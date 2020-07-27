@@ -2,110 +2,133 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEDDC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16AE921744
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7D2206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:43:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xt1tz2xi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730965AbgG0Pm4 (ORCPT
+        id S1730983AbgG0Pnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:42:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729699AbgG0Pm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:42:56 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF03B206E7;
-        Mon, 27 Jul 2020 15:42:55 +0000 (UTC)
-Date:   Mon, 27 Jul 2020 11:42:54 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     kernel-team@fb.com, linux-kernel@vger.kernel.org, mingo@redhat.com
-Subject: Re: [PATCH] ftrace: fix ftrace_trace_task return value
-Message-ID: <20200727114254.3086b8b9@oasis.local.home>
-In-Reply-To: <20200725005048.1790-1-josef@toxicpanda.com>
-References: <20200725005048.1790-1-josef@toxicpanda.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 Jul 2020 11:43:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728071AbgG0Pnm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 11:43:42 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33188C061794;
+        Mon, 27 Jul 2020 08:43:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=DTiJ9DCKSihE4ycmCvc3MBz3EguzZmtKetvhRYWhQ6s=; b=xt1tz2xi4gFW1RBYpqonj0wO2
+        Vhy82d52V/bO7PkJUW4NbK7p9SnY59C+3iPXG6bdK7L6MDy75jmSLRmUK1LT/rrwDfbmRXEmBoML/
+        l6ffTZkhsJitXdhUeWM2HSCSHhHGmHEbY682TCBWO+mny9ybadR8497BWvxGvccE4pkyqT8vOu580
+        +dUp6Gs8QEkDsjnraaOBYbQNvY1rjID70opjpsqtj/cwXf0XYSilmK+kFAgx82cteXuOGB6acUuAo
+        avLfdgmogGQ8hMyq1c6RmT+5iAn2y6HV3hd60P2oNixKLymg+h7oC7moU4uSXN/oBh3MI7tl0pKT3
+        NAaTsyBYw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44858)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1k05Hs-00031S-09; Mon, 27 Jul 2020 16:43:36 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1k05Hr-0003mQ-5e; Mon, 27 Jul 2020 16:43:35 +0100
+Date:   Mon, 27 Jul 2020 16:43:35 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Rob Herring <robh@kernel.org>, miguelborgesdefreitas@gmail.com,
+        a.zummo@towertech.it, baruch@tkos.co.il, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
+ battery switch-over
+Message-ID: <20200727154335.GL1551@shell.armlinux.org.uk>
+References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-1-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
+ <20200723174905.GA596242@bogus>
+ <20200723195755.GV3428@piout.net>
+ <20200727094553.GH1551@shell.armlinux.org.uk>
+ <20200727144938.GC239143@piout.net>
+ <20200727152439.GK1551@shell.armlinux.org.uk>
+ <20200727154104.GE239143@piout.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727154104.GE239143@piout.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 20:50:48 -0400
-Josef Bacik <josef@toxicpanda.com> wrote:
-
-> I was attempting to use pid filtering with function_graph, but it wasn't
-> allowing anything to make it through.  Turns out ftrace_trace_task
-> returns false if ftrace_ignore_pid is not-empty, which isn't correct
-> anymore.  We're now setting it to FTRACE_PID_IGNORE if we need to ignore
-> that pid, otherwise it's set to the pid (which is weird considering the
-> name) or to FTRACE_PID_TRACE.  Fix the check to check for !=
-> FTRACE_PID_IGNORE.  With this we can now use function_graph with pid
-> filtering.
+On Mon, Jul 27, 2020 at 05:41:04PM +0200, Alexandre Belloni wrote:
+> On 27/07/2020 16:24:39+0100, Russell King - ARM Linux admin wrote:
+> > On Mon, Jul 27, 2020 at 04:49:38PM +0200, Alexandre Belloni wrote:
+> > > On 27/07/2020 10:45:53+0100, Russell King - ARM Linux admin wrote:
+> > > > > This is but this shouldn't be a DT property as it has to be changed
+> > > > > dynamically. I'm working on an ioctl interface to change this
+> > > > > configuration.
+> > > > 
+> > > > Why does it need to be changed dynamically?  If the hardware components
+> > > > are not fitted to allow the RTC to be safely used without DSM, then
+> > > > why should userspace be able to disable DSM?
+> > > 
+> > > For RTCs with a standby mode, you want to be able to return to standby
+> > > mode.
+> > > 
+> > > That would happen for example after factory flashing in that common use
+> > > case:
+> > >  - the board is manufactured
+> > >  - Vbackup is installed, the RTC switches to standby mode
+> > >  - the board is then booted to flash a system, Vprimary is now present,
+> > >    the RTC switches to DSM.
+> > > 
+> > > At this point, if the board is simply shut down, the RTC will start
+> > > draining Vbackup before leaving the factory. Instead, we want to be able
+> > > to return to standby mode until the final user switches the product on
+> > > for the first time.
+> > 
+> > I don't think you're understanding what's going on with this proposed
+> > patch.  The cubox-i does work today, and the RTC does survive most
+> > power-downs. There are situations where it doesn't.
+> > 
+> > So, let's take your process above.
+> > 
+> > - the board is manufactured
+> > - Vbackup is installed, the RTC switches to standby mode
+> > - the board is then booted to flash a system, Vprimary is now present
+> > - the board is powered down.  the RTC _might_ switch over to battery
+> >   if it notices the power failure in time, or it might not.  A random
+> >   sample of units leaving the factory have the RTC in standby mode.
+> >   Others are draining the battery.
+> > 
+> > I'm not saying what you propose isn't a good idea.  I'm questioning
+> > why we should expose this in the generic kernel on platforms where
+> > it's likely to end up with the RTC being corrupted.
+> > 
 > 
+> Note that I didn't say we should expose settings that are not working
+> but it is a different discussion.
 
-I just ran into this myself! And was about to go look at why function
-graph pid filtering wasn't working. Thanks for the patch! I'll start
-testing it this week.
+It isn't a different discussion - that is exactly what the point of
+my emails to you all along have been!
 
--- Steve
+So, can we please have that discussion, it is pertinent to this patch.
 
-
-> Fixes: 717e3f5ebc82 ("ftrace: Make function trace pid filtering a bit more exact")
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> ---
->  kernel/trace/ftrace.c | 3 ---
->  kernel/trace/trace.h  | 7 ++++++-
->  2 files changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 1903b80db6eb..7d879fae3777 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -139,9 +139,6 @@ static inline void ftrace_ops_init(struct ftrace_ops *ops)
->  #endif
->  }
->  
-> -#define FTRACE_PID_IGNORE	-1
-> -#define FTRACE_PID_TRACE	-2
-> -
->  static void ftrace_pid_func(unsigned long ip, unsigned long parent_ip,
->  			    struct ftrace_ops *op, struct pt_regs *regs)
->  {
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index 13db4000af3f..1531ec565cb5 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -1103,6 +1103,10 @@ print_graph_function_flags(struct trace_iterator *iter, u32 flags)
->  extern struct list_head ftrace_pids;
->  
->  #ifdef CONFIG_FUNCTION_TRACER
-> +
-> +#define FTRACE_PID_IGNORE	-1
-> +#define FTRACE_PID_TRACE	-2
-> +
->  struct ftrace_func_command {
->  	struct list_head	list;
->  	char			*name;
-> @@ -1114,7 +1118,8 @@ struct ftrace_func_command {
->  extern bool ftrace_filter_param __initdata;
->  static inline int ftrace_trace_task(struct trace_array *tr)
->  {
-> -	return !this_cpu_read(tr->array_buffer.data->ftrace_ignore_pid);
-> +	return this_cpu_read(tr->array_buffer.data->ftrace_ignore_pid) !=
-> +		FTRACE_PID_IGNORE;
->  }
->  extern int ftrace_is_dead(void);
->  int ftrace_create_function_files(struct trace_array *tr,
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
