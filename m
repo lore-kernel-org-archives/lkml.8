@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 466BFC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F987C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 239392075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5123A2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgG0FTE (ORCPT
+        id S1726952AbgG0FUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:19:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56300 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726064AbgG0FTD (ORCPT
+        Mon, 27 Jul 2020 01:20:40 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64966 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725787AbgG0FUk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:19:03 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R5IA2B160856;
-        Mon, 27 Jul 2020 01:18:47 -0400
+        Mon, 27 Jul 2020 01:20:40 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R51u0M115558;
+        Mon, 27 Jul 2020 01:18:23 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32hrnkg0ff-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32hrcvge9n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 01:18:47 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R5Ilwk161855;
-        Mon, 27 Jul 2020 01:18:47 -0400
+        Mon, 27 Jul 2020 01:18:23 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R52BER116399;
+        Mon, 27 Jul 2020 01:18:22 -0400
 Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32hrnkg0ew-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32hrcvge8p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 01:18:46 -0400
+        Mon, 27 Jul 2020 01:18:22 -0400
 Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R5FQ96013378;
-        Mon, 27 Jul 2020 05:18:45 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 32gcy4htf9-1
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R5F74Y013202;
+        Mon, 27 Jul 2020 05:18:20 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 32gcy4htey-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 05:18:45 +0000
+        Mon, 27 Jul 2020 05:18:20 +0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R5IgeK58589410
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R5IIG932047562
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 05:18:43 GMT
+        Mon, 27 Jul 2020 05:18:18 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D39BEA4057;
-        Mon, 27 Jul 2020 05:18:42 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id EC772A4055;
+        Mon, 27 Jul 2020 05:18:17 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4ECFFA404D;
-        Mon, 27 Jul 2020 05:18:39 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 0A6D2A4040;
+        Mon, 27 Jul 2020 05:18:14 +0000 (GMT)
 Received: from srikart450.in.ibm.com (unknown [9.85.97.241])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Jul 2020 05:18:39 +0000 (GMT)
+        Mon, 27 Jul 2020 05:18:13 +0000 (GMT)
 From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 To:     Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
@@ -70,9 +70,9 @@ Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Jordan Niethe <jniethe5@gmail.com>
-Subject: [PATCH v4 07/10] Powerpc/numa: Detect support for coregroup
-Date:   Mon, 27 Jul 2020 10:48:02 +0530
-Message-Id: <20200727051805.16728-8-srikar@linux.vnet.ibm.com>
+Subject: [PATCH v4 01/10] powerpc/smp: Fix a warning under !NEED_MULTIPLE_NODES
+Date:   Mon, 27 Jul 2020 10:47:56 +0530
+Message-Id: <20200727051805.16728-2-srikar@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200727051805.16728-1-srikar@linux.vnet.ibm.com>
 References: <20200727051805.16728-1-srikar@linux.vnet.ibm.com>
@@ -81,24 +81,18 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-27_03:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 adultscore=0 clxscore=1015 impostorscore=0 phishscore=0
- mlxscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007270032
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0 phishscore=0
+ impostorscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for grouping cores based on the device-tree classification.
-- The last domain in the associativity domains always refers to the
-core.
-- If primary reference domain happens to be the penultimate domain in
-the associativity domains device-tree property, then there are no
-coregroups. However if its not a penultimate domain, then there are
-coregroups. There can be more than one coregroup. For now we would be
-interested in the last or the smallest coregroups.
+Fix a build warning in a non CONFIG_NEED_MULTIPLE_NODES
+"error: _numa_cpu_lookup_table_ undeclared"
 
 Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 Cc: LKML <linux-kernel@vger.kernel.org>
@@ -116,97 +110,33 @@ Cc: Jordan Niethe <jniethe5@gmail.com>
 Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 ---
-Changelog v1 -> v2:
-	Explained Coregroup in commit msg (Michael Ellerman)
+Changelog v2 -> v3:
+	Removed node caching part. Rewrote the Commit msg (Michael Ellerman)
+	Renamed to powerpc/smp: Fix a warning under !NEED_MULTIPLE_NODES
 
- arch/powerpc/include/asm/smp.h |  1 +
- arch/powerpc/kernel/smp.c      |  1 +
- arch/powerpc/mm/numa.c         | 34 +++++++++++++++++++++-------------
- 3 files changed, 23 insertions(+), 13 deletions(-)
+ arch/powerpc/kernel/smp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/smp.h b/arch/powerpc/include/asm/smp.h
-index 49a25e2400f2..5bdc17a7049f 100644
---- a/arch/powerpc/include/asm/smp.h
-+++ b/arch/powerpc/include/asm/smp.h
-@@ -28,6 +28,7 @@
- extern int boot_cpuid;
- extern int spinning_secondaries;
- extern u32 *cpu_to_phys_id;
-+extern bool coregroup_enabled;
- 
- extern void cpu_die(void);
- extern int cpu_to_chip_id(int cpu);
 diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-index 3c5ccf6d2b1c..698000c7f76f 100644
+index 73199470c265..edf94ca64eea 100644
 --- a/arch/powerpc/kernel/smp.c
 +++ b/arch/powerpc/kernel/smp.c
-@@ -74,6 +74,7 @@ static DEFINE_PER_CPU(int, cpu_state) = { 0 };
- 
- struct task_struct *secondary_current;
- bool has_big_cores;
-+bool coregroup_enabled;
- 
- DEFINE_PER_CPU(cpumask_var_t, cpu_sibling_map);
- DEFINE_PER_CPU(cpumask_var_t, cpu_smallcore_map);
-diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-index 2298899a0f0a..51cb672f113b 100644
---- a/arch/powerpc/mm/numa.c
-+++ b/arch/powerpc/mm/numa.c
-@@ -886,7 +886,9 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
- static void __init find_possible_nodes(void)
- {
- 	struct device_node *rtas;
--	u32 numnodes, i;
-+	const __be32 *domains;
-+	int prop_length, max_nodes;
-+	u32 i;
- 
- 	if (!numa_enabled)
- 		return;
-@@ -895,25 +897,31 @@ static void __init find_possible_nodes(void)
- 	if (!rtas)
- 		return;
- 
--	if (of_property_read_u32_index(rtas, "ibm,current-associativity-domains",
--				min_common_depth, &numnodes)) {
--		/*
--		 * ibm,current-associativity-domains is a fairly recent
--		 * property. If it doesn't exist, then fallback on
--		 * ibm,max-associativity-domains. Current denotes what the
--		 * platform can support compared to max which denotes what the
--		 * Hypervisor can support.
--		 */
--		if (of_property_read_u32_index(rtas, "ibm,max-associativity-domains",
--				min_common_depth, &numnodes))
-+	/*
-+	 * ibm,current-associativity-domains is a fairly recent property. If
-+	 * it doesn't exist, then fallback on ibm,max-associativity-domains.
-+	 * Current denotes what the platform can support compared to max
-+	 * which denotes what the Hypervisor can support.
-+	 */
-+	domains = of_get_property(rtas, "ibm,current-associativity-domains",
-+					&prop_length);
-+	if (!domains) {
-+		domains = of_get_property(rtas, "ibm,max-associativity-domains",
-+					&prop_length);
-+		if (!domains)
- 			goto out;
+@@ -860,6 +860,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+ 					GFP_KERNEL, cpu_to_node(cpu));
+ 		zalloc_cpumask_var_node(&per_cpu(cpu_core_map, cpu),
+ 					GFP_KERNEL, cpu_to_node(cpu));
++#ifdef CONFIG_NEED_MULTIPLE_NODES
+ 		/*
+ 		 * numa_node_id() works after this.
+ 		 */
+@@ -868,6 +869,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+ 			set_cpu_numa_mem(cpu,
+ 				local_memory_node(numa_cpu_lookup_table[cpu]));
+ 		}
++#endif
  	}
  
--	for (i = 0; i < numnodes; i++) {
-+	max_nodes = of_read_number(&domains[min_common_depth], 1);
-+	for (i = 0; i < max_nodes; i++) {
- 		if (!node_possible(i))
- 			node_set(i, node_possible_map);
- 	}
- 
-+	prop_length /= sizeof(int);
-+	if (prop_length > min_common_depth + 2)
-+		coregroup_enabled = 1;
-+
- out:
- 	of_node_put(rtas);
- }
+ 	/* Init the cpumasks so the boot CPU is related to itself */
 -- 
 2.17.1
 
