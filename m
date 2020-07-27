@@ -2,107 +2,112 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8598BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEDAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 583512072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:46:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RAuGFAnf"
+	by mail.kernel.org (Postfix) with ESMTP id 7EA4820738
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:49:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgG0Hqg (ORCPT
+        id S1726706AbgG0Htl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:46:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgG0Hqg (ORCPT
+        Mon, 27 Jul 2020 03:49:41 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:49773 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgG0Htk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:46:36 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8836C0619D2;
-        Mon, 27 Jul 2020 00:46:35 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFX1j6rDvz9sRW;
-        Mon, 27 Jul 2020 17:46:33 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595835994;
-        bh=OyFK23EEAzKzQf8PiO3NBnsNkfMdybSgGGu1JgJ4NWE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=RAuGFAnf6krRksT41li3gRxXRTiuPu0MdwaHQ7RpvldBJXfXDt89hmaZ/bVSWCyli
-         XJCF2NuA9kJ4SRLId6K9O7fojQlpe9Cu1Vktey2U0ooEGxK/dxSIq50eFJyLO+eEY9
-         uRCw1Fh3zSdO1KadJtCWUiZEJZwfVx3xcG0jPqARX8F5WvatFip5dKO6BrImUO7z0M
-         7OP8UsB+tbOb0/C8dDeynxU3ElKtgA2CEamAUYAmOE2vFuNRJ9OG4pTmZUh1dgTcAv
-         g2Tbe8Nu9rKjX/UDz5XqZZ8f9ltuvoD9Oxaf9aDL3L4XsMqOamPsZl9rGx86ysONuv
-         E1+Mo7lrXtq3w==
-Date:   Mon, 27 Jul 2020 17:46:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Ofir Bitton <obitton@habana.ai>
-Subject: linux-next: manual merge of the char-misc tree with Linus' tree
-Message-ID: <20200727174633.40fd8f15@canb.auug.org.au>
+        Mon, 27 Jul 2020 03:49:40 -0400
+Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MmU9R-1ki8LS0GDx-00iQrk for <linux-kernel@vger.kernel.org>; Mon, 27 Jul
+ 2020 09:49:39 +0200
+Received: by mail-qt1-f171.google.com with SMTP id b25so11538091qto.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:49:38 -0700 (PDT)
+X-Gm-Message-State: AOAM531x8u5CXtQTSfWSDrreOdb0juCJhNPaphjFiz8wO4S3OBXLW0/d
+        zspr+RSjtzmXBxNxlPeY5fznhx5d9Ho+H2DD8rs=
+X-Google-Smtp-Source: ABdhPJyqvtFtc9EeRn23Z++9snt24Adrey6DZY0MGaUrfMzSaEFa1Rx5bauVO7MVoNlBp10B/WVA2Ld+bxrUKqWk8nE=
+X-Received: by 2002:aed:2946:: with SMTP id s64mr614510qtd.204.1595836177987;
+ Mon, 27 Jul 2020 00:49:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wdV_+DImcfZsl3kIUSXr888";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200726043948.1357573-1-daniel@0x0f.com> <20200726043948.1357573-7-daniel@0x0f.com>
+In-Reply-To: <20200726043948.1357573-7-daniel@0x0f.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 27 Jul 2020 09:49:22 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a39E2ww_nuR0PHxT=Lnqsu+-mkHdbT+TzSnH6mYA7pKeA@mail.gmail.com>
+Message-ID: <CAK8P3a39E2ww_nuR0PHxT=Lnqsu+-mkHdbT+TzSnH6mYA7pKeA@mail.gmail.com>
+Subject: Re: [PATCH 6/7] ARM:mstar: Add syscon node for "pmsleep" area
+To:     Daniel Palmer <daniel@0x0f.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:BIN1nKwO5OyDJZP5VcffJDmmkyLkZJ27LEzfx9XapM2fEemNskh
+ wLhRObCNnuVEsrUaLlyZcB99Yo7JemJrNxnN/qjCIijSHgNGPa4P7W243s2Ag6qG2R6aMIV
+ HtmI/MGMsMNyGLowsA6bk8WM0JrKlI+ThP3IX9ByY1mTtQhqU7pyBjjAOV9PvZe+ueBVdjz
+ FSVNCpGflgB370noq7/3A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DcSsac6gRNs=:MKtDngoHSRyVWOyNjPRL5E
+ mPAoMDsJOBQdKwpIcwOg7QFvvrzFKgHy09xa5rPsxkfh7KlYbaH2Dlp8LKVP3LOPs/XN6TYQg
+ u2JHG4c9hmjZpJyHQekrmubujBUftjcVxD3pkUafMYULMXGhW3sb3grKbowu0hvopy8mcyboQ
+ i9eNQLclquPBEe5lr9xp/V566QFGDdyPt4qwT88o3ZKV22c7Uskd5qN+fASbE4MN4KmXQTSnz
+ 29zWlIHaWMZF72oojMRxUiNINTJ4RLyvBYm3CxzZCKAxu2RDMKwHaseu+GfhKFNEt0db8J/oi
+ pL+nxW5AROQQL1m3xrc9wq/K+3k2U7zGrlFpP5nDdhUBR8BeYo0A857wdChjjIs0YWcuxQ3z/
+ YUsrqWiLR8dzx9ydwys0T+T7j+WfIWjXUNzpi7F/+DeVrcc3GvbSpnkBaexzXHMPXW2ldZ6/B
+ AQ1ZL7YbA6PHo8vLUEKg1Ombpf5L/JJTGTjcVxTL6bSc43CiTtnptSmH2pzOlMhC0pP4FhR2t
+ r1S+DAQFDPXwzRzaHep1wIUa/ByApNfc+TzLN/jqRVMS1szyQk0oM3FgsS+p6JCaBHHmqA2hS
+ uAn0UywcQNQjBFHVRNEgqYDPZgFzX0uGZAo+KAWULxtJWf3ES+TSEKjGhHxM7DYWiJUq422rb
+ hokBW9G4zLfFg/X8y2ZP3UAH9DB65rV67KQ7tS1I1+Yd1dNZyFtNZF7uQSaGZYa3Dv+TmciEB
+ aaKY4IBoEWAPLIO6V/e+FBmwc+fpFR/5FPL0nlyy3zZNjcF1IbLmzNUDO1aB1QnvSKYYtiTpZ
+ 6EIYYKPqyZeVRaAExswAaO3Z4sC+NW6VdmlVmYX/nLtOHnq5QKuuw/6o4Q1lx+tfudoi+YR8t
+ YU4o4uetOu1zUioWgeYDa6wnKwdPBD72q/uJ3XMYcW7JXjQ3NVAgeWu2yRen2exxUiLQ4arJD
+ cAdbbeyPSgf1BwN07o2S2gsYwhxguFkxiaW3DrFIJpKx+jUvqO3uY
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/wdV_+DImcfZsl3kIUSXr888
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jul 26, 2020 at 6:40 AM Daniel Palmer <daniel@0x0f.com> wrote:
+>
+> MStar v7 SoCs contain a region of registers that are in the always on
+> domain that the vendor code calls the "pmsleep" area.
+>
+> This area contains registers for a broad range of functionality and
+> needs to be shared between drivers.
+>
+> This patch adds a syscon node for the pmsleep area so that other
+> drivers can access registers in the area.
+>
+> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
 
-Hi all,
+I think it would be better to add a more specific compatible string in
+addition to the "syscon" one, to make it possible to later add a proper
+driver for this area, in case there is a need for that.
 
-Today's linux-next merge of the char-misc tree got a conflict in:
+       Arnd
 
-  drivers/misc/habanalabs/common/command_submission.c
-
-between commit:
-
-  cea7a0449ea3 ("habanalabs: prevent possible out-of-bounds array access")
-
-from Linus' tree and commit:
-
-  3abc99bb7dcb ("habanalabs: configure maximum queues per asic")
-
-from the char-misc tree.
-
-I fixed it up (I used parts of each that no longer conflict) and can
-carry the fix as necessary. This is now fixed as far as linux-next is
-concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/wdV_+DImcfZsl3kIUSXr888
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ehlkACgkQAVBC80lX
-0GwHhggAoLfNPpYh1aF/JvXmGyiZAh4m8WZPbfS2e/1vK3rs4hJgphpBo8ZdnH9I
-nZtAVTfORhcGQTfXPPGI8eVGFIi7+0U5D5Bum+u1v4iwCJIteFaY1bp/+KkIuFq/
-t0WR55wrIY2w1P+kBgh1ggo0kgC2QDFzOCBCAuKwKuJXvBGGWx2iHTGeMZ70Njau
-VHuoHw71s/JjNnW8iATxUaY6BGS+UgZQMj8RgBGPxVoshwcZHXmZTVxXARauEszS
-QA4kowzlH/O8RkkVQqIgimtOcjGTQC/WMr1iVPw95arEE5ZMJsFg7UcTCYod0P3m
-U/6JoPDSf0D8hUmVrTZfoPuW93xpeQ==
-=m/Q7
------END PGP SIGNATURE-----
-
---Sig_/wdV_+DImcfZsl3kIUSXr888--
+> ---
+>  arch/arm/boot/dts/mstar-v7.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/mstar-v7.dtsi b/arch/arm/boot/dts/mstar-v7.dtsi
+> index a73b1d162dfd..c8b192569d05 100644
+> --- a/arch/arm/boot/dts/mstar-v7.dtsi
+> +++ b/arch/arm/boot/dts/mstar-v7.dtsi
+> @@ -73,6 +73,11 @@ riu: bus@1f000000 {
+>                         #size-cells = <1>;
+>                         ranges = <0x0 0x1f000000 0x00400000>;
+>
+> +                       pmsleep: syscon@1c00 {
+> +                               compatible = "syscon";
+> +                               reg = <0x1c00 0x100>;
+> +                       };
+> +
+>                         l3bridge: l3bridge@204400 {
+>                                 compatible = "mstar,l3bridge";
+>                                 reg = <0x204400 0x200>;
+> --
+> 2.27.0
+>
