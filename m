@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5631C433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E36C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF8D920775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B73D02070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859487;
-	bh=6rrJ4vF0KkOU6fgx8VcLlGCgvhfHnsigbaZGsxfaHaU=;
+	s=default; t=1595859493;
+	bh=aH9N2X8cK9yWknxgS/kGhUdLd4Tp5DOTt7iEgW0I6Q0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DC0DsSpCj+efWpvMnOldmffrTlCCJekJNv9dFtJ3Z5Oj/BkaopaOJbqzVIloxL6Z1
-	 IreGXbHY/ArMh8jG7l01V3n44jWPvPcC8pw/3+4GzCUS0qMrXubnfT3LxIypMgK46w
-	 fHqYkJo5q/uNCk5RjDdIdCdL8O7Erxdfr93884oo=
+	b=X0C657qOl6HALwxjOT8ENp2PhPc2jjSaBvU1LdRfJf5GYltwCPyCk+2qD413jEZRI
+	 o4eBAKPGcFJQj1Oatw3K3wmaNJWYxrawiRviVvE6lUnJD6W0bWae/6aCRDMHJVNIOP
+	 K44jTKIs7/wvUYWMoYheW9TeiPErWaoGM64hqovM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731168AbgG0OSG (ORCPT
+        id S1731178AbgG0OSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:18:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45548 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:18:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731147AbgG0OSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:18:01 -0400
+        id S1731170AbgG0OSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:18:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 992EC2070A;
-        Mon, 27 Jul 2020 14:18:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA4DB2070A;
+        Mon, 27 Jul 2020 14:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859481;
-        bh=6rrJ4vF0KkOU6fgx8VcLlGCgvhfHnsigbaZGsxfaHaU=;
+        s=default; t=1595859486;
+        bh=aH9N2X8cK9yWknxgS/kGhUdLd4Tp5DOTt7iEgW0I6Q0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Go7Bi6U2igMkDFDUgkc+qgrrJPttQEacVoR+swfDqMUXqtD67/64oZWMZTmGKL8bj
-         IslHqP3UkQ0E2l757VI+83Kgi2VKEh4fFhFL41dhaun5RViSJrYxlkLqKttJCKrSvq
-         LF6jRJ8Xk+a5KIYYIFPVChVhP4oyQEskLxex9qN4=
+        b=ktsnJ8EqCkXMVOH7MpGQGjU5iDSvQq/PaKWJM0df9Dtymt4etSHLP4cIs6muT9J50
+         ep9C5IyTYeogaaH5I37deqOftU0CriliBY3XeBwZp8StL/5K7cyi1U62mmUwctjAsF
+         mvHg0oG/7Mz5YUx2M7pxr6HunLcS9Tix9ginayZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+ed318e8b790ca72c5ad0@syzkaller.appspotmail.com,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 125/138] khugepaged: fix null-pointer dereference due to race
-Date:   Mon, 27 Jul 2020 16:05:20 +0200
-Message-Id: <20200727134931.680601862@linuxfoundation.org>
+        stable@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 127/138] mmc: sdhci-of-aspeed: Fix clock divider calculation
+Date:   Mon, 27 Jul 2020 16:05:22 +0200
+Message-Id: <20200727134931.778827641@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -64,58 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+From: Eddie James <eajames@linux.ibm.com>
 
-commit 594cced14ad3903166c8b091ff96adac7552f0b3 upstream.
+commit ebd4050c6144b38098d8eed34df461e5e3fa82a9 upstream.
 
-khugepaged has to drop mmap lock several times while collapsing a page.
-The situation can change while the lock is dropped and we need to
-re-validate that the VMA is still in place and the PMD is still subject
-for collapse.
+When calculating the clock divider, start dividing at 2 instead of 1.
+The divider is divided by two at the end of the calculation, so starting
+at 1 may result in a divider of 0, which shouldn't happen.
 
-But we miss one corner case: while collapsing an anonymous pages the VMA
-could be replaced with file VMA.  If the file VMA doesn't have any
-private pages we get NULL pointer dereference:
-
-	general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
-	KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-	anon_vma_lock_write include/linux/rmap.h:120 [inline]
-	collapse_huge_page mm/khugepaged.c:1110 [inline]
-	khugepaged_scan_pmd mm/khugepaged.c:1349 [inline]
-	khugepaged_scan_mm_slot mm/khugepaged.c:2110 [inline]
-	khugepaged_do_scan mm/khugepaged.c:2193 [inline]
-	khugepaged+0x3bba/0x5a10 mm/khugepaged.c:2238
-
-The fix is to make sure that the VMA is anonymous in
-hugepage_vma_revalidate().  The helper is only used for collapsing
-anonymous pages.
-
-Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
-Reported-by: syzbot+ed318e8b790ca72c5ad0@syzkaller.appspotmail.com
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200722121439.44328-1-kirill.shutemov@linux.intel.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+Acked-by: Joel Stanley <joel@jms.id.au>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/20200709195706.12741-3-eajames@linux.ibm.com
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/khugepaged.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mmc/host/sdhci-of-aspeed.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -876,6 +876,9 @@ static int hugepage_vma_revalidate(struc
- 		return SCAN_ADDRESS_RANGE;
- 	if (!hugepage_vma_check(vma, vma->vm_flags))
- 		return SCAN_VMA_CHECK;
-+	/* Anon VMA expected */
-+	if (!vma->anon_vma || vma->vm_ops)
-+		return SCAN_VMA_CHECK;
- 	return 0;
- }
+--- a/drivers/mmc/host/sdhci-of-aspeed.c
++++ b/drivers/mmc/host/sdhci-of-aspeed.c
+@@ -68,7 +68,7 @@ static void aspeed_sdhci_set_clock(struc
+ 	if (WARN_ON(clock > host->max_clk))
+ 		clock = host->max_clk;
  
+-	for (div = 1; div < 256; div *= 2) {
++	for (div = 2; div < 256; div *= 2) {
+ 		if ((parent / div) <= clock)
+ 			break;
+ 	}
 
 
