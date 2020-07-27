@@ -2,52 +2,50 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F81EC433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B82CC433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0C0021D95
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 417162073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858880;
-	bh=deAweHWo/9uso7c0xjr/l67++4cZ+yJjx2ZpWpma110=;
+	s=default; t=1595858887;
+	bh=7rd/OGluXtLn4fNF/C5/d8dC2FG2dp25gWQxcM9U4/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P5fy57z9+jXJo0bQM/DcUWhWMmbtQnPqQXCvwSnMlOhxiDscP7xsqFQLm9lQii0mi
-	 2Q87OFiYBKmSom6EJwO/+eMj9/LyeD2cNaT3NKjDwXdtlHqPpd2bScMUeuJW7xTtm9
-	 bAHhvDmYulc/qINKPIQ5jC/PIyKbPBfwYpRg/fbs=
+	b=oavMmPK3RMdBtWHPSuBEwQp4bKSIatpUzVF1zzA7xQL34owQaAi+Yf3jC/7rgsiII
+	 XZvV3oqNsIeWyEZdYvHDCrdeLBq0sjeC1/Y6izcLeOkQ6Hm/PQIryIco/ZTb3Z1EcB
+	 OQJ7osLxIa/Ymlk5KDFm9WQpkTzP18C1q3lCOJoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgG0OH6 (ORCPT
+        id S1729370AbgG0OIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:07:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56994 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:08:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729326AbgG0OHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:07:55 -0400
+        id S1729354AbgG0OID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:08:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5364B2073E;
-        Mon, 27 Jul 2020 14:07:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 891B22073E;
+        Mon, 27 Jul 2020 14:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858874;
-        bh=deAweHWo/9uso7c0xjr/l67++4cZ+yJjx2ZpWpma110=;
+        s=default; t=1595858883;
+        bh=7rd/OGluXtLn4fNF/C5/d8dC2FG2dp25gWQxcM9U4/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d5JlD2cXEJ2B/S6ZkTSaCrBOQOJTPjIeoIz4p9PgVXO7hYCSvdwoVmb5P2g5lZZQd
-         Q3PhZ0xsxyfJjnrWDtmZorM/a9W9XHSIgv3+gvZ1iZhjAwUkA9gxetBZc7Gl6tSgbI
-         p5zdZQ3eb8nlKyUQdH5/V1WVkjSbJvs0tftRw//o=
+        b=NNm8ab+iS9+8dfjW9iDVwEAWyVh3DKJ7YSD99xkrWoxjw0W2BMK4zL5/jkuiHGurO
+         TuFzEq6sIANgc3JcTSGHupOJYtwFimUemHI4mPqfVCBQAqk1zFmR2HWjiEpbBsNxMh
+         T6cGO/Kc9SllWrx2YFSeJIuLhqsnG8c6DcD5IV2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 27/64] bonding: check error value of register_netdevice() immediately
-Date:   Mon, 27 Jul 2020 16:04:06 +0200
-Message-Id: <20200727134912.496357926@linuxfoundation.org>
+        stable@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 4.14 47/64] usb: xhci-mtk: fix the failure of bandwidth allocation
+Date:   Mon, 27 Jul 2020 16:04:26 +0200
+Message-Id: <20200727134913.520008557@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -60,90 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
 
-[ Upstream commit 544f287b84959203367cd29e16e772717612fab4 ]
+commit 5ce1a24dd98c00a57a8fa13660648abf7e08e3ef upstream.
 
-If register_netdevice() is failed, net_device should not be used
-because variables are uninitialized or freed.
-So, the routine should be stopped immediately.
-But, bond_create() doesn't check return value of register_netdevice()
-immediately. That will result in a panic because of using uninitialized
-or freed memory.
+The wMaxPacketSize field of endpoint descriptor may be zero
+as default value in alternate interface, and they are not
+actually selected when start stream, so skip them when try to
+allocate bandwidth.
 
-Test commands:
-    modprobe netdev-notifier-error-inject
-    echo -22 > /sys/kernel/debug/notifier-error-inject/netdev/\
-actions/NETDEV_REGISTER/error
-    modprobe bonding max_bonds=3
+Cc: stable <stable@vger.kernel.org>
+Fixes: 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Link: https://lore.kernel.org/r/1594360672-2076-1-git-send-email-chunfeng.yun@mediatek.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Splat looks like:
-[  375.028492][  T193] general protection fault, probably for non-canonical address 0x6b6b6b6b6b6b6b6b: 0000 [#1] SMP DEBUG_PAGEALLOC PTI
-[  375.033207][  T193] CPU: 2 PID: 193 Comm: kworker/2:2 Not tainted 5.8.0-rc4+ #645
-[  375.036068][  T193] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-[  375.039673][  T193] Workqueue: events linkwatch_event
-[  375.041557][  T193] RIP: 0010:dev_activate+0x4a/0x340
-[  375.043381][  T193] Code: 40 a8 04 0f 85 db 00 00 00 8b 83 08 04 00 00 85 c0 0f 84 0d 01 00 00 31 d2 89 d0 48 8d 04 40 48 c1 e0 07 48 03 83 00 04 00 00 <48> 8b 48 10 f6 41 10 01 75 08 f0 80 a1 a0 01 00 00 fd 48 89 48 08
-[  375.050267][  T193] RSP: 0018:ffff9f8facfcfdd8 EFLAGS: 00010202
-[  375.052410][  T193] RAX: 6b6b6b6b6b6b6b6b RBX: ffff9f8fae6ea000 RCX: 0000000000000006
-[  375.055178][  T193] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff9f8fae6ea000
-[  375.057762][  T193] RBP: ffff9f8fae6ea000 R08: 0000000000000000 R09: 0000000000000000
-[  375.059810][  T193] R10: 0000000000000001 R11: 0000000000000000 R12: ffff9f8facfcfe08
-[  375.061892][  T193] R13: ffffffff883587e0 R14: 0000000000000000 R15: ffff9f8fae6ea580
-[  375.063931][  T193] FS:  0000000000000000(0000) GS:ffff9f8fbae00000(0000) knlGS:0000000000000000
-[  375.066239][  T193] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  375.067841][  T193] CR2: 00007f2f542167a0 CR3: 000000012cee6002 CR4: 00000000003606e0
-[  375.069657][  T193] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  375.071471][  T193] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  375.073269][  T193] Call Trace:
-[  375.074005][  T193]  linkwatch_do_dev+0x4d/0x50
-[  375.075052][  T193]  __linkwatch_run_queue+0x10b/0x200
-[  375.076244][  T193]  linkwatch_event+0x21/0x30
-[  375.077274][  T193]  process_one_work+0x252/0x600
-[  375.078379][  T193]  ? process_one_work+0x600/0x600
-[  375.079518][  T193]  worker_thread+0x3c/0x380
-[  375.080534][  T193]  ? process_one_work+0x600/0x600
-[  375.081668][  T193]  kthread+0x139/0x150
-[  375.082567][  T193]  ? kthread_park+0x90/0x90
-[  375.083567][  T193]  ret_from_fork+0x22/0x30
-
-Fixes: e826eafa65c6 ("bonding: Call netif_carrier_off after register_netdevice")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/usb/host/xhci-mtk-sch.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index fef599eb822b6..1f867e275408e 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -4773,15 +4773,19 @@ int bond_create(struct net *net, const char *name)
- 	bond_dev->rtnl_link_ops = &bond_link_ops;
+--- a/drivers/usb/host/xhci-mtk-sch.c
++++ b/drivers/usb/host/xhci-mtk-sch.c
+@@ -284,6 +284,10 @@ static bool need_bw_sch(struct usb_host_
+ 	if (is_fs_or_ls(speed) && !has_tt)
+ 		return false;
  
- 	res = register_netdevice(bond_dev);
-+	if (res < 0) {
-+		free_netdev(bond_dev);
-+		rtnl_unlock();
++	/* skip endpoint with zero maxpkt */
++	if (usb_endpoint_maxp(&ep->desc) == 0)
++		return false;
 +
-+		return res;
-+	}
- 
- 	netif_carrier_off(bond_dev);
- 
- 	bond_work_init_all(bond);
- 
- 	rtnl_unlock();
--	if (res < 0)
--		free_netdev(bond_dev);
--	return res;
-+	return 0;
+ 	return true;
  }
  
- static int __net_init bond_net_init(struct net *net)
--- 
-2.25.1
-
 
 
