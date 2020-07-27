@@ -2,188 +2,207 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AFF920759
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2B120786
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:31:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="bNB8QPZz"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="iwguWkkz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgG0K36 (ORCPT
+        id S1728079AbgG0Kbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:29:58 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:61323 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbgG0K36 (ORCPT
+        Mon, 27 Jul 2020 06:31:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726701AbgG0Kbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:29:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595845797; x=1627381797;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=SuaWi4FTxbOTrEcgWevsnR8S8cQMlrxxVNKNOCQhSZo=;
-  b=bNB8QPZzD6zEKDeiRXX0tjg81G/JzpsVQInqnEP9Y80xL3w4kuxllpvm
-   cAzLH3k05ilofyv88Uo162ihERTm+THCqotJzuYcvLWkROx19BqqTSQ8s
-   Bqs3reUmiBRcoTx4VwxcrnC8odn64x8JLPu1Ez5rSfXGgtwVqSBOvQZNV
-   D3ejGlKa9PnlGU1dvTzSl/5WYfg8tvvK8wo3ibWCj3ShVAVU0L51Ew9gr
-   VeQQOhmQG69TqgVNN55n6rwDZPleyilkJ4vQOc9PpfY6zVb9pbhqst6fn
-   cnL6SKDvU2vFMxUsNHKKmcGvD5GGwRmxvjWJDSy+uXHfv/w41nlonYRmD
-   Q==;
-IronPort-SDR: OaYGCwf7gPUIibsrB0X04TK4Fbb+JcZA3AsAvOyyjYuuRf30ux71aCwdgpjaXTh7WnAw5T9Lr/
- sXZHA4BZA3xsnKC3FrALgcAvjl6ug4VwDJvXP9jRLG+mLBgWqfPtSB/fpLC3gDufvglDxlA2Ny
- rcqfPz/ZcQs+JciDcVjQI4dPbGA4VwQWfhQvo1Qvnoc0E+p4u0E7usD+iFZi4QlURTXWyxVQM8
- eK8miRcun8QdOV3EWK48Z5IhDN+GKx4AevSlsr+VJ2UPMvOjQyEN8rc0aSnOW1Dt1TQa1Yb1C1
- pO4=
-X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="89224922"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jul 2020 03:29:57 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 27 Jul 2020 03:29:56 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Mon, 27 Jul 2020 03:29:08 -0700
-References: <20200727084211.6632-1-lars.povlsen@microchip.com> <20200727095009.GK4073@piout.net>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-List-Id: <soc.lore.kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        SoC Team <soc@kernel.org>, "Arnd Bergmann" <arnd@arndb.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 00/10] Adding support for Microchip Sparx5 SoC
-In-Reply-To: <20200727095009.GK4073@piout.net>
-Date:   Mon, 27 Jul 2020 12:29:52 +0200
-Message-ID: <87v9i9fdy7.fsf@soft-dev15.microsemi.net>
+        Mon, 27 Jul 2020 06:31:40 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0AABC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 03:31:39 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id x9so16637640ljc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 03:31:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=i3XwR98HxDmxV1ax4v8jtaggfWv+sYL3uUK+dd0akmY=;
+        b=iwguWkkz533L7LLgAfcn4S0q7w5+uQy4yBNRRiZmqHmr32Saxi4jkbpRXWOGmYcFh9
+         wYt/8XroNWsei+k2Lulvjr3b29rc4c1hCmMIO6c1lh/ETxygvSdcv1XgvUcRvdHJF2L7
+         hnjR40WWJhG/PTFhxsgv7Er8+AC3mAoRiEtdsUBHZd2IBpK4bQXfpk5cH63HFMF61hQc
+         apJWzSUgCMni5ogSzUMpttLSw8a89UIGWf5ttOdxT/+KqyphKKLCWwY6V7VrS1ijotai
+         GLyDHB6bPtzaTZqTraYp7a/TS9dowzYOEVzuzWFo8KjTaRZRjVCeOJTkOs6b9UqBXScv
+         ytrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=i3XwR98HxDmxV1ax4v8jtaggfWv+sYL3uUK+dd0akmY=;
+        b=pG6iW/ugQvLczM/KXzzXj9/8g8YiFgDAsiJhDbNBtzKKAWywfJa11/FXcKuWsMAwy2
+         hn7Nt08AJXnYeLkzjocAg7sB5QHCJgBB/99E06reGNa++6wAVfSksGm+Ly3wMA/JLUgK
+         UQTftUfVeqVU0+EZGekKZepA1c0Co+BFKucXUMLtmOmtPgLEo34kygF3QmY/qO+0bJrO
+         Lxb11bd36f11vJfRPvfMKqrhxvZXaFtvCsBKlZMWgkIoIKqqjRXdO3Qh7zRpU9gUmUKX
+         WuPIt/qU59mbV0ZJT5jJtiktmhyHTYyCm6F7nWb6s5AMe0sDEzbFQVVpUdPxdLqkuWX6
+         YUgQ==
+X-Gm-Message-State: AOAM532TGhJS6SxRgPfiVXxxX4kY5VJOaGJ4iRwl1jxxAcjX5yFe+yZX
+        UmFbDRR39qUlD+rKPZym3tYgjw==
+X-Google-Smtp-Source: ABdhPJxAS93HRzUuftjwn7h5yhLOuVfWE5SlYaIHq2tQF/YYYmWM/rxNmsXtpjuWJK2FUaOVMTiT4g==
+X-Received: by 2002:a2e:8995:: with SMTP id c21mr1405063lji.52.1595845898317;
+        Mon, 27 Jul 2020 03:31:38 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id b2sm2607553lji.63.2020.07.27.03.31.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 03:31:37 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id AC621102081; Mon, 27 Jul 2020 13:31:40 +0300 (+03)
+Date:   Mon, 27 Jul 2020 13:31:40 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        syzbot <syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        syzkaller-bugs@googlegroups.com,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: kernel BUG at include/linux/swapops.h:LINE!
+Message-ID: <20200727103140.xycdx6ctecomqsoe@box>
+References: <000000000000bc4fd705a6e090e2@google.com>
+ <0000000000004c38cd05aad1d13f@google.com>
+ <20200720165144.93189f7825bd28e234a42cb8@linux-foundation.org>
+ <20200723073744.5268-1-hdanton@sina.com>
+ <20200724111311.rcjqigtjqpkenxg6@box>
+ <20200726164904.GG23808@casper.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726164904.GG23808@casper.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jul 26, 2020 at 05:49:04PM +0100, Matthew Wilcox wrote:
+> On Fri, Jul 24, 2020 at 02:13:11PM +0300, Kirill A. Shutemov wrote:
+> > On Thu, Jul 23, 2020 at 03:37:44PM +0800, Hillf Danton wrote:
+> > > 
+> > > On Tue, 21 Jul 2020 14:11:31 +0300 Kirill A. Shutemov wrote:
+> > > > On Mon, Jul 20, 2020 at 04:51:44PM -0700, Andrew Morton wrote:
+> > > > > On Sun, 19 Jul 2020 14:10:19 -0700 syzbot wrote:
+> > > > > 
+> > > > > > syzbot has found a reproducer for the following issue on:
+> > > > > > 
+> > > > > > HEAD commit:    4c43049f Add linux-next specific files for 20200716
+> > > > > > git tree:       linux-next
+> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=12c56087100000
+> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=2c76d72659687242
+> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=c48f34012b06c4ac67dd
+> > > > > > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1344abeb100000
+> > > > > > 
+> > > > > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > > > > > Reported-by: syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com
+> > > > > 
+> > > > > Thanks.
+> > > > > 
+> > > > > __handle_mm_fault
+> > > > >   ->pmd_migration_entry_wait
+> > > > >     ->migration_entry_to_page
+> > > > > 
+> > > > > stumbled onto an unlocked page.
+> > > > > 
+> > > > > I don't immediately see a cause.  Perhaps Matthew's "THP prep patches",
+> > > > > perhaps something else.
+> > > > > 
+> > > > > Is it possible to perform a bisection?
+> > > > 
+> > > > Maybe it's related to the new lock_page_async()?
+> > > 
+> > > Or is there likely the window that after copy_huge_pmd() the src pmd migrate
+> > > entry is removed and the page unlocked but the dst is not?
+> > 
+> > No.
+> > 
+> > copy_huge_pmd() runs with exclusive mmap_lock on the source side and
+> > destination side is not running yet.
+> 
+> The one I'm hitting is huge related though.
+> 
+> I added this debug:
+> 
+> +++ b/include/linux/swapops.h
+> @@ -165,8 +165,9 @@ static inline struct page *device_private_entry_to_page(swp_entry_t entry)
+>  #ifdef CONFIG_MIGRATION
+>  static inline swp_entry_t make_migration_entry(struct page *page, int write)
+>  {
+> -       BUG_ON(!PageLocked(compound_head(page)));
+> +       VM_BUG_ON_PAGE(!PageLocked(page), page);
+>  
+> +if (PageCompound(page)) printk("pfn %lx order %d\n", page_to_pfn(page), thp_order(thp_head(page)));
+>         return swp_entry(write ? SWP_MIGRATION_WRITE : SWP_MIGRATION_READ,
+>                         page_to_pfn(page));
+>  }
+> @@ -194,7 +195,11 @@ static inline struct page *migration_entry_to_page(swp_entry_t entry)
+>          * Any use of migration entries may only occur while the
+>          * corresponding page is locked
+>          */
+> -       BUG_ON(!PageLocked(compound_head(p)));
+> +       if (!PageLocked(p)) {
+> +               dump_page(p, "not locked");
+> +               printk("swap entry %d.%lx\n", swp_type(entry), swp_offset(entry));
+> +               BUG();
+> +       }
+>         return p;
+>  }
+>  
+> 
+> and got useful output (while running generic/086):
+> 
+> 1457 086 (20181): drop_caches: 3
+> 1457 page:00000000a216ae9a refcount:2 mapcount:0 mapping:000000009ba7bfed index:0x2227 pfn:0x229e7
+> 1457 aops:def_blk_aops ino:0
+> 1457 flags: 0x4000000000002030(lru|active|private)
+> 1457 raw: 4000000000002030 fffff5b4416b5a48 fffff5b4408a7988 ffff9e9c34848578
+> 1457 raw: 0000000000002227 ffff9e9bd18f0d00 00000002ffffffff 0000000000000000
+> 1457 page dumped because: not locked
+> 1457 swap entry 30.229e7
+> 1457 ------------[ cut here ]------------
+> 1457 kernel BUG at include/linux/swapops.h:201!
+> 1457 invalid opcode: 0000 [#1] SMP PTI
+> 1457 CPU: 3 PID: 646 Comm: check Kdump: loaded Tainted: G        W         5.8.0-rc6-00067-gd8b18bdf9870-dirty #355
+> 1457 Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
+> 1457 RIP: 0010:__migration_entry_wait+0x109/0x110
+> [...]
+> 
+> Looking back in the trace, I see:
+> 
+> ...
+> 1457 pfn 229e5 order 9
+> 1457 pfn 229e6 order 9
+> 1457 pfn 229e7 order 9
+> 1457 pfn 229e8 order 9
+> 1457 pfn 229e9 order 9
+> ...
+> 
+> so I would say we have a refcount problem.  I've probably made it worse by
+> creating more THPs, but I don't think I'm the originator of the problem.
+> 
+> I know very little about the migration code today.  I suspect I'm going
+> to have to learn about it next week.
 
-Alexandre Belloni writes:
+It would be interesting to know if the migration entires ever got removed
+for pfn. I mean if remove_migration_pte() got called for it.
 
-> Hi Lars,
->
-> As Arnd stated, he already applied the patches so you have to send an
-> incremental patch to fix the clock driver.
->
-
-I actually wrote Arnd about this specifically, and he replied that a
-patch against either next or mainline was fine - so that's why I
-refreshed the lot (Including Reviewed-by: headers).
-
-But I will send an incremental patch just in case, no problem.
-
----Lars
-
-
-> On 27/07/2020 10:42:01+0200, Lars Povlsen wrote:
->> This patch series adds support for Microchip Sparx5 SoC, the CPU
->> system of a advanced, TSN capable gigabit switch. The CPU is an armv8
->> x 2 CPU core (A53).
->>
->> Although this is an ARM core, it shares some peripherals with the
->> Microsemi Ocelot MIPS SoC.
->>
->> NB: This version *only* updates the drivers/clk/clk-sparx5.c driver
->>
->> Changes in v4:
->> - Updates to the clock driver per Stephen Boyd <sboyd@kernel.org>
->>  - Remove unused include of of_address.h
->>  - Remove unused member in s5_hw_clk struct
->>  - Changed type (to unsigned long) for freq in s5_pll_conf struct
->>  - Use .parent_data instead of looking up parent name
->>  - Use devm_of_clk_add_hw_provider
->>  - Some minor comsmetics
->>
->> Changes in v3:
->> - a "gpio-restart" node has been added to the pcb134/pcb135 DT files.
->> - pinctrl-ocelot.c: ENOTSUPP replaced by EOPNOTSUPP. Fixed non-static
->>   ocelot_pinconf_set(), Fixed ocelot_hw_get_value() not returning proper
->>   read value.
->> - Rebased on v5.8-rc1
->>
->> Changes in v2:
->> - Misc fixes to bindings/arm/microchip,sparx5.yaml
->> - Changed clock driver to platform driver, using bitfields, recalc
->>   properly implented, using proper clock parent.
->> - arch/arm64/boot/dts/microchip/sparx5.dtsi:
->>  - Added pmu and psci node, using PSCI
->>  - Updates to GICv3 register spaces (GICV/GICH)
->>  - Updated timer interrupt specifiers
->> - pinctrl: ocelot: Fixed symbol clashes from powerpc
->>
->> Lars Povlsen (10):
->>   dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
->>   arm64: sparx5: Add support for Microchip 2xA53 SoC
->>   arm64: dts: sparx5: Add basic cpu support
->>   arm64: dts: sparx5: Add pinctrl support
->>   pinctrl: ocelot: Add Sparx5 SoC support
->>   dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
->>   dt-bindings: clock: sparx5: Add bindings include file
->>   clk: sparx5: Add Sparx5 SoC DPLL clock driver
->>   arm64: dts: sparx5: Add Sparx5 SoC DPLL clock
->>   arm64: dts: sparx5: Add i2c devices, i2c muxes
->>
->>  .../bindings/arm/microchip,sparx5.yaml        |  65 +++
->>  .../bindings/clock/microchip,sparx5-dpll.yaml |  52 +++
->>  .../devicetree/bindings/mfd/syscon.yaml       |   1 +
->>  MAINTAINERS                                   |   9 +
->>  arch/arm64/Kconfig.platforms                  |  14 +
->>  arch/arm64/boot/dts/Makefile                  |   1 +
->>  arch/arm64/boot/dts/microchip/Makefile        |   4 +
->>  arch/arm64/boot/dts/microchip/sparx5.dtsi     | 213 +++++++++
->>  .../boot/dts/microchip/sparx5_pcb125.dts      |  21 +
->>  .../boot/dts/microchip/sparx5_pcb134.dts      |  17 +
->>  .../dts/microchip/sparx5_pcb134_board.dtsi    | 252 ++++++++++
->>  .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  17 +
->>  .../boot/dts/microchip/sparx5_pcb135.dts      |  17 +
->>  .../dts/microchip/sparx5_pcb135_board.dtsi    |  92 ++++
->>  .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  17 +
->>  .../boot/dts/microchip/sparx5_pcb_common.dtsi |  19 +
->>  drivers/clk/Makefile                          |   1 +
->>  drivers/clk/clk-sparx5.c                      | 295 ++++++++++++
->>  drivers/pinctrl/pinctrl-ocelot.c              | 430 +++++++++++++++++-
->>  include/dt-bindings/clock/microchip,sparx5.h  |  23 +
->>  20 files changed, 1559 insertions(+), 1 deletion(-)
->>  create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
->>  create mode 100644 Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
->>  create mode 100644 arch/arm64/boot/dts/microchip/Makefile
->>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5.dtsi
->>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
->>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
->>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
->>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
->>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
->>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
->>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
->>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
->>  create mode 100644 drivers/clk/clk-sparx5.c
->>  create mode 100644 include/dt-bindings/clock/microchip,sparx5.h
->>
->> --
->> 2.27.0
+It can be rmap issue too. Maybe it misses PMD on remove_migration_ptes()
+or something.
 
 -- 
-Lars Povlsen,
-Microchip
+ Kirill A. Shutemov
