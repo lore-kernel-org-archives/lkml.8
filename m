@@ -2,686 +2,298 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE76C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02E4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10A1820759
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A1220759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgG0Fai (ORCPT
+        id S1726433AbgG0Fcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:30:38 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:30244 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726728AbgG0FaF (ORCPT
+        Mon, 27 Jul 2020 01:32:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52014 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726006AbgG0Fcz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:30:05 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R5Rmv5011000;
-        Mon, 27 Jul 2020 01:30:03 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 32ghn5da4s-1
+        Mon, 27 Jul 2020 01:32:55 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R53WCV126676;
+        Mon, 27 Jul 2020 01:32:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32gdmc4sxd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 01:30:03 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 06R5U1MY017815
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Mon, 27 Jul 2020 01:30:02 -0400
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sun, 26 Jul 2020 22:30:00 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Sun, 26 Jul 2020 22:30:00 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06R5TksT007624;
-        Mon, 27 Jul 2020 01:29:57 -0400
-From:   <alexandru.tachici@analog.com>
-To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH v6 7/9] hwmon: pmbus: adm1266: program firmware
-Date:   Mon, 27 Jul 2020 08:31:19 +0300
-Message-ID: <20200727053121.23288-8-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200727053121.23288-1-alexandru.tachici@analog.com>
-References: <20200727053121.23288-1-alexandru.tachici@analog.com>
+        Mon, 27 Jul 2020 01:32:43 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R54GpA129854;
+        Mon, 27 Jul 2020 01:32:43 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32gdmc4swv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 01:32:42 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R5WSBS031738;
+        Mon, 27 Jul 2020 05:32:40 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 32gcqghu0n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 05:32:40 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R5WZ1M26607880
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 05:32:35 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C11154C050;
+        Mon, 27 Jul 2020 05:32:35 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A91414C044;
+        Mon, 27 Jul 2020 05:32:32 +0000 (GMT)
+Received: from srikart450.in.ibm.com (unknown [9.85.97.241])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jul 2020 05:32:32 +0000 (GMT)
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <michaele@au1.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Nick Piggin <npiggin@au1.ibm.com>,
+        Oliver OHalloran <oliveroh@au1.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@linux.ibm.com>,
+        Anton Blanchard <anton@au1.ibm.com>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: [PATCH v4 00/10] Coregroup support on Powerpc
+Date:   Mon, 27 Jul 2020 11:02:20 +0530
+Message-Id: <20200727053230.19753-1-srikar@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-27_03:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 lowpriorityscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007270040
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ adultscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 bulkscore=0 mlxscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270036
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Tachici <alexandru.tachici@analog.com>
+Changelog v3 ->v4:
+v3: https://lore.kernel.org/lkml/20200723085116.4731-1-srikar@linux.vnet.ibm.com/t/#u
 
-Writing the firmware Intel hex file to the nvmem,
-of the master adm1266,  with offset 0, will now
-trigger the firmware programming of all cascaded
-devices simultaneously through pmbus.
+powerpc/smp: Create coregroup domain
+	if coregroup_support doesn't exist, update MC mask to the next
+	smaller domain mask.
 
-During this process all adm1266 sequencers will be
-stopped and at the end will be issued a hard reset
-(see AN-1453 Programming the firmware).
+Changelog v2 -> v3:
+v2: https://lore.kernel.org/linuxppc-dev/20200721113814.32284-1-srikar@linux.vnet.ibm.com/t/#u
 
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
- drivers/hwmon/pmbus/adm1266.c | 501 +++++++++++++++++++++++++++++++++-
- 1 file changed, 500 insertions(+), 1 deletion(-)
+powerpc/smp: Cache node for reuse
+	Removed node caching part. Rewrote the Commit msg (Michael Ellerman)
+	Renamed to powerpc/smp: Fix a warning under !NEED_MULTIPLE_NODES
 
-diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
-index 34bd4e652729..376fc56abe04 100644
---- a/drivers/hwmon/pmbus/adm1266.c
-+++ b/drivers/hwmon/pmbus/adm1266.c
-@@ -9,6 +9,7 @@
- #include <linux/bitfield.h>
- #include <linux/crc8.h>
- #include <linux/debugfs.h>
-+#include <linux/delay.h>
- #include <linux/gpio/driver.h>
- #include <linux/i2c.h>
- #include <linux/i2c-smbus.h>
-@@ -18,18 +19,31 @@
- #include <linux/nvmem-consumer.h>
- #include <linux/nvmem-provider.h>
- #include "pmbus.h"
-+#include <linux/property.h>
- #include <linux/slab.h>
- #include <linux/timekeeping.h>
- 
-+#define ADM1266_STORE_USER_ALL	0x15
-+#define ADM1266_STATUS_MFR	0x80
-+#define ADM1266_IC_DEVICE_REV	0xAE
- #define ADM1266_BLACKBOX_CONFIG	0xD3
- #define ADM1266_PDIO_CONFIG	0xD4
-+#define ADM1266_SEQUENCE_CONFIG	0xD6
-+#define ADM1266_SYSTEM_CONFIG	0xD7
-+#define ADM1266_GO_COMMAND	0xD8
- #define ADM1266_READ_STATE	0xD9
- #define ADM1266_READ_BLACKBOX	0xDE
- #define ADM1266_SET_RTC		0xDF
-+#define ADM1266_LOGIC_CONFIG	0xE0
- #define ADM1266_GPIO_CONFIG	0xE1
-+#define ADM1266_USER_DATA	0xE3
- #define ADM1266_BLACKBOX_INFO	0xE6
- #define ADM1266_PDIO_STATUS	0xE9
- #define ADM1266_GPIO_STATUS	0xEA
-+#define ADM1266_MEMORY_CONFIG	0xF8
-+#define ADM1266_SWITCH_MEMORY	0xFA
-+#define ADM1266_UPDATE_FW	0xFC
-+#define ADM1266_FW_PASSWORD	0xFD
- 
- /* ADM1266 GPIO defines */
- #define ADM1266_GPIO_NR			9
-@@ -44,10 +58,35 @@
- #define ADM1266_PDIO_GLITCH_FILT(x)	FIELD_GET(GENMASK(12, 9), x)
- #define ADM1266_PDIO_OUT_CFG(x)		FIELD_GET(GENMASK(2, 0), x)
- 
-+/* ADM1266 FW_PASSWORD defines*/
-+#define ADM1266_PASSWD_CMD_LEN	17
-+#define ADM1266_CHANGE_PASSWORD	1
-+#define ADM1266_UNLOCK_DEV	2
-+#define ADM1266_LOCK_DEV	3
-+
-+/* ADM1266 STATUS_MFR defines */
-+#define ADM1266_STATUS_PART_LOCKED(x)	FIELD_GET(BIT(2), x)
-+
-+/* ADM1266 GO_COMMAND defines */
-+#define ADM1266_GO_COMMAND_STOP		BIT(0)
-+#define ADM1266_GO_COMMAND_SEQ_RES	BIT(1)
-+#define ADM1266_GO_COMMAND_HARD_RES	BIT(2)
-+
-+#define ADM1266_FIRMWARE_OFFSET		0x00000
-+#define ADM1266_FIRMWARE_SIZE		131072
- #define ADM1266_BLACKBOX_OFFSET		0x7F700
- #define ADM1266_BLACKBOX_SIZE		64
- 
- #define ADM1266_PMBUS_BLOCK_MAX		255
-+#define ADM1266_MAX_DEVICES		16
-+
-+static LIST_HEAD(registered_masters);
-+static DEFINE_MUTEX(registered_masters_lock);
-+
-+struct adm1266_data_ref {
-+	struct adm1266_data *data;
-+	struct list_head list;
-+};
- 
- struct adm1266_data {
- 	struct pmbus_driver_info info;
-@@ -57,6 +96,10 @@ struct adm1266_data {
- 	struct dentry *debugfs_dir;
- 	struct nvmem_config nvmem_config;
- 	struct nvmem_device *nvmem;
-+	bool master_dev;
-+	struct list_head cascaded_devices_list;
-+	struct mutex cascaded_devices_mutex; /* lock cascaded_devices_list */
-+	u8 nr_devices;
- 	u8 *dev_mem;
- 	struct mutex buf_mutex;
- 	u8 write_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
-@@ -69,6 +112,11 @@ static const struct nvmem_cell_info adm1266_nvmem_cells[] = {
- 		.offset         = ADM1266_BLACKBOX_OFFSET,
- 		.bytes          = 2048,
- 	},
-+	{
-+		.name           = "firmware",
-+		.offset         = ADM1266_FIRMWARE_OFFSET,
-+		.bytes          = ADM1266_FIRMWARE_SIZE,
-+	},
- };
- 
- DECLARE_CRC8_TABLE(pmbus_crc_table);
-@@ -123,6 +171,27 @@ static int adm1266_pmbus_group_command(struct adm1266_data *data, struct i2c_cli
- 	return ret;
- }
- 
-+static int adm1266_group_cmd(struct adm1266_data *data, u8 cmd, u8 *write_data, u8 w_len,
-+			     bool to_slaves)
-+{
-+	struct i2c_client *clients[ADM1266_MAX_DEVICES];
-+	struct adm1266_data_ref *slave_ref;
-+	int i = 0;
-+
-+	clients[i] = data->client;
-+	i++;
-+
-+	if (!to_slaves)
-+		return adm1266_pmbus_group_command(data, clients, 1, cmd, w_len, write_data);
-+
-+	list_for_each_entry(slave_ref, &data->cascaded_devices_list, list) {
-+		clients[i] = slave_ref->data->client;
-+		i++;
-+	}
-+
-+	return adm1266_pmbus_group_command(data, clients, i, cmd, w_len, write_data);
-+}
-+
- /*
-  * Different from Block Read as it sends data and waits for the slave to
-  * return a value dependent on that data. The protocol is simply a Write Block
-@@ -449,6 +518,9 @@ static int adm1266_read_mem_cell(struct adm1266_data *data, const struct nvmem_c
- 		if (ret)
- 			dev_err(&data->client->dev, "Could not read blackbox!");
- 		return ret;
-+	case ADM1266_FIRMWARE_OFFSET:
-+		/* firmware is write-only */
-+		return 0;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -477,14 +549,411 @@ static int adm1266_nvmem_read(void *priv, unsigned int offset, void *val,
- 	return 0;
- }
- 
-+static int adm1266_unlock_device(struct adm1266_data *data)
-+{
-+	struct i2c_client *client = data->client;
-+	u8 passwd_cmd[ADM1266_PASSWD_CMD_LEN];
-+	int reg_val;
-+	int ret;
-+	int i;
-+
-+	memset(passwd_cmd, 0xFF, ADM1266_PASSWD_CMD_LEN);
-+	passwd_cmd[ADM1266_PASSWD_CMD_LEN - 1] = ADM1266_UNLOCK_DEV;
-+
-+	/* password needs to be written twice correctly*/
-+	for (i = 0; i < 2; i++) {
-+		ret = i2c_smbus_write_block_data(client, ADM1266_FW_PASSWORD,
-+						 ADM1266_PASSWD_CMD_LEN, passwd_cmd);
-+		if (ret < 0) {
-+			dev_err(&client->dev, "Could not write password.");
-+			return ret;
-+		}
-+
-+		/* 50 ms delay between subsequent password writes are needed*/
-+		msleep(50);
-+	}
-+
-+	/* check if device is unlocked */
-+	reg_val = pmbus_read_byte_data(client, 0, ADM1266_STATUS_MFR);
-+	if (reg_val < 0) {
-+		dev_err(&client->dev, "Could not read status.");
-+		return reg_val;
-+	}
-+	if (ADM1266_STATUS_PART_LOCKED(reg_val)) {
-+		dev_err(&client->dev, "Device locked.");
-+		return -EBUSY;
-+	}
-+
-+	return 0;
-+}
-+
-+static int adm1266_unlock_all_dev(struct adm1266_data *data)
-+{
-+	struct adm1266_data_ref *slave_ref;
-+	int ret;
-+
-+	ret = adm1266_unlock_device(data);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Could not unlock master.");
-+		return ret;
-+	}
-+
-+	list_for_each_entry(slave_ref, &data->cascaded_devices_list, list) {
-+		ret = adm1266_unlock_device(slave_ref->data);
-+		if (ret < 0) {
-+			dev_err(&data->client->dev, "Could not unlock slave addr: %d.",
-+				slave_ref->data->client->addr);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int adm1266_lock_device(struct adm1266_data *data)
-+{
-+	struct i2c_client *client = data->client;
-+	u8 passwd_cmd[ADM1266_PASSWD_CMD_LEN];
-+	int reg_val;
-+	int ret;
-+
-+	memset(passwd_cmd, 0, ADM1266_PASSWD_CMD_LEN);
-+	passwd_cmd[ADM1266_PASSWD_CMD_LEN - 1] = ADM1266_LOCK_DEV;
-+
-+	ret = i2c_smbus_write_block_data(client, ADM1266_FW_PASSWORD, ADM1266_PASSWD_CMD_LEN,
-+					 passwd_cmd);
-+	if (ret < 0)
-+		return ret;
-+
-+	msleep(50);
-+
-+	/* check if device is now locked */
-+	reg_val = pmbus_read_byte_data(client, 0, ADM1266_STATUS_MFR);
-+	if (reg_val < 0)
-+		return reg_val;
-+
-+	if (!ADM1266_STATUS_PART_LOCKED(reg_val))
-+		return -EBUSY;
-+
-+	return 0;
-+}
-+
-+static void adm1266_lock_all_dev(struct adm1266_data *data)
-+{
-+	struct adm1266_data_ref *slave_ref;
-+	int ret;
-+
-+	ret = adm1266_lock_device(data);
-+	if (ret < 0)
-+		dev_warn(&data->client->dev, "Could not lock dev: %s.",
-+			 dev_name(&data->client->dev));
-+
-+	list_for_each_entry(slave_ref, &data->cascaded_devices_list, list) {
-+		ret = adm1266_lock_device(slave_ref->data);
-+		if (ret < 0)
-+			dev_warn(&slave_ref->data->client->dev, "Could not lock dev: %s.",
-+				 dev_name(&slave_ref->data->client->dev));
-+	}
-+}
-+
-+static const int write_delays[][3] = {
-+	{ADM1266_SYSTEM_CONFIG, 400, 1},
-+	{ADM1266_USER_DATA, 100, 1},
-+	{ADM1266_LOGIC_CONFIG, 200, 1},
-+	{ADM1266_SEQUENCE_CONFIG, 2500, 1},
-+	{ADM1266_UPDATE_FW, 2000, 1},
-+	{ADM1266_MEMORY_CONFIG, 100, 0},
-+	{ADM1266_STORE_USER_ALL, 300, 0},
-+};
-+
-+static int adm1266_write_hex(struct adm1266_data *data,
-+			     unsigned int offset, unsigned int size)
-+{
-+	const u8 *ending_str = ":00000001FF";
-+	u8 *hex_cmd = data->dev_mem + offset;
-+	u8 *fw_end = data->dev_mem + offset + size;
-+	unsigned int write_delay;
-+	u8 write_buf[ADM1266_PMBUS_BLOCK_MAX + 1];
-+	u8 first_writes[7];
-+	u8 byte_count;
-+	u8 reg_address;
-+	int ret;
-+	int i;
-+
-+	memset(first_writes, 1, 7);
-+
-+	while (hex_cmd < fw_end) {
-+		hex_cmd = strnchr(hex_cmd, size, ':');
-+
-+		if (!hex_cmd || hex_cmd >= fw_end) {
-+			dev_err(&data->client->dev, "Firmware ending missing.");
-+			return -EINVAL;
-+		}
-+
-+		if (!strncmp(hex_cmd, ending_str, strlen(ending_str)))
-+			break;
-+
-+		hex_cmd++;
-+
-+		ret = hex2bin(&byte_count, hex_cmd, 1);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = hex2bin(&reg_address, hex_cmd + 4, 1);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = hex2bin(write_buf, hex_cmd + 8, byte_count);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = adm1266_group_cmd(data, reg_address, write_buf, byte_count, true);
-+		if (ret < 0) {
-+			dev_err(&data->client->dev, "Firmware write error: %d.", ret);
-+			return ret;
-+		}
-+
-+		/* write to eeprom with specified delays */
-+		write_delay = 40;
-+		for (i = 0; i < 7; i++) {
-+			if (reg_address == write_delays[i][0]) {
-+				if (write_delays[i][2] && first_writes[i]) {
-+					first_writes[i] = 0;
-+					write_delay = write_delays[i][1];
-+				}
-+
-+				if (!write_delays[i][2])
-+					write_delay = write_delays[i][1];
-+			}
-+		}
-+		msleep(write_delay);
-+	}
-+
-+	return 0;
-+}
-+
-+static int adm1266_program_firmware(struct adm1266_data *data)
-+{
-+	u8 write_data[3];
-+	int ret;
-+
-+	write_data[0] = ADM1266_GO_COMMAND_STOP | ADM1266_GO_COMMAND_SEQ_RES;
-+	write_data[1] = 0x0;
-+	ret = adm1266_group_cmd(data, ADM1266_GO_COMMAND, write_data, 2, true);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Could not stop all devs.");
-+		return ret;
-+	}
-+
-+	/* after issuing a stop command, wait 100 ms */
-+	msleep(100);
-+
-+	ret = adm1266_unlock_all_dev(data);
-+	if (ret < 0)
-+		goto lock_all_devices;
-+
-+	write_data[0] = 0x2;
-+	write_data[1] = 0x0;
-+	write_data[2] = 0x0;
-+	ret = adm1266_group_cmd(data, ADM1266_UPDATE_FW, write_data, 3, true);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Could not set bootloader mode.");
-+		goto lock_all_devices;
-+	}
-+
-+	/* wait for adm1266 to enter bootloader mode */
-+	msleep(2000);
-+
-+	ret = adm1266_write_hex(data, ADM1266_FIRMWARE_OFFSET,
-+				ADM1266_FIRMWARE_SIZE);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Could not write hex.");
-+		goto lock_all_devices;
-+	}
-+
-+	write_data[0] = ADM1266_GO_COMMAND_HARD_RES;
-+	ret = adm1266_group_cmd(data, ADM1266_GO_COMMAND, write_data, 2, true);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Could not reset all devs.");
-+		goto lock_all_devices;
-+	}
-+
-+lock_all_devices:
-+	adm1266_lock_all_dev(data);
-+
-+	return ret;
-+}
-+
-+/* check if firmware/config write has ended */
-+static bool adm1266_check_ending(struct adm1266_data *data, unsigned int offset,
-+				 unsigned int size)
-+{
-+	const u8 *ending_str = ":00000001FF";
-+	u8 *hex_cmd = data->dev_mem + offset;
-+	u8 *fw_end = data->dev_mem + offset + size;
-+
-+	hex_cmd = strnchr(hex_cmd, size, ':');
-+	for (; hex_cmd && hex_cmd < fw_end;
-+	     hex_cmd = strnchr(hex_cmd, size, ':')) {
-+		if (!strncmp(hex_cmd, ending_str, strlen(ending_str)))
-+			return true;
-+
-+		hex_cmd++;
-+	}
-+
-+	return false;
-+}
-+
-+static int adm1266_write_mem_cell(struct adm1266_data *data,
-+				  const struct nvmem_cell_info *mem_cell,
-+				  unsigned int offset,
-+				  u8 *val,
-+				  size_t bytes)
-+{
-+	unsigned int cell_end = mem_cell->offset + mem_cell->bytes;
-+	unsigned int cell_start = mem_cell->offset;
-+	int (*program_func)(struct adm1266_data *data);
-+	bool fw_writen;
-+
-+	switch (mem_cell->offset) {
-+	case ADM1266_FIRMWARE_OFFSET:
-+		if (!data->master_dev) {
-+			dev_err(&data->client->dev,
-+				"Only master programs the firmware.");
-+			return -EINVAL;
-+		}
-+
-+		program_func = &adm1266_program_firmware;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (offset < cell_start || offset + bytes >= cell_end)
-+		return -EINVAL;
-+
-+	if (offset == mem_cell->offset)
-+		memset(data->dev_mem + mem_cell->offset, 0, mem_cell->bytes);
-+
-+	memcpy(data->dev_mem + offset, val, bytes);
-+
-+	fw_writen = adm1266_check_ending(data, mem_cell->offset,
-+					 mem_cell->bytes);
-+
-+	if (fw_writen)
-+		return program_func(data);
-+
-+	return 0;
-+}
-+
-+static int adm1266_nvmem_write(void *priv, unsigned int offset, void *val,
-+			       size_t bytes)
-+{
-+	const struct nvmem_cell_info *mem_cell;
-+	struct adm1266_data *data = priv;
-+	int ret;
-+	int i;
-+
-+	for (i = 0; i < data->nvmem_config.ncells; i++) {
-+		mem_cell = &adm1266_nvmem_cells[i];
-+
-+		if (!adm1266_cell_is_accessed(mem_cell, offset, bytes))
-+			continue;
-+
-+		ret = adm1266_write_mem_cell(data, mem_cell, offset,
-+					     val, bytes);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int adm1266_register_slave(struct adm1266_data *slave,
-+				  struct adm1266_data *master)
-+{
-+	struct adm1266_data_ref *slave_ref;
-+
-+	slave_ref = devm_kzalloc(&slave->client->dev,
-+				 sizeof(*slave_ref), GFP_KERNEL);
-+	if (!slave_ref)
-+		return -ENOMEM;
-+
-+	slave_ref->data = slave;
-+	INIT_LIST_HEAD(&slave_ref->list);
-+
-+	mutex_lock(&master->cascaded_devices_mutex);
-+	list_add_tail(&slave_ref->list, &master->cascaded_devices_list);
-+	mutex_unlock(&master->cascaded_devices_mutex);
-+
-+	return 0;
-+}
-+
-+static int adm1266_register(struct adm1266_data *data)
-+{
-+	struct fwnode_reference_args master_fwnode_ref;
-+	const struct fwnode_handle *fw;
-+	const struct fwnode_handle *master_fw;
-+	struct adm1266_data_ref *master_ref;
-+	int ret;
-+
-+	fw = dev_fwnode(&data->client->dev);
-+	INIT_LIST_HEAD(&data->cascaded_devices_list);
-+
-+	/* master devices do not have this property */
-+	if (!fwnode_property_present(fw, "adi,master-adm1266")) {
-+		data->master_dev = true;
-+
-+		master_ref = devm_kzalloc(&data->client->dev,
-+					  sizeof(*master_ref), GFP_KERNEL);
-+		if (!master_ref)
-+			return -ENOMEM;
-+
-+		master_ref->data = data;
-+		INIT_LIST_HEAD(&master_ref->list);
-+
-+		mutex_lock(&registered_masters_lock);
-+		list_add(&master_ref->list, &registered_masters);
-+		mutex_unlock(&registered_masters_lock);
-+	}
-+
-+	if (data->master_dev)
-+		return 0;
-+
-+	ret = fwnode_property_get_reference_args(fw, "adi,master-adm1266",
-+						 NULL, 0, 0,
-+						 &master_fwnode_ref);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev,
-+			"Could not read adi,master-adm1266 property");
-+		return ret;
-+	}
-+
-+	mutex_lock(&registered_masters_lock);
-+
-+	/* search for the corresponding master of this slave */
-+	list_for_each_entry(master_ref, &registered_masters, list) {
-+		master_fw = dev_fwnode(&master_ref->data->client->dev);
-+
-+		if (master_fw == master_fwnode_ref.fwnode) {
-+			mutex_unlock(&registered_masters_lock);
-+			return adm1266_register_slave(data, master_ref->data);
-+		}
-+	}
-+
-+	mutex_unlock(&registered_masters_lock);
-+
-+	return -EPROBE_DEFER;
-+}
-+
- static int adm1266_config_nvmem(struct adm1266_data *data)
- {
- 	data->nvmem_config.name = dev_name(&data->client->dev);
- 	data->nvmem_config.dev = &data->client->dev;
- 	data->nvmem_config.root_only = true;
--	data->nvmem_config.read_only = true;
- 	data->nvmem_config.owner = THIS_MODULE;
- 	data->nvmem_config.reg_read = adm1266_nvmem_read;
-+	data->nvmem_config.reg_write = adm1266_nvmem_write;
- 	data->nvmem_config.cells = adm1266_nvmem_cells;
- 	data->nvmem_config.ncells = ARRAY_SIZE(adm1266_nvmem_cells);
- 	data->nvmem_config.priv = data;
-@@ -528,6 +997,21 @@ static int adm1266_set_rtc(struct adm1266_data *data)
- 					  write_buf);
- }
- 
-+static int adm1266_firmware_present(struct i2c_client *client)
-+{
-+	u8 read_buf[I2C_SMBUS_BLOCK_MAX];
-+	int ret;
-+
-+	ret = i2c_smbus_read_i2c_block_data(client, ADM1266_IC_DEVICE_REV,
-+					    8, read_buf);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "Could not read firmware revision.");
-+		return ret;
-+	}
-+
-+	return !!(read_buf[0] | read_buf[1] | read_buf[2]);
-+}
-+
- static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *id)
- {
- 	struct adm1266_data *data;
-@@ -546,6 +1030,21 @@ static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *
- 
- 	crc8_populate_msb(pmbus_crc_table, 0x7);
- 	mutex_init(&data->buf_mutex);
-+	mutex_init(&data->cascaded_devices_mutex);
-+
-+	ret = adm1266_register(data);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = adm1266_firmware_present(client);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!ret) {
-+		dev_notice(&client->dev, "Chip firmware not written.");
-+		return adm1266_config_nvmem(data);
-+	}
-+
- 
- 	ret = adm1266_config_gpio(data);
- 	if (ret < 0)
+powerpc/smp: Enable small core scheduling sooner
+	Rewrote changelog (Gautham)
+	Renamed to powerpc/smp: Move topology fixups into  a new function
+
+powerpc/smp: Create coregroup domain
+	Add optimization for mask updation under coregroup_support
+
+Changelog v1 -> v2:
+v1: https://lore.kernel.org/linuxppc-dev/20200714043624.5648-1-srikar@linux.vnet.ibm.com/t/#u
+
+powerpc/smp: Merge Power9 topology with Power topology
+	Replaced a reference to cpu_smt_mask with per_cpu(cpu_sibling_map, cpu)
+	since cpu_smt_mask is only defined under CONFIG_SCHED_SMT
+
+powerpc/smp: Enable small core scheduling sooner
+	Restored the previous info msg (Jordan)
+	Moved big core topology fixup to fixup_topology (Gautham)
+
+powerpc/smp: Dont assume l2-cache to be superset of sibling
+	Set cpumask after verifying l2-cache. (Gautham)
+
+powerpc/smp: Generalize 2nd sched domain
+	Moved shared_cache topology fixup to fixup_topology (Gautham)
+
+Powerpc/numa: Detect support for coregroup
+	Explained Coregroup in commit msg (Michael Ellerman)
+
+Powerpc/smp: Create coregroup domain
+	Moved coregroup topology fixup to fixup_topology (Gautham)
+
+powerpc/smp: Implement cpu_to_coregroup_id
+	Move coregroup_enabled before getting associativity (Gautham)
+
+powerpc/smp: Provide an ability to disable coregroup
+	Patch dropped (Michael Ellerman)
+
+Cleanup of existing powerpc topologies and add coregroup support on
+Powerpc. Coregroup is a group of (subset of) cores of a DIE that share
+a resource.
+
+Patch 7 of this patch series: "Powerpc/numa: Detect support for coregroup"
+depends on
+https://lore.kernel.org/linuxppc-dev/20200707140644.7241-1-srikar@linux.vnet.ibm.com/t/#u
+However it should be easy to rebase the patch without the above patch.
+
+This patch series is based on top of current powerpc/next tree + the
+above patch.
+
+On Power 8 Systems
+------------------
+$ tail /proc/cpuinfo
+processor	: 255
+cpu		: POWER8 (architected), altivec supported
+clock		: 3724.000000MHz
+revision	: 2.1 (pvr 004b 0201)
+
+timebase	: 512000000
+platform	: pSeries
+model		: IBM,8408-E8E
+machine		: CHRP IBM,8408-E8E
+MMU		: Hash
+
+Before the patchset
+-------------------
+$ cat /proc/sys/kernel/sched_domain/cpu0/domain*/name
+SMT
+DIE
+NUMA
+NUMA
+$ head /proc/schedstat
+version 15
+timestamp 4295534931
+cpu0 0 0 0 0 0 0 41389823338 17682779896 14117
+domain0 00000000,00000000,00000000,00000000,00000000,00000000,00000000,000000ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00000000,00000000,00000000,00000000,00000000,00000000,00000000,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain2 00000000,00000000,00000000,00000000,00000000,00000000,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain3 ffffffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+cpu1 0 0 0 0 0 0 27087859050 152273672 10396
+domain0 00000000,00000000,00000000,00000000,00000000,00000000,00000000,000000ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00000000,00000000,00000000,00000000,00000000,00000000,00000000,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+After the patchset
+------------------
+$ cat /proc/sys/kernel/sched_domain/cpu0/domain*/name
+SMT
+DIE
+NUMA
+NUMA
+$ head /proc/schedstat
+version 15
+timestamp 4295534931
+cpu0 0 0 0 0 0 0 41389823338 17682779896 14117
+domain0 00000000,00000000,00000000,00000000,00000000,00000000,00000000,000000ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00000000,00000000,00000000,00000000,00000000,00000000,00000000,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain2 00000000,00000000,00000000,00000000,00000000,00000000,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain3 ffffffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+cpu1 0 0 0 0 0 0 27087859050 152273672 10396
+domain0 00000000,00000000,00000000,00000000,00000000,00000000,00000000,000000ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00000000,00000000,00000000,00000000,00000000,00000000,00000000,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+On Power 9 (with device-tree enablement to show coregroups).
+(hunks for mimicing a coregroup was posted at
+https://lore.kernel.org/linuxppc-dev/20200714043624.5648-1-srikar@linux.vnet.ibm.com/t/#m2cb09bb11c7a93257d6123d1d27edb8212f8af21)
+-----------------------------------------------------------
+$ tail /proc/cpuinfo
+processor	: 127
+cpu		: POWER9 (architected), altivec supported
+clock		: 3000.000000MHz
+revision	: 2.2 (pvr 004e 0202)
+
+timebase	: 512000000
+platform	: pSeries
+model		: IBM,9008-22L
+machine		: CHRP IBM,9008-22L
+MMU		: Hash
+
+Before patchset
+--------------
+$ cat /proc/sys/kernel/sched_domain/cpu0/domain*/name
+SMT
+CACHE
+DIE
+NUMA
+
+$ head /proc/schedstat
+version 15
+timestamp 4318242208
+cpu0 0 0 0 0 0 0 28077107004 4773387362 78205
+domain0 00000000,00000000,00000000,00000055 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00000000,00000000,00000000,000000ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain2 00000000,00000000,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain3 ffffffff,ffffffff,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+cpu1 0 0 0 0 0 0 24177439200 413887604 75393
+domain0 00000000,00000000,00000000,000000aa 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00000000,00000000,00000000,000000ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+After patchset
+--------------
+$ cat /proc/sys/kernel/sched_domain/cpu0/domain*/name
+SMT
+CACHE
+MC
+DIE
+NUMA
+
+$ head /proc/schedstat
+version 15
+timestamp 4318242208
+cpu0 0 0 0 0 0 0 28077107004 4773387362 78205
+domain0 00000000,00000000,00000000,00000055 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00000000,00000000,00000000,000000ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain2 00000000,00000000,00000000,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain3 00000000,00000000,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain4 ffffffff,ffffffff,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+cpu1 0 0 0 0 0 0 24177439200 413887604 75393
+domain0 00000000,00000000,00000000,000000aa 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Michael Ellerman <michaele@au1.ibm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Nick Piggin <npiggin@au1.ibm.com>
+Cc: Oliver OHalloran <oliveroh@au1.ibm.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: Michael Neuling <mikey@linux.ibm.com>
+Cc: Anton Blanchard <anton@au1.ibm.com>
+Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+Cc: Jordan Niethe <jniethe5@gmail.com>
+
+Srikar Dronamraju (10):
+  powerpc/smp: Fix a warning under !NEED_MULTIPLE_NODES
+  powerpc/smp: Merge Power9 topology with Power topology
+  powerpc/smp: Move powerpc_topology above
+  powerpc/smp: Move topology fixups into  a new function
+  powerpc/smp: Dont assume l2-cache to be superset of sibling
+  powerpc/smp: Generalize 2nd sched domain
+  powerpc/numa: Detect support for coregroup
+  powerpc/smp: Allocate cpumask only after searching thread group
+  powerpc/smp: Create coregroup domain
+  powerpc/smp: Implement cpu_to_coregroup_id
+
+ arch/powerpc/include/asm/smp.h      |   1 +
+ arch/powerpc/include/asm/topology.h |  10 ++
+ arch/powerpc/kernel/smp.c           | 246 +++++++++++++++++-----------
+ arch/powerpc/mm/numa.c              |  59 +++++--
+ 4 files changed, 210 insertions(+), 106 deletions(-)
+
 -- 
-2.20.1
+2.17.1
 
