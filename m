@@ -2,130 +2,127 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A83C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B13AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDC52075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0A12075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:59:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m+fTHaAj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgG0G60 convert rfc822-to-8bit (ORCPT
+        id S1726911AbgG0G7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 02:58:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52638 "EHLO
+        Mon, 27 Jul 2020 02:59:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726662AbgG0G6Z (ORCPT
+        with ESMTP id S1726116AbgG0G7w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 02:58:25 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7037C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 23:58:25 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jzx5W-0006HG-KR; Mon, 27 Jul 2020 08:58:18 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jzx5U-0004Sa-7O; Mon, 27 Jul 2020 08:58:16 +0200
-Message-ID: <00892cf87c3da679d76c4632109ebcf21059d556.camel@pengutronix.de>
-Subject: Re: [PATCH v9 02/12] ata: ahci_brcm: Fix use of BCM7216 reset
- controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Jim Quinlan <james.quinlan@broadcom.com>,
-        linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Mon, 27 Jul 2020 08:58:16 +0200
-In-Reply-To: <20200724203407.16972-3-james.quinlan@broadcom.com>
-References: <20200724203407.16972-1-james.quinlan@broadcom.com>
-         <20200724203407.16972-3-james.quinlan@broadcom.com>
+        Mon, 27 Jul 2020 02:59:52 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82DDAC0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 23:59:52 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id i62so19648941ybc.15
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 23:59:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=9/YSwprGE0WZwSWfXLYVy6V0Ah3OoUpnPGrBV/LRITA=;
+        b=m+fTHaAj0JPw3ABBmUnN46A5mmPLHkTVVyZ8suMxXp+vWgocvuwn2YhFNGm88lQUDF
+         0Ipw8hhTQmjl6srPRoA77U8pFkle0oyTVg9q7efUVULis+4aPAbpcNJYLgXjR9pGks2K
+         0yFv71jR8JqgC1y6376PhYUd0wsXPulqQ2fYvCwRvvx2kEDQ4bGhIi38ppg63XRYKsli
+         OJhjdpysVbe0efevbEozHhMUjOoKKqsfe9ptDyWa9vwKUoCod/akcOxXjLKP3GmfnlNp
+         F82cjKtzMvkUKQvUWJk48FIhA3xTcb0HP6tKvdZlrtDtw2WZeBIBXmTLt5yDgVbYCM8A
+         abNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=9/YSwprGE0WZwSWfXLYVy6V0Ah3OoUpnPGrBV/LRITA=;
+        b=JtQp+fXM/WPuiSyF9K4W0ASjVPdDAZ0TYaIujw7rYwnoXQOkWoZiuhMotN0zV28Rkv
+         lLD4d0s95Rjbr+62NPf5/CpP1kbTfM2uG+grNy1MzSJ2OH7iTWfC5dAZp5pv12KUy0cA
+         3378UvWtsxCeSn9Gzt32T7tGDvz6H3rKeJI/nB6NS78TWSy4SQeBjp7SQh8MOh5yDBxb
+         YRMhxev8kCQVFYMC49ui5+LP0RgUzzLpecUQc3P03VWHeWgZPLGzxTbQYASF/A2KEiCj
+         smn3nk/xpaJVfWbzAd88YgiSyCGkBwEsGy5SLj98Ewp3qVfeMwZZOEhD90NpIdJszSGP
+         vJ8g==
+X-Gm-Message-State: AOAM532lMc3X8kUjAwEiCiTbw5hqGp2iiyeTxnGzjgLbKtndOLXtWpKL
+        /bXfDhhydoem1Do5HDQpntVrpu2FEcO8
+X-Google-Smtp-Source: ABdhPJz7ZE9JX1xcuL6ggGjeX4GY2EfS6ZQVKaFpFeKXbWp8rV2g56PwdJo+OYTDl/0xDoD2QJjN04vRVhCC
+X-Received: by 2002:a5b:14a:: with SMTP id c10mr32329689ybp.493.1595833191601;
+ Sun, 26 Jul 2020 23:59:51 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 23:59:48 -0700
+Message-Id: <20200727065948.12201-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+Subject: [PATCH] perf record: Set PERF_RECORD_SAMPLE if attr->freq is set.
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        David Sharp <dhsharp@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
-MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jim,
+From: David Sharp <dhsharp@google.com>
 
-On Fri, 2020-07-24 at 16:33 -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
-> 
-> A reset controller "rescal" is shared between the AHCI driver and the PCIe
-> driver for the BrcmSTB 7216 chip.  Use
-> devm_reset_control_get_optional_shared() to handle this sharing.
-> 
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> 
-> Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
-> Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller name")
-> ---
->  drivers/ata/ahci_brcm.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-> index 6853dbb4131d..d6115bc04b09 100644
-> --- a/drivers/ata/ahci_brcm.c
-> +++ b/drivers/ata/ahci_brcm.c
-> @@ -428,7 +428,6 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  {
->  	const struct of_device_id *of_id;
->  	struct device *dev = &pdev->dev;
-> -	const char *reset_name = NULL;
->  	struct brcm_ahci_priv *priv;
->  	struct ahci_host_priv *hpriv;
->  	struct resource *res;
-> @@ -452,11 +451,10 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  
->  	/* Reset is optional depending on platform and named differently */
->  	if (priv->version == BRCM_SATA_BCM7216)
-> -		reset_name = "rescal";
-> +		priv->rcdev = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
->  	else
-> -		reset_name = "ahci";
-> +		priv->rcdev = devm_reset_control_get_optional(&pdev->dev, "ahci");
+evsel__config() would only set PERF_RECORD_SAMPLE if it set attr->freq
+from perf record options. When it is set by libpfm events, it would not
+get set. This changes evsel__config to see if attr->freq is set outside of
+whether or not it changes attr->freq itself.
 
-Please use devm_reset_control_get_optional_exclusive() here.
+Signed-off-by: David Sharp <dhsharp@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/evsel.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
->  
-> -	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
->  	if (IS_ERR(priv->rcdev))
->  		return PTR_ERR(priv->rcdev);
->  
-> @@ -479,10 +477,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  		break;
->  	}
->  
-> -	if (priv->version == BRCM_SATA_BCM7216)
-> -		ret = reset_control_reset(priv->rcdev);
-> -	else
-> -		ret = reset_control_deassert(priv->rcdev);
-> +	ret = reset_control_deassert(priv->rcdev);
->  	if (ret)
->  		return ret;
->  
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index ef802f6d40c1..811f538f7d77 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -979,13 +979,18 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 	if (!attr->sample_period || (opts->user_freq != UINT_MAX ||
+ 				     opts->user_interval != ULLONG_MAX)) {
+ 		if (opts->freq) {
+-			evsel__set_sample_bit(evsel, PERIOD);
+ 			attr->freq		= 1;
+ 			attr->sample_freq	= opts->freq;
+ 		} else {
+ 			attr->sample_period = opts->default_interval;
+ 		}
+ 	}
++	/*
++	 * If attr->freq was set (here or earlier), ask for period
++	 * to be sampled.
++	 */
++	if (attr->freq)
++		evsel__set_sample_bit(evsel, PERIOD);
+ 
+ 	if (opts->no_samples)
+ 		attr->sample_freq = 0;
+-- 
+2.28.0.rc0.142.g3c755180ce-goog
 
-Since you switch from _reset to _deassert/_assert here, I suspect you
-should also change the out_reset error path, and the suspend/resume
-functions accordingly.
-
-regards
-Philipp
