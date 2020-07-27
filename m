@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C35C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 419C72075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 821CF2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgG0FSm (ORCPT
+        id S1726897AbgG0FTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:18:42 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53244 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726064AbgG0FSl (ORCPT
+        Mon, 27 Jul 2020 01:19:14 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32172 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726064AbgG0FTO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:18:41 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R53WPM126667;
-        Mon, 27 Jul 2020 01:18:29 -0400
+        Mon, 27 Jul 2020 01:19:14 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R533kX052950;
+        Mon, 27 Jul 2020 01:18:55 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32gdmc4g2t-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32ggwwrf3r-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 01:18:28 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R53cG6127437;
-        Mon, 27 Jul 2020 01:18:28 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32gdmc4g1j-1
+        Mon, 27 Jul 2020 01:18:55 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R53HnB054136;
+        Mon, 27 Jul 2020 01:18:55 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32ggwwrf38-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 01:18:27 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R5GHmG018930;
-        Mon, 27 Jul 2020 05:18:25 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 32gcqghtq4-1
+        Mon, 27 Jul 2020 01:18:54 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R5FajI003198;
+        Mon, 27 Jul 2020 05:18:53 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 32gcpx1u87-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 05:18:24 +0000
+        Mon, 27 Jul 2020 05:18:53 +0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R5IMgP58130872
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R5HQVJ64487878
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 05:18:22 GMT
+        Mon, 27 Jul 2020 05:17:26 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C62AEA4057;
-        Mon, 27 Jul 2020 05:18:22 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 0AB07A4055;
+        Mon, 27 Jul 2020 05:18:51 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 88354A4053;
-        Mon, 27 Jul 2020 05:18:18 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 314E5A4040;
+        Mon, 27 Jul 2020 05:18:47 +0000 (GMT)
 Received: from srikart450.in.ibm.com (unknown [9.85.97.241])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Jul 2020 05:18:18 +0000 (GMT)
+        Mon, 27 Jul 2020 05:18:46 +0000 (GMT)
 From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 To:     Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
@@ -70,9 +70,9 @@ Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Jordan Niethe <jniethe5@gmail.com>
-Subject: [PATCH v4 02/10] powerpc/smp: Merge Power9 topology with Power topology
-Date:   Mon, 27 Jul 2020 10:47:57 +0530
-Message-Id: <20200727051805.16728-3-srikar@linux.vnet.ibm.com>
+Subject: [PATCH v4 09/10] Powerpc/smp: Create coregroup domain
+Date:   Mon, 27 Jul 2020 10:48:04 +0530
+Message-Id: <20200727051805.16728-10-srikar@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200727051805.16728-1-srikar@linux.vnet.ibm.com>
 References: <20200727051805.16728-1-srikar@linux.vnet.ibm.com>
@@ -81,20 +81,19 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-27_03:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- adultscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 malwarescore=0 bulkscore=0 mlxscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007270036
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 mlxlogscore=999
+ phishscore=0 impostorscore=0 clxscore=1015 bulkscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A new sched_domain_topology_level was added just for Power9. However the
-same can be achieved by merging powerpc_topology with power9_topology
-and makes the code more simpler especially when adding a new sched
-domain.
+Add percpu coregroup maps and masks to create coregroup domain.
+If a coregroup doesn't exist, the coregroup domain will be degenerated
+in favour of SMT/CACHE domain.
 
 Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 Cc: LKML <linux-kernel@vger.kernel.org>
@@ -109,91 +108,177 @@ Cc: Ingo Molnar <mingo@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Valentin Schneider <valentin.schneider@arm.com>
 Cc: Jordan Niethe <jniethe5@gmail.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 ---
+Changelog v3 ->v4:
+	if coregroup_support doesn't exist, update MC mask to the next
+	smaller domain mask.
+
+Changelog v2 -> v3:
+	Add optimization for mask updation under coregroup_support
+
 Changelog v1 -> v2:
-	Replaced a reference to cpu_smt_mask with per_cpu(cpu_sibling_map, cpu)
-	since cpu_smt_mask is only defined under CONFIG_SCHED_SMT
+	Moved coregroup topology fixup to fixup_topology (Gautham)
 
- arch/powerpc/kernel/smp.c | 33 ++++++++++-----------------------
- 1 file changed, 10 insertions(+), 23 deletions(-)
+ arch/powerpc/include/asm/topology.h | 10 ++++++
+ arch/powerpc/kernel/smp.c           | 48 +++++++++++++++++++++++++++++
+ arch/powerpc/mm/numa.c              |  5 +++
+ 3 files changed, 63 insertions(+)
 
+diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
+index f0b6300e7dd3..6609174918ab 100644
+--- a/arch/powerpc/include/asm/topology.h
++++ b/arch/powerpc/include/asm/topology.h
+@@ -88,12 +88,22 @@ static inline int cpu_distance(__be32 *cpu1_assoc, __be32 *cpu2_assoc)
+ 
+ #if defined(CONFIG_NUMA) && defined(CONFIG_PPC_SPLPAR)
+ extern int find_and_online_cpu_nid(int cpu);
++extern int cpu_to_coregroup_id(int cpu);
+ #else
+ static inline int find_and_online_cpu_nid(int cpu)
+ {
+ 	return 0;
+ }
+ 
++static inline int cpu_to_coregroup_id(int cpu)
++{
++#ifdef CONFIG_SMP
++	return cpu_to_core_id(cpu);
++#else
++	return 0;
++#endif
++}
++
+ #endif /* CONFIG_NUMA && CONFIG_PPC_SPLPAR */
+ 
+ #include <asm-generic/topology.h>
 diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-index edf94ca64eea..283a04e54f52 100644
+index dab96a1203ec..95f0bf72e283 100644
 --- a/arch/powerpc/kernel/smp.c
 +++ b/arch/powerpc/kernel/smp.c
-@@ -1313,7 +1313,7 @@ int setup_profiling_timer(unsigned int multiplier)
- }
+@@ -80,6 +80,7 @@ DEFINE_PER_CPU(cpumask_var_t, cpu_sibling_map);
+ DEFINE_PER_CPU(cpumask_var_t, cpu_smallcore_map);
+ DEFINE_PER_CPU(cpumask_var_t, cpu_l2_cache_map);
+ DEFINE_PER_CPU(cpumask_var_t, cpu_core_map);
++DEFINE_PER_CPU(cpumask_var_t, cpu_coregroup_map);
  
- #ifdef CONFIG_SCHED_SMT
--/* cpumask of CPUs with asymetric SMT dependancy */
-+/* cpumask of CPUs with asymmetric SMT dependency */
- static int powerpc_smt_flags(void)
- {
- 	int flags = SD_SHARE_CPUCAPACITY | SD_SHARE_PKG_RESOURCES;
-@@ -1326,14 +1326,6 @@ static int powerpc_smt_flags(void)
+ EXPORT_PER_CPU_SYMBOL(cpu_sibling_map);
+ EXPORT_PER_CPU_SYMBOL(cpu_l2_cache_map);
+@@ -91,6 +92,7 @@ enum {
+ 	smt_idx,
+ #endif
+ 	bigcore_idx,
++	mc_idx,
+ 	die_idx,
+ };
+ 
+@@ -869,6 +871,21 @@ static const struct cpumask *smallcore_smt_mask(int cpu)
  }
  #endif
  
--static struct sched_domain_topology_level powerpc_topology[] = {
--#ifdef CONFIG_SCHED_SMT
--	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
--#endif
--	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
--	{ NULL, },
--};
--
- /*
-  * P9 has a slightly odd architecture where pairs of cores share an L2 cache.
-  * This topology makes it *much* cheaper to migrate tasks between adjacent cores
-@@ -1351,7 +1343,13 @@ static int powerpc_shared_cache_flags(void)
-  */
- static const struct cpumask *shared_cache_mask(int cpu)
++static struct cpumask *cpu_coregroup_mask(int cpu)
++{
++	return per_cpu(cpu_coregroup_map, cpu);
++}
++
++static bool has_coregroup_support(void)
++{
++	return coregroup_enabled;
++}
++
++static const struct cpumask *cpu_mc_mask(int cpu)
++{
++	return cpu_coregroup_mask(cpu);
++}
++
+ static const struct cpumask *cpu_bigcore_mask(int cpu)
  {
--	return cpu_l2_cache_mask(cpu);
-+	if (shared_caches)
-+		return cpu_l2_cache_mask(cpu);
-+
-+	if (has_big_cores)
-+		return cpu_smallcore_mask(cpu);
-+
-+	return per_cpu(cpu_sibling_map, cpu);
- }
- 
- #ifdef CONFIG_SCHED_SMT
-@@ -1361,7 +1359,7 @@ static const struct cpumask *smallcore_smt_mask(int cpu)
- }
- #endif
- 
--static struct sched_domain_topology_level power9_topology[] = {
-+static struct sched_domain_topology_level powerpc_topology[] = {
- #ifdef CONFIG_SCHED_SMT
+ 	return per_cpu(cpu_sibling_map, cpu);
+@@ -879,6 +896,7 @@ static struct sched_domain_topology_level powerpc_topology[] = {
  	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
  #endif
-@@ -1386,21 +1384,10 @@ void __init smp_cpus_done(unsigned int max_cpus)
- #ifdef CONFIG_SCHED_SMT
+ 	{ cpu_bigcore_mask, SD_INIT_NAME(BIGCORE) },
++	{ cpu_mc_mask, SD_INIT_NAME(MC) },
+ 	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
+ 	{ NULL, },
+ };
+@@ -925,6 +943,10 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+ 					GFP_KERNEL, cpu_to_node(cpu));
+ 		zalloc_cpumask_var_node(&per_cpu(cpu_core_map, cpu),
+ 					GFP_KERNEL, cpu_to_node(cpu));
++		if (has_coregroup_support())
++			zalloc_cpumask_var_node(&per_cpu(cpu_coregroup_map, cpu),
++						GFP_KERNEL, cpu_to_node(cpu));
++
+ #ifdef CONFIG_NEED_MULTIPLE_NODES
+ 		/*
+ 		 * numa_node_id() works after this.
+@@ -942,6 +964,9 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+ 	cpumask_set_cpu(boot_cpuid, cpu_l2_cache_mask(boot_cpuid));
+ 	cpumask_set_cpu(boot_cpuid, cpu_core_mask(boot_cpuid));
+ 
++	if (has_coregroup_support())
++		cpumask_set_cpu(boot_cpuid, cpu_coregroup_mask(boot_cpuid));
++
+ 	init_big_cores();
  	if (has_big_cores) {
- 		pr_info("Big cores detected but using small core scheduling\n");
--		power9_topology[0].mask = smallcore_smt_mask;
- 		powerpc_topology[0].mask = smallcore_smt_mask;
+ 		cpumask_set_cpu(boot_cpuid,
+@@ -1233,6 +1258,8 @@ static void remove_cpu_from_masks(int cpu)
+ 		set_cpus_unrelated(cpu, i, cpu_sibling_mask);
+ 		if (has_big_cores)
+ 			set_cpus_unrelated(cpu, i, cpu_smallcore_mask);
++		if (has_coregroup_support())
++			set_cpus_unrelated(cpu, i, cpu_coregroup_mask);
  	}
+ }
  #endif
--	/*
--	 * If any CPU detects that it's sharing a cache with another CPU then
--	 * use the deeper topology that is aware of this sharing.
--	 */
--	if (shared_caches) {
--		pr_info("Using shared cache scheduler topology\n");
--		set_sched_topology(power9_topology);
--	} else {
--		pr_info("Using standard scheduler topology\n");
--		set_sched_topology(powerpc_topology);
--	}
-+	set_sched_topology(powerpc_topology);
+@@ -1293,6 +1320,20 @@ static void add_cpu_to_masks(int cpu)
+ 	add_cpu_to_smallcore_masks(cpu);
+ 	update_mask_by_l2(cpu, cpu_l2_cache_mask);
+ 
++	if (has_coregroup_support()) {
++		int coregroup_id = cpu_to_coregroup_id(cpu);
++
++		cpumask_set_cpu(cpu, cpu_coregroup_mask(cpu));
++		for_each_cpu_and(i, cpu_online_mask, cpu_cpu_mask(cpu)) {
++			int fcpu = cpu_first_thread_sibling(i);
++
++			if (fcpu == first_thread)
++				set_cpus_related(cpu, i, cpu_coregroup_mask);
++			else if (coregroup_id == cpu_to_coregroup_id(i))
++				set_cpus_related(cpu, i, cpu_coregroup_mask);
++		}
++	}
++
+ 	if (pkg_id == -1) {
+ 		struct cpumask *(*mask)(int) = cpu_sibling_mask;
+ 
+@@ -1398,6 +1439,9 @@ static void fixup_topology(void)
+ 		powerpc_topology[bigcore_idx].name = "CACHE";
+ #endif
+ 	}
++
++	if (!has_coregroup_support())
++		powerpc_topology[mc_idx].mask = powerpc_topology[bigcore_idx].mask;
  }
  
- #ifdef CONFIG_HOTPLUG_CPU
+ void __init smp_cpus_done(unsigned int max_cpus)
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index 51cb672f113b..0d57779e7942 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -1216,6 +1216,11 @@ int find_and_online_cpu_nid(int cpu)
+ 	return new_nid;
+ }
+ 
++int cpu_to_coregroup_id(int cpu)
++{
++	return cpu_to_core_id(cpu);
++}
++
+ static int topology_update_init(void)
+ {
+ 	topology_inited = 1;
 -- 
 2.17.1
 
