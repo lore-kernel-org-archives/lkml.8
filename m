@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE5DC4345F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED33C43468
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE44920719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430D820719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:43:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="dsxXANEN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="N8+VXSlD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgG0InB (ORCPT
+        id S1727840AbgG0InI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:43:01 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:44405 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727804AbgG0Im7 (ORCPT
+        Mon, 27 Jul 2020 04:43:08 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:13862 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbgG0Imw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:42:59 -0400
+        Mon, 27 Jul 2020 04:42:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595839377; x=1627375377;
+  t=1595839370; x=1627375370;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=rCGT4N1yOPlxvY9suPfbdkB7M2NYTVLpQxsrCKbtlPs=;
-  b=dsxXANENGlOUbgYFMG0NpE3MEpJ+Q1D4PrAJKIJex0RwRVdxdvgH+qPa
-   BU8QeG7wG92VvkbnQ6UxMgWamz6hlGfumzQm1IaT1k/tjAwdj+7jEwnrM
-   c/ZjtX1arQeDl27sIBBmH/ukDKnBkAWIQEpP1h7FIqkt42ZoJTzQ3lXNM
-   bpMjpB7WAcjvivPDXISr/KeiPxqgvIUJ2osGuaeN9JSD+o1q905LxEpA/
-   vCOpxsKThPJnFnx2jx0Y3UuO4mZcB5yrNSvbLQY02LklsjqTM7NkmWysx
-   TLJgIjLPIwjdN0g6fe75I2lpvtHkNFF5ln2deIvJbHbu9z5rTj0wDOnm4
-   Q==;
-IronPort-SDR: LsgXvG6LbuYeONzwBFRI/v1P2AJ7VaSCN2dQ09JSKoa9OvFAByaVOImcftLvIMPudbvy5vqWpy
- CTf133/wEdz6FCVeHGeeUJNp5zJbep2WVAmBs1+SQGrKCrEvqbGhJxoDsIIyGiwh84qR8Zutgf
- J97r9bC6GXRikiPIQqUYVM3cdFW7W2g0Y4SOzwueNhUofSioSgtGGY3QwQKH9soJk9D8h1rgNb
- CGPM4QzWiPgbO8LJT9yJmTgW3Lb5utMFJGYI8DyTQfa9s7TmRPmeX7TeJGF4rFt/ydpwTOZgB0
- rR4=
+  bh=7thvExZSalBZUH4+8/Ip/j0mToLKwhEPjKW89XaoI1M=;
+  b=N8+VXSlDitPNrao9YdQtIzYWibz7qBWm28cVqBW06N+MTbTEL8woxqg2
+   sLtbZTxVIQCQ6QKQawSOrICaKvwcHbiDVvqeSPDP+EDg/hXhtMvuayHzq
+   VfW8hHSWWCBJ7mC7Sogj9c+/ml53ExUtClrI4n6RNoHbliOMxpcAW0deB
+   26OmGoVPoZpDid4N8FE7ClhaE4a25QIpr1AynLaY9yo6a3yi05IXdOZh3
+   H32z1s0LMnab4IRXkuR/Ve9OARRt5pate0BNGxiQ/1geJsUCKmwWkYZf9
+   G81sSEy26873f9dQpD3euQBxPHDfQez68HihN1R7fpMVtV/BbZ/yMSRp7
+   g==;
+IronPort-SDR: PfeTjsj7r7Z6Hdd6VN7YfJVIhO0KmAIHff55XlRf+2ypfq6pDauPBokTbXdzEDqt+w2pckUy+o
+ vHoZUBQ/w5ivlaXvC246vC77GMLPuRZzPKZ+DAqmTebtuX6WOL+WDoLbKmGQOtBbGbv2RL2GZQ
+ SJQpONYmqplAWz4sqQXlyx/nzMraUtiiIAEDVe19Nwl/dWcV+Br/CV4WiX2LDz0VEhgZLisRHv
+ kP1Cr/vS2p0uGAeLnNq1wKJCij4ejZYsH5loNMvCEq3bD3ndZMwdOkyKwoIc/xPOi4Sn36We9Q
+ 0es=
 X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="81360590"
+   d="scan'208";a="20643783"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jul 2020 01:42:56 -0700
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jul 2020 01:42:49 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 27 Jul 2020 01:42:12 -0700
+ 15.1.1979.3; Mon, 27 Jul 2020 01:42:48 -0700
 Received: from soft-dev15.microsemi.net (10.10.115.15) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Mon, 27 Jul 2020 01:42:51 -0700
+ 15.1.1979.3 via Frontend Transport; Mon, 27 Jul 2020 01:42:45 -0700
 From:   Lars Povlsen <lars.povlsen@microchip.com>
 List-Id: <soc.lore.kernel.org>
 To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
@@ -67,9 +67,9 @@ CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v4 10/10] arm64: dts: sparx5: Add i2c devices, i2c muxes
-Date:   Mon, 27 Jul 2020 10:42:11 +0200
-Message-ID: <20200727084211.6632-11-lars.povlsen@microchip.com>
+Subject: [PATCH v4 08/10] clk: sparx5: Add Sparx5 SoC DPLL clock driver
+Date:   Mon, 27 Jul 2020 10:42:09 +0200
+Message-ID: <20200727084211.6632-9-lars.povlsen@microchip.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727084211.6632-1-lars.povlsen@microchip.com>
 References: <20200727084211.6632-1-lars.povlsen@microchip.com>
@@ -81,432 +81,328 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds i2c devices and muxes to the Sparx5 reference boards.
+This adds a device driver for the Sparx5 SoC DPLL clock
 
 Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 ---
- arch/arm64/boot/dts/microchip/sparx5.dtsi     |  38 +++
- .../boot/dts/microchip/sparx5_pcb125.dts      |   4 +
- .../dts/microchip/sparx5_pcb134_board.dtsi    | 237 ++++++++++++++++++
- .../dts/microchip/sparx5_pcb135_board.dtsi    |  77 ++++++
- .../boot/dts/microchip/sparx5_pcb_common.dtsi |   4 +
- 5 files changed, 360 insertions(+)
+ drivers/clk/Makefile     |   1 +
+ drivers/clk/clk-sparx5.c | 295 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 296 insertions(+)
+ create mode 100644 drivers/clk/clk-sparx5.c
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index 161846caf9c94..cf712e80615da 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -170,6 +170,44 @@ uart2_pins: uart2-pins {
- 				pins = "GPIO_26", "GPIO_27";
- 				function = "uart2";
- 			};
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index ca9af11d33913..da8fcf147eb13 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -28,6 +28,7 @@ obj-$(CONFIG_COMMON_CLK_CDCE925)	+= clk-cdce925.o
+ obj-$(CONFIG_ARCH_CLPS711X)		+= clk-clps711x.o
+ obj-$(CONFIG_COMMON_CLK_CS2000_CP)	+= clk-cs2000-cp.o
+ obj-$(CONFIG_ARCH_EFM32)		+= clk-efm32gg.o
++obj-$(CONFIG_ARCH_SPARX5)		+= clk-sparx5.o
+ obj-$(CONFIG_COMMON_CLK_FIXED_MMIO)	+= clk-fixed-mmio.o
+ obj-$(CONFIG_COMMON_CLK_FSL_SAI)	+= clk-fsl-sai.o
+ obj-$(CONFIG_COMMON_CLK_GEMINI)		+= clk-gemini.o
+diff --git a/drivers/clk/clk-sparx5.c b/drivers/clk/clk-sparx5.c
+new file mode 100644
+index 0000000000000..0fad0c1a01862
+--- /dev/null
++++ b/drivers/clk/clk-sparx5.c
+@@ -0,0 +1,295 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Microchip Sparx5 SoC Clock driver.
++ *
++ * Copyright (c) 2019 Microchip Inc.
++ *
++ * Author: Lars Povlsen <lars.povlsen@microchip.com>
++ */
 +
-+			i2c_pins: i2c-pins {
-+				pins = "GPIO_14", "GPIO_15";
-+				function = "twi";
-+			};
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/clk-provider.h>
++#include <linux/bitfield.h>
++#include <linux/of.h>
++#include <linux/slab.h>
++#include <linux/platform_device.h>
++#include <dt-bindings/clock/microchip,sparx5.h>
 +
-+			i2c2_pins: i2c2-pins {
-+				pins = "GPIO_28", "GPIO_29";
-+				function = "twi2";
-+			};
-+		};
++#define PLL_DIV		GENMASK(7, 0)
++#define PLL_PRE_DIV	GENMASK(10, 8)
++#define PLL_ROT_DIR	BIT(11)
++#define PLL_ROT_SEL	GENMASK(13, 12)
++#define PLL_ROT_ENA	BIT(14)
++#define PLL_CLK_ENA	BIT(15)
 +
-+		i2c0: i2c@600101000 {
-+			compatible = "snps,designware-i2c";
-+			status = "disabled";
-+			pinctrl-0 = <&i2c_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6 0x00101000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			i2c-sda-hold-time-ns = <300>;
-+			clock-frequency = <100000>;
-+			clocks = <&ahb_clk>;
-+		};
++#define MAX_SEL 4
++#define MAX_PRE BIT(3)
 +
-+		i2c1: i2c@600103000 {
-+			compatible = "snps,designware-i2c";
-+			status = "disabled";
-+			pinctrl-0 = <&i2c2_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6 0x00103000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+			i2c-sda-hold-time-ns = <300>;
-+			clock-frequency = <100000>;
-+			clocks = <&ahb_clk>;
- 		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-index d7f985f7ee020..91ee5b6cfc37a 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-@@ -15,3 +15,7 @@ memory@0 {
- 		reg = <0x00000000 0x00000000 0x10000000>;
- 	};
- };
++static const u8 sel_rates[MAX_SEL] = { 0, 2*8, 2*4, 2*2 };
 +
-+&i2c1 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-index 9b2aec400101b..18a535a043686 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-@@ -7,9 +7,246 @@
- #include "sparx5_pcb_common.dtsi"
- 
- /{
-+	aliases {
-+	    i2c0   = &i2c0;
-+	    i2c100 = &i2c100;
-+	    i2c101 = &i2c101;
-+	    i2c102 = &i2c102;
-+	    i2c103 = &i2c103;
-+	    i2c104 = &i2c104;
-+	    i2c105 = &i2c105;
-+	    i2c106 = &i2c106;
-+	    i2c107 = &i2c107;
-+	    i2c108 = &i2c108;
-+	    i2c109 = &i2c109;
-+	    i2c110 = &i2c110;
-+	    i2c111 = &i2c111;
-+	    i2c112 = &i2c112;
-+	    i2c113 = &i2c113;
-+	    i2c114 = &i2c114;
-+	    i2c115 = &i2c115;
-+	    i2c116 = &i2c116;
-+	    i2c117 = &i2c117;
-+	    i2c118 = &i2c118;
-+	    i2c119 = &i2c119;
-+	};
-+
- 	gpio-restart {
- 		compatible = "gpio-restart";
- 		gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
- 		priority = <200>;
- 	};
- };
-+
-+&gpio {
-+	i2cmux_pins_i: i2cmux-pins-i {
-+	       pins = "GPIO_16", "GPIO_17", "GPIO_18", "GPIO_19",
-+		      "GPIO_20", "GPIO_22", "GPIO_36", "GPIO_35",
-+		      "GPIO_50", "GPIO_51", "GPIO_56", "GPIO_57";
-+		function = "twi_scl_m";
-+		output-low;
-+	};
-+	i2cmux_0: i2cmux-0 {
-+		pins = "GPIO_16";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_1: i2cmux-1 {
-+		pins = "GPIO_17";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_2: i2cmux-2 {
-+		pins = "GPIO_18";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_3: i2cmux-3 {
-+		pins = "GPIO_19";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_4: i2cmux-4 {
-+		pins = "GPIO_20";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_5: i2cmux-5 {
-+		pins = "GPIO_22";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_6: i2cmux-6 {
-+		pins = "GPIO_36";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_7: i2cmux-7 {
-+		pins = "GPIO_35";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_8: i2cmux-8 {
-+		pins = "GPIO_50";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_9: i2cmux-9 {
-+		pins = "GPIO_51";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_10: i2cmux-10 {
-+		pins = "GPIO_56";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_11: i2cmux-11 {
-+		pins = "GPIO_57";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
++static const char *clk_names[N_CLOCKS] = {
++	"core", "ddr", "cpu2", "arm2",
++	"aux1", "aux2", "aux3", "aux4",
++	"synce",
 +};
 +
-+&axi {
-+	i2c0_imux: i2c0-imux@0 {
-+		compatible = "i2c-mux-pinctrl";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		i2c-parent = <&i2c0>;
-+	};
-+	i2c0_emux: i2c0-emux@0 {
-+		compatible = "i2c-mux-gpio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		i2c-parent = <&i2c0>;
-+	};
++struct s5_hw_clk {
++	struct clk_hw hw;
++	void __iomem *reg;
 +};
 +
-+&i2c0_imux {
-+	pinctrl-names =
-+		"i2c100", "i2c101", "i2c102", "i2c103",
-+		"i2c104", "i2c105", "i2c106", "i2c107",
-+		"i2c108", "i2c109", "i2c110", "i2c111", "idle";
-+	pinctrl-0 = <&i2cmux_0>;
-+	pinctrl-1 = <&i2cmux_1>;
-+	pinctrl-2 = <&i2cmux_2>;
-+	pinctrl-3 = <&i2cmux_3>;
-+	pinctrl-4 = <&i2cmux_4>;
-+	pinctrl-5 = <&i2cmux_5>;
-+	pinctrl-6 = <&i2cmux_6>;
-+	pinctrl-7 = <&i2cmux_7>;
-+	pinctrl-8 = <&i2cmux_8>;
-+	pinctrl-9 = <&i2cmux_9>;
-+	pinctrl-10 = <&i2cmux_10>;
-+	pinctrl-11 = <&i2cmux_11>;
-+	pinctrl-12 = <&i2cmux_pins_i>;
-+	i2c100: i2c_sfp1 {
-+		reg = <0x0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c101: i2c_sfp2 {
-+		reg = <0x1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c102: i2c_sfp3 {
-+		reg = <0x2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c103: i2c_sfp4 {
-+		reg = <0x3>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c104: i2c_sfp5 {
-+		reg = <0x4>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c105: i2c_sfp6 {
-+		reg = <0x5>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c106: i2c_sfp7 {
-+		reg = <0x6>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c107: i2c_sfp8 {
-+		reg = <0x7>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c108: i2c_sfp9 {
-+		reg = <0x8>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c109: i2c_sfp10 {
-+		reg = <0x9>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c110: i2c_sfp11 {
-+		reg = <0xa>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c111: i2c_sfp12 {
-+		reg = <0xb>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
++struct s5_clk_data {
++	void __iomem *base;
++	struct s5_hw_clk s5_hw[N_CLOCKS];
 +};
 +
-+&i2c0_emux {
-+	mux-gpios = <&gpio 55 GPIO_ACTIVE_HIGH
-+		     &gpio 60 GPIO_ACTIVE_HIGH
-+		     &gpio 61 GPIO_ACTIVE_HIGH
-+		     &gpio 54 GPIO_ACTIVE_HIGH>;
-+	idle-state = <0x8>;
-+	i2c112: i2c_sfp13 {
-+		reg = <0x0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c113: i2c_sfp14 {
-+		reg = <0x1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c114: i2c_sfp15 {
-+		reg = <0x2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c115: i2c_sfp16 {
-+		reg = <0x3>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c116: i2c_sfp17 {
-+		reg = <0x4>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c117: i2c_sfp18 {
-+		reg = <0x5>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c118: i2c_sfp19 {
-+		reg = <0x6>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c119: i2c_sfp20 {
-+		reg = <0x7>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-index 9b2aec400101b..d71f11a10b3d2 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-@@ -7,9 +7,86 @@
- #include "sparx5_pcb_common.dtsi"
- 
- /{
-+	aliases {
-+	    i2c0   = &i2c0;
-+	    i2c152 = &i2c152;
-+	    i2c153 = &i2c153;
-+	    i2c154 = &i2c154;
-+	    i2c155 = &i2c155;
-+	};
-+
- 	gpio-restart {
- 		compatible = "gpio-restart";
- 		gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
- 		priority = <200>;
- 	};
- };
-+
-+&gpio {
-+	i2cmux_pins_i: i2cmux-pins-i {
-+	       pins = "GPIO_35", "GPIO_36",
-+		      "GPIO_50", "GPIO_51";
-+		function = "twi_scl_m";
-+		output-low;
-+	};
-+	i2cmux_s29: i2cmux-0 {
-+		pins = "GPIO_35";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_s30: i2cmux-1 {
-+		pins = "GPIO_36";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_s31: i2cmux-2 {
-+		pins = "GPIO_50";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_s32: i2cmux-3 {
-+		pins = "GPIO_51";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
++struct s5_pll_conf {
++	unsigned long freq;
++	u8 div;
++	bool rot_ena;
++	u8 rot_sel;
++	u8 rot_dir;
++	u8 pre_div;
 +};
 +
-+&axi {
-+	i2c0_imux: i2c0-imux@0 {
-+		compatible = "i2c-mux-pinctrl";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		i2c-parent = <&i2c0>;
-+	};
++#define to_s5_pll(hw) container_of(hw, struct s5_hw_clk, hw)
++
++static unsigned long s5_calc_freq(unsigned long parent_rate,
++				  const struct s5_pll_conf *conf)
++{
++	unsigned long rate = parent_rate / conf->div;
++
++	if (conf->rot_ena) {
++		int sign = conf->rot_dir ? -1 : 1;
++		int divt = sel_rates[conf->rot_sel] * (1 + conf->pre_div);
++		int divb = divt + sign;
++
++		rate = mult_frac(rate, divt, divb);
++		rate = roundup(rate, 1000);
++	}
++
++	return rate;
++}
++
++static void s5_search_fractional(unsigned long rate,
++				 unsigned long parent_rate,
++				 int div,
++				 struct s5_pll_conf *conf)
++{
++	struct s5_pll_conf best;
++	ulong cur_offset, best_offset = rate;
++	int d, i, j;
++
++	memset(conf, 0, sizeof(*conf));
++	conf->div = div;
++	conf->rot_ena = 1;	/* Fractional rate */
++
++	for (d = 0; best_offset > 0 && d <= 1 ; d++) {
++		conf->rot_dir = !!d;
++		for (i = 0; best_offset > 0 && i < MAX_PRE; i++) {
++			conf->pre_div = i;
++			for (j = 1; best_offset > 0 && j < MAX_SEL; j++) {
++				conf->rot_sel = j;
++				conf->freq = s5_calc_freq(parent_rate, conf);
++				cur_offset = abs(rate - conf->freq);
++				if (cur_offset < best_offset) {
++					best_offset = cur_offset;
++					best = *conf;
++				}
++			}
++		}
++	}
++
++	/* Best match */
++	*conf = best;
++}
++
++static unsigned long s5_calc_params(unsigned long rate,
++				    unsigned long parent_rate,
++				    struct s5_pll_conf *conf)
++{
++	if (parent_rate % rate) {
++		struct s5_pll_conf alt1, alt2;
++		int div;
++
++		div = DIV_ROUND_CLOSEST_ULL(parent_rate, rate);
++		s5_search_fractional(rate, parent_rate, div, &alt1);
++
++		/* Straight match? */
++		if (alt1.freq == rate) {
++			*conf = alt1;
++		} else {
++			/* Try without rounding divider */
++			div = parent_rate / rate;
++			if (div != alt1.div) {
++				s5_search_fractional(rate, parent_rate, div,
++						     &alt2);
++				/* Select the better match */
++				if (abs(rate - alt1.freq) <
++				    abs(rate - alt2.freq))
++					*conf = alt1;
++				else
++					*conf = alt2;
++			}
++		}
++	} else {
++		/* Straight fit */
++		memset(conf, 0, sizeof(*conf));
++		conf->div = parent_rate / rate;
++	}
++
++	return conf->freq;
++}
++
++static int s5_pll_enable(struct clk_hw *hw)
++{
++	struct s5_hw_clk *pll = to_s5_pll(hw);
++	u32 val = readl(pll->reg);
++
++	val |= PLL_CLK_ENA;
++	writel(val, pll->reg);
++
++	return 0;
++}
++
++static void s5_pll_disable(struct clk_hw *hw)
++{
++	struct s5_hw_clk *pll = to_s5_pll(hw);
++	u32 val = readl(pll->reg);
++
++	val &= ~PLL_CLK_ENA;
++	writel(val, pll->reg);
++}
++
++static int s5_pll_set_rate(struct clk_hw *hw,
++			   unsigned long rate,
++			   unsigned long parent_rate)
++{
++	struct s5_hw_clk *pll = to_s5_pll(hw);
++	struct s5_pll_conf conf;
++	unsigned long eff_rate;
++	u32 val;
++
++	eff_rate = s5_calc_params(rate, parent_rate, &conf);
++	if (eff_rate != rate)
++		return -EOPNOTSUPP;
++
++	val = readl(pll->reg) & PLL_CLK_ENA;
++	val |= FIELD_PREP(PLL_DIV, conf.div);
++	if (conf.rot_ena) {
++		val |= PLL_ROT_ENA;
++		val |= FIELD_PREP(PLL_ROT_SEL, conf.rot_sel);
++		val |= FIELD_PREP(PLL_PRE_DIV, conf.pre_div);
++		if (conf.rot_dir)
++			val |= PLL_ROT_DIR;
++	}
++	writel(val, pll->reg);
++
++	return 0;
++}
++
++static unsigned long s5_pll_recalc_rate(struct clk_hw *hw,
++					unsigned long parent_rate)
++{
++	struct s5_hw_clk *pll = to_s5_pll(hw);
++	struct s5_pll_conf conf;
++	u32 val;
++
++	val = readl(pll->reg);
++
++	if (val & PLL_CLK_ENA) {
++		conf.div     = FIELD_GET(PLL_DIV, val);
++		conf.pre_div = FIELD_GET(PLL_PRE_DIV, val);
++		conf.rot_ena = FIELD_GET(PLL_ROT_ENA, val);
++		conf.rot_dir = FIELD_GET(PLL_ROT_DIR, val);
++		conf.rot_sel = FIELD_GET(PLL_ROT_SEL, val);
++
++		conf.freq = s5_calc_freq(parent_rate, &conf);
++	} else {
++		conf.freq = 0;
++	}
++
++	return conf.freq;
++}
++
++static long s5_pll_round_rate(struct clk_hw *hw, unsigned long rate,
++			      unsigned long *parent_rate)
++{
++	struct s5_pll_conf conf;
++
++	return s5_calc_params(rate, *parent_rate, &conf);
++}
++
++static const struct clk_ops s5_pll_ops = {
++	.enable		= s5_pll_enable,
++	.disable	= s5_pll_disable,
++	.set_rate	= s5_pll_set_rate,
++	.round_rate	= s5_pll_round_rate,
++	.recalc_rate	= s5_pll_recalc_rate,
 +};
 +
-+&i2c0_imux {
-+	pinctrl-names =
-+		"i2c152", "i2c153", "i2c154", "i2c155",
-+		"idle";
-+	pinctrl-0 = <&i2cmux_s29>;
-+	pinctrl-1 = <&i2cmux_s30>;
-+	pinctrl-2 = <&i2cmux_s31>;
-+	pinctrl-3 = <&i2cmux_s32>;
-+	pinctrl-4 = <&i2cmux_pins_i>;
-+	i2c152: i2c_sfp1 {
-+		reg = <0x0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c153: i2c_sfp2 {
-+		reg = <0x1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c154: i2c_sfp3 {
-+		reg = <0x2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c155: i2c_sfp4 {
-+		reg = <0x3>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
-index 1f99d0db1284f..9d1a082de3e29 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
-@@ -13,3 +13,7 @@ &uart0 {
- &uart1 {
- 	status = "okay";
- };
++static struct clk_hw *s5_clk_hw_get(struct of_phandle_args *clkspec, void *data)
++{
++	struct s5_clk_data *s5_clk = data;
++	unsigned int idx = clkspec->args[0];
 +
-+&i2c0 {
-+	status = "okay";
++	if (idx >= N_CLOCKS) {
++		pr_err("%s: invalid index %u\n", __func__, idx);
++		return ERR_PTR(-EINVAL);
++	}
++
++	return &s5_clk->s5_hw[idx].hw;
++}
++
++static int s5_clk_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	int i, ret;
++	struct s5_clk_data *s5_clk;
++	struct clk_parent_data pdata = { .index = 0 };
++	struct clk_init_data init = {
++		.ops = &s5_pll_ops,
++		.num_parents = 1,
++		.parent_data = &pdata,
++	};
++
++	s5_clk = devm_kzalloc(dev, sizeof(*s5_clk), GFP_KERNEL);
++	if (!s5_clk)
++		return -ENOMEM;
++
++	s5_clk->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(s5_clk->base))
++		return PTR_ERR(s5_clk->base);
++
++	for (i = 0; i < N_CLOCKS; i++) {
++		struct s5_hw_clk *s5_hw = &s5_clk->s5_hw[i];
++
++		init.name = clk_names[i];
++		s5_hw->reg = s5_clk->base + (i * 4);
++		s5_hw->hw.init = &init;
++		ret = devm_clk_hw_register(dev, &s5_hw->hw);
++		if (ret) {
++			dev_err(dev, "failed to register %s clock\n",
++				init.name);
++			return ret;
++		}
++	}
++
++	return devm_of_clk_add_hw_provider(dev, s5_clk_hw_get, s5_clk);
++}
++
++static const struct of_device_id s5_clk_dt_ids[] = {
++	{ .compatible = "microchip,sparx5-dpll", },
++	{ }
 +};
++MODULE_DEVICE_TABLE(of, s5_clk_dt_ids);
++
++static struct platform_driver s5_clk_driver = {
++	.probe  = s5_clk_probe,
++	.driver = {
++		.name = "sparx5-clk",
++		.of_match_table = s5_clk_dt_ids,
++	},
++};
++builtin_platform_driver(s5_clk_driver);
 -- 
 2.27.0
 
