@@ -2,112 +2,450 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F49C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19A75206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 970D92075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:59:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bMgExa5z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o5yHaWQy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgG0Mzp (ORCPT
+        id S1728451AbgG0M7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:55:45 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:29484 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728387AbgG0Mzp (ORCPT
+        Mon, 27 Jul 2020 08:59:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728141AbgG0M7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:55:45 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RCb6Fo013340;
-        Mon, 27 Jul 2020 14:55:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=mjY/7dksrDC7M4Ud2YDvD9iqbnxWCHmQNoGB5GRnp2M=;
- b=bMgExa5ztW937ye1ZcAy14vLwvQA+T0FDcWOyldE4Ee+O+rx6KLOtd/1W9f6ebDxkn1U
- st+MEnKYNB4Khb3BAKF91tFIshx8+JyOOERJth7f+BKjSVx1OGyn0SRmrPokUIfGU+0t
- wonz8gwJcgwlOpoZa1R+vX/doMX4vGmrxqUUxiflw5+m7EfeYbT/4qswjVtkyMH8JLBR
- re2Yjdi5dPsseWdAvg75nJqhV2XUKKBtqjzBbqktITMVU8uF/vX53xg15ZzR4789JnCv
- f1qVMbP5hZf26Pd2Am81CQtKClTVee9e/VmyE4UmdU8cu94oZRPQf0MTHTSjg6xsnH97 Uw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32g9v99cqk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 14:55:31 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6226710002A;
-        Mon, 27 Jul 2020 14:55:30 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4D2EA2BF9B4;
-        Mon, 27 Jul 2020 14:55:30 +0200 (CEST)
-Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jul
- 2020 14:55:29 +0200
-Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
- SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
- 15.00.1473.003; Mon, 27 Jul 2020 14:55:29 +0200
-From:   Patrice CHOTARD <patrice.chotard@st.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>
-Subject: Re: [PATCH 4/7] usb: dwc3: convert to
- devm_platform_ioremap_resource_byname
-Thread-Topic: [PATCH 4/7] usb: dwc3: convert to
- devm_platform_ioremap_resource_byname
-Thread-Index: AQHWX/0W9J7PYecCTkOfnceP/F29OqkbSOeA
-Date:   Mon, 27 Jul 2020 12:55:29 +0000
-Message-ID: <7e8ab37e-d94b-ac7d-3642-b82329c653cd@st.com>
-References: <1595404275-8449-1-git-send-email-chunfeng.yun@mediatek.com>
- <1595404275-8449-4-git-send-email-chunfeng.yun@mediatek.com>
-In-Reply-To: <1595404275-8449-4-git-send-email-chunfeng.yun@mediatek.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <66DBBCCCBDA2664D99A68A00CFC169EC@st.com>
-Content-Transfer-Encoding: base64
+        Mon, 27 Jul 2020 08:59:30 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49375C061794;
+        Mon, 27 Jul 2020 05:59:29 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id t15so9325993pjq.5;
+        Mon, 27 Jul 2020 05:59:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VHNOjOLT8L5bvPY4qKI4UvNASs4/aefQCEWO9D/TPoE=;
+        b=o5yHaWQytRX91ifzHq/S9ZnWy78b50E6Gwrm3PzJPXnUUAUD4fhzedtA2C+nglcxX5
+         aQNM/NQa+Jioh8iPem1CYAjW/K86vLNXNztmoQzy0uVBGq/xjgBe+Zj5WClmqxqTPCiL
+         a/c4ymQCFxCEIm6k72avM1Yq9o6sI1F/BfixK6Pbt7x4T0YdCqUKjCoWBhlV4nUmKwVS
+         o24GGQ0y6UgE8V3TH03agfXO1HEIitKsdJZ2sFtXmFRPhpCn31cV0Wbf7y6R18cxkndV
+         gMYIW5DSLsFuPjmI6rqR/zDKgbfzLZLug3uSBK8qi3/8q5VpV1zLsolDG/u+kn+J+pqw
+         LLxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VHNOjOLT8L5bvPY4qKI4UvNASs4/aefQCEWO9D/TPoE=;
+        b=pZ7dS46LRqSHShOBCECDRTgivXwX8PcvBFydWjSX4HhxTdnaWpaar4O2bMeZPSvHCQ
+         k4cwt4ALua+w7WQY9mj88RdcLBBxYVZdTPQIDJ5mnTA1zbO/QHgpo7pe4PAC24RUPiCI
+         ZZuoGKBg52LvWDvWl7Anoi8Mq+anVMzltqFqb2yB2UeWeNcOGiFq4Ex+Rbld/KAXslVI
+         qiVI/HoIf9Ia53+LmgDfTaZJH3EcsP/UzKQItopBBNNzig/vLCN9QPehUnhZJvGTzCot
+         c0VQ1CMtt5U98b/fF1DyomTAX0xWdVJbau82rgYqgCZ4IypuJ8QYycX2Njm8GRV4r0sn
+         ykLQ==
+X-Gm-Message-State: AOAM532zR6b5XbGUoG+3CJEsHKvsmD19+NvIKtoRSITKHcV2O9BJ1/Rh
+        HD9XU7bRikKyXFh/SQ/EULkY+pFt/OeaXM4vJpo=
+X-Google-Smtp-Source: ABdhPJw6Op6TMpltAU8vfBTUT5JjWbr5uNcHIx2aPv/CXQMDUoWWD3cpCXny2MNKSQFwzVd08Giqr6Ga9Z+QLVQybZg=
+X-Received: by 2002:a17:902:4b:: with SMTP id 69mr2990279pla.18.1595854768443;
+ Mon, 27 Jul 2020 05:59:28 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_08:2020-07-27,2020-07-27 signatures=0
+References: <20200727122242.32337-1-vadym.kochan@plvision.eu> <20200727122242.32337-2-vadym.kochan@plvision.eu>
+In-Reply-To: <20200727122242.32337-2-vadym.kochan@plvision.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Jul 2020 15:59:13 +0300
+Message-ID: <CAHp75Ve-MyFg5QqHjywGk6X+v_F77HkRBuQsJ0Cx3WLJ5ZV43w@mail.gmail.com>
+Subject: Re: [net-next v4 1/6] net: marvell: prestera: Add driver for Prestera
+ family ASIC devices
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2h1bmZlbmcNCg0KT24gNy8yMi8yMCA5OjUxIEFNLCBDaHVuZmVuZyBZdW4gd3JvdGU6DQo+
-IFVzZSBkZXZtX3BsYXRmb3JtX2lvcmVtYXBfcmVzb3VyY2VfYnluYW1lKCkgdG8gc2ltcGxpZnkg
-Y29kZQ0KPg0KPiBDYzogUGF0cmljZSBDaG90YXJkIDxwYXRyaWNlLmNob3RhcmRAc3QuY29tPg0K
-PiBTaWduZWQtb2ZmLWJ5OiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+
-DQo+IC0tLQ0KPiAgZHJpdmVycy91c2IvZHdjMy9kd2MzLXN0LmMgfCA0ICsrLS0NCj4gIDEgZmls
-ZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL3VzYi9kd2MzL2R3YzMtc3QuYyBiL2RyaXZlcnMvdXNiL2R3YzMvZHdjMy1z
-dC5jDQo+IGluZGV4IGM2ODI0MjAuLmU3MzNiZTggMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvdXNi
-L2R3YzMvZHdjMy1zdC5jDQo+ICsrKyBiL2RyaXZlcnMvdXNiL2R3YzMvZHdjMy1zdC5jDQo+IEBA
-IC0yMDYsOCArMjA2LDggQEAgc3RhdGljIGludCBzdF9kd2MzX3Byb2JlKHN0cnVjdCBwbGF0Zm9y
-bV9kZXZpY2UgKnBkZXYpDQo+ICAJaWYgKCFkd2MzX2RhdGEpDQo+ICAJCXJldHVybiAtRU5PTUVN
-Ow0KPiAgDQo+IC0JcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlX2J5bmFtZShwZGV2LCBJT1JF
-U09VUkNFX01FTSwgInJlZy1nbHVlIik7DQo+IC0JZHdjM19kYXRhLT5nbHVlX2Jhc2UgPSBkZXZt
-X2lvcmVtYXBfcmVzb3VyY2UoZGV2LCByZXMpOw0KPiArCWR3YzNfZGF0YS0+Z2x1ZV9iYXNlID0N
-Cj4gKwkJZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlX2J5bmFtZShwZGV2LCAicmVnLWds
-dWUiKTsNCj4gIAlpZiAoSVNfRVJSKGR3YzNfZGF0YS0+Z2x1ZV9iYXNlKSkNCj4gIAkJcmV0dXJu
-IFBUUl9FUlIoZHdjM19kYXRhLT5nbHVlX2Jhc2UpOw0KPiAgDQoNClJldmlld2VkLWJ5OiBQYXRy
-aWNlIENob3RhcmQgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+DQoNClRoYW5rcw0KDQpQYXRyaWNl
-DQo=
+On Mon, Jul 27, 2020 at 3:23 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+>
+> Marvell Prestera 98DX326x integrates up to 24 ports of 1GbE with 8
+> ports of 10GbE uplinks or 2 ports of 40Gbps stacking for a largely
+> wireless SMB deployment.
+>
+> The current implementation supports only boards designed for the Marvell
+> Switchdev solution and requires special firmware.
+>
+> The core Prestera switching logic is implemented in prestera_main.c,
+> there is an intermediate hw layer between core logic and firmware. It is
+> implemented in prestera_hw.c, the purpose of it is to encapsulate hw
+> related logic, in future there is a plan to support more devices with
+> different HW related configurations.
+>
+> This patch contains only basic switch initialization and RX/TX support
+> over SDMA mechanism.
+>
+> Currently supported devices have DMA access range <= 32bit and require
+> ZONE_DMA to be enabled, for such cases SDMA driver checks if the skb
+> allocated in proper range supported by the Prestera device.
+>
+> Also meanwhile there is no TX interrupt support in current firmware
+> version so recycling work is scheduled on each xmit.
+>
+> Port's mac address is generated from the switch base mac which may be
+> provided via device-tree (static one or as nvme cell), or randomly
+> generated.
+
+...
+
+> Signed-off-by: Andrii Savka <andrii.savka@plvision.eu>
+> Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
+> Signed-off-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
+> Signed-off-by: Serhiy Pshyk <serhiy.pshyk@plvision.eu>
+> Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
+> Signed-off-by: Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
+> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+
+This needs more work. You have to really understand the role of each
+person in the above list.
+I highly recommend (re-)read sections 11-13 of Submitting Patches.
+
+...
+
+> +/* SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
+
+The idea of SPDX is to have it as a separate (standalone) comment.
+
+...
+
+> +enum prestera_event_type {
+> +       PRESTERA_EVENT_TYPE_UNSPEC,
+> +
+> +       PRESTERA_EVENT_TYPE_PORT,
+> +       PRESTERA_EVENT_TYPE_RXTX,
+> +
+> +       PRESTERA_EVENT_TYPE_MAX,
+
+Commas in the terminators are not good.
+
+> +};
+
+...
+
+> +#include "prestera_dsa.h"
+
+The idea that you include more generic headers earlier than more custom ones.
+
+> +#include <linux/string.h>
+> +#include <linux/bitops.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/errno.h>
+
+Perhaps ordered?
+
+...
+
+> +/* TrgDev[4:0] = {Word0[28:24]} */
+
+> + * SrcPort/TrgPort[7:0] = {Word2[20], Word1[11:10], Word0[23:19]}
+
+> +/* bits 13:15 -- UP */
+
+> +/* bits 0:11 -- VID */
+
+These are examples of useless comments.
+
+...
+
+> +       dsa->vlan.is_tagged = (bool)FIELD_GET(PRESTERA_W0_IS_TAGGED, words[0]);
+> +       dsa->vlan.cfi_bit = (u8)FIELD_GET(PRESTERA_W1_CFI_BIT, words[1]);
+> +       dsa->vlan.vpt = (u8)FIELD_GET(PRESTERA_W0_VPT, words[0]);
+> +       dsa->vlan.vid = (u16)FIELD_GET(PRESTERA_W0_VID, words[0]);
+
+Do you need those castings?
+
+...
+
+> +       struct prestera_msg_event_port *hw_evt;
+> +
+> +       hw_evt = (struct prestera_msg_event_port *)msg;
+
+Can be one line I suppose.
+
+...
+
+> +       if (evt->id == PRESTERA_PORT_EVENT_STATE_CHANGED)
+> +               evt->port_evt.data.oper_state = hw_evt->param.oper_state;
+> +       else
+> +               return -EINVAL;
+> +
+> +       return 0;
+
+Perhaps traditional pattern, i.e.
+
+  if (...)
+    return -EINVAL;
+  ...
+  return 0;
+
+...
+
+> +       err = fw_event_parsers[msg->type].func(buf, &evt);
+> +       if (!err)
+> +               eh.func(sw, &evt, eh.arg);
+
+Ditto.
+
+> +       return err;
+
+...
+
+> +       memcpy(&req.param.mac, mac, sizeof(req.param.mac));
+
+Consider to use ether_addr_*() APIs instead of open-coded mem*() ones.
+
+...
+
+> +#define PRESTERA_MTU_DEFAULT 1536
+
+Don't we have global default for this?
+
+...
+
+> +#define PRESTERA_STATS_DELAY_MS        msecs_to_jiffies(1000)
+
+It's not _MS.
+
+...
+
+> +       if (!is_up)
+> +               netif_stop_queue(dev);
+> +
+> +       err = prestera_hw_port_state_set(port, is_up);
+> +
+> +       if (is_up && !err)
+> +               netif_start_queue(dev);
+
+Much better if will look lke
+
+  if (is_up) {
+  ...
+  err  = ...(..., true);
+  if (err)
+    return err;
+  ...
+  } else {
+    return prestera_*(..., false);
+  }
+  return 0;
+
+> +       return err;
+
+...
+
+> +       /* Only 0xFF mac addrs are supported */
+> +       if (port->fp_id >= 0xFF)
+> +               goto err_port_init;
+
+You meant 255, right?
+Otherwise you have to mentioned is it byte limitation or what?
+
+...
+
+> +static int prestera_switch_set_base_mac_addr(struct prestera_switch *sw)
+> +{
+> +       struct device_node *base_mac_np;
+> +       struct device_node *np;
+
+> +       np = of_find_compatible_node(NULL, NULL, "marvell,prestera");
+> +       if (np) {
+> +               base_mac_np = of_parse_phandle(np, "base-mac-provider", 0);
+> +               if (base_mac_np) {
+> +                       const char *base_mac;
+> +
+> +                       base_mac = of_get_mac_address(base_mac_np);
+> +                       of_node_put(base_mac_np);
+> +                       if (!IS_ERR(base_mac))
+> +                               ether_addr_copy(sw->base_mac, base_mac);
+> +               }
+> +       }
+> +
+> +       if (!is_valid_ether_addr(sw->base_mac)) {
+> +               eth_random_addr(sw->base_mac);
+> +               dev_info(sw->dev->dev, "using random base mac address\n");
+> +       }
+
+Isn't it device_get_mac_address() reimplementation?
+
+> +
+> +       return prestera_hw_switch_mac_set(sw, sw->base_mac);
+> +}
+
+...
+
+> +       err = prestera_switch_init(sw);
+> +       if (err) {
+> +               kfree(sw);
+> +               return err;
+> +       }
+> +
+> +       return 0;
+
+if (err)
+ kfree(...);
+return err;
+
+Also, check reference counting.
+
+...
+
+> +#define PRESTERA_SDMA_RX_DESC_PKT_LEN(desc) \
+
+> +       ((le32_to_cpu((desc)->word2) >> 16) & 0x3FFF)
+
+Why not GENMASK() ?
+
+...
+
+> +       if (dma + sizeof(struct prestera_sdma_desc) > sdma->dma_mask) {
+> +               dev_err(dma_dev, "failed to alloc desc\n");
+> +               dma_pool_free(sdma->desc_pool, desc, dma);
+
+Better first undo something *then* print a message.
+
+> +               return -ENOMEM;
+> +       }
+
+...
+
+> +static void prestera_sdma_rx_desc_set_len(struct prestera_sdma_desc *desc,
+> +                                         size_t val)
+> +{
+> +       u32 word = le32_to_cpu(desc->word2);
+> +
+> +       word = (word & ~GENMASK(15, 0)) | val;
+
+Shouldn't you do traditional pattern?
+
+word = (word & ~mask) | (val & mask);
+
+> +       desc->word2 = cpu_to_le32(word);
+> +}
+
+...
+
+> +       dma = dma_map_single(dev, skb->data, skb->len, DMA_FROM_DEVICE);
+
+> +
+
+Redundant blank line.
+
+> +       if (dma_mapping_error(dev, dma))
+> +               goto err_dma_map;
+
+...
+
+> +               pr_warn_ratelimited("received pkt for non-existent port(%u, %u)\n",
+> +                                   dev_id, hw_port);
+
+netdev_warn_ratelimited() ? Or something closer to that?
+
+...
+
+> +       qmask = GENMASK(qnum - 1, 0);
+
+BIT(qnum) - 1 will produce much better code I suppose.
+
+...
+
+> +       if (pkts_done < budget && napi_complete_done(napi, pkts_done))
+> +               prestera_write(sdma->sw, PRESTERA_SDMA_RX_INTR_MASK_REG,
+> +                              0xff << 2);
+
+GENMASK() ?
+
+...
+
+> +       word = (word & ~GENMASK(30, 16)) | ((len + ETH_FCS_LEN) << 16);
+
+Consider traditional pattern.
+
+...
+
+> +       word |= PRESTERA_SDMA_TX_DESC_DMA_OWN << 31;
+
+I hope that was defined with U. Otherwise it's UB.
+
+...
+
+> +       new_skb = alloc_skb(len, GFP_ATOMIC | GFP_DMA);
+
+Atomic? Why?
+
+...
+
+> +static int prestera_sdma_tx_wait(struct prestera_sdma *sdma,
+> +                                struct prestera_tx_ring *tx_ring)
+> +{
+
+> +       int tx_retry_num = 10 * tx_ring->max_burst;
+
+Magic!
+
+> +       while (--tx_retry_num) {
+> +               if (prestera_sdma_is_ready(sdma))
+> +                       return 0;
+> +
+> +               udelay(1);
+> +       }
+
+unsigned int counter = ...;
+
+do { } while (--counter);
+
+looks better.
+
+Also, why udelay()? Is it atomic context?
+
+> +       return -EBUSY;
+> +}
+
+...
+
+> +       if (!tx_ring->burst--) {
+
+Don't do like this. It makes code harder to understand.
+
+  if (tx_ring->...) {
+    ...->burst--;
+  } else {
+    ...
+  }
+
+> +               tx_ring->burst = tx_ring->max_burst;
+> +
+> +               err = prestera_sdma_tx_wait(sdma, tx_ring);
+> +               if (err)
+> +                       goto drop_skb_unmap;
+> +       }
+
+-- 
+With Best Regards,
+Andy Shevchenko
