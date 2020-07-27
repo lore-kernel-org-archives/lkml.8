@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 870AEC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8082C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F78320825
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8242020825
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859377;
-	bh=cJk9fZrndJKKdWnZeYkDDzEpUUE2wUwx9/n+2luZ4lk=;
+	s=default; t=1595859379;
+	bh=qR3qR1P8zCZPBL7I5aiHn7cQAkCbUrhl/7b8QvE1Xlo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l0oilYm1re3Zm6lq9ZJVqonBS0B25fhoVsghgwyhEX+Jj4LBMdbrQyauMuyw9oyux
-	 Awjqsj9jXlmmEnwX/3sFr2tiGXMgjofLjSTYBkkr20X+0z1P06VNDWkgdsecNu126X
-	 P3ehNwtUlYvzL8z8E0zT9R7UlsRpK1MwBoBJE4ww=
+	b=In+vrFy7uT6TsmDXEj1WeRIHKHKfQqFAf/VTr4oa5TwFkiaveNM4yDOoBTs6d9fBR
+	 38va9oIza2qRfKwVJPBlqvuOLbEMxjhVVTMayPfK058Whi6OVBtOsdEK5xvm+EGTAc
+	 6EuXSd2YKxcW0SpcJopwxT2we0MQQUM11Q8YI8go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730813AbgG0OQO (ORCPT
+        id S1730836AbgG0OQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:16:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42992 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:16:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730802AbgG0OQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:16:09 -0400
+        id S1730826AbgG0OQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:16:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1537620775;
-        Mon, 27 Jul 2020 14:16:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BFF520825;
+        Mon, 27 Jul 2020 14:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859368;
-        bh=cJk9fZrndJKKdWnZeYkDDzEpUUE2wUwx9/n+2luZ4lk=;
+        s=default; t=1595859375;
+        bh=qR3qR1P8zCZPBL7I5aiHn7cQAkCbUrhl/7b8QvE1Xlo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HZvEDvFm0Cby8+dnbxr4qdeVW2EQMAUcs23ynA3kAzJv8V5ObLPOBDxm+lafUBLIA
-         6JZajJh9P6BRhunm30qUNbsK8uqYIJ/xGDqpjf/mCUXpKvfUVXFyg0NcOKP8fIpIE7
-         FhbeIndJc1AOBA32K0g4b+yz97onwHuP6aeMLax0=
+        b=MyY17lBT7IgI5NjcK1Gf0jF1RKOqafN/uvMvBLBQQgRcm7IaLlDmz7mmB6dD16hjm
+         Nz8DDRoXAWir3/dqa6x0MMpr5iKNN0GIkcWb8d1HIzR7VFpqvEPu4qWakDK2Wr3atW
+         t6/VbL0kJKQ3GCgQNj12sYJiMdu8DA06kSEVp+4Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Angelo Dureghello <angelo.dureghello@timesys.com>,
-        kbuild test robot <lkp@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 081/138] dmaengine: fsl-edma: fix wrong tcd endianness for big-endian cpu
-Date:   Mon, 27 Jul 2020 16:04:36 +0200
-Message-Id: <20200727134929.426368642@linuxfoundation.org>
+        stable@vger.kernel.org, Derek Basehore <dbasehore@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 084/138] Input: elan_i2c - only increment wakeup count on touch
+Date:   Mon, 27 Jul 2020 16:04:39 +0200
+Message-Id: <20200727134929.572518147@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -61,73 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Angelo Dureghello <angelo.dureghello@timesys.com>
+From: Derek Basehore <dbasehore@chromium.org>
 
-[ Upstream commit 8678c71c17721e0f771f135967ef0cce8f69ce9a ]
+[ Upstream commit 966334dfc472bdfa67bed864842943b19755d192 ]
 
-Due to recent fixes in m68k arch-specific I/O accessor macros, this
-driver is not working anymore for ColdFire. Fix wrong tcd endianness
-removing additional swaps, since edma_writex() functions should already
-take care of any eventual swap if needed.
+This moves the wakeup increment for elan devices to the touch report.
+This prevents the drivers from incorrectly reporting a wakeup when the
+resume callback resets then device, which causes an interrupt to
+occur.
 
-Note, i could only test the change in ColdFire mcf54415 and Vybrid
-vf50 / Colibri where i don't see any issue. So, every feedback and
-test for all other SoCs involved is really appreciated.
-
-Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Link: https://lore.kernel.org/r/20200701225205.1674463-1-angelo.dureghello@timesys.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+Link: https://lore.kernel.org/r/20200706235046.1984283-1-dbasehore@chromium.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/fsl-edma-common.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ drivers/input/mouse/elan_i2c_core.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index b1a7ca91701a8..d6010486ee502 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -347,26 +347,28 @@ static void fsl_edma_set_tcd_regs(struct fsl_edma_chan *fsl_chan,
- 	/*
- 	 * TCD parameters are stored in struct fsl_edma_hw_tcd in little
- 	 * endian format. However, we need to load the TCD registers in
--	 * big- or little-endian obeying the eDMA engine model endian.
-+	 * big- or little-endian obeying the eDMA engine model endian,
-+	 * and this is performed from specific edma_write functions
- 	 */
- 	edma_writew(edma, 0,  &regs->tcd[ch].csr);
--	edma_writel(edma, le32_to_cpu(tcd->saddr), &regs->tcd[ch].saddr);
--	edma_writel(edma, le32_to_cpu(tcd->daddr), &regs->tcd[ch].daddr);
+diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+index 8719da5403834..196e8505dd8d7 100644
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -951,6 +951,8 @@ static void elan_report_absolute(struct elan_tp_data *data, u8 *packet)
+ 	u8 hover_info = packet[ETP_HOVER_INFO_OFFSET];
+ 	bool contact_valid, hover_event;
  
--	edma_writew(edma, le16_to_cpu(tcd->attr), &regs->tcd[ch].attr);
--	edma_writew(edma, le16_to_cpu(tcd->soff), &regs->tcd[ch].soff);
-+	edma_writel(edma, (s32)tcd->saddr, &regs->tcd[ch].saddr);
-+	edma_writel(edma, (s32)tcd->daddr, &regs->tcd[ch].daddr);
- 
--	edma_writel(edma, le32_to_cpu(tcd->nbytes), &regs->tcd[ch].nbytes);
--	edma_writel(edma, le32_to_cpu(tcd->slast), &regs->tcd[ch].slast);
-+	edma_writew(edma, (s16)tcd->attr, &regs->tcd[ch].attr);
-+	edma_writew(edma, tcd->soff, &regs->tcd[ch].soff);
- 
--	edma_writew(edma, le16_to_cpu(tcd->citer), &regs->tcd[ch].citer);
--	edma_writew(edma, le16_to_cpu(tcd->biter), &regs->tcd[ch].biter);
--	edma_writew(edma, le16_to_cpu(tcd->doff), &regs->tcd[ch].doff);
-+	edma_writel(edma, (s32)tcd->nbytes, &regs->tcd[ch].nbytes);
-+	edma_writel(edma, (s32)tcd->slast, &regs->tcd[ch].slast);
- 
--	edma_writel(edma, le32_to_cpu(tcd->dlast_sga),
-+	edma_writew(edma, (s16)tcd->citer, &regs->tcd[ch].citer);
-+	edma_writew(edma, (s16)tcd->biter, &regs->tcd[ch].biter);
-+	edma_writew(edma, (s16)tcd->doff, &regs->tcd[ch].doff);
++	pm_wakeup_event(&data->client->dev, 0);
 +
-+	edma_writel(edma, (s32)tcd->dlast_sga,
- 			&regs->tcd[ch].dlast_sga);
+ 	hover_event = hover_info & 0x40;
+ 	for (i = 0; i < ETP_MAX_FINGERS; i++) {
+ 		contact_valid = tp_info & (1U << (3 + i));
+@@ -974,6 +976,8 @@ static void elan_report_trackpoint(struct elan_tp_data *data, u8 *report)
+ 	u8 *packet = &report[ETP_REPORT_ID_OFFSET + 1];
+ 	int x, y;
  
--	edma_writew(edma, le16_to_cpu(tcd->csr), &regs->tcd[ch].csr);
-+	edma_writew(edma, (s16)tcd->csr, &regs->tcd[ch].csr);
- }
++	pm_wakeup_event(&data->client->dev, 0);
++
+ 	if (!data->tp_input) {
+ 		dev_warn_once(&data->client->dev,
+ 			      "received a trackpoint report while no trackpoint device has been created. Please report upstream.\n");
+@@ -998,7 +1002,6 @@ static void elan_report_trackpoint(struct elan_tp_data *data, u8 *report)
+ static irqreturn_t elan_isr(int irq, void *dev_id)
+ {
+ 	struct elan_tp_data *data = dev_id;
+-	struct device *dev = &data->client->dev;
+ 	int error;
+ 	u8 report[ETP_MAX_REPORT_LEN];
  
- static inline
+@@ -1016,8 +1019,6 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
+ 	if (error)
+ 		goto out;
+ 
+-	pm_wakeup_event(dev, 0);
+-
+ 	switch (report[ETP_REPORT_ID_OFFSET]) {
+ 	case ETP_REPORT_ID:
+ 		elan_report_absolute(data, report);
+@@ -1026,7 +1027,7 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
+ 		elan_report_trackpoint(data, report);
+ 		break;
+ 	default:
+-		dev_err(dev, "invalid report id data (%x)\n",
++		dev_err(&data->client->dev, "invalid report id data (%x)\n",
+ 			report[ETP_REPORT_ID_OFFSET]);
+ 	}
+ 
 -- 
 2.25.1
 
