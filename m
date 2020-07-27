@@ -1,97 +1,117 @@
-Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D5CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EF0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2B220809
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:03:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Cd4cAP3h"
+	by mail.kernel.org (Postfix) with ESMTP id 0D8C020729
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595894319;
+	bh=KOHL4dqqOgt80ENeUP3fboWfrZ4Es2kGP47CsCXbxcc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CULQtr8QHdLyKJyh8JOV4cEDhuVh0HpgKtIs+zO8MB229Vl8/eNmdPR8J6nJUnWiz
+	 7fD1fAS1wpHvH8a0cXDSVtREQQKcgwpEZjIpeLCIcc4j2dWdyaHL05E7xE0xJsUuWt
+	 89D5cYmHjaZdz0yvGqLE8+vTRUk4Wz1e8XktUntw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgG1ADK (ORCPT
+        id S1727051AbgG0X6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 20:03:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgG1ADK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 20:03:10 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2247EC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 17:03:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=bqzMdiPLEFKP5bfRsIjeQSwN8431aYJ/2kMLDMmcsxc=; b=Cd4cAP3hjP4gld3KlmBfDKmXF/
-        VkrRKTHigqOfyB5N+pvfppZjJRK4WsrA/7v84rp75l2/FunfHoRfg5mofkb170WaehH/mL557ErzC
-        wIHojNJRbjaUgxhTk/0rOJf/D1dePhyHt4Jbj5fLvN6/cREPGtaav1h46qGf5/TE79bopJfKOboX/
-        Lj462KKuw6cUwkqh6gy9Zsv+fdFIU9fPAAOX+WmN+7pqN+C5g9d4uFYUtMIC6PgNlRUBPdCjRJNoW
-        gHY7ApWu5SGctQwjsSU8yDu8FlgdYgHP5BYrsEAc7vJkL4LfWgdqKLnp5eUeltfYkClQABveUch90
-        77Yy/y1w==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0D5H-0002Ef-C3; Tue, 28 Jul 2020 00:03:08 +0000
-Subject: Re: [PATCH] checkpatch: Add test for repeated words
-To:     Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Whitcroft <apw@canonical.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-References: <20200726162902.Horde.TCqHYaODbkzEpM-rFzDd8A2@messagerie.si.c-s.fr>
- <b796e912-e945-3cb1-03f8-0f38009634a4@infradead.org>
- <add7c13b1ca24c8cb6f243b99d61c19287020efd.camel@perches.com>
- <4e505c35-8428-89bb-7f9b-bc819382c3cd@infradead.org>
- <16aa5f86f2f899a9156305ead4b7042449278eea.camel@perches.com>
- <cda9b566ad67976e1acd62b053de50ee44a57250.camel@perches.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e8cae8c6-84b8-0f1c-d94f-3ef5804a31e0@infradead.org>
-Date:   Mon, 27 Jul 2020 17:03:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 27 Jul 2020 19:58:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbgG0X6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:58:37 -0400
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D91920729;
+        Mon, 27 Jul 2020 23:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595894316;
+        bh=KOHL4dqqOgt80ENeUP3fboWfrZ4Es2kGP47CsCXbxcc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aYLfTp63EvOY7mzzhG3YX+3lCzRVUC/99sTt3Kzg6B7o1mRawcxxXeAzPgkFayaGb
+         CtzdbutF1yLSPKl9jqguggzLu+kvTJ3tlhfvsSEdQEpRmXgdcLzM2yQkM9wkD4T5M5
+         P/0wVHxukuXpUMIQv/O9iXuJYx8tVa9Sqt6Ne5EA=
+Received: by mail-lj1-f178.google.com with SMTP id s16so3947607ljc.8;
+        Mon, 27 Jul 2020 16:58:36 -0700 (PDT)
+X-Gm-Message-State: AOAM5326Np0b4C1fDMHNEP0wMRbyVzd1Lran4EkIpVTnUH35UlHu9tvg
+        aSSmexu/xEpQkaQwryyHHkA8BciZnm+iYqBPBIE=
+X-Google-Smtp-Source: ABdhPJyv4OWF5To6eW9anQABnbVH7sCiHCLi4jX2RUv1HVc5jxz2Gscx3ylyxBMeO5DNTJGjoZiX9w8flGdoziNTeDY=
+X-Received: by 2002:a2e:88c6:: with SMTP id a6mr11178609ljk.27.1595894314926;
+ Mon, 27 Jul 2020 16:58:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <cda9b566ad67976e1acd62b053de50ee44a57250.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-12-guro@fb.com>
+In-Reply-To: <20200727184506.2279656-12-guro@fb.com>
+From:   Song Liu <song@kernel.org>
+Date:   Mon, 27 Jul 2020 16:58:23 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW70Tzw=V7+N9Y=rzKSyihtiHHv03B_=Murr+GyepUTtpA@mail.gmail.com>
+Message-ID: <CAPhsuW70Tzw=V7+N9Y=rzKSyihtiHHv03B_=Murr+GyepUTtpA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 11/35] bpf: refine memcg-based memory
+ accounting for sockmap and sockhash maps
+To:     Roman Gushchin <guro@fb.com>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/20 12:33 AM, Joe Perches wrote:
-> Try to avoid adding repeated words either on the
-> same line or consecutive comment lines in a block
-> 
-> e.g.:
-> 
-> duplicated word in comment block
-> 
-> 	/*
-> 	 * this is a comment block where the last word of the previous
-> 	 * previous line is also the first word of the next line
-> 	 */
-> 
-> and simple duplication
-> 
-> 	/* test this this again */
-> 
-> Inspired-by: Randy Dunlap (rdunlap@infradead.org>
-> Signed-off-by: Joe Perches <joe@perches.com>
+On Mon, Jul 27, 2020 at 12:27 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> Include internal metadata into the memcg-based memory accounting.
+> Also include the memory allocated on updating an element.
+>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-Thanks for adding this check, Joe.
+Acked-by: Song Liu <songliubraving@fb.com>
 
 > ---
->  scripts/checkpatch.pl | 38 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
-
-
--- 
-~Randy
-
+>  net/core/sock_map.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+> index 119f52a99dc1..bc797adca44c 100644
+> --- a/net/core/sock_map.c
+> +++ b/net/core/sock_map.c
+> @@ -38,7 +38,7 @@ static struct bpf_map *sock_map_alloc(union bpf_attr *attr)
+>             attr->map_flags & ~SOCK_CREATE_FLAG_MASK)
+>                 return ERR_PTR(-EINVAL);
+>
+> -       stab = kzalloc(sizeof(*stab), GFP_USER);
+> +       stab = kzalloc(sizeof(*stab), GFP_USER | __GFP_ACCOUNT);
+>         if (!stab)
+>                 return ERR_PTR(-ENOMEM);
+>
+> @@ -829,7 +829,8 @@ static struct bpf_shtab_elem *sock_hash_alloc_elem(struct bpf_shtab *htab,
+>                 }
+>         }
+>
+> -       new = kmalloc_node(htab->elem_size, GFP_ATOMIC | __GFP_NOWARN,
+> +       new = kmalloc_node(htab->elem_size,
+> +                          GFP_ATOMIC | __GFP_NOWARN | __GFP_ACCOUNT,
+>                            htab->map.numa_node);
+>         if (!new) {
+>                 atomic_dec(&htab->count);
+> @@ -1011,7 +1012,7 @@ static struct bpf_map *sock_hash_alloc(union bpf_attr *attr)
+>         if (attr->key_size > MAX_BPF_STACK)
+>                 return ERR_PTR(-E2BIG);
+>
+> -       htab = kzalloc(sizeof(*htab), GFP_USER);
+> +       htab = kzalloc(sizeof(*htab), GFP_USER | __GFP_ACCOUNT);
+>         if (!htab)
+>                 return ERR_PTR(-ENOMEM);
+>
+> --
+> 2.26.2
+>
