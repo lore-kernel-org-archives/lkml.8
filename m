@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDC9C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70446C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCEF5207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6EC20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858848;
-	bh=ZBjwUVbaiLu8cbZf0dieYqykVNN/NZ6iX7h+k5LliDg=;
+	s=default; t=1595858856;
+	bh=XFO+m3iK7LtY6B1k/pVSY4bt5WEHisSrjpPfU8C8G2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W+fFyoG5kHwZEMuPf4gmAgR/Zdcwp4eKBtnHSjbAWW8k2vuYgkUI2SoUugxOrm8kH
-	 DHDW5PUbRqi+C/tbEZbjzDpIehJpDu15Miwf/3EbXHhcQpKBNcotyEJxkYUD/uj9Ne
-	 JrGqy0YJ7GFBgIHIhU2jqv35Ln2viJXoAVtylzRU=
+	b=Q8/bFt0Sz4mFVXXknGkyvcONPRpMT+MEh6O+icd4niG2OXUyH48CeiBBhbJFY+EX3
+	 TvapCogyGDlVJDhfPZNypMHtLXWmm7hccgwoYOdAgTVt7wjKshCOpu9EEyzGBLOmZ7
+	 kIokrnERkgL0kPW/ckyIHGzBNq5YJO/GvrIVv2Ug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgG0OH0 (ORCPT
+        id S1728881AbgG0OHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:07:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55990 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:07:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728780AbgG0OHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:07:22 -0400
+        id S1729240AbgG0OH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:07:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6170D20775;
-        Mon, 27 Jul 2020 14:07:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58D1920775;
+        Mon, 27 Jul 2020 14:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858842;
-        bh=ZBjwUVbaiLu8cbZf0dieYqykVNN/NZ6iX7h+k5LliDg=;
+        s=default; t=1595858846;
+        bh=XFO+m3iK7LtY6B1k/pVSY4bt5WEHisSrjpPfU8C8G2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KVqQpYf8m1oMzFJeZU/JtWnkU5NSuFmQg0/8jNsEt7wHXy3a2J52YRGKr+BZkKk+5
-         B8UJ1DkT2+CUo5mBMu9hOWbvjGxDi0TL8R5hJldEqdQ4Qd0amB/s+DO3KCWthSfmdd
-         rrkS+y4umZZFgEMzb9NBMVHlmgdbBGQDIfOyfNAQ=
+        b=KRwAdmBMn6PwuizklOyl0rMqaASScfVf0dhcKZdIsz2fpoF85tseWIV6qI8UGVtCk
+         ViEAruzyWYeDyBMKqBJO8PdcItspikjX/gWe8cixoUfr6BlKti3JClcKCtTy88CMi5
+         3YYjWAvJa6sE3iETRyp6cr3RCIP1r/eYKaetf50I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 09/64] net: sky2: initialize return of gm_phy_read
-Date:   Mon, 27 Jul 2020 16:03:48 +0200
-Message-Id: <20200727134911.497957172@linuxfoundation.org>
+Subject: [PATCH 4.14 26/64] net: smc91x: Fix possible memory leak in smc_drv_probe()
+Date:   Mon, 27 Jul 2020 16:04:05 +0200
+Message-Id: <20200727134912.446316264@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -61,48 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit 28b18e4eb515af7c6661c3995c6e3c34412c2874 ]
+[ Upstream commit bca9749b1aa23d964d3ab930938af66dbf887f15 ]
 
-clang static analysis flags this garbage return
+If try_toggle_control_gpio() failed in smc_drv_probe(), free_netdev(ndev)
+should be called to free the ndev created earlier. Otherwise, a memleak
+will occur.
 
-drivers/net/ethernet/marvell/sky2.c:208:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
-        return v;
-        ^~~~~~~~
-
-static inline u16 gm_phy_read( ...
-{
-	u16 v;
-	__gm_phy_read(hw, port, reg, &v);
-	return v;
-}
-
-__gm_phy_read can return without setting v.
-
-So handle similar to skge.c's gm_phy_read, initialize v.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: 7d2911c43815 ("net: smc91x: Fix gpios for device tree based booting")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/sky2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/smsc/smc91x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
-index 5046efdad5390..34ae4bf6e7162 100644
---- a/drivers/net/ethernet/marvell/sky2.c
-+++ b/drivers/net/ethernet/marvell/sky2.c
-@@ -215,7 +215,7 @@ io_error:
+diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
+index 96ac0d3af6f5b..f570a37c68c23 100644
+--- a/drivers/net/ethernet/smsc/smc91x.c
++++ b/drivers/net/ethernet/smsc/smc91x.c
+@@ -2294,7 +2294,7 @@ static int smc_drv_probe(struct platform_device *pdev)
+ 		ret = try_toggle_control_gpio(&pdev->dev, &lp->power_gpio,
+ 					      "power", 0, 0, 100);
+ 		if (ret)
+-			return ret;
++			goto out_free_netdev;
  
- static inline u16 gm_phy_read(struct sky2_hw *hw, unsigned port, u16 reg)
- {
--	u16 v;
-+	u16 v = 0;
- 	__gm_phy_read(hw, port, reg, &v);
- 	return v;
- }
+ 		/*
+ 		 * Optional reset GPIO configured? Minimum 100 ns reset needed
+@@ -2303,7 +2303,7 @@ static int smc_drv_probe(struct platform_device *pdev)
+ 		ret = try_toggle_control_gpio(&pdev->dev, &lp->reset_gpio,
+ 					      "reset", 0, 0, 100);
+ 		if (ret)
+-			return ret;
++			goto out_free_netdev;
+ 
+ 		/*
+ 		 * Need to wait for optional EEPROM to load, max 750 us according
 -- 
 2.25.1
 
