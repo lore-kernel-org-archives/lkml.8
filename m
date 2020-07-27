@@ -2,115 +2,116 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAA4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3461AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48D82206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0531E206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:46:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rG1283Do";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oabFngj7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="useCPffe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730815AbgG0PlI (ORCPT
+        id S1731009AbgG0Pqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:41:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49666 "EHLO
+        Mon, 27 Jul 2020 11:46:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730309AbgG0PlH (ORCPT
+        with ESMTP id S1729040AbgG0Pqn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:41:07 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED3B3C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:41:06 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595864465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=v2GoCD6qjiCp2SZh/B51AWSLCQivBgFFObpLzIT1tS4=;
-        b=rG1283DoQ5qLCZ574zhNvf40GyaDkQrdPlUP9Iv5UQ8JOaetvZsFPsvgerdjwyQsP0CfIH
-        dbH5HMelj7eSirYeGuHhUKV8rL1/PpQ49hvqNyTpVm/5zViRGg481mtxRhCNyzHgbGm7Y9
-        P9Gw6Q39k+PnboWZDwIXpcH8oEgaO1f3N4d8t+MPx+1jjPyNnAqwP64AVYGugtw+gKwE2D
-        tLpQ4fSMOBCvX/mpGpPLxZP2IpFay23N95P9gJtqZ8fLSjuvnLKDrcgXPvVPKBx+ciiaHl
-        REDbY0H2jGgCd3bIiPQpD9+gyX9Af7uLEpW6leLlqA3bD3Nw7TLgNIFUV9+W/A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595864465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=v2GoCD6qjiCp2SZh/B51AWSLCQivBgFFObpLzIT1tS4=;
-        b=oabFngj7mpGC/vE+Ror7c/XAQUxxNR3FamgmIhbF7oLNio+SG/GFlC4z4NIQgzSs94O/Cy
-        XzJfFyj5/DtMGwBw==
-To:     qianjun.kernel@gmail.com, peterz@infradead.org, will@kernel.org,
-        luto@kernel.org
-Cc:     linux-kernel@vger.kernel.org, laoar.shao@gmail.com,
-        urezki@gmail.com, jun qian <qianjun.kernel@gmail.com>
-Subject: Re: [PATCH V4] Softirq:avoid large sched delay from the pending softirqs
-In-Reply-To: <1595601083-10183-1-git-send-email-qianjun.kernel@gmail.com>
-References: <1595601083-10183-1-git-send-email-qianjun.kernel@gmail.com>
-Date:   Mon, 27 Jul 2020 17:41:04 +0200
-Message-ID: <87sgddaru7.fsf@nanos.tec.linutronix.de>
+        Mon, 27 Jul 2020 11:46:43 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50869C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:46:43 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id b14so13943468qkn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:46:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=eq6Q8ztU/SV0qKLD6bpCFHf5g7ycq71mi8wbaYyCfwM=;
+        b=useCPfferacyo/0JUXOwYUSEUXb19osX2BOfpi1ycjVc26Azr4WGsIO+HRRWYTQr30
+         ySYFahM0ujDCbR+y3GgsggUMD87PZjJagx6VbBz9Vl6sire8+gHrnPbKMCOGyTfujuv2
+         RcQgoQWn38hlsB6hYzRNKe3yQfu11PHLhztVBbtLsP5nvUSCSOqDLKfV7HJR0So428Kx
+         vzVnQEAK+vY+ePlywy2k6mxRztpQxEbhVd9c0M/oK7EzxRiqm7cmvka0Mkb1byNec6lO
+         7NMb6BRwQs5LTdbinevBq0SBoK/XHbKto6yTn1+SYs+JjMMutAWY2c6AnDIYoCHLbLmS
+         bzeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=eq6Q8ztU/SV0qKLD6bpCFHf5g7ycq71mi8wbaYyCfwM=;
+        b=ZqcBuHy3xFiMgS2nvtazsxCLNTAKh05VRThExKM3lCT23ZZu1F5MksvMRw01+0vuB6
+         sY7wGvRK8lB4ugjB/GeSwgXoqFCAfSqFmhYqsfsegYv6lIyRtlZH75YjB6AZo8bscYzi
+         jbHywXU5zIzIJwTiTxit6q5ltWegtT8WFZ3pfUwvJCayTQdm/1mfLudd8TTWVCgxvIsq
+         E9LEdgZbqkG5N55CES42rMSdLblSQeTYPox8VqCK+w7d78yWFmX+YAvAzogdWmFu72Jn
+         bUanS4qlmFokynBzrtBI8VjEw0SVNVILT9+sfb74lJmtTCriGo+K/rOwYgFFF4N2dCrd
+         B47w==
+X-Gm-Message-State: AOAM530xFzQtbDCersWaJpvEI/AEBCf2lFRVWkKpjVY5e/gdRLQ9jyTC
+        JJ5mpWhbCvjZs8BrtzwZFOri51dcTA==
+X-Google-Smtp-Source: ABdhPJwVxJVQnSQkMP5WrsFM11nJ6OZHIQPk6i8j75Z7FhEUMKNos2zkeaTqm2s/ehlmTd+a3DiD4A==
+X-Received: by 2002:a05:620a:1089:: with SMTP id g9mr23428430qkk.252.1595864802583;
+        Mon, 27 Jul 2020 08:46:42 -0700 (PDT)
+Received: from localhost.localdomain ([209.94.141.207])
+        by smtp.gmail.com with ESMTPSA id w18sm14390947qtn.3.2020.07.27.08.46.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 08:46:42 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH v2] firewire: Prevent kernel-infoleak in ioctl_get_info()
+Date:   Mon, 27 Jul 2020 11:45:21 -0400
+Message-Id: <20200727154521.315774-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200727151537.315023-1-yepeilin.cs@gmail.com>
+References: <20200727151537.315023-1-yepeilin.cs@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian,
+ioctl_get_info() is copying uninitialized stack memory to userspace due to
+the compiler not initializing holes in statically allocated structures.
+Fix it by initializing `event` using memset() in fill_bus_reset_event().
 
-qianjun.kernel@gmail.com writes:
->  /*
->   * We restart softirq processing for at most MAX_SOFTIRQ_RESTART times,
->   * but break the loop if need_resched() is set or after 2 ms.
-> - * The MAX_SOFTIRQ_TIME provides a nice upper bound in most cases, but in
-> - * certain cases, such as stop_machine(), jiffies may cease to
-> - * increment and so we need the MAX_SOFTIRQ_RESTART limit as
-> - * well to make sure we eventually return from this method.
-> + * In the loop, if the processing time of the softirq has exceeded 2
-> + * milliseconds, we also need to break the loop to wakeup the
-> ksofirqd.
+Cc: stable@vger.kernel.org
+Fixes: 344bbc4de14e ("firewire: Generalize get_config_rom to get_info.")
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+Change in v2:
+    - Add an appropriate `Fixes` tag. (Suggested by Arnd Bergmann
+      <arnd@arndb.de>)
 
-You are removing the MAX_SOFTIRQ_RESTART limit explanation and I rather
-have MAX_SOFTIRQ_TIME_NS there than '2 milliseconds' in case the value
-gets adjusted later on. Also while sched_clock() is granular on many
-systems it still can be jiffies based and then the above problem
-persists.
+ drivers/firewire/core-cdev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> @@ -299,6 +298,19 @@ asmlinkage __visible void __softirq_entry __do_softirq(void)
->  		}
->  		h++;
->  		pending >>= softirq_bit;
-> +
-> +		/*
-> +		 * the softirq's action has been running for too much time
-> +		 * so it may need to wakeup the ksoftirqd
-> +		 */
-> +		if (need_resched() && sched_clock() > end) {
-> +			/*
-> +			 * Ensure that the remaining pending bits are
-> +			 * handled.
-> +			 */
-> +			or_softirq_pending(pending << (vec_nr + 1));
+diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
+index fb6c651214f3..2341d762df5b 100644
+--- a/drivers/firewire/core-cdev.c
++++ b/drivers/firewire/core-cdev.c
+@@ -340,6 +340,8 @@ static void fill_bus_reset_event(struct fw_cdev_event_bus_reset *event,
+ {
+ 	struct fw_card *card = client->device->card;
+ 
++	memset(event, 0, sizeof(*event));
++
+ 	spin_lock_irq(&card->lock);
+ 
+ 	event->closure	     = client->bus_reset_closure;
+-- 
+2.25.1
 
-To or the value interrupts need to be disabled because otherwise you can
-lose a bit when an interrupt happens in the middle of the RMW operation
-and raises a softirq which is not in @pending and not in the per CPU
-local softirq pending storage.
-
-There is another problem. Assume bit 0 and 1 are pending when the
-processing starts. Now it breaks out after bit 0 has been handled and
-stores back bit 1 as pending. Before ksoftirqd runs bit 0 gets raised
-again. ksoftirqd runs and handles bit 0, which takes more than the
-timeout. As a result the bit 0 processing can starve all other softirqs.
-
-So this needs more thought.
-
-Thanks,
-
-        tglx
