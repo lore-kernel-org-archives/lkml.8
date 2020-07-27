@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF14FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA8BC433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA55421D95
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A17721D95
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859787;
-	bh=9YDQ//FKRdwgXd+87UsMSe+Y6OxUfMAleBfFYEuz80c=;
+	s=default; t=1595859790;
+	bh=e9V3lPrkqDvI9PpIFRoLbKwiPOAE5nFcLwbfsSfpGZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V8j05ZCZo0ANr6ywAJk/N2+bzmtEFD3GB+ex4gbxqyXhX7wkFCmc0XsoA9lzlUGYH
-	 yaltOOaZyyABarOnZ+vwMq9LFVbG6VBJEBQqnxDsC3biRtU+DmMz5W0O2e7m2JD/ev
-	 22R4LZi7EY0yfFyJ6hmTua3boz2ZIYHT+mbM470M=
+	b=1l5Rl59Ih8hWBAO6wHmyHkuCcyNVAiy5WKxIqfbGIMbhUlYunpvVfDnB8Vu3rwj9+
+	 5clh/19pMHpsByFFvQ4w2rIHW8Zfqfh571kjjmGjHI3w9n+hudQXccPdST1RAj0pd4
+	 XszLlAvbgABmkJza+ompC2PgzRvhJoniFtMoWeqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732011AbgG0OXG (ORCPT
+        id S1728832AbgG0OXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52100 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:23:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731997AbgG0OXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:23:00 -0400
+        id S1732004AbgG0OXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:23:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C18322070A;
-        Mon, 27 Jul 2020 14:22:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6194D2070A;
+        Mon, 27 Jul 2020 14:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859780;
-        bh=9YDQ//FKRdwgXd+87UsMSe+Y6OxUfMAleBfFYEuz80c=;
+        s=default; t=1595859782;
+        bh=e9V3lPrkqDvI9PpIFRoLbKwiPOAE5nFcLwbfsSfpGZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DknD6UfPMITxxEHgQ6DhayQNGXlGsiKy9F3yYOWP18EmjZ0GDfaxAZEOpMhS+pXSu
-         hMpkbjWx+DftUxdIWJ+xDPc1fYZyktd3Hr13E0cFh9EtizcO79NG8QfKPMvDXtNTKy
-         lk5b0z1EqUzDokys4m2hUDLKJe2TR5z5ccU0n1Rw=
+        b=i9QdEFmXUUaCw6pViwV10r5Ua79rEAQW1nyOgAxHxOfUxcuNImnNa2s4tC+f5g/kt
+         Lxo3JqQwB8vKfsicL7N5Z4fYAToo6BpZkXB9A64NjIOtzJqdKbCUUgMTWigaQsrN5C
+         dA+rZzofdLT+Bk0heXmYXbr1LSebAIzErqI+XpCs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 102/179] dmaengine: ti: k3-udma: Fix cleanup code for alloc_chan_resources
-Date:   Mon, 27 Jul 2020 16:04:37 +0200
-Message-Id: <20200727134937.621458979@linuxfoundation.org>
+Subject: [PATCH 5.7 103/179] dmaengine: ti: k3-udma: Fix the running channel handling in alloc_chan_resources
+Date:   Mon, 27 Jul 2020 16:04:38 +0200
+Message-Id: <20200727134937.668966561@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,103 +61,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit 5a9377cc7421b59b13c9b90b8dc0aca332a1c958 ]
+[ Upstream commit b5b0180c2f767e90b4a6a885a0a2abaab6e3d48d ]
 
-Some of the earlier errors should be sent to the error cleanup path to
-make sure that the uchan struct is reset, the dma_pool (if allocated) is
-released and memcpy channel pairs are released in a correct way.
+In the unlikely case when the channel is running (RT enabled) during
+alloc_chan_resources then we should use udma_reset_chan() and not
+udma_stop() as the later is trying to initiate a teardown on the channel,
+which is not valid at this point.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20200527070612.636-2-peter.ujfalusi@ti.com
+Link: https://lore.kernel.org/r/20200527070612.636-3-peter.ujfalusi@ti.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ti/k3-udma.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ drivers/dma/ti/k3-udma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 7cab23fe5c73f..35f54a1af29d8 100644
+index 35f54a1af29d8..b777f1924968f 100644
 --- a/drivers/dma/ti/k3-udma.c
 +++ b/drivers/dma/ti/k3-udma.c
-@@ -1773,7 +1773,8 @@ static int udma_alloc_chan_resources(struct dma_chan *chan)
- 			dev_err(ud->ddev.dev,
- 				"Descriptor pool allocation failed\n");
- 			uc->use_dma_pool = false;
--			return -ENOMEM;
-+			ret = -ENOMEM;
-+			goto err_cleanup;
- 		}
- 	}
+@@ -1868,7 +1868,7 @@ static int udma_alloc_chan_resources(struct dma_chan *chan)
  
-@@ -1793,16 +1794,18 @@ static int udma_alloc_chan_resources(struct dma_chan *chan)
- 
- 		ret = udma_get_chan_pair(uc);
- 		if (ret)
--			return ret;
-+			goto err_cleanup;
- 
- 		ret = udma_alloc_tx_resources(uc);
--		if (ret)
--			return ret;
-+		if (ret) {
-+			udma_put_rchan(uc);
-+			goto err_cleanup;
-+		}
- 
- 		ret = udma_alloc_rx_resources(uc);
- 		if (ret) {
- 			udma_free_tx_resources(uc);
--			return ret;
-+			goto err_cleanup;
- 		}
- 
- 		uc->config.src_thread = ud->psil_base + uc->tchan->id;
-@@ -1820,10 +1823,8 @@ static int udma_alloc_chan_resources(struct dma_chan *chan)
- 			uc->id);
- 
- 		ret = udma_alloc_tx_resources(uc);
--		if (ret) {
--			uc->config.remote_thread_id = -1;
--			return ret;
--		}
-+		if (ret)
-+			goto err_cleanup;
- 
- 		uc->config.src_thread = ud->psil_base + uc->tchan->id;
- 		uc->config.dst_thread = uc->config.remote_thread_id;
-@@ -1840,10 +1841,8 @@ static int udma_alloc_chan_resources(struct dma_chan *chan)
- 			uc->id);
- 
- 		ret = udma_alloc_rx_resources(uc);
--		if (ret) {
--			uc->config.remote_thread_id = -1;
--			return ret;
--		}
-+		if (ret)
-+			goto err_cleanup;
- 
- 		uc->config.src_thread = uc->config.remote_thread_id;
- 		uc->config.dst_thread = (ud->psil_base + uc->rchan->id) |
-@@ -1858,7 +1857,9 @@ static int udma_alloc_chan_resources(struct dma_chan *chan)
- 		/* Can not happen */
- 		dev_err(uc->ud->dev, "%s: chan%d invalid direction (%u)\n",
- 			__func__, uc->id, uc->config.dir);
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto err_cleanup;
-+
- 	}
- 
- 	/* check if the channel configuration was successful */
-@@ -1936,7 +1937,7 @@ err_psi_free:
- err_res_free:
- 	udma_free_tx_resources(uc);
- 	udma_free_rx_resources(uc);
--
-+err_cleanup:
- 	udma_reset_uchan(uc);
- 
- 	if (uc->use_dma_pool) {
+ 	if (udma_is_chan_running(uc)) {
+ 		dev_warn(ud->dev, "chan%d: is running!\n", uc->id);
+-		udma_stop(uc);
++		udma_reset_chan(uc, false);
+ 		if (udma_is_chan_running(uc)) {
+ 			dev_err(ud->dev, "chan%d: won't stop!\n", uc->id);
+ 			goto err_res_free;
 -- 
 2.25.1
 
