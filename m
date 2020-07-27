@@ -2,57 +2,54 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14B6C433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B88C433F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0B792173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15D5A2173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859523;
-	bh=dVQ0hwlWWpDvG5Xm+0dZcSPdLlPaxjOtR+QNtoShlzE=;
+	s=default; t=1595859527;
+	bh=ypuA/oRfRs3AqXkaEtmQlA22CeAA125dbi9BiGjjIyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rg5BBIpg84kYUKzL64xQbbVkSxRS7MnD5IHvn/sBxnsgWUIsdlkkNnV94+kUHp7ES
-	 sJ/HqAUk7iNW2kMsMP9Iqt9y4rXVqhR6xSeN3YxLwl6RYQBysObQrpR5wgIZUJG6YI
-	 7NP71PgOA+zuI2ik37G1odVxisE3XMdbH3iOzGYQ=
+	b=enC0zX0zXkLsBdBDe5NxT7gZNAE1JCEGNYgOSVHdRA0DWUIUMFQ9ztpsMoVJpsFqF
+	 0gnPE/rTLGSl5O5Dpae9QVa5j0JedqsJYF7wycWESExtH0JMzOnytqK5kJ118rigHC
+	 oZsmmdYzb0XcKFtWfaj+nBEQIdGonGmTMHyynCeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbgG0OSm (ORCPT
+        id S1729249AbgG0OSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:18:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46376 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:18:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730074AbgG0OSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:18:39 -0400
+        id S1731279AbgG0OSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:18:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27FC42070A;
-        Mon, 27 Jul 2020 14:18:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D7042075A;
+        Mon, 27 Jul 2020 14:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859518;
-        bh=dVQ0hwlWWpDvG5Xm+0dZcSPdLlPaxjOtR+QNtoShlzE=;
+        s=default; t=1595859521;
+        bh=ypuA/oRfRs3AqXkaEtmQlA22CeAA125dbi9BiGjjIyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EgU+WqICPv9Bm8HBcqzhZ3s0N2AgUcMZRez7XHmIm/0WrjtOb1tYm1uAqywQvW2b3
-         kloySLDsfGtIjK2pQYncCxNcxrL4IEGktAUKYcQI/JgKPLTkIm/OWt8LpeISiCFzi9
-         kkQV6qSbQfBiu1nyp52ua69q1xeRFPl0CZfUHrJo=
+        b=vShvrK6rWGy0tFWG8JLViLLTFFlafdeA/F3RMA0V1Z6owEhV1WqdRz2SQdHK5lkZz
+         qqdVAHPF/bdUMZcHEPXs+LdTZnR0jDG5N6tfkce701Ro+dObr6kV9SK0b0I5Y7Sv9V
+         vBxcB362r/0uGGnsiWvf23w1A5u+I2Ct/9D1XNvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Guo Ren <guoren@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 101/138] asm-generic/mmiowb: Allow mmiowb_set_pending() when preemptible()
-Date:   Mon, 27 Jul 2020 16:04:56 +0200
-Message-Id: <20200727134930.414367344@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 134/138] ASoC: topology: fix kernel oops on route addition error
+Date:   Mon, 27 Jul 2020 16:05:29 +0200
+Message-Id: <20200727134932.112940483@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -65,85 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit bd024e82e4cd95c7f1a475a55f99871936c2b2db ]
+commit 6f0307df83f2aa6bdf656c2219c89ce96502d20e upstream.
 
-Although mmiowb() is concerned only with serialising MMIO writes occuring
-in contexts where a spinlock is held, the call to mmiowb_set_pending()
-from the MMIO write accessors can occur in preemptible contexts, such
-as during driver probe() functions where ordering between CPUs is not
-usually a concern, assuming that the task migration path provides the
-necessary ordering guarantees.
+When errors happens while loading graph components, the kernel oopses
+while trying to remove all topology components. This can be
+root-caused to a list pointing to memory that was already freed on
+error.
 
-Unfortunately, the default implementation of mmiowb_set_pending() is not
-preempt-safe, as it makes use of a a per-cpu variable to track its
-internal state. This has been reported to generate the following splat
-on riscv:
+remove_route() is already called on errors and will perform the
+required cleanups so there's no need to free the route memory in
+soc_tplg_dapm_graph_elems_load() if the route was added to the
+list. We do however want to free the routes allocated but not added to
+the list.
 
- | BUG: using smp_processor_id() in preemptible [00000000] code: swapper/0/1
- | caller is regmap_mmio_write32le+0x1c/0x46
- | CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-hfu+ #1
- | Call Trace:
- |  walk_stackframe+0x0/0x7a
- |  dump_stack+0x6e/0x88
- |  regmap_mmio_write32le+0x18/0x46
- |  check_preemption_disabled+0xa4/0xaa
- |  regmap_mmio_write32le+0x18/0x46
- |  regmap_mmio_write+0x26/0x44
- |  regmap_write+0x28/0x48
- |  sifive_gpio_probe+0xc0/0x1da
+Fixes: 7df04ea7a31ea ('ASoC: topology: modify dapm route loading routine and add dapm route unloading')
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200707203749.113883-2-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Although it's possible to fix the driver in this case, other splats have
-been seen from other drivers, including the infamous 8250 UART, and so
-it's better to address this problem in the mmiowb core itself.
-
-Fix mmiowb_set_pending() by using the raw_cpu_ptr() to get at the mmiowb
-state and then only updating the 'mmiowb_pending' field if we are not
-preemptible (i.e. we have a non-zero nesting count).
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Guo Ren <guoren@kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Reported-by: Palmer Dabbelt <palmer@dabbelt.com>
-Reported-by: Emil Renner Berthing <kernel@esmil.dk>
-Tested-by: Emil Renner Berthing <kernel@esmil.dk>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Link: https://lore.kernel.org/r/20200716112816.7356-1-will@kernel.org
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/asm-generic/mmiowb.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ sound/soc/soc-topology.c |   22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/include/asm-generic/mmiowb.h b/include/asm-generic/mmiowb.h
-index 9439ff037b2d1..5698fca3bf560 100644
---- a/include/asm-generic/mmiowb.h
-+++ b/include/asm-generic/mmiowb.h
-@@ -27,7 +27,7 @@
- #include <asm/smp.h>
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -1284,17 +1284,29 @@ static int soc_tplg_dapm_graph_elems_loa
+ 		list_add(&routes[i]->dobj.list, &tplg->comp->dobj_list);
  
- DECLARE_PER_CPU(struct mmiowb_state, __mmiowb_state);
--#define __mmiowb_state()	this_cpu_ptr(&__mmiowb_state)
-+#define __mmiowb_state()	raw_cpu_ptr(&__mmiowb_state)
- #else
- #define __mmiowb_state()	arch_mmiowb_state()
- #endif	/* arch_mmiowb_state */
-@@ -35,7 +35,9 @@ DECLARE_PER_CPU(struct mmiowb_state, __mmiowb_state);
- static inline void mmiowb_set_pending(void)
- {
- 	struct mmiowb_state *ms = __mmiowb_state();
--	ms->mmiowb_pending = ms->nesting_count;
-+
-+	if (likely(ms->nesting_count))
-+		ms->mmiowb_pending = ms->nesting_count;
- }
+ 		ret = soc_tplg_add_route(tplg, routes[i]);
+-		if (ret < 0)
++		if (ret < 0) {
++			/*
++			 * this route was added to the list, it will
++			 * be freed in remove_route() so increment the
++			 * counter to skip it in the error handling
++			 * below.
++			 */
++			i++;
+ 			break;
++		}
  
- static inline void mmiowb_spin_lock(void)
--- 
-2.25.1
-
+ 		/* add route, but keep going if some fail */
+ 		snd_soc_dapm_add_routes(dapm, routes[i], 1);
+ 	}
+ 
+-	/* free memory allocated for all dapm routes in case of error */
+-	if (ret < 0)
+-		for (i = 0; i < count ; i++)
+-			kfree(routes[i]);
++	/*
++	 * free memory allocated for all dapm routes not added to the
++	 * list in case of error
++	 */
++	if (ret < 0) {
++		while (i < count)
++			kfree(routes[i++]);
++	}
+ 
+ 	/*
+ 	 * free pointer to array of dapm routes as this is no longer needed.
 
 
