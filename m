@@ -2,80 +2,180 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC842C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A48AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBC902073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:12:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595877161;
-	bh=iDjuqni09Ye+Y5tnBznZ5YEHc2O13s9uN4udYT6xhSg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l8qOjWRyIOrIXgPj5CQl8pfpsT2fVWakGlIB4hIL2LRvRK++Jb6IqUE85kXZnVV0b
-	 xx8xN9B/uKEYrEyS0FEmSJhpYZQXF+Ou6VO4bFUkJICzQErjpTPEB3k/vkjnHLW7tn
-	 TKgXXmRifg4W0Ko4pwqNSWl5+vcjgQE4jcOMQfFc=
+	by mail.kernel.org (Postfix) with ESMTP id 61F6720719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728491AbgG0TMk (ORCPT
+        id S1728536AbgG0TNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:12:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728343AbgG0TMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:12:40 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C24C520719;
-        Mon, 27 Jul 2020 19:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595877160;
-        bh=iDjuqni09Ye+Y5tnBznZ5YEHc2O13s9uN4udYT6xhSg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZbgCyEDCCb9e28CEWIs4zRb4ylp5tXAupnlxiuhkXb7GspPsQvYAzWADUqm5idmbp
-         W2kek20eQJMvggBOY7o0OMkIakJOOY8j9ATva8TRjGuJOByzP1YDl86skpoJBjb1ba
-         kbJgg10ZmpQCq/HNvMUXyz69h/3my82xjPz0H82U=
-Date:   Mon, 27 Jul 2020 15:12:38 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: Re: [PATCH 5.7 024/179] dm mpath: pass IO start time to path selector
-Message-ID: <20200727191238.GH406581@sasha-vm>
-References: <20200727134932.659499757@linuxfoundation.org>
- <20200727134933.846667790@linuxfoundation.org>
- <87sgdcuda6.fsf@collabora.com>
+        Mon, 27 Jul 2020 15:13:49 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:59035 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728493AbgG0TNs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 15:13:48 -0400
+Received: (qmail 1479089 invoked by uid 1000); 27 Jul 2020 15:13:47 -0400
+Date:   Mon, 27 Jul 2020 15:13:47 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
+Message-ID: <20200727191347.GA1477670@rowland.harvard.edu>
+References: <20200717044427.68747-1-ebiggers@kernel.org>
+ <20200717174750.GQ12769@casper.infradead.org>
+ <20200718013839.GD2183@sol.localdomain>
+ <20200718021304.GS12769@casper.infradead.org>
+ <20200718052818.GF2183@sol.localdomain>
+ <20200727151746.GC1468275@rowland.harvard.edu>
+ <20200727152827.GM23808@casper.infradead.org>
+ <20200727163149.GD1468275@rowland.harvard.edu>
+ <20200727165917.GN23808@casper.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87sgdcuda6.fsf@collabora.com>
+In-Reply-To: <20200727165917.GN23808@casper.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:35:13PM -0400, Gabriel Krisman Bertazi wrote:
->Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
->
->> From: Gabriel Krisman Bertazi <krisman@collabora.com>
->>
->> [ Upstream commit 087615bf3acdafd0ba7c7c9ed5286e7b7c80fe1b ]
->>
->> The HST path selector needs this information to perform path
->> prediction. For request-based mpath, struct request's io_start_time_ns
->> is used, while for bio-based, use the start_time stored in dm_io.
->
->Hi Greg,
->
->This patch is not -stable material.  It is only needed for a new feature
->merged in 5.8.
+On Mon, Jul 27, 2020 at 05:59:17PM +0100, Matthew Wilcox wrote:
+> On Mon, Jul 27, 2020 at 12:31:49PM -0400, Alan Stern wrote:
+> > On Mon, Jul 27, 2020 at 04:28:27PM +0100, Matthew Wilcox wrote:
+> > > On Mon, Jul 27, 2020 at 11:17:46AM -0400, Alan Stern wrote:
+> > > > Given a type "T", an object x of type pointer-to-T, and a function
+> > > > "func" that takes various arguments and returns a pointer-to-T, the
+> > > > accepted API for calling func once would be to create once_func() as
+> > > > follows:
+> > > > 
+> > > > T *once_func(T **ppt, args...)
+> > > > {
+> > > > 	static DEFINE_MUTEX(mut);
+> > > > 	T *p;
+> > > > 
+> > > > 	p = smp_load_acquire(ppt);	/* Mild optimization */
+> > > > 	if (p)
+> > > > 		return p;
+> > > > 
+> > > > 	mutex_lock(mut);
+> > > > 	p = smp_load_acquire(ppt);
+> > > > 	if (!p) {
+> > > > 		p = func(args...);
+> > > > 		if (!IS_ERR_OR_NULL(p))
+> > > > 			smp_store_release(ppt, p);
+> > > > 	}
+> > > > 	mutex_unlock(mut);
+> > > > 	return p;
+> > > > }
+> > > > 
+> > > > Users then would have to call once_func(&x, args...) and check the
+> > > > result.  Different x objects would constitute different "once"
+> > > > domains.
+> > > [...]
+> > > > In fact, the only drawback I can think of is that because this relies
+> > > > on a single mutex for all the different possible x's, it might lead to
+> > > > locking conflicts (if func had to call once_func() recursively, for
+> > > > example).  In most reasonable situations such conflicts would not
+> > > > arise.
+> > > 
+> > > Another drawback for this approach relative to my get_foo() approach
+> > > upthread is that, because we don't have compiler support, there's no
+> > > enforcement that accesses to 'x' go through once_func().  My approach
+> > > wraps accesses in a deliberately-opaque struct so you have to write
+> > > some really ugly code to get at the raw value, and it's just easier to
+> > > call get_foo().
+> > 
+> > Something like that could be included in once_func too.  It's relatively 
+> > tangential to the main point I was making, which was to settle on an 
+> > overall API and discuss how it should be described in recipes.txt.
+> 
+> Then I think you're trying to describe something which is too complicated
+> because it's overly general.  I don't think device drivers should contain
+> "smp_load_acquire" and "smp_store_release".  Most device driver authors
+> struggle with spinlocks and mutexes.
 
-I've dropped it, thank you!
+Then I didn't explain my proposal clearly enough.  It doesn't require 
+device driver authors to know anything about smp_load_acquire, 
+smp_store_release, spinlocks, or mutexes.
 
--- 
-Thanks,
-Sasha
+Suppose an author wants to allocate and initialize a struct foo exactly 
+once.  Then the driver code would contain something like this:
+
+struct foo *foop;
+
+static struct foo *alloc_foo(gfp_t gfp)
+{
+	... allocate and initialize ...
+}
+
+MAKE_ONCE_FUNC(struct foo, alloc_foo, (gfp_t gfp), (gfp))
+
+The code to use it is:
+
+	struct foo *p = once_alloc_foo(&foop, GFP_KERNEL);
+
+If you don't like the global pointer, encapsulate it as follows:
+
+struct foo *get_foo(grp_t gfp)
+{
+	static struct foo *foop;
+
+	return once_alloc_foo(&foop, gfp);
+}
+
+and have users call get_foo instead of once_alloc_foo.
+
+It's hard to imagine this getting much simpler.
+
+> The once_get() / once_store() API:
+> 
+> struct foo *get_foo(gfp_t gfp)
+> {
+> 	static struct once_pointer my_foo;
+> 	struct foo *foop;
+> 
+> 	foop = once_get(&my_foo);
+> 	if (foop)
+> 		return foop;
+> 
+> 	foop = alloc_foo(gfp);
+> 	if (foop && !once_store(&my_foo, foop)) {
+> 		free_foo(foop);
+> 		foop = once_get(&my_foo);
+> 	}
+> 
+> 	return foop;
+> }
+> 
+> is easy to understand.  There's no need to talk about acquire and release
+> semantics, barriers, reordering, ... it all just works in the obvious way
+> that it's written.
+
+The MAKE_ONCE_FUNC API is just as easy to understand and requires less 
+boilerplate.  It's type-safe whereas your once_pointer structures 
+aren't.  And it's more general, in the sense that it provides a way to 
+call a function only once, as opposed to a way to store a pointer only 
+once.
+
+Alan Stern
