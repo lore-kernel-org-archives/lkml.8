@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA57C433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F53DC433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA89F208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD8B20A8B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892293;
-	bh=5rkRIb3U+cgcQZ4kmQQZEzU4H5D2wfdrv2LhgBPwlHc=;
+	s=default; t=1595892297;
+	bh=nn6c3ouFo/CWs+YNKGZ6KhFVr0vVTmP3ij6HaIERD9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wqGG19CfiKZHhhP7v74TZ75dW72MUfosqPUp7ybDibDxijlL05Buh50bFz6K+ANEt
-	 gLMQkKV0ohqtahKQkPJQfU8+FHQNMSUpEWUFlJtRp5f4j0mxkbWj5/Yq2EdTSZ4koB
-	 gBzwVBfis2GnQE77NCzC1DJ5szapUj7xm3dlviSE=
+	b=pZBwgMahHyq8zRgHBTBSTvfHDeWp9lMCmPS7sWi3KrlBuwipgfLNLpBkSbLiejH/t
+	 y4LQ8FsY+kQH3IuvZh9FcYj/sp8lXaHjnQ3TdV54sVZKVoeBy2X3cTYuIMw6xdh0no
+	 hQuCxTmZAPvw9kuvIF9Ntie9CBxS5lNx7gio84Ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgG0XYw (ORCPT
+        id S1728442AbgG0XY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:24:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36004 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:24:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728377AbgG0XYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:24:47 -0400
+        id S1728416AbgG0XYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:24:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D97D22B3F;
-        Mon, 27 Jul 2020 23:24:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78C6A22B42;
+        Mon, 27 Jul 2020 23:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892286;
-        bh=5rkRIb3U+cgcQZ4kmQQZEzU4H5D2wfdrv2LhgBPwlHc=;
+        s=default; t=1595892292;
+        bh=nn6c3ouFo/CWs+YNKGZ6KhFVr0vVTmP3ij6HaIERD9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j6P5sEhyBSTDyJ1bgIVRkFcN5nEYzwM4MB1YKQrSrbnxYzfoblYaq0Cw1ONOpX83r
-         38Trld51QEpoq7+wrHwKuwvSWZTEJ64sOmdzItWztCJo3pC1HaMBxZtS0x/GHDCdBd
-         5o1cFosI7QYybn3FayfZMAZ6f0ZgsdFaOv7N2dA8=
+        b=GJo675ly+4JlpYrrB1hct1tF0hISjtpGg7A+R0b7GtBzoY7i8yAtlB6n25OW2JHeJ
+         QqRiuiNQu9SQ1KPBj/7SLUsnzZHyZc80utX6noEZRf658FxRm+r2WSyNphw20elfC8
+         o5wbdZVEiH7Fkh7ymX67K2uQlFL7iC4LUXnhJsak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laurence Oberman <loberman@redhat.com>,
+Cc:     Xie He <xie.he.0141@gmail.com>, Eric Dumazet <edumazet@google.com>,
+        Martin Schiller <ms@dev.tdt.de>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/10] qed: Disable "MFW indication via attention" SPAM every 5 minutes
-Date:   Mon, 27 Jul 2020 19:24:35 -0400
-Message-Id: <20200727232443.718000-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 06/10] drivers/net/wan/x25_asy: Fix to make it work
+Date:   Mon, 27 Jul 2020 19:24:39 -0400
+Message-Id: <20200727232443.718000-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200727232443.718000-1-sashal@kernel.org>
 References: <20200727232443.718000-1-sashal@kernel.org>
@@ -59,36 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurence Oberman <loberman@redhat.com>
+From: Xie He <xie.he.0141@gmail.com>
 
-[ Upstream commit 1d61e21852d3161f234b9656797669fe185c251b ]
+[ Upstream commit 8fdcabeac39824fe67480fd9508d80161c541854 ]
 
-This is likely firmware causing this but its starting to annoy customers.
-Change the message level to verbose to prevent the spam.
-Note that this seems to only show up with ISCSI enabled on the HBA via the
-qedi driver.
+This driver is not working because of problems of its receiving code.
+This patch fixes it to make it work.
 
-Signed-off-by: Laurence Oberman <loberman@redhat.com>
+When the driver receives an LAPB frame, it should first pass the frame
+to the LAPB module to process. After processing, the LAPB module passes
+the data (the packet) back to the driver, the driver should then add a
+one-byte pseudo header and pass the data to upper layers.
+
+The changes to the "x25_asy_bump" function and the
+"x25_asy_data_indication" function are to correctly implement this
+procedure.
+
+Also, the "x25_asy_unesc" function ignores any frame that is shorter
+than 3 bytes. However the shortest frames are 2-byte long. So we need
+to change it to allow 2-byte frames to pass.
+
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Reviewed-by: Martin Schiller <ms@dev.tdt.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_int.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wan/x25_asy.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
-index f9e475075d3ea..61d5d76545687 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_int.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
-@@ -1015,7 +1015,8 @@ static int qed_int_attentions(struct qed_hwfn *p_hwfn)
- 			index, attn_bits, attn_acks, asserted_bits,
- 			deasserted_bits, p_sb_attn_sw->known_attn);
- 	} else if (asserted_bits == 0x100) {
--		DP_INFO(p_hwfn, "MFW indication via attention\n");
-+		DP_VERBOSE(p_hwfn, NETIF_MSG_INTR,
-+			   "MFW indication via attention\n");
+diff --git a/drivers/net/wan/x25_asy.c b/drivers/net/wan/x25_asy.c
+index 4f25c2d8fff06..6fe9695a5f18f 100644
+--- a/drivers/net/wan/x25_asy.c
++++ b/drivers/net/wan/x25_asy.c
+@@ -183,7 +183,7 @@ static inline void x25_asy_unlock(struct x25_asy *sl)
+ 	netif_wake_queue(sl->dev);
+ }
+ 
+-/* Send one completely decapsulated IP datagram to the IP layer. */
++/* Send an LAPB frame to the LAPB module to process. */
+ 
+ static void x25_asy_bump(struct x25_asy *sl)
+ {
+@@ -195,13 +195,12 @@ static void x25_asy_bump(struct x25_asy *sl)
+ 	count = sl->rcount;
+ 	dev->stats.rx_bytes += count;
+ 
+-	skb = dev_alloc_skb(count+1);
++	skb = dev_alloc_skb(count);
+ 	if (skb == NULL) {
+ 		netdev_warn(sl->dev, "memory squeeze, dropping packet\n");
+ 		dev->stats.rx_dropped++;
+ 		return;
+ 	}
+-	skb_push(skb, 1);	/* LAPB internal control */
+ 	skb_put_data(skb, sl->rbuff, count);
+ 	skb->protocol = x25_type_trans(skb, sl->dev);
+ 	err = lapb_data_received(skb->dev, skb);
+@@ -209,7 +208,6 @@ static void x25_asy_bump(struct x25_asy *sl)
+ 		kfree_skb(skb);
+ 		printk(KERN_DEBUG "x25_asy: data received err - %d\n", err);
  	} else {
- 		DP_VERBOSE(p_hwfn, NETIF_MSG_INTR,
- 			   "MFW indication [deassertion]\n");
+-		netif_rx(skb);
+ 		dev->stats.rx_packets++;
+ 	}
+ }
+@@ -356,12 +354,21 @@ static netdev_tx_t x25_asy_xmit(struct sk_buff *skb,
+  */
+ 
+ /*
+- *	Called when I frame data arrives. We did the work above - throw it
+- *	at the net layer.
++ *	Called when I frame data arrive. We add a pseudo header for upper
++ *	layers and pass it to upper layers.
+  */
+ 
+ static int x25_asy_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
++	if (skb_cow(skb, 1)) {
++		kfree_skb(skb);
++		return NET_RX_DROP;
++	}
++	skb_push(skb, 1);
++	skb->data[0] = X25_IFACE_DATA;
++
++	skb->protocol = x25_type_trans(skb, dev);
++
+ 	return netif_rx(skb);
+ }
+ 
+@@ -657,7 +664,7 @@ static void x25_asy_unesc(struct x25_asy *sl, unsigned char s)
+ 	switch (s) {
+ 	case X25_END:
+ 		if (!test_and_clear_bit(SLF_ERROR, &sl->flags) &&
+-		    sl->rcount > 2)
++		    sl->rcount >= 2)
+ 			x25_asy_bump(sl);
+ 		clear_bit(SLF_ESCAPE, &sl->flags);
+ 		sl->rcount = 0;
 -- 
 2.25.1
 
