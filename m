@@ -2,87 +2,81 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E72C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F3CC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 828F7206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 624BF206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SL2Gkjqb"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="AJgFVAeq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbgG0QZ0 (ORCPT
+        id S1729580AbgG0QZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 12:25:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56556 "EHLO
+        Mon, 27 Jul 2020 12:25:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728446AbgG0QZZ (ORCPT
+        with ESMTP id S1729486AbgG0QZp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:25:25 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8B37C061794;
-        Mon, 27 Jul 2020 09:25:23 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id s190so3250339ooa.13;
-        Mon, 27 Jul 2020 09:25:23 -0700 (PDT)
+        Mon, 27 Jul 2020 12:25:45 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FA5C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 09:25:44 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id c6so3170646pje.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 09:25:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kLEwg/GwaUFP5MTtIx9yELTFjI7/3rn3DIkXhvdqZaU=;
-        b=SL2Gkjqb+X2fjcvF1VHGdaS4g0KaJfv9brxRvotYAOF1r4cxXgKvQvQvss5Th8BGtI
-         BvrBRUT/gBIbrq7cbH/atelEM7n5eli33tySTmotJQEKTO+DN0DwQnpzzWaf4ck8U+ae
-         IdzzufDV5OI+9mPMzdnwrUS98zsYNZ2a2r5QJHSsh/XdlbWYHHPx9mtprdADuemYo5FY
-         ogap3CWrKEO5FJLugFi++ZdTyfU3JVL99dA2tMhXP2DNaU5iB4wkGYGIg+X5H7JhADGV
-         SJmK7HolDBy8mhHbZ1m3kfBMMZJGS/MliDs+suuBCQRPI/OotD8pSsDKpRTi2YLj8ohq
-         LI6Q==
+        bh=PgFDMWbXvBiEOAL8M87yEjCfGoE6x1y/jQ7//nauM8k=;
+        b=AJgFVAeqNc0eTNWKlRiSdboLLmWGtucMVtlkCPLfxpBGGAOOTw7XJMakcq6cwtXPte
+         LEWZgdT2NaR/JInb5XxIN5Smg+ng7vi9zQeZMCLwjk1ov8i28QxqN+dvgNRo6VfRyAGc
+         GBFvwT83gAamdChAgmQR7vLsWjeOfx5Uw2LjnV++DPbvKy39G2ymgTSAdCMm2x6Our1I
+         94YsqiAYqbGhTjUwF1TYPnjl7nZPE4pLK5AeHvUmbBHlUPuq7gkHP2amjZG1T8c4njdx
+         M1wCjXnOwFI6Xm2Go58ZuKECCu6Tjw7+nmjJ0ZRUF/3Eill1r/Y0cYhEGxbrQi2p6703
+         1Qlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=kLEwg/GwaUFP5MTtIx9yELTFjI7/3rn3DIkXhvdqZaU=;
-        b=gteji0Kvr85QaN82DXaRK+HpQ3sMqp81sxhsJuO0NK66tWRzPwlxtpPLslQ7NmBpGT
-         3bFzYvTmy5hMVIvfwChyRAyW0idi3LTlzxdew8r5bqJXOWdpTwuOSdKo0rq+VZ/yNDtd
-         hylmDrONYUX3nIhy4mKylSWcl36qAWI5AU6SycnFiT+Bnm4jHBF8ndsteZyxx2nFSnvU
-         uDAL0OOtMw8yXTzvh5/5VllIKfrlvzjuljFiOj2R1xhYgUSp0Rmf7b0m6tYbOx27/8H5
-         ULpewjAMPFGvlPdR+GV2X59XBMqPq03pIS2S3Qr/QGIiwT3GrH2nd9HwPMUKZOSEntCt
-         EKzA==
-X-Gm-Message-State: AOAM532EkkYlv4vr0vFc7DhJ/Gofk58kvJ5jyAEASfbG6GM5Sugd9gh/
-        ATv5hW6dSAwjpaQfWqP1R7Mjl6Ck
-X-Google-Smtp-Source: ABdhPJyNKM4sqOTOSrrgLKu7GyOOBqYh9EpoiC0V0A3UviX3MIkXfMB0DJbeKjOQp9wN+auzOr4t2Q==
-X-Received: by 2002:a4a:ae07:: with SMTP id z7mr20059296oom.25.1595867122954;
-        Mon, 27 Jul 2020 09:25:22 -0700 (PDT)
-Received: from localhost.localdomain (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id g2sm3594103otr.72.2020.07.27.09.25.21
+        bh=PgFDMWbXvBiEOAL8M87yEjCfGoE6x1y/jQ7//nauM8k=;
+        b=CjAti8KSNE91hWvQwT/FsE/Qd2c6jYkXW7+qfsOxuc04HsAJi4FdoLP66kM13Dd8uQ
+         pL7x9npq9Ul4FEDmLXv/2+p2iw9qBeh1zMuFpfWToVpDrf8iP0oFqB9zQCbo3aKzE3ri
+         r4dijm0lawwdDi8Q+9j/VOPgM9y3vm/xclnaRTiNEgv5gNkkPOfr75fdYVi6x00LJpvM
+         oamTIwBYWKM7NpNADBzzYMTZ8w8IB6iaNUyxIa+4PdCQ98H3XPZP/dmUwUGrA+cvC5qY
+         PboZ4QoXA7jptui5vf6dCLjLGAvWi8388aD5TwnOyV0nlMvYJ0W3oa/9xe5xSo4sd95r
+         YelQ==
+X-Gm-Message-State: AOAM533rh0kjdAytwhl+rdoizlSNEHuMvltWIFwbfLqsXnhZZeWhPNqV
+        Qt6RG9VVcSfpjHpMFK24s4qI8YRH8Io=
+X-Google-Smtp-Source: ABdhPJzhbpBDCDrPt1P1xzvTKEDPhAXqIMc+mtjQuLAEnv/alhrt/rhN2nq6GrLuC3iTTLwresjkGw==
+X-Received: by 2002:a17:902:900b:: with SMTP id a11mr19177442plp.315.1595867144116;
+        Mon, 27 Jul 2020 09:25:44 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id v15sm15621045pgo.15.2020.07.27.09.25.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 09:25:22 -0700 (PDT)
-Subject: Re: [PATCH 2/6] rtlwifi: Remove unnecessary parenthese in rtl_dbg
- uses
-To:     Joe Perches <joe@perches.com>, Pkshih <pkshih@realtek.com>
-Cc:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>
-References: <cover.1595706419.git.joe@perches.com>
- <9b2eaedb7ea123ea766a379459b20a9486d1cd41.1595706420.git.joe@perches.com>
- <1595830034.12227.7.camel@realtek.com>
- <ae9d562ec9ef765dddd1491d4cfb5f6d18f7025f.camel@perches.com>
- <1595840670.17671.4.camel@realtek.com>
- <6e0c07bc3d2f48d4a62a9e270366c536cfe56783.camel@perches.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <374359f9-8199-f4b9-0596-adc41c8c664f@lwfinger.net>
-Date:   Mon, 27 Jul 2020 11:25:21 -0500
+        Mon, 27 Jul 2020 09:25:43 -0700 (PDT)
+Subject: Re: [Linux-kernel-mentees] [PATCH] block/scsi-ioctl: Prevent
+ kernel-infoleak in scsi_put_cdrom_generic_arg()
+To:     Peilin Ye <yepeilin.cs@gmail.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200727161932.322955-1-yepeilin.cs@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <78d90a98-7bd5-1604-cc27-90842c365ecf@kernel.dk>
+Date:   Mon, 27 Jul 2020 10:25:42 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <6e0c07bc3d2f48d4a62a9e270366c536cfe56783.camel@perches.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200727161932.322955-1-yepeilin.cs@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -90,26 +84,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/20 9:52 AM, Joe Perches wrote:
-> On Mon, 2020-07-27 at 09:04 +0000, Pkshih wrote:
->> So, I think you would like to have parenthesis intentionally.
->> If so,
->> test1 ? : (test2 ? :)
->> would be better.
->>
->>
->> If not,
->> test1 ? : test2 ? :
->> may be what you want (without any parenthesis).
-> 
-> Use whatever style you like, it's unimportant to me
-> and it's not worth spending any real time on it.
+On 7/27/20 10:19 AM, Peilin Ye wrote:
+> scsi_put_cdrom_generic_arg() is copying uninitialized stack memory to
+> userspace due to the compiler not initializing holes in statically
+> allocated structures. Fix it by initializing `cgc32` using memset().
 
-If you are so busy, why did you jump in with patches that you knew I was already 
-working on? You knew because you critiqued my first submission.
+Could also just add the appropriate pad, so the compiler does the
+right thing.
 
-@Kalle: Please drop my contributions in the sequence "PATCH v2 00/15] rtlwifi: 
-Change RT_TRACE into rtl_dbg for all drivers".
 
-Larry
+diff --git a/block/scsi_ioctl.c b/block/scsi_ioctl.c
+index ef722f04f88a..72108404718f 100644
+--- a/block/scsi_ioctl.c
++++ b/block/scsi_ioctl.c
+@@ -651,6 +651,7 @@ struct compat_cdrom_generic_command {
+ 	compat_int_t	stat;
+ 	compat_caddr_t	sense;
+ 	unsigned char	data_direction;
++	unsigned char	pad[3];
+ 	compat_int_t	quiet;
+ 	compat_int_t	timeout;
+ 	compat_caddr_t	reserved[1];
+
+-- 
+Jens Axboe
 
