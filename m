@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F487C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3332C43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDF5320838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C04CA2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858947;
-	bh=dDYMeLZjX3Mk7vDyttfKXiLA3J946CdDW0KeqIMbSuI=;
+	s=default; t=1595858949;
+	bh=V5jsp7B+sSoMt0qmiSAgiOSvyzsP+E7ltS+c6WCU2TU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mTWJcGuVsFqv6nDlfzEWThYBInJKPLc4YYjWJP9Lp6StODzuHogkP+pxZc8eeVx1Z
-	 tt5lgH4CZ6MU1xLJ18LzJc/FSBmLTZuCYtjrf1XfnKiieET7SzNv9pBJoor/U5Benu
-	 mv7wdvIPtQVAbO/S+aTDpPNE0VnrtGD04HwcnEXk=
+	b=2V1ydB8oLZYxB8pphM/a6VUT6tSzSH8sEQm8DJxLYCBIEWVeUBf9oDv+7ZMkukTF3
+	 lXCVL4Jv2GfQWxHGF7OC2riN4+icnKGG2vvNX+gSaxbruot/LHvbUjk25JSfsRbO0R
+	 RsaTkZeub937ZQEwP64kvVipelYacV3zMlSqfd8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729551AbgG0OJF (ORCPT
+        id S1728589AbgG0OJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:09:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58814 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:09:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729472AbgG0OJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:09:01 -0400
+        id S1729472AbgG0OJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:09:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD0142073E;
-        Mon, 27 Jul 2020 14:08:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 389FE2073E;
+        Mon, 27 Jul 2020 14:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858940;
-        bh=dDYMeLZjX3Mk7vDyttfKXiLA3J946CdDW0KeqIMbSuI=;
+        s=default; t=1595858945;
+        bh=V5jsp7B+sSoMt0qmiSAgiOSvyzsP+E7ltS+c6WCU2TU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tw/wVKyvt1o5nOZdt+woflBAccn7AbnMPIBWwWQoqfS5GYO7hHHnLlwSy47SBsxvS
-         cABSTlHIMt8MzUROIIwXogLNVS1eRViP8EZvOCwbMqqplmTQnlQDWCs63UIjEJ5NoO
-         ZhYFKGaWAq0lBtGcKlpreODziz7geQsbRWVqN/f0=
+        b=VbSRhlzZHESjhWjdL1/oPW1Fk0yUziDD9rP9b5JhKNm86RidxkgP500KPuYj8gygl
+         e2ebkS7Dkw01ZCb7jrWaiCGW6ImPLiy89CvTa0MVMy5gr6ZFoA7iPwIEx5YrjJPldv
+         7I0SuuKVdQekQq+woTobhVdhzIiARpIn3Cdjr7bQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Anglin <dave.anglin@bell.net>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 4.14 62/64] parisc: Add atomic64_set_release() define to avoid CPU soft lockups
-Date:   Mon, 27 Jul 2020 16:04:41 +0200
-Message-Id: <20200727134914.255710806@linuxfoundation.org>
+        stable@vger.kernel.org, Mark ODonovan <shiftee@posteo.net>,
+        Roman Mamedov <rm@romanrm.net>,
+        =?UTF-8?q?Viktor=20J=C3=A4gersk=C3=BCpper?= 
+        <viktor_jaegerskuepper@freenet.de>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 64/64] ath9k: Fix regression with Atheros 9271
+Date:   Mon, 27 Jul 2020 16:04:43 +0200
+Message-Id: <20200727134914.342119752@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -59,84 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John David Anglin <dave.anglin@bell.net>
+From: Mark O'Donovan <shiftee@posteo.net>
 
-commit be6577af0cef934ccb036445314072e8cb9217b9 upstream.
+commit 92f53e2fda8bb9a559ad61d57bfb397ce67ed0ab upstream.
 
-Stalls are quite frequent with recent kernels. I enabled
-CONFIG_SOFTLOCKUP_DETECTOR and I caught the following stall:
+This fix allows ath9k_htc modules to connect to WLAN once again.
 
-watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [cc1:22803]
-CPU: 0 PID: 22803 Comm: cc1 Not tainted 5.6.17+ #3
-Hardware name: 9000/800/rp3440
- IAOQ[0]: d_alloc_parallel+0x384/0x688
- IAOQ[1]: d_alloc_parallel+0x388/0x688
- RP(r2): d_alloc_parallel+0x134/0x688
-Backtrace:
- [<000000004036974c>] __lookup_slow+0xa4/0x200
- [<0000000040369fc8>] walk_component+0x288/0x458
- [<000000004036a9a0>] path_lookupat+0x88/0x198
- [<000000004036e748>] filename_lookup+0xa0/0x168
- [<000000004036e95c>] user_path_at_empty+0x64/0x80
- [<000000004035d93c>] vfs_statx+0x104/0x158
- [<000000004035dfcc>] __do_sys_lstat64+0x44/0x80
- [<000000004035e5a0>] sys_lstat64+0x20/0x38
- [<0000000040180054>] syscall_exit+0x0/0x14
-
-The code was stuck in this loop in d_alloc_parallel:
-
-    4037d414:   0e 00 10 dc     ldd 0(r16),ret0
-    4037d418:   c7 fc 5f ed     bb,< ret0,1f,4037d414 <d_alloc_parallel+0x384>
-    4037d41c:   08 00 02 40     nop
-
-This is the inner loop of bit_spin_lock which is called by hlist_bl_unlock in
-d_alloc_parallel:
-
-static inline void bit_spin_lock(int bitnum, unsigned long *addr)
-{
-        /*
-         * Assuming the lock is uncontended, this never enters
-         * the body of the outer loop. If it is contended, then
-         * within the inner loop a non-atomic test is used to
-         * busywait with less bus contention for a good time to
-         * attempt to acquire the lock bit.
-         */
-        preempt_disable();
-#if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
-        while (unlikely(test_and_set_bit_lock(bitnum, addr))) {
-                preempt_enable();
-                do {
-                        cpu_relax();
-                } while (test_bit(bitnum, addr));
-                preempt_disable();
-        }
-#endif
-        __acquire(bitlock);
-}
-
-After consideration, I realized that we must be losing bit unlocks.
-Then, I noticed that we missed defining atomic64_set_release().
-Adding this define fixes the stalls in bit operations.
-
-Signed-off-by: Dave Anglin <dave.anglin@bell.net>
-Cc: stable@vger.kernel.org
-Signed-off-by: Helge Deller <deller@gmx.de>
+Fixes: 2bbcaaee1fcb ("ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=208251
+Signed-off-by: Mark O'Donovan <shiftee@posteo.net>
+Reported-by: Roman Mamedov <rm@romanrm.net>
+Tested-by: Viktor Jägersküpper <viktor_jaegerskuepper@freenet.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200711043324.8079-1-shiftee@posteo.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/include/asm/atomic.h |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/ath/ath9k/hif_usb.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/parisc/include/asm/atomic.h
-+++ b/arch/parisc/include/asm/atomic.h
-@@ -258,6 +258,8 @@ atomic64_set(atomic64_t *v, s64 i)
- 	_atomic_spin_unlock_irqrestore(v, flags);
- }
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.c
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+@@ -731,11 +731,13 @@ static void ath9k_hif_usb_reg_in_cb(stru
+ 			return;
+ 		}
  
-+#define atomic64_set_release(v, i)	atomic64_set((v), (i))
++		rx_buf->skb = nskb;
 +
- static __inline__ s64
- atomic64_read(const atomic64_t *v)
- {
+ 		usb_fill_int_urb(urb, hif_dev->udev,
+ 				 usb_rcvintpipe(hif_dev->udev,
+ 						 USB_REG_IN_PIPE),
+ 				 nskb->data, MAX_REG_IN_BUF_SIZE,
+-				 ath9k_hif_usb_reg_in_cb, nskb, 1);
++				 ath9k_hif_usb_reg_in_cb, rx_buf, 1);
+ 	}
+ 
+ resubmit:
 
 
