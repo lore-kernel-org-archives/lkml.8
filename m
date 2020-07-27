@@ -2,187 +2,99 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4221DC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9299C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC872073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 932672073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:09:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hm74B84F"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b2xjOflb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731151AbgG0QIB (ORCPT
+        id S1728268AbgG0QJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 12:08:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730853AbgG0QH6 (ORCPT
+        Mon, 27 Jul 2020 12:09:42 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58460 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726942AbgG0QJk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:07:58 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F2CCC061794;
-        Mon, 27 Jul 2020 09:07:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=ET8ge25B/3xdyn220GmjQpe18xhraMf83CX/rWioRr8=; b=hm74B84F3xA+4pL0lGJjlDcoe8
-        ZiVUeAXBU4bI6JUlo6c8aU3xf8xS+ki3wrQZbYIMVIEh9ZPHDog12z++I+dky4hBBKrlFq8u86yHs
-        zNxCVynvQxMDqgKoKAeqJinK1h3Yij34p/GEeFguxQQ4tQnfaHU13XSwKORjIPxGF9N+IEzl/37yS
-        BBUHayA1uqlkiUVihsRBfBo6W6kJ+3/YGfDXioIl5KXdJQGjdi1Bjhd8undpR+USLMl5SIfomDhWl
-        4SMrqUhzKoVrzfnvemfIttxsjmwLRIQLMv4nHPJdgrAGipFbJ4tlq/5IF2yBbw7YNF4dvCqc23Twg
-        Qefdn8Xw==;
-Received: from [2001:4bb8:18c:2acc:aa45:8411:1fb3:30ec] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k05fP-0002mn-Jh; Mon, 27 Jul 2020 16:07:57 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 3/3] initd: pass a non-f_pos offset to kernel_read/kernel_write
-Date:   Mon, 27 Jul 2020 18:07:44 +0200
-Message-Id: <20200727160744.329121-4-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727160744.329121-1-hch@lst.de>
-References: <20200727160744.329121-1-hch@lst.de>
+        Mon, 27 Jul 2020 12:09:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595866179;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OPQOqiZCF/CXGUjGCPsDuUPFb0RD1RJET28Zyk3zKE4=;
+        b=b2xjOflb8J5fau5CigoAJ+8yPx7kJ4zb32IRj5U9rAts3KjDTpPhT2WX1Pozsg4LtMTFWV
+        OYsVbKJ9QS6gtAADNlqyzba98v1WDpjB0URTytJCmdszab7Tyz6qJwJXmhyiYnbVQmnM8P
+        AMvb+d0KdSyAcaGclpav6+CV18pcI+A=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-231-hINEtqRlNgyWkwDA0yu2Ug-1; Mon, 27 Jul 2020 12:09:35 -0400
+X-MC-Unique: hINEtqRlNgyWkwDA0yu2Ug-1
+Received: by mail-ed1-f70.google.com with SMTP id m12so5768528edv.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 09:09:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=OPQOqiZCF/CXGUjGCPsDuUPFb0RD1RJET28Zyk3zKE4=;
+        b=nZHyS5kx8XFtxAZC00IyFtiCErTUbKQpTh+QxHIYhyTaJYRIz3N7orRYIFHS+L9yy1
+         SCWuHnADlT3cdGpP5/QVSoa8MiBj4YXN6u3J1xFEdA0M9YDcR2AFEUeqDjHcqifbRdAd
+         R8/k6jD5LCBn/BXKzlu7Qnsq6ZrNsDDQzmEfJVd5tZTiZb80oyryRQ0oQWUvE/VmjdBO
+         VsPjp0LDnT9Nxraxu41V2XvLQfmtwV5s659VOAkOw2XxVQYT+EQl7DPBVV/T1Ji4cJGN
+         mxqNMkkiS6BmJrusG3raeKoCNtUSar4KdbaYZbPQeyNNon6eP9GNYce5uMVgjocXsMen
+         JXHQ==
+X-Gm-Message-State: AOAM533NkmTreF6aauXpb3fozudQf5PhiIiPUo8JXTzMmVsHeHejBebb
+        7Zy3lp6HHaUIUtwpRajn4iqBw2KrMJ0XsHzurLvRIRL1HDZExMc0cFe1B/6WiRs1RI6HMo2KqzS
+        WTE698FCZEH3I/rpEfiTB/In2
+X-Received: by 2002:a05:6402:cb:: with SMTP id i11mr9374789edu.372.1595866174517;
+        Mon, 27 Jul 2020 09:09:34 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx/hhArY+P/WnFI9GEc6R3AlSG06qBpjRYmUOuaXpr8IMw0UcMbxhNf3VfCAhBOae5V8WHpqw==
+X-Received: by 2002:a05:6402:cb:: with SMTP id i11mr9374774edu.372.1595866174365;
+        Mon, 27 Jul 2020 09:09:34 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id gh25sm1891816ejb.109.2020.07.27.09.09.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 09:09:33 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     virtio-fs-list <virtio-fs@redhat.com>, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com
+Subject: Re: [PATCH v4] kvm,x86: Exit to user space in case page fault error
+In-Reply-To: <20200727135603.GA39559@redhat.com>
+References: <20200720211359.GF502563@redhat.com> <20200727135603.GA39559@redhat.com>
+Date:   Mon, 27 Jul 2020 18:09:32 +0200
+Message-ID: <87ft9dlz2b.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass an explicit offset instead of ->f_pos, and to make that easier use
-file scope file structs and offsets everywhere except for
-identify_ramdisk_image instead of the current strange mix.  This also
-fixes the fact that identify_ramdisk_image fails to reset the file
-position to the rd_image_start parameter instead of the default 0.
+Vivek Goyal <vgoyal@redhat.com> writes:
 
-Fixes: 18468d879596 ("initrd: switch initrd loading to struct file based APIs")
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- init/do_mounts_rd.c | 29 +++++++++++++----------------
- 1 file changed, 13 insertions(+), 16 deletions(-)
+> On Mon, Jul 20, 2020 at 05:13:59PM -0400, Vivek Goyal wrote:
+>> Page fault error handling behavior in kvm seems little inconsistent when
+>> page fault reports error. If we are doing fault synchronously
+>> then we capture error (-EFAULT) returned by __gfn_to_pfn_memslot() and
+>> exit to user space and qemu reports error, "error: kvm run failed Bad address".
+>
+> Hi Vitaly,
+>
+> A gentle reminder. How does this patch look now?
+>
 
-diff --git a/init/do_mounts_rd.c b/init/do_mounts_rd.c
-index 8307fdb5d136b8..d4255c10432a8b 100644
---- a/init/do_mounts_rd.c
-+++ b/init/do_mounts_rd.c
-@@ -14,6 +14,8 @@
- 
- #include <linux/decompress/generic.h>
- 
-+static struct file *in_file, *out_file;
-+static loff_t in_pos, out_pos;
- 
- static int __init prompt_ramdisk(char *str)
- {
-@@ -31,8 +33,7 @@ static int __init ramdisk_start_setup(char *str)
- }
- __setup("ramdisk_start=", ramdisk_start_setup);
- 
--static int __init crd_load(struct file *in_file, struct file *out_file,
--		decompress_fn deco);
-+static int __init crd_load(decompress_fn deco);
- 
- /*
-  * This routine tries to find a RAM disk image to load, and returns the
-@@ -54,7 +55,7 @@ static int __init crd_load(struct file *in_file, struct file *out_file,
-  *	lz4
-  */
- static int __init
--identify_ramdisk_image(struct file *file, int start_block,
-+identify_ramdisk_image(struct file *file, loff_t pos,
- 		decompress_fn *decompressor)
- {
- 	const int size = 512;
-@@ -66,7 +67,7 @@ identify_ramdisk_image(struct file *file, int start_block,
- 	unsigned char *buf;
- 	const char *compress_name;
- 	unsigned long n;
--	loff_t pos;
-+	int start_block = rd_image_start;
- 
- 	buf = kmalloc(size, GFP_KERNEL);
- 	if (!buf)
-@@ -185,7 +186,6 @@ static unsigned long nr_blocks(struct file *file)
- int __init rd_load_image(char *from)
- {
- 	int res = 0;
--	struct file *in_file, *out_file;
- 	unsigned long rd_blocks, devblocks;
- 	int nblocks, i;
- 	char *buf = NULL;
-@@ -203,12 +203,13 @@ int __init rd_load_image(char *from)
- 	if (IS_ERR(in_file))
- 		goto noclose_input;
- 
--	nblocks = identify_ramdisk_image(in_file, rd_image_start, &decompressor);
-+	in_pos = rd_image_start * BLOCK_SIZE;
-+	nblocks = identify_ramdisk_image(in_file, in_pos, &decompressor);
- 	if (nblocks < 0)
- 		goto done;
- 
- 	if (nblocks == 0) {
--		if (crd_load(in_file, out_file, decompressor) == 0)
-+		if (crd_load(decompressor) == 0)
- 			goto successful_load;
- 		goto done;
- 	}
-@@ -252,8 +253,8 @@ int __init rd_load_image(char *from)
- 			fput(in_file);
- 			break;
- 		}
--		kernel_read(in_file, buf, BLOCK_SIZE, &in_file->f_pos);
--		kernel_write(out_file, buf, BLOCK_SIZE, &out_file->f_pos);
-+		kernel_read(in_file, buf, BLOCK_SIZE, &in_pos);
-+		kernel_write(out_file, buf, BLOCK_SIZE, &out_pos);
- #if !defined(CONFIG_S390)
- 		if (!(i % 16)) {
- 			pr_cont("%c\b", rotator[rotate & 0x3]);
-@@ -284,11 +285,10 @@ int __init rd_load_disk(int n)
- 
- static int exit_code;
- static int decompress_error;
--static struct file *crd_infile, *crd_outfile;
- 
- static long __init compr_fill(void *buf, unsigned long len)
- {
--	long r = kernel_read(crd_infile, buf, len, &crd_infile->f_pos);
-+	long r = kernel_read(in_file, buf, len, &in_pos);
- 	if (r < 0)
- 		printk(KERN_ERR "RAMDISK: error while reading compressed data");
- 	else if (r == 0)
-@@ -298,7 +298,7 @@ static long __init compr_fill(void *buf, unsigned long len)
- 
- static long __init compr_flush(void *window, unsigned long outcnt)
- {
--	long written = kernel_write(crd_outfile, window, outcnt, &crd_outfile->f_pos);
-+	long written = kernel_write(out_file, window, outcnt, &out_pos);
- 	if (written != outcnt) {
- 		if (decompress_error == 0)
- 			printk(KERN_ERR
-@@ -317,12 +317,9 @@ static void __init error(char *x)
- 	decompress_error = 1;
- }
- 
--static int __init crd_load(struct file *in_file, struct file *out_file,
--		decompress_fn deco)
-+static int __init crd_load(decompress_fn deco)
- {
- 	int result;
--	crd_infile = in_file;
--	crd_outfile = out_file;
- 
- 	if (!deco) {
- 		pr_emerg("Invalid ramdisk decompression routine.  "
+Sorry, I even reviewd it but never replied. It looks good to me!
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
 -- 
-2.27.0
+Vitaly
 
