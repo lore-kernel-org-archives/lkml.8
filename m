@@ -2,123 +2,111 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A58C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7D5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB9E206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44CE420719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:49:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595846956;
+	bh=zNfqzDInDnSp+fKCzpx3F6lQ3q4TBw0M7Av0QoXkGpo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=Hp1k8qoHEQ02GaeFsgsNNhBhd6uORF5duBc4wJdzd16ePR6jmd471VwOhmIusjQZD
+	 W6ulRCKsUQCTz7WAKqCj22z/mIeWtKSLdH4YjRClIEZP41+Y/APyH9HPya4PGb4KkG
+	 bdDL2lM5Q1ScIBTeIT4Tb5jL8khdAgf1r3acJH+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgG0KsM (ORCPT
+        id S1728289AbgG0KtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:48:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:41614 "EHLO foss.arm.com"
+        Mon, 27 Jul 2020 06:49:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbgG0KsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:48:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 600E630E;
-        Mon, 27 Jul 2020 03:48:10 -0700 (PDT)
-Received: from [192.168.1.84] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A66B93F66E;
-        Mon, 27 Jul 2020 03:48:07 -0700 (PDT)
-Subject: Re: [PATCH 0/9] arm64: Stolen time support
-To:     zhukeqian <zhukeqian1@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        xiexiangyou@huawei.com, yebiaoxiang@huawei.com,
-        "wanghaibin.wang@huawei.com >> Wanghaibin (D)" 
-        <wanghaibin.wang@huawei.com>
-References: <20190802145017.42543-1-steven.price@arm.com>
- <1611996b-1ec1-dee7-ed61-b3b9df23f138@huawei.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <25c7f2e2-e779-4e97-fdc5-0aba9fcf0fbc@arm.com>
-Date:   Mon, 27 Jul 2020 11:48:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <1611996b-1ec1-dee7-ed61-b3b9df23f138@huawei.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        id S1726298AbgG0KtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 06:49:14 -0400
+Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ED78206E7;
+        Mon, 27 Jul 2020 10:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595846953;
+        bh=zNfqzDInDnSp+fKCzpx3F6lQ3q4TBw0M7Av0QoXkGpo=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=lhClkxotlesTUV1UDov1RrY64xr/ppyKNwCO0sGj548usN3ExBpqNf1v73lO6qY2x
+         gXrALj4a7FB2QB75LMyX17RGfKrjHGwIko0vBdXAOFq7H637gLacrQYgI1EPBcNl4F
+         WQ3zl8FW26O60MLGh4f1gZbN6TKyE1zhYxL/dUMo=
+Message-ID: <1595846951.4841.61.camel@kernel.org>
+Subject: Re: [PATCH v3 11/19] LSM: Introduce kernel_post_load_data() hook
+From:   Mimi Zohar <zohar@kernel.org>
+To:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 27 Jul 2020 06:49:11 -0400
+In-Reply-To: <20200724213640.389191-12-keescook@chromium.org>
+References: <20200724213640.389191-1-keescook@chromium.org>
+         <20200724213640.389191-12-keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/07/2020 04:26, zhukeqian wrote:
-> Hi Steven,
+On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
+> There are a few places in the kernel where LSMs would like to have
+> visibility into the contents of a kernel buffer that has been loaded or
+> read. While security_kernel_post_read_file() (which includes the
+> buffer) exists as a pairing for security_kernel_read_file(), no such
+> hook exists to pair with security_kernel_load_data().
+> 
+> Earlier proposals for just using security_kernel_post_read_file() with a
+> NULL file argument were rejected (i.e. "file" should always be valid for
+> the security_..._file hooks, but it appears at least one case was
+> left in the kernel during earlier refactoring. (This will be fixed in
+> a subsequent patch.)
+> 
+> Since not all cases of security_kernel_load_data() can have a single
+> contiguous buffer made available to the LSM hook (e.g. kexec image
+> segments are separately loaded), there needs to be a way for the LSM to
+> reason about its expectations of the hook coverage. In order to handle
+> this, add a "contents" argument to the "kernel_load_data" hook that
+> indicates if the newly added "kernel_post_load_data" hook will be called
+> with the full contents once loaded. That way, LSMs requiring full contents
+> can choose to unilaterally reject "kernel_load_data" with contents=false
+> (which is effectively the existing hook coverage), but when contents=true
+> they can allow it and later evaluate the "kernel_post_load_data" hook
+> once the buffer is loaded.
+> 
+> With this change, LSMs can gain coverage over non-file-backed data loads
+> (e.g. init_module(2) and firmware userspace helper), which will happen
+> in subsequent patches.
+> 
+> Additionally prepare IMA to start processing these cases.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Hi Keqian,
+At least from an IMA perspective, the original
+security_kernel_load_data() hook was defined in order to prevent
+certain syscalls - init_module, kexec_load - and loading firmware via
+sysfs.  The resulting error messages were generic.
+  
+Unlike security_kernel_load_data(), security_kernel_post_load_data()
+is meant to be used, but without a file desciptor specific
+information, like the filename associated with the buffer, is missing.
+ Having the filename isn't actually necessary for verifying the
+appended signature, but it is needed for auditing signature
+verification failures and including in the IMA measurement list.
 
-> On 2019/8/2 22:50, Steven Price wrote:
->> This series add support for paravirtualized time for arm64 guests and
->> KVM hosts following the specification in Arm's document DEN 0057A:
->>
->> https://developer.arm.com/docs/den0057/a
->>
->> It implements support for stolen time, allowing the guest to
->> identify time when it is forcibly not executing.
->>
->> It doesn't implement support for Live Physical Time (LPT) as there are
->> some concerns about the overheads and approach in the above
-> Do you plan to pick up LPT support? As there is demand of cross-frequency migration
-> (from older platform to newer platform).
-
-I don't have any plans to pick up the LPT support at the moment - feel 
-free to pick it up! ;)
-
-> I am not clear about the overheads and approach problem here, could you please
-> give some detail information? Maybe we can work together to solve these concerns. :-)
-
-Fundamentally the issue here is that LPT only solves one small part of 
-migration between different hosts. To successfully migrate between hosts 
-with different CPU implementations it is also necessary to be able to 
-virtualise various ID registers (e.g. MIDR_EL1, REVIDR_EL1, AIDR_EL1) 
-which we have no support for currently.
-
-The problem with just virtualising the registers is how you handle 
-errata. The guest will currently use those (and other) ID registers to 
-decide whether to enable specific errata workarounds. But what errata 
-should be enabled for a guest which might migrate to another host?
-
-What we ideally need is a mechanism to communicate to the guest what 
-workarounds are required to successfully run on any of the hosts that 
-the guest may be migrated to. You may also have the situation where the 
-workarounds required for two hosts are mutually incompatible - something 
-needs to understand this and do the "right thing" (most likely just 
-reject this situation, i.e. prevent the migration).
-
-There are various options here: e.g. a para-virtualised interface to 
-describe the workarounds (but this is hard to do in an OS-agnostic way), 
-or virtual-ID registers describing an idealised environment where no 
-workarounds are required (and only hosts that have no errata affecting a 
-guest would be able to provide this).
-
-Given the above complexity and the fact that Armv8.6-A standardises the 
-frequency to 1GHz this didn't seem worth continuing with. So LPT was 
-dropped from the spec and patches to avoid holding up the stolen time 
-support.
-
-However, if you have a use case which doesn't require such a generic 
-migration (e.g. perhaps old and new platforms are based on the same IP) 
-then it might be worth looking at bring this back. But to make the 
-problem solvable it either needs to be restricted to platforms which are 
-substantially the same (so the errata list will be identical), or 
-there's work to be done in preparation to deal with migrating a guest 
-successfully between hosts with potentially different errata requirements.
-
-Can you share more details about the hosts that you are interested in 
-migrating between?
-
-Thanks,
-
-Steve
+Mimi
