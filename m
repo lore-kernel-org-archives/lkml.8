@@ -2,123 +2,94 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DCDC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F20C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 120C520715
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A142F20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:24:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sM8bc/w1"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GhiZxUwr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgG0DPp (ORCPT
+        id S1726832AbgG0DYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 23:15:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgG0DPo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 23:15:44 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 724B4C0619D2;
-        Sun, 26 Jul 2020 20:15:44 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m8so1415157pfh.3;
-        Sun, 26 Jul 2020 20:15:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R2fUCpyoEpXcLqhIagFjvMuKuk/xhf3lv26ScKGnflM=;
-        b=sM8bc/w11dDweOpJW9Qk53Fv8si9G2l7ygEVDrUgs/D7ZuCACvFsJy11hAPMYdpfOY
-         EiPeW+9N/kkKISSeyZR3PiK4KSrqP296ijyOayoR2Tqmt56/CfSzD6C8aqLo+s0SyCFw
-         tLsnR4/iOybUpCvPCUwWxtUZUB3fJHoIOTvbKtmY9RJOepnAMNwe42cwXpmWiunFdWnN
-         DQ6Sm7ah3lJnh1uoxG79Y7s2K1ZEOHxPYLeE1cYP4arSQwXD/Opr21fZUr+Krad1etUG
-         Bwqc0Ik+rV4XatMi5M3id29PnaJb8SjomEsN5MvjbbE7iG5goMDbJzO+9g19UdkLez4t
-         X9ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R2fUCpyoEpXcLqhIagFjvMuKuk/xhf3lv26ScKGnflM=;
-        b=YPTfWW+t819nYrF67X27mRmP8J3I5IYpAGngKN88vpMrb6JaEBzIuxMxu06H/n2jB6
-         CeIYtTv5xYOqaqPZ2WQZAO1idGzPgFWfTiGblDfC1lzWHZWdp7ocFN/gfIQ8PIto01LK
-         50EaLt9TQgSnVcdVnyd3xKVKot6rebhxb8vUCS6MvMJ8Y+40n/dcegtZNzaiz0BS221H
-         DBiXBDSPdydGVPdtSIQ/BO3RZOUbtl8uaKYyXN93G6nBC2dMNix8pmty60YSHEQ0JoSQ
-         +ACcxxgpqPb18DsVp5WkiGmO0BZmk8mrUnWRRvanhpw2sYkFnsrLAsmIV167sSv/nv2R
-         BHJA==
-X-Gm-Message-State: AOAM532gNP9J0bK51XN9S78Sd7vNdZu/7jNtSRK4yALE+crs7E8LWM5c
-        K2mc8j4P5Pcsf9w+khH00cRLK/wC
-X-Google-Smtp-Source: ABdhPJy5pIVT7e44QOu5P7YIYWfZ8mYz7zYUGCXQ5YrJJMwGU6eXzZQ8p4mIfMOcz8tENo/WOa+/rQ==
-X-Received: by 2002:a62:e70c:: with SMTP id s12mr17509922pfh.98.1595819744044;
-        Sun, 26 Jul 2020 20:15:44 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x24sm11693903pjr.53.2020.07.26.20.15.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 26 Jul 2020 20:15:43 -0700 (PDT)
-Date:   Sun, 26 Jul 2020 20:15:41 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rtc: ds1307: provide an indication that the watchdog
- has fired
-Message-ID: <20200727031541.GA53573@roeck-us.net>
-References: <20200726231306.734-1-chris.packham@alliedtelesis.co.nz>
+        Sun, 26 Jul 2020 23:24:33 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40401 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726072AbgG0DYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 23:24:33 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFQCL6Lx4z9sPB;
+        Mon, 27 Jul 2020 13:24:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595820271;
+        bh=IfBRA6eVpcHJNAolxx2wP0Kl+Bk8woNPiXAVx2Spiss=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GhiZxUwrNcfLYCccmWTarHNB24q9vVGsdR9zWrd44uVlPUnQzKzAMBt+cU5KlrWdy
+         uyp6+nyFmuPqi/W2myMoYHPZnO0FyeYp+plGUfFk8pcUdfpBTjsMZf0zQx2l71QRsl
+         UZt3GinFN94VBckgC4mxOH6gamBgyWcshTn662+4jn8lsKWfjLA3ne4Ca31x0uWK/f
+         RVzwZQlYY33UkZv3PstbhQMXYHz0d5IHMfZv3P4tPRQTEIT5d6OPdUwiGNoE12395+
+         mq9NLD4qBvIHv3f84Z/EcjaGuz/7LTVQtumP/yf3XauECL+btulACvHFF+PL10gfxE
+         DBKtt1dqgOQdg==
+Date:   Mon, 27 Jul 2020 13:24:28 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the devfreq tree
+Message-ID: <20200727132428.2763f57b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726231306.734-1-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/J8q3D4iwceZKDr7Y4ZEUwtl";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:13:06AM +1200, Chris Packham wrote:
-> There's not much feedback when the ds1388 watchdog fires. Generally it
-> yanks on the reset line and the board reboots. Capture the fact that the
-> watchdog has fired in the past so that userspace can retrieve it via
-> WDIOC_GETBOOTSTATUS. This should help distinguish a watchdog triggered
-> reset from a power interruption.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
-> Changes in v2:
-> - Set bootstatus to WDIOF_CARDRESET and let userspace decide what to do with
->   the information.
-> 
->  drivers/rtc/rtc-ds1307.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-> index 49702942bb08..209736db510d 100644
-> --- a/drivers/rtc/rtc-ds1307.c
-> +++ b/drivers/rtc/rtc-ds1307.c
-> @@ -868,6 +868,14 @@ static int ds1388_wdt_start(struct watchdog_device *wdt_dev)
->  	struct ds1307 *ds1307 = watchdog_get_drvdata(wdt_dev);
->  	u8 regs[2];
->  	int ret;
-> +	int val;
-> +
-> +	ret = regmap_read(ds1307->regmap, DS1388_REG_FLAG, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val & DS1388_BIT_WF)
-> +		wdt_dev->bootstatus = WDIOF_CARDRESET;
+--Sig_/J8q3D4iwceZKDr7Y4ZEUwtl
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This should be done during probe, ie in ds1307_wdt_register().
+Hi all,
 
-Guenter
+In commit
 
->  
->  	ret = regmap_update_bits(ds1307->regmap, DS1388_REG_FLAG,
->  				 DS1388_BIT_WF, 0);
-> -- 
-> 2.27.0
-> 
+  332c5b522b7c ("PM / devfrq: Fix indentaion of devfreq_summary debugfs nod=
+e")
+
+Fixes tag
+
+  Fixes: commit 66d0e797bf09 ("Revert "PM / devfreq: Modify the device name=
+ as devfreq(X) for sysfs"")
+
+has these problem(s):
+
+  - leading word 'commit' unexpected
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/J8q3D4iwceZKDr7Y4ZEUwtl
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8eSOwACgkQAVBC80lX
+0Gy3rgf/W4KKU6ZgDddibwcN/kNPBKAq1JV3dAWeIongnd+HYZvME0+lSJ1WqPhm
+hlOOLufYNQd15KGAo8YWtvoee4yt0EBq7lAvUSAq+l7mGlb98rUiiXmUs/DfMnAs
+WT3I1h56FpLn+GCvy7fvJvR+jdktV968RsWe6kyM3eZ0y+u8BxZgbqPkFZwwyElZ
+Rhs6u8ef76kctSaDgJ8wLV9gOY0dFZ2UAKm6qFi0FHi28Zx6wx/BSqTAIt6ikF+3
+iBLNGxMX87PDs/UgaY7+t4/0yvhUXQU9Pnm6MS55HmJaYI54fU8fgMzoZ4dHsZgS
+5uCSNvNgeWOK228DaFv28Tu0hHQbRg==
+=xLOt
+-----END PGP SIGNATURE-----
+
+--Sig_/J8q3D4iwceZKDr7Y4ZEUwtl--
