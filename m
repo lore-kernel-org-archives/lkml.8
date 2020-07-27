@@ -2,172 +2,155 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E03C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD2E8206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D9520719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:08:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JLJpwy/I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgG0D6x (ORCPT
+        id S1726122AbgG0EIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 23:58:53 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8829 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726676AbgG0D6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 23:58:53 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A40D314EB9C7481BCB8C;
-        Mon, 27 Jul 2020 11:58:51 +0800 (CST)
-Received: from huawei.com (10.175.104.57) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Mon, 27 Jul 2020
- 11:58:50 +0800
-From:   Peng Wu <wupeng58@huawei.com>
-To:     <bskeggs@redhat.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <airlied@gmail.com>, <lyude@redhat.com>
-CC:     <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] crc:Fix build errors
-Date:   Mon, 27 Jul 2020 12:00:18 +0800
-Message-ID: <1595822418-34124-1-git-send-email-wupeng58@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 27 Jul 2020 00:08:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgG0EIZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 00:08:25 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0A9C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 21:08:24 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id o22so8467466pjw.2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 21:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jKgXPHuanETb6NKgX4EbBQFIax+y6guFENgQ12rvRUU=;
+        b=JLJpwy/IS8n1zugslKCBC4sqQUeqaWOQRkC9BbSQY0Y72nSTy1m+Vwp/F3naHRyshX
+         0MqX9nEOiMq9XJoaZuSK4pYLyWuF5YCFmgaNSjfbG+YAuN2r7qHaBfv/nVgN+PakbqHB
+         XXGCxR7VTjGj+DrZB+/1Khy8XFqt6kf5rVoeQtROSsmBw6nqQAIEA3VApUL+8Hm2GzMf
+         0t81fnKP6qDtPxnuNCzRwPRLMvwJGtl1f69ao7KeY+37bLxkISbE60MAVA7KoL0kcCBw
+         HmSzyM1oQAeuygFZ1mvxbx3QYzFHv9tSeIHsGTgNSvt+L8MfzwTTZVXkoMrnzXUXy/Vz
+         WIVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jKgXPHuanETb6NKgX4EbBQFIax+y6guFENgQ12rvRUU=;
+        b=EiDZ55+vZAKX4p0ihhfOXlq6onrrlJkHXs1FMV9Oep9ThZBZJt6J8bF5C+qFphkSo7
+         qwMaDdRqGKQH4Gx3ne/ZCTXvVVpQoVOMogteb6b+exxA9fYBRwcLH5qPell2B6OVCUDP
+         +HOeGKH5m0n9S1p+ZyyBHa6sLCSI7k97TdTiUt8TcuSJbAMg4943MYqYZwNXnLICSIrP
+         ZaVO6W4FACRdlrgwDyyqORyfI2wGWMoUw+EtRaqqAS2DR8sFA+2i/+7+VEHTS9zizYED
+         9NKmHwuvWoxi23fEw4Tjl3v2XP5F8kJnF/jNks5j99sFyFNDYTjSoPYRTEafYBFM/jGR
+         CIBg==
+X-Gm-Message-State: AOAM532C3GfjEP3g0XkKBiVLGpOunrIADSfWrAd/rXOhaNngy6uWyMjI
+        GRbzo1I1JIIG9d1MQJN9p1Ha+bt+zJeaWw==
+X-Google-Smtp-Source: ABdhPJyQbCKR9Z/UH9snvh8EHh2w7W9mu7J97KYNBf3jjjWsMJISyjgB7VwzeqHRUXCqV5US674/UA==
+X-Received: by 2002:a17:90a:9e7:: with SMTP id 94mr3893850pjo.97.1595822904050;
+        Sun, 26 Jul 2020 21:08:24 -0700 (PDT)
+Received: from glados.lan ([2601:647:4c01:6541:fa16:54ff:fed1:1bd6])
+        by smtp.gmail.com with ESMTPSA id e129sm6542501pfe.94.2020.07.26.21.08.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2020 21:08:23 -0700 (PDT)
+From:   Thomas Hebb <tommyhebb@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Thomas Hebb <tommyhebb@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        David Carrillo-Cisneros <davidcc@google.com>,
+        Ian Rogers <irogers@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: [PATCH 1/3] tools build feature: Use CC and CXX from parent
+Date:   Sun, 26 Jul 2020 21:08:14 -0700
+Message-Id: <0a6e69d1736b0fa231a648f50b0cce5d8a6734ef.1595822871.git.tommyhebb@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.104.57]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_DRM_NOUVEAU=y,the following errors
-are seen while building crc.h.
+commit c8c188679ccf ("tools build: Use the same CC for feature detection
+and actual build") changed these assignments from unconditional (:=) to
+conditional (?=) so that they wouldn't clobber values from the
+environment. However, conditional assignment does not work properly for
+variables that Make implicitly sets, among which are CC and CXX. To
+quote tools/scripts/Makefile.include, which handles this properly:
 
-In file included from /scratch/linux/drivers/gpu/drm/nouveau/nouveau_display.c:47:
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h: In function ‘nv50_head_crc_late_register’:
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h:109:47: error: parameter name omitted
- static inline int nv50_head_crc_late_register(struct nv50_head *) {}
-                                               ^~~~~~~~~~~~~~~~~~
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h:109:54: warning: no return statement in function returning non-void [-Wreturn-type]
- static inline int nv50_head_crc_late_register(struct nv50_head *) {}
-                                                      ^~~~~~~~~
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h: In function ‘nv50_crc_handle_vblank’:
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h:111:57: warning: ‘return’ with a value, in function returning void
- nv50_crc_handle_vblank(struct nv50_head *head) { return 0; }
-                                                         ^
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h:111:1: note: declared here
- nv50_crc_handle_vblank(struct nv50_head *head) { return 0; }
- ^~~~~~~~~~~~~~~~~~~~~~
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h: In function ‘nv50_crc_atomic_check_head’:
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h:114:28: error: parameter name omitted
- nv50_crc_atomic_check_head(struct nv50_head *, struct nv50_head_atom *,
-                            ^~~~~~~~~~~~~~~~~~
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h:114:48: error: parameter name omitted
- nv50_crc_atomic_check_head(struct nv50_head *, struct nv50_head_atom *,
-                                                ^~~~~~~~~~~~~~~~~~~~~~~
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h:115:7: error: parameter name omitted
-       struct nv50_head_atom *) {}
-       ^~~~~~~~~~~~~~~~~~~~~~~
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h:115:14: warning: no return statement in function returning non-void [-Wreturn-type]
-       struct nv50_head_atom *) {}
-              ^~~~~~~~~~~~~~
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h: In function ‘nv50_crc_atomic_stop_reporting’:
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h:118:32: error: parameter name omitted
- nv50_crc_atomic_stop_reporting(struct drm_atomic_state *) {}
-                                ^~~~~~~~~~~~~~~~~~~~~~~~~
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h: In function ‘nv50_crc_atomic_init_notifier_contexts’:
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h:120:40: error: parameter name omitted
- nv50_crc_atomic_init_notifier_contexts(struct drm_atomic_state *) {}
-                                        ^~~~~~~~~~~~~~~~~~~~~~~~~
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h: In function ‘nv50_crc_atomic_release_notifier_contexts’:
-/scratch/linux/drivers/gpu/drm/nouveau/dispnv50/crc.h:122:43: error: parameter name omitted
+  # Makefiles suck: This macro sets a default value of $(2) for the
+  # variable named by $(1), unless the variable has been set by
+  # environment or command line. This is necessary for CC and AR
+  # because make sets default values, so the simpler ?= approach
+  # won't work as expected.
 
-Signed-off-by: Peng Wu <wupeng58@huawei.com>
+In other words, the conditional assignments will not run even if the
+variables are not overridden in the environment; Make will set CC to
+"cc" and CXX to "g++" when it starts[1], meaning the variables are not
+empty by the time the conditional assignments are evaluated. This breaks
+cross-compilation when CROSS_COMPILE is set but CC isn't, since "cc"
+gets used for feature detection instead of the cross compiler (and
+likewise for CXX).
+
+To fix the issue, just pass down the values of CC and CXX computed by
+the parent Makefile, which gets included by the Makefile that actually
+builds whatever we're detecting features for and so is guaranteed to
+have good values. This is a better solution anyway, since it means we
+aren't trying to replicate the logic of the parent build system and so
+don't risk it getting out of sync.
+
+Leave PKG_CONFIG alone, since 1) there's no common logic to compute it
+in Makefile.include, and 2) it's not an implicit variable, so
+conditional assignment works properly.
+
+[1] https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
+
+Fixes: c8c188679ccf ("tools build: Use the same CC for feature detection and actual build")
+Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
 ---
- drivers/gpu/drm/nouveau/dispnv50/crc.h | 44 +++++++++++++++++-----------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/crc.h b/drivers/gpu/drm/nouveau/dispnv50/crc.h
-index 4bc59e7..3da16cd 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/crc.h
-+++ b/drivers/gpu/drm/nouveau/dispnv50/crc.h
-@@ -76,22 +76,22 @@ struct nv50_crc {
- };
+ tools/build/Makefile.feature | 2 +-
+ tools/build/feature/Makefile | 2 --
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index cb152370fdef..774f0b0ca28a 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -8,7 +8,7 @@ endif
  
- void nv50_crc_init(struct drm_device *dev);
--int nv50_head_crc_late_register(struct nv50_head *);
-+int nv50_head_crc_late_register(struct nv50_head *head);
- void nv50_crc_handle_vblank(struct nv50_head *head);
+ feature_check = $(eval $(feature_check_code))
+ define feature_check_code
+-  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
++  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC=$(CC) CXX=$(CXX) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
+ endef
  
--int nv50_crc_verify_source(struct drm_crtc *, const char *, size_t *);
--const char *const *nv50_crc_get_sources(struct drm_crtc *, size_t *);
--int nv50_crc_set_source(struct drm_crtc *, const char *);
-+int nv50_crc_verify_source(struct drm_crtc *crtc, const char *source_name, size_t *values_cnt);
-+const char *const *nv50_crc_get_sources(struct drm_crtc *crtc, size_t *count);
-+int nv50_crc_set_source(struct drm_crtc *crtc, const char *source_str);
+ feature_set = $(eval $(feature_set_code))
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index b1f0321180f5..93b590d81209 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -74,8 +74,6 @@ FILES=                                          \
  
--int nv50_crc_atomic_check_head(struct nv50_head *, struct nv50_head_atom *,
--			       struct nv50_head_atom *);
-+int nv50_crc_atomic_check_head(struct nv50_head *head, struct nv50_head_atom *asyh,
-+			       struct nv50_head_atom *armh);
- void nv50_crc_atomic_check_outp(struct nv50_atom *atom);
--void nv50_crc_atomic_stop_reporting(struct drm_atomic_state *);
--void nv50_crc_atomic_init_notifier_contexts(struct drm_atomic_state *);
--void nv50_crc_atomic_release_notifier_contexts(struct drm_atomic_state *);
--void nv50_crc_atomic_start_reporting(struct drm_atomic_state *);
--void nv50_crc_atomic_set(struct nv50_head *, struct nv50_head_atom *);
--void nv50_crc_atomic_clr(struct nv50_head *);
-+void nv50_crc_atomic_stop_reporting(struct drm_atomic_state *state);
-+void nv50_crc_atomic_init_notifier_contexts(struct drm_atomic_state *state);
-+void nv50_crc_atomic_release_notifier_contexts(struct drm_atomic_state *state);
-+void nv50_crc_atomic_start_reporting(struct drm_atomic_state *state);
-+void nv50_crc_atomic_set(struct nv50_head *head, struct nv50_head_atom *asyh);
-+void nv50_crc_atomic_clr(struct nv50_head *head);
+ FILES := $(addprefix $(OUTPUT),$(FILES))
  
- extern const struct nv50_crc_func crc907d;
- extern const struct nv50_crc_func crcc37d;
-@@ -106,26 +106,26 @@ struct nv50_crc_atom {};
- #define nv50_crc_set_source NULL
- 
- static inline void nv50_crc_init(struct drm_device *dev) {}
--static inline int nv50_head_crc_late_register(struct nv50_head *) {}
-+static inline int nv50_head_crc_late_register(struct nv50_head *head) { return 0; }
- static inline void
--nv50_crc_handle_vblank(struct nv50_head *head) { return 0; }
-+nv50_crc_handle_vblank(struct nv50_head *head) {}
- 
- static inline int
--nv50_crc_atomic_check_head(struct nv50_head *, struct nv50_head_atom *,
--			   struct nv50_head_atom *) {}
-+nv50_crc_atomic_check_head(struct nv50_head *head, struct nv50_head_atom *asyh,
-+			   struct nv50_head_atom *armh) { return 0; }
- static inline void nv50_crc_atomic_check_outp(struct nv50_atom *atom) {}
- static inline void
--nv50_crc_atomic_stop_reporting(struct drm_atomic_state *) {}
-+nv50_crc_atomic_stop_reporting(struct drm_atomic_state *state) {}
- static inline void
--nv50_crc_atomic_init_notifier_contexts(struct drm_atomic_state *) {}
-+nv50_crc_atomic_init_notifier_contexts(struct drm_atomic_state *state) {}
- static inline void
--nv50_crc_atomic_release_notifier_contexts(struct drm_atomic_state *) {}
-+nv50_crc_atomic_release_notifier_contexts(struct drm_atomic_state *state) {}
- static inline void
--nv50_crc_atomic_start_reporting(struct drm_atomic_state *) {}
-+nv50_crc_atomic_start_reporting(struct drm_atomic_state *state) {}
- static inline void
--nv50_crc_atomic_set(struct nv50_head *, struct nv50_head_atom *) {}
-+nv50_crc_atomic_set(struct nv50_head *head, struct nv50_head_atom *asyh) {}
- static inline void
--nv50_crc_atomic_clr(struct nv50_head *) {}
-+nv50_crc_atomic_clr(struct nv50_head *head) {}
- 
- #endif /* IS_ENABLED(CONFIG_DEBUG_FS) */
- #endif /* !__NV50_CRC_H__ */
+-CC ?= $(CROSS_COMPILE)gcc
+-CXX ?= $(CROSS_COMPILE)g++
+ PKG_CONFIG ?= $(CROSS_COMPILE)pkg-config
+ LLVM_CONFIG ?= llvm-config
+ CLANG ?= clang
 -- 
-2.7.4
+2.27.0
 
