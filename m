@@ -2,312 +2,106 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAE0C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D08AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 825FF20809
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A952073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgG0EcV (ORCPT
+        id S1726222AbgG0Ei7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 00:32:21 -0400
-Received: from mga17.intel.com ([192.55.52.151]:24188 "EHLO mga17.intel.com"
+        Mon, 27 Jul 2020 00:38:59 -0400
+Received: from mga09.intel.com ([134.134.136.24]:18171 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbgG0EcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 00:32:17 -0400
-IronPort-SDR: sv1s+BB8PkcTfceI8wWKA2Dn24YJQDuX+eDgjTRkqdAVV4XIw+zq8fwn05DmNSCBqQEu5OLhSX
- HN6aRwyA+K1w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="131016891"
+        id S1725775AbgG0Ei7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 00:38:59 -0400
+IronPort-SDR: oHt++YRZMMtHbKQAZju13K2pWl5Sywl9mgmz5q4fVb/YxhLlJrt39CQ7Axp4Kh9FzW230mRgjg
+ Cxs0KFhWKRrw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="152212542"
 X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
-   d="scan'208";a="131016891"
+   d="scan'208";a="152212542"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 21:32:09 -0700
-IronPort-SDR: lxSV+MiKR0bzOj6qJY8QtMUe9NSEMaWVg5PuBKbisZG8NidVF5ibPYIN++lx55pJXEALcR5cLp
- EU2h9K96mziQ==
-X-ExtLoop1: 1
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 21:38:58 -0700
+IronPort-SDR: L6jOe41O0iqVqciMLpspnbWmF0D/4Y9vYi1l/Y5ngszxIkVL7I31Gq/pAxbYff5Pj9SPokJhGM
+ 6Q7GnAjVYErQ==
 X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
-   d="scan'208";a="329550035"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orsmga007.jf.intel.com with ESMTP; 26 Jul 2020 21:32:08 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Cathy Zhang <cathy.zhang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dimitri Sivanich <sivanich@sgi.com>, linux-edac@vger.kernel.org
-Subject: [PATCH 2/4] x86/cpu: Relocate sync_core() to sync_core.h
-Date:   Sun, 26 Jul 2020 21:31:30 -0700
-Message-Id: <20200727043132.15082-3-ricardo.neri-calderon@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
-References: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
+   d="scan'208";a="463930493"
+Received: from unknown (HELO [10.239.13.99]) ([10.239.13.99])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 21:38:55 -0700
+Subject: Re: [RFC 2/2] KVM: VMX: Enable bus lock VM exit
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Chenyi Qiang <chenyi.qiang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200628085341.5107-1-chenyi.qiang@intel.com>
+ <20200628085341.5107-3-chenyi.qiang@intel.com>
+ <878sg3bo8b.fsf@vitty.brq.redhat.com>
+ <0159554d-82d5-b388-d289-a5375ca91323@intel.com>
+ <87366bbe1y.fsf@vitty.brq.redhat.com>
+ <adad61e8-8252-0491-7feb-992a52c1b4f3@intel.com>
+ <87zh8j9to2.fsf@vitty.brq.redhat.com> <20200723012114.GP9114@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <a1c2a7dc-d52a-daad-4078-3097579ffef2@intel.com>
+Date:   Mon, 27 Jul 2020 12:38:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200723012114.GP9114@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Having sync_core() in processor.h is problematic since it is not possible
-to check for hardware capabilities via the *cpu_has() family of macros.
-The latter needs the definitions in processor.h.
+On 7/23/2020 9:21 AM, Sean Christopherson wrote:
+> On Wed, Jul 01, 2020 at 04:49:49PM +0200, Vitaly Kuznetsov wrote:
+>> Xiaoyao Li <xiaoyao.li@intel.com> writes:
+>>> So you want an exit to userspace for every bus lock and leave it all to
+>>> userspace. Yes, it's doable.
+>>
+>> In some cases we may not even want to have a VM exit: think
+>> e.g. real-time/partitioning case when even in case of bus lock we may
+>> not want to add additional latency just to count such events.
+> 
+> Hmm, I suspect this isn't all that useful for real-time cases because they'd
+> probably want to prevent the split lock in the first place, e.g. would prefer
+> to use the #AC variant in fatal mode.  Of course, the availability of split
+> lock #AC is a whole other can of worms.
+> 
+> But anyways, I 100% agree that this needs either an off-by-default module
+> param or an opt-in per-VM capability.
+> 
 
-It also looks more intuitive to relocate the function to sync_core.h.
+Maybe on-by-default or an opt-out per-VM capability?
+Turning it on introduces no overhead if no bus lock happens in guest but 
+gives KVM the capability to track every potential bus lock. If user 
+doesn't want the extra latency due to bus lock VM exit, it's better try 
+to fix the bus lock, which also incurs high latency.
 
-This changeset does not make changes in functionality.
+>> I'd suggest we make the new capability tri-state:
+>> - disabled (no vmexit, default)
+>> - stats only (what this patch does)
+>> - userspace exit
+>> But maybe this is an overkill, I'd like to hear what others think.
+> 
+> Userspace exit would also be interesting for debug.  Another throttling
+> option would be schedule() or cond_reched(), though that's probably getting
+> into overkill territory.
+> 
 
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Cathy Zhang <cathy.zhang@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Dimitri Sivanich <sivanich@sgi.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kyung Min Park <kyung.min.park@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: linux-edac@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
----
----
- arch/x86/include/asm/processor.h    | 64 -----------------------------
- arch/x86/include/asm/sync_core.h    | 64 +++++++++++++++++++++++++++++
- arch/x86/kernel/alternative.c       |  1 +
- arch/x86/kernel/cpu/mce/core.c      |  1 +
- drivers/misc/sgi-gru/grufault.c     |  1 +
- drivers/misc/sgi-gru/gruhandles.c   |  1 +
- drivers/misc/sgi-gru/grukservices.c |  1 +
- 7 files changed, 69 insertions(+), 64 deletions(-)
-
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 2a1f7e1d7151..97143d87994c 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -676,70 +676,6 @@ static inline unsigned int cpuid_edx(unsigned int op)
- 	return edx;
- }
- 
--/*
-- * This function forces the icache and prefetched instruction stream to
-- * catch up with reality in two very specific cases:
-- *
-- *  a) Text was modified using one virtual address and is about to be executed
-- *     from the same physical page at a different virtual address.
-- *
-- *  b) Text was modified on a different CPU, may subsequently be
-- *     executed on this CPU, and you want to make sure the new version
-- *     gets executed.  This generally means you're calling this in a IPI.
-- *
-- * If you're calling this for a different reason, you're probably doing
-- * it wrong.
-- */
--static inline void sync_core(void)
--{
--	/*
--	 * There are quite a few ways to do this.  IRET-to-self is nice
--	 * because it works on every CPU, at any CPL (so it's compatible
--	 * with paravirtualization), and it never exits to a hypervisor.
--	 * The only down sides are that it's a bit slow (it seems to be
--	 * a bit more than 2x slower than the fastest options) and that
--	 * it unmasks NMIs.  The "push %cs" is needed because, in
--	 * paravirtual environments, __KERNEL_CS may not be a valid CS
--	 * value when we do IRET directly.
--	 *
--	 * In case NMI unmasking or performance ever becomes a problem,
--	 * the next best option appears to be MOV-to-CR2 and an
--	 * unconditional jump.  That sequence also works on all CPUs,
--	 * but it will fault at CPL3 (i.e. Xen PV).
--	 *
--	 * CPUID is the conventional way, but it's nasty: it doesn't
--	 * exist on some 486-like CPUs, and it usually exits to a
--	 * hypervisor.
--	 *
--	 * Like all of Linux's memory ordering operations, this is a
--	 * compiler barrier as well.
--	 */
--#ifdef CONFIG_X86_32
--	asm volatile (
--		"pushfl\n\t"
--		"pushl %%cs\n\t"
--		"pushl $1f\n\t"
--		"iret\n\t"
--		"1:"
--		: ASM_CALL_CONSTRAINT : : "memory");
--#else
--	unsigned int tmp;
--
--	asm volatile (
--		"mov %%ss, %0\n\t"
--		"pushq %q0\n\t"
--		"pushq %%rsp\n\t"
--		"addq $8, (%%rsp)\n\t"
--		"pushfq\n\t"
--		"mov %%cs, %0\n\t"
--		"pushq %q0\n\t"
--		"pushq $1f\n\t"
--		"iretq\n\t"
--		"1:"
--		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
--#endif
--}
--
- extern void select_idle_routine(const struct cpuinfo_x86 *c);
- extern void amd_e400_c1e_apic_setup(void);
- 
-diff --git a/arch/x86/include/asm/sync_core.h b/arch/x86/include/asm/sync_core.h
-index c67caafd3381..9c5573f2c333 100644
---- a/arch/x86/include/asm/sync_core.h
-+++ b/arch/x86/include/asm/sync_core.h
-@@ -6,6 +6,70 @@
- #include <asm/processor.h>
- #include <asm/cpufeature.h>
- 
-+/*
-+ * This function forces the icache and prefetched instruction stream to
-+ * catch up with reality in two very specific cases:
-+ *
-+ *  a) Text was modified using one virtual address and is about to be executed
-+ *     from the same physical page at a different virtual address.
-+ *
-+ *  b) Text was modified on a different CPU, may subsequently be
-+ *     executed on this CPU, and you want to make sure the new version
-+ *     gets executed.  This generally means you're calling this in a IPI.
-+ *
-+ * If you're calling this for a different reason, you're probably doing
-+ * it wrong.
-+ */
-+static inline void sync_core(void)
-+{
-+	/*
-+	 * There are quite a few ways to do this.  IRET-to-self is nice
-+	 * because it works on every CPU, at any CPL (so it's compatible
-+	 * with paravirtualization), and it never exits to a hypervisor.
-+	 * The only down sides are that it's a bit slow (it seems to be
-+	 * a bit more than 2x slower than the fastest options) and that
-+	 * it unmasks NMIs.  The "push %cs" is needed because, in
-+	 * paravirtual environments, __KERNEL_CS may not be a valid CS
-+	 * value when we do IRET directly.
-+	 *
-+	 * In case NMI unmasking or performance ever becomes a problem,
-+	 * the next best option appears to be MOV-to-CR2 and an
-+	 * unconditional jump.  That sequence also works on all CPUs,
-+	 * but it will fault at CPL3 (i.e. Xen PV).
-+	 *
-+	 * CPUID is the conventional way, but it's nasty: it doesn't
-+	 * exist on some 486-like CPUs, and it usually exits to a
-+	 * hypervisor.
-+	 *
-+	 * Like all of Linux's memory ordering operations, this is a
-+	 * compiler barrier as well.
-+	 */
-+#ifdef CONFIG_X86_32
-+	asm volatile (
-+		"pushfl\n\t"
-+		"pushl %%cs\n\t"
-+		"pushl $1f\n\t"
-+		"iret\n\t"
-+		"1:"
-+		: ASM_CALL_CONSTRAINT : : "memory");
-+#else
-+	unsigned int tmp;
-+
-+	asm volatile (
-+		"mov %%ss, %0\n\t"
-+		"pushq %q0\n\t"
-+		"pushq %%rsp\n\t"
-+		"addq $8, (%%rsp)\n\t"
-+		"pushfq\n\t"
-+		"mov %%cs, %0\n\t"
-+		"pushq %q0\n\t"
-+		"pushq $1f\n\t"
-+		"iretq\n\t"
-+		"1:"
-+		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
-+#endif
-+}
-+
- /*
-  * Ensure that a core serializing instruction is issued before returning
-  * to user-mode. x86 implements return to user-space through sysexit,
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 20e07feb4064..3abc1316f91b 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -16,6 +16,7 @@
- #include <linux/kprobes.h>
- #include <linux/mmu_context.h>
- #include <linux/bsearch.h>
-+#include <linux/sync_core.h>
- #include <asm/text-patching.h>
- #include <asm/alternative.h>
- #include <asm/sections.h>
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 1a0139d9a34b..e76c1ddd35e7 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -42,6 +42,7 @@
- #include <linux/export.h>
- #include <linux/jump_label.h>
- #include <linux/set_memory.h>
-+#include <linux/sync_core.h>
- #include <linux/task_work.h>
- #include <linux/hardirq.h>
- 
-diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufault.c
-index b1521112dbbd..723825524ea0 100644
---- a/drivers/misc/sgi-gru/grufault.c
-+++ b/drivers/misc/sgi-gru/grufault.c
-@@ -20,6 +20,7 @@
- #include <linux/io.h>
- #include <linux/uaccess.h>
- #include <linux/security.h>
-+#include <linux/sync_core.h>
- #include <linux/prefetch.h>
- #include "gru.h"
- #include "grutables.h"
-diff --git a/drivers/misc/sgi-gru/gruhandles.c b/drivers/misc/sgi-gru/gruhandles.c
-index f7224f90f413..1d75d5e540bc 100644
---- a/drivers/misc/sgi-gru/gruhandles.c
-+++ b/drivers/misc/sgi-gru/gruhandles.c
-@@ -16,6 +16,7 @@
- #define GRU_OPERATION_TIMEOUT	(((cycles_t) local_cpu_data->itc_freq)*10)
- #define CLKS2NSEC(c)		((c) *1000000000 / local_cpu_data->itc_freq)
- #else
-+#include <linux/sync_core.h>
- #include <asm/tsc.h>
- #define GRU_OPERATION_TIMEOUT	((cycles_t) tsc_khz*10*1000)
- #define CLKS2NSEC(c)		((c) * 1000000 / tsc_khz)
-diff --git a/drivers/misc/sgi-gru/grukservices.c b/drivers/misc/sgi-gru/grukservices.c
-index 0197441a1eae..f6e600bfac5d 100644
---- a/drivers/misc/sgi-gru/grukservices.c
-+++ b/drivers/misc/sgi-gru/grukservices.c
-@@ -16,6 +16,7 @@
- #include <linux/miscdevice.h>
- #include <linux/proc_fs.h>
- #include <linux/interrupt.h>
-+#include <linux/sync_core.h>
- #include <linux/uaccess.h>
- #include <linux/delay.h>
- #include <linux/export.h>
--- 
-2.17.1
+We're going to leverage host's policy, i.e., calling 
+handle_user_bus_lock(), for throttling, as proposed in 
+https://lkml.kernel.org/r/1595021700-68460-1-git-send-email-fenghua.yu@intel.com
 
