@@ -2,110 +2,116 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F3CC433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71290C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 624BF206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47FE0206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:26:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="AJgFVAeq"
+	dkim=pass (2048-bit key) header.d=draconx-ca.20150623.gappssmtp.com header.i=@draconx-ca.20150623.gappssmtp.com header.b="Si4G24rb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbgG0QZq (ORCPT
+        id S1729890AbgG0Q0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 12:25:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56624 "EHLO
+        Mon, 27 Jul 2020 12:26:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729486AbgG0QZp (ORCPT
+        with ESMTP id S1729668AbgG0Q0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:25:45 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FA5C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 09:25:44 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id c6so3170646pje.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 09:25:44 -0700 (PDT)
+        Mon, 27 Jul 2020 12:26:36 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A17FAC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 09:26:36 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id 2so9034449ybr.13
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 09:26:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PgFDMWbXvBiEOAL8M87yEjCfGoE6x1y/jQ7//nauM8k=;
-        b=AJgFVAeqNc0eTNWKlRiSdboLLmWGtucMVtlkCPLfxpBGGAOOTw7XJMakcq6cwtXPte
-         LEWZgdT2NaR/JInb5XxIN5Smg+ng7vi9zQeZMCLwjk1ov8i28QxqN+dvgNRo6VfRyAGc
-         GBFvwT83gAamdChAgmQR7vLsWjeOfx5Uw2LjnV++DPbvKy39G2ymgTSAdCMm2x6Our1I
-         94YsqiAYqbGhTjUwF1TYPnjl7nZPE4pLK5AeHvUmbBHlUPuq7gkHP2amjZG1T8c4njdx
-         M1wCjXnOwFI6Xm2Go58ZuKECCu6Tjw7+nmjJ0ZRUF/3Eill1r/Y0cYhEGxbrQi2p6703
-         1Qlw==
+        d=draconx-ca.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=t/olIwYqxp1DyF1+bW9J2vZgk69Gj3uV2JTib0EW5Sg=;
+        b=Si4G24rbigkgdAImlbDToCCGZL0kCGnAQvty5GeSVw4L0ScgzB8ijFZoUfapsn+BNF
+         LJ8NxdyGuZ51rVMSGsRD6PhV7TeEzmVJAXRhsjW8pPo6Hxi7yFtwux+quxWdiNK/d6rh
+         F7EmOX6qIvczVK1xW30DFscIJzdbF1AIGW4Q+cxGK/wjdPQK0+UXQM/BVR0I6zbzxepN
+         y7x3fp1tTNol3me+YD/HmqpdU2sOD79SrKbkZIIFq0l0bKBzYc8SI7Baw2gTqchtRSp1
+         dY7tPCj66Jq+jOpFtEwJVWx8gGFZ99c9brhF4TDXgPk80l+xmkGVypxtKbnjT5A/FWun
+         k7Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PgFDMWbXvBiEOAL8M87yEjCfGoE6x1y/jQ7//nauM8k=;
-        b=CjAti8KSNE91hWvQwT/FsE/Qd2c6jYkXW7+qfsOxuc04HsAJi4FdoLP66kM13Dd8uQ
-         pL7x9npq9Ul4FEDmLXv/2+p2iw9qBeh1zMuFpfWToVpDrf8iP0oFqB9zQCbo3aKzE3ri
-         r4dijm0lawwdDi8Q+9j/VOPgM9y3vm/xclnaRTiNEgv5gNkkPOfr75fdYVi6x00LJpvM
-         oamTIwBYWKM7NpNADBzzYMTZ8w8IB6iaNUyxIa+4PdCQ98H3XPZP/dmUwUGrA+cvC5qY
-         PboZ4QoXA7jptui5vf6dCLjLGAvWi8388aD5TwnOyV0nlMvYJ0W3oa/9xe5xSo4sd95r
-         YelQ==
-X-Gm-Message-State: AOAM533rh0kjdAytwhl+rdoizlSNEHuMvltWIFwbfLqsXnhZZeWhPNqV
-        Qt6RG9VVcSfpjHpMFK24s4qI8YRH8Io=
-X-Google-Smtp-Source: ABdhPJzhbpBDCDrPt1P1xzvTKEDPhAXqIMc+mtjQuLAEnv/alhrt/rhN2nq6GrLuC3iTTLwresjkGw==
-X-Received: by 2002:a17:902:900b:: with SMTP id a11mr19177442plp.315.1595867144116;
-        Mon, 27 Jul 2020 09:25:44 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id v15sm15621045pgo.15.2020.07.27.09.25.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 09:25:43 -0700 (PDT)
-Subject: Re: [Linux-kernel-mentees] [PATCH] block/scsi-ioctl: Prevent
- kernel-infoleak in scsi_put_cdrom_generic_arg()
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200727161932.322955-1-yepeilin.cs@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <78d90a98-7bd5-1604-cc27-90842c365ecf@kernel.dk>
-Date:   Mon, 27 Jul 2020 10:25:42 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=t/olIwYqxp1DyF1+bW9J2vZgk69Gj3uV2JTib0EW5Sg=;
+        b=D6HS6Baje6BSwNZhLBxrCYLQOqKo6DEKpIeh73KmQWUl/SPiQPoRqdIcSKke24vBa4
+         dwkQalFZVv97m7p0MU0cQ3v1UCutOzNH5gBAF0a+6quJNlcZxA7O3VoPy4s9sfhFWLzs
+         hH9Zt8p/wduogStSZ5JI3Ei0MYJco+n7Kte7lomaoGoDOXbJVPY61sP4G7Go6cFS2rxv
+         r5w9mOLevAoIi7cyYAZfMItYVJG6KA66taqiP/CR2HvdEe8jfmNbJWSMCwJVvuoEDeHi
+         y9ODse8YyubGtpJrqQ6jFTaYHUhJ5TDqiaSfMCs1zBH6nQWKethd5ME4BTgAFnB7Jf5m
+         guQA==
+X-Gm-Message-State: AOAM531TxsAFTnGWSTCwt3tuflikS00vu0ZBALPpV3qBp/4man3dGYIt
+        CnJJrBEOJKLAkc1vAW3T3xqHEOLQrqiGJuq8lUNOefY0ykg=
+X-Google-Smtp-Source: ABdhPJwUz/OEyvaeMrlRL7/0gzWkSvl13aw4W+YbB6UZVVd9EunH/SkBmAxVgNok0fEA7Y4Mv3RanZgv5EEeNkF63v0=
+X-Received: by 2002:a25:df0e:: with SMTP id w14mr20160814ybg.225.1595867195726;
+ Mon, 27 Jul 2020 09:26:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200727161932.322955-1-yepeilin.cs@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a25:807:0:0:0:0:0 with HTTP; Mon, 27 Jul 2020 09:26:35 -0700 (PDT)
+X-Originating-IP: [24.53.240.163]
+In-Reply-To: <20200727160554.GG794331@ZenIV.linux.org.uk>
+References: <20200723155101.pnezpo574ot4qkzx@atlas.draconx.ca> <20200727160554.GG794331@ZenIV.linux.org.uk>
+From:   Nick Bowler <nbowler@draconx.ca>
+Date:   Mon, 27 Jul 2020 12:26:35 -0400
+Message-ID: <CADyTPEx=Y5KxYRV0JXgeH6njJMObTOFpAc4wmha0uUfO8yQfxQ@mail.gmail.com>
+Subject: Re: PROBLEM: cryptsetup fails to unlock drive in 5.8-rc6 (regression)
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/20 10:19 AM, Peilin Ye wrote:
-> scsi_put_cdrom_generic_arg() is copying uninitialized stack memory to
-> userspace due to the compiler not initializing holes in statically
-> allocated structures. Fix it by initializing `cgc32` using memset().
+On 2020-07-27, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Thu, Jul 23, 2020 at 11:51:01AM -0400, Nick Bowler wrote:
+>> Hi,
+>>
+>> After installing Linux 5.8-rc6, it seems cryptsetup can no longer
+>> open LUKS volumes.  Regardless of the entered passphrase (correct
+>> or otherwise), the result is a very unhelpful "Keyslot open failed."
+>> message.
+>>
+>> On the kernels which fail, I also noticed that the cryptsetup
+>> benchmark command appears to not be able to determine that any
+>> ciphers are available (output at end of message), possibly for
+>> the same reason.
+>>
+>> Bisected to the following commit, which suggests a problem specific
+>> to compat userspace (this is amd64 kernel).  I tested both ia32 and
+>> x32 userspace to confirm the problem.  Reverting this commit on top
+>> of 5.8-rc6 resolves the issue.
+>>
+>> Looking at strace output the failing syscall appears to be:
+>>
+>>   sendmsg(8, {msg_name=NULL, msg_namelen=0,
+>> 	     msg_iov=[{iov_base=..., iov_len=512}], msg_iovlen=1,
+>> 	     msg_control=[{cmsg_len=16, cmsg_level=SOL_ALG,
+>> 	     cmsg_type=0x3}, {cmsg_len=32, cmsg_level=SOL_ALG,
+>> 	     cmsg_type=0x2}], msg_controllen=48, msg_flags=0}, 0)
+>> 	     = -1 EINVAL (Invalid argument)
+>
+> Huh?  Just in case - could you verify that on the kernel with that
+> commit reverted the same sendmsg() succeeds?
 
-Could also just add the appropriate pad, so the compiler does the
-right thing.
+Seems so; with commit 547ce4cfb34c reverted on top of 5.8-rc6 there is
+no such error in the strace output.  This particular syscall seems
+to be succeeding:
 
+  sendmsg(8, {msg_name=NULL, msg_namelen=0,
+	  msg_iov=[{iov_base=..., iov_len=512}], msg_iovlen=1,
+	  msg_control=[{cmsg_len=16, cmsg_level=SOL_ALG,
+	  cmsg_type=0x3}, {cmsg_len=32, cmsg_level=SOL_ALG,
+	  cmsg_type=0x2}], msg_controllen=48, msg_flags=0}, 0) = 512
 
-diff --git a/block/scsi_ioctl.c b/block/scsi_ioctl.c
-index ef722f04f88a..72108404718f 100644
---- a/block/scsi_ioctl.c
-+++ b/block/scsi_ioctl.c
-@@ -651,6 +651,7 @@ struct compat_cdrom_generic_command {
- 	compat_int_t	stat;
- 	compat_caddr_t	sense;
- 	unsigned char	data_direction;
-+	unsigned char	pad[3];
- 	compat_int_t	quiet;
- 	compat_int_t	timeout;
- 	compat_caddr_t	reserved[1];
-
--- 
-Jens Axboe
-
+Cheers,
+  Nick
