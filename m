@@ -2,94 +2,106 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A26C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22EDC2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:56:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595879773;
-	bh=HhbZb8eGpSUIjHKBTzNw69dutdCwiSZR4cS1T30M2gk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C7FDCUrZ+cd59gg+Pfv/QzV/Foq8DNrGMc8exSkZ+CwBgq+yCjJygqSWfFoivwo1a
-	 R0UjPcLKTp/I20qr8EjgRK8YYPu0NRPk2vYIi8rs/Huyfk43gRkO17QjVucdRDz2qE
-	 xwE0s3bIE4zs5cj3nLuePsIEduu5agXqPwbpq7lQ=
+	by mail.kernel.org (Postfix) with ESMTP id CD0F42074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:02:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y3HVXgsR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbgG0T4M (ORCPT
+        id S1728663AbgG0UCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:56:12 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46166 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgG0T4L (ORCPT
+        Mon, 27 Jul 2020 16:02:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbgG0UCj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:56:11 -0400
-Received: by mail-io1-f68.google.com with SMTP id a5so3060582ioa.13;
-        Mon, 27 Jul 2020 12:56:10 -0700 (PDT)
+        Mon, 27 Jul 2020 16:02:39 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCF2AC0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:02:39 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id d4so10532773pgk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:02:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=IXDeKj/8CgvwBowlCvSFrtK4qV4sd1hCGAzTc7QYtD4=;
+        b=Y3HVXgsRYqk2PJIxygUxaAR7AKRLEORJjoG6eXL600/gkGgOi2sSTJ0j0691Qu0VWN
+         JI+1n6sCK5PDGAca2AOtTUa++CMoguByq0quyCD6X7WayrZ8TDfnlWxG/yBUO1UfjdOn
+         j0KYrkKQLQNv6UNdXBXDg2Q293ux5L7n7GxFk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C8UHP2DIuI2PhUn6nQlydwILHy7h5veWF+bWL7pWmYI=;
-        b=t6aHTR0rhje2Y1yZqvcoadZgdBqa1fv/bvvSvorRyM7ZhInaaQkh2Rxw9bkIH9u0wm
-         pY8Bpy5tUZj2C8ZpL9GsgQi9U9F1DayB/dTdmxHAJzJdfcEXlAOLwg0wj4eNKvyJDGCr
-         gU5c1TtrSYLij5zMyxx+cKwrSAfDovKnSUTqiA8Dv5geZ55ynDPtTK07GUjtd2P/5EUW
-         k9dxNoofTVGIjJwmOgFAebRUu2rw8HfW8/LHdkdkYcquBM/xj7d2hTs+iUBvKMyvXuE9
-         diE2OEzuM6iuxgkDPEYMv++1aYJ3fhvhH9v3Xf25jfWnY85zGLSWuxL+9a/DX1bwIGHr
-         DWXQ==
-X-Gm-Message-State: AOAM533dkLlfuab1fn7JiYcxT/Fu2Ac5tqKIn2T53RQqGzGgaOZNb19Q
-        3ApsiXB9htOK6EKt6KVqRA==
-X-Google-Smtp-Source: ABdhPJwE+bqEac4f3wM8AlVwnQRJLKAVkJx8XhPsguZt8wv7uHc9/LrC6MgxM35EmhAD4wDtwDAGKg==
-X-Received: by 2002:a5e:9519:: with SMTP id r25mr21081467ioj.199.1595879770589;
-        Mon, 27 Jul 2020 12:56:10 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r2sm6613651ilc.58.2020.07.27.12.56.07
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=IXDeKj/8CgvwBowlCvSFrtK4qV4sd1hCGAzTc7QYtD4=;
+        b=rfAJrEPtQRN88iNzl+IfrHD7/jj/nQmh3+AulAbDOJUvozlYuvCmg62+dxs+wsXc3a
+         bFSIJNVjYaZJfrcErfW/s8jNyj4pun796ygU4478owfsXjlCY/16s1wyaTIhN3kiuHHr
+         5cvgII71JDQakBZXz1ZY7tR9y9orFVnT5FbleDwDfSbGMJ3hcNrv9tT3yCV/QSyK7aJF
+         8YaNXOOxK6WUA062hhU4LoxE/pI74dCl8ud52vrAo5i8/PsHmhF5QVrrjdKFVyFu0IHP
+         IpVVuwt1QDuAtnNh0XvlGLg4s2KWwplX3AobxurTWVnQLhqCwQNc2U/81rONygI6CPPs
+         Xj9Q==
+X-Gm-Message-State: AOAM5305s4tiZmE9kunzrzcdt+CCFEHkOST9C1LlqRj44xEXFgHL/mC7
+        PJN6vjtqhE7Km3ogyjV0TgyC9ahR+yw=
+X-Google-Smtp-Source: ABdhPJwoSS7iWNG6ib5qqh9HziwtyhV7QAHABX4BFAetR8LGWSTIw5v3Xyvkxa2lVfZQgeiGcZV5nw==
+X-Received: by 2002:a63:e24a:: with SMTP id y10mr19769530pgj.1.1595880159038;
+        Mon, 27 Jul 2020 13:02:39 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id 21sm15629639pfu.124.2020.07.27.13.02.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 12:56:09 -0700 (PDT)
-Received: (nullmailer pid 777930 invoked by uid 1000);
-        Mon, 27 Jul 2020 19:56:06 -0000
-Date:   Mon, 27 Jul 2020 13:56:06 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anup Patel <anup.patel@wdc.com>
-Cc:     Anup Patel <anup@brainfault.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Emil Renner Berhing <kernel@esmil.dk>,
-        linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v6 4/4] dt-bindings: timer: Add CLINT bindings
-Message-ID: <20200727195606.GA777876@bogus>
-References: <20200724071822.126758-1-anup.patel@wdc.com>
- <20200724071822.126758-5-anup.patel@wdc.com>
+        Mon, 27 Jul 2020 13:02:38 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724071822.126758-5-anup.patel@wdc.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200726125636.3aa003ad@archlinux>
+References: <20200724213329.899216-1-swboyd@chromium.org> <20200726125636.3aa003ad@archlinux>
+Subject: Re: [PATCH 0/3] Some sx9310 iio driver updates
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Daniel Campello <campello@chromium.org>
+To:     Jonathan Cameron <jic23@kernel.org>
+Date:   Mon, 27 Jul 2020 13:02:37 -0700
+Message-ID: <159588015706.1360974.7201974727081274212@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 12:48:22 +0530, Anup Patel wrote:
-> We add DT bindings documentation for CLINT device.
-> 
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-> Tested-by: Emil Renner Berhing <kernel@esmil.dk>
-> ---
->  .../bindings/timer/sifive,clint.yaml          | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> 
+Quoting Jonathan Cameron (2020-07-26 04:56:36)
+> On Fri, 24 Jul 2020 14:33:24 -0700
+> Stephen Boyd <swboyd@chromium.org> wrote:
+>=20
+> > These patches are only related because I'm looking at this driver. The
+> > first one resends the DT binding for the driver that was merged in
+> > v5.8-rc1 with a small change to update for proper regulators. The second
+> > patch fixes a few printks that are missing newlines and should be
+> > totally non-trivial to apply. The third patch changes whoami to unsigned
+> > to avoid confusing. The fourth patch drops channel_users because it's
+> > unused. The final patch adds support to enable the svdd and vdd supplies
+> > so that this driver can work on a board I have where the svdd supply
+> > isn't enabled at boot and needs to be turned on before this driver
+> > starts to communicate with the chip.
+> Hi Stephen,
+>=20
+> I clearly made a mess of picking this driver up in the first place.
+>=20
+> Anyhow, we now have two series in flight for the driver that, whilst
+> mostly independent (I think) will result in at least some fuzz.
+> If possible could you work with Daniel to send me one single series
+> with all the changes?
+>=20
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Sure. No problem for me to work with Daniel. Thanks.
