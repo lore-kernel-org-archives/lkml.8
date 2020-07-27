@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46938C433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502BDC433FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2619C20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A9142075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859332;
-	bh=JvqmCjpfFxHkGSS4o1rUiFiNGvL2wl2mA3JOg82VGYI=;
+	s=default; t=1595859337;
+	bh=19mQB+PQDrdF584KAX767sTni5YlZ0N4xfTr5X9tToo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ucld3eesXdfXEAem+hv9SwRSF30AFgv6HKtVaV7Z7DvsNR42OmA8uk1ZZ7HIoM8fk
-	 zoXQVqMr6kxqFRd3gi3Hv0aO4t6Z4Gqb1pxc81CqfLJATTsy06Rx96yMx5CQRBk38x
-	 Ve/0LgeT4w+EaLV7Ph8kkR2CmvA2jFrBdUOwi/9w=
+	b=yGHRkECbCO1IARW25jjmBnkfZozNmbVl7iytnD3QYRyyVVW+syKNdFIdYcb+3FPZK
+	 osgxfgvPlo+f6i40YrIPkZ6N0H47Yrfe4phuoiqBBYH/O5hEWm5IxinWjH/UHBgJ1I
+	 H7i8TdM4C3qhFpQuH0Fw0X9lA5IWJ1016GPidtAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730710AbgG0OP3 (ORCPT
+        id S1730729AbgG0OPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:15:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41730 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:15:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730697AbgG0OPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:15:23 -0400
+        id S1730120AbgG0OP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:15:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C80E2075A;
-        Mon, 27 Jul 2020 14:15:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 769772083B;
+        Mon, 27 Jul 2020 14:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859323;
-        bh=JvqmCjpfFxHkGSS4o1rUiFiNGvL2wl2mA3JOg82VGYI=;
+        s=default; t=1595859327;
+        bh=19mQB+PQDrdF584KAX767sTni5YlZ0N4xfTr5X9tToo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IKj3NKRIMcqzgxaJ9/J+dkcM7kUj8byExh5qnO/UKsthhtz5YRJ0qrVtvBjoA7kqk
-         49G978fGZp/wSdM2KfrB+Td7m7FVB210VtsPIV9p0nAYs1tLwFaR7mfQvbhwwsqFgd
-         H8sHg/2GZOKO2rFRmp18u+RoMRq8ltm/0xtiEkdw=
+        b=0X4n+gqtoMBm/qbS3hOAweEdrh0VjomCn0UP/U33HD0Y0hUUgrRYyN+a40eKwIYRb
+         xXlwbTOmSdnTl1RquSKttZ4lQlw3L5oth0CfNILgM9NKcwQag2XCBudS1rHqTJdf18
+         CPJc0TdSMX+OoMjFb0+4t+4x0RexphZT+WtSXyHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>, Wu Hao <hao.wu@intel.com>,
+        Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 063/138] enetc: Remove the mdio bus on PF probe bailout
-Date:   Mon, 27 Jul 2020 16:04:18 +0200
-Message-Id: <20200727134928.557474581@linuxfoundation.org>
+Subject: [PATCH 5.4 038/138] fpga: dfl: pci: reduce the scope of variable ret
+Date:   Mon, 27 Jul 2020 16:03:53 +0200
+Message-Id: <20200727134927.279295285@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -60,72 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
+From: Xu Yilun <yilun.xu@intel.com>
 
-[ Upstream commit 26cb7085c8984e5b71d65c374a135134ed8cabb3 ]
+[ Upstream commit e19485dc7a0d210b428a249c0595769bd495fb71 ]
 
-For ENETC ports that register an external MDIO bus,
-the bus doesn't get removed on the error bailout path
-of enetc_pf_probe().
+This is to fix lkp cppcheck warnings:
 
-This issue became much more visible after recent:
-commit 07095c025ac2 ("net: enetc: Use DT protocol information to set up the ports")
-Before this commit, one could make probing fail on the error
-path only by having register_netdev() fail, which is unlikely.
-But after this commit, because it moved the enetc_of_phy_get()
-call up in the probing sequence, now we can trigger an mdiobus_free()
-bug just by forcing enetc_alloc_msix() to return error, i.e. with the
-'pci=nomsi' kernel bootarg (since ENETC relies on MSI support to work),
-as the calltrace below shows:
+ drivers/fpga/dfl-pci.c:230:6: warning: The scope of the variable 'ret' can be reduced. [variableScope]
+    int ret = 0;
+        ^
 
-kernel BUG at /home/eiz/work/enetc/net/drivers/net/phy/mdio_bus.c:648!
-Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-[...]
-Hardware name: LS1028A RDB Board (DT)
-pstate: 80000005 (Nzcv daif -PAN -UAO BTYPE=--)
-pc : mdiobus_free+0x50/0x58
-lr : devm_mdiobus_free+0x14/0x20
-[...]
-Call trace:
- mdiobus_free+0x50/0x58
- devm_mdiobus_free+0x14/0x20
- release_nodes+0x138/0x228
- devres_release_all+0x38/0x60
- really_probe+0x1c8/0x368
- driver_probe_device+0x5c/0xc0
- device_driver_attach+0x74/0x80
- __driver_attach+0x8c/0xd8
- bus_for_each_dev+0x7c/0xd8
- driver_attach+0x24/0x30
- bus_add_driver+0x154/0x200
- driver_register+0x64/0x120
- __pci_register_driver+0x44/0x50
- enetc_pf_driver_init+0x24/0x30
- do_one_initcall+0x60/0x1c0
- kernel_init_freeable+0x1fc/0x274
- kernel_init+0x14/0x110
- ret_from_fork+0x10/0x34
+ drivers/fpga/dfl-pci.c:230:10: warning: Variable 'ret' is assigned a value that is never used. [unreadVariable]
+    int ret = 0;
+            ^
 
-Fixes: ebfcb23d62ab ("enetc: Add ENETC PF level external MDIO support")
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 3c2760b78f90 ("fpga: dfl: pci: fix return value of cci_pci_sriov_configure")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+Acked-by: Wu Hao <hao.wu@intel.com>
+Reviewed-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Moritz Fischer <mdf@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/enetc/enetc_pf.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/fpga/dfl-pci.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-index b73421c3e25b1..74847aa644f12 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-@@ -885,6 +885,7 @@ static int enetc_pf_probe(struct pci_dev *pdev,
- 	return 0;
+diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+index 538755062ab7c..a78c409bf2c44 100644
+--- a/drivers/fpga/dfl-pci.c
++++ b/drivers/fpga/dfl-pci.c
+@@ -227,7 +227,6 @@ static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
+ {
+ 	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
+ 	struct dfl_fpga_cdev *cdev = drvdata->cdev;
+-	int ret = 0;
  
- err_reg_netdev:
-+	enetc_mdio_remove(pf);
- 	enetc_of_put_phy(priv);
- 	enetc_free_msix(priv);
- err_alloc_msix:
+ 	if (!num_vfs) {
+ 		/*
+@@ -239,6 +238,8 @@ static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
+ 		dfl_fpga_cdev_config_ports_pf(cdev);
+ 
+ 	} else {
++		int ret;
++
+ 		/*
+ 		 * before enable SRIOV, put released ports into VF access mode
+ 		 * first of all.
 -- 
 2.25.1
 
