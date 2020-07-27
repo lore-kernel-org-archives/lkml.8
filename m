@@ -2,156 +2,178 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0C6C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C7BC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5D8620719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2474220719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GOEo/zcN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ckvE44+e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbgG0Q4a (ORCPT
+        id S1728631AbgG0Q7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 12:56:30 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43916 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728005AbgG0Q4a (ORCPT
+        Mon, 27 Jul 2020 12:59:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728005AbgG0Q7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:56:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595868988;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=dxBNTe/BodyVvh9xfMz73x9oXYT+tCU+lASmaVKO9wk=;
-        b=GOEo/zcNKOLiVlgJWD+tA6o+yapZ3Y+hWHtsRL73a28Wt+o6Lgtt2pkcv978QRm3I8YWsn
-        +G2puAeOkQyqdxQ+CNnRHYTDu0Iere+GKdCcGIv+CHUgGxbJFvCynmTfgGZtJUCnzMukKm
-        StIbGvAZvniCDqJi2hiA4BxHUxs7EoA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389-F_jDiUu6NSG4yOz16ti4hQ-1; Mon, 27 Jul 2020 12:56:24 -0400
-X-MC-Unique: F_jDiUu6NSG4yOz16ti4hQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 040BB79EC1;
-        Mon, 27 Jul 2020 16:56:23 +0000 (UTC)
-Received: from [10.36.112.53] (ovpn-112-53.ams2.redhat.com [10.36.112.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E3E48FA5F;
-        Mon, 27 Jul 2020 16:56:17 +0000 (UTC)
-Subject: Re: [PATCH] virtio_balloon: fix up endian-ness for free cmd id
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Liang Li <liang.z.li@intel.com>,
-        Wei Wang <wei.w.wang@intel.com>,
-        virtualization@lists.linux-foundation.org,
-        Alexander Duyck <alexander.duyck@gmail.com>
-References: <20200727160310.102494-1-mst@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <15ac104a-d5dc-00a6-f327-314131dd1930@redhat.com>
-Date:   Mon, 27 Jul 2020 18:56:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 27 Jul 2020 12:59:22 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D73C061794;
+        Mon, 27 Jul 2020 09:59:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qKCvvUqZxubrOC+RuxMq8NEC5P8ybthEmCL48oWCrpQ=; b=ckvE44+e+1WMR2mp8dKzBgbajf
+        MRjIbVSLSEnIOpTHTPlktISnxkb3xb2LJoWBCVy2RimzwCRNAbuutSOq//ZLA1NcW8kONGkUvbCyn
+        TPu9GpGYCln4xEmK8HPSS6Kp1T8nd7KxnSY6hao2LqmVDG0ivjCGiFPUh9VT9P6R8BnRzKRlpUcFk
+        JMMTU8SNcxhfHyUdvofky9QjWN7hjaWNUodRngN6yT9Nyb1J4CIK38an75whMYwherJSmx+BVzBpk
+        NKduur9QXgpSqPv+S46Xmo1XdmQKDep7agWIvtf4w6s9TojDwbWNTvZGFsatOXVoklpH5QOZIxL8b
+        GLPAOf6A==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k06T7-0005TL-BJ; Mon, 27 Jul 2020 16:59:17 +0000
+Date:   Mon, 27 Jul 2020 17:59:17 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
+Message-ID: <20200727165917.GN23808@casper.infradead.org>
+References: <20200717044427.68747-1-ebiggers@kernel.org>
+ <20200717174750.GQ12769@casper.infradead.org>
+ <20200718013839.GD2183@sol.localdomain>
+ <20200718021304.GS12769@casper.infradead.org>
+ <20200718052818.GF2183@sol.localdomain>
+ <20200727151746.GC1468275@rowland.harvard.edu>
+ <20200727152827.GM23808@casper.infradead.org>
+ <20200727163149.GD1468275@rowland.harvard.edu>
 MIME-Version: 1.0
-In-Reply-To: <20200727160310.102494-1-mst@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727163149.GD1468275@rowland.harvard.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.07.20 18:03, Michael S. Tsirkin wrote:
-> free cmd id is read using virtio endian, spec says all fields
-> in balloon are LE. Fix it up.
+On Mon, Jul 27, 2020 at 12:31:49PM -0400, Alan Stern wrote:
+> On Mon, Jul 27, 2020 at 04:28:27PM +0100, Matthew Wilcox wrote:
+> > On Mon, Jul 27, 2020 at 11:17:46AM -0400, Alan Stern wrote:
+> > > Given a type "T", an object x of type pointer-to-T, and a function
+> > > "func" that takes various arguments and returns a pointer-to-T, the
+> > > accepted API for calling func once would be to create once_func() as
+> > > follows:
+> > > 
+> > > T *once_func(T **ppt, args...)
+> > > {
+> > > 	static DEFINE_MUTEX(mut);
+> > > 	T *p;
+> > > 
+> > > 	p = smp_load_acquire(ppt);	/* Mild optimization */
+> > > 	if (p)
+> > > 		return p;
+> > > 
+> > > 	mutex_lock(mut);
+> > > 	p = smp_load_acquire(ppt);
+> > > 	if (!p) {
+> > > 		p = func(args...);
+> > > 		if (!IS_ERR_OR_NULL(p))
+> > > 			smp_store_release(ppt, p);
+> > > 	}
+> > > 	mutex_unlock(mut);
+> > > 	return p;
+> > > }
+> > > 
+> > > Users then would have to call once_func(&x, args...) and check the
+> > > result.  Different x objects would constitute different "once"
+> > > domains.
+> > [...]
+> > > In fact, the only drawback I can think of is that because this relies
+> > > on a single mutex for all the different possible x's, it might lead to
+> > > locking conflicts (if func had to call once_func() recursively, for
+> > > example).  In most reasonable situations such conflicts would not
+> > > arise.
+> > 
+> > Another drawback for this approach relative to my get_foo() approach
+> > upthread is that, because we don't have compiler support, there's no
+> > enforcement that accesses to 'x' go through once_func().  My approach
+> > wraps accesses in a deliberately-opaque struct so you have to write
+> > some really ugly code to get at the raw value, and it's just easier to
+> > call get_foo().
 > 
-> Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  drivers/virtio/virtio_balloon.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> index 774deb65a9bb..798ec304fe3e 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -578,10 +578,14 @@ static int init_vqs(struct virtio_balloon *vb)
->  static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
->  {
->  	if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
-> -			       &vb->config_read_bitmap))
-> +			       &vb->config_read_bitmap)) {
->  		virtio_cread(vb->vdev, struct virtio_balloon_config,
->  			     free_page_hint_cmd_id,
->  			     &vb->cmd_id_received_cache);
-> +		/* Legacy balloon config space is LE, unlike all other devices. */
-> +		if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
-> +			vb->cmd_id_received_cache = le32_to_cpu((__force __le32)vb->cmd_id_received_cache);
-> +	}
->  
->  	return vb->cmd_id_received_cache;
->  }
-> 
+> Something like that could be included in once_func too.  It's relatively 
+> tangential to the main point I was making, which was to settle on an 
+> overall API and discuss how it should be described in recipes.txt.
 
-Acked-by: David Hildenbrand <david@redhat.com>
+Then I think you're trying to describe something which is too complicated
+because it's overly general.  I don't think device drivers should contain
+"smp_load_acquire" and "smp_store_release".  Most device driver authors
+struggle with spinlocks and mutexes.
 
--- 
-Thanks,
+The once_get() / once_store() API:
 
-David / dhildenb
+struct foo *get_foo(gfp_t gfp)
+{
+	static struct once_pointer my_foo;
+	struct foo *foop;
 
+	foop = once_get(&my_foo);
+	if (foop)
+		return foop;
+
+	foop = alloc_foo(gfp);
+	if (foop && !once_store(&my_foo, foop)) {
+		free_foo(foop);
+		foop = once_get(&my_foo);
+	}
+
+	return foop;
+}
+
+is easy to understand.  There's no need to talk about acquire and release
+semantics, barriers, reordering, ... it all just works in the obvious way
+that it's written.
+
+If you want to put a mutex around all this, you can:
+
+struct foo *get_foo(gfp_t gfp)
+{
+	static DEFINE_MUTEX(m);
+	static struct init_once_pointer my_foo;
+	struct foo *foop;
+
+	foop = once_get(&my_foo);
+	if (foop)
+		return foop;
+
+	mutex_lock(&m);
+	foop = once_get(&my_foo);
+	if (!foop) {
+		foop = alloc_foo(gfp);
+		if (foop && !once_store(&my_foo, foop)) {
+			free_foo(foop);
+			foop = once_get(&my_foo);
+		}
+	}
+	mutex_unlock(&m);
+
+	return foop;
+}
