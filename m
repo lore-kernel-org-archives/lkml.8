@@ -2,182 +2,113 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70508C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D262C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48ABD20759
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC5E20759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:04:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YvSZb7Y2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XmcVqhm/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgG0JDg (ORCPT
+        id S1727120AbgG0JEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:03:36 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:23452 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgG0JDf (ORCPT
+        Mon, 27 Jul 2020 05:04:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgG0JEK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:03:35 -0400
+        Mon, 27 Jul 2020 05:04:10 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C49C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:04:09 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id l2so3493393wrc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:04:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1595840616; x=1627376616;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=oYQUjD8dm/BApSQBrI8Gg5yalczlaUdJshqRb6pjbFc=;
-  b=YvSZb7Y2b+yrwvLX5yBmaw36yNlVZEVU9HhkmXeMyFiytCSldgQwZELN
-   rLsqKiLNxfuvotkN8yeP7/yQ8F+cL7f8HQobVqo9wqv9kmgoXcC8VOUmz
-   krqwKIJMMSfmx0zuQaS8DQzABQPRe6sJoZiiG6Ih3YJAms0qbCJJHXwCR
-   c=;
-IronPort-SDR: SeUBRoAaOOHBYkmwX+kFFfS0f8E2TXF9TxG1RPvIcCdkvjKgx+opOY2SaqTBlDb9GuvV29duQw
- S/y4+38llViw==
-X-IronPort-AV: E=Sophos;i="5.75,402,1589241600"; 
-   d="scan'208";a="63149857"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 27 Jul 2020 09:03:33 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id AD0E1A1E1E;
-        Mon, 27 Jul 2020 09:03:30 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 27 Jul 2020 09:03:29 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.48) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 27 Jul 2020 09:03:13 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Greg Thelen <gthelen@google.com>
-CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
-        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
-        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
-        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <rppt@kernel.org>, <sblbir@amazon.com>,
-        <shakeelb@google.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <snu@amazon.de>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH v18 06/14] mm/damon: Implement callbacks for the virtual memory address spaces
-Date:   Mon, 27 Jul 2020 11:02:55 +0200
-Message-ID: <20200727090255.24114-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <xr934kpt76n5.fsf@gthelen.svl.corp.google.com>
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Kqm25lF7ewtP6gQPXchdKeNoTYsJJHa4GocmE1fwErk=;
+        b=XmcVqhm/0j31KrSqjLijP1s5O/yWVNg7px+madWmjsWNWEnyhRedmOJyD+xjYK/r7n
+         8U8SVRacZPb6JwHk3RCn6JoCOcPvmJul8pfv6QdYnFXT7UhsTLPKKOez8SYps/oomt1p
+         Mqjsy/gRiLkMI/JSZi9BTiVFUxhoa5MFURwilJliSiBhywoOmgkfw6aaAyPLOBvQ0KTe
+         Itst60BaAacAOd20K1brUt6YD8fGLY8fMpaXhTktIehhpffXaTAywydveUbmy9UR1P91
+         n9Ff8R7wZ8gbeMXLYl+5LV4uVOWZz8ybacK1NrAkRTZptBA2dsCYKtRppAMt/6jqp7is
+         cKwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Kqm25lF7ewtP6gQPXchdKeNoTYsJJHa4GocmE1fwErk=;
+        b=VSmek13qOMZuNK7Cu6pBzEWmn9NOORo5yh0BWlhq/XvDFKwJfMaMYhGIn07UHKpshZ
+         /7YoPmK74Gs3+t2EBsik81N6rOygqzIxThRGM9ne+SxA+b21GVr8ze+Wb0INGkARh2Vw
+         SRydDkhhcyRZ2yiIQwn+KIJkame9+yTAZsDMauHz6Vm+BhMs2b5+SxEm9JXatvphfFL9
+         rbya7zWpYXX10vHqY2cLsNHd3mT+oAwSWYk0fBZD8j1IfPmJF44UTcaoufa2GHDxgj0i
+         sJ7yJy/7hjr83zWKQ/710E0mKkV8PUWCUQVefQBYXkRHFXZYU/RrGAFj1l+DokpXQg3E
+         GjaQ==
+X-Gm-Message-State: AOAM5330Uw9aw1XBf3M9sqjaE8l1lAk01HmhBj7hC3v/29C49GijluqN
+        f/rLa36xWl59C5HG8nNE9Z6tKSCqe/kM/g==
+X-Google-Smtp-Source: ABdhPJyoMNFU464fyBQyU0C+Zj/H8Z010qinNwqPEnEO85BmQspEmZ4wPd3WZmuD3V+yssQpfa5Mgg==
+X-Received: by 2002:a5d:4649:: with SMTP id j9mr18401968wrs.270.1595840647556;
+        Mon, 27 Jul 2020 02:04:07 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:24ff:55c1:a76d:5341? ([2a01:e34:ed2f:f020:24ff:55c1:a76d:5341])
+        by smtp.googlemail.com with ESMTPSA id f17sm19136347wme.14.2020.07.27.02.04.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2020 02:04:07 -0700 (PDT)
+Subject: Re: [PATCH] thermal: Fix zone lookup by ID
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>, Amit Kucheria <amitk@kernel.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200724170105.2705467-1-thierry.reding@gmail.com>
+ <db6efeab-b2bc-bad5-9c75-89e3e306256c@linaro.org>
+ <20200727090133.GG2781612@ulmo>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <baa76252-5f8c-0d2f-224b-221804289e1c@linaro.org>
+Date:   Mon, 27 Jul 2020 11:04:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.48]
-X-ClientProxiedBy: EX13D47UWC003.ant.amazon.com (10.43.162.70) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+In-Reply-To: <20200727090133.GG2781612@ulmo>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020 00:34:54 -0700 Greg Thelen <gthelen@google.com> wrote:
 
-> SeongJae Park <sjpark@amazon.com> wrote:
+Hi Thierry,
+
+thanks for testing the code.
+
+On 27/07/2020 11:01, Thierry Reding wrote:
+> On Fri, Jul 24, 2020 at 07:12:49PM +0200, Daniel Lezcano wrote:
+>> Hi Thierry,
+>>
+>> Applied, thanks for the fix!
 > 
-> > From: SeongJae Park <sjpark@amazon.de>
-> >
-> > This commit introduces a reference implementation of the address space
-> > specific low level primitives for the virtual address space, so that
-> > users of DAMON can easily monitor the data accesses on virtual address
-> > spaces of specific processes by simply configuring the implementation to
-> > be used by DAMON.
-[...]
-> > diff --git a/mm/damon.c b/mm/damon.c
-> > index b844924b9fdb..386780739007 100644
-> > --- a/mm/damon.c
-> > +++ b/mm/damon.c
-> > @@ -9,6 +9,9 @@
-[...]
-> > +/*
-> > + * Functions for the access checking of the regions
-> > + */
-> > +
-> > +static void damon_mkold(struct mm_struct *mm, unsigned long addr)
-> > +{
-> > +	pte_t *pte = NULL;
-> > +	pmd_t *pmd = NULL;
-> > +	spinlock_t *ptl;
-> > +
-> > +	if (follow_pte_pmd(mm, addr, NULL, &pte, &pmd, &ptl))
-> > +		return;
-> > +
-> > +	if (pte) {
-> > +		if (pte_young(*pte)) {
-> > +			clear_page_idle(pte_page(*pte));
-> > +			set_page_young(pte_page(*pte));
+> I ran into this as I was experimenting with the new netlink interface
+> and got things wrong. Do you have any userspace that you use for testing
+> this that I can use as a reference?
 > 
-> While this compiles without support for PG_young and PG_idle, I assume
-> it won't work well because it'd clear pte.young without setting
-> PG_young.  And this would mess with vmscan.
-
-You're right, thanks for catching this up!  This definitely need to be fixed in
-the next spin.
-
-> 
-> So this code appears to depend on PG_young and PG_idle, which are
-> currently only available via CONFIG_IDLE_PAGE_TRACKING.  DAMON could
-> depend on CONFIG_IDLE_PAGE_TRACKING via Kconfig.  But I assume that
-> CONFIG_IDLE_PAGE_TRACKING and CONFIG_DAMON cannot be concurrently used
-> because they'll stomp on each other's use of pte.young, PG_young,
-> PG_idle.
-> So I suspect we want:
-> 1. CONFIG_DAMON to depend on !CONFIG_IDLE_PAGE_TRACKING and vise-versa.
-> 2. PG_young,PG_idle and related helpers to depend on
->    CONFIG_DAMON||CONFIG_IDLE_PAGE_TRACKING.
-
-Awesome insights and suggestions, thanks!
-
-I would like to note that DAMON could be interfered by IDLE_PAGE_TRACKING and
-vmscan, but not vice versa, as DAMON respects PG_idle and PG_young.  This
-design came from the weak goal of DAMON.  DAMON aims to provide not perfect
-monitoring but only best effort accuracy that would be sufficient for
-performance-centric DRAM level memory management.  So, at that time, I thought
-being interfered by IDLE_PAGE_TRACKING and the reclaim logic would not be a
-real problem but letting IDLE_PAGE_TRACKING coexist is somehow beneficial.
-That said, I couldn't find a real benefit of the coexistance yet, and the
-problem of being interference now seems bigger as we will support more cases
-including the page granularity.
-
-Maybe we could make IDLE_PAGE_TRACKING and DAMON coexist but mutual exclusive
-in runtime, if the beneficial of coexistance turns out big.  However, I would
-like to make it simple first and optimize the case later if real requirement
-found.
-
-So, I will implement your suggestions in the next spin.  If you have different
-opinions, please feel free to comment.
+> I have managed to get it to work now, but I'm still interested in any
+> userspace that you might have for this.
 
 
-Thanks,
-SeongJae Park
+  https://git.linaro.org/people/daniel.lezcano/thermal-genl.git/
 
-> 
-> > +		}
-> > +		*pte = pte_mkold(*pte);
-> > +		pte_unmap_unlock(pte, ptl);
-> > +		return;
-> > +	}
-> > +
-> > +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > +	if (pmd_young(*pmd)) {
-> > +		clear_page_idle(pmd_page(*pmd));
-> > +		set_page_young(pmd_page(*pmd));
-> > +	}
-> > +	*pmd = pmd_mkold(*pmd);
-> > +	spin_unlock(ptl);
-> > +#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-> > +}
-> > +
-[...]
+
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
