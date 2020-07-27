@@ -2,133 +2,125 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB62C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E106CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15CE020729
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C233A2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:31:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gNMTf3a9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731039AbgG0RaX (ORCPT
+        id S1731054AbgG0RbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:30:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731008AbgG0RaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:30:21 -0400
-Received: from gaia (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16E9D20714;
-        Mon, 27 Jul 2020 17:30:17 +0000 (UTC)
-Date:   Mon, 27 Jul 2020 18:30:15 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, dyoung@redhat.com,
-        bhe@redhat.com, will@kernel.org, james.morse@arm.com,
-        robh+dt@kernel.org, arnd@arndb.de, John.P.donnelly@oracle.com,
-        prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de, corbet@lwn.net,
-        bhsharma@redhat.com, horms@verge.net.au, guohanjun@huawei.com,
-        xiexiuqi@huawei.com, huawei.libin@huawei.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kexec@lists.infradead.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v10 4/5] arm64: kdump: fix kdump broken with ZONE_DMA
- reintroduced
-Message-ID: <20200727173014.GL13938@gaia>
-References: <20200703035816.31289-1-chenzhou10@huawei.com>
- <20200703035816.31289-5-chenzhou10@huawei.com>
+        Mon, 27 Jul 2020 13:31:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730662AbgG0RbC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 13:31:02 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 028CEC061794;
+        Mon, 27 Jul 2020 10:31:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=OWoBvMBmWyDilWMUdxwiwp8BDkF9aBjJr3HcaF0ozXo=; b=gNMTf3a99kpRORweCKLBEzsKU
+        iSe3KroPt7Iqtw/bTqtUJLI9vbLgXjhJlmVBffJQNmOwMpMP444Elz5KmXqbFFYSaohyNGYv4trFv
+        kLXIAej49+UmDQL8ZkxwyYIytiTS6jYsMNbGzKLZXhqjRnzYO+298DuWWtJJ/3F7w24d2Or+d16Gv
+        Mr4LBEDVQeIAInXJvWmh7F6sxHglSw/9CUoqxs2GKOo3YdDcpdYsJ5AktzS+SGXMUVkN6hIl8BwvK
+        RznIj6+WwBcv3VOUHARDlkq5x9OqDNV5L3g0xmJh7xkl0hjixEhim6FZVOCJy3WEb3hRWOBKjsynO
+        HR4yAjzmQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44886)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1k06xh-00037t-BM; Mon, 27 Jul 2020 18:30:53 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1k06xf-0003pn-Gq; Mon, 27 Jul 2020 18:30:51 +0100
+Date:   Mon, 27 Jul 2020 18:30:51 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Jon Nettleton <jon@solid-run.com>, Rob Herring <robh@kernel.org>,
+        Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>,
+        a.zummo@towertech.it, Baruch Siach <baruch@tkos.co.il>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
+ battery switch-over
+Message-ID: <20200727173051.GM1551@shell.armlinux.org.uk>
+References: <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
+ <20200723174905.GA596242@bogus>
+ <20200723195755.GV3428@piout.net>
+ <20200727094553.GH1551@shell.armlinux.org.uk>
+ <20200727144938.GC239143@piout.net>
+ <20200727152439.GK1551@shell.armlinux.org.uk>
+ <20200727154104.GE239143@piout.net>
+ <20200727154335.GL1551@shell.armlinux.org.uk>
+ <CABdtJHuVaTa5T0-KdQ-wZQrmFQ6HO3FvgnTgSo3aOi+=SPzDZA@mail.gmail.com>
+ <20200727161632.GF239143@piout.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703035816.31289-5-chenzhou10@huawei.com>
+In-Reply-To: <20200727161632.GF239143@piout.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 11:58:15AM +0800, Chen Zhou wrote:
-> commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32")
-> broken the arm64 kdump. If the memory reserved for crash dump kernel
-> falled in ZONE_DMA32, the devices in crash dump kernel need to use
-> ZONE_DMA will alloc fail.
+On Mon, Jul 27, 2020 at 06:16:32PM +0200, Alexandre Belloni wrote:
+> On 27/07/2020 17:55:50+0200, Jon Nettleton wrote:
+> > > So, can we please have that discussion, it is pertinent to this patch.
+> > >
+> > 
+> > Thinking about this some more, I believe whether or not an IOCTL
+> > interface is in the works or needed is irrelevant.  This patch
+> > describes the hardware and how it is designed and the topic of
+> > discussion is if we need a simple boolean state, or if we need
+> > something that could be used to support dynamic configuration in the
+> > future.  I would rather make this decision now rather than keep
+> > tacking on boolean config options, or revisit a bunch of device-tree
+> > changes.
 > 
-> This patch addressed the above issue based on "reserving crashkernel
-> above 4G". Originally, we reserve low memory below 4G, and now just need
-> to adjust memory limit to arm64_dma_phys_limit in reserve_crashkernel_low
-> if ZONE_DMA is enabled. That is, if there are devices need to use ZONE_DMA
-> in crash dump kernel, it is a good choice to use parameters
-> "crashkernel=X crashkernel=Y,low".
-> 
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> ---
->  kernel/crash_core.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index a7580d291c37..e8ecbbc761a3 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -320,6 +320,7 @@ int __init reserve_crashkernel_low(void)
->  	unsigned long long base, low_base = 0, low_size = 0;
->  	unsigned long total_low_mem;
->  	int ret;
-> +	phys_addr_t crash_max = 1ULL << 32;
->  
->  	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
->  
-> @@ -352,7 +353,11 @@ int __init reserve_crashkernel_low(void)
->  			return 0;
->  	}
->  
-> -	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
-> +#ifdef CONFIG_ARM64
-> +	if (IS_ENABLED(CONFIG_ZONE_DMA))
-> +		crash_max = arm64_dma_phys_limit;
-> +#endif
-> +	low_base = memblock_find_in_range(0, crash_max, low_size, CRASH_ALIGN);
->  	if (!low_base) {
->  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
->  		       (unsigned long)(low_size >> 20));
+> Something that would describe the hardware is a property telling whether
+> the filter is present on VDD, not a property selecting DSM. The driver
+> can then chose to avoid standard mode when needed.
 
-Given the number of #ifdefs we end up with in this function, I think
-it's better to simply copy to the code to arch/arm64 and tailor it
-accordingly.
+Whether DSM needs to be enabled or not is _not_ just a function of
+whether there is a filter present or not.
 
-Anyway, there are two series solving slightly different issues with
-kdump reservations:
+The requirement in the data sheet is that when the VDD supply drops
+below 2.5V, it does not fall more than 0.7V/ms.  That can be
+achieved many different ways, not only by adding a resistive filter
+to the VDD supply to the RTC.  It could also be achieved via the design
+of the power supply - for example, having a large enough reservoir
+capacitor to ensure under all loads that the VDD supply will not fall
+faster than 0.7V/ms.
 
-1. This series which relaxes the crashkernel= allocation to go anywhere
-   in the accessible space while having a dedicated crashkernel=X,low
-   option for ZONE_DMA.
+There are many ways to meet this requirement.
 
-2. Bhupesh's series [1] forcing crashkernel=X allocations only from
-   ZONE_DMA.
+Adding a DT property to indicate whether the filter is present or not
+is definitely not the right approach.  Should we also add properties
+for every possible solution to this problem.
 
-For RPi4 support, we limited ZONE_DMA allocations to the 1st GB.
-Existing crashkernel= uses may no longer work, depending on where the
-allocation falls. Option (2) above is a quick fix assuming that the
-crashkernel reservation is small enough. What's a typical crashkernel
-option here? That series is probably more prone to reservation failures.
-
-Option (1), i.e. this series, doesn't solve the problem raised by
-Bhupesh unless one uses the crashkernel=X,low argument. It can actually
-make it worse even for ZONE_DMA32 since the allocation can go above 4G
-(assuming that we change the ZONE_DMA configuration to only limit it to
-1GB on RPi4).
-
-I'm more inclined to keep the crashkernel= behaviour to ZONE_DMA
-allocations. If this is too small for typical kdump, we can look into
-expanding ZONE_DMA to 4G on non-RPi4 hardware (we had patches on the
-list). In addition, if Chen thinks allocations above 4G are still needed
-or if RPi4 needs a sufficiently large crashkernel=, I'd rather have a
-",high" option to explicitly require such access.
-
-[1] http://lists.infradead.org/pipermail/kexec/2020-July/020777.html
+	vdd-has-filter;
+	psu-has-large-capacitors;
+	... etc ...
 
 -- 
-Catalin
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
