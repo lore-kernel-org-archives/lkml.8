@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2588C43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F49C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B175C206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC7FB206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860669;
-	bh=zrKBIjCnCmBPGY+wqL3lLsnjhyuLe5/lQbJwslNZXN8=;
+	s=default; t=1595860667;
+	bh=d3kN0P0WxtjeXEhXznWA8anAD4sSuMBBhzj7YQAx3ys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qyhhLeW//5C/NaZ7VLFtgk1Zzcl6oT5haX8fq7mVaN/rJpA+hgmzDs5zxRfgvD1Vc
-	 d/mP08WbPKkWjLBwgIdUiHvz7OkkJOmTV04bnHrn8vJRCsy0vB9m+9Hb3P29OD/ofJ
-	 fS8XA01Z8vw+FSHcdF4qcZF1PYYDuZWfTn9oETow=
+	b=iQBb5MzGojIrv9JMM+t0jFRYkQrbdRFshksaV9qoCRS0yijvZaPnHFpxYMZqUBAhU
+	 iC4WgZLay3GbK7W9hmhJdi+HUx0gJTfcI+Yb82WQG7CLPmI3cNxvgSZqGmktctzUXq
+	 b580XcsH7Mh6VCo2Fu4zmd4r6UcFe/R62jjUHAo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728545AbgG0OMJ (ORCPT
+        id S1730142AbgG0OML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:12:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36100 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:12:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729192AbgG0OMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:12:05 -0400
+        id S1730135AbgG0OMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:12:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B17A2073E;
-        Mon, 27 Jul 2020 14:12:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C03BA20838;
+        Mon, 27 Jul 2020 14:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859124;
-        bh=zrKBIjCnCmBPGY+wqL3lLsnjhyuLe5/lQbJwslNZXN8=;
+        s=default; t=1595859127;
+        bh=d3kN0P0WxtjeXEhXznWA8anAD4sSuMBBhzj7YQAx3ys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VEZ9aW7ZlouApy4RLSpv8X/iFTiw7T6nR7e2KOouktUgJLTHzKUw9BMSFywO6vO9+
-         LEzy8tU0DS8xiThVMjToRNHcg0xec5VCc3RwruBrcRgF1CnWRqCr4PQEb+FZimrwGI
-         FeG57CBpRqH9prbk2FTGfValoaBGT9AARRJPRKMQ=
+        b=AECSfT1tG48vXpTAYTH3hB4JAPGJOGQiy6jmgtWXx/387pBygB6B7EhSBfch65kcr
+         j73kyIb6m9EZ4+nP/R2yJuz8ypRash0uP6G8z+K3H1LHMiQaZLnaNUx38xeY1xpXKu
+         v4SSlP7iUg85kZMYKU4RGG7/JVnHdj4zyuBT81ws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+        stable@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
         Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@suse.com>,
+        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 75/86] mm/memcg: fix refcount error while moving and swapping
-Date:   Mon, 27 Jul 2020 16:04:49 +0200
-Message-Id: <20200727134918.154511384@linuxfoundation.org>
+Subject: [PATCH 4.19 76/86] mm: memcg/slab: fix memory leak at non-root kmem_cache destroy
+Date:   Mon, 27 Jul 2020 16:04:50 +0200
+Message-Id: <20200727134918.205538211@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -64,61 +66,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Muchun Song <songmuchun@bytedance.com>
 
-commit 8d22a9351035ef2ff12ef163a1091b8b8cf1e49c upstream.
+commit d38a2b7a9c939e6d7329ab92b96559ccebf7b135 upstream.
 
-It was hard to keep a test running, moving tasks between memcgs with
-move_charge_at_immigrate, while swapping: mem_cgroup_id_get_many()'s
-refcount is discovered to be 0 (supposedly impossible), so it is then
-forced to REFCOUNT_SATURATED, and after thousands of warnings in quick
-succession, the test is at last put out of misery by being OOM killed.
+If the kmem_cache refcount is greater than one, we should not mark the
+root kmem_cache as dying.  If we mark the root kmem_cache dying
+incorrectly, the non-root kmem_cache can never be destroyed.  It
+resulted in memory leak when memcg was destroyed.  We can use the
+following steps to reproduce.
 
-This is because of the way moved_swap accounting was saved up until the
-task move gets completed in __mem_cgroup_clear_mc(), deferred from when
-mem_cgroup_move_swap_account() actually exchanged old and new ids.
-Concurrent activity can free up swap quicker than the task is scanned,
-bringing id refcount down 0 (which should only be possible when
-offlining).
+  1) Use kmem_cache_create() to create a new kmem_cache named A.
+  2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
+     so the refcount of B is just increased.
+  3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
+     decrease the B's refcount but mark the B as dying.
+  4) Create a new memory cgroup and alloc memory from the kmem_cache
+     B. It leads to create a non-root kmem_cache for allocating memory.
+  5) When destroy the memory cgroup created in the step 4), the
+     non-root kmem_cache can never be destroyed.
 
-Just skip that optimization: do that part of the accounting immediately.
+If we repeat steps 4) and 5), this will cause a lot of memory leak.  So
+only when refcount reach zero, we mark the root kmem_cache as dying.
 
-Fixes: 615d66c37c75 ("mm: memcontrol: fix memcg id ref counter on swap charge move")
-Signed-off-by: Hugh Dickins <hughd@google.com>
+Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Alex Shi <alex.shi@linux.alibaba.com>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Michal Hocko <mhocko@suse.com>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2007071431050.4726@eggly.anvils
+Link: http://lkml.kernel.org/r/20200716165103.83462-1-songmuchun@bytedance.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memcontrol.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/slab_common.c |   35 ++++++++++++++++++++++++++++-------
+ 1 file changed, 28 insertions(+), 7 deletions(-)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5147,7 +5147,6 @@ static void __mem_cgroup_clear_mc(void)
- 		if (!mem_cgroup_is_root(mc.to))
- 			page_counter_uncharge(&mc.to->memory, mc.moved_swap);
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -310,6 +310,14 @@ int slab_unmergeable(struct kmem_cache *
+ 	if (s->refcount < 0)
+ 		return 1;
  
--		mem_cgroup_id_get_many(mc.to, mc.moved_swap);
- 		css_put_many(&mc.to->css, mc.moved_swap);
++#ifdef CONFIG_MEMCG_KMEM
++	/*
++	 * Skip the dying kmem_cache.
++	 */
++	if (s->memcg_params.dying)
++		return 1;
++#endif
++
+ 	return 0;
+ }
  
- 		mc.moved_swap = 0;
-@@ -5338,7 +5337,8 @@ put:			/* get_mctgt_type() gets the page
- 			ent = target.ent;
- 			if (!mem_cgroup_move_swap_account(ent, mc.from, mc.to)) {
- 				mc.precharge--;
--				/* we fixup refcnts and charges later. */
-+				mem_cgroup_id_get_many(mc.to, 1);
-+				/* we fixup other refcnts and charges later. */
- 				mc.moved_swap++;
- 			}
- 			break;
+@@ -832,12 +840,15 @@ static int shutdown_memcg_caches(struct
+ 	return 0;
+ }
+ 
+-static void flush_memcg_workqueue(struct kmem_cache *s)
++static void memcg_set_kmem_cache_dying(struct kmem_cache *s)
+ {
+ 	mutex_lock(&slab_mutex);
+ 	s->memcg_params.dying = true;
+ 	mutex_unlock(&slab_mutex);
++}
+ 
++static void flush_memcg_workqueue(struct kmem_cache *s)
++{
+ 	/*
+ 	 * SLUB deactivates the kmem_caches through call_rcu_sched. Make
+ 	 * sure all registered rcu callbacks have been invoked.
+@@ -858,10 +869,6 @@ static inline int shutdown_memcg_caches(
+ {
+ 	return 0;
+ }
+-
+-static inline void flush_memcg_workqueue(struct kmem_cache *s)
+-{
+-}
+ #endif /* CONFIG_MEMCG_KMEM */
+ 
+ void slab_kmem_cache_release(struct kmem_cache *s)
+@@ -879,8 +886,6 @@ void kmem_cache_destroy(struct kmem_cach
+ 	if (unlikely(!s))
+ 		return;
+ 
+-	flush_memcg_workqueue(s);
+-
+ 	get_online_cpus();
+ 	get_online_mems();
+ 
+@@ -890,6 +895,22 @@ void kmem_cache_destroy(struct kmem_cach
+ 	if (s->refcount)
+ 		goto out_unlock;
+ 
++#ifdef CONFIG_MEMCG_KMEM
++	memcg_set_kmem_cache_dying(s);
++
++	mutex_unlock(&slab_mutex);
++
++	put_online_mems();
++	put_online_cpus();
++
++	flush_memcg_workqueue(s);
++
++	get_online_cpus();
++	get_online_mems();
++
++	mutex_lock(&slab_mutex);
++#endif
++
+ 	err = shutdown_memcg_caches(s);
+ 	if (!err)
+ 		err = shutdown_cache(s);
 
 
