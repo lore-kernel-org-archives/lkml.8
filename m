@@ -2,103 +2,109 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5F6C4345A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9D0C4345D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E430B20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Lg4IwShA"
+	by mail.kernel.org (Postfix) with ESMTP id 52CF922B49
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:40:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595860813;
+	bh=Kud5aXcuRZFC1TM/M8ptwqIRGTSRAZWadeB2mSKiX7A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VpPFQBoDdGl8me+YISyluvF1cfrmJmuRLeSwYpI2oOtzscn6S3hPA3H1VOPXIvmKr
+	 PL5FFtTZb5G0JbHpEGJRK8fn+fLy/DAnfWxpgl5pzQkMB0ir7ildPIL1bRJmLqj+h0
+	 K3RvVN1y6Aou9tCcppuDL1eIUhfneEn7YWso/A1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbgG0OJR (ORCPT
+        id S1728924AbgG0OJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:09:17 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:53186 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729576AbgG0OJN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:09:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729577AbgG0OJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Jul 2020 10:09:13 -0400
-Received: from sequoia.work.tihix.com (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 7CA6520B4908;
-        Mon, 27 Jul 2020 07:09:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7CA6520B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF2102073E;
+        Mon, 27 Jul 2020 14:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1595858953;
-        bh=RI9OjMpT7wMC5gT81EsD8X2qDIaOFyrvt8WWKKu6l9g=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Lg4IwShAgGT6iQ+2TqIuqm/DwHEFPecAPRo2UL+8av/4jOYMji9G6XcVdjrkcxdz3
-         Iu4ThfYyoxzhOsm2qxVQ/cU+L3quvtWwBIK9lhZqTD8MqApjNqtVOFe9/PluQHniAt
-         3dIncUce+myctKw6bhLWuEqVvc1CZUzlVRrL8tio=
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
-        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH 0/2] ima: Fix keyrings race condition and other key related bugs
-Date:   Mon, 27 Jul 2020 09:08:29 -0500
-Message-Id: <20200727140831.64251-1-tyhicks@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
+        bh=Kud5aXcuRZFC1TM/M8ptwqIRGTSRAZWadeB2mSKiX7A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tr2uqsm4fmkNy05SL1gBmaDmTeDOQyF6doe6YxaqMYobz7QBQxrmF3nnEtato4VTF
+         HVCxsi4kbn/hLhaPvJQghQq2PL7OuN+wseD6INTjb5LKe6+CtjooLtUlg/t2vsXFVo
+         1yq++5KAKy5ilNQe2Ncx0mxbaZOTiCpmlYX+tyCU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 10/86] net: sky2: initialize return of gm_phy_read
+Date:   Mon, 27 Jul 2020 16:03:44 +0200
+Message-Id: <20200727134914.857464769@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
+References: <20200727134914.312934924@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nayna pointed out that the "keyrings=" option in an IMA policy rule
-should only be accepted when CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is
-enabled:
+From: Tom Rix <trix@redhat.com>
 
- https://lore.kernel.org/linux-integrity/336cc947-1f70-0286-6506-6df3d1d23a1d@linux.vnet.ibm.com/
+[ Upstream commit 28b18e4eb515af7c6661c3995c6e3c34412c2874 ]
 
-While fixing this, the compiler warned me about the potential for the
-ima_keyrings pointer to be NULL despite it being used, without a check
-for NULL, as the destination address for the strcpy() in
-ima_match_keyring().
+clang static analysis flags this garbage return
 
-It also became apparent that there was not adequate locking around the
-use of the pre-allocated buffer that ima_keyrings points to. The kernel
-keyring has a lock (.sem member of struct key) that ensures only one key
-can be added to a given keyring at a time but there's no protection
-against adding multiple keys to different keyrings at the same time.
+drivers/net/ethernet/marvell/sky2.c:208:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
+        return v;
+        ^~~~~~~~
 
-The first patch in this series fixes both ima_keyrings related issues by
-parsing the list of keyrings in a KEY_CHECK rule at policy load time
-rather than deferring the parsing to policy check time. Once that fix is
-in place, the second patch can enforce that
-CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS must be enabled in order to use
-"func=KEY_CHECK" or "keyrings=" options in IMA policy.
+static inline u16 gm_phy_read( ...
+{
+	u16 v;
+	__gm_phy_read(hw, port, reg, &v);
+	return v;
+}
 
-The new "keyrings=" value handling is done in a generic manner that can
-be reused by other options in the future. This seems to make sense as
-"appraise_type=" has similar style (though it doesn't need to be fully
-parsed at this time) and using "|" as an alternation delimiter is
-becoming the norm in IMA policy.
+__gm_phy_read can return without setting v.
 
-This series is based on commit 311aa6aafea4 ("ima: move
-APPRAISE_BOOTPARAM dependency on ARCH_POLICY to runtime") in
-next-integrity.
+So handle similar to skge.c's gm_phy_read, initialize v.
 
-Tyler
+Signed-off-by: Tom Rix <trix@redhat.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/marvell/sky2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tyler Hicks (2):
-  ima: Pre-parse the list of keyrings in a KEY_CHECK rule
-  ima: Fail rule parsing when asymmetric key measurement isn't
-    supportable
-
- security/integrity/ima/ima_policy.c | 142 +++++++++++++++++++---------
- 1 file changed, 96 insertions(+), 46 deletions(-)
-
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index d013f30019b69..2452d8ba40730 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -215,7 +215,7 @@ io_error:
+ 
+ static inline u16 gm_phy_read(struct sky2_hw *hw, unsigned port, u16 reg)
+ {
+-	u16 v;
++	u16 v = 0;
+ 	__gm_phy_read(hw, port, reg, &v);
+ 	return v;
+ }
 -- 
 2.25.1
+
+
 
