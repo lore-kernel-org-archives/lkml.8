@@ -2,93 +2,131 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC432C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42918C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87D572074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:01:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1eEVpGE"
+	by mail.kernel.org (Postfix) with ESMTP id 297D120672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:01:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgG0KBk (ORCPT
+        id S1727120AbgG0KBf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:01:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgG0KBh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:01:37 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B28DC061794;
-        Mon, 27 Jul 2020 03:01:37 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id m200so4290928ybf.10;
-        Mon, 27 Jul 2020 03:01:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=0ovBpV1RCu/BA4nTaDoRsgP6/JwSLVZ6NKuTSDEoq2o=;
-        b=E1eEVpGEJkFOHv/jqkFzsLLBeZstzNWOnkRuOgqZq3k7vgl9/Ijqj/NHFA/SBQMZJO
-         Y5OwQaqHN56aElH0syOGrNz6hrxinVDdoiIx40CkrlNzdXZF+LOTL2Kw/XHgTflBaNs3
-         s+SDsKy1h6DhAsl7AVa9QBZryXqrY7kxTLH1jWsyUnRFbQQyFGtpXyU2kkn02DvoxTUr
-         EIRmh0xZkgIjxUFFLjuQpMcN/lNSu64f2XwZf0TqoQ+2+b0vfQxtGe+OR30rtc1OadC0
-         eb8Ox+INKvauRuG7kuqzAKaaZc177gbuissG5WyDzbxBY1aD4g0CEDZ1xv5EqIm7nKLz
-         xx3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=0ovBpV1RCu/BA4nTaDoRsgP6/JwSLVZ6NKuTSDEoq2o=;
-        b=roXU5ZXqKLuEryFQ/Il5pYIMEKnKIN/EOzquosRyHRRcp3ZXV9R9KcoolDmwRR3eOR
-         PskYogj4q1zg78Z4VANgyUlD52A1GFmwNvp9KLeQ4P9epxS55zZlbB6YE7SWcMfLU/cD
-         +jvCQ1kFOv8Ot53HCIcypE2ihIB9FgGUjDd+hf9kTTIZ2tIr7kCLEdVnjOKv8V5LEkfH
-         wi8AG/6JoZl22raNSKLPKImjInFD2xnUWNFx7IirKPhhTaA6hhyrhxCH/ojaNv69UsI5
-         ZMCwWXoYZ6IzRgq9p/zNzF050/3jQ2p7MB0p95BmuK2nj8BwPJKZy1UYcHm/hSLm9GMq
-         desw==
-X-Gm-Message-State: AOAM531nTkU22fYHH9B2PezcXShMfmf5vm4OFJa5oNn0QOjLnzVVOLRk
-        RFqiQf5E311JBqkxXSjtD0/aXlBYw4NYxMMxIW0=
-X-Google-Smtp-Source: ABdhPJz2Z1EfUwootw8qs317nd/jj2jzAlI9c6sRGBnky/I0AJpP1/G4Jft3ZDAapmF2Mq/YqGV64nNWGGukhI/jh4w=
-X-Received: by 2002:a25:bbd2:: with SMTP id c18mr31296332ybk.495.1595844096142;
- Mon, 27 Jul 2020 03:01:36 -0700 (PDT)
+        Mon, 27 Jul 2020 06:01:35 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2529 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726139AbgG0KBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 06:01:35 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id D2CE66CD8921393AABEB;
+        Mon, 27 Jul 2020 11:01:33 +0100 (IST)
+Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
+ 2020 11:01:33 +0100
+Date:   Mon, 27 Jul 2020 11:00:10 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@kernel.org>,
+        <tony.luck@intel.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [RFC PATCH 1/9] pci_ids: Add class code and extended capability
+ for RCEC
+Message-ID: <20200727110010.00005042@Huawei.com>
+In-Reply-To: <20200724172223.145608-2-sean.v.kelley@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+        <20200724172223.145608-2-sean.v.kelley@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-From:   Cixi Geng <gengcixi@gmail.com>
-Date:   Mon, 27 Jul 2020 18:00:59 +0800
-Message-ID: <CAF12kFsOrFOQBrZv6qBbcQ971acEM0XxLWKqBJvEspoQ3UOHUQ@mail.gmail.com>
-Subject: kunit compile failed on um
-To:     brendanhiggins@google.com
-Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>, zhang.lyra@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.52.121.176]
+X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Brendan:
-When I run kunit test in um , it failed on kernel 5.8-rc* while
-succeeded  in v5.7 with same configuration. is this a bug?
+On Fri, 24 Jul 2020 10:22:15 -0700
+Sean V Kelley <sean.v.kelley@intel.com> wrote:
 
-Here is my operation:
- gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
+> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> 
+> A PCIe Root Complex Event Collector(RCEC) has the base class 0x08,
+> sub-class 0x07, and programming interface 0x00. Add the class code
+> 0x0807 to identify RCEC devices and add the defines for the RCEC
+> Endpoint Association Extended Capability.
+> 
+> See PCI Express Base Specification, version 5.0-1, section "1.3.4
+> Root Complex Event Collector" and section "7.9.10 Root Complex
+> Event Collector Endpoint Association Extended Capability"
 
-the kunitconfig:
-Cixi.Geng:~/git-projects/torvals-linux$ cat .kunitconfig
-CONFIG_KUNIT=y
-CONFIG_KUNIT_TEST=y
-CONFIG_KUNIT_EXAMPLE_TEST=y
+Add a reference to the document
+"PCI Code and ID Assignment Specification"
+for the class number.
 
-command:
-Cixi.Geng:~/git-projects/torvals-linux$ ./tools/testing/kunit/kunit.py run
+From the change log on latest version seems like it's been there since
+version 1.4.
 
-the Error log:
-[17:51:14] Configuring KUnit Kernel ...
-[17:51:14] Building KUnit Kernel ...
-ERROR:root:b"make[1]:
-\xe8\xbf\x9b\xe5\x85\xa5\xe7\x9b\xae\xe5\xbd\x95\xe2\x80\x9c/home/cixi.geng1/git-projects/torvals-linux/.kunit\xe2\x80\x9d\n/home/cixi.geng1/git-projects/torvals-linux/Makefile:551:
-recipe for target 'outputmakefile' failed\nmake[1]:
-\xe7\xa6\xbb\xe5\xbc\x80\xe7\x9b\xae\xe5\xbd\x95\xe2\x80\x9c/home/cixi.geng1/git-projects/torvals-linux/.kunit\xe2\x80\x9d\nMakefile:185:
-recipe for target '__sub-make' failed\n"
+There is a worrying note (bottom of page 16 of 1.12 version of that docs)
+in there that says some older specs used 0x0806 for RCECs and that we
+should use the port type field to actually check if we have one.
+
+Hopefully we won't encounter any of those in the wild.
+
+Otherwise, it's exactly what the spec says.
+We could bike shed on naming choices, but the ones you have seem clear enough
+to me.
+
+FWIW
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+
+Jonathan
+> 
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> ---
+>  include/linux/pci_ids.h       | 1 +
+>  include/uapi/linux/pci_regs.h | 7 +++++++
+>  2 files changed, 8 insertions(+)
+> 
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 0ad57693f392..de8dff1fb176 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -81,6 +81,7 @@
+>  #define PCI_CLASS_SYSTEM_RTC		0x0803
+>  #define PCI_CLASS_SYSTEM_PCI_HOTPLUG	0x0804
+>  #define PCI_CLASS_SYSTEM_SDHCI		0x0805
+> +#define PCI_CLASS_SYSTEM_RCEC		0x0807
+>  #define PCI_CLASS_SYSTEM_OTHER		0x0880
+>  
+>  #define PCI_BASE_CLASS_INPUT		0x09
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index f9701410d3b5..f335f65f65d6 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -828,6 +828,13 @@
+>  #define  PCI_PWR_CAP_BUDGET(x)	((x) & 1)	/* Included in system budget */
+>  #define PCI_EXT_CAP_PWR_SIZEOF	16
+>  
+> +/* Root Complex Event Collector Endpoint Association  */
+> +#define PCI_RCEC_RCIEP_BITMAP	4	/* Associated Bitmap for RCiEPs */
+> +#define PCI_RCEC_BUSN		8	/* RCEC Associated Bus Numbers */
+> +#define  PCI_RCEC_BUSN_REG_VER	0x02	/* Least capability version that BUSN present */
+> +#define  PCI_RCEC_BUSN_NEXT(x)	(((x) >> 8) & 0xff)
+> +#define  PCI_RCEC_BUSN_LAST(x)	(((x) >> 16) & 0xff)
+> +
+>  /* Vendor-Specific (VSEC, PCI_EXT_CAP_ID_VNDR) */
+>  #define PCI_VNDR_HEADER		4	/* Vendor-Specific Header */
+>  #define  PCI_VNDR_HEADER_ID(x)	((x) & 0xffff)
+
+
