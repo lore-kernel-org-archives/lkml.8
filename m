@@ -2,174 +2,134 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF183C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BF4C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E33B20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X19ILMVn"
+	by mail.kernel.org (Postfix) with ESMTP id CC9A720838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595860154;
+	bh=lgjCCENV00DiV1K/LA1CHrBy+wCLaLIT1uQKueyEVAI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WzMQHGLSt6B//te7COWZpoMpfvhEBXZTANhjWBCHWMHnKuy5tbw2iNdqCFdXxZ4HT
+	 AfOu7USANckTrVsREvHwH5ysGgI/L9QyND2Ingpakn644SPSqErBFnH77WG523/F5J
+	 /X3LnEsZQrM1zA07QxS2hsWtsFmRKQ6c5B49tCNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732763AbgG0O3c (ORCPT
+        id S1732726AbgG0O3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:29:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729827AbgG0O32 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:29:28 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1929C061794;
-        Mon, 27 Jul 2020 07:29:28 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id 72so8083674ple.0;
-        Mon, 27 Jul 2020 07:29:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=o0FwXWJzk9fg0IFqdpyGQiSwsPpWPqkwzppi0kl4fRE=;
-        b=X19ILMVnSbYreBVhndZtyG/r7ymaNtXrolJRzStGqDjC4fBj1tBNPp2/0EwMC3pEWg
-         ctByeaI16babSvSD07KdX/CGEYLGi5oDewwAmTQiiLyTPSU0nBcIJb0wqd9+0ZXUt5NA
-         R2wyGyskfKapkd0fa3WPAgXzhhvGPwgabtTeWg1q7bYeE4mpxLYsaj+mRlQqb931qLHs
-         Ol1abQ97x1y0CCetMhhAss3ahDc2dUUmOHVJjViV/pwqNlM9bsfT5zU3D1sK6nhYk/+g
-         sJrbZsg3VGdG7rPYQVrDxWsbptv6eFp2fcjuyDNBPEl+L7E1nbxdz/VVj9M823BV1jJs
-         6KRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o0FwXWJzk9fg0IFqdpyGQiSwsPpWPqkwzppi0kl4fRE=;
-        b=hLIXlFTygGHP28woh80l2FN+tLaiQ7p0VmbldHdffDzdoW72Bk0b2DPBeiWkVuHXOZ
-         8Uv78JOMdQVWPMP5seCmt0pwhQMyf92u+6XZq2v8o5tl7hBSmyV7GI/8uNuFYlPBH2z3
-         l9j+BrmqDS3A3cwEMK0001wXCyFSQk6en3t86yLFNqc8LFqEOoYFk4Sqc6UFzi0yv+IJ
-         O3PtDsXyii6RyWItQuKbh0MyBbCnHDBygp+FoIG/dD3AACzxUnhjuNWSKMD4Fnh5Lgch
-         9Ko/H/m16MuV5WUOsJ+SidnEVoZPkIj5AvbHAzKStMkqoERBaBwaWsNz3rivLF8/cLCZ
-         EMjg==
-X-Gm-Message-State: AOAM532YpSKk/lS0d68YXDZtJcaPV0V7YZe7zrQGr09MTBz1bwxOoymd
-        oU/ijqafGsubDy1Fo2ERshg=
-X-Google-Smtp-Source: ABdhPJw9puvQA92a0JkpFjjmz2WkQsRKIqNGuvtIwBDIBtS9+/irr2W/OVTdPqbqO7VVJ6F2Tr0LAg==
-X-Received: by 2002:a17:902:9a96:: with SMTP id w22mr19257977plp.172.1595860168111;
-        Mon, 27 Jul 2020 07:29:28 -0700 (PDT)
-Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id o8sm14330081pgb.23.2020.07.27.07.29.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 07:29:27 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 07:29:25 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     "Ooi, Joyce" <joyce.ooi@intel.com>
-Cc:     Thor Thayer <thor.thayer@linux.intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Dinh Nguyen <dinh.nguyen@intel.com>,
-        Dalon Westergreen <dalon.westergreen@intel.com>
-Subject: Re: [PATCH v5 08/10] net: eth: altera: add support for ptp and
- timestamping
-Message-ID: <20200727142925.GB16836@hoboy>
-References: <20200727092157.115937-1-joyce.ooi@intel.com>
- <20200727092157.115937-9-joyce.ooi@intel.com>
+        Mon, 27 Jul 2020 10:29:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732092AbgG0OX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:23:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 923EF2083E;
+        Mon, 27 Jul 2020 14:23:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595859808;
+        bh=lgjCCENV00DiV1K/LA1CHrBy+wCLaLIT1uQKueyEVAI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qQAhzkz/Sidfw3dQ7yWviKafxL5k0u12esHdrjoFKtZNI7DBeNu/DBNFrflRRZ7x0
+         Cf621sz96vykThnMDi2ywB+pyNPpY1ax9N+gBDoJ09//Vo3RCdIBqmLdYhRFo/am3U
+         7GEpRug0Sk+knqNktLFbMZo2xVq4DvlCZqE6W86Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "leilk.liu" <leilk.liu@mediatek.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 112/179] spi: mediatek: use correct SPI_CFG2_REG MACRO
+Date:   Mon, 27 Jul 2020 16:04:47 +0200
+Message-Id: <20200727134938.110153749@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
+References: <20200727134932.659499757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727092157.115937-9-joyce.ooi@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 05:21:55PM +0800, Ooi, Joyce wrote:
+From: leilk.liu <leilk.liu@mediatek.com>
 
-> +/* ioctl to configure timestamping */
-> +static int tse_do_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
-> +{
-> +	struct altera_tse_private *priv = netdev_priv(dev);
-> +	struct hwtstamp_config config;
-> +
-> +	if (!netif_running(dev))
-> +		return -EINVAL;
-> +
-> +	if (!priv->has_ptp) {
-> +		netdev_alert(priv->dev, "Timestamping not supported");
-> +		return -EOPNOTSUPP;
-> +	}
+[ Upstream commit 44b37eb79e16a56cb30ba55b2da452396b941e7a ]
 
-The user might well have a PHY that supports time stamping.  The code
-must pass the ioctl through to the PHY even when !priv->has_ptp.
+this patch use correct SPI_CFG2_REG offset.
 
-> +
-> +	if (!dev->phydev)
-> +		return -EINVAL;
-> +
-> +	if (!phy_has_hwtstamp(dev->phydev)) {
-> +		if (cmd == SIOCSHWTSTAMP) {
-> +			if (copy_from_user(&config, ifr->ifr_data,
-> +					   sizeof(struct hwtstamp_config)))
-> +				return -EFAULT;
-> +
-> +			if (config.flags)
-> +				return -EINVAL;
-> +
-> +			switch (config.tx_type) {
-> +			case HWTSTAMP_TX_OFF:
-> +				priv->hwts_tx_en = 0;
-> +				break;
-> +			case HWTSTAMP_TX_ON:
-> +				priv->hwts_tx_en = 1;
-> +				break;
-> +			default:
-> +				return -ERANGE;
-> +			}
-> +
-> +			switch (config.rx_filter) {
-> +			case HWTSTAMP_FILTER_NONE:
-> +				priv->hwts_rx_en = 0;
-> +				config.rx_filter = HWTSTAMP_FILTER_NONE;
-> +				break;
-> +			default:
-> +				priv->hwts_rx_en = 1;
-> +				config.rx_filter = HWTSTAMP_FILTER_ALL;
-> +				break;
-> +			}
-> +
-> +			if (copy_to_user(ifr->ifr_data, &config,
-> +					 sizeof(struct hwtstamp_config)))
-> +				return -EFAULT;
-> +			else
-> +				return 0;
-> +		}
-> +
-> +		if (cmd == SIOCGHWTSTAMP) {
-> +			config.flags = 0;
-> +
-> +			if (priv->hwts_tx_en)
-> +				config.tx_type = HWTSTAMP_TX_ON;
-> +			else
-> +				config.tx_type = HWTSTAMP_TX_OFF;
-> +
-> +			if (priv->hwts_rx_en)
-> +				config.rx_filter = HWTSTAMP_FILTER_ALL;
-> +			else
-> +				config.rx_filter = HWTSTAMP_FILTER_NONE;
-> +
-> +			if (copy_to_user(ifr->ifr_data, &config,
-> +					 sizeof(struct hwtstamp_config)))
-> +				return -EFAULT;
-> +			else
-> +				return 0;
-> +		}
-> +	}
-> +
-> +	return phy_mii_ioctl(dev->phydev, ifr, cmd);
-> +}
+Signed-off-by: leilk.liu <leilk.liu@mediatek.com>
+Link: https://lore.kernel.org/r/20200701090020.7935-1-leilk.liu@mediatek.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/spi/spi-mt65xx.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-Thanks,
-Richard
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 6783e12c40c22..a556795caeef4 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -36,7 +36,6 @@
+ #define SPI_CFG0_SCK_LOW_OFFSET           8
+ #define SPI_CFG0_CS_HOLD_OFFSET           16
+ #define SPI_CFG0_CS_SETUP_OFFSET          24
+-#define SPI_ADJUST_CFG0_SCK_LOW_OFFSET    16
+ #define SPI_ADJUST_CFG0_CS_HOLD_OFFSET    0
+ #define SPI_ADJUST_CFG0_CS_SETUP_OFFSET   16
+ 
+@@ -48,6 +47,8 @@
+ #define SPI_CFG1_CS_IDLE_MASK             0xff
+ #define SPI_CFG1_PACKET_LOOP_MASK         0xff00
+ #define SPI_CFG1_PACKET_LENGTH_MASK       0x3ff0000
++#define SPI_CFG2_SCK_HIGH_OFFSET          0
++#define SPI_CFG2_SCK_LOW_OFFSET           16
+ 
+ #define SPI_CMD_ACT                  BIT(0)
+ #define SPI_CMD_RESUME               BIT(1)
+@@ -283,7 +284,7 @@ static void mtk_spi_set_cs(struct spi_device *spi, bool enable)
+ static void mtk_spi_prepare_transfer(struct spi_master *master,
+ 				     struct spi_transfer *xfer)
+ {
+-	u32 spi_clk_hz, div, sck_time, cs_time, reg_val = 0;
++	u32 spi_clk_hz, div, sck_time, cs_time, reg_val;
+ 	struct mtk_spi *mdata = spi_master_get_devdata(master);
+ 
+ 	spi_clk_hz = clk_get_rate(mdata->spi_clk);
+@@ -296,18 +297,18 @@ static void mtk_spi_prepare_transfer(struct spi_master *master,
+ 	cs_time = sck_time * 2;
+ 
+ 	if (mdata->dev_comp->enhance_timing) {
++		reg_val = (((sck_time - 1) & 0xffff)
++			   << SPI_CFG2_SCK_HIGH_OFFSET);
+ 		reg_val |= (((sck_time - 1) & 0xffff)
+-			   << SPI_CFG0_SCK_HIGH_OFFSET);
+-		reg_val |= (((sck_time - 1) & 0xffff)
+-			   << SPI_ADJUST_CFG0_SCK_LOW_OFFSET);
++			   << SPI_CFG2_SCK_LOW_OFFSET);
+ 		writel(reg_val, mdata->base + SPI_CFG2_REG);
+-		reg_val |= (((cs_time - 1) & 0xffff)
++		reg_val = (((cs_time - 1) & 0xffff)
+ 			   << SPI_ADJUST_CFG0_CS_HOLD_OFFSET);
+ 		reg_val |= (((cs_time - 1) & 0xffff)
+ 			   << SPI_ADJUST_CFG0_CS_SETUP_OFFSET);
+ 		writel(reg_val, mdata->base + SPI_CFG0_REG);
+ 	} else {
+-		reg_val |= (((sck_time - 1) & 0xff)
++		reg_val = (((sck_time - 1) & 0xff)
+ 			   << SPI_CFG0_SCK_HIGH_OFFSET);
+ 		reg_val |= (((sck_time - 1) & 0xff) << SPI_CFG0_SCK_LOW_OFFSET);
+ 		reg_val |= (((cs_time - 1) & 0xff) << SPI_CFG0_CS_HOLD_OFFSET);
+-- 
+2.25.1
+
+
+
