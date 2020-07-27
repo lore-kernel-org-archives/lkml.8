@@ -2,119 +2,239 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E319DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89A0C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE084206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:07:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595855273;
-	bh=AMi2gLfyvz4Pzyz9YDmdVT9VjepzkPLuNlEIsAaH8BI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D++gNwiDmGf3jKsn1qDfq0WaqJQpxfRw1RhDa1KAxm9EuM+dp2oaUoBXXEa6xjYJz
-	 9BGr/DM4ODZiYv67guFqENKbnlrBl33pZhB2ulRVvaj5KdlDptk53+Wm5+zSdDE51V
-	 9ubkazHfe6OhZgVqzUHZuYGpEbXO0y66vSlRTnDo=
+	by mail.kernel.org (Postfix) with ESMTP id C2944206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:09:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MIlJM9Xz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbgG0NHw (ORCPT
+        id S1728671AbgG0NJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:07:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728141AbgG0NHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:07:51 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0363206D8;
-        Mon, 27 Jul 2020 13:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595855271;
-        bh=AMi2gLfyvz4Pzyz9YDmdVT9VjepzkPLuNlEIsAaH8BI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bu31vcATjTnv0NP8lHz08cxLsQPSaYLW4iYAv6mxr3RFeDNSNGfxWDyJX7piWPIzN
-         ih6hB3pWOjzdlrbaL5J+qnSY+sMc28wF38/pShr+R7K9evW1IlBIVnZJoWao+ue2Ld
-         /117aEdG7Xeh8NKJxF3cw9Q8RYnh8J5CBsbTOnHc=
-Date:   Mon, 27 Jul 2020 14:07:34 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Steve Lee <SteveS.Lee@maximintegrated.com>
-Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "ckeepax@opensource.cirrus.com" <ckeepax@opensource.cirrus.com>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "rf@opensource.wolfsonmicro.com" <rf@opensource.wolfsonmicro.com>,
-        "shumingf@realtek.com" <shumingf@realtek.com>,
-        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "jack.yu@realtek.com" <jack.yu@realtek.com>,
-        "nuno.sa@analog.com" <nuno.sa@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "ryan.lee.maxim@gmail.com" <ryan.lee.maxim@gmail.com>,
-        Ryan Lee <RyanS.Lee@maximintegrated.com>,
-        "steves.lee.maxim@gmail.com" <steves.lee.maxim@gmail.com>
-Subject: Re: [PATCH 3/3] ASoC: max98390: update dsm param bin max size
-Message-ID: <20200727130734.GD6275@sirena.org.uk>
-References: <20200724085644.9837-1-steves.lee@maximintegrated.com>
- <20200724105059.GA5664@sirena.org.uk>
- <MWHPR11MB204753BF80DED8923AD3BEA292720@MWHPR11MB2047.namprd11.prod.outlook.com>
+        Mon, 27 Jul 2020 09:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbgG0NJg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 09:09:36 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C2D9C061794;
+        Mon, 27 Jul 2020 06:09:35 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id s26so9034153pfm.4;
+        Mon, 27 Jul 2020 06:09:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=V2H1tlMLXxYxucqE7fzBGTDFcMq1gtGJ4rquGrh2ZhI=;
+        b=MIlJM9Xzo58AFvW6Fy6A5plY/aankHz0/bF/5QpI8pCOSRwmmQKZQgxfbewFXSFRqq
+         auBb7mhhQlZ6SBlipvkDLaKNatoNYi+OTmFFv9YmJhx6iUvtJ4Qn/XTafA9G3Q+cNVZm
+         4pal2Pq4R9UPMuXTZT6yQuuRw8TB9VCAsuExrFjE/wa3sCCEljimv6dXXE1vkwwvoVrr
+         nEY9rFTTZjQZqXAYSxxioJGLu/42ONwmbgUqAAi2pujPg8HIv9Br8V3AHMEE5eZjeSkm
+         HK6v7wGsRcT0pi5nrfdHcHOX24htw+bi3aGtXFG2jcESmlrz3qWpqR+RviABgdKwns7W
+         alHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=V2H1tlMLXxYxucqE7fzBGTDFcMq1gtGJ4rquGrh2ZhI=;
+        b=j/YtD35N6tLu7LzJQBR/kLvJsHbHrPf8I0pwhYEHXLKdQaKna/iR1obrCBUdAF1ewS
+         StycepV52eekvXG4kxPDToVJzgwu8cDehqQsjAQjIzN/WTyC7P7/i1wPASTGiDx7DXEV
+         xyQMBseu6GAx3dxmzdzn2gaF/zO/5ylJzRNwF6LeQH/pxxoYe8gbPSA+GBIA6ooSKKVj
+         6kp0AojrPLomZ7sNDvlOkBORfjvv3VVxIgKeU1IcIS6NtALK6pAiI2w+F4JaggtQJgZk
+         sAurFPoxVAmrXvMORK3WhhYfpp8NsYT7PERfGC/3AfyqWXQRdzGSh2SPddAoPsvHkF3T
+         J90A==
+X-Gm-Message-State: AOAM530o6TuDtFV8+XyQGY+8wQ8PcFLaPfug38vMTBc4wCuli3SOx/0J
+        upNCcVkpC5BNL2aeV+po7oA=
+X-Google-Smtp-Source: ABdhPJzmW4MB+8kyEVPNT2dKVYcXMow76EuwUPI+GPmwmKEC003b4GlrTMTumZ3rTmpPvjb2voj96Q==
+X-Received: by 2002:a63:7b15:: with SMTP id w21mr20524655pgc.386.1595855374446;
+        Mon, 27 Jul 2020 06:09:34 -0700 (PDT)
+Received: from gmail.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id 186sm14925807pfe.1.2020.07.27.06.09.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 06:09:33 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 18:38:09 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        dmaengine <dmaengine@vger.kernel.org>
+Subject: Re: [PATCH v1] dmaengine: pch_dma: use generic power management
+Message-ID: <20200727130809.GA82098@gmail.com>
+References: <20200720113740.353479-1-vaibhavgupta40@gmail.com>
+ <20200727085621.GL12965@vkoul-mobl>
+ <CAHp75VesTCOffxiy6=HG=g2t4=js3SnTm4LcdrgAGYiNvSS65Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uxuisgdDHaNETlh8"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <MWHPR11MB204753BF80DED8923AD3BEA292720@MWHPR11MB2047.namprd11.prod.outlook.com>
-X-Cookie: Doing gets it done.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHp75VesTCOffxiy6=HG=g2t4=js3SnTm4LcdrgAGYiNvSS65Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 27, 2020 at 02:19:14PM +0300, Andy Shevchenko wrote:
+> On Mon, Jul 27, 2020 at 1:16 PM Vinod Koul <vkoul@kernel.org> wrote:
+> > On 20-07-20, 17:07, Vaibhav Gupta wrote:
+> > > Drivers using legacy PM have to manage PCI states and device's PM states
+> > > themselves. They also need to take care of configuration registers.
+> > >
+> > > With improved and powerful support of generic PM, PCI Core takes care of
+> > > above mentioned, device-independent, jobs.
+> > >
+> > > This driver makes use of PCI helper functions like
+> > > pci_save/restore_state(), pci_enable/disable_device(),
+> > > and pci_set_power_state() to do required operations. In generic mode, they
+> > > are no longer needed.
+> > >
+> > > Change function parameter in both .suspend() and .resume() to
+> > > "struct device*" type. Use dev_get_drvdata() to get drv data.
+> >
+> > You are doing too many things in One patch. Do consider splitting them
+> > up to a change per patch. for example using __maybe could be one patch,
+> > removing code is suspend-resume callbacks would be other one.
+> 
+> Vinod, while I completely agree with you in general, in this case it
+> would make more unnecessary churn and will be rather unhelpful in all
+> ways: for the contributor to do this work, for the reader to collect
+> all the pieces. It also will be a bisectability issue, because the
+> #ifdeffery replacement (IIRC you need to move from CONFIG_PM to
+> CONFIG_PM_SLEEP). I really don't see any advantages of the splitting
+> here.
+> 
+> > > Compile-tested only.
+> >
+> > I would like to see some testing before we merge this
+> 
+> I have hardware to test (Intel Minnowboard v1) but have no time. And
+> taking into account that I did similar changes for many other drivers,
+> I can give my
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> and take responsibility if somebody complains in the future (I don't
+> believe it will be one).
+>
+Thanks! :D 
+> P.S. Another scenario if Vaibhav can find that board (there were
+> dozens of thousands at least produced and floating on the second hand
+> market) and test himself. It may be good since he touches the full lot
+> of PCH (EGT20) drivers.
+> 
+I cannot promise, but surely will try to get my hands on it :)
 
---uxuisgdDHaNETlh8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jul 27, 2020 at 02:00:09AM +0000, Steve Lee wrote:
-
-> > I'm missing patches 1-2 and have no cover letter - what's the story with
-> > dependencies?
-
->  I will re-send patch ang please ignore this patch.=20
-> DSM init param is extended to cover more register so that DSM MAX PARAM S=
-IZE value is changed.
-
-I applied these on Friday having found the other two patches (you're not
-sending things as a thread so they get lost, for example if someone
-sends a big series at a similar time like what happened on Friday) so
-your new version won't apply, please resend whatever change you want to
-make as an incremental patch against current code.
-
-Please do not submit new versions of already applied patches, please
-submit incremental updates to the existing code.  Modifying existing
-commits creates problems for other users building on top of those
-commits so it's best practice to only change pubished git commits if
-absolutely essential.
-
---uxuisgdDHaNETlh8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8e0ZUACgkQJNaLcl1U
-h9Aqawf9HopZUMhCAwGV7wiVa1eQ8XQk/OPZHjlLzQJWkumo48KLX9suSNS9hLM7
-jiovx41l0JOBC1VXNa9PvWE+rl52Ugry0xNmYeGYTtk5aPj+7ugIA2qxtrKfXjen
-QM1UrXRJjLv6LX7m+fF/YLa7ltOm81D6WJs6qt+vgBQJz0GjAx9ctk6Hx8ZqBylV
-0IiGhsxIEzuPxipTKhu/F9KNRuCKcewTAZCOY9eATGIapp8JTx5YjelS6D6+Nd1G
-366Zi9knBZBdZOrgM0wl19mw35BNG4RKhp1IrKjNzagiG19EMDnaGXuaX7awFyYH
-lg2Y6n9jSDhN2VDYH9qdObYl+iZCtA==
-=bS9e
------END PGP SIGNATURE-----
-
---uxuisgdDHaNETlh8--
+Thanks
+Vaibhav Gupta
+> > > Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> > > ---
+> > >  drivers/dma/pch_dma.c | 35 +++++++++--------------------------
+> > >  1 file changed, 9 insertions(+), 26 deletions(-)
+> > >
+> > > diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
+> > > index a3b0b4c56a19..e93005837e3f 100644
+> > > --- a/drivers/dma/pch_dma.c
+> > > +++ b/drivers/dma/pch_dma.c
+> > > @@ -735,8 +735,7 @@ static irqreturn_t pd_irq(int irq, void *devid)
+> > >       return ret0 | ret2;
+> > >  }
+> > >
+> > > -#ifdef       CONFIG_PM
+> > > -static void pch_dma_save_regs(struct pch_dma *pd)
+> > > +static void __maybe_unused pch_dma_save_regs(struct pch_dma *pd)
+> > >  {
+> > >       struct pch_dma_chan *pd_chan;
+> > >       struct dma_chan *chan, *_c;
+> > > @@ -759,7 +758,7 @@ static void pch_dma_save_regs(struct pch_dma *pd)
+> > >       }
+> > >  }
+> > >
+> > > -static void pch_dma_restore_regs(struct pch_dma *pd)
+> > > +static void __maybe_unused pch_dma_restore_regs(struct pch_dma *pd)
+> > >  {
+> > >       struct pch_dma_chan *pd_chan;
+> > >       struct dma_chan *chan, *_c;
+> > > @@ -782,40 +781,25 @@ static void pch_dma_restore_regs(struct pch_dma *pd)
+> > >       }
+> > >  }
+> > >
+> > > -static int pch_dma_suspend(struct pci_dev *pdev, pm_message_t state)
+> > > +static int __maybe_unused pch_dma_suspend(struct device *dev)
+> > >  {
+> > > -     struct pch_dma *pd = pci_get_drvdata(pdev);
+> > > +     struct pch_dma *pd = dev_get_drvdata(dev);
+> > >
+> > >       if (pd)
+> > >               pch_dma_save_regs(pd);
+> > >
+> > > -     pci_save_state(pdev);
+> > > -     pci_disable_device(pdev);
+> > > -     pci_set_power_state(pdev, pci_choose_state(pdev, state));
+> > > -
+> > >       return 0;
+> > >  }
+> > >
+> > > -static int pch_dma_resume(struct pci_dev *pdev)
+> > > +static int __maybe_unused pch_dma_resume(struct device *dev)
+> > >  {
+> > > -     struct pch_dma *pd = pci_get_drvdata(pdev);
+> > > -     int err;
+> > > -
+> > > -     pci_set_power_state(pdev, PCI_D0);
+> > > -     pci_restore_state(pdev);
+> > > -
+> > > -     err = pci_enable_device(pdev);
+> > > -     if (err) {
+> > > -             dev_dbg(&pdev->dev, "failed to enable device\n");
+> > > -             return err;
+> > > -     }
+> > > +     struct pch_dma *pd = dev_get_drvdata(dev);
+> > >
+> > >       if (pd)
+> > >               pch_dma_restore_regs(pd);
+> > >
+> > >       return 0;
+> > >  }
+> > > -#endif
+> > >
+> > >  static int pch_dma_probe(struct pci_dev *pdev,
+> > >                                  const struct pci_device_id *id)
+> > > @@ -993,15 +977,14 @@ static const struct pci_device_id pch_dma_id_table[] = {
+> > >       { 0, },
+> > >  };
+> > >
+> > > +static SIMPLE_DEV_PM_OPS(pch_dma_pm_ops, pch_dma_suspend, pch_dma_resume);
+> > > +
+> > >  static struct pci_driver pch_dma_driver = {
+> > >       .name           = DRV_NAME,
+> > >       .id_table       = pch_dma_id_table,
+> > >       .probe          = pch_dma_probe,
+> > >       .remove         = pch_dma_remove,
+> > > -#ifdef CONFIG_PM
+> > > -     .suspend        = pch_dma_suspend,
+> > > -     .resume         = pch_dma_resume,
+> > > -#endif
+> > > +     .driver.pm      = &pch_dma_pm_ops,
+> > >  };
+> > >
+> > >  module_pci_driver(pch_dma_driver);
+> > > --
+> > > 2.27.0
+> >
+> > --
+> > ~Vinod
+> 
+> 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
