@@ -2,121 +2,111 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77FBC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC34C2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:53:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595850821;
-	bh=pmx7r4So4ltU9GFLtyowT8sGCWQ3CPndiOgHKn5MH2Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cucpGlDzVy3mf63VPBqXIO2nhcG5hcH8mtN8TtDXQaqnKhzvB+5zs9qFOSXlawzb4
-	 XELMS+8S2dUYeVJs51GAlfkwuGtWjQgaJGfKEEm1v8jksRvXsoDibJomxqSD50jhJe
-	 SFnwPF6zbz/C0rGdzttjErKTmYcJDp9eXoatrAtw=
+	by mail.kernel.org (Postfix) with ESMTP id A138F206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:54:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="bfgrUSF9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgG0Lxk (ORCPT
+        id S1728286AbgG0LyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:53:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbgG0Lxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:53:39 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A227E206E7;
-        Mon, 27 Jul 2020 11:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595850819;
-        bh=pmx7r4So4ltU9GFLtyowT8sGCWQ3CPndiOgHKn5MH2Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G1ACx5gLsKOlLnHUq7TxrmlaoSuUj35QO83mZgX22J+x2NolUsEZLVhjOUT0Duu2X
-         UBU8N1plsG6Qtp1WieL6u0koBH+1NAhNq5ckcoQiUhlW12aQ+nQzPDHVpbAGDiZ+1d
-         LpaP1h91USoBeicfxQp8fugF1xEmm13NGV/cXHe4=
-Date:   Mon, 27 Jul 2020 12:53:21 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mike Looijmans <mike.looijmans@topic.nl>
-Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org, lgirdwood@gmail.com
-Subject: Re: [PATCH v3] usb: dwc3: Add support for VBUS power control
-Message-ID: <20200727115321.GC6275@sirena.org.uk>
-References: <20200619142512.19824-1-mike.looijmans@topic.nl>
- <20200723075612.tn5dbkhes2chohwh@axis.com>
- <20200723110523.GA4759@sirena.org.uk>
- <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.2698920d-90ba-4c46-abda-83e18e2093c8@emailsignatures365.codetwo.com>
- <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.0d2bd5fa-15cc-4b27-b94e-83614f9e5b38.ac9c2a67-d7df-4f70-81b3-db983bbfb4db@emailsignatures365.codetwo.com>
- <e63ee918-c9e3-a8ee-e7c5-577b5a3e09be@topic.nl>
- <20200727102317.GA6275@sirena.org.uk>
- <be4013b6-01c6-7f67-35ad-5c398b85c066@topic.nl>
+        Mon, 27 Jul 2020 07:54:12 -0400
+Received: from mail-bn7nam10on2064.outbound.protection.outlook.com ([40.107.92.64]:54240
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726873AbgG0LyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:54:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VRR/H1OrF4zU9NGbIP9AFaDY7fbRQLnjt7sSTefS3Jkz+/O2CYLI9eac+v+2MZFSL5W/XIONotnKSW6Glg0zQJkpsjRMC29FBHuWfID+y32F96Ujm/rRli6rqCXRrZtjlSnjAoOg5/uf+5VcGfv8kcoO236PHbb4/LOZJB5+b7zSVaNiAveUZZT6oaA0BbKtW8aHerZMHfQ9hdY3YaY4ralX6zRJY6vkEim1eSgQAvpHidJRDFrgfi4NnC/X0bxe01Pu0/WlntiYB0qBNcOMR8SsMhXBv1OigrPL214Q7EHWCsl+ohurEOAwy3LuNsCRTRLtyEmIrFcOTcaqOhglTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bmyILddlzE6b8rLZ7uHEXEZPJLFMABXC0tskFTC2hQo=;
+ b=CaXK8OVYZJ4J4ck+8hGeZwOsxdvvQLWKh//Kj6b4G4ZLUlx94tagzPrQdZzl7hr8yXlk5z2B/c5TkyyoeB9s7C2GPaivpfUTwuE76UjPaNFWHOsB60gHVjInBmTtvspxRdUwgN6vTWyiVvcH9Ahvshr+q0BBxGJdpMgGNo8Sj4O7VOPTkcRVxE2T5Bp75zpc5LayB5Ilu1okwIJ63N/2FweIpmfvt4Q1Xmkyh9ICUC/miZ6Wf04fUDrJc2Va+m0Nd4a7Yi/WkQVjsQTRpkirrnivkQs6KbXtGXaX3uQtY5RRZnt9OP+IMnRrBjqYTsqRkcWswEWT95SMPtipv89RCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bmyILddlzE6b8rLZ7uHEXEZPJLFMABXC0tskFTC2hQo=;
+ b=bfgrUSF964Pgru4UIg3qbUeWjuwZKpc4Xn/le9A7Z3E+leV34Jc5O2qwax3fblC5H0upvPS4M3V1zkrjHJaH10Q1rc950/qHdU8f2m1FCaF/xe+OtFfPkpGFKc1K7PgZKIL7kpbHw5kZLpi5yDl0DiKyjEUPCeR79VMdU4VnmbQ=
+Authentication-Results: bootlin.com; dkim=none (message not signed)
+ header.d=none;bootlin.com; dmarc=none action=none header.from=synaptics.com;
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
+ by BYAPR03MB4599.namprd03.prod.outlook.com (2603:10b6:a03:134::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Mon, 27 Jul
+ 2020 11:54:08 +0000
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::b5cc:ca6b:3c25:a99c]) by BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::b5cc:ca6b:3c25:a99c%4]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
+ 11:54:08 +0000
+Date:   Mon, 27 Jul 2020 19:50:12 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-nex 0/2] net: mvneta: improve phylink_speed_up/down
+ usage
+Message-ID: <20200727195012.4bcd069d@xhacker.debian>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYAPR01CA0044.jpnprd01.prod.outlook.com
+ (2603:1096:404:28::32) To BYAPR03MB3573.namprd03.prod.outlook.com
+ (2603:10b6:a02:ae::15)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vOmOzSkFvhd7u8Ms"
-Content-Disposition: inline
-In-Reply-To: <be4013b6-01c6-7f67-35ad-5c398b85c066@topic.nl>
-X-Cookie: Doing gets it done.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0044.jpnprd01.prod.outlook.com (2603:1096:404:28::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Mon, 27 Jul 2020 11:54:06 +0000
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: aab0cb9a-6f8c-4bf8-112f-08d83223c4a1
+X-MS-TrafficTypeDiagnostic: BYAPR03MB4599:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB459953A1E41920362F060100ED720@BYAPR03MB4599.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3044;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: r9iQybaTWsQa1FL4KTK9G0/5cq6BJIET5/Qw1hsr0Kq9uG3Srp551bgGOd6T1lvY37tRfFh7sGOBTGRsHz4Can54DMM4ard32MjYJM733J2RggnMCLb+MlgirJg6rph3kSSfzwDVCM0K3NbWuzOt0z0muz4AA40oS2NSJ6GtPhqcsumJwqib8eaUqgpVfEOS4vQ9krGIYSwPAzFzQpBjHf5agRY6KcINdmzA8lEqscnlSl3b3Iy/V2d3DKY5oWZUYB1+M2ziWwTVMVqePJml9xLSarGdHX1mC1gzQMjhiyJVCdHYFzPh3ANgRZb7X3Ub
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(136003)(376002)(366004)(346002)(39860400002)(478600001)(7696005)(4326008)(1076003)(956004)(16526019)(52116002)(66946007)(6506007)(186003)(26005)(86362001)(4744005)(110136005)(6666004)(2906002)(55016002)(8936002)(5660300002)(316002)(83380400001)(9686003)(8676002)(66476007)(66556008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: TCkvoSrhJsCtgVFn8K4F+jAfR6VFkGSearQju4Bv6yjR0V9KI9OhLB5H3n5dHuJovjBQi5It/dz/O6nPiJTazn2QOhnl48XKoPP7lMDawjxJ599xl79D2z4i0fngvqPpzEdUOjeEjMI14c/V/kqqDpwG9zYrnF4T9rRvDUiPIHPbOFE4ZIVNp5xiaGfkN5Bqbf7GDPCSlj4Sjp9fQy5JTORcLgOu1coFwOY+Wa+/NbYBRbpAgb0BRhc7nkPU8v62IfEtZbnybCenbiMpmVsoRfBRuOOeOUCt0cHbX0/DgTh7qQdjUXSX6WxBHg0CMtGkOLxgm6CngHqpRC57Ij3tmupSZ4oPgMjckFlDvvh1Dl7MXukGDPlHSIaPirAVsq5ptZdgM4Mktdkjjmut/jjUxL7FiM2Gbou0Qgd9rqHyE0b3O+a8Hw8NsAeEX+SzoLfkSa7aI+prwYgbLX+57sFuVOk22wouKegbnnBkvsz4l94Md6qU1rwBBeN6UwImPl6O
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aab0cb9a-6f8c-4bf8-112f-08d83223c4a1
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3573.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 11:54:08.0497
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: z3RIcUReGf3T1Z25I5AWy21X7SyxrH3YVHdaXKe7yZfe2mL+j9Ea8wciZtv1kIOzbUYIWW37U/TAH3AefghIPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4599
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+patch1 fix the comment
+patch2 tries to avoid unnecessary phylink_speed_up() and
+phylink_speed_down() during changing the mtu.
 
---vOmOzSkFvhd7u8Ms
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Jisheng Zhang (2):
+  net: mvneta: fix comment about phylink_speed_down
+  net: mvneta: Don't speed down the PHY when changing mtu
 
-On Mon, Jul 27, 2020 at 01:50:26PM +0200, Mike Looijmans wrote:
->=20
-> Met vriendelijke groet / kind regards,
->=20
-> Mike Looijmans
-> System Expert
+ drivers/net/ethernet/marvell/mvneta.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-You probably want to remove your signature when replying to the list...
+-- 
+2.28.0.rc0
 
-> On 27-07-2020 12:23, Mark Brown wrote:
-> > On Sun, Jul 26, 2020 at 09:10:39AM +0200, Mike Looijmans wrote:
-
-> > > It's the 5V VBUS power for the USB "plug" that's being controlled her=
-e. It
-> > > must turned on when the controller is in "host" mode. Some boards arr=
-ange
-> > > this in hardware through the PHY, and some just don't have any contro=
-l at
-> > > all and have it permanently on or off. On a board where the 5V is con=
-trolled
-> > > using a GPIO line or an I2C chip, this patch is required to make it w=
-ork.
-
-> > That sounds like the driver should not be using _get_optional() then.
-
-> Making it mandatory would break most (read: all except Topic's) existing
-> boards as they won't have it in their devicetree. I'm perfectly okay with
-> that, but others might disagree.
-
-No, it wouldn't break them at all - they'd get a dummy regulator
-provided.
-
---vOmOzSkFvhd7u8Ms
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8ewDEACgkQJNaLcl1U
-h9AOeAf/Q3uCuO9POLkFE4AFLM60fwOW/cXI1NJMegOuZ91RhQk4TF2WaZlMWHIf
-b8SYB4gvI151gQYg2UPgf52UpWEbVUZN6GoM/wyk1dOAm6ulrMx248Upv3gQkpHi
-RBRynDGfnTgOdn6GPde9XO24zF9zCpL6HyN1AHbp9y9zuC3nVg23Pi+Usyw3MyiG
-RWRyQ3lKAqssLAh+6CYQQBVQ2mEp6ubHxH9UuGoKYfgDDqo7gff1b4Ibfkv9QT3G
-wjVCthn7ZcgpKyFalB1cZ6MJcsnvEvtWcdz/lMAYT6YXpha0UvuVs5xj0LFYw6pc
-u9fo8pNhRClmGM+PizicmWsAcQ6aBg==
-=yKtV
------END PGP SIGNATURE-----
-
---vOmOzSkFvhd7u8Ms--
