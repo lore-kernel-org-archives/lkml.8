@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F065C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFFEC433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80654208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 017E12173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859140;
-	bh=3OHby8XDBx0VTjGkXODfmyS4uUhnDdD6Mf6sVeCoxnM=;
+	s=default; t=1595859148;
+	bh=oKGghECnOuCDtNH1ZYo2vmubxt0MKgCDi77vFnlNNIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cw/iTNt7Y2iDBILinMZ9bXhpC5Ki6lHKk7MWa+KxFr7/dHdZursyM+Ocghb/5u2YJ
-	 vOiUOmkj5UfVrimcLsfZLkkafuT5xAFrvlOY9MY1RL+lJsY/O2jEkPr5LeJMbQ0QgA
-	 T6TCMfe1U16WBLMtZ1+BVprHS0k6XNDI2zu+S1V0=
+	b=ZsA4lSSAZSFpmHgv5asd8Qphkq9QA16r/KoJuNDv9IcXwtdRA8hU7QU8+0MaoE9r4
+	 BYy5GUyn3pWYUBLmMRsOUKr8OVCqZyUTt/ZUc6sOYZFjAGED0peFRgpWVI8bmCOE5l
+	 AvkOqG0xxN/LlpKuD8vz8q1uoWDMRFMrBpOuPogg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbgG0OMT (ORCPT
+        id S1729618AbgG0OM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:12:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36440 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:12:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730182AbgG0OMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:12:16 -0400
+        id S1730194AbgG0OMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:12:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AA1C2173E;
-        Mon, 27 Jul 2020 14:12:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60F202083E;
+        Mon, 27 Jul 2020 14:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859135;
-        bh=3OHby8XDBx0VTjGkXODfmyS4uUhnDdD6Mf6sVeCoxnM=;
+        s=default; t=1595859142;
+        bh=oKGghECnOuCDtNH1ZYo2vmubxt0MKgCDi77vFnlNNIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vv80Y1ahYxyBalsvrahQ5tIaeVbI6dbbaq7aSbRpk6Ov6MWB4yLhPZxBDXaOxWpx4
-         SejlHWd6m+tLoOfO+EYG7OtYletb4wUfMYYr3Ft0KiP32GonvPqXwS0Qu0/MYLo99Y
-         ZbVgvSwrNmfdV6lGBE12PoWY+Mn7y08u26F3APa0=
+        b=jDn7OvqbBzyySU4Bfs9KQtCJLsXjPu4trjMUpnvqz8ibRwyFgRfEEbVdeeLKgI/YQ
+         14VNLmRu0tGcJ5NF4KxUVdjyeHaK2EPbcUm6GXG7aTlQ/YkBtlUf/jo6CzobjxymhP
+         jJeDjgtMfSHQPohwGMgOecZaezoe7B/6uK+U9BSE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Qiu Wenbo <qiuwenbo@phytium.com.cn>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.19 79/86] drm/amd/powerplay: fix a crash when overclocking Vega M
-Date:   Mon, 27 Jul 2020 16:04:53 +0200
-Message-Id: <20200727134918.363029745@linuxfoundation.org>
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
+        Patrick Fernie <patrick.fernie@gmail.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Subject: [PATCH 4.19 64/86] Revert "cifs: Fix the target file was deleted when rename failed."
+Date:   Mon, 27 Jul 2020 16:04:38 +0200
+Message-Id: <20200727134917.638089035@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -60,52 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiu Wenbo <qiuwenbo@phytium.com.cn>
+From: Steve French <stfrench@microsoft.com>
 
-commit 88bb16ad998a0395fe4b346b7d3f621aaa0a2324 upstream.
+commit 0e6705182d4e1b77248a93470d6d7b3013d59b30 upstream.
 
-Avoid kernel crash when vddci_control is SMU7_VOLTAGE_CONTROL_NONE and
-vddci_voltage_table is empty. It has been tested on Intel Hades Canyon
-(i7-8809G).
+This reverts commit 9ffad9263b467efd8f8dc7ae1941a0a655a2bab2.
 
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=208489
-Fixes: ac7822b0026f ("drm/amd/powerplay: add smumgr support for VEGAM (v2)")
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Qiu Wenbo <qiuwenbo@phytium.com.cn>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Upon additional testing with older servers, it was found that
+the original commit introduced a regression when using the old SMB1
+dialect and rsyncing over an existing file.
+
+The patch will need to be respun to address this, likely including
+a larger refactoring of the SMB1 and SMB3 rename code paths to make
+it less confusing and also to address some additional rename error
+cases that SMB3 may be able to workaround.
+
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reported-by: Patrick Fernie <patrick.fernie@gmail.com>
+CC: Stable <stable@vger.kernel.org>
+Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
+Acked-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ fs/cifs/inode.c |   10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
---- a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-@@ -643,9 +643,6 @@ static int vegam_get_dependency_volt_by_
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -1783,7 +1783,6 @@ cifs_rename2(struct inode *source_dir, s
+ 	FILE_UNIX_BASIC_INFO *info_buf_target;
+ 	unsigned int xid;
+ 	int rc, tmprc;
+-	bool new_target = d_really_is_negative(target_dentry);
  
- 	/* sclk is bigger than max sclk in the dependence table */
- 	*voltage |= (dep_table->entries[i - 1].vddc * VOLTAGE_SCALE) << VDDC_SHIFT;
--	vddci = phm_find_closest_vddci(&(data->vddci_voltage_table),
--			(dep_table->entries[i - 1].vddc -
--					(uint16_t)VDDC_VDDCI_DELTA));
+ 	if (flags & ~RENAME_NOREPLACE)
+ 		return -EINVAL;
+@@ -1860,13 +1859,8 @@ cifs_rename2(struct inode *source_dir, s
+ 	 */
  
- 	if (SMU7_VOLTAGE_CONTROL_NONE == data->vddci_control)
- 		*voltage |= (data->vbios_boot_state.vddci_bootup_value *
-@@ -653,8 +650,13 @@ static int vegam_get_dependency_volt_by_
- 	else if (dep_table->entries[i - 1].vddci)
- 		*voltage |= (dep_table->entries[i - 1].vddci *
- 				VOLTAGE_SCALE) << VDDC_SHIFT;
--	else
-+	else {
-+		vddci = phm_find_closest_vddci(&(data->vddci_voltage_table),
-+				(dep_table->entries[i - 1].vddc -
-+						(uint16_t)VDDC_VDDCI_DELTA));
-+
- 		*voltage |= (vddci * VOLTAGE_SCALE) << VDDCI_SHIFT;
-+	}
- 
- 	if (SMU7_VOLTAGE_CONTROL_NONE == data->mvdd_control)
- 		*mvdd = data->vbios_boot_state.mvdd_bootup_value * VOLTAGE_SCALE;
+ unlink_target:
+-	/*
+-	 * If the target dentry was created during the rename, try
+-	 * unlinking it if it's not negative
+-	 */
+-	if (new_target &&
+-	    d_really_is_positive(target_dentry) &&
+-	    (rc == -EACCES || rc == -EEXIST)) {
++	/* Try unlinking the target dentry if it's not negative */
++	if (d_really_is_positive(target_dentry) && (rc == -EACCES || rc == -EEXIST)) {
+ 		if (d_is_dir(target_dentry))
+ 			tmprc = cifs_rmdir(target_dir, target_dentry);
+ 		else
 
 
