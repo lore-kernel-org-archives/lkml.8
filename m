@@ -2,110 +2,106 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51086C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43A5C43446
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA83206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ErrfmWmU"
+	by mail.kernel.org (Postfix) with ESMTP id 8FD10206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595860607;
+	bh=vnz8ROALb5gubnj68vO1PvMNUEb7QYnW9YoPnbZSgck=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kAWr8Z3rV5RM6laXEFFM6AA4Q1PhxkReZLmq0r6hqWtKyoS6yysn/0sgERw+IS3+k
+	 YdRYNuKlccwHO2Pqh1Y/gCCIMsEmMX5yuJGNLbUM7p2vr8JQuVVIKRoq70Po2JbWwi
+	 N37WNScZgQnCtaEJAKZxXpxcYnJyurmNsuug/o/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731150AbgG0Ogw (ORCPT
+        id S1729711AbgG0ONT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:36:52 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:37596 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730317AbgG0ONL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:13:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595859191; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=od6qu1NhBeEXZbA2Vs3vSoZKYr7uCAz7VQWNJzNyddA=;
- b=ErrfmWmUGJd9lD6rVhz1jgED8fbPh40MJinix9frLomKJ80GbSncjW6gboqgyWHFjqoTIwXh
- 3j7dCC4hSqwqhEv78gPssydL3uTR90kOU9aJn92t1q/0BiisC/4DFN2I5HG4Dz2i9FKRDqbl
- ltHUdr1ZLk5dQ8fkugy5V3yOC8w=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
- 5f1ee0d97186ea1ee1f26dff (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 14:12:41
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CBF42C4344C; Mon, 27 Jul 2020 14:12:40 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Mon, 27 Jul 2020 10:13:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729741AbgG0ONO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:13:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 02493C4344C;
-        Mon, 27 Jul 2020 14:12:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8707221D95;
+        Mon, 27 Jul 2020 14:13:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595859194;
+        bh=vnz8ROALb5gubnj68vO1PvMNUEb7QYnW9YoPnbZSgck=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gxe7zaODqbnicOh6l5znxnnDivcdzfUJ3h3Ku5/OCW7XJqefpENaq8fgzIOmC2rJu
+         kSLUK4459Czz4m5T7Bvlpv9Oaxfd3HOvo7zqe1WR/+mehTTlHFLqFFvXkKP/i6rVzD
+         rpsaIQABiOgrJUrxf20aHgJp0AtIIHfBoUBGymXU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Steve Schremmer <steve.schremmer@netapp.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 015/138] scsi: dh: Add Fujitsu device to devinfo and dh lists
+Date:   Mon, 27 Jul 2020 16:03:30 +0200
+Message-Id: <20200727134926.035752373@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
+References: <20200727134925.228313570@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 27 Jul 2020 19:42:37 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     mathieu.poirier@linaro.org, mike.leach@linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, swboyd@chromium.org,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org
-Subject: Re: [PATCH] coresight: etm4x: Fix etm4_count race using atomic
- variable
-In-Reply-To: <c98f0c27-7f0c-cf99-d52b-8a8b1e197ace@arm.com>
-References: <20200727060728.15027-1-saiprakash.ranjan@codeaurora.org>
- <c98f0c27-7f0c-cf99-d52b-8a8b1e197ace@arm.com>
-Message-ID: <7a98dc32652731e7a795e150e7e8d14f@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-27 15:09, Suzuki K Poulose wrote:
-> On 07/27/2020 07:07 AM, Sai Prakash Ranjan wrote:
->> etm4_count keeps track of number of ETMv4 registered and on some
->> systems, a race is observed on etm4_count variable which can
->> lead to multiple calls to cpuhp_setup_state_nocalls_cpuslocked().
->> This function internally calls cpuhp_store_callbacks() which
->> prevents multiple registrations of callbacks for a given state
->> and due to this race, it returns -EBUSY leading to ETM probe
->> failures like below.
->> 
->>   coresight-etm4x: probe of 7040000.etm failed with error -16
->> 
->> This race can easily be triggered with async probe by setting
->> probe type as PROBE_PREFER_ASYNCHRONOUS and with ETM power
->> management property "arm,coresight-loses-context-with-cpu".
->> 
->> Prevent this race by converting etm4_count variable to atomic.
->> 
->> Fixes: 9b6a3f3633a5 ("coresight: etmv4: Fix CPU power management setup 
->> in probe() function")
->> Fixes: 58eb457be028 ("hwtracing/coresight-etm4x: Convert to hotplug 
->> state machine")
->> Suggested-by: Mike Leach <mike.leach@linaro.org>
->> (Mike: Rootcause and context for commit message)
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> 
-> Please could we leave the hotplug notifier installed with the driver
-> init and don't worry about this at all ? We bail out early in the
-> notifier anyways, if the CPU is not registered with its ETM.
-> 
+From: Steve Schremmer <steve.schremmer@netapp.com>
 
-Sure thing, sorry for not taking the cue from earlier discussion.
+[ Upstream commit e094fd346021b820f37188aaa6b502c7490ab5b5 ]
 
-Thanks,
-Sai
+Add FUJITSU ETERNUS_AHB
 
+Link: https://lore.kernel.org/r/DM6PR06MB5276CCA765336BD312C4282E8C660@DM6PR06MB5276.namprd06.prod.outlook.com
+Signed-off-by: Steve Schremmer <steve.schremmer@netapp.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/scsi_devinfo.c | 1 +
+ drivers/scsi/scsi_dh.c      | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
+index df14597752ec8..fb5a7832353ce 100644
+--- a/drivers/scsi/scsi_devinfo.c
++++ b/drivers/scsi/scsi_devinfo.c
+@@ -239,6 +239,7 @@ static struct {
+ 	{"LSI", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"ENGENIO", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"LENOVO", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
++	{"FUJITSU", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"SanDisk", "Cruzer Blade", NULL, BLIST_TRY_VPD_PAGES |
+ 		BLIST_INQUIRY_36},
+ 	{"SMSC", "USB 2 HS-CF", NULL, BLIST_SPARSELUN | BLIST_INQUIRY_36},
+diff --git a/drivers/scsi/scsi_dh.c b/drivers/scsi/scsi_dh.c
+index 42f0550d6b11f..6f41e4b5a2b85 100644
+--- a/drivers/scsi/scsi_dh.c
++++ b/drivers/scsi/scsi_dh.c
+@@ -63,6 +63,7 @@ static const struct scsi_dh_blist scsi_dh_blist[] = {
+ 	{"LSI", "INF-01-00",		"rdac", },
+ 	{"ENGENIO", "INF-01-00",	"rdac", },
+ 	{"LENOVO", "DE_Series",		"rdac", },
++	{"FUJITSU", "ETERNUS_AHB",	"rdac", },
+ 	{NULL, NULL,			NULL },
+ };
+ 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.25.1
+
+
+
