@@ -2,138 +2,203 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A53FC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C16AC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 282DE206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:25:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595849101;
-	bh=drHPhSD0jJfk/z9wwjoZaV/N+C/C6uB4xTn1Ihfva5o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EDNy7bWyJ8FEQGpLTz/Ny521t1MB8Rh9miM6+8w6kO/saCzBQVKIIivKbpL9BrHRE
-	 LIq+Eqv2dBuYuiZWW5+WJZtAg6p3e7gilYBwpW44g1g9c60pbC8a/X7yI+76qKvHVJ
-	 ruYaCW2mbr2Ze50QYsuZg0zzxyvTNAE9ss5v2Uyg=
+	by mail.kernel.org (Postfix) with ESMTP id E4F4320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbgG0LY7 (ORCPT
+        id S1728237AbgG0LZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:24:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbgG0LY7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:24:59 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2E3AC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 04:24:58 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id by13so11813181edb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 04:24:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KVi4ci9r11iJZabvuK+KNAiYWVzMLwehv9ewIXbDGvM=;
-        b=dfnfcBE6Yer3PftNB0mQkFcdpQxmYW+IAxCT1L7YYGg40QLgJIxlPRaitzNSbYHI2J
-         Ua1KreJbpjZUCWqdZ5tRBs4Kae+7xdizoBUycqxkjCrkdXflATo1qFrW/NKGW3VuLksh
-         aoufBsNLCw84ngyFvga395rF6HeZ+bcBMAmIpeElC5zQZOdR7gXMsSI0sIgPdmoccDOf
-         uCma2h06EdedbuF9LTZbhb2/y7YWaQv0MD0tMZwYncTHRZzWnRTWpL4zlL95cQOdatS9
-         xL0/IPtgx3SnqIvhQNY4fXMoTtf+tRewou/ecsvGltm3lQwOfhkgOOvq7MypRhfLsoDm
-         JCFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=KVi4ci9r11iJZabvuK+KNAiYWVzMLwehv9ewIXbDGvM=;
-        b=pwd6eg+0JdMq2qUF5C3Yq6FnfiWmem2D9zPT/JIaBaTcN1JRYPnYHJoDMR4Ub/xa2X
-         9hJu26G6/9QbGUQgDfZeLDAmoxVewlePlj+U6HQmFmeijNkB/4o6VTvY7vyMw8wAkuFw
-         VTn52V/1VfltkSk7ZJnAH1eOlz+aqkI8mI+rOGY72vSuUZ6Lf7fGjd9Gp3yMWebPVEOr
-         uRfrBWdX4XIzSPZz43j4YkS8ohC/VQhw628vG3wdIVPAhH/WIxC8dt0tx0xN20DuC827
-         fbrl+nQa3cTla3Qy3ESbx+tfVIOpnCvJ8vm6Bp268jBsR4/O/tPHfV+BQWcwrLbsVPqE
-         J5ww==
-X-Gm-Message-State: AOAM533LS0b+2e5RzGemo+QySE+/Rsc8w/UZy7CFDG9/o6ZeokIvCcPP
-        h0MR4/lnUoEDvN1VQ7ZOkz0=
-X-Google-Smtp-Source: ABdhPJxBqgF5ZegS8JvKjGK4iLDDSjijDGanOkVWxVEKsWvZu/6aXcQPq1GqtUHxarRZ3mCaDkWaqw==
-X-Received: by 2002:a05:6402:b4c:: with SMTP id bx12mr20224476edb.157.1595849097185;
-        Mon, 27 Jul 2020 04:24:57 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id i5sm6689345ejg.121.2020.07.27.04.24.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 04:24:56 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 13:24:54 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     vincent.donnefort@arm.com
-Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
-        linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
-        lukasz.luba@arm.com, valentin.schneider@arm.com
-Subject: Re: [PATCH] sched/fair: provide u64 read for 32-bits arch helper
-Message-ID: <20200727112454.GB55660@gmail.com>
-References: <1595847564-239957-1-git-send-email-vincent.donnefort@arm.com>
+        Mon, 27 Jul 2020 07:25:23 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2534 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726967AbgG0LZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:25:23 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id EC015FC00B6E85392BDD;
+        Mon, 27 Jul 2020 12:25:21 +0100 (IST)
+Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
+ 2020 12:25:21 +0100
+Date:   Mon, 27 Jul 2020 12:23:58 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@kernel.org>,
+        <tony.luck@intel.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [RFC PATCH 6/9] PCI: Add 'rcec' field to pci_dev for associated
+ RCiEPs
+Message-ID: <20200727122358.00006c23@Huawei.com>
+In-Reply-To: <20200724172223.145608-7-sean.v.kelley@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+        <20200724172223.145608-7-sean.v.kelley@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595847564-239957-1-git-send-email-vincent.donnefort@arm.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.121.176]
+X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 24 Jul 2020 10:22:20 -0700
+Sean V Kelley <sean.v.kelley@intel.com> wrote:
 
-* vincent.donnefort@arm.com <vincent.donnefort@arm.com> wrote:
-
-> From: Vincent Donnefort <vincent.donnefort@arm.com>
+> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 > 
-> Introducing two macro helpers u64_32read() and u64_32read_set_copy() to
-> factorize the u64 vminruntime and last_update_time read on a 32-bits
-> architecture. Those new helpers encapsulate smp_rmb() and smp_wmb()
-> synchronization and therefore, have a small penalty in set_task_rq_fair()
-> and init_cfs_rq().
+> When attempting error recovery for an RCiEP associated with an RCEC device,
+> there needs to be a way to update the Root Error Status, the Uncorrectable
+> Error Status and the Uncorrectable Error Severity of the parent RCEC.
+> So add the 'rcec' field to the pci_dev structure and provide a hook for the
+> Root Port Driver to associate RCiEPs with their respective parent RCEC.
 > 
-> The choice of using a macro over an inline function is driven by the
-> conditional u64 variable copy declarations.
+> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
 
-Could you please explain how "conditional u64 variable copy 
-declarations" prevents us to use an inline function for this:
+I haven't tested yet, but I think there is one path in here that breaks
+my case (no OS visible rcec / all done in firmware GHESv2 / APEI)
 
-> +/*
-> + * u64_32read() / u64_32read_set_copy()
-> + *
-> + * Use the copied u64 value to protect against data race. This is only
-> + * applicable for 32-bits architectures.
-> + */
-> +#if !defined(CONFIG_64BIT) && defined(CONFIG_SMP)
-> +# define u64_32read(val, copy)						\
-> +({									\
-> +	u64 _val;							\
-> +	u64 _val_copy;							\
-> +									\
-> +	do {								\
-> +		_val_copy = copy;					\
-> +		/*							\
-> +		 * paired with u64_32read_set_copy, ordering access	\
-> +		 * to val and copy.					\
-> +		 */							\
-> +		smp_rmb();						\
-> +		_val = val;						\
-> +	} while (_val != _val_copy);					\
-> +									\
-> +	_val;								\
-> +})
-> +# define u64_32read_set_copy(val, copy)					\
-> +do {									\
-> +	/* paired with u64_32read, ordering access to val and copy */	\
-> +	smp_wmb();							\
-> +	copy = val;							\
-> +} while (0)
-> +#else
-> +# define u64_32read(val, copy) (val)
-> +# define u64_32read_set_copy(val, copy) do { } while (0)
-> +#endif
+Jonathan
+
+> ---
+>  drivers/pci/pcie/aer.c         |  9 +++++----
+>  drivers/pci/pcie/err.c         |  9 +++++++++
+>  drivers/pci/pcie/portdrv_pci.c | 15 +++++++++++++++
+>  include/linux/pci.h            |  3 +++
+>  4 files changed, 32 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 3acf56683915..f1bf06be449e 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1335,17 +1335,18 @@ static int aer_probe(struct pcie_device *dev)
+>  static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+>  {
+>  	int aer = dev->aer_cap;
+> +	int rc = 0;
+>  	u32 reg32;
+> -	int rc;
+> -
+>  
+>  	/* Disable Root's interrupt in response to error messages */
+>  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+>  	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
+>  	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+>  
+> -	rc = pci_bus_error_reset(dev);
+> -	pci_info(dev, "Root Port link has been reset\n");
+> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC) {
+> +		rc = pci_bus_error_reset(dev);
+> +		pci_info(dev, "Root Port link has been reset\n");
+> +	}
+>  
+>  	/* Clear Root Error Status */
+>  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 9b3ec94bdf1d..0aae7643132e 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -203,6 +203,11 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  		pci_walk_dev_affected(dev, report_frozen_detected, &status);
+>  		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
+>  			status = flr_on_rciep(dev);
+> +			/*
+> +			 * The callback only clears the Root Error Status
+> +			 * of the RCEC (see aer.c).
+> +			 */
+> +			reset_link(dev->rcec);
+
+This looks dangerous for my case where APEI / GHESv2 is used.  In that case
+we don't expose an RCEC at all.   I don't think the reset_link callback
+is safe to a null pointer here.  Fix may be as simple as
+if (dev->rcec)
+	reset_link(dev->rcec);
+
+
+>  			if (status != PCI_ERS_RESULT_RECOVERED) {
+>  				pci_warn(dev, "function level reset failed\n");
+>  				goto failed;
+> @@ -246,7 +251,11 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)) {
+>  		pci_aer_clear_device_status(dev);
+>  		pci_aer_clear_nonfatal_status(dev);
+> +	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
+> +		pci_aer_clear_device_status(dev->rcec);
+> +		pci_aer_clear_nonfatal_status(dev->rcec);
+
+These may be safe as in my both now have protections for !pcie_aer_is_native.
+
+>  	}
 > +
+>  	pci_info(dev, "device recovery successful\n");
+>  	return status;
+>  
+> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+> index d5b109499b10..f9409a0110c2 100644
+> --- a/drivers/pci/pcie/portdrv_pci.c
+> +++ b/drivers/pci/pcie/portdrv_pci.c
+> @@ -90,6 +90,18 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
+>  #define PCIE_PORTDRV_PM_OPS	NULL
+>  #endif /* !PM */
+>  
+> +static int pcie_hook_rcec(struct pci_dev *pdev, void *data)
+> +{
+> +	struct pci_dev *rcec = (struct pci_dev *)data;
+> +
+> +	pdev->rcec = rcec;
+> +	pci_info(rcec, "RCiEP(under an RCEC) %04x:%02x:%02x.%d\n",
+> +		 pci_domain_nr(pdev->bus), pdev->bus->number,
+> +		 PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
 
-Thanks,
+We may want to make this debug info at somepoint if we have a way
+of discovering it from userspace.   The PCI boot up is extremely
+verbose already!
 
-	Ingo
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * pcie_portdrv_probe - Probe PCI-Express port devices
+>   * @dev: PCI-Express port device being probed
+> @@ -110,6 +122,9 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+>  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
+>  		return -ENODEV;
+>  
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
+> +		pcie_walk_rcec(dev, pcie_hook_rcec, dev);
+> +
+>  	status = pcie_port_device_register(dev);
+>  	if (status)
+>  		return status;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 34c1c4f45288..e920f29df40b 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -326,6 +326,9 @@ struct pci_dev {
+>  #ifdef CONFIG_PCIEAER
+>  	u16		aer_cap;	/* AER capability offset */
+>  	struct aer_stats *aer_stats;	/* AER stats for this device */
+> +#endif
+> +#ifdef CONFIG_PCIEPORTBUS
+> +	struct pci_dev	*rcec;		/* Associated RCEC device */
+>  #endif
+>  	u8		pcie_cap;	/* PCIe capability offset */
+>  	u8		msi_cap;	/* MSI capability offset */
+
+
