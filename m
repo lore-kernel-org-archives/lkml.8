@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF2FC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9133C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF18820786
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B982173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892238;
-	bh=Iz5tUY4gfrdU2cdZyw0Xqf8QtUvX+KWg12EojTs4aaY=;
+	s=default; t=1595892243;
+	bh=2lk5uht8HIRYz3UwO/2cD6dc8jKUN8zbECfiXqIVzu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f9r7pY9GHPNAaTRi3gkXY/6c1gO2qkhU3znR1lPcT6X5mF1aY528vgv7QuzdWhEKW
-	 EClWlJ3TvO+NSWPMLq8Io4b9CXZqlP/lZ1uwbCkQPBkbyyKL6Hw47/hn1svW8+h25X
-	 deHFQamehYdJs13A6xsnSDxQlXckpRPApvUy2IfY=
+	b=pG2sW8EIDDgYIYZ7AN5iwUuArwuD6JbUds/sI9uOSdFnY6CfLlmmst/O5TS866r0g
+	 is7RIFO+5aaaOD+lnYTQdQp3JwlpJGxzWH4db3riRcjJkn0IadNb3zYWioK3QcAd0Z
+	 Nk03xTzIFhy3AyDnIgw1VHDcZzl56K/92JpXbVrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgG0XX4 (ORCPT
+        id S1728027AbgG0XYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34698 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:24:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgG0XXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:23:54 -0400
+        id S1727977AbgG0XX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:23:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB95520809;
-        Mon, 27 Jul 2020 23:23:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E456B2173E;
+        Mon, 27 Jul 2020 23:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892233;
-        bh=Iz5tUY4gfrdU2cdZyw0Xqf8QtUvX+KWg12EojTs4aaY=;
+        s=default; t=1595892238;
+        bh=2lk5uht8HIRYz3UwO/2cD6dc8jKUN8zbECfiXqIVzu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3N6lNSPfPorGsO3KDTFGfLGeL/KBUYC9/v4OIt+1+RLs4ASIovRRYSRiSriYKHUx
-         60k1/oSA5gL77Ki20MOFAXwN4Ef+B6a544I9Tt1aoEDfdm9nggKzWpmyYXlR6nqZFn
-         wrf4v/NZ9HRSDqF2J4r4dtMPaSNyVDuuOR4Db15s=
+        b=piJAQTQA24wKRgpgdp95mEazTRdEb+3MCVqPsveWwpAK1CgmSjAoWAqCzqFakpe9w
+         AvoxrSa5NjiBTCILEfb3ydl/qQ3xaDPepLoY0dgWW/QJrylQK9kyFLN+2dZ7l/iArp
+         k5719aLxq9o3fpXNyaSo0XiyS1FxqlkPQBGxJ/5s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laurence Oberman <loberman@redhat.com>,
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 05/25] qed: Disable "MFW indication via attention" SPAM every 5 minutes
-Date:   Mon, 27 Jul 2020 19:23:25 -0400
-Message-Id: <20200727232345.717432-5-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-nfc@lists.01.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 09/25] nfc: s3fwrn5: add missing release on skb in s3fwrn5_recv_frame
+Date:   Mon, 27 Jul 2020 19:23:29 -0400
+Message-Id: <20200727232345.717432-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200727232345.717432-1-sashal@kernel.org>
 References: <20200727232345.717432-1-sashal@kernel.org>
@@ -59,36 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurence Oberman <loberman@redhat.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 1d61e21852d3161f234b9656797669fe185c251b ]
+[ Upstream commit 1e8fd3a97f2d83a7197876ceb4f37b4c2b00a0f3 ]
 
-This is likely firmware causing this but its starting to annoy customers.
-Change the message level to verbose to prevent the spam.
-Note that this seems to only show up with ISCSI enabled on the HBA via the
-qedi driver.
+The implementation of s3fwrn5_recv_frame() is supposed to consume skb on
+all execution paths. Release skb before returning -ENODEV.
 
-Signed-off-by: Laurence Oberman <loberman@redhat.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_int.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nfc/s3fwrn5/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
-index 9f5113639eaf0..4bccaafca8b28 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_int.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
-@@ -1172,7 +1172,8 @@ static int qed_int_attentions(struct qed_hwfn *p_hwfn)
- 			index, attn_bits, attn_acks, asserted_bits,
- 			deasserted_bits, p_sb_attn_sw->known_attn);
- 	} else if (asserted_bits == 0x100) {
--		DP_INFO(p_hwfn, "MFW indication via attention\n");
-+		DP_VERBOSE(p_hwfn, NETIF_MSG_INTR,
-+			   "MFW indication via attention\n");
- 	} else {
- 		DP_VERBOSE(p_hwfn, NETIF_MSG_INTR,
- 			   "MFW indication [deassertion]\n");
+diff --git a/drivers/nfc/s3fwrn5/core.c b/drivers/nfc/s3fwrn5/core.c
+index 91d4d5b28a7d9..ba6c486d64659 100644
+--- a/drivers/nfc/s3fwrn5/core.c
++++ b/drivers/nfc/s3fwrn5/core.c
+@@ -198,6 +198,7 @@ int s3fwrn5_recv_frame(struct nci_dev *ndev, struct sk_buff *skb,
+ 	case S3FWRN5_MODE_FW:
+ 		return s3fwrn5_fw_recv_frame(ndev, skb);
+ 	default:
++		kfree_skb(skb);
+ 		return -ENODEV;
+ 	}
+ }
 -- 
 2.25.1
 
