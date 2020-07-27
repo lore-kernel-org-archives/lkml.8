@@ -2,51 +2,53 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B411C433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE69C433FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09B6520719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822E920719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860888;
-	bh=5MbtI0ihvkEoxI9SWcTbrLH2vIzaHkcSMuxKD1ckyRM=;
+	s=default; t=1595860875;
+	bh=PGRiRoVTRfv+QPQFffdOaLAOyu+ZjllG5kH32WIlkgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ixwX9Xe11H29/dpsjeTsRLoEdKf9WklSPeB5e2WBsVGWfZEoXv9TeEWrz7lN12tgd
-	 nx6SNdJ2aKYoYboRRz5xVpPH/8dLx9m2deUK0VNSHt5iYUd+NnwoXRiy1FOVKO7AkN
-	 BphTKPBviPxPLmk9nthZAK43Rsj1bPzusmccTkas=
+	b=G+D3N6nY1kSOQ7uB8h/zcnjvZKovZK8RJ2Y7R0NsDHbCuw4xl2jEQAn5QbrFa2gt8
+	 jbAlrftLxxHJDCcWIAIr/qsBcpov/VpRj/+7vh86oXSj4DD2b768go15QcueIEjKBI
+	 Qx95EMLGcfZKOTiSDsY13SWACIF+R7Ds0YuGCHyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733065AbgG0Ol0 (ORCPT
+        id S1729420AbgG0OIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:41:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57450 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:08:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729381AbgG0OIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:08:11 -0400
+        id S1729406AbgG0OIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:08:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6002B207FC;
-        Mon, 27 Jul 2020 14:08:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DE0D207FC;
+        Mon, 27 Jul 2020 14:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858890;
-        bh=5MbtI0ihvkEoxI9SWcTbrLH2vIzaHkcSMuxKD1ckyRM=;
+        s=default; t=1595858903;
+        bh=PGRiRoVTRfv+QPQFffdOaLAOyu+ZjllG5kH32WIlkgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YmZP/EKn3PzoGsbB87wEGPWQosBa+Xc73ra7S4f6L3iLHZTMwMjnMD6HcLDyDfCBH
-         yRtjA1GUVbEPt8y56xzAqzvP40coTyq/nyeigg39RBpfq/ME6q4XVPSrwfERSlSb7d
-         IHL5qcirUaDVOw+J8jCCPuUvz1BLHirNShSul58E=
+        b=XjtmYs3Wpc/95k56Fcw1ih6JCt/jSVl/KvDT+3GcqqyWgN4jhicVaTpxunYw3xfGt
+         5t9P4hpWIsMd8bu+9TExC7Xib0cmYRgv/bm+R5Gza0rUpZGNnGrHcOYB13fPHCVtt+
+         uLIJXiOXiy69H7q8MNFqs/OAzFncsA2C0A4dL3qE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rustam Kovhaev <rkovhaev@gmail.com>,
-        syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 50/64] staging: wlan-ng: properly check endpoint types
-Date:   Mon, 27 Jul 2020 16:04:29 +0200
-Message-Id: <20200727134913.648225386@linuxfoundation.org>
+        stable@vger.kernel.org, Liu Jian <liujian56@huawei.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 28/64] mlxsw: destroy workqueue when trap_register in mlxsw_emad_init
+Date:   Mon, 27 Jul 2020 16:04:07 +0200
+Message-Id: <20200727134912.546393647@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -59,52 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rustam Kovhaev <rkovhaev@gmail.com>
+From: Liu Jian <liujian56@huawei.com>
 
-commit faaff9765664009c1c7c65551d32e9ed3b1dda8f upstream.
+[ Upstream commit 5dbaeb87f2b309936be0aeae00cbc9e7f20ab296 ]
 
-As syzkaller detected, wlan-ng driver does not do sanity check of
-endpoints in prism2sta_probe_usb(), add check for xfer direction and type
+When mlxsw_core_trap_register fails in mlxsw_emad_init,
+destroy_workqueue() shouled be called to destroy mlxsw_core->emad_wq.
 
-Reported-and-tested-by: syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=c2a1fa67c02faa0de723
-Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200722161052.999754-1-rkovhaev@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: d965465b60ba ("mlxsw: core: Fix possible deadlock")
+Signed-off-by: Liu Jian <liujian56@huawei.com>
+Reviewed-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wlan-ng/prism2usb.c |   16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlxsw/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/wlan-ng/prism2usb.c
-+++ b/drivers/staging/wlan-ng/prism2usb.c
-@@ -61,11 +61,25 @@ static int prism2sta_probe_usb(struct us
- 			       const struct usb_device_id *id)
- {
- 	struct usb_device *dev;
--
-+	const struct usb_endpoint_descriptor *epd;
-+	const struct usb_host_interface *iface_desc = interface->cur_altsetting;
- 	struct wlandevice *wlandev = NULL;
- 	struct hfa384x *hw = NULL;
- 	int result = 0;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
+index fad26046e1595..96f9f267d16d4 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+@@ -619,7 +619,7 @@ static int mlxsw_emad_init(struct mlxsw_core *mlxsw_core)
+ 	err = mlxsw_core_trap_register(mlxsw_core, &mlxsw_emad_rx_listener,
+ 				       mlxsw_core);
+ 	if (err)
+-		return err;
++		goto err_trap_register;
  
-+	if (iface_desc->desc.bNumEndpoints != 2) {
-+		result = -ENODEV;
-+		goto failed;
-+	}
-+
-+	result = -EINVAL;
-+	epd = &iface_desc->endpoint[1].desc;
-+	if (!usb_endpoint_is_bulk_in(epd))
-+		goto failed;
-+	epd = &iface_desc->endpoint[2].desc;
-+	if (!usb_endpoint_is_bulk_out(epd))
-+		goto failed;
-+
- 	dev = interface_to_usbdev(interface);
- 	wlandev = create_wlan();
- 	if (!wlandev) {
+ 	err = mlxsw_core->driver->basic_trap_groups_set(mlxsw_core);
+ 	if (err)
+@@ -631,6 +631,7 @@ static int mlxsw_emad_init(struct mlxsw_core *mlxsw_core)
+ err_emad_trap_set:
+ 	mlxsw_core_trap_unregister(mlxsw_core, &mlxsw_emad_rx_listener,
+ 				   mlxsw_core);
++err_trap_register:
+ 	destroy_workqueue(mlxsw_core->emad_wq);
+ 	return err;
+ }
+-- 
+2.25.1
+
 
 
