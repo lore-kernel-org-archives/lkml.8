@@ -2,180 +2,227 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6289C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB43C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B72DA207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3828A20775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="EhL6stLZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TfcXv0PS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729574AbgG0PAM (ORCPT
+        id S1729660AbgG0PAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:00:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbgG0PAL (ORCPT
+        Mon, 27 Jul 2020 11:00:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42119 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726983AbgG0PAW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:00:11 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88318C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:00:11 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k13so317472plk.13
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:00:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=wjEW0lREFus8EI322SDRPKgG4j1s1AWKdt5U75Ucocc=;
-        b=EhL6stLZi9wXPCL91sPuosEnsHWJbKk9Huug49YnPVjbUNqt32xBzbOgTDmvpxweJ9
-         Mmnuxhh3VI1wQeBK15SysbYmCZomp+RVSRJKUd5kBXJfKLVeerU60eYAxcxxJmXRDezb
-         R6IEB5/T4UvxqW1ERE/LOVMRdWVYsWy1y8Gajm7BknSsSlkGUTKVeMuV1hcFqTrq9Mup
-         BVbrQMNg/dJdMXh++TcHYmKs5OE/GS/8cbPY5Mdd4tUDByBfQ3mCvE+vkgR4Xvew4x2v
-         wR/8QKXJgER+56PR9FV16ALqyDUL1a78qsINV/0mCh3Ib32sdbrwHFAhBEOjT0IY9g6y
-         0JYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=wjEW0lREFus8EI322SDRPKgG4j1s1AWKdt5U75Ucocc=;
-        b=BBo0qqZcFxg6CFpt6FI9vHSyN4y5rxslqfB50lV/Kkz2yy+oYrVbp9WiXx9Meg00lo
-         197LLJlp7mWJ0AFFu6CSc2ClUGYfPIu/1qg70DjfkrQGCOFbt174O61Q/pCcXJnHE8kW
-         cSjeGAq+xaHkw3Zzyed/dZO/aXO5vB4cR1FXDjoirb2dBM5OwqyhxqzuPtL5RmRDxZe4
-         fgQvvtev9is/WiVhnp6He5EeKuxo0zlUFGFDpmPtIPr0Og09Aqsn562mcFx6WFILYGZP
-         FJWGkNwFw4o+WYE1p0ly7QsYHi+CrDZ/83Dy4v8Q4WPrxaa9vyqtlQ0n6bDtL+gfwCIw
-         ht+w==
-X-Gm-Message-State: AOAM533PwJrmfTrIwU7w2kxm+xvjXSONidknVHa2vPUOqRddR334bJTM
-        vRR5ZpnIv5eVpU4ZqhjZpwREBQ==
-X-Google-Smtp-Source: ABdhPJzQuLg+aYWabdbry4azYJ1VOJKYgI2dyAGxpZQ56GRxowjKpwzOHLjsRgFU11k/hqWmIFOalw==
-X-Received: by 2002:a17:90a:3fc7:: with SMTP id u7mr19110663pjm.231.1595862011095;
-        Mon, 27 Jul 2020 08:00:11 -0700 (PDT)
-Received: from [192.168.1.102] (c-24-20-148-49.hsd1.or.comcast.net. [24.20.148.49])
-        by smtp.gmail.com with ESMTPSA id h15sm16174872pjc.14.2020.07.27.08.00.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 Jul 2020 08:00:10 -0700 (PDT)
-From:   "Sean V Kelley" <sean.v.kelley@intel.com>
-To:     "Jonathan Cameron" <Jonathan.Cameron@huawei.com>
-Cc:     bhelgaas@google.com, rjw@rjwysocki.net, tony.luck@intel.com,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 4/9] PCI/AER: Extend AER error handling to RCECs
-Date:   Mon, 27 Jul 2020 08:00:11 -0700
-X-Mailer: MailMate (1.13.1r5671)
-Message-ID: <BBEF2C05-521A-42D9-9AA4-F0B537E063F5@intel.com>
-In-Reply-To: <20200727150426.00005cde@huawei.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
- <20200724172223.145608-5-sean.v.kelley@intel.com>
- <20200727150426.00005cde@huawei.com>
+        Mon, 27 Jul 2020 11:00:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595862020;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wnitoymfQEUjS6w0iAPbQqMgOxxH+kRHvYNw3Wi9zi4=;
+        b=TfcXv0PS50wu/kH5FRUSvigqU0h6E8b7xHGg4OrRW5g23RfUlAv1iirlxmtXvhiXSx+CGk
+        gjzcldF3sYQcrSHSN9lhX5QfrLY5AmRfQxXHt99t2sm+hUCMR6iiuvKaHw61FG4larXKvD
+        7LV/Gh9tPEBf0YpUFiQClJAF6PPEbTQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-JakRd3drOWSbfKceE5wqqQ-1; Mon, 27 Jul 2020 11:00:16 -0400
+X-MC-Unique: JakRd3drOWSbfKceE5wqqQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8AF6879ED0;
+        Mon, 27 Jul 2020 15:00:15 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B6CD70BB9;
+        Mon, 27 Jul 2020 15:00:15 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 11:00:14 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     John Donnelly <John.P.donnelly@oracle.com>, stable@vger.kernel.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: (resend) [PATCH [linux-4.14.y]] dm cache: submit writethrough
+ writes in parallel to origin and cache
+Message-ID: <20200727150014.GA27472@redhat.com>
+References: <37c5a615-655d-c106-afd0-54e03f3c0eef@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <37c5a615-655d-c106-afd0-54e03f3c0eef@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27 Jul 2020, at 7:04, Jonathan Cameron wrote:
+This mail needs to be saent to stable@vger.kernel.org (now cc'd).
 
-> On Fri, 24 Jul 2020 10:22:18 -0700
-> Sean V Kelley <sean.v.kelley@intel.com> wrote:
->
->> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>
->> Currently the kernel does not handle AER errors for Root Complex 
->> integrated
->> End Points (RCiEPs)[0]. These devices sit on a root bus within the 
->> Root Complex
->> (RC). AER handling is performed by a Root Complex Event Collector 
->> (RCEC) [1]
->> which is a effectively a type of RCiEP on the same root bus.
->>
->> For an RCEC (technically not a Bridge), error messages "received" 
->> from
->> associated RCiEPs must be enabled for "transmission" in order to 
->> cause a
->> System Error via the Root Control register or (when the Advanced 
->> Error
->> Reporting Capability is present) reporting via the Root Error Command
->> register and logging in the Root Error Status register and Error 
->> Source
->> Identification register.
->>
->> In addition to the defined OS level handling of the reset flow for 
->> the
->> associated RCiEPs of an RCEC, it is possible to also have a firmware 
->> first
->> model. In that case there is no need to take any actions on the RCEC 
->> because
->> the firmware is responsible for them. This is true where APEI [2] is 
->> used
->> to report the AER errors via a GHES[v2] HEST entry [3] and relevant
->> AER CPER record [4] and Firmware First handling is in use.
->>
->> We effectively end up with two different types of discovery for
->> purposes of handling AER errors:
->>
->> 1) Normal bus walk - we pass the downstream port above a bus to which
->> the device is attached and it walks everything below that point.
->>
->> 2) An RCiEP with no visible association with an RCEC as there is no 
->> need to
->> walk devices. In that case, the flow is to just call the callbacks 
->> for the actual
->> device.
->>
->> A new walk function, similar to pci_bus_walk is provided that takes a 
->> pci_dev
->> instead of a bus. If that dev corresponds to a downstream port it 
->> will walk
->> the subordinate bus of that downstream port. If the dev does not then 
->> it
->> will call the function on that device alone.
->>
->> [0] ACPI PCI Express Base Specification 5.0-1 1.3.2.3 Root Complex 
->> Integrated
->>     Endpoint Rules.
->> [1] ACPI PCI Express Base Specification 5.0-1 6.2 Error Signalling 
->> and Logging
->> [2] ACPI Specification 6.3 Chapter 18 ACPI Platform Error Interface 
->> (APEI)
->> [3] ACPI Specification 6.3 18.2.3.7 Generic Hardware Error Source
->> [4] UEFI Specification 2.8, N.2.7 PCI Express Error Section
->>
->> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
->> ---
-> ...
->
->
->>  	pci_dbg(dev, "broadcast resume message\n");
->> -	pci_walk_bus(bus, report_resume, &status);
->> +	pci_walk_dev_affected(dev, report_resume, &status);
->>
->> -	pci_aer_clear_device_status(dev);
->> -	pci_aer_clear_nonfatal_status(dev);
->
-> This code had changed a little in Bjorn's pci/next branch so do a 
-> rebase on that
-> before v2.
-
-Will ensure rebase includes pci/next.
+Greg et al: please backport 2df3bae9a6543e90042291707b8db0cbfbae9ee9
 
 Thanks,
+Mike
 
-Sean
+On Mon, Jul 27 2020 at  9:40am -0400,
+John Donnelly <John.P.donnelly@oracle.com> wrote:
 
->
->> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
->> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
->> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)) {
->> +		pci_aer_clear_device_status(dev);
->> +		pci_aer_clear_nonfatal_status(dev);
->> +	}
->>  	pci_info(dev, "device recovery successful\n");
->>  	return status;
->>
+> From: Mike Snitzer <snitzer@redhat.com>
+> 
+> Discontinue issuing writethrough write IO in series to the origin and
+> then cache.
+> 
+> Use bio_clone_fast() to create a new origin clone bio that will be
+> mapped to the origin device and then bio_chain() it to the bio that gets
+> remapped to the cache device. The origin clone bio does _not_ have a
+> copy of the per_bio_data -- as such check_if_tick_bio_needed() will not
+> be called.
+> 
+> The cache bio (parent bio) will not complete until the origin bio has
+> completed -- this fulfills bio_clone_fast()'s requirements as well as
+> the requirement to not complete the original IO until the write IO has
+> completed to both the origin and cache device.
+> 
+> Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+> 
+> (cherry picked from commit 2df3bae9a6543e90042291707b8db0cbfbae9ee9)
+> 
+> Fixes: 705559706d62038b74c5088114c1799cf2c9dce8 (dm bio record:
+> save/restore bi_end_io and bi_integrity, version 4.14.188)
+> 
+> 70555970 introduced a mkfs.ext4 hang on a LVM device that has been
+> modified with lvconvert --cachemode=writethrough.
+> 
+> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+> Tested-by: John Donnelly <john.p.donnelly@oracle.com>
+> Reviewed-by: Somasundaram Krishnasamy <somasundaram.krishnasamy@oracle.com>
+> 
+> conflict: drivers/md/dm-cache-target.c - Corrected syntax of
+> writethrough_mode(&cache->feature) that was caught by
+> arm compiler.
+> 
+> cc: stable@vger.kernel.org
+> cc: snitzer@redhat.com
+> ---
+> drivers/md/dm-cache-target.c | 54 ++++++++++++++++++++++++------------
+> 1 file changed, 37 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/md/dm-cache-target.c b/drivers/md/dm-cache-target.c
+> index 69cdb29ef6be..8241b7c36655 100644
+> --- a/drivers/md/dm-cache-target.c
+> +++ b/drivers/md/dm-cache-target.c
+> @@ -450,6 +450,7 @@ struct cache {
+> struct work_struct migration_worker;
+> struct delayed_work waker;
+> struct dm_bio_prison_v2 *prison;
+> + struct bio_set *bs;
+> mempool_t *migration_pool;
+> @@ -868,16 +869,23 @@ static void check_if_tick_bio_needed(struct
+> cache *cache, struct bio *bio)
+> spin_unlock_irqrestore(&cache->lock, flags);
+> }
+> -static void remap_to_origin_clear_discard(struct cache *cache,
+> struct bio *bio,
+> - dm_oblock_t oblock)
+> +static void __remap_to_origin_clear_discard(struct cache *cache,
+> struct bio *bio,
+> + dm_oblock_t oblock, bool bio_has_pbd)
+> {
+> - // FIXME: this is called way too much.
+> - check_if_tick_bio_needed(cache, bio);
+> + if (bio_has_pbd)
+> + check_if_tick_bio_needed(cache, bio);
+> remap_to_origin(cache, bio);
+> if (bio_data_dir(bio) == WRITE)
+> clear_discard(cache, oblock_to_dblock(cache, oblock));
+> }
+> +static void remap_to_origin_clear_discard(struct cache *cache,
+> struct bio *bio,
+> + dm_oblock_t oblock)
+> +{
+> + // FIXME: check_if_tick_bio_needed() is called way too much
+> through this interface
+> + __remap_to_origin_clear_discard(cache, bio, oblock, true);
+> +}
+> +
+> static void remap_to_cache_dirty(struct cache *cache, struct bio *bio,
+> dm_oblock_t oblock, dm_cblock_t cblock)
+> {
+> @@ -971,23 +979,25 @@ static void writethrough_endio(struct bio *bio)
+> }
+> /*
+> - * FIXME: send in parallel, huge latency as is.
+> * When running in writethrough mode we need to send writes to clean blocks
+> - * to both the cache and origin devices. In future we'd like to clone the
+> - * bio and send them in parallel, but for now we're doing them in
+> - * series as this is easier.
+> + * to both the cache and origin devices. Clone the bio and send
+> them in parallel.
+> */
+> -static void remap_to_origin_then_cache(struct cache *cache, struct
+> bio *bio,
+> - dm_oblock_t oblock, dm_cblock_t cblock)
+> +static void remap_to_origin_and_cache(struct cache *cache, struct bio *bio,
+> + dm_oblock_t oblock, dm_cblock_t cblock)
+> {
+> - struct per_bio_data *pb = get_per_bio_data(bio, PB_DATA_SIZE_WT);
+> + struct bio *origin_bio = bio_clone_fast(bio, GFP_NOIO, cache->bs);
+> - pb->cache = cache;
+> - pb->cblock = cblock;
+> - dm_hook_bio(&pb->hook_info, bio, writethrough_endio, NULL);
+> - dm_bio_record(&pb->bio_details, bio);
+> + BUG_ON(!origin_bio);
+> - remap_to_origin_clear_discard(pb->cache, bio, oblock);
+> + bio_chain(origin_bio, bio);
+> + /*
+> + * Passing false to __remap_to_origin_clear_discard() skips
+> + * all code that might use per_bio_data (since clone doesn't have it)
+> + */
+> + __remap_to_origin_clear_discard(cache, origin_bio, oblock, false);
+> + submit_bio(origin_bio);
+> +
+> + remap_to_cache(cache, bio, cblock);
+> }
+> /*----------------------------------------------------------------
+> @@ -1873,7 +1883,7 @@ static int map_bio(struct cache *cache, struct
+> bio *bio, dm_oblock_t block,
+> } else {
+> if (bio_data_dir(bio) == WRITE && writethrough_mode(&cache->features) &&
+> !is_dirty(cache, cblock)) {
+> - remap_to_origin_then_cache(cache, bio, block, cblock);
+> + remap_to_origin_and_cache(cache, bio, block, cblock);
+> accounted_begin(cache, bio);
+> } else
+> remap_to_cache_dirty(cache, bio, block, cblock);
+> @@ -2132,6 +2142,9 @@ static void destroy(struct cache *cache)
+> kfree(cache->ctr_args[i]);
+> kfree(cache->ctr_args);
+> + if (cache->bs)
+> + bioset_free(cache->bs);
+> +
+> kfree(cache);
+> }
+> @@ -2589,6 +2602,13 @@ static int cache_create(struct cache_args
+> *ca, struct cache **result)
+> cache->features = ca->features;
+> ti->per_io_data_size = get_per_bio_data_size(cache);
+> + if (writethrough_mode(&cache->features)) {
+> + /* Create bioset for writethrough bios issued to origin */
+> + cache->bs = bioset_create(BIO_POOL_SIZE, 0, 0);
+> + if (!cache->bs)
+> + goto bad;
+> + }
+> +
+> cache->callbacks.congested_fn = cache_is_congested;
+> dm_table_add_target_callbacks(ti->table, &cache->callbacks);
+> 
+> -- 
+> 2.26.2
+> 
+
