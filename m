@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91260C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8CEC433F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0C720838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBDB922B3F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859078;
-	bh=7/bT1ObWFc0vmB+DUQCMp5JYvmyrsUL+aA9T/8le4Dg=;
+	s=default; t=1595859079;
+	bh=SAMDObAPKgoZIXKFTKFMdIp+C1FyCwxF1h7AKrbE8qE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e9DiP60Z6zg1W9751rRh0Qg2th4PyapuGQ5hDUDvpxlJngdW3M640ZXRN8VuEPuZy
-	 g8Z4qpqBesyY+ystSaBSYKEz6wpFdC+yrB0O/G8ZONhvpuoBukejLi4Psdm+VJUJLt
-	 vu0eQpskv3FbKlJn4XlijOL8ngv1G3F4RIF42t6A=
+	b=bhvXoSOur8jivZB+WmPNFukd+/UsSaCGmsY+q8ybV+wpKhCS3eXQBEcwonJOAe3WL
+	 N3F62vOjm2k1ZlktY4qsQzLLqZarYIUE8PJ7j5TwbUI0KHLREVH5wUzh4Y991C3z2j
+	 7FU1UM1umcYnxNhQ7SkrfXvIZlw1H4iZTkTPUfDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729999AbgG0OLQ (ORCPT
+        id S1730009AbgG0OLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:11:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34672 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:11:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729993AbgG0OLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:11:14 -0400
+        id S1730000AbgG0OLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:11:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83C07208E4;
-        Mon, 27 Jul 2020 14:11:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B21D21775;
+        Mon, 27 Jul 2020 14:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859074;
-        bh=7/bT1ObWFc0vmB+DUQCMp5JYvmyrsUL+aA9T/8le4Dg=;
+        s=default; t=1595859076;
+        bh=SAMDObAPKgoZIXKFTKFMdIp+C1FyCwxF1h7AKrbE8qE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eqif9O2KLQKysbk2esvvEg+B9udQBYOB+xl2dnuoYrng6BiJ27Us6y5Di5FXdOGD7
-         13ijE9ZA1CCu7vc/XUoNWUxlHyM7WoIwZ3LYOoQe+bg7uYSzQHV9fnaC4gj/zZSJyP
-         9JOSjQDQQgKh88d8Kd/XPQhKEsjOYqZcBkcQ/5ts=
+        b=vAJNYLhsXn+tz0SZiHd9iXLKHKQPNFOftrMory1O0kcJ7kT111ERDuENvaORE7BvP
+         adT7yBqzjVi2Rj6jlC5bO3lXqEtQ9uTaHM9ywRg4CIQMk1N1c1PZ8H04F7THW6bYUz
+         j4Mlm3dslyC9qKoXC4+FTUQVf5/CXqVUzopk5LE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chu Lin <linchuyuan@google.com>,
+        stable@vger.kernel.org,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 56/86] hwmon: (adm1275) Make sure we are reading enough data for different chips
-Date:   Mon, 27 Jul 2020 16:04:30 +0200
-Message-Id: <20200727134917.225251026@linuxfoundation.org>
+Subject: [PATCH 4.19 57/86] hwmon: (scmi) Fix potential buffer overflow in scmi_hwmon_probe()
+Date:   Mon, 27 Jul 2020 16:04:31 +0200
+Message-Id: <20200727134917.285414070@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -60,68 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chu Lin <linchuyuan@google.com>
+From: Cristian Marussi <cristian.marussi@arm.com>
 
-[ Upstream commit 6d1d41c075a1a54ba03370e268171fec20e06563 ]
+[ Upstream commit 3ce17cd2b94907f6d91b81b32848044b84c97606 ]
 
-Issue:
-When PEC is enabled, binding adm1272 to the adm1275 would
-fail due to PEC error. See below:
-adm1275: probe of xxxx failed with error -74
+SMATCH detected a potential buffer overflow in the manipulation of
+hwmon_attributes array inside the scmi_hwmon_probe function:
 
-Diagnosis:
-Per the datasheet of adm1272, adm1278, adm1293 and amd1294,
-PMON_CONFIG (0xd4) is 16bits wide. On the other hand,
-PMON_CONFIG (0xd4) for adm1275 is 8bits wide. The driver should not
-assume everything is 8bits wide and read only 8bits from it.
+drivers/hwmon/scmi-hwmon.c:226
+ scmi_hwmon_probe() error: buffer overflow 'hwmon_attributes' 6 <= 9
 
-Solution:
-If it is adm1272, adm1278, adm1293 and adm1294, use i2c_read_word.
-Else, use i2c_read_byte
+Fix it by statically declaring the size of the array as the maximum
+possible as defined by hwmon_max define.
 
-Testing:
-Binding adm1272 to the driver.
-The change is only tested on adm1272.
-
-Signed-off-by: Chu Lin <linchuyuan@google.com>
-Link: https://lore.kernel.org/r/20200709040612.3977094-1-linchuyuan@google.com
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Link: https://lore.kernel.org/r/20200715121338.GA18761@e119603-lin.cambridge.arm.com
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/pmbus/adm1275.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/hwmon/scmi-hwmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-index 13600fa79e7f3..a19cf9052fc6d 100644
---- a/drivers/hwmon/pmbus/adm1275.c
-+++ b/drivers/hwmon/pmbus/adm1275.c
-@@ -364,6 +364,7 @@ MODULE_DEVICE_TABLE(i2c, adm1275_id);
- static int adm1275_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-+	s32 (*config_read_fn)(const struct i2c_client *client, u8 reg);
- 	u8 block_buffer[I2C_SMBUS_BLOCK_MAX + 1];
- 	int config, device_config;
- 	int ret;
-@@ -408,11 +409,16 @@ static int adm1275_probe(struct i2c_client *client,
- 			   "Device mismatch: Configured %s, detected %s\n",
- 			   id->name, mid->name);
+diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
+index 91976b6ca3000..91bfecdb3f5ba 100644
+--- a/drivers/hwmon/scmi-hwmon.c
++++ b/drivers/hwmon/scmi-hwmon.c
+@@ -99,7 +99,7 @@ static enum hwmon_sensor_types scmi_types[] = {
+ 	[ENERGY] = hwmon_energy,
+ };
  
--	config = i2c_smbus_read_byte_data(client, ADM1275_PMON_CONFIG);
-+	if (mid->driver_data == adm1272 || mid->driver_data == adm1278 ||
-+	    mid->driver_data == adm1293 || mid->driver_data == adm1294)
-+		config_read_fn = i2c_smbus_read_word_data;
-+	else
-+		config_read_fn = i2c_smbus_read_byte_data;
-+	config = config_read_fn(client, ADM1275_PMON_CONFIG);
- 	if (config < 0)
- 		return config;
- 
--	device_config = i2c_smbus_read_byte_data(client, ADM1275_DEVICE_CONFIG);
-+	device_config = config_read_fn(client, ADM1275_DEVICE_CONFIG);
- 	if (device_config < 0)
- 		return device_config;
- 
+-static u32 hwmon_attributes[] = {
++static u32 hwmon_attributes[hwmon_max] = {
+ 	[hwmon_chip] = HWMON_C_REGISTER_TZ,
+ 	[hwmon_temp] = HWMON_T_INPUT | HWMON_T_LABEL,
+ 	[hwmon_in] = HWMON_I_INPUT | HWMON_I_LABEL,
 -- 
 2.25.1
 
