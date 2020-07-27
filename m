@@ -2,113 +2,100 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60F8C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44796C4345B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7302920786
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E1FF208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892557;
-	bh=6A+UnJffvNtJviVbexL14aZ+ErblWEm8XBAuF4tWmpM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=njvX3l13/jJUuKHFh8wv3qFXkplUuayUPxeHOxqWpP0N5wytk53UExozXWrLbn8yt
-	 F3rF55HfBPvDm+BWjqQehT5lmPoQxsyYO2orH/kNrUUSH9UvrhRWKkhgXrHQtxxKut
-	 ypKydimB2voaW3cdI8USG2jP88ooeSRe29llLURw=
+	s=default; t=1595892573;
+	bh=2RNa96Lx3KsNfqNDjq9god52tZ1VPKcA7xclquJSil4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ezpL8NPw9L4i9BM56+V7TBIVX1nfum3WoWSesP9acfOicEFDDfEmD+uSuzbcNGUdq
+	 89LtSeTVfJhCvoCuOxhu5E0pG1/u6Eq3waZZ5AutrISsmAlRHLiBxHrOp03xknfjfe
+	 vAKuanPdhQO7Y6cbnjAjHuRsmhPIoxszQ80hDmeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbgG0X3Q (ORCPT
+        id S1728842AbgG0X3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:29:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35092 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:29:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728075AbgG0XYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:24:11 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728053AbgG0X33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:29:29 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 113732173E;
-        Mon, 27 Jul 2020 23:24:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26B70208E4;
+        Mon, 27 Jul 2020 23:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892250;
-        bh=6A+UnJffvNtJviVbexL14aZ+ErblWEm8XBAuF4tWmpM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LtiZMc3RcbX0tb0he86RNNwAHrjfP5f+VC1J9sZkRo/OLwPq0F5nCxYlrkvHT4u/h
-         4m0Ll40z9ORVxFUv6/E+JyzWztO9d3NrryzvqryYGtdon57Yf8wA/UcAd92pAWPLki
-         M/IP196EGk/9MZs1gnUwLZtei7x15yw6eXpG4Pzc=
+        s=default; t=1595892569;
+        bh=2RNa96Lx3KsNfqNDjq9god52tZ1VPKcA7xclquJSil4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uE0PAjHgPjzoetbsN/6so4DPgozOnmyKNvHU8W2xZw6FpPzgAAQTixICEsmfB9X0z
+         hT+Q5UWXeUeetlHHpvTj1A9d2BBPGqq5Yr41q+ubCL8d4VERacmJcX0x7TL1JyzQ4m
+         yit/0ZEtGmME0foyMvstdUdNlbtlw0cKb/mR7tkU=
+Date:   Mon, 27 Jul 2020 19:29:28 -0400
 From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 18/25] x86/unwind/orc: Fix ORC for newly forked tasks
-Date:   Mon, 27 Jul 2020 19:23:38 -0400
-Message-Id: <20200727232345.717432-18-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200727232345.717432-1-sashal@kernel.org>
-References: <20200727232345.717432-1-sashal@kernel.org>
+To:     "dbasehore ." <dbasehore@chromium.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 54/86] Input: elan_i2c - only increment wakeup count
+ on touch
+Message-ID: <20200727232928.GK406581@sasha-vm>
+References: <20200727134914.312934924@linuxfoundation.org>
+ <20200727134917.124943291@linuxfoundation.org>
+ <20200727212933.pkt6kgescdz7akht@duo.ucw.cz>
+ <20200727220112.GV1665100@dtor-ws>
+ <CAGAzgsrTBm0UWM5QwxzePRrpz2xOUsJ4cuyj28q=ik++OQ-dkw@mail.gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAGAzgsrTBm0UWM5QwxzePRrpz2xOUsJ4cuyj28q=ik++OQ-dkw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+On Mon, Jul 27, 2020 at 03:18:06PM -0700, dbasehore . wrote:
+>On Mon, Jul 27, 2020 at 3:01 PM Dmitry Torokhov
+><dmitry.torokhov@gmail.com> wrote:
+>>
+>> On Mon, Jul 27, 2020 at 11:29:33PM +0200, Pavel Machek wrote:
+>> > Hi!
+>> >
+>> > > From: Derek Basehore <dbasehore@chromium.org>
+>> > >
+>> > > [ Upstream commit 966334dfc472bdfa67bed864842943b19755d192 ]
+>> > >
+>> > > This moves the wakeup increment for elan devices to the touch report.
+>> > > This prevents the drivers from incorrectly reporting a wakeup when the
+>> > > resume callback resets then device, which causes an interrupt to
+>> > > occur.
+>> >
+>> > Contrary to the changelog, this does not move anything... unlike
+>> > mainline, it simply adds two pm_wakeup_events.
+>> >
+>> > It may still be correct, but maybe someone wants to double-check?
+>>
+>> Good catch, I believe the backport is busted.
+>
+>I don't believe it will break anything, but the backport isn't needed
+>in 4.19 since "Input: elan_i2c - increment wakeup count if wake
+>source" wasn't merged into 4.19. It's probably best to drop the
+>backport.
 
-[ Upstream commit 372a8eaa05998cd45b3417d0e0ffd3a70978211a ]
+Hm, I wonder how this happened. It was just a cherry pick in this case
+:/
 
-The ORC unwinder fails to unwind newly forked tasks which haven't yet
-run on the CPU.  It correctly reads the 'ret_from_fork' instruction
-pointer from the stack, but it incorrectly interprets that value as a
-call stack address rather than a "signal" one, so the address gets
-incorrectly decremented in the call to orc_find(), resulting in bad ORC
-data.
+Either way, I've dropped it from 4.19, thanks!
 
-Fix it by forcing 'ret_from_fork' frames to be signal frames.
-
-Reported-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Link: https://lkml.kernel.org/r/f91a8778dde8aae7f71884b5df2b16d552040441.1594994374.git.jpoimboe@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/unwind_orc.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 7f969b2d240fd..ec88bbe08a328 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -440,8 +440,11 @@ bool unwind_next_frame(struct unwind_state *state)
- 	/*
- 	 * Find the orc_entry associated with the text address.
- 	 *
--	 * Decrement call return addresses by one so they work for sibling
--	 * calls and calls to noreturn functions.
-+	 * For a call frame (as opposed to a signal frame), state->ip points to
-+	 * the instruction after the call.  That instruction's stack layout
-+	 * could be different from the call instruction's layout, for example
-+	 * if the call was to a noreturn function.  So get the ORC data for the
-+	 * call instruction itself.
- 	 */
- 	orc = orc_find(state->signal ? state->ip : state->ip - 1);
- 	if (!orc) {
-@@ -662,6 +665,7 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 		state->sp = task->thread.sp;
- 		state->bp = READ_ONCE_NOCHECK(frame->bp);
- 		state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
-+		state->signal = (void *)state->ip == ret_from_fork;
- 	}
- 
- 	if (get_stack_info((unsigned long *)state->sp, state->task,
 -- 
-2.25.1
-
+Thanks,
+Sasha
