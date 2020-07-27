@@ -2,101 +2,134 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3332C43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 642F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C04CA2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858949;
-	bh=V5jsp7B+sSoMt0qmiSAgiOSvyzsP+E7ltS+c6WCU2TU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2V1ydB8oLZYxB8pphM/a6VUT6tSzSH8sEQm8DJxLYCBIEWVeUBf9oDv+7ZMkukTF3
-	 lXCVL4Jv2GfQWxHGF7OC2riN4+icnKGG2vvNX+gSaxbruot/LHvbUjk25JSfsRbO0R
-	 RsaTkZeub937ZQEwP64kvVipelYacV3zMlSqfd8A=
+	by mail.kernel.org (Postfix) with ESMTP id 4959520838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgG0OJI (ORCPT
+        id S1729621AbgG0OJT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:09:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729472AbgG0OJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:09:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 389FE2073E;
-        Mon, 27 Jul 2020 14:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858945;
-        bh=V5jsp7B+sSoMt0qmiSAgiOSvyzsP+E7ltS+c6WCU2TU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VbSRhlzZHESjhWjdL1/oPW1Fk0yUziDD9rP9b5JhKNm86RidxkgP500KPuYj8gygl
-         e2ebkS7Dkw01ZCb7jrWaiCGW6ImPLiy89CvTa0MVMy5gr6ZFoA7iPwIEx5YrjJPldv
-         7I0SuuKVdQekQq+woTobhVdhzIiARpIn3Cdjr7bQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark ODonovan <shiftee@posteo.net>,
-        Roman Mamedov <rm@romanrm.net>,
-        =?UTF-8?q?Viktor=20J=C3=A4gersk=C3=BCpper?= 
-        <viktor_jaegerskuepper@freenet.de>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 64/64] ath9k: Fix regression with Atheros 9271
-Date:   Mon, 27 Jul 2020 16:04:43 +0200
-Message-Id: <20200727134914.342119752@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
-References: <20200727134911.020675249@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 27 Jul 2020 10:09:19 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:30307 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729578AbgG0OJO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:09:14 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-250-GXr1mpTxOlmxyosLYcC-jw-1; Mon, 27 Jul 2020 15:09:11 +0100
+X-MC-Unique: GXr1mpTxOlmxyosLYcC-jw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 27 Jul 2020 15:09:10 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 27 Jul 2020 15:09:10 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Al Viro' <viro@zeniv.linux.org.uk>
+CC:     'David Miller' <davem@davemloft.net>, "hch@lst.de" <hch@lst.de>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
+        "linux-decnet-user@lists.sourceforge.net" 
+        <linux-decnet-user@lists.sourceforge.net>,
+        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "mptcp@lists.01.org" <mptcp@lists.01.org>,
+        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
+Subject: RE: get rid of the address_space override in setsockopt v2
+Thread-Topic: get rid of the address_space override in setsockopt v2
+Thread-Index: AQHWYgvqDt5Xt3HFu0u82UKLVqcKxKkbLTEQgAA3GQCAABNbQA==
+Date:   Mon, 27 Jul 2020 14:09:09 +0000
+Message-ID: <5d958e937db54849b4ef9046e7e12277@AcuMS.aculab.com>
+References: <20200723060908.50081-1-hch@lst.de>
+ <20200724.154342.1433271593505001306.davem@davemloft.net>
+ <8ae792c27f144d4bb5cbea0c1cce4eed@AcuMS.aculab.com>
+ <20200727134814.GD794331@ZenIV.linux.org.uk>
+In-Reply-To: <20200727134814.GD794331@ZenIV.linux.org.uk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark O'Donovan <shiftee@posteo.net>
+From: Al Viro
+> Sent: 27 July 2020 14:48
+> 
+> On Mon, Jul 27, 2020 at 09:51:45AM +0000, David Laight wrote:
+> 
+> > I'm sure there is code that processes options in chunks.
+> > This probably means it is possible to put a chunk boundary
+> > at the end of userspace and continue processing the very start
+> > of kernel memory.
+> >
+> > At best this faults on the kernel copy code and crashes the system.
+> 
+> Really?  Care to provide some details, or is it another of your "I can't
+> be possibly arsed to check what I'm saying, but it stands for reason
+> that..." specials?
 
-commit 92f53e2fda8bb9a559ad61d57bfb397ce67ed0ab upstream.
+I did more 'homework' than sometimes :-)
+Slightly difficult without a searchable net-next tree.
+However, as has been pointed out is a different thread
+this code is used to update IPv6 flow labels:
 
-This fix allows ath9k_htc modules to connect to WLAN once again.
+> > -		if (copy_from_user(fl->opt+1, optval+CMSG_ALIGN(sizeof(*freq)), olen))
+> > +		sockptr_advance(optval, CMSG_ALIGN(sizeof(*freq)));
+> > +		if (copy_from_sockptr(fl->opt + 1, optval, olen))
+> >  			goto done;
 
-Fixes: 2bbcaaee1fcb ("ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=208251
-Signed-off-by: Mark O'Donovan <shiftee@posteo.net>
-Reported-by: Roman Mamedov <rm@romanrm.net>
-Tested-by: Viktor Jägersküpper <viktor_jaegerskuepper@freenet.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200711043324.8079-1-shiftee@posteo.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+and doesn't work because the advances are no longer cumulative.
 
----
- drivers/net/wireless/ath/ath9k/hif_usb.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Now access_ok() has to take the base address and length to stop
+'running into' kernel space, but the code above can advance from
+a valid user pointer (which won't fault) to a kernel address.
 
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -731,11 +731,13 @@ static void ath9k_hif_usb_reg_in_cb(stru
- 			return;
- 		}
- 
-+		rx_buf->skb = nskb;
-+
- 		usb_fill_int_urb(urb, hif_dev->udev,
- 				 usb_rcvintpipe(hif_dev->udev,
- 						 USB_REG_IN_PIPE),
- 				 nskb->data, MAX_REG_IN_BUF_SIZE,
--				 ath9k_hif_usb_reg_in_cb, nskb, 1);
-+				 ath9k_hif_usb_reg_in_cb, rx_buf, 1);
- 	}
- 
- resubmit:
+If there were always an unmapped 'guard' page in the user address
+space the access_ok() check prior to copy_to/from_user() wouldn't
+need the length.
+So I surmise that no such guard page exists and so the above
+can advance from user addresses into kernel ones.
 
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
