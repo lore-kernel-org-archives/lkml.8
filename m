@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0032BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FA6C43446
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D56262075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55EB72075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:48:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="nTyh+uP+"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="KXDilQrP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731788AbgG0Sp2 (ORCPT
+        id S1731712AbgG0SpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 14:45:28 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:43592 "EHLO
+        Mon, 27 Jul 2020 14:45:25 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:7522 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728921AbgG0SpW (ORCPT
+        by vger.kernel.org with ESMTP id S1731175AbgG0SpS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 14:45:22 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RIcv6T016654
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 11:45:21 -0700
+        Mon, 27 Jul 2020 14:45:18 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RIf4xq020150
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 11:45:17 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=yZVcgIKOzM2xyUhwAi8wclQ8zsNO09LHWnp3/VpJR04=;
- b=nTyh+uP+hfW854C5Yf2vCD/aDe25wJ5CgxdrkCRKqbZPUFNNq5Ik427IQDpHWvMG9d8o
- YpMrUknhZnsUj/3MhKx49Kyza9lJF+/hBLkn0k706sgTdXS46G5u0bnEAM5A3gaLgxqG
- +rxTsnY26hXNwynoJvroidrf9go2bG9oSvM= 
+ bh=LemzQmSpwUqh0yVmoBb6ZzTmt1hoW0QS3JNG8xksTno=;
+ b=KXDilQrPnKyDA2J80G/p2bPPGp+jq30BZyPU6JaowXhGnr+FsGw+A2ohllf/ow+hIzQe
+ SrM/FDcDCA5Pe3o/ul6qpVMfFpMnIqzfP96OliY/mjvit508YLR6IQ/L+0YaNBtWpM16
+ x+GuWqINDxrcX3vhEavlx8dzK+h8ZBYB8Wc= 
 Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 32h4q9dvj9-13
+        by mx0a-00082601.pphosted.com with ESMTP id 32h4k25uxf-2
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 11:45:21 -0700
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 11:45:17 -0700
 Received: from intmgw001.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.1.1979.3; Mon, 27 Jul 2020 11:45:16 -0700
 Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id DE4341DAFE93; Mon, 27 Jul 2020 11:45:10 -0700 (PDT)
+        id C976C1DAFE8B; Mon, 27 Jul 2020 11:45:10 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
@@ -51,9 +51,9 @@ CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
         <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next v2 17/35] bpf: eliminate rlimit-based memory accounting for devmap maps
-Date:   Mon, 27 Jul 2020 11:44:48 -0700
-Message-ID: <20200727184506.2279656-18-guro@fb.com>
+Subject: [PATCH bpf-next v2 13/35] bpf: eliminate rlimit-based memory accounting for arraymap maps
+Date:   Mon, 27 Jul 2020 11:44:44 -0700
+Message-ID: <20200727184506.2279656-14-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200727184506.2279656-1-guro@fb.com>
 References: <20200727184506.2279656-1-guro@fb.com>
@@ -63,81 +63,91 @@ X-FB-Internal: Safe
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-27_13:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
- impostorscore=0 clxscore=1015 lowpriorityscore=0 mlxlogscore=986
- malwarescore=0 adultscore=0 phishscore=0 mlxscore=0 priorityscore=1501
- bulkscore=0 suspectscore=38 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007270126
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ clxscore=1015 adultscore=0 malwarescore=0 bulkscore=0 phishscore=0
+ priorityscore=1501 mlxlogscore=874 mlxscore=0 spamscore=0 suspectscore=38
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270126
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not use rlimit-based memory accounting for devmap maps.
+Do not use rlimit-based memory accounting for arraymap maps.
 It has been replaced with the memcg-based memory accounting.
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
 ---
- kernel/bpf/devmap.c | 18 ++----------------
- 1 file changed, 2 insertions(+), 16 deletions(-)
+ kernel/bpf/arraymap.c | 24 ++++--------------------
+ 1 file changed, 4 insertions(+), 20 deletions(-)
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index 05bf93088063..8148c7260a54 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -109,8 +109,6 @@ static inline struct hlist_head *dev_map_index_hash(s=
-truct bpf_dtab *dtab,
- static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
+diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
+index 9597fecff8da..41581c38b31d 100644
+--- a/kernel/bpf/arraymap.c
++++ b/kernel/bpf/arraymap.c
+@@ -75,11 +75,10 @@ int array_map_alloc_check(union bpf_attr *attr)
+ static struct bpf_map *array_map_alloc(union bpf_attr *attr)
  {
- 	u32 valsize =3D attr->value_size;
--	u64 cost =3D 0;
--	int err;
+ 	bool percpu =3D attr->map_type =3D=3D BPF_MAP_TYPE_PERCPU_ARRAY;
+-	int ret, numa_node =3D bpf_map_attr_numa_node(attr);
++	int numa_node =3D bpf_map_attr_numa_node(attr);
+ 	u32 elem_size, index_mask, max_entries;
+ 	bool bypass_spec_v1 =3D bpf_bypass_spec_v1();
+-	u64 cost, array_size, mask64;
+-	struct bpf_map_memory mem;
++	u64 array_size, mask64;
+ 	struct bpf_array *array;
 =20
- 	/* check sanity of attributes. 2 value sizes supported:
- 	 * 4 bytes: ifindex
-@@ -135,21 +133,13 @@ static int dev_map_init_map(struct bpf_dtab *dtab, =
-union bpf_attr *attr)
-=20
- 		if (!dtab->n_buckets) /* Overflow check */
- 			return -EINVAL;
--		cost +=3D (u64) sizeof(struct hlist_head) * dtab->n_buckets;
--	} else {
--		cost +=3D (u64) dtab->map.max_entries * sizeof(struct bpf_dtab_netdev =
-*);
+ 	elem_size =3D round_up(attr->value_size, 8);
+@@ -120,44 +119,29 @@ static struct bpf_map *array_map_alloc(union bpf_at=
+tr *attr)
+ 		}
  	}
 =20
--	/* if map size is larger than memlock limit, reject it */
--	err =3D bpf_map_charge_init(&dtab->map.memory, cost);
--	if (err)
--		return -EINVAL;
+-	/* make sure there is no u32 overflow later in round_up() */
+-	cost =3D array_size;
+-	if (percpu)
+-		cost +=3D (u64)attr->max_entries * elem_size * num_possible_cpus();
 -
- 	if (attr->map_type =3D=3D BPF_MAP_TYPE_DEVMAP_HASH) {
- 		dtab->dev_index_head =3D dev_map_create_hash(dtab->n_buckets,
- 							   dtab->map.numa_node);
- 		if (!dtab->dev_index_head)
--			goto free_charge;
-+			return -ENOMEM;
+-	ret =3D bpf_map_charge_init(&mem, cost);
+-	if (ret < 0)
+-		return ERR_PTR(ret);
+-
+ 	/* allocate all map elements and zero-initialize them */
+ 	if (attr->map_flags & BPF_F_MMAPABLE) {
+ 		void *data;
 =20
- 		spin_lock_init(&dtab->index_lock);
+ 		/* kmalloc'ed memory can't be mmap'ed, use explicit vmalloc */
+ 		data =3D bpf_map_area_mmapable_alloc(array_size, numa_node);
+-		if (!data) {
+-			bpf_map_charge_finish(&mem);
++		if (!data)
+ 			return ERR_PTR(-ENOMEM);
+-		}
+ 		array =3D data + PAGE_ALIGN(sizeof(struct bpf_array))
+ 			- offsetof(struct bpf_array, value);
  	} else {
-@@ -157,14 +147,10 @@ static int dev_map_init_map(struct bpf_dtab *dtab, =
-union bpf_attr *attr)
- 						      sizeof(struct bpf_dtab_netdev *),
- 						      dtab->map.numa_node);
- 		if (!dtab->netdev_map)
--			goto free_charge;
-+			return -ENOMEM;
+ 		array =3D bpf_map_area_alloc(array_size, numa_node);
  	}
+-	if (!array) {
+-		bpf_map_charge_finish(&mem);
++	if (!array)
+ 		return ERR_PTR(-ENOMEM);
+-	}
+ 	array->index_mask =3D index_mask;
+ 	array->map.bypass_spec_v1 =3D bypass_spec_v1;
 =20
- 	return 0;
--
--free_charge:
--	bpf_map_charge_finish(&dtab->map.memory);
--	return -ENOMEM;
- }
+ 	/* copy mandatory map attributes */
+ 	bpf_map_init_from_attr(&array->map, attr);
+-	bpf_map_charge_move(&array->map.memory, &mem);
+ 	array->elem_size =3D elem_size;
 =20
- static struct bpf_map *dev_map_alloc(union bpf_attr *attr)
+ 	if (percpu && bpf_array_alloc_percpu(array)) {
+-		bpf_map_charge_finish(&array->map.memory);
+ 		bpf_map_area_free(array);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
 --=20
 2.26.2
 
