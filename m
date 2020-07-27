@@ -2,123 +2,373 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADBAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6056EC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5648220719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:46:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HUSvyOs+"
+	by mail.kernel.org (Postfix) with ESMTP id 298A62083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595861254;
+	bh=ra7ySkxUG6tdQ2Sev5kAIRiDu6mF6ko2V3p5aNPDPJc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RSkSbV/diHuTKzCYkaDDSTPUc7S8iFTQzf386mczKOhLmSAS6nT1Ifb7rppmHIwJj
+	 OcaI9xGUe4ccsw+X3QBI7Yb0VxIk+suMAY+c2PvX2JqJose7P3a+lZGDEPO/OQyfvz
+	 yoKWZxW1BWXlAWaR4KTBZDPorUGamYQa5jqBp2fU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgG0Oqg (ORCPT
+        id S1729187AbgG0Ora (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:46:36 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51526 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728314AbgG0Oqf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:46:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06REVmaZ087477;
-        Mon, 27 Jul 2020 14:46:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=XZwDFP7/Bk7zQbeafucYS3tZ79YR2yepxvTQrzg7myI=;
- b=HUSvyOs+R8abvlti5/CYCUsc1Mun5agLKVhE1J1FYLAAeUJlNpRpQZICRy3PXxpK/oA4
- emDk2wTO26NGj2FfHLKWZVeO7GphKusAf6DeZSjixEatmThFucWRrkoZGBgjovp2kzA2
- zNXdlKF7Z2OinXOHmL2XssewXx8zNb66bVZAEV7RxZ1ByL12T29HT4l4JHGKSmqOlXkh
- eo/diz1WnEyyVgHe2eJefifzeyjF+2abfJMMft+xY49tGExm8n6vQVYTw9Ir/OeVS1cK
- kTx87K5xgctwCJObs8wYtxTq1y9DPKJDDzXzo23MnOOzp4FGuwCp+pXRsMb3WprhiroC Aw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 32hu1j9ysc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Jul 2020 14:46:22 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06REiONS085503;
-        Mon, 27 Jul 2020 14:46:21 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 32hu5qv06y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 14:46:21 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06REkIMi026768;
-        Mon, 27 Jul 2020 14:46:18 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Jul 2020 07:46:18 -0700
-Date:   Mon, 27 Jul 2020 17:46:09 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vandana BN <bnvandana@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
- kernel-infoleak in video_put_user()
-Message-ID: <20200727144609.GG1913@kadam>
-References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
- <20200726222703.102701-1-yepeilin.cs@gmail.com>
- <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
- <20200727131608.GD1913@kadam>
- <CAK8P3a3+9Gr6G6KDWu=iW3316O9cPH+XupBBajJaxrq20xQcyQ@mail.gmail.com>
- <20200727141416.GA306745@PWN>
+        Mon, 27 Jul 2020 10:47:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43026 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728434AbgG0Ora (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:47:30 -0400
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47780208E4;
+        Mon, 27 Jul 2020 14:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595861249;
+        bh=ra7ySkxUG6tdQ2Sev5kAIRiDu6mF6ko2V3p5aNPDPJc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TF2dtyfsIDQRwALZEtKEIJBBZLhz7MjWD1h9rT0N1cjMb4xqxeeRIRk7ENzGtUqcl
+         249z6ZfJuZ2do83K5kHDAzU8UMHstx7getoA4EnGDxRWPFCLO+5uQpSynbRfzuQ/s/
+         5I+u+Q36tKog5J3IeOWAlhiBjQ790O6cCwaf8dEY=
+Received: by mail-ej1-f47.google.com with SMTP id g11so5580647ejr.0;
+        Mon, 27 Jul 2020 07:47:29 -0700 (PDT)
+X-Gm-Message-State: AOAM530wqU6PjiEBRo320eQpo9ddmzw+p2QQQozUB88Eq/LMU7chl7zm
+        yovObqXqlRrD4DXicUSgUeIsbZKCCJkiua28Zw==
+X-Google-Smtp-Source: ABdhPJx8L+G/aF7IMetyVPuFX7TWQTopBRl2QWzS8clJFtiKlB8YVgmkr1f0mMdVne9ueI/35nYOM9rLDue3RzkM5BI=
+X-Received: by 2002:a17:906:7857:: with SMTP id p23mr20143758ejm.260.1595861247757;
+ Mon, 27 Jul 2020 07:47:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727141416.GA306745@PWN>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007270104
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9694 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 mlxlogscore=999
- malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
- suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007270104
+References: <1595303971-8793-1-git-send-email-neal.liu@mediatek.com>
+ <1595303971-8793-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
+ <1595389756.20193.12.camel@mtkswgap22> <CAAOTY_9k7rM=Pf43DwJR_bkQvxVtpWYTjVoNSZLVE2N0Y_DBmA@mail.gmail.com>
+ <1595484707.26237.12.camel@mtkswgap22> <CAAOTY__V3zwux7UP7p4SUbreGrPBbwRqi=E1WVsA58tYNmri1A@mail.gmail.com>
+ <1595573719.24412.9.camel@mtkswgap22> <CAAOTY__KYH4G3E+c=zoOk==hPJHsAd5u4Q0oj4adKstaoOciMg@mail.gmail.com>
+ <1595819152.7630.13.camel@mtkswgap22>
+In-Reply-To: <1595819152.7630.13.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Mon, 27 Jul 2020 22:47:15 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8j4rxxqOD0-gf-=sJPhiLu9KE4zF467v7g2EBrTFJUeQ@mail.gmail.com>
+Message-ID: <CAAOTY_8j4rxxqOD0-gf-=sJPhiLu9KE4zF467v7g2EBrTFJUeQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] soc: mediatek: add mtk-devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 10:14:16AM -0400, Peilin Ye wrote:
-> Yes, I would like to! I will start from:
-> 
-> 	drivers/firewire/core-cdev.c:463
+Hi, Neal:
 
-My prefered fix for this would be to add a memset at the start of
-fill_bus_reset_event().
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8827=E6=97=
+=A5 =E9=80=B1=E4=B8=80 =E4=B8=8A=E5=8D=8811:06=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi Chun-Kuang,
+>
+> On Fri, 2020-07-24 at 23:55 +0800, Chun-Kuang Hu wrote:
+> > Hi, Neal:
+> >
+> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8824=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=882:55=E5=AF=AB=E9=81=93=EF=BC=9A
+> > >
+> > > Hi Chun-Kuang,
+> > >
+> > > On Fri, 2020-07-24 at 00:32 +0800, Chun-Kuang Hu wrote:
+> > > > Hi, Neal:
+> > > >
+> > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=882=
+3=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=882:11=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > > > >
+> > > > > Hi Chun-Kuang,
+> > > > >
+> > > > > On Wed, 2020-07-22 at 22:25 +0800, Chun-Kuang Hu wrote:
+> > > > > > Hi, Neal:
+> > > > > >
+> > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=
+=8822=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8811:49=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> > > > > > >
+> > > > > > > Hi Chun-Kuang,
+> > > > > > >
+> > > > > > > On Wed, 2020-07-22 at 07:21 +0800, Chun-Kuang Hu wrote:
+> > > > > > > > Hi, Neal:
+> > > > > > > >
+> > > > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=
+=E6=9C=8821=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8812:00=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > > +
+> > > > > > > > > +/*
+> > > > > > > > > + * mtk_devapc_dump_vio_dbg - get the violation index and=
+ dump the full violation
+> > > > > > > > > + *                           debug information.
+> > > > > > > > > + */
+> > > > > > > > > +static bool mtk_devapc_dump_vio_dbg(struct mtk_devapc_co=
+ntext *ctx, u32 vio_idx)
+> > > > > > > > > +{
+> > > > > > > > > +       u32 shift_bit;
+> > > > > > > > > +
+> > > > > > > > > +       if (check_vio_mask(ctx, vio_idx))
+> > > > > > > > > +               return false;
+> > > > > > > > > +
+> > > > > > > > > +       if (!check_vio_status(ctx, vio_idx))
+> > > > > > > > > +               return false;
+> > > > > > > > > +
+> > > > > > > > > +       shift_bit =3D get_shift_group(ctx, vio_idx);
+> > > > > > > > > +
+> > > > > > > > > +       if (sync_vio_dbg(ctx, shift_bit))
+> > > > > > > > > +               return false;
+> > > > > > > > > +
+> > > > > > > > > +       devapc_extract_vio_dbg(ctx);
+> > > > > > > >
+> > > > > > > > I think get_shift_group(), sync_vio_dbg(), and
+> > > > > > > > devapc_extract_vio_dbg() should be moved out of vio_idx for=
+-loop (the
+> > > > > > > > loop in devapc_violation_irq()) because these three functio=
+n is not
+> > > > > > > > related to vio_idx.
+> > > > > > > > Another question: when multiple vio_idx violation occur, vi=
+o_addr is
+> > > > > > > > related to which one vio_idx? The latest happened one?
+> > > > > > > >
+> > > > > > >
+> > > > > > > Actually, it's related to vio_idx. But we don't use it direct=
+ly on these
+> > > > > > > function. I think below snip code might be better way to unde=
+rstand it.
+> > > > > > >
+> > > > > > > for (...)
+> > > > > > > {
+> > > > > > >         check_vio_mask()
+> > > > > > >         check_vio_status()
+> > > > > > >
+> > > > > > >         // if get vio_idx, mask it temporarily
+> > > > > > >         mask_module_irq(true)
+> > > > > > >         clear_vio_status()
+> > > > > > >
+> > > > > > >         // dump violation info
+> > > > > > >         get_shift_group()
+> > > > > > >         sync_vio_dbg()
+> > > > > > >         devapc_extract_vio_dbg()
+> > > > > > >
+> > > > > > >         // unmask
+> > > > > > >         mask_module_irq(false)
+> > > > > > > }
+> > > > > >
+> > > > > > This snip code does not explain any thing. I could rewrite this=
+ code as:
+> > > > > >
+> > > > > > for (...)
+> > > > > > {
+> > > > > >     check_vio_mask()
+> > > > > >     check_vio_status()
+> > > > > >
+> > > > > >     // if get vio_idx, mask it temporarily
+> > > > > >     mask_module_irq(true)
+> > > > > >     clear_vio_status()
+> > > > > >     // unmask
+> > > > > >     mask_module_irq(false)
+> > > > > > }
+> > > > > >
+> > > > > > // dump violation info
+> > > > > > get_shift_group()
+> > > > > > sync_vio_dbg()
+> > > > > > devapc_extract_vio_dbg()
+> > > > > >
+> > > > > > And my version is identical with your version, isn't it?
+> > > > >
+> > > > > Sorry, I did not explain it clearly. Let's me try again.
+> > > > > The reason why I put "dump violation info" between mask & unmask =
+context
+> > > > > is because it has to stop interrupt first before dump violation i=
+nfo,
+> > > > > and then unmask it to prepare next violation.
+> > > > > These sequence guarantee that if multiple violation is triggered,=
+ we
+> > > > > still have information to debug.
+> > > > > If the code sequence in your version and multiple violation is
+> > > > > triggered, there might be no any information but keeps entering I=
+SR.
+> > > > > Finally, system might be abnormal and watchdog timeout.
+> > > > > In this case, we still don't have any information to debug.
+> > > >
+> > > > I still don't understand why no information to debug. For example w=
+hen
+> > > > vio_idx 5, 10, 15 has violation,
+> > > > You would mask vio_idx 5 to get information, but vio_idx 10, 15 doe=
+s
+> > > > not mask yet.
+> > > > In your words, when vio_idx 10, 15 not mask, you would not get any
+> > > > debug information when you process vio_idx 5.
+> > > >
+> > > > In my version, I would clear all status, why keeps entering ISR?
+> > >
+> > > Think about this case, if someone tries to dump "AAA" module's regist=
+er.
+> > > It would keep read reg base, base+0x4, base+0x8, ...
+> > > All these registers are in the same slave, which would be same vio_id=
+x.
+> > > (Take vio_idx 5 as example)
+> > > In this case, vio_idx 5 will keep triggering interrupt. If you did no=
+t
+> > > do "dump violation info" between mask & unmask, you cannot get any
+> > > violation info until the last interrupt being handled.
+> > > Normally, system will crash before last interrupt coming.
+> >
+> > You have said that first vio_addr would be kept until it's 'handled'.
+> > So the first vio_addr reg_base would be kept even though other
+> > violation happen. And I could handle (clear status and dump info) it
+> > then vio_addr would next violation's address. I'm confused with your
+> > statement. If AAA is dumping register of vio_idx 5, BBB is dumping
+> > register of vio_idx 10, CCC is dumping register of vio_idx 15, I think
+> > you should mask all vio_idx not only one. So the code would be
+> >
+> > for all vio_idx {
+> >     mask_module_irq(true)
+> > }
+> >
+> > devapc_extract_vio_dbg()
+> >
+> > for all vio_idx {
+> >     clear_vio_status()
+> >     mask_module_irq(false)
+> > }
+> >
+>
+> I'm also consider this solution and I think it's much better to
+> understand hardware behavior.
+>
+> devapc_dump_vio_dbg()
+> {
+>         while(1) {
+>                 // might have multiple shift_bit raised
+>                 shift_bit =3D get_shift_group()
+>                 if (shift_bit >=3D 0 && shift bit <=3D 31)
+>                         sync_vio_dbg(shift_bit)
+>                         extract_vio_dbg()
 
-	memset(event, 0, sizeof(*event));
+According to your statement, when multiple violation occur, only the
+first one is kept, others are dropped. I think we just need to dump
+debug info once.
 
-	spin_lock_irq(&card->lock);
+Because only one violation information would be kept, why not only one
+group (equal to no group)?
 
-	event->closure       = client->bus_reset_closure;
+Regards,
+Chun-Kuang.
 
-
-> 	drivers/input/misc/uinput.c:743
-
-I don't think this is a bug.
-
-regards,
-dan carpenter
-
+>                 else
+>                         break
+>         }
+> }
+>
+> devapc_violation_irq()
+> {
+>         for all vio_idx {
+>                 mask_module_irq(true)
+>         }
+>
+>         devapc_dump_vio_dbg()
+>
+>         for all vio_idx {
+>                 clear_vio_status()
+>                 mask_module_irq(false)
+>         }
+> }
+>
+> Is it more clear for this control flow?
+> Thanks !
+>
+> > >
+> > > >
+> > > > >
+> > > > > >
+> > > > > > >
+> > > > > > > About your question, vio_addr would be the first one.
+> > > > > >
+> > > > > > So other vio_addr would be dropped? Or hardware would keep all
+> > > > > > vio_addr and you have some way to get all vio_addr?
+> > > > > >
+> > > > >
+> > > > > In this case, hardware will drop other violation info and keep th=
+e first
+> > > > > one until it been handled.
+> > > >
+> > > > Does 'handled' mean status is cleared?
+> > >
+> > > "handled" means clear status and dump violation info.
+> > >
+> > > >
+> > > > Regards,
+> > > > Chun-Kuang.
+> > > >
+> > > > >
+> > > > > > >
+> > > > > > > > > +
+> > > > > > > > > +       return true;
+> > > > > > > > > +}
+> > > > > > > > > +
+> > > > > > > > > +/*
+> > > > > > > > > + * devapc_violation_irq - the devapc Interrupt Service R=
+outine (ISR) will dump
+> > > > > > > > > + *                        violation information includin=
+g which master violates
+> > > > > > > > > + *                        access slave.
+> > > > > > > > > + */
+> > > > > > > > > +static irqreturn_t devapc_violation_irq(int irq_number,
+> > > > > > > > > +                                       struct mtk_devapc=
+_context *ctx)
+> > > > > > > > > +{
+> > > > > > > > > +       u32 vio_idx;
+> > > > > > > > > +
+> > > > > > > > > +       for (vio_idx =3D 0; vio_idx < ctx->vio_idx_num; v=
+io_idx++) {
+> > > > > > > > > +               if (!mtk_devapc_dump_vio_dbg(ctx, vio_idx=
+))
+> > > > > > > > > +                       continue;
+> > > > > > > > > +
+> > > > > > > > > +               /* Ensure that violation info are written=
+ before
+> > > > > > > > > +                * further operations
+> > > > > > > > > +                */
+> > > > > > > > > +               smp_mb();
+> > > > > > > > > +
+> > > > > > > > > +               /*
+> > > > > > > > > +                * Mask slave's irq before clearing vio s=
+tatus.
+> > > > > > > > > +                * Must do it to avoid nested interrupt a=
+nd prevent
+> > > > > > > > > +                * unexpected behavior.
+> > > > > > > > > +                */
+> > > > > > > > > +               mask_module_irq(ctx, vio_idx, true);
+> > > > > > > > > +
+> > > > > > > > > +               clear_vio_status(ctx, vio_idx);
+> > > > > > > > > +
+> > > > > > > > > +               mask_module_irq(ctx, vio_idx, false);
+> > > > > > > > > +       }
+> > > > > > > > > +
+> > > > > > > > > +       return IRQ_HANDLED;
+> > > > > > > > > +}
+> > > > > > > > > +
+> > > > > > > > > +/*
+> > >
+>
