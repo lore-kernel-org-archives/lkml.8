@@ -2,86 +2,114 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B95C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4ADC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9DA20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:43:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595835784;
-	bh=CWDrS913xhE/Ei5VKRgacCZBZZ5CT52NbA8L2aWjx8U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lVIMwNVGcy2vyrhqvsNWe9ycxpWVagoOoh+Wa2EUH73uC6qb/N0MRE5+mdL+8aC9W
-	 o7T7U1l2H/455cQoGP6gq6NZG9swEt7PwgSDHclK0UkwoPhYndnM7sLQtchiwvAQJM
-	 tGchzIPRtRkGJ7/A8azNt3AwTZdgUVs0Nid5QhJs=
+	by mail.kernel.org (Postfix) with ESMTP id B80772072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:44:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aFXOkM+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgG0HnD (ORCPT
+        id S1726981AbgG0Hn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:43:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbgG0HnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:43:03 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90B212072E;
-        Mon, 27 Jul 2020 07:43:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595835782;
-        bh=CWDrS913xhE/Ei5VKRgacCZBZZ5CT52NbA8L2aWjx8U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=04BPySg3vTHHFuE6IVvZMuxbzbtb/uzbjuKvBAdIUkHp6tq5XF+7MJoLbRVZ3LHSE
-         y9s3q6mM1VT+/fttpy3P4ZRnymKtZBgoLWTCxAmDoKh8cmTrvBJfWXuufjV2c5AxsW
-         /z+4p//QrVD3PitJOegbt19ciAgz3e2pUM37w8io=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jzxmn-00FDtT-6A; Mon, 27 Jul 2020 08:43:01 +0100
+        Mon, 27 Jul 2020 03:43:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbgG0Hn7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 03:43:59 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 237EDC0619D4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:43:59 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id r11so713112pfl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:43:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Yz4TcW9rTup6J1JHf4cL+vgG/kmFz0aHv9ruePdNsKs=;
+        b=aFXOkM+Be+7mBtbE26DlXdCZ1eQ7pGgqRGMDv7uP587bt+zwmfsY4EiU1e0wTOgTy3
+         Yw3ZlK7Y0MBV7i48If//5OPi/xfuJ7myy+YbKQ1g0MwO+4U+9eTWWoe8SzCgaZJ+dUEg
+         wOytugbcFSL9vY8q9xzzyKmeiWm+gq9jldEOniIwHuJnAzv+oWs4lo6i3X7j181HUNOl
+         0KY3hNz8ipRo93vT3i38xhYHmOosCK2Te7HhO1rdUrFxHyJBhMXzppT3SpiC7mbZp1jd
+         8txo/0j375SmCHvYFEEyagYwGcCTmwlqbqkY86RUt5BW3L3F47+v5SuVM5jnf3PrGnct
+         QBZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Yz4TcW9rTup6J1JHf4cL+vgG/kmFz0aHv9ruePdNsKs=;
+        b=PgRVuDMQGJrhzVJrlehZ84WceDp7iPqbFV7GR+VwRqZNta1m7aqtHiJV1ZsmWH8oGM
+         53bXb0/QliIuhX4ompcIOKArDND8/KQH+ggrFVtfFxyO/MVL5eScCVrXkk0zQUoD327e
+         8D34idgYvdUb2u4TWMj9OMgXdmbmzWRIEdUjgyv/axnXWMuh6x04N2axo0LFu8Ql+uAD
+         exwsN3CzyH1fUy8GLavCT7YJhe/TRAmQwr9wnAQOzSr/dvhT5YI55AkaNbnmahWLxOB2
+         AWLrTuRwEJkZGDe8SSrbDoc6G9LZ1FaQ0xEt2YDGKmaEwlqFdevBgv6OJBw5vpmUDP7Z
+         bUug==
+X-Gm-Message-State: AOAM531u/mPhueWRk+I1PR0EpMK369lf7q4GZMxvC0Ch3otqpia3MXB+
+        NYWzmXAWW5ItgE5ZG4U9rvWAvg==
+X-Google-Smtp-Source: ABdhPJzNAhwoobYuzfypI6jZj3vQId16bxmejaBmJhjHNhj5jBPLz54zUVzlg6Vppj/NNfSRoK5DIw==
+X-Received: by 2002:a63:6c49:: with SMTP id h70mr18571850pgc.150.1595835838525;
+        Mon, 27 Jul 2020 00:43:58 -0700 (PDT)
+Received: from nagraj.local ([49.206.21.239])
+        by smtp.gmail.com with ESMTPSA id n22sm13062152pjq.25.2020.07.27.00.43.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 00:43:57 -0700 (PDT)
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Subject: [PATCH v3 0/2] Add support for Tianma nt36672a video mode panel
+Date:   Mon, 27 Jul 2020 13:13:46 +0530
+Message-Id: <20200727074348.26116-1-sumit.semwal@linaro.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 27 Jul 2020 08:43:01 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the irqchip tree
-In-Reply-To: <20200727081003.7ffaa22d@canb.auug.org.au>
-References: <20200727081003.7ffaa22d@canb.auug.org.au>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <c6211f3d4f9c85a0fa77f19ef4efec95@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: sfr@canb.auug.org.au, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Some Poco F1 phones from Xiaomi have an nt36672a video mode panel; add support
+for the same.
+Most of the panel data is taken from downstream panel dts, and is converted to
+drm-panel based driver by me.
+It has been validated with v5.8-rc5 on Poco F1 phone; my tree with other
+dependent patches is here [1]
 
-On 2020-07-26 23:10, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Commit
-> 
->   e5c19cf32b68 ("irqchip/stm32-exti: Use the
-> hwspin_lock_timeout_in_atomic() API")
-> 
-> is missing a Signed-off-by from its committer.
+[1]: https://git.linaro.org/people/sumit.semwal/linux-dev.git/log/?h=dev/poco-panel-upstreaming
 
-Looks like I fat-fingered a b4 invocation! Thanks for the heads up,
-will be fixed in a minute.
+---
+v2: In dt-binding, removed ports node, making port@0 directly under panel@0 node.
+    Also updated the panel_on delay to a safer 200ms as needed for latest Android.
+v3: Replaced port@0 with just port in panel@0 node.
 
-         M.
+[1]: 
+
+Sumit Semwal (2):
+  dt-bindings: display: panel: Add bindings for Tianma nt36672a panel
+  drm: panel: Add tianma nt36672a panel driver
+
+ .../display/panel/tianma,nt36672a.yaml        |  95 ++
+ MAINTAINERS                                   |   7 +
+ drivers/gpu/drm/panel/Kconfig                 |  11 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ drivers/gpu/drm/panel/panel-tianma-nt36672a.c | 859 ++++++++++++++++++
+ 5 files changed, 973 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-tianma-nt36672a.c
+
 -- 
-Jazz is not dead. It just smells funny...
+2.27.0
+
