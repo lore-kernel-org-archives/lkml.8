@@ -2,118 +2,93 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBA7C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F53020679
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:56:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595894202;
-	bh=pIvFrotDaXLQ53fI6ndW8jI8DT1JK2t5D5sC0WCfGr8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=j1STeQDn3wfPwPUTeCUb8W+ak9cVN2sXrZfYWFIdkqb8Ap6PJNIkkd98xAuEstZF4
-	 58s0Ft+qNlX5f3/+JuXeTxfseEaXg1wVzavMhcfOmxYeyn9rKEwHyUA/vX9Y77UDjD
-	 XepP4ug97czkovUMmC4qA7iKeT+07BrRQhw4ATiU=
+	by mail.kernel.org (Postfix) with ESMTP id 7D04720729
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:57:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rMPv1MwJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgG0X4l (ORCPT
+        id S1726994AbgG0X5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgG0X4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:56:41 -0400
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21CC820679;
-        Mon, 27 Jul 2020 23:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595894200;
-        bh=pIvFrotDaXLQ53fI6ndW8jI8DT1JK2t5D5sC0WCfGr8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jwF1CbD0GAuxK4wrdhWzcn+JPtunKxSvvFDxv5qAMwsY5AqtVnLIKyzChwRUJk+ET
-         BE14SahExuO3hIHqCFE1pgPACnIuaKaomfxpyf++C4hRYBSDYmaeUauI8Btk74+lqA
-         vCBR5Rtfhgo628/xVYhZZqeuhK8xu8QxK6183ZYw=
-Received: by mail-lj1-f170.google.com with SMTP id x9so19173325ljc.5;
-        Mon, 27 Jul 2020 16:56:40 -0700 (PDT)
-X-Gm-Message-State: AOAM533yHzAPkZCsK4PrudF5qxalH64OMNw9u+wycKBeuDpirpZBcCEC
-        8j56Q9RUACjym5fHkg6F1IxlJt1YMRwV7cgvxeg=
-X-Google-Smtp-Source: ABdhPJzU25QM6X7+NjrWASkQh6IbY/CuZrlfdu20GW08qB6Rm4g8RyXQjMZLEQ/1KX7I6CI0cW0kBqTdI8Zotm1w+nE=
-X-Received: by 2002:a2e:81c2:: with SMTP id s2mr2781767ljg.10.1595894198520;
- Mon, 27 Jul 2020 16:56:38 -0700 (PDT)
+        Mon, 27 Jul 2020 19:57:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgG0X53 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:57:29 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A129DC061794;
+        Mon, 27 Jul 2020 16:57:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=DrmwEKrz7BHtbJJmQ7m3w5SwKnKl4Ez0pS0H/xr6id8=; b=rMPv1MwJu9ht8NCJpDf6ui19Q+
+        v3Tjt4LnnWAjFWdwkvAshvKB7QcgNcECeHYZ5x/RWGCAUlanNkRqvy4G5aA8KiNNNmmcz6w2kV1Ei
+        6WPmEvawzNUnS3fzlUjX8GPpesRkmGLnBaxvOM0v72yQp5Qb3RHlhwIgIvvO8W2bpd1DmtbYjqNDN
+        wD6VPHd3ZIM1OxafCWQvtihOHa8uhCAp/sjkxV/6BqhsVx1C616Qz+wNElxtTcqvGmoRSZjqMFZom
+        y/8cRWNbETqqzzn54cDwOU7FHIA1zFlQ15e7h0HgUWS8evq4uFOEoO+sqhyqacze4rsg0nUqHbDk1
+        WZGXSGDQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0Czd-0001yi-26; Mon, 27 Jul 2020 23:57:17 +0000
+To:     LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Milo Kim <milo.kim@ti.com>,
+        Mathias Nyman <mathias.nyman@nokia.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH -next] leds: fix LEDS_LP55XX_COMMON dependency and build
+ errors
+Message-ID: <dba79c02-b7f1-dd75-b364-93d90538cc5e@infradead.org>
+Date:   Mon, 27 Jul 2020 16:57:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-10-guro@fb.com>
-In-Reply-To: <20200727184506.2279656-10-guro@fb.com>
-From:   Song Liu <song@kernel.org>
-Date:   Mon, 27 Jul 2020 16:56:27 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5W5TJUEcSH-q3Q2-YmJsPZ2PxvgKcAmYVO0xut3MD+sg@mail.gmail.com>
-Message-ID: <CAPhsuW5W5TJUEcSH-q3Q2-YmJsPZ2PxvgKcAmYVO0xut3MD+sg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 09/35] bpf: memcg-based memory accounting for
- bpf ringbuffer
-To:     Roman Gushchin <guro@fb.com>
-Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:22 PM Roman Gushchin <guro@fb.com> wrote:
->
-> Enable the memcg-based memory accounting for the memory used by
-> the bpf ringbuffer.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Acked-by: Song Liu <songliubraving@fb.com>
+Make LEDS_LP55XX_COMMON depend on I2C to fix build errors:
 
-> ---
->  kernel/bpf/ringbuf.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/kernel/bpf/ringbuf.c b/kernel/bpf/ringbuf.c
-> index 002f8a5c9e51..e8e2c39cbdc9 100644
-> --- a/kernel/bpf/ringbuf.c
-> +++ b/kernel/bpf/ringbuf.c
-> @@ -60,8 +60,8 @@ struct bpf_ringbuf_hdr {
->
->  static struct bpf_ringbuf *bpf_ringbuf_area_alloc(size_t data_sz, int numa_node)
->  {
-> -       const gfp_t flags = GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_NOWARN |
-> -                           __GFP_ZERO;
-> +       const gfp_t flags = GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL |
-> +                           __GFP_NOWARN | __GFP_ZERO;
->         int nr_meta_pages = RINGBUF_PGOFF + RINGBUF_POS_PAGES;
->         int nr_data_pages = data_sz >> PAGE_SHIFT;
->         int nr_pages = nr_meta_pages + nr_data_pages;
-> @@ -89,7 +89,8 @@ static struct bpf_ringbuf *bpf_ringbuf_area_alloc(size_t data_sz, int numa_node)
->          */
->         array_size = (nr_meta_pages + 2 * nr_data_pages) * sizeof(*pages);
->         if (array_size > PAGE_SIZE)
-> -               pages = vmalloc_node(array_size, numa_node);
-> +               pages = __vmalloc_node(array_size, 1, GFP_KERNEL_ACCOUNT,
-> +                                      numa_node, __builtin_return_address(0));
->         else
->                 pages = kmalloc_node(array_size, flags, numa_node);
->         if (!pages)
-> @@ -167,7 +168,7 @@ static struct bpf_map *ringbuf_map_alloc(union bpf_attr *attr)
->                 return ERR_PTR(-E2BIG);
->  #endif
->
-> -       rb_map = kzalloc(sizeof(*rb_map), GFP_USER);
-> +       rb_map = kzalloc(sizeof(*rb_map), GFP_USER | __GFP_ACCOUNT);
->         if (!rb_map)
->                 return ERR_PTR(-ENOMEM);
->
-> --
-> 2.26.2
->
+leds-lp55xx-common.c:(.text+0x9d): undefined reference to `i2c_smbus_read_byte_data'
+leds-lp55xx-common.c:(.text+0x8fc): undefined reference to `i2c_smbus_write_byte_data'
+
+These errors happened when I2C=m and LEDS_LP55XX_COMMON=y, so
+prevent that from being possible.
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Dan Murphy <dmurphy@ti.com>
+Cc: linux-leds@vger.kernel.org
+Cc: Milo Kim <milo.kim@ti.com>
+Cc: Mathias Nyman <mathias.nyman@nokia.com>
+---
+ drivers/leds/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- linux-next-20200727.orig/drivers/leds/Kconfig
++++ linux-next-20200727/drivers/leds/Kconfig
+@@ -399,6 +399,7 @@ config LEDS_LP55XX_COMMON
+ 	tristate "Common Driver for TI/National LP5521/5523/55231/5562/8501"
+ 	depends on LEDS_CLASS_MULTICOLOR || !LEDS_CLASS_MULTICOLOR
+ 	depends on OF
++	depends on I2C
+ 	select FW_LOADER
+ 	select FW_LOADER_USER_HELPER
+ 	help
+
