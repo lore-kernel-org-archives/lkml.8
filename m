@@ -2,133 +2,156 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B23C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8061C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4AF620759
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:27:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KuCDzLEh"
+	by mail.kernel.org (Postfix) with ESMTP id A625C20759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726471AbgG0F1U (ORCPT
+        id S1726738AbgG0FaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:27:20 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21482 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726116AbgG0F1U (ORCPT
+        Mon, 27 Jul 2020 01:30:04 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:29546 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726006AbgG0FaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:27:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595827638;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AKE5Hc2PxuPIW6hu7a7doCEJmqwBxswHHKiFGDtBWQs=;
-        b=KuCDzLEhWv1b+/Uu095gPIeZDehqdGr2jzIpoGZCQwF4MiOHYngWuEW5g/8Ee3xoEwmJaf
-        woNtM/l6o7pmFAlu7cTlgANUJwODJkmWOqdsay7hDUCMNrNKMHLTifIiQDDS2366Pnkvag
-        LaXv6zCU3+Wv97hZWvCsyUmvW46VK1E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-247-WX2tJBGCNPCBLW1UaUOyYg-1; Mon, 27 Jul 2020 01:27:14 -0400
-X-MC-Unique: WX2tJBGCNPCBLW1UaUOyYg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD4C259;
-        Mon, 27 Jul 2020 05:27:09 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-104.ams2.redhat.com [10.36.112.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ECB8410013D0;
-        Mon, 27 Jul 2020 05:27:01 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
-Subject: Re: [PATCH v7 4/7] fs: Introduce O_MAYEXEC flag for openat2(2)
-References: <20200723171227.446711-1-mic@digikod.net>
-        <20200723171227.446711-5-mic@digikod.net>
-        <20200727042106.GB794331@ZenIV.linux.org.uk>
-Date:   Mon, 27 Jul 2020 07:27:00 +0200
-In-Reply-To: <20200727042106.GB794331@ZenIV.linux.org.uk> (Al Viro's message
-        of "Mon, 27 Jul 2020 05:21:06 +0100")
-Message-ID: <87y2n55xzv.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Mon, 27 Jul 2020 01:30:04 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R5ThkN004102;
+        Mon, 27 Jul 2020 01:30:03 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 32gek65jhf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 01:30:03 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 06R5U1PM047688
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 27 Jul 2020 01:30:01 -0400
+Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sun, 26 Jul 2020 22:30:00 -0700
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
+ SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sun, 26 Jul 2020 22:29:51 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Sun, 26 Jul 2020 22:29:59 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06R5TksS007624;
+        Mon, 27 Jul 2020 01:29:56 -0400
+From:   <alexandru.tachici@analog.com>
+To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH v6 6/9] hwmon: pmbus: adm1266: Add group command support
+Date:   Mon, 27 Jul 2020 08:31:18 +0300
+Message-ID: <20200727053121.23288-7-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200727053121.23288-1-alexandru.tachici@analog.com>
+References: <20200727053121.23288-1-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_03:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ adultscore=0 clxscore=1015 suspectscore=0 impostorscore=0 phishscore=0
+ spamscore=0 mlxlogscore=999 lowpriorityscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270039
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Al Viro:
+From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-> On Thu, Jul 23, 2020 at 07:12:24PM +0200, Micka=C3=83=C2=ABl Sala=C3=83=
-=C2=BCn wrote:
->> When the O_MAYEXEC flag is passed, openat2(2) may be subject to
->> additional restrictions depending on a security policy managed by the
->> kernel through a sysctl or implemented by an LSM thanks to the
->> inode_permission hook.  This new flag is ignored by open(2) and
->> openat(2) because of their unspecified flags handling.  When used with
->> openat2(2), the default behavior is only to forbid to open a directory.
->
-> Correct me if I'm wrong, but it looks like you are introducing a magical
-> flag that would mean "let the Linux S&M take an extra special whip
-> for this open()".
->
-> Why is it done during open?  If the caller is passing it deliberately,
-> why not have an explicit request to apply given torture device to an
-> already opened file?  Why not sys_masochism(int fd, char *hurt_flavour),
-> for that matter?
+The Group Command Protocol is used to send commands
+to more than one PMBus device. Some devices working
+together require that they must execute some commands
+all at once.
 
-While I do not think this is appropriate language for a workplace, Al
-has a point: If the auditing event can be generated on an already-open
-descriptor, it would also cover scenarios like this one:
+The commands are sent in one continuous transmission.
+When the devices detect the STOP condition that ends
+the sending of commands, they all begin executing
+the command they received.
 
-  perl < /path/to/script
+This patch adds support for the group command protocol.
 
-Where the process that opens the file does not (and cannot) know that it
-will be used for execution purposes.
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+---
+ drivers/hwmon/pmbus/adm1266.c | 50 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-Thanks,
-Florian
+diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
+index c06465100320..34bd4e652729 100644
+--- a/drivers/hwmon/pmbus/adm1266.c
++++ b/drivers/hwmon/pmbus/adm1266.c
+@@ -73,6 +73,56 @@ static const struct nvmem_cell_info adm1266_nvmem_cells[] = {
+ 
+ DECLARE_CRC8_TABLE(pmbus_crc_table);
+ 
++/* PMBus Group command. */
++static int adm1266_pmbus_group_command(struct adm1266_data *data, struct i2c_client **clients,
++				       u8 nr_clients, u8 cmd, u8 w_len, u8 *data_w)
++{
++	struct i2c_msg *msgs;
++	u8 addr;
++	int ret;
++	int i;
++
++	msgs = kcalloc(nr_clients, sizeof(struct i2c_msg), GFP_KERNEL);
++	if (!msgs)
++		return -ENOMEM;
++
++	for (i = 0; i < nr_clients; i++) {
++		msgs[i].addr = clients[i]->addr;
++		msgs[i].len = w_len + 1;
++
++		msgs[i].buf = kcalloc(ADM1266_PMBUS_BLOCK_MAX + 2, sizeof(u8), GFP_KERNEL);
++		if (!msgs[i].buf) {
++			ret = -ENOMEM;
++			goto cleanup;
++		}
++
++		msgs[i].buf[0] = cmd;
++		memcpy(&msgs[i].buf[1], data_w, w_len);
++
++		if (clients[i]->flags & I2C_CLIENT_PEC) {
++			u8 crc = 0;
++
++			addr = i2c_8bit_addr_from_msg(&msgs[i]);
++			crc = crc8(pmbus_crc_table, &addr, 1, crc);
++			crc = crc8(pmbus_crc_table, msgs[i].buf, msgs[i].len,
++				   crc);
++
++			msgs[i].buf[msgs[i].len] = crc;
++			msgs[i].len++;
++		}
++	};
++
++	ret = i2c_transfer(data->client->adapter, msgs, nr_clients);
++
++cleanup:
++	for (i = i - 1; i >= 0; i--)
++		kfree(msgs[i].buf);
++
++	kfree(msgs);
++
++	return ret;
++}
++
+ /*
+  * Different from Block Read as it sends data and waits for the slave to
+  * return a value dependent on that data. The protocol is simply a Write Block
+-- 
+2.20.1
 
