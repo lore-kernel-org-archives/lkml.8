@@ -2,143 +2,266 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCDBC433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D16AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6A9120714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:14:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595873644;
-	bh=LWg6lS2bAWBAc68FRiPBOyPEeHgvgjIV2QRuQyG1usg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vKmYBbSOnhkRQnZB7C3ahhBEi0DouKXIecUD1bD6LlouKb7gzejcYjgNCjRk5/ovd
-	 GXQCgJvFn2nRuSK6TI/1w0+KlGC8v5QOpYCCBMUo4km/TAFTy4x7iVBRVA/cG9XpJK
-	 g+az8GoWBlXhL57Wtp1LyI3MxaveyZaAse7PriBE=
+	by mail.kernel.org (Postfix) with ESMTP id 1E01020714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:14:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e+vB9jT0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731437AbgG0SOC (ORCPT
+        id S1731529AbgG0SOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 14:14:02 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:42153 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731250AbgG0SN7 (ORCPT
+        Mon, 27 Jul 2020 14:14:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729356AbgG0SOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 14:13:59 -0400
-Received: by mail-il1-f196.google.com with SMTP id i138so8006560ild.9;
-        Mon, 27 Jul 2020 11:13:58 -0700 (PDT)
+        Mon, 27 Jul 2020 14:14:20 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 055FFC061794;
+        Mon, 27 Jul 2020 11:14:20 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f18so15701014wml.3;
+        Mon, 27 Jul 2020 11:14:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oweP9/5P4IwfXq7FRGFpzMEQgr6J1hZ6crzxPuNCiqY=;
+        b=e+vB9jT04h1RqsV7Fy7tiIT+AHPMYl/g2rFgZntMj6RpzHGLDjLAI8bOB/FL+yBNX/
+         9qn331OfOwaU3a8WYOhf3CAAJYYXHhs4KMXgtBWnexxEufuchYEnVKcDBSXzVUispykn
+         PR40AH4VCMOWPdvJgpX6acxF7DBqNP8KyP2q4AIPqMVFUtDLmsCl6VmFgcNrsvst1eG9
+         klrjBAOThyjIG0dioA2ojFxTUJn17xbtsqRdZ6z0B6yZtinAFVZ395Hi2lInjq360Fl9
+         UtHO5WaCd+wmaxPB5DTQj2gwpModMlRNzeqY5m7liEbD/D9B33L3Io0obgG6UCAB3VY/
+         xNiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qphSXwUDbDL/STSwZyNfj+0kNYsQNz0+uZs8OU4m+yA=;
-        b=qvBpVHSwS/omHvl2saFmqdD9UELRonQdpK3bPLQIxOezLda6RPWbCdDBLqpSQCXuUS
-         vJ/aE6yYLdYyBKidQ2RxfyKNhhE9rso0VwY4lvd8S6jh5mn8CovBiDX++hA68ZgcKFuq
-         0jxkKVaHUPwfN8uFzEiAMVaAAz9mXJhx3QPOfrQyRnORhllbokFDYh30mnCgGU3kGF0O
-         6Gg05a59kw99PVuVM9fFP1WCj7PoEnnY/N/K8/5ziHE3Pn7StQ9a2YKGhVUaDNQz+BuF
-         U3/R1KZ0/52Mj6BrNsOsKKB0uyXsv1YsmN7rEFw4BdPCYk0rYMztNiIOsAJfAoxV3dOE
-         XpwQ==
-X-Gm-Message-State: AOAM531ylHtovtu6XLArMXS3l7VlMASx5cuJO7/WeoXaTgW0/14AYbF3
-        ePUXRa1+KWsvmhsBSQ51mQ==
-X-Google-Smtp-Source: ABdhPJxgiypIQYIODHYWAN1gC3+lDaAHwErFKahF6Ut43xD7/abYM0/1Z1iU78NrtHLEqfkyGnVtBQ==
-X-Received: by 2002:a05:6e02:1213:: with SMTP id a19mr3107446ilq.129.1595873638096;
-        Mon, 27 Jul 2020 11:13:58 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id z68sm1237830ilf.25.2020.07.27.11.13.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 11:13:57 -0700 (PDT)
-Received: (nullmailer pid 638572 invoked by uid 1000);
-        Mon, 27 Jul 2020 18:13:52 -0000
-Date:   Mon, 27 Jul 2020 12:13:52 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     freedreno@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Xiaozhe Shi <xiaozhes@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Brian Masney <masneyb@onstation.org>,
-        Sean Paul <sean@poorly.run>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Manu Gautam <mgautam@codeaurora.org>, martin.botka1@gmail.com,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Harigovindan P <harigovi@codeaurora.org>,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH 9/9] soc/qcom: Add REVID driver
-Message-ID: <20200727181352.GB634850@bogus>
-References: <20200726111215.22361-1-konradybcio@gmail.com>
- <20200726111215.22361-10-konradybcio@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oweP9/5P4IwfXq7FRGFpzMEQgr6J1hZ6crzxPuNCiqY=;
+        b=I89mTvMkn97s6PKfwIBjBwWhnLQAzbWy7fGu9gkQDklSvTknhBmf8P1qJUatpkEHP/
+         Jb2/VmxybEbrsivbV/xv7bGTJi8326zXsIqILyzussSnsZG1OmsmR14CO8cAM2YHm6RP
+         uNTHgJvDsqurZ4fz4yslEtpfhKjWyWlBelBXK/G9OVl4Tto7oN3H6TkuR6LRBoCvjQcx
+         be+ZeVjAxYMoM4kofstRiYlYhPtk0xgUabmFUmaZIlm6zCOSSvm1p0zWPpkqzshqyV4a
+         ZyDB0LHnsNYdEq1wrR0R34sUlVj2qJBVsaAVOXgIdxp5mM+pxW2zxffBQxWi+h7iDgLi
+         QzmQ==
+X-Gm-Message-State: AOAM532KS4IJPCr8NJ60Jk/pvznJbeeQLmxncKp0RpKFoe1vpvKzin5U
+        weHRO7hntHnAiB4BvH6Psq6Puf3eDx2QtaD/fmA=
+X-Google-Smtp-Source: ABdhPJwDf3NQVRSMOOvQ3/gDp3spLrysuALfIbGNUz8NSRkrcu7vnDQpr1MxHquSAobzWw/p7CVeHkm3ribJUJCaGHA=
+X-Received: by 2002:a7b:c941:: with SMTP id i1mr429279wml.73.1595873658666;
+ Mon, 27 Jul 2020 11:14:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726111215.22361-10-konradybcio@gmail.com>
+References: <20200727103421.50739-1-christophe.jaillet@wanadoo.fr> <224fc7f6-f56b-1dc8-87f2-33ff85d5720d@gmail.com>
+In-Reply-To: <224fc7f6-f56b-1dc8-87f2-33ff85d5720d@gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 27 Jul 2020 14:14:07 -0400
+Message-ID: <CADnq5_MKR9SC947WCN6Qp4BLhrK03=FtT7hD7b+DwNQ46krmkQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm/radeon: switch from 'pci_' to 'dma_' API
+To:     Christian Koenig <christian.koenig@amd.com>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        kernel-janitors@vger.kernel.org,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 26 Jul 2020 13:12:06 +0200, Konrad Dybcio wrote:
-> From: Xiaozhe Shi <xiaozhes@codeaurora.org>
-> 
-> Add the REVID device driver. The REVID driver will print out the PMIC
-> revision at probe time.
-> 
-> Signed-off-by: Xiaozhe Shi <xiaozhes@codeaurora.org>
-> [konradybcio@gmail.com: Fast-forward the driver from kernel 4.14 to 5.8,
-> convert binding to yaml]
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> ---
->  .../bindings/soc/qcom/qcom,qpnp-revid.yaml    |  38 ++
->  drivers/soc/qcom/Kconfig                      |   9 +
->  drivers/soc/qcom/Makefile                     |   1 +
->  drivers/soc/qcom/qpnp-revid.c                 | 288 ++++++++++++++
->  include/linux/qpnp/qpnp-revid.h               | 369 ++++++++++++++++++
->  5 files changed, 705 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.yaml
->  create mode 100644 drivers/soc/qcom/qpnp-revid.c
->  create mode 100644 include/linux/qpnp/qpnp-revid.h
-> 
+Applied.  Thanks!
 
+Alex
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.yaml:  while scanning a block scalar
-  in "<unicode string>", line 22, column 18
-found a tab character where an indentation space is expected
-  in "<unicode string>", line 24, column 1
-Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.yaml: ignoring, error parsing file
-warning: no schema found in file: ./Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.yaml: ignoring, error parsing file
-warning: no schema found in file: ./Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.yaml
-Makefile:1347: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-
-See https://patchwork.ozlabs.org/patch/1336467
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+On Mon, Jul 27, 2020 at 9:42 AM Christian K=C3=B6nig
+<ckoenig.leichtzumerken@gmail.com> wrote:
+>
+> Am 27.07.20 um 12:34 schrieb Christophe JAILLET:
+> > The wrappers in include/linux/pci-dma-compat.h should go away.
+> >
+> > The patch has been generated with the coccinelle script below and has b=
+een
+> > hand modified to replace GFP_ with a correct flag.
+> > It has been compile tested.
+> >
+> > When memory is allocated in 'radeon_gart_table_ram_alloc()' GFP_KERNEL
+> > can be used because its callers already use this flag.
+> >
+> > Both 'r100_pci_gart_init()' (r100.c) and 'rs400_gart_init()' (rs400.c)
+> > call 'radeon_gart_init()'.
+> > This function uses 'vmalloc'.
+> >
+> >
+> > @@
+> > @@
+> > -    PCI_DMA_BIDIRECTIONAL
+> > +    DMA_BIDIRECTIONAL
+> >
+> > @@
+> > @@
+> > -    PCI_DMA_TODEVICE
+> > +    DMA_TO_DEVICE
+> >
+> > @@
+> > @@
+> > -    PCI_DMA_FROMDEVICE
+> > +    DMA_FROM_DEVICE
+> >
+> > @@
+> > @@
+> > -    PCI_DMA_NONE
+> > +    DMA_NONE
+> >
+> > @@
+> > expression e1, e2, e3;
+> > @@
+> > -    pci_alloc_consistent(e1, e2, e3)
+> > +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+> >
+> > @@
+> > expression e1, e2, e3;
+> > @@
+> > -    pci_zalloc_consistent(e1, e2, e3)
+> > +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+> >
+> > @@
+> > expression e1, e2, e3, e4;
+> > @@
+> > -    pci_free_consistent(e1, e2, e3, e4)
+> > +    dma_free_coherent(&e1->dev, e2, e3, e4)
+> >
+> > @@
+> > expression e1, e2, e3, e4;
+> > @@
+> > -    pci_map_single(e1, e2, e3, e4)
+> > +    dma_map_single(&e1->dev, e2, e3, e4)
+> >
+> > @@
+> > expression e1, e2, e3, e4;
+> > @@
+> > -    pci_unmap_single(e1, e2, e3, e4)
+> > +    dma_unmap_single(&e1->dev, e2, e3, e4)
+> >
+> > @@
+> > expression e1, e2, e3, e4, e5;
+> > @@
+> > -    pci_map_page(e1, e2, e3, e4, e5)
+> > +    dma_map_page(&e1->dev, e2, e3, e4, e5)
+> >
+> > @@
+> > expression e1, e2, e3, e4;
+> > @@
+> > -    pci_unmap_page(e1, e2, e3, e4)
+> > +    dma_unmap_page(&e1->dev, e2, e3, e4)
+> >
+> > @@
+> > expression e1, e2, e3, e4;
+> > @@
+> > -    pci_map_sg(e1, e2, e3, e4)
+> > +    dma_map_sg(&e1->dev, e2, e3, e4)
+> >
+> > @@
+> > expression e1, e2, e3, e4;
+> > @@
+> > -    pci_unmap_sg(e1, e2, e3, e4)
+> > +    dma_unmap_sg(&e1->dev, e2, e3, e4)
+> >
+> > @@
+> > expression e1, e2, e3, e4;
+> > @@
+> > -    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
+> > +    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+> >
+> > @@
+> > expression e1, e2, e3, e4;
+> > @@
+> > -    pci_dma_sync_single_for_device(e1, e2, e3, e4)
+> > +    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+> >
+> > @@
+> > expression e1, e2, e3, e4;
+> > @@
+> > -    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
+> > +    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+> >
+> > @@
+> > expression e1, e2, e3, e4;
+> > @@
+> > -    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
+> > +    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+> >
+> > @@
+> > expression e1, e2;
+> > @@
+> > -    pci_dma_mapping_error(e1, e2)
+> > +    dma_mapping_error(&e1->dev, e2)
+> >
+> > @@
+> > expression e1, e2;
+> > @@
+> > -    pci_set_dma_mask(e1, e2)
+> > +    dma_set_mask(&e1->dev, e2)
+> >
+> > @@
+> > expression e1, e2;
+> > @@
+> > -    pci_set_consistent_dma_mask(e1, e2)
+> > +    dma_set_coherent_mask(&e1->dev, e2)
+> >
+> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>
+> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+>
+> > ---
+> > If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+> >     https://marc.info/?l=3Dkernel-janitors&m=3D158745678307186&w=3D4
+> > ---
+> >   drivers/gpu/drm/radeon/radeon_gart.c | 9 ++++-----
+> >   1 file changed, 4 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/radeon/radeon_gart.c b/drivers/gpu/drm/rad=
+eon/radeon_gart.c
+> > index f178ba321715..b7ce254e5663 100644
+> > --- a/drivers/gpu/drm/radeon/radeon_gart.c
+> > +++ b/drivers/gpu/drm/radeon/radeon_gart.c
+> > @@ -72,8 +72,8 @@ int radeon_gart_table_ram_alloc(struct radeon_device =
+*rdev)
+> >   {
+> >       void *ptr;
+> >
+> > -     ptr =3D pci_alloc_consistent(rdev->pdev, rdev->gart.table_size,
+> > -                                &rdev->gart.table_addr);
+> > +     ptr =3D dma_alloc_coherent(&rdev->pdev->dev, rdev->gart.table_siz=
+e,
+> > +                              &rdev->gart.table_addr, GFP_KERNEL);
+> >       if (ptr =3D=3D NULL) {
+> >               return -ENOMEM;
+> >       }
+> > @@ -110,9 +110,8 @@ void radeon_gart_table_ram_free(struct radeon_devic=
+e *rdev)
+> >                             rdev->gart.table_size >> PAGE_SHIFT);
+> >       }
+> >   #endif
+> > -     pci_free_consistent(rdev->pdev, rdev->gart.table_size,
+> > -                         (void *)rdev->gart.ptr,
+> > -                         rdev->gart.table_addr);
+> > +     dma_free_coherent(&rdev->pdev->dev, rdev->gart.table_size,
+> > +                       (void *)rdev->gart.ptr, rdev->gart.table_addr);
+> >       rdev->gart.ptr =3D NULL;
+> >       rdev->gart.table_addr =3D 0;
+> >   }
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
