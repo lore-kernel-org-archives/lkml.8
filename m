@@ -2,129 +2,125 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1D0C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0624206D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2D0B206D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YpOet+5O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tfe0RUHc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbgG0NKL (ORCPT
+        id S1728632AbgG0NKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:10:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53706 "EHLO
+        Mon, 27 Jul 2020 09:10:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbgG0NKL (ORCPT
+        with ESMTP id S1728141AbgG0NKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:10:11 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A754FC061794;
-        Mon, 27 Jul 2020 06:10:10 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id x9so17157461ljc.5;
-        Mon, 27 Jul 2020 06:10:10 -0700 (PDT)
+        Mon, 27 Jul 2020 09:10:24 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26CF0C061794;
+        Mon, 27 Jul 2020 06:10:24 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id e8so9474370pgc.5;
+        Mon, 27 Jul 2020 06:10:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=S8aJgTeOOMNvC3X35ZPNyQ7MJmZxrJEivSO6dpNlY0w=;
-        b=YpOet+5OohAKeocqhV4KRLZsIftxN6qyrcm78/wxaBs4d531oO5QKTKrZAavKghZL1
-         pCvTUMj6CTUQ7v/+BuleaUG+AhkLfMHR3pY4oYBx5YzOCRaa/7hEJ2fd3CUvYiZIHVsJ
-         YhVqVLUXSKvLjP2D3TReIOkhipMEb03uXaymu+V+PtUQ4Mj/bMQ5pnv2WGm1toyTWaFy
-         TVznEBSh19VXP+D2rafhgJJLiuV1/YzcVhg7LbMTkvVkKtaioOBnzibXP9GPx3C85zqq
-         Q1V6b2Yrfk2meVn+ZJe9/8si9mV1w3U2qX92U8RK+Ih6CAN0M8VfxziWYQ8JgrrTWrj6
-         xPbg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=m8ss2q7X9z9vWtUgWZuhapv2kDOMmjklHJYu5RbP5UQ=;
+        b=tfe0RUHcG6oEB/pYDfPsKbNlouoLw0dJgAttdqMZmC+zxCa/y4vF/dDFzGevJjNZvH
+         cBQT3JQLt5EnDjE4rTePPuKCj1AaL56IC2TphWX1/5fnCdys4Rl/wDYqdE0Qi7uRvYE6
+         0oK7ZkmnNGgA7wJSRU5NcJt+rshEcFyoMSukxUhyoB1IfeHhivqMO0bGgkHWwxLSSt62
+         sEnNrtGDxf5e/i0e+pnAbhSsh0jYdYT8ORkwoFoPOQUxBHU1Pgg1vIYL4E+rGViAKCpM
+         F2fuW8Dg2ZEun0pd/DnorX8w3ZC5o4jVcSlfDl60+7kOdWxBRnomw/s5TkiuhPv/loXX
+         S/ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S8aJgTeOOMNvC3X35ZPNyQ7MJmZxrJEivSO6dpNlY0w=;
-        b=RAYuWxAddQxooYjf7nVcS6fyNBErfL5tsUFzqmYworOA9hLbR/CoBBsU00v2n6choj
-         AYZkn7ZEJ9uuzqQZISiWsyMBdfhK9ZpM8sJ9K4mNXV0dI/4uP/Rwyo8sF08amc3vOyCm
-         BEwPAISwshsDZ8+rrgPvfMPvYm8efBMXPwrjFjVwqjdV4NjqHvpc/h2xxgjhpghVSkqI
-         gAs+332hD5rpiZGuRdpaucWXzuflBKRxnBtHBqMnfvjJ9kPBjKPgLsijNTaOYfBdMJY8
-         oM15SiSJYDCuZLpOUL1qigVBG6/Dz2Gb39rNlDw/WKWDiE2JX9QSay+DOEkaxZstzyET
-         WILw==
-X-Gm-Message-State: AOAM532rWUhSAxAiRn/q0kc6wU1CcbxVLM/m9djy2F5n6u21aI59a0Vh
-        wYAiiQ2t8hYGEIM8YseL4bEufgmB
-X-Google-Smtp-Source: ABdhPJwnoGvwlTb4Q7yMAGl31ThQ1KF8qea01jP6Ay2SV7pxHkffrZcL4Kvcg7FIL4wXQC4qb+FkRQ==
-X-Received: by 2002:a2e:a0cd:: with SMTP id f13mr9415769ljm.343.1595855409032;
-        Mon, 27 Jul 2020 06:10:09 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
-        by smtp.googlemail.com with ESMTPSA id l19sm2348443ljb.15.2020.07.27.06.10.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 06:10:08 -0700 (PDT)
-Subject: Re: [PATCH] mmc: tegra: Add Runtime PM callbacks
-To:     Aniruddha Rao <anrao@nvidia.com>, adrian.hunter@intel.com,
-        ulf.hansson@linaro.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, p.zabel@pengutronix.de
-Cc:     linux-mmc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1595854036-15434-1-git-send-email-anrao@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ea1a68b6-2399-f7ae-a336-bd1e14793b52@gmail.com>
-Date:   Mon, 27 Jul 2020 16:10:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=m8ss2q7X9z9vWtUgWZuhapv2kDOMmjklHJYu5RbP5UQ=;
+        b=GiXSJBBthCRDBXjc9L9rWGlJ8JsmF6LE8zl4Lx7qBp1BJQ6+44s1ugrOG+WhMk4wPI
+         WWJcKGMSQwqNA5ZBeWhuwNjygvK+3Mp9bbhPkjCmcN4VTDJjjb0msHIfL9m2Skj3DIi+
+         EDmGklieXBDWUYHZGjFzR1zHpMI64XAhnDH5nYrGn4JWd9Klw7qjsJ/PhXXcWFbJTQE4
+         8GkM6qIcV7T83eMEsieB3573UVV/aRe4kXxvQwdNZ5nPf3BegYUUiDbwIfIvpZOzbSBb
+         JTohgLifxaDKKD6UctT+y5q7f5YGWRESQDqnxlEwpZfAmD7r52cp/Y1ZK3dRw6mCN7Y8
+         X2yA==
+X-Gm-Message-State: AOAM532AiSDuQj5uYCQyOtSTG1+D/7V0JGxEwq+qJe0rgJKj23zzmoLx
+        aAB+Fg7tbdqNoH2RyzXO0WPiA+/QQboJzQ==
+X-Google-Smtp-Source: ABdhPJyLY2OZt4FGCKBTtRcO9W18r2z79wDn+b8Jv3UNdFD4X2mpSxav3uGwaI20ww39In/zyxqTBw==
+X-Received: by 2002:aa7:94a7:: with SMTP id a7mr19562705pfl.83.1595855423688;
+        Mon, 27 Jul 2020 06:10:23 -0700 (PDT)
+Received: from gmail.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id e15sm14802124pgt.17.2020.07.27.06.10.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 06:10:23 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 18:38:58 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v1] spi: spi-topcliff-pch: use generic power management
+Message-ID: <20200727130858.GB82098@gmail.com>
+References: <CAHp75Vdo22ofbCktupFYbfYy6PQ609fsk5B6u2b3FpfKxs8OQg@mail.gmail.com>
+ <20200724223746.GA1538991@bjorn-Precision-5520>
+ <CAHp75VdSr1rguc9HJVh_rA1nBh1uyCdr18eyPosWPzCH1K2=zg@mail.gmail.com>
+ <CAHp75VfKeTCBOne3tDSM46q6m_FE+7hS3H9Hx5C3RRPvueqZAQ@mail.gmail.com>
+ <20200727070652.GA5400@gmail.com>
+ <CAHp75VdzAk6U_mKn32+dmw1aNyREtaXMB6sHubE8G9imtv5=3g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1595854036-15434-1-git-send-email-anrao@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdzAk6U_mKn32+dmw1aNyREtaXMB6sHubE8G9imtv5=3g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-27.07.2020 15:47, Aniruddha Rao пишет:
-> Add runtime suspend/resume callbacks to save power
-> when the bus is not in use.
-> In runtime suspend
-> - Turn off the SDMMC host CAR clock.
-> - Turn off the trimmer/DLL circuit(BG) power supply(VREG).
-> - Turn off the SDMMC host internal clocks.
+On Mon, Jul 27, 2020 at 02:12:16PM +0300, Andy Shevchenko wrote:
+> On Mon, Jul 27, 2020 at 10:08 AM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
+> > On Sat, Jul 25, 2020 at 01:44:44PM +0300, Andy Shevchenko wrote:
+> > > On Sat, Jul 25, 2020 at 1:42 PM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
 > 
-> Re-enable all the disabled clocks/regulators in runtime resume.
+> ...
 > 
-> Signed-off-by: Aniruddha Rao <anrao@nvidia.com>
-> ---
->  drivers/mmc/host/sdhci-tegra.c | 149 ++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 140 insertions(+), 9 deletions(-)
+> > > The only problem here, is that the 2nd is already in the Mark's tree
+> > > and he doesn't do rebases.
+> > > So, it will be the other way around.
+> > >
+> > Concluding from yours and Bjorn's suggestion, I will drop the
+> > device_wakeup_disable() call form .resume() and send the fix. I will also track
+> > the drivers who got similar upgrades and went un-noticed.
 > 
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> index 0a3f9d0..1b4b245 100644
-> --- a/drivers/mmc/host/sdhci-tegra.c
-> +++ b/drivers/mmc/host/sdhci-tegra.c
-> @@ -23,6 +23,7 @@
->  #include <linux/mmc/slot-gpio.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/ktime.h>
-> +#include <linux/pm_runtime.h>
->  
->  #include "sdhci-pltfm.h"
->  #include "cqhci.h"
-> @@ -36,6 +37,7 @@
->  #define SDHCI_CLOCK_CTRL_SDR50_TUNING_OVERRIDE		BIT(5)
->  #define SDHCI_CLOCK_CTRL_PADPIPE_CLKEN_OVERRIDE		BIT(3)
->  #define SDHCI_CLOCK_CTRL_SPI_MODE_CLKEN_OVERRIDE	BIT(2)
-> +#define SDHCI_CLOCK_CTRL_SDMMC_CLK			BIT(0)
->  
->  #define SDHCI_TEGRA_VENDOR_SYS_SW_CTRL			0x104
->  #define SDHCI_TEGRA_SYS_SW_CTRL_ENHANCED_STROBE		BIT(31)
-> @@ -51,6 +53,9 @@
->  #define SDHCI_MISC_CTRL_ENABLE_SDHCI_SPEC_300		0x20
->  #define SDHCI_MISC_CTRL_ENABLE_DDR50			0x200
->  
-> +#define SDHCI_TEGRA_VENDOR_IO_TRIM_CTRL_0		0x1AC
-> +#define SDHCI_TEGRA_IO_TRIM_CTRL_0_SEL_VREG_MASK	0x4
-
-Hello Aniruddha,
-
-Does this register exist on older Tegra SoCs?
+> Thanks for doing this!
+> 
+> > As Bjorn mentioned, the problem is that I don't have hardware to test, so I just
+> > replicated the legacy behaviour in generic by replacing
+> > pci_enable_wake(....,false) with device_wakeup_disable().
+> >
+> > So, from now, while upgrading drivers with generic PM, should I completely drop
+> > the pci_enable_wake(....,false) calls if both .suspend() and .resume() try to
+> > wakeup-disable the device?
+> 
+> I guess the best approach is to rely on the PCI core to do the right thing.
+> But mention this change in the commit message that we will have a
+> track of the changes properly.
+> 
+Okay. Thanks !
+Vaibhav Gupta
+> -- 
+> With Best Regards,
+> Andy Shevchenko
