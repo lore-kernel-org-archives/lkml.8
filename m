@@ -2,168 +2,89 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AFEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C392C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 783E420792
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C1A20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:07:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgG0HBe (ORCPT
+        id S1726839AbgG0HHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:01:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgG0HBd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:01:33 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5079C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:01:33 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jzx8a-0006aD-Qt; Mon, 27 Jul 2020 09:01:28 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jzx8Y-0006Jq-RX; Mon, 27 Jul 2020 09:01:26 +0200
-Date:   Mon, 27 Jul 2020 09:01:26 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH v5 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200727070126.2juwfmra3i67lxfw@pengutronix.de>
-References: <cover.1595489518.git.rahul.tanwar@linux.intel.com>
- <0f47648107ec23f72868ca37f29ea43e15c08e08.1595489518.git.rahul.tanwar@linux.intel.com>
- <20200723161553.ey47oijnwitf4hvu@pengutronix.de>
- <c2ef8f5c-af23-a63d-5f72-de0c307be8eb@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ddzwp66u6avxreag"
-Content-Disposition: inline
-In-Reply-To: <c2ef8f5c-af23-a63d-5f72-de0c307be8eb@linux.intel.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Mon, 27 Jul 2020 03:07:42 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:36546 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726140AbgG0HHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 03:07:42 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv98UfR5fIRkBAA--.653S2;
+        Mon, 27 Jul 2020 15:07:01 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: Move pci_info() after pci_fixup_device() in pci_setup_device()
+Date:   Mon, 27 Jul 2020 15:06:55 +0800
+Message-Id: <1595833615-8049-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxv98UfR5fIRkBAA--.653S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw45Jr47ZFW8ury5ArykAFb_yoWkCrXEv3
+        yUuF4xWr4DAa10kFn8Jw43Z3sYk3Z09rWxWr48Ka4IvayIvrZ8XF4UXry7K3WUua15Cr90
+        qFWDGr4rCr10kjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbwkYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC2
+        0s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+        0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+        14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20x
+        vaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+        xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8iL0UUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In the current code, we can not see the PCI info after fixup which is
+correct to reflect the reality, it is better to move pci_info() after
+pci_fixup_device() in pci_setup_device().
 
---ddzwp66u6avxreag
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ drivers/pci/probe.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On Mon, Jul 27, 2020 at 02:04:56PM +0800, Tanwar, Rahul wrote:
->=20
-> Hi Uwe,
->=20
-> On 24/7/2020 12:15 am, Uwe Kleine-K=F6nig wrote:
-> > Hello,
-> >
-> > On Thu, Jul 23, 2020 at 03:44:18PM +0800, Rahul Tanwar wrote:
-> >> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
-> >> +			 const struct pwm_state *state)
-> >> +{
-> >> +	struct lgm_pwm_chip *pc =3D to_lgm_pwm_chip(chip);
-> >> +	u32 duty_cycle, val;
-> >> +	int ret;
-> >> +
-> >> +	if (!state->enabled) {
-> >> +		ret =3D lgm_pwm_enable(chip, 0);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	/*
-> >> +	 * HW only supports NORMAL polarity
-> >> +	 * HW supports fixed period which can not be changed/configured by u=
-ser
-> >> +	 */
-> >> +	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
-> >> +	    state->period !=3D pc->period)
-> >> +		return -EINVAL;
-> > At least for state->polarity you have to check before state->enabled, as
-> > the expectation on
-> >
-> >         .enabled =3D false
-> >         .polarity =3D PWM_POLARITY_INVERSED
-> >
-> > is that the output becomes constant high. Also as confirmed at the end
-> > of v4, state->period < pc->period was the right check to do.
->=20
-> For below case:
->=20
-> .enabled =3D false
-> .polarity =3D PWM_POLARITY_INVERSED
->=20
-> Since our HW does not support inversed polarity, the output for above case
-> is expected to be constant low. And if we disable PWM before checking for
-> polarity, the output becomes constant low. The code just does that. Sorry,
-> i could not understand what is wrong with the code. It looks correct to m=
-e.
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 2f66988..7c046aed 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1802,9 +1802,6 @@ int pci_setup_device(struct pci_dev *dev)
+ 	dev->revision = class & 0xff;
+ 	dev->class = class >> 8;		    /* upper 3 bytes */
+ 
+-	pci_info(dev, "[%04x:%04x] type %02x class %#08x\n",
+-		   dev->vendor, dev->device, dev->hdr_type, dev->class);
+-
+ 	if (pci_early_dump)
+ 		early_dump_pci_device(dev);
+ 
+@@ -1822,6 +1819,9 @@ int pci_setup_device(struct pci_dev *dev)
+ 	/* Early fixups, before probing the BARs */
+ 	pci_fixup_device(pci_fixup_early, dev);
+ 
++	pci_info(dev, "[%04x:%04x] type %02x class %#08x\n",
++		 dev->vendor, dev->device, dev->hdr_type, dev->class);
++
+ 	/* Device class may be changed after fixup */
+ 	class = dev->class >> 8;
+ 
+-- 
+2.1.0
 
-As your hardware can only support normal polarity, the code must have:
-
-	if (state->polarity !=3D PWM_POLARITY_NORMAL)
-		return -EINVAL;
-
-	if (!state->enabled) {
-		ret =3D lgm_pwm_enable(chip, 0);
-		return ret;
-	}
-
-That's what I meant writing: "At least for state->polarity you have to
-check before state->enabled".
-
-> Given the fact that we support fixed period, if we allow
-> state->period < pc->period case then the duty cycle will be evaluated as
-> higher than the requested one because the state->period is lesser than
-> the actual fixed period supported by the HW. Can you please elaborate
-> on why you think we should allow state->period < pc->period case?
-
-You should not allow it. In v4 you had:
-
-	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
-	    state->period < pc->period)
-		return -EINVAL;
-
-That's the right thing to do (even though I was unsettled at one point
-and wrote it was wrong). The check in v5 with state->period !=3D
-pc->period is wrong.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ddzwp66u6avxreag
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8ee8MACgkQwfwUeK3K
-7AkRDAgAiUnatkQl/KD0wuhWITucTaiQM4Qo2QZDKhy/JLydo0U0VKR3+A/uN3QN
-W3gcMAu9xeocUFMKtbrWAgCVczK+k1yfI9w5EB6fHRl65MlH5J3MwfDvib1EAIcm
-H0kA9zCdlD5UujmGB6cJhgs+mnpJobdM/EV1OMGon8FlZ7AvopWJ34HZFFsUvA6P
-FCme/aqyHZ92V6dAfemLY9J2yy7bjMiZUOhFAp13/3kwCWKaPL/IIL3Z5ShLCWMO
-ASO/dZjP3PT5oDryiKq43XR2zftEVzgw+gKroVhvuN8Vo1n3MHVeNvdvq52m2C7C
-KCKTd+qGQy0VWGG+M2xuI/7n8xHZZg==
-=NaYd
------END PGP SIGNATURE-----
-
---ddzwp66u6avxreag--
