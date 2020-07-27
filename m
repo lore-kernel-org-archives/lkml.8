@@ -2,52 +2,50 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450D8C43446
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2245BC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 233E220825
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009202083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859456;
-	bh=rrYPwgY0lFW5PL5+vQ9DBmbkKCuq18MghKUF6N2ntoQ=;
+	s=default; t=1595859462;
+	bh=wgQ+dqjWde6gj5sHLIy3LyLTb5h2Ed0FJyVL+Tfcgec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kg9/JGpMWueYex2Rw8QoigDrS8gxlDFjX8bSxhMf3hV2AuDOZr41xfh497cmdJQkV
-	 NdGQfaS0OkpKZvu7d3vGl6EDsTur+F9r5hCsPo+4gq03oWl1WdLM3GiVQbTr4gPd5C
-	 jvuqawHHGwh9NYRB0jHDl7ypSDqIEhECQB1EwXTU=
+	b=DP+L60ZsfYUiRmspwsvrLDHqOCQAdmd9+IxIfpH2MOSfVYOogYptl9+mW7TXthgiC
+	 AiKMAGjWQ6a2h3LK3HGDAserBzNoSj4LkGuwgJkSTCdgV4qVcZJApa821vujN94RSz
+	 uenQ82hHObprO/DZs93rzxAtg0xig1OhR8R10sak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731082AbgG0ORf (ORCPT
+        id S1731096AbgG0ORk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:17:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44658 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:17:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731037AbgG0ORW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:17:22 -0400
+        id S1730442AbgG0ORc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:17:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7015120775;
-        Mon, 27 Jul 2020 14:17:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22E382070A;
+        Mon, 27 Jul 2020 14:17:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859441;
-        bh=rrYPwgY0lFW5PL5+vQ9DBmbkKCuq18MghKUF6N2ntoQ=;
+        s=default; t=1595859451;
+        bh=wgQ+dqjWde6gj5sHLIy3LyLTb5h2Ed0FJyVL+Tfcgec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MEgdbfGTIkdQWG+EmNu0Pr+GmxwMw4shs3XKGj1Wd/x5IpxhwupfCJui2ipT7VUWW
-         pHpsVjbJkR2ZRAghGG1XgSJ81H2xoO5bd+eHYz4RnaLaRn/AaY+zmp0Pyt7rmGmJMZ
-         9saGX2TwrI1O9ymVXCaNosLIJ0W/cgWtCudPa7m8=
+        b=Kauvi2uxtsXVcWiCiQgFUj8AtQa7JvDFIribmNlXczkPBe1i2Z6EfSdhBy0Naj3Kj
+         ZagtVdBD94993n9oqE2HgVtpRZXCIbS5S+Bj5xrm3DuD3xMGnOizjCnp5MgaeP8kGL
+         0oM7jakrrUBg0ccxRk2ky4w6tVDvc4/kRZEr6eUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qi Liu <liuqi115@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 102/138] drivers/perf: Prevent forced unbinding of PMU drivers
-Date:   Mon, 27 Jul 2020 16:04:57 +0200
-Message-Id: <20200727134930.567598549@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 5.4 114/138] staging: comedi: addi_apci_1564: check INSN_CONFIG_DIGITAL_TRIG shift
+Date:   Mon, 27 Jul 2020 16:05:09 +0200
+Message-Id: <20200727134931.150739679@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -60,197 +58,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qi Liu <liuqi115@huawei.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-[ Upstream commit f32ed8eb0e3f0d0ef4ddb854554d60ca5863a9f9 ]
+commit 926234f1b8434c4409aa4c53637aa3362ca07cea upstream.
 
-Forcefully unbinding PMU drivers during perf sampling will lead to
-a kernel panic, because the perf upper-layer framework call a NULL
-pointer in this situation.
+The `INSN_CONFIG` comedi instruction with sub-instruction code
+`INSN_CONFIG_DIGITAL_TRIG` includes a base channel in `data[3]`. This is
+used as a right shift amount for other bitmask values without being
+checked.  Shift amounts greater than or equal to 32 will result in
+undefined behavior.  Add code to deal with this.
 
-To solve this issue, "suppress_bind_attrs" should be set to true, so
-that bind/unbind can be disabled via sysfs and prevent unbinding PMU
-drivers during perf sampling.
+Fixes: 1e15687ea472 ("staging: comedi: addi_apci_1564: add Change-of-State interrupt subdevice and required functions")
+Cc: <stable@vger.kernel.org> #3.17+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20200717145257.112660-4-abbotti@mev.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Qi Liu <liuqi115@huawei.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Link: https://lore.kernel.org/r/1594975763-32966-1-git-send-email-liuqi115@huawei.com
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm-cci.c                        | 1 +
- drivers/perf/arm-ccn.c                        | 1 +
- drivers/perf/arm_dsu_pmu.c                    | 1 +
- drivers/perf/arm_smmuv3_pmu.c                 | 1 +
- drivers/perf/arm_spe_pmu.c                    | 1 +
- drivers/perf/fsl_imx8_ddr_perf.c              | 1 +
- drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c | 1 +
- drivers/perf/hisilicon/hisi_uncore_hha_pmu.c  | 1 +
- drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c  | 1 +
- drivers/perf/qcom_l2_pmu.c                    | 1 +
- drivers/perf/qcom_l3_pmu.c                    | 1 +
- drivers/perf/thunderx2_pmu.c                  | 1 +
- drivers/perf/xgene_pmu.c                      | 1 +
- 13 files changed, 13 insertions(+)
+ drivers/staging/comedi/drivers/addi_apci_1564.c |   20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/perf/arm-cci.c b/drivers/perf/arm-cci.c
-index 8f8606b9bc9ee..aca4570f78a86 100644
---- a/drivers/perf/arm-cci.c
-+++ b/drivers/perf/arm-cci.c
-@@ -1720,6 +1720,7 @@ static struct platform_driver cci_pmu_driver = {
- 	.driver = {
- 		   .name = DRIVER_NAME,
- 		   .of_match_table = arm_cci_pmu_matches,
-+		   .suppress_bind_attrs = true,
- 		  },
- 	.probe = cci_pmu_probe,
- 	.remove = cci_pmu_remove,
-diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
-index 6fc0273b6129d..336948b41bd16 100644
---- a/drivers/perf/arm-ccn.c
-+++ b/drivers/perf/arm-ccn.c
-@@ -1545,6 +1545,7 @@ static struct platform_driver arm_ccn_driver = {
- 	.driver = {
- 		.name = "arm-ccn",
- 		.of_match_table = arm_ccn_match,
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = arm_ccn_probe,
- 	.remove = arm_ccn_remove,
-diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
-index 70968c8c09d7f..4594e2ed13d59 100644
---- a/drivers/perf/arm_dsu_pmu.c
-+++ b/drivers/perf/arm_dsu_pmu.c
-@@ -759,6 +759,7 @@ static struct platform_driver dsu_pmu_driver = {
- 	.driver = {
- 		.name	= DRVNAME,
- 		.of_match_table = of_match_ptr(dsu_pmu_of_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = dsu_pmu_device_probe,
- 	.remove = dsu_pmu_device_remove,
-diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-index f8fc1b612119c..9cdd89b29334e 100644
---- a/drivers/perf/arm_smmuv3_pmu.c
-+++ b/drivers/perf/arm_smmuv3_pmu.c
-@@ -861,6 +861,7 @@ static void smmu_pmu_shutdown(struct platform_device *pdev)
- static struct platform_driver smmu_pmu_driver = {
- 	.driver = {
- 		.name = "arm-smmu-v3-pmcg",
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = smmu_pmu_probe,
- 	.remove = smmu_pmu_remove,
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 4e4984a55cd1b..079701e8de186 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -1228,6 +1228,7 @@ static struct platform_driver arm_spe_pmu_driver = {
- 	.driver	= {
- 		.name		= DRVNAME,
- 		.of_match_table	= of_match_ptr(arm_spe_pmu_of_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe	= arm_spe_pmu_device_probe,
- 	.remove	= arm_spe_pmu_device_remove,
-diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-index b241db6929c08..09f44c6e2eaf6 100644
---- a/drivers/perf/fsl_imx8_ddr_perf.c
-+++ b/drivers/perf/fsl_imx8_ddr_perf.c
-@@ -646,6 +646,7 @@ static struct platform_driver imx_ddr_pmu_driver = {
- 	.driver         = {
- 		.name   = "imx-ddr-pmu",
- 		.of_match_table = imx_ddr_pmu_dt_ids,
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe          = ddr_perf_probe,
- 	.remove         = ddr_perf_remove,
-diff --git a/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c b/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-index 64712cf2f99ad..b79c96b14328b 100644
---- a/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-@@ -420,6 +420,7 @@ static struct platform_driver hisi_ddrc_pmu_driver = {
- 	.driver = {
- 		.name = "hisi_ddrc_pmu",
- 		.acpi_match_table = ACPI_PTR(hisi_ddrc_pmu_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = hisi_ddrc_pmu_probe,
- 	.remove = hisi_ddrc_pmu_remove,
-diff --git a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-index a4004dad6bf1c..78865b4ac4a6f 100644
---- a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-@@ -431,6 +431,7 @@ static struct platform_driver hisi_hha_pmu_driver = {
- 	.driver = {
- 		.name = "hisi_hha_pmu",
- 		.acpi_match_table = ACPI_PTR(hisi_hha_pmu_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = hisi_hha_pmu_probe,
- 	.remove = hisi_hha_pmu_remove,
-diff --git a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-index 2f3f291b0c2ed..9dd50c3bc74ec 100644
---- a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-@@ -421,6 +421,7 @@ static struct platform_driver hisi_l3c_pmu_driver = {
- 	.driver = {
- 		.name = "hisi_l3c_pmu",
- 		.acpi_match_table = ACPI_PTR(hisi_l3c_pmu_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = hisi_l3c_pmu_probe,
- 	.remove = hisi_l3c_pmu_remove,
-diff --git a/drivers/perf/qcom_l2_pmu.c b/drivers/perf/qcom_l2_pmu.c
-index 21d6991dbe0ba..4da37f650f983 100644
---- a/drivers/perf/qcom_l2_pmu.c
-+++ b/drivers/perf/qcom_l2_pmu.c
-@@ -1028,6 +1028,7 @@ static struct platform_driver l2_cache_pmu_driver = {
- 	.driver = {
- 		.name = "qcom-l2cache-pmu",
- 		.acpi_match_table = ACPI_PTR(l2_cache_pmu_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = l2_cache_pmu_probe,
- 	.remove = l2_cache_pmu_remove,
-diff --git a/drivers/perf/qcom_l3_pmu.c b/drivers/perf/qcom_l3_pmu.c
-index 656e830798d9e..9ddb577c542b5 100644
---- a/drivers/perf/qcom_l3_pmu.c
-+++ b/drivers/perf/qcom_l3_pmu.c
-@@ -814,6 +814,7 @@ static struct platform_driver qcom_l3_cache_pmu_driver = {
- 	.driver = {
- 		.name = "qcom-l3cache-pmu",
- 		.acpi_match_table = ACPI_PTR(qcom_l3_cache_pmu_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = qcom_l3_cache_pmu_probe,
- };
-diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
-index 43d76c85da56b..9e1c3c7eeba9b 100644
---- a/drivers/perf/thunderx2_pmu.c
-+++ b/drivers/perf/thunderx2_pmu.c
-@@ -816,6 +816,7 @@ static struct platform_driver tx2_uncore_driver = {
- 	.driver = {
- 		.name		= "tx2-uncore-pmu",
- 		.acpi_match_table = ACPI_PTR(tx2_uncore_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = tx2_uncore_probe,
- 	.remove = tx2_uncore_remove,
-diff --git a/drivers/perf/xgene_pmu.c b/drivers/perf/xgene_pmu.c
-index 7e328d6385c37..328aea9f6be32 100644
---- a/drivers/perf/xgene_pmu.c
-+++ b/drivers/perf/xgene_pmu.c
-@@ -1981,6 +1981,7 @@ static struct platform_driver xgene_pmu_driver = {
- 		.name		= "xgene-pmu",
- 		.of_match_table = xgene_pmu_of_match,
- 		.acpi_match_table = ACPI_PTR(xgene_pmu_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- };
+--- a/drivers/staging/comedi/drivers/addi_apci_1564.c
++++ b/drivers/staging/comedi/drivers/addi_apci_1564.c
+@@ -331,14 +331,22 @@ static int apci1564_cos_insn_config(stru
+ 				    unsigned int *data)
+ {
+ 	struct apci1564_private *devpriv = dev->private;
+-	unsigned int shift, oldmask;
++	unsigned int shift, oldmask, himask, lomask;
  
--- 
-2.25.1
-
+ 	switch (data[0]) {
+ 	case INSN_CONFIG_DIGITAL_TRIG:
+ 		if (data[1] != 0)
+ 			return -EINVAL;
+ 		shift = data[3];
+-		oldmask = (1U << shift) - 1;
++		if (shift < 32) {
++			oldmask = (1U << shift) - 1;
++			himask = data[4] << shift;
++			lomask = data[5] << shift;
++		} else {
++			oldmask = 0xffffffffu;
++			himask = 0;
++			lomask = 0;
++		}
+ 		switch (data[2]) {
+ 		case COMEDI_DIGITAL_TRIG_DISABLE:
+ 			devpriv->ctrl = 0;
+@@ -362,8 +370,8 @@ static int apci1564_cos_insn_config(stru
+ 				devpriv->mode2 &= oldmask;
+ 			}
+ 			/* configure specified channels */
+-			devpriv->mode1 |= data[4] << shift;
+-			devpriv->mode2 |= data[5] << shift;
++			devpriv->mode1 |= himask;
++			devpriv->mode2 |= lomask;
+ 			break;
+ 		case COMEDI_DIGITAL_TRIG_ENABLE_LEVELS:
+ 			if (devpriv->ctrl != (APCI1564_DI_IRQ_ENA |
+@@ -380,8 +388,8 @@ static int apci1564_cos_insn_config(stru
+ 				devpriv->mode2 &= oldmask;
+ 			}
+ 			/* configure specified channels */
+-			devpriv->mode1 |= data[4] << shift;
+-			devpriv->mode2 |= data[5] << shift;
++			devpriv->mode1 |= himask;
++			devpriv->mode2 |= lomask;
+ 			break;
+ 		default:
+ 			return -EINVAL;
 
 
