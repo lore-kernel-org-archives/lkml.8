@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1641C433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4C5C43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0A6F206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F9A206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860589;
-	bh=c+Y+yQT3lxy7e7HAIRDMVGzel/ODh5MUBqlnOruI4bU=;
+	s=default; t=1595860596;
+	bh=Nnja+LHhundbZRtUoZNYR6xqJHf/eWzAviu2i5bqXdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qVZYHrHZkvGb0oHa1yhNdhPJksDxtUXcei1m8V10RaAMVALem90SzfPySP0Ef7pVv
-	 tbIUT3OIpcGWBT8qHbo0vq4sMaEK/uiY+GIunwS4wG1MANDQze07BfjJ+EJPhKlhqk
-	 aBMUH17Ki90O3Mqy7eFCFkuX5m7JKZdHs8GoajYg=
+	b=bnI5ZZShW8k8Z5WDX5OYDamnEMK2nWLE5gc7Otk/vMxOYzBPZyNlQTKbQVz4P2CEf
+	 AcrlSuIFWrKkamFmvE20/dQa9BJMAp51x2IyLTKogOgqrM56lnlgzSW9nC59s2l1BH
+	 UVEp49dmKv4Tmtdo/t56ORaYIn2pnKCedxiojhXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731163AbgG0Og2 (ORCPT
+        id S1731855AbgG0Oge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:36:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38874 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:36:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729175AbgG0ONn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:13:43 -0400
+        id S1730386AbgG0ONf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:13:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 794E220838;
-        Mon, 27 Jul 2020 14:13:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D95120838;
+        Mon, 27 Jul 2020 14:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859223;
-        bh=c+Y+yQT3lxy7e7HAIRDMVGzel/ODh5MUBqlnOruI4bU=;
+        s=default; t=1595859214;
+        bh=Nnja+LHhundbZRtUoZNYR6xqJHf/eWzAviu2i5bqXdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sX8mysB2/boeBI1x3fa6DPv5hWY4JhOtdBTXPNPQT78hApuY4LPb6wqnfmmX/L6Io
-         zaFN7yCy2zlK17LH1HBSk8eH/ArHNsXNYj2sXkiySigB6NQ4AroQ+6DFBTzt2QdPyT
-         cekWNeFLsEtUneWL0SFvVWPtmy6eyHCPe5pmjGg4=
+        b=F3JlsrU9OIRfVl5C0kIzVcx6bmeknUfJfWVaenHmc6gCeI10ZQoLUqt6TcZ+2iHvn
+         AAGbD6C8ureOMDVO2Cj7DWNUpZ0BgT4kF/RDuOfrJoUrpXqG66Z0QJMITSzImWvOmB
+         700T2RWlM0Rjm1Pns4CzWYZVAr4ah8dQ0iW3TOCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
+        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 025/138] dm: do not use waitqueue for request-based DM
-Date:   Mon, 27 Jul 2020 16:03:40 +0200
-Message-Id: <20200727134926.633536587@linuxfoundation.org>
+Subject: [PATCH 5.4 005/138] mac80211: allow rx of mesh eapol frames with default rx key
+Date:   Mon, 27 Jul 2020 16:03:20 +0200
+Message-Id: <20200727134925.509009180@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -60,141 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Markus Theil <markus.theil@tu-ilmenau.de>
 
-[ Upstream commit 85067747cf9888249fa11fa49ef75af5192d3988 ]
+[ Upstream commit 0b467b63870d9c05c81456aa9bfee894ab2db3b6 ]
 
-Given request-based DM now uses blk-mq's blk_mq_queue_inflight() to
-determine if outstanding IO has completed (and DM has no control over
-the blk-mq state machine used to track outstanding IO) it is unsafe to
-wakeup waiter (dm_wait_for_completion) before blk-mq has cleared a
-request's state bits (e.g. MQ_RQ_IN_FLIGHT or MQ_RQ_COMPLETE).  As
-such dm_wait_for_completion() could be left to wait indefinitely if no
-other requests complete.
+Without this patch, eapol frames cannot be received in mesh
+mode, when 802.1X should be used. Initially only a MGTK is
+defined, which is found and set as rx->key, when there are
+no other keys set. ieee80211_drop_unencrypted would then
+drop these eapol frames, as they are data frames without
+encryption and there exists some rx->key.
 
-Fix this by eliminating request-based DM's use of waitqueue to wait
-for blk-mq requests to complete in dm_wait_for_completion.
+Fix this by differentiating between mesh eapol frames and
+other data frames with existing rx->key. Allow mesh mesh
+eapol frames only if they are for our vif address.
 
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Depends-on: 3c94d83cb3526 ("blk-mq: change blk_mq_queue_busy() to blk_mq_queue_inflight()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+With this patch in-place, ieee80211_rx_h_mesh_fwding continues
+after the ieee80211_drop_unencrypted check and notices, that
+these eapol frames have to be delivered locally, as they should.
+
+Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
+Link: https://lore.kernel.org/r/20200625104214.50319-1-markus.theil@tu-ilmenau.de
+[small code cleanups]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-rq.c |  4 ---
- drivers/md/dm.c    | 64 ++++++++++++++++++++++++++++------------------
- 2 files changed, 39 insertions(+), 29 deletions(-)
+ net/mac80211/rx.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
-index 3f8577e2c13be..9fb46a6301d80 100644
---- a/drivers/md/dm-rq.c
-+++ b/drivers/md/dm-rq.c
-@@ -146,10 +146,6 @@ static void rq_end_stats(struct mapped_device *md, struct request *orig)
-  */
- static void rq_completed(struct mapped_device *md)
- {
--	/* nudge anyone waiting on suspend queue */
--	if (unlikely(wq_has_sleeper(&md->wait)))
--		wake_up(&md->wait);
--
- 	/*
- 	 * dm_put() must be at the end of this function. See the comment above
- 	 */
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 1e7ad2ad48295..87319c473594a 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -627,28 +627,6 @@ static void free_tio(struct dm_target_io *tio)
- 	bio_put(&tio->clone);
- }
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 69429c8df7b30..e5fb9002d3147 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -2305,6 +2305,7 @@ static int ieee80211_802_1x_port_control(struct ieee80211_rx_data *rx)
  
--static bool md_in_flight_bios(struct mapped_device *md)
--{
--	int cpu;
--	struct hd_struct *part = &dm_disk(md)->part0;
--	long sum = 0;
--
--	for_each_possible_cpu(cpu) {
--		sum += part_stat_local_read_cpu(part, in_flight[0], cpu);
--		sum += part_stat_local_read_cpu(part, in_flight[1], cpu);
--	}
--
--	return sum != 0;
--}
--
--static bool md_in_flight(struct mapped_device *md)
--{
--	if (queue_is_mq(md->queue))
--		return blk_mq_queue_inflight(md->queue);
--	else
--		return md_in_flight_bios(md);
--}
--
- u64 dm_start_time_ns_from_clone(struct bio *bio)
+ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
  {
- 	struct dm_target_io *tio = container_of(bio, struct dm_target_io, clone);
-@@ -2439,15 +2417,29 @@ void dm_put(struct mapped_device *md)
- }
- EXPORT_SYMBOL_GPL(dm_put);
++	struct ieee80211_hdr *hdr = (void *)rx->skb->data;
+ 	struct sk_buff *skb = rx->skb;
+ 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
  
--static int dm_wait_for_completion(struct mapped_device *md, long task_state)
-+static bool md_in_flight_bios(struct mapped_device *md)
-+{
-+	int cpu;
-+	struct hd_struct *part = &dm_disk(md)->part0;
-+	long sum = 0;
+@@ -2315,6 +2316,31 @@ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
+ 	if (status->flag & RX_FLAG_DECRYPTED)
+ 		return 0;
+ 
++	/* check mesh EAPOL frames first */
++	if (unlikely(rx->sta && ieee80211_vif_is_mesh(&rx->sdata->vif) &&
++		     ieee80211_is_data(fc))) {
++		struct ieee80211s_hdr *mesh_hdr;
++		u16 hdr_len = ieee80211_hdrlen(fc);
++		u16 ethertype_offset;
++		__be16 ethertype;
 +
-+	for_each_possible_cpu(cpu) {
-+		sum += part_stat_local_read_cpu(part, in_flight[0], cpu);
-+		sum += part_stat_local_read_cpu(part, in_flight[1], cpu);
++		if (!ether_addr_equal(hdr->addr1, rx->sdata->vif.addr))
++			goto drop_check;
++
++		/* make sure fixed part of mesh header is there, also checks skb len */
++		if (!pskb_may_pull(rx->skb, hdr_len + 6))
++			goto drop_check;
++
++		mesh_hdr = (struct ieee80211s_hdr *)(skb->data + hdr_len);
++		ethertype_offset = hdr_len + ieee80211_get_mesh_hdrlen(mesh_hdr) +
++				   sizeof(rfc1042_header);
++
++		if (skb_copy_bits(rx->skb, ethertype_offset, &ethertype, 2) == 0 &&
++		    ethertype == rx->sdata->control_port_protocol)
++			return 0;
 +	}
 +
-+	return sum != 0;
-+}
-+
-+static int dm_wait_for_bios_completion(struct mapped_device *md, long task_state)
- {
- 	int r = 0;
- 	DEFINE_WAIT(wait);
- 
--	while (1) {
-+	while (true) {
- 		prepare_to_wait(&md->wait, &wait, task_state);
- 
--		if (!md_in_flight(md))
-+		if (!md_in_flight_bios(md))
- 			break;
- 
- 		if (signal_pending_state(task_state, current)) {
-@@ -2462,6 +2454,28 @@ static int dm_wait_for_completion(struct mapped_device *md, long task_state)
- 	return r;
- }
- 
-+static int dm_wait_for_completion(struct mapped_device *md, long task_state)
-+{
-+	int r = 0;
-+
-+	if (!queue_is_mq(md->queue))
-+		return dm_wait_for_bios_completion(md, task_state);
-+
-+	while (true) {
-+		if (!blk_mq_queue_inflight(md->queue))
-+			break;
-+
-+		if (signal_pending_state(task_state, current)) {
-+			r = -EINTR;
-+			break;
-+		}
-+
-+		msleep(5);
-+	}
-+
-+	return r;
-+}
-+
- /*
-  * Process the deferred bios
-  */
++drop_check:
+ 	/* Drop unencrypted frames if key is set. */
+ 	if (unlikely(!ieee80211_has_protected(fc) &&
+ 		     !ieee80211_is_any_nullfunc(fc) &&
 -- 
 2.25.1
 
