@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73995C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E453C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFD6207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E415B20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860080;
-	bh=6IiCZJSCazxGZ+S4y95kWx0DvTpmrq6GMeSZMEbfpyM=;
+	s=default; t=1595860088;
+	bh=ryk1JkLK4R/2OzRJdodKgOOsjjAB4I2jemhgOQ6/pEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cIUV1KEuucIjFTbxdn4tT4PEVo3Z3V1tWqMco6BJwe+ZxsR4GdCxKJfC0Mtuel4RX
-	 Vz20wyJJp0YJQG11BZBzARgoeNtXpzjBNH6++0DBLvSqX4hw4cjZoUlgIy8NRfTzr5
-	 qZ9ELe48/KswNbONtWXDXVqVUkpUgmQnBdpbJZL0=
+	b=ARY+Am9c5mRyKv+IKRFQflBHi7F000x4URws4kZ8M1bJYFTQPkUbMDUl8uYGAxPzR
+	 ipV45TUhEBLl8fxEMlgtkT2MTHI3hz3sockClqWb0i5397kvjWcPMqhWoKbRzgxqoy
+	 /8Q6iE25G8DQoyFucqBsCOop6meGYcP5+GgfTypM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732410AbgG0O17 (ORCPT
+        id S1730881AbgG0O2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:27:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54990 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:28:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732381AbgG0OZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:25:11 -0400
+        id S1732352AbgG0OZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:25:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 577C522B40;
-        Mon, 27 Jul 2020 14:25:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2CEA2075A;
+        Mon, 27 Jul 2020 14:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859910;
-        bh=6IiCZJSCazxGZ+S4y95kWx0DvTpmrq6GMeSZMEbfpyM=;
+        s=default; t=1595859900;
+        bh=ryk1JkLK4R/2OzRJdodKgOOsjjAB4I2jemhgOQ6/pEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y2nfmy1HiUX7EzjB8mjCNyR+Pz+hkVtDtSHWDV9B8SQBvQAQMXh544G0KLYkXrlfL
-         eEWha2oVdN+5mGToA885Co5UCGYDMGr0tjhhD9W9363Zo4hPiuXBLcjeolQcbyABwo
-         ECxmXE5p+6kYBbrr555ET/nLRQ8bmIJg8XbOYGbI=
+        b=uNj1NzIrqsNi1FjRCNSLIR33GgooIY3838wlLhIfEXg7/A4FoP2Yw00JMKWiqcDZB
+         zU9MzTn8DRDVHe95yfWODXF19jfobf/w1jci9ZYBC7qRhXkyFmTuPXwkLoDyY03Zyl
+         Ce08ZydErradKF0KNeFtIR4KHhHEULEudgKaVaFI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Peter Chen <peter.chen@nxp.com>,
+        stable@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 123/179] usb: cdns3: trace: fix some endian issues
-Date:   Mon, 27 Jul 2020 16:04:58 +0200
-Message-Id: <20200727134938.643783619@linuxfoundation.org>
+Subject: [PATCH 5.7 119/179] usb: dwc3: pci: add support for the Intel Tiger Lake PCH -H variant
+Date:   Mon, 27 Jul 2020 16:04:54 +0200
+Message-Id: <20200727134938.451472966@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,37 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-[ Upstream commit 65b7cf48c211ece5e2560a334eb9608e48775a8f ]
+[ Upstream commit c3f595a8119207cc0f82b3dc6ec5bbf6f3e6b135 ]
 
-It is found by sparse.
+This patch adds the necessary PCI ID for TGP-H devices.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/cdns3/trace.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/dwc3/dwc3-pci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/usb/cdns3/trace.h b/drivers/usb/cdns3/trace.h
-index 755c565822575..0a2a3269bfac6 100644
---- a/drivers/usb/cdns3/trace.h
-+++ b/drivers/usb/cdns3/trace.h
-@@ -404,9 +404,9 @@ DECLARE_EVENT_CLASS(cdns3_log_trb,
- 	TP_fast_assign(
- 		__assign_str(name, priv_ep->name);
- 		__entry->trb = trb;
--		__entry->buffer = trb->buffer;
--		__entry->length = trb->length;
--		__entry->control = trb->control;
-+		__entry->buffer = le32_to_cpu(trb->buffer);
-+		__entry->length = le32_to_cpu(trb->length);
-+		__entry->control = le32_to_cpu(trb->control);
- 		__entry->type = usb_endpoint_type(priv_ep->endpoint.desc);
- 		__entry->last_stream_id = priv_ep->last_stream_id;
- 	),
+diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
+index 96c05b121fac8..47b7e83d90626 100644
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -38,6 +38,7 @@
+ #define PCI_DEVICE_ID_INTEL_ICLLP		0x34ee
+ #define PCI_DEVICE_ID_INTEL_EHLLP		0x4b7e
+ #define PCI_DEVICE_ID_INTEL_TGPLP		0xa0ee
++#define PCI_DEVICE_ID_INTEL_TGPH		0x43ee
+ 
+ #define PCI_INTEL_BXT_DSM_GUID		"732b85d5-b7a7-4a1b-9ba0-4bbd00ffd511"
+ #define PCI_INTEL_BXT_FUNC_PMU_PWR	4
+@@ -358,6 +359,9 @@ static const struct pci_device_id dwc3_pci_id_table[] = {
+ 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_TGPLP),
+ 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
+ 
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_TGPH),
++	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
++
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_NL_USB),
+ 	  (kernel_ulong_t) &dwc3_pci_amd_properties, },
+ 	{  }	/* Terminating Entry */
 -- 
 2.25.1
 
