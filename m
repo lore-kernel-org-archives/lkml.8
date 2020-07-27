@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1F3C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAC5C43457
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B02820719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DB3E2083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860835;
-	bh=58KyAkNxzlfX9Tzbg4tc1CYwtIyYcUOiqkzipU7lwEI=;
+	s=default; t=1595860849;
+	bh=0ZB1inq6G3mEXC1hC6A8lpXD+S8c6wP75Jh/MvwT8Ts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HpTubopjnv+h3uY3mfahuYbtmQxZagz6VAFlL+T24EbWozXhFhYFXoQE11NvCyJLS
-	 peVcOCLSvSEMyGFzy4plCMc/qIddeYwk6+niR63o9R+h2okFp0d38rfn9QApTz8g27
-	 fvEBSDg0bsH71Sc26BqegBqsNoNjjDyI/nvaXt7U=
+	b=V5WM07x4VaHJNl5B+YXo4XA42q5l+naIiuPLQAzMELveOBn1VcWpHUdOZMIdRF+Dp
+	 uVbF9bPddiJkuJ4TwTE0Zq1CNQ6P3PsS7TuAtE2DNFAgowGVjT3diEi1UPnl2k3ocR
+	 1xyAGPRXZ5Dgz1sXhAf4iT+XxaueSm/RTjo8V1sQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbgG0OJO (ORCPT
+        id S1729180AbgG0OI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:09:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59096 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:08:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728852AbgG0OJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:09:11 -0400
+        id S1729524AbgG0OIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:08:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F9FB2073E;
-        Mon, 27 Jul 2020 14:09:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6CBF2073E;
+        Mon, 27 Jul 2020 14:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858950;
-        bh=58KyAkNxzlfX9Tzbg4tc1CYwtIyYcUOiqkzipU7lwEI=;
+        s=default; t=1595858935;
+        bh=0ZB1inq6G3mEXC1hC6A8lpXD+S8c6wP75Jh/MvwT8Ts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sbaqLnG3vAa6l+CiMnc0TfaHNGL6q7ydqZT5zOGy0vE+UEvCs5/QyAdBFOtEwMbkL
-         TiBukCt8c7t2JiuFnJTkAxiho5tvQT7E5iVU7E/s4tVzBojLfbw0Sb2EFObiU30OvD
-         xDmZIqiECnoScCvI4/n+tZuOUTNah+9UrA9lcKk0=
+        b=QJclpbQGXiA2Mf2k6RvcjF1uAMKe0tNb2P4QoL58xplTqHqoLpDemRPRE996/pwal
+         s76ALPs4qiQwuMxdL8TxNPXk5LqcCEmtQB6ojcCqiTHP7O8USSjfv+UAU+hSNWkDcE
+         pRtjLMwHbhYO36CTL0II80Vb0iQTeD+oDt6rMhYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH 4.19 01/86] soc: qcom: rpmh: Dirt can only make you dirtier, not cleaner
-Date:   Mon, 27 Jul 2020 16:03:35 +0200
-Message-Id: <20200727134914.387358933@linuxfoundation.org>
+        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 60/64] mm/memcg: fix refcount error while moving and swapping
+Date:   Mon, 27 Jul 2020 16:04:39 +0200
+Message-Id: <20200727134914.144811936@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
-References: <20200727134914.312934924@linuxfoundation.org>
+In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
+References: <20200727134911.020675249@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,43 +64,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Hugh Dickins <hughd@google.com>
 
-commit 35bb4b22f606c0cc8eedf567313adc18161b1af4 upstream.
+commit 8d22a9351035ef2ff12ef163a1091b8b8cf1e49c upstream.
 
-Adding an item into the cache should never be able to make the cache
-cleaner.  Use "|=" rather than "=" to update the dirty flag.
+It was hard to keep a test running, moving tasks between memcgs with
+move_charge_at_immigrate, while swapping: mem_cgroup_id_get_many()'s
+refcount is discovered to be 0 (supposedly impossible), so it is then
+forced to REFCOUNT_SATURATED, and after thousands of warnings in quick
+succession, the test is at last put out of misery by being OOM killed.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Maulik Shah <mkshah@codeaurora.org> Thanks, Maulik
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Fixes: bb7000677a1b ("soc: qcom: rpmh: Update dirty flag only when data changes")
-Reported-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200417141531.1.Ia4b74158497213eabad7c3d474c50bfccb3f342e@changeid
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This is because of the way moved_swap accounting was saved up until the
+task move gets completed in __mem_cgroup_clear_mc(), deferred from when
+mem_cgroup_move_swap_account() actually exchanged old and new ids.
+Concurrent activity can free up swap quicker than the task is scanned,
+bringing id refcount down 0 (which should only be possible when
+offlining).
+
+Just skip that optimization: do that part of the accounting immediately.
+
+Fixes: 615d66c37c75 ("mm: memcontrol: fix memcg id ref counter on swap charge move")
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2007071431050.4726@eggly.anvils
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/soc/qcom/rpmh.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ mm/memcontrol.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/soc/qcom/rpmh.c
-+++ b/drivers/soc/qcom/rpmh.c
-@@ -150,10 +150,10 @@ existing:
- 		break;
- 	}
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -4883,7 +4883,6 @@ static void __mem_cgroup_clear_mc(void)
+ 		if (!mem_cgroup_is_root(mc.to))
+ 			page_counter_uncharge(&mc.to->memory, mc.moved_swap);
  
--	ctrlr->dirty = (req->sleep_val != old_sleep_val ||
--			req->wake_val != old_wake_val) &&
--			req->sleep_val != UINT_MAX &&
--			req->wake_val != UINT_MAX;
-+	ctrlr->dirty |= (req->sleep_val != old_sleep_val ||
-+			 req->wake_val != old_wake_val) &&
-+			 req->sleep_val != UINT_MAX &&
-+			 req->wake_val != UINT_MAX;
+-		mem_cgroup_id_get_many(mc.to, mc.moved_swap);
+ 		css_put_many(&mc.to->css, mc.moved_swap);
  
- unlock:
- 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+ 		mc.moved_swap = 0;
+@@ -5074,7 +5073,8 @@ put:			/* get_mctgt_type() gets the page
+ 			ent = target.ent;
+ 			if (!mem_cgroup_move_swap_account(ent, mc.from, mc.to)) {
+ 				mc.precharge--;
+-				/* we fixup refcnts and charges later. */
++				mem_cgroup_id_get_many(mc.to, 1);
++				/* we fixup other refcnts and charges later. */
+ 				mc.moved_swap++;
+ 			}
+ 			break;
 
 
