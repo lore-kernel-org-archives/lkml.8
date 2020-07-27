@@ -2,122 +2,130 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F16A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A83C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC05E2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:55:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="F/jAtfus"
+	by mail.kernel.org (Postfix) with ESMTP id 9BDC52075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgG0Gzp (ORCPT
+        id S1726877AbgG0G60 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 02:55:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52226 "EHLO
+        Mon, 27 Jul 2020 02:58:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgG0Gzp (ORCPT
+        with ESMTP id S1726662AbgG0G6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 02:55:45 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EED71C0619D2;
-        Sun, 26 Jul 2020 23:55:44 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFVv16G2Fz9sPf;
-        Mon, 27 Jul 2020 16:55:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595832942;
-        bh=V0YRt44wIYuXHGwhklCesj1tAF0YsqZncAcPDG9Sr1M=;
-        h=Date:From:To:Cc:Subject:From;
-        b=F/jAtfusKXiYRgb80GjgjxKMA/iILwKwv8mXiMcFqexMzotCQr+r47gSMRaPHNC9c
-         ph7LzmUuAYdDQjAQ5ldbDhCZMC0abihNJhaMe+4Gj1cNeSeXklrJMQseEjguhNUfIW
-         KCkTGYiQsUn/fmHSb4k/PtE5bwPDrzdVbTtbyUFcv/swXJd56v584A8e4oK1OqZf3N
-         y8li+xrPgQWzRQCR5+HJqpHKSykRBQ4I+tCBm30oiEJU7dU5xMy3kage4cSFtNiLBJ
-         61D1B27/bJLgYYLcrwRoU388+K6WMmqVaeJ3RWs+6IFaz2pETpEdah4aQB/XVTAbCy
-         ZFqqZPVUbl8xg==
-Date:   Mon, 27 Jul 2020 16:55:39 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: linux-next: build failure after merge of the driver-core tree
-Message-ID: <20200727165539.0e8797ab@canb.auug.org.au>
+        Mon, 27 Jul 2020 02:58:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7037C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 23:58:25 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jzx5W-0006HG-KR; Mon, 27 Jul 2020 08:58:18 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jzx5U-0004Sa-7O; Mon, 27 Jul 2020 08:58:16 +0200
+Message-ID: <00892cf87c3da679d76c4632109ebcf21059d556.camel@pengutronix.de>
+Subject: Re: [PATCH v9 02/12] ata: ahci_brcm: Fix use of BCM7216 reset
+ controller
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Mon, 27 Jul 2020 08:58:16 +0200
+In-Reply-To: <20200724203407.16972-3-james.quinlan@broadcom.com>
+References: <20200724203407.16972-1-james.quinlan@broadcom.com>
+         <20200724203407.16972-3-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Nd0.zjHSp54xmHO7IGVQ0oq";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Nd0.zjHSp54xmHO7IGVQ0oq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Jim,
 
-Hi all,
+On Fri, 2020-07-24 at 16:33 -0400, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
+> 
+> A reset controller "rescal" is shared between the AHCI driver and the PCIe
+> driver for the BrcmSTB 7216 chip.  Use
+> devm_reset_control_get_optional_shared() to handle this sharing.
+> 
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> 
+> Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
+> Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller name")
+> ---
+>  drivers/ata/ahci_brcm.c | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
+> index 6853dbb4131d..d6115bc04b09 100644
+> --- a/drivers/ata/ahci_brcm.c
+> +++ b/drivers/ata/ahci_brcm.c
+> @@ -428,7 +428,6 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+>  {
+>  	const struct of_device_id *of_id;
+>  	struct device *dev = &pdev->dev;
+> -	const char *reset_name = NULL;
+>  	struct brcm_ahci_priv *priv;
+>  	struct ahci_host_priv *hpriv;
+>  	struct resource *res;
+> @@ -452,11 +451,10 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+>  
+>  	/* Reset is optional depending on platform and named differently */
+>  	if (priv->version == BRCM_SATA_BCM7216)
+> -		reset_name = "rescal";
+> +		priv->rcdev = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
+>  	else
+> -		reset_name = "ahci";
+> +		priv->rcdev = devm_reset_control_get_optional(&pdev->dev, "ahci");
 
-After merging the driver-core tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Please use devm_reset_control_get_optional_exclusive() here.
 
-In file included from include/linux/dmi.h:5,
-                 from drivers/firmware/efi/embedded-firmware.c:8:
-drivers/firmware/efi/embedded-firmware.c:25:38: error: static declaration o=
-f 'efi_embedded_fw_list' follows non-static declaration
-   25 | EFI_EMBEDDED_FW_VISIBILITY LIST_HEAD(efi_embedded_fw_list);
-      |                                      ^~~~~~~~~~~~~~~~~~~~
-include/linux/list.h:24:19: note: in definition of macro 'LIST_HEAD'
-   24 |  struct list_head name =3D LIST_HEAD_INIT(name)
-      |                   ^~~~
-In file included from drivers/firmware/efi/embedded-firmware.c:17:
-drivers/firmware/efi/embedded-firmware.h:16:25: note: previous declaration =
-of 'efi_embedded_fw_list' was here
-   16 | extern struct list_head efi_embedded_fw_list;
-      |                         ^~~~~~~~~~~~~~~~~~~~
-drivers/firmware/efi/embedded-firmware.c:26:33: error: static declaration o=
-f 'efi_embedded_fw_checked' follows non-static declaration
-   26 | EFI_EMBEDDED_FW_VISIBILITY bool efi_embedded_fw_checked;
-      |                                 ^~~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/firmware/efi/embedded-firmware.c:17:
-drivers/firmware/efi/embedded-firmware.h:17:13: note: previous declaration =
-of 'efi_embedded_fw_checked' was here
-   17 | extern bool efi_embedded_fw_checked;
-      |             ^~~~~~~~~~~~~~~~~~~~~~~
+>  
+> -	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
+>  	if (IS_ERR(priv->rcdev))
+>  		return PTR_ERR(priv->rcdev);
+>  
+> @@ -479,10 +477,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+>  		break;
+>  	}
+>  
+> -	if (priv->version == BRCM_SATA_BCM7216)
+> -		ret = reset_control_reset(priv->rcdev);
+> -	else
+> -		ret = reset_control_deassert(priv->rcdev);
+> +	ret = reset_control_deassert(priv->rcdev);
+>  	if (ret)
+>  		return ret;
+>  
 
-Caused by commit
+Since you switch from _reset to _deassert/_assert here, I suspect you
+should also change the out_reset error path, and the suspend/resume
+functions accordingly.
 
-  2d38dbf89a06 ("test_firmware: Test platform fw loading on non-EFI systems=
-")
-
-CONFIG_TEST_FIRMWARE=3Dm for this build.
-
-I have used the driver-core tree from next-20200724 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Nd0.zjHSp54xmHO7IGVQ0oq
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8eemsACgkQAVBC80lX
-0GxoGwf/dHpXXGndf84Ys+4T7kHxH90+KyZxm7wg2PB0cj0j7gnjBEk0qrLy1r5z
-GBlIJ6mVoJ5DX7EUi1T9zRwSbTaqSjGdJxDNFX4gCcxmibX2Du0FdnpqeVWE0leV
-lGcwrGdrg9BHrNs7x6y6HRJ0mJrxV/dR0KsYgH+dJUh0OtADpSE9gEffHeTYk9+n
-+BCbPIAFggQZ5cTkGI7BqTXQXJNAp2RPAJc0rh/SoaGkKoYZHMzyIDY0WJfTQ6QP
-udmm8MWp4PDPvCGt7Z0twg6+khyvHpJ7KIGKWT4Lw/9Hh4q3l6IA5x1EX1yAQ4MH
-Rb89vLt1ODbdOiXRhSpgN+Yh6rbKZg==
-=Lq/u
------END PGP SIGNATURE-----
-
---Sig_/Nd0.zjHSp54xmHO7IGVQ0oq--
+regards
+Philipp
