@@ -2,260 +2,133 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A33C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B23C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFE692073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4AF620759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:27:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KuCDzLEh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgG0FXu (ORCPT
+        id S1726471AbgG0F1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:23:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10934 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726116AbgG0FXu (ORCPT
+        Mon, 27 Jul 2020 01:27:20 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21482 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726116AbgG0F1U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:23:50 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R5324e100318;
-        Mon, 27 Jul 2020 01:23:34 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32h2bg7cn6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 01:23:33 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R53Ngr101240;
-        Mon, 27 Jul 2020 01:23:33 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32h2bg7ckv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 01:23:32 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R5F3O0013180;
-        Mon, 27 Jul 2020 05:18:29 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 32gcy4htf3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 05:18:29 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R5IRHN59244610
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 05:18:27 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C266A4053;
-        Mon, 27 Jul 2020 05:18:27 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3FC8AA404D;
-        Mon, 27 Jul 2020 05:18:23 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.85.97.241])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Jul 2020 05:18:23 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: [PATCH v4 03/10] powerpc/smp: Move powerpc_topology above
-Date:   Mon, 27 Jul 2020 10:47:58 +0530
-Message-Id: <20200727051805.16728-4-srikar@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200727051805.16728-1-srikar@linux.vnet.ibm.com>
-References: <20200727051805.16728-1-srikar@linux.vnet.ibm.com>
+        Mon, 27 Jul 2020 01:27:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595827638;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AKE5Hc2PxuPIW6hu7a7doCEJmqwBxswHHKiFGDtBWQs=;
+        b=KuCDzLEhWv1b+/Uu095gPIeZDehqdGr2jzIpoGZCQwF4MiOHYngWuEW5g/8Ee3xoEwmJaf
+        woNtM/l6o7pmFAlu7cTlgANUJwODJkmWOqdsay7hDUCMNrNKMHLTifIiQDDS2366Pnkvag
+        LaXv6zCU3+Wv97hZWvCsyUmvW46VK1E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-247-WX2tJBGCNPCBLW1UaUOyYg-1; Mon, 27 Jul 2020 01:27:14 -0400
+X-MC-Unique: WX2tJBGCNPCBLW1UaUOyYg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD4C259;
+        Mon, 27 Jul 2020 05:27:09 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-112-104.ams2.redhat.com [10.36.112.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id ECB8410013D0;
+        Mon, 27 Jul 2020 05:27:01 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+Subject: Re: [PATCH v7 4/7] fs: Introduce O_MAYEXEC flag for openat2(2)
+References: <20200723171227.446711-1-mic@digikod.net>
+        <20200723171227.446711-5-mic@digikod.net>
+        <20200727042106.GB794331@ZenIV.linux.org.uk>
+Date:   Mon, 27 Jul 2020 07:27:00 +0200
+In-Reply-To: <20200727042106.GB794331@ZenIV.linux.org.uk> (Al Viro's message
+        of "Mon, 27 Jul 2020 05:21:06 +0100")
+Message-ID: <87y2n55xzv.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_03:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 spamscore=0 impostorscore=0
- mlxscore=0 phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007270036
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just moving the powerpc_topology description above.
-This will help in using functions in this file and avoid declarations.
+* Al Viro:
 
-No other functional changes
+> On Thu, Jul 23, 2020 at 07:12:24PM +0200, Micka=C3=83=C2=ABl Sala=C3=83=
+=C2=BCn wrote:
+>> When the O_MAYEXEC flag is passed, openat2(2) may be subject to
+>> additional restrictions depending on a security policy managed by the
+>> kernel through a sysctl or implemented by an LSM thanks to the
+>> inode_permission hook.  This new flag is ignored by open(2) and
+>> openat(2) because of their unspecified flags handling.  When used with
+>> openat2(2), the default behavior is only to forbid to open a directory.
+>
+> Correct me if I'm wrong, but it looks like you are introducing a magical
+> flag that would mean "let the Linux S&M take an extra special whip
+> for this open()".
+>
+> Why is it done during open?  If the caller is passing it deliberately,
+> why not have an explicit request to apply given torture device to an
+> already opened file?  Why not sys_masochism(int fd, char *hurt_flavour),
+> for that matter?
 
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Anton Blanchard <anton@ozlabs.org>
-Cc: Oliver O'Halloran <oohall@gmail.com>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Michael Neuling <mikey@neuling.org>
-Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Jordan Niethe <jniethe5@gmail.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
----
- arch/powerpc/kernel/smp.c | 116 +++++++++++++++++++-------------------
- 1 file changed, 58 insertions(+), 58 deletions(-)
+While I do not think this is appropriate language for a workplace, Al
+has a point: If the auditing event can be generated on an already-open
+descriptor, it would also cover scenarios like this one:
 
-diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-index 283a04e54f52..a685915e5941 100644
---- a/arch/powerpc/kernel/smp.c
-+++ b/arch/powerpc/kernel/smp.c
-@@ -818,6 +818,64 @@ static int init_cpu_l1_cache_map(int cpu)
- 	return err;
- }
- 
-+static bool shared_caches;
-+
-+#ifdef CONFIG_SCHED_SMT
-+/* cpumask of CPUs with asymmetric SMT dependency */
-+static int powerpc_smt_flags(void)
-+{
-+	int flags = SD_SHARE_CPUCAPACITY | SD_SHARE_PKG_RESOURCES;
-+
-+	if (cpu_has_feature(CPU_FTR_ASYM_SMT)) {
-+		printk_once(KERN_INFO "Enabling Asymmetric SMT scheduling\n");
-+		flags |= SD_ASYM_PACKING;
-+	}
-+	return flags;
-+}
-+#endif
-+
-+/*
-+ * P9 has a slightly odd architecture where pairs of cores share an L2 cache.
-+ * This topology makes it *much* cheaper to migrate tasks between adjacent cores
-+ * since the migrated task remains cache hot. We want to take advantage of this
-+ * at the scheduler level so an extra topology level is required.
-+ */
-+static int powerpc_shared_cache_flags(void)
-+{
-+	return SD_SHARE_PKG_RESOURCES;
-+}
-+
-+/*
-+ * We can't just pass cpu_l2_cache_mask() directly because
-+ * returns a non-const pointer and the compiler barfs on that.
-+ */
-+static const struct cpumask *shared_cache_mask(int cpu)
-+{
-+	if (shared_caches)
-+		return cpu_l2_cache_mask(cpu);
-+
-+	if (has_big_cores)
-+		return cpu_smallcore_mask(cpu);
-+
-+	return per_cpu(cpu_sibling_map, cpu);
-+}
-+
-+#ifdef CONFIG_SCHED_SMT
-+static const struct cpumask *smallcore_smt_mask(int cpu)
-+{
-+	return cpu_smallcore_mask(cpu);
-+}
-+#endif
-+
-+static struct sched_domain_topology_level powerpc_topology[] = {
-+#ifdef CONFIG_SCHED_SMT
-+	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
-+#endif
-+	{ shared_cache_mask, powerpc_shared_cache_flags, SD_INIT_NAME(CACHE) },
-+	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
-+	{ NULL, },
-+};
-+
- static int init_big_cores(void)
- {
- 	int cpu;
-@@ -1247,8 +1305,6 @@ static void add_cpu_to_masks(int cpu)
- 			set_cpus_related(cpu, i, cpu_core_mask);
- }
- 
--static bool shared_caches;
--
- /* Activate a secondary processor. */
- void start_secondary(void *unused)
- {
-@@ -1312,62 +1368,6 @@ int setup_profiling_timer(unsigned int multiplier)
- 	return 0;
- }
- 
--#ifdef CONFIG_SCHED_SMT
--/* cpumask of CPUs with asymmetric SMT dependency */
--static int powerpc_smt_flags(void)
--{
--	int flags = SD_SHARE_CPUCAPACITY | SD_SHARE_PKG_RESOURCES;
--
--	if (cpu_has_feature(CPU_FTR_ASYM_SMT)) {
--		printk_once(KERN_INFO "Enabling Asymmetric SMT scheduling\n");
--		flags |= SD_ASYM_PACKING;
--	}
--	return flags;
--}
--#endif
--
--/*
-- * P9 has a slightly odd architecture where pairs of cores share an L2 cache.
-- * This topology makes it *much* cheaper to migrate tasks between adjacent cores
-- * since the migrated task remains cache hot. We want to take advantage of this
-- * at the scheduler level so an extra topology level is required.
-- */
--static int powerpc_shared_cache_flags(void)
--{
--	return SD_SHARE_PKG_RESOURCES;
--}
--
--/*
-- * We can't just pass cpu_l2_cache_mask() directly because
-- * returns a non-const pointer and the compiler barfs on that.
-- */
--static const struct cpumask *shared_cache_mask(int cpu)
--{
--	if (shared_caches)
--		return cpu_l2_cache_mask(cpu);
--
--	if (has_big_cores)
--		return cpu_smallcore_mask(cpu);
--
--	return per_cpu(cpu_sibling_map, cpu);
--}
--
--#ifdef CONFIG_SCHED_SMT
--static const struct cpumask *smallcore_smt_mask(int cpu)
--{
--	return cpu_smallcore_mask(cpu);
--}
--#endif
--
--static struct sched_domain_topology_level powerpc_topology[] = {
--#ifdef CONFIG_SCHED_SMT
--	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
--#endif
--	{ shared_cache_mask, powerpc_shared_cache_flags, SD_INIT_NAME(CACHE) },
--	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
--	{ NULL, },
--};
--
- void __init smp_cpus_done(unsigned int max_cpus)
- {
- 	/*
--- 
-2.17.1
+  perl < /path/to/script
+
+Where the process that opens the file does not (and cannot) know that it
+will be used for execution purposes.
+
+Thanks,
+Florian
 
