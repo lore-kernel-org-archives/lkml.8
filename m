@@ -2,101 +2,94 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 763DFC433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A5CC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50D792073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:18:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="naMvyOJd"
+	by mail.kernel.org (Postfix) with ESMTP id 214E020719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:18:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgG0TS3 (ORCPT
+        id S1728749AbgG0TSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:18:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55284 "EHLO
+        Mon, 27 Jul 2020 15:18:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728107AbgG0TS2 (ORCPT
+        with ESMTP id S1728107AbgG0TSi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:18:28 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5529C0619D4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 12:18:28 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e8so10420124pgc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 12:18:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2xySvV1IjY/ykAIVcs+vE5LOnvW22SWhPjf5yGr8ub4=;
-        b=naMvyOJdT0LmNEVjAZJNPFto3+cHVILBVTkAr9eDy2kEWatCjbsevbDKbZEUwUxrN1
-         03PXmw7vaaifaTs5uxCJxs/K0Mn5g3/tJ2r2VLcCYE6VH4I/9dtNCbtcdADpwbwuUFmA
-         TeD/KFkaSOzBnAybvvjtjX5wmagf37ExNGMpw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2xySvV1IjY/ykAIVcs+vE5LOnvW22SWhPjf5yGr8ub4=;
-        b=DmC8xKftLow43rPvzeTVn5egJAlxre7NMN0U4ptVww3ixmLTzIz7BZPhLt3zDHo3O1
-         6WDNSifN+25NEiOqQo3eCm/SffRpbeeLmtXdfkN4W9z8mSq/F8lP2n81JDk9fHW2aDy6
-         ocNStDIUkm3OeVkpSmX6OlcQOmACOO2f9TdKtANiIS7W0lJmg/ahb9imP+oxqzJHVbw7
-         3cmsQo/GWphsD1WycnQTZd1PhZD2eI4BF+T8eT2O+e5b5HXkYnm9CiYAgeLigoDjEv9W
-         aBSRcHjB7xWfzUrU8O9G+3ZrOSKUGGGN9NOhKCpq1s6zHKibJfqwQ0UDQ0u4bQKqkElq
-         +d4w==
-X-Gm-Message-State: AOAM5312QKeZz1eINOw6oUvGW8e76KQpbBI3EiWozrAANZlBZK/pVZKm
-        Gv2iwtX3YM7Zoh6PWXka9Qx8Yg==
-X-Google-Smtp-Source: ABdhPJxHxU54eoeuYUvz0gC8SenG8BHXpKDdQtpJ9uHUXR3Pw/fdpX8ZlqWMdFH8+3KSnha9vSr3vQ==
-X-Received: by 2002:a63:df03:: with SMTP id u3mr20314068pgg.84.1595877508338;
-        Mon, 27 Jul 2020 12:18:28 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id f3sm356807pju.54.2020.07.27.12.18.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 12:18:27 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 12:18:26 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v10 1/2] usb: dwc3: qcom: Add interconnect support in
- dwc3 driver
-Message-ID: <20200727191826.GC3191083@google.com>
-References: <1595528857-25357-1-git-send-email-sanm@codeaurora.org>
- <1595528857-25357-2-git-send-email-sanm@codeaurora.org>
- <20200727191719.GB3191083@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200727191719.GB3191083@google.com>
+        Mon, 27 Jul 2020 15:18:38 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE87C061794;
+        Mon, 27 Jul 2020 12:18:38 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3C26B12763789;
+        Mon, 27 Jul 2020 12:01:52 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 12:18:36 -0700 (PDT)
+Message-Id: <20200727.121836.2197759951419525125.davem@davemloft.net>
+To:     alobakin@marvell.com
+Cc:     kuba@kernel.org, irusskikh@marvell.com,
+        michal.kalderon@marvell.com, aelior@marvell.com,
+        denis.bolotin@marvell.com, GR-everest-linux-l2@marvell.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dan.carpenter@oracle.com
+Subject: Re: [PATCH net-next] qed: fix the allocation of the chains with an
+ external PBL
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200727115133.1631-1-alobakin@marvell.com>
+References: <20200727115133.1631-1-alobakin@marvell.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 27 Jul 2020 12:01:52 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:17:19PM -0700, Matthias Kaehlcke wrote:
-> On Thu, Jul 23, 2020 at 11:57:36PM +0530, Sandeep Maheswaram wrote:
-> > Add interconnect support in dwc3-qcom driver to vote for bus
-> > bandwidth.
-> > 
-> > This requires for two different paths - from USB to
-> > DDR. The other is from APPS to USB.
-> > 
-> > Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> > Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-> 
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+From: Alexander Lobakin <alobakin@marvell.com>
+Date: Mon, 27 Jul 2020 14:51:33 +0300
 
-Sorry, that was meant for v11
+> Dan reports static checker warning:
+> 
+> "The patch 9b6ee3cf95d3: "qed: sanitize PBL chains allocation" from Jul
+> 23, 2020, leads to the following static checker warning:
+> 
+> 	drivers/net/ethernet/qlogic/qed/qed_chain.c:299 qed_chain_alloc_pbl()
+> 	error: uninitialized symbol 'pbl_virt'.
+> 
+> drivers/net/ethernet/qlogic/qed/qed_chain.c
+>    249  static int qed_chain_alloc_pbl(struct qed_dev *cdev, struct qed_chain *chain)
+>    250  {
+>    251          struct device *dev = &cdev->pdev->dev;
+>    252          struct addr_tbl_entry *addr_tbl;
+>    253          dma_addr_t phys, pbl_phys;
+>    254          __le64 *pbl_virt;
+>                 ^^^^^^^^^^^^^^^^
+> [...]
+>    271          if (chain->b_external_pbl)
+>    272                  goto alloc_pages;
+>                         ^^^^^^^^^^^^^^^^ uninitialized
+> [...]
+>    298                  /* Fill the PBL table with the physical address of the page */
+>    299                  pbl_virt[i] = cpu_to_le64(phys);
+>                         ^^^^^^^^^^^
+> [...]
+> "
+> 
+> This issue was introduced with commit c3a321b06a80 ("qed: simplify
+> initialization of the chains with an external PBL"), when
+> chain->pbl_sp.table_virt initialization was moved up to
+> qed_chain_init_params().
+> Fix it by initializing pbl_virt with an already filled chain struct field.
+> 
+> Fixes: c3a321b06a80 ("qed: simplify initialization of the chains with an external PBL")
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+
+Applied, thank you.
