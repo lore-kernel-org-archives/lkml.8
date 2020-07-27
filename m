@@ -2,161 +2,229 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D13C43457
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 053212078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:06:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858814;
-	bh=sdyPBMb08Nd6jQJyCqGjD0ZfRNG2F04VQCtP+a3zcYU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PvShRM2yOf8EXnXQI9HrWGEJ2nMkMe/KVOFCIobUMFSpw2ch1/1hkfxB+ntpm5/bc
-	 nF8MnVyTPBWa+yNGPahgRpco4U2I/vw61bXiHgruEKThSDgDvjlwcp4WhRTJY/ooPu
-	 PBlHsmRXREzu3E5J+QLOklpiXKFs1a6G26If/tmM=
+	by mail.kernel.org (Postfix) with ESMTP id 43B6C20825
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:06:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="llKbCc1J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgG0OGw (ORCPT
+        id S1729046AbgG0OG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:06:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54966 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgG0OGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:06:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 294C420775;
-        Mon, 27 Jul 2020 14:06:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858806;
-        bh=sdyPBMb08Nd6jQJyCqGjD0ZfRNG2F04VQCtP+a3zcYU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OBRJucAcwVKenMJ1FI0ZU2plQxFhFPhftIEpaDIrROPsrS+KeRy3Xl+p1rSaafR6m
-         PRKpR5vjRqnOJLWPZcXAqJxzMt9MkOTAxmtsH6Y+/FYTP1zA9DW+WGlV2cQHr+Gn5b
-         F6+RImU30DuMaISf5+s1PULt0XuA9mrP1+V8oZ5Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Boris Burkov <boris@bur.io>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 19/64] btrfs: fix mount failure caused by race with umount
-Date:   Mon, 27 Jul 2020 16:03:58 +0200
-Message-Id: <20200727134911.980431139@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
-References: <20200727134911.020675249@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 27 Jul 2020 10:06:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729005AbgG0OGx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:06:53 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48261C0619D2;
+        Mon, 27 Jul 2020 07:06:53 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id c6so2812845pje.1;
+        Mon, 27 Jul 2020 07:06:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=/dlgd3xXF2wViyMH4/dVOyKUUCfyX+RzmgXdSrfRYJs=;
+        b=llKbCc1Jzqqo+R2xnbeoSk/TDJIw41decVAgoX43zZVyuP/6dBJRdvVkOESBSZdY3L
+         A96qMW2LreOn6cizUXAumgXb4phDCe+3Wmp0SCjIhtrMbZc9/XlXNsuZ42Mkxi9onWUN
+         e/kI4+z14oylOT5JCyzHeS2a6YKqMRmH64petkoLdwnt4KWGFluP0k0YrufbbbybYjjW
+         v5/tH2Z311vFwPIgGNRMCNKM9yR9GKhUEmjyiPAtXXp2VBPT9GelUDEFlRgNgWDpxgrC
+         jgiGlAuMF/8reRfi4rxL91Xiz0S4wZvgvqDfkIyyLp3PWYjaVoEGxqU3u7qlC5u448EM
+         KVWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=/dlgd3xXF2wViyMH4/dVOyKUUCfyX+RzmgXdSrfRYJs=;
+        b=fwcOMntVLKtYfuIQN39cugOgI9Sl8ZrPUU2VxdvMk8f+PzqUkaZHdWnVN8iJOiJ48i
+         SWirCozrdo/XcxeTcZ08Sj0HHqW01Xe4IdAIMB1FX6vuBYGoacBIEtYWE4ajB8qZx2j+
+         fvClJ/gJCoZu+TFuI3mqU+q0VebrM9fNBGTk7mQGIeIwvg/U93u1ElhuLZJ+hcFxqFd9
+         Hoh1nIPwhRvr0RMKiX13rx2WpyqdQJnohVsECFuNXXXuLfR7CHn0QuCrnWjH1mXUmdLB
+         7PlKdxX9L6/r9Mn39Xc7Onb/7TlkTRa+MI33wZbWd44yGeCg9Z/SE3HVbPwqK1OCg0Sg
+         /oJw==
+X-Gm-Message-State: AOAM532gr8j+dFs7miW1gU70ENr0+MMMati3d4R9GlBpoAJTJ2AJWyUo
+        thdE0iNNqDDX/6R8BsgMaS0PL/QR+j4=
+X-Google-Smtp-Source: ABdhPJyNjZQimFQYsPZZojsGgdduUxnpmtCXQWSqh9MJ9HkwSZ8ELCmS6a/9rrVk9cGhiLpy+DgT6A==
+X-Received: by 2002:a17:90a:2d8b:: with SMTP id p11mr13163026pjd.10.1595858812742;
+        Mon, 27 Jul 2020 07:06:52 -0700 (PDT)
+Received: from blackclown ([103.88.82.91])
+        by smtp.gmail.com with ESMTPSA id y18sm15372647pff.10.2020.07.27.07.06.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 Jul 2020 07:06:51 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 19:36:40 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     hare@suse.com, jejb@linux.ibm.com, martin.peterson@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND] scsi: aic7xxx: Remove pci-dma-compat wrapper APIs.
+Message-ID: <20200727140640.GA14759@blackclown>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Burkov <boris@bur.io>
 
-commit 48cfa61b58a1fee0bc49eef04f8ccf31493b7cdd upstream.
+--UugvWAfsgieZRqgk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It is possible to cause a btrfs mount to fail by racing it with a slow
-umount. The crux of the sequence is generic_shutdown_super not yet
-calling sop->put_super before btrfs_mount_root calls btrfs_open_devices.
-If that occurs, btrfs_open_devices will decide the opened counter is
-non-zero, increment it, and skip resetting fs_devices->total_rw_bytes to
-0. From here, mount will call sget which will result in grab_super
-trying to take the super block umount semaphore. That semaphore will be
-held by the slow umount, so mount will block. Before up-ing the
-semaphore, umount will delete the super block, resulting in mount's sget
-reliably allocating a new one, which causes the mount path to dutifully
-fill it out, and increment total_rw_bytes a second time, which causes
-the mount to fail, as we see double the expected bytes.
+The legacy API wrappers in include/linux/pci-dma-compat.h
+should go away as it creates unnecessary midlayering
+for include/linux/dma-mapping.h APIs, instead use dma-mapping.h
+APIs directly.
 
-Here is the sequence laid out in greater detail:
+The patch has been generated with the coccinelle script below
+and has been hand modified to replace GFP_ with correct flag.
 
-CPU0                                                    CPU1
-down_write sb->s_umount
-btrfs_kill_super
-  kill_anon_super(sb)
-    generic_shutdown_super(sb);
-      shrink_dcache_for_umount(sb);
-      sync_filesystem(sb);
-      evict_inodes(sb); // SLOW
+Compile-tested only.
 
-                                              btrfs_mount_root
-                                                btrfs_scan_one_device
-                                                fs_devices = device->fs_devices
-                                                fs_info->fs_devices = fs_devices
-                                                // fs_devices-opened makes this a no-op
-                                                btrfs_open_devices(fs_devices, mode, fs_type)
-                                                s = sget(fs_type, test, set, flags, fs_info);
-                                                  find sb in s_instances
-                                                  grab_super(sb);
-                                                    down_write(&s->s_umount); // blocks
+@@@@
+- PCI_DMA_BIDIRECTIONAL
++ DMA_BIDIRECTIONAL
 
-      sop->put_super(sb)
-        // sb->fs_devices->opened == 2; no-op
-      spin_lock(&sb_lock);
-      hlist_del_init(&sb->s_instances);
-      spin_unlock(&sb_lock);
-      up_write(&sb->s_umount);
-                                                    return 0;
-                                                  retry lookup
-                                                  don't find sb in s_instances (deleted by CPU0)
-                                                  s = alloc_super
-                                                  return s;
-                                                btrfs_fill_super(s, fs_devices, data)
-                                                  open_ctree // fs_devices total_rw_bytes improperly set!
-                                                    btrfs_read_chunk_tree
-                                                      read_one_dev // increment total_rw_bytes again!!
-                                                      super_total_bytes < fs_devices->total_rw_bytes // ERROR!!!
+@@@@
+- PCI_DMA_TODEVICE
++ DMA_TO_DEVICE
 
-To fix this, we clear total_rw_bytes from within btrfs_read_chunk_tree
-before the calls to read_one_dev, while holding the sb umount semaphore
-and the uuid mutex.
+@@@@
+- PCI_DMA_FROMDEVICE
++ DMA_FROM_DEVICE
 
-To reproduce, it is sufficient to dirty a decent number of inodes, then
-quickly umount and mount.
+@@@@
+- PCI_DMA_NONE
++ DMA_NONE
 
-  for i in $(seq 0 500)
-  do
-    dd if=/dev/zero of="/mnt/foo/$i" bs=1M count=1
-  done
-  umount /mnt/foo&
-  mount /mnt/foo
+@@ expression E1, E2, E3; @@
+- pci_alloc_consistent(E1, E2, E3)
++ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
 
-does the trick for me.
+@@ expression E1, E2, E3; @@
+- pci_zalloc_consistent(E1, E2, E3)
++ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
 
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Boris Burkov <boris@bur.io>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+@@ expression E1, E2, E3, E4; @@
+- pci_free_consistent(E1, E2, E3, E4)
++ dma_free_coherent(&E1->dev, E2, E3, E4)
 
+@@ expression E1, E2, E3, E4; @@
+- pci_map_single(E1, E2, E3, E4)
++ dma_map_single(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_unmap_single(E1, E2, E3, E4)
++ dma_unmap_single(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4, E5; @@
+- pci_map_page(E1, E2, E3, E4, E5)
++ dma_map_page(&E1->dev, E2, E3, E4, E5)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_unmap_page(E1, E2, E3, E4)
++ dma_unmap_page(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_map_sg(E1, E2, E3, E4)
++ dma_map_sg(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_unmap_sg(E1, E2, E3, E4)
++ dma_unmap_sg(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_single_for_cpu(E1, E2, E3, E4)
++ dma_sync_single_for_cpu(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_single_for_device(E1, E2, E3, E4)
++ dma_sync_single_for_device(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_sg_for_cpu(E1, E2, E3, E4)
++ dma_sync_sg_for_cpu(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_sg_for_device(E1, E2, E3, E4)
++ dma_sync_sg_for_device(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2; @@
+- pci_dma_mapping_error(E1, E2)
++ dma_mapping_error(&E1->dev, E2)
+
+@@ expression E1, E2; @@
+- pci_set_consistent_dma_mask(E1, E2)
++ dma_set_coherent_mask(&E1->dev, E2)
+
+@@ expression E1, E2; @@
+- pci_set_dma_mask(E1, E2)
++ dma_set_mask(&E1->dev, E2)
+
+Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
 ---
- fs/btrfs/volumes.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/scsi/aic7xxx/aic79xx_osm.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -6902,6 +6902,14 @@ int btrfs_read_chunk_tree(struct btrfs_f
- 	mutex_lock(&fs_info->chunk_mutex);
- 
- 	/*
-+	 * It is possible for mount and umount to race in such a way that
-+	 * we execute this code path, but open_fs_devices failed to clear
-+	 * total_rw_bytes. We certainly want it cleared before reading the
-+	 * device items, so clear it here.
-+	 */
-+	fs_info->fs_devices->total_rw_bytes = 0;
-+
-+	/*
- 	 * Read all device items, and then all the chunk items. All
- 	 * device items are found before any chunk item (their object id
- 	 * is smaller than the lowest possible object id for a chunk
+diff --git a/drivers/scsi/aic7xxx/aic79xx_osm.c b/drivers/scsi/aic7xxx/aic7=
+9xx_osm.c
+index 3782a20d5888..2998d70e1987 100644
+--- a/drivers/scsi/aic7xxx/aic79xx_osm.c
++++ b/drivers/scsi/aic7xxx/aic79xx_osm.c
+@@ -952,8 +952,8 @@ int
+ ahd_dmamem_alloc(struct ahd_softc *ahd, bus_dma_tag_t dmat, void** vaddr,
+ 		 int flags, bus_dmamap_t *mapp)
+ {
+-	*vaddr =3D pci_alloc_consistent(ahd->dev_softc,
+-				      dmat->maxsize, mapp);
++	*vaddr =3D dma_alloc_coherent(&ahd->dev_softc->dev, dmat->maxsize, mapp,
++				    GFP_ATOMIC);
+ 	if (*vaddr =3D=3D NULL)
+ 		return (ENOMEM);
+ 	return(0);
+@@ -963,8 +963,7 @@ void
+ ahd_dmamem_free(struct ahd_softc *ahd, bus_dma_tag_t dmat,
+ 		void* vaddr, bus_dmamap_t map)
+ {
+-	pci_free_consistent(ahd->dev_softc, dmat->maxsize,
+-			    vaddr, map);
++	dma_free_coherent(&ahd->dev_softc->dev, dmat->maxsize, vaddr, map);
+ }
+=20
+ int
+--=20
+2.17.1
 
 
+--UugvWAfsgieZRqgk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8e32UACgkQ+gRsbIfe
+744KDw/7BpO7VI4xx9d2wmnGAwifaIX6neKoXzHs8RxWHssVDdZHn0PVd07wcNTZ
+2GYQ3gr9HVZJKe3GGwLY1naLzK2Ee28bHvfUro/DEdcJHjF5oyVgCwYEJT5vxdrU
+0wO2SvP3uUha3INyogAqUecWIdhqo6sGJ4LPnoeu93vp/RIK81CELKebxP9vkY9s
+Lq2l+BxeXyMMTxxfUWNMRTurf3FqqOnmRuN9uqM9hH+wMmM6WgY0BYDKam4fVecw
+/AwSrHQVyDzRle/zMnGUgJhV50KPwJbkmm2de2aqAUkwwrYYpOan5VgU5A+hRQJO
+7ry9jBXRxZn1rBz8T/v9IXD2UZ705/o6tDm51YrUrNY+Kk7JOI1rp2pTHV2ITpIQ
+aGp7SBUSEeXELdjrkgD/BSC0iopZ+apeiIh87qZEJ3VqS7xvrB05b8xm0XPKXDNy
+i3O3Vc5aOAypnb7GhBWxvKaM962WGhnH2AvRvxrPDbFRycsafwnkVa7QPU4P1Xs4
+xZG8HYg8SSJ3uLLpxb00SrtvDL9lyzR1cMWVU42eEDUeB0W9N/fY3rPvpB28iJ37
+CeAaJu8purH1u/+2B80S/p0933lWpih07cmnIx12q3R1MiFY2z5PlyJDiUGxeIbq
+YGsKrIMLMgPAHmNt5/I9LyAyoA1TaVsgiHwRKOY2jHFOWCHc+n0=
+=yJ/4
+-----END PGP SIGNATURE-----
+
+--UugvWAfsgieZRqgk--
