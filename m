@@ -2,146 +2,94 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692BCC433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F623C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B7D20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:50:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dzevA4ip"
+	by mail.kernel.org (Postfix) with ESMTP id 2928B20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:50:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgG0JuR (ORCPT
+        id S1727091AbgG0Jur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:50:17 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:53072 "EHLO m43-7.mailgun.net"
+        Mon, 27 Jul 2020 05:50:47 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:44132 "EHLO a.mx.secunet.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgG0JuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:50:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595843414; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
- Subject: Sender; bh=Kbjy0E1cyBAH7os5xRP4ZFWN/pUN1FsBi0P64wEC5LI=; b=dzevA4ipkOY4Zy580L8euz2e+uBHllOynb+CotBJRCF/P/7EN/vMxrAD+X94GeRm3j2cU0k8
- S2B5wE76Q4Qvkb/hk2jq4PuI/U4rfe3+KGiy9KeHygMYp1t1E0p+X00YhoSVoP674LMMp/Kd
- cb9KSB8WMdFMkuNmKwdYpMIjuj4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5f1ea355634c4259e31b7b8b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 09:50:13
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E1D83C433A0; Mon, 27 Jul 2020 09:50:12 +0000 (UTC)
-Received: from [192.168.0.129] (unknown [183.83.142.110])
+        id S1726196AbgG0Juq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:50:46 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 64AA420561;
+        Mon, 27 Jul 2020 11:50:44 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ufs28DryHkk0; Mon, 27 Jul 2020 11:50:44 +0200 (CEST)
+Received: from cas-essen-01.secunet.de (201.40.53.10.in-addr.arpa [10.53.40.201])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 119ACC433C9;
-        Mon, 27 Jul 2020 09:50:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 119ACC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
-Subject: Re: [PATCH v4 00/12] ASoC: qcom: Add support for SC7180 lpass variant
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1595413915-17867-1-git-send-email-rohitkr@codeaurora.org>
- <d1e6d60b-9f00-266d-74ad-8c18bbf8d142@linaro.org>
-From:   Rohit Kumar <rohitkr@codeaurora.org>
-Message-ID: <cb02a3d7-a947-852d-739f-a5f4b823f06a@codeaurora.org>
-Date:   Mon, 27 Jul 2020 15:20:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        by a.mx.secunet.com (Postfix) with ESMTPS id 01B4920482;
+        Mon, 27 Jul 2020 11:50:44 +0200 (CEST)
+Received: from mbx-essen-01.secunet.de (10.53.40.197) by
+ cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 27 Jul 2020 11:50:43 +0200
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
+ (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Mon, 27 Jul
+ 2020 11:50:43 +0200
+Received: by gauss2.secunet.de (Postfix, from userid 1000)
+        id 671043184651; Mon, 27 Jul 2020 11:50:43 +0200 (CEST)
+Date:   Mon, 27 Jul 2020 11:50:43 +0200
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+CC:     B K Karthik <bkkarthik@pesu.pes.edu>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Linux Kernel Network Developers" <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        <skhan@linuxfoundation.org>,
+        <linux-kernel-mentees@lists.linuxfoundation.org>
+Subject: Re: [PATCH v2] net: ipv6: fix use-after-free Read in
+ __xfrm6_tunnel_spi_lookup
+Message-ID: <20200727095043.GA20687@gauss3.secunet.de>
+References: <20200726030855.q6dfjekazfzl5usw@pesu.pes.edu>
+ <CAM_iQpUFL7VdCKSgUa6N3pg7ijjZRu6-6UAs2oNosM-EzgXbaQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <d1e6d60b-9f00-266d-74ad-8c18bbf8d142@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAM_iQpUFL7VdCKSgUa6N3pg7ijjZRu6-6UAs2oNosM-EzgXbaQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: cas-essen-02.secunet.de (10.53.40.202) To
+ mbx-essen-01.secunet.de (10.53.40.197)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jul 25, 2020 at 10:35:12PM -0700, Cong Wang wrote:
+> On Sat, Jul 25, 2020 at 8:09 PM B K Karthik <bkkarthik@pesu.pes.edu> wrote:
+> > @@ -103,10 +103,10 @@ static int __xfrm6_tunnel_spi_check(struct net *net, u32 spi)
+> >  {
+> >         struct xfrm6_tunnel_net *xfrm6_tn = xfrm6_tunnel_pernet(net);
+> >         struct xfrm6_tunnel_spi *x6spi;
+> > -       int index = xfrm6_tunnel_spi_hash_byspi(spi);
+> > +       int index = xfrm6_tunnel_spi_hash_byaddr((const xfrm_address_t *)spi);
+> >
+> >         hlist_for_each_entry(x6spi,
+> > -                            &xfrm6_tn->spi_byspi[index],
+> > +                            &xfrm6_tn->spi_byaddr[index],
+> >                              list_byspi) {
+> >                 if (x6spi->spi == spi)
+> 
+> How did you convince yourself this is correct? This lookup is still
+> using spi. :)
 
-On 7/24/2020 4:52 PM, Srinivas Kandagatla wrote:
->
->
-> On 22/07/2020 11:31, Rohit kumar wrote:
->> This patch chain add audio support for SC7180 soc by doing the required
->> modification in existing common lpass-cpu/lpass-platform driver.
->> This also fixes some concurrency issue.
->>
->> Changes since v3:
->>     - Fixed yaml documentation comments and make dt_binding_check 
->> issues.
->>     - Moved general fixes out of sc7180 specific patches as suggested 
->> by Srinivas.
->>     - Update clock-names to make it same as existing platforms.
->>
->> Ajit Pandey (4):
->>    ASoC: qcom: Add common array to initialize soc based core clocks
->>    ASoC: qcom: lpass-platform: Replace card->dev with component->dev
->>    include: dt-bindings: sound: Add sc7180-lpass bindings header
->>    ASoC: qcom: lpass-sc7180: Add platform driver for lpass audio
->>
->> Rohit kumar (8):
->>    ASoC: qcom: lpass-cpu: Move ahbix clk to platform specific function
->>    ASoC: qcom: lpass-platform: fix memory leak
->>    ASoC: qcom: lpass: Use regmap_field for i2sctl and dmactl registers
->>    ASoC: qcom: lpass-cpu: fix concurrency issue
->>    dt-bindings: sound: lpass-cpu: Add sc7180 lpass cpu node
->>    ASoC: qcom: lpass-cpu: Use platform_get_resource
->>    ASoC: qcom: lpass-platform: Use platform_get_irq
->>    dt-bindings: sound: lpass-cpu: Move to yaml format
->
->
-Thanks Srini for review and testing.
-
-Mark, I am planning to repost patch07 onwards to address comments by Rob as
-
-there are no comments till patch06 and they are just fixes.
-
-> Tested this on Dragon Board 410c!
->
-> Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->
-> --srini
->>
->>   .../devicetree/bindings/sound/qcom,lpass-cpu.txt   |  79 --------
->>   .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 185 
->> ++++++++++++++++++
->>   include/dt-bindings/sound/sc7180-lpass.h           |  10 +
->>   sound/soc/qcom/Kconfig                             |   5 +
->>   sound/soc/qcom/Makefile                            |   2 +
->>   sound/soc/qcom/lpass-apq8016.c                     |  86 ++++++--
->>   sound/soc/qcom/lpass-cpu.c                         | 204 
->> ++++++++++---------
->>   sound/soc/qcom/lpass-ipq806x.c                     |  67 +++++++
->>   sound/soc/qcom/lpass-lpaif-reg.h                   | 157 
->> ++++++++-------
->>   sound/soc/qcom/lpass-platform.c                    | 155 
->> +++++++++++----
->>   sound/soc/qcom/lpass-sc7180.c                      | 216 
->> +++++++++++++++++++++
->>   sound/soc/qcom/lpass.h                             |  63 +++++-
->>   12 files changed, 930 insertions(+), 299 deletions(-)
->>   delete mode 100644 
->> Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
->>   create mode 100644 
->> Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
->>   create mode 100644 include/dt-bindings/sound/sc7180-lpass.h
->>   create mode 100644 sound/soc/qcom/lpass-sc7180.c
->>
--- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
-
+This can not be correct, it takes a u32 spi value and casts it to a
+pointer to an IP address.
