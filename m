@@ -2,112 +2,113 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEDAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A776FC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA4820738
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 791AE2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:50:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qSKI9QTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbgG0Htl (ORCPT
+        id S1726997AbgG0HuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:49:41 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:49773 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgG0Htk (ORCPT
+        Mon, 27 Jul 2020 03:50:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgG0HuA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:49:40 -0400
-Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MmU9R-1ki8LS0GDx-00iQrk for <linux-kernel@vger.kernel.org>; Mon, 27 Jul
- 2020 09:49:39 +0200
-Received: by mail-qt1-f171.google.com with SMTP id b25so11538091qto.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:49:38 -0700 (PDT)
-X-Gm-Message-State: AOAM531x8u5CXtQTSfWSDrreOdb0juCJhNPaphjFiz8wO4S3OBXLW0/d
-        zspr+RSjtzmXBxNxlPeY5fznhx5d9Ho+H2DD8rs=
-X-Google-Smtp-Source: ABdhPJyqvtFtc9EeRn23Z++9snt24Adrey6DZY0MGaUrfMzSaEFa1Rx5bauVO7MVoNlBp10B/WVA2Ld+bxrUKqWk8nE=
-X-Received: by 2002:aed:2946:: with SMTP id s64mr614510qtd.204.1595836177987;
- Mon, 27 Jul 2020 00:49:37 -0700 (PDT)
+        Mon, 27 Jul 2020 03:50:00 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00805C0619D2;
+        Mon, 27 Jul 2020 00:49:58 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id k71so8798103pje.0;
+        Mon, 27 Jul 2020 00:49:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HhIDh5Hx27FTVnTfWMP3UANCkbwxny8/a15rEFriMYg=;
+        b=qSKI9QTIVnlWHPnZx/oZulFmEZuP+u00joILTApKVVfP8s8yOV9YqDxlWAUO5yHFRZ
+         +GS4TjL2cTBKGeoTyNVVBx1rnsHKcPP0+cHUOMhMsjBjoC4Fp0St0V6WOdKcHWE3a7qY
+         uBuoUliduYJmBTAK5v4zBrqqhFQl9sD9/AAWfSRvwNPOxyUS8btYqgX4mjC84N2qLcaA
+         AGn7/vABnbyl3VYcHiBYvEwUWuv8YJXVoaPeEXT7L5npeTKE9SRyUmOSV8t9X66GNovS
+         ThzJhhTB2NqIDsg3ULQ7+1AV9S1UOREuUFckafPO97cbrkHJwl/HhP1AkxRHz5x4hXOI
+         2JaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HhIDh5Hx27FTVnTfWMP3UANCkbwxny8/a15rEFriMYg=;
+        b=mG04y1v7f55elE7Br1wzKu+uY7M9EurmetBZMsIPaPeXuWfAgUFSrS1jkD/sRh7XKG
+         IchU4agWjIGTDJzV6Nav0cLQY/0D/fBdOqeZcc/liK8relTpJaIN+zV/KnjtNK3Att1r
+         aYCINdELA7i0t04ULn9r34DmQdWYRxwejo5nIyvjYhyDk75abuGWv2IgDfygMznxUeS6
+         dkYC/EGL+0W9VcUbRXbr3NLmbSciGiLQhdHL9wvBA1UHqDer/55S2CN4DwpqYdjmv67T
+         zvF/Hc+/U4FibwI7CI/5wpxuoE5250PStZf7sWhVBcuzL7STQaDAFrz82hYUhE0FLyOQ
+         33Zg==
+X-Gm-Message-State: AOAM530JHKQAHZIokwweT/BGycAU/pz2hMzp75YC9BrAR6KHPvFiEOqc
+        ezKdDDogz2V2lCrp9f1IDq6BECR6RdapYPklubM=
+X-Google-Smtp-Source: ABdhPJyPnB6FMtVB5Q9bd2CIaxCVWPVOup1tHBVKZLnpG1UbzQLvIgKLF9H89TgmFXZDcF6RR6t7SbG6MhniZDPpst8=
+X-Received: by 2002:a17:90a:8985:: with SMTP id v5mr2061101pjn.181.1595836198458;
+ Mon, 27 Jul 2020 00:49:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200726043948.1357573-1-daniel@0x0f.com> <20200726043948.1357573-7-daniel@0x0f.com>
-In-Reply-To: <20200726043948.1357573-7-daniel@0x0f.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jul 2020 09:49:22 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a39E2ww_nuR0PHxT=Lnqsu+-mkHdbT+TzSnH6mYA7pKeA@mail.gmail.com>
-Message-ID: <CAK8P3a39E2ww_nuR0PHxT=Lnqsu+-mkHdbT+TzSnH6mYA7pKeA@mail.gmail.com>
-Subject: Re: [PATCH 6/7] ARM:mstar: Add syscon node for "pmsleep" area
-To:     Daniel Palmer <daniel@0x0f.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200717114155.56222-1-hdegoede@redhat.com> <20200719225649.GA4341@khazad-dum.debian.net>
+ <20200722054144.GQ1665100@dtor-ws> <20200727005049.GA10254@khazad-dum.debian.net>
+ <f67ede61-c9d4-6abc-9b59-a5b2b615d1b6@redhat.com>
+In-Reply-To: <f67ede61-c9d4-6abc-9b59-a5b2b615d1b6@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Jul 2020 10:49:42 +0300
+Message-ID: <CAHp75VdvhC5HJ-BjqjDxU_Z_7_i8MV5UDN4FgWHvZfSD5=smqg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Add 3 new keycodes and use them for 3 new hotkeys on
+ new Lenovo Thinkpads
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Marco Trevisan <marco.trevisan@canonical.com>,
+        Mark Pearson <mpearson@lenovo.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:BIN1nKwO5OyDJZP5VcffJDmmkyLkZJ27LEzfx9XapM2fEemNskh
- wLhRObCNnuVEsrUaLlyZcB99Yo7JemJrNxnN/qjCIijSHgNGPa4P7W243s2Ag6qG2R6aMIV
- HtmI/MGMsMNyGLowsA6bk8WM0JrKlI+ThP3IX9ByY1mTtQhqU7pyBjjAOV9PvZe+ueBVdjz
- FSVNCpGflgB370noq7/3A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DcSsac6gRNs=:MKtDngoHSRyVWOyNjPRL5E
- mPAoMDsJOBQdKwpIcwOg7QFvvrzFKgHy09xa5rPsxkfh7KlYbaH2Dlp8LKVP3LOPs/XN6TYQg
- u2JHG4c9hmjZpJyHQekrmubujBUftjcVxD3pkUafMYULMXGhW3sb3grKbowu0hvopy8mcyboQ
- i9eNQLclquPBEe5lr9xp/V566QFGDdyPt4qwT88o3ZKV22c7Uskd5qN+fASbE4MN4KmXQTSnz
- 29zWlIHaWMZF72oojMRxUiNINTJ4RLyvBYm3CxzZCKAxu2RDMKwHaseu+GfhKFNEt0db8J/oi
- pL+nxW5AROQQL1m3xrc9wq/K+3k2U7zGrlFpP5nDdhUBR8BeYo0A857wdChjjIs0YWcuxQ3z/
- YUsrqWiLR8dzx9ydwys0T+T7j+WfIWjXUNzpi7F/+DeVrcc3GvbSpnkBaexzXHMPXW2ldZ6/B
- AQ1ZL7YbA6PHo8vLUEKg1Ombpf5L/JJTGTjcVxTL6bSc43CiTtnptSmH2pzOlMhC0pP4FhR2t
- r1S+DAQFDPXwzRzaHep1wIUa/ByApNfc+TzLN/jqRVMS1szyQk0oM3FgsS+p6JCaBHHmqA2hS
- uAn0UywcQNQjBFHVRNEgqYDPZgFzX0uGZAo+KAWULxtJWf3ES+TSEKjGhHxM7DYWiJUq422rb
- hokBW9G4zLfFg/X8y2ZP3UAH9DB65rV67KQ7tS1I1+Yd1dNZyFtNZF7uQSaGZYa3Dv+TmciEB
- aaKY4IBoEWAPLIO6V/e+FBmwc+fpFR/5FPL0nlyy3zZNjcF1IbLmzNUDO1aB1QnvSKYYtiTpZ
- 6EIYYKPqyZeVRaAExswAaO3Z4sC+NW6VdmlVmYX/nLtOHnq5QKuuw/6o4Q1lx+tfudoi+YR8t
- YU4o4uetOu1zUioWgeYDa6wnKwdPBD72q/uJ3XMYcW7JXjQ3NVAgeWu2yRen2exxUiLQ4arJD
- cAdbbeyPSgf1BwN07o2S2gsYwhxguFkxiaW3DrFIJpKx+jUvqO3uY
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 6:40 AM Daniel Palmer <daniel@0x0f.com> wrote:
+On Mon, Jul 27, 2020 at 10:45 AM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> MStar v7 SoCs contain a region of registers that are in the always on
-> domain that the vendor code calls the "pmsleep" area.
+> Hi,
 >
-> This area contains registers for a broad range of functionality and
-> needs to be shared between drivers.
+> On 7/27/20 2:50 AM, Henrique de Moraes Holschuh wrote:
+> > On Tue, 21 Jul 2020, Dmitry Torokhov wrote:
+> >> On Sun, Jul 19, 2020 at 07:56:49PM -0300, Henrique de Moraes Holschuh wrote:
+> >>> On Fri, 17 Jul 2020, Hans de Goede wrote:
+> >>>> This is a simple patch-series adding support for 3 new hotkeys found
+> >>>> on various new Lenovo Thinkpad models.
+> >>>
+> >>> For all three patches, pending an ack for the new keycodes by the input
+> >>> maintainers:
+> >>>
+> >>> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+> >>
+> >> Do you want me to merge all 3 through input tree?
+> >
+> > Hans, Daren, Andy, what do you prefer?
 >
-> This patch adds a syscon node for the pmsleep area so that other
-> drivers can access registers in the area.
->
-> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
+> Taking all this upstream through Dmitry's input tree is fine with
+> me, but this really is up to Andy and/or Daren.
 
-I think it would be better to add a more specific compatible string in
-addition to the "syscon" one, to make it possible to later add a proper
-driver for this area, in case there is a need for that.
+Fine with me.
 
-       Arnd
-
-> ---
->  arch/arm/boot/dts/mstar-v7.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/mstar-v7.dtsi b/arch/arm/boot/dts/mstar-v7.dtsi
-> index a73b1d162dfd..c8b192569d05 100644
-> --- a/arch/arm/boot/dts/mstar-v7.dtsi
-> +++ b/arch/arm/boot/dts/mstar-v7.dtsi
-> @@ -73,6 +73,11 @@ riu: bus@1f000000 {
->                         #size-cells = <1>;
->                         ranges = <0x0 0x1f000000 0x00400000>;
->
-> +                       pmsleep: syscon@1c00 {
-> +                               compatible = "syscon";
-> +                               reg = <0x1c00 0x100>;
-> +                       };
-> +
->                         l3bridge: l3bridge@204400 {
->                                 compatible = "mstar,l3bridge";
->                                 reg = <0x204400 0x200>;
-> --
-> 2.27.0
->
+-- 
+With Best Regards,
+Andy Shevchenko
