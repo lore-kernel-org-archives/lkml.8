@@ -2,678 +2,215 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D29DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C198C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01B8220738
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:34:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mGscJig9"
+	by mail.kernel.org (Postfix) with ESMTP id 350AF20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgG0He6 (ORCPT
+        id S1726891AbgG0HiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:34:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58310 "EHLO
+        Mon, 27 Jul 2020 03:38:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbgG0He5 (ORCPT
+        with ESMTP id S1726211AbgG0HiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:34:57 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EACBC0619D4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:34:57 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id q145so6816212ybg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:34:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=uT6pgAtYpa/FSiCTXiSnVA8DYUDxNWOwe6DKjrBjW0w=;
-        b=mGscJig9To5bbFAShL4gZXM5cJDvVVNnM2LdrONcdXt+LR4+Qzm/55wZhAzr6Nlpcv
-         u2wIpTG0yNJAvkDd9N2LCZggSeR4PVka5ljDLFHLVvr6fo0C8w5YIz/dTb49m4nLOBAz
-         PcXyKy71qIwFHXKcndADfU7zYEA5vy5EOkzKbzkuewkVQzZEQxKTnfEfPrx9n/eelHOe
-         +RWj0navCZTyH/BEmn9adz5q93dJyXGwxNjMswW6m0iMsD/GuA20QT5YGRFY/qNfpVPL
-         carsCU2Fr41F5dwHh93nJXELKPx96C1dOrKhECU7yK3F3uwqfJpRmxvDG9hA5klEhAqG
-         4HJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=uT6pgAtYpa/FSiCTXiSnVA8DYUDxNWOwe6DKjrBjW0w=;
-        b=PjVBW21WczXALqde7zoCp4cAp2Jbm8+l6CI4LAsc+8UD1gpP5Si23A7kl5cQ8iXV1l
-         8nLlwzAHt7F7xxyF38Z9ZHKj6f3pm7TazKcriOrnNzKX0+m6HH/wyWRe0iAIarIQQJak
-         /hPLaoMDmnyvkWPaW+RSEkkfgafMD7S7J+NYzLuLHvVoRbYbV4Oc1WKfamDwIpP42I34
-         /VIgc/95NDAU0fEwecJjKkSM7YNa80fIRMf/NhjteMaWwn2jsTVVom6o38F6Qp/qqREi
-         bnfW9StQHdhK1JcHhxO7n6RwTRq89FHRWqnKOcWLR5OPGM1ixUDziD6HS3nU2FZ2d6wp
-         fpYQ==
-X-Gm-Message-State: AOAM530m9I2FmssGkmlI/xIIVulN+CtBsRkj010m8NLV26sK2A/AiTrc
-        OuCrtcIag1vlfE6ByE8W+RXJS5p+xwcC
-X-Google-Smtp-Source: ABdhPJyi5+FqZ/rYlJ6EHug3LzzyeAjLF3NUKoZc5yGUmZg4wzQ8/SEwT6ZDmV3mjAkJ5BDpV8JuzIaETI6o
-X-Received: by 2002:a25:1085:: with SMTP id 127mr31289023ybq.254.1595835296232;
- Mon, 27 Jul 2020 00:34:56 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 00:34:54 -0700
-In-Reply-To: <20200713084144.4430-7-sjpark@amazon.com>
-Message-Id: <xr934kpt76n5.fsf@gthelen.svl.corp.google.com>
-Mime-Version: 1.0
-References: <20200713084144.4430-1-sjpark@amazon.com> <20200713084144.4430-7-sjpark@amazon.com>
-Subject: Re: [PATCH v18 06/14] mm/damon: Implement callbacks for the virtual
- memory address spaces
-From:   Greg Thelen <gthelen@google.com>
-To:     SeongJae Park <sjpark@amazon.com>, akpm@linux-foundation.org
-Cc:     SeongJae Park <sjpark@amazon.de>, Jonathan.Cameron@Huawei.com,
-        aarcange@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, amit@kernel.org,
-        benh@kernel.crashing.org, brendan.d.gregg@gmail.com,
-        brendanhiggins@google.com, cai@lca.pw, colin.king@canonical.com,
-        corbet@lwn.net, david@redhat.com, dwmw@amazon.com,
-        foersleo@amazon.de, irogers@google.com, jolsa@redhat.com,
-        kirill@shutemov.name, mark.rutland@arm.com, mgorman@suse.de,
-        minchan@kernel.org, mingo@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, rdunlap@infradead.org, riel@surriel.com,
-        rientjes@google.com, rostedt@goodmis.org, rppt@kernel.org,
-        sblbir@amazon.com, shakeelb@google.com, shuah@kernel.org,
-        sj38.park@gmail.com, snu@amazon.de, vbabka@suse.cz,
-        vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com,
-        ying.huang@intel.com, linux-damon@amazon.com, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Jul 2020 03:38:05 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 010AAC0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:38:05 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jzxht-0002NO-VG; Mon, 27 Jul 2020 09:37:57 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jzxht-0007xt-1v; Mon, 27 Jul 2020 09:37:57 +0200
+Date:   Mon, 27 Jul 2020 09:37:57 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
+Message-ID: <20200727073757.r2vq6djh3a4dyfp6@pengutronix.de>
+References: <20200724080813.24884-1-peng.fan@nxp.com>
+ <20200724080813.24884-4-peng.fan@nxp.com>
+ <20200727062335.v2pxgu6kr6ao2qmh@pengutronix.de>
+ <DB6PR0402MB27601C875FF5F1E02DBF5C6488720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+ <20200727064151.767kc7622tcqmqfs@pengutronix.de>
+ <DB6PR0402MB276063FBE74FCF222CB00F8588720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lledsvdu3e7clex3"
+Content-Disposition: inline
+In-Reply-To: <DB6PR0402MB276063FBE74FCF222CB00F8588720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:08:39 up 254 days, 22:27, 241 users,  load average: 0.11, 0.11,
+ 0.08
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SeongJae Park <sjpark@amazon.com> wrote:
 
-> From: SeongJae Park <sjpark@amazon.de>
->
-> This commit introduces a reference implementation of the address space
-> specific low level primitives for the virtual address space, so that
-> users of DAMON can easily monitor the data accesses on virtual address
-> spaces of specific processes by simply configuring the implementation to
-> be used by DAMON.
->
-> The low level primitives for the fundamental access monitoring are
-> defined in two parts:
-> 1. Identification of the monitoring target address range for the address
-> space.
-> 2. Access check of specific address range in the target space.
->
-> The reference implementation for the virtual address space provided by
-> this commit is designed as below.
->
-> PTE Accessed-bit Based Access Check
-> -----------------------------------
->
-> The implementation uses PTE Accessed-bit for basic access checks.  That
-> is, it clears the bit for next sampling target page and checks whether
-> it set again after one sampling period.  To avoid disturbing other
-> Accessed bit users such as the reclamation logic, the implementation
-> adjusts the ``PG_Idle`` and ``PG_Young`` appropriately, as same to the
-> 'Idle Page Tracking'.
->
-> VMA-based Target Address Range Construction
-> -------------------------------------------
->
-> Only small parts in the super-huge virtual address space of the
-> processes are mapped to physical memory and accessed.  Thus, tracking
-> the unmapped address regions is just wasteful.  However, because DAMON
-> can deal with some level of noise using the adaptive regions adjustment
-> mechanism, tracking every mapping is not strictly required but could
-> even incur a high overhead in some cases.  That said, too huge unmapped
-> areas inside the monitoring target should be removed to not take the
-> time for the adaptive mechanism.
->
-> For the reason, this implementation converts the complex mappings to
-> three distinct regions that cover every mapped area of the address
-> space.  Also, the two gaps between the three regions are the two biggest
-> unmapped areas in the given address space.  The two biggest unmapped
-> areas would be the gap between the heap and the uppermost mmap()-ed
-> region, and the gap between the lowermost mmap()-ed region and the stack
-> in most of the cases.  Because these gaps are exceptionally huge in
-> usual address spacees, excluding these will be sufficient to make a
-> reasonable trade-off.  Below shows this in detail::
->
->     <heap>
->     <BIG UNMAPPED REGION 1>
->     <uppermost mmap()-ed region>
->     (small mmap()-ed regions and munmap()-ed regions)
->     <lowermost mmap()-ed region>
->     <BIG UNMAPPED REGION 2>
->     <stack>
->
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> Reviewed-by: Leonard Foerster <foersleo@amazon.de>
-> ---
->  include/linux/damon.h |   6 +
->  mm/damon.c            | 474 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 480 insertions(+)
->
-> diff --git a/include/linux/damon.h b/include/linux/damon.h
-> index 3c0b92a679e8..310d36d123b3 100644
-> --- a/include/linux/damon.h
-> +++ b/include/linux/damon.h
-> @@ -144,6 +144,12 @@ struct damon_ctx {
->  	void (*aggregate_cb)(struct damon_ctx *context);
->  };
->  
-> +/* Reference callback implementations for virtual memory */
-> +void kdamond_init_vm_regions(struct damon_ctx *ctx);
-> +void kdamond_update_vm_regions(struct damon_ctx *ctx);
-> +void kdamond_prepare_vm_access_checks(struct damon_ctx *ctx);
-> +unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx);
-> +
->  int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
->  int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
->  		unsigned long aggr_int, unsigned long regions_update_int,
-> diff --git a/mm/damon.c b/mm/damon.c
-> index b844924b9fdb..386780739007 100644
-> --- a/mm/damon.c
-> +++ b/mm/damon.c
-> @@ -9,6 +9,9 @@
->   * This file is constructed in below parts.
->   *
->   * - Functions and macros for DAMON data structures
-> + * - Functions for the initial monitoring target regions construction
-> + * - Functions for the dynamic monitoring target regions update
-> + * - Functions for the access checking of the regions
->   * - Functions for DAMON core logics and features
->   * - Functions for the DAMON programming interface
->   * - Functions for the module loading/unloading
-> @@ -196,6 +199,477 @@ static unsigned long damon_region_sz_limit(struct damon_ctx *ctx)
->  	return sz;
->  }
->  
-> +/*
-> + * Get the mm_struct of the given task
-> + *
-> + * Caller _must_ put the mm_struct after use, unless it is NULL.
-> + *
-> + * Returns the mm_struct of the task on success, NULL on failure
-> + */
-> +static struct mm_struct *damon_get_mm(struct damon_task *t)
-> +{
-> +	struct task_struct *task;
-> +	struct mm_struct *mm;
-> +
-> +	task = damon_get_task_struct(t);
-> +	if (!task)
-> +		return NULL;
-> +
-> +	mm = get_task_mm(task);
-> +	put_task_struct(task);
-> +	return mm;
-> +}
-> +
-> +/*
-> + * Functions for the initial monitoring target regions construction
-> + */
-> +
-> +/*
-> + * Size-evenly split a region into 'nr_pieces' small regions
-> + *
-> + * Returns 0 on success, or negative error code otherwise.
-> + */
-> +static int damon_split_region_evenly(struct damon_ctx *ctx,
-> +		struct damon_region *r, unsigned int nr_pieces)
-> +{
-> +	unsigned long sz_orig, sz_piece, orig_end;
-> +	struct damon_region *n = NULL, *next;
-> +	unsigned long start;
-> +
-> +	if (!r || !nr_pieces)
-> +		return -EINVAL;
-> +
-> +	orig_end = r->ar.end;
-> +	sz_orig = r->ar.end - r->ar.start;
-> +	sz_piece = ALIGN_DOWN(sz_orig / nr_pieces, MIN_REGION);
-> +
-> +	if (!sz_piece)
-> +		return -EINVAL;
-> +
-> +	r->ar.end = r->ar.start + sz_piece;
-> +	next = damon_next_region(r);
-> +	for (start = r->ar.end; start + sz_piece <= orig_end;
-> +			start += sz_piece) {
-> +		n = damon_new_region(start, start + sz_piece);
-> +		if (!n)
-> +			return -ENOMEM;
-> +		damon_insert_region(n, r, next);
-> +		r = n;
-> +	}
-> +	/* complement last region for possible rounding error */
-> +	if (n)
-> +		n->ar.end = orig_end;
-> +
-> +	return 0;
-> +}
-> +
-> +static unsigned long sz_range(struct damon_addr_range *r)
-> +{
-> +	return r->end - r->start;
-> +}
-> +
-> +static void swap_ranges(struct damon_addr_range *r1,
-> +			struct damon_addr_range *r2)
-> +{
-> +	struct damon_addr_range tmp;
-> +
-> +	tmp = *r1;
-> +	*r1 = *r2;
-> +	*r2 = tmp;
-> +}
-> +
-> +/*
-> + * Find three regions separated by two biggest unmapped regions
-> + *
-> + * vma		the head vma of the target address space
-> + * regions	an array of three address ranges that results will be saved
-> + *
-> + * This function receives an address space and finds three regions in it which
-> + * separated by the two biggest unmapped regions in the space.  Please refer to
-> + * below comments of 'damon_init_vm_regions_of()' function to know why this is
-> + * necessary.
-> + *
-> + * Returns 0 if success, or negative error code otherwise.
-> + */
-> +static int damon_three_regions_in_vmas(struct vm_area_struct *vma,
-> +				       struct damon_addr_range regions[3])
-> +{
-> +	struct damon_addr_range gap = {0}, first_gap = {0}, second_gap = {0};
-> +	struct vm_area_struct *last_vma = NULL;
-> +	unsigned long start = 0;
-> +	struct rb_root rbroot;
-> +
-> +	/* Find two biggest gaps so that first_gap > second_gap > others */
-> +	for (; vma; vma = vma->vm_next) {
-> +		if (!last_vma) {
-> +			start = vma->vm_start;
-> +			goto next;
-> +		}
-> +
-> +		if (vma->rb_subtree_gap <= sz_range(&second_gap)) {
-> +			rbroot.rb_node = &vma->vm_rb;
-> +			vma = rb_entry(rb_last(&rbroot),
-> +					struct vm_area_struct, vm_rb);
-> +			goto next;
-> +		}
-> +
-> +		gap.start = last_vma->vm_end;
-> +		gap.end = vma->vm_start;
-> +		if (sz_range(&gap) > sz_range(&second_gap)) {
-> +			swap_ranges(&gap, &second_gap);
-> +			if (sz_range(&second_gap) > sz_range(&first_gap))
-> +				swap_ranges(&second_gap, &first_gap);
-> +		}
-> +next:
-> +		last_vma = vma;
-> +	}
-> +
-> +	if (!sz_range(&second_gap) || !sz_range(&first_gap))
-> +		return -EINVAL;
-> +
-> +	/* Sort the two biggest gaps by address */
-> +	if (first_gap.start > second_gap.start)
-> +		swap_ranges(&first_gap, &second_gap);
-> +
-> +	/* Store the result */
-> +	regions[0].start = ALIGN(start, MIN_REGION);
-> +	regions[0].end = ALIGN(first_gap.start, MIN_REGION);
-> +	regions[1].start = ALIGN(first_gap.end, MIN_REGION);
-> +	regions[1].end = ALIGN(second_gap.start, MIN_REGION);
-> +	regions[2].start = ALIGN(second_gap.end, MIN_REGION);
-> +	regions[2].end = ALIGN(last_vma->vm_end, MIN_REGION);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Get the three regions in the given task
-> + *
-> + * Returns 0 on success, negative error code otherwise.
-> + */
-> +static int damon_three_regions_of(struct damon_task *t,
-> +				struct damon_addr_range regions[3])
-> +{
-> +	struct mm_struct *mm;
-> +	int rc;
-> +
-> +	mm = damon_get_mm(t);
-> +	if (!mm)
-> +		return -EINVAL;
-> +
-> +	down_read(&mm->mmap_sem);
-> +	rc = damon_three_regions_in_vmas(mm->mmap, regions);
-> +	up_read(&mm->mmap_sem);
-> +
-> +	mmput(mm);
-> +	return rc;
-> +}
-> +
-> +/*
-> + * Initialize the monitoring target regions for the given task
-> + *
-> + * t	the given target task
-> + *
-> + * Because only a number of small portions of the entire address space
-> + * is actually mapped to the memory and accessed, monitoring the unmapped
-> + * regions is wasteful.  That said, because we can deal with small noises,
-> + * tracking every mapping is not strictly required but could even incur a high
-> + * overhead if the mapping frequently changes or the number of mappings is
-> + * high.  The adaptive regions adjustment mechanism will further help to deal
-> + * with the noise by simply identifying the unmapped areas as a region that
-> + * has no access.  Moreover, applying the real mappings that would have many
-> + * unmapped areas inside will make the adaptive mechanism quite complex.  That
-> + * said, too huge unmapped areas inside the monitoring target should be removed
-> + * to not take the time for the adaptive mechanism.
-> + *
-> + * For the reason, we convert the complex mappings to three distinct regions
-> + * that cover every mapped area of the address space.  Also the two gaps
-> + * between the three regions are the two biggest unmapped areas in the given
-> + * address space.  In detail, this function first identifies the start and the
-> + * end of the mappings and the two biggest unmapped areas of the address space.
-> + * Then, it constructs the three regions as below:
-> + *
-> + *     [mappings[0]->start, big_two_unmapped_areas[0]->start)
-> + *     [big_two_unmapped_areas[0]->end, big_two_unmapped_areas[1]->start)
-> + *     [big_two_unmapped_areas[1]->end, mappings[nr_mappings - 1]->end)
-> + *
-> + * As usual memory map of processes is as below, the gap between the heap and
-> + * the uppermost mmap()-ed region, and the gap between the lowermost mmap()-ed
-> + * region and the stack will be two biggest unmapped regions.  Because these
-> + * gaps are exceptionally huge areas in usual address space, excluding these
-> + * two biggest unmapped regions will be sufficient to make a trade-off.
-> + *
-> + *   <heap>
-> + *   <BIG UNMAPPED REGION 1>
-> + *   <uppermost mmap()-ed region>
-> + *   (other mmap()-ed regions and small unmapped regions)
-> + *   <lowermost mmap()-ed region>
-> + *   <BIG UNMAPPED REGION 2>
-> + *   <stack>
-> + */
-> +static void damon_init_vm_regions_of(struct damon_ctx *c, struct damon_task *t)
-> +{
-> +	struct damon_region *r;
-> +	struct damon_addr_range regions[3];
-> +	unsigned long sz = 0, nr_pieces;
-> +	int i;
-> +
-> +	if (damon_three_regions_of(t, regions)) {
-> +		pr_err("Failed to get three regions of task %d\n", t->pid);
-> +		return;
-> +	}
-> +
-> +	for (i = 0; i < 3; i++)
-> +		sz += regions[i].end - regions[i].start;
-> +	if (c->min_nr_regions)
-> +		sz /= c->min_nr_regions;
-> +	if (sz < MIN_REGION)
-> +		sz = MIN_REGION;
-> +
-> +	/* Set the initial three regions of the task */
-> +	for (i = 0; i < 3; i++) {
-> +		r = damon_new_region(regions[i].start, regions[i].end);
-> +		if (!r) {
-> +			pr_err("%d'th init region creation failed\n", i);
-> +			return;
-> +		}
-> +		damon_add_region(r, t);
-> +
-> +		nr_pieces = (regions[i].end - regions[i].start) / sz;
-> +		damon_split_region_evenly(c, r, nr_pieces);
-> +	}
-> +}
-> +
-> +/* Initialize '->regions_list' of every task */
-> +void kdamond_init_vm_regions(struct damon_ctx *ctx)
-> +{
-> +	struct damon_task *t;
-> +
-> +	damon_for_each_task(t, ctx) {
-> +		/* the user may set the target regions as they want */
-> +		if (!nr_damon_regions(t))
-> +			damon_init_vm_regions_of(ctx, t);
-> +	}
-> +}
-> +
-> +/*
-> + * Functions for the dynamic monitoring target regions update
-> + */
-> +
-> +/*
-> + * Check whether a region is intersecting an address range
-> + *
-> + * Returns true if it is.
-> + */
-> +static bool damon_intersect(struct damon_region *r, struct damon_addr_range *re)
-> +{
-> +	return !(r->ar.end <= re->start || re->end <= r->ar.start);
-> +}
-> +
-> +/*
-> + * Update damon regions for the three big regions of the given task
-> + *
-> + * t		the given task
-> + * bregions	the three big regions of the task
-> + */
-> +static void damon_apply_three_regions(struct damon_ctx *ctx,
-> +		struct damon_task *t, struct damon_addr_range bregions[3])
-> +{
-> +	struct damon_region *r, *next;
-> +	unsigned int i = 0;
-> +
-> +	/* Remove regions which are not in the three big regions now */
-> +	damon_for_each_region_safe(r, next, t) {
-> +		for (i = 0; i < 3; i++) {
-> +			if (damon_intersect(r, &bregions[i]))
-> +				break;
-> +		}
-> +		if (i == 3)
-> +			damon_destroy_region(r);
-> +	}
-> +
-> +	/* Adjust intersecting regions to fit with the three big regions */
-> +	for (i = 0; i < 3; i++) {
-> +		struct damon_region *first = NULL, *last;
-> +		struct damon_region *newr;
-> +		struct damon_addr_range *br;
-> +
-> +		br = &bregions[i];
-> +		/* Get the first and last regions which intersects with br */
-> +		damon_for_each_region(r, t) {
-> +			if (damon_intersect(r, br)) {
-> +				if (!first)
-> +					first = r;
-> +				last = r;
-> +			}
-> +			if (r->ar.start >= br->end)
-> +				break;
-> +		}
-> +		if (!first) {
-> +			/* no damon_region intersects with this big region */
-> +			newr = damon_new_region(
-> +					ALIGN_DOWN(br->start, MIN_REGION),
-> +					ALIGN(br->end, MIN_REGION));
-> +			if (!newr)
-> +				continue;
-> +			damon_insert_region(newr, damon_prev_region(r), r);
-> +		} else {
-> +			first->ar.start = ALIGN_DOWN(br->start, MIN_REGION);
-> +			last->ar.end = ALIGN(br->end, MIN_REGION);
-> +		}
-> +	}
-> +}
-> +
-> +/*
-> + * Update regions for current memory mappings
-> + */
-> +void kdamond_update_vm_regions(struct damon_ctx *ctx)
-> +{
-> +	struct damon_addr_range three_regions[3];
-> +	struct damon_task *t;
-> +
-> +	damon_for_each_task(t, ctx) {
-> +		if (damon_three_regions_of(t, three_regions))
-> +			continue;
-> +		damon_apply_three_regions(ctx, t, three_regions);
-> +	}
-> +}
-> +
-> +/*
-> + * Functions for the access checking of the regions
-> + */
-> +
-> +static void damon_mkold(struct mm_struct *mm, unsigned long addr)
-> +{
-> +	pte_t *pte = NULL;
-> +	pmd_t *pmd = NULL;
-> +	spinlock_t *ptl;
-> +
-> +	if (follow_pte_pmd(mm, addr, NULL, &pte, &pmd, &ptl))
-> +		return;
-> +
-> +	if (pte) {
-> +		if (pte_young(*pte)) {
-> +			clear_page_idle(pte_page(*pte));
-> +			set_page_young(pte_page(*pte));
+--lledsvdu3e7clex3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-While this compiles without support for PG_young and PG_idle, I assume
-it won't work well because it'd clear pte.young without setting
-PG_young.  And this would mess with vmscan.
+On Mon, Jul 27, 2020 at 06:51:00AM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
+> >=20
+> > On Mon, Jul 27, 2020 at 06:28:20AM +0000, Peng Fan wrote:
+> > > Hi Oleksij,
+> > >
+> > > > Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
+> > > >
+> > > > On Fri, Jul 24, 2020 at 04:08:06PM +0800, Peng Fan wrote:
+> > > > > We might need to map an region multiple times, becaue the region
+> > > > > might be shared between remote processors, such i.MX8QM with dual
+> > M4 cores.
+> > > > > So use devm_ioremap, not devm_ioremap_resource.
+> > > >
+> > > > Can you please give an example of this kind of shared resources and
+> > > > how they should be handled by two separate devices?
+> > >
+> > > This is to share vdevbuffer space, there is a vdevbuffer in device
+> > > tree, it will be shared between M4_0 and M4_1.
+> > >
+> > > For the buffer, it is Linux DMA API will handle the space.
+> >=20
+> > Why remoteproc need to care about it? If I see it correctly, from the l=
+inux
+> > perspective, it is one buffer and one driver is responsible for it. Or =
+do I missing
+> > some thing?
+>=20
+> We not have the vdev buffer in resource table, so I added in device tree,=
+ see below:
 
-So this code appears to depend on PG_young and PG_idle, which are
-currently only available via CONFIG_IDLE_PAGE_TRACKING.  DAMON could
-depend on CONFIG_IDLE_PAGE_TRACKING via Kconfig.  But I assume that
-CONFIG_IDLE_PAGE_TRACKING and CONFIG_DAMON cannot be concurrently used
-because they'll stomp on each other's use of pte.young, PG_young,
-PG_idle.
-So I suspect we want:
-1. CONFIG_DAMON to depend on !CONFIG_IDLE_PAGE_TRACKING and vise-versa.
-2. PG_young,PG_idle and related helpers to depend on
-   CONFIG_DAMON||CONFIG_IDLE_PAGE_TRACKING.
+Hm.. if vdev is not in resource table and should not be controlled by
+remoteproc, why do we need remoteproc?
 
-> +		}
-> +		*pte = pte_mkold(*pte);
-> +		pte_unmap_unlock(pte, ptl);
-> +		return;
-> +	}
-> +
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +	if (pmd_young(*pmd)) {
-> +		clear_page_idle(pmd_page(*pmd));
-> +		set_page_young(pmd_page(*pmd));
-> +	}
-> +	*pmd = pmd_mkold(*pmd);
-> +	spin_unlock(ptl);
-> +#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-> +}
-> +
-> +static void damon_prepare_vm_access_check(struct damon_ctx *ctx,
-> +			struct mm_struct *mm, struct damon_region *r)
-> +{
-> +	r->sampling_addr = damon_rand(r->ar.start, r->ar.end);
-> +
-> +	damon_mkold(mm, r->sampling_addr);
-> +}
-> +
-> +void kdamond_prepare_vm_access_checks(struct damon_ctx *ctx)
-> +{
-> +	struct damon_task *t;
-> +	struct mm_struct *mm;
-> +	struct damon_region *r;
-> +
-> +	damon_for_each_task(t, ctx) {
-> +		mm = damon_get_mm(t);
-> +		if (!mm)
-> +			continue;
-> +		damon_for_each_region(r, t)
-> +			damon_prepare_vm_access_check(ctx, mm, r);
-> +		mmput(mm);
-> +	}
-> +}
-> +
-> +static bool damon_young(struct mm_struct *mm, unsigned long addr,
-> +			unsigned long *page_sz)
-> +{
-> +	pte_t *pte = NULL;
-> +	pmd_t *pmd = NULL;
-> +	spinlock_t *ptl;
-> +	bool young = false;
-> +
-> +	if (follow_pte_pmd(mm, addr, NULL, &pte, &pmd, &ptl))
-> +		return false;
-> +
-> +	*page_sz = PAGE_SIZE;
-> +	if (pte) {
-> +		young = pte_young(*pte);
-> +		pte_unmap_unlock(pte, ptl);
-> +		return young;
-> +	}
-> +
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +	young = pmd_young(*pmd);
-> +	spin_unlock(ptl);
-> +	*page_sz = ((1UL) << HPAGE_PMD_SHIFT);
-> +#endif	/* CONFIG_TRANSPARENT_HUGEPAGE */
-> +
-> +	return young;
-> +}
-> +
-> +/*
-> + * Check whether the region was accessed after the last preparation
-> + *
-> + * mm	'mm_struct' for the given virtual address space
-> + * r	the region to be checked
-> + */
-> +static void damon_check_vm_access(struct damon_ctx *ctx,
-> +			       struct mm_struct *mm, struct damon_region *r)
-> +{
-> +	static struct mm_struct *last_mm;
-> +	static unsigned long last_addr;
-> +	static unsigned long last_page_sz = PAGE_SIZE;
-> +	static bool last_accessed;
-> +
-> +	/* If the region is in the last checked page, reuse the result */
-> +	if (mm == last_mm && (ALIGN_DOWN(last_addr, last_page_sz) ==
-> +				ALIGN_DOWN(r->sampling_addr, last_page_sz))) {
-> +		if (last_accessed)
-> +			r->nr_accesses++;
-> +		return;
-> +	}
-> +
-> +	last_accessed = damon_young(mm, r->sampling_addr, &last_page_sz);
-> +	if (last_accessed)
-> +		r->nr_accesses++;
-> +
-> +	last_mm = mm;
-> +	last_addr = r->sampling_addr;
-> +}
-> +
-> +unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx)
-> +{
-> +	struct damon_task *t;
-> +	struct mm_struct *mm;
-> +	struct damon_region *r;
-> +	unsigned int max_nr_accesses = 0;
-> +
-> +	damon_for_each_task(t, ctx) {
-> +		mm = damon_get_mm(t);
-> +		if (!mm)
-> +			continue;
-> +		damon_for_each_region(r, t) {
-> +			damon_check_vm_access(ctx, mm, r);
-> +			max_nr_accesses = max(r->nr_accesses, max_nr_accesses);
-> +		}
-> +		mmput(mm);
-> +	}
-> +
-> +	return max_nr_accesses;
-> +}
-> +
->  /*
->   * Functions for DAMON core logics and features
->   */
+>         imx8qm_cm40: imx8qm_cm4@0 {
+>                 compatible =3D "fsl,imx8qm-cm4";
+>                 rsc-da =3D <0x90000000>;
+>                 mbox-names =3D "tx", "rx", "rxdb";
+>                 mboxes =3D <&lsio_mu5 0 1
+>                           &lsio_mu5 1 1
+>                           &lsio_mu5 3 1>;
+>                 mub-partition =3D <3>;
+>                 memory-region =3D <&vdev0vring0>, <&vdev0vring1>, <&vdevb=
+uffer>,
+>                                 <&vdev1vring0>, <&vdev1vring1>;
+>                 core-index =3D <0>;
+>                 core-id =3D <IMX_SC_R_M4_0_PID0>;
+>                 status =3D "okay";
+>                 power-domains =3D <&pd IMX_SC_R_M4_0_PID0>,
+>                                 <&pd IMX_SC_R_M4_0_MU_1A>;
+>         };
+>=20
+>         imx8qm_cm41: imx8x_cm4@1 {
+>                 compatible =3D "fsl,imx8qm-cm4";
+>                 rsc-da =3D <0x90100000>;
+>                 mbox-names =3D "tx", "rx", "rxdb";
+>                 mboxes =3D <&lsio_mu6 0 1
+>                           &lsio_mu6 1 1
+>                           &lsio_mu6 3 1>;
+>                 mub-partition =3D <4>;
+>                 memory-region =3D <&vdev2vring0>, <&vdev2vring1>, <&vdevb=
+uffer>,
+>                                 <&vdev3vring0>, <&vdev3vring1>;
+>                 core-index =3D <1>;
+>                 core-id =3D <IMX_SC_R_M4_1_PID0>;
+>                 status =3D "okay";
+>                 power-domains =3D <&pd IMX_SC_R_M4_1_PID0>,
+>                                 <&pd IMX_SC_R_M4_1_MU_1A>;
+>         };
+>=20
+>                 vdevbuffer: vdevbuffer {
+>                         compatible =3D "shared-dma-pool";
+>                         reg =3D <0 0x90400000 0 0x100000>;
+>                         no-map;
+>                 };
+>=20
+> I have the upper vdevbuffer node shared between M40 and M41 node.
+> The vdevbuffer will be used as virtio data buffer.
+>=20
+> And I have the following in rproc_add_virtio_dev to share vdevbuffer:
+>         /* Try to find dedicated vdev buffer carveout */
+>         mem =3D rproc_find_carveout_by_name(rproc, "vdev%dbuffer", rvdev-=
+>index);
+>         if (!mem)
+>                 mem =3D rproc_find_carveout_by_name(rproc, "vdevbuffer");
+
+With kernel v5.8-rc7 i get following call chain:
+rproc_boot()
+  rproc_fw_boot()
+    rproc_handle_vdev
+      rproc_vdev_do_start()
+        rproc_add_virtio_dev()
+
+
+So, at the end, we will call rproc_add_virtio_dev() only if we boot
+firmware by linux, or if we get at least the resource table.
+
+Since none of this seems to be the case, i still do not understand how
+it should work.
+
+> Hope this is clear.
+
+:) i still need some time to understand it.
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--lledsvdu3e7clex3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl8ehFAACgkQ4omh9DUa
+UbNuvBAAzaHrZx+RWrM1K4wZ6lTlnlom0/YvoOHFJy6BFwR3G5839nr1109/x9Rg
+SBhifCjiIISDYSDl2MdlgAPxjjEcLfjIJH9PTCzk9YoXZOkBvCzTnxBxSePlXAol
+ezH+BJsu/Bfc9iva+cLflE3CAEAc80MESPXlMoQg6W7E7CS0CsvTh4MwuWWc0KDR
+a9lEI7axGKePILdQzK6r25cAerJwxH1YA4EWOg09Da9kwSnECMdcY+fI5Bp1aYxg
+zlpxbtcpwtLgeR3s+IzKSOEGkWeMQOOwumVJ5hEs2Rdl4GoPvWBt+YH34XYnziU3
+gTLCfpJkno5smfBOub49/6UA+wj8aDVzZaAWZj0/FwowFvmymgncl4RpSRtkqG1s
+k6xiBSBES+IIBHeZek7SINYI4UoA0rV4GnbzIFza6IzhB58mcv1a3i1S+TnNHEoi
+ZyR+tTyK7NdeuRoWO5W7dlgFa7pt1Y+pia1HGWiksnUY4xCsdaVm+Ugpm4OXY1KB
+9IneQA0QfggVk8BuXnP0i6qlQGc5abdLYhPM8SI71jzuRtMzt2O/yAKGt+mhHQTO
+VxNfoa+q7DVG/bce3Q3iRCK+BG92BznmYF7v+uiHEWuD/7tRcztXKjJkxxuu9MTc
+l+FN2vsU9w/tdeFrEivpA4yq/Lr5ExMvHYmjDzqnYj3NTlFdd88=
+=1uiY
+-----END PGP SIGNATURE-----
+
+--lledsvdu3e7clex3--
