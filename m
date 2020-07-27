@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A329FC433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC3BC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 722B1207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14239207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860263;
-	bh=TecO03OPduOUqsycocBSfTknmGQEVs9nwM8nTt4HnO0=;
+	s=default; t=1595860270;
+	bh=fWgkcWHZ5S4Hy6H2qIaWgZq9/peitARfUWaqCkpTLzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k2WGm/Ns4cy+sFAqlBcxhXT0fDQTDM+b4kuy1oHhB5m/bkVubvVTu+5DzHG1oej6H
-	 817yYabPvNlv9iCmV+9AdAFR9KvIH/oTqeM4JxCc362CZbrJeqDP3Cx+l0JsCEnKAH
-	 4bdgMjUx1RQuo27U5+2UF4RBoFZVpjndtqHVjJSI=
+	b=CzwtpN9FU48P8cjS+a2GkhkRVpL8QVelJJQCJwOX8zvyRvyvZNe7udZUtXFdsqL/s
+	 vBkJ1o3dUsU7Sd/yozmIHXD8BAdSY1HY7tTXQJgl/FL9UpnHsspp9Y6CP0fjBTmo48
+	 WHzpKezTNu2WNFLoCmsoo+WJSoUAGfNTQ5Pnyfe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731684AbgG0OVN (ORCPT
+        id S1732790AbgG0ObH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:21:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49704 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731638AbgG0OVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:21:10 -0400
+        id S1731660AbgG0OVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:21:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 310492070B;
-        Mon, 27 Jul 2020 14:21:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B00E2070B;
+        Mon, 27 Jul 2020 14:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859669;
-        bh=TecO03OPduOUqsycocBSfTknmGQEVs9nwM8nTt4HnO0=;
+        s=default; t=1595859664;
+        bh=fWgkcWHZ5S4Hy6H2qIaWgZq9/peitARfUWaqCkpTLzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u1Gfzg5YoPpNOoKms/o9WqI6WXSUcLABU96sVFUr0SQOgVdZhHPvkoxFu3s1UPXqM
-         xdOJxD7iY9fr/JG1k7sTh8gTSgbvcfMH5EolNsyfv5TNccdXw8KL4TID9aHnr9ap/y
-         eTluKDLtHnPNwhnN5lImYz0lxHxmMP9awFXP6FA8=
+        b=glilwNrpGiexzIpCjeDQcZQjbiyHEj6B6Ax2Tby5ekuFVnHAbDKtM0jzPr7as1ecR
+         hTosoQOThCa6pfxRJWZOF0YukEnm/7kYDfgmW2ZyTzIWSIhw5SBujD4X8+ESWSA5Er
+         Vc/Bg6C/y0Y8A0VnkKl9fSMDTw+oh+KhgZVtd/Js=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Mans Rullgard <mans@mansr.com>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Jakub Kicinski <kuba@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 060/179] drm: sun4i: hdmi: Fix inverted HPD result
-Date:   Mon, 27 Jul 2020 16:03:55 +0200
-Message-Id: <20200727134935.594677480@linuxfoundation.org>
+Subject: [PATCH 5.7 050/179] dpaa2-eth: check fsl_mc_get_endpoint for IS_ERR_OR_NULL()
+Date:   Mon, 27 Jul 2020 16:03:45 +0200
+Message-Id: <20200727134935.105780439@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,38 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
 
-[ Upstream commit baa1841eb797eadce6c907bdaed7cd6f01815404 ]
+[ Upstream commit 841eb4012cef84820e5906527b31a854f42b0748 ]
 
-When the extra HPD polling in sun4i_hdmi was removed, the result of
-HPD was accidentally inverted.
+The fsl_mc_get_endpoint() function can return an error or directly a
+NULL pointer in case the peer device is not under the root DPRC
+container. Treat this case also, otherwise it would lead to a NULL
+pointer when trying to access the peer fsl_mc_device.
 
-Fix this by inverting the check.
-
-Fixes: bda8eaa6dee7 ("drm: sun4i: hdmi: Remove extra HPD polling")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Tested-by: Mans Rullgard <mans@mansr.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200711011030.21997-1-wens@kernel.org
+Fixes: 719479230893 ("dpaa2-eth: add MAC/PHY support through phylink")
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 2 +-
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-index f07e0c32b93a2..4c5072a578bf2 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-@@ -263,7 +263,7 @@ sun4i_hdmi_connector_detect(struct drm_connector *connector, bool force)
- 	unsigned long reg;
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+index 569e06d2bab21..72fa9c4e058f7 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+@@ -3383,7 +3383,7 @@ static int dpaa2_eth_connect_mac(struct dpaa2_eth_priv *priv)
  
- 	reg = readl(hdmi->base + SUN4I_HDMI_HPD_REG);
--	if (reg & SUN4I_HDMI_HPD_HIGH) {
-+	if (!(reg & SUN4I_HDMI_HPD_HIGH)) {
- 		cec_phys_addr_invalidate(hdmi->cec_adap);
- 		return connector_status_disconnected;
- 	}
+ 	dpni_dev = to_fsl_mc_device(priv->net_dev->dev.parent);
+ 	dpmac_dev = fsl_mc_get_endpoint(dpni_dev);
+-	if (IS_ERR(dpmac_dev) || dpmac_dev->dev.type != &fsl_mc_bus_dpmac_type)
++	if (IS_ERR_OR_NULL(dpmac_dev) || dpmac_dev->dev.type != &fsl_mc_bus_dpmac_type)
+ 		return 0;
+ 
+ 	if (dpaa2_mac_is_type_fixed(dpmac_dev, priv->mc_io))
 -- 
 2.25.1
 
