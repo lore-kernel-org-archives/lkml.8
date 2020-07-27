@@ -2,105 +2,129 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A73C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BE8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7D820759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 602C020759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:16:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=students-iitmandi-ac-in.20150623.gappssmtp.com header.i=@students-iitmandi-ac-in.20150623.gappssmtp.com header.b="uOHtcrYT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qFRv66x+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgG1CPj (ORCPT
+        id S1726814AbgG1CQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:15:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35186 "EHLO
+        Mon, 27 Jul 2020 22:16:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgG1CPi (ORCPT
+        with ESMTP id S1726247AbgG1CQa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 22:15:38 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89927C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 19:15:38 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x9so9121770plr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 19:15:38 -0700 (PDT)
+        Mon, 27 Jul 2020 22:16:30 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 340A0C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 19:16:30 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id i138so8972834ild.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 19:16:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=students-iitmandi-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hBlxnjAq+NQ7xq9tyIscN6vQVF0VMix+mjCrmXItPMg=;
-        b=uOHtcrYTmCosLIc22eS/NeLsVC6fVrazz3QS9IfOvftpZ3IVdvH2jSELcQ0Je6XAfn
-         VpGwJrxu6PCnYN9hqFHF2IIdLqcu19CjfZqEZvgqhU0QWQWzmL+wTIC7Uq2x7OsUB9EO
-         xKCUWBc9YUqJhxjPfkDl5NtTJRVDTm4FpftsNZ//mhhq5WkOQAqX6bWILHe4g09GAR3Q
-         pdUpSA1e0c7ej0pkI8wZXxJS62RtHuNYBk7+GwV4bJ+06tNjKfVC9r3A5bUBxb6kGSuU
-         94VTqY7ku+CAz1Xdai9XfdM4Yg8hsaAcGao5O/433g19X6+0SvtLEI0IVYnzVnHaSeZm
-         S+WA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+qhhZcvnd3RwCE+F+SIU+6bIz1sPCtUPTyz82YandFo=;
+        b=qFRv66x+Edw1E+2euA44W6pSi/QdRSgRAuqJr5j87nkElpfIJYd0Ulo2oMb7qvFS2A
+         1YaugNbwMsygktYgyYSotHWs4z+QeIc4BhbLPLluw85gbbpJuGg27/hfsTBCSOTN0c2Z
+         KnxSpb8uZRn6vzvEns12aizFTS7X0H+TBuwNMbRq4TlHww/GMpfSlMIibX8M90RvvCDp
+         EDzsLb2qVJsm6OzyV7+I3s7OWTKed8CL5ua+kpiVkdWF7wwShVUtGYBpMn4pSdXYA/Pm
+         kYNgKfMX5KIi1KMlmP+h0paxQXYe6dVD28DGHha+CjQ+G8vdC25H2tmEkd17vauWmGg5
+         rcuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hBlxnjAq+NQ7xq9tyIscN6vQVF0VMix+mjCrmXItPMg=;
-        b=AYdUTuVrocWEGqp7PV3345KzOVTvMGXeLR8P2CkLxszozJBZT0hi6j41lByDVwGz2+
-         lCSzEdFpKGQ/dpc+1fw/LnEdSI4/N+NjO3NXPfaekOFWN9ZMbqd+qqbcs/p3De0BpUSy
-         MQrcCWFOjvZz60toEXlZbKIqpOD2D7+RyGtPtQ1xrO/DG9ibyB0txqxyXrFfI8sV6wkN
-         Z6jFZRJXwNDuTYgna5t49MXuiof1qy7zvLY4rM8lW+xTfWNy79hNjZXzOhA0zS4Wbf9E
-         Sc5UUZt1nAUx3L1x6ukb+O4tCzJCOJ9KnhvZfBYlIGjMLo/mVGJggq6wVzN1gdvIbmx6
-         FH/w==
-X-Gm-Message-State: AOAM533xFVGemWp4t0oYk1W4y8KdWkpkysRjRysNj72IsUF5RQzu/UC4
-        aC7+SOet3X7fpBvUrDns4/i3eg==
-X-Google-Smtp-Source: ABdhPJwzNVTSIeKUloUb5M/3iD6Xn5Y8aCAEXO+PabHJqE0BOsIVOgLuCMNps+33LtqqaT/obVKdiA==
-X-Received: by 2002:a17:902:8bc6:: with SMTP id r6mr8654988plo.289.1595902538102;
-        Mon, 27 Jul 2020 19:15:38 -0700 (PDT)
-Received: from devil-VirtualBox.www.tendawifi.com ([103.198.174.215])
-        by smtp.gmail.com with ESMTPSA id g4sm16732466pgn.64.2020.07.27.19.15.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 19:15:37 -0700 (PDT)
-From:   Ankit Baluni <b18007@students.iitmandi.ac.in>
-To:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Ankit Baluni <b18007@students.iitmandi.ac.in>
-Subject: [PATCH] Staging : media : atomisp : Fixed a brace coding sytle issue
-Date:   Tue, 28 Jul 2020 07:45:18 +0530
-Message-Id: <20200728021518.19639-1-b18007@students.iitmandi.ac.in>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+qhhZcvnd3RwCE+F+SIU+6bIz1sPCtUPTyz82YandFo=;
+        b=h2TH3IBDNKHIjEwCwkvAUSky/4psWM1CSyq6bRdVVQ6TlRByKkN0ySF+ADEgxSHBRS
+         sP4hzRV+1p1MgJXDJiXgIGTrVWMNEONm/pg1741OqMbWBF9hYHbf231OmY7TKfYzMYV8
+         0hZLSfAc79YJO0lYxQSEbEQUDyEkBtZNpNaBdoD9ZGPD3Yt6MpKHN6yi/BULtY/e1Uba
+         ylCjnDXYQYz+nGb4iBIGINJ7FP+oDMifEbrDj+izj1M10zrqdE5ikFW9CB7+bj9E6t2m
+         tCW/hdGh8uE2Ati/C4ewDXCT1lmz1WrsfD3jyDkshYPgPYs/LfDW7D0ZdctPItTDHIaE
+         XXig==
+X-Gm-Message-State: AOAM5315nTcjpvmNXZx0EiJa8j1Ep2vXEp3dFet2mKNaPI7zW8qELpJd
+        bovaig0MgzJ3uAfFHj0NxHP6wXfEuuAxitvHheppGQAR
+X-Google-Smtp-Source: ABdhPJyRGZ6wDA+UhVMRrrMpC3VXX10f0UdEKy2RU3tRJYFS731AYHP3Mobcvf9npHHHyQCtFPwo1Fi6FOVbF+R/H0c=
+X-Received: by 2002:a92:9f96:: with SMTP id z22mr27481140ilk.266.1595902589613;
+ Mon, 27 Jul 2020 19:16:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1594983811-25908-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1594983811-25908-2-git-send-email-gene.chen.richtek@gmail.com> <20200727110821.GH1850026@dell>
+In-Reply-To: <20200727110821.GH1850026@dell>
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+Date:   Tue, 28 Jul 2020 02:16:15 +0800
+Message-ID: <CAE+NS34FexE-LwbzkOLepKytKCbKm3RowPQKqROR_a6wCrVLLA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] mfd: mt6360: Rearrange include file
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Gene Chen <gene_chen@richtek.com>, benjamin.chao@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixing coding style issue by removing the braces that are not required.
+Lee Jones <lee.jones@linaro.org> =E6=96=BC 2020=E5=B9=B47=E6=9C=8827=E6=97=
+=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=887:08=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Fri, 17 Jul 2020, Gene Chen wrote:
+>
+> > From: Gene Chen <gene_chen@richtek.com>
+> >
+> > Rearrange include file without sorting by alphabet.
+>
+> Why are you making this change?
+>
 
-Signed-off-by: Ankit Baluni<b18007@students.iitmandi.ac.in>
----
- drivers/staging/media/atomisp/pci/atomisp_ioctl.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Personal coding style references from upstream code.
+I can discard this change if it doesn't make sense.
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
-index f8d616f08b51..701de098cb29 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
-@@ -1828,11 +1828,10 @@ static int atomisp_streamon(struct file *file, void *fh,
- 			dev_err(isp->dev, "master slave sensor stream on failed!\n");
- 			goto out;
- 		}
--		if (!IS_ISP2401) {
-+		if (!IS_ISP2401)
- 			__wdt_on_master_slave_sensor(isp, wdt_duration);
--		} else {
-+		else
- 			__wdt_on_master_slave_sensor_pipe(pipe, wdt_duration, true);
--		}
- 		goto start_delay_wq;
- 	} else if (asd->depth_mode->val && (atomisp_streaming_count(isp) <
- 					    ATOMISP_DEPTH_SENSOR_STREAMON_COUNT)) {
--- 
-2.25.1
-
+> > Signed-off-by: Gene Chen <gene_chen@richtek.com>
+> > ---
+> >  drivers/mfd/mt6360-core.c | 11 +++++------
+> >  1 file changed, 5 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
+> > index e9cacc2..df4506f 100644
+> > --- a/drivers/mfd/mt6360-core.c
+> > +++ b/drivers/mfd/mt6360-core.c
+> > @@ -5,15 +5,14 @@
+> >   * Author: Gene Chen <gene_chen@richtek.com>
+> >   */
+> >
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> >  #include <linux/i2c.h>
+> > -#include <linux/init.h>
+> > +#include <linux/crc8.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/regmap.h>
+> >  #include <linux/interrupt.h>
+> > -#include <linux/kernel.h>
+> >  #include <linux/mfd/core.h>
+> > -#include <linux/module.h>
+> > -#include <linux/of_irq.h>
+> > -#include <linux/of_platform.h>
+> > -#include <linux/version.h>
+> >
+> >  #include <linux/mfd/mt6360.h>
+> >
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Senior Technical Lead - Developer Services
+> Linaro.org =E2=94=82 Open source software for Arm SoCs
+> Follow Linaro: Facebook | Twitter | Blog
