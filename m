@@ -2,166 +2,151 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 317F4C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1211CC433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD502078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:17:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IuTQSyB2"
+	by mail.kernel.org (Postfix) with ESMTP id EC0E72073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731557AbgG0QRH (ORCPT
+        id S1731564AbgG0QRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 12:17:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35927 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731542AbgG0QRE (ORCPT
+        Mon, 27 Jul 2020 12:17:19 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:21858 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731321AbgG0QQj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:17:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595866621;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BsUwnhDK87WKgN3gqd90CcbtRyIxe05OQOcWAwl8fSE=;
-        b=IuTQSyB2ZJs58ydl0LAtJwvDyXThs2+AWlGZ+dlNC3u9TG6lex16s+BswLCmvoTG4lsNVy
-        8DUkXHEJgWM2V9b7MLiNa8yTzgEwrGd6brElj6E5dTVxBlHC/R7xeoAbS/4VL4WsSY3Jwq
-        QkO8BOA49hqOYcbmFUfhr9iHBlxMxTM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-67-B5H_vO1jPPqp1TMy90Z1og-1; Mon, 27 Jul 2020 12:17:00 -0400
-X-MC-Unique: B5H_vO1jPPqp1TMy90Z1og-1
-Received: by mail-wr1-f72.google.com with SMTP id w7so1811933wre.11
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 09:16:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BsUwnhDK87WKgN3gqd90CcbtRyIxe05OQOcWAwl8fSE=;
-        b=WWxUvDxDcMw6CZ35dYqv1pNtLs0SLmlkWj+zKvDV1+F62iidmO/jzYL2w2OzaCclK3
-         740BIsLvfgC1iO342J5MV8MdltRPOIq0UtAP4ETbomR7gnCJZMcrZN17pqpLxtLHrN6f
-         lXahD8m6fTn8Pv47IMVOSI/wJq1p4sNDZRvvJEkiTNRhLnONTpViMcYfzTp6bbCgmRVY
-         If/8qOLcV+8NMlwfD44W1pP0aJO7/Yn7IGNKtHABYkqb8GLVkj5c6AxP4yTjxggWZahJ
-         TtEmtExXweuKLJWSMBBiDPamhkmhWdnGhVGNDqvnSgkSzKu0yL4Nj8dGrhT3HHsh2k5B
-         aS2A==
-X-Gm-Message-State: AOAM533PN830cBWEp7ytZ5Ld/YzE26pRGTyc6/bKgSLI6se1aOxMrV+/
-        ZcjLwTEHIbtwWLXh/SpGb57RDWKyIpU5Ua/+pyodjxRvbzPVwwOiPOnJ3iu9++IYXtJE6oAklqW
-        5uCd5JiLyIlv/jl7a1Q9qWMOF
-X-Received: by 2002:a1c:6408:: with SMTP id y8mr84041wmb.52.1595866618758;
-        Mon, 27 Jul 2020 09:16:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxLKcAmtjP5qdwtcop3VZz69phHqUmhA/GYnUvT8EjsYnFf+2mjdi7w0x6HCc4EEuewJ9M+uA==
-X-Received: by 2002:a1c:6408:: with SMTP id y8mr84025wmb.52.1595866618480;
-        Mon, 27 Jul 2020 09:16:58 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.170.5])
-        by smtp.gmail.com with ESMTPSA id u66sm76686wmu.37.2020.07.27.09.16.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 09:16:57 -0700 (PDT)
-Subject: Re: [PATCH] KVM: nVMX: properly pad struct kvm_vmx_nested_state_hdr
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
-References: <20200713082824.1728868-1-vkuznets@redhat.com>
- <20200713151750.GA29901@linux.intel.com>
- <878sfntnoz.fsf@vitty.brq.redhat.com>
- <85fd54ff-01f5-0f1f-1bb7-922c740a37c1@redhat.com>
- <20200727154654.GA8675@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <5d50ea1e-f2a2-8aa9-1dd3-4cbca6c6f885@redhat.com>
-Date:   Mon, 27 Jul 2020 18:16:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 27 Jul 2020 12:16:39 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RG7xmj019091;
+        Mon, 27 Jul 2020 12:16:38 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 32ghn5eykx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 12:16:38 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 06RGGbgj050467
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 27 Jul 2020 12:16:37 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Mon, 27 Jul
+ 2020 12:16:36 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 27 Jul 2020 12:16:36 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06RGGShn009603;
+        Mon, 27 Jul 2020 12:16:35 -0400
+From:   <alexandru.tachici@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <jic23@kernel.org>, <robh+dt@kernel.org>
+Subject: [PATCH v7 6/9] hwmon: pmbus: adm1266: Add group command support
+Date:   Mon, 27 Jul 2020 19:18:11 +0300
+Message-ID: <20200727161814.14076-7-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200727161814.14076-1-alexandru.tachici@analog.com>
+References: <20200727161814.14076-1-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <20200727154654.GA8675@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_11:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 lowpriorityscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/07/20 17:46, Sean Christopherson wrote:
->> It might as well send it now if the code didn't attempt to zero the
->> struct before filling it in (this is another good reason to use a
->> "flags" field to say what's been filled in).
-> The issue is that flags itself could hold garbage.
-> 
-> https://lkml.kernel.org/r/20200713151750.GA29901@linux.intel.com
+From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-Quoting from there:
+The Group Command Protocol is used to send commands
+to more than one PMBus device. Some devices working
+together require that they must execute some commands
+all at once.
 
-> Which means that userspace built for the old kernel will potentially send in
-> garbage for the new 'flags' field due to it being uninitialized stack data,
-> even with the layout after this patch.
+The commands are sent in one continuous transmission.
+When the devices detect the STOP condition that ends
+the sending of commands, they all begin executing
+the command they received.
 
-Userspace should always zero everything.  I don't think that the padding
-between fields is any different from the other bytes padding the header
-to 128 bytes.
+This patch adds support for the group command protocol.
 
->   struct kvm_vmx_nested_state_hdr hdr = {
->       .vmxon_pa = root,
->       .vmcs12_pa = vmcs12,
->   };
-> 
-> QEMU won't see issues because it zero allocates the entire nested state.
-> 
-> All the above being said, after looking at the whole picture I think padding
-> the header is a moot point.  The header is padded out to 120 bytes[*] when
-> including in the full nested state, and KVM only ever consumes the header in
-> the context of the full nested state.  I.e. if there's garbage at offset 6,
-> odds are there's going to be garbage at offset 18, so internally padding the
-> header does nothing.
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+---
+ drivers/hwmon/pmbus/adm1266.c | 50 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-Yes, that was what I was hinting at with "it might as well send it now"
-(i.e., after the patch).
-
-(All of this is moot for userspace that just uses KVM_GET_NESTED_STATE
-and passes it back to KVM_SET_NESTED_STATE).
-
-> KVM should be checking that the unused bytes of (sizeof(pad) - sizeof(vmx/svm))
-> is zero if we want to expand into the padding in the future.  Right now we're
-> relying on userspace to zero allocate the struct without enforcing it.
-
-The alternative, which is almost as good, is to only use these extra
-fields which could be garbage if the flags are not set, and check the
-flags (see the patches I have sent earlier today).
-
-The chance of the flags passing the check will decrease over time as
-more flags are added; but the chance of having buggy userspace that
-sends down garbage also will.
-
-> [*] Amusing side note, the comment in the header is wrong.  It states "pad
->     the header to 128 bytes", but only pads it to 120 bytes, because union.
-> 
-> /* for KVM_CAP_NESTED_STATE */
-> struct kvm_nested_state {
-> 	__u16 flags;
-> 	__u16 format;
-> 	__u32 size;
-> 
-> 	union {
-> 		struct kvm_vmx_nested_state_hdr vmx;
-> 		struct kvm_svm_nested_state_hdr svm;
-> 
-> 		/* Pad the header to 128 bytes.  */
-> 		__u8 pad[120];
-> 	} hdr;
-
-There are 8 bytes before the union, and it's not a coincidence. :)
-"Header" refers to the stuff before the data region.
-
-> Odds are no real VMM will have issue given the dynamic size of struct
-> kvm_nested_state, but 
-
-... *suspence* ...
-
-Paolo
+diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
+index b61a968d67f9..f571fe1ee35d 100644
+--- a/drivers/hwmon/pmbus/adm1266.c
++++ b/drivers/hwmon/pmbus/adm1266.c
+@@ -73,6 +73,56 @@ static const struct nvmem_cell_info adm1266_nvmem_cells[] = {
+ 
+ DECLARE_CRC8_TABLE(pmbus_crc_table);
+ 
++/* PMBus Group command. */
++static int adm1266_pmbus_group_command(struct adm1266_data *data, struct i2c_client **clients,
++				       u8 nr_clients, u8 cmd, u8 w_len, u8 *data_w)
++{
++	struct i2c_msg *msgs;
++	u8 addr;
++	int ret;
++	int i;
++
++	msgs = kcalloc(nr_clients, sizeof(struct i2c_msg), GFP_KERNEL);
++	if (!msgs)
++		return -ENOMEM;
++
++	for (i = 0; i < nr_clients; i++) {
++		msgs[i].addr = clients[i]->addr;
++		msgs[i].len = w_len + 1;
++
++		msgs[i].buf = kcalloc(ADM1266_PMBUS_BLOCK_MAX + 2, sizeof(u8), GFP_KERNEL);
++		if (!msgs[i].buf) {
++			ret = -ENOMEM;
++			goto cleanup;
++		}
++
++		msgs[i].buf[0] = cmd;
++		memcpy(&msgs[i].buf[1], data_w, w_len);
++
++		if (clients[i]->flags & I2C_CLIENT_PEC) {
++			u8 crc = 0;
++
++			addr = i2c_8bit_addr_from_msg(&msgs[i]);
++			crc = crc8(pmbus_crc_table, &addr, 1, crc);
++			crc = crc8(pmbus_crc_table, msgs[i].buf, msgs[i].len,
++				   crc);
++
++			msgs[i].buf[msgs[i].len] = crc;
++			msgs[i].len++;
++		}
++	};
++
++	ret = i2c_transfer(data->client->adapter, msgs, nr_clients);
++
++cleanup:
++	for (i = i - 1; i >= 0; i--)
++		kfree(msgs[i].buf);
++
++	kfree(msgs);
++
++	return ret;
++}
++
+ /*
+  * Different from Block Read as it sends data and waits for the slave to
+  * return a value dependent on that data. The protocol is simply a Write Block
+-- 
+2.20.1
 
