@@ -2,85 +2,387 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60C6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 938C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98E9720759
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62AD520759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:14:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SGJ595p1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgG0DJX (ORCPT
+        id S1727029AbgG0DOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 23:09:23 -0400
-Received: from smtpbgau1.qq.com ([54.206.16.166]:56829 "EHLO smtpbgau1.qq.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgG0DJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 23:09:23 -0400
-X-QQ-mid: bizesmtp12t1595819273txqw0pfa
-Received: from localhost.localdomain (unknown [210.242.163.205])
-        by esmtp6.qq.com (ESMTP) with 
-        id ; Mon, 27 Jul 2020 11:07:51 +0800 (CST)
-X-QQ-SSF: 01400000002000P0ZF20B00A0000000
-X-QQ-FEAT: QjnoOdcw2Yw8E9sswuoGlMhfjozJc3UzV+uxJJRW9L8bW2UUuzlmi9RtxA2un
-        6jIf2edYYxIVguVktR54n0/c1J+yGpBAQMD1bup3kJ3866tMU44A/kH7z96gtAWba9ITirD
-        BkFufO1TuxXtgv+ZoClMpPgAI68wM6q9odr80+Vo61rK7NQ9C3IauxMljLcXlCU3dTgJ+Mr
-        ldj/ey/pUI4pNfJpLen0+qgBTQJAeyD9uRFCPxwlcB+L9DcCIMtmhAc06cSXBXtVWDF8BWl
-        iL4qssoSahfpiXAsc2pnTrEoU4/X2kh/jcvwzazceq2UBtO9c8mW0UUmx/RXkJoYQSnP3ZS
-        VI+6SOUBlFBTKImTr+pUyu1rLd6Yg==
-X-QQ-GoodBg: 2
-From:   David Lu <david.lu@bitland.com.cn>
-To:     david.lu@bitland.com.cn
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: ov8856: decrease hs_trail time
-Date:   Mon, 27 Jul 2020 11:07:48 +0800
-Message-Id: <20200727030748.3791-1-david.lu@bitland.com.cn>
-X-Mailer: git-send-email 2.17.1
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:bitland.com.cn:qybgforeign:qybgforeign5
-X-QQ-Bgrelay: 1
+        Sun, 26 Jul 2020 23:14:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbgG0DOA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 23:14:00 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9821C0619D5
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 20:13:57 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h19so15543341ljg.13
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 20:13:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AYtY7Du0SSIBmGOFfAIhObGrFtoQCfrN9p7cr9Hx2EE=;
+        b=SGJ595p10ldocrUFdXMnvf+IivoBgRjRAqRx/O3+1J5K5em/gqTC/vk84QVYxDkfVJ
+         jX9MYW3DBkQBh5uUSQnFYyGJPElfcJ0kZHm6nNEsGRgtgZd8Wlb1nfR3PPZhu54JsTgM
+         a2bNzb8ETDlx9NXTw0JSu4BiKgef5bG/tkoWS1tv5C2TYs2JbLyb/jjiqx9TwqVerAQt
+         pHuPjuaHKpiLgnZmQSrr0robfz9UyoIPyIIg6n88HFJmQWLYR2GMtd4ZDAdS0tcLHma8
+         lDcwavluHp48w0nAaJ9uemHksRiHN+G9bfdqN+QuLZ7L2EmMFKxecPLGAVPscw2n8PB+
+         yYPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AYtY7Du0SSIBmGOFfAIhObGrFtoQCfrN9p7cr9Hx2EE=;
+        b=Td9ev9EIO6oxEg/lsrjrAVxrvrnMG1/8aMsjGrzBADJN5CTRyaQV++0mFfzGdY2wHR
+         bK5LidtwXfTgAwoGDeTzxK+DMgxp796Mt324gLyjlFJzOWYfoasZ53mgt1yLmW49s1NH
+         LHhQVX9xn2y/lY11UpDW6p2CqW3xF9jG5Zgrj9UIuUWmT6mtOK7kf3UsV+3dc3lLmJ1q
+         0C5PJ2K7kW7xn2p5ecIdlDZRIq6k/aow7hSAw828Q4mfNdUiAuCjto7I13mXpqzNg28H
+         eQjKPI9cJQmP9Sodse+LFDkAs5gQKyzoexObk8MTJT/504J8mHx7Z2gKL8UgfD+hnA3h
+         SvHg==
+X-Gm-Message-State: AOAM531Jy9EF1I24z/gl3QQDYyd6z9BaIDzeG8M8SPBa33yvHOHpN9zY
+        AbW+nfvNJE92llM7Sbzy0bI0p+QSaL+DmUyK+wotKQ==
+X-Google-Smtp-Source: ABdhPJzjtxkHRQCOFbkzlTIoLleatG34kzs0z8sUrAYkt2zi0x5dSofrSESRDq4cEut8WAvF0ObtJCx6dIShD+aSofE=
+X-Received: by 2002:a05:651c:1106:: with SMTP id d6mr8654740ljo.214.1595819636012;
+ Sun, 26 Jul 2020 20:13:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200717084932.3449-1-masahisa.kojima@linaro.org>
+ <20200717084932.3449-2-masahisa.kojima@linaro.org> <20200723023634.GI45081@linux.intel.com>
+In-Reply-To: <20200723023634.GI45081@linux.intel.com>
+From:   Masahisa Kojima <masahisa.kojima@linaro.org>
+Date:   Mon, 27 Jul 2020 12:13:44 +0900
+Message-ID: <CADQ0-X8wYq97iqoKHAoyTN3qJf_f243e3HEhzjkbNAT-8FEEGQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] tpm: tis: add support for MMIO TPM on SynQuacer
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ardb@kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To meet mipi hi speed transmission, decrease hs_trail time to pass mipi
-test.
+Hi Jarkko,
 
-Signed-off-by: David Lu <david.lu@bitland.com.cn>
----
- drivers/media/i2c/ov8856.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thank you for your comments.
 
-diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
-index 4ca27675cc5a..1f1835b14a24 100644
---- a/drivers/media/i2c/ov8856.c
-+++ b/drivers/media/i2c/ov8856.c
-@@ -284,7 +284,7 @@ static const struct ov8856_reg mode_3280x2464_regs[] = {
- 	{0x4601, 0x80},
- 	{0x4800, 0x44},
- 	{0x4816, 0x53},
--	{0x481b, 0x58},
-+	{0x481b, 0x42},
- 	{0x481f, 0x27},
- 	{0x4837, 0x16},
- 	{0x483c, 0x0f},
-@@ -474,7 +474,7 @@ static const struct ov8856_reg mode_1640x1232_regs[] = {
- 	{0x4601, 0x80},
- 	{0x4800, 0x44},
- 	{0x4816, 0x53},
--	{0x481b, 0x58},
-+	{0x481b, 0x42},
- 	{0x481f, 0x27},
- 	{0x4837, 0x16},
- 	{0x483c, 0x0f},
--- 
-2.17.1
+On Thu, 23 Jul 2020 at 11:36, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Fri, Jul 17, 2020 at 05:49:31PM +0900, Masahisa Kojima wrote:
+> > When fitted, the SynQuacer platform exposes its SPI TPM via a MMIO
+> > window that is backed by the SPI command sequencer in the SPI bus
+> > controller. This arrangement has the limitation that only byte size
+> > accesses are supported, and so we'll need to provide a separate module
+> > that take this into account.
+> >
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
+> > ---
+> >  drivers/char/tpm/Kconfig             |  12 ++
+> >  drivers/char/tpm/Makefile            |   1 +
+> >  drivers/char/tpm/tpm_tis_synquacer.c | 209 +++++++++++++++++++++++++++
+> >  3 files changed, 222 insertions(+)
+> >  create mode 100644 drivers/char/tpm/tpm_tis_synquacer.c
+> >
+> > diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> > index 58b4c573d176..a18c314da211 100644
+> > --- a/drivers/char/tpm/Kconfig
+> > +++ b/drivers/char/tpm/Kconfig
+> > @@ -74,6 +74,18 @@ config TCG_TIS_SPI_CR50
+> >         If you have a H1 secure module running Cr50 firmware on SPI bus,
+> >         say Yes and it will be accessible from within Linux.
+> >
+> > +config TCG_TIS_SYNQUACER
+> > +     tristate "TPM Interface Specification 1.2 Interface / TPM 2.0 FIFO Interface (MMIO - SynQuacer)"
+> > +     depends on ARCH_SYNQUACER
+> > +     select TCG_TIS_CORE
+> > +     help
+> > +       If you have a TPM security chip that is compliant with the
+> > +       TCG TIS 1.2 TPM specification (TPM1.2) or the TCG PTP FIFO
+> > +       specification (TPM2.0) say Yes and it will be accessible from
+> > +       within Linux on Socionext SynQuacer platform.
+> > +       To compile this driver as a module, choose  M here;
+> > +       the module will be called tpm_tis_synquacer.
+> > +
+> >  config TCG_TIS_I2C_ATMEL
+> >       tristate "TPM Interface Specification 1.2 Interface (I2C - Atmel)"
+> >       depends on I2C
+> > diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> > index 9567e5197f74..84db4fb3a9c9 100644
+> > --- a/drivers/char/tpm/Makefile
+> > +++ b/drivers/char/tpm/Makefile
+> > @@ -21,6 +21,7 @@ tpm-$(CONFIG_EFI) += eventlog/efi.o
+> >  tpm-$(CONFIG_OF) += eventlog/of.o
+> >  obj-$(CONFIG_TCG_TIS_CORE) += tpm_tis_core.o
+> >  obj-$(CONFIG_TCG_TIS) += tpm_tis.o
+> > +obj-$(CONFIG_TCG_TIS_SYNQUACER) += tpm_tis_synquacer.o
+> >
+> >  obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
+> >  tpm_tis_spi-y := tpm_tis_spi_main.o
+> > diff --git a/drivers/char/tpm/tpm_tis_synquacer.c b/drivers/char/tpm/tpm_tis_synquacer.c
+> > new file mode 100644
+> > index 000000000000..ac2a1d2a5001
+> > --- /dev/null
+> > +++ b/drivers/char/tpm/tpm_tis_synquacer.c
+> > @@ -0,0 +1,209 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2020 Linaro Ltd.
+> > + *
+> > + * This device driver implements MMIO TPM on SynQuacer Platform.
+> > + */
+> > +#include <linux/acpi.h>
+> > +#include <linux/init.h>
+> > +#include <linux/module.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/kernel.h>
+> > +#include "tpm.h"
+> > +#include "tpm_tis_core.h"
+> > +
+> > +struct tpm_tis_synquacer_info {
+> > +     struct resource res;
+> > +     /* irq > 0 means: use irq $irq;
+> > +      * irq = 0 means: autoprobe for an irq;
+> > +      * irq = -1 means: no irq support
+> > +      */
+> > +     int irq;
+> > +};
+>
+> According to the coding style, multi-line comments must begin with an
+> empty line.
+>
+> Also it would be preferable to have the comment prepending the struct
+> for easier read:
+>
+> /*
+>  * irq > 0 means: use irq $irq;
+>  * irq = 0 means: autoprobe for an irq;
+>  * irq = -1 means: no irq support
+>  */
+> struct tpm_tis_synquacer_info {
 
+I will modify.
 
+>
+> > +
+> > +struct tpm_tis_synquacer_phy {
+> > +     struct tpm_tis_data priv;
+> > +     void __iomem *iobase;
+> > +};
+> > +
+> > +static inline struct tpm_tis_synquacer_phy *to_tpm_tis_tcg_phy(struct tpm_tis_data *data)
+> > +{
+> > +     return container_of(data, struct tpm_tis_synquacer_phy, priv);
+> > +}
+> > +
+> > +static int tpm_tis_synquacer_read_bytes(struct tpm_tis_data *data, u32 addr,
+> > +                                     u16 len, u8 *result)
+> > +{
+> > +     struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
+> > +
+> > +     while (len--)
+> > +             *result++ = ioread8(phy->iobase + addr);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int tpm_tis_synquacer_write_bytes(struct tpm_tis_data *data, u32 addr,
+> > +                                      u16 len, const u8 *value)
+> > +{
+> > +     struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
+> > +
+> > +     while (len--)
+> > +             iowrite8(*value++, phy->iobase + addr);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int tpm_tis_synquacer_read16_bw(struct tpm_tis_data *data,
+> > +                                    u32 addr, u16 *result)
+> > +{
+> > +     struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
+> > +
+> > +     /*
+> > +      * Due to the limitation of SPI controller on SynQuacer,
+> > +      * 16/32 bits access must be done in byte-wise and descending order.
+> > +      */
+> > +     *result = (ioread8(phy->iobase + addr + 1) << 8) |
+> > +               (ioread8(phy->iobase + addr));
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int tpm_tis_synquacer_read32_bw(struct tpm_tis_data *data,
+> > +                                    u32 addr, u32 *result)
+> > +{
+> > +     struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
+> > +
+> > +     /*
+> > +      * Due to the limitation of SPI controller on SynQuacer,
+> > +      * 16/32 bits access must be done in byte-wise and descending order.
+> > +      */
+> > +     *result = (ioread8(phy->iobase + addr + 3) << 24) |
+> > +               (ioread8(phy->iobase + addr + 2) << 16) |
+> > +               (ioread8(phy->iobase + addr + 1) << 8) |
+> > +               (ioread8(phy->iobase + addr));
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int tpm_tis_synquacer_write32_bw(struct tpm_tis_data *data,
+> > +                                     u32 addr, u32 value)
+> > +{
+> > +     struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
+> > +
+> > +     /*
+> > +      * Due to the limitation of SPI controller on SynQuacer,
+> > +      * 16/32 bits access must be done in byte-wise and descending order.
+> > +      */
+> > +     iowrite8(value >> 24, phy->iobase + addr + 3);
+> > +     iowrite8(value >> 16, phy->iobase + addr + 2);
+> > +     iowrite8(value >> 8, phy->iobase + addr + 1);
+> > +     iowrite8(value, phy->iobase + addr);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct tpm_tis_phy_ops tpm_tcg_bw = {
+> > +     .read_bytes     = tpm_tis_synquacer_read_bytes,
+> > +     .write_bytes    = tpm_tis_synquacer_write_bytes,
+> > +     .read16         = tpm_tis_synquacer_read16_bw,
+> > +     .read32         = tpm_tis_synquacer_read32_bw,
+> > +     .write32        = tpm_tis_synquacer_write32_bw,
+> > +};
+> > +
+> > +static int tpm_tis_synquacer_init(struct device *dev,
+> > +                               struct tpm_tis_synquacer_info *tpm_info)
+> > +{
+> > +     struct tpm_tis_synquacer_phy *phy;
+> > +
+> > +     phy = devm_kzalloc(dev, sizeof(struct tpm_tis_synquacer_phy), GFP_KERNEL);
+> > +     if (phy == NULL)
+> > +             return -ENOMEM;
+> > +
+> > +     phy->iobase = devm_ioremap_resource(dev, &tpm_info->res);
+> > +     if (IS_ERR(phy->iobase))
+> > +             return PTR_ERR(phy->iobase);
+> > +
+> > +     return tpm_tis_core_init(dev, &phy->priv, tpm_info->irq, &tpm_tcg_bw,
+> > +                              ACPI_HANDLE(dev));
+> > +}
+> > +
+> > +static SIMPLE_DEV_PM_OPS(tpm_tis_synquacer_pm, tpm_pm_suspend, tpm_tis_resume);
+> > +
+> > +static int tpm_tis_synquacer_probe(struct platform_device *pdev)
+> > +{
+> > +     struct tpm_tis_synquacer_info tpm_info = {};
+> > +     struct resource *res;
+> > +
+> > +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +     if (res == NULL) {
+> > +             dev_err(&pdev->dev, "no memory resource defined\n");
+> > +             return -ENODEV;
+> > +     }
+> > +     tpm_info.res = *res;
+> > +
+> > +     tpm_info.irq = -1;
+> > +
+> > +     return tpm_tis_synquacer_init(&pdev->dev, &tpm_info);
+> > +}
+> > +
+> > +static int tpm_tis_synquacer_remove(struct platform_device *pdev)
+> > +{
+> > +     struct tpm_chip *chip = dev_get_drvdata(&pdev->dev);
+> > +
+> > +     tpm_chip_unregister(chip);
+> > +     tpm_tis_remove(chip);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +#ifdef CONFIG_OF
+> > +static const struct of_device_id tis_synquacer_of_platform_match[] = {
+> > +     {.compatible = "socionext,synquacer-tpm-mmio"},
+> > +     {},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, tis_synquacer_of_platform_match);
+> > +#endif
+> > +
+> > +#ifdef CONFIG_ACPI
+> > +static const struct acpi_device_id tpm_synquacer_acpi_tbl[] = {
+> > +     { "SCX0009" },
+> > +     {},
+> > +};
+> > +MODULE_DEVICE_TABLE(acpi, tpm_synquacer_acpi_tbl);
+> > +#endif
+> > +
+> > +static struct platform_driver tis_synquacer_drv = {
+> > +     .probe = tpm_tis_synquacer_probe,
+> > +     .remove = tpm_tis_synquacer_remove,
+> > +     .driver = {
+> > +             .name           = "tpm_tis_synquacer",
+> > +             .pm             = &tpm_tis_synquacer_pm,
+> > +             .of_match_table = of_match_ptr(tis_synquacer_of_platform_match),
+> > +             .acpi_match_table = ACPI_PTR(tpm_synquacer_acpi_tbl),
+> > +     },
+> > +};
+> > +
+> > +static int __init tpm_tis_synquacer_module_init(void)
+> > +{
+> > +     int rc;
+> > +
+> > +     rc = platform_driver_register(&tis_synquacer_drv);
+> > +     if (rc)
+> > +             return rc;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void __exit tpm_tis_synquacer_module_exit(void)
+> > +{
+> > +     platform_driver_unregister(&tis_synquacer_drv);
+> > +}
+> > +
+> > +module_init(tpm_tis_synquacer_module_init);
+> > +module_exit(tpm_tis_synquacer_module_exit);
+> > +MODULE_AUTHOR("Masahisa Kojima (masahisa.kojima@linaro.org)");
+>
+> It is completely redundant field because authorship is part of the
+> commit object itself. And it does not tell the truth after a while
+> anyway. MODULE_AUTHOR() made more sense before there was any sort of
+> legit versio control in place.
+>
+> I think it would be better not to have it as we don't have any use
+> for this data. It is just cruft hanging there.
 
+OK, I will remove MODULE_AUTHOR() line.
+I will also plan to remove MODULE_VERSION("2.0").
+tpm_tis_spi_main.c only has MODULE_DESCRIPTION() and MODULE_LICENSE(),
+I plan to follow this example.
+
+Regards,
+Masahisa
+
+>
+> > +MODULE_DESCRIPTION("TPM MMIO Driver for Socionext SynQuacer platform");
+> > +MODULE_VERSION("2.0");
+> > +MODULE_LICENSE("GPL");
+> > --
+> > 2.20.1
+> >
+>
+> /Jarkko
