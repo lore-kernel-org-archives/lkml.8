@@ -2,132 +2,121 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88284C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6194D206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:52:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="vWluG5lr"
+	by mail.kernel.org (Postfix) with ESMTP id BC34C2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:53:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595850821;
+	bh=pmx7r4So4ltU9GFLtyowT8sGCWQ3CPndiOgHKn5MH2Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cucpGlDzVy3mf63VPBqXIO2nhcG5hcH8mtN8TtDXQaqnKhzvB+5zs9qFOSXlawzb4
+	 XELMS+8S2dUYeVJs51GAlfkwuGtWjQgaJGfKEEm1v8jksRvXsoDibJomxqSD50jhJe
+	 SFnwPF6zbz/C0rGdzttjErKTmYcJDp9eXoatrAtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgG0LwK (ORCPT
+        id S1728245AbgG0Lxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:52:10 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:17894 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726873AbgG0LwJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:52:09 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RBpaGm000720;
-        Mon, 27 Jul 2020 04:52:06 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=pfpt0818; bh=Nd7arwfxNZtpVI9ZnivLJIX8lOylM+VZWcCMVyaqn9U=;
- b=vWluG5lrFsWCaoupxBxbOhIK2ZbtQqq8wTryqRE+EDrnw48/fkraCqbexYOqXkdohl6H
- 4OPqi46wNPtT+a5f6kUopgF+GHo1bF79efqDgJzLT65iFLRTbWyVYm52sOwrIJJ/h2yU
- /g4/eAu4QYUQ89CDgPmPXB4zEwG/+QZ3asDOHFbWWkkL8l3hiuLfLeU0GdGIFHmM8nSY
- l+DWHi0Cds9jHaO30H6zL1/u0QDkPvPxhgj+3KIm6XfwtBThETfgkUQmQAikXEjs/IcK
- cnk5sgkix/MIbctK7kBcaDtnTYOgia4oR1/pTOtcP59NmR/1PvSuAXINdgmqReYdfJnx 0w== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 32gj3qq5f4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 04:52:06 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 27 Jul
- 2020 04:52:05 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 27 Jul 2020 04:52:05 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 27ECF3F703F;
-        Mon, 27 Jul 2020 04:52:01 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH net-next] qed: fix the allocation of the chains with an external PBL
-Date:   Mon, 27 Jul 2020 14:51:33 +0300
-Message-ID: <20200727115133.1631-1-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 27 Jul 2020 07:53:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726873AbgG0Lxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:53:39 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A227E206E7;
+        Mon, 27 Jul 2020 11:53:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595850819;
+        bh=pmx7r4So4ltU9GFLtyowT8sGCWQ3CPndiOgHKn5MH2Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=G1ACx5gLsKOlLnHUq7TxrmlaoSuUj35QO83mZgX22J+x2NolUsEZLVhjOUT0Duu2X
+         UBU8N1plsG6Qtp1WieL6u0koBH+1NAhNq5ckcoQiUhlW12aQ+nQzPDHVpbAGDiZ+1d
+         LpaP1h91USoBeicfxQp8fugF1xEmm13NGV/cXHe4=
+Date:   Mon, 27 Jul 2020 12:53:21 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mike Looijmans <mike.looijmans@topic.nl>
+Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org, lgirdwood@gmail.com
+Subject: Re: [PATCH v3] usb: dwc3: Add support for VBUS power control
+Message-ID: <20200727115321.GC6275@sirena.org.uk>
+References: <20200619142512.19824-1-mike.looijmans@topic.nl>
+ <20200723075612.tn5dbkhes2chohwh@axis.com>
+ <20200723110523.GA4759@sirena.org.uk>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.2698920d-90ba-4c46-abda-83e18e2093c8@emailsignatures365.codetwo.com>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.0d2bd5fa-15cc-4b27-b94e-83614f9e5b38.ac9c2a67-d7df-4f70-81b3-db983bbfb4db@emailsignatures365.codetwo.com>
+ <e63ee918-c9e3-a8ee-e7c5-577b5a3e09be@topic.nl>
+ <20200727102317.GA6275@sirena.org.uk>
+ <be4013b6-01c6-7f67-35ad-5c398b85c066@topic.nl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_07:2020-07-27,2020-07-27 signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vOmOzSkFvhd7u8Ms"
+Content-Disposition: inline
+In-Reply-To: <be4013b6-01c6-7f67-35ad-5c398b85c066@topic.nl>
+X-Cookie: Doing gets it done.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan reports static checker warning:
 
-"The patch 9b6ee3cf95d3: "qed: sanitize PBL chains allocation" from Jul
-23, 2020, leads to the following static checker warning:
+--vOmOzSkFvhd7u8Ms
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	drivers/net/ethernet/qlogic/qed/qed_chain.c:299 qed_chain_alloc_pbl()
-	error: uninitialized symbol 'pbl_virt'.
+On Mon, Jul 27, 2020 at 01:50:26PM +0200, Mike Looijmans wrote:
+>=20
+> Met vriendelijke groet / kind regards,
+>=20
+> Mike Looijmans
+> System Expert
 
-drivers/net/ethernet/qlogic/qed/qed_chain.c
-   249  static int qed_chain_alloc_pbl(struct qed_dev *cdev, struct qed_chain *chain)
-   250  {
-   251          struct device *dev = &cdev->pdev->dev;
-   252          struct addr_tbl_entry *addr_tbl;
-   253          dma_addr_t phys, pbl_phys;
-   254          __le64 *pbl_virt;
-                ^^^^^^^^^^^^^^^^
-[...]
-   271          if (chain->b_external_pbl)
-   272                  goto alloc_pages;
-                        ^^^^^^^^^^^^^^^^ uninitialized
-[...]
-   298                  /* Fill the PBL table with the physical address of the page */
-   299                  pbl_virt[i] = cpu_to_le64(phys);
-                        ^^^^^^^^^^^
-[...]
-"
+You probably want to remove your signature when replying to the list...
 
-This issue was introduced with commit c3a321b06a80 ("qed: simplify
-initialization of the chains with an external PBL"), when
-chain->pbl_sp.table_virt initialization was moved up to
-qed_chain_init_params().
-Fix it by initializing pbl_virt with an already filled chain struct field.
+> On 27-07-2020 12:23, Mark Brown wrote:
+> > On Sun, Jul 26, 2020 at 09:10:39AM +0200, Mike Looijmans wrote:
 
-Fixes: c3a321b06a80 ("qed: simplify initialization of the chains with an external PBL")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
----
- drivers/net/ethernet/qlogic/qed/qed_chain.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> > > It's the 5V VBUS power for the USB "plug" that's being controlled her=
+e. It
+> > > must turned on when the controller is in "host" mode. Some boards arr=
+ange
+> > > this in hardware through the PHY, and some just don't have any contro=
+l at
+> > > all and have it permanently on or off. On a board where the 5V is con=
+trolled
+> > > using a GPIO line or an I2C chip, this patch is required to make it w=
+ork.
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_chain.c b/drivers/net/ethernet/qlogic/qed/qed_chain.c
-index f8efd36d66e0..b83d17b14e85 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_chain.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_chain.c
-@@ -268,8 +268,10 @@ static int qed_chain_alloc_pbl(struct qed_dev *cdev, struct qed_chain *chain)
- 
- 	chain->pbl.pp_addr_tbl = addr_tbl;
- 
--	if (chain->b_external_pbl)
-+	if (chain->b_external_pbl) {
-+		pbl_virt = chain->pbl_sp.table_virt;
- 		goto alloc_pages;
-+	}
- 
- 	size = array_size(page_cnt, sizeof(*pbl_virt));
- 	if (unlikely(size == SIZE_MAX))
--- 
-2.25.1
+> > That sounds like the driver should not be using _get_optional() then.
 
+> Making it mandatory would break most (read: all except Topic's) existing
+> boards as they won't have it in their devicetree. I'm perfectly okay with
+> that, but others might disagree.
+
+No, it wouldn't break them at all - they'd get a dummy regulator
+provided.
+
+--vOmOzSkFvhd7u8Ms
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8ewDEACgkQJNaLcl1U
+h9AOeAf/Q3uCuO9POLkFE4AFLM60fwOW/cXI1NJMegOuZ91RhQk4TF2WaZlMWHIf
+b8SYB4gvI151gQYg2UPgf52UpWEbVUZN6GoM/wyk1dOAm6ulrMx248Upv3gQkpHi
+RBRynDGfnTgOdn6GPde9XO24zF9zCpL6HyN1AHbp9y9zuC3nVg23Pi+Usyw3MyiG
+RWRyQ3lKAqssLAh+6CYQQBVQ2mEp6ubHxH9UuGoKYfgDDqo7gff1b4Ibfkv9QT3G
+wjVCthn7ZcgpKyFalB1cZ6MJcsnvEvtWcdz/lMAYT6YXpha0UvuVs5xj0LFYw6pc
+u9fo8pNhRClmGM+PizicmWsAcQ6aBg==
+=yKtV
+-----END PGP SIGNATURE-----
+
+--vOmOzSkFvhd7u8Ms--
