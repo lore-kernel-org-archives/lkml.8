@@ -2,131 +2,131 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F49DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9024EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 061B320719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66ECA20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:38:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Ai5egpza"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgG0RhZ (ORCPT
+        id S1731247AbgG0RiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:37:25 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:45321 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbgG0RhY (ORCPT
+        Mon, 27 Jul 2020 13:38:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729034AbgG0RiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:37:24 -0400
-Received: by mail-io1-f69.google.com with SMTP id p17so8766049iod.12
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 10:37:24 -0700 (PDT)
+        Mon, 27 Jul 2020 13:38:14 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81430C061794;
+        Mon, 27 Jul 2020 10:38:14 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id z17so12742229edr.9;
+        Mon, 27 Jul 2020 10:38:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/sKKwVMF8e4uHhkt8F3tJZDTVJK3HD/IRNcRCGfQ0iI=;
+        b=Ai5egpzaMg+snqXKaqxknnOqLimP/zj6IXv/zg0JBwwuK2BwrBIY0TLJ4HUwd86yOj
+         RCLN69SG4FyZirYcRCk7C74kaP0ZojtIhFxs4zZEB+TYfzr48Lk8HudamqQshhc0D/wC
+         gpXUFpQsiOSLG1rdFgb+Tz4Y9nO0Q1tfTio11oUlFfkkqHMdbN/Xf6f/9CeaCq6XXQZH
+         KIu2zNkMU9nLtBYFfqks/doGXNHXkrcKdXtXcs5bslKRbh3qRWP8eHyhhKr0T7c3+677
+         1udexORQ0Qi8oYFeVw4NjT6bh2qLFnFLVrCSShBsy1UvMhSqDV1LNoHsPKbuOPGx1jNn
+         Y2yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=luBsnytwWNJwACq4vbB9UK5VfUTfOaDSrjQjfmgB0MU=;
-        b=shdONtNc8+1PbglamjJFBP0j0WS/4oiae7IBZDBVdipqswiFjLcUJo3XdLqjmwXvoI
-         4Es8Yg11eDBQ7VXpTxC/XeFRXTjSoFHQsOM6BayvzEm4PGlYo6fOwWeEkj38OGk0fUmL
-         QtNH4MZkK/X7ke1it3bnHO/1xVetJ41rZbSfTrlCU63ujqsQpboyNtc/7j6xmwloSIau
-         k85nA0oEjt/CaTrVXJOsAxFQWOAw4Yeoqbv2ELwe4wgrxVdTPX9chpCBCBnH9Jx81fS7
-         k8Bok4oKSgeBoBLUh2XC7S27v8IiK+YmbzA2LX8eifVvJLPZHPhzIeiFUIKpSfgn6GFR
-         Yvog==
-X-Gm-Message-State: AOAM533P54zKlAOPwfBBmsjgzzLNKVYzJj98M86mcUeAughmVXfaHdAO
-        sRSjy+iHHasyVHcOT+xujfEn9sFBCiXrmV1L83oz4DRKqqMf
-X-Google-Smtp-Source: ABdhPJzIn9q6VG1lVe8VZwfUIyj6cfxC8xLkfRrihpYyzsogso/bzRlI/909qNfOP+v00PI4wdW9vjKckQ6NkdRkfauGxaJ84Ty4
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/sKKwVMF8e4uHhkt8F3tJZDTVJK3HD/IRNcRCGfQ0iI=;
+        b=RWY0MnM5qeE9CSQi+R46OWs75N+5iJWi9s5c4/hBUZo485kJ31vzS+asyF5fMG4X5t
+         1ZLC4bu0KQtqOntwakZd87E/t4hcn2N+y+JNMRRSfYGKp/emZjptWAdK5uQEH14fARJO
+         9HnNSjRsKAWCnSNPZCGuC7sm6NGSEyJgdMWOlS3aO28XmQMah8pZC012WC4hvbnz40nV
+         b616xE6nk/MpPr93cqJA4mfXOi3Us87bdLyZvTlvUpZxdIedJLBb/8aZk3rannQRnL/A
+         o59JWuMSicNQK5DvK0JcltBi15kkvXOc4+f4FLKmrm+Y2rReMCtVqbq7poCzkgPwgfA1
+         GCTQ==
+X-Gm-Message-State: AOAM532EBKg/dJ/csfgLoVkLhggGkvlj9FKeVt0yWKa8CwEwaD79uVhW
+        IzINypjKQqO36orXRpYJSdQrRV4GnQE=
+X-Google-Smtp-Source: ABdhPJxBfOMURSmESYSYBVelY4lBWbo7lOCvYRLpUDv8nxmeawmAsgobF3dOIFn/CqLO8ohJbJKl8g==
+X-Received: by 2002:a05:6402:22f0:: with SMTP id dn16mr22471016edb.83.1595871493204;
+        Mon, 27 Jul 2020 10:38:13 -0700 (PDT)
+Received: from localhost.localdomain (p200300f13716be00428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:3716:be00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id cc9sm8115756edb.14.2020.07.27.10.38.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 10:38:12 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     hminas@synopsys.com, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, marex@denx.de,
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3] usb: dwc2: Add missing cleanups when usb_add_gadget_udc() fails
+Date:   Mon, 27 Jul 2020 19:38:01 +0200
+Message-Id: <20200727173801.792626-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:18b:: with SMTP id 133mr25380271ilb.101.1595871443952;
- Mon, 27 Jul 2020 10:37:23 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 10:37:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000862c0305ab6fc661@google.com>
-Subject: WARNING: ODEBUG bug in delete_node
-From:   syzbot <syzbot+062ee7c41cfd844a3a9a@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Call dwc2_debugfs_exit() and dwc2_hcd_remove() (if the HCD was enabled
+earlier) when usb_add_gadget_udc() has failed. This ensures that the
+debugfs entries created by dwc2_debugfs_init() as well as the HCD are
+cleaned up in the error path.
 
-syzbot found the following issue on:
-
-HEAD commit:    e9a523ff Add linux-next specific files for 20200727
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17ad9108900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2cbc23e6202df3d0
-dashboard link: https://syzkaller.appspot.com/bug?extid=062ee7c41cfd844a3a9a
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+062ee7c41cfd844a3a9a@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-ODEBUG: activate active (active state 1) object type: rcu_head hint: 0x0
-WARNING: CPU: 1 PID: 16220 at lib/debugobjects.c:485 debug_print_object+0x160/0x250 lib/debugobjects.c:485
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 16220 Comm: syz-executor.0 Not tainted 5.8.0-rc7-next-20200727-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x20/0x45 kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
- exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:545
-RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:485
-Code: dd a0 12 94 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48 8b 14 dd a0 12 94 88 48 c7 c7 00 08 94 88 e8 e2 87 a6 fd <0f> 0b 83 05 13 a1 1a 07 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
-RSP: 0018:ffffc900065e7958 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: ffff8880a1a18280 RSI: ffffffff815d93b7 RDI: fffff52000cbcf1d
-RBP: 0000000000000001 R08: 0000000000000001 R09: ffff8880ae7318a7
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff89c52a00
-R13: 0000000000000000 R14: 1ffff92000cbcf36 R15: ffffffff89c52a00
- debug_object_activate+0x2da/0x3e0 lib/debugobjects.c:652
- debug_object_activate+0x337/0x3e0 lib/debugobjects.c:682
- debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
- __call_rcu kernel/rcu/tree.c:2869 [inline]
- call_rcu+0x2c/0x7e0 kernel/rcu/tree.c:2957
- radix_tree_node_free lib/radix-tree.c:309 [inline]
- delete_node+0xe5/0x8a0 lib/radix-tree.c:572
- __radix_tree_delete+0x190/0x370 lib/radix-tree.c:1378
- radix_tree_delete_item+0xe7/0x230 lib/radix-tree.c:1429
- mnt_free_id fs/namespace.c:131 [inline]
- cleanup_mnt+0x3db/0x500 fs/namespace.c:1140
- task_work_run+0xdd/0x190 kernel/task_work.c:135
- exit_task_work include/linux/task_work.h:25 [inline]
- do_exit+0xb7d/0x29f0 kernel/exit.c:806
- do_group_exit+0x125/0x310 kernel/exit.c:903
- __do_sys_exit_group kernel/exit.c:914 [inline]
- __se_sys_exit_group kernel/exit.c:912 [inline]
- __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:912
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c369
-Code: Bad RIP value.
-RSP: 002b:00007fff0e2003e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000016 RCX: 000000000045c369
-RDX: 0000000000415e00 RSI: 0000000000ca85f0 RDI: 0000000000000043
-RBP: 00000000004d0de8 R08: 000000000000000c R09: 0000000000000000
-R10: 00000000023fc940 R11: 0000000000000246 R12: 0000000000000003
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000744ca0
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
+Fixes: 207324a321a866 ("usb: dwc2: Postponed gadget registration to the udc class driver")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Changes since v2 at [1]:
+- add #if around the new label and it's code to prevent the following
+  warning found by the Kernel test robot:
+    unused label 'error_debugfs' [-Wunused-label]
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Changes since v1 at [0]
+- also cleanup the HCD as suggested by Minas (thank you!)
+- updated the subject accordingly
+
+
+[0] https://patchwork.kernel.org/patch/11631381/
+[1] https://patchwork.kernel.org/patch/11642957/
+
+
+ drivers/usb/dwc2/platform.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+index cb8ddbd53718..b74099764b2d 100644
+--- a/drivers/usb/dwc2/platform.c
++++ b/drivers/usb/dwc2/platform.c
+@@ -583,12 +583,19 @@ static int dwc2_driver_probe(struct platform_device *dev)
+ 		retval = usb_add_gadget_udc(hsotg->dev, &hsotg->gadget);
+ 		if (retval) {
+ 			dwc2_hsotg_remove(hsotg);
+-			goto error_init;
++			goto error_debugfs;
+ 		}
+ 	}
+ #endif /* CONFIG_USB_DWC2_PERIPHERAL || CONFIG_USB_DWC2_DUAL_ROLE */
+ 	return 0;
+ 
++#if IS_ENABLED(CONFIG_USB_DWC2_PERIPHERAL) || \
++	IS_ENABLED(CONFIG_USB_DWC2_DUAL_ROLE)
++error_debugfs:
++	dwc2_debugfs_exit(hsotg);
++	if (hsotg->hcd_enabled)
++		dwc2_hcd_remove(hsotg);
++#endif
+ error_init:
+ 	if (hsotg->params.activate_stm_id_vb_detection)
+ 		regulator_disable(hsotg->usb33d);
+-- 
+2.27.0
+
