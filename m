@@ -2,285 +2,107 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B285FC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECFDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85DCA2074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A552070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:54:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qLSFx10Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NATaD6DO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgG0K6l (ORCPT
+        id S1728348AbgG0KyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:58:41 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:13336 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728392AbgG0K6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:58:40 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595847519; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=DEfjH/2I4evPsMqfPSbH/iM41ACmWP5x0mOUhdXb52s=;
- b=qLSFx10QkkV0S7oqsbFOKJTUIArC02n3K+lD/P+rQCduGwCLEdlg/nDiglOuqFhEWhUjbBDe
- tMjIrBXuSU9Rg8kFH4MISE2khT2jG0vws69N1LO5hXcRNO3pQNzxEmL18N1PEycB4d9n/wOn
- UUKqzglzYUp8c/HI8YGD6V77ifs=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f1eb35da61bb9e3f58d35e0 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 10:58:37
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 861D9C433CB; Mon, 27 Jul 2020 10:58:36 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 914D4C433C6;
-        Mon, 27 Jul 2020 10:58:35 +0000 (UTC)
+        Mon, 27 Jul 2020 06:54:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgG0KyG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 06:54:06 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C42C9C061794;
+        Mon, 27 Jul 2020 03:54:05 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id 72so7813956ple.0;
+        Mon, 27 Jul 2020 03:54:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oIEKzcok0AHytuejxAqDHox+Hv/4xCQLeQwpksAUjBk=;
+        b=NATaD6DOFsQ65caJoNxzMR1zR5wWv1mukgUlz/BQxbkOyAc5URJ66Y+8cdha222tlD
+         khfhBoARpbTJAfxfgmxzI25DrnSdQBWxkRBW4/FLvsE89WqdYen4yWtLcPPRWXfcPiQW
+         Gik2kR8VvdLGEoWhb8f0jxxfsTaN1VITh/z6fnufWcLt+xSwyDnNjizNAmxx5ggA+Tl+
+         ij30otw8WWxa0Me518bb4RvNp+5dOrGeuixKwriyJ/GTmZ0NBZVS3RelFEGMegirNXO3
+         /3CobaheVraCdrqydqqbQPsNUyqVJl8E46cp9mILLaxCGk4jnpvgGsPmnunjnFgO7aeq
+         LL8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oIEKzcok0AHytuejxAqDHox+Hv/4xCQLeQwpksAUjBk=;
+        b=KFpEi9J7MISEH0iONR3nJaoIUpy0/uMKA/LAMhltjDKbfVXw7z1AQjnxp2o/SriHim
+         uJuKTVon0Bjt9ronjDl0Y6XbOrIZi3T2Tc7ByWlVuf2o6mbtsk8DoZ/3gFp0koUgUiW3
+         NFlj/XBVZIrYM6FGjjId2CqYKok9LdLF/4ssMm9cmh1Ejmdh1ur6bp96131NkZ48ZQAp
+         z/+OGhVsS7//yWhetkUrg7BazCkHRquMbvGFehDG01Pgj9+0A1mvhxQ2wroEQSfTLFdF
+         1Z3GWJ6VK2r2OVw/VBuQ0MD2KzIJvCyNCwSTu8KBkfQYwG2tEm8EARw6ZhdSroP2ZL+z
+         Vbxw==
+X-Gm-Message-State: AOAM531VNSC8Fqc3q/FwaSo1uzXPU6wyjmp5i/xcObqRBTlyez+7LFnm
+        D0JGsdeshRQFLlGZMtlKZzOp/VE/eoTY0pj4u0scEdNa
+X-Google-Smtp-Source: ABdhPJzKpuotHtZQWXCNXpW4Rd40X2ZHyq6xGCf7dma4uujyWwxfrgebmhgIZK8KpV8IbxrNGqpdB0U2NUlVH+QVpNQ=
+X-Received: by 2002:a17:90a:498b:: with SMTP id d11mr19017924pjh.129.1595847245382;
+ Mon, 27 Jul 2020 03:54:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 27 Jul 2020 16:28:35 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org, mka@chromium.org,
-        dianders@chromium.org, linux-kernel@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH 4/6] arm64: dts: qcom: sdm845: Increase the number of
- interconnect cells
-In-Reply-To: <20200723130942.28491-5-georgi.djakov@linaro.org>
-References: <20200723130942.28491-1-georgi.djakov@linaro.org>
- <20200723130942.28491-5-georgi.djakov@linaro.org>
-Message-ID: <3c8c4aae7697d9d5a052b9dfd1ea0cf4@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <0bad52e6e10ff2e8d8a19f95bab7642ec5e71838.1595838334.git.sramani@mellanox.com>
+In-Reply-To: <0bad52e6e10ff2e8d8a19f95bab7642ec5e71838.1595838334.git.sramani@mellanox.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Jul 2020 13:53:50 +0300
+Message-ID: <CAHp75Vdsw61-uNi2TiR7F4j0s=F6XCnQC_j81hXfyJ9tfeq8QA@mail.gmail.com>
+Subject: Re: [PATCH v1] platform/mellanox: mlxbf-pmc: Add Mellanox BlueField
+ PMC driver
+To:     Shravan Kumar Ramani <sramani@mellanox.com>
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-23 18:39, Georgi Djakov wrote:
-> Increase the number of interconnect-cells, as now we can include
-> the tag information. The consumers can specify the path tag as an
-> additional argument to the endpoints.
+On Mon, Jul 27, 2020 at 12:02 PM Shravan Kumar Ramani
+<sramani@mellanox.com> wrote:
+>
+> The performance modules in BlueField are present in several hardware
+> blocks and each block provides access to these stats either through
+> counters that can be programmed to monitor supported events or
+> through memory-mapped registers that hold the relevant information.
+> The hardware blocks that include a performance module are:
+>  * Tile (block containing 2 cores and a shared L2 cache)
+>  * TRIO (PCIe root complex)
+>  * MSS (Memory Sub-system containing the Memory Controller and L3 cache)
+>  * GIC (Interrupt controller)
+>  * SMMU (System Memory Management Unit)
+> The mlx_pmc driver provides access to all of these performance modules
+> through a hwmon sysfs interface.
 
-Tested-by: Sibi Sankar <sibis@codeaurora.org>
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Just brief comments:
+- consider to revisit header block to see what is really necessary and
+what can be dropped
+- add comma to the arrays where last line is not a termination
+- look at match_string() / sysfs_match_string() API, I think they can
+be utilised here
+- UUID manipulations (esp. with that GUID_INIT() against non-constant)
+seems too much, consider refactoring and cleaning up these pieces
+- use kstroto*() API instead of sscanf. It has a range check
 
-https://patchwork.kernel.org/patch/11655409/
-I'll replace the tag ids with the
-macros once ^^ lands.
-
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 44 ++++++++++++++--------------
->  1 file changed, 22 insertions(+), 22 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index e506793407d8..94f5d27f2927 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -200,7 +200,7 @@ &LITTLE_CPU_SLEEP_1
->  			dynamic-power-coefficient = <100>;
->  			qcom,freq-domain = <&cpufreq_hw 0>;
->  			operating-points-v2 = <&cpu0_opp_table>;
-> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
-> SLAVE_EBI1>,
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
-> SLAVE_EBI1 3>,
->  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_0>;
-> @@ -225,7 +225,7 @@ &LITTLE_CPU_SLEEP_1
->  			dynamic-power-coefficient = <100>;
->  			qcom,freq-domain = <&cpufreq_hw 0>;
->  			operating-points-v2 = <&cpu0_opp_table>;
-> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
-> SLAVE_EBI1>,
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
-> SLAVE_EBI1 3>,
->  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_100>;
-> @@ -247,7 +247,7 @@ &LITTLE_CPU_SLEEP_1
->  			dynamic-power-coefficient = <100>;
->  			qcom,freq-domain = <&cpufreq_hw 0>;
->  			operating-points-v2 = <&cpu0_opp_table>;
-> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
-> SLAVE_EBI1>,
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
-> SLAVE_EBI1 3>,
->  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_200>;
-> @@ -269,7 +269,7 @@ &LITTLE_CPU_SLEEP_1
->  			dynamic-power-coefficient = <100>;
->  			qcom,freq-domain = <&cpufreq_hw 0>;
->  			operating-points-v2 = <&cpu0_opp_table>;
-> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
-> SLAVE_EBI1>,
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
-> SLAVE_EBI1 3>,
->  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_300>;
-> @@ -291,7 +291,7 @@ &BIG_CPU_SLEEP_1
->  			dynamic-power-coefficient = <396>;
->  			qcom,freq-domain = <&cpufreq_hw 1>;
->  			operating-points-v2 = <&cpu4_opp_table>;
-> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
-> SLAVE_EBI1>,
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
-> SLAVE_EBI1 3>,
->  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_400>;
-> @@ -313,7 +313,7 @@ &BIG_CPU_SLEEP_1
->  			dynamic-power-coefficient = <396>;
->  			qcom,freq-domain = <&cpufreq_hw 1>;
->  			operating-points-v2 = <&cpu4_opp_table>;
-> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
-> SLAVE_EBI1>,
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
-> SLAVE_EBI1 3>,
->  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_500>;
-> @@ -335,7 +335,7 @@ &BIG_CPU_SLEEP_1
->  			dynamic-power-coefficient = <396>;
->  			qcom,freq-domain = <&cpufreq_hw 1>;
->  			operating-points-v2 = <&cpu4_opp_table>;
-> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
-> SLAVE_EBI1>,
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
-> SLAVE_EBI1 3>,
->  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_600>;
-> @@ -357,7 +357,7 @@ &BIG_CPU_SLEEP_1
->  			dynamic-power-coefficient = <396>;
->  			qcom,freq-domain = <&cpufreq_hw 1>;
->  			operating-points-v2 = <&cpu4_opp_table>;
-> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
-> SLAVE_EBI1>,
-> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
-> SLAVE_EBI1 3>,
->  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
->  			#cooling-cells = <2>;
->  			next-level-cache = <&L2_700>;
-> @@ -2011,49 +2011,49 @@ pcie1_lane: lanes@1c06200 {
->  		mem_noc: interconnect@1380000 {
->  			compatible = "qcom,sdm845-mem-noc";
->  			reg = <0 0x01380000 0 0x27200>;
-> -			#interconnect-cells = <1>;
-> +			#interconnect-cells = <2>;
->  			qcom,bcm-voters = <&apps_bcm_voter>;
->  		};
-> 
->  		dc_noc: interconnect@14e0000 {
->  			compatible = "qcom,sdm845-dc-noc";
->  			reg = <0 0x014e0000 0 0x400>;
-> -			#interconnect-cells = <1>;
-> +			#interconnect-cells = <2>;
->  			qcom,bcm-voters = <&apps_bcm_voter>;
->  		};
-> 
->  		config_noc: interconnect@1500000 {
->  			compatible = "qcom,sdm845-config-noc";
->  			reg = <0 0x01500000 0 0x5080>;
-> -			#interconnect-cells = <1>;
-> +			#interconnect-cells = <2>;
->  			qcom,bcm-voters = <&apps_bcm_voter>;
->  		};
-> 
->  		system_noc: interconnect@1620000 {
->  			compatible = "qcom,sdm845-system-noc";
->  			reg = <0 0x01620000 0 0x18080>;
-> -			#interconnect-cells = <1>;
-> +			#interconnect-cells = <2>;
->  			qcom,bcm-voters = <&apps_bcm_voter>;
->  		};
-> 
->  		aggre1_noc: interconnect@16e0000 {
->  			compatible = "qcom,sdm845-aggre1-noc";
->  			reg = <0 0x016e0000 0 0x15080>;
-> -			#interconnect-cells = <1>;
-> +			#interconnect-cells = <2>;
->  			qcom,bcm-voters = <&apps_bcm_voter>;
->  		};
-> 
->  		aggre2_noc: interconnect@1700000 {
->  			compatible = "qcom,sdm845-aggre2-noc";
->  			reg = <0 0x01700000 0 0x1f300>;
-> -			#interconnect-cells = <1>;
-> +			#interconnect-cells = <2>;
->  			qcom,bcm-voters = <&apps_bcm_voter>;
->  		};
-> 
->  		mmss_noc: interconnect@1740000 {
->  			compatible = "qcom,sdm845-mmss-noc";
->  			reg = <0 0x01740000 0 0x1c100>;
-> -			#interconnect-cells = <1>;
-> +			#interconnect-cells = <2>;
->  			qcom,bcm-voters = <&apps_bcm_voter>;
->  		};
-> 
-> @@ -2156,8 +2156,8 @@ ipa: ipa@1e40000 {
->  			clocks = <&rpmhcc RPMH_IPA_CLK>;
->  			clock-names = "core";
-> 
-> -			interconnects = <&aggre2_noc MASTER_IPA &mem_noc SLAVE_EBI1>,
-> -				        <&aggre2_noc MASTER_IPA &system_noc SLAVE_IMEM>,
-> +			interconnects = <&aggre2_noc MASTER_IPA 0 &mem_noc SLAVE_EBI1 0>,
-> +					<&aggre2_noc MASTER_IPA 0 &system_noc SLAVE_IMEM 0>,
->  					<&gladiator_noc MASTER_APPSS_PROC &config_noc SLAVE_IPA_CFG>;
->  			interconnect-names = "memory",
->  					     "imem",
-> @@ -3561,8 +3561,8 @@ usb_1: usb@a6f8800 {
-> 
->  			resets = <&gcc GCC_USB30_PRIM_BCR>;
-> 
-> -			interconnects = <&aggre2_noc MASTER_USB3_0 &mem_noc SLAVE_EBI1>,
-> -					<&gladiator_noc MASTER_APPSS_PROC &config_noc SLAVE_USB3_0>;
-> +			interconnects = <&aggre2_noc MASTER_USB3_0 0 &mem_noc SLAVE_EBI1 
-> 0>,
-> +					<&gladiator_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_USB3_0 0>;
->  			interconnect-names = "usb-ddr", "apps-usb";
-> 
->  			usb_1_dwc3: dwc3@a600000 {
-> @@ -3609,8 +3609,8 @@ usb_2: usb@a8f8800 {
-> 
->  			resets = <&gcc GCC_USB30_SEC_BCR>;
-> 
-> -			interconnects = <&aggre2_noc MASTER_USB3_1 &mem_noc SLAVE_EBI1>,
-> -					<&gladiator_noc MASTER_APPSS_PROC &config_noc SLAVE_USB3_1>;
-> +			interconnects = <&aggre2_noc MASTER_USB3_1 0 &mem_noc SLAVE_EBI1 
-> 0>,
-> +					<&gladiator_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_USB3_1 0>;
->  			interconnect-names = "usb-ddr", "apps-usb";
-> 
->  			usb_2_dwc3: dwc3@a800000 {
-> @@ -4306,7 +4306,7 @@ lpasscc: clock-controller@17014000 {
->  		gladiator_noc: interconnect@17900000 {
->  			compatible = "qcom,sdm845-gladiator-noc";
->  			reg = <0 0x17900000 0 0xd080>;
-> -			#interconnect-cells = <1>;
-> +			#interconnect-cells = <2>;
->  			qcom,bcm-voters = <&apps_bcm_voter>;
->  		};
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+With Best Regards,
+Andy Shevchenko
