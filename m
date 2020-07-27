@@ -2,143 +2,90 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D057C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597C3C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17E1220672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38CFC20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:36:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p3Q3J+WA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lZUCBhCd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgG0IgE (ORCPT
+        id S1726854AbgG0Igf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:36:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39522 "EHLO
+        Mon, 27 Jul 2020 04:36:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbgG0IgC (ORCPT
+        with ESMTP id S1726227AbgG0Igf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:36:02 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D24C061794;
-        Mon, 27 Jul 2020 01:36:02 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id g11so4413523ejr.0;
-        Mon, 27 Jul 2020 01:36:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=H+xLAiBQ1pH8gECByy/1KrbQRjM9z76f1/RAtD3ZJ0E=;
-        b=p3Q3J+WAI8nKPKPg62+INQcxywjWgw6SNOscCCt6ytYnSiEpotAvraZ+nDjQLPHiVG
-         3WZdrdopCzSp1TR14OpmPqDZlqm8zkQoST6ni8oBJKZfO49SpA/95H9nhE07DSHNxyVw
-         BUJq4rkDqDwckcJZBiPfQCooeB7GzgYQsNzuPh/Ivx0vT3M374PX8qfbz4d0du29353N
-         15kEllK8b9B8JiiYRaZj7g5JI5krHN2rfdQLv3Qkw8WOT3dCOCcwlowds3ze28oh+Wjc
-         WzRXKBiVmjm3d2zmHdvEuqtdGWizkdcYThxvepgcO+zgMLwBcrDeQKL5Hyq9HVIAZzFV
-         XbdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H+xLAiBQ1pH8gECByy/1KrbQRjM9z76f1/RAtD3ZJ0E=;
-        b=cKp+Jxuym2XAkdHpn0KRHF5eTIg3yHEao6h9Ykm4M4+CdT2Q3q0XRT4CipgyUxK3Mm
-         RwJ6fRdiz+EUq457lNNrrLeun7JmfqTtsQuS9XtEQMzwE+XgwZrKEDT6MWYzVcC0dmAE
-         4PaJ359ayyJgt0UredFkzkGHIKTrsUR13ttAp1/tv2Tb2Fm8a1sie+O30eK9QAy9ggqQ
-         1gDLWBkRZi7X3VjtIDFTwdrA+uWn2pFU5MRq0JMnKW1LF6x59Yy7v65ETjLEXaaeKnC5
-         RiAwqAAhbeckcQz5/bg7/zi4VXbu5tIWEASuDeyjI3GUmQgI7Hew6B3/te5nxnemNSyK
-         XUbw==
-X-Gm-Message-State: AOAM532KGAkNjKzRbukjx4x2W7ZYirFVvbsi10YqjO2d0t2K4UvoHYzt
-        7X6QKVKkR+FqBLBz66exR0Gh9Szy
-X-Google-Smtp-Source: ABdhPJzdWk1CsONTYOmHqvIRydh45tHT5jOnPly71GQxjIWeNYG2gVBmch+OpkGCQOVzans2fCnw0Q==
-X-Received: by 2002:a17:907:42cc:: with SMTP id nz20mr13567797ejb.429.1595838961237;
-        Mon, 27 Jul 2020 01:36:01 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id h10sm6902925eds.0.2020.07.27.01.35.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 01:35:59 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 10:35:58 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>
-Subject: Re: [PATCH v3 4/6] pwm: cros-ec: Accept more error codes from
- cros_ec_cmd_xfer_status
-Message-ID: <20200727083558.GF2781612@ulmo>
-References: <20200726220101.29059-1-linux@roeck-us.net>
- <20200726220101.29059-5-linux@roeck-us.net>
+        Mon, 27 Jul 2020 04:36:35 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35293C061794;
+        Mon, 27 Jul 2020 01:36:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3jHDYPNEyZSDNf8t0KwCcgaWouvTTdLYFPAan9XpiKk=; b=lZUCBhCdH3I6A6wocrCmJymCJP
+        Fkb1/ZtOrqdP7f+wjkm51CuCM55nKeuek7tPVOf0F/G86vyUCb4ivpVLrzze+e/Tetrd1q6pxGLX2
+        KpnoCQ1LBM7CsEWFUeuJIwdKSSvKrYgK94wISM+s1KD2+0VMUJYYPoGQl4+LfWo55RqoBUSYFJp7b
+        Y/tTjW7zFdAuYcWRcGciwN6B8wXRJmshlcvShtzQs3EIk78TxBilCNwFAuBqcfmFYRA9Nv2a84qDF
+        tMYs5w0u9G7sz+yZT7/QRlO9oLJWMWw/gJNi5ZYWL46fBrO5CitPmos/2nnn5oZQQzpNL+EvGeGWi
+        oBy3TJ4w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jzycP-0003Lm-5n; Mon, 27 Jul 2020 08:36:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3B81530411F;
+        Mon, 27 Jul 2020 10:36:20 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F0CB52B73BB17; Mon, 27 Jul 2020 10:36:19 +0200 (CEST)
+Date:   Mon, 27 Jul 2020 10:36:19 +0200
+From:   peterz@infradead.org
+To:     hpa@zytor.com
+Cc:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Cathy Zhang <cathy.zhang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-edac@vger.kernel.org
+Subject: Re: [PATCH 4/4] x86/cpu: Use SERIALIZE in sync_core() when available
+Message-ID: <20200727083619.GF119549@hirez.programming.kicks-ass.net>
+References: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
+ <20200727043132.15082-5-ricardo.neri-calderon@linux.intel.com>
+ <D51F2DC3-3C56-44E6-A1F2-434E7D27133C@zytor.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="QXO0/MSS4VvK6f+D"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200726220101.29059-5-linux@roeck-us.net>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+In-Reply-To: <D51F2DC3-3C56-44E6-A1F2-434E7D27133C@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jul 26, 2020 at 10:55:15PM -0700, hpa@zytor.com wrote:
+> For a really overenginered solution, but which might perform
+> unnecessary poorly on existing hardware:
+> 
+> asm volatile("1: .byte 0xf, 0x1, 0xe8; 2:"
+>                         _ASM_EXTABLE(1b,2b));
 
---QXO0/MSS4VvK6f+D
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ha! cute, you take an #UD ?
 
-On Sun, Jul 26, 2020 at 03:00:59PM -0700, Guenter Roeck wrote:
-> Since commit c5cd2b47b203 ("platform/chrome: cros_ec_proto: Report command
-> not supported") we can no longer assume that cros_ec_cmd_xfer_status()
-> reports -EPROTO for all errors returned by the EC itself. A follow-up
-> patch will change cros_ec_cmd_xfer_status() to report additional errors
-> reported by the EC as distinguished Linux error codes.
->=20
-> Handle this change by no longer assuming that only -EPROTO is used
-> to report all errors returned by the EC itself. Instead, support both
-> the old and the new error codes.
->=20
-> Cc: Gwendal Grignou <gwendal@chromium.org>
-> Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-> Cc: Prashant Malani <pmalani@chromium.org>
-> Cc: Brian Norris <briannorris@chromium.org>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
-> v3: Added patch
->=20
->  drivers/pwm/pwm-cros-ec.c | 21 ++++++++++++++-------
->  1 file changed, 14 insertions(+), 7 deletions(-)
-
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
-
---QXO0/MSS4VvK6f+D
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8eke4ACgkQ3SOs138+
-s6H7tBAAh58Ngu1hLcym7p1Z2mX0XksBPysYjynk4RvIe3RQbRGLOohuXfq0WAn5
-ZhBVjcuIB0VJ8L1TEioH2ErYLp6XVVsOTKx1krKxlxV5eKB30IhX2zJyjziXUtIj
-HlIqARKkwsJRqk/OhqSwgtdz8vlExufgn1Y8JTbQMNoMRdBfW/GHjPItvBHtbeZ/
-mxrOzlNUSUrX6syPy/KkY87i2D9tCwvXssnNh2LMNcSz7ZFB0ca1HZD5tODRRjPP
-EfOG+CRPHoB+H6/iYD0P7PaAZACRR/ski38HA9XehRR9p9AjZjx9X+zW4O4wM8Mg
-89aFGsH7UZGUXH5R0BEwHkQMfB3Sxvk5pe4aHVWRwcHOA6JXMeqa1Cf7Q++4RTm/
-G+/2tGfjqlBjmGNDbsZ+DMM3xycINg7r673bRZQ+ArbXFPMDRi6jSoQNTu1wiSeW
-V0cngps+K5oDJ9fl3mpckjuRu6wkGAYNi2vOmRveuM7alk8M8k4vO/Ws695BZuUG
-B+ctytEzW2jwRUv1SqCItSgVbmYiJdNG4RNE5SX9OcTezqrZ9xSdabGQL54chwUr
-YQ/nGDDiQB90OIs5Xa9eZ5zgKXP7HMYKfqegxE0ULPRthDq8vqle8mKQOxTZjypo
-rVzzlpkjjgn5+q+r6wE1AOXZN+aKKhbI9ARGECF8Nfxdvvs0sdA=
-=dYyC
------END PGP SIGNATURE-----
-
---QXO0/MSS4VvK6f+D--
+We could optimize the #UD exception handler for this I suppose, but that
+makes it an even worse hack. The simple alternative() seems like a much
+simpler approach.
