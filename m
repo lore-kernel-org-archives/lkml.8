@@ -2,231 +2,115 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F175C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAA4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F906206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48D82206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:41:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rG1283Do";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oabFngj7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730993AbgG0PpM convert rfc822-to-8bit (ORCPT
+        id S1730815AbgG0PlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:45:12 -0400
-Received: from omta012.uswest2.a.cloudfilter.net ([35.164.127.235]:56223 "EHLO
-        omta012.uswest2.a.cloudfilter.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728015AbgG0PpL (ORCPT
+        Mon, 27 Jul 2020 11:41:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730309AbgG0PlH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:45:11 -0400
-X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 Jul 2020 11:45:10 EDT
-Received: from cxr.smtp.a.cloudfilter.net ([10.0.16.145])
-        by cmsmtp with ESMTP
-        id 00M5kTac7mUuy05CUkkwzh; Mon, 27 Jul 2020 15:38:02 +0000
-Received: from ws ([68.106.48.162])
-        by cmsmtp with ESMTPSA
-        id 05CIkRkFGKrUj05CJkzNoN; Mon, 27 Jul 2020 15:38:02 +0000
-Authentication-Results: cox.net; auth=pass (LOGIN)
- smtp.auth=1i5t5.duncan@cox.net
-X-Authority-Analysis: v=2.4 cv=Wu6VjfTv c=1 sm=1 tr=0 ts=5f1ef4da
- a=fEuF7Lzz1MGHEe1xFtqdOg==:117 a=fEuF7Lzz1MGHEe1xFtqdOg==:17
- a=IkcTkHD0fZMA:10 a=zd2uoN0lAAAA:8 a=VwQbUJbxAAAA:8 a=kviXuzpPAAAA:8
- a=sfOm8-O8AAAA:8 a=GEFCdFOGbQv7mSB_pWQA:9 a=tqTlq1B0_eMsoCT5:21
- a=h_W-Jm2LaEDf4Mgu:21 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=qrIFiuKZe2vaD64auk6j:22 a=TvTJqdcANYtsRzA46cdi:22
-Date:   Mon, 27 Jul 2020 08:37:49 -0700
-From:   Duncan <1i5t5.duncan@cox.net>
-To:     "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
-Cc:     Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Mazin Rezk <mnrzk@protonmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        "sunpeng.li@amd.com" <sunpeng.li@amd.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        "mphantomx@yahoo.com.br" <mphantomx@yahoo.com.br>,
-        "regressions@leemhuis.info" <regressions@leemhuis.info>,
-        "anthony.ruhier@gmail.com" <anthony.ruhier@gmail.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: [PATCH] drm/amd/display: Clear dm_state for fast updates
-Message-ID: <20200727083749.7b0fe41d@ws>
-In-Reply-To: <e2f55480-c24f-6c85-08d3-21131a22d0bf@amd.com>
-References: <M0lxN5AUlPvzBKULfIBe5BZRwfQGXeMQCdWItYcQ-9P79y32WzExYK2Y0DwyNVtyGelqbvV07_lFk1oeT4cApbT-P_oH0bnxQbMmFsJv_xg=@protonmail.com>
-        <ba078fb0-0dbc-df06-cfe9-f9537883f82a@amd.com>
-        <e2f55480-c24f-6c85-08d3-21131a22d0bf@amd.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 27 Jul 2020 11:41:07 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED3B3C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:41:06 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595864465;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=v2GoCD6qjiCp2SZh/B51AWSLCQivBgFFObpLzIT1tS4=;
+        b=rG1283DoQ5qLCZ574zhNvf40GyaDkQrdPlUP9Iv5UQ8JOaetvZsFPsvgerdjwyQsP0CfIH
+        dbH5HMelj7eSirYeGuHhUKV8rL1/PpQ49hvqNyTpVm/5zViRGg481mtxRhCNyzHgbGm7Y9
+        P9Gw6Q39k+PnboWZDwIXpcH8oEgaO1f3N4d8t+MPx+1jjPyNnAqwP64AVYGugtw+gKwE2D
+        tLpQ4fSMOBCvX/mpGpPLxZP2IpFay23N95P9gJtqZ8fLSjuvnLKDrcgXPvVPKBx+ciiaHl
+        REDbY0H2jGgCd3bIiPQpD9+gyX9Af7uLEpW6leLlqA3bD3Nw7TLgNIFUV9+W/A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595864465;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=v2GoCD6qjiCp2SZh/B51AWSLCQivBgFFObpLzIT1tS4=;
+        b=oabFngj7mpGC/vE+Ror7c/XAQUxxNR3FamgmIhbF7oLNio+SG/GFlC4z4NIQgzSs94O/Cy
+        XzJfFyj5/DtMGwBw==
+To:     qianjun.kernel@gmail.com, peterz@infradead.org, will@kernel.org,
+        luto@kernel.org
+Cc:     linux-kernel@vger.kernel.org, laoar.shao@gmail.com,
+        urezki@gmail.com, jun qian <qianjun.kernel@gmail.com>
+Subject: Re: [PATCH V4] Softirq:avoid large sched delay from the pending softirqs
+In-Reply-To: <1595601083-10183-1-git-send-email-qianjun.kernel@gmail.com>
+References: <1595601083-10183-1-git-send-email-qianjun.kernel@gmail.com>
+Date:   Mon, 27 Jul 2020 17:41:04 +0200
+Message-ID: <87sgddaru7.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-CMAE-Envelope: MS4xfGkEX9Tay6GTZG9sI91aPbcWvbf0prl9drr0Vb6zi1HgHYrb/SN12LpKXhuWCazaf+qGdIhr0rDqn9HLwAXeM3wycfWeeljqu1boy1ql56iXYF2bAXJz
- 4PrWzP+Uy36trlqXirzeMrGeboMFt5LYoa6RHk/m4z70GBnLHEb6dD51SPsGoU4nyO9+XjhxIA7nzI+kH3dHHRcaTZJKCsWPmAKdNAFR85/ZzNe/G505umhL
- h5CVTpg7b1YPJw/h0qcK/1supgqADO8HdqrrhcUkwDxg0wBbbhtvN4knfxZ15D9ZP7Vdp3TwhRWBocd9U846F4Myu7GiNfD1fEPPgypGBriCShImbrMLiNMt
- I8jOgqdsreoANf1ywhz9Rmlj+/tPyho79HkyyOJslD72GwFlmp+FtkCAExRvUWW5o3PuuZ1k8068az/563afztRlxPOQjjl6JZlAwYnBQZBWcc2zGrVJLf21
- A0WiYWxTG32RH9chFcrpewHDI5k9VQICRbmygXFqWm72nVjpGOXgsSEESMKBd7pC9eEmiuhV1gGAFrl2i6kuFALoqDWw22oWX4OE8XA3fSlsvUckRa429M7i
- F+PNepcnIOHv/i8opDVBn1KoLqr4xLXANds5JsRyi7cHs5Z1vOKxnyuCIJ7Ku+iNvZQikjzJ31959ojtKu9vJwdVZ04RpiXp0mpWHlVh4edw/Q==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020 10:05:01 -0400
-"Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com> wrote:
+Qian,
 
-> On 2020-07-27 9:39 a.m., Christian König wrote:
-> > Am 27.07.20 um 07:40 schrieb Mazin Rezk:
-> >> This patch fixes a race condition that causes a use-after-free
-> >> during amdgpu_dm_atomic_commit_tail. This can occur when 2
-> >> non-blocking commits are requested and the second one finishes
-> >> before the first. Essentially, this bug occurs when the following
-> >> sequence of events happens:
-> >>
-> >> 1. Non-blocking commit #1 is requested w/ a new dm_state #1 and is
-> >> deferred to the workqueue.
-> >>
-> >> 2. Non-blocking commit #2 is requested w/ a new dm_state #2 and is
-> >> deferred to the workqueue.
-> >>
-> >> 3. Commit #2 starts before commit #1, dm_state #1 is used in the
-> >> commit_tail and commit #2 completes, freeing dm_state #1.
-> >>
-> >> 4. Commit #1 starts after commit #2 completes, uses the freed
-> >> dm_state 1 and dereferences a freelist pointer while setting the
-> >> context.
-> > 
-> > Well I only have a one mile high view on this, but why don't you
-> > let the work items execute in order?
-> > 
-> > That would be better anyway cause this way we don't trigger a cache
-> > line ping pong between CPUs.
-> > 
-> > Christian.
-> 
-> We use the DRM helpers for managing drm_atomic_commit_state and those 
-> helpers internally push non-blocking commit work into the system
-> unbound work queue.
-> 
-> While we could duplicate a copy of that code with nothing but the 
-> workqueue changed that isn't something I'd really like to maintain
-> going forward.
-> 
-> Regards,
-> Nicholas Kazlauskas
+qianjun.kernel@gmail.com writes:
+>  /*
+>   * We restart softirq processing for at most MAX_SOFTIRQ_RESTART times,
+>   * but break the loop if need_resched() is set or after 2 ms.
+> - * The MAX_SOFTIRQ_TIME provides a nice upper bound in most cases, but in
+> - * certain cases, such as stop_machine(), jiffies may cease to
+> - * increment and so we need the MAX_SOFTIRQ_RESTART limit as
+> - * well to make sure we eventually return from this method.
+> + * In the loop, if the processing time of the softirq has exceeded 2
+> + * milliseconds, we also need to break the loop to wakeup the
+> ksofirqd.
 
-Additionally, I don't see mentioned on-thread (it's on the bug and now
-in the details below) that we're talking multi-monitor, not
-single-monitor. Presumably that goes some way toward answering the "why
-not force order?" question, considering the outputs may be running at
-different refresh frequencies, etc...
+You are removing the MAX_SOFTIRQ_RESTART limit explanation and I rather
+have MAX_SOFTIRQ_TIME_NS there than '2 milliseconds' in case the value
+gets adjusted later on. Also while sched_clock() is granular on many
+systems it still can be jiffies based and then the above problem
+persists.
 
-All the reports on the bug seem to be multi-monitor (after seeing
-multi-monitor/output in several reports I asked if anyone was seeing it
-with only one monitor and no answers), and as you commented on the bug
-for your proposed patch but seems missing from this one here (different
-author/proposal) ...
+> @@ -299,6 +298,19 @@ asmlinkage __visible void __softirq_entry __do_softirq(void)
+>  		}
+>  		h++;
+>  		pending >>= softirq_bit;
+> +
+> +		/*
+> +		 * the softirq's action has been running for too much time
+> +		 * so it may need to wakeup the ksoftirqd
+> +		 */
+> +		if (need_resched() && sched_clock() > end) {
+> +			/*
+> +			 * Ensure that the remaining pending bits are
+> +			 * handled.
+> +			 */
+> +			or_softirq_pending(pending << (vec_nr + 1));
 
-Commits #1 and #2 don't touch any of the same core DRM objects (CRTCs,
-Planes, Connectors) so Commit #2 does not stall for Commit #1. DRM
-Private Objects have always been avoided in stall checks, so we have no
-safety from DRM core in this regard.
+To or the value interrupts need to be disabled because otherwise you can
+lose a bit when an interrupt happens in the middle of the RMW operation
+and raises a softirq which is not in @pending and not in the per CPU
+local softirq pending storage.
 
-> >>
-> >> Since this bug has only been spotted with fast commits, this patch
-> >> fixes the bug by clearing the dm_state instead of using the old
-> >> dc_state for fast updates. In addition, since dm_state is only
-> >> used for its dc_state and amdgpu_dm_atomic_commit_tail will retain
-> >> the dc_state if none is found,
-> >> removing the dm_state should not have any consequences in fast
-> >> updates.
-> >>
-> >> This use-after-free bug has existed for a while now, but only
-> >> caused a noticeable issue starting from 5.7-rc1 due to 3202fa62f
-> >> ("slub: relocate freelist pointer to middle of object") moving the
-> >> freelist pointer from dm_state->base (which was unused) to
-> >> dm_state->context (which is dereferenced).
-> >>
-> >> Bugzilla: 
-> >> https://bugzilla.kernel.org/show_bug.cgi?id=207383 
-> >>
-> >> Fixes: bd200d190f45 ("drm/amd/display: Don't replace the dc_state
-> >> for fast updates")
-> >> Reported-by: Duncan <1i5t5.duncan@cox.net>
-> >> Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
-> >> ---
-> >>   .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 36
-> >> ++++++++++++++----- 1 file changed, 27 insertions(+), 9
-> >> deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c 
-> >> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> >> index 86ffa0c2880f..710edc70e37e 100644
-> >> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> >> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> >> @@ -8717,20 +8717,38 @@ static int amdgpu_dm_atomic_check(struct 
-> >> drm_device *dev,
-> >>            * the same resource. If we have a new DC context as
-> >> part of
-> >>            * the DM atomic state from validation we need to free
-> >> it and
-> >>            * retain the existing one instead.
-> >> +         *
-> >> +         * Furthermore, since the DM atomic state only contains
-> >> the DC
-> >> +         * context and can safely be annulled, we can free the
-> >> state
-> >> +         * and clear the associated private object now to free
-> >> +         * some memory and avoid a possible use-after-free later.
-> >>            */
-> >> -        struct dm_atomic_state *new_dm_state, *old_dm_state;
-> >>
-> >> -        new_dm_state = dm_atomic_get_new_state(state);
-> >> -        old_dm_state = dm_atomic_get_old_state(state);
-> >> +        for (i = 0; i < state->num_private_objs; i++) {
-> >> +            struct drm_private_obj *obj =
-> >> state->private_objs[i].ptr;
-> >>
-> >> -        if (new_dm_state && old_dm_state) {
-> >> -            if (new_dm_state->context)
-> >> -                dc_release_state(new_dm_state->context);
-> >> +            if (obj->funcs == adev->dm.atomic_obj.funcs) {
-> >> +                int j = state->num_private_objs-1;
-> >>
-> >> -            new_dm_state->context = old_dm_state->context;
-> >> +                dm_atomic_destroy_state(obj,
-> >> +                        state->private_objs[i].state);
-> >> +
-> >> +                /* If i is not at the end of the array then the
-> >> +                 * last element needs to be moved to where i was
-> >> +                 * before the array can safely be truncated.
-> >> +                 */
-> >> +                if (i != j)
-> >> +                    state->private_objs[i] =
-> >> +                        state->private_objs[j];
-> >>
-> >> -            if (old_dm_state->context)
-> >> -                dc_retain_state(old_dm_state->context);
-> >> +                state->private_objs[j].ptr = NULL;
-> >> +                state->private_objs[j].state = NULL;
-> >> +                state->private_objs[j].old_state = NULL;
-> >> +                state->private_objs[j].new_state = NULL;
-> >> +
-> >> +                state->num_private_objs = j;
-> >> +                break;
-> >> +            }
-> >>           }
-> >>       }
-> >>
-> >> -- 
-> >> 2.27.0
-> >>
-> > 
-> 
+There is another problem. Assume bit 0 and 1 are pending when the
+processing starts. Now it breaks out after bit 0 has been handled and
+stores back bit 1 as pending. Before ksoftirqd runs bit 0 gets raised
+again. ksoftirqd runs and handles bit 0, which takes more than the
+timeout. As a result the bit 0 processing can starve all other softirqs.
 
--- 
-Duncan - No HTML messages please; they are filtered as spam.
-"Every nonfree program has a lord, a master --
-and if you use the program, he is your master."  Richard Stallman
+So this needs more thought.
+
+Thanks,
+
+        tglx
