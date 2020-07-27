@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD22C433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CC1C433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE95A2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5140620775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859599;
-	bh=W1KFMAIHFlohENhNRehYvsOhP45gjEfT1u4uc4hD2kM=;
+	s=default; t=1595859606;
+	bh=iINv9F84Bgoo99yjFob1WezwwZvaTlQYEjVwF0s72S8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VXp96thOgOvqkFsRP+rjLO0Jr8gZN34+MT1vfN5VTSUMiel/PoRBE5nFBN9aP7a+4
-	 n13LHTb40VZWynx9wsfbV8r5ShqM8r01oiudyvgbmcQ4x1WB/n2L8FG6Bb+DeOlbGp
-	 O5i+uhTCjM51rsLSVmubIahw4CrXqmveTj+iMRMw=
+	b=lm8Dmlypy7oLdow+1roXVzQb/L7tn0DVruDxYuTo0zIhHDb+ljtkbM4HajRLANBmm
+	 I807Y624l5761EYkU9/KyL/i45coHwXjEKiPzrymwBNLs2tqSJZxdiLg/ojdWBaER8
+	 YHbf5gXdJSwUjc7N73Z23e7sGGWA1vbGD1t+zOzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731475AbgG0OT6 (ORCPT
+        id S1730580AbgG0OUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:19:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47970 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:20:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731455AbgG0OTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:19:52 -0400
+        id S1731461AbgG0OT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:19:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E34902070A;
-        Mon, 27 Jul 2020 14:19:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFA592070A;
+        Mon, 27 Jul 2020 14:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859592;
-        bh=W1KFMAIHFlohENhNRehYvsOhP45gjEfT1u4uc4hD2kM=;
+        s=default; t=1595859597;
+        bh=iINv9F84Bgoo99yjFob1WezwwZvaTlQYEjVwF0s72S8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c6cCWkTV0AFsCbjAIRrCq0t0AV0eu3gMZGKWCNiMoXgM5VL/wjIMDFsDi9MEPRZeC
-         L9/isjDEeW0LmyXiOUpOTxNGgo3lRzaiJsKl5HseAXcwGZl679gMCQE4J2GHim7inA
-         xyK94OxLfJJHkKJhz3irL5QctuIQUdMYng7002lc=
+        b=HajdEWyRRXdwXdOC61jAVC4pwatQTnCsyW3YG9YU26sUsdt+w0hIIK45mVcoplphj
+         KDfVSugCWFWTNa8HvxoMF8dElaCv2DATR7mqLK9ZjruKIZyhwRD9Tq+Q6Pw2mBJhUy
+         rR9QOd2azZ8FIDtEuPBf2XHtJ/shgUHDeLra8UvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 031/179] btrfs: reloc: clear DEAD_RELOC_TREE bit for orphan roots to prevent runaway balance
-Date:   Mon, 27 Jul 2020 16:03:26 +0200
-Message-Id: <20200727134934.182761381@linuxfoundation.org>
+        stable@vger.kernel.org, Joonho Wohn <doomsheart@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 033/179] ALSA: hda/realtek: Fixed ALC298 sound bug by adding quirk for Samsung Notebook Pen S
+Date:   Mon, 27 Jul 2020 16:03:28 +0200
+Message-Id: <20200727134934.279131875@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -59,66 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Joonho Wohn <doomsheart@gmail.com>
 
-commit 1dae7e0e58b484eaa43d530f211098fdeeb0f404 upstream.
+commit 568e4e82128aac2c62c2c359ebebb6007fd794f9 upstream.
 
-[BUG]
-There are several reported runaway balance, that balance is flooding the
-log with "found X extents" where the X never changes.
+Fixed no headphone sound bug on laptop Samsung Notebook Pen S
+(950SBE-951SBE), by using existing patch in Linus' tree, commit
+14425f1f521f (ALSA: hda/realtek: Add quirk for Samsung Notebook).
+This laptop uses the same ALC298 but different subsystem id 0x144dc812.
+I added SND_PCI_QUIRK at sound/pci/hda/patch_realtek.c
 
-[CAUSE]
-Commit d2311e698578 ("btrfs: relocation: Delay reloc tree deletion after
-merge_reloc_roots") introduced BTRFS_ROOT_DEAD_RELOC_TREE bit to
-indicate that one subvolume has finished its tree blocks swap with its
-reloc tree.
-
-However if balance is canceled or hits ENOSPC halfway, we didn't clear
-the BTRFS_ROOT_DEAD_RELOC_TREE bit, leaving that bit hanging forever
-until unmount.
-
-Any subvolume root with that bit, would cause backref cache to skip this
-tree block, as it has finished its tree block swap.  This would cause
-all tree blocks of that root be ignored by balance, leading to runaway
-balance.
-
-[FIX]
-Fix the problem by also clearing the BTRFS_ROOT_DEAD_RELOC_TREE bit for
-the original subvolume of orphan reloc root.
-
-Add an umount check for the stale bit still set.
-
-Fixes: d2311e698578 ("btrfs: relocation: Delay reloc tree deletion after merge_reloc_roots")
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Joonho Wohn <doomsheart@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/CAHcbMh291aWDKiWSZoxXB4-Eru6OYRwGA4AVEdCZeYmVLo5ZxQ@mail.gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- fs/btrfs/disk-io.c    |    1 +
- fs/btrfs/relocation.c |    2 ++
- 2 files changed, 3 insertions(+)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -1998,6 +1998,7 @@ void btrfs_put_root(struct btrfs_root *r
- 
- 	if (refcount_dec_and_test(&root->refs)) {
- 		WARN_ON(!RB_EMPTY_ROOT(&root->inode_tree));
-+		WARN_ON(test_bit(BTRFS_ROOT_DEAD_RELOC_TREE, &root->state));
- 		if (root->anon_dev)
- 			free_anon_bdev(root->anon_dev);
- 		btrfs_drew_lock_destroy(&root->snapshot_lock);
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -2642,6 +2642,8 @@ again:
- 					root->reloc_root = NULL;
- 					btrfs_put_root(reloc_root);
- 				}
-+				clear_bit(BTRFS_ROOT_DEAD_RELOC_TREE,
-+					  &root->state);
- 				btrfs_put_root(root);
- 			}
- 
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7551,6 +7551,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x144d, 0xc176, "Samsung Notebook 9 Pro (NP930MBE-K04US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x144d, 0xc740, "Samsung Ativ book 8 (NP870Z5G)", ALC269_FIXUP_ATIV_BOOK_8),
++	SND_PCI_QUIRK(0x144d, 0xc812, "Samsung Notebook Pen S (NT950SBE-X58)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x1458, 0xfa53, "Gigabyte BXBT-2807", ALC283_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1462, 0xb120, "MSI Cubi MS-B120", ALC283_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1462, 0xb171, "Cubi N 8GL (MS-B171)", ALC283_FIXUP_HEADSET_MIC),
 
 
