@@ -2,107 +2,86 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC4EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B95C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABD4220738
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:41:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V47joEy7"
+	by mail.kernel.org (Postfix) with ESMTP id 4E9DA20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595835784;
+	bh=CWDrS913xhE/Ei5VKRgacCZBZZ5CT52NbA8L2aWjx8U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lVIMwNVGcy2vyrhqvsNWe9ycxpWVagoOoh+Wa2EUH73uC6qb/N0MRE5+mdL+8aC9W
+	 o7T7U1l2H/455cQoGP6gq6NZG9swEt7PwgSDHclK0UkwoPhYndnM7sLQtchiwvAQJM
+	 tGchzIPRtRkGJ7/A8azNt3AwTZdgUVs0Nid5QhJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgG0Hlg (ORCPT
+        id S1726814AbgG0HnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgG0Hlg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:41:36 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E11C0619D4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:41:35 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t6so7572180plo.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=02L+nV06/zwmICNroTjg7mYMa/wTXN2VrRKBLAVM2dw=;
-        b=V47joEy77meF+oSYORGjxuLpKGaeEr7xnIXCBWjrzNaPfWMvv2QRB45d0IROIpCTOO
-         80nbmPjwyX5jPTo6BZfOxXcEMWPaVYTXVfJo+azQjZsMxvxNXq3LCe12uRk/2m8Ifli5
-         2PJ9EDDRyYjJ9BIe+vMXLuW3oWZVdsOwml30I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=02L+nV06/zwmICNroTjg7mYMa/wTXN2VrRKBLAVM2dw=;
-        b=nScWjHSEoYKX0P7DAYLBP5//QkY63USOhZJz+OXwm0ydQXix85mioaydNm7FT7Hcj5
-         h017KmrCSJnnN57BfJM/LQvodzLpN5iBoFGmu1sLCuobFXwp1UAOqY4+aCTpc7yITTKJ
-         /+NAyoOE/xpjyWFACRBmO4ZkY9EAQ0C4KnJaPYHq2fW7kBuq6aCcY1RcQyIN0rBso7cN
-         MNTjOhGFZ5q79dr9VMCFLzue1rIiEHVpt5009DiAo044hs/4NqiPq8iQsfx5EUIXKXCK
-         lt/iTC7/zZZnu/7XKMEETm9x90pb+Gca1gtSqI61q3wt+hb/YNmJ8H3abfmffIsCDVgG
-         WtfA==
-X-Gm-Message-State: AOAM533PcLTDN1VVZBdl90rsrpiODqwmCZdHLcn6bx2Mt86aPXpxh7tp
-        uk/tC4+lI8VuTyODFdLHsjv+lA==
-X-Google-Smtp-Source: ABdhPJzuZ7ICmuF4ozEQuv167siP20VYHysSz7yu/BjNoHfuX0QIrN7rkJ7u6etQwGM3gpJ79LyGpA==
-X-Received: by 2002:a17:90a:204:: with SMTP id c4mr16807174pjc.165.1595835695486;
-        Mon, 27 Jul 2020 00:41:35 -0700 (PDT)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:1a60:24ff:fe89:3e93])
-        by smtp.gmail.com with ESMTPSA id f2sm13966544pfb.184.2020.07.27.00.41.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 00:41:34 -0700 (PDT)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: mt8173: elm: Fix nor_flash node property
-Date:   Mon, 27 Jul 2020 15:41:24 +0800
-Message-Id: <20200727074124.3779237-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+        Mon, 27 Jul 2020 03:43:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbgG0HnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 03:43:03 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90B212072E;
+        Mon, 27 Jul 2020 07:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595835782;
+        bh=CWDrS913xhE/Ei5VKRgacCZBZZ5CT52NbA8L2aWjx8U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=04BPySg3vTHHFuE6IVvZMuxbzbtb/uzbjuKvBAdIUkHp6tq5XF+7MJoLbRVZ3LHSE
+         y9s3q6mM1VT+/fttpy3P4ZRnymKtZBgoLWTCxAmDoKh8cmTrvBJfWXuufjV2c5AxsW
+         /z+4p//QrVD3PitJOegbt19ciAgz3e2pUM37w8io=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jzxmn-00FDtT-6A; Mon, 27 Jul 2020 08:43:01 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 27 Jul 2020 08:43:01 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the irqchip tree
+In-Reply-To: <20200727081003.7ffaa22d@canb.auug.org.au>
+References: <20200727081003.7ffaa22d@canb.auug.org.au>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <c6211f3d4f9c85a0fa77f19ef4efec95@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: sfr@canb.auug.org.au, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bus-width and non-removable is not used by the driver.
-max-frequency should be spi-max-frequency for flash node.
+Hi Stephen,
 
-Fixes: 689b937bedde ("arm64: dts: mediatek: add mt8173 elm and hana board")
-Reported-by: Nicolas Boichat <drinkcat@chromium.org>
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
- arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+On 2020-07-26 23:10, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Commit
+> 
+>   e5c19cf32b68 ("irqchip/stm32-exti: Use the
+> hwspin_lock_timeout_in_atomic() API")
+> 
+> is missing a Signed-off-by from its committer.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-index a5a12b2599a4..01522dd10603 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-@@ -431,12 +431,11 @@ &nor_flash {
- 	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&nor_gpio1_pins>;
--	bus-width = <8>;
--	max-frequency = <50000000>;
--	non-removable;
-+
- 	flash@0 {
- 		compatible = "jedec,spi-nor";
- 		reg = <0>;
-+		spi-max-frequency = <50000000>;
- 	};
- };
- 
+Looks like I fat-fingered a b4 invocation! Thanks for the heads up,
+will be fixed in a minute.
+
+         M.
 -- 
-2.28.0.rc0.142.g3c755180ce-goog
-
+Jazz is not dead. It just smells funny...
