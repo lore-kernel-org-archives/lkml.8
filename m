@@ -2,229 +2,101 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C639C433F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43B6C20825
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:06:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="llKbCc1J"
+	by mail.kernel.org (Postfix) with ESMTP id 4D6D720838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595858802;
+	bh=N9rfu8Rm9dG6SIRtmK83SO4PfCqaxsXzeswlY0y/zTI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AYwlEYcbUV4864/diEdE2/82le7cTziZR0t+X3IV6OZy7Gp/u1nrZyZYjtKBG4LN/
+	 QYtczNAfpYhH1hJIqcYx4LnDE+RsFTvI4HbtGVWwWZk3HASUuOjGKxJuYfvtyjjagu
+	 5CCeCpbkEQutsIFGqqKNecc6N7Ck4JRrH59gRHqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729046AbgG0OG4 (ORCPT
+        id S1726905AbgG0OGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:06:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729005AbgG0OGx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:06:53 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48261C0619D2;
-        Mon, 27 Jul 2020 07:06:53 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id c6so2812845pje.1;
-        Mon, 27 Jul 2020 07:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=/dlgd3xXF2wViyMH4/dVOyKUUCfyX+RzmgXdSrfRYJs=;
-        b=llKbCc1Jzqqo+R2xnbeoSk/TDJIw41decVAgoX43zZVyuP/6dBJRdvVkOESBSZdY3L
-         A96qMW2LreOn6cizUXAumgXb4phDCe+3Wmp0SCjIhtrMbZc9/XlXNsuZ42Mkxi9onWUN
-         e/kI4+z14oylOT5JCyzHeS2a6YKqMRmH64petkoLdwnt4KWGFluP0k0YrufbbbybYjjW
-         v5/tH2Z311vFwPIgGNRMCNKM9yR9GKhUEmjyiPAtXXp2VBPT9GelUDEFlRgNgWDpxgrC
-         jgiGlAuMF/8reRfi4rxL91Xiz0S4wZvgvqDfkIyyLp3PWYjaVoEGxqU3u7qlC5u448EM
-         KVWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=/dlgd3xXF2wViyMH4/dVOyKUUCfyX+RzmgXdSrfRYJs=;
-        b=fwcOMntVLKtYfuIQN39cugOgI9Sl8ZrPUU2VxdvMk8f+PzqUkaZHdWnVN8iJOiJ48i
-         SWirCozrdo/XcxeTcZ08Sj0HHqW01Xe4IdAIMB1FX6vuBYGoacBIEtYWE4ajB8qZx2j+
-         fvClJ/gJCoZu+TFuI3mqU+q0VebrM9fNBGTk7mQGIeIwvg/U93u1ElhuLZJ+hcFxqFd9
-         Hoh1nIPwhRvr0RMKiX13rx2WpyqdQJnohVsECFuNXXXuLfR7CHn0QuCrnWjH1mXUmdLB
-         7PlKdxX9L6/r9Mn39Xc7Onb/7TlkTRa+MI33wZbWd44yGeCg9Z/SE3HVbPwqK1OCg0Sg
-         /oJw==
-X-Gm-Message-State: AOAM532gr8j+dFs7miW1gU70ENr0+MMMati3d4R9GlBpoAJTJ2AJWyUo
-        thdE0iNNqDDX/6R8BsgMaS0PL/QR+j4=
-X-Google-Smtp-Source: ABdhPJyNjZQimFQYsPZZojsGgdduUxnpmtCXQWSqh9MJ9HkwSZ8ELCmS6a/9rrVk9cGhiLpy+DgT6A==
-X-Received: by 2002:a17:90a:2d8b:: with SMTP id p11mr13163026pjd.10.1595858812742;
-        Mon, 27 Jul 2020 07:06:52 -0700 (PDT)
-Received: from blackclown ([103.88.82.91])
-        by smtp.gmail.com with ESMTPSA id y18sm15372647pff.10.2020.07.27.07.06.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 Jul 2020 07:06:51 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 19:36:40 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     hare@suse.com, jejb@linux.ibm.com, martin.peterson@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] scsi: aic7xxx: Remove pci-dma-compat wrapper APIs.
-Message-ID: <20200727140640.GA14759@blackclown>
+        Mon, 27 Jul 2020 10:06:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728731AbgG0OGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:06:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 466CA2250E;
+        Mon, 27 Jul 2020 14:06:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595858798;
+        bh=N9rfu8Rm9dG6SIRtmK83SO4PfCqaxsXzeswlY0y/zTI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wMUKSiJlc0XtDSOKo454tU23IvRMAypJh1vpVVzODLms2dIuUKfMQSRZ+Ky1YUJGP
+         DyCFh0prWtFd+Fr7cCZ/XS8TCElcM6qaoobTwnuAnBJHfEJdMKirQMPiexgMM4tnnA
+         vRtX+r8tDMC/q93+SuxGKpdBdB4FHTaAfXz4YwMg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+e42d0746c3c3699b6061@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 16/64] ALSA: info: Drop WARN_ON() from buffer NULL sanity check
+Date:   Mon, 27 Jul 2020 16:03:55 +0200
+Message-Id: <20200727134911.833341128@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
+References: <20200727134911.020675249@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Takashi Iwai <tiwai@suse.de>
 
---UugvWAfsgieZRqgk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit 60379ba08532eca861e933b389526a4dc89e0c42 upstream.
 
-The legacy API wrappers in include/linux/pci-dma-compat.h
-should go away as it creates unnecessary midlayering
-for include/linux/dma-mapping.h APIs, instead use dma-mapping.h
-APIs directly.
+snd_info_get_line() has a sanity check of NULL buffer -- both buffer
+itself being NULL and buffer->buffer being NULL.  Basically both
+checks are valid and necessary, but the problem is that it's with
+snd_BUG_ON() macro that triggers WARN_ON().  The latter condition
+(NULL buffer->buffer) can be met arbitrarily by user since the buffer
+is allocated at the first write, so it means that user can trigger
+WARN_ON() at will.
 
-The patch has been generated with the coccinelle script below
-and has been hand modified to replace GFP_ with correct flag.
+This patch addresses it by simply moving buffer->buffer NULL check out
+of snd_BUG_ON() so that spurious WARNING is no longer triggered.
 
-Compile-tested only.
+Reported-by: syzbot+e42d0746c3c3699b6061@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200717084023.5928-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-@@@@
-- PCI_DMA_BIDIRECTIONAL
-+ DMA_BIDIRECTIONAL
-
-@@@@
-- PCI_DMA_TODEVICE
-+ DMA_TO_DEVICE
-
-@@@@
-- PCI_DMA_FROMDEVICE
-+ DMA_FROM_DEVICE
-
-@@@@
-- PCI_DMA_NONE
-+ DMA_NONE
-
-@@ expression E1, E2, E3; @@
-- pci_alloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
-
-@@ expression E1, E2, E3; @@
-- pci_zalloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_free_consistent(E1, E2, E3, E4)
-+ dma_free_coherent(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_single(E1, E2, E3, E4)
-+ dma_map_single(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_single(E1, E2, E3, E4)
-+ dma_unmap_single(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4, E5; @@
-- pci_map_page(E1, E2, E3, E4, E5)
-+ dma_map_page(&E1->dev, E2, E3, E4, E5)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_page(E1, E2, E3, E4)
-+ dma_unmap_page(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_sg(E1, E2, E3, E4)
-+ dma_map_sg(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_sg(E1, E2, E3, E4)
-+ dma_unmap_sg(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_cpu(E1, E2, E3, E4)
-+ dma_sync_single_for_cpu(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_device(E1, E2, E3, E4)
-+ dma_sync_single_for_device(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_cpu(E1, E2, E3, E4)
-+ dma_sync_sg_for_cpu(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_device(E1, E2, E3, E4)
-+ dma_sync_sg_for_device(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2; @@
-- pci_dma_mapping_error(E1, E2)
-+ dma_mapping_error(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_consistent_dma_mask(E1, E2)
-+ dma_set_coherent_mask(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_dma_mask(E1, E2)
-+ dma_set_mask(&E1->dev, E2)
-
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
 ---
- drivers/scsi/aic7xxx/aic79xx_osm.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ sound/core/info.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/aic7xxx/aic79xx_osm.c b/drivers/scsi/aic7xxx/aic7=
-9xx_osm.c
-index 3782a20d5888..2998d70e1987 100644
---- a/drivers/scsi/aic7xxx/aic79xx_osm.c
-+++ b/drivers/scsi/aic7xxx/aic79xx_osm.c
-@@ -952,8 +952,8 @@ int
- ahd_dmamem_alloc(struct ahd_softc *ahd, bus_dma_tag_t dmat, void** vaddr,
- 		 int flags, bus_dmamap_t *mapp)
+--- a/sound/core/info.c
++++ b/sound/core/info.c
+@@ -634,7 +634,9 @@ int snd_info_get_line(struct snd_info_bu
  {
--	*vaddr =3D pci_alloc_consistent(ahd->dev_softc,
--				      dmat->maxsize, mapp);
-+	*vaddr =3D dma_alloc_coherent(&ahd->dev_softc->dev, dmat->maxsize, mapp,
-+				    GFP_ATOMIC);
- 	if (*vaddr =3D=3D NULL)
- 		return (ENOMEM);
- 	return(0);
-@@ -963,8 +963,7 @@ void
- ahd_dmamem_free(struct ahd_softc *ahd, bus_dma_tag_t dmat,
- 		void* vaddr, bus_dmamap_t map)
- {
--	pci_free_consistent(ahd->dev_softc, dmat->maxsize,
--			    vaddr, map);
-+	dma_free_coherent(&ahd->dev_softc->dev, dmat->maxsize, vaddr, map);
- }
-=20
- int
---=20
-2.17.1
+ 	int c = -1;
+ 
+-	if (snd_BUG_ON(!buffer || !buffer->buffer))
++	if (snd_BUG_ON(!buffer))
++		return 1;
++	if (!buffer->buffer)
+ 		return 1;
+ 	if (len <= 0 || buffer->stop || buffer->error)
+ 		return 1;
 
 
---UugvWAfsgieZRqgk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8e32UACgkQ+gRsbIfe
-744KDw/7BpO7VI4xx9d2wmnGAwifaIX6neKoXzHs8RxWHssVDdZHn0PVd07wcNTZ
-2GYQ3gr9HVZJKe3GGwLY1naLzK2Ee28bHvfUro/DEdcJHjF5oyVgCwYEJT5vxdrU
-0wO2SvP3uUha3INyogAqUecWIdhqo6sGJ4LPnoeu93vp/RIK81CELKebxP9vkY9s
-Lq2l+BxeXyMMTxxfUWNMRTurf3FqqOnmRuN9uqM9hH+wMmM6WgY0BYDKam4fVecw
-/AwSrHQVyDzRle/zMnGUgJhV50KPwJbkmm2de2aqAUkwwrYYpOan5VgU5A+hRQJO
-7ry9jBXRxZn1rBz8T/v9IXD2UZ705/o6tDm51YrUrNY+Kk7JOI1rp2pTHV2ITpIQ
-aGp7SBUSEeXELdjrkgD/BSC0iopZ+apeiIh87qZEJ3VqS7xvrB05b8xm0XPKXDNy
-i3O3Vc5aOAypnb7GhBWxvKaM962WGhnH2AvRvxrPDbFRycsafwnkVa7QPU4P1Xs4
-xZG8HYg8SSJ3uLLpxb00SrtvDL9lyzR1cMWVU42eEDUeB0W9N/fY3rPvpB28iJ37
-CeAaJu8purH1u/+2B80S/p0933lWpih07cmnIx12q3R1MiFY2z5PlyJDiUGxeIbq
-YGsKrIMLMgPAHmNt5/I9LyAyoA1TaVsgiHwRKOY2jHFOWCHc+n0=
-=yJ/4
------END PGP SIGNATURE-----
-
---UugvWAfsgieZRqgk--
