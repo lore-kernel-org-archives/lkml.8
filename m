@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BECC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E948FC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 218A820838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E372083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858862;
-	bh=l6uFOSzGbUaaNsdDAOVOSCGbrlf+F2+bnOottOD+KvE=;
+	s=default; t=1595858867;
+	bh=957oKhyzfJEsn2BNVCIWxTyGK7q0im7wFaa03N9dAic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1x+TlGV5S860FvuqQp1epAgVPos9ua/qsZO219FIGYoVnP09GIWVYySY22eVWMBPl
-	 vnlYBQ6cnA9f9y2SvXLImq1TpM5+0Tlr7OGKTxPFxGDz8skt837lrzm85KnX5zOXEe
-	 A8sSXso3wK9jXOzPxEz+YVXXJWDQmSbjgcsOAH3c=
+	b=g75dU1BFZ/vGkOU208nb5i/TLnaktsr+dkMktRxti+qAbKozKEPXYLjRknfHlptvF
+	 Re1tqsvjIgogR1pKBHYtCP1ycJ9lJacHFI7E7m6ar3LX3F7209a302mi5gXLwUOMt+
+	 ZwiOxhwkOZOTvI75jItLbjjXWvycIritWz2/3rI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbgG0OHl (ORCPT
+        id S1729300AbgG0OHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:07:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56502 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:07:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728424AbgG0OHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:07:37 -0400
+        id S1729281AbgG0OHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:07:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD27A207FC;
-        Mon, 27 Jul 2020 14:07:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2DD42078E;
+        Mon, 27 Jul 2020 14:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858857;
-        bh=l6uFOSzGbUaaNsdDAOVOSCGbrlf+F2+bnOottOD+KvE=;
+        s=default; t=1595858860;
+        bh=957oKhyzfJEsn2BNVCIWxTyGK7q0im7wFaa03N9dAic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZcPbSaWaEwBdge0SQEyd44e2CWcFEXgWW/1xDCd+mq2NwFAncLcuo8xW+ttA9Vj7U
-         GwYHxZHOV6dfefcYuZaHLksNtUMgBhJGc6VcH3Wvnjg53PQC6+QxmWcxqSGs/myhMw
-         b1QR2K4/cO0jcrSjRDr+3a943BSTh9XsO9/EGMiQ=
+        b=OplE0zDswr8P2VBeTMKglzRspW3v0rCF7k2v1y4gBFqn0v7l9DMknBmWPAAlTFF6f
+         o+uctx10kDR4e7K8d9GX2x+AceKufviWKHEeBCU5A2MDkXHvr7n3ozjPnzHx9vdRIZ
+         mrKjD+ZeZ1Ned2Ooh5vYVc/FIHe4ml4FWekmMCtw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "leilk.liu" <leilk.liu@mediatek.com>,
+        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 38/64] spi: mediatek: use correct SPI_CFG2_REG MACRO
-Date:   Mon, 27 Jul 2020 16:04:17 +0200
-Message-Id: <20200727134913.051981238@linuxfoundation.org>
+Subject: [PATCH 4.14 39/64] regmap: dev_get_regmap_match(): fix string comparison
+Date:   Mon, 27 Jul 2020 16:04:18 +0200
+Message-Id: <20200727134913.105979980@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -60,74 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: leilk.liu <leilk.liu@mediatek.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
 
-[ Upstream commit 44b37eb79e16a56cb30ba55b2da452396b941e7a ]
+[ Upstream commit e84861fec32dee8a2e62bbaa52cded6b05a2a456 ]
 
-this patch use correct SPI_CFG2_REG offset.
+This function is used by dev_get_regmap() to retrieve a regmap for the
+specified device. If the device has more than one regmap, the name parameter
+can be used to specify one.
 
-Signed-off-by: leilk.liu <leilk.liu@mediatek.com>
-Link: https://lore.kernel.org/r/20200701090020.7935-1-leilk.liu@mediatek.com
+The code here uses a pointer comparison to check for equal strings. This
+however will probably always fail, as the regmap->name is allocated via
+kstrdup_const() from the regmap's config->name.
+
+Fix this by using strcmp() instead.
+
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Link: https://lore.kernel.org/r/20200703103315.267996-1-mkl@pengutronix.de
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-mt65xx.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/base/regmap/regmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-index 0c2867deb36fc..da28c52c9da19 100644
---- a/drivers/spi/spi-mt65xx.c
-+++ b/drivers/spi/spi-mt65xx.c
-@@ -41,7 +41,6 @@
- #define SPI_CFG0_SCK_LOW_OFFSET           8
- #define SPI_CFG0_CS_HOLD_OFFSET           16
- #define SPI_CFG0_CS_SETUP_OFFSET          24
--#define SPI_ADJUST_CFG0_SCK_LOW_OFFSET    16
- #define SPI_ADJUST_CFG0_CS_HOLD_OFFSET    0
- #define SPI_ADJUST_CFG0_CS_SETUP_OFFSET   16
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 013d0a2b3ba0a..4e0cc40ad9ceb 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1242,7 +1242,7 @@ static int dev_get_regmap_match(struct device *dev, void *res, void *data)
  
-@@ -53,6 +52,8 @@
- #define SPI_CFG1_CS_IDLE_MASK             0xff
- #define SPI_CFG1_PACKET_LOOP_MASK         0xff00
- #define SPI_CFG1_PACKET_LENGTH_MASK       0x3ff0000
-+#define SPI_CFG2_SCK_HIGH_OFFSET          0
-+#define SPI_CFG2_SCK_LOW_OFFSET           16
- 
- #define SPI_CMD_ACT                  BIT(0)
- #define SPI_CMD_RESUME               BIT(1)
-@@ -259,7 +260,7 @@ static void mtk_spi_set_cs(struct spi_device *spi, bool enable)
- static void mtk_spi_prepare_transfer(struct spi_master *master,
- 				     struct spi_transfer *xfer)
- {
--	u32 spi_clk_hz, div, sck_time, cs_time, reg_val = 0;
-+	u32 spi_clk_hz, div, sck_time, cs_time, reg_val;
- 	struct mtk_spi *mdata = spi_master_get_devdata(master);
- 
- 	spi_clk_hz = clk_get_rate(mdata->spi_clk);
-@@ -272,18 +273,18 @@ static void mtk_spi_prepare_transfer(struct spi_master *master,
- 	cs_time = sck_time * 2;
- 
- 	if (mdata->dev_comp->enhance_timing) {
-+		reg_val = (((sck_time - 1) & 0xffff)
-+			   << SPI_CFG2_SCK_HIGH_OFFSET);
- 		reg_val |= (((sck_time - 1) & 0xffff)
--			   << SPI_CFG0_SCK_HIGH_OFFSET);
--		reg_val |= (((sck_time - 1) & 0xffff)
--			   << SPI_ADJUST_CFG0_SCK_LOW_OFFSET);
-+			   << SPI_CFG2_SCK_LOW_OFFSET);
- 		writel(reg_val, mdata->base + SPI_CFG2_REG);
--		reg_val |= (((cs_time - 1) & 0xffff)
-+		reg_val = (((cs_time - 1) & 0xffff)
- 			   << SPI_ADJUST_CFG0_CS_HOLD_OFFSET);
- 		reg_val |= (((cs_time - 1) & 0xffff)
- 			   << SPI_ADJUST_CFG0_CS_SETUP_OFFSET);
- 		writel(reg_val, mdata->base + SPI_CFG0_REG);
- 	} else {
--		reg_val |= (((sck_time - 1) & 0xff)
-+		reg_val = (((sck_time - 1) & 0xff)
- 			   << SPI_CFG0_SCK_HIGH_OFFSET);
- 		reg_val |= (((sck_time - 1) & 0xff) << SPI_CFG0_SCK_LOW_OFFSET);
- 		reg_val |= (((cs_time - 1) & 0xff) << SPI_CFG0_CS_HOLD_OFFSET);
+ 	/* If the user didn't specify a name match any */
+ 	if (data)
+-		return (*r)->name == data;
++		return !strcmp((*r)->name, data);
+ 	else
+ 		return 1;
+ }
 -- 
 2.25.1
 
