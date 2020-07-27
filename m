@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E06C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A329FC433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 591B2207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 722B1207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860259;
-	bh=U1vHDKNq8WHILmUU+SD2QZgy44JApUdZ+BAhy+I1cx8=;
+	s=default; t=1595860263;
+	bh=TecO03OPduOUqsycocBSfTknmGQEVs9nwM8nTt4HnO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qVaja+bLivmkUKHB9N9h313RkAp2aTNKGj2Mf1W96YVsynFDHNlqG13XNRI8nX3rb
-	 QV/WAkFGOtsMLq0voidZ/ISUAHka6Vm7AvEB+YW6fpT+Ho04J1q16sYw7TV9cFWT+U
-	 rpbTjpmIl5ADzoDYKKdwK8BRNZohxLAkB0xqbKqE=
+	b=k2WGm/Ns4cy+sFAqlBcxhXT0fDQTDM+b4kuy1oHhB5m/bkVubvVTu+5DzHG1oej6H
+	 817yYabPvNlv9iCmV+9AdAFR9KvIH/oTqeM4JxCc362CZbrJeqDP3Cx+l0JsCEnKAH
+	 4bdgMjUx1RQuo27U5+2UF4RBoFZVpjndtqHVjJSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732785AbgG0Oa5 (ORCPT
+        id S1731684AbgG0OVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:30:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49850 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731698AbgG0OVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:21:17 -0400
+        id S1731638AbgG0OVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:21:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14FF42070B;
-        Mon, 27 Jul 2020 14:21:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 310492070B;
+        Mon, 27 Jul 2020 14:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859677;
-        bh=U1vHDKNq8WHILmUU+SD2QZgy44JApUdZ+BAhy+I1cx8=;
+        s=default; t=1595859669;
+        bh=TecO03OPduOUqsycocBSfTknmGQEVs9nwM8nTt4HnO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v/8yDaZPW6rpFagCGVWI8LKmkKG/fz8iNUMn7L50ps6AePONx5mAK3/PtKilbi1H0
-         wdBoVrazYOIcQGfnNAGYZQUsE+ENIUvGvFQnV2d4mn8/3QmHzcVxUioqTKHgfXaHVF
-         37WZEbo0Zx7gQJDwtB2dzVRWEXPYi+YrOGed3Ubw=
+        b=u1Gfzg5YoPpNOoKms/o9WqI6WXSUcLABU96sVFUr0SQOgVdZhHPvkoxFu3s1UPXqM
+         xdOJxD7iY9fr/JG1k7sTh8gTSgbvcfMH5EolNsyfv5TNccdXw8KL4TID9aHnr9ap/y
+         eTluKDLtHnPNwhnN5lImYz0lxHxmMP9awFXP6FA8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Mans Rullgard <mans@mansr.com>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 063/179] net: dsa: mv88e6xxx: fix in-band AN link establishment
-Date:   Mon, 27 Jul 2020 16:03:58 +0200
-Message-Id: <20200727134935.740410070@linuxfoundation.org>
+Subject: [PATCH 5.7 060/179] drm: sun4i: hdmi: Fix inverted HPD result
+Date:   Mon, 27 Jul 2020 16:03:55 +0200
+Message-Id: <20200727134935.594677480@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,94 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit fad58190c0ffd72c394722928cd3e919b6e18357 ]
+[ Upstream commit baa1841eb797eadce6c907bdaed7cd6f01815404 ]
 
-If in-band negotiation or fixed-link modes are specified for a DSA
-port, the DSA code will force the link down during initialisation. For
-fixed-link mode, this is fine, as phylink will manage the link state.
-However, for in-band mode, phylink expects the PCS to detect link,
-which will not happen if the link is forced down.
+When the extra HPD polling in sun4i_hdmi was removed, the result of
+HPD was accidentally inverted.
 
-There is a related issue that in in-band mode, the link could come up
-while we are making configuration changes, so we should force the link
-down prior to reconfiguring the interface mode.
+Fix this by inverting the check.
 
-This patch addresses both issues.
-
-Fixes: 3be98b2d5fbc ("net: dsa: Down cpu/dsa ports phylink will control")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: bda8eaa6dee7 ("drm: sun4i: hdmi: Remove extra HPD polling")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Tested-by: Mans Rullgard <mans@mansr.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200711011030.21997-1-wens@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c | 22 +++++++++++++++++++---
- drivers/net/dsa/mv88e6xxx/chip.h |  1 +
- 2 files changed, 20 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 2b4a723c83065..e065be419a03d 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -664,8 +664,11 @@ static void mv88e6xxx_mac_config(struct dsa_switch *ds, int port,
- 				 const struct phylink_link_state *state)
- {
- 	struct mv88e6xxx_chip *chip = ds->priv;
-+	struct mv88e6xxx_port *p;
- 	int err;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+index f07e0c32b93a2..4c5072a578bf2 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+@@ -263,7 +263,7 @@ sun4i_hdmi_connector_detect(struct drm_connector *connector, bool force)
+ 	unsigned long reg;
  
-+	p = &chip->ports[port];
-+
- 	/* FIXME: is this the correct test? If we're in fixed mode on an
- 	 * internal port, why should we process this any different from
- 	 * PHY mode? On the other hand, the port may be automedia between
-@@ -675,10 +678,14 @@ static void mv88e6xxx_mac_config(struct dsa_switch *ds, int port,
- 		return;
- 
- 	mv88e6xxx_reg_lock(chip);
--	/* FIXME: should we force the link down here - but if we do, how
--	 * do we restore the link force/unforce state? The driver layering
--	 * gets in the way.
-+	/* In inband mode, the link may come up at any time while the link
-+	 * is not forced down. Force the link down while we reconfigure the
-+	 * interface mode.
- 	 */
-+	if (mode == MLO_AN_INBAND && p->interface != state->interface &&
-+	    chip->info->ops->port_set_link)
-+		chip->info->ops->port_set_link(chip, port, LINK_FORCED_DOWN);
-+
- 	err = mv88e6xxx_port_config_interface(chip, port, state->interface);
- 	if (err && err != -EOPNOTSUPP)
- 		goto err_unlock;
-@@ -691,6 +698,15 @@ static void mv88e6xxx_mac_config(struct dsa_switch *ds, int port,
- 	if (err > 0)
- 		err = 0;
- 
-+	/* Undo the forced down state above after completing configuration
-+	 * irrespective of its state on entry, which allows the link to come up.
-+	 */
-+	if (mode == MLO_AN_INBAND && p->interface != state->interface &&
-+	    chip->info->ops->port_set_link)
-+		chip->info->ops->port_set_link(chip, port, LINK_UNFORCED);
-+
-+	p->interface = state->interface;
-+
- err_unlock:
- 	mv88e6xxx_reg_unlock(chip);
- 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.h b/drivers/net/dsa/mv88e6xxx/chip.h
-index e5430cf2ad711..6476524e8239d 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.h
-+++ b/drivers/net/dsa/mv88e6xxx/chip.h
-@@ -232,6 +232,7 @@ struct mv88e6xxx_port {
- 	u64 atu_full_violation;
- 	u64 vtu_member_violation;
- 	u64 vtu_miss_violation;
-+	phy_interface_t interface;
- 	u8 cmode;
- 	bool mirror_ingress;
- 	bool mirror_egress;
+ 	reg = readl(hdmi->base + SUN4I_HDMI_HPD_REG);
+-	if (reg & SUN4I_HDMI_HPD_HIGH) {
++	if (!(reg & SUN4I_HDMI_HPD_HIGH)) {
+ 		cec_phys_addr_invalidate(hdmi->cec_adap);
+ 		return connector_status_disconnected;
+ 	}
 -- 
 2.25.1
 
