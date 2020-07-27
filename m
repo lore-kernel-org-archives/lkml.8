@@ -2,53 +2,55 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C005EC433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC98C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0374208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D710F21744
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859099;
-	bh=kB41gXh/gK69Ub+thQTzV8vVMeVaJNEl8ZZLFyl95ZQ=;
+	s=default; t=1595859100;
+	bh=QZVW5a1aE5FbLe9+ltNBnDpgn0AHKSmS9TQ8jjloP9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LJLd0HSAUJCcVd/o79ZVsnfG9no+t/X4EG5rY05DT0N4iTJ19lyYYQbbw6YKTk6MF
-	 EAl1sjAwWintZL4XA3p37FOYuNbEJUMiHewTB0hA1iRDBk6QJRjD88nA3yw+K0x1JH
-	 Pa44r4sxuK/WtFvqhWGCG8NrXa8ezYyKTiKjTKdI=
+	b=f0eMftzklN/vrivRYQqmDfNthjNaWhzeRJVfrkfEC31A9ZUqbcwazL3SSbKmT8ybp
+	 oL1WrILlaUadZDW03AcVMQ5Yptkm+K1VoESZS8eiuqOi8KeHi8ONkFbkS5gEZU40D/
+	 AFt1jMjleJGzusdq1vlwBk7qJ3KBYqnHnvYBEoms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbgG0OLi (ORCPT
+        id S1730037AbgG0OLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:11:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35052 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:11:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729452AbgG0OL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:11:26 -0400
+        id S1730026AbgG0OLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:11:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C972920838;
-        Mon, 27 Jul 2020 14:11:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4237420838;
+        Mon, 27 Jul 2020 14:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859086;
-        bh=kB41gXh/gK69Ub+thQTzV8vVMeVaJNEl8ZZLFyl95ZQ=;
+        s=default; t=1595859091;
+        bh=QZVW5a1aE5FbLe9+ltNBnDpgn0AHKSmS9TQ8jjloP9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=180DPRe+hrjhJZC6XYqnwqzGxeMzu1JbtxFWLlO1dNkqondoJMWmWmgVdgA7TzMec
-         RoB/jrlYbAEimVeRUhmz5ZkrSY7t/PftZR+PTdatNgCf1TYOE/pIxKA8nEngzunxcY
-         YvAw3/QuwxS2YQwliCV+X+SOL2hKwILvlY3TGnFE=
+        b=aqbg/9CRN6SWcZKc0KIWyr90rWj0QkFlm7ctQyUn4omFGgVEs83RS/AyrVXUaEkYE
+         kBHwR1YylpzMRp6ezTz5jMdGd6Yh54WzSR05rqs1PAF7vZceV/B13mgQ+xR0RPuCck
+         Q+5xWAYFr3AYws7eDQG7xBspZaEs0K9Nm9b8wZhU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 59/86] x86: math-emu: Fix up cmp insn for clang ias
-Date:   Mon, 27 Jul 2020 16:04:33 +0200
-Message-Id: <20200727134917.395764070@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot <syzbot+1068f09c44d151250c33@syzkaller.appspotmail.com>,
+        syzbot <syzbot+e5344baa319c9a96edec@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Michal Hocko <mhocko@suse.com>, Todd Kjos <tkjos@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 4.19 61/86] binder: Dont use mmput() from shrinker function.
+Date:   Mon, 27 Jul 2020 16:04:35 +0200
+Message-Id: <20200727134917.494599997@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -61,43 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
 
-[ Upstream commit 81e96851ea32deb2c921c870eecabf335f598aeb ]
+commit f867c771f98891841c217fa8459244ed0dd28921 upstream.
 
-The clang integrated assembler requires the 'cmp' instruction to
-have a length prefix here:
+syzbot is reporting that mmput() from shrinker function has a risk of
+deadlock [1], for delayed_uprobe_add() from update_ref_ctr() calls
+kzalloc(GFP_KERNEL) with delayed_uprobe_lock held, and
+uprobe_clear_state() from __mmput() also holds delayed_uprobe_lock.
 
-arch/x86/math-emu/wm_sqrt.S:212:2: error: ambiguous instructions require an explicit suffix (could be 'cmpb', 'cmpw', or 'cmpl')
- cmp $0xffffffff,-24(%ebp)
- ^
+Commit a1b2289cef92ef0e ("android: binder: drop lru lock in isolate
+callback") replaced mmput() with mmput_async() in order to avoid sleeping
+with spinlock held. But this patch replaces mmput() with mmput_async() in
+order not to start __mmput() from shrinker context.
 
-Make this a 32-bit comparison, which it was clearly meant to be.
+[1] https://syzkaller.appspot.com/bug?id=bc9e7303f537c41b2b0cc2dfcea3fc42964c2d45
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://lkml.kernel.org/r/20200527135352.1198078-1-arnd@arndb.de
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: syzbot <syzbot+1068f09c44d151250c33@syzkaller.appspotmail.com>
+Reported-by: syzbot <syzbot+e5344baa319c9a96edec@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Reviewed-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Todd Kjos <tkjos@google.com>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/4ba9adb2-43f5-2de0-22de-f6075c1fab50@i-love.sakura.ne.jp
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/math-emu/wm_sqrt.S | 2 +-
+ drivers/android/binder_alloc.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/math-emu/wm_sqrt.S b/arch/x86/math-emu/wm_sqrt.S
-index f031c0e193565..515cdee90df72 100644
---- a/arch/x86/math-emu/wm_sqrt.S
-+++ b/arch/x86/math-emu/wm_sqrt.S
-@@ -209,7 +209,7 @@ sqrt_stage_2_finish:
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -987,7 +987,7 @@ enum lru_status binder_alloc_free_page(s
+ 		trace_binder_unmap_user_end(alloc, index);
+ 	}
+ 	up_read(&mm->mmap_sem);
+-	mmput(mm);
++	mmput_async(mm);
  
- #ifdef PARANOID
- /* It should be possible to get here only if the arg is ffff....ffff */
--	cmp	$0xffffffff,FPU_fsqrt_arg_1
-+	cmpl	$0xffffffff,FPU_fsqrt_arg_1
- 	jnz	sqrt_stage_2_error
- #endif /* PARANOID */
+ 	trace_binder_unmap_kernel_start(alloc, index);
  
--- 
-2.25.1
-
 
 
