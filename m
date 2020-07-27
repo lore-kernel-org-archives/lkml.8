@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A94C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AF9C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACF72173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7DE2173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859204;
-	bh=1qUn0lMJORu6ifgNr/+2XMmc4BJdRSnGJM6VzusjKEw=;
+	s=default; t=1595859207;
+	bh=i0Mq5tOfkQ2d2GWrgjnmQ83jMOvTDBT004ev3WGvF9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FnD7asvAvI9hdsSKyD1yYpSQ3eFYnkn5aO+ltFOPHF0tqqaT6rq7dM7I1eHT16Umv
-	 p45/AKYY7gMQlAiVyC0aosLyaQW2p1vjoi097YjDiUtkZYOamOlSxLoRXg9x5gNJzO
-	 z4njysWiWaZCMuYF8jdPgCqEBc+eFPZ7EdWqm8iI=
+	b=xOsU57O6EgXAgoCLnk+OvU3yVuq20b3KyAV+DTEPLKLMUThVYsmxqPFLvVldcHA1P
+	 bdjL5JMXQ/vCvu2ye01gmaIjXhVeg6tCIcvVsGyT4Yn6STT+OutCWVpFWR3qBXrx0B
+	 gTyHJteetJiswQ/tBt3QIBBJYpaVJaYYm7OeclyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730361AbgG0ONX (ORCPT
+        id S1729759AbgG0ON0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:13:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38236 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:13:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729741AbgG0ONT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:13:19 -0400
+        id S1730356AbgG0ONW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:13:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCF4D208E4;
-        Mon, 27 Jul 2020 14:13:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43D632073E;
+        Mon, 27 Jul 2020 14:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859199;
-        bh=1qUn0lMJORu6ifgNr/+2XMmc4BJdRSnGJM6VzusjKEw=;
+        s=default; t=1595859201;
+        bh=i0Mq5tOfkQ2d2GWrgjnmQ83jMOvTDBT004ev3WGvF9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YmFCUXMOrIzAFKjyW5t11wIBW77yMl7r1xK1mmKaHUOL/WQBpLcGLZS1yjc84I/4l
-         SLWC/hbCgBZiFcYDbpTnDwAbrSEEu615Pql9zpoZwmnalvS/xLfZgFJF6Pb9/3jvDn
-         7hjsmRpgT37/bm20pX/eqciMkIrJuSy9JueUTGc4=
+        b=ee1wdKNmdhoNmqCQitMsvuY0r0VrSoLJwlq/StA8aQNjCHORCRt/6OKq2wIxyjg5F
+         8hzKm7pcjE/EmwODGXWJ4QzSTUdwIgEtUMucwhlcpxSc9pzlXr7cljtaMuMq+ZxT7U
+         hdmfcKqG0pS1yBVGlpTlI/ykObNF2HARv9vMgHZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 017/138] drivers/firmware/psci: Fix memory leakage in alloc_init_cpu_groups()
-Date:   Mon, 27 Jul 2020 16:03:32 +0200
-Message-Id: <20200727134926.176944604@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolaus Rath <Nikolaus@rath.org>,
+        Hugh Dickins <hughd@google.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 018/138] fuse: fix weird page warning
+Date:   Mon, 27 Jul 2020 16:03:33 +0200
+Message-Id: <20200727134926.226479143@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -60,48 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gavin Shan <gshan@redhat.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-[ Upstream commit c377e67c6271954969384f9be1b1b71de13eba30 ]
+commit a5005c3cda6eeb6b95645e6cc32f58dafeffc976 upstream.
 
-The CPU mask (@tmp) should be released on failing to allocate
-@cpu_groups or any of its elements. Otherwise, it leads to memory
-leakage because the CPU mask variable is dynamically allocated
-when CONFIG_CPUMASK_OFFSTACK is enabled.
+When PageWaiters was added, updating this check was missed.
 
-Signed-off-by: Gavin Shan <gshan@redhat.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Link: https://lore.kernel.org/r/20200630075227.199624-1-gshan@redhat.com
-Signed-off-by: Will Deacon <will@kernel.org>
+Reported-by: Nikolaus Rath <Nikolaus@rath.org>
+Reported-by: Hugh Dickins <hughd@google.com>
+Fixes: 62906027091f ("mm: add PageWaiters indicating tasks are waiting for a page bit")
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: André Almeida <andrealmeid@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/psci/psci_checker.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/fuse/dev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/psci/psci_checker.c b/drivers/firmware/psci/psci_checker.c
-index 6a445397771ca..03eb798ad3ed9 100644
---- a/drivers/firmware/psci/psci_checker.c
-+++ b/drivers/firmware/psci/psci_checker.c
-@@ -157,8 +157,10 @@ static int alloc_init_cpu_groups(cpumask_var_t **pcpu_groups)
- 
- 	cpu_groups = kcalloc(nb_available_cpus, sizeof(cpu_groups),
- 			     GFP_KERNEL);
--	if (!cpu_groups)
-+	if (!cpu_groups) {
-+		free_cpumask_var(tmp);
- 		return -ENOMEM;
-+	}
- 
- 	cpumask_copy(tmp, cpu_online_mask);
- 
-@@ -167,6 +169,7 @@ static int alloc_init_cpu_groups(cpumask_var_t **pcpu_groups)
- 			topology_core_cpumask(cpumask_any(tmp));
- 
- 		if (!alloc_cpumask_var(&cpu_groups[num_groups], GFP_KERNEL)) {
-+			free_cpumask_var(tmp);
- 			free_cpu_groups(num_groups, &cpu_groups);
- 			return -ENOMEM;
- 		}
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index 4f2e4f38feb86..06dd38e76c62a 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -771,7 +771,8 @@ static int fuse_check_page(struct page *page)
+ 	       1 << PG_uptodate |
+ 	       1 << PG_lru |
+ 	       1 << PG_active |
+-	       1 << PG_reclaim))) {
++	       1 << PG_reclaim |
++	       1 << PG_waiters))) {
+ 		pr_warn("trying to steal weird page\n");
+ 		pr_warn("  page=%p index=%li flags=%08lx, count=%i, mapcount=%i, mapping=%p\n", page, page->index, page->flags, page_count(page), page_mapcount(page), page->mapping);
+ 		return 1;
 -- 
 2.25.1
 
