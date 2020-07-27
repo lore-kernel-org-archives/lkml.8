@@ -2,218 +2,116 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9A6C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C322AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B17BD20759
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A00D720759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:27:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hl1MZrCA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBMPjRAh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgG0K0a (ORCPT
+        id S1728062AbgG0K1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:26:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56698 "EHLO
+        Mon, 27 Jul 2020 06:27:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbgG0K03 (ORCPT
+        with ESMTP id S1726744AbgG0K1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:26:29 -0400
+        Mon, 27 Jul 2020 06:27:49 -0400
 Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082F6C061794;
-        Mon, 27 Jul 2020 03:26:29 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id q17so7770444pls.9;
-        Mon, 27 Jul 2020 03:26:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AC59C061794;
+        Mon, 27 Jul 2020 03:27:49 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t6so7789034plo.3;
+        Mon, 27 Jul 2020 03:27:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mIbgqGp5MHZMjDC7erbJ1Rt5TOVChIklfPVrDvY14LE=;
-        b=Hl1MZrCAMbdwuH66+INdibLCKo1F5WaU6Wzbw1CxFVM2/CC6eXpakmuU2zctfwPKUA
-         iXI3IKDljPUoa9TZLpOUEi6bnEWomQyorlKflg3VEU1h/EN9iCI5oKYH72OSm5fN9dav
-         Ft6Zx1+9I1skoUVpqVPBB9NxT+zQk/70gWHVzcHs/YTUcL48DsFlqkHfweg0TSpUlCMY
-         ck2S8tlJCe39gYSVuCahnrgkdU6pQ8Negd8HCEvMwoxKRHBtfTZiCiGRTjLvuUvT+gVq
-         kWc3zXYoq2sN18WJS1fmoy4sT0JeDNmnpHuRtMSHrkQp1dAHWn5vqRDy1U0l4XJPH22l
-         5xHQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MfnAXIeR1KafYrufEJLqv/puSReDeQoJLVmC/MZWqGI=;
+        b=cBMPjRAhkvB1/gbD27+X++2U5e9tuVr2DvEmEMsdVWx+9ZPD7HRqswj0n48/wZE7Bx
+         /MIRkFKMsljFs/1/zplVRkxpBvwpVlgVh7Qok+iAnPdpCKxTXLBSh93y/frRqzaZlBms
+         ZAMrf6lNd04WR2kl9wvoJVZuRojPssXADz4eEPnPuGTOVWqSqBt2e+HwTGrCWTwuaj11
+         ZD0MW6hIf4M7FEk1VY9Z7qq5AK0GBiR19ZtfcPG9YdoKgfJtoz9IxJNxc21xRQYxPm/K
+         nlitfpaIwDsftdfnHXB51XPmXCat39CiviSqjUkXXdOtE/Qwn+wQTX+IsD8lKFerh0LX
+         rb0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mIbgqGp5MHZMjDC7erbJ1Rt5TOVChIklfPVrDvY14LE=;
-        b=oNxDq8wqc8AzjEOtZTYe6uRkN850DXyMm6TRyngslzFK65yBP+H3nZdgoTBEIhAGfu
-         h87/rRHYIaet4ZQ9LDk9C/r1N5JEWCQzNMg6rMUUdyH87JvlOcLHLccXRX+Eccd5eEnQ
-         6oTkW4Te/ISo0lhg+lJ7asIFOoUbFKdtDqusY7PyPqUJk40X+xabrk4qG35C2ZNDxPuz
-         KbyJN+DtbgpU1r9LcG8E+rIQqxJi+m00htdZ75jQWnb0ibJnpstbNibGUNSVljn+oKGk
-         SN73U2rV0TCENDrzgFbAMhxzFzkLh7f/3Isp1fbOgbr5w629/DtVq9AsCHVBEOjeoc9p
-         wZeA==
-X-Gm-Message-State: AOAM532t/oJQQrn6mnIQAIxLDzelJMlfE3UA9fROnvmFXQwOFFhU48Cs
-        sOerhaUZE38TLln0UGJV+7E=
-X-Google-Smtp-Source: ABdhPJwvy/WOl/w2WDv1Ka8d4q2k+6ieoSAP+9ozI85rk/XR45FfGfn+17WzdJQvOpACbwFBJhlq7g==
-X-Received: by 2002:a17:902:8bc6:: with SMTP id r6mr5839446plo.289.1595845588420;
-        Mon, 27 Jul 2020 03:26:28 -0700 (PDT)
-Received: from gmail.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id g3sm14217345pfq.19.2020.07.27.03.26.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 03:26:27 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 15:55:03 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH v1] dmaengine: pch_dma: use generic power management
-Message-ID: <20200727102503.GA7767@gmail.com>
-References: <20200720113740.353479-1-vaibhavgupta40@gmail.com>
- <20200727085621.GL12965@vkoul-mobl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MfnAXIeR1KafYrufEJLqv/puSReDeQoJLVmC/MZWqGI=;
+        b=CPUdDeoqar7y6UMsEcvDu8l3Nk2ML6zlm9vY4be05lJPzvLTz8DYWzMLu8J4zTjkBD
+         2uYGnxNhPPLt9RRuMDqrmd9HaAkzccKjl3qgi8wyoLP0mh34+246d3yn5evZEnQQQWRC
+         Hk3CaPsRYXahXcGcqnAFKRl+YOIfrfkhfDe/mBgP6ynt+t8qvTV7AYA5Ii7enXlRctU3
+         iy6FHLBmU4udOp0wqGiVbDmVXl4Pm2/jNEC9r93oyJ0OsgetY+glQNSijw/v0GVAAryO
+         ct8nYUlbAn6Rpj9su2Yk4TFZ1zy6grIPDeSUI/VczWP92vi0pRopBFSdeqAc6mHNoiO+
+         2AuQ==
+X-Gm-Message-State: AOAM530s4NvqR9RB6UkILoQCQk7B/vcQhoXDcQbL4X+lL3fbgCZfH3RB
+        fsSVSAfSvme1jIY1g+SCYZ6PEllxNL/Ef3eDlcM=
+X-Google-Smtp-Source: ABdhPJxEHPFoGSoZxU9r1b2GjJ1IWxHQsitK6DAhl4vZAYD76oQq7AHniHMA/DHdJb4mBAanhYP8ZH93gI5OO/jHCCs=
+X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr15807500pjp.228.1595845669025;
+ Mon, 27 Jul 2020 03:27:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200727085621.GL12965@vkoul-mobl>
+References: <20200719002903.20469-1-rdunlap@infradead.org> <c76c51bfa78316caaf8201a63ac200fa373ae3ae.camel@linux.intel.com>
+In-Reply-To: <c76c51bfa78316caaf8201a63ac200fa373ae3ae.camel@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Jul 2020 13:27:34 +0300
+Message-ID: <CAHp75VeugozEiOMg1VeWegrP1m0VU5xKfxEj6gJPQbnuYh5zCw@mail.gmail.com>
+Subject: Re: [PATCH] isst: isst_if.h: drop a duplicated word
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 02:26:21PM +0530, Vinod Koul wrote:
-> Hi Vaibhav,
-> 
-> On 20-07-20, 17:07, Vaibhav Gupta wrote:
-> > Drivers using legacy PM have to manage PCI states and device's PM states
-> > themselves. They also need to take care of configuration registers.
-> > 
-> > With improved and powerful support of generic PM, PCI Core takes care of
-> > above mentioned, device-independent, jobs.
-> > 
-> > This driver makes use of PCI helper functions like
-> > pci_save/restore_state(), pci_enable/disable_device(),
-> > and pci_set_power_state() to do required operations. In generic mode, they
-> > are no longer needed.
-> > 
-> > Change function parameter in both .suspend() and .resume() to
-> > "struct device*" type. Use dev_get_drvdata() to get drv data.
-> 
-> You are doing too many things in One patch. Do consider splitting them
-> up to a change per patch. for example using __maybe could be one patch,
-> removing code is suspend-resume callbacks would be other one.
+On Tue, Jul 21, 2020 at 6:10 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
 >
-Sure. But I guess just marking of "__maybe_unused" is not some significant
-change. All the legacy PCI drivers have .suspend() and .resume() inside
-"#ifdef CONFIG_PM" container.
-It is only when I am upgrading them one by one to generic, I remove the
-container and mark them with the attribute. So it is like a part of complete
-generic upgrade.
+> On Sat, 2020-07-18 at 17:29 -0700, Randy Dunlap wrote:
+> > Drop the repeated word "for" in a comment.
+> >
+> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> > Cc: platform-driver-x86@vger.kernel.org
+> > Cc: Darren Hart <dvhart@infradead.org>
+> > Cc: Andy Shevchenko <andy@infradead.org>
+> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+>
 
-Thanks
-Vaibhav Gupta
-> > Compile-tested only.
-> 
-> I would like to see some testing before we merge this
-> 
-> > 
-> > Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Pushed to my review and testing queue, thanks!
+
 > > ---
-> >  drivers/dma/pch_dma.c | 35 +++++++++--------------------------
-> >  1 file changed, 9 insertions(+), 26 deletions(-)
-> > 
-> > diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
-> > index a3b0b4c56a19..e93005837e3f 100644
-> > --- a/drivers/dma/pch_dma.c
-> > +++ b/drivers/dma/pch_dma.c
-> > @@ -735,8 +735,7 @@ static irqreturn_t pd_irq(int irq, void *devid)
-> >  	return ret0 | ret2;
-> >  }
-> >  
-> > -#ifdef	CONFIG_PM
-> > -static void pch_dma_save_regs(struct pch_dma *pd)
-> > +static void __maybe_unused pch_dma_save_regs(struct pch_dma *pd)
-> >  {
-> >  	struct pch_dma_chan *pd_chan;
-> >  	struct dma_chan *chan, *_c;
-> > @@ -759,7 +758,7 @@ static void pch_dma_save_regs(struct pch_dma *pd)
-> >  	}
-> >  }
-> >  
-> > -static void pch_dma_restore_regs(struct pch_dma *pd)
-> > +static void __maybe_unused pch_dma_restore_regs(struct pch_dma *pd)
-> >  {
-> >  	struct pch_dma_chan *pd_chan;
-> >  	struct dma_chan *chan, *_c;
-> > @@ -782,40 +781,25 @@ static void pch_dma_restore_regs(struct pch_dma *pd)
-> >  	}
-> >  }
-> >  
-> > -static int pch_dma_suspend(struct pci_dev *pdev, pm_message_t state)
-> > +static int __maybe_unused pch_dma_suspend(struct device *dev)
-> >  {
-> > -	struct pch_dma *pd = pci_get_drvdata(pdev);
-> > +	struct pch_dma *pd = dev_get_drvdata(dev);
-> >  
-> >  	if (pd)
-> >  		pch_dma_save_regs(pd);
-> >  
-> > -	pci_save_state(pdev);
-> > -	pci_disable_device(pdev);
-> > -	pci_set_power_state(pdev, pci_choose_state(pdev, state));
-> > -
-> >  	return 0;
-> >  }
-> >  
-> > -static int pch_dma_resume(struct pci_dev *pdev)
-> > +static int __maybe_unused pch_dma_resume(struct device *dev)
-> >  {
-> > -	struct pch_dma *pd = pci_get_drvdata(pdev);
-> > -	int err;
-> > -
-> > -	pci_set_power_state(pdev, PCI_D0);
-> > -	pci_restore_state(pdev);
-> > -
-> > -	err = pci_enable_device(pdev);
-> > -	if (err) {
-> > -		dev_dbg(&pdev->dev, "failed to enable device\n");
-> > -		return err;
-> > -	}
-> > +	struct pch_dma *pd = dev_get_drvdata(dev);
-> >  
-> >  	if (pd)
-> >  		pch_dma_restore_regs(pd);
-> >  
-> >  	return 0;
-> >  }
-> > -#endif
-> >  
-> >  static int pch_dma_probe(struct pci_dev *pdev,
-> >  				   const struct pci_device_id *id)
-> > @@ -993,15 +977,14 @@ static const struct pci_device_id pch_dma_id_table[] = {
-> >  	{ 0, },
-> >  };
-> >  
-> > +static SIMPLE_DEV_PM_OPS(pch_dma_pm_ops, pch_dma_suspend, pch_dma_resume);
-> > +
-> >  static struct pci_driver pch_dma_driver = {
-> >  	.name		= DRV_NAME,
-> >  	.id_table	= pch_dma_id_table,
-> >  	.probe		= pch_dma_probe,
-> >  	.remove		= pch_dma_remove,
-> > -#ifdef CONFIG_PM
-> > -	.suspend	= pch_dma_suspend,
-> > -	.resume		= pch_dma_resume,
-> > -#endif
-> > +	.driver.pm	= &pch_dma_pm_ops,
-> >  };
-> >  
-> >  module_pci_driver(pch_dma_driver);
-> > -- 
-> > 2.27.0
-> 
-> -- 
-> ~Vinod
+> > This description could still use some better wording.
+>
+> I will fix the wording in a follow up patch.
+>
+> >  include/uapi/linux/isst_if.h |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > --- linux-next-20200717.orig/include/uapi/linux/isst_if.h
+> > +++ linux-next-20200717/include/uapi/linux/isst_if.h
+> > @@ -69,7 +69,7 @@ struct isst_if_cpu_maps {
+> >   * @logical_cpu:     Logical CPU number to get target PCI device.
+> >   * @reg:             PUNIT register offset
+> >   * @value:           For write operation value to write and for
+> > - *                   for read placeholder read value
+> > + *                   read placeholder read value
+> >   *
+> >   * Structure to specify read/write data to PUNIT registers.
+> >   */
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
