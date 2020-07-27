@@ -2,90 +2,203 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E84FC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6C6720825
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57256206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858242;
-	bh=Egeq+a8oWDr1xtB1xbFHglsSZ6j1GXnIOgGl3YfP39c=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=ZqPJEh0XUYgjPLszZkZiWGxrBOHKBQm7z7rkMmQF0DVg42uchcvlsnl+IKESM+u5t
-	 EupCmHzGfe3Tf760ol41hFVJybLs/UbWRZgFnePp1CHlkyJF6QeLrBBSgPDUkkKvr0
-	 5j/08hDbK1klo+Vq7VRcLnt/SX/W/bkUqk0lATiw=
+	s=default; t=1595858553;
+	bh=w9/M8wZSBgtmevXcbf3Dwx3L57Rd5tG6sXBObrQkJoM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EhNyz1XGeC7rmkfivxMRj/c0TtdtsEFYRFWagWHJUBXk2Rajm22cM/X1dCjfgb+aT
+	 hqqrOGlhnYD8qGGln61mT5Y3O9vg04UFefOK1PU4TRHaYpBwafgIz3QFVD9M179aUA
+	 RRoVskiL6jpfXs0fcjVjA/E3b/dMqL43IjdPpw3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgG0N5V (ORCPT
+        id S1728321AbgG0OCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:57:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726744AbgG0N5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:57:20 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED1172070A;
-        Mon, 27 Jul 2020 13:57:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858240;
-        bh=Egeq+a8oWDr1xtB1xbFHglsSZ6j1GXnIOgGl3YfP39c=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=QJCj4FlhVyGBn71gPApMPrk9ALQq2zR3lQwvdtcITRWzDgFvw8Ee6+fxmp3zzej1i
-         cd9WgMNsMCUVx45aAqG7OgEDWFqhv5r8PG22q3uOqOXksz8j/4jP6edNRQl4x3IRH7
-         1E3qFQDxdiLPFrLPuOHhqZE+5jj+JZEDWw+xAlwY=
-Date:   Mon, 27 Jul 2020 14:57:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jonathan Liu <net147@gmail.com>
-Cc:     Olliver Schinagl <oliver@schinagl.nl>,
-        linux-arm-kernel@lists.infradead.org,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-In-Reply-To: <20200727072328.510798-1-net147@gmail.com>
-References: <20200727072328.510798-1-net147@gmail.com>
-Subject: Re: [PATCH] spi: sun4i: update max transfer size reported
-Message-Id: <159585821344.22560.5654112245536281167.b4-ty@kernel.org>
+        Mon, 27 Jul 2020 10:02:32 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35720 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgG0OCa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:02:30 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k4so14414251oik.2;
+        Mon, 27 Jul 2020 07:02:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mRY3UX2NBXS9aSshDQuKlv62KiLkLKBPXBEuh/ff5bQ=;
+        b=VZSmWFSCFyGTLM566ozWQhgVUteuGMUYaoXa9BG44LFRqw1G5DrZBZNJ62ADFNOGb8
+         iFkvT+SOwbwhZrPvbhPFAWvvBdX7lb5Mn0hUXE/v+4jyiMfh2tzRuQMKd6UQsSV/9jnw
+         +G+HKy93qhzOFhdrv7BI1MhGfvVBiU3qlkWc0FE74hrA7MLuX1WUCWdWsGJ1WALS8NM2
+         VNTmu7I6K6IjnlYfMHLlebau8zeEvmDuPxf0bysUUCDlaEMJstnCEpQV2KEo7p0J1UBM
+         7PDz86fG561/8xGuB8yHbCadYlJmGENpvaCogo2+TJTEAN5so005tHFoFvleQi1r67QU
+         H3hw==
+X-Gm-Message-State: AOAM532vU3HiT73XGhfXmUdNw41TTbcshn4WfuvjI16YclzPNC9t5zFS
+        SSiNHLmKrzygkoNmuQiMFucu6yPjl1697WEV+bU=
+X-Google-Smtp-Source: ABdhPJwVRDYwbcsm/QOnkqd5RoiNowF+0IcXiCPMz8Ihy8I8/y2G9R4k8waaFkVE53P3g1YaEJL9s8CrE7Grwj7SSFc=
+X-Received: by 2002:aca:4a89:: with SMTP id x131mr19034751oia.103.1595858549233;
+ Mon, 27 Jul 2020 07:02:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200722093732.14297-1-ionela.voinescu@arm.com> <20200722093732.14297-5-ionela.voinescu@arm.com>
+In-Reply-To: <20200722093732.14297-5-ionela.voinescu@arm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 27 Jul 2020 16:02:18 +0200
+Message-ID: <CAJZ5v0jvvEvxs2dwsGd1kerTT3pJTJj6fVg0ndtdeUhiq+K_UQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] cpufreq: report whether cpufreq supports Frequency
+ Invariance (FI)
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020 17:23:28 +1000, Jonathan Liu wrote:
-> The spi-sun4i driver already has the ability to do large transfers.
-> However, the max transfer size reported is still fifo depth - 1.
-> 
-> Update the max transfer size reported to the max value possible.
+On Wed, Jul 22, 2020 at 11:38 AM Ionela Voinescu
+<ionela.voinescu@arm.com> wrote:
+>
+> Now that the update of the FI scale factor is done in cpufreq core for
+> selected functions - target(), target_index() and fast_switch(),
+> we can provide feedback to the task scheduler and architecture code
+> on whether cpufreq supports FI.
+>
+> For this purpose, provide error and debug messages, together with an
+> external function to expose whether the cpufreq drivers support FI, by
+> using a static key.
+>
+> The logic behind the enablement of cpufreq-based invariance is as
+> follows:
+>  - cpufreq-based invariance is disabled by default
+>  - cpufreq-based invariance is enabled if any of the callbacks
+>    above is implemented while the unsupported setpolicy() is not
+>  - if enabled, cpufreq-based invariance will be disabled during the
+>    call of the default arch_set_freq_scale() function which does
+>    not set a scale factor.
+>
+> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/cpufreq/cpufreq.c | 28 ++++++++++++++++++++++++++++
+>  include/linux/cpufreq.h   |  5 +++++
+>  2 files changed, 33 insertions(+)
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 3497c1cd6818..1d0b046fe8e9 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -61,6 +61,9 @@ static struct cpufreq_driver *cpufreq_driver;
+>  static DEFINE_PER_CPU(struct cpufreq_policy *, cpufreq_cpu_data);
+>  static DEFINE_RWLOCK(cpufreq_driver_lock);
+>
+> +/* Mark support for the scheduler's frequency invariance engine */
+> +static DEFINE_STATIC_KEY_FALSE(cpufreq_set_freq_scale);
+> +
+>  /* Flag to suspend/resume CPUFreq governors */
+>  static bool cpufreq_suspended;
+>
+> @@ -69,6 +72,25 @@ static inline bool has_target(void)
+>         return cpufreq_driver->target_index || cpufreq_driver->target;
+>  }
+>
+> +static inline
+> +void enable_cpufreq_freq_invariance(struct cpufreq_driver *driver)
+> +{
+> +       if ((driver->target || driver->target_index || driver->fast_switch) &&
+> +           !driver->setpolicy) {
+> +
+> +               static_branch_enable_cpuslocked(&cpufreq_set_freq_scale);
+> +               pr_debug("%s: Driver %s can provide frequency invariance.",
+> +                        __func__, driver->name);
+> +       } else
+> +               pr_err("%s: Driver %s cannot provide frequency invariance.",
+> +               __func__, driver->name);
 
-Applied to
+This doesn't follow the kernel coding style (the braces around the
+pr_err() statement are missing).
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Besides, IMO on architectures where arch_set_freq_scale() is empty,
+this should be empty as well.
 
-Thanks!
-
-[1/1] spi: sun4i: update max transfer size reported
-      commit: 241b888791ee2fa47b97b3b9dc0e857d241db18d
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+> +}
+> +
+> +bool cpufreq_sets_freq_scale(void)
+> +{
+> +       return static_branch_likely(&cpufreq_set_freq_scale);
+> +}
+> +
+>  /* internal prototypes */
+>  static unsigned int __cpufreq_get(struct cpufreq_policy *policy);
+>  static int cpufreq_init_governor(struct cpufreq_policy *policy);
+> @@ -159,6 +181,9 @@ EXPORT_SYMBOL_GPL(get_cpu_idle_time);
+>  __weak void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
+>                 unsigned long max_freq)
+>  {
+> +       if (cpufreq_sets_freq_scale())
+> +               static_branch_disable_cpuslocked(&cpufreq_set_freq_scale);
+> +
+>  }
+>  EXPORT_SYMBOL_GPL(arch_set_freq_scale);
+>
+> @@ -2722,6 +2747,8 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
+>         cpufreq_driver = driver_data;
+>         write_unlock_irqrestore(&cpufreq_driver_lock, flags);
+>
+> +       enable_cpufreq_freq_invariance(cpufreq_driver);
+> +
+>         if (driver_data->setpolicy)
+>                 driver_data->flags |= CPUFREQ_CONST_LOOPS;
+>
+> @@ -2791,6 +2818,7 @@ int cpufreq_unregister_driver(struct cpufreq_driver *driver)
+>         cpus_read_lock();
+>         subsys_interface_unregister(&cpufreq_interface);
+>         remove_boost_sysfs_file();
+> +       static_branch_disable_cpuslocked(&cpufreq_set_freq_scale);
+>         cpuhp_remove_state_nocalls_cpuslocked(hp_online);
+>
+>         write_lock_irqsave(&cpufreq_driver_lock, flags);
+> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+> index e62b022cb07e..f81215ad76f1 100644
+> --- a/include/linux/cpufreq.h
+> +++ b/include/linux/cpufreq.h
+> @@ -217,6 +217,7 @@ void refresh_frequency_limits(struct cpufreq_policy *policy);
+>  void cpufreq_update_policy(unsigned int cpu);
+>  void cpufreq_update_limits(unsigned int cpu);
+>  bool have_governor_per_policy(void);
+> +bool cpufreq_sets_freq_scale(void);
+>  struct kobject *get_governor_parent_kobj(struct cpufreq_policy *policy);
+>  void cpufreq_enable_fast_switch(struct cpufreq_policy *policy);
+>  void cpufreq_disable_fast_switch(struct cpufreq_policy *policy);
+> @@ -237,6 +238,10 @@ static inline unsigned int cpufreq_get_hw_max_freq(unsigned int cpu)
+>  {
+>         return 0;
+>  }
+> +static inline bool cpufreq_sets_freq_scale(void)
+> +{
+> +       return false;
+> +}
+>  static inline void disable_cpufreq(void) { }
+>  #endif
+>
+> --
+> 2.17.1
+>
