@@ -2,61 +2,99 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C658EC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C578BC4345C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF0AF2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE16208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595859794;
+	bh=V5OWNkTgdBCyEL+REiwW5x93P/nnXPsdFaS/dcNSbK4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cGdoJ+x66il7RVt2re0TlnC8PtYRggFS9HTS2B118iPtZgNjUsykD01haiRQ2eVDp
+	 uW792VIgvQip1LY6bLnn0ARa1oDonPdTxqWkGk9n/Cxm0Z9yW14eAQAmxtNCY27AEx
+	 cyefaJ3rAeCdLQz8gUdRfgBdlU7KN5ujUcLezonk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732084AbgG0OX0 (ORCPT
+        id S1732034AbgG0OXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:23:26 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:51896 "EHLO raptor.unsafe.ru"
+        Mon, 27 Jul 2020 10:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732046AbgG0OXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:23:20 -0400
-Received: from comp-core-i7-2640m-0182e6.redhat.com (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1732027AbgG0OXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:23:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id BB28120479;
-        Mon, 27 Jul 2020 14:15:40 +0000 (UTC)
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Gladkov <legion@kernel.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH v1 0/2] proc: Relax check of mount visibility
-Date:   Mon, 27 Jul 2020 16:14:09 +0200
-Message-Id: <20200727141411.203770-1-gladkov.alexey@gmail.com>
-X-Mailer: git-send-email 2.25.4
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A23521883;
+        Mon, 27 Jul 2020 14:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595859790;
+        bh=V5OWNkTgdBCyEL+REiwW5x93P/nnXPsdFaS/dcNSbK4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QXEluM4x8UEj1hKv6U6dgo4ZeOewRn28vbcmljWJKQsM8mAI8eiv0mAm5Cl49h+az
+         +VrwecYw7Fghmn2MkKXU1u+sCCnDvM244aUBJMvwb47FNmPyvL7KMK54L+84aexK+q
+         VNvcV+9aqBbO8w9Iezc/vUBQXQ6m01sPWgOeXQUE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mona Hossain <mona.hossain@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 106/179] dmaengine: idxd: fix hw descriptor fields for delta record
+Date:   Mon, 27 Jul 2020 16:04:41 +0200
+Message-Id: <20200727134937.814859294@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
+References: <20200727134932.659499757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Mon, 27 Jul 2020 14:15:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If only the dynamic part of procfs is mounted (subset=pid), then there is no
-need to check if procfs is fully visible to the user in the new user namespace.
+From: Dave Jiang <dave.jiang@intel.com>
 
-Alexey Gladkov (2):
-  proc: Relax check of mount visibility
-  Show /proc/self/net only for CAP_NET_ADMIN
+[ Upstream commit 0b8975bdc0cc5310d48d9bdd871cefebe1f94c99 ]
 
- fs/namespace.c     | 27 ++++++++++++++++-----------
- fs/proc/proc_net.c |  6 ++++++
- fs/proc/root.c     | 16 +++++++++-------
- include/linux/fs.h |  1 +
- 4 files changed, 32 insertions(+), 18 deletions(-)
+Fix the hw descriptor fields for delta record in user exported idxd.h
+header. Missing the "expected result mask" field.
 
+Reported-by: Mona Hossain <mona.hossain@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/159120526866.65385.536565786678052944.stgit@djiang5-desk3.ch.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/uapi/linux/idxd.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/uapi/linux/idxd.h b/include/uapi/linux/idxd.h
+index 1f412fbf561bb..e103c1434e4b0 100644
+--- a/include/uapi/linux/idxd.h
++++ b/include/uapi/linux/idxd.h
+@@ -110,9 +110,12 @@ struct dsa_hw_desc {
+ 	uint16_t	rsvd1;
+ 	union {
+ 		uint8_t		expected_res;
++		/* create delta record */
+ 		struct {
+ 			uint64_t	delta_addr;
+ 			uint32_t	max_delta_size;
++			uint32_t 	delt_rsvd;
++			uint8_t 	expected_res_mask;
+ 		};
+ 		uint32_t	delta_rec_size;
+ 		uint64_t	dest2;
 -- 
-2.25.4
+2.25.1
+
+
 
