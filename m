@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4188C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDDDC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74BBC208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6886A2173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859867;
-	bh=kOVhulJk+pdwU88duSZrqzaEiuBdYU+NRWyGSP6HyBo=;
+	s=default; t=1595859871;
+	bh=dVQ0hwlWWpDvG5Xm+0dZcSPdLlPaxjOtR+QNtoShlzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JJhLpvjZuwJxrvbtlTmLW9SA/DbAaAtbSOTjYoi6XOgDow4sdYNxbu8ULadnYlJhq
-	 D2QlQGGSyDrQxlGef7dJPRpwYZBTF0YTlM+0rm6dxzBrTz3lM3eN8vpcQ1lMoBm1fx
-	 hxeROykhydx9g/WSP2k7KhtHIAVidq1eoYLG04+A=
+	b=Kc1FBVA3jaL4DBy3s/fRuvF4sBOb7vYoJ0V5O2KhZTpzItRCEVmkJZ8g74sus/f9L
+	 KfJVc9NF9wKYS/Y5uziE9wNXk3N8Wls8w8xMdKKVSA+jx9CfrSeNLzmhxQfTn5kXnu
+	 Vm8hDuDSTWWmL09NGGG0zf15fqAdyKFWtlD4VdcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732267AbgG0OY0 (ORCPT
+        id S1731639AbgG0OYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:24:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53898 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:24:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732202AbgG0OYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:24:24 -0400
+        id S1732202AbgG0OY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:24:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F05921744;
-        Mon, 27 Jul 2020 14:24:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D50A22083E;
+        Mon, 27 Jul 2020 14:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859863;
-        bh=kOVhulJk+pdwU88duSZrqzaEiuBdYU+NRWyGSP6HyBo=;
+        s=default; t=1595859866;
+        bh=dVQ0hwlWWpDvG5Xm+0dZcSPdLlPaxjOtR+QNtoShlzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RdYBmobozHhgvZ94mBOR+2fGXTnsO7D7AqDC4qQ7EPzaI8PGTxJvF7it/bjDXlzdX
-         Bqokrk5ZWyOa2KR3+dX1yQTR0E6drso+t3y0HCKMfQ3skQyq6ZE3ZnqIIEcX9LqmZu
-         ekVktbKBYv7A6lVlSxYjxWK6zxH8ooae4KbDn1rU=
+        b=oWJjs17rYgn+KyBYTFj4MGS/ClJeoMS4ZCg9f/LumRexPwz8TlmJZ1WJDYk28BATa
+         Ggn0lMdBKoUxp8flnZwZ5gEov89RGx8gmvIxez9yeQrtmtctXhceBgbxdnFOS3syMF
+         SIQs4WU/aARn6vu/sy/kIf0Yzgt7bn8TvXBTn8x0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Katsnelson <me@0upti.me>,
-        Lyude Paul <lyude@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 117/179] Input: synaptics - enable InterTouch for ThinkPad X1E 1st gen
-Date:   Mon, 27 Jul 2020 16:04:52 +0200
-Message-Id: <20200727134938.354419325@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Guo Ren <guoren@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 135/179] asm-generic/mmiowb: Allow mmiowb_set_pending() when preemptible()
+Date:   Mon, 27 Jul 2020 16:05:10 +0200
+Message-Id: <20200727134939.225631465@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,34 +65,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Katsnelson <me@0upti.me>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit dcb00fc799dc03fd320e123e4c81b3278c763ea5 ]
+[ Upstream commit bd024e82e4cd95c7f1a475a55f99871936c2b2db ]
 
-Tested on my own laptop, touchpad feels slightly more responsive with
-this on, though it might just be placebo.
+Although mmiowb() is concerned only with serialising MMIO writes occuring
+in contexts where a spinlock is held, the call to mmiowb_set_pending()
+from the MMIO write accessors can occur in preemptible contexts, such
+as during driver probe() functions where ordering between CPUs is not
+usually a concern, assuming that the task migration path provides the
+necessary ordering guarantees.
 
-Signed-off-by: Ilya Katsnelson <me@0upti.me>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Link: https://lore.kernel.org/r/20200703143457.132373-1-me@0upti.me
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Unfortunately, the default implementation of mmiowb_set_pending() is not
+preempt-safe, as it makes use of a a per-cpu variable to track its
+internal state. This has been reported to generate the following splat
+on riscv:
+
+ | BUG: using smp_processor_id() in preemptible [00000000] code: swapper/0/1
+ | caller is regmap_mmio_write32le+0x1c/0x46
+ | CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc3-hfu+ #1
+ | Call Trace:
+ |  walk_stackframe+0x0/0x7a
+ |  dump_stack+0x6e/0x88
+ |  regmap_mmio_write32le+0x18/0x46
+ |  check_preemption_disabled+0xa4/0xaa
+ |  regmap_mmio_write32le+0x18/0x46
+ |  regmap_mmio_write+0x26/0x44
+ |  regmap_write+0x28/0x48
+ |  sifive_gpio_probe+0xc0/0x1da
+
+Although it's possible to fix the driver in this case, other splats have
+been seen from other drivers, including the infamous 8250 UART, and so
+it's better to address this problem in the mmiowb core itself.
+
+Fix mmiowb_set_pending() by using the raw_cpu_ptr() to get at the mmiowb
+state and then only updating the 'mmiowb_pending' field if we are not
+preemptible (i.e. we have a non-zero nesting count).
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Guo Ren <guoren@kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Reported-by: Palmer Dabbelt <palmer@dabbelt.com>
+Reported-by: Emil Renner Berthing <kernel@esmil.dk>
+Tested-by: Emil Renner Berthing <kernel@esmil.dk>
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Link: https://lore.kernel.org/r/20200716112816.7356-1-will@kernel.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/synaptics.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/asm-generic/mmiowb.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-index 758dae8d65006..4b81b2d0fe067 100644
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -179,6 +179,7 @@ static const char * const smbus_pnp_ids[] = {
- 	"LEN0093", /* T480 */
- 	"LEN0096", /* X280 */
- 	"LEN0097", /* X280 -> ALPS trackpoint */
-+	"LEN0099", /* X1 Extreme 1st */
- 	"LEN009b", /* T580 */
- 	"LEN200f", /* T450s */
- 	"LEN2044", /* L470  */
+diff --git a/include/asm-generic/mmiowb.h b/include/asm-generic/mmiowb.h
+index 9439ff037b2d1..5698fca3bf560 100644
+--- a/include/asm-generic/mmiowb.h
++++ b/include/asm-generic/mmiowb.h
+@@ -27,7 +27,7 @@
+ #include <asm/smp.h>
+ 
+ DECLARE_PER_CPU(struct mmiowb_state, __mmiowb_state);
+-#define __mmiowb_state()	this_cpu_ptr(&__mmiowb_state)
++#define __mmiowb_state()	raw_cpu_ptr(&__mmiowb_state)
+ #else
+ #define __mmiowb_state()	arch_mmiowb_state()
+ #endif	/* arch_mmiowb_state */
+@@ -35,7 +35,9 @@ DECLARE_PER_CPU(struct mmiowb_state, __mmiowb_state);
+ static inline void mmiowb_set_pending(void)
+ {
+ 	struct mmiowb_state *ms = __mmiowb_state();
+-	ms->mmiowb_pending = ms->nesting_count;
++
++	if (likely(ms->nesting_count))
++		ms->mmiowb_pending = ms->nesting_count;
+ }
+ 
+ static inline void mmiowb_spin_lock(void)
 -- 
 2.25.1
 
