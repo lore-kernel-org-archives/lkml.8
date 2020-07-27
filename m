@@ -2,134 +2,203 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 642F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 160C9C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4959520838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33B221883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595858951;
+	bh=Uhwv9BLjXV3HDvq8VHaWMMh1szkfitTRn03HPtXVIi8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VGtG4UHVlaQtmtJt5N22SLXHDiYO/caTS9oeFXvHPWrTNOWOU6fWRBH+B0N7frLzN
+	 cjalRxJD+LiGdRHz0qqebBawZT5V//uzKkoPSn/ax1Ucx5ReKU6uTkSJtQ48A9YJm8
+	 2LlshCv/g3fi3ONSCQMauPViofSJJaXzEQHyUH48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgG0OJT convert rfc822-to-8bit (ORCPT
+        id S1729571AbgG0OJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:09:19 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:30307 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729578AbgG0OJO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:09:14 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-250-GXr1mpTxOlmxyosLYcC-jw-1; Mon, 27 Jul 2020 15:09:11 +0100
-X-MC-Unique: GXr1mpTxOlmxyosLYcC-jw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 27 Jul 2020 15:09:10 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 27 Jul 2020 15:09:10 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Al Viro' <viro@zeniv.linux.org.uk>
-CC:     'David Miller' <davem@davemloft.net>, "hch@lst.de" <hch@lst.de>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
-Subject: RE: get rid of the address_space override in setsockopt v2
-Thread-Topic: get rid of the address_space override in setsockopt v2
-Thread-Index: AQHWYgvqDt5Xt3HFu0u82UKLVqcKxKkbLTEQgAA3GQCAABNbQA==
-Date:   Mon, 27 Jul 2020 14:09:09 +0000
-Message-ID: <5d958e937db54849b4ef9046e7e12277@AcuMS.aculab.com>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200724.154342.1433271593505001306.davem@davemloft.net>
- <8ae792c27f144d4bb5cbea0c1cce4eed@AcuMS.aculab.com>
- <20200727134814.GD794331@ZenIV.linux.org.uk>
-In-Reply-To: <20200727134814.GD794331@ZenIV.linux.org.uk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 27 Jul 2020 10:09:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729547AbgG0OJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:09:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C101C20838;
+        Mon, 27 Jul 2020 14:09:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595858948;
+        bh=Uhwv9BLjXV3HDvq8VHaWMMh1szkfitTRn03HPtXVIi8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uAYW/Uh/LV64L93M6o+VI/BIw92Dv9If4kubrfqblf5fCvyeySvwHPOFmj0W/iYIW
+         1qJgD7bAe1hS4WZFKchH3q3Cs3TKnRSWtHnBL4aWBlvG2Y5kVzayHU18cQZrI31VL+
+         7ZF9MdhhKA+CBJj70Kja0zeqdtgTKBmtztR07WTg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
+Subject: [PATCH 4.14 58/64] vt: Reject zero-sized screen buffer size.
+Date:   Mon, 27 Jul 2020 16:04:37 +0200
+Message-Id: <20200727134914.054373422@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
+References: <20200727134911.020675249@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro
-> Sent: 27 July 2020 14:48
-> 
-> On Mon, Jul 27, 2020 at 09:51:45AM +0000, David Laight wrote:
-> 
-> > I'm sure there is code that processes options in chunks.
-> > This probably means it is possible to put a chunk boundary
-> > at the end of userspace and continue processing the very start
-> > of kernel memory.
-> >
-> > At best this faults on the kernel copy code and crashes the system.
-> 
-> Really?  Care to provide some details, or is it another of your "I can't
-> be possibly arsed to check what I'm saying, but it stands for reason
-> that..." specials?
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-I did more 'homework' than sometimes :-)
-Slightly difficult without a searchable net-next tree.
-However, as has been pointed out is a different thread
-this code is used to update IPv6 flow labels:
+commit ce684552a266cb1c7cc2f7e623f38567adec6653 upstream.
 
-> > -		if (copy_from_user(fl->opt+1, optval+CMSG_ALIGN(sizeof(*freq)), olen))
-> > +		sockptr_advance(optval, CMSG_ALIGN(sizeof(*freq)));
-> > +		if (copy_from_sockptr(fl->opt + 1, optval, olen))
-> >  			goto done;
+syzbot is reporting general protection fault in do_con_write() [1] caused
+by vc->vc_screenbuf == ZERO_SIZE_PTR caused by vc->vc_screenbuf_size == 0
+caused by vc->vc_cols == vc->vc_rows == vc->vc_size_row == 0 caused by
+fb_set_var() from ioctl(FBIOPUT_VSCREENINFO) on /dev/fb0 , for
+gotoxy(vc, 0, 0) from reset_terminal() from vc_init() from vc_allocate()
+ from con_install() from tty_init_dev() from tty_open() on such console
+causes vc->vc_pos == 0x10000000e due to
+((unsigned long) ZERO_SIZE_PTR) + -1U * 0 + (-1U << 1).
 
-and doesn't work because the advances are no longer cumulative.
+I don't think that a console with 0 column or 0 row makes sense. And it
+seems that vc_do_resize() does not intend to allow resizing a console to
+0 column or 0 row due to
 
-Now access_ok() has to take the base address and length to stop
-'running into' kernel space, but the code above can advance from
-a valid user pointer (which won't fault) to a kernel address.
+  new_cols = (cols ? cols : vc->vc_cols);
+  new_rows = (lines ? lines : vc->vc_rows);
 
-If there were always an unmapped 'guard' page in the user address
-space the access_ok() check prior to copy_to/from_user() wouldn't
-need the length.
-So I surmise that no such guard page exists and so the above
-can advance from user addresses into kernel ones.
+exception.
 
-	David
+Theoretically, cols and rows can be any range as long as
+0 < cols * rows * 2 <= KMALLOC_MAX_SIZE is satisfied (e.g.
+cols == 1048576 && rows == 2 is possible) because of
 
+  vc->vc_size_row = vc->vc_cols << 1;
+  vc->vc_screenbuf_size = vc->vc_rows * vc->vc_size_row;
+
+in visual_init() and kzalloc(vc->vc_screenbuf_size) in vc_allocate().
+
+Since we can detect cols == 0 or rows == 0 via screenbuf_size = 0 in
+visual_init(), we can reject kzalloc(0). Then, vc_allocate() will return
+an error, and con_write() will not be called on a console with 0 column
+or 0 row.
+
+We need to make sure that integer overflow in visual_init() won't happen.
+Since vc_do_resize() restricts cols <= 32767 and rows <= 32767, applying
+1 <= cols <= 32767 and 1 <= rows <= 32767 restrictions to vc_allocate()
+will be practically fine.
+
+This patch does not touch con_init(), for returning -EINVAL there
+does not help when we are not returning -ENOMEM.
+
+[1] https://syzkaller.appspot.com/bug?extid=017265e8553724e514e8
+
+Reported-and-tested-by: syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200712111013.11881-1-penguin-kernel@I-love.SAKURA.ne.jp
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/tty/vt/vt.c |   29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
+
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -762,10 +762,19 @@ static const struct tty_port_operations
+ 	.destruct = vc_port_destruct,
+ };
+ 
++/*
++ * Change # of rows and columns (0 means unchanged/the size of fg_console)
++ * [this is to be used together with some user program
++ * like resize that changes the hardware videomode]
++ */
++#define VC_MAXCOL (32767)
++#define VC_MAXROW (32767)
++
+ int vc_allocate(unsigned int currcons)	/* return 0 on success */
+ {
+ 	struct vt_notifier_param param;
+ 	struct vc_data *vc;
++	int err;
+ 
+ 	WARN_CONSOLE_UNLOCKED();
+ 
+@@ -795,6 +804,11 @@ int vc_allocate(unsigned int currcons)	/
+ 	if (!*vc->vc_uni_pagedir_loc)
+ 		con_set_default_unimap(vc);
+ 
++	err = -EINVAL;
++	if (vc->vc_cols > VC_MAXCOL || vc->vc_rows > VC_MAXROW ||
++	    vc->vc_screenbuf_size > KMALLOC_MAX_SIZE || !vc->vc_screenbuf_size)
++		goto err_free;
++	err = -ENOMEM;
+ 	vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
+ 	if (!vc->vc_screenbuf)
+ 		goto err_free;
+@@ -812,7 +826,7 @@ int vc_allocate(unsigned int currcons)	/
+ err_free:
+ 	kfree(vc);
+ 	vc_cons[currcons].d = NULL;
+-	return -ENOMEM;
++	return err;
+ }
+ 
+ static inline int resize_screen(struct vc_data *vc, int width, int height,
+@@ -827,14 +841,6 @@ static inline int resize_screen(struct v
+ 	return err;
+ }
+ 
+-/*
+- * Change # of rows and columns (0 means unchanged/the size of fg_console)
+- * [this is to be used together with some user program
+- * like resize that changes the hardware videomode]
+- */
+-#define VC_RESIZE_MAXCOL (32767)
+-#define VC_RESIZE_MAXROW (32767)
 -
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+ /**
+  *	vc_do_resize	-	resizing method for the tty
+  *	@tty: tty being resized
+@@ -869,7 +875,7 @@ static int vc_do_resize(struct tty_struc
+ 	user = vc->vc_resize_user;
+ 	vc->vc_resize_user = 0;
+ 
+-	if (cols > VC_RESIZE_MAXCOL || lines > VC_RESIZE_MAXROW)
++	if (cols > VC_MAXCOL || lines > VC_MAXROW)
+ 		return -EINVAL;
+ 
+ 	new_cols = (cols ? cols : vc->vc_cols);
+@@ -880,7 +886,7 @@ static int vc_do_resize(struct tty_struc
+ 	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
+ 		return 0;
+ 
+-	if (new_screen_size > KMALLOC_MAX_SIZE)
++	if (new_screen_size > KMALLOC_MAX_SIZE || !new_screen_size)
+ 		return -EINVAL;
+ 	newscreen = kzalloc(new_screen_size, GFP_USER);
+ 	if (!newscreen)
+@@ -3031,6 +3037,7 @@ static int __init con_init(void)
+ 		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
+ 		tty_port_init(&vc->port);
+ 		visual_init(vc, currcons, 1);
++		/* Assuming vc->vc_{cols,rows,screenbuf_size} are sane here. */
+ 		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
+ 		vc_init(vc, vc->vc_rows, vc->vc_cols,
+ 			currcons || !vc->vc_sw->con_save_screen);
+
 
