@@ -2,126 +2,101 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B4CC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC245C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D98DD2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:46:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="n2cUFF0S"
+	by mail.kernel.org (Postfix) with ESMTP id 904A82075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728839AbgG0Sqd (ORCPT
+        id S1732286AbgG0Sqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 14:46:33 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:41744 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732103AbgG0Spx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 14:45:53 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RIjrul021093
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 11:45:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=MfBRLRLGsy/1tMM++wlzJ5s7yWgWU4zl3ei5tqNLqCg=;
- b=n2cUFF0S5gIHneq7Beg2k2JVJoWOTUazSxUzmdxga9yo81qlaZhbvZewEvLd89+hZIyQ
- Y5z0tOf2Rtnmu8knvK90bbNJKLmWkMYYYQGIzEvuHvkcl2PQ9UEUAPDzq0L5dgBdS9Ob
- k9VjcYA0FXU086XCUd9gyhwNhN/Lfit/LK4= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 32h4ed5u9q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 11:45:53 -0700
-Received: from intmgw003.06.prn3.facebook.com (2620:10d:c085:208::11) by
- mail.thefacebook.com (2620:10d:c085:11d::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 27 Jul 2020 11:45:16 -0700
-Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id EDFAF1DAFE99; Mon, 27 Jul 2020 11:45:10 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
-To:     <bpf@vger.kernel.org>
-CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next v2 20/35] bpf: eliminate rlimit-based memory accounting for queue_stack_maps maps
-Date:   Mon, 27 Jul 2020 11:44:51 -0700
-Message-ID: <20200727184506.2279656-21-guro@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200727184506.2279656-1-guro@fb.com>
-References: <20200727184506.2279656-1-guro@fb.com>
+        Mon, 27 Jul 2020 14:46:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35542 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732095AbgG0Spw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 14:45:52 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB38E2075A;
+        Mon, 27 Jul 2020 18:45:51 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 14:45:50 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tingwei Zhang <tingwei@codeaurora.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, tsoni@codeaurora.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mao Jinlong <jinlmao@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] tracing: add flag to control different traces
+Message-ID: <20200727144550.7aa40c61@oasis.local.home>
+In-Reply-To: <20200726025931.30510-3-tingwei@codeaurora.org>
+References: <20200726025931.30510-1-tingwei@codeaurora.org>
+        <20200726025931.30510-3-tingwei@codeaurora.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_13:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 impostorscore=0
- adultscore=0 bulkscore=0 malwarescore=0 phishscore=0 clxscore=1015
- suspectscore=13 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007270127
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not use rlimit-based memory accounting for queue_stack maps.
-It has been replaced with the memcg-based memory accounting.
+On Sun, 26 Jul 2020 10:59:27 +0800
+Tingwei Zhang <tingwei@codeaurora.org> wrote:
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
----
- kernel/bpf/queue_stack_maps.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/bpf/queue_stack_maps.c b/kernel/bpf/queue_stack_maps.=
-c
-index 44184f82916a..92e73c35a34a 100644
---- a/kernel/bpf/queue_stack_maps.c
-+++ b/kernel/bpf/queue_stack_maps.c
-@@ -66,29 +66,21 @@ static int queue_stack_map_alloc_check(union bpf_attr=
- *attr)
-=20
- static struct bpf_map *queue_stack_map_alloc(union bpf_attr *attr)
- {
--	int ret, numa_node =3D bpf_map_attr_numa_node(attr);
--	struct bpf_map_memory mem =3D {0};
-+	int numa_node =3D bpf_map_attr_numa_node(attr);
- 	struct bpf_queue_stack *qs;
--	u64 size, queue_size, cost;
-+	u64 size, queue_size;
-=20
- 	size =3D (u64) attr->max_entries + 1;
--	cost =3D queue_size =3D sizeof(*qs) + size * attr->value_size;
--
--	ret =3D bpf_map_charge_init(&mem, cost);
--	if (ret < 0)
--		return ERR_PTR(ret);
-+	queue_size =3D sizeof(*qs) + size * attr->value_size;
-=20
- 	qs =3D bpf_map_area_alloc(queue_size, numa_node);
--	if (!qs) {
--		bpf_map_charge_finish(&mem);
-+	if (!qs)
- 		return ERR_PTR(-ENOMEM);
--	}
-=20
- 	memset(qs, 0, sizeof(*qs));
-=20
- 	bpf_map_init_from_attr(&qs->map, attr);
-=20
--	bpf_map_charge_move(&qs->map.memory, &mem);
- 	qs->size =3D size;
-=20
- 	raw_spin_lock_init(&qs->lock);
---=20
-2.26.2
+> diff --git a/include/linux/trace.h b/include/linux/trace.h
+> index 7fd86d3c691f..d2fdf9be84b5 100644
+> --- a/include/linux/trace.h
+> +++ b/include/linux/trace.h
+> @@ -3,6 +3,9 @@
+>  #define _LINUX_TRACE_H
+>  
+>  #ifdef CONFIG_TRACING
+> +
+> +#define TRACE_EXPORT_FUNCTION	BIT_ULL(0)
 
+All the flags variables below are defined as "int". Why the BIT_ULL()?
+BIT(0) should work just fine. The ULL makes one think these flags will
+be used for unsigned long variables, which it is not.
+
+-- Steve
+
+
+> +
+
+>  struct trace_export {
+>  	struct trace_export __rcu	*next;
+>  	void (*write)(struct trace_export *, const void *, unsigned int);
+> +	int flags;
+>  };
+>  
+>  int register_ftrace_export(struct trace_export *export);
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index bb62269724d5..8f1e66831e9e 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -2747,33 +2747,37 @@ trace_buffer_unlock_commit_nostack(struct trace_buffer *buffer,
+>  
+>  static void
+>  trace_process_export(struct trace_export *export,
+> -	       struct ring_buffer_event *event)
+> +	       struct ring_buffer_event *event, int flag)
+>  {
+>  	struct trace_entry *entry;
+>  	unsigned int size = 0;
+>  
+> -	entry = ring_buffer_event_data(event);
+> -	size = ring_buffer_event_length(event);
+> -	export->write(export, entry, size);
+> +	if (export->flags & flag) {
+> +		entry = ring_buffer_event_data(event);
+> +		size = ring_buffer_event_length(event);
+> +		export->write(export, entry, size);
+> +	}
+>  }
