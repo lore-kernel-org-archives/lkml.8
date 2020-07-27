@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E763C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3314C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 054FE2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1580207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859987;
-	bh=YoCy38iOHeTU55I0Spc40QOQcTYhXBtxt9aDG9lTwgI=;
+	s=default; t=1595859990;
+	bh=DgP8QoXgHkkBMA1H5XydTzU0oPZhdEGeesvrTY8nD+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ft/XFKipXKlNQl38DdUmZz/zJmmkcTbVKEMUfTrBDoyXn8ANoYyJy+KcOPTnWwxu7
-	 1PefoAbDwhEU/qOtxB18y593rsJOuSCTyjO+zW1Q4wn587wEBFSzdfiqC+2sNfukOg
-	 FYL5Mb58AV/u3G5OR+qjQPHQLE/FqWftNUh6DSWg=
+	b=j7Azp+EYAHt8uA9r+kpu/yVFlRX+R6Y0oGvuRE96irpHOqvDmQdMa8lsAo/wCfuty
+	 ir7JsKnTrstM5oqk+SrHyzxEBEVW5rgoaQWmVYcKQCOclyskx9FEHqFwamibWh28b6
+	 xtUTb9Bpj8dKMobWf2499Nx3gM87kbdCG65/uh1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732602AbgG0O0Y (ORCPT
+        id S1732600AbgG0O03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:26:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56540 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:26:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732552AbgG0O0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:26:18 -0400
+        id S1732552AbgG0O00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:26:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58FE1207FC;
-        Mon, 27 Jul 2020 14:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7E89207FC;
+        Mon, 27 Jul 2020 14:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859977;
-        bh=YoCy38iOHeTU55I0Spc40QOQcTYhXBtxt9aDG9lTwgI=;
+        s=default; t=1595859985;
+        bh=DgP8QoXgHkkBMA1H5XydTzU0oPZhdEGeesvrTY8nD+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wxHqAKvsdun/7U2pyE2LJh1OWKQGm0p/eqj3bh37ti2mW6zNwxg9clFXoA7LtaoNW
-         Zgy+NySm1u4RhRSRxX80etkjk3YUqpY5jNrOzupdZXAD3ClwVBL1vZ16BEuBZQ6TnV
-         uVbUKO4XoKEK/PrwbXwVz9GgbSR8IzB/OAOKlRv4=
+        b=Y/K4CSfcuoRnJKYwrMDj4LgWtF+MQmeQDsO5WNkQ80GYOT0ukPIgBDGKTVUnEKOLb
+         c0NWOyiisPwb2iple7F+K4QRek3XvlALRRgdKAzRsBZW82B9/B0QtQ5zVlZLFflHI0
+         K8APGgM9A40lOy1/Bfwiy7jBh7L709qzAi0LWNPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shardar Shariff Md <smohammed@nvidia.com>,
-        Krishna Yarlagadda <kyarlagadda@nvidia.com>,
-        Johan Hovold <johan@kernel.org>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 5.7 151/179] serial: tegra: fix CREAD handling for PIO
-Date:   Mon, 27 Jul 2020 16:05:26 +0200
-Message-Id: <20200727134940.027896061@linuxfoundation.org>
+        stable@vger.kernel.org, Jun Nie <jun.nie@linaro.org>,
+        Mike Tipton <mdtipton@codeaurora.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH 5.7 154/179] interconnect: msm8916: Fix buswidth of pcnoc_s nodes
+Date:   Mon, 27 Jul 2020 16:05:29 +0200
+Message-Id: <20200727134940.172079666@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,49 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Georgi Djakov <georgi.djakov@linaro.org>
 
-commit b374c562ee7ab3f3a1daf959c01868bae761571c upstream.
+commit 92d232d176041db5b033dd7b7f7f2cf343f82237 upstream.
 
-Commit 33ae787b74fc ("serial: tegra: add support to ignore read") added
-support for dropping input in case CREAD isn't set, but for PIO the
-ignore_status_mask wasn't checked until after the character had been
-put in the receive buffer.
+The buswidth of the pcnoc_s_* nodes is actually not 8, but
+4 bytes. Let's fix it.
 
-Note that the NULL tty-port test is bogus and will be removed by a
-follow-on patch.
-
-Fixes: 33ae787b74fc ("serial: tegra: add support to ignore read")
-Cc: stable <stable@vger.kernel.org>     # 5.4
-Cc: Shardar Shariff Md <smohammed@nvidia.com>
-Cc: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Link: https://lore.kernel.org/r/20200710135947.2737-2-johan@kernel.org
+Reported-by: Jun Nie <jun.nie@linaro.org>
+Reviewed-by: Mike Tipton <mdtipton@codeaurora.org>
+Fixes: 30c8fa3ec61a ("interconnect: qcom: Add MSM8916 interconnect provider driver")
+Link: https://lore.kernel.org/r/20200709130004.12462-1-georgi.djakov@linaro.org
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200723083735.5616-3-georgi.djakov@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/serial-tegra.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/interconnect/qcom/msm8916.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/drivers/tty/serial/serial-tegra.c
-+++ b/drivers/tty/serial/serial-tegra.c
-@@ -653,11 +653,14 @@ static void tegra_uart_handle_rx_pio(str
- 		ch = (unsigned char) tegra_uart_read(tup, UART_RX);
- 		tup->uport.icount.rx++;
- 
--		if (!uart_handle_sysrq_char(&tup->uport, ch) && tty)
--			tty_insert_flip_char(tty, ch, flag);
-+		if (uart_handle_sysrq_char(&tup->uport, ch))
-+			continue;
- 
- 		if (tup->uport.ignore_status_mask & UART_LSR_DR)
- 			continue;
-+
-+		if (tty)
-+			tty_insert_flip_char(tty, ch, flag);
- 	} while (1);
- }
- 
+--- a/drivers/interconnect/qcom/msm8916.c
++++ b/drivers/interconnect/qcom/msm8916.c
+@@ -197,13 +197,13 @@ DEFINE_QNODE(pcnoc_int_0, MSM8916_PNOC_I
+ DEFINE_QNODE(pcnoc_int_1, MSM8916_PNOC_INT_1, 8, -1, -1, MSM8916_PNOC_SNOC_MAS);
+ DEFINE_QNODE(pcnoc_m_0, MSM8916_PNOC_MAS_0, 8, -1, -1, MSM8916_PNOC_INT_0);
+ DEFINE_QNODE(pcnoc_m_1, MSM8916_PNOC_MAS_1, 8, -1, -1, MSM8916_PNOC_SNOC_MAS);
+-DEFINE_QNODE(pcnoc_s_0, MSM8916_PNOC_SLV_0, 8, -1, -1, MSM8916_SLAVE_CLK_CTL, MSM8916_SLAVE_TLMM, MSM8916_SLAVE_TCSR, MSM8916_SLAVE_SECURITY, MSM8916_SLAVE_MSS);
+-DEFINE_QNODE(pcnoc_s_1, MSM8916_PNOC_SLV_1, 8, -1, -1, MSM8916_SLAVE_IMEM_CFG, MSM8916_SLAVE_CRYPTO_0_CFG, MSM8916_SLAVE_MSG_RAM, MSM8916_SLAVE_PDM, MSM8916_SLAVE_PRNG);
+-DEFINE_QNODE(pcnoc_s_2, MSM8916_PNOC_SLV_2, 8, -1, -1, MSM8916_SLAVE_SPDM, MSM8916_SLAVE_BOOT_ROM, MSM8916_SLAVE_BIMC_CFG, MSM8916_SLAVE_PNOC_CFG, MSM8916_SLAVE_PMIC_ARB);
+-DEFINE_QNODE(pcnoc_s_3, MSM8916_PNOC_SLV_3, 8, -1, -1, MSM8916_SLAVE_MPM, MSM8916_SLAVE_SNOC_CFG, MSM8916_SLAVE_RBCPR_CFG, MSM8916_SLAVE_QDSS_CFG, MSM8916_SLAVE_DEHR_CFG);
+-DEFINE_QNODE(pcnoc_s_4, MSM8916_PNOC_SLV_4, 8, -1, -1, MSM8916_SLAVE_VENUS_CFG, MSM8916_SLAVE_CAMERA_CFG, MSM8916_SLAVE_DISPLAY_CFG);
+-DEFINE_QNODE(pcnoc_s_8, MSM8916_PNOC_SLV_8, 8, -1, -1, MSM8916_SLAVE_USB_HS, MSM8916_SLAVE_SDCC_1, MSM8916_SLAVE_BLSP_1);
+-DEFINE_QNODE(pcnoc_s_9, MSM8916_PNOC_SLV_9, 8, -1, -1, MSM8916_SLAVE_SDCC_2, MSM8916_SLAVE_LPASS, MSM8916_SLAVE_GRAPHICS_3D_CFG);
++DEFINE_QNODE(pcnoc_s_0, MSM8916_PNOC_SLV_0, 4, -1, -1, MSM8916_SLAVE_CLK_CTL, MSM8916_SLAVE_TLMM, MSM8916_SLAVE_TCSR, MSM8916_SLAVE_SECURITY, MSM8916_SLAVE_MSS);
++DEFINE_QNODE(pcnoc_s_1, MSM8916_PNOC_SLV_1, 4, -1, -1, MSM8916_SLAVE_IMEM_CFG, MSM8916_SLAVE_CRYPTO_0_CFG, MSM8916_SLAVE_MSG_RAM, MSM8916_SLAVE_PDM, MSM8916_SLAVE_PRNG);
++DEFINE_QNODE(pcnoc_s_2, MSM8916_PNOC_SLV_2, 4, -1, -1, MSM8916_SLAVE_SPDM, MSM8916_SLAVE_BOOT_ROM, MSM8916_SLAVE_BIMC_CFG, MSM8916_SLAVE_PNOC_CFG, MSM8916_SLAVE_PMIC_ARB);
++DEFINE_QNODE(pcnoc_s_3, MSM8916_PNOC_SLV_3, 4, -1, -1, MSM8916_SLAVE_MPM, MSM8916_SLAVE_SNOC_CFG, MSM8916_SLAVE_RBCPR_CFG, MSM8916_SLAVE_QDSS_CFG, MSM8916_SLAVE_DEHR_CFG);
++DEFINE_QNODE(pcnoc_s_4, MSM8916_PNOC_SLV_4, 4, -1, -1, MSM8916_SLAVE_VENUS_CFG, MSM8916_SLAVE_CAMERA_CFG, MSM8916_SLAVE_DISPLAY_CFG);
++DEFINE_QNODE(pcnoc_s_8, MSM8916_PNOC_SLV_8, 4, -1, -1, MSM8916_SLAVE_USB_HS, MSM8916_SLAVE_SDCC_1, MSM8916_SLAVE_BLSP_1);
++DEFINE_QNODE(pcnoc_s_9, MSM8916_PNOC_SLV_9, 4, -1, -1, MSM8916_SLAVE_SDCC_2, MSM8916_SLAVE_LPASS, MSM8916_SLAVE_GRAPHICS_3D_CFG);
+ DEFINE_QNODE(pcnoc_snoc_mas, MSM8916_PNOC_SNOC_MAS, 8, 29, -1, MSM8916_PNOC_SNOC_SLV);
+ DEFINE_QNODE(pcnoc_snoc_slv, MSM8916_PNOC_SNOC_SLV, 8, -1, 45, MSM8916_SNOC_INT_0, MSM8916_SNOC_INT_BIMC, MSM8916_SNOC_INT_1);
+ DEFINE_QNODE(qdss_int, MSM8916_SNOC_QDSS_INT, 8, -1, -1, MSM8916_SNOC_INT_0, MSM8916_SNOC_INT_BIMC);
 
 
