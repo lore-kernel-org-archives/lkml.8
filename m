@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B18DC43457
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D808C43458
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD26620838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05187207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860368;
-	bh=JfB1Zl1taTnjxsD1iQ0MHKt1q1YqdCcsz0pQJBK6fDE=;
+	s=default; t=1595860376;
+	bh=0ZJWlq1G8erVgH9EJ/RuAJrxn1aUU9FfBEqTpkzpFxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OTLFIPDfoHgiJk2z6+2y/VGIDz7nA60SVvl5ASMGpBetMgsHX5TV1PchcZOJ74j+v
-	 fwgBmsZ6Ha1mG4zoaZr57scLqB8jA2vyk+KHod5eQBQcZUkgYR1C+JiqEfaW7eWqKK
-	 5ewd3BmuBnBXDrFVwLhCGgTG0BfiN6JU2N24fTBU=
+	b=o5FEg8/5MQH1YAcAf6bCnBZDAyi/s+Y/rRwGPU0UHdPPQGiNPPOXILAfG9su4B3eO
+	 nlWeQ5xMAC38dBaVIvS1u1lcZEBjBeOPQxLOHFCKhkvo57flIYs45qeu4TIKUUDkR2
+	 m/VrrP89WtLemgev/xhUFnEklMbxtxhRDvquP3Yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731260AbgG0OSg (ORCPT
+        id S1730576AbgG0Ocz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:18:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46234 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:32:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731248AbgG0OSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:18:31 -0400
+        id S1731224AbgG0OS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:18:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD8DA20775;
-        Mon, 27 Jul 2020 14:18:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5045F2070A;
+        Mon, 27 Jul 2020 14:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859511;
-        bh=JfB1Zl1taTnjxsD1iQ0MHKt1q1YqdCcsz0pQJBK6fDE=;
+        s=default; t=1595859508;
+        bh=0ZJWlq1G8erVgH9EJ/RuAJrxn1aUU9FfBEqTpkzpFxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lepeWVuT1eYOYQkqfCgYWE1zCFm8N9GFgaVDQGJrLrb2jHIU9lTCqxoLupxr1upeW
-         J+fGsx9xSRkBg6OcapcTPqlxPgvHMdMAe44uWm3wgP8MRNQMhSUhhBGM8y4Bwm5u2B
-         QGy69DgoIwIN1XW9CbXD84dt8YT89wf0iQB+aDU8=
+        b=DKMBjkNHoKRWaGZxXSKU2FVTDQqChUDaNEbz6HYI5w3Vi12lkLiklR+v0IEC0RMYE
+         1ehOKKYb33MQf51fNWZyRxSCAnRuRpA7c6HlZihLFxKneBNoK19jF94xIqEzNhDerr
+         fzprGb2iEDSVs3Tnr3xY0RX79Wrrmmd0wwFw1jxw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 108/138] iwlwifi: mvm: dont call iwl_mvm_free_inactive_queue() under RCU
-Date:   Mon, 27 Jul 2020 16:05:03 +0200
-Message-Id: <20200727134930.866994237@linuxfoundation.org>
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
+        Patrick Fernie <patrick.fernie@gmail.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Subject: [PATCH 5.4 107/138] Revert "cifs: Fix the target file was deleted when rename failed."
+Date:   Mon, 27 Jul 2020 16:05:02 +0200
+Message-Id: <20200727134930.819342802@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -60,47 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Steve French <stfrench@microsoft.com>
 
-commit fbb1461ad1d6eacca9beb69a2f3ce1b5398d399b upstream.
+commit 0e6705182d4e1b77248a93470d6d7b3013d59b30 upstream.
 
-iwl_mvm_free_inactive_queue() will sleep in synchronize_net() under
-some circumstances, so don't call it under RCU. There doesn't appear
-to be a need for RCU protection around this particular call.
+This reverts commit 9ffad9263b467efd8f8dc7ae1941a0a655a2bab2.
 
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/iwlwifi.20200403112332.0f49448c133d.I17fd308bc4a9491859c9b112f4eb5d2c3fc18d7d@changeid
+Upon additional testing with older servers, it was found that
+the original commit introduced a regression when using the old SMB1
+dialect and rsyncing over an existing file.
+
+The patch will need to be respun to address this, likely including
+a larger refactoring of the SMB1 and SMB3 rename code paths to make
+it less confusing and also to address some additional rename error
+cases that SMB3 may be able to workaround.
+
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reported-by: Patrick Fernie <patrick.fernie@gmail.com>
+CC: Stable <stable@vger.kernel.org>
+Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
+Acked-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ fs/cifs/inode.c |   10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -1184,17 +1184,15 @@ static int iwl_mvm_inactivity_check(stru
- 	for_each_set_bit(i, &changetid_queues, IWL_MAX_HW_QUEUES)
- 		iwl_mvm_change_queue_tid(mvm, i);
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -1791,7 +1791,6 @@ cifs_rename2(struct inode *source_dir, s
+ 	FILE_UNIX_BASIC_INFO *info_buf_target;
+ 	unsigned int xid;
+ 	int rc, tmprc;
+-	bool new_target = d_really_is_negative(target_dentry);
  
-+	rcu_read_unlock();
-+
- 	if (free_queue >= 0 && alloc_for_sta != IWL_MVM_INVALID_STA) {
- 		ret = iwl_mvm_free_inactive_queue(mvm, free_queue, queue_owner,
- 						  alloc_for_sta);
--		if (ret) {
--			rcu_read_unlock();
-+		if (ret)
- 			return ret;
--		}
- 	}
+ 	if (flags & ~RENAME_NOREPLACE)
+ 		return -EINVAL;
+@@ -1868,13 +1867,8 @@ cifs_rename2(struct inode *source_dir, s
+ 	 */
  
--	rcu_read_unlock();
--
- 	return free_queue;
- }
- 
+ unlink_target:
+-	/*
+-	 * If the target dentry was created during the rename, try
+-	 * unlinking it if it's not negative
+-	 */
+-	if (new_target &&
+-	    d_really_is_positive(target_dentry) &&
+-	    (rc == -EACCES || rc == -EEXIST)) {
++	/* Try unlinking the target dentry if it's not negative */
++	if (d_really_is_positive(target_dentry) && (rc == -EACCES || rc == -EEXIST)) {
+ 		if (d_is_dir(target_dentry))
+ 			tmprc = cifs_rmdir(target_dir, target_dentry);
+ 		else
 
 
