@@ -2,53 +2,53 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC58C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1A8C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7E2420825
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3472E20775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858820;
-	bh=Mb9rP4LI2vXmW+8anhuT9s+wMWwNZL182QmZnUFU9R8=;
+	s=default; t=1595858822;
+	bh=ZGHLr7kALoPqFwJLj/tZqPaw1QXVTJmEq/VIiu3n9H8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F+FuZQIP9Xbh0+FcFGI8Hw8T6ZJNd7G50xlax+0txkZfvgFg4XdMgvb2IKWsDCl7U
-	 QAKA9sigEWWpZsIc6zg8eNlMoRtNEismHV3vlZy6RX50IRea3jyi6eOMu4qkATzr8g
-	 mLcg6BlHehBRIMlF8NRqawyuXthWvf5zsgudHUnk=
+	b=UCtq/rop2APMC3AmSj4ghQQuLZCQZejUSB84+j028Raj5U506OiHFdFGVxzH3khJf
+	 b2my/0Zkxj+MCHIL/DqCRVfNCPHiZeclQDbylkKenBj3nNs1pDUNBE7f7LROHOUFcK
+	 ugoeC2xMwWkxaOlBwYXa/b9pBlK21v6bwLA7TOWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbgG0OG7 (ORCPT
+        id S1729107AbgG0OHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:06:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55104 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:07:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgG0OGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:06:52 -0400
+        id S1729064AbgG0OG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:06:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5C6920775;
-        Mon, 27 Jul 2020 14:06:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E5C22078E;
+        Mon, 27 Jul 2020 14:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858812;
-        bh=Mb9rP4LI2vXmW+8anhuT9s+wMWwNZL182QmZnUFU9R8=;
+        s=default; t=1595858818;
+        bh=ZGHLr7kALoPqFwJLj/tZqPaw1QXVTJmEq/VIiu3n9H8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FqjNDkAguYOYXCK5yyWsXiuwzYC/Yis8hS23u3Ha9POh48a/zPLN+I1nyq//Yk3Mi
-         DpCtpycqPMfFHsBSu5MbEQXXo48bu22WQryAMHhkbsYZBVqZny8vFWpvsJCiL4NfyO
-         qEsDYU0WyLdv4OeOTW94qiyih0nImqbdsnXVeCEk=
+        b=1egwd68DsjfVZGRWu6P0Ro5kQ4ZyUvH8a7MsQ9df+gSVHAOUgOJgrJ1wat1VEbNI3
+         59x+0MqZe0JM5uwx/RiJxtBi+zqksS6dpc4/QXJyjFemkRDSbTeDFdizvGYIkFZ8eC
+         VQAdWr7YLa/r3vGlP/QqyNF2AlvkUkU+EjB+Jhc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Robbie Ko <robbieko@synology.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 20/64] btrfs: fix page leaks after failure to lock page for delalloc
-Date:   Mon, 27 Jul 2020 16:03:59 +0200
-Message-Id: <20200727134912.046122358@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 22/64] hippi: Fix a size used in a pci_free_consistent() in an error handling path
+Date:   Mon, 27 Jul 2020 16:04:01 +0200
+Message-Id: <20200727134912.240928673@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -61,38 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robbie Ko <robbieko@synology.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit 5909ca110b29aa16b23b52b8de8d3bb1035fd738 upstream.
+[ Upstream commit 3195c4706b00106aa82c73acd28340fa8fc2bfc1 ]
 
-When locking pages for delalloc, we check if it's dirty and mapping still
-matches. If it does not match, we need to return -EAGAIN and release all
-pages. Only the current page was put though, iterate over all the
-remaining pages too.
+The size used when calling 'pci_alloc_consistent()' and
+'pci_free_consistent()' should match.
 
-CC: stable@vger.kernel.org # 4.14+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Robbie Ko <robbieko@synology.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix it and have it consistent with the corresponding call in 'rr_close()'.
 
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent_io.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/hippi/rrunner.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -1721,7 +1721,8 @@ static int __process_pages_contig(struct
- 				if (!PageDirty(pages[i]) ||
- 				    pages[i]->mapping != mapping) {
- 					unlock_page(pages[i]);
--					put_page(pages[i]);
-+					for (; i < ret; i++)
-+						put_page(pages[i]);
- 					err = -EAGAIN;
- 					goto out;
- 				}
+diff --git a/drivers/net/hippi/rrunner.c b/drivers/net/hippi/rrunner.c
+index d7ba2b813effc..40ef4aeb0ef04 100644
+--- a/drivers/net/hippi/rrunner.c
++++ b/drivers/net/hippi/rrunner.c
+@@ -1250,7 +1250,7 @@ static int rr_open(struct net_device *dev)
+ 		rrpriv->info = NULL;
+ 	}
+ 	if (rrpriv->rx_ctrl) {
+-		pci_free_consistent(pdev, sizeof(struct ring_ctrl),
++		pci_free_consistent(pdev, 256 * sizeof(struct ring_ctrl),
+ 				    rrpriv->rx_ctrl, rrpriv->rx_ctrl_dma);
+ 		rrpriv->rx_ctrl = NULL;
+ 	}
+-- 
+2.25.1
+
 
 
