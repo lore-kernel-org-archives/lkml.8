@@ -2,137 +2,91 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 090B5C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C38BC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D671B20792
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD6020738
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:41:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="upscnwtW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cS8CO0k1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgG0TjB (ORCPT
+        id S1728414AbgG0Tl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:39:01 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42462 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbgG0Ti6 (ORCPT
+        Mon, 27 Jul 2020 15:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbgG0Tl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:38:58 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RJRmYp180965;
-        Mon, 27 Jul 2020 19:38:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=GnGInBejxKJR8KJdylZfInvi9CkV1xbWav4Z516HihQ=;
- b=upscnwtWCsxxYQnNHL3wUGx99lTGZuMNcRNj4crsmOnCplU+pP8LssIwi4AMyc8A6HJT
- N8uvWGeQDhfE5qRtt14xOZaWHWBjappAj4zwBxR0/sh88jRN9vS1+mfyjV/XygBn1L1o
- fS4ghb/FcTbOsbcXENI6LUKqbkYKesGCi0mH8OMqVVpHVcrq86+wjku2rzUri8ExEx83
- sQT8wOyO3dDc+x3HtL2LJl6zEuOn68V+DyDL8/nNKTl6+hNU4fO5zZALd/Ji898G0Y8z
- A0qW4f79QbVzXCvZV7WIfh+zmaicNXo8rDY8RBnOaEyw/CltASNawjhAzMZwFRGywCFT NA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 32hu1j3gau-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Jul 2020 19:38:55 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RJSk3q084037;
-        Mon, 27 Jul 2020 19:38:54 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 32hu5rfyem-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 19:38:54 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06RJcrhX017980;
-        Mon, 27 Jul 2020 19:38:53 GMT
-Received: from dhcp-10-154-112-121.vpn.oracle.com (/10.154.112.121)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Jul 2020 12:38:53 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.5\))
-Subject: re: (resend) [PATCH [linux-4.14.y]] dm cache: submit writethrough
- writes in parallel to origin and cache
-From:   John Donnelly <john.p.donnelly@oracle.com>
-In-Reply-To: <20200727191809.GI406581@sasha-vm>
-Date:   Mon, 27 Jul 2020 14:38:52 -0500
-Cc:     Mike Snitzer <snitzer@redhat.com>, stable@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <D8DDA535-33D5-4E80-85B3-62A463441B5F@oracle.com>
-References: <37c5a615-655d-c106-afd0-54e03f3c0eef@oracle.com>
- <20200727150014.GA27472@redhat.com> <20200727191809.GI406581@sasha-vm>
-To:     Sasha Levin <sashal@kernel.org>
-X-Mailer: Apple Mail (2.3445.9.5)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 bulkscore=0
- malwarescore=0 suspectscore=3 spamscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007270130
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 malwarescore=0 clxscore=1011 mlxscore=0 impostorscore=0
- phishscore=0 adultscore=0 suspectscore=3 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007270130
+        Mon, 27 Jul 2020 15:41:28 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 535E3C061794;
+        Mon, 27 Jul 2020 12:41:28 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m8so2796679pfh.3;
+        Mon, 27 Jul 2020 12:41:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=HsP2ETe5pQS8UqrtlgdyGqg7uS6MUHLsMN/+VIpwKyM=;
+        b=cS8CO0k1BkjvF8UX1gXbAH/kZSHdWXyDYCLteyY3XabHYSl9/pWPbnY5dD4nRxStrz
+         gCPOv+QolEyfL6jw/bNqYw9BOG3G2ZbGT0FQKLM9HAnyqGiT8XQkNaNdWwspBOVh+34f
+         SKtsvKGzXVPwsnQ8FhWX1VmGgdPJdfSVhT/FSL2XEuKG9+FCPFZjGUWTR8V2a27g47Ps
+         whNMq9FpAlfeHjPcbJGN+7aRZYkgyZvgmAI7HFgGXPv48lRaSp3lrvhQv0ok2lmJfY5V
+         I2CKM0UdU7SsSTCfvSRdz3/sq5hY6bm+JMlOjYclmdra35BaV9dhT9qU51o0eASO+jTo
+         swxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=HsP2ETe5pQS8UqrtlgdyGqg7uS6MUHLsMN/+VIpwKyM=;
+        b=VadqCHyp5uGNtqfLjxyE5qZh1pllXR7JPKK5s+HIKFxHP0qBby/NysWCCGpX4vl4Ug
+         fA+vepiFqCpOQ1dZRP959/vvTOptQPJ+4H/BXlkbvpU02nL7eFbFDSuTCCvvivfeKOMc
+         8P5advnzXHZi3eT1rBYCb44qqP2uiHzNI/qiq6kNiYy/4njk8zXaHhhhuyWYcxDWsSTl
+         zuBZpvf6BRTXw3aiDvW7zALeqkTi3zMlIHXxtQ0Ns818hV5ebpxaa7sluONZZfNwmmQb
+         sBOkgx6rpH0aJAU/sR3gWLZl9kAoCSC47h/JfX+ogp0jtasYZmO2uyf2r38mTc8L9aGQ
+         r7oA==
+X-Gm-Message-State: AOAM533M/RlJBa1Ss/7CKo/8QmqqICmDDeKxfvaFb7MGIT1KinPaSuL0
+        4SQ9medpe7bX+CUCYj/SHdZLGJ/kNzooYuH5jmI=
+X-Google-Smtp-Source: ABdhPJzWuIVSUuVwZ6a6ME03FyveJQGaX7eCAfeLtRyhfLDX/sJu4H/PsCIx5iSAmmwzDNGOSPucdpsFHQaI0ufIc7U=
+X-Received: by 2002:a65:6707:: with SMTP id u7mr20981952pgf.233.1595878887813;
+ Mon, 27 Jul 2020 12:41:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200726110524.151957-1-xie.he.0141@gmail.com>
+In-Reply-To: <20200726110524.151957-1-xie.he.0141@gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Mon, 27 Jul 2020 12:41:16 -0700
+Message-ID: <CAJht_EOAGFkVXsrJefWNMDn_D5HhH+ODkqE03BULyzb_Ma8A5A@mail.gmail.com>
+Subject: Re: [PATCH] drivers/net/wan/lapbether: Use needed_headroom instead of hard_header_len
+To:     Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Linux X25 <linux-x25@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Cong Wang,
 
+I'm wishing to change a driver from using "hard_header_len" to using
+"needed_headroom" to declare its needed headroom. I submitted a patch
+and it is decided it needs to be reviewed. I see you participated in
+"hard_header_len vs needed_headroom" discussions in the past. Can you
+help me review this patch? Thanks!
 
-> On Jul 27, 2020, at 2:18 PM, Sasha Levin <sashal@kernel.org> wrote:
-> 
-> On Mon, Jul 27, 2020 at 11:00:14AM -0400, Mike Snitzer wrote:
->> This mail needs to be saent to stable@vger.kernel.org (now cc'd).
->> 
->> Greg et al: please backport 2df3bae9a6543e90042291707b8db0cbfbae9ee9
-> 
-> Hm, what's the issue that this patch addresses? It's not clear from the
-> commit message.
-> 
-> -- 
-> Thanks,
-> Sasha
+The patch is at:
+http://patchwork.ozlabs.org/project/netdev/patch/20200726110524.151957-1-xie.he.0141@gmail.com/
 
-HI Sasha ,
+In my understanding, hard_header_len should be the length of the header
+created by dev_hard_header. Any additional headroom needed should be
+declared in needed_headroom instead of hard_header_len. I came to this
+conclusion by examining the logic of net/packet/af_packet.c:packet_snd.
 
-In an off-line conversation I had with Mike , he indicated that :
+What do you think?
 
-
-commit 1b17159e52bb31f982f82a6278acd7fab1d3f67b
-Author: Mike Snitzer <snitzer@redhat.com>
-Date:   Fri Feb 28 18:00:53 2020 -0500
-
-   dm bio record: save/restore bi_end_io and bi_integrity
-
-
-commit 248aa2645aa7fc9175d1107c2593cc90d4af5a4e
-Author: Mike Snitzer <snitzer@redhat.com>
-Date:   Fri Feb 28 18:11:53 2020 -0500
-
-   dm integrity: use dm_bio_record and dm_bio_restore
-
-
-Were picked up  in  "stable" kernels picked up even though 
-neither was marked for stable@vger.kernel.org 
-
-Adding this missing  commit :  
-
- 2df3bae9a6543e90042291707b8db0cbfbae9ee9
-
-
-Completes the series 
-
-
-Thank you ,
-
-
-John.
-
-
+Thanks!
