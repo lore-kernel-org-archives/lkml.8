@@ -2,126 +2,103 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8798CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61061C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6652E20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C34C20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:33:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="mFLKdcFQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgG0IaY (ORCPT
+        id S1726590AbgG0Idf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:30:24 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2525 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726139AbgG0IaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:30:23 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 1001EE1A7B0462DD1BCC;
-        Mon, 27 Jul 2020 09:30:22 +0100 (IST)
-Received: from [127.0.0.1] (10.210.169.250) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 27 Jul
- 2020 09:30:21 +0100
-Subject: Re: [PATCH] io: Fix return type of _inb and _inl
-To:     Arnd Bergmann <arnd@arndb.de>, Stafford Horne <shorne@gmail.com>
-CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>
-References: <20200726031154.1012044-1-shorne@gmail.com>
- <CAHp75VciC+gqkCZ9voNKHU3hrtiOVzeWBu9_YEagpCGdTME2yg@mail.gmail.com>
- <20200726125325.GC80756@lianli.shorne-pla.net>
- <CAK8P3a0-wPsVi-fXPW4Dghn30cumrzvLujp7usio50EHmCHM=g@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <a55f21a7-aff9-09a9-2fcd-c9ef76728116@huawei.com>
-Date:   Mon, 27 Jul 2020 09:28:25 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0-wPsVi-fXPW4Dghn30cumrzvLujp7usio50EHmCHM=g@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Mon, 27 Jul 2020 04:33:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbgG0Ide (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 04:33:34 -0400
+Received: from smtp11.infineon.com (smtp11.infineon.com [IPv6:2a00:18f0:1e00:4::5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78A7DC061794;
+        Mon, 27 Jul 2020 01:33:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
+  t=1595838814; x=1627374814;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=7LaxfNE64L/JQojkBYKPBox9K7OsCJ2QWRkABxmkPjM=;
+  b=mFLKdcFQgQpykAkKnhK5RC8pXW/JiYfP981U2cqVj+ZcGtV4SsfZ5aGX
+   HN40acsAMv55IJnT1gr15lyxvdTBL/Csk9sUFb9sbco5qCWN0baLvOiNR
+   agwyfkiZKhiFFivQfCjNGnkNqMWj1QgpOoaPnOhcaAT27KRsyGiWl6fxr
+   4=;
+IronPort-SDR: PVi5OazAKoPZruS2kF89Nl+QuAH5Cf0zALIf9QHKU/ThpnLejm8exJ/z1MBw42vI0b3Akyc2hp
+ Dq7XmJAzcboUW0eLMTyy1Tglo4RwhtBbXkZVAEUDNDUtAY+gUGx/Ctv4iv2eD6/jg1H0L8qSdi
+ IyZSJF/fsH6O6nz1QAChwc6DwRRzm2YpLKKJh23670kxOyeTgk2C9HLvJ91ioYcjxh/TLVcK7U
+ qmovStrYg6u0tBejJnJLCjX8XqMKKfDM6YfhmMHFnibrtgd5Vi0qsL/tVkucvNVP3gs974afN7
+ qCg=
+X-SBRS: None
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="171356427"
+X-IronPort-AV: E=Sophos;i="5.75,401,1589234400"; 
+   d="scan'208";a="171356427"
+Received: from unknown (HELO mucxv001.muc.infineon.com) ([172.23.11.16])
+  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 10:33:28 +0200
+Received: from MUCSE718.infineon.com (MUCSE718.infineon.com [172.23.7.101])
+        by mucxv001.muc.infineon.com (Postfix) with ESMTPS;
+        Mon, 27 Jul 2020 10:33:27 +0200 (CEST)
+Received: from MUCSE701.infineon.com (172.23.7.90) by MUCSE718.infineon.com
+ (172.23.7.101) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.1913.5; Mon, 27
+ Jul 2020 10:33:27 +0200
+Received: from MUCSE711.infineon.com (172.23.7.83) by MUCSE701.infineon.com
+ (172.23.7.90) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.1913.5; Mon, 27
+ Jul 2020 10:33:27 +0200
+Received: from MUCSE711.infineon.com ([fe80::cc45:4d1a:3881:a6e5]) by
+ MUCSE711.infineon.com ([fe80::cc45:4d1a:3881:a6e5%20]) with mapi id
+ 15.01.1913.010; Mon, 27 Jul 2020 10:33:27 +0200
+From:   <Peter.Huewe@infineon.com>
+To:     <tianjia.zhang@linux.alibaba.com>, <arnd@arndb.de>
+CC:     <peterhuewe@gmx.de>, <jarkko.sakkinen@linux.intel.com>,
+        <jgg@ziepe.ca>, <gregkh@linuxfoundation.org>,
+        <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <christophe.ricard@gmail.com>, <Alexander.Steffen@infineon.com>
+Subject: RE: [PATCH] tpm: Fix the description error of the help information in
+ Kconfig
+Thread-Topic: [PATCH] tpm: Fix the description error of the help information
+ in Kconfig
+Thread-Index: AQHWY8Enxsmh6g9s/kGoV2thptZCGaka4RQAgAAU+ICAACMGkA==
+Date:   Mon, 27 Jul 2020 08:33:26 +0000
+Message-ID: <09571889ac784850a6c5855f2dc0888e@infineon.com>
+References: <20200727025323.26712-1-tianjia.zhang@linux.alibaba.com>
+ <CAK8P3a2neQUP2marbRUxpSZE4OTJtf97JKSK5-LC6EzH8rRHDQ@mail.gmail.com>
+ <13d8ab17-5cea-3e00-ecdb-87c68d7f2a15@linux.alibaba.com>
+In-Reply-To: <13d8ab17-5cea-3e00-ecdb-87c68d7f2a15@linux.alibaba.com>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.169.250]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.23.8.247]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/07/2020 09:04, Arnd Bergmann wrote:> On Sun, Jul 26, 2020 at 2:53 
-PM Stafford Horne <shorne@gmail.com> wrote:
->>
->> On Sun, Jul 26, 2020 at 12:00:37PM +0300, Andy Shevchenko wrote:
->>> On Sun, Jul 26, 2020 at 6:14 AM Stafford Horne <shorne@gmail.com> wrote:
->>>>
->>>> The return type of functions _inb, _inw and _inl are all u16 which looks
->>>> wrong.  This patch makes them u8, u16 and u32 respectively.
->>>>
->>>> The original commit text for these does not indicate that these should
->>>> be all forced to u16.
->>>
->>> Is it in alight with all architectures? that support this interface natively?
->>>
->>> (Return value is arch-dependent AFAIU, so it might actually return
->>> 16-bit for byte read, but I agree that this is weird for 32-bit value.
->>> I think you have elaborate more in the commit message)
->>
->> Well, this is the generic io code,  at least these api's appear to not be different
->> for each architecture.  The output read by the architecture dependant code i.e.
->> __raw_readb() below is getting is placed into a u8.  So I think the output of
->> the function will be u8.
->>
->> static inline u8 _inb(unsigned long addr)
->> {
->>          u8 val;
->>
->>          __io_pbr();
->>          val = __raw_readb(PCI_IOBASE + addr);
->>          __io_par(val);
->>          return val;
->> }
->>
->> I can expand the commit text, but I would like to get some comments from the
->> original author to confirm if this is an issue.
-> 
-> I think your original version is fine, this was clearly just a typo and I've
-> applied your fix now and will forward it to Linus in the next few days,
-> giving John the chance to add his Ack or further comments.
-> 
-> Thanks a lot for spotting it and sending a fix.
-
-Thanks Arnd.
-
-Yeah, these looks like copy+paste errors on my part:
-
-Reviewed-by: John Garry <john.garry@huawei.com>
-
-I'll give this patch a spin, but not expecting any differences (since 
-original seems ok).
-
-Note that kbuild robot also reported this:
-https://lore.kernel.org/lkml/202007140549.J7X9BVPT%25lkp@intel.com/
-
-Extract:
-
-include/asm-generic/io.h:521:22: sparse: sparse: incorrect type in 
-argument 1 (different base types) @@     expected unsigned int 
-[usertype] value @@     got restricted __le32 [usertype] @@
-    include/asm-generic/io.h:521:22: sparse:     expected unsigned int 
-[usertype] value
-    include/asm-generic/io.h:521:22: sparse:     got restricted __le32 
-[usertype]
-
-But they look like issues which were in the existing code. I tried to 
-recreate to verify any change, but trying to manually upgrade glibc 
-busted my machine :(
-
-Thanks,
-John
+SGksDQpPbiAyMDIwLzcvMjcgMTU6MTAsIEFybmQgQmVyZ21hbm4gd3JvdGU6DQo+IE9uIE1vbiwg
+SnVsIDI3LCAyMDIwIGF0IDQ6NTQgQU0gVGlhbmppYSBaaGFuZyANCj4gPHRpYW5qaWEuemhhbmdA
+bGludXguYWxpYmFiYS5jb20+IHdyb3RlOg0KPj4NCj4+IE9idmlvdXNseSwgdGhlIFRQTSB2ZXJz
+aW9uIG51bWJlciBpbiB0aGUgaGVscCBtZXNzYWdlIGlzIHdyb25nLCB3aGljaCANCj4+IHdpbGwg
+Y2F1c2UgY29uZnVzaW9uLiBUaGlzIHBhdGNoIGZpeGVzIGl0Lg0KPiANCj4gSG93IGlzIHRoaXMg
+Im9idmlvdXMiPyBJIHRyaWVkIGZpbmRpbmcgdGhlIHNwZWNpZmljYXRpb24gYW5kIGNvdWxkIG5v
+dCANCj4gc2VlIGFueXRoaW5nIHRvIGJhY2sgdXAgVElTIDEuMyBiZWluZyBvbmx5IHN1cHBvcnRl
+ZCB3aXRoIFRQTSAxLjMsIG9yIA0KPiB0aGUgZXhpc3RlbmNlIG9mIGEgVFBNIDEuMyBzcGVjaWZp
+Y2F0aW9uIGF0IGFsbC4NCj4gDQpUaGVyZSBpcyBubyBUUE0gMS4zLg0KDQpUaGVyZSBpcyBhIFRJ
+UyBTcGVjaWZpY2F0aW9uIDEuMyB3aGljaCBhcHBsaWVzIHRvIFRQTTEuMiANClRoZXNlIGFyZSBk
+aWZmZXJlbnQgc3BlY3MsIHdpdGggZGlmZmVyZW50IHZlcnNpb24gbnVtYmVycy4NClNvIHRoZSBm
+aXggaXMgaW5jb3JyZWN0Lg0KDQpUaGFua3MsDQpQZXRlcg0K
