@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D9AC433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8269C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7572C20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DF520775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859533;
-	bh=3Hmqgwr1tD2S0HFwH63ITNi5sClWaaetAgCJAU9oYEg=;
+	s=default; t=1595859536;
+	bh=sDEnlAlhFB/QP2r2vRPVPqWMEAb7Ot7M+9SnlkSmfxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h12kSo/XA+P9to0DDmXx6YTquQHNN7fJXhksgpRQh7VqhoDhDGEA5lzzhkKlydYJa
-	 Q/QQj0HdUgl7HPADHQQCouh/7ABefijU2siLCt7VJH0S9cx5BU2liSek+W3D0DU9Ze
-	 hrRQBxQ8SIBiB219FaHRrYyWhksRmjDMVz4I24gA=
+	b=YXONVX0a/YqBQiCpU2hPOdmT4I/SAtlexgKCp5gi+oZ30/mcoyMfNPGIe13Uh5C0D
+	 aFCGvn8Oij3MICQv3StNfo4V9rmvjwtd55txMMDX+3/k92+R/xN5wpDISCQJe7EXeQ
+	 0AVoeM4SQg4v5tML4Gykl2jMD4pvQ3JwFN6dqtC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731311AbgG0OSv (ORCPT
+        id S1731322AbgG0OSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:18:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46526 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:18:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731295AbgG0OSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:18:47 -0400
+        id S1731313AbgG0OSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:18:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5A832070A;
-        Mon, 27 Jul 2020 14:18:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9775B2070A;
+        Mon, 27 Jul 2020 14:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859526;
-        bh=3Hmqgwr1tD2S0HFwH63ITNi5sClWaaetAgCJAU9oYEg=;
+        s=default; t=1595859532;
+        bh=sDEnlAlhFB/QP2r2vRPVPqWMEAb7Ot7M+9SnlkSmfxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zTxmH8IY08BHkin1ail3yhaQ8pLAv0ugmP7DjBaUmnriW2Se3RKkive78w1ASuFzZ
-         Rai4kvyk4eIpqA7uvHdfpXl9cURM8aroI1nXUBiJMy2pB+f582Uu2AVbjh2GDo5GLD
-         zNhJvxrEUGEBlK9AoRouOcPBT7qGRKpiIh1c5L1w=
+        b=2qmXsq1YzsMeTHKCfjSNfS13TEY03IRNtiAwhnTgTe8lf2GhcSHKuDu2d0+kmT1AD
+         ASn4vPzSHfJcE5rLGiIsMdSVbtXhZrN5/WsUG6sTEtT/FEnLnqO8uIH6Ou8Tvqq/us
+         Y5o7TOatKfQa1m5RsWASttpm95wK2wKdC2/tJWs4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 133/138] ASoC: qcom: Drop HAS_DMA dependency to fix link failure
-Date:   Mon, 27 Jul 2020 16:05:28 +0200
-Message-Id: <20200727134932.063931415@linuxfoundation.org>
+        stable@vger.kernel.org, Mark ODonovan <shiftee@posteo.net>,
+        Roman Mamedov <rm@romanrm.net>,
+        =?UTF-8?q?Viktor=20J=C3=A4gersk=C3=BCpper?= 
+        <viktor_jaegerskuepper@freenet.de>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.4 138/138] ath9k: Fix regression with Atheros 9271
+Date:   Mon, 27 Jul 2020 16:05:33 +0200
+Message-Id: <20200727134932.314172471@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -59,57 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Mark O'Donovan <shiftee@posteo.net>
 
-commit b6aa06de7757667bac88997a8807b143b8436035 upstream.
+commit 92f53e2fda8bb9a559ad61d57bfb397ce67ed0ab upstream.
 
-When building on allyesconfig kernel for a NO_DMA=y platform (e.g.
-Sun-3), CONFIG_SND_SOC_QCOM_COMMON=y, but CONFIG_SND_SOC_QDSP6_AFE=n,
-leading to a link failure:
+This fix allows ath9k_htc modules to connect to WLAN once again.
 
-    sound/soc/qcom/common.o: In function `qcom_snd_parse_of':
-    common.c:(.text+0x2e2): undefined reference to `q6afe_is_rx_port'
-
-While SND_SOC_QDSP6 depends on HAS_DMA, SND_SOC_MSM8996 and SND_SOC_SDM845
-don't, so the following warning is seen:
-
-    WARNING: unmet direct dependencies detected for SND_SOC_QDSP6
-      Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && QCOM_APR [=y] && HAS_DMA [=n]
-      Selected by [y]:
-      - SND_SOC_MSM8996 [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && QCOM_APR [=y]
-      - SND_SOC_SDM845 [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && QCOM_APR [=y] && CROS_EC [=y] && I2C [=y] && SOUNDWIRE [=y]
-
-Until recently, this warning was harmless (from a compile-testing
-point-of-view), but the new user of q6afe_is_rx_port() turned this into
-a hard failure.
-
-As the QDSP6 driver itself builds fine if NO_DMA=y, and it depends on
-QCOM_APR (which in turns depends on ARCH_QCOM || COMPILE_TEST), it is
-safe to increase compile testing coverage.  Hence fix the link failure
-by dropping the HAS_DMA dependency of SND_SOC_QDSP6.
-
-Fixes: a2120089251f1fe2 ("ASoC: qcom: common: set correct directions for dailinks")
-Fixes: 6b1687bf76ef84cb ("ASoC: qcom: add sdm845 sound card support")
-Fixes: a6f933f63f2ffdb2 ("ASoC: qcom: apq8096: Add db820c machine driver")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Link: https://lore.kernel.org/r/20200629122443.21736-1-geert@linux-m68k.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 2bbcaaee1fcb ("ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=208251
+Signed-off-by: Mark O'Donovan <shiftee@posteo.net>
+Reported-by: Roman Mamedov <rm@romanrm.net>
+Tested-by: Viktor Jägersküpper <viktor_jaegerskuepper@freenet.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200711043324.8079-1-shiftee@posteo.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/qcom/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath9k/hif_usb.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/sound/soc/qcom/Kconfig
-+++ b/sound/soc/qcom/Kconfig
-@@ -72,7 +72,7 @@ config SND_SOC_QDSP6_ASM_DAI
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.c
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+@@ -733,11 +733,13 @@ static void ath9k_hif_usb_reg_in_cb(stru
+ 			return;
+ 		}
  
- config SND_SOC_QDSP6
- 	tristate "SoC ALSA audio driver for QDSP6"
--	depends on QCOM_APR && HAS_DMA
-+	depends on QCOM_APR
- 	select SND_SOC_QDSP6_COMMON
- 	select SND_SOC_QDSP6_CORE
- 	select SND_SOC_QDSP6_AFE
++		rx_buf->skb = nskb;
++
+ 		usb_fill_int_urb(urb, hif_dev->udev,
+ 				 usb_rcvintpipe(hif_dev->udev,
+ 						 USB_REG_IN_PIPE),
+ 				 nskb->data, MAX_REG_IN_BUF_SIZE,
+-				 ath9k_hif_usb_reg_in_cb, nskb, 1);
++				 ath9k_hif_usb_reg_in_cb, rx_buf, 1);
+ 	}
+ 
+ resubmit:
 
 
