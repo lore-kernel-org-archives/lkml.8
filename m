@@ -2,81 +2,182 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A830EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532CAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73DE720759
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D732075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:33:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="QBVHnZTK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SGMEjLSs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbgG0Uc6 (ORCPT
+        id S1729320AbgG0Uda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:32:58 -0400
-Received: from vern.gendns.com ([98.142.107.122]:50622 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgG0Uc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:32:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=2Qbdrl9zDyYUDiuprAY1yYquh3ltubEZYSXcWV7O1Lc=; b=QBVHnZTKCHFlJW8ennnb2tB/bb
-        m0yH45Z+uSv96AyPFVGsbZFJZnRrd44+wNtbHN6q/hV30+42IEsFoTO0092Q6OOqIkfuVg2Mvtjf+
-        Ye3+H1liJuQwL3Bci2oHiex06QodIsf46Pac9uQzpJvv9I3JCM0lPy9X0gAt0sb1l1c05kvnpMUD8
-        wKa5FCc433oxck/+7RMkwYSsxBDsxbYtWzCi9mGBnEwwSA2pFt8P6/pqB10q90WNJESegHcuyLsz3
-        2D0tdqwUl1mWXWXl5UTSoNroloQINmpSecYfOPep7laYF18QaIuwYHkNXLlzTfUSbIIS9MRJO3461
-        W109mHhw==;
-Received: from [2600:1700:4830:165f::19e] (port=59352)
-        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <david@lechnology.com>)
-        id 1k09nr-0004In-Rw; Mon, 27 Jul 2020 16:32:55 -0400
-Subject: Re: [PATCH][next] clk: davinci: Use fallthrough pseudo-keyword
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200727201122.GA2593@embeddedor>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <4cc1d793-4722-42c2-9712-2ebccbd6abeb@lechnology.com>
-Date:   Mon, 27 Jul 2020 15:32:53 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200727201122.GA2593@embeddedor>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        Mon, 27 Jul 2020 16:33:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728917AbgG0Ud3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 16:33:29 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1965CC0619D4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:33:29 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id i9so22318095ybg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:33:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=8+GWCqToRsYuSGreGCapWzOVpnWd7snaZLCa1XNJr0I=;
+        b=SGMEjLSsF+Ur+M/B7vxrNKGkbM9VGYJ4OL16bAu+jA4wlVRqUKmhkovlTjCvo5cwU9
+         /GR6A4itCCVvgEwtK6ZdxnsEsFauXhRtDAeadxCpTuMTAFSYGn3km+Wp/WDZ5pV/gE4h
+         5OPZoJf92JLkU7KvFmGXdg4/sOkHWtZBnadjwZtWWIw3EWWfeUUoEaQa7B/7pGV01SWb
+         m1h0X+ZNhWSnCC/KQ7tVoclpMbFgTjvcOXkHZJ5eTjyTTCkc12F3Xg9ylL2tYHwxh9iF
+         RMSKvHSOapmw+rwteyyXBBlypKDGCfdEQfDDkF+XzY69jwq96n38yxI8cUB000mfvGjj
+         CEMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=8+GWCqToRsYuSGreGCapWzOVpnWd7snaZLCa1XNJr0I=;
+        b=fITN5XFBP8WtUsRdX69yoTGmXOtcLOAaNvgbv7pRbbmjJmlk5XeFoEmI7+lBnvEtPm
+         cenVIgbrGhmjTFO6YTEtoFVlOp6BlHAIfSgfpUo4AQaOktxVuT36z5o/DwJRYuvyQ/w7
+         0tmrllv0Q5otb27y2+aPm+y4VN3n8vx9XThl64Bb+9D7Po1npLlcho08lXwSbVL2ojds
+         58/qwvbbAXv7arlQnMiJBRyM7SE18u8fxrXMGY9NSWlKD+1zCAcSpyeCJ62j1AjjnIS+
+         5wu7h2aKx6Np+l/gE+5yw4E420/r7NSzySgw4WZ/MAkG3yc9xuJ+XW/zr3gT1a2VoHRD
+         9Gyg==
+X-Gm-Message-State: AOAM530MBw/w1Q+0TvRkwRHu4ilYnkafaMRdo+7BNt4l9GeJkWuyyVp9
+        9ogromjElFZzmnr9EPJW80jzcaD+8aSAQtcqxK7l5q2zKPlyY/2zFSz4qhUhR8QjIRGWR4Eh+vL
+        7MRivoWvbB8J2S5wTC74V+olKN/OgwJFBK0goBQR2Ba8ajFLdP9zbTwXius0BiOoeF1md/io6
+X-Google-Smtp-Source: ABdhPJyJorpxq2jFPepAV9fDiih8wuRQXMoiV5SISAnOdfN1gBNWXGfdqI5rYs7ErSZFfzEXT7vNGuGHGtL8
+X-Received: by 2002:a25:31d4:: with SMTP id x203mr37893178ybx.396.1595882008151;
+ Mon, 27 Jul 2020 13:33:28 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 13:33:24 -0700
+Message-Id: <20200727203324.2614917-1-bgardon@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+Subject: [PATCH 1/1] kvm: mmu: zap pages when zapping only parent
+From:   Ben Gardon <bgardon@google.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, Peter Xu <peterx@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Peter Shier <pshier@google.com>,
+        Ben Gardon <bgardon@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/20 3:11 PM, Gustavo A. R. Silva wrote:
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1].
-> 
-> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+When the KVM MMU zaps a page, it will recursively zap the unsynced child
+pages, but not the synced ones. This can create problems over time when
+running many nested guests because it leaves unlinked pages which will not
+be freed until the page quota is hit. With the default page quota of 20
+shadow pages per 1000 guest pages, this looks like a memory leak and can
+degrade MMU performance.
 
-Reviewed-by: David Lechner <david@lechnology.com>
+In a recent benchmark, substantial performance degradation was observed:
+An L1 guest was booted with 64G memory.
+2G nested Windows guests were booted, 10 at a time for 20
+iterations. (200 total boots)
+Windows was used in this benchmark because they touch all of their
+memory on startup.
+By the end of the benchmark, the nested guests were taking ~10% longer
+to boot. With this patch there is no degradation in boot time.
+Without this patch the benchmark ends with hundreds of thousands of
+stale EPT02 pages cluttering up rmaps and the page hash map. As a
+result, VM shutdown is also much slower: deleting memslot 0 was
+observed to take over a minute. With this patch it takes just a
+few miliseconds.
+
+If TDP is enabled, zap child shadow pages when zapping the only parent
+shadow page.
+
+Tested by running the kvm-unit-tests suite on an Intel Haswell machine.
+No regressions versus
+commit c34b26b98cac ("KVM: MIPS: clean up redundant 'kvm_run' parameters"),
+or warnings.
+
+Reviewed-by: Peter Shier <pshier@google.com>
+Signed-off-by: Ben Gardon <bgardon@google.com>
+---
+ arch/x86/kvm/mmu/mmu.c | 49 +++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 44 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index fa506aaaf0194..c550bc3831dcc 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -2626,13 +2626,52 @@ static bool mmu_page_zap_pte(struct kvm *kvm, struct kvm_mmu_page *sp,
+ 	return false;
+ }
+ 
+-static void kvm_mmu_page_unlink_children(struct kvm *kvm,
+-					 struct kvm_mmu_page *sp)
++static int kvm_mmu_page_unlink_children(struct kvm *kvm,
++					struct kvm_mmu_page *sp,
++					struct list_head *invalid_list)
+ {
+ 	unsigned i;
++	int zapped = 0;
++
++	for (i = 0; i < PT64_ENT_PER_PAGE; ++i) {
++		u64 *sptep = sp->spt + i;
++		u64 spte = *sptep;
++		struct kvm_mmu_page *child_sp;
++
++		/*
++		 * Zap the page table entry, unlinking any potential child
++		 * page
++		 */
++		mmu_page_zap_pte(kvm, sp, sptep);
++
++		/* If there is no child page for this spte, continue */
++		if (!is_shadow_present_pte(spte) ||
++		    is_last_spte(spte, sp->role.level))
++			continue;
++
++		/*
++		 * If TDP is enabled, then any shadow pages are part of either
++		 * the EPT01 or an EPT02. In either case, do not expect the
++		 * same pattern of page reuse seen in x86 PTs for
++		 * copy-on-write  and similar techniques. In this case, it is
++		 * unlikely that a parentless shadow PT will be used again in
++		 * the near future. Zap it to keep the rmaps and page hash
++		 * maps from filling up with stale EPT02 pages.
++		 */
++		if (!tdp_enabled)
++			continue;
++
++		child_sp = to_shadow_page(spte & PT64_BASE_ADDR_MASK);
++		if (WARN_ON_ONCE(!child_sp))
++			continue;
++
++		/* Zap the page if it has no remaining parent pages */
++		if (!child_sp->parent_ptes.val)
++			zapped += kvm_mmu_prepare_zap_page(kvm, child_sp,
++							   invalid_list);
++	}
+ 
+-	for (i = 0; i < PT64_ENT_PER_PAGE; ++i)
+-		mmu_page_zap_pte(kvm, sp, sp->spt + i);
++	return zapped;
+ }
+ 
+ static void kvm_mmu_unlink_parents(struct kvm *kvm, struct kvm_mmu_page *sp)
+@@ -2678,7 +2717,7 @@ static bool __kvm_mmu_prepare_zap_page(struct kvm *kvm,
+ 	trace_kvm_mmu_prepare_zap_page(sp);
+ 	++kvm->stat.mmu_shadow_zapped;
+ 	*nr_zapped = mmu_zap_unsync_children(kvm, sp, invalid_list);
+-	kvm_mmu_page_unlink_children(kvm, sp);
++	*nr_zapped += kvm_mmu_page_unlink_children(kvm, sp, invalid_list);
+ 	kvm_mmu_unlink_parents(kvm, sp);
+ 
+ 	/* Zapping children means active_mmu_pages has become unstable. */
+-- 
+2.28.0.rc0.142.g3c755180ce-goog
+
