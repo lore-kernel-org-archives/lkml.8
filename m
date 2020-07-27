@@ -2,121 +2,100 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57ED4C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3128C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 335A62072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 918B22072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:05:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKrVFetT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PAolxzQ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgG0WFB (ORCPT
+        id S1726992AbgG0WFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 18:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53052 "EHLO
+        Mon, 27 Jul 2020 18:05:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgG0WFA (ORCPT
+        with ESMTP id S1726140AbgG0WFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 18:05:00 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18204C061794;
-        Mon, 27 Jul 2020 15:05:00 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id d14so16816746qke.13;
-        Mon, 27 Jul 2020 15:05:00 -0700 (PDT)
+        Mon, 27 Jul 2020 18:05:22 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B61E6C061794;
+        Mon, 27 Jul 2020 15:05:22 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id e13so16848044qkg.5;
+        Mon, 27 Jul 2020 15:05:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iVuPTRHNAeDbxJIJqGMzJ2wPysTPpDFSvpK97m2+rwo=;
-        b=KKrVFetTr55OQ+1m/sHURefNlPvk09O9SSfcOdgGMAm4zuxZf2zAWC0vPdDs9StyHe
-         gg5ArsycVSyP74J5m0Nsd0irvaQDUFdjymVgMbhv9dyfOVrSnBog0ABmlszMZjFpv8Qf
-         FHk7u4eIF+rXkYulvQJ6a6XYBQVHXoiZJQmIMk1WuHF9HrUI2vcCrcnpmYpQ5LmmLEwe
-         3g80DomwgA4a2yr2RnNFzlZPcwixL1rbxQV2gq0V2G6e1qkBPXNSoYDto4yKglTwBtLZ
-         Hdu3c/oSdPzw1wZLuQxdmdVkcm7y32liptBK++zRSYLp7inGClfhqzU2MlOwEaWYCkxv
-         NvWA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WuFdlm+CwCfC5jm4EAsuXY89WjDd91XAqsuAZzGK8mQ=;
+        b=PAolxzQ2iUlCuHDBs8UfBB7KdiLqoIOCLPfykpyhW6G8pTLvwaf47IXSCLLLhbwA+r
+         iTQLd2XrTqDzqT/MGnYqcllM1gjEzX83ZnQSOqcn8wpyb7519Lpd7K53T916HgJRu1o8
+         pBs2pfSJikX/gZNpKGjcHPa13o2d8ivm9pFJV8ZtFeWqRe9dH+eXSD7bVhfnHUKxAaRc
+         LM0nJXHqgzOx4YLYGtUCFIzag0H97fsliRyGf0qh/gBRSeFj+C7fyOChCsS1fWlrFkj6
+         WZhGuwm1XGEsvw+Bdm1zqaUGXj+7AG517MPCcP0zvs61uuBjK0kziHXi/1DpjkPB7SZ9
+         fuQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iVuPTRHNAeDbxJIJqGMzJ2wPysTPpDFSvpK97m2+rwo=;
-        b=tbW4Cpfom1yLmrc+UxEDyLhg0JVmUZSqpsuy12SUW44/EgC1EfLq/tsmvPzIhgElA1
-         OOLzgME3D+xjRjnDMDQ2KHnCem58Bklpg6lIp1E48oYkwOZTI2598BCoZ8gn7LIesLCF
-         Gy87Q4HU26Uan1pZ73vw9I2o5dqSHtnUssXgouZt23BNe80+wgc0ilk1KqP1s2uLJaMy
-         /NMrdi4JrUAGxeXxc/zh0X+dmMEATQDuqj2hojhnif28PHPIufBKyE49QpeqUKnBqdZM
-         MDsI2+/pxZ3GGa+JiD0XU9cS7MerxAFTpw1+9w15PjHbU82MjBJPmsZ2+Qd/Jo4gLfr2
-         TKSA==
-X-Gm-Message-State: AOAM531LzPOtJyEu1U5wAiIp3EXiI/GRKPmHX+vhH6obLJHTk79a83dQ
-        +MIfxzwEWmuVBrZLm3TCEQ==
-X-Google-Smtp-Source: ABdhPJzfxFKdzL8nQ1KA2C516wzRCtGXJoI/WM2PqHeAK/4CHI1X4r58A9z6GhvCvrBKLEDROQUrkQ==
-X-Received: by 2002:a05:620a:4ca:: with SMTP id 10mr22310620qks.306.1595887499368;
-        Mon, 27 Jul 2020 15:04:59 -0700 (PDT)
-Received: from PWN ([209.94.141.207])
-        by smtp.gmail.com with ESMTPSA id l64sm5279365qkc.21.2020.07.27.15.04.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 15:04:58 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 18:04:56 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vandana BN <bnvandana@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
- kernel-infoleak in video_put_user()
-Message-ID: <20200727220456.GA328887@PWN>
-References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
- <20200726222703.102701-1-yepeilin.cs@gmail.com>
- <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
- <20200727131608.GD1913@kadam>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WuFdlm+CwCfC5jm4EAsuXY89WjDd91XAqsuAZzGK8mQ=;
+        b=ZiEdKgNC2tz6TdCNZKNjEV/ILe4/vUa+6Lsxt4aAq8uPSW02/5jkEBV0/DCK72Hpj9
+         D3Xe2RpftwrL4MDCCaXn7Qp/5pGWi9I8Y/iS5LZ43LM7AUIZCgbW3/QjmCHZX1ZX2rKq
+         VEM/C2k2VC/tpw7UFbhqE50lNGfC3zK5+tBQJBhfiQpI0kv/lbUTRdSYs7G13O5O+nt1
+         zJxLvGDjq0hiHhR7fzughdqFotHZEUMSwBOUNa4J/ePk7BNC2Ze/2cZNw7izuAPC0sse
+         Fboqd3Wo29p9Oo9sl62AJ4SqwIaeUW4FJPpvme9rElJiTcyMPrzKKS0ssF/NUEydEBES
+         0Vlw==
+X-Gm-Message-State: AOAM530PiT4zjAgKc48tqDafB8W5vqTLeBqcAZUH0Itc0HpJFMTEMkdJ
+        Yuvxkkcd486UHGXxG28GJtSgvNCiE+KtVsARgO4=
+X-Google-Smtp-Source: ABdhPJyLba6B6ZS6EMcnNTr7/0bdvGuB1aK7l4LLL8zAo+CMqhBgfxT0JLGRKctvy+AsA7PIkIgqZhT2OQwfBDizkU8=
+X-Received: by 2002:a37:afc3:: with SMTP id y186mr5804406qke.36.1595887521999;
+ Mon, 27 Jul 2020 15:05:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727131608.GD1913@kadam>
+References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-30-guro@fb.com>
+In-Reply-To: <20200727184506.2279656-30-guro@fb.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 27 Jul 2020 15:05:11 -0700
+Message-ID: <CAEf4BzZjbK4W1fmW07tMOJsRGCYNeBd6eqyFE_fSXAK6+0uHhw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 29/35] bpf: libbpf: cleanup RLIMIT_MEMLOCK usage
+To:     Roman Gushchin <guro@fb.com>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 04:16:08PM +0300, Dan Carpenter wrote:
-> drivers/char/hpet.c:675 hpet_ioctl() warn: check that 'info' doesn't leak information (struct has a hole after 'hi_timer')
+On Mon, Jul 27, 2020 at 12:21 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> As bpf is not using memlock rlimit for memory accounting anymore,
+> let's remove the related code from libbpf.
+>
+> Bpf operations can't fail because of exceeding the limit anymore.
+>
 
-This one seems like a false positive.
+They can't in the newest kernel, but libbpf will keep working and
+supporting old kernels for a very long time now. So please don't
+remove any of this.
 
-drivers/char/hpet.c:670:
+But it would be nice to add a detection of whether kernel needs a
+RLIMIT_MEMLOCK bump or not. Is there some simple and reliable way to
+detect this from user-space?
 
-	mutex_lock(&hpet_mutex);
-	err = hpet_ioctl_common(file->private_data, cmd, arg, &info);
-	mutex_unlock(&hpet_mutex);
 
-	if ((cmd == HPET_INFO) && !err &&
-	    (copy_to_user((void __user *)arg, &info, sizeof(info))))
-		err = -EFAULT;
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> ---
+>  tools/lib/bpf/libbpf.c | 31 +------------------------------
+>  tools/lib/bpf/libbpf.h |  5 -----
+>  2 files changed, 1 insertion(+), 35 deletions(-)
+>
 
-`info` is only being copied to userspace when `cmd` is `HPET_INFO`.
-However, hpet_ioctl_common() is already doing memset() on `info` in
-`case HPET_INFO`:
-
-drivers/char/hpet.c:612:
-
-	case HPET_INFO:
-		{
-			memset(info, 0, sizeof(*info));
-			^^^^^^
-
-Thank you,
-Peilin Ye
+[...]
