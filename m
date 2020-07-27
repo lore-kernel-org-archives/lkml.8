@@ -2,140 +2,100 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC7CC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEE9C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8538207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B3D20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595860251;
+	bh=DFVeJ/lrb11eR2M8PKEcHH/XGizsaMEJnixiYlEdY1o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GE7uteYocjTcuQERslp/HR+QBSiJHNflx+56UCfV4wRKp7gJP5dzQfXiZj04kxDKo
+	 BSQFKQq/9ey3ukzcUmrfkzEb9U2jBZTbXlndn+0e9WYMzkC0gDrosNy5KQzIDC4LSS
+	 IMw48Czq3bajekKy8teAR3mbWCkfcRqQQpv0fCiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732778AbgG0Oa4 (ORCPT
+        id S1732596AbgG0Oau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:30:56 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43714 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731696AbgG0OVS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:21:18 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k040B-0002xm-PK; Mon, 27 Jul 2020 14:21:15 +0000
-Date:   Mon, 27 Jul 2020 16:21:14 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: bpfilter logging write errors in dmesg
-Message-ID: <20200727142114.uzxr4kl7xdj2ildi@wittgenstein>
-References: <20200727104636.nuz3u4xb7ba7ue5a@wittgenstein>
- <20200727132855.GA28165@lst.de>
- <20200727141337.liwdfjxq4cwvt5if@wittgenstein>
+        Mon, 27 Jul 2020 10:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731719AbgG0OVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:21:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE1C12070A;
+        Mon, 27 Jul 2020 14:21:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595859685;
+        bh=DFVeJ/lrb11eR2M8PKEcHH/XGizsaMEJnixiYlEdY1o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OAYq7emz2+/SQnkFQZu1ozvHpGjs4hyUcfNMEeWeMr3tTz5CywpkwelJG0rRU8P4k
+         h9XU4azLTpQ7mWRijypP7kpLHhp8zbR+YHszMsQtl7ERSE4LsWkaS4TRA7sKRssiHq
+         Q1dmA8JEgfXe5TiLXJhi8i6gmse9BxxDfSuI9tLU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Alessio Bonfiglio <alessio.bonfiglio@mail.polimi.it>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 066/179] iwlwifi: Make some Killer Wireless-AC 1550 cards work again
+Date:   Mon, 27 Jul 2020 16:04:01 +0200
+Message-Id: <20200727134935.883326149@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
+References: <20200727134932.659499757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200727141337.liwdfjxq4cwvt5if@wittgenstein>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 04:13:38PM +0200, Christian Brauner wrote:
-> On Mon, Jul 27, 2020 at 03:28:55PM +0200, Christoph Hellwig wrote:
-> > On Mon, Jul 27, 2020 at 12:46:36PM +0200, Christian Brauner wrote:
-> > > Hey Christoph,
-> > > 
-> > > Seems that commit
-> > > 6955a76fbcd5 ("bpfilter: switch to kernel_write")
-> > > causes bpfilter to spew these useless messages in dmesg?
-> > > 
-> > > [   26.356824] Started bpfilter
-> > > [   26.357059] bpfilter: write fail -22
-> > > [   26.396244] Started bpfilter
-> > > [   26.396325] bpfilter: Loaded bpfilter_umh pid 637
-> > > [   26.396542] bpfilter: write fail -22
-> > > [   26.409588] bpfilter: Loaded bpfilter_umh pid 638
-> > > [   26.410790] Started bpfilter
-> > > [   26.410960] bpfilter: write fail -22
-> > > [   26.445718] Started bpfilter
-> > > [   26.445799] bpfilter: Loaded bpfilter_umh pid 640
-> > > [   26.445983] bpfilter: write fail -22
-> > > [   26.451122] bpfilter: read fail 0
-> > > [   26.496497] bpfilter: Loaded bpfilter_umh pid 648
-> > > [   26.497889] Started bpfilter
-> > > [   26.750028] bpfilter: write fail -22
-> > > [   26.768400] Started bpfilter
-> > > [   26.768496] bpfilter: Loaded bpfilter_umh pid 661
-> > > [   26.768699] bpfilter: write fail -22
-> > > [   26.806550] Started bpfilter
-> > > [   26.806616] bpfilter: Loaded bpfilter_umh pid 663
-> > > [   26.864708] bpfilter: write fail -22
-> > > [   26.872345] bpfilter: Loaded bpfilter_umh pid 666
-> > > [   26.873072] Started bpfilter
-> > > [   26.873194] bpfilter: write fail -22
-> > > [   27.295514] kauditd_printk_skb: 22 callbacks suppressed
-> > > 
-> > > This is on a pure v5.8-rc7 via make bindep-pkg. I'm not using bpfilter
-> > > in any shape or form afaict and haven't seen those messages before and
-> > > this seems to be the last change I see.
-> > 
-> > I don't see any of those on 5.8-rc, just:
-> > 
-> > root@testvm:~# dmesg | grep bpf
-> > [    6.692550] bpfilter: Loaded bpfilter_umh pid 1849
-> 
-> Hm, odd
-> 
-> > 
-> > That debug patch below should help to pintpoint what is going on for
-> > you:
-> 
-> Thanks for the debug patch! Applied and ran a kernel and I'm getting:
-> 
-> [   21.919851] bpfilter: Loaded bpfilter_umh pid 619
-> [   22.000229] rw_verify_area
-> [   22.000235] bpfilter: write fail -22
-> [   22.014686] Started bpfilter
-> 
-> I'm also seeing some other failures later:
-> 
-> [  236.898220] bpfilter: write fail -22
-> [  236.899255] bpfilter: write fail -32
-> [  236.922557] bpfilter: Loaded bpfilter_umh pid 1101
-> [  236.923310] Started bpfilter
-> [  236.923521] rw_verify_area
-> [  236.923524] bpfilter: write fail -22
-> [  236.925273] bpfilter: read fail 0
-> [  236.945117] bpfilter: Loaded bpfilter_umh pid 1103
-> [  236.945925] Started bpfilter
-> [  236.946123] rw_verify_area
-> [  236.946126] bpfilter: write fail -22
-> [  236.947641] bpfilter: read fail 0
-> [  236.968143] bpfilter: Loaded bpfilter_umh pid 1105
-> [  236.968734] Started bpfilter
-> [  236.987777] rw_verify_area
-> [  236.987781] bpfilter: write fail -22
-> [  236.990072] bpfilter: read fail 0
-> 
-> Seems I can trigger this via iptables:
-> 
-> [  437.922719] bpfilter: write fail -22
-> [  437.924488] bpfilter: read fail 0
-> root@g1-vm:~# iptables -S
-> iptables v1.8.4 (legacy): can't initialize iptables table `filter': Bad address
-> Perhaps iptables or your kernel needs to be upgraded.
-> 
-> I have
-> CONFIG_IP_NF_IPTABLES=m
-> CONFIG_IP6_NF_IPTABLES=m
-> maybe I'm just missing another kernel option or something and I have no
-> idea how this bpfilter thing and iptables relate to each other. So maybe
-> it's not worth the effort and it's just my setup being broken somehow.
+From: Alessio Bonfiglio <alessio.bonfiglio@mail.polimi.it>
 
-Fwiw, it seems that on kernels that replace iptables with nftables
-programs calling into iptables will cause this bpfilter dmesg logging.
+[ Upstream commit b5ba46b81c2fef00bcf110777fb6d51befa4a23e ]
 
-Christian
+Fix the regression introduced by commit c8685937d07f ("iwlwifi: move
+pu devices to new table") by adding the ids and the configurations of
+two missing Killer 1550 cards in order to configure and let them work
+correctly again (following the new table convention).
+Resolve bug 208141 ("Wireless ac 9560 not working kernel 5.7.2",
+https://bugzilla.kernel.org/show_bug.cgi?id=208141).
+
+Fixes: c8685937d07f ("iwlwifi: move pu devices to new table")
+Signed-off-by: Alessio Bonfiglio <alessio.bonfiglio@mail.polimi.it>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200714091911.4442-1-alessio.bonfiglio@mail.polimi.it
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+index 29971c25dba44..9ea3e56346722 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+@@ -577,6 +577,8 @@ static const struct iwl_dev_info iwl_dev_info_table[] = {
+ 	IWL_DEV_INFO(0x30DC, 0x1552, iwl9560_2ac_cfg_soc, iwl9560_killer_1550i_name),
+ 	IWL_DEV_INFO(0x31DC, 0x1551, iwl9560_2ac_cfg_soc, iwl9560_killer_1550s_name),
+ 	IWL_DEV_INFO(0x31DC, 0x1552, iwl9560_2ac_cfg_soc, iwl9560_killer_1550i_name),
++	IWL_DEV_INFO(0xA370, 0x1551, iwl9560_2ac_cfg_soc, iwl9560_killer_1550s_name),
++	IWL_DEV_INFO(0xA370, 0x1552, iwl9560_2ac_cfg_soc, iwl9560_killer_1550i_name),
+ 
+ 	IWL_DEV_INFO(0x271C, 0x0214, iwl9260_2ac_cfg, iwl9260_1_name),
+ 
+-- 
+2.25.1
+
+
+
