@@ -2,118 +2,107 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3174C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043D1C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80A1A20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vLbPGjbD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IOBF3Boh"
+	by mail.kernel.org (Postfix) with ESMTP id CDCFB20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595859926;
+	bh=Tdh9cOVs/2IgNFxLPF4ZL/iqY0zBfjy8MZwS73LcFlo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2OsWSFe6uE/1BbWXZ1AjSnKBDI0QHbFrwuM2/j56XKo8BlOs0UtuwQMhW9iXIFyjG
+	 pPyfGsWEFKjJ4hsQBZHtmDu037VYC1Ua4hX0WBb189T7HTBBFZBid3kUi38E0bA7Wl
+	 +B2iGgWUaMLBtr6/Ql8bWEwNEfGm0fDfy4RzGZB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732418AbgG0OZW (ORCPT
+        id S1732430AbgG0OZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:25:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732389AbgG0OZN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:25:13 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500DCC0619D2;
-        Mon, 27 Jul 2020 07:25:13 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 14:25:10 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595859911;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uMD+An+yRJFnhJevzCpA9ASEr2Q20FpshnheoKFP3lk=;
-        b=vLbPGjbDu2xic82PJEQ82vZLPeFAmFqYivgCm3yc34Cj16gmBHbwTTTHFiqTA1WMuXH/QX
-        gXkpT0pMoEUlUucqKl1a/NiojyhBygGLmFH6kQoRvjPiK89gCtrztGXI7sXsaTZQqOKd3m
-        Lofu5ZC0RjLd/7/vn4d/bQwvuMd1gQrRHsVagm55eQbUW0yR0E3y5lATi0gCJf/yPRvNGm
-        GT/Jt9wfAUlz1WBEnZMD247e/B0Mow2VjDM3efkG527VkUUOig648RuYH68STzFOWUAmB2
-        9RWMkmd4R30aCPVBgMf1gjMdhHeQQU8+bxWy2vybPWhCocfM1hCNgsegsnHKhw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595859911;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uMD+An+yRJFnhJevzCpA9ASEr2Q20FpshnheoKFP3lk=;
-        b=IOBF3Bohu/1/UggaMobfJVuRHvPh1liRAcuGVDP/hHcgLq3VqJMpBOdUPgworZ3sud2/a5
-        JngDew5W/0T70ECA==
-From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] genirq/debugfs: Add missing irqchip flags
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <874kpvydxc.wl-maz@kernel.org>
-References: <874kpvydxc.wl-maz@kernel.org>
+        Mon, 27 Jul 2020 10:25:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731498AbgG0OZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:25:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98CAF207FC;
+        Mon, 27 Jul 2020 14:25:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595859918;
+        bh=Tdh9cOVs/2IgNFxLPF4ZL/iqY0zBfjy8MZwS73LcFlo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=K6l5TkhguRe1x6pjbAXirXONgFMYko7CPuEXLevc4s3RbjSi2oPtdsF6l8NKycLLR
+         lG6tXVLuF2U4wq4slZGJ62egKzErlpIdpPaiq5+MRIXEwjF0a14MAUOeskY+2zboZk
+         akCx3M1s6qWDc3+gpN2JWKz8YQbm9uqsFLnSqx/U=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 5.7 148/179] staging: comedi: ni_6527: fix INSN_CONFIG_DIGITAL_TRIG support
+Date:   Mon, 27 Jul 2020 16:05:23 +0200
+Message-Id: <20200727134939.878334717@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
+References: <20200727134932.659499757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Message-ID: <159585991070.4006.15343271710137526648.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the irq/urgent branch of tip:
+From: Ian Abbott <abbotti@mev.co.uk>
 
-Commit-ID:     aa251fc5b936d3ddb4b4c4b36427eb9aa3347c82
-Gitweb:        https://git.kernel.org/tip/aa251fc5b936d3ddb4b4c4b36427eb9aa3347c82
-Author:        Marc Zyngier <maz@kernel.org>
-AuthorDate:    Sat, 25 Jul 2020 13:30:55 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 27 Jul 2020 16:20:40 +02:00
+commit f07804ec77d77f8a9dcf570a24154e17747bc82f upstream.
 
-genirq/debugfs: Add missing irqchip flags
+`ni6527_intr_insn_config()` processes `INSN_CONFIG` comedi instructions
+for the "interrupt" subdevice.  When `data[0]` is
+`INSN_CONFIG_DIGITAL_TRIG` it is configuring the digital trigger.  When
+`data[2]` is `COMEDI_DIGITAL_TRIG_ENABLE_EDGES` it is configuring rising
+and falling edge detection for the digital trigger, using a base channel
+number (or shift amount) in `data[3]`, a rising edge bitmask in
+`data[4]` and falling edge bitmask in `data[5]`.
 
-Recently introduced irqchip flags lack the corresponding printouts in
-debugfs. Add them.
+If the base channel number (shift amount) is greater than or equal to
+the number of channels (24) of the digital input subdevice, there are no
+changes to the rising and falling edges, so the mask of channels to be
+changed can be set to 0, otherwise the mask of channels to be changed,
+and the rising and falling edge bitmasks are shifted by the base channel
+number before calling `ni6527_set_edge_detection()` to change the
+appropriate registers.  Unfortunately, the code is comparing the base
+channel (shift amount) to the interrupt subdevice's number of channels
+(1) instead of the digital input subdevice's number of channels (24).
+Fix it by comparing to 32 because all shift amounts for an `unsigned
+int` must be less than that and everything from bit 24 upwards is
+ignored by `ni6527_set_edge_detection()` anyway.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/874kpvydxc.wl-maz@kernel.org
-
+Fixes: 110f9e687c1a8 ("staging: comedi: ni_6527: support INSN_CONFIG_DIGITAL_TRIG")
+Cc: <stable@vger.kernel.org> # 3.17+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20200717145257.112660-2-abbotti@mev.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/debugfs.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/staging/comedi/drivers/ni_6527.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
-index 4f9f844..b95ff5d 100644
---- a/kernel/irq/debugfs.c
-+++ b/kernel/irq/debugfs.c
-@@ -112,6 +112,7 @@ static const struct irq_bit_descr irqdata_states[] = {
- 	BIT_MASK_DESCR(IRQD_AFFINITY_SET),
- 	BIT_MASK_DESCR(IRQD_SETAFFINITY_PENDING),
- 	BIT_MASK_DESCR(IRQD_AFFINITY_MANAGED),
-+	BIT_MASK_DESCR(IRQD_AFFINITY_ON_ACTIVATE),
- 	BIT_MASK_DESCR(IRQD_MANAGED_SHUTDOWN),
- 	BIT_MASK_DESCR(IRQD_CAN_RESERVE),
- 	BIT_MASK_DESCR(IRQD_MSI_NOMASK_QUIRK),
-@@ -120,6 +121,10 @@ static const struct irq_bit_descr irqdata_states[] = {
- 
- 	BIT_MASK_DESCR(IRQD_WAKEUP_STATE),
- 	BIT_MASK_DESCR(IRQD_WAKEUP_ARMED),
-+
-+	BIT_MASK_DESCR(IRQD_DEFAULT_TRIGGER_SET),
-+
-+	BIT_MASK_DESCR(IRQD_HANDLE_ENFORCE_IRQCTX),
- };
- 
- static const struct irq_bit_descr irqdesc_states[] = {
+--- a/drivers/staging/comedi/drivers/ni_6527.c
++++ b/drivers/staging/comedi/drivers/ni_6527.c
+@@ -332,7 +332,7 @@ static int ni6527_intr_insn_config(struc
+ 		case COMEDI_DIGITAL_TRIG_ENABLE_EDGES:
+ 			/* check shift amount */
+ 			shift = data[3];
+-			if (shift >= s->n_chan) {
++			if (shift >= 32) {
+ 				mask = 0;
+ 				rising = 0;
+ 				falling = 0;
+
+
