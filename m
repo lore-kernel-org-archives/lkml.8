@@ -2,89 +2,90 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61A6C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135E7C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80E8820672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D920920672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:36:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zSAzepY+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JPnziurF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c3iTE5Ez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgG0Nfs (ORCPT
+        id S1729003AbgG0NgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:35:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55718 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgG0Nfr (ORCPT
+        Mon, 27 Jul 2020 09:36:07 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39673 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726298AbgG0NgG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:35:47 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595856945;
+        Mon, 27 Jul 2020 09:36:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595856966;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eG1kw9cByLDLba+9JXhHfz3Jq5+C2noEAEOZxdZDOEk=;
-        b=zSAzepY+nxICGlsy0aLvGhyY5To3CUHknHJ+PYLwz3xhhDjTn/M/t5l0PHdLorbbFiSjuE
-        l3rYTa+u9l9omHyIKN1yvGLxgL54UhdTHBxyeJpMy3RR/XYF1kr7gC1vnVIPc3biZJOZ84
-        AyJK7KR3dhWCZ10aS2NQWCerLL2D+ILCgxkqSd9TKPltc5uibBxgZxWxRjwDeQfGNsBO+j
-        u+ibZY7AchpxvcI+aQVKu2Po5+iQD64ITqEoSM1N7gpRkMbTomfy5I+xTfkZwaAdE75upb
-        oizpDHlIyMuSUnkBtqfvNlxn+5ZQAXrfssVOgXGqSaw+UgF+o2N1KBJpWgyUng==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595856945;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eG1kw9cByLDLba+9JXhHfz3Jq5+C2noEAEOZxdZDOEk=;
-        b=JPnziurFtgLjN9iHatLlqALT8UOFEdyfw7cnRhaokIoLIZppTqDerD6CLISSjJ2RBfECW7
-        qFNPAjxy7f19vQBg==
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     John Keeping <john@metanate.com>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Ben Herrenschmidt <benh@amazon.com>,
-        Ali Saidi <alisaidi@amazon.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2] genirq/affinity: Handle affinity setting on inactive interrupts correctly
-In-Reply-To: <875zabyeyo.wl-maz@kernel.org>
-References: <87k0z2s2q3.fsf@nanos.tec.linutronix.de> <877dv2rv25.fsf@nanos.tec.linutronix.de> <20200724182422.27ddced6.john@metanate.com> <87h7twu1cp.fsf@nanos.tec.linutronix.de> <875zabyeyo.wl-maz@kernel.org>
-Date:   Mon, 27 Jul 2020 15:35:44 +0200
-Message-ID: <874kptcc7j.fsf@nanos.tec.linutronix.de>
+        bh=qUgEH1K320HFXVyeiPJVVXjlGNJKxoO09QtGKl4Q8tg=;
+        b=c3iTE5Ezqeg4hbDLIUANqYqGidCAAxBt2dO2qSlSFlewdVO8zlE2Wt/ML95zvV2iWUPk22
+        5/5FQqnVnGBER+BpDDFxT0e0mcCvFOjbfqzP7XF4vhmuof3OXQsZ4ix0wMYUSIIA0Ln6Be
+        LmyKuyj9mmrsJcEOU9zF//uXBL2CgTg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-48-5g5K5XbrPlGQU-D9eMtoZQ-1; Mon, 27 Jul 2020 09:36:01 -0400
+X-MC-Unique: 5g5K5XbrPlGQU-D9eMtoZQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A03721932489;
+        Mon, 27 Jul 2020 13:36:00 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C7CB219D82;
+        Mon, 27 Jul 2020 13:35:59 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200727224343.5f86c3c8@canb.auug.org.au>
+References: <20200727224343.5f86c3c8@canb.auug.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     dhowells@redhat.com,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: problem in the fsinfo tree
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2814644.1595856959.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 27 Jul 2020 14:35:59 +0100
+Message-ID: <2814645.1595856959@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marc,
+Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-Marc Zyngier <maz@kernel.org> writes:
-> On Fri, 24 Jul 2020 21:03:50 +0100,
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->> Right. My brain tricked me to believe that we made activation mandatory,
->> but that's not.
->> 
->> I have some ideas for a trivial generic way to solve this without
->> undoing the commit in question and without going through all the irq
->> chip drivers. So far everything I came up with is butt ugly. Maybe Marc
->> has some brilliant idea.
->
-> Not really. We have contradicting behaviours here, where some
-> interrupts want to see the set_affinity early (the above case), and
-> some cannot handle that (x86 vectors and the GICv3 ITS). We could key
-> it on the presence of an activate callback, but it feels fragile.
+> In rebasing commit
+> =
 
-Yes, I thought about that briefly, but yeah, it's fragile and bound to
-break in weird ways.
+>   348b039216fb ("fsinfo: Add fsinfo() syscall to query filesystem inform=
+ation")
+> =
 
-That said, we should make activate mandatory and actually set up the
-affinity during activation correctly.
+> you forgot to update
+> =
 
-Thanks,
+> arch/arm64/include/asm/unistd.h
+> include/uapi/asm-generic/unistd.h =
 
-        tglx
+
+Sorry about that, but it's a pain to do this manually.
+
+David
+
