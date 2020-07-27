@@ -2,141 +2,115 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE40C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCAC220719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E901E2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:03:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pDLVBEBb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fRWep9/e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbgG0P7k (ORCPT
+        id S1728353AbgG0QDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:59:40 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9476 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726854AbgG0P7j (ORCPT
+        Mon, 27 Jul 2020 12:03:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29640 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727116AbgG0QDw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:59:39 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f1ef9910001>; Mon, 27 Jul 2020 08:58:09 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 27 Jul 2020 08:59:39 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 27 Jul 2020 08:59:39 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jul
- 2020 15:59:37 +0000
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.100)
- by HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 27 Jul 2020 15:59:37 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dMZyRx3jFrk3laGeWPVgSSH5bLVeSwLkQduAxWI9HmuH65ZZ/V/emGkVdHQ+MmP088Eo0IBMbDaepp6/Ge+2RNF7GsOKj5RbVMOUThHZVJ6p2BWRc+5PUxWu5isYpXDaxCy4ZvfH/izMD0F3OzCcv/WKRJqD1dKdw7eBE31dN3rcmk8OPXK6VnFt5TXUJcC7PhDYHWqFT/lNfw0jYGa2C73bjJqOjAI/G2xwI8LALXyywfepEscZnB+L3Vm9R0IqJbecWrlgs736o6eHvWWf4RALHkLnnlCgQLQZAovGAOByTiZNf11Wy8sqJWsf5711sPya2h7V9xzph+B7jGQoRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NPMONdCB4k0jTgFefoe6hJgx8IsbMBCthvowVcECkLs=;
- b=PcA7LCAQm5EUQyJiTyZtNfoPiQFt0gA0cDr/IVOdFyAoaFOaK9qqMiLWPgNllEfk2UiouubS/HGX8HnNXjKMHpEg5UVD+WyhZFuFtodUAJMF7zgrVfJyrdmhdGoOntAGr6pMCYL5ldRjXWwrAasNUKJX0hsjf1JulQDytu4aByFFq/9Wh7v4es5yBlEZIa8Wop2k/n2QX/O6EL/FE+SK4PiQ+QjSuAGCn+CLQHNj4fKDpb39P7KDhxVQhbjcjerWJLtRcrPrQB6XAbLsRBA3biH/NA3JPDmICEr92x4QqTsghB2U/bDEQcf/ZdqiUbiV9u4ajPYCsivvAYs5FCADvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: huawei.com; dkim=none (message not signed)
- header.d=none;huawei.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB3306.namprd12.prod.outlook.com (2603:10b6:5:186::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.28; Mon, 27 Jul
- 2020 15:59:35 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
- 15:59:34 +0000
-Date:   Mon, 27 Jul 2020 12:59:32 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Li Heng <liheng40@huawei.com>
-CC:     <dledford@redhat.com>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] RDMA/core: fix return error value to negative
-Message-ID: <20200727155932.GA59082@nvidia.com>
-References: <1595645787-20375-1-git-send-email-liheng40@huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1595645787-20375-1-git-send-email-liheng40@huawei.com>
-X-ClientProxiedBy: BL0PR0102CA0002.prod.exchangelabs.com
- (2603:10b6:207:18::15) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Mon, 27 Jul 2020 12:03:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595865830;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=PzdX7wVbIx8ObG6INsApXS+qCsher40rhMpcw3UMWXc=;
+        b=fRWep9/eDzx7Ww6z4zN62m+rTnXBNTYCOg7UuWVuOsuPf17ojus0npnfFNslirEqNBp0GD
+        DhxnNcqh91EVD4gIY0ZAV6TvzGjcDazOfwHY04iqlTfr5Sai/0tcf0mS75P2YPjXMjF7BH
+        12Xh1PcEEYssn4/Mk/n9R2d6eyic8TA=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-130-xNh-l0k5P1acssznhjs_Xg-1; Mon, 27 Jul 2020 12:03:48 -0400
+X-MC-Unique: xNh-l0k5P1acssznhjs_Xg-1
+Received: by mail-wr1-f69.google.com with SMTP id h4so4107705wrh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 09:03:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=PzdX7wVbIx8ObG6INsApXS+qCsher40rhMpcw3UMWXc=;
+        b=WKrmNfNY7dq9ev+VdDCi/PN5EjQXTIOg/gkgDssVOH7nLwSy0Yhq59o6wTj6ZuxSw0
+         dEqGaB/PzQWX0XRB6d3MNCQFVIcviYXNyHyI4+g6W/0HbC8X15Mo6o30ZJ1fHRkxWmNe
+         MDZ+ZVLR/rthVRHwyXRMzQ0M1TlfrAKl3KKTyAztxMHwXkTwdQFtNj+HDSKP5nNRxcRt
+         IZKgBPvu0Y1FuF6f+WnajthnulDPXHjVb3Wl8GfD+i7vakQeQxVYellWKQ/U56NkESZu
+         4OSNdf3lDywk93vg+B1zKwEOZsAGuIrizTy37D8W0Q793ZkXEhruLRUlcsXpk7vmsKmr
+         xfvA==
+X-Gm-Message-State: AOAM5324rijOkNKAcGdUYsED1nS8/xvu62d6+fSy9RM7uqKdSvtmqZEr
+        J1cKl2hyMKJC7m7j7qjC2YQ5W7jaJbiiZTbU+Nf2OVMrVHABzczwjpNivD81km+4G5ouXnonUiP
+        SWmQ+iNdCJdmhYfut8aXE7ErI
+X-Received: by 2002:adf:b1cf:: with SMTP id r15mr22476416wra.118.1595865827382;
+        Mon, 27 Jul 2020 09:03:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz7Ef1D9xDtsNFK+f9eP9IKT0MLwb1s7S8Er/1M1xlErxN9gFMzZ7/LwGj3k9MKPcujJZ0e8g==
+X-Received: by 2002:adf:b1cf:: with SMTP id r15mr22476396wra.118.1595865827149;
+        Mon, 27 Jul 2020 09:03:47 -0700 (PDT)
+Received: from redhat.com ([192.117.173.58])
+        by smtp.gmail.com with ESMTPSA id z63sm111712wmb.2.2020.07.27.09.03.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 09:03:46 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 12:03:43 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Liang Li <liang.z.li@intel.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        virtualization@lists.linux-foundation.org,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Subject: [PATCH] virtio_balloon: fix up endian-ness for free cmd id
+Message-ID: <20200727160310.102494-1-mst@redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR0102CA0002.prod.exchangelabs.com (2603:10b6:207:18::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20 via Frontend Transport; Mon, 27 Jul 2020 15:59:34 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k05XI-000FNW-Cx; Mon, 27 Jul 2020 12:59:32 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 875b502c-8560-4175-40d4-08d832460e45
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3306:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3306C86A587ACD9F829967A7C2720@DM6PR12MB3306.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:962;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0j/iyRBXQSdEuzgRLImx/a1uM+7pXTLS6PBb+ucXCwMWpLf+7AxNG0tMNNDlCv0QAjMitfx3COF7Rhvhzh0KsiJdeAbXFfLJv8o9K9n77BAKHOxwog6twd7ZuqXURlCXOb1M3S8XuRcJjHZGiEd/rnHMYPhZEFAMmZ241pz7x2fx3mBlPhFDafixuKcW3SnTypDpiYMz0YY+ml8KEZnW49CtamCixBdbMVPSPkm4EEv/SSl3xZWFqel4hGPp22EWHBijNkmpRU2HR8IH+s+Bc4E6LoZnErRyguz3Tq2pIySZLlkeRvWn9AFz8OJO3X7KIJj4uuf216su1gjHgFWqGA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(396003)(376002)(39860400002)(36756003)(8676002)(316002)(26005)(9786002)(9746002)(6916009)(4326008)(66946007)(1076003)(5660300002)(66476007)(66556008)(33656002)(478600001)(83380400001)(4744005)(186003)(86362001)(426003)(2906002)(2616005)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 570YEBe5gelOVzJL0gmQMo5v29en78zcxz0Dt51JI4znmyR1z2C3+l+1FiImW7zXQ4DGGMCwA5GIZqBNjIgPd6+tyIAjyX2SW8/SoRumymvO6dPF8uuUJwKSsd/vf3HMMfJHJi7H3X3NspeVaPlkgsM6E04y14SsnWOYItBrvqSrFKcL48v5ewsScDrbJhgd6SYiuFXR39DvK6IK4R51sNuwGoZblGbpd4ehRTlKDy9eDcqXLv40GzJR/N6UBvYL6n6LDuCMfRcfpgTR1E4Ya/V/6TZ9BG6VgWlyb0bPV5p+KPZgYuwF/sQJQu3ehrmSyu54H3AxI4VQ2saIfLuTiVsoLrDxFkATE0Kf88441HEkynyA/PsMdaWRteU10gAifq1DiADMWJqv+WIBBEyPZizfAdywcJxyuicxYVwNCKLgIKaLtP/lyzRYmSlY5rnAg1bTLVV6UDfZXjdtyzxWbCpC9P32PiLuUYscoFLrHms=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 875b502c-8560-4175-40d4-08d832460e45
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 15:59:34.4152
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Pgxt/52jCy4nTb41HeU95oNDtd2nNFpb5IGds2DuB8kyH3D4otHMnIuS9GIg9vje
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3306
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595865489; bh=NPMONdCB4k0jTgFefoe6hJgx8IsbMBCthvowVcECkLs=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
-         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
-         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=pDLVBEBbUrFa7lhcPmXpDY2ZviIsX8f5yfjHZsKD/+m69uk+WEP6a4y6ygTRiB5Ur
-         4zbQtYxRD7vkMblyp+90etq6B4gNZK/BtZ1/ZnyLpah/ppOgmLUzcUwAbBbIrFlI2J
-         NyU1m2s0chr308sDfMJoAASUSGxPUnu2NIflyHrOurv6gYTrxh1u635oD15p20uEqi
-         WfXwQe/PL7t9Zjz2JqQOqyHj+FacTM7VIoQoPyyoLfW59EeOIWGEJuGLS12VwynuuV
-         fjeqyd6Ri52Kjky1dEXjjnf7zczvRElTPco7MVEO/cPudYmN2mLqsITaNHDV+mTYzG
-         0gNG/K7iGMQ8A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 10:56:27AM +0800, Li Heng wrote:
-> Fixes: 8d9ec9addd6c (IB/core: Add a sgid_attr pointer to struct rdma_ah_attr)
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Li Heng <liheng40@huawei.com>
-> Reviewed-by: Parav Pandit <parav@mellanox.com>
-> ---
->  drivers/infiniband/core/verbs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+free cmd id is read using virtio endian, spec says all fields
+in balloon are LE. Fix it up.
 
-Applied to for-next, thanks
+Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ drivers/virtio/virtio_balloon.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Jason
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index 774deb65a9bb..798ec304fe3e 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -578,10 +578,14 @@ static int init_vqs(struct virtio_balloon *vb)
+ static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
+ {
+ 	if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
+-			       &vb->config_read_bitmap))
++			       &vb->config_read_bitmap)) {
+ 		virtio_cread(vb->vdev, struct virtio_balloon_config,
+ 			     free_page_hint_cmd_id,
+ 			     &vb->cmd_id_received_cache);
++		/* Legacy balloon config space is LE, unlike all other devices. */
++		if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
++			vb->cmd_id_received_cache = le32_to_cpu((__force __le32)vb->cmd_id_received_cache);
++	}
+ 
+ 	return vb->cmd_id_received_cache;
+ }
+-- 
+MST
+
