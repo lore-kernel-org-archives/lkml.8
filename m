@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF69AC432C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7593EC2BA4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADEC4208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414AE208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892471;
-	bh=24/kZlRm8jazrDcIiMOpg+gWnDJLT6ZaiVEEri8sSQo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ZDTTDwIexAStAwXr4NY/MtOdw3H/8ksrExslHOL53MUh526Ki3MDG7NV5LPfLQj8E
-	 hIG23RjKEy034JShfxP786eSRqsDNIeFSt0kAqJq/cAMyvqZbT5/kUYRW0kgOUmidI
-	 zlyuXhys4b4OdQ5plNH3M7Fd+tdMiG/Pqhe5XzbQ=
+	s=default; t=1595892476;
+	bh=h5rqxxYfACI8lziQ7XNfbCk2S/drUfGwBebl1x248LA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rT5nBWG8WAFwIVi8DddWc8kCj07gbSODgXSjS0uQfTSfTM4PwE+jm+rF4rbJwMo3q
+	 Gev1wcDioeZU7TjsN1RT/rUUSehBogiixA9C2yB9vma3DNqZAWaxVwA+DliFlBNQSl
+	 tYyu6o5lNuq7+yT8pjXjznikon/BQ+SaK8Qic4vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbgG0X1u (ORCPT
+        id S1728364AbgG0XYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:27:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35982 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:24:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbgG0XYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:24:46 -0400
+        id S1728311AbgG0XYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:24:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 026F621D95;
-        Mon, 27 Jul 2020 23:24:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51EF122B3F;
+        Mon, 27 Jul 2020 23:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892285;
-        bh=24/kZlRm8jazrDcIiMOpg+gWnDJLT6ZaiVEEri8sSQo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=cx+xuIVDgzChKFRiE7ZZ+uYvYn4E4gJ696F+4oGpNdgHTudv946c+7KdxFmHmq4Hh
-         rb7mid3txCKrH4dYr2b32XuEjZdlSB33RBvvUTeDoAF43EnuT79SLCmzk6uKEY/efY
-         KhdnrpsTKWH8bH73SZKltNbFL1YMy9JKp+KhLsDI=
+        s=default; t=1595892278;
+        bh=h5rqxxYfACI8lziQ7XNfbCk2S/drUfGwBebl1x248LA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=muBV7uMn1ndrQ0TWhfc3sV2jXSg1dZ+eu/SIS/tX5iNOJK+g0mxH8ZlE/HoiQ7609
+         2Ee5QEsCVOAL/5zZ9Nou8Hsl4G3vU+PYPryvNBFWfVNybISOQEHvUOTednAckH7Efx
+         yREMSdujjSK3kJx5Zum/VBdF7gYYPBCC/wGEo4bQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 01/10] usb: hso: Fix debug compile warning on sparc32
-Date:   Mon, 27 Jul 2020 19:24:34 -0400
-Message-Id: <20200727232443.718000-1-sashal@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 13/17] x86/stacktrace: Fix reliable check for empty user task stacks
+Date:   Mon, 27 Jul 2020 19:24:16 -0400
+Message-Id: <20200727232420.717684-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200727232420.717684-1-sashal@kernel.org>
+References: <20200727232420.717684-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,50 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit e0484010ec05191a8edf980413fc92f28050c1cc ]
+[ Upstream commit 039a7a30ec102ec866d382a66f87f6f7654f8140 ]
 
-On sparc32, tcflag_t is "unsigned long", unlike on all other
-architectures, where it is "unsigned int":
+If a user task's stack is empty, or if it only has user regs, ORC
+reports it as a reliable empty stack.  But arch_stack_walk_reliable()
+incorrectly treats it as unreliable.
 
-    drivers/net/usb/hso.c: In function ‘hso_serial_set_termios’:
-    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 4 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
-    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
-       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
-       ^~~~~~~
-    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 5 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
-    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
-       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
-       ^~~~~~~
+That happens because the only success path for user tasks is inside the
+loop, which only iterates on non-empty stacks.  Generally, a user task
+must end in a user regs frame, but an empty stack is an exception to
+that rule.
 
-As "unsigned long" is 32-bit on sparc32, fix this by casting all tcflag_t
-parameters to "unsigned int".
-While at it, use "%u" to format unsigned numbers.
+Thanks to commit 71c95825289f ("x86/unwind/orc: Fix error handling in
+__unwind_start()"), unwind_start() now sets state->error appropriately.
+So now for both ORC and FP unwinders, unwind_done() and !unwind_error()
+always means the end of the stack was successfully reached.  So the
+success path for kthreads is no longer needed -- it can also be used for
+empty user tasks.
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+Link: https://lkml.kernel.org/r/f136a4e5f019219cbc4f4da33b30c2f44fa65b84.1594994374.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/hso.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/kernel/stacktrace.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
-index 5251c5f6f96ed..61b9d33681484 100644
---- a/drivers/net/usb/hso.c
-+++ b/drivers/net/usb/hso.c
-@@ -1403,8 +1403,9 @@ static void hso_serial_set_termios(struct tty_struct *tty, struct ktermios *old)
- 	unsigned long flags;
+diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
+index 2d6898c2cb647..6d83b4b857e6a 100644
+--- a/arch/x86/kernel/stacktrace.c
++++ b/arch/x86/kernel/stacktrace.c
+@@ -58,7 +58,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+ 			 * or a page fault), which can make frame pointers
+ 			 * unreliable.
+ 			 */
+-
+ 			if (IS_ENABLED(CONFIG_FRAME_POINTER))
+ 				return -EINVAL;
+ 		}
+@@ -81,10 +80,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+ 	if (unwind_error(&state))
+ 		return -EINVAL;
  
- 	if (old)
--		hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
--			tty->termios.c_cflag, old->c_cflag);
-+		hso_dbg(0x16, "Termios called with: cflags new[%u] - old[%u]\n",
-+			(unsigned int)tty->termios.c_cflag,
-+			(unsigned int)old->c_cflag);
+-	/* Success path for non-user tasks, i.e. kthreads and idle tasks */
+-	if (!(task->flags & (PF_KTHREAD | PF_IDLE)))
+-		return -EINVAL;
+-
+ 	return 0;
+ }
  
- 	/* the actual setup */
- 	spin_lock_irqsave(&serial->serial_lock, flags);
 -- 
 2.25.1
 
