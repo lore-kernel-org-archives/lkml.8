@@ -2,113 +2,128 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A776FC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F17A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 791AE2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE87720672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:50:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qSKI9QTI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjS7ZIgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgG0HuA (ORCPT
+        id S1727057AbgG0Hup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:50:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60634 "EHLO
+        Mon, 27 Jul 2020 03:50:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgG0HuA (ORCPT
+        with ESMTP id S1726116AbgG0Hup (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:50:00 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00805C0619D2;
-        Mon, 27 Jul 2020 00:49:58 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id k71so8798103pje.0;
-        Mon, 27 Jul 2020 00:49:58 -0700 (PDT)
+        Mon, 27 Jul 2020 03:50:45 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFA88C0619D2;
+        Mon, 27 Jul 2020 00:50:44 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id g11so4283371ejr.0;
+        Mon, 27 Jul 2020 00:50:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HhIDh5Hx27FTVnTfWMP3UANCkbwxny8/a15rEFriMYg=;
-        b=qSKI9QTIVnlWHPnZx/oZulFmEZuP+u00joILTApKVVfP8s8yOV9YqDxlWAUO5yHFRZ
-         +GS4TjL2cTBKGeoTyNVVBx1rnsHKcPP0+cHUOMhMsjBjoC4Fp0St0V6WOdKcHWE3a7qY
-         uBuoUliduYJmBTAK5v4zBrqqhFQl9sD9/AAWfSRvwNPOxyUS8btYqgX4mjC84N2qLcaA
-         AGn7/vABnbyl3VYcHiBYvEwUWuv8YJXVoaPeEXT7L5npeTKE9SRyUmOSV8t9X66GNovS
-         ThzJhhTB2NqIDsg3ULQ7+1AV9S1UOREuUFckafPO97cbrkHJwl/HhP1AkxRHz5x4hXOI
-         2JaA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=d+C+aRIzZChly/+LMFF0Tq4yjhH/K1QkKiEm2WmPAqY=;
+        b=ZjS7ZIgbBgpF0BCvSDDWXTDY4QJNfpLnL3sxY6sH1OcJBbXPf5GcSvcTtsHCBCHKff
+         poyr2wwc8lrls009nnXy+ttm+yrrFB60ow0sw0LRBOBGeoywHL5AgRH+5SoLM9i0MHCf
+         VTeZc5VMOt8nWJnGoJsn0I9DnonmAgpvPE+DOKwUdZGxyhxQTsS6wMS6ywF27TwDPnPu
+         4+TSNl6z33Q8piFEa5Y/0esuW3BCes1FB1fBrNgFjq0ByoiOBbAic992HVDFkZpK+T5M
+         cb34UZpoHjA8uuXLA5TkB0QT5FvlHV9hdx+Xm3zdyxX22SQKXNQY/Qd7xdl/h/ckoB1n
+         EX2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HhIDh5Hx27FTVnTfWMP3UANCkbwxny8/a15rEFriMYg=;
-        b=mG04y1v7f55elE7Br1wzKu+uY7M9EurmetBZMsIPaPeXuWfAgUFSrS1jkD/sRh7XKG
-         IchU4agWjIGTDJzV6Nav0cLQY/0D/fBdOqeZcc/liK8relTpJaIN+zV/KnjtNK3Att1r
-         aYCINdELA7i0t04ULn9r34DmQdWYRxwejo5nIyvjYhyDk75abuGWv2IgDfygMznxUeS6
-         dkYC/EGL+0W9VcUbRXbr3NLmbSciGiLQhdHL9wvBA1UHqDer/55S2CN4DwpqYdjmv67T
-         zvF/Hc+/U4FibwI7CI/5wpxuoE5250PStZf7sWhVBcuzL7STQaDAFrz82hYUhE0FLyOQ
-         33Zg==
-X-Gm-Message-State: AOAM530JHKQAHZIokwweT/BGycAU/pz2hMzp75YC9BrAR6KHPvFiEOqc
-        ezKdDDogz2V2lCrp9f1IDq6BECR6RdapYPklubM=
-X-Google-Smtp-Source: ABdhPJyPnB6FMtVB5Q9bd2CIaxCVWPVOup1tHBVKZLnpG1UbzQLvIgKLF9H89TgmFXZDcF6RR6t7SbG6MhniZDPpst8=
-X-Received: by 2002:a17:90a:8985:: with SMTP id v5mr2061101pjn.181.1595836198458;
- Mon, 27 Jul 2020 00:49:58 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=d+C+aRIzZChly/+LMFF0Tq4yjhH/K1QkKiEm2WmPAqY=;
+        b=QTuVtKEbJv1BCn9yw2XNUFa8WH7fU+W8g4yR5BQA7aWmqSHs9ww2gJbdKNSsmM9SiC
+         ngNr37KRvvliiQiqvih8TN6izDtROO1d20AW/5K5EARzWJOb1KG9BeZtjcorFRPRZnI1
+         ge0P8MiLSKzKcy03VGOqgqMP8PBm5MTKKtE2FNruGq/pyk8TukAx225yTwTkqtyESred
+         Y1IbI/VRUFFlH8I2dT3+RvUE5YopeIYI55jQuOkqQzUDA0qUKCrKRS8LAxayZ1wPODd3
+         uTPgcahI9eb1XGMW4jzs9/usW0aSoiluiQRKFw1zq5XdcJQILJo7Gt2QTZQiSO726p5c
+         GbrQ==
+X-Gm-Message-State: AOAM5325juV6lyiRaE8JtZ1Kbr9rvisM6LWWZJlrmIwzXNwhDAW0Y2+B
+        G2P/QBl9t//aB2SDwY/UJiY=
+X-Google-Smtp-Source: ABdhPJx8ifaJYFn4DV6d0HZchBwdWU1orYgPlMqTeqHGuzS0V9eW7FKWnUH5f7CVB0wUBXhSRFCzqA==
+X-Received: by 2002:a17:906:248d:: with SMTP id e13mr1559098ejb.169.1595836243458;
+        Mon, 27 Jul 2020 00:50:43 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id m20sm6526256ejk.90.2020.07.27.00.50.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 00:50:42 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 09:50:41 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] Fix a bunch of W=1 warnings in PWM
+Message-ID: <20200727075041.GC2781612@ulmo>
+References: <20200629124752.1018358-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-References: <20200717114155.56222-1-hdegoede@redhat.com> <20200719225649.GA4341@khazad-dum.debian.net>
- <20200722054144.GQ1665100@dtor-ws> <20200727005049.GA10254@khazad-dum.debian.net>
- <f67ede61-c9d4-6abc-9b59-a5b2b615d1b6@redhat.com>
-In-Reply-To: <f67ede61-c9d4-6abc-9b59-a5b2b615d1b6@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 27 Jul 2020 10:49:42 +0300
-Message-ID: <CAHp75VdvhC5HJ-BjqjDxU_Z_7_i8MV5UDN4FgWHvZfSD5=smqg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Add 3 new keycodes and use them for 3 new hotkeys on
- new Lenovo Thinkpads
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Marco Trevisan <marco.trevisan@canonical.com>,
-        Mark Pearson <mpearson@lenovo.com>,
-        Christian Kellner <ckellner@redhat.com>,
-        Benjamin Berg <bberg@redhat.com>,
-        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="eRtJSFbw+EEWtPj3"
+Content-Disposition: inline
+In-Reply-To: <20200629124752.1018358-1-lee.jones@linaro.org>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 10:45 AM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 7/27/20 2:50 AM, Henrique de Moraes Holschuh wrote:
-> > On Tue, 21 Jul 2020, Dmitry Torokhov wrote:
-> >> On Sun, Jul 19, 2020 at 07:56:49PM -0300, Henrique de Moraes Holschuh wrote:
-> >>> On Fri, 17 Jul 2020, Hans de Goede wrote:
-> >>>> This is a simple patch-series adding support for 3 new hotkeys found
-> >>>> on various new Lenovo Thinkpad models.
-> >>>
-> >>> For all three patches, pending an ack for the new keycodes by the input
-> >>> maintainers:
-> >>>
-> >>> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-> >>
-> >> Do you want me to merge all 3 through input tree?
-> >
-> > Hans, Daren, Andy, what do you prefer?
->
-> Taking all this upstream through Dmitry's input tree is fine with
-> me, but this really is up to Andy and/or Daren.
 
-Fine with me.
+--eRtJSFbw+EEWtPj3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Mon, Jun 29, 2020 at 01:47:48PM +0100, Lee Jones wrote:
+> Attempting to clean-up W=3D1 kernel builds, which are currently
+> overwhelmingly riddled with niggly little warnings.
+>=20
+> Lee Jones (4):
+>   pwm: bcm-iproc: Remove impossible comparison when validating duty
+>     cycle
+>   pwm: bcm-kona: Remove impossible comparison when validating duty cycle
+>   pwm: mediatek: Provide missing kerneldoc description for 'soc' arg
+>   pwm: omap-dmtimer: Repair pwm_omap_dmtimer_chip's broken kerneldoc
+>     header
+>=20
+>  drivers/pwm/pwm-bcm-iproc.c    | 3 +--
+>  drivers/pwm/pwm-bcm-kona.c     | 2 +-
+>  drivers/pwm/pwm-mediatek.c     | 1 +
+>  drivers/pwm/pwm-omap-dmtimer.c | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+
+Applied, thanks.
+
+Thierry
+
+--eRtJSFbw+EEWtPj3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8eh1EACgkQ3SOs138+
+s6EE0BAAtJ8jgzHwsPcXNK+EPH9rUmVFDOOHkL11CCJUc+k7H6oJtANYVNlCuwey
+8XYLAu9/hthSJddVGKF5lieUj4vDEoI+z0ZAzs2FV4q6gTKqbubYideTCk87PPZk
+tBpthZF9UjCRBzKeCD9shr9QXUH1VgCe2GbM9rwurVYBfl8O3Wl5zj7JBs/VirRy
+2S0AVyIjya6pqsSb6f0EFSehv2plffKe9Le0BEYfNd1kt06OOtWZ9vmQgY2gNBa5
+tqLmO7ZgBgVHq/IJ+figo+1Qlry51M//WgLiF6YbnBjgQJnynmSVUZfU7rOjhO6r
+eACFJZyeGlpsUoooUQ5MwYW6yP5wGhKUNpQQ/+rccZ36KNMEEybSBJ18/GszXDBW
+2DQLpkqQl+6csDb2WZmkvz7AbFVleSQnb6JDcAcyiDHhuaP4OxlWYnnhfs/Q3iuk
+vBIvqZUOSw3mNCoIkfpmpibKbVI2IwqXX/yAg5MWeR9xk2yWLXCaQi9MeXWuoUbF
+MRaRSJfppmvxzETu7qeGN/WpbO7limVWjwCyNk0URFSWWKSM8GOPLpjS/IQYmC6x
+bId2ypU+o6QB+F2QbD4DnvNivPiuyvOpwXNZH9Y4UV1zVvLq36Wg2K0Jn4NLtPu/
+rHrSGxjTq9L6n71N11mxrV7fPM9uS9jKNVGGgrCc3vZQMT4lJrs=
+=kRNd
+-----END PGP SIGNATURE-----
+
+--eRtJSFbw+EEWtPj3--
