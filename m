@@ -2,266 +2,104 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D16AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCFDC43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E01020714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:14:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e+vB9jT0"
+	by mail.kernel.org (Postfix) with ESMTP id 7119F20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:14:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595873671;
+	bh=pVKMY7lDiPq79GD7FAvQ4agKAX3xRA0hdYXrlEkB1fk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VsDZTPbdsFCt/9c5MoPnt8kyU8bj4+pK8dqt6kNBSNK+wrl49QfCkp6LwSghBjZGL
+	 yeOqVAt5JDqvKPR1MZvYMOOaLMCDQyrRLvzRmcGH4pBG34UJ1b99S2buBbbjY+euDr
+	 ix/pdlIRgtNelEwVBjmM3iusPX2pPOXJGxrrG7/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731529AbgG0SOV (ORCPT
+        id S1731572AbgG0SOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 14:14:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729356AbgG0SOU (ORCPT
+        Mon, 27 Jul 2020 14:14:30 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:38659 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729356AbgG0SO3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 14:14:20 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 055FFC061794;
-        Mon, 27 Jul 2020 11:14:20 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f18so15701014wml.3;
-        Mon, 27 Jul 2020 11:14:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oweP9/5P4IwfXq7FRGFpzMEQgr6J1hZ6crzxPuNCiqY=;
-        b=e+vB9jT04h1RqsV7Fy7tiIT+AHPMYl/g2rFgZntMj6RpzHGLDjLAI8bOB/FL+yBNX/
-         9qn331OfOwaU3a8WYOhf3CAAJYYXHhs4KMXgtBWnexxEufuchYEnVKcDBSXzVUispykn
-         PR40AH4VCMOWPdvJgpX6acxF7DBqNP8KyP2q4AIPqMVFUtDLmsCl6VmFgcNrsvst1eG9
-         klrjBAOThyjIG0dioA2ojFxTUJn17xbtsqRdZ6z0B6yZtinAFVZ395Hi2lInjq360Fl9
-         UtHO5WaCd+wmaxPB5DTQj2gwpModMlRNzeqY5m7liEbD/D9B33L3Io0obgG6UCAB3VY/
-         xNiw==
+        Mon, 27 Jul 2020 14:14:29 -0400
+Received: by mail-il1-f195.google.com with SMTP id s21so13903498ilk.5;
+        Mon, 27 Jul 2020 11:14:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oweP9/5P4IwfXq7FRGFpzMEQgr6J1hZ6crzxPuNCiqY=;
-        b=I89mTvMkn97s6PKfwIBjBwWhnLQAzbWy7fGu9gkQDklSvTknhBmf8P1qJUatpkEHP/
-         Jb2/VmxybEbrsivbV/xv7bGTJi8326zXsIqILyzussSnsZG1OmsmR14CO8cAM2YHm6RP
-         uNTHgJvDsqurZ4fz4yslEtpfhKjWyWlBelBXK/G9OVl4Tto7oN3H6TkuR6LRBoCvjQcx
-         be+ZeVjAxYMoM4kofstRiYlYhPtk0xgUabmFUmaZIlm6zCOSSvm1p0zWPpkqzshqyV4a
-         ZyDB0LHnsNYdEq1wrR0R34sUlVj2qJBVsaAVOXgIdxp5mM+pxW2zxffBQxWi+h7iDgLi
-         QzmQ==
-X-Gm-Message-State: AOAM532KS4IJPCr8NJ60Jk/pvznJbeeQLmxncKp0RpKFoe1vpvKzin5U
-        weHRO7hntHnAiB4BvH6Psq6Puf3eDx2QtaD/fmA=
-X-Google-Smtp-Source: ABdhPJwDf3NQVRSMOOvQ3/gDp3spLrysuALfIbGNUz8NSRkrcu7vnDQpr1MxHquSAobzWw/p7CVeHkm3ribJUJCaGHA=
-X-Received: by 2002:a7b:c941:: with SMTP id i1mr429279wml.73.1595873658666;
- Mon, 27 Jul 2020 11:14:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rPmxfYQDyT8r9CcnowDVVykigkQ+z869mGL3I9FOWwo=;
+        b=BdhgMsN66sRBooFq8ZkMQzcEIrYFHI4dS9ClZo+YjP37BDflDMJklDk/hbKpN0KUG1
+         j3WT6FAI5vHxe26gzwRxYnnqNFqVfJ8L4ivkBlZJ3tiyxQhCtA9CGPzuUzVE8WQ/QkVe
+         TaSNnVkcrATxn+Bp3P6mi46TADFKzvFlKdxn0IOZ/9Xj1MBMX2DF0DQEAKdyJHtt8wVY
+         gNy/qWr9roVJ3JzWDAQrfAoVqaXlyse88xJFABdTOiwi2qMTPFmIvsQEYAtHtZ33IIj5
+         kkrRHi7tx3uYAK1YQGIyEMgo24k+f1LsLewXKMNvDejRkJUafCQqIFGR6gx5pzW/prRc
+         HOGQ==
+X-Gm-Message-State: AOAM5328fCAoqGwOninl8eb2emrVgV1F/5kVkSgGp55kl8ZFXbUEVUkT
+        OB+IcYIGp+heiAevl5tnOg==
+X-Google-Smtp-Source: ABdhPJwOPsDlRJNd39fzhlpbhYZJWTt8o2fLoFjCpKxHuendknVSAZX52OcisWkASIdYEOtqu66cqA==
+X-Received: by 2002:a05:6e02:545:: with SMTP id i5mr20290346ils.59.1595873668199;
+        Mon, 27 Jul 2020 11:14:28 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id b11sm1133142ile.32.2020.07.27.11.14.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 11:14:27 -0700 (PDT)
+Received: (nullmailer pid 639381 invoked by uid 1000);
+        Mon, 27 Jul 2020 18:14:24 -0000
+Date:   Mon, 27 Jul 2020 12:14:24 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Talel Shenhar <talel@amazon.com>
+Cc:     robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        mchehab@kernel.org, davem@davemloft.net, catalin.marinas@arm.com,
+        devicetree@vger.kernel.org, ronenk@amazon.com, james.morse@arm.com,
+        bp@alien8.de, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, hhhawa@amazon.com, hanochu@amazon.com,
+        mark.rutland@arm.com, eitan@amazon.com, will@kernel.org,
+        nicolas.ferre@microchip.com, jonnyc@amazon.com,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v8 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
+ Labs Memory Controller EDAC
+Message-ID: <20200727181424.GA639053@bogus>
+References: <20200726191555.5210-1-talel@amazon.com>
+ <20200726191555.5210-2-talel@amazon.com>
 MIME-Version: 1.0
-References: <20200727103421.50739-1-christophe.jaillet@wanadoo.fr> <224fc7f6-f56b-1dc8-87f2-33ff85d5720d@gmail.com>
-In-Reply-To: <224fc7f6-f56b-1dc8-87f2-33ff85d5720d@gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 27 Jul 2020 14:14:07 -0400
-Message-ID: <CADnq5_MKR9SC947WCN6Qp4BLhrK03=FtT7hD7b+DwNQ46krmkQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drm/radeon: switch from 'pci_' to 'dma_' API
-To:     Christian Koenig <christian.koenig@amd.com>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        kernel-janitors@vger.kernel.org,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726191555.5210-2-talel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  Thanks!
+On Sun, 26 Jul 2020 22:15:54 +0300, Talel Shenhar wrote:
+> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
+> 
+> Signed-off-by: Talel Shenhar <talel@amazon.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/edac/amazon,al-mc-edac.yaml      | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+> 
 
-Alex
 
-On Mon, Jul 27, 2020 at 9:42 AM Christian K=C3=B6nig
-<ckoenig.leichtzumerken@gmail.com> wrote:
->
-> Am 27.07.20 um 12:34 schrieb Christophe JAILLET:
-> > The wrappers in include/linux/pci-dma-compat.h should go away.
-> >
-> > The patch has been generated with the coccinelle script below and has b=
-een
-> > hand modified to replace GFP_ with a correct flag.
-> > It has been compile tested.
-> >
-> > When memory is allocated in 'radeon_gart_table_ram_alloc()' GFP_KERNEL
-> > can be used because its callers already use this flag.
-> >
-> > Both 'r100_pci_gart_init()' (r100.c) and 'rs400_gart_init()' (rs400.c)
-> > call 'radeon_gart_init()'.
-> > This function uses 'vmalloc'.
-> >
-> >
-> > @@
-> > @@
-> > -    PCI_DMA_BIDIRECTIONAL
-> > +    DMA_BIDIRECTIONAL
-> >
-> > @@
-> > @@
-> > -    PCI_DMA_TODEVICE
-> > +    DMA_TO_DEVICE
-> >
-> > @@
-> > @@
-> > -    PCI_DMA_FROMDEVICE
-> > +    DMA_FROM_DEVICE
-> >
-> > @@
-> > @@
-> > -    PCI_DMA_NONE
-> > +    DMA_NONE
-> >
-> > @@
-> > expression e1, e2, e3;
-> > @@
-> > -    pci_alloc_consistent(e1, e2, e3)
-> > +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-> >
-> > @@
-> > expression e1, e2, e3;
-> > @@
-> > -    pci_zalloc_consistent(e1, e2, e3)
-> > +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-> >
-> > @@
-> > expression e1, e2, e3, e4;
-> > @@
-> > -    pci_free_consistent(e1, e2, e3, e4)
-> > +    dma_free_coherent(&e1->dev, e2, e3, e4)
-> >
-> > @@
-> > expression e1, e2, e3, e4;
-> > @@
-> > -    pci_map_single(e1, e2, e3, e4)
-> > +    dma_map_single(&e1->dev, e2, e3, e4)
-> >
-> > @@
-> > expression e1, e2, e3, e4;
-> > @@
-> > -    pci_unmap_single(e1, e2, e3, e4)
-> > +    dma_unmap_single(&e1->dev, e2, e3, e4)
-> >
-> > @@
-> > expression e1, e2, e3, e4, e5;
-> > @@
-> > -    pci_map_page(e1, e2, e3, e4, e5)
-> > +    dma_map_page(&e1->dev, e2, e3, e4, e5)
-> >
-> > @@
-> > expression e1, e2, e3, e4;
-> > @@
-> > -    pci_unmap_page(e1, e2, e3, e4)
-> > +    dma_unmap_page(&e1->dev, e2, e3, e4)
-> >
-> > @@
-> > expression e1, e2, e3, e4;
-> > @@
-> > -    pci_map_sg(e1, e2, e3, e4)
-> > +    dma_map_sg(&e1->dev, e2, e3, e4)
-> >
-> > @@
-> > expression e1, e2, e3, e4;
-> > @@
-> > -    pci_unmap_sg(e1, e2, e3, e4)
-> > +    dma_unmap_sg(&e1->dev, e2, e3, e4)
-> >
-> > @@
-> > expression e1, e2, e3, e4;
-> > @@
-> > -    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-> > +    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-> >
-> > @@
-> > expression e1, e2, e3, e4;
-> > @@
-> > -    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-> > +    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-> >
-> > @@
-> > expression e1, e2, e3, e4;
-> > @@
-> > -    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-> > +    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-> >
-> > @@
-> > expression e1, e2, e3, e4;
-> > @@
-> > -    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-> > +    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-> >
-> > @@
-> > expression e1, e2;
-> > @@
-> > -    pci_dma_mapping_error(e1, e2)
-> > +    dma_mapping_error(&e1->dev, e2)
-> >
-> > @@
-> > expression e1, e2;
-> > @@
-> > -    pci_set_dma_mask(e1, e2)
-> > +    dma_set_mask(&e1->dev, e2)
-> >
-> > @@
-> > expression e1, e2;
-> > @@
-> > -    pci_set_consistent_dma_mask(e1, e2)
-> > +    dma_set_coherent_mask(&e1->dev, e2)
-> >
-> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
->
-> > ---
-> > If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-> >     https://marc.info/?l=3Dkernel-janitors&m=3D158745678307186&w=3D4
-> > ---
-> >   drivers/gpu/drm/radeon/radeon_gart.c | 9 ++++-----
-> >   1 file changed, 4 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/radeon/radeon_gart.c b/drivers/gpu/drm/rad=
-eon/radeon_gart.c
-> > index f178ba321715..b7ce254e5663 100644
-> > --- a/drivers/gpu/drm/radeon/radeon_gart.c
-> > +++ b/drivers/gpu/drm/radeon/radeon_gart.c
-> > @@ -72,8 +72,8 @@ int radeon_gart_table_ram_alloc(struct radeon_device =
-*rdev)
-> >   {
-> >       void *ptr;
-> >
-> > -     ptr =3D pci_alloc_consistent(rdev->pdev, rdev->gart.table_size,
-> > -                                &rdev->gart.table_addr);
-> > +     ptr =3D dma_alloc_coherent(&rdev->pdev->dev, rdev->gart.table_siz=
-e,
-> > +                              &rdev->gart.table_addr, GFP_KERNEL);
-> >       if (ptr =3D=3D NULL) {
-> >               return -ENOMEM;
-> >       }
-> > @@ -110,9 +110,8 @@ void radeon_gart_table_ram_free(struct radeon_devic=
-e *rdev)
-> >                             rdev->gart.table_size >> PAGE_SHIFT);
-> >       }
-> >   #endif
-> > -     pci_free_consistent(rdev->pdev, rdev->gart.table_size,
-> > -                         (void *)rdev->gart.ptr,
-> > -                         rdev->gart.table_addr);
-> > +     dma_free_coherent(&rdev->pdev->dev, rdev->gart.table_size,
-> > +                       (void *)rdev->gart.ptr, rdev->gart.table_addr);
-> >       rdev->gart.ptr =3D NULL;
-> >       rdev->gart.table_addr =3D 0;
-> >   }
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.example.dt.yaml: example-0: edac@f0080000:reg:0: [0, 4027056128, 0, 65536] is too long
+
+
+See https://patchwork.ozlabs.org/patch/1336532
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
