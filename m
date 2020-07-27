@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1C0C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0227C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9422A20FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 879B32070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859415;
-	bh=cPR2zPn5HSoqWO5iLEJ+606lEqfGx63K60WONIiPpHY=;
+	s=default; t=1595859707;
+	bh=OdLkRB2xOGe8mEdYlFzHbiS2fJS4dERxvM6LXLy6FXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FsgC7aIXpl+oSx05Vz4Zb3HAoxfKlwGLjrZmQYqyHG0Uxnu8EjYPdnpADpEZvXmgB
-	 wbaQFMqZ4Z2JH5u+P4hiJpCB64mJUYq+VjSjcdo7QpamFr7jlIhi3hRTvgiYn7LDmh
-	 TYsr3xZiSaB1Jh5pzyFNYi36PKc2TiAewFEtj6HY=
+	b=xxCbd1CZ3V66PnDeR3tsNtjvpzQCPfWj4px8M+4Vt7jas4SvIiodFWcJcRnUAcZ8x
+	 akXW8E7gdv945aUOamoDuMAFLKgb0qCcKsJZe3iCEIySuP2dtwrXVtlnGtZDVORwy6
+	 Lc4iEKl2KuXVkReIkeloNMjvA4dTb5CGlgnSnoXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730368AbgG0OQy (ORCPT
+        id S1731787AbgG0OVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:16:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43876 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730939AbgG0OQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:16:49 -0400
+        id S1730258AbgG0OVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:21:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6B6F20775;
-        Mon, 27 Jul 2020 14:16:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 170EA2070B;
+        Mon, 27 Jul 2020 14:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859409;
-        bh=cPR2zPn5HSoqWO5iLEJ+606lEqfGx63K60WONIiPpHY=;
+        s=default; t=1595859703;
+        bh=OdLkRB2xOGe8mEdYlFzHbiS2fJS4dERxvM6LXLy6FXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KvWNlNPlIkSBNq5GCZ9Oy4UDtTxcVR7osSQxe5VRAObHtAHtFCWevU33akQHYPtqD
-         LjhlTbxZ+nN2xDj3/BC8bENscVVJ8S/jjsIgO6qF1sUQaYbFxFqyo1UDPO/ZctRY3V
-         Ml6bFP4R34C0N193n4luvI/13SQ95+vRhgvMoNDY=
+        b=GCPJoEkqNZ+32x9Kkxi7djg9E0d6gIsxRDCAwl9qBO3Pn+aLBkVmjno+cXr769LU3
+         9p/ILJkahKZSgAfnl/QBVAhTpONGKwLqnGJ7os/dFrlWyQApGK/xDa48la5fnHvftB
+         V1NYUMtXrxBOnxIeKu5kML+BvpHd3y0+cDfPo5uA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Shannon Nelson <snelson@pensando.io>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 096/138] hwmon: (scmi) Fix potential buffer overflow in scmi_hwmon_probe()
-Date:   Mon, 27 Jul 2020 16:04:51 +0200
-Message-Id: <20200727134930.177243965@linuxfoundation.org>
+Subject: [PATCH 5.7 072/179] ionic: update filter id after replay
+Date:   Mon, 27 Jul 2020 16:04:07 +0200
+Message-Id: <20200727134936.194813700@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
-References: <20200727134925.228313570@linuxfoundation.org>
+In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
+References: <20200727134932.659499757@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,41 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Marussi <cristian.marussi@arm.com>
+From: Shannon Nelson <snelson@pensando.io>
 
-[ Upstream commit 3ce17cd2b94907f6d91b81b32848044b84c97606 ]
+[ Upstream commit cc4428c4de8c31f12e4690d0409e0432fe05702f ]
 
-SMATCH detected a potential buffer overflow in the manipulation of
-hwmon_attributes array inside the scmi_hwmon_probe function:
+When we replay the rx filters after a fw-upgrade we get new
+filter_id values from the FW, which we need to save and update
+in our local filter list.  This allows us to delete the filters
+with the correct filter_id when we're done.
 
-drivers/hwmon/scmi-hwmon.c:226
- scmi_hwmon_probe() error: buffer overflow 'hwmon_attributes' 6 <= 9
-
-Fix it by statically declaring the size of the array as the maximum
-possible as defined by hwmon_max define.
-
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Link: https://lore.kernel.org/r/20200715121338.GA18761@e119603-lin.cambridge.arm.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: 7e4d47596b68 ("ionic: replay filters after fw upgrade")
+Signed-off-by: Shannon Nelson <snelson@pensando.io>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/scmi-hwmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../ethernet/pensando/ionic/ionic_rx_filter.c | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
-index 8a7732c0bef3e..7cd13a217c615 100644
---- a/drivers/hwmon/scmi-hwmon.c
-+++ b/drivers/hwmon/scmi-hwmon.c
-@@ -147,7 +147,7 @@ static enum hwmon_sensor_types scmi_types[] = {
- 	[ENERGY] = hwmon_energy,
- };
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_rx_filter.c b/drivers/net/ethernet/pensando/ionic/ionic_rx_filter.c
+index fb9d828812bd2..cd0076fc3044e 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_rx_filter.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_rx_filter.c
+@@ -21,13 +21,16 @@ void ionic_rx_filter_free(struct ionic_lif *lif, struct ionic_rx_filter *f)
+ void ionic_rx_filter_replay(struct ionic_lif *lif)
+ {
+ 	struct ionic_rx_filter_add_cmd *ac;
++	struct hlist_head new_id_list;
+ 	struct ionic_admin_ctx ctx;
+ 	struct ionic_rx_filter *f;
+ 	struct hlist_head *head;
+ 	struct hlist_node *tmp;
++	unsigned int key;
+ 	unsigned int i;
+ 	int err;
  
--static u32 hwmon_attributes[] = {
-+static u32 hwmon_attributes[hwmon_max] = {
- 	[hwmon_chip] = HWMON_C_REGISTER_TZ,
- 	[hwmon_temp] = HWMON_T_INPUT | HWMON_T_LABEL,
- 	[hwmon_in] = HWMON_I_INPUT | HWMON_I_LABEL,
++	INIT_HLIST_HEAD(&new_id_list);
+ 	ac = &ctx.cmd.rx_filter_add;
+ 
+ 	for (i = 0; i < IONIC_RX_FILTER_HLISTS; i++) {
+@@ -58,9 +61,30 @@ void ionic_rx_filter_replay(struct ionic_lif *lif)
+ 						    ac->mac.addr);
+ 					break;
+ 				}
++				spin_lock_bh(&lif->rx_filters.lock);
++				ionic_rx_filter_free(lif, f);
++				spin_unlock_bh(&lif->rx_filters.lock);
++
++				continue;
+ 			}
++
++			/* remove from old id list, save new id in tmp list */
++			spin_lock_bh(&lif->rx_filters.lock);
++			hlist_del(&f->by_id);
++			spin_unlock_bh(&lif->rx_filters.lock);
++			f->filter_id = le32_to_cpu(ctx.comp.rx_filter_add.filter_id);
++			hlist_add_head(&f->by_id, &new_id_list);
+ 		}
+ 	}
++
++	/* rebuild the by_id hash lists with the new filter ids */
++	spin_lock_bh(&lif->rx_filters.lock);
++	hlist_for_each_entry_safe(f, tmp, &new_id_list, by_id) {
++		key = f->filter_id & IONIC_RX_FILTER_HLISTS_MASK;
++		head = &lif->rx_filters.by_id[key];
++		hlist_add_head(&f->by_id, head);
++	}
++	spin_unlock_bh(&lif->rx_filters.lock);
+ }
+ 
+ int ionic_rx_filters_init(struct ionic_lif *lif)
 -- 
 2.25.1
 
