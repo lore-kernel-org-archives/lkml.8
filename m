@@ -2,292 +2,228 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A0BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE43C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE73120775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:58:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HEMVnZX7"
+	by mail.kernel.org (Postfix) with ESMTP id 6A6C5207BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595872689;
+	bh=CA4nKbNPAW8fMZ9ZLQytkTZcWotgaZypXd7jV3UWu4k=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=DSE5ZrpV6e4GedxcegGKWGIFLVSccuCvBPHRIK2hOc50Vid5liE6bjAOEY6d4SvDG
+	 0/NXiLu2lDML3tDF9O2RGtfpHYD/PctYsqXP61yKoAAC+bgiGE5ppqOqoVbEWzqag6
+	 gbxoRqtRbSvvFc+/9PZVAIT/8z4F/E05Pij35FR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbgG0R6E (ORCPT
+        id S1731545AbgG0R6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:58:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729144AbgG0R6C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:58:02 -0400
-Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 740D0C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 10:58:02 -0700 (PDT)
-Received: by mail-pf1-x44a.google.com with SMTP id x2so4937950pfo.11
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 10:58:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=v79kbmUkhVfOjNte7kKJtv1wRDHs0zSXbmGajTvWXv4=;
-        b=HEMVnZX7jaCR6Dx3/f8jO8MM2TJn10Vgm+3WwNJZC2gGx5Xuheqe2zDflWymTVnCb6
-         Td3RdtBmv1zC+GgRd5hCzx10VyDj6FvqTBDw8mynJPtkZBo7qAmX5R5CiJEPTJCBbKXS
-         1xFnzfN/29lJsw2grBcfZCyN3/rXzo62GQYeBwHWOgbmeDicxMkfDb9/XxUjS3T22Fr2
-         dLnaF9pFF3ZyLmQ1rihimEBPxc8QQKj9u8KL6EUbn0RwyyGlM8/hRHa0Hns+GBTDNbJn
-         RTlJ+tXPR90s7DOfGAosp8XIQPTn6Lm7wjjG4iuRdjJMk2qBWcJey87UyBHuaJVHnyYd
-         Jm7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=v79kbmUkhVfOjNte7kKJtv1wRDHs0zSXbmGajTvWXv4=;
-        b=Uw/g+Y1tKAJSVejgbVy+sWPMr7OvBKvcOReO3PIz3KHXPgntWcknG0R4OnO7RcJQ+t
-         9g4gHOxiG9P7XcXCR+WUeIq9zmNgVZ+V84KTR9o45DdAWxX0PRVxOcjMo6eRfwTsL4Rf
-         DQ0suK+Sihsz7p9WsBPDdRWjjjP3gTsJ8eaAGyeDJyAZAHlm/bR/W87w/UL0zt2ldxKk
-         hPzYVgZLmtsEuiHmP2qYWqdskaF3Rts0iwawMBcfAIxTMfmRGBwL7HM57eA7jr2Tsyo7
-         fdu+/KyzLzsvqLrvLRTi0vo1OlWSnCjL4eOsx0EQ7R9pZne/nextFzrNjTOKF/todeON
-         X0tQ==
-X-Gm-Message-State: AOAM5316q7bmZLidalh0Ut9aG8FiiG/hkpr9z5KQ/Pisis7xIoqbriSY
-        eHmjqgVehqqE9Asd3X6W7X0SmGD9YK1CWXwE/9s=
-X-Google-Smtp-Source: ABdhPJyb0sm0pWa5ByI1RgPKb62bIHEnGcfdYmL0NVmKgoJbCACCmb96SrUbd51FxVdHNXFIvotUvmJ8NstJCkhTP5w=
-X-Received: by 2002:a65:6086:: with SMTP id t6mr20167995pgu.342.1595872681997;
- Mon, 27 Jul 2020 10:58:01 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 17:57:20 +0000
-In-Reply-To: <20200727175720.4022402-1-willmcvicker@google.com>
-Message-Id: <20200727175720.4022402-2-willmcvicker@google.com>
-Mime-Version: 1.0
-References: <20200727175720.4022402-1-willmcvicker@google.com>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-Subject: [PATCH 1/1] netfilter: nat: add range checks for access to nf_nat_l[34]protos[]
-From:   Will McVicker <willmcvicker@google.com>
-To:     security@kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, Will McVicker <willmcvicker@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Jul 2020 13:58:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729686AbgG0R6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 13:58:05 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E29820714;
+        Mon, 27 Jul 2020 17:58:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595872684;
+        bh=CA4nKbNPAW8fMZ9ZLQytkTZcWotgaZypXd7jV3UWu4k=;
+        h=Date:From:To:Cc:Subject:From;
+        b=JMuv/vD+0Ef5m4HgdJexhqp7LsShRNCoYmvZMz6RY00aO4TTHgzsIdBHBYygfaux8
+         6BTDFRJMZY7fzX7bxUBOEmz+stqYlzs6N5HllYk4NA5ZDbX/TFaIaT7yhb23uOK3ox
+         1hEXbQxo9dWCIdcHZCXSLNlGXUatE/XVy70MBVsQ=
+Date:   Mon, 27 Jul 2020 13:03:56 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Boris Pismenny <borisp@mellanox.com>
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] net/mlx5: Use fallthrough pseudo-keyword
+Message-ID: <20200727180356.GA26612@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The indexes to the nf_nat_l[34]protos arrays come from userspace. So we
-need to make sure that before indexing the arrays, we verify the index
-is within the array bounds in order to prevent an OOB memory access.
-Here is an example kernel panic on 4.14.180 when userspace passes in an
-index greater than NFPROTO_NUMPROTO.
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
-Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-Modules linked in:...
-Process poc (pid: 5614, stack limit = 0x00000000a3933121)
-CPU: 4 PID: 5614 Comm: poc Tainted: G S      W  O    4.14.180-g051355490483
-Hardware name: Qualcomm Technologies, Inc. SM8150 V2 PM8150 Google Inc. MSM
-task: 000000002a3dfffe task.stack: 00000000a3933121
-pc : __cfi_check_fail+0x1c/0x24
-lr : __cfi_check_fail+0x1c/0x24
-...
-Call trace:
-__cfi_check_fail+0x1c/0x24
-name_to_dev_t+0x0/0x468
-nfnetlink_parse_nat_setup+0x234/0x258
-ctnetlink_parse_nat_setup+0x4c/0x228
-ctnetlink_new_conntrack+0x590/0xc40
-nfnetlink_rcv_msg+0x31c/0x4d4
-netlink_rcv_skb+0x100/0x184
-nfnetlink_rcv+0xf4/0x180
-netlink_unicast+0x360/0x770
-netlink_sendmsg+0x5a0/0x6a4
-___sys_sendmsg+0x314/0x46c
-SyS_sendmsg+0xb4/0x108
-el0_svc_naked+0x34/0x38
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Signed-off-by: Will McVicker <willmcvicker@google.com>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/ipv4/netfilter/nf_nat_l3proto_ipv4.c |  6 ++++--
- net/ipv6/netfilter/nf_nat_l3proto_ipv6.c |  5 +++--
- net/netfilter/nf_nat_core.c              | 27 ++++++++++++++++++++++--
- net/netfilter/nf_nat_helper.c            |  4 ++++
- 4 files changed, 36 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h         | 2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c          | 4 ++--
+ .../net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c    | 2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c      | 2 +-
+ .../net/ethernet/mellanox/mlx5/core/eswitch_offloads.c    | 2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c       | 4 ++--
+ drivers/net/ethernet/mellanox/mlx5/core/lag_mp.c          | 8 ++++----
+ drivers/net/ethernet/mellanox/mlx5/core/vport.c           | 2 +-
+ 8 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/net/ipv4/netfilter/nf_nat_l3proto_ipv4.c b/net/ipv4/netfilter/nf_nat_l3proto_ipv4.c
-index 6115bf1ff6f0..1912fc66147c 100644
---- a/net/ipv4/netfilter/nf_nat_l3proto_ipv4.c
-+++ b/net/ipv4/netfilter/nf_nat_l3proto_ipv4.c
-@@ -218,7 +218,8 @@ int nf_nat_icmp_reply_translation(struct sk_buff *skb,
- 		return 1;
- 
- 	l4proto = __nf_nat_l4proto_find(NFPROTO_IPV4, inside->ip.protocol);
--	if (!nf_nat_ipv4_manip_pkt(skb, hdrlen + sizeof(inside->icmp),
-+	if (!l4proto ||
-+	    !nf_nat_ipv4_manip_pkt(skb, hdrlen + sizeof(inside->icmp),
- 				   l4proto, &ct->tuplehash[!dir].tuple, !manip))
- 		return 0;
- 
-@@ -234,7 +235,8 @@ int nf_nat_icmp_reply_translation(struct sk_buff *skb,
- 	/* Change outer to look like the reply to an incoming packet */
- 	nf_ct_invert_tuplepr(&target, &ct->tuplehash[!dir].tuple);
- 	l4proto = __nf_nat_l4proto_find(NFPROTO_IPV4, 0);
--	if (!nf_nat_ipv4_manip_pkt(skb, 0, l4proto, &target, manip))
-+	if (!l4proto ||
-+	    !nf_nat_ipv4_manip_pkt(skb, 0, l4proto, &target, manip))
- 		return 0;
- 
- 	return 1;
-diff --git a/net/ipv6/netfilter/nf_nat_l3proto_ipv6.c b/net/ipv6/netfilter/nf_nat_l3proto_ipv6.c
-index ca6d38698b1a..a72840baf27b 100644
---- a/net/ipv6/netfilter/nf_nat_l3proto_ipv6.c
-+++ b/net/ipv6/netfilter/nf_nat_l3proto_ipv6.c
-@@ -228,7 +228,8 @@ int nf_nat_icmpv6_reply_translation(struct sk_buff *skb,
- 		return 1;
- 
- 	l4proto = __nf_nat_l4proto_find(NFPROTO_IPV6, inside->ip6.nexthdr);
--	if (!nf_nat_ipv6_manip_pkt(skb, hdrlen + sizeof(inside->icmp6),
-+	if (!l4proto ||
-+	    !nf_nat_ipv6_manip_pkt(skb, hdrlen + sizeof(inside->icmp6),
- 				   l4proto, &ct->tuplehash[!dir].tuple, !manip))
- 		return 0;
- 
-@@ -245,7 +246,7 @@ int nf_nat_icmpv6_reply_translation(struct sk_buff *skb,
- 
- 	nf_ct_invert_tuplepr(&target, &ct->tuplehash[!dir].tuple);
- 	l4proto = __nf_nat_l4proto_find(NFPROTO_IPV6, IPPROTO_ICMPV6);
--	if (!nf_nat_ipv6_manip_pkt(skb, 0, l4proto, &target, manip))
-+	if (!l4proto || !nf_nat_ipv6_manip_pkt(skb, 0, l4proto, &target, manip))
- 		return 0;
- 
- 	return 1;
-diff --git a/net/netfilter/nf_nat_core.c b/net/netfilter/nf_nat_core.c
-index 2268b10a9dcf..d28185f38955 100644
---- a/net/netfilter/nf_nat_core.c
-+++ b/net/netfilter/nf_nat_core.c
-@@ -64,12 +64,16 @@ struct nat_net {
- inline const struct nf_nat_l3proto *
- __nf_nat_l3proto_find(u8 family)
- {
-+	if (family >= NFPROTO_NUMPROTO)
-+		return NULL;
- 	return rcu_dereference(nf_nat_l3protos[family]);
- }
- 
- inline const struct nf_nat_l4proto *
- __nf_nat_l4proto_find(u8 family, u8 protonum)
- {
-+	if (family >= NFPROTO_NUMPROTO)
-+		return NULL;
- 	return rcu_dereference(nf_nat_l4protos[family][protonum]);
- }
- EXPORT_SYMBOL_GPL(__nf_nat_l4proto_find);
-@@ -317,7 +321,7 @@ find_best_ips_proto(const struct nf_conntrack_zone *zone,
-  * range. It might not be possible to get a unique tuple, but we try.
-  * At worst (or if we race), we will end up with a final duplicate in
-  * __ip_conntrack_confirm and drop the packet. */
--static void
-+static int
- get_unique_tuple(struct nf_conntrack_tuple *tuple,
- 		 const struct nf_conntrack_tuple *orig_tuple,
- 		 const struct nf_nat_range2 *range,
-@@ -328,13 +332,22 @@ get_unique_tuple(struct nf_conntrack_tuple *tuple,
- 	const struct nf_nat_l3proto *l3proto;
- 	const struct nf_nat_l4proto *l4proto;
- 	struct net *net = nf_ct_net(ct);
-+	int ret = 0;
- 
- 	zone = nf_ct_zone(ct);
- 
- 	rcu_read_lock();
- 	l3proto = __nf_nat_l3proto_find(orig_tuple->src.l3num);
-+	if (!l3proto) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
- 	l4proto = __nf_nat_l4proto_find(orig_tuple->src.l3num,
- 					orig_tuple->dst.protonum);
-+	if (!l4proto) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
- 
- 	/* 1) If this srcip/proto/src-proto-part is currently mapped,
- 	 * and that same mapping gives a unique tuple within the given
-@@ -387,6 +400,7 @@ get_unique_tuple(struct nf_conntrack_tuple *tuple,
- 	l4proto->unique_tuple(l3proto, tuple, range, maniptype, ct);
- out:
- 	rcu_read_unlock();
-+	return ret;
- }
- 
- struct nf_conn_nat *nf_ct_nat_ext_add(struct nf_conn *ct)
-@@ -409,6 +423,7 @@ nf_nat_setup_info(struct nf_conn *ct,
- {
- 	struct net *net = nf_ct_net(ct);
- 	struct nf_conntrack_tuple curr_tuple, new_tuple;
-+	int err;
- 
- 	/* Can't setup nat info for confirmed ct. */
- 	if (nf_ct_is_confirmed(ct))
-@@ -428,7 +443,9 @@ nf_nat_setup_info(struct nf_conn *ct,
- 	nf_ct_invert_tuplepr(&curr_tuple,
- 			     &ct->tuplehash[IP_CT_DIR_REPLY].tuple);
- 
--	get_unique_tuple(&new_tuple, &curr_tuple, range, ct, maniptype);
-+	err = get_unique_tuple(&new_tuple, &curr_tuple, range, ct, maniptype);
-+	if (err < 0)
-+		return NF_DROP;
- 
- 	if (!nf_ct_tuple_equal(&new_tuple, &curr_tuple)) {
- 		struct nf_conntrack_tuple reply;
-@@ -509,8 +526,12 @@ static unsigned int nf_nat_manip_pkt(struct sk_buff *skb, struct nf_conn *ct,
- 	nf_ct_invert_tuplepr(&target, &ct->tuplehash[!dir].tuple);
- 
- 	l3proto = __nf_nat_l3proto_find(target.src.l3num);
-+	if (!l3proto)
-+		return NF_DROP;
- 	l4proto = __nf_nat_l4proto_find(target.src.l3num,
- 					target.dst.protonum);
-+	if (!l4proto)
-+		return NF_DROP;
- 	if (!l3proto->manip_pkt(skb, 0, l4proto, &target, mtype))
- 		return NF_DROP;
- 
-@@ -816,6 +837,8 @@ static int nfnetlink_parse_nat_proto(struct nlattr *attr,
- 		return err;
- 
- 	l4proto = __nf_nat_l4proto_find(nf_ct_l3num(ct), nf_ct_protonum(ct));
-+	if (!l4proto)
-+		return -EINVAL;
- 	if (l4proto->nlattr_to_range)
- 		err = l4proto->nlattr_to_range(tb, range);
- 
-diff --git a/net/netfilter/nf_nat_helper.c b/net/netfilter/nf_nat_helper.c
-index 99606baedda4..6f694444137e 100644
---- a/net/netfilter/nf_nat_helper.c
-+++ b/net/netfilter/nf_nat_helper.c
-@@ -121,6 +121,8 @@ bool __nf_nat_mangle_tcp_packet(struct sk_buff *skb,
- 	datalen = skb->len - protoff;
- 
- 	l3proto = __nf_nat_l3proto_find(nf_ct_l3num(ct));
-+	if (!l3proto)
-+		return false;
- 	l3proto->csum_recalc(skb, IPPROTO_TCP, tcph, &tcph->check,
- 			     datalen, oldlen);
- 
-@@ -179,6 +181,8 @@ nf_nat_mangle_udp_packet(struct sk_buff *skb,
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h b/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
+index cf425a60cddc..5067bbdfc284 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
+@@ -360,7 +360,7 @@ mlx5e_set_eseg_swp(struct sk_buff *skb, struct mlx5_wqe_eth_seg *eseg,
+ 	switch (swp_spec->tun_l4_proto) {
+ 	case IPPROTO_UDP:
+ 		eseg->swp_flags |= MLX5_ETH_WQE_SWP_INNER_L4_UDP;
+-		/* fall through */
++		fallthrough;
+ 	case IPPROTO_TCP:
+ 		eseg->swp_inner_l4_offset = skb_inner_transport_offset(skb) / 2;
+ 		break;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+index e0c1b010d41a..e5b276489cf3 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+@@ -153,11 +153,11 @@ bool mlx5e_xdp_handle(struct mlx5e_rq *rq, struct mlx5e_dma_info *di,
  		return true;
+ 	default:
+ 		bpf_warn_invalid_xdp_action(act);
+-		/* fall through */
++		fallthrough;
+ 	case XDP_ABORTED:
+ xdp_abort:
+ 		trace_xdp_exception(rq->netdev, prog, act);
+-		/* fall through */
++		fallthrough;
+ 	case XDP_DROP:
+ 		rq->stats->xdp_drop++;
+ 		return true;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+index 0e6698d1b4ca..f4861545b236 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+@@ -470,7 +470,7 @@ bool mlx5e_ktls_handle_tx_skb(struct tls_context *tls_ctx, struct mlx5e_txqsq *s
+ 			if (likely(!skb->decrypted))
+ 				goto out;
+ 			WARN_ON_ONCE(1);
+-			/* fall-through */
++			fallthrough;
+ 		case MLX5E_KTLS_SYNC_FAIL:
+ 			goto err_out;
+ 		}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+index af849bc83c30..08270987c506 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+@@ -243,7 +243,7 @@ int mlx5e_ethtool_get_sset_count(struct mlx5e_priv *priv, int sset)
+ 		return MLX5E_NUM_PFLAGS;
+ 	case ETH_SS_TEST:
+ 		return mlx5e_self_test_num(priv);
+-	/* fallthrough */
++		fallthrough;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+index db856d70c4f8..5748ebb437e9 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+@@ -2353,7 +2353,7 @@ int mlx5_devlink_eswitch_inline_mode_set(struct devlink *devlink, u8 mode,
+ 	case MLX5_CAP_INLINE_MODE_NOT_REQUIRED:
+ 		if (mode == DEVLINK_ESWITCH_INLINE_MODE_NONE)
+ 			goto out;
+-		/* fall through */
++		fallthrough;
+ 	case MLX5_CAP_INLINE_MODE_L2:
+ 		NL_SET_ERR_MSG_MOD(extack, "Inline mode can't be set");
+ 		err = -EOPNOTSUPP;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
+index 182d3ac3e73f..831d2c39e153 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/conn.c
+@@ -339,14 +339,14 @@ static void mlx5_fpga_conn_handle_cqe(struct mlx5_fpga_conn *conn,
+ 	switch (opcode) {
+ 	case MLX5_CQE_REQ_ERR:
+ 		status = ((struct mlx5_err_cqe *)cqe)->syndrome;
+-		/* Fall through */
++		fallthrough;
+ 	case MLX5_CQE_REQ:
+ 		mlx5_fpga_conn_sq_cqe(conn, cqe, status);
+ 		break;
  
- 	l3proto = __nf_nat_l3proto_find(nf_ct_l3num(ct));
-+	if (!l3proto)
-+		return false;
- 	l3proto->csum_recalc(skb, IPPROTO_UDP, udph, &udph->check,
- 			     datalen, oldlen);
+ 	case MLX5_CQE_RESP_ERR:
+ 		status = ((struct mlx5_err_cqe *)cqe)->syndrome;
+-		/* Fall through */
++		fallthrough;
+ 	case MLX5_CQE_RESP_SEND:
+ 		mlx5_fpga_conn_rq_cqe(conn, cqe, status);
+ 		break;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lag_mp.c b/drivers/net/ethernet/mellanox/mlx5/core/lag_mp.c
+index e9089a793632..9e68f5926ab6 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/lag_mp.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/lag_mp.c
+@@ -198,13 +198,13 @@ static void mlx5_lag_fib_update(struct work_struct *work)
+ 	/* Protect internal structures from changes */
+ 	rtnl_lock();
+ 	switch (fib_work->event) {
+-	case FIB_EVENT_ENTRY_REPLACE: /* fall through */
++	case FIB_EVENT_ENTRY_REPLACE:
+ 	case FIB_EVENT_ENTRY_DEL:
+ 		mlx5_lag_fib_route_event(ldev, fib_work->event,
+ 					 fib_work->fen_info.fi);
+ 		fib_info_put(fib_work->fen_info.fi);
+ 		break;
+-	case FIB_EVENT_NH_ADD: /* fall through */
++	case FIB_EVENT_NH_ADD:
+ 	case FIB_EVENT_NH_DEL:
+ 		fib_nh = fib_work->fnh_info.fib_nh;
+ 		mlx5_lag_fib_nexthop_event(ldev,
+@@ -255,7 +255,7 @@ static int mlx5_lag_fib_event(struct notifier_block *nb,
+ 		return NOTIFY_DONE;
  
+ 	switch (event) {
+-	case FIB_EVENT_ENTRY_REPLACE: /* fall through */
++	case FIB_EVENT_ENTRY_REPLACE:
+ 	case FIB_EVENT_ENTRY_DEL:
+ 		fen_info = container_of(info, struct fib_entry_notifier_info,
+ 					info);
+@@ -278,7 +278,7 @@ static int mlx5_lag_fib_event(struct notifier_block *nb,
+ 		 */
+ 		fib_info_hold(fib_work->fen_info.fi);
+ 		break;
+-	case FIB_EVENT_NH_ADD: /* fall through */
++	case FIB_EVENT_NH_ADD:
+ 	case FIB_EVENT_NH_DEL:
+ 		fnh_info = container_of(info, struct fib_nh_notifier_info,
+ 					info);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/vport.c b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
+index 88cdb9bb4c4a..bdafc85fd874 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/vport.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
+@@ -110,7 +110,7 @@ void mlx5_query_min_inline(struct mlx5_core_dev *mdev,
+ 	case MLX5_CAP_INLINE_MODE_VPORT_CONTEXT:
+ 		if (!mlx5_query_nic_vport_min_inline(mdev, 0, min_inline_mode))
+ 			break;
+-		/* fall through */
++		fallthrough;
+ 	case MLX5_CAP_INLINE_MODE_L2:
+ 		*min_inline_mode = MLX5_INLINE_MODE_L2;
+ 		break;
 -- 
-2.28.0.rc0.142.g3c755180ce-goog
+2.27.0
 
