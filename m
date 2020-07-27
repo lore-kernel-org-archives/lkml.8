@@ -2,226 +2,303 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF12EC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8336AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38BD32074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:27:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="jF0s0rqm"
+	by mail.kernel.org (Postfix) with ESMTP id 562FB2074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:28:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595881706;
+	bh=aYSeVSHouvNAoh4D27QzelNJE605X6Pqy1mo5TW2Y4A=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=s14yTYiN1JQQHHYi7iJsVEyhC1v1JZSgLWZTp/Jnhv2V/bH6VsLBa72UQNYJFDuKF
+	 458FD+6NwIhf/xdcL5A2IoBzOjBEOZf9FqS/K6xKvM4UX3EdnDExWhN7B082Gcdr9Y
+	 qAwAm3xJEoOE3GX/0n+hcRwPkpXYvmQxB4boSSa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbgG0U1L (ORCPT
+        id S1729238AbgG0U2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:27:11 -0400
-Received: from mail-40137.protonmail.ch ([185.70.40.137]:26825 "EHLO
-        mail-40137.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729208AbgG0U1K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:27:10 -0400
-Date:   Mon, 27 Jul 2020 20:27:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1595881628;
-        bh=L4/PzAU/PlbzwZ2pM51uKqp5OqHinU8wQ2m72zcFpIY=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=jF0s0rqm7pfzq1RbqLiBAPHmL5jPQVQRQbxaFTLpjxvthnH5rtUz6Ah/JfKsW+Ezn
-         V0gJRcz1wQFiX//qEie+nSWCYSkSVMMvEOBTvoJgqegQ53mBxNYUQ6un5xMn3xMo67
-         ovFGLELi6xu21otX+KxrLfGTgSd5V9YIT7lrLakk=
-To:     "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
-From:   Mazin Rezk <mnrzk@protonmail.com>
-Cc:     Mazin Rezk <mnrzk@protonmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        "anthony.ruhier@gmail.com" <anthony.ruhier@gmail.com>,
-        Duncan <1i5t5.duncan@cox.net>, Kees Cook <keescook@chromium.org>,
-        "sunpeng.li@amd.com" <sunpeng.li@amd.com>,
-        "regressions@leemhuis.info" <regressions@leemhuis.info>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "mphantomx@yahoo.com.br" <mphantomx@yahoo.com.br>,
-        =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Reply-To: Mazin Rezk <mnrzk@protonmail.com>
-Subject: Re: [PATCH] drm/amd/display: Clear dm_state for fast updates
-Message-ID: <_8mO29uo4bTBeV3K8ZXjTwJA7HX3nPP0pdFIESyPYhiVyPdT4ejgJyp-kMVW3_UnqZsolGj8uP2C1dLvelaOgqiY6saKE_m97ECqhdIdr8o=@protonmail.com>
-In-Reply-To: <c8e3031a-b21f-2b19-9d39-7a01687c7f06@amd.com>
-References: <M0lxN5AUlPvzBKULfIBe5BZRwfQGXeMQCdWItYcQ-9P79y32WzExYK2Y0DwyNVtyGelqbvV07_lFk1oeT4cApbT-P_oH0bnxQbMmFsJv_xg=@protonmail.com> <c8e3031a-b21f-2b19-9d39-7a01687c7f06@amd.com>
+        Mon, 27 Jul 2020 16:28:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55384 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbgG0U2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 16:28:23 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4696E206E7;
+        Mon, 27 Jul 2020 20:28:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595881702;
+        bh=aYSeVSHouvNAoh4D27QzelNJE605X6Pqy1mo5TW2Y4A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=wgH46tyrQPCV701y9bxUNPMT8OdNFXzLfyld1hCA4blHuT/HLRdEptgxWAipDur7F
+         svTK/RHIq7+4i481ud8/+UxPIjPbKzrS9oxzbTb3Wc44rvBpz4Z2thZQzcqBlF1Xnp
+         jWJHJWacMYwHzUVAZSemKQ/34bZu2ZZttiiyGdxo=
+Date:   Mon, 27 Jul 2020 15:34:13 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Li Yang <leoyang.li@nxp.com>, Zhang Wei <zw@zh-kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] dmaengine: Use fallthrough pseudo-keyword
+Message-ID: <20200727203413.GA6245@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, July 27, 2020 9:26 AM, Kazlauskas, Nicholas <nicholas.kazlauskas=
-@amd.com> wrote:
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
-> On 2020-07-27 1:40 a.m., Mazin Rezk wrote:
-> > This patch fixes a race condition that causes a use-after-free during
-> > amdgpu_dm_atomic_commit_tail. This can occur when 2 non-blocking commit=
-s
-> > are requested and the second one finishes before the first. Essentially=
-,
-> > this bug occurs when the following sequence of events happens:
-> >
-> > 1. Non-blocking commit #1 is requested w/ a new dm_state #1 and is
-> > deferred to the workqueue.
-> >
-> > 2. Non-blocking commit #2 is requested w/ a new dm_state #2 and is
-> > deferred to the workqueue.
-> >
-> > 3. Commit #2 starts before commit #1, dm_state #1 is used in the
-> > commit_tail and commit #2 completes, freeing dm_state #1.
-> >
-> > 4. Commit #1 starts after commit #2 completes, uses the freed dm_state
-> > 1 and dereferences a freelist pointer while setting the context.
-> >
-> > Since this bug has only been spotted with fast commits, this patch fixe=
-s
-> > the bug by clearing the dm_state instead of using the old dc_state for
-> > fast updates. In addition, since dm_state is only used for its dc_state
-> > and amdgpu_dm_atomic_commit_tail will retain the dc_state if none is fo=
-und,
-> > removing the dm_state should not have any consequences in fast updates.
-> >
-> > This use-after-free bug has existed for a while now, but only caused a
-> > noticeable issue starting from 5.7-rc1 due to 3202fa62f ("slub: relocat=
-e
-> > freelist pointer to middle of object") moving the freelist pointer from
-> > dm_state->base (which was unused) to dm_state->context (which is
-> > dereferenced).
-> >
-> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D207383
-> > Fixes: bd200d190f45 ("drm/amd/display: Don't replace the dc_state for f=
-ast updates")
-> > Reported-by: Duncan <1i5t5.duncan@cox.net>
-> > Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
-> > ---
-> >   .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 36 ++++++++++++++----=
--
-> >   1 file changed, 27 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/driver=
-s/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > index 86ffa0c2880f..710edc70e37e 100644
-> > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > @@ -8717,20 +8717,38 @@ static int amdgpu_dm_atomic_check(struct drm_de=
-vice *dev,
-> >   =09=09 * the same resource. If we have a new DC context as part of
-> >   =09=09 * the DM atomic state from validation we need to free it and
-> >   =09=09 * retain the existing one instead.
-> > +=09=09 *
-> > +=09=09 * Furthermore, since the DM atomic state only contains the DC
-> > +=09=09 * context and can safely be annulled, we can free the state
-> > +=09=09 * and clear the associated private object now to free
-> > +=09=09 * some memory and avoid a possible use-after-free later.
-> >   =09=09 */
-> > -=09=09struct dm_atomic_state *new_dm_state, *old_dm_state;
-> >
-> > -=09=09new_dm_state =3D dm_atomic_get_new_state(state);
-> > -=09=09old_dm_state =3D dm_atomic_get_old_state(state);
-> > +=09=09for (i =3D 0; i < state->num_private_objs; i++) {
-> > +=09=09=09struct drm_private_obj *obj =3D state->private_objs[i].ptr;
-> >
-> > -=09=09if (new_dm_state && old_dm_state) {
-> > -=09=09=09if (new_dm_state->context)
-> > -=09=09=09=09dc_release_state(new_dm_state->context);
-> > +=09=09=09if (obj->funcs =3D=3D adev->dm.atomic_obj.funcs) {
-> > +=09=09=09=09int j =3D state->num_private_objs-1;
-> >
-> > -=09=09=09new_dm_state->context =3D old_dm_state->context;
-> > +=09=09=09=09dm_atomic_destroy_state(obj,
-> > +=09=09=09=09=09=09state->private_objs[i].state);
-> > +
-> > +=09=09=09=09/* If i is not at the end of the array then the
-> > +=09=09=09=09 * last element needs to be moved to where i was
-> > +=09=09=09=09 * before the array can safely be truncated.
-> > +=09=09=09=09 */
-> > +=09=09=09=09if (i !=3D j)
-> > +=09=09=09=09=09state->private_objs[i] =3D
-> > +=09=09=09=09=09=09state->private_objs[j];
-> >
-> > -=09=09=09if (old_dm_state->context)
-> > -=09=09=09=09dc_retain_state(old_dm_state->context);
-> > +=09=09=09=09state->private_objs[j].ptr =3D NULL;
-> > +=09=09=09=09state->private_objs[j].state =3D NULL;
-> > +=09=09=09=09state->private_objs[j].old_state =3D NULL;
-> > +=09=09=09=09state->private_objs[j].new_state =3D NULL;
-> > +
-> > +=09=09=09=09state->num_private_objs =3D j;
-> > +=09=09=09=09break;
-> > +=09=09=09}
->
-> In the bug report itself I mentioned that I don't really like hacking
-> around the DRM core for resolving this patch but to go into more
-> specifics, it's really two issues of code maintenance:
->
-> 1. It's iterating over internal structures and layout of private objects
-> in the state and modifying the state. The core doesn't really guarantee
-> how these things are going to be laid out and it may change in the future=
-.
->
-> 2. It's freeing an allocation we don't own from DM. DRM doesn't track
-> this state elsewhere for purposes of freeing, but nothing is really
-> stopping the core from doing this later down the line.
->
-> The implementation itself is correct from a technical perspective, but
-> I'd rather it reside in DRM as a helper for code maintenance purposes.
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-So would something like this in drm_atomic_helper.c work?
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/dma/amba-pl08x.c    | 10 +++++-----
+ drivers/dma/fsldma.c        |  2 +-
+ drivers/dma/imx-dma.c       |  2 +-
+ drivers/dma/iop-adma.h      | 12 ++++++------
+ drivers/dma/nbpfaxi.c       |  2 +-
+ drivers/dma/pl330.c         | 10 +++-------
+ drivers/dma/sh/shdma-base.c |  2 +-
+ 7 files changed, 18 insertions(+), 22 deletions(-)
 
-void drm_atomic_helper_delete_private_obj(struct drm_atomic_state *state,
-=09=09=09=09=09int i)
-{
-=09struct drm_private_obj *obj =3D state->private_objs[i].ptr;
-=09int end =3D state->num_private_objs-1;
+diff --git a/drivers/dma/amba-pl08x.c b/drivers/dma/amba-pl08x.c
+index 9adc7a2fa3d3..a24882ba3764 100644
+--- a/drivers/dma/amba-pl08x.c
++++ b/drivers/dma/amba-pl08x.c
+@@ -1767,7 +1767,7 @@ static u32 pl08x_memcpy_cctl(struct pl08x_driver_data *pl08x)
+ 	default:
+ 		dev_err(&pl08x->adev->dev,
+ 			"illegal burst size for memcpy, set to 1\n");
+-		/* Fall through */
++		fallthrough;
+ 	case PL08X_BURST_SZ_1:
+ 		cctl |= PL080_BSIZE_1 << PL080_CONTROL_SB_SIZE_SHIFT |
+ 			PL080_BSIZE_1 << PL080_CONTROL_DB_SIZE_SHIFT;
+@@ -1806,7 +1806,7 @@ static u32 pl08x_memcpy_cctl(struct pl08x_driver_data *pl08x)
+ 	default:
+ 		dev_err(&pl08x->adev->dev,
+ 			"illegal bus width for memcpy, set to 8 bits\n");
+-		/* Fall through */
++		fallthrough;
+ 	case PL08X_BUS_WIDTH_8_BITS:
+ 		cctl |= PL080_WIDTH_8BIT << PL080_CONTROL_SWIDTH_SHIFT |
+ 			PL080_WIDTH_8BIT << PL080_CONTROL_DWIDTH_SHIFT;
+@@ -1850,7 +1850,7 @@ static u32 pl08x_ftdmac020_memcpy_cctl(struct pl08x_driver_data *pl08x)
+ 	default:
+ 		dev_err(&pl08x->adev->dev,
+ 			"illegal bus width for memcpy, set to 8 bits\n");
+-		/* Fall through */
++		fallthrough;
+ 	case PL08X_BUS_WIDTH_8_BITS:
+ 		cctl |= PL080_WIDTH_8BIT << FTDMAC020_LLI_SRC_WIDTH_SHIFT |
+ 			PL080_WIDTH_8BIT << FTDMAC020_LLI_DST_WIDTH_SHIFT;
+@@ -2612,7 +2612,7 @@ static int pl08x_of_probe(struct amba_device *adev,
+ 	switch (val) {
+ 	default:
+ 		dev_err(&adev->dev, "illegal burst size for memcpy, set to 1\n");
+-		/* Fall through */
++		fallthrough;
+ 	case 1:
+ 		pd->memcpy_burst_size = PL08X_BURST_SZ_1;
+ 		break;
+@@ -2647,7 +2647,7 @@ static int pl08x_of_probe(struct amba_device *adev,
+ 	switch (val) {
+ 	default:
+ 		dev_err(&adev->dev, "illegal bus width for memcpy, set to 8 bits\n");
+-		/* Fall through */
++		fallthrough;
+ 	case 8:
+ 		pd->memcpy_bus_width = PL08X_BUS_WIDTH_8_BITS;
+ 		break;
+diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
+index ad72b3f42ffa..e342cf52d296 100644
+--- a/drivers/dma/fsldma.c
++++ b/drivers/dma/fsldma.c
+@@ -1163,7 +1163,7 @@ static int fsl_dma_chan_probe(struct fsldma_device *fdev,
+ 	switch (chan->feature & FSL_DMA_IP_MASK) {
+ 	case FSL_DMA_IP_85XX:
+ 		chan->toggle_ext_pause = fsl_chan_toggle_ext_pause;
+-		/* Fall through */
++		fallthrough;
+ 	case FSL_DMA_IP_83XX:
+ 		chan->toggle_ext_start = fsl_chan_toggle_ext_start;
+ 		chan->set_src_loop_size = fsl_chan_set_src_loop_size;
+diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
+index 5c0fb3134825..88717506c1f6 100644
+--- a/drivers/dma/imx-dma.c
++++ b/drivers/dma/imx-dma.c
+@@ -556,7 +556,7 @@ static int imxdma_xfer_desc(struct imxdma_desc *d)
+ 		 * We fall-through here intentionally, since a 2D transfer is
+ 		 * similar to MEMCPY just adding the 2D slot configuration.
+ 		 */
+-		/* Fall through */
++		fallthrough;
+ 	case IMXDMA_DESC_MEMCPY:
+ 		imx_dmav1_writel(imxdma, d->src, DMA_SAR(imxdmac->channel));
+ 		imx_dmav1_writel(imxdma, d->dest, DMA_DAR(imxdmac->channel));
+diff --git a/drivers/dma/iop-adma.h b/drivers/dma/iop-adma.h
+index c499c9578f00..d44eabb6f5eb 100644
+--- a/drivers/dma/iop-adma.h
++++ b/drivers/dma/iop-adma.h
+@@ -496,7 +496,7 @@ iop3xx_desc_init_xor(struct iop3xx_desc_aau *hw_desc, int src_cnt,
+ 		}
+ 		hw_desc->src_edc[AAU_EDCR2_IDX].e_desc_ctrl = edcr;
+ 		src_cnt = 24;
+-		/* fall through */
++		fallthrough;
+ 	case 17 ... 24:
+ 		if (!u_desc_ctrl.field.blk_ctrl) {
+ 			hw_desc->src_edc[AAU_EDCR2_IDX].e_desc_ctrl = 0;
+@@ -510,7 +510,7 @@ iop3xx_desc_init_xor(struct iop3xx_desc_aau *hw_desc, int src_cnt,
+ 		}
+ 		hw_desc->src_edc[AAU_EDCR1_IDX].e_desc_ctrl = edcr;
+ 		src_cnt = 16;
+-		/* fall through */
++		fallthrough;
+ 	case 9 ... 16:
+ 		if (!u_desc_ctrl.field.blk_ctrl)
+ 			u_desc_ctrl.field.blk_ctrl = 0x2; /* use EDCR0 */
+@@ -522,7 +522,7 @@ iop3xx_desc_init_xor(struct iop3xx_desc_aau *hw_desc, int src_cnt,
+ 		}
+ 		hw_desc->src_edc[AAU_EDCR0_IDX].e_desc_ctrl = edcr;
+ 		src_cnt = 8;
+-		/* fall through */
++		fallthrough;
+ 	case 2 ... 8:
+ 		shift = 1;
+ 		for (i = 0; i < src_cnt; i++) {
+@@ -602,19 +602,19 @@ iop_desc_init_null_xor(struct iop_adma_desc_slot *desc, int src_cnt,
+ 	case 25 ... 32:
+ 		u_desc_ctrl.field.blk_ctrl = 0x3; /* use EDCR[2:0] */
+ 		hw_desc->src_edc[AAU_EDCR2_IDX].e_desc_ctrl = 0;
+-		/* fall through */
++		fallthrough;
+ 	case 17 ... 24:
+ 		if (!u_desc_ctrl.field.blk_ctrl) {
+ 			hw_desc->src_edc[AAU_EDCR2_IDX].e_desc_ctrl = 0;
+ 			u_desc_ctrl.field.blk_ctrl = 0x3; /* use EDCR[2:0] */
+ 		}
+ 		hw_desc->src_edc[AAU_EDCR1_IDX].e_desc_ctrl = 0;
+-		/* fall through */
++		fallthrough;
+ 	case 9 ... 16:
+ 		if (!u_desc_ctrl.field.blk_ctrl)
+ 			u_desc_ctrl.field.blk_ctrl = 0x2; /* use EDCR0 */
+ 		hw_desc->src_edc[AAU_EDCR0_IDX].e_desc_ctrl = 0;
+-		/* fall through */
++		fallthrough;
+ 	case 1 ... 8:
+ 		if (!u_desc_ctrl.field.blk_ctrl && src_cnt > 4)
+ 			u_desc_ctrl.field.blk_ctrl = 0x1; /* use mini-desc */
+diff --git a/drivers/dma/nbpfaxi.c b/drivers/dma/nbpfaxi.c
+index 74df621402e1..ca4e0930207a 100644
+--- a/drivers/dma/nbpfaxi.c
++++ b/drivers/dma/nbpfaxi.c
+@@ -483,7 +483,7 @@ static size_t nbpf_xfer_size(struct nbpf_device *nbpf,
+ 
+ 	default:
+ 		pr_warn("%s(): invalid bus width %u\n", __func__, width);
+-		/* fall through */
++		fallthrough;
+ 	case DMA_SLAVE_BUSWIDTH_1_BYTE:
+ 		size = burst;
+ 	}
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 2c508ee672b9..9b69716172a4 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -1061,16 +1061,16 @@ static bool _start(struct pl330_thread *thrd)
+ 
+ 		if (_state(thrd) == PL330_STATE_KILLING)
+ 			UNTIL(thrd, PL330_STATE_STOPPED)
+-		/* fall through */
++		fallthrough;
+ 
+ 	case PL330_STATE_FAULTING:
+ 		_stop(thrd);
+-		/* fall through */
++		fallthrough;
+ 
+ 	case PL330_STATE_KILLING:
+ 	case PL330_STATE_COMPLETING:
+ 		UNTIL(thrd, PL330_STATE_STOPPED)
+-		/* fall through */
++		fallthrough;
+ 
+ 	case PL330_STATE_STOPPED:
+ 		return _trigger(thrd);
+@@ -1121,7 +1121,6 @@ static u32 _emit_load(unsigned int dry_run, u8 buf[],
+ 
+ 	switch (direction) {
+ 	case DMA_MEM_TO_MEM:
+-		/* fall through */
+ 	case DMA_MEM_TO_DEV:
+ 		off += _emit_LD(dry_run, &buf[off], cond);
+ 		break;
+@@ -1155,7 +1154,6 @@ static inline u32 _emit_store(unsigned int dry_run, u8 buf[],
+ 
+ 	switch (direction) {
+ 	case DMA_MEM_TO_MEM:
+-		/* fall through */
+ 	case DMA_DEV_TO_MEM:
+ 		off += _emit_ST(dry_run, &buf[off], cond);
+ 		break;
+@@ -1216,7 +1214,6 @@ static int _bursts(struct pl330_dmac *pl330, unsigned dry_run, u8 buf[],
+ 
+ 	switch (pxs->desc->rqtype) {
+ 	case DMA_MEM_TO_DEV:
+-		/* fall through */
+ 	case DMA_DEV_TO_MEM:
+ 		off += _ldst_peripheral(pl330, dry_run, &buf[off], pxs, cyc,
+ 			cond);
+@@ -1266,7 +1263,6 @@ static int _dregs(struct pl330_dmac *pl330, unsigned int dry_run, u8 buf[],
+ 
+ 	switch (pxs->desc->rqtype) {
+ 	case DMA_MEM_TO_DEV:
+-		/* fall through */
+ 	case DMA_DEV_TO_MEM:
+ 		off += _emit_MOV(dry_run, &buf[off], CCR, dregs_ccr);
+ 		off += _ldst_peripheral(pl330, dry_run, &buf[off], pxs, 1,
+diff --git a/drivers/dma/sh/shdma-base.c b/drivers/dma/sh/shdma-base.c
+index 2deeaab078a4..788d696323bb 100644
+--- a/drivers/dma/sh/shdma-base.c
++++ b/drivers/dma/sh/shdma-base.c
+@@ -383,7 +383,7 @@ static dma_async_tx_callback __ld_cleanup(struct shdma_chan *schan, bool all)
+ 			switch (desc->mark) {
+ 			case DESC_COMPLETED:
+ 				desc->mark = DESC_WAITING;
+-				/* Fall through */
++				fallthrough;
+ 			case DESC_WAITING:
+ 				if (head_acked)
+ 					async_tx_ack(&desc->async_tx);
+-- 
+2.27.0
 
-=09obj->funcs->atomic_destroy_state(obj, state->private_objs[i].state);
-
-=09/* If i is not at the end of the array then the last element
-=09 * needs to be moved to where i was before the array can safely
-=09 * be truncated.
-=09 */
-=09if (i !=3D end)
-=09=09state->private_objs[i] =3D state->private_objs[end];
-
-=09state->private_objs[end].ptr =3D NULL;
-=09state->private_objs[end].state =3D NULL;
-=09state->private_objs[end].old_state =3D NULL;
-=09state->private_objs[end].new_state =3D NULL;
-
-=09state->num_private_objs =3D end;
-}
-
-I was considering doing something like that, but I wanted to avoid
-modifying DRM core to fix a bug in amdgpu. I guess this makes more sense
-though since it does seem rather unorthodox to make changes to
-drm_atomic_state outside of DRM core. Perhaps there will be a use for this
-function outside of this patch in the future.
-
-Thanks,
-Mazin Rezk
-
->
-> Regards,
-> Nicholas Kazlauskas
->
-> >   =09=09}
-> >   =09}
-> >
-> > --
-> > 2.27.0
-> >
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> >
