@@ -2,275 +2,105 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BA8C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BCFC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80A2820714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:42:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="peHWGC30"
+	by mail.kernel.org (Postfix) with ESMTP id A531B20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595860957;
+	bh=lXydRmKUFY5sur3nSfW3FGBmlslf8j7RwPqS6nb1vfQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OXYt1YqCBsB1JjoTDhhJlUgHPm/IXCHXF/ExBjeWe/hHcNnK10ByuXK0uLR3FUkHv
+	 tKB4pR1c+Tqn+8LnT3ZGuYCRvUgQ8CfN3/Nd9lJtuiTscYMsrmzsUd7wYr83Q+w1aR
+	 QGlkGGpol9KPSSHAEAmHb4c/Lbguy/lL8VcHTiHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733139AbgG0OmY (ORCPT
+        id S1733157AbgG0Omg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729232AbgG0OHZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:07:25 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29B98C061794;
-        Mon, 27 Jul 2020 07:07:25 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id l2so2788348pff.0;
-        Mon, 27 Jul 2020 07:07:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=rRa+fNv/h1FLu+e0oE4gptqf0fEaL6gJEA3JJuU10DI=;
-        b=peHWGC30Cc4mA3aNsP0q1simXnVE+JXDG/VGM4rr2LjgWNKoOR7WolOdacYFzdz6bU
-         Iue6nCpY7k7ThnLX3f2gtK1eVj27P5VSL4dXkrDAvRQBgl8SgaNxxv/D4Eds4TXdqYmg
-         jbrRzyRDLN8JUq4CD9qD9ja7U8+wZWQwybqxr+yYtV4ZcXdr8xrPnGBitLIoeGGB/X+v
-         9nqpEItJUw5nWDi4Z3mCh35jqpRjjlPFatlFkicfeHbjbqiVObU1UyYfG6YAHf4GUj9t
-         vojKLcNOOV+Whq2u7UWhAzh9+8iyAB/daxYBQH6hJTgCSnBCZnAdlfbZriKVkn1pzoKr
-         oqww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=rRa+fNv/h1FLu+e0oE4gptqf0fEaL6gJEA3JJuU10DI=;
-        b=I7IoomyFVkzi7fwzg2rCnKM6srqnetTQuNsaSowOXBopEeFLDdgmPJC8HoAX4GqRWu
-         3rBXxmU+tDuoZktNL1uy18w3VfupdJVga68utFv8O9NLXq6k5LYGzCZOa3k/SHVKTa42
-         hdB+c/BhqRZPUV9qoWQxnG/V8X6u7bFiHCTS1vxprTaX/FMe8prKuMFRyhqVdla0LYqp
-         LlUukqOLDeIu3INxghEPTU/9KXalgimjIti4ty9/usglZbT0B+JJ5IIYJoW/sHRJdUnF
-         FH+w3z+2wZsx3JiOXrKdMEMAun3mN5vspZLrd/gYMa0NolyUn4jeI0qrQa0D88upj2qm
-         ZIzQ==
-X-Gm-Message-State: AOAM530o/rTFUAFbO2DrICdBlylIZlZlccyQ4lVzL5rkHyBFG28XX00F
-        gb4hraNtJ5HSxT+BSox8Gk7xaT3+8oQ=
-X-Google-Smtp-Source: ABdhPJwyQG7PnT2nCaXWxsHbL2qpIG3kNtO1WyEmRdXQAB+5YOW+5gNsYZR0JpVmHGErRsOzZv3g7w==
-X-Received: by 2002:a62:164a:: with SMTP id 71mr20981392pfw.266.1595858844659;
-        Mon, 27 Jul 2020 07:07:24 -0700 (PDT)
-Received: from blackclown ([103.88.82.91])
-        by smtp.gmail.com with ESMTPSA id n137sm15266576pfd.194.2020.07.27.07.07.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 Jul 2020 07:07:23 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 19:37:18 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     oliver@neukum.org, aliakc@web.de, lenehan@twibble.org,
-        jejb@linux.ibm.com, don.brace@microsemi.com
-Cc:     dc395x@twibble.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, esc.storagedev@microsemi.com
-Subject: [PATCH RESEND] scsi: hpsa and dc395x: Remove pci_dma_compat wrapper
- APIs.
-Message-ID: <20200727140718.GB14759@blackclown>
+        Mon, 27 Jul 2020 10:42:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727833AbgG0OGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:06:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3A652078E;
+        Mon, 27 Jul 2020 14:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595858815;
+        bh=lXydRmKUFY5sur3nSfW3FGBmlslf8j7RwPqS6nb1vfQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=E0GdkqaPc2q31ayQYrxw3vIsLnfrypajvfHWi75szcgq0gOslMdvBvlikLlUfPn/w
+         nDYxtOK6b9XAyyGKVQmXvDEYljFLoX4yTURsLO+oYh/KuxKeBq+Ni0JfAA0RI37an/
+         ma/z4yHJ2Dr+PxWwfzafF6E1ogYEnNES6n7c8Tcc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 21/64] bnxt_en: Fix race when modifying pause settings.
+Date:   Mon, 27 Jul 2020 16:04:00 +0200
+Message-Id: <20200727134912.096049773@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
+References: <20200727134911.020675249@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pvezYHf7grwyp3Bc"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
---pvezYHf7grwyp3Bc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 163e9ef63641a02de4c95cd921577265c52e1ce2 ]
 
-The legacy API wrappers in include/linux/pci-dma-compat.h
-should go away as it creates unnecessary midlayering
-for include/linux/dma-mapping.h APIs, instead use dma-mapping.h
-APIs directly.
+The driver was modified to not rely on rtnl lock to protect link
+settings about 2 years ago.  The pause setting was missed when
+making that change.  Fix it by acquiring link_lock mutex before
+calling bnxt_hwrm_set_pause().
 
-The patch has been generated with the coccinelle script below
-and compile-tested.
-
-@@@@
-- PCI_DMA_BIDIRECTIONAL
-+ DMA_BIDIRECTIONAL
-
-@@@@
-- PCI_DMA_TODEVICE
-+ DMA_TO_DEVICE
-
-@@@@
-- PCI_DMA_FROMDEVICE
-+ DMA_FROM_DEVICE
-
-@@@@
-- PCI_DMA_NONE
-+ DMA_NONE
-
-@@ expression E1, E2, E3; @@
-- pci_alloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
-
-@@ expression E1, E2, E3; @@
-- pci_zalloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_free_consistent(E1, E2, E3, E4)
-+ dma_free_coherent(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_single(E1, E2, E3, E4)
-+ dma_map_single(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_single(E1, E2, E3, E4)
-+ dma_unmap_single(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4, E5; @@
-- pci_map_page(E1, E2, E3, E4, E5)
-+ dma_map_page(&E1->dev, E2, E3, E4, E5)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_page(E1, E2, E3, E4)
-+ dma_unmap_page(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_sg(E1, E2, E3, E4)
-+ dma_map_sg(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_sg(E1, E2, E3, E4)
-+ dma_unmap_sg(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_cpu(E1, E2, E3, E4)
-+ dma_sync_single_for_cpu(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_device(E1, E2, E3, E4)
-+ dma_sync_single_for_device(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_cpu(E1, E2, E3, E4)
-+ dma_sync_sg_for_cpu(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_device(E1, E2, E3, E4)
-+ dma_sync_sg_for_device(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2; @@
-- pci_dma_mapping_error(E1, E2)
-+ dma_mapping_error(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_consistent_dma_mask(E1, E2)
-+ dma_set_coherent_mask(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_dma_mask(E1, E2)
-+ dma_set_mask(&E1->dev, E2)
-
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+Fixes: e2dc9b6e38fa ("bnxt_en: Don't use rtnl lock to protect link change logic in workqueue.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Reviewed-by: Edwin Peer <edwin.peer@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/dc395x.c |  6 +++---
- drivers/scsi/hpsa.c   | 16 ++++++++--------
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/dc395x.c b/drivers/scsi/dc395x.c
-index 37c6cc374079..58d4acdb0447 100644
---- a/drivers/scsi/dc395x.c
-+++ b/drivers/scsi/dc395x.c
-@@ -902,7 +902,7 @@ static void build_srb(struct scsi_cmnd *cmd, struct Dev=
-iceCtlBlk *dcb,
- 	nseg =3D scsi_dma_map(cmd);
- 	BUG_ON(nseg < 0);
-=20
--	if (dir =3D=3D PCI_DMA_NONE || !nseg) {
-+	if (dir =3D=3D DMA_NONE || !nseg) {
- 		dprintkdbg(DBG_0,
- 			"build_srb: [0] len=3D%d buf=3D%p use_sg=3D%d !MAP=3D%08x\n",
- 			   cmd->bufflen, scsi_sglist(cmd), scsi_sg_count(cmd),
-@@ -3135,7 +3135,7 @@ static void pci_unmap_srb(struct AdapterCtlBlk *acb, =
-struct ScsiReqBlk *srb)
- 	struct scsi_cmnd *cmd =3D srb->cmd;
- 	enum dma_data_direction dir =3D cmd->sc_data_direction;
-=20
--	if (scsi_sg_count(cmd) && dir !=3D PCI_DMA_NONE) {
-+	if (scsi_sg_count(cmd) && dir !=3D DMA_NONE) {
- 		/* unmap DC395x SG list */
- 		dprintkdbg(DBG_SG, "pci_unmap_srb: list=3D%08x(%05x)\n",
- 			srb->sg_bus_addr, SEGMENTX_LEN);
-@@ -3333,7 +3333,7 @@ static void srb_done(struct AdapterCtlBlk *acb, struc=
-t DeviceCtlBlk *dcb,
-=20
- 		if (!ckc_only && (cmd->result & RES_DID) =3D=3D 0
- 		    && cmd->cmnd[2] =3D=3D 0 && scsi_bufflen(cmd) >=3D 8
--		    && dir !=3D PCI_DMA_NONE && ptr && (ptr->Vers & 0x07) >=3D 2)
-+		    && dir !=3D DMA_NONE && ptr && (ptr->Vers & 0x07) >=3D 2)
- 			dcb->inquiry7 =3D ptr->Flags;
-=20
- 	/*if( srb->cmd->cmnd[0] =3D=3D INQUIRY && */
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 81d0414e2117..ef90391a0269 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -9310,10 +9310,10 @@ static int hpsa_enter_performant_mode(struct ctlr_i=
-nfo *h, u32 trans_support)
- static void hpsa_free_ioaccel1_cmd_and_bft(struct ctlr_info *h)
- {
- 	if (h->ioaccel_cmd_pool) {
--		pci_free_consistent(h->pdev,
--			h->nr_cmds * sizeof(*h->ioaccel_cmd_pool),
--			h->ioaccel_cmd_pool,
--			h->ioaccel_cmd_pool_dhandle);
-+		dma_free_coherent(&h->pdev->dev,
-+				  h->nr_cmds * sizeof(*h->ioaccel_cmd_pool),
-+				  h->ioaccel_cmd_pool,
-+				  h->ioaccel_cmd_pool_dhandle);
- 		h->ioaccel_cmd_pool =3D NULL;
- 		h->ioaccel_cmd_pool_dhandle =3D 0;
- 	}
-@@ -9363,10 +9363,10 @@ static void hpsa_free_ioaccel2_cmd_and_bft(struct c=
-tlr_info *h)
- 	hpsa_free_ioaccel2_sg_chain_blocks(h);
-=20
- 	if (h->ioaccel2_cmd_pool) {
--		pci_free_consistent(h->pdev,
--			h->nr_cmds * sizeof(*h->ioaccel2_cmd_pool),
--			h->ioaccel2_cmd_pool,
--			h->ioaccel2_cmd_pool_dhandle);
-+		dma_free_coherent(&h->pdev->dev,
-+				  h->nr_cmds * sizeof(*h->ioaccel2_cmd_pool),
-+				  h->ioaccel2_cmd_pool,
-+				  h->ioaccel2_cmd_pool_dhandle);
- 		h->ioaccel2_cmd_pool =3D NULL;
- 		h->ioaccel2_cmd_pool_dhandle =3D 0;
- 	}
---=20
-2.17.1
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index 3c78cd1cdd6fb..6edbbfc1709a2 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -1287,8 +1287,11 @@ static int bnxt_set_pauseparam(struct net_device *dev,
+ 	if (epause->tx_pause)
+ 		link_info->req_flow_ctrl |= BNXT_LINK_PAUSE_TX;
+ 
+-	if (netif_running(dev))
++	if (netif_running(dev)) {
++		mutex_lock(&bp->link_lock);
+ 		rc = bnxt_hwrm_set_pause(bp);
++		mutex_unlock(&bp->link_lock);
++	}
+ 	return rc;
+ }
+ 
+-- 
+2.25.1
 
 
---pvezYHf7grwyp3Bc
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8e35YACgkQ+gRsbIfe
-745LERAArCx2Ge07lVIKLK0+ZHYsHsU+GUJH4CMIJ6cWPDmY3kPrWA68T9/RwPhv
-T39sW+NRyr4qrQL15WFOST8/x1xXIZKh76wGu8LMsan+UFwzxN57cAq2dzCQJ7Cp
-o55GkPNParldjorb4EcE3lKHIG2Yx1O05kUJ4WV/Zfllq0L2cT7BFYf0ggqFmnLo
-0pqh6TPH+yP8DdeADX0fe99/wLHr9jZSy/DnwNkfS4fU5VyAIUcDjdlDTX8gQ72r
-m8etjUazpEhWQK5rDP1vX0QOY2RM7g1gunAKR3J0x+/5shEmWFnkkfJrrCcAz37R
-JZMG4mXA1Tgb2bFtYtRo2bZgJlyPtDGr+LegnW5TiWLUGhTOXx+z282mids0P65E
-tsdel8P3gHgRuYrp7rC4a+QVqhJLEDLYB8Tfj3T3j46tykf3CA5nLZoJ12uJGxRK
-CgPyYNtt0r0YHEGvgEBnRrO06jc8e5Of+mGCFGQYtc+FNXOHmE8C/A0u8b2hqPeE
-03IAkIhCLTqefsGn+fFkIraZtTiA7Et81znkBh0bY5W5loYWUTl3agGgJ+rv/VpM
-v1nwVCu3jwvOoPOHVzfELC8pu/rpgkrO/36XEbjMbQ8eIMDh/4036yGiBjx+Cw+/
-EXpiQQQ7wo8+OvvWg9x050ql4JxGq0h36KrBLLnxhGqGWxwRCxQ=
-=myJW
------END PGP SIGNATURE-----
-
---pvezYHf7grwyp3Bc--
