@@ -2,149 +2,166 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A34C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6968C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D5D92070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:03:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="dGOnxmLz"
+	by mail.kernel.org (Postfix) with ESMTP id BC77620809
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:08:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgG0XD2 (ORCPT
+        id S1727121AbgG0XIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:03:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgG0XD1 (ORCPT
+        Mon, 27 Jul 2020 19:08:12 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44768 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbgG0XIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:03:27 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28238C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 16:03:27 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id u64so16945127qka.12
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 16:03:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GBftFvyHvrin0kdl06v10bVa3MCqdXQloUXFuRhSc9k=;
-        b=dGOnxmLzwK+/tLLwNr0I9cnSw4nho2QwiTGJwt0v2qNs6Z+PbQ1OhL4xeADddYSfQE
-         +KuWpveDYW1bObBiAAEn3QwjAy0tzAfgtgE9TGnAVDe5A1V9ec/MZQsj5xzbPrNLF0RW
-         xVesQErP5QQ8EtaQWU2UWIwv1t7gcE+ZM0XOc=
+        Mon, 27 Jul 2020 19:08:09 -0400
+Received: by mail-qk1-f195.google.com with SMTP id j187so16961895qke.11
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 16:08:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GBftFvyHvrin0kdl06v10bVa3MCqdXQloUXFuRhSc9k=;
-        b=M7IE1I2IgpVADYFKYHVq0HhRpCUWCO09BrnVhtk4sfRGbyhczju6Hr7UjzUhFf/+eh
-         3ouJPk5S/+xITUm9insgKwQUxJl0TZkL3T5wzfU7EtxB7/63r7rnkbv1OoqMtgv6NiVk
-         jjH2ho1A2D0OzlpAqUifl4lTDFvd+j1J2KO8aFDVtA/WSc3z4p8pPCuAFqjvHjSNXEuV
-         BMzSKksgR2ghTZX4ypZjd+zLYOjf9rIVZnGTdHs1UUg/BbLXPHX2p6cV932i6wdJWH1T
-         gE7UTH8vmlkDgomFXjY0H+y77nQV9RAudCJmUhvA80ETV/h/duXSN8V2sWcp/OG228Wb
-         ztyA==
-X-Gm-Message-State: AOAM533rqwu/FvsJ6NmaMUuqeCgw2hu2J/OxvJrpDNbyb+e13zsyU/5g
-        CtpHxzk33bdARJbHvlUrMW67Mw==
-X-Google-Smtp-Source: ABdhPJzSqUgi++lBXyma31OuRRPsRzshcfFme7Q9i4ZBKMuKkAbLkRrL3kq111ejLYEBNlmHdA2LDg==
-X-Received: by 2002:a37:458f:: with SMTP id s137mr25188859qka.129.1595891005462;
-        Mon, 27 Jul 2020 16:03:25 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id t83sm20045377qke.133.2020.07.27.16.03.24
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RKDvHMgirTfGFPxMcAqMp+8UvNThgvdbysGLoxQ1j6s=;
+        b=QdMNZu/hFMdRNj74Nu+Fbt30ZDsKIK7FT3AUnrpH8tp7f52TEbuo8QUrNrpG97zpE1
+         0cQxOD4Gd0raBzxOim2jkp5F7MeylrW+8qKvRcTaSnz0Kbwzc8w/PnYUD7IiWxJ0V1z9
+         Wmqo2GHigJF0h4HLwMjhihTG62l4ZFjHj7MpzKWTY0rb9lKXEPOStIw03fZZT6uY2122
+         RWoo3Fj27kCdFD3ihtFCRob8dHKwBM6op+bEisBApX2CXLzDVa9VbiWs7UGP9MJpy3no
+         6O8Ehq5K4QDrGb6+utSSqCnL91nHpCus5lAjjjm3Qh2OqsLusmZAAzrYjXttQeq/QBUq
+         aKrw==
+X-Gm-Message-State: AOAM533EUyL4aBQkoU0t+W3TGCVRuQHZnCPHQbI0Mzo5joYkZwXA7Dw4
+        1vYx90Qr2nkAAnO5W0fg/xk=
+X-Google-Smtp-Source: ABdhPJwCvR3LoArxRJ4v3q6LdtssvjY/rFvkk1ZCZ4c04G4rfs+sAbP2xj7hu6BkZPN8hyN/Jj3DKw==
+X-Received: by 2002:a37:62d4:: with SMTP id w203mr24551249qkb.463.1595891287398;
+        Mon, 27 Jul 2020 16:08:07 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id j61sm8216984qtd.52.2020.07.27.16.08.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 16:03:24 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 19:03:23 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu <rcu@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH RFC v2] rcu/segcblist: Add counters to segcblist
- datastructure
-Message-ID: <20200727230323.GA3390623@google.com>
-References: <20200719035518.2386828-1-joel@joelfernandes.org>
- <CAEXW_YQhYiYQZOJ95dqBcu_fAZ_6k7HGbrw53eTgPrgXU+5few@mail.gmail.com>
- <20200719041841.GA2398236@google.com>
- <20200720082211.GA35358@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <CAEXW_YR4dxuPV+Yu9HcYCSAdiV1H=9Rk9HJgCST-YMMc7J2Mgg@mail.gmail.com>
- <20200727134925.GB79404@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+        Mon, 27 Jul 2020 16:08:06 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Kees Cook <keescook@chromium.org>, x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v2 5/8] x86/kaslr: Simplify __process_mem_region
+Date:   Mon, 27 Jul 2020 19:07:58 -0400
+Message-Id: <20200727230801.3468620-6-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200727215047.3341098-1-nivedita@alum.mit.edu>
+References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727134925.GB79404@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 09:49:25PM +0800, Boqun Feng wrote:
-[...] 
-> So C11 features are available to gnu89 as extensions, also I tried to
-> compile the following code with -std=gnu89:
-> 
-> 	#include <stdio.h>
-> 
-> 	typedef struct {
-> 		int a;
-> 	} atomic_t;
-> 
-> 	void g(void) {
-> 		printf("this is g\n");
-> 	}
-> 
-> 	void h(void) {
-> 		printf("this is f\n");
-> 	}
-> 
-> 	#define gen(x) _Generic((x), atomic_t : h(), int : g())
-> 
-> 	int main(void) {
-> 		int a;
-> 		atomic_t b;
-> 		gen(a);
-> 		gen(b);
-> 		gen(b);
-> 	}
-> 
-> , and it worked.
-> 
-> Besides, please note that in include/linux/compiler_types.h, _Generic is
-> already used.
+Get rid of unnecessary temporary variables and redundant tests in
+__process_mem_region.
 
-> > > With these primitives introduced, you can avoid () to add those
-> > > rcu_segcblist_*_seglen() which have #ifdefs in them. Of course, an
-> > > alternative would be that we implement rcu_segcblist_*_seglen() using
-> > > _Generic, but I think someone else may have the similar problems or
-> > > requirement (already or in the future), so it might be worthwhile to
-> > > introduce the gen_ primitives for broader usage.
-> > 
-> > One issue is code using memory barriers around the operation, such as
-> > in rcu_segcblist_add_len() where you use smp_mb__before_atomic() for
-> > the atomic version, and regular smp_mb() for the non-atomic version.
-> > So ifdef will still exist to some degree.
-> > 
-> 
-> Right, I think we can have two functions: long_add_mb() and
-> atomic_long_add_mb(), this part is similar to ifdef approach, but we can
-> make a gen_long_add_mb() based on these two functions, and
-> gen_long_add_mb() simply switches between those functions according to
-> the actual type of the field, which I think is better than ifdef
-> approach at readability and maintenance.
+Fix one minor bug: in case of an overlap, the beginning of the region
+should be used even if it is exactly image_size, not just strictly
+larger.
 
-Thanks for clarification. I agree with your idea, would you be able to write
-a patch to add the helpers my patch can use?
+Change type of minimum/image_size arguments in process_mem_region to
+unsigned long. These actually can never be above 4G (even on x86_64),
+and they're unsigned long in every other function except this one.
 
-If others are Ok with your idea, I can go ahead and use your helpers.
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+---
+ arch/x86/boot/compressed/kaslr.c | 50 ++++++++------------------------
+ 1 file changed, 12 insertions(+), 38 deletions(-)
 
-(I could write the helpers myself as well, next time I send the patch).
-
-thanks,
-
- - Joel
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index 758d78433f94..d3d8f1f6d5d3 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -622,42 +622,24 @@ static void __process_mem_region(struct mem_vector *entry,
+ 				 unsigned long image_size)
+ {
+ 	struct mem_vector region, overlap;
+-	unsigned long start_orig, end;
+-	struct mem_vector cur_entry;
++	unsigned long region_end;
+ 
+-	/* Ignore entries entirely below our minimum. */
+-	if (entry->start + entry->size < minimum)
+-		return;
+-
+-	/* Ignore entries above memory limit */
+-	end = min(entry->size + entry->start, mem_limit);
+-	if (entry->start >= end)
+-		return;
+-	cur_entry.start = entry->start;
+-	cur_entry.size = end - entry->start;
+-
+-	region.start = cur_entry.start;
+-	region.size = cur_entry.size;
++	/* Clamp region to minimum and memory limit. */
++	region.start = clamp_val(entry->start, minimum, mem_limit);
++	region_end = clamp_val(entry->start + entry->size, minimum, mem_limit);
+ 
+ 	/* Give up if slot area array is full. */
+ 	while (slot_area_index < MAX_SLOT_AREA) {
+-		start_orig = region.start;
+-
+-		/* Potentially raise address to minimum location. */
+-		if (region.start < minimum)
+-			region.start = minimum;
+-
+ 		/* Potentially raise address to meet alignment needs. */
+ 		region.start = ALIGN(region.start, CONFIG_PHYSICAL_ALIGN);
+ 
+ 		/* Did we raise the address above the passed in memory entry? */
+-		if (region.start > cur_entry.start + cur_entry.size)
++		if (region.start > region_end)
+ 			return;
+ 
+-		/* Reduce size by any delta from the original address. */
+-		region.size -= region.start - start_orig;
++		region.size = region_end - region.start;
+ 
+-		/* Return if region can't contain decompressed kernel */
++		/* Return if region can't contain decompressed kernel. */
+ 		if (region.size < image_size)
+ 			return;
+ 
+@@ -668,27 +650,19 @@ static void __process_mem_region(struct mem_vector *entry,
+ 		}
+ 
+ 		/* Store beginning of region if holds at least image_size. */
+-		if (overlap.start > region.start + image_size) {
+-			struct mem_vector beginning;
+-
+-			beginning.start = region.start;
+-			beginning.size = overlap.start - region.start;
+-			process_gb_huge_pages(&beginning, image_size);
++		if (overlap.start >= region.start + image_size) {
++			region.size = overlap.start - region.start;
++			process_gb_huge_pages(&region, image_size);
+ 		}
+ 
+-		/* Return if overlap extends to or past end of region. */
+-		if (overlap.start + overlap.size >= region.start + region.size)
+-			return;
+-
+ 		/* Clip off the overlapping region and start over. */
+-		region.size -= overlap.start - region.start + overlap.size;
+ 		region.start = overlap.start + overlap.size;
+ 	}
+ }
+ 
+ static bool process_mem_region(struct mem_vector *region,
+-			       unsigned long long minimum,
+-			       unsigned long long image_size)
++			       unsigned long minimum,
++			       unsigned long image_size)
+ {
+ 	int i;
+ 	/*
+-- 
+2.26.2
 
