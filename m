@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B82CC433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127B1C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 417162073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A952083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858887;
-	bh=7rd/OGluXtLn4fNF/C5/d8dC2FG2dp25gWQxcM9U4/E=;
+	s=default; t=1595858890;
+	bh=8gpnCQXxrzuCe30fU4MKX30rljl7ytsstjVxo47e0UA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oavMmPK3RMdBtWHPSuBEwQp4bKSIatpUzVF1zzA7xQL34owQaAi+Yf3jC/7rgsiII
-	 XZvV3oqNsIeWyEZdYvHDCrdeLBq0sjeC1/Y6izcLeOkQ6Hm/PQIryIco/ZTb3Z1EcB
-	 OQJ7osLxIa/Ymlk5KDFm9WQpkTzP18C1q3lCOJoU=
+	b=2bSC2VBH5GvJVxz3MWFHKywaIQLqsznrlIjJU2+YMpBSHt480dEJYKeZEjGD4BkpV
+	 g6kmk3prpHXHV1JOVt3nRlHky046yfBJAA2cjo3gXnQoRjHAhTnTXckMHG8Nx5+7Vc
+	 qPJ335VUExx96Cz6TR8aNeCebF6/oovwqC61A9cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbgG0OIG (ORCPT
+        id S1729368AbgG0OIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:08:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57210 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:08:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729354AbgG0OID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:08:03 -0400
+        id S1729367AbgG0OIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:08:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 891B22073E;
-        Mon, 27 Jul 2020 14:08:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E1892073E;
+        Mon, 27 Jul 2020 14:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858883;
-        bh=7rd/OGluXtLn4fNF/C5/d8dC2FG2dp25gWQxcM9U4/E=;
+        s=default; t=1595858885;
+        bh=8gpnCQXxrzuCe30fU4MKX30rljl7ytsstjVxo47e0UA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NNm8ab+iS9+8dfjW9iDVwEAWyVh3DKJ7YSD99xkrWoxjw0W2BMK4zL5/jkuiHGurO
-         TuFzEq6sIANgc3JcTSGHupOJYtwFimUemHI4mPqfVCBQAqk1zFmR2HWjiEpbBsNxMh
-         T6cGO/Kc9SllWrx2YFSeJIuLhqsnG8c6DcD5IV2Q=
+        b=0SPeffcUDa/gPWNhbThxnuGmHwmgKyx4x3tltR4+MUOvwxQI9ErlQVFkIjCTrG44o
+         SXmoz25E63h62s5hUF+1TIdVwqOUdTvXOdQkP3XlsLJ12X1+1IExZP3vabeuWMbeeI
+         eIRBkMwgEhiwzh85kz9IWimx7zk8mEsV8ucbeXro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 4.14 47/64] usb: xhci-mtk: fix the failure of bandwidth allocation
-Date:   Mon, 27 Jul 2020 16:04:26 +0200
-Message-Id: <20200727134913.520008557@linuxfoundation.org>
+        stable@vger.kernel.org, Forest Crossman <cyrozap@gmail.com>
+Subject: [PATCH 4.14 48/64] usb: xhci: Fix ASM2142/ASM3142 DMA addressing
+Date:   Mon, 27 Jul 2020 16:04:27 +0200
+Message-Id: <20200727134913.561486112@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -58,37 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+From: Forest Crossman <cyrozap@gmail.com>
 
-commit 5ce1a24dd98c00a57a8fa13660648abf7e08e3ef upstream.
+commit dbb0897e805f2ab1b8bc358f6c3d878a376b8897 upstream.
 
-The wMaxPacketSize field of endpoint descriptor may be zero
-as default value in alternate interface, and they are not
-actually selected when start stream, so skip them when try to
-allocate bandwidth.
+The ASM2142/ASM3142 (same PCI IDs) does not support full 64-bit DMA
+addresses, which can cause silent memory corruption or IOMMU errors on
+platforms that use the upper bits. Add the XHCI_NO_64BIT_SUPPORT quirk
+to fix this issue.
 
+Signed-off-by: Forest Crossman <cyrozap@gmail.com>
 Cc: stable <stable@vger.kernel.org>
-Fixes: 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Link: https://lore.kernel.org/r/1594360672-2076-1-git-send-email-chunfeng.yun@mediatek.com
+Link: https://lore.kernel.org/r/20200717112734.328432-1-cyrozap@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-mtk-sch.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/host/xhci-pci.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/host/xhci-mtk-sch.c
-+++ b/drivers/usb/host/xhci-mtk-sch.c
-@@ -284,6 +284,10 @@ static bool need_bw_sch(struct usb_host_
- 	if (is_fs_or_ls(speed) && !has_tt)
- 		return false;
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -235,6 +235,9 @@ static void xhci_pci_quirks(struct devic
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+ 			pdev->device == 0x1142)
+ 		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
++	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
++			pdev->device == 0x2142)
++		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
  
-+	/* skip endpoint with zero maxpkt */
-+	if (usb_endpoint_maxp(&ep->desc) == 0)
-+		return false;
-+
- 	return true;
- }
- 
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+ 		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
 
 
