@@ -2,114 +2,83 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D7EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13528C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77068206D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE9320714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:41:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgG0Ckq (ORCPT
+        id S1727866AbgG0Clz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 22:40:46 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8827 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726044AbgG0Ckq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 22:40:46 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 13534F58F6CB3CE6DC4E;
-        Mon, 27 Jul 2020 10:40:44 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 27 Jul 2020 10:40:35 +0800
-From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
-To:     <lduncan@suse.com>, <cleech@redhat.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <michael.christie@oracle.com>
-CC:     <open-iscsi@googlegroups.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <jingxiangfeng@huawei.com>
-Subject: [PATCH] scsi: iscsi: jump to correct label in an error path
-Date:   Mon, 27 Jul 2020 10:43:40 +0800
-Message-ID: <20200727024340.163937-1-jingxiangfeng@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 26 Jul 2020 22:41:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgG0Clz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 22:41:55 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46BEEC0619D2;
+        Sun, 26 Jul 2020 19:41:55 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jzt5J-003N6N-Ej; Mon, 27 Jul 2020 02:41:49 +0000
+Date:   Mon, 27 Jul 2020 03:41:49 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Lukasz Stelmach <l.stelmach@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Song Liu <song@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Shaohua Li <shaohua.li@intel.com>
+Subject: Re: [PATCH 16/23] initramfs: simplify clean_rootfs
+Message-ID: <20200727024149.GB795125@ZenIV.linux.org.uk>
+References: <20200714190427.4332-1-hch@lst.de>
+ <20200714190427.4332-17-hch@lst.de>
+ <CGME20200717205549eucas1p13fca9a8496836faa71df515524743648@eucas1p1.samsung.com>
+ <7f37802c-d8d9-18cd-7394-df51fa785988@samsung.com>
+ <20200718100035.GA8856@lst.de>
+ <20200723092200.GA19922@lst.de>
+ <dleftjblk6b95t.fsf%l.stelmach@samsung.com>
+ <20200723142734.GA11080@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200723142734.GA11080@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In current code, it jumps to put_host() when scsi_host_lookup()
-failes to get host. Jump to correct label to fix it.
+On Thu, Jul 23, 2020 at 04:27:34PM +0200, Christoph Hellwig wrote:
+> On Thu, Jul 23, 2020 at 04:25:34PM +0200, Lukasz Stelmach wrote:
+> > >> Can you comment out the call to d_genocide?  It seems like for your
+> > >> the fact that clean_rootfs didn't actually clean up was a feature and
+> > >> not a bug.
+> > >> 
+> > >> I guess the old, pre-2008 code also wouldn't have worked for you in
+> > >> that case.
+> > >
+> > > Did you get a chance to try this?
+> > 
+> > Indeed, commenting out d_genocide() helps.
+> 
+> So given that people have relied on at least the basic device nodes
+> like /dev/console to not go away since 2008, I wonder if we should just
+> remove clean_rootfs entirely
+> 
+> Linus, Al?
 
-Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
----
- drivers/scsi/scsi_transport_iscsi.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+First of all, d_genocide() is simply wrong here from VFS point of view.  _IF_
+you want recursive removal, you need simple_recursive_remove(path.dentry, NULL).
+And it's a userland-visible change of behaviour.
 
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index 7ae5024..5984596 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -3341,7 +3341,7 @@ static int iscsi_new_flashnode(struct iscsi_transport *transport,
- 		pr_err("%s could not find host no %u\n",
- 		       __func__, ev->u.new_flashnode.host_no);
- 		err = -ENODEV;
--		goto put_host;
-+		goto exit_new_fnode;
- 	}
- 
- 	index = transport->new_flashnode(shost, data, len);
-@@ -3351,7 +3351,6 @@ static int iscsi_new_flashnode(struct iscsi_transport *transport,
- 	else
- 		err = -EIO;
- 
--put_host:
- 	scsi_host_put(shost);
- 
- exit_new_fnode:
-@@ -3376,7 +3375,7 @@ static int iscsi_del_flashnode(struct iscsi_transport *transport,
- 		pr_err("%s could not find host no %u\n",
- 		       __func__, ev->u.del_flashnode.host_no);
- 		err = -ENODEV;
--		goto put_host;
-+		goto exit_del_fnode;
- 	}
- 
- 	idx = ev->u.del_flashnode.flashnode_idx;
-@@ -3418,7 +3417,7 @@ static int iscsi_login_flashnode(struct iscsi_transport *transport,
- 		pr_err("%s could not find host no %u\n",
- 		       __func__, ev->u.login_flashnode.host_no);
- 		err = -ENODEV;
--		goto put_host;
-+		goto exit_login_fnode;
- 	}
- 
- 	idx = ev->u.login_flashnode.flashnode_idx;
-@@ -3470,7 +3469,7 @@ static int iscsi_logout_flashnode(struct iscsi_transport *transport,
- 		pr_err("%s could not find host no %u\n",
- 		       __func__, ev->u.logout_flashnode.host_no);
- 		err = -ENODEV;
--		goto put_host;
-+		goto exit_logout_fnode;
- 	}
- 
- 	idx = ev->u.logout_flashnode.flashnode_idx;
-@@ -3520,7 +3519,7 @@ static int iscsi_logout_flashnode_sid(struct iscsi_transport *transport,
- 		pr_err("%s could not find host no %u\n",
- 		       __func__, ev->u.logout_flashnode.host_no);
- 		err = -ENODEV;
--		goto put_host;
-+		goto exit_logout_sid;
- 	}
- 
- 	session = iscsi_session_lookup(ev->u.logout_flashnode_sid.sid);
--- 
-1.8.3.1
-
+As for removal of clean_rootfs()...  FWIW, the odds of an image that would
+eventually fail accidentally getting past the signature mismatch check are
+fairly low.  I've no idea what scenario the author of that thing used to have;
+that would be Shaohua Li <shaohua.li@intel.com>.  Cc'd...
