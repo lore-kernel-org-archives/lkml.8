@@ -2,348 +2,165 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C815C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A270C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D21C8207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E69E820A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:36:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="H8CqUUaq"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VnQikaXY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729983AbgG1XcN (ORCPT
+        id S1730511AbgG1XgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 19:32:13 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.38]:33715 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729597AbgG1XcM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 19:32:12 -0400
-X-Greylist: delayed 1274 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Jul 2020 19:32:11 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 2BAC846C45
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 18:10:55 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 0YkJkJxHG4KQc0YkJkQzPj; Tue, 28 Jul 2020 18:10:55 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8xFpoRcRW3dX8FFKyT2jpqXNkGs3k/oRHLR/MOPh1jg=; b=H8CqUUaqu4PuXF/UhO+cy5eM87
-        T5UOGLSKjp+McPSvuDdh9lvqR1g+QXvAkltEwrl/SQq0Smv13CK9T9RykZS7Q0bEvyUNXj2gy5SnM
-        IedQzcL8PNFeiID3aBPpRvcaEPEjwwYKM+t3mhVXF4JZK0huto1esShJdp3icgviJb1yaJjDGSAv6
-        tgLBgVBQQkGQkPp5nwFIQ/fEAb+jZWrjUNc0qbGhzZWpFM4RmvggQ4bpYD8Z8a5KVr/89V7zQxfQq
-        rjhUrYX55KuLB0xoa/EP6xhfeYI7RK39cQ7bw6sxupBtlIF5BRIEdLS+JMPKdZaIGXLT5BWyHipLA
-        mTrCYYiQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:59820 helo=[192.168.15.2])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1k0YkI-001HGT-Qz; Tue, 28 Jul 2020 18:10:54 -0500
-Subject: Re: [char-misc-next] Revert "mei: hdcp: Replace one-element array
- with flexible-array member"
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "Winkler, Tomas" <tomas.winkler@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Usyskin, Alexander" <alexander.usyskin@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>
-References: <20200728214139.3129532-1-tomas.winkler@intel.com>
- <e80a9e75-4497-1587-deab-b5c6a0fcc48f@embeddedor.com>
- <8ec7601780b542c2bc0168e03749ec0e@intel.com>
- <d6ef8ca4-6e11-b758-0e24-75301e1a5303@embeddedor.com>
- <398e20e8c3f7436bb50d671b9aa9f809@intel.com>
- <6736aefa05e84b30bcc91003b55c7644@intel.com>
- <c4a93287-6010-8ea4-cab2-09efa49e3391@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Message-ID: <fe8f4b91-c65e-0664-c5df-52d4a93734b5@embeddedor.com>
-Date:   Tue, 28 Jul 2020 18:16:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <c4a93287-6010-8ea4-cab2-09efa49e3391@embeddedor.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 28 Jul 2020 19:36:10 -0400
+Received: from mail-eopbgr70054.outbound.protection.outlook.com ([40.107.7.54]:64577
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730402AbgG1XgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 19:36:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eUUmDGDlil5TWN2XNjpwjFkMixOlTf7vstikcYecFxqY6wQdMILDS5bUcwQk29CxdokPGvfjHUeMe7eBokmy5ZQ27D5D5zkaO3LdWlUG6kykqL68arYSRk568Pl8YuuJjbnBLYwj0Wt1vVW3MQGbw8gyNceCEOZUUo1JsXjJ+EePXuCoVmROlxjJlREfhEWK3YEGcoQqKrifnIEYLSsJkN6v8laR9i8DlNRK1ORW2wiuAAYY0296z9qSAcQ/ls6xcSQwnqf63T/edTWCRHS4Ju2jBP+duBNNZZ+R3Mpcp1jxaUQfgh1eUjPMgw6QjYqOAhV2gqN7QB+oRUxzA/yH0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rVcc8ZqYWLlX4w8VVaWGqo3bjVatQP82gxk0GmcJ7/g=;
+ b=iF6Axjsc0vQgqDb9OzO2DEfa12/WY5r0rEfdl5ZxLjPuJzD86RxK45uNA2ouTh23uSkX2a1t9OGlxu0SULLZTRDN5Y+nJua2nts3kLgcD1A+7RJKWfLJil8ALhBNwS8RAIwl3iAgIoS9t1o+L+gE0N8D96mtKmkq9efNwk4cDrjmAe8X/HdPxfB+jxwRCn3UzpDNMvdizpSZ7QYObKCbPL+bMLBZ7F/PHbHarqP1hStOrEUJuuWalyieMJq7tMIOaSi0IgZtQg+q1SAlrMMyTYs4AM5rbhITgCyuw9PgMLoLrr/NgbYnRHmvyNT8y0Qpm8U1eJvr0JTshphWqSUuhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rVcc8ZqYWLlX4w8VVaWGqo3bjVatQP82gxk0GmcJ7/g=;
+ b=VnQikaXYFd0DjoBCzotE+q6DBH94CUcPAw2oAVpBv5ccLrHFNpH62k+AAUPQakQ9ZlEI0lS0586dEM53q3H9h3B5vOWP7EciNDOCUagHdUgefxLJ6y2wCKJitS4prh6Q5DMXO1sPDYnPVdHZHKzraT5QM6zTUs2ZesThLGu3T1s=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB7PR04MB4235.eurprd04.prod.outlook.com (2603:10a6:5:22::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Tue, 28 Jul
+ 2020 23:36:03 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::49f8:20ce:cf20:80b3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::49f8:20ce:cf20:80b3%6]) with mapi id 15.20.3216.034; Tue, 28 Jul 2020
+ 23:36:03 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/2] watchdog: imx7ulp: Strictly follow the sequence for
+ wdog operations
+Thread-Topic: [PATCH 1/2] watchdog: imx7ulp: Strictly follow the sequence for
+ wdog operations
+Thread-Index: AQHWZKrocghDMpUaBEu/lC3XXGngDakdDvaAgACUUzA=
+Date:   Tue, 28 Jul 2020 23:36:03 +0000
+Message-ID: <DB3PR0402MB3916744794CDCCE7BC332147F5730@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1595918567-2017-1-git-send-email-Anson.Huang@nxp.com>
+ <566adde7-c397-72f1-145d-fbca9de77cd7@roeck-us.net>
+In-Reply-To: <566adde7-c397-72f1-145d-fbca9de77cd7@roeck-us.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1k0YkI-001HGT-Qz
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.2]) [187.162.31.110]:59820
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: roeck-us.net; dkim=none (message not signed)
+ header.d=none;roeck-us.net; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [183.192.23.221]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5d09a625-ac17-4993-0635-08d8334efe2a
+x-ms-traffictypediagnostic: DB7PR04MB4235:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB423500CA0DB6B4DE0C2F5B71F5730@DB7PR04MB4235.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: JctIpaiqNs1j5UHoIAlv7sGtRKIgWqgbnWlMt4yNUYcTtJbd0vQqHOVFZ19puj6aQ55aAMB6brqgEU1SDln13Zc9xslrhd4otBaqeydqRtTKjjp6RoEwsxBg8DEL8Lu23EDOcNLlKjPOhzeS5mODSeEjlm3FDGsvuG+hr6Y6vQNb0gl0rs1ORAKZevWr+ZtZvsJoSsvhf/OopCM/CBPuL0zXs2z2BZ50b95VTlbUVMZKclO9RKy8PPFImwbDSi4ozr++o754y7UlhcV8BrVbKVC3nyeOul5aHY+BDAvm/ZRWdgAzW5L3MEVFfwWKWIvYvJXxdUpVXdY1c6sBHA+V1w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(346002)(376002)(39840400004)(396003)(8936002)(55016002)(6506007)(4326008)(110136005)(478600001)(2906002)(316002)(53546011)(71200400001)(186003)(8676002)(7696005)(26005)(5660300002)(52536014)(33656002)(83380400001)(86362001)(66476007)(64756008)(66446008)(66556008)(76116006)(66946007)(44832011)(9686003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: MQ30VDdve7A9y8EGQbCgU1qjFdGWiKvz6JKw1OznVFQlGiBFQq/kYFo7bxvQ9+Fx/84SltTgcT14L8dZ4aoIGVtMuQfYdwHqYfxp9zKoyw00jHfHDfQvU1HeLOZEhBFYEQFKrGrfq+Y8YQ9IHQM/crkclzfrjcXS+vAfMgFS6cdk+SD7hizOtIjs+SPJckDKuIoEz4Wfig2+y7aFFC97mLDA7CNGK3mIsU5yeusdZQLkbaeDZB24o3QT97uoP9HzyhMWE5kwZv/bBkwZXqm5uGxkhATv4wt+tDUUYCQpH9I1xG1FoQk5PvDiEIg5tuXEPezhPD2zRppm3oZPpNgd0IWHOfVZS2US2YEE2xxdbBIJK6i8HNQfP+l1mfwCgtqKjKq+UEeIfKyTUjjktOG3nHaxbD/H+6eF5HbasAdereD2LVwDtLrDkKE/YonYofkk3Wtd5QN+s4FA/RedXkcRFXW2fYkIbA70Qp/CZzCbxd7TPwSutRQIH7M0weceaAXR
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d09a625-ac17-4993-0635-08d8334efe2a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 23:36:03.5868
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Wi0sZL2+EnTqbnv8jAvwwIcVcda/Yk0K4kn+DgB8tyiQE2NCeAr8iAC5qqRhipQXJS3mhCeWQ92z+HlSR+H7aQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4235
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/28/20 18:04, Gustavo A. R. Silva wrote:
-> Tomas,
-> 
-> Please, see some comments below...
-> 
-> On 7/28/20 17:29, Winkler, Tomas wrote:
->>>>>>
->>>>>> Hi Tomas,
->>>>>>
->>>>>> On 7/28/20 16:41, Tomas Winkler wrote:
->>>>>>> Greg please revert, this commit it changes size of struct
->>>>>>> wired_cmd_repeater_auth_stream_req_in, this is not what firmware
->>>>>>> is expecting.
->>>>>>
->>>>>> Could you elaborate on what's the firmware expecting, exactly?
->>>>> struct wired_cmd_repeater_auth_stream_req_in {
->>>>>   -	struct hdcp2_streamid_type	streams[1];
->>>>>   + 	struct hdcp2_streamid_type	streams[];
->>>>> }
->>>>>
->>>>> But then you have, which you haven't changed to + 1 byte =
->>>>> mei_cldev_send(cldev, (u8 *)&verify_mprime_in,
->>>>>                               sizeof(verify_mprime_in));
->>>>>
-> 
-> I don't think the fix for this is to add 1 byte, if any, it seems
-> to be sizeof(*data->streams), or sizeof(struct hdcp2_streamid_type)
-> what needs to be added.
-> 
-> But it might be better to code something like this, instead:
-> 
-> diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c b/drivers/misc/mei/hdcp/mei_hdcp.c
-> index e6c3dc595617..7fe63c915548 100644
-> --- a/drivers/misc/mei/hdcp/mei_hdcp.c
-> +++ b/drivers/misc/mei/hdcp/mei_hdcp.c
-> @@ -572,12 +572,12 @@ static int mei_hdcp_verify_mprime(struct device *dev,
->                HDCP_2_2_MPRIME_LEN);
->         drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data->seq_num_m);
->         memcpy(verify_mprime_in.streams, data->streams,
-> -              (data->k * sizeof(struct hdcp2_streamid_type)));
-> +              (data->k * sizeof(*data->streams)));
-> 
->         verify_mprime_in.k = cpu_to_be16(data->k);
-> 
->         byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in,
-> -                             sizeof(verify_mprime_in));
-> +                             struct_size(&verify_mprime_in, streams, data->k));
->         if (byte < 0) {
->                 dev_dbg(dev, "mei_cldev_send failed. %zd\n", byte);
->                 return byte;
-> 
-> struct_size(&verify_mprime_in, streams, data->k) will give us the size, in bytes,
-> of struct wired_cmd_repeater_auth_stream_req_in plus the size in bytes for
-> the streams[] flexible-array, which is determined by struct hdcp2_streamid_type and
-> data->k.
-> 
-> What do you think?
-> 
-
-This is even better:
-
-diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c b/drivers/misc/mei/hdcp/mei_hdcp.c
-index e6c3dc595617..852374565cba 100644
---- a/drivers/misc/mei/hdcp/mei_hdcp.c
-+++ b/drivers/misc/mei/hdcp/mei_hdcp.c
-@@ -572,12 +572,12 @@ static int mei_hdcp_verify_mprime(struct device *dev,
-               HDCP_2_2_MPRIME_LEN);
-        drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data->seq_num_m);
-        memcpy(verify_mprime_in.streams, data->streams,
--              (data->k * sizeof(struct hdcp2_streamid_type)));
-+              flex_array_size(&verify_mprime_in, streams, data->k));
-
-        verify_mprime_in.k = cpu_to_be16(data->k);
-
-        byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in,
--                             sizeof(verify_mprime_in));
-+                             struct_size(&verify_mprime_in, streams, data->k));
-        if (byte < 0) {
-                dev_dbg(dev, "mei_cldev_send failed. %zd\n", byte);
-                return byte;
-
-the flex_array_size() is a new helper that was designed for this situations. :)
-It calculates the size of a flexible array member within an enclosing structure,
-which is exactly the case.
-
-Thanks
---
-Gustavo
-
-> See more comments below...
-> 
->>>>
->>>> I see, this is the kind of feedback I need from people that knows the
->>>> code better. Thanks!
->>>>
->>>>> But that's not the major point. Point is that we should be able to
->>>>> review and test the code before it is merged.  You haven't run it, right?
->>>>> There is MAINTAINERS file for a reason.
->>>>>
->>>>
->>>> I'm using this command:
->>>>
->>>> $ scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback
->>>>
->>>> and this is the output for both files:
->>>>
->>>> $ scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback
->>>> drivers/misc/mei/hdcp/mei_hdcp.c Arnd Bergmann <arnd@arndb.de>
->>>> (supporter:CHAR and MISC DRIVERS) Greg Kroah-Hartman
->>>> <gregkh@linuxfoundation.org> (supporter:CHAR and MISC DRIVERS) linux-
->>>> kernel@vger.kernel.org (open list) $ scripts/get_maintainer.pl
->>>> --nokeywords -- nogit --nogit-fallback
->>>> drivers/misc/mei/hdcp/mei_hdcp.h Arnd Bergmann <arnd@arndb.de>
->>>> (supporter:CHAR and MISC DRIVERS) Greg Kroah-Hartman
->>>> <gregkh@linuxfoundation.org> (supporter:CHAR and MISC DRIVERS) linux-
->>>> kernel@vger.kernel.org (open list)
->>>
->>>
->>>> For some reason you don't appear on the list above. Do you see
->>>> anything wrong with the command I'm running to get the maintainers and
->>> lists?
->>>
->>> Not sure, it should be caught by drivers/misc/mei/* ?
->>> Maybe it is not recursive? Need to check the script, frankly I usually check this
->>> manually.
->>>
->>> INTEL MANAGEMENT ENGINE (mei)
->>> M:      Tomas Winkler <tomas.winkler@intel.com>
->>> L:      linux-kernel@vger.kernel.org
->>> S:      Supported
->>> F:      Documentation/driver-api/mei/*
->>> F:      drivers/misc/mei/*
->>> F:      drivers/watchdog/mei_wdt.c
->>> F:      include/linux/mei_cl_bus.h
->>> F:      include/uapi/linux/mei.h
->>> F:      samples/mei/*
->>>
->>
->> It's not recursive, when I add drivers/misc/mei/hdcp/* . It works correctly 
->> I will post a patch.
->>
-> 
-> Great. I'm glad we got to the root cause of this issue. :)
-> 
-> Thanks
-> --
-> Gustavo
-> 
->> Thanks
->> Tomas
->>
->>
->>>
->>>>
->>>> Thanks
->>>> --
->>>> Gustavo
->>>>
->>>>>>
->>>>>>> I really do not appreciate that the code is bypassing driver
->>>>>>> maintaner review, I think this is a minimum we can ask for, this
->>>>>>> is not for a first time.
->>>>>>>
->>>>>>> This reverts commit c56967d674e361ebe716e66992e3c5332b25ac1f.
->>>>>>>
->>>>>>> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
->>>>>>> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
->>>>>>> ---
->>>>>>>  drivers/misc/mei/hdcp/mei_hdcp.c | 2 +-
->>>>>>> drivers/misc/mei/hdcp/mei_hdcp.h | 2 +-
->>>>>>>  2 files changed, 2 insertions(+), 2 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c
->>>>>>> b/drivers/misc/mei/hdcp/mei_hdcp.c
->>>>>>> index d1d3e025ca0e..e6c3dc595617 100644
->>>>>>> --- a/drivers/misc/mei/hdcp/mei_hdcp.c
->>>>>>> +++ b/drivers/misc/mei/hdcp/mei_hdcp.c
->>>>>>> @@ -572,7 +572,7 @@ static int mei_hdcp_verify_mprime(struct
->>>>>>> device
->>>>>> *dev,
->>>>>>>  	       HDCP_2_2_MPRIME_LEN);
->>>>>>>  	drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data-
->>>> seq_num_m);
->>>>>>>  	memcpy(verify_mprime_in.streams, data->streams,
->>>>>>> -	       array_size(data->k, sizeof(*data->streams)));
->>>>>>> +	       (data->k * sizeof(struct hdcp2_streamid_type)));
->>>>>>>
->>>>>>>  	verify_mprime_in.k = cpu_to_be16(data->k);
->>>>>>>
->>>>>>> diff --git a/drivers/misc/mei/hdcp/mei_hdcp.h
->>>>>>> b/drivers/misc/mei/hdcp/mei_hdcp.h
->>>>>>> index 834757f5e072..18ffc773fa18 100644
->>>>>>> --- a/drivers/misc/mei/hdcp/mei_hdcp.h
->>>>>>> +++ b/drivers/misc/mei/hdcp/mei_hdcp.h
->>>>>>> @@ -358,7 +358,7 @@ struct
->>> wired_cmd_repeater_auth_stream_req_in
->>>> {
->>>>>>>  	u8
->>>>>> 	seq_num_m[HDCP_2_2_SEQ_NUM_LEN];
->>>>>>>  	u8				m_prime[HDCP_2_2_MPRIME_LEN];
->>>>>>>  	__be16				k;
->>>>>>> -	struct hdcp2_streamid_type	streams[];
->>>>>>> +	struct hdcp2_streamid_type	streams[1];
->>>>>>>  } __packed;
->>>>>>>
->>>>>>>  struct wired_cmd_repeater_auth_stream_req_out {
->>>>>>>
+SGksIEd1ZW50ZXINCg0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8yXSB3YXRjaGRvZzogaW14
+N3VscDogU3RyaWN0bHkgZm9sbG93IHRoZSBzZXF1ZW5jZSBmb3INCj4gd2RvZyBvcGVyYXRpb25z
+DQo+IA0KPiBPbiA3LzI3LzIwIDExOjQyIFBNLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiBBY2Nv
+cmRpbmcgdG8gcmVmZXJlbmNlIG1hbnVhbCwgdGhlIGkuTVg3VUxQIFdET0cncyBvcGVyYXRpb25z
+IHNob3VsZA0KPiA+IGZvbGxvdyBiZWxvdyBzZXF1ZW5jZToNCj4gPg0KPiA+IDEuIGRpc2FibGUg
+Z2xvYmFsIGludGVycnVwdHM7DQo+ID4gMi4gdW5sb2NrIHRoZSB3ZG9nIGFuZCB3YWl0IHVubG9j
+ayBiaXQgc2V0OyAzLiByZWNvbmZpZ3VyZSB0aGUgd2RvZw0KPiA+IGFuZCB3YWl0IGZvciByZWNv
+bmZpZ3VyYXRpb24gYml0IHNldDsgNC4gZW5hYmVsIGdsb2JhbCBpbnRlcnJ1cHRzLg0KPiA+DQo+
+ID4gU3RyaWN0bHkgZm9sbG93IHRoZSByZWNvbW1lbmRlZCBzZXF1ZW5jZSBjYW4gbWFrZSBpdCBt
+b3JlIHJvYnVzdC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5I
+dWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3dhdGNoZG9nL2lteDd1bHBfd2R0
+LmMgfCAyOSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdl
+ZCwgMjkgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvd2F0Y2hk
+b2cvaW14N3VscF93ZHQuYw0KPiA+IGIvZHJpdmVycy93YXRjaGRvZy9pbXg3dWxwX3dkdC5jIGlu
+ZGV4IDc5OTNjOGMuLmI0MTRlY2YgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy93YXRjaGRvZy9p
+bXg3dWxwX3dkdC5jDQo+ID4gKysrIGIvZHJpdmVycy93YXRjaGRvZy9pbXg3dWxwX3dkdC5jDQo+
+ID4gQEAgLTQsNiArNCw3IEBADQo+ID4gICAqLw0KPiA+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9j
+bGsuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+DQo+ID4gICNpbmNsdWRlIDxsaW51
+eC9pby5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQo+ID4gICNpbmNsdWRlIDxs
+aW51eC9tb2R1bGUuaD4NCj4gPiBAQCAtNDgsMTcgKzQ5LDMyIEBAIHN0cnVjdCBpbXg3dWxwX3dk
+dF9kZXZpY2Ugew0KPiA+ICAJc3RydWN0IGNsayAqY2xrOw0KPiA+ICB9Ow0KPiA+DQo+ID4gK3N0
+YXRpYyBpbmxpbmUgdm9pZCBpbXg3dWxwX3dkdF93YWl0KHZvaWQgX19pb21lbSAqYmFzZSwgdTMy
+IG1hc2spIHsNCj4gPiArCWludCByZXRyaWVzID0gMTAwOw0KPiA+ICsNCj4gPiArCWRvIHsNCj4g
+PiArCQlpZiAocmVhZGxfcmVsYXhlZChiYXNlICsgV0RPR19DUykgJiBtYXNrKQ0KPiA+ICsJCQly
+ZXR1cm47DQo+ID4gKwkJdXNsZWVwX3JhbmdlKDIwMCwgMTAwMCk7DQo+ID4gKwl9IHdoaWxlIChy
+ZXRyaWVzLS0pOw0KPiANCj4gU2xlZXAgd2l0aCBpbnRlcnJ1cHRzIGRpc2FibGVkID8gSSBjYW4g
+bm90IGltYWdpbmUgdGhhdCB0aGlzIHdvcmtzIHdlbGwgaW4gYQ0KPiBzaW5nbGUgQ1BVIHN5c3Rl
+bS4gT24gdG9wIG9mIHRoYXQsIGl0IHNlZW1zIHF1aXRlIHBvaW50bGVzcy4NCj4gRWl0aGVyIHlv
+dSBkb24ndCB3YW50IHRvIGJlIGludGVycnVwdGVkIG9yIHlvdSBkbywgYnV0IHNsZWVwaW5nIHdp
+dGggaW50ZXJydXB0cw0KPiBkaXNhYmxlZCByZWFsbHkgZG9lc24ndCBtYWtlIHNlbnNlLiBBbmQg
+ZG9lcyBpdCByZWFsbHkgdGFrZSAyMDAtMTAwMCB1UyBmb3IgdGhlDQo+IHdhdGNoZG9nIHN1YnN5
+c3RlbSB0byByZWFjdCwgYW5kIHNvbWV0aW1lcyB1cCB0byAyMDAgKiAxMDAgPSAyMCBtUyA/IFRo
+YXQNCj4gc2VlbXMgaGlnaGx5IHVubGlrZWx5LiBJZiBzdWNoIGEgZGVsYXkgbG9vcCBpcyBpbmRl
+ZWQgbmVlZGVkLCBpdCBzaG91bGQgYmUNCj4gbGltaXRlZCBieSBhIHRpbWUsIG5vdCBieSBudW1i
+ZXIgb2YgcmVwZXRpdGlvbnMuDQo+IA0KPiBVbmxlc3MgdGhlcmUgaXMgZXZpZGVuY2UgdGhhdCB0
+aGVyZSBpcyBhIHByb2JsZW0gdGhhdCBuZWVkcyB0byBiZSBzb2x2ZWQsIEkgYW0NCj4gbm90IGdv
+aW5nIHRvIGFjY2VwdCB0aGlzIGNvZGUuDQo+IA0KDQpPb3BzLCB0aGlzIGlzIGEgbWlzdGFrZSBv
+ZiB1c2luZyBzbGVlcCB3aXRoIGludGVycnVwdCBkaXNhYmxlZCwgc29ycnkgZm9yIHRoYXQuDQpU
+aGUgYmVzdCBvcHRpb24gaXMgdG8gdXNlIHJlYWRsX3JlbGF4ZWRfcG9sbF90aW1lb3V0X2F0b21p
+YygpIHRvIHBvbGwgdGhlIHN0YXR1cw0KYml0LCBob3dldmVyLCB0aGUgaS5NWDdVTFAgd2F0Y2hk
+b2cgaXMgdmVyeSBzcGVjaWFsIHRoYXQgdGhlIHVubG9jayB3aW5kb3cgT05MWQ0Kb3BlbiBmb3Ig
+c2V2ZXJhbCBjeWNsZXMsIHRoYXQgbWVhbnMgdGhlIHVubG9jayBzdGF0dXMgYml0IHdpbGwgYmUg
+c2V0IGFuZCB0aGVuIGNsZWFyDQphdXRvbWF0aWNhbGx5IGFmdGVyIHRob3NlIGN5Y2xlcywgdXNp
+bmcgcmVhZGxfcmVsYXhlZF9wb2xsX3RpbWVvdXRfYXRvbWljKCkgd2lsbA0KZmFpbCBzaW5jZSB0
+aGVyZSBhcmUgbWFueSB0aW1lb3V0IGhhbmRsZSBjb2RlIGluIGl0IGFuZCB0aGUgdW5sb2NrIHdp
+bmRvdyBpcyBvcGVuDQphbmQgY2xvc2UgZHVyaW5nIHRoaXMgdGltZW91dCBoYW5kbGUgaW50ZXJ2
+YWwsIHNvIGl0IGZhaWwgdG8gY2F0Y2ggdGhlIHVubG9jayBiaXQuDQoNClRoZSBpZGVhbCBvcHRp
+b24gaXMgdXNpbmcgYXRvbWljIHBvbGxpbmcgd2l0aG91dCBhbnkgb3RoZXIgdGltZW91dCBjaGVj
+ayB0byBtYWtlDQpzdXJlIHRoZSB1bmxvY2sgd2luZG93IGlzIE5PVCBtaXNzZWQsIGJ1dCBJIHRo
+aW5rIExpbnV4IGtlcm5lbCB3aWxsIE5PVCBhY2NlcHQNCmEgd2hpbGUgbG9vcCB3aXRob3V0IHRp
+bWVvdXQsIGFuZCB0aGF0IGlzIHdoeSBJIHRyaWVkIHRvIHVzZSB1c2xlZXBfcmFuZ2VzKCksIGJ1
+dA0Kb2J2aW91c2x5IEkgbWFkZSBhIG1pc3Rha2Ugb2YgdXNpbmcgaXQgd2l0aCBJUlEgZGlzYWJs
+ZWQuDQoNCkRvIHlvdSBoYXZlIGFueSBzdWdnZXN0aW9uIG9mIGhvdyB0byBoYW5kbGUgc3VjaCBj
+YXNlPyBJZiB0aGUgaGFyZHdhcmUgT05MWQ0KdW5sb2NrIHRoZSByZWdpc3RlciBmb3IgYSBzbWFs
+bCB3aW5kb3csIGhvdyB0byBwb2xsIHRoZSBzdGF0dXMgYml0IHdpdGggdGltZW91dA0KaGFuZGxl
+IGFuZCBhbHNvIG1ha2Ugc3VyZSB0aGUgdGltZW91dCBoYW5kbGUgY29kZSBhcyBxdWljayBhcyBw
+b3NzaWJsZSB0byBOT1QNCm1pc3MgdGhlIHdpbmRvdz8NCg0KVGhhbmtzLA0KQW5zb24NCg0KIA0K
+DQoNCg0K
