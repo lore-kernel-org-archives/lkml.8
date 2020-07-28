@@ -2,109 +2,172 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B12C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16045206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:26:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="AMNAOQuH"
+	by mail.kernel.org (Postfix) with ESMTP id 871BF206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbgG1N0Y (ORCPT
+        id S1730101AbgG1N1X convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:26:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729896AbgG1N0Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:26:24 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CDA8C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:26:23 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f18so18304173wrs.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:26:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v/s3jq9NJ73fEE3PqAt09ZsxAzz0EYmQoxyJ22ptWsE=;
-        b=AMNAOQuHuu9Kq4fDu9l86Z+9ICzEZfJEibVLB529V+O1SpWFHMlJ2zLBtF+rO+y7TG
-         Q+wZFwzJLVUo8NsOAhuvJbfWElzNvmspMdU+oCiHJKEmskHEEe2yRp80MyOy3BJGX7/P
-         5G7J2GCI1EiCkBgjlsbKARbl8zb+EbhhKFO1lUaznDnlpxOe05I5ejiSQ08hPLfhy8Cc
-         djkj9X3+p1ECObpBykTuNlRS0OjjvH4VrX6Mo3X4oLB0NSHwm334lJN/fHNRczPkHqRY
-         WQ9K4Pql1wqS8SnhzjwOrh9KUf9xlJyx9GlC7iyIuXrgQG3G22OshAjviDbHhl7ZAi1l
-         phyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v/s3jq9NJ73fEE3PqAt09ZsxAzz0EYmQoxyJ22ptWsE=;
-        b=NMGhBJhs5bbNgwjwW/BaBDmy5qApSKWjQCOVjTjkN/ryU25PvqKIXqneMTlYnhcvmJ
-         K9IzU+WgHoUpP3O++gA9C4aZijAHAUrTWyKmp96J+QpiGY+bZB7CWrw08FMre4vX3xgS
-         N/gwYRjWWAFvY5pgxjfJkY37lHaacIlCHrE09w8/Zlm3ghFFP1W00B09cgoXy5djZC+M
-         LU1SYP2FPsY21vtOsaY2WZgVklLByOMbpm99GgzlEVjnDwMipyvXqrimvF/fcrQTX9HB
-         LMa+wkLp46KyEFNFcW9FFlzoddk0V9/Ok2tLj/bqeADt32jCT6oiFFB6hVij/F6YRTQX
-         sDrw==
-X-Gm-Message-State: AOAM533B1Z3ddwffJTXgzADtHFGSeuuiJCZBAlWhx0pBm11zmqMWtE0/
-        qXsWPjHdGKCoktZKXUa4IQilSDZuIKjudz7rzaNIcQ==
-X-Google-Smtp-Source: ABdhPJySDbUjGGpOV5SM3Kmte7QuRaaRGIKl/L3Uz8KmoBnA6/EJ6CU8RhtGbCStzLkpgHgzCXMHVaU7WDEXY/mHy54=
-X-Received: by 2002:a5d:6681:: with SMTP id l1mr23870585wru.47.1595942782329;
- Tue, 28 Jul 2020 06:26:22 -0700 (PDT)
+        Tue, 28 Jul 2020 09:27:23 -0400
+Received: from mga17.intel.com ([192.55.52.151]:33611 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729896AbgG1N1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 09:27:22 -0400
+IronPort-SDR: VSX3xX3ZfPOZbOEdTHBzh6K6MjvS8JtEE1z39/1IJTgXvrYXabw+tQTRYjDqOeMsyfNoihFRx7
+ nb+5bSlTOJXA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="131268976"
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="131268976"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 06:27:17 -0700
+IronPort-SDR: JjdD5x4CQ/Ed4UrBOerz6LwPkXJOlxuttsP4cyWE1A0xvHMKRJN5W/deAbaBoE2O1Nk1fm0gzA
+ tqN+BU9DqDTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="322184272"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga002.fm.intel.com with ESMTP; 28 Jul 2020 06:27:17 -0700
+Received: from shsmsx606.ccr.corp.intel.com (10.109.6.216) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 28 Jul 2020 06:27:17 -0700
+Received: from shsmsx605.ccr.corp.intel.com (10.109.6.215) by
+ SHSMSX606.ccr.corp.intel.com (10.109.6.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 28 Jul 2020 21:27:14 +0800
+Received: from shsmsx605.ccr.corp.intel.com ([10.109.6.215]) by
+ SHSMSX605.ccr.corp.intel.com ([10.109.6.215]) with mapi id 15.01.1713.004;
+ Tue, 28 Jul 2020 21:27:14 +0800
+From:   "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+To:     'Jonathan Cameron' <Jonathan.Cameron@Huawei.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "ashok.raj@kernel.org" <ashok.raj@kernel.org>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC PATCH 5/9] PCI/AER: Apply function level reset to RCiEP on
+ fatal error
+Thread-Topic: [RFC PATCH 5/9] PCI/AER: Apply function level reset to RCiEP on
+ fatal error
+Thread-Index: AQHWYd8JuKRT8XhezUyU1QFRnaPiOakaxSkAgAI6MYA=
+Date:   Tue, 28 Jul 2020 13:27:14 +0000
+Message-ID: <a79c227f0913438cb5a94dc80a075a7c@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+        <20200724172223.145608-6-sean.v.kelley@intel.com>
+ <20200727121726.000072a8@Huawei.com>
+In-Reply-To: <20200727121726.000072a8@Huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+x-originating-ip: [10.239.127.36]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <cdbba354ffc234d6c03978671f99e129748ff48f.1594230107.git-series.maxime@cerno.tech>
-In-Reply-To: <cdbba354ffc234d6c03978671f99e129748ff48f.1594230107.git-series.maxime@cerno.tech>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Tue, 28 Jul 2020 14:26:06 +0100
-Message-ID: <CAPY8ntC1tR+Y+FsHX85B3KT1VHu_eLQS=72CUwYgg9yYbjUgVg@mail.gmail.com>
-Subject: Re: [PATCH v4 60/78] drm/vc4: hdmi: Remove unused CEC_CLOCK_DIV define
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime
+> From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> Sent: Monday, July 27, 2020 7:17 PM
+> To: Kelley, Sean V <sean.v.kelley@intel.com>
+> Cc: bhelgaas@google.com; rjw@rjwysocki.net; ashok.raj@kernel.org; Luck,
+> Tony <tony.luck@intel.com>;
+> sathyanarayanan.kuppuswamy@linux.intel.com; linux-pci@vger.kernel.org;
+> linux-kernel@vger.kernel.org; Zhuo, Qiuxu <qiuxu.zhuo@intel.com>
+> Subject: Re: [RFC PATCH 5/9] PCI/AER: Apply function level reset to RCiEP
+> on fatal error
+> 
+> On Fri, 24 Jul 2020 10:22:19 -0700
+> Sean V Kelley <sean.v.kelley@intel.com> wrote:
+> 
+> > From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> >
+> > Attempt to do function level reset for an RCiEP associated with an
+> > RCEC device on fatal error.
+> 
+> I'd like to understand more on your reasoning for flr here.
+> Is it simply that it is all we can do, or is there some basis in a spec
+> somewhere?
+> 
 
-On Wed, 8 Jul 2020 at 18:44, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> The CEC_CLOCK_DIV define is not used anywhere in the driver, let's remove
-> it.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Yes. Though there isn't the link reset for the RCiEP here, I think we should still be able to reset the RCiEP via FLR on fatal error, if the RCiEP supports FLR.
 
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+-Qiuxu
 
-> ---
->  drivers/gpu/drm/vc4/vc4_hdmi.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> index 86e21de6c578..a01562a49bf0 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> @@ -55,7 +55,6 @@
->
->  #define HSM_CLOCK_FREQ 163682864
->  #define CEC_CLOCK_FREQ 40000
-> -#define CEC_CLOCK_DIV  (HSM_CLOCK_FREQ / CEC_CLOCK_FREQ)
->
->  static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
->  {
-> --
-> git-series 0.9.1
+> >
+> > Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> > ---
+> >  drivers/pci/pcie/err.c | 31 ++++++++++++++++++++++---------
+> >  1 file changed, 22 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c index
+> > 044df004f20b..9b3ec94bdf1d 100644
+> > --- a/drivers/pci/pcie/err.c
+> > +++ b/drivers/pci/pcie/err.c
+> > @@ -170,6 +170,17 @@ static void pci_walk_dev_affected(struct
+> pci_dev *dev, int (*cb)(struct pci_dev
+> >  	}
+> >  }
+> >
+> > +static enum pci_channel_state flr_on_rciep(struct pci_dev *dev) {
+> > +	if (!pcie_has_flr(dev))
+> > +		return PCI_ERS_RESULT_NONE;
+> > +
+> > +	if (pcie_flr(dev))
+> > +		return PCI_ERS_RESULT_DISCONNECT;
+> > +
+> > +	return PCI_ERS_RESULT_RECOVERED;
+> > +}
+> > +
+> >  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> >  			enum pci_channel_state state,
+> >  			pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
+> @@ -191,15
+> > +202,17 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> >  	if (state == pci_channel_io_frozen) {
+> >  		pci_walk_dev_affected(dev, report_frozen_detected,
+> &status);
+> >  		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
+> > -			pci_warn(dev, "link reset not possible for RCiEP\n");
+> > -			status = PCI_ERS_RESULT_NONE;
+> > -			goto failed;
+> > -		}
+> > -
+> > -		status = reset_link(dev);
+> > -		if (status != PCI_ERS_RESULT_RECOVERED) {
+> > -			pci_warn(dev, "link reset failed\n");
+> > -			goto failed;
+> > +			status = flr_on_rciep(dev);
+> > +			if (status != PCI_ERS_RESULT_RECOVERED) {
+> > +				pci_warn(dev, "function level reset failed\n");
+> > +				goto failed;
+> > +			}
+> > +		} else {
+> > +			status = reset_link(dev);
+> > +			if (status != PCI_ERS_RESULT_RECOVERED) {
+> > +				pci_warn(dev, "link reset failed\n");
+> > +				goto failed;
+> > +			}
+> >  		}
+> >  	} else {
+> >  		pci_walk_dev_affected(dev, report_normal_detected,
+> &status);
+> 
+
