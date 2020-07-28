@@ -2,171 +2,123 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD504C43464
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BFCC43466
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DEF5207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72132074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:06:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e8ovD5nr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730374AbgG1XGP (ORCPT
+        id S1730418AbgG1XGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 19:06:15 -0400
-Received: from smtprelay0009.hostedemail.com ([216.40.44.9]:42968 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730323AbgG1XGN (ORCPT
+        Tue, 28 Jul 2020 19:06:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730037AbgG1XFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 19:06:13 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id DF3A3182CED5B;
-        Tue, 28 Jul 2020 23:06:11 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: swing96_0a091fa26f6d
-X-Filterd-Recvd-Size: 5557
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 28 Jul 2020 23:06:10 +0000 (UTC)
-Message-ID: <90f4d174d8a2d50104ad52aa0bd4e0ece86f2e90.camel@perches.com>
-Subject: Re: [char-misc-next] Revert "mei: hdcp: Replace one-element array
- with flexible-array member"
-From:   Joe Perches <joe@perches.com>
-To:     "Winkler, Tomas" <tomas.winkler@intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Usyskin, Alexander" <alexander.usyskin@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Date:   Tue, 28 Jul 2020 16:06:08 -0700
-In-Reply-To: <398e20e8c3f7436bb50d671b9aa9f809@intel.com>
-References: <20200728214139.3129532-1-tomas.winkler@intel.com>
-         <e80a9e75-4497-1587-deab-b5c6a0fcc48f@embeddedor.com>
-         <8ec7601780b542c2bc0168e03749ec0e@intel.com>
-         <d6ef8ca4-6e11-b758-0e24-75301e1a5303@embeddedor.com>
-         <398e20e8c3f7436bb50d671b9aa9f809@intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Tue, 28 Jul 2020 19:05:40 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4B91C0619D4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 16:05:40 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id p16so6944512ile.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 16:05:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Nao6Sg98gC9dnjx3GEZXAl5nG7UIQ3Jxef2Bqt6ZzNA=;
+        b=e8ovD5nrAw0AQrEDf9TwEgeiTLsCgrXKE5Ekm1aC8Awgru6PH0WKivHuShFoekmMu/
+         qr7V69nKAd4jLRDoypN2UneXhquWBepj2r1Qbkiy5ZdB6GOWPztLWa5nLvnLErk93K7D
+         /FpDoxLelPIAedCwUr6BUZjQ4DMJ8WqwET9Dk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Nao6Sg98gC9dnjx3GEZXAl5nG7UIQ3Jxef2Bqt6ZzNA=;
+        b=uWc4DFRYDuDfrW0BhgMNrJ8MggGwVvu2EBgYhbSkoJyiS+px/ficz/TxY2/0z9T4bz
+         MmnnFfn+RTgZkg0IO2NNfOCXiq1qmAgXFeK9Ux4fpYqX67hDPqsQYY9M4pXr6MYWI4G4
+         sIbQRdFsXULXQllqGxPXuuUnLoa05LeEiQHpvvCWO9L72KWEvMVw+jIxjwc+A2PQNUYM
+         qCKxL2+B5d7xNSXXw5jnOpYWLnS+NreydEuHUJXp69rJAoyrwUO7uQ0I4p122lIhk4U4
+         DeWAwcJPmr/BZLZL+YpqIkp9kGqG/hqp0dYlVziuyqMHAGTrJC0Xq9sfdOEJo1a3DcH+
+         uMZw==
+X-Gm-Message-State: AOAM530zlTeAm+OnhGE58rktkgAMm1n8RhJ2JUEtMMzbfjAjC7cXzYl1
+        uTiZ46pGaWH5N9w/CFq3QqgSeA==
+X-Google-Smtp-Source: ABdhPJyhLQiF4TVfnU30f3gpZuJ7l3ktbNkM+nWpgbh48zg3EVccqyu593QJwQZsJaHqAr6usPUyFg==
+X-Received: by 2002:a92:89da:: with SMTP id w87mr31763124ilk.236.1595977540032;
+        Tue, 28 Jul 2020 16:05:40 -0700 (PDT)
+Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
+        by smtp.gmail.com with ESMTPSA id w10sm148945ilo.10.2020.07.28.16.05.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 16:05:39 -0700 (PDT)
+From:   Daniel Campello <campello@chromium.org>
+To:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org
+Subject: [PATCH v2 06/14] iio: sx9310: Fixes various memory handling
+Date:   Tue, 28 Jul 2020 17:05:12 -0600
+Message-Id: <20200728170317.v2.6.I8accffd77d616cb55b29bc3021cb0f5e1da3b68a@changeid>
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+In-Reply-To: <20200728230520.2011240-1-campello@chromium.org>
+References: <20200728151258.1222876-1-campello@chromium.org>
+ <20200728230520.2011240-1-campello@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-28 at 22:14 +0000, Winkler, Tomas wrote:
-> > -----Original Message-----
-> > From: Gustavo A. R. Silva <gustavo@embeddedor.com>
-[]
-> > I'm using this command:
-> > 
-> > $ scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback
-> > 
-> > and this is the output for both files:
-> > 
-> > $ scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback
-> > drivers/misc/mei/hdcp/mei_hdcp.c Arnd Bergmann <arnd@arndb.de>
-> > (supporter:CHAR and MISC DRIVERS) Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> (supporter:CHAR and MISC DRIVERS) linux-
-> > kernel@vger.kernel.org (open list) $ scripts/get_maintainer.pl --nokeywords --
-> > nogit --nogit-fallback drivers/misc/mei/hdcp/mei_hdcp.h Arnd Bergmann
-> > <arnd@arndb.de> (supporter:CHAR and MISC DRIVERS) Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> (supporter:CHAR and MISC DRIVERS) linux-
-> > kernel@vger.kernel.org (open list)
-> > For some reason you don't appear on the list above. Do you see anything
-> > wrong with the command I'm running to get the maintainers and lists?
-> 
-> Not sure, it should be caught by drivers/misc/mei/* ?  
+Makes use __aligned(8) to ensure that the timestamp is correctly aligned
+when we call io_push_to_buffers_with_timestamp().
+Also makes use of sizeof() for regmap_bulk_read instead of static value.
 
-No, this pattern matches _only_ files in that
-particular directory and not any files in any
-subdirectory.
+Signed-off-by: Daniel Campello <campello@chromium.org>
+---
 
-> Maybe it is not recursive?
+Changes in v2:
+ - Fixed commit message from "iio: sx9310: Align memory"
 
-It depends on the pattern.
-Patterns with trailing slashes match subdirectories too.
+ drivers/iio/proximity/sx9310.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-from MAINTAINERS:
-
-	F: *Files* and directories wildcard patterns.
-	   A trailing slash includes all files and subdirectory files.
-	   F:	drivers/net/	all files in and below drivers/net
-	   F:	drivers/net/*	all files in drivers/net, but not below
-	   F:	*/net/*		all files in "any top level directory"/net
-	   One pattern per line.  Multiple F: lines acceptable.
-
-
-> Need to check the script, 
-> frankly I usually check this manually.  prob
-> 
-> INTEL MANAGEMENT ENGINE (mei)
-> M:      Tomas Winkler <tomas.winkler@intel.com>
-> L:      linux-kernel@vger.kernel.org
-> S:      Supported
-> F:      Documentation/driver-api/mei/*
-> F:      drivers/misc/mei/*
-
-You probably want:
-
-F:	drivers/misc/mei/
-
-> F:      drivers/watchdog/mei_wdt.c
-> F:      include/linux/mei_cl_bus.h
-> F:      include/uapi/linux/mei.h
-> F:      samples/mei/*
-> 
-> 
-> > Thanks
-> > --
-> > Gustavo
-> > 
-> > > > > I really do not appreciate that the code is bypassing driver
-> > > > > maintaner review, I think this is a minimum we can ask for, this is
-> > > > > not for a first time.
-> > > > > 
-> > > > > This reverts commit c56967d674e361ebe716e66992e3c5332b25ac1f.
-> > > > > 
-> > > > > Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > > > > Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-> > > > > ---
-> > > > >  drivers/misc/mei/hdcp/mei_hdcp.c | 2 +-
-> > > > > drivers/misc/mei/hdcp/mei_hdcp.h | 2 +-
-> > > > >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c
-> > > > > b/drivers/misc/mei/hdcp/mei_hdcp.c
-> > > > > index d1d3e025ca0e..e6c3dc595617 100644
-> > > > > --- a/drivers/misc/mei/hdcp/mei_hdcp.c
-> > > > > +++ b/drivers/misc/mei/hdcp/mei_hdcp.c
-> > > > > @@ -572,7 +572,7 @@ static int mei_hdcp_verify_mprime(struct device
-> > > > *dev,
-> > > > >  	       HDCP_2_2_MPRIME_LEN);
-> > > > >  	drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data-
-> > seq_num_m);
-> > > > >  	memcpy(verify_mprime_in.streams, data->streams,
-> > > > > -	       array_size(data->k, sizeof(*data->streams)));
-> > > > > +	       (data->k * sizeof(struct hdcp2_streamid_type)));
-> > > > > 
-> > > > >  	verify_mprime_in.k = cpu_to_be16(data->k);
-> > > > > 
-> > > > > diff --git a/drivers/misc/mei/hdcp/mei_hdcp.h
-> > > > > b/drivers/misc/mei/hdcp/mei_hdcp.h
-> > > > > index 834757f5e072..18ffc773fa18 100644
-> > > > > --- a/drivers/misc/mei/hdcp/mei_hdcp.h
-> > > > > +++ b/drivers/misc/mei/hdcp/mei_hdcp.h
-> > > > > @@ -358,7 +358,7 @@ struct wired_cmd_repeater_auth_stream_req_in
-> > {
-> > > > >  	u8
-> > > > 	seq_num_m[HDCP_2_2_SEQ_NUM_LEN];
-> > > > >  	u8				m_prime[HDCP_2_2_MPRIME_LEN];
-> > > > >  	__be16				k;
-> > > > > -	struct hdcp2_streamid_type	streams[];
-> > > > > +	struct hdcp2_streamid_type	streams[1];
-> > > > >  } __packed;
-> > > > > 
-> > > > >  struct wired_cmd_repeater_auth_stream_req_out {
-> > > > > 
+diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+index bb007673f758d5..75e85dcd6b3572 100644
+--- a/drivers/iio/proximity/sx9310.c
++++ b/drivers/iio/proximity/sx9310.c
+@@ -132,8 +132,8 @@ struct sx9310_data {
+ 	 */
+ 	bool prox_stat[SX9310_NUM_CHANNELS];
+ 	bool trigger_enabled;
+-	__be16 buffer[SX9310_NUM_CHANNELS +
+-		      4]; /* 64-bit data + 64-bit timestamp */
++	/* 64-bit data + 64-bit timestamp buffer */
++	__be16 buffer[SX9310_NUM_CHANNELS + 4] __aligned(8);
+ 	/* Remember enabled channels and sample rate during suspend. */
+ 	unsigned int suspend_ctrl0;
+ 	struct completion completion;
+@@ -340,7 +340,7 @@ static int sx9310_read_prox_data(struct sx9310_data *data,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return regmap_bulk_read(data->regmap, chan->address, val, 2);
++	return regmap_bulk_read(data->regmap, chan->address, val, sizeof(*val));
+ }
+ 
+ /*
+-- 
+2.28.0.163.g6104cc2f0b6-goog
 
