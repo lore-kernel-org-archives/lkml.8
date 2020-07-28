@@ -2,151 +2,169 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D02C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B617BC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C421620809
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935B620786
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:56:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="rXPKI3ET"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SgmKbxsh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgG1Ivx (ORCPT
+        id S1728294AbgG1I4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:51:53 -0400
-Received: from mail-eopbgr70072.outbound.protection.outlook.com ([40.107.7.72]:64228
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726032AbgG1Ivx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:51:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=crAeQbama/jr7bHRzULtDWjW2q7B26S+i435zRaFkVr2K4QzPzTM+aShXoC0CjmgBFZZ3PZodK5pPv7hoZKoeqX3qT8dzznIoK6U0wDvMN4FSq52fM5ZL1zQlYX2RZjdVw7DRcUq8w96uZLBij+9iExR73GLjT6HY6ajCVP9EZrlKFh+aTyKSSDQMbEmqqMMG1CymUF+uX+7Rvvr1su7k5QeiNbynJrZaIwlqR+NC4ylDS5KbIsybbLyFEldOkGbg5BTmRyX6QI7RKqZaSsiA6NdVrNgCSFEEO0vT8BfkdIAejMdy+GIKbMLPDa7oYH2grXU/afRGu6frW2YDfBKUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mrqbOsupbQq6kxmsi9SPcA/PjpAmvTyvgyjhGHsX6vE=;
- b=AADOR5GyNYwIfEi0fhdMBSqU16uRJO+18RB/q3kvUp6QthoowKmxpG0I6JNclXgQJ9N8134cMeQobPrMC7M64rGuCwXmagZBheNHj7i+B+vw776aO8Jeaw+zJ9XvHsER2JS/QnlbzYtobRqxMj+kSoSd3/UPx7BXJUknxeee9E7hR7N7/9sOiR4rmtCiLav3+nRFzGk1TgANkdsbZC4/PQChxBEFI8udUgZXlWnoAnqt2UQDYMg84uPKj73GTqg3PNt/TNkMwR7n57l+w5O3RewH8PsX23UJNJ4uWu3mBvdpkV7ySSrojImQdHRAar6MscZfDuDZ7yEtVKB8ZWvffw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mrqbOsupbQq6kxmsi9SPcA/PjpAmvTyvgyjhGHsX6vE=;
- b=rXPKI3ETBmCI4j1neg/Kwv99gtMrTF9AbsnXXIzmK7te8h3/0lpieeRIfh1/xS9RaYeB9s/NBZnPVsoITLDwuXVo5ipcP9D50zMuQXINVFPlq1Z3xliUngXXwwoBWDrd4Q7SJJMovNsS2lukznoo8KOKeQu+UiblLSJQCSBWjgk=
-Authentication-Results: canb.auug.org.au; dkim=none (message not signed)
- header.d=none;canb.auug.org.au; dmarc=none action=none
- header.from=mellanox.com;
-Received: from AM6PR05MB6408.eurprd05.prod.outlook.com (2603:10a6:20b:b8::23)
- by AM5PR0501MB2562.eurprd05.prod.outlook.com (2603:10a6:203:c::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.28; Tue, 28 Jul
- 2020 08:51:49 +0000
-Received: from AM6PR05MB6408.eurprd05.prod.outlook.com
- ([fe80::15f4:b130:d907:ce72]) by AM6PR05MB6408.eurprd05.prod.outlook.com
- ([fe80::15f4:b130:d907:ce72%6]) with mapi id 15.20.3216.034; Tue, 28 Jul 2020
- 08:51:49 +0000
-Date:   Tue, 28 Jul 2020 11:51:46 +0300
-From:   Leon Romanovsky <leonro@mellanox.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the kspp tree with the rdma tree
-Message-ID: <20200728085146.GE75549@unreal>
-References: <20200728184520.5634a0a0@canb.auug.org.au>
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
-Content-Disposition: inline
-In-Reply-To: <20200728184520.5634a0a0@canb.auug.org.au>
-X-ClientProxiedBy: AM0P190CA0002.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:208:190::12) To AM6PR05MB6408.eurprd05.prod.outlook.com
- (2603:10a6:20b:b8::23)
+        Tue, 28 Jul 2020 04:56:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728253AbgG1I4W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:56:22 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AF6BC0619D7
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:56:20 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id r2so12393311wrs.8
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:56:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=wxTwrgnq9E/WiNk3kV+5CMVUMO6IYGLUJRsXmpueos0=;
+        b=SgmKbxshWIgy7i/i8vqaI5tcJ2bU9gb64Sjar5YKhBEB9iRFEBzg3k9HrxnHFKOSOs
+         zMcnsMKMr8P3PuxxZvVa0Ir4j3kWZgXjk2nPksQHELB7nSQggAJnMs7JY2nOvsJ+GTyc
+         sIiabW7fz/o12PIx2L6NxjeBcGNbm096zWnTV1cVN3V+7GI56cqEkWoS5K7sGXi1aM9m
+         1knClukA542+MNKmOGARWM3fcYgIfXhxS0F2pay/Q5sEMEVLSN/zk8GkjyMscM7sqgyD
+         YpxFhjMDccQmmVdIisDgzl/kMCQRrp8Zbjd/gxKYKRbEEJIQ6UoCMBONxNgeMkHczaNP
+         XxdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wxTwrgnq9E/WiNk3kV+5CMVUMO6IYGLUJRsXmpueos0=;
+        b=c13rfh4MkwwZTbThy8NsOBdnI2wz+OSlAZH6ggqtZAVXBR1PCr5WHUUJ/SCOUWfdLK
+         iqc6AYFHO3JHAsJ0Xk+P++SvrKfE4NWT15GVMLXPMSI0MN5AMLS8liPzXcdPy04R1I/r
+         oDwSzdC0XKt1Ko7TBP9CXvat3UHi6vl/BvLuv8/BUEKUPDSeWnFuOBEVKze9byT+ywxu
+         F1REznezgxFuSAPHv1sSdouGHpGkmpOhdTugX3FED7Z6naXcl2THVJUiiDaslOtB+rVv
+         HueqFxNrA5DhcVJdT2s/pMzeFZzuWGQlmxuNSVBPRbrkrDriKHx0G03Jk/M7k0rZLz34
+         8xOQ==
+X-Gm-Message-State: AOAM5311YX/gvKMSB9lqY+ezbYCownHVmnU6/DZvzetXyinblCZfNS/Z
+        WgyAbcb87xul1KPdaO2xLSOXag==
+X-Google-Smtp-Source: ABdhPJzyefbTUcC6FA1OtyHG3ZE+ihx1cIgJ8kJah012w56nbIM6+qpRfcUIjerKX0Iu0TxyY/d/Tw==
+X-Received: by 2002:adf:f045:: with SMTP id t5mr25467199wro.288.1595926579385;
+        Tue, 28 Jul 2020 01:56:19 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id a10sm12662484wro.35.2020.07.28.01.56.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 01:56:18 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 09:56:16 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
+Message-ID: <20200728085616.GD2419169@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-3-michael@walle.cc>
+ <20200728072422.GF1850026@dell>
+ <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
+ <20200728082707.GB2419169@dell>
+ <a47993ca4c77ab1ee92f6693debb3c87@walle.cc>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost (213.57.247.131) by AM0P190CA0002.EURP190.PROD.OUTLOOK.COM (2603:10a6:208:190::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20 via Frontend Transport; Tue, 28 Jul 2020 08:51:48 +0000
-X-Originating-IP: [213.57.247.131]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: bc6fc861-41ec-44f9-8b94-08d832d376dd
-X-MS-TrafficTypeDiagnostic: AM5PR0501MB2562:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM5PR0501MB2562502DBC8F64B6B0BC0109B0730@AM5PR0501MB2562.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rgcnp/6PTujgIFFZvu0sUBSM7LoX3fhZAQSbiV3eudc4/u+vHWuVQr9vL2PbljK4yC6IrXtD1yGGkWniedbFDS71mv9O//PZggK9o0OXddakP7qzDq916KLRUurw/j9D4iT31UCbdet3LYYwkXVwxMpPGL0OZZ44+JQ1g5m6/V/2Qogr4tB+70INnNLE2QyoupyiOZ2eB4bCFV1Pp39VklomenzCQ2DY1SqCVoQWFSod5kFPeGH1VXdjzWAJqI/8NAgfHvDnJN6I30ZUeyx7DrUXkr5qMUiOaurrcJ0bxMPp2GCgNbemqBBkYRv5i3YbrF6MUoS2+MITSI1NQo2E4lPSOH57peNo0uS1wNMWiV9MT/bPcpUYb+ISc/ljBaV7
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6408.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(7916004)(396003)(39860400002)(346002)(376002)(366004)(136003)(5660300002)(66556008)(1076003)(66476007)(66946007)(6486002)(16526019)(186003)(6916009)(4326008)(26005)(33716001)(956004)(44144004)(8676002)(478600001)(6496006)(8936002)(9686003)(52116002)(2906002)(54906003)(86362001)(316002)(21480400003)(33656002)(2700100001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: UcuWNGe0N6d/n04ppZ6KftU54YLvZtYZJ2+wAE1w4i1+rVkl5rHfPHROCpKL+Mwsidvt13t++9HwvWxINt4H2c8dQnFqM5g34FS1946Xw3iJFCExYQDtmcPXrlkKI93gpnMfdvTrxxBBbP7ZjB7mTsi8QIWquHtPqjNatY1Dksanq7MGPoaD9wyTAq0suG1ejFwWfGyzcVtM3yT7yj+VG2uVLv7sZsqI3of1LCFH5wqYqekQ+82KWqfYyYZgyltJ9hIAZ6Wz07QndOwEX9a4tmxNaT/itzJ05LciGh129KegG/3tY7yjfAwZhUMMSQKZIm3ZtZUVOnb7XvzJP7W9NKhQq82QPAa1ACo7AkDWPIsV9Orxxg+cI870aHHKdjuX+5C5lGwMJm++dZNu8PITHI0w1H5PfxYrWT+ucn5/Q4rz7AVgRS15CcwH3To+7rMx7NQeQ1hERq7KNaTulRU/oU45DUHomdByeC1w4+WuZyCWPrD0r0yZqugxdRLeaZfa
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc6fc861-41ec-44f9-8b94-08d832d376dd
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR05MB6408.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 08:51:48.9062
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rsE+hiwMdaTKrd69rUqKKtmtZrF71e+soz4c4l53Soenq+Z9cmO9nH/sc6sBoxDeySU2Nh2pBme1f3iR7A9QEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0501MB2562
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a47993ca4c77ab1ee92f6693debb3c87@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---5mCyUwZo2JvN/JJP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> > > > > +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
+> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > +
+> > > > > +title: Kontron's sl28cpld board management controller
+> > > >
+> > > > "S128CPLD" ?
+> > > 
+> > > still not, its sl28cpld, think of a project/code name, not the product
+> > > appended with CPLD.
+> > > 
+> > > > "Board Management Controller (BMC)" ?
+> > > 
+> > > sounds like IPMI, which I wanted to avoid.
+> > 
+> > Is there a datasheet?
+> 
+> No there isn't.
 
-On Tue, Jul 28, 2020 at 06:45:20PM +1000, Stephen Rothwell wrote:
-> Hi all,
->
-> Today's linux-next merge of the kspp tree got a conflict in:
->
->   drivers/infiniband/core/uverbs_cmd.c
->
-> between commit:
->
->   29f3fe1d6854 ("RDMA/uverbs: Remove redundant assignments")
->
-> from the rdma tree and commit:
->
->   3f649ab728cd ("treewide: Remove uninitialized_var() usage")
->
-> from the kspp tree.
->
-> I fixed it up (the former basically did what the latter did, so I used
-> the former version) and can carry the fix as necessary. This is now fixed
-> as far as linux-next is concerned, but any non trivial conflicts should
-> be mentioned to your upstream maintainer when your tree is submitted for
-> merging.  You may also want to consider cooperating with the maintainer
-> of the conflicting tree to minimise any particularly complex conflicts.
+Then what are you working from?
 
-Thanks Stephen,
-The 29f3fe1d6854 > 3f649ab728cd for drivers/infiniband/core.
+> > > > > +maintainers:
+> > > > > +  - Michael Walle <michael@walle.cc>
+> > > > > +
+> > > > > +description: |
+> > > > > +  The board management controller may contain different IP blocks
+> > > > > like
+> > > > > +  watchdog, fan monitoring, PWM controller, interrupt controller
+> > > > > and a
+> > > > > +  GPIO controller.
+> > > > > +
+> > > > > +properties:
+> > > > > +  compatible:
+> > > > > +    const: kontron,sl28cpld-r1
+> > > >
+> > > > We don't usually code revision numbers in compatible strings.
+> > > >
+> > > > Is there any way to pull this from the H/W?
+> > > 
+> > > No, unfortunately you can't. And I really want to keep that, in case
+> > > in the future there are some backwards incompatible changes.
+> > 
+> > Rob,
+> > 
+> > I know you reviewed this already, but you can give your opinion on
+> > this specifically please?  I know that we have pushed back on this in
+> > the past.
+> 
+> Oh, come one. That is an arbitrary string. "sl28cpld-r1" is the first
+> implementation of this. A future "sl28cpld-r2" might look completely
+> different and might not suite the simple MFD at all. "sl28cpld" is
+> a made up name - as "sl28cpld-r1" is, too.
 
->
-> --
-> Cheers,
-> Stephen Rothwell
+Well that sounds bogus for a start.  I guess that's one of the
+problems with trying to support programmable H/W in S/W.
+ 
+If it's okay with Rob, then I'll be okay with it.
 
+Just to note, this has not been okay for others in the past, and this
+use-case is not 'special'.
 
-
---5mCyUwZo2JvN/JJP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQT1m3YD37UfMCUQBNwp8NhrnBAZsQUCXx/nIAAKCRAp8NhrnBAZ
-sTqzAP9zz1l7DuNxhgHs80hPuIC1IXHBQUSr9w/fCn6lQ2RMhAD7BCGkq5rLAtuq
-bADyraF7iWYreEpJ+RE2OhiZS3m+xgM=
-=WeLP
------END PGP SIGNATURE-----
-
---5mCyUwZo2JvN/JJP--
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
