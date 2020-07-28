@@ -2,109 +2,181 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4B7C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9D272075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E29E020809
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:29:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CPYuQwuY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ejEGGvg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbgG1I2g (ORCPT
+        id S1728192AbgG1I3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:28:36 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:46697 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728147AbgG1I2g (ORCPT
+        Tue, 28 Jul 2020 04:29:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728042AbgG1I3J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:28:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595924916; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=JsZFMI5l/wCWWGprGiEt11W9Nl9giP5BK5ShNxbLSLs=; b=CPYuQwuYVXQFCgZLssqfYLa1ka9JKjFFr/vVWQ1kHhvW6APKsAqpQYTsBUQo/dnOY18How3R
- Q2TGP3qc664DKnp7HzGlFrMo5OmjEXtM9LiCT2NrIckETLUEeKru2cu46xm9J9cZ84a9Y3RI
- +kUTB9ngrWsaKcOX2M2aP9vF8ig=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f1fe134a61bb9e3f57d16bd (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 08:26:28
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 76611C433CB; Tue, 28 Jul 2020 08:26:27 +0000 (UTC)
-Received: from [192.168.0.102] (unknown [49.204.127.128])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sivaprak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8D6D3C433C9;
-        Tue, 28 Jul 2020 08:26:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8D6D3C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
-Subject: Re: linux-next: manual merge of the devicetree tree with the pci tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Rob Herring <robherring2@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-References: <20200728154903.51a60b8e@canb.auug.org.au>
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Message-ID: <c7c752bc-2a06-fc56-6f87-dfdddd8a436e@codeaurora.org>
-Date:   Tue, 28 Jul 2020 13:56:21 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 04:29:09 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16BC7C0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:29:09 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id u185so10537427pfu.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:29:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=yZsNfus+6QxB/2Q1/ypFJuiPTGp9cOvML6i0dLAUdac=;
+        b=ejEGGvg9afWN+1y9f+oMsCwu34xhvRkvayj6gOjnrHe4jy2EJmceBZ2vFQgag+khsr
+         7ca5BnlFiO+UHKZ0RNKBKkA1WHQpIHiOKR/m0ToBWXQYAxkklg2OlXj3fMIQVtqKE3lD
+         JI++O+B2lfF/GMviF5c2JM+7LUjRI2SElFT/w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=yZsNfus+6QxB/2Q1/ypFJuiPTGp9cOvML6i0dLAUdac=;
+        b=ZlXWeHA22U6Yq4/h/RuPl7QzZiNlea3+/D2INSfZmBfc2CP6ZXSitaWdvqYBhjUgPg
+         TT3uNfP5CYff1Mz9x6w6jtz7wiLuAGqV9VtGu0LlhKH0CT+M/fD24XynL/GM1ZZH8v1H
+         r6Cel4pMDqj84sx0QTZcjlFuMr/fKVd1CXi438JXrEoksP1m+2P4tlg8QgTY8Ewebm7v
+         Yba/lwk8BokNfkeO+Jtq8Hstx/IVYGeDHxc9gMo13mqxiILEXtxSYGFjF0+X7WYvq9FL
+         xxuWB8FhMGzwZZ1SaVPR38ke5VIrVnIZMUulqKTLU94Ex5Rzx+JNAycezeiPt76e5cDI
+         p8Vg==
+X-Gm-Message-State: AOAM533hB4FPG5M06za3yy28Gewf+Ew4KUJB9IfrE8Km6Ql8/peHm8QT
+        G2kNDvMruKyNkghuxTX8YHf/Ow==
+X-Google-Smtp-Source: ABdhPJyW9jUuaOyVc/e8KZvS6QCn6ltABXxe0vW3hPZVBAQOy7+lfoVizNyt8xrxJoHZ7VqHTpvdsg==
+X-Received: by 2002:aa7:91cd:: with SMTP id z13mr24700924pfa.133.1595924948476;
+        Tue, 28 Jul 2020 01:29:08 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id v28sm18481742pgn.81.2020.07.28.01.29.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 01:29:07 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200728154903.51a60b8e@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200728075102.30807-1-saiprakash.ranjan@codeaurora.org>
+References: <20200728075102.30807-1-saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCHv2] coresight: etm4x: Fix etm4_count race by moving cpuhp callbacks to init
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Date:   Tue, 28 Jul 2020 01:29:06 -0700
+Message-ID: <159592494608.1360974.13925720722764973592@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/2020 11:19 AM, Stephen Rothwell wrote:
-> Hi all,
->
-> Today's linux-next merge of the devicetree tree got a conflict in:
->
->    Documentation/devicetree/bindings/pci/qcom,pcie.txt
->
-> between commits:
->
->    736ae5c91712 ("dt-bindings: PCI: qcom: Add missing clks")
->    b11b8cc161de ("dt-bindings: PCI: qcom: Add ext reset")
->    d511580ea9c2 ("dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant")
->
-> from the pci tree and commit:
->
->    70172d196947 ("dt-bindings: pci: convert QCOM pci bindings to YAML")
->
-> from the devicetree tree.
->
-> I don;t know how to fixed it up so I just left the latter one . This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+Quoting Sai Prakash Ranjan (2020-07-28 00:51:02)
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtr=
+acing/coresight/coresight-etm4x.c
+> index 6d7d2169bfb2..adb71987a1e3 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+> @@ -48,8 +48,6 @@ module_param(pm_save_enable, int, 0444);
+>  MODULE_PARM_DESC(pm_save_enable,
+>         "Save/restore state on power down: 1 =3D never, 2 =3D self-hosted=
+");
+> =20
+> -/* The number of ETMv4 currently registered */
+> -static int etm4_count;
+>  static struct etmv4_drvdata *etmdrvdata[NR_CPUS];
+>  static void etm4_set_default_config(struct etmv4_config *config);
+>  static int etm4_set_event_filters(struct etmv4_drvdata *drvdata,
+> @@ -1403,12 +1401,9 @@ static int etm4_pm_setup_cpuslocked(void)
 
-Rob/Bjorn,
+Is this only called from __init now? If so please mark it as __init
+then.
 
-Please let me know if I can provide a patch rebased to linux-next.
+>  {
+>         int ret;
+> =20
+> -       if (etm4_count++)
+> -               return 0;
+> -
+>         ret =3D cpu_pm_register_notifier(&etm4_cpu_pm_nb);
+>         if (ret)
+> -               goto reduce_count;
+> +               return ret;
+> =20
+>         ret =3D cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ARM_CORESIG=
+HT_STARTING,
+>                                                    "arm/coresight4:starti=
+ng",
+> @@ -1432,17 +1427,11 @@ static int etm4_pm_setup_cpuslocked(void)
+> =20
+>  unregister_notifier:
+>         cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
+> -
+> -reduce_count:
+> -       --etm4_count;
+>         return ret;
+>  }
+> =20
+>  static void etm4_pm_clear(void)
 
-Bjorn can pick up the patch after review and Rob can drop the old pci 
-yaml conversion patch.
+This is __init too?
 
-let me know your thoughts.
+>  {
+> -       if (--etm4_count !=3D 0)
+> -               return;
+> -
+>         cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
+>         cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_STARTING);
+>         if (hp_online) {
+> @@ -1598,4 +1576,29 @@ static struct amba_driver etm4x_driver =3D {
+>         .probe          =3D etm4_probe,
+>         .id_table       =3D etm4_ids,
+>  };
+> -builtin_amba_driver(etm4x_driver);
+> +
+> +static int __init etm4x_init(void)
+> +{
+> +       int ret;
+> +
+> +       cpus_read_lock();
+> +       ret =3D etm4_pm_setup_cpuslocked();
+> +       cpus_read_unlock();
+> +
+> +       /* etm4_pm_setup_cpuslocked() does its own cleanup - exit on erro=
+r */
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret =3D amba_driver_register(&etm4x_driver);
+> +       if (ret) {
+> +               pr_info("Error registering etm4x driver\n");
 
->
+Use pr_err() please.
+
+> +               goto err_init;
+> +       }
+> +
+> +       return ret;
+> +
+> +err_init:
+
+Why is this a goto?
+
+> +       etm4_pm_clear();
+> +       return ret;
+
+Instead of just putting this in the if (ret) arm?
+
+> +}
+> +module_init(etm4x_init);
+
+It was device_initcall before with builtin_amba_driver(), best to not
+change that.
