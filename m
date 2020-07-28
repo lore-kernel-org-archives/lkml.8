@@ -2,103 +2,96 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A98C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743D0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13D5B206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 541FA206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:23:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vV/8Y6Wp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LheCqbjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730004AbgG1NW4 (ORCPT
+        id S1730094AbgG1NXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:22:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53616 "EHLO
+        Tue, 28 Jul 2020 09:23:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729433AbgG1NWz (ORCPT
+        with ESMTP id S1730086AbgG1NXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:22:55 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8916EC061794;
-        Tue, 28 Jul 2020 06:22:55 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id gc9so11579392pjb.2;
-        Tue, 28 Jul 2020 06:22:55 -0700 (PDT)
+        Tue, 28 Jul 2020 09:23:38 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 469DCC0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:23:38 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id 1so5486602vsl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:23:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nf1O99k+zsvJqjI/za3C3+LNhANhWMX3dBWewicGWoQ=;
-        b=vV/8Y6WpSwU9HTxSD/WJ/EvnS9XpQW0xb0WmXdXvTjR59DT26u+VWyuBNuaIaAeLjr
-         AaNLCzhBn8d81jnuBLGyc+snvUOJghb/k7EcDcrfQfA2sboAIKDqIrXsFNCuG8OdVfkw
-         WkrOXWDMF4bD6LrTz+zbhPB5ZsyN8kYxqvm4Ar7m5yuTLFczPk27/mlyUAVJiI3HRtSe
-         DolevwAoBLh6X4rFwk0Re7o30X3vbGJICz1stm8S11krtGYvLuoaGIm4VSvoRGKcwtk4
-         hTX0tS2XykR3BGO445hOjNkLz1KymFyQMpurS4RSMqPAhujHSIiYUk69nyMRNpSqVRVT
-         CuTA==
+        bh=QXfi6vnP/umEXJ3y6ImlOcqse9iDrshGxOOYKi2M06w=;
+        b=LheCqbjpyiQxtwihTuUKy4NYEy6OXctJA8A1Y2Sr5BuJnvgKdbi15QewOOWwOTF6LV
+         N2nrvCDnDI6GG/a3Jcr92B0KsFOfnIx3sJxvg47M9j3sObDZC9PWHbGNaB1knVrOKZMt
+         XaQkggAT9CIHSU6HwIIO0Uh6obozcw60whadWtPtoWDktgnp71oS0tVa3zhHJs+7n8+K
+         IAbkNycIfArwi90Sg+Df3RoB6L4iaWjWFKdl2zPrVAgC63StILnwkrJVR/XSS4BQYQAg
+         xqyjw3VvVR1efAQwRhhfVK/v7zHsJwwiKNVVj4dbwhCGVPp4+N3Jt8y8IK2q1SbP04DV
+         +a/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nf1O99k+zsvJqjI/za3C3+LNhANhWMX3dBWewicGWoQ=;
-        b=gEEGbPFeZz2zlwfx0HKW/oGmY+TCU8IETXpsydHKwfbwz17nhuwxSLPorOikSMNVEu
-         x4pkgpDm45R63w3rXrKM8AkS0LgUaj3iBwyVVJB17ezXJz1T2RGTCyoic1iWTNFFvxtg
-         c3DlERueBhFl3qlS/h90xFST6Bb1SF8XSoeGSSv6HuWYQUc6icNHngM4zqpB26UgMjfW
-         nJjMyRLDkXrMqL+jID9/eszfxH9fx7TQqc/NkFCVICr5bTlju3DfNbaNY1kSURJeURsF
-         PkH+1XVuGInOtgY/3n8Ztcob8b42uJBDWrFj7JJwlAXGp4wURUUUayMYXQeSKDOuLFzW
-         rtyQ==
-X-Gm-Message-State: AOAM533JgRT0U8cjiVyH825bq4YNqdZlgCW5UZU+OTirXZgfmlRG4x0b
-        ztNwSTmff3Ht++tVb523pA+NDRXsQJUxUbbkHQU=
-X-Google-Smtp-Source: ABdhPJz9Jk45e1SqiyDKZYa6RYOm/76TyaeUDRNkM5h0Lo0ybef78akWq7E7BAoASP7zeSOXUIr+/b2GIFPWGnB8Bpo=
-X-Received: by 2002:a17:902:4b:: with SMTP id 69mr7486754pla.18.1595942574825;
- Tue, 28 Jul 2020 06:22:54 -0700 (PDT)
+        bh=QXfi6vnP/umEXJ3y6ImlOcqse9iDrshGxOOYKi2M06w=;
+        b=IcYgl0x8BkGG6f/039uJgE2o0Chkfwq+jSwLz3pjE6JuDJARGfnRad2PdLZmVSJK/d
+         m0cYyjc46K38W0qctTHGqH9Du1FijZKeH+LvKr6VRl2c3+2LbY/16NtEMTSASISMyvtY
+         gUOxsftMwCFDXvfrGAnoMpXkx9bA3WoDkA3zJtvfuEgDXjUsVagrQb8Jv/6VO7ds77Tz
+         dXkaxXTN3uxMUVbiwWOj9Pp0x9x8pdwouhADDrvPom/W+4nRjGTNcUr9rYcNTkP1YqIG
+         ZsvpYULif6OJIzTKchWUvHDTtQI3XE0MZsp87SFSLZmeKq2U29TFqqAwMNZoOXe6oDjP
+         EcfQ==
+X-Gm-Message-State: AOAM533L+zd+jLRqNlYqnxSUmPlswgq9jONnoKyCUYp7QF+TTZ9KZcuC
+        whLZ3OG2KTZs6SGHvjz1uzsFzRBJIO8SKD2bzyF6ZQ==
+X-Google-Smtp-Source: ABdhPJzBOH10rk3Rdn+jqyz9OJv/90a0M5FuL1RWCmiobUTvZgrGDVcf4sKGcimEjjpR3cDYVpJ4HObqnToKzsJqr9g=
+X-Received: by 2002:a67:f60c:: with SMTP id k12mr19847110vso.8.1595942617191;
+ Tue, 28 Jul 2020 06:23:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
- <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
- <20200723100317.GJ3703480@smile.fi.intel.com> <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
- <CAHp75Vdeg6v_yLYjxZPJM7SgDP-fou6SEuaE8+TFCNW4c2r_rA@mail.gmail.com>
- <20200727215010.qzhvavmskfoaapi5@mobilestation> <CACRpkda5Ki+itbvLsxSLj4o1NRKdf9P48kbYXEgArDqcEcWA7w@mail.gmail.com>
-In-Reply-To: <CACRpkda5Ki+itbvLsxSLj4o1NRKdf9P48kbYXEgArDqcEcWA7w@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Jul 2020 16:22:39 +0300
-Message-ID: <CAHp75VeY0HMKXJCP2Ds=BWdWduevXDqUK1pkF1G1fUTQn7uC3Q@mail.gmail.com>
-Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200724091520.880211-1-tweek@google.com> <CAEjxPJ45ij3obT37ywn_edb9xb89z-SdwzejfN6+jrvAtghXfA@mail.gmail.com>
+ <CAHC9VhS4aXD8kcXnQ2MsYvjc--xXSUpsM1xtgq3X5DBT59ohhw@mail.gmail.com>
+ <CA+zpnLfczC=9HQA8s1oBGKGQO+OkuydF85o89dhSxdOyKBHMgg@mail.gmail.com> <20200728091220.5769b606@oasis.local.home>
+In-Reply-To: <20200728091220.5769b606@oasis.local.home>
+From:   =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
+Date:   Tue, 28 Jul 2020 15:23:15 +0200
+Message-ID: <CA+zpnLc1i32LZGXU8q3=Ssd7Nhpzis0PFXjs8e+weav6rMpWbQ@mail.gmail.com>
+Subject: Re: [PATCH] selinux: add tracepoint on denials
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Nick Kralevich <nnk@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 11:18 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Mon, Jul 27, 2020 at 11:50 PM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
->
-> > It turns out my "mostly" was wrong in this matter. It's 4 out of 17 patches,
-> > which make the initialization in the same order as mine:
->
-> I'll think about fixing them up to all look the same at some point
-> if noone beats me to it. Sorry for the mess, I was just hacking
-> along to get this work item finalized.
+On Tue, Jul 28, 2020 at 3:12 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> Where in that document does it say that trace events have a fixed size.
+> We have a lot of dynamically sized trace events.
 
-I have sent three patches (two updates according to above matter and
-one is a fix on top of your template clean up I missed myself).
+My mistake. From the "format" pseudo-file, I assumed the offset and
+size were fixed.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> Please take a look at samples/trace_events/trace_events_sample.h
+> and read the example on __print_symbolic().
+> I think that's what you are looking for.
+
+Ack, thanks for pointing these out. I still think that my other
+argument (i.e. duplication of avc message) holds.
