@@ -2,95 +2,66 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EF4C433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3062070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:56:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595966211;
-	bh=t6ZBb6aKjOP/D53m5Lux0B4l1dQapES6T4xqgzSEF5o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iv7nr1XDFQx+g0uPMOEk+2cRT1DTqZDkwCrtoESQDarU5gEam77JuhQhjELiHYeOA
-	 drZzVC9xCR7TGeafsgV8hoC/elXUHf01rjouOLEYl/ewditcFvfzieOfVWTbUSO47P
-	 IgnLOTNJnepdGa6Hexm/kHy6duz2B9yfsKF7cSdc=
+	by mail.kernel.org (Postfix) with ESMTP id 9A6232070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:57:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbgG1T4t (ORCPT
+        id S1729045AbgG1T5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:56:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728874AbgG1T4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:56:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BC242070A;
-        Tue, 28 Jul 2020 19:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595966208;
-        bh=t6ZBb6aKjOP/D53m5Lux0B4l1dQapES6T4xqgzSEF5o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=loUq6fsR9oQLkUjlfoFYvKPr2i6bqC2ehfaKt0sMzOhA6vcojo09dKpNP4VbTxW2E
-         DF9qQ0DxImikxo7X1nRO5ZV5hDN+Br9zU/HrU0uT4QuGJg7KWwiO6dd6l5KMBHxbej
-         P/ZKKP7Qx1kmZ0W6BZXMajP5aV5AwEY2cU4oWR0U=
-Date:   Tue, 28 Jul 2020 21:56:40 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Mimi Zohar <zohar@kernel.org>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 15/19] IMA: Add support for file reads without contents
-Message-ID: <20200728195640.GA342741@kroah.com>
-References: <20200724213640.389191-1-keescook@chromium.org>
- <20200724213640.389191-16-keescook@chromium.org>
- <1595856214.4841.86.camel@kernel.org>
- <202007281244.2F2681AE9@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202007281244.2F2681AE9@keescook>
+        Tue, 28 Jul 2020 15:57:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728939AbgG1T5F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 15:57:05 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D047C061794;
+        Tue, 28 Jul 2020 12:57:05 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5C0A6128A1DBC;
+        Tue, 28 Jul 2020 12:40:19 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 12:57:03 -0700 (PDT)
+Message-Id: <20200728.125703.1154756600985752474.davem@davemloft.net>
+To:     vaibhavgupta40@gmail.com
+Cc:     helgaas@kernel.org, bhelgaas@google.com, bjorn@helgaas.com,
+        vaibhav.varodek@gmail.com, kuba@kernel.org,
+        kevin.curtis@farsite.co.uk, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: Re: [PATCH v1] farsync: use generic power management
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200728042809.91436-1-vaibhavgupta40@gmail.com>
+References: <20200728042809.91436-1-vaibhavgupta40@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 28 Jul 2020 12:40:19 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 12:44:50PM -0700, Kees Cook wrote:
-> On Mon, Jul 27, 2020 at 09:23:34AM -0400, Mimi Zohar wrote:
-> > On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
-> > > From: Scott Branden <scott.branden@broadcom.com>
-> > > 
-> > > When the kernel_read_file LSM hook is called with contents=false, IMA
-> > > can appraise the file directly, without requiring a filled buffer. When
-> > > such a buffer is available, though, IMA can continue to use it instead
-> > > of forcing a double read here.
-> > > 
-> > > Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> > > Link: https://lore.kernel.org/lkml/20200706232309.12010-10-scott.branden@broadcom.com/
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > 
-> > After adjusting the comment below.
-> > 
-> > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+From: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Date: Tue, 28 Jul 2020 09:58:10 +0530
+
+> The .suspend() and .resume() callbacks are not defined for this driver.
+> Still, their power management structure follows the legacy framework. To
+> bring it under the generic framework, simply remove the binding of
+> callbacks from "struct pci_driver".
 > 
-> Sure!
+> Change code indentation from space to tab in "struct pci_driver".
 > 
-> Greg, shall I send a v4 with added Reviews and the comment change or is
-> that minor enough that you're able to do it?
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 
-v4 is needed, as this series is a mess of reviewes and you will have to
-redo at least one patch and drop some others, right?
-
-thanks,
-
-greg k-h
+Applied.
