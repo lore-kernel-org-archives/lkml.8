@@ -2,80 +2,123 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04006C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43413C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDE1C2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220D12074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595954281;
+	bh=UaTT6eelrtF58zWytNG0egvpELFC0XFjYD4HTtCZOO0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=a+zBpifUPCqCffWx8qibqs7XA4ybwkNx5/cmrHTZI1lZC0Soxyd5gr099CrYqvpFi
+	 P1G7rgJLU8mQYZPhBTWO8l10seqrNffN16CkwO6esnC3gBH75rGrbUHSjXMkzdk+m/
+	 MvEbjjRtLtpA+XjNQhAUwAn8qZbfQBOL06htvTzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731544AbgG1Qhi (ORCPT
+        id S1731556AbgG1QiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:37:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:13313 "EHLO mga14.intel.com"
+        Tue, 28 Jul 2020 12:38:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731443AbgG1Qhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:37:38 -0400
-IronPort-SDR: HLFXi22vSCuNG1ChQN99setDP08TzXmbgC9RWpEtC6cxa7ImK8QIRnQQGvBUB+BDpHneAQpiEr
- SmjcJ6Loo0nA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="150427062"
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="150427062"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 09:37:27 -0700
-IronPort-SDR: qgNctiPNbBK1fZbDeaC/j6G6gp0dpgqsDtkxPQR4rAFgk+k8WziK7SEVKRnZxcE39PF6Vsy0oe
- g4R+/s/U1zBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="434379202"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.212.32.199]) ([10.212.32.199])
-  by orsmga004.jf.intel.com with ESMTP; 28 Jul 2020 09:37:26 -0700
-Subject: Re: [PATCH net-next RFC 00/13] Add devlink reload level option
-To:     Moshe Shemesh <moshe@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <326163fb-ed79-62ea-ed2d-cb3b7700db54@intel.com>
-Date:   Tue, 28 Jul 2020 09:37:25 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.0.1
+        id S1731443AbgG1Qh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:37:59 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ABAD2053B;
+        Tue, 28 Jul 2020 16:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595954279;
+        bh=UaTT6eelrtF58zWytNG0egvpELFC0XFjYD4HTtCZOO0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2I46v+1m8oKmJ9VQeo6N0nZjzcRmXs1Ru/C4qbubwOnEDs27BOFW3Kl+HdEPSSiBk
+         fu7YtYgh8gzbomyi98+V8kVZYGGWkFSh6gateSBafHcHZIcZ4DjQC26w9JylQyHBzx
+         y4cWhePYSIuGjTcYQT0/UjYg1ZER9QYZh1A14SgU=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k0Sc1-00FiFS-5h; Tue, 28 Jul 2020 17:37:57 +0100
 MIME-Version: 1.0
-In-Reply-To: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Jul 2020 17:37:57 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com,
+        robh+dt@kernel.org, lee.jones@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        david@lechnology.com, wmills@ti.com, praneeth@ti.com
+Subject: Re: [PATCH v4 3/5] irqchip/irq-pruss-intc: Add logic for handling
+ reserved interrupts
+In-Reply-To: <1595927918-19845-4-git-send-email-grzegorz.jaszczyk@linaro.org>
+References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1595927918-19845-4-git-send-email-grzegorz.jaszczyk@linaro.org>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <1ae8b42d0e7a09caf01197b11cea2fff@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com, praneeth@ti.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-07-28 10:18, Grzegorz Jaszczyk wrote:
+> From: Suman Anna <s-anna@ti.com>
+> 
+> The PRUSS INTC has a fixed number of output interrupt lines that are
+> connected to a number of processors or other PRUSS instances or other
+> devices (like DMA) on the SoC. The output interrupt lines 2 through 9
+> are usually connected to the main Arm host processor and are referred
+> to as host interrupts 0 through 7 from ARM/MPU perspective.
+> 
+> All of these 8 host interrupts are not always exclusively connected
+> to the Arm interrupt controller. Some SoCs have some interrupt lines
+> not connected to the Arm interrupt controller at all, while a few 
+> others
+> have the interrupt lines connected to multiple processors in which they
+> need to be partitioned as per SoC integration needs. For example, 
+> AM437x
+> and 66AK2G SoCs have 2 PRUSS instances each and have the host interrupt 
+> 5
+> connected to the other PRUSS, while AM335x has host interrupt 0 shared
+> between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU 
+> and
+> a DMA controller.
+> 
+> Add logic to the PRUSS INTC driver to ignore both these shared and
+> invalid interrupts.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+> ---
+> v3->v4:
+> - Due to changes in DT bindings which converts irqs-reserved
+>   property from uint8-array to bitmask requested by Rob introduce
+>   relevant changes in the driver.
+> - Merge the irqs-reserved and irqs-shared to one property since they
+>   can be handled by one logic (relevant change was introduced to DT
+>   binding).
 
+This isn't what I asked for in my initial review.
 
-On 7/27/2020 4:02 AM, Moshe Shemesh wrote:
-> Introduce new option on devlink reload API to enable the user to select the
-> reload level required. Complete support for all levels in mlx5.
-> The following reload levels are supported:
->   driver: Driver entities re-instantiation only. 
+I repeatedly asked for the *handling* to be common, not for the
+properties to be merged. I don't mind either way, but I understood
+there were two properties for a good reason. Has this reason gone?
 
-So, this is the current support. Ok.
+Anyway, I'll come back to it once I start reviewing the series
+again.
 
->   fw_reset: Firmware reset and driver entities re-instantiation. 
-
-
-This would include firmware update? What about differing levels of
-device/firmware reset? I.e. I think some of our HW has function level
-reset, device wide reset, as well as EMP reset. For us, only EMP reset
-would trigger firmware update.
-
->   fw_live_patch: Firmware live patching only.
-
-This is for update without reset, right?
+          M.
+-- 
+Jazz is not dead. It just smells funny...
