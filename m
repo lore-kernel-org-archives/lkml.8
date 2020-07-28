@@ -2,94 +2,151 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB80C433FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72F2C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE3B207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:32:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595953922;
-	bh=fMNQi5A+NN2YwKr4BGffFEl5pIiiOIfMgqPkYAoC4Ts=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=no5vXYA54a0ilzQv2hzExACRyayn1ekXCHeX076JqAxbIp1+cSf/2MPD0r6QRHaxh
-	 EgrYZqTVSYsRs5XJbEqAefmTCBE6ZRUnzOs6ay4y+VNWOZscigmCd/s5EWH3npnNqh
-	 YAPtFTZr8A5dF6dqvqvvs9oLseDL+tfRg723JqIM=
+	by mail.kernel.org (Postfix) with ESMTP id A5A532074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:32:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NGYC9tEd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731485AbgG1QcB (ORCPT
+        id S1731495AbgG1Qcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:32:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731458AbgG1Qb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:31:58 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64575207F5;
-        Tue, 28 Jul 2020 16:31:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595953918;
-        bh=fMNQi5A+NN2YwKr4BGffFEl5pIiiOIfMgqPkYAoC4Ts=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=J5LDSWxez+sdvsG5Q86BG2VchGVcuv+Ij5o934S/xyclHizLJ/DeUsKu94yFSRiyF
-         zNwCTBa0xwGxWL6dTrstVII8B1s3mfB1uLSceZ3HCheQ7am8GFyOsG2DpO0hh/SH35
-         YHc30CVV2cx04Nx81hneZecSPYBBAikJZ+xk4m6c=
-Date:   Tue, 28 Jul 2020 17:31:40 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-In-Reply-To: <20200727172936.661567-1-vaibhavgupta40@gmail.com>
-References: <CAHp75VfmKvAy6bSk70g3c2qJcUzzo0AUhzxR6dFja+ZppGMLRg@mail.gmail.com> <20200727172936.661567-1-vaibhavgupta40@gmail.com>
-Subject: Re: [PATCH v3] spi: spi-topcliff-pch: drop call to wakeup-disable
-Message-Id: <159595388005.15302.729932493645865477.b4-ty@kernel.org>
+        Tue, 28 Jul 2020 12:32:35 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:36752 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731286AbgG1Qce (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:32:34 -0400
+Received: from [192.168.254.32] (unknown [47.187.206.220])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 46AA720B4908;
+        Tue, 28 Jul 2020 09:32:33 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 46AA720B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595953953;
+        bh=Rb0cIoD+PBZ6iPo4SV0GEZ6L0o4DvfLkYqFF52aPh2A=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=NGYC9tEdPV6xnCVOdwIeqZvN2dKm0x9MAjUMmotn+8mMWAF3jwAU9jFcfsdT1zLtI
+         b7kaqYuzPMht/pDkpeohuuGK2OeqJMq4r2wVIMvJUufeWS2YydUzzEWfndiFPJ2qGr
+         mIHtInG/DXexeidbSrB3P9fJodqZv03UsuUKNwbM=
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>
+References: <aefc85852ea518982e74b233e11e16d2e707bc32>
+ <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <c23de6ec47614f489943e1a89a21dfa3@AcuMS.aculab.com>
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Message-ID: <f5cfd11b-04fe-9db7-9d67-7ee898636edb@linux.microsoft.com>
+Date:   Tue, 28 Jul 2020 11:32:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <c23de6ec47614f489943e1a89a21dfa3@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020 22:59:37 +0530, Vaibhav Gupta wrote:
-> Before generic upgrade, both .suspend() and .resume() were invoking
-> pci_enable_wake(pci_dev, PCI_D3hot, 0). Hence, disabling wakeup in both
-> states. (Normal trend is .suspend() enables and .resume() disables the
-> wakeup.)
-> 
-> This was ambiguous and may be buggy. Instead of replicating the legacy
-> behavior, drop the wakeup-disable call.
+Thanks. See inline..
 
-Applied to
+On 7/28/20 10:13 AM, David Laight wrote:
+> From:  madvenka@linux.microsoft.com
+>> Sent: 28 July 2020 14:11
+> ...
+>> The kernel creates the trampoline mapping without any permissions. When
+>> the trampoline is executed by user code, a page fault happens and the
+>> kernel gets control. The kernel recognizes that this is a trampoline
+>> invocation. It sets up the user registers based on the specified
+>> register context, and/or pushes values on the user stack based on the
+>> specified stack context, and sets the user PC to the requested target
+>> PC. When the kernel returns, execution continues at the target PC.
+>> So, the kernel does the work of the trampoline on behalf of the
+>> application.
+> Isn't the performance of this going to be horrid?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+It takes about the same amount of time as getpid(). So, it is
+one quick trip into the kernel. I expect that applications will
+typically not care about this extra overhead as long as
+they are able to run.
 
-Thanks!
+But I agree that if there is an application that cannot tolerate
+this extra overhead, then it is an issue. See below for further
+discussion.
 
-[1/1] spi: spi-topcliff-pch: drop call to wakeup-disable
-      commit: 15b413d93ccd0d26c29f005df82c299c8f14cbd6
+In the libffi changes I have included in the cover letter, I have
+done it in such a way that trampfd is chosen when current
+security settings don't allow other methods such as
+loading trampoline code into a file and mapping it. In this
+case, the application can at least run with trampfd.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+>
+> If you don't care that much about performance the fixup can
+> all be done in userspace within the fault signal handler.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+I do care about performance.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+This is a framework to address trampolines. In this initial
+work, I want to establish one basic way for things to work.
+In the future, trampfd can be enhanced for performance.
+For instance, it is easy for an architecture to generate
+the exact instructions required to load specified registers,
+push specified values on the stack and jump to a target
+PC. The kernel can map a page with the generated code
+with execute permissions. In this case, the performance
+issue goes away.
+> Since whatever you do needs the application changed why
+> not change the implementation of nested functions to not
+> need on-stack executable trampolines.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+I kinda agree with your suggestion.
 
-Thanks,
-Mark
+But it is up to the GCC folks to change its implementation.
+I am trying to provide a way for their existing implementation
+to work in a more secure way.
+> I can think of other alternatives that don't need much more
+> than an array of 'push constant; jump trampoline' instructions
+> be created (all jump to the same place).
+>
+> You might want something to create an executable page of such
+> instructions.
+
+Agreed. And that can be done within this framework as
+I have mentioned above.
+
+But it is not just this trampoline type that I have implemented
+in this patchset. In the future, other types can be implemented
+and other contexts can be defined. Basically, the approach is
+for the user to supply a recipe to the kernel and leave it up to
+the kernel to do it in the best way possible. I am hoping that
+other forms of dynamic code can be addressed in the future
+using the same framework.
+
+*Purely as a hypothetical example*, a user can supply
+instructions in a language such as BPF that the kernel
+understands and have the kernel arrange for that to
+be executed in user context.
+
+Madhavan
+
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+
