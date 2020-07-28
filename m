@@ -2,251 +2,136 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3C3C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC99C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EDEF206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:23:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="l/a67glz"
+	by mail.kernel.org (Postfix) with ESMTP id C402C206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:23:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730084AbgG1NXg (ORCPT
+        id S1730075AbgG1NXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:23:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729433AbgG1NXf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:23:35 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C0EC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:23:35 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a5so8309421wrm.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:23:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RVbcnjfZmdkWTayIDxfBVMqVlu5cuT3hIbVqa5TR/1k=;
-        b=l/a67glzcc5AQ6/acG9FVfC2RJtuuPIoD5fiBv6VDXxVCxLzRofZr6tYMAwi+RVHqm
-         LGGNIJtTApsfJEtkxt8+co8EYg8e5E96j18GWe26DOsYoViYehCeJJ/1iS5JJYTbd//5
-         IEHnkwXARfBE2T/UoQK5VCeWULGDKZJogO5bgWkg99ghHE/mD0VbeKmM1lubsgCGG9B6
-         1AyJ43cy0a2fFoMAzNjN2mfE5sgSwzaDeVq8KfcpD20QumElze+rGxRJAwHC4+0iLN4Y
-         us/t3V0t9pz59c2lhHJ4wpguDVfuP87u6b6FmOac7lDFRT2jzv7X/TiNWfZOkDYf37mR
-         KB3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RVbcnjfZmdkWTayIDxfBVMqVlu5cuT3hIbVqa5TR/1k=;
-        b=fdhb1csUvl5YTjaX0HkS1Se5C3Y1CNluq/8OhRtUxjD0xS4Y5CCf3bLhUuDmO6Y7VX
-         SHHq0eq0/nnvXGv0OlA0nNsBdf9Rj4McScJQBdAt/fAJQLahLQuFPWWN0ui8oRNQx+tE
-         D7ekd5rGsXlH4Og1dkTvmNU1U3cFTiauo7+Chn9qyepD9rmq5i/qI4gFutGG5mzgD3ZC
-         kyXyffIVMMRB6p3RQkWHVOCyxY2YBFlWnwtbkhoUYAEZdgudMx0YqvQ3nU3jqxFXkbCQ
-         LMBxhoOOwLr/RXhl8fal2Cyfr/MSg46NTsCorp0++m8DB4QdzomFzF0w7BDJr2x4cJEE
-         BuBQ==
-X-Gm-Message-State: AOAM531z0pJ/BPKFRUPOwJhcrcLarbTjf8YORRpUFtWUo6W2i6GkEgV2
-        ktUBlIfx1HqVUQQKtoe9iUMRAR2EuDnmfb+wC2lc3A==
-X-Google-Smtp-Source: ABdhPJwKPzvOdxA6F4ifxZqzfCce2ctRWLCLhUEwv66hHxbniZKHfhme5B/iZKhFoSzPnF3OSINLAaKUATFpgkpPCWE=
-X-Received: by 2002:adf:fe50:: with SMTP id m16mr7606176wrs.27.1595942613862;
- Tue, 28 Jul 2020 06:23:33 -0700 (PDT)
+        Tue, 28 Jul 2020 09:23:31 -0400
+Received: from relay.sw.ru ([185.231.240.75]:37472 "EHLO relay3.sw.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729433AbgG1NXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 09:23:31 -0400
+Received: from [192.168.15.36]
+        by relay3.sw.ru with esmtp (Exim 4.93)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1k0PYr-0004Hm-NN; Tue, 28 Jul 2020 16:22:30 +0300
+Subject: Re: [RFC PATCH 5/5] mm: introduce MADV_DOEXEC
+To:     Anthony Yznaga <anthony.yznaga@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org
+Cc:     mhocko@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        viro@zeniv.linux.org.uk, akpm@linux-foundation.org, arnd@arndb.de,
+        ebiederm@xmission.com, keescook@chromium.org, gerg@linux-m68k.org,
+        christian.brauner@ubuntu.com, peterz@infradead.org,
+        esyr@redhat.com, jgg@ziepe.ca, christian@kellner.me,
+        areber@redhat.com, cyphar@cyphar.com, steven.sistare@oracle.com
+References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+ <1595869887-23307-6-git-send-email-anthony.yznaga@oracle.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <743a51db-dc27-c49c-9c65-ac164f5283ba@virtuozzo.com>
+Date:   Tue, 28 Jul 2020 16:22:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <1b459f691ed99dcae2cea07e23ec1f5dd39837be.1594230107.git-series.maxime@cerno.tech>
-In-Reply-To: <1b459f691ed99dcae2cea07e23ec1f5dd39837be.1594230107.git-series.maxime@cerno.tech>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Tue, 28 Jul 2020 14:23:17 +0100
-Message-ID: <CAPY8ntC6=QO1wsEOj+c-nnJ4EHPaeUhRgAvE9gcWVv9KQbniKA@mail.gmail.com>
-Subject: Re: [PATCH v4 58/78] drm/vc4: hdmi: Move CEC init to its own function
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1595869887-23307-6-git-send-email-anthony.yznaga@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime
-
-On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> The CEC init code was put directly into the bind function, which was quite
-> inconsistent with how the audio support was done, and would prevent us from
-> further changes to skip that initialisation entirely.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-
+On 27.07.2020 20:11, Anthony Yznaga wrote:
+> madvise MADV_DOEXEC preserves a memory range across exec.  Initially
+> only supported for non-executable, non-stack, anonymous memory.
+> MADV_DONTEXEC reverts the effect of a previous MADV_DOXEXEC call and
+> undoes the preservation of the range.  After a successful exec call,
+> the behavior of all ranges reverts to MADV_DONTEXEC.
+> 
+> Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
+> Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 > ---
->  drivers/gpu/drm/vc4/vc4_hdmi.c | 108 +++++++++++++++++++++-------------
->  1 file changed, 67 insertions(+), 41 deletions(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> index ef51eedaf75a..8cd08b541c14 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> @@ -1171,6 +1171,67 @@ static const struct cec_adap_ops vc4_hdmi_cec_adap_ops = {
->         .adap_log_addr = vc4_hdmi_cec_adap_log_addr,
->         .adap_transmit = vc4_hdmi_cec_adap_transmit,
->  };
+>  include/uapi/asm-generic/mman-common.h |  3 +++
+>  mm/madvise.c                           | 25 +++++++++++++++++++++++++
+>  2 files changed, 28 insertions(+)
+> 
+> diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+> index f94f65d429be..7c5f616b28f7 100644
+> --- a/include/uapi/asm-generic/mman-common.h
+> +++ b/include/uapi/asm-generic/mman-common.h
+> @@ -72,6 +72,9 @@
+>  #define MADV_COLD	20		/* deactivate these pages */
+>  #define MADV_PAGEOUT	21		/* reclaim these pages */
+>  
+> +#define MADV_DOEXEC	22		/* do inherit across exec */
+> +#define MADV_DONTEXEC	23		/* don't inherit across exec */
 > +
-> +static int vc4_hdmi_cec_init(struct vc4_hdmi *vc4_hdmi)
-> +{
-> +       struct cec_connector_info conn_info;
-> +       struct platform_device *pdev = vc4_hdmi->pdev;
-> +       u32 value;
-> +       int ret;
-> +
-> +       vc4_hdmi->cec_adap = cec_allocate_adapter(&vc4_hdmi_cec_adap_ops,
-> +                                                 vc4_hdmi, "vc4",
-> +                                                 CEC_CAP_DEFAULTS |
-> +                                                 CEC_CAP_CONNECTOR_INFO, 1);
-> +       ret = PTR_ERR_OR_ZERO(vc4_hdmi->cec_adap);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       cec_fill_conn_info_from_drm(&conn_info, &vc4_hdmi->connector);
-> +       cec_s_conn_info(vc4_hdmi->cec_adap, &conn_info);
-> +
-> +       HDMI_WRITE(HDMI_CEC_CPU_MASK_SET, 0xffffffff);
-> +       value = HDMI_READ(HDMI_CEC_CNTRL_1);
-> +       value &= ~VC4_HDMI_CEC_DIV_CLK_CNT_MASK;
-> +       /*
-> +        * Set the logical address to Unregistered and set the clock
-> +        * divider: the hsm_clock rate and this divider setting will
-> +        * give a 40 kHz CEC clock.
-> +        */
-> +       value |= VC4_HDMI_CEC_ADDR_MASK |
-> +                (4091 << VC4_HDMI_CEC_DIV_CLK_CNT_SHIFT);
-> +       HDMI_WRITE(HDMI_CEC_CNTRL_1, value);
-> +       ret = devm_request_threaded_irq(&pdev->dev, platform_get_irq(pdev, 0),
-> +                                       vc4_cec_irq_handler,
-> +                                       vc4_cec_irq_handler_thread, 0,
-> +                                       "vc4 hdmi cec", vc4_hdmi);
-> +       if (ret)
-> +               goto err_delete_cec_adap;
-> +
-> +       ret = cec_register_adapter(vc4_hdmi->cec_adap, &pdev->dev);
-> +       if (ret < 0)
-> +               goto err_delete_cec_adap;
-> +
-> +       return 0;
-> +
-> +err_delete_cec_adap:
-> +       cec_delete_adapter(vc4_hdmi->cec_adap);
-> +
-> +       return ret;
-> +}
-> +
-> +static void vc4_hdmi_cec_exit(struct vc4_hdmi *vc4_hdmi)
-> +{
-> +       cec_unregister_adapter(vc4_hdmi->cec_adap);
-> +}
-> +#else
-> +static int vc4_hdmi_cec_init(struct vc4_hdmi *vc4_hdmi)
-> +{
-> +       return 0;
-> +}
-> +
-> +static void vc4_hdmi_cec_exit(struct vc4_hdmi *vc4_hdmi) {};
-> +
+>  /* compatibility flags */
+>  #define MAP_FILE	0
+>  
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index dd1d43cf026d..b447fa748649 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -103,6 +103,26 @@ static long madvise_behavior(struct vm_area_struct *vma,
+>  	case MADV_KEEPONFORK:
+>  		new_flags &= ~VM_WIPEONFORK;
+>  		break;
+> +	case MADV_DOEXEC:
+
+For me MADV_KEEPONEXEC sounds better as it's symmetric to MADV_KEEPONFORK.
+
+> +		/*
+> +		 * MADV_DOEXEC is only supported on private, non-executable,
+> +		 * non-stack anonymous memory and if the VM_EXEC_KEEP flag
+> +		 * is available.
+> +		 */
+> +		if (!VM_EXEC_KEEP || vma->vm_file || vma->vm_flags & (VM_EXEC|VM_SHARED|VM_STACK)) {
+> +			error = -EINVAL;
+> +			goto out;
+> +		}
+> +		new_flags |= (new_flags & ~VM_MAYEXEC) | VM_EXEC_KEEP;
+> +		break;
+> +	case MADV_DONTEXEC:
+> +		if (!VM_EXEC_KEEP) {
+> +			error = -EINVAL;
+> +			goto out;
+> +		}
+> +		if (new_flags & VM_EXEC_KEEP)
+> +			new_flags |= (new_flags & ~VM_EXEC_KEEP) | VM_MAYEXEC;
+> +		break;
+>  	case MADV_DONTDUMP:
+>  		new_flags |= VM_DONTDUMP;
+>  		break;
+> @@ -983,6 +1003,8 @@ static int madvise_inject_error(int behavior,
+>  	case MADV_SOFT_OFFLINE:
+>  	case MADV_HWPOISON:
 >  #endif
->
->  static int vc4_hdmi_build_regset(struct vc4_hdmi *vc4_hdmi,
-> @@ -1250,9 +1311,6 @@ static int vc4_hdmi_init_resources(struct vc4_hdmi *vc4_hdmi)
->
->  static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
->  {
-> -#ifdef CONFIG_DRM_VC4_HDMI_CEC
-> -       struct cec_connector_info conn_info;
-> -#endif
->         const struct vc4_hdmi_variant *variant = of_device_get_match_data(dev);
->         struct platform_device *pdev = to_platform_device(dev);
->         struct drm_device *drm = dev_get_drvdata(master);
-> @@ -1332,43 +1390,13 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
->         if (ret)
->                 goto err_destroy_encoder;
->
-> -#ifdef CONFIG_DRM_VC4_HDMI_CEC
-> -       vc4_hdmi->cec_adap = cec_allocate_adapter(&vc4_hdmi_cec_adap_ops,
-> -                                                 vc4_hdmi, "vc4",
-> -                                                 CEC_CAP_DEFAULTS |
-> -                                                 CEC_CAP_CONNECTOR_INFO, 1);
-> -       ret = PTR_ERR_OR_ZERO(vc4_hdmi->cec_adap);
-> -       if (ret < 0)
-> -               goto err_destroy_conn;
-> -
-> -       cec_fill_conn_info_from_drm(&conn_info, &vc4_hdmi->connector);
-> -       cec_s_conn_info(vc4_hdmi->cec_adap, &conn_info);
-> -
-> -       HDMI_WRITE(HDMI_CEC_CPU_MASK_SET, 0xffffffff);
-> -       value = HDMI_READ(HDMI_CEC_CNTRL_1);
-> -       value &= ~VC4_HDMI_CEC_DIV_CLK_CNT_MASK;
-> -       /*
-> -        * Set the logical address to Unregistered and set the clock
-> -        * divider: the hsm_clock rate and this divider setting will
-> -        * give a 40 kHz CEC clock.
-> -        */
-> -       value |= VC4_HDMI_CEC_ADDR_MASK |
-> -                (4091 << VC4_HDMI_CEC_DIV_CLK_CNT_SHIFT);
-> -       HDMI_WRITE(HDMI_CEC_CNTRL_1, value);
-> -       ret = devm_request_threaded_irq(dev, platform_get_irq(pdev, 0),
-> -                                       vc4_cec_irq_handler,
-> -                                       vc4_cec_irq_handler_thread, 0,
-> -                                       "vc4 hdmi cec", vc4_hdmi);
-> +       ret = vc4_hdmi_cec_init(vc4_hdmi);
->         if (ret)
-> -               goto err_delete_cec_adap;
-> -       ret = cec_register_adapter(vc4_hdmi->cec_adap, dev);
-> -       if (ret < 0)
-> -               goto err_delete_cec_adap;
-> -#endif
-> +               goto err_destroy_conn;
->
->         ret = vc4_hdmi_audio_init(vc4_hdmi);
->         if (ret)
-> -               goto err_destroy_encoder;
-> +               goto err_free_cec;
->
->         vc4_debugfs_add_file(drm, variant->debugfs_name,
->                              vc4_hdmi_debugfs_regs,
-> @@ -1376,12 +1404,10 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
->
->         return 0;
->
-> -#ifdef CONFIG_DRM_VC4_HDMI_CEC
-> -err_delete_cec_adap:
-> -       cec_delete_adapter(vc4_hdmi->cec_adap);
-> +err_free_cec:
-> +       vc4_hdmi_cec_exit(vc4_hdmi);
->  err_destroy_conn:
->         vc4_hdmi_connector_destroy(&vc4_hdmi->connector);
-> -#endif
->  err_destroy_encoder:
->         drm_encoder_cleanup(encoder);
->  err_unprepare_hsm:
-> @@ -1422,7 +1448,7 @@ static void vc4_hdmi_unbind(struct device *dev, struct device *master,
->         kfree(vc4_hdmi->hdmi_regset.regs);
->         kfree(vc4_hdmi->hd_regset.regs);
->
-> -       cec_unregister_adapter(vc4_hdmi->cec_adap);
-> +       vc4_hdmi_cec_exit(vc4_hdmi);
->         vc4_hdmi_connector_destroy(&vc4_hdmi->connector);
->         drm_encoder_cleanup(&vc4_hdmi->encoder.base.base);
->
-> --
-> git-series 0.9.1
+> +	case MADV_DOEXEC:
+> +	case MADV_DONTEXEC:
+>  		return true;
+>  
+>  	default:
+> @@ -1037,6 +1059,9 @@ static int madvise_inject_error(int behavior,
+>   *  MADV_DONTDUMP - the application wants to prevent pages in the given range
+>   *		from being included in its core dump.
+>   *  MADV_DODUMP - cancel MADV_DONTDUMP: no longer exclude from core dump.
+> + *  MADV_DOEXEC - On exec, preserve and duplicate this area in the new process
+> + *		  if the new process allows it.
+> + *  MADV_DONTEXEC - Undo the effect of MADV_DOEXEC.
+>   *
+>   * return values:
+>   *  zero    - success
+> 
+
