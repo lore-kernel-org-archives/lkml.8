@@ -2,209 +2,121 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F36C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9BAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5397320786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:08:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="k3Ka3V4s";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="QCdNg70w"
+	by mail.kernel.org (Postfix) with ESMTP id 79D3320838
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:09:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595894964;
+	bh=K1Jwt+CiWgjpwCuB/A8HDxni5foS28/ROXvaTPCzAJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aN0LooCAh5V593s3TPhBIe7rVQCGHyG7KV+6NfcDUZ/LVIGnzpLgYyP3IezJIlWH6
+	 5mWrW0/WeKavMPJbWfJJ/VJvv6yn7GHkrB/eqCVuW/cwuX2DLipAEomBAaWxtw1Un3
+	 IROhsQOItpemNR/W8oE5j/2LA225WfN2UEl2xEzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgG1AIV (ORCPT
+        id S1726800AbgG1AJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 20:08:21 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:62344 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726222AbgG1AIV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 20:08:21 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06S04xSK016450;
-        Mon, 27 Jul 2020 17:08:07 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=TE9DQvCmw80zpa6a8gJNwkfvBTOmTzkSsF52VAZIrWI=;
- b=k3Ka3V4s9zj47xgXXO+l38p8sAv33r6LE0ChKw2sKsvobUGDkgU3eKzDg9RJ0blilHoR
- DZGK/Uc2vsWgYiVkBtdiwFZm6L2DOZRetqMg9qBbn92h8XKAswrKGx5mp4rqMApzam8R
- gyItIJK2gyF2zX9ooeqrjnOlfQc+vtrkm+Y= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 32h4q9f48c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 27 Jul 2020 17:08:07 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.229) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 27 Jul 2020 17:08:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QdYnLZvGEmXQXDNwoD41Hvry6Jp9RtzNuPCVv4XPAtnHKgTuWPZSxedin6uwlY9gMWymdHMFlLpsByobCAxnWep2kXcQ1JSyU+HbX3KonltDRYATSQbH3wcQQfS8UNbZhZ/Q9nr3wLOALJyvrld9dFmefcULghjH9QsyP4Ar2d0IKM7A48A5y6VQVhNf4cp0zaECuczqKrifu3HXD1e7rWwcIBMctc5FdieEhYxsGnWfGP97spZePJP9t5vSTwV2ybeBknSZOOSI4fCUj0yfeWQ9PYZnT9dchjmcGK13fv1ZJrztuegpYWoKCQb81bjBWlYU5biiffVk6CiIhpSWlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TE9DQvCmw80zpa6a8gJNwkfvBTOmTzkSsF52VAZIrWI=;
- b=HiLmCUtLQa5iSYGxkga4R7N/SQqomDnAlQV0I0yeVCw3vux9BHbdKTkp6zFvmGmGC+TZf64K+ADwhQoSGijxug+Uztp+pRYPvOg1ftsuUd7gsguH4xEGHdJdBZQSGIAwNTib75vpixDDPBSqVztj+j4OltUzgVBxzXgPKFlHpvlwyTPSSvkbAbaTWEZzldy/5HMgXoMiWl6xcg95U9t2TKObXDVxeELSH+G4mtVnKUDA1w4UljdMKJv3HVlYSDszGuALUvZ1eP9Z5YipciVeA0uSHoPzx6avtWB6IBAbOWSLpPI0WRmYIfjHAZTkllv1y0O0ggDxEpoFzz9V5C58ZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TE9DQvCmw80zpa6a8gJNwkfvBTOmTzkSsF52VAZIrWI=;
- b=QCdNg70wxlAcMfSWg4BiH91Tc1nNHohpI++p+oau6taY8bJteBkYq9KxztPhYbBaBaW7htgUrqokWr6KvxYdJDCRP1YyZhTO0NGCAgFc5+FlKSOsB6WhGuYHpJe4AR2ox5zUbTXZJ9rbrbLS5EOvadOG0Y7Fxw1DM2Tt8++L7Xc=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB3141.namprd15.prod.outlook.com (2603:10b6:a03:f5::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Tue, 28 Jul
- 2020 00:08:05 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
- 00:08:05 +0000
-Date:   Mon, 27 Jul 2020 17:08:02 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Song Liu <song@kernel.org>
-CC:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next v2 01/35] bpf: memcg-based memory accounting for
- bpf progs
-Message-ID: <20200728000802.GB352883@carbon.DHCP.thefacebook.com>
-References: <20200727184506.2279656-1-guro@fb.com>
- <20200727184506.2279656-2-guro@fb.com>
- <CAPhsuW49mOQYCx77jucJ_NkeYhoSxOZ_cCujBUjgMdJBy3keeg@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPhsuW49mOQYCx77jucJ_NkeYhoSxOZ_cCujBUjgMdJBy3keeg@mail.gmail.com>
-X-ClientProxiedBy: BYAPR06CA0040.namprd06.prod.outlook.com
- (2603:10b6:a03:14b::17) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Mon, 27 Jul 2020 20:09:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726222AbgG1AJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 20:09:22 -0400
+Received: from earth.universe (unknown [185.213.155.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADDE520786;
+        Tue, 28 Jul 2020 00:09:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595894962;
+        bh=K1Jwt+CiWgjpwCuB/A8HDxni5foS28/ROXvaTPCzAJ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=to/Seqp0rn3C1Kqoa1/ayXn5xAoETkbUgaqZ96fuTVjNEBmI+rpb43fgSMa8mOstB
+         bjjpq53q4W99EEyv1WrCqe/xfXiuwKne0hz1G/RngXLx1bY1g8rn548Ik2vC6yBmbS
+         0PlYN9xb93Yy37kXSSbkXnjaQnPLC6aYq0LE625g=
+Received: by earth.universe (Postfix, from userid 1000)
+        id BE2373C0B87; Tue, 28 Jul 2020 02:09:13 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 02:09:13 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     pali@kernel.org, afd@ti.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] power: supply: bq2xxxx: Replace HTTP links with HTTPS
+ ones
+Message-ID: <20200728000913.vbijq3toa5vqijvv@earth.universe>
+References: <20200713191638.37311-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:1b7a) by BYAPR06CA0040.namprd06.prod.outlook.com (2603:10b6:a03:14b::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend Transport; Tue, 28 Jul 2020 00:08:04 +0000
-X-Originating-IP: [2620:10d:c090:400::5:1b7a]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fc9e816f-9a1d-46d2-c59c-08d8328a4cfd
-X-MS-TrafficTypeDiagnostic: BYAPR15MB3141:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB3141196FF49A1BB8A11F3B59BE730@BYAPR15MB3141.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: U0mjcZMenr8vpQczdrlXgdEQnfnh8gvR4n4n3HQctDZvnvto1YzQgAOkGkzM/kkvmiNf1eyt+KMOfrHNiQJpyxMjtg0RbCmELzcAbFvi/uZ4gZgy4S53/maoeBdnOWxs0vLAU+xQWtPqpPuDlNJW+Egc0LKMCWgKYhggwO82qxLeszXLUjemMd+aVxDxCCBNM55dw8lELZPHmvs/hp1w41rI6UgjXDs1Mw1G6XTwszChOrDpADe2WO77jD6Q/zJ7E9lTr16cWIn3VFXEffvVU+DZMOe5MM/19xL9+aybK6M7aXQr/IXo67hTn2uGWrbm21Nvv6TtnIuxaDdIXybS5g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(396003)(39860400002)(366004)(376002)(346002)(8936002)(83380400001)(5660300002)(55016002)(86362001)(316002)(9686003)(33656002)(6916009)(478600001)(1076003)(66556008)(66476007)(16526019)(186003)(52116002)(53546011)(66946007)(2906002)(54906003)(8676002)(4326008)(15650500001)(6506007)(7696005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: +tXnr9XraZqpHzcAYCDrjn9V3K1HGNGzByO0YG4QteF3/fKuCCUGKWg7diq/KFujU6p1k+m5byaFJ72dVK6n5E95axlsttHvRoTb9QmR1yL8n2CXDdfRtKZ+Unv0MqGGKCyPzXyUZOM4EgPUzYesVoUH/vJoNF2zPWzDUvJYAfLVKwzLyj91EwNyoI5M6vXfaOxhv1LigVQ2Ca+yklB2IYPraRTkdhm5YTTXGVKKtOH9NMOY/dB+CFbOQzD9Ueb+cNJADmt6GrE84b4m+Lg6ZZtp9Z0wlWEEG/koRsv8aRvZJCnVY5E/urp+0XgHcW/aIHep+7UeQiRTLBmo6ANgojKNZElkMlzYkijlr0Zff12k/1p6RH+E3iliRIxU5NODIgX1Wcn438Jqx6sA3vH/3CYJo3z6+qGoPwMPz0evDuhTCnc6WdqI4woV5XdvUa30uSxylrq9elZSA3WMnzA/EQEaZ5QVHQnhLyeYlvZ81IThA2IFWhb7eWX569s8UC9NHnz0S/v4A/G146TGAB3TKQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc9e816f-9a1d-46d2-c59c-08d8328a4cfd
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 00:08:05.3339
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MrvrdU/rVQPe+3IIwLG7lH1afYD+gFZTRB3YnyW8e3kYzEXSXKzDp/wfjdNfwpm+
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3141
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_15:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
- impostorscore=0 clxscore=1011 lowpriorityscore=0 mlxlogscore=999
- malwarescore=0 adultscore=0 phishscore=0 mlxscore=0 priorityscore=1501
- bulkscore=0 suspectscore=5 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007270165
-X-FB-Internal: deliver
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="e7g6drv22bw3eue3"
+Content-Disposition: inline
+In-Reply-To: <20200713191638.37311-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 03:11:42PM -0700, Song Liu wrote:
-> On Mon, Jul 27, 2020 at 12:20 PM Roman Gushchin <guro@fb.com> wrote:
-> >
-> > Include memory used by bpf programs into the memcg-based accounting.
-> > This includes the memory used by programs itself, auxiliary data
-> > and statistics.
-> >
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > ---
-> >  kernel/bpf/core.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-> > index bde93344164d..daab8dcafbd4 100644
-> > --- a/kernel/bpf/core.c
-> > +++ b/kernel/bpf/core.c
-> > @@ -77,7 +77,7 @@ void *bpf_internal_load_pointer_neg_helper(const struct sk_buff *skb, int k, uns
-> >
-> >  struct bpf_prog *bpf_prog_alloc_no_stats(unsigned int size, gfp_t gfp_extra_flags)
-> >  {
-> > -       gfp_t gfp_flags = GFP_KERNEL | __GFP_ZERO | gfp_extra_flags;
-> > +       gfp_t gfp_flags = GFP_KERNEL_ACCOUNT | __GFP_ZERO | gfp_extra_flags;
-> >         struct bpf_prog_aux *aux;
-> >         struct bpf_prog *fp;
-> >
-> > @@ -86,7 +86,7 @@ struct bpf_prog *bpf_prog_alloc_no_stats(unsigned int size, gfp_t gfp_extra_flag
-> >         if (fp == NULL)
-> >                 return NULL;
-> >
-> > -       aux = kzalloc(sizeof(*aux), GFP_KERNEL | gfp_extra_flags);
-> > +       aux = kzalloc(sizeof(*aux), GFP_KERNEL_ACCOUNT | gfp_extra_flags);
-> >         if (aux == NULL) {
-> >                 vfree(fp);
-> >                 return NULL;
-> > @@ -104,7 +104,7 @@ struct bpf_prog *bpf_prog_alloc_no_stats(unsigned int size, gfp_t gfp_extra_flag
-> >
-> >  struct bpf_prog *bpf_prog_alloc(unsigned int size, gfp_t gfp_extra_flags)
-> >  {
-> > -       gfp_t gfp_flags = GFP_KERNEL | __GFP_ZERO | gfp_extra_flags;
-> > +       gfp_t gfp_flags = GFP_KERNEL_ACCOUNT | __GFP_ZERO | gfp_extra_flags;
-> >         struct bpf_prog *prog;
-> >         int cpu;
-> >
-> > @@ -217,7 +217,7 @@ void bpf_prog_free_linfo(struct bpf_prog *prog)
-> >  struct bpf_prog *bpf_prog_realloc(struct bpf_prog *fp_old, unsigned int size,
-> >                                   gfp_t gfp_extra_flags)
-> >  {
-> > -       gfp_t gfp_flags = GFP_KERNEL | __GFP_ZERO | gfp_extra_flags;
-> > +       gfp_t gfp_flags = GFP_KERNEL_ACCOUNT | __GFP_ZERO | gfp_extra_flags;
-> >         struct bpf_prog *fp;
-> >         u32 pages, delta;
-> >         int ret;
-> > --
 
-Hi Song!
+--e7g6drv22bw3eue3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for looking into the patchset!
+Hi,
 
-> 
-> Do we need similar changes in
-> 
-> bpf_prog_array_copy()
-> bpf_prog_alloc_jited_linfo()
-> bpf_prog_clone_create()
-> 
-> and maybe a few more?
+On Mon, Jul 13, 2020 at 09:16:38PM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>=20
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+>=20
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-I've tried to follow the rlimit-based accounting, so those objects which were
-skipped are mostly skipped now and vice versa. The main reason for that is
-simple: I don't know many parts of bpf code well enough to decide whether
-we need accounting or not.
+[...]
 
-In general with memcg-based accounting we can easily cover places which were
-not covered previously: e.g. the memory used by the verifier. But I guess it's
-better to do it case-by-case.
+>  drivers/power/supply/bq2415x_charger.c     | 16 ++++----
+>  drivers/power/supply/bq24257_charger.c     |  6 +--
+>  drivers/power/supply/bq27xxx_battery.c     | 44 +++++++++++-----------
+>  drivers/power/supply/bq27xxx_battery_hdq.c |  2 +-
+>  drivers/power/supply/bq27xxx_battery_i2c.c |  2 +-
+>  5 files changed, 35 insertions(+), 35 deletions(-)
 
-But if you're aware of any big objects which should be accounted for sure,
-please, let me know.
+Thanks, queued.
 
-Thanks!
+-- Sebastian
 
+--e7g6drv22bw3eue3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8fbKYACgkQ2O7X88g7
++prAtxAAmU9pmGt7EtCDGrTcI4KlPEgzYckp/LqN3Zrx0FW7qQgKDBeoMQmJiDiI
+bBnPoDV6zxFbWbmtjR5XoSceTgxojLZVgf37o4M4UsWTQMdippg2D/kxQU+r2j8P
+VzuHPM9YD/0xPchgcllF337K8FpYOGYuG8pXLq+OEBCYvsuTi9tATJnv1pXMewqE
+PedGHds9GOeNCcpudMqinUeWnXCFamy6MnYqZmVTq1QwLDEnEhdY0Q+An7324VpU
+5LB8hqYYu5dhusbBo5zy34CnYZ4l00G0Wj5Gk9ytqJ7A5WQ4OjkWpJFa+9iNV03+
+yd8neV4o8GjVYh4YcXiX5TqBrFgpRIzsy3QaHrpTzoQpunMbwADaq7SzghyBSjWn
+khkbYYcjqqgsRpqBNMg9FSmJpAo8gtSBF5y2f2ndr9Vw/bN9TJOGzw7GeQMreMTZ
+c8mm34ZJ9J+KfgS0hoV5gXs0tROf7ctr5zJD49KGP76P8iQ8z9cu19Ie/yFbA4Ks
+kp4Kf6/lrCcWQIoDGbXbCacBlLBFjxOceES70evtl+MxaUAmpHX0IhxhXHiDMuhG
+PP5bE20JyHy+3SmZBBRigc7bEo6Y5+dwppNDVI2qkP2y4IDvmQ6KiSJvwN19quN3
+5VXpHC0HPuqf2AL4aHJCUCbntH6x2Eoy6SCHVvwwFIRI5Al1mI8=
+=m61K
+-----END PGP SIGNATURE-----
+
+--e7g6drv22bw3eue3--
