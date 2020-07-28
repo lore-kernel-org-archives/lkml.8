@@ -2,109 +2,176 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA590C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6F4C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96DEE206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:14:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Evf1Ur3A"
+	by mail.kernel.org (Postfix) with ESMTP id CDCC12070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:15:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595945723;
+	bh=lUPY2x+FC7QKHEsbHiDvmWaDq+mpMmmwkd+OggYom1s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2XIWEc4qgm64GVx+VSCiqbP6QLFtNZBu3AfUtJFznzBPr8AsJMnjd5wDH3t9T5bhS
+	 01s+JPde6quk064hp8/FD798hUzGduu+2h8JrH1o3vz9oE1zXNHOphPxSj6Whx+X+W
+	 4WrOAR9ektjHfnGjLVaj8u6fMhswghxgKlqEeMgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730338AbgG1OOS (ORCPT
+        id S1730382AbgG1OPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:14:18 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:47082 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730065AbgG1OOS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:14:18 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 50F4120B4908;
-        Tue, 28 Jul 2020 07:14:17 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 50F4120B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1595945657;
-        bh=TdiXmpRni8ubU9ZDCDtSAAikTrjb8aB1OWY4V4JuSWY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Evf1Ur3ATOtpFVAItqhYZ14GV7dEE7G0F8scuvuWY+5YXZid01YBRNk2ADH4dmMxu
-         MzpX0tGWkm375WpScdzy6AkFVS+xpwbJwwNwYVykTP3DSzpCzRVc3V587YZxWplxwU
-         El9Q8CuUBJizQUwxUGDf2TmNl07aAb69+70sBYck=
-Subject: Re: [PATCH 2/2] ima: Fail rule parsing when asymmetric key
- measurement isn't supportable
-To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
-        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-References: <20200727140831.64251-1-tyhicks@linux.microsoft.com>
- <20200727140831.64251-3-tyhicks@linux.microsoft.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <b9dc379d-0529-692e-9b7d-dce5ad893eb7@linux.microsoft.com>
-Date:   Tue, 28 Jul 2020 07:14:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 10:15:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730012AbgG1OPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 10:15:20 -0400
+Received: from kernel.org (unknown [87.71.40.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BC04206F5;
+        Tue, 28 Jul 2020 14:15:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595945719;
+        bh=lUPY2x+FC7QKHEsbHiDvmWaDq+mpMmmwkd+OggYom1s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QgGc4X7YUZ1ckDx2DS7TV0wJ9kprJKWkAHEon+OMgHl2R1sb+tkMTAcVnCBfWfbCy
+         0OtC+wiVDREvJNkkA1XcIE7jDME0kzNs1q63GPOaIsM59WTD15P6atSjYRp+nh+npo
+         fGSf3gFWEKzBxONEs1GYYDPsR5qUaUEQHRNOUSzo=
+Date:   Tue, 28 Jul 2020 17:15:04 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        clang-built-linux@googlegroups.com,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
+Subject: Re: [PATCH 14/15] x86/numa: remove redundant iteration over
+ memblock.reserved
+Message-ID: <20200728141504.GC3655207@kernel.org>
+References: <20200728051153.1590-1-rppt@kernel.org>
+ <20200728051153.1590-15-rppt@kernel.org>
+ <20200728110254.GA14854@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-In-Reply-To: <20200727140831.64251-3-tyhicks@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728110254.GA14854@MiWiFi-R3L-srv>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/20 7:08 AM, Tyler Hicks wrote:
-> Measuring keys is currently only supported for asymmetric keys. In the
-> future, this might change.
+On Tue, Jul 28, 2020 at 07:02:54PM +0800, Baoquan He wrote:
+> On 07/28/20 at 08:11am, Mike Rapoport wrote:
+> > From: Mike Rapoport <rppt@linux.ibm.com>
+> > 
+> > numa_clear_kernel_node_hotplug() function first traverses numa_meminfo
+> > regions to set node ID in memblock.reserved and than traverses
+> > memblock.reserved to update reserved_nodemask to include node IDs that were
+> > set in the first loop.
+> > 
+> > Remove redundant traversal over memblock.reserved and update
+> > reserved_nodemask while iterating over numa_meminfo.
+> > 
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > ---
+> >  arch/x86/mm/numa.c | 26 ++++++++++----------------
+> >  1 file changed, 10 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> > index 8ee952038c80..4078abd33938 100644
+> > --- a/arch/x86/mm/numa.c
+> > +++ b/arch/x86/mm/numa.c
+> > @@ -498,31 +498,25 @@ static void __init numa_clear_kernel_node_hotplug(void)
+> >  	 * and use those ranges to set the nid in memblock.reserved.
+> >  	 * This will split up the memblock regions along node
+> >  	 * boundaries and will set the node IDs as well.
+> > +	 *
+> > +	 * The nid will also be set in reserved_nodemask which is later
+> > +	 * used to clear MEMBLOCK_HOTPLUG flag.
+> > +	 *
+> > +	 * [ Note, when booting with mem=nn[kMG] or in a kdump kernel,
+> > +	 *   numa_meminfo might not include all memblock.reserved
+> > +	 *   memory ranges, because quirks such as trim_snb_memory()
+> > +	 *   reserve specific pages for Sandy Bridge graphics.
+> > +	 *   These ranges will remain with nid == MAX_NUMNODES. ]
+> >  	 */
+> >  	for (i = 0; i < numa_meminfo.nr_blks; i++) {
+> >  		struct numa_memblk *mb = numa_meminfo.blk + i;
+> >  		int ret;
+> >  
+> >  		ret = memblock_set_node(mb->start, mb->end - mb->start, &memblock.reserved, mb->nid);
+> > +		node_set(mb->nid, reserved_nodemask);
 > 
-> For now, the "func=KEY_CHECK" and "keyrings=" options are only
-> appropriate when CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is enabled. Make
-> this clear at policy load so that IMA policy authors don't assume that
-> these policy language constructs are supported.
+> Really? This will set all node id into reserved_nodemask. But in the
+> current code, it's setting nid into memblock reserved region which
+> interleaves with numa_memoinfo, then get those nid and set it in
+> reserved_nodemask. This is so different, with my understanding. Please
+> correct me if I am wrong.
+
+You are right, I've missed the intersections of numa_meminfo with
+memblock.reserved.
+
+x86 interaction with membock is so, hmm, interesting...
+ 
+> Thanks
+> Baoquan
 > 
-> Fixes: 2b60c0ecedf8 ("IMA: Read keyrings= option from the IMA policy")
-> Fixes: 5808611cccb2 ("IMA: Add KEY_CHECK func to measure keys")
-> Suggested-by: Nayna Jain <nayna@linux.ibm.com>
-> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> ---
->   security/integrity/ima/ima_policy.c | 6 ++++--
->   1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index c328cfa0fc49..05f012fd3dca 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -1233,7 +1233,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
->   				entry->func = POLICY_CHECK;
->   			else if (strcmp(args[0].from, "KEXEC_CMDLINE") == 0)
->   				entry->func = KEXEC_CMDLINE;
-> -			else if (strcmp(args[0].from, "KEY_CHECK") == 0)
-> +			else if (IS_ENABLED(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) &&
-> +				 strcmp(args[0].from, "KEY_CHECK") == 0)
->   				entry->func = KEY_CHECK;
->   			else
->   				result = -EINVAL;
-> @@ -1290,7 +1291,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
->   		case Opt_keyrings:
->   			ima_log_string(ab, "keyrings", args[0].from);
->   
-> -			if (entry->keyrings) {
-> +			if (!IS_ENABLED(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) ||
-> +			    entry->keyrings) {
->   				result = -EINVAL;
->   				break;
->   			}
+> >  		WARN_ON_ONCE(ret);
+> >  	}
+> >  
+> > -	/*
+> > -	 * Now go over all reserved memblock regions, to construct a
+> > -	 * node mask of all kernel reserved memory areas.
+> > -	 *
+> > -	 * [ Note, when booting with mem=nn[kMG] or in a kdump kernel,
+> > -	 *   numa_meminfo might not include all memblock.reserved
+> > -	 *   memory ranges, because quirks such as trim_snb_memory()
+> > -	 *   reserve specific pages for Sandy Bridge graphics. ]
+> > -	 */
+> > -	for_each_memblock(reserved, mb_region) {
+> > -		int nid = memblock_get_region_node(mb_region);
+> > -
+> > -		if (nid != MAX_NUMNODES)
+> > -			node_set(nid, reserved_nodemask);
+> > -	}
+> > -
+> >  	/*
+> >  	 * Finally, clear the MEMBLOCK_HOTPLUG flag for all memory
+> >  	 * belonging to the reserved node mask.
+> > -- 
+> > 2.26.2
+> > 
+> > 
 > 
 
-Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-
+-- 
+Sincerely yours,
+Mike.
