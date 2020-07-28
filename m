@@ -2,102 +2,86 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D67D1C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAAEC433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1A9F2074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DAC42074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:53:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595951639;
+	bh=gWJFQ7KbXU4CB3E5IPadofiuBeWM1QedR1jU6yv1biM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=s7zEEYzT6sCyLp8qLfRaoGbk4unoGy00yA/pBbz3VyYwZiHLZLlJC9P6yh3fAa9FO
+	 FD03XJoraBkT5CGeYx5gUpxXsY44MIxiuyEba5Wl1xoqIxH5HYtvs8QGrKYdGEigIV
+	 nNif/qNz/iwRLEq3cfbtVHgaR1HDiQQXnGODxAf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731125AbgG1Px1 (ORCPT
+        id S1731150AbgG1Px6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:53:27 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:28797 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730977AbgG1Px1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:53:27 -0400
-Received: from ironmsg07-lv.qualcomm.com (HELO ironmsg07-lv.qulacomm.com) ([10.47.202.151])
-  by alexa-out.qualcomm.com with ESMTP; 28 Jul 2020 08:53:26 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg07-lv.qulacomm.com with ESMTP/TLS/AES256-SHA; 28 Jul 2020 08:53:24 -0700
-Received: from gubbaven-linux.qualcomm.com ([10.206.64.32])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 28 Jul 2020 21:23:01 +0530
-Received: by gubbaven-linux.qualcomm.com (Postfix, from userid 2365015)
-        id ECC9621A2A; Tue, 28 Jul 2020 21:23:00 +0530 (IST)
-From:   Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        rjliao@codeaurora.org, hbandi@codeaurora.org,
-        abhishekpandit@chromium.org,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-Subject: [PATCH v1] Bluetooth: hci_qca: Stop collecting memdump again for command timeout during SSR
-Date:   Tue, 28 Jul 2020 21:23:00 +0530
-Message-Id: <1595951580-16724-1-git-send-email-gubbaven@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 28 Jul 2020 11:53:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55538 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731040AbgG1Px5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:53:57 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C89CE2065C;
+        Tue, 28 Jul 2020 15:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595951637;
+        bh=gWJFQ7KbXU4CB3E5IPadofiuBeWM1QedR1jU6yv1biM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=heA20mt5mf/z6pFz72zn89Qr++Gzwv2c4eygc0T76bA2GbHXJl+94jkV9+XbuLMGE
+         zm3Z3xbwiQzuP8FngT8FZuTQDC4SvJ77wBYuyG4jb1KRSbC7Oaehy1+JH169usMnVB
+         ouDqP4k17TtZIOLH/o8P9w/kx5JswzclkDTAPBjI=
+Date:   Tue, 28 Jul 2020 08:53:55 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     linux-mediatek@lists.infradead.org,
+        Landen Chao <landen.chao@mediatek.com>,
+        Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmVuw6k=?= van Dorst <opensource@vdorst.com>
+Subject: Re: [PATCH v3] net: ethernet: mtk_eth_soc: fix mtu warning
+Message-ID: <20200728085355.7de7c14e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200728122743.78489-1-frank-w@public-files.de>
+References: <20200728122743.78489-1-frank-w@public-files.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setting memdump state to idle prior to setting of callback function
-pointer for command timeout to NULL,causing the issue.Now moved the
-initialisation of memdump state to qca_setup().
+On Tue, 28 Jul 2020 14:27:43 +0200 Frank Wunderlich wrote:
+> From: Landen Chao <landen.chao@mediatek.com>
 
-Fixes: d841502c79e3 ("Bluetooth: hci_qca: Collect controller memory dump during SSR")
-Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
----
- drivers/bluetooth/hci_qca.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Hi gents,
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 3d13002..20e1ded 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1668,6 +1668,8 @@ static int qca_setup(struct hci_uart *hu)
- 	bt_dev_info(hdev, "setting up %s",
- 		qca_is_wcn399x(soc_type) ? "wcn399x" : "ROME/QCA6390");
- 
-+	qca->memdump_state = QCA_MEMDUMP_IDLE;
-+
- retry:
- 	ret = qca_power_on(hdev);
- 	if (ret)
-@@ -1817,9 +1819,6 @@ static void qca_power_shutdown(struct hci_uart *hu)
- 	qca_flush(hu);
- 	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
- 
--	hu->hdev->hw_error = NULL;
--	hu->hdev->cmd_timeout = NULL;
--
- 	/* Non-serdev device usually is powered by external power
- 	 * and don't need additional action in driver for power down
- 	 */
-@@ -1841,6 +1840,9 @@ static int qca_power_off(struct hci_dev *hdev)
- 	struct qca_data *qca = hu->priv;
- 	enum qca_btsoc_type soc_type = qca_soc_type(hu);
- 
-+	hu->hdev->hw_error = NULL;
-+	hu->hdev->cmd_timeout = NULL;
-+
- 	/* Stop sending shutdown command if soc crashes. */
- 	if (soc_type != QCA_ROME
- 		&& qca->memdump_state == QCA_MEMDUMP_IDLE) {
-@@ -1848,7 +1850,6 @@ static int qca_power_off(struct hci_dev *hdev)
- 		usleep_range(8000, 10000);
- 	}
- 
--	qca->memdump_state = QCA_MEMDUMP_IDLE;
- 	qca_power_shutdown(hu);
- 	return 0;
- }
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+if the patch is from Landen we need his sign-off on it.
+
+> in recent Kernel-Versions there are warnings about incorrect MTU-Size
+> like these:
+>=20
+> eth0: mtu greater than device maximum
+> mtk_soc_eth 1b100000.ethernet eth0: error -22 setting MTU to include DSA =
+overhead
+>=20
+> Fixes: bfcb813203e6 ("net: dsa: configure the MTU for switch ports")
+> Fixes: 72579e14a1d3 ("net: dsa: don't fail to probe if we couldn't set th=
+e MTU")
+> Fixes: 7a4c53bee332 ("net: report invalid mtu value via netlink extack")
+> Signed-off-by: Ren=C3=A9 van Dorst <opensource@vdorst.com>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 
