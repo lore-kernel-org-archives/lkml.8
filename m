@@ -4,38 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB641C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0F0C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB29D20825
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26EE02065E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbgG1UWs (ORCPT
+        id S1728869AbgG1UW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:22:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbgG1UWs (ORCPT
+        Tue, 28 Jul 2020 16:22:58 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56844 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728817AbgG1UWz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 16:22:48 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD821C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:22:47 -0700 (PDT)
+        Tue, 28 Jul 2020 16:22:55 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: krisman)
-        with ESMTPSA id 86B68297E76
+        with ESMTPSA id 207DC291A2E
 From:   Gabriel Krisman Bertazi <krisman@collabora.com>
 To:     luto@kernel.org, tglx@linutronix.de
 Cc:     keescook@chromium.org, x86@kernel.org,
         linux-kernel@vger.kernel.org,
         Gabriel Krisman Bertazi <krisman@collabora.com>,
         kernel@collabora.com
-Subject: [PATCH 1/6] arch: x86: Don't use TIF flags for mm context
-Date:   Tue, 28 Jul 2020 16:22:24 -0400
-Message-Id: <20200728202229.1195682-2-krisman@collabora.com>
+Subject: [PATCH 3/6] arch: x86: Wrap TIF_X32 checks
+Date:   Tue, 28 Jul 2020 16:22:26 -0400
+Message-Id: <20200728202229.1195682-4-krisman@collabora.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200728202229.1195682-1-krisman@collabora.com>
 References: <20200728202229.1195682-1-krisman@collabora.com>
@@ -46,68 +43,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TIF_IA32 and TIF_X32 are going away.  Create a dedicated enum for the
-MM context.
+In preparation to remove TIF_X32, add a wrapper that checks the process
+is using the X32 ABI without using the flag directly.
 
 Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
 ---
- arch/x86/include/asm/mmu_context.h | 2 +-
- arch/x86/include/asm/thread_info.h | 6 ++++++
- arch/x86/kernel/process_64.c       | 4 ++--
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ arch/x86/entry/vdso/vma.c          | 2 +-
+ arch/x86/include/asm/elf.h         | 2 +-
+ arch/x86/include/asm/thread_info.h | 1 +
+ arch/x86/kernel/process_64.c       | 3 +--
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
-index 47562147e70b..055ee5d66b41 100644
---- a/arch/x86/include/asm/mmu_context.h
-+++ b/arch/x86/include/asm/mmu_context.h
-@@ -178,7 +178,7 @@ static inline void arch_exit_mmap(struct mm_struct *mm)
- static inline bool is_64bit_mm(struct mm_struct *mm)
+diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+index ea7c1f0b79df..0f54a5feeced 100644
+--- a/arch/x86/entry/vdso/vma.c
++++ b/arch/x86/entry/vdso/vma.c
+@@ -417,7 +417,7 @@ int compat_arch_setup_additional_pages(struct linux_binprm *bprm,
+ 				       int uses_interp)
  {
- 	return	!IS_ENABLED(CONFIG_IA32_EMULATION) ||
--		!(mm->context.ia32_compat == TIF_IA32);
-+		!(mm->context.ia32_compat == PSABI_IA32);
- }
- #else
- static inline bool is_64bit_mm(struct mm_struct *mm)
+ #ifdef CONFIG_X86_X32_ABI
+-	if (test_thread_flag(TIF_X32)) {
++	if (TASK_X32(current)) {
+ 		if (!vdso64_enabled)
+ 			return 0;
+ 		return map_vdso_randomized(&vdso_image_x32);
+diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
+index 452beed7892b..a5c8f10d5180 100644
+--- a/arch/x86/include/asm/elf.h
++++ b/arch/x86/include/asm/elf.h
+@@ -363,7 +363,7 @@ do {									\
+ #define AT_SYSINFO		32
+ 
+ #define COMPAT_ARCH_DLINFO						\
+-if (test_thread_flag(TIF_X32))						\
++if (TASK_X32(current))							\
+ 	ARCH_DLINFO_X32;						\
+ else									\
+ 	ARCH_DLINFO_IA32
 diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-index 267701ae3d86..934aa15b20f2 100644
+index a3859595847c..6d55a9c0dda2 100644
 --- a/arch/x86/include/asm/thread_info.h
 +++ b/arch/x86/include/asm/thread_info.h
-@@ -53,6 +53,12 @@ struct task_struct;
- #include <asm/cpufeature.h>
- #include <linux/atomic.h>
+@@ -244,5 +244,6 @@ extern void arch_setup_new_exec(void);
+ #endif	/* !__ASSEMBLY__ */
  
-+enum {
-+	PSABI_IA64 = 0,
-+	PSABI_IA32 = 1,
-+	PSABI_X32  = 2
-+};
-+
- struct thread_info {
- 	unsigned long		flags;		/* low level flags */
- 	u32			status;		/* thread synchronous flags */
+ #define TASK_IA32(tsk) test_tsk_thread_flag(tsk, TIF_IA32)
++#define TASK_X32(tsk) test_tsk_thread_flag(tsk, TIF_X32)
+ 
+ #endif /* _ASM_X86_THREAD_INFO_H */
 diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index 9a97415b2139..4452a35402f9 100644
+index 4452a35402f9..f20a365017b8 100644
 --- a/arch/x86/kernel/process_64.c
 +++ b/arch/x86/kernel/process_64.c
-@@ -557,7 +557,7 @@ static void __set_personality_x32(void)
- 	clear_thread_flag(TIF_IA32);
- 	set_thread_flag(TIF_X32);
- 	if (current->mm)
--		current->mm->context.ia32_compat = TIF_X32;
-+		current->mm->context.ia32_compat = PSABI_X32;
- 	current->personality &= ~READ_IMPLIES_EXEC;
- 	/*
- 	 * in_32bit_syscall() uses the presence of the x32 syscall bit
-@@ -578,7 +578,7 @@ static void __set_personality_ia32(void)
- 	set_thread_flag(TIF_IA32);
- 	clear_thread_flag(TIF_X32);
- 	if (current->mm)
--		current->mm->context.ia32_compat = TIF_IA32;
-+		current->mm->context.ia32_compat = PSABI_IA32;
- 	current->personality |= force_personality32;
- 	/* Prepare the first "return" to user space */
- 	task_pt_regs(current)->orig_ax = __NR_ia32_execve;
+@@ -406,8 +406,7 @@ EXPORT_SYMBOL_GPL(start_thread);
+ void compat_start_thread(struct pt_regs *regs, u32 new_ip, u32 new_sp)
+ {
+ 	start_thread_common(regs, new_ip, new_sp,
+-			    test_thread_flag(TIF_X32)
+-			    ? __USER_CS : __USER32_CS,
++			    TASK_X32(current) ? __USER_CS : __USER32_CS,
+ 			    __USER_DS, __USER_DS);
+ }
+ #endif
 -- 
 2.27.0
 
