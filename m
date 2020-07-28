@@ -3,130 +3,262 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC5DC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FB6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB47820775
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3791F20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:00:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QPVWPwg0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="emxPU/TI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbgG1I7b (ORCPT
+        id S1728397AbgG1JAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:59:31 -0400
-Received: from mail-eopbgr70044.outbound.protection.outlook.com ([40.107.7.44]:52485
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728474AbgG1I73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:59:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Oi/UcLlHCXQNN6CBAyrIJl2SkG2utX5gtFVWJQp5hW4vYDjTgjerbo1U6IgnuxvjP9+W5ZfR4m9/46IorNVb+xRvXNkw4dQO6fuaZZ5U1FlxcBdf4AOiqqHYfpiun/JiE3mr3bMk7g6b3Bl3pNS68gfUplIFj0FStDEMlVoJHacX34lLA9Qlw3cEO84tRBskCA93JfHkb3ca5A9mqcrcd5PoqJncBUIFOCEwZe/duHYzZ+7fcX22Rxc6PzO3ZVO4tiWeB/B0YNCPkZM4eTNSLMuVrQhZhw5y8gF6lzcfVTs27PUVxokJ4oamtLI1MmWPAgOOapwAJv7PDOg5wcmmBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o3q9qceQW+ne+Ts3yq31vqnQ43fTAwd7b9tRBWnyk5M=;
- b=h2BVclNylGvq0xtGp9rSaIuBTM7/CCmJQOKNmfEb6xXwcIflpf05skyIxJnqxzOT2W0hpPu/Y7NmA+SJxZPf0+yUPtfinJkoXfhwev0fMe8nmCPYUO8qEJPF9zh8VVSD4+uoW8GAa0zTRH0mu2uNLzs/eyWmSK+UB3nzIZ/tjLJ0Q8KxxT7Tjkon7fzzaT2Cr3Auk0aevH9MVfenzyKPoyeCn5t0DLb3UD/Bkc1fPM7QaX1NFMrFhFYYkKEE2tdp2qbD2uMnJEtdHcgrlZsfwupxWMSu7QRGPuWjreB0GixP9Su33PGYqxRid0Xi63/aAPxOwIeTCyEMIBysVUZgFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o3q9qceQW+ne+Ts3yq31vqnQ43fTAwd7b9tRBWnyk5M=;
- b=QPVWPwg05637Sl9w/UtAot+zwckcu8TEGWFOdR/0O0Ny/ujhmIyqf9kS5RNMtjHsnI5kZkooEZoIcEYCQCZaSDjkt6g1Nud6EM3XAVPe0vB72BRpd7QYWvwpoSCkGR6/J3HIRvZV4levnbbvV5hHJEyQ66wUGRKjkt48HVytfFY=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0401MB2375.eurprd04.prod.outlook.com (2603:10a6:4:4a::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22; Tue, 28 Jul
- 2020 08:59:25 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::2d36:b569:17c:7701]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::2d36:b569:17c:7701%4]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
- 08:59:25 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de
-Cc:     arnd@arndb.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] ARM: imx_v6_v7_defconfig: Support i.MX8MN/P/Q
-Date:   Tue, 28 Jul 2020 16:55:04 +0800
-Message-Id: <1595926504-6121-1-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: SGAP274CA0016.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::28)
- To DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+        Tue, 28 Jul 2020 05:00:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbgG1JAM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 05:00:12 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A538DC061794;
+        Tue, 28 Jul 2020 02:00:12 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id t6so11512775pgq.1;
+        Tue, 28 Jul 2020 02:00:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eXWDEkg4433DRZvcoGLFZLwDxOJJX9Wg+/QFW7sV+OE=;
+        b=emxPU/TIzPfj1TTUnuwUbMvATPs5XLnweOqB7/KY0b/Q41TG/uOC57PgMlZ7HE8UPp
+         VzhUlN0h8hJW8SZiX+cuwGOQoOeOm/kBDw/W7lf46h+xL5kcsNgomTpkwhYdovIRlp3f
+         fvGGba+i3cc82fgMGZ3DGf5BnnwD6UyQn8v5iaUgtnu/ULswv2CwuyeY393zna07UOTH
+         E3iT4FvwNUm1bWVWfvRWuD8R4YCTG9E9TU5nbn73oZVZ/+w7YPLc7Cm6Y2bRupbzKyWM
+         bkq7nLfljswYuCP8P1PbXzVG/MJoc9yY+f//Cls2C9IIsYdHvE/2eAdm2R4+KcfwQVl2
+         Q/6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eXWDEkg4433DRZvcoGLFZLwDxOJJX9Wg+/QFW7sV+OE=;
+        b=qK5GtmY+0bf9rWfPR0w8lEIhkuMdZTtB28CiJzEnE4OudCzLR70VV8O3rldlMgbdPr
+         s+QOHsduituE0sL8pE0KOg3GPHh+uVrZ2/il7nlSTm0621qH6JCUk9Re9YPjdakRf9IK
+         3CkzhuCcJCKo6aJzqnDPfFlOznkBE9RFeCL03LUoxdb9nEuL7ybPsgq59k0+hIApsgLg
+         yiANNM2PsHDXB8V7pDlP9NN7nDa3Xb8BF4PbxN+k3qVtkMD62y6Melnriltav7fX/pvK
+         sHlwTYTKbUrzzxr7DmiMCqn/7yRiF4wp3F8d99TD2XbtRgfLGS4dgrWgqZDE+3qYw2rL
+         3Ylw==
+X-Gm-Message-State: AOAM533A0I5Abze7Yoy/ey+SbtVoR6HQPfnR8+DWRlt4RCfYtP0+rTpy
+        bH58K5qyA5rE5YhcNexu+N0=
+X-Google-Smtp-Source: ABdhPJwofzJqI96SNcAW3qc+RKA54AqcQwu88f1RTCsajCDXpWPqPEh74QJSWZ0ijFUX9TKSrful8w==
+X-Received: by 2002:a63:3541:: with SMTP id c62mr833395pga.127.1595926812125;
+        Tue, 28 Jul 2020 02:00:12 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id t11sm9306174pfh.35.2020.07.28.02.00.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 02:00:11 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v1] pch_can: use generic power management
+Date:   Tue, 28 Jul 2020 14:27:57 +0530
+Message-Id: <20200728085757.888620-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.67) by SGAP274CA0016.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3216.22 via Frontend Transport; Tue, 28 Jul 2020 08:59:22 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c1e91424-62fc-4e5a-741e-08d832d486fe
-X-MS-TrafficTypeDiagnostic: DB6PR0401MB2375:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR0401MB2375D1EBBAE1658FA9B61E1C88730@DB6PR0401MB2375.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2043;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wCvphMMVkZ9hBKBqUkgFHBnioJsEZi7qEvD5bWAsFZd5wQlYC9T+4j1oPpDHMaB3ha0GScDKWKl3/1Y023bRi66qvPrzqH4H2ZhkjFHt9mjeK74J8Nn0ejpI4QmtBYPnHzS4TElBeUtcUZVpcBEWSh7y2Y1U96OPONy5yEn8/JfUAJ/j8qfPM1rynv2W8N3c5+RCqBhjMA/SyVYdjBc04jVZOIuG1zrz0k1IHljVVi2c9eimI9sJKj2ePMDW+Z5zb51Ifw+F6Sg2jlQnEXCIkdfyzQvA4RxCgSzSv7Q52v9APHn4JYgJA77PmxV6dPs3HugHmDoPPEdLtLaXZwN490+CoA3MLTgyfrM8UKliZEcJCNJA0a7mEIhVZMjeEQkm
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(376002)(346002)(396003)(136003)(478600001)(36756003)(26005)(5660300002)(4326008)(83380400001)(86362001)(69590400007)(4744005)(8676002)(52116002)(6506007)(8936002)(2906002)(6486002)(186003)(6512007)(9686003)(66476007)(66556008)(6666004)(316002)(66946007)(16526019)(2616005)(956004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: ttWuuu0Wm67xaakwt4+2oT3xPuEiEW4iMKtaFAaWzWAeHmPi3VzwjsZhLSINCS1fsU+48EJq+8rWEMY217S3fxel+NDGaYzuihJeL0QWka3NUqdHUCLTJRlLMBoDphDyZOBVf+BU7r0iIaekh5JcsOOW1yhs6sePVqq0E+n7SfP8tfVDIdVwRBeWNzf3cf69Zq6QHgneH+AsUNMb5BVEmi5jwco6Cy3zQFSwt26fiUr5M9c6YYC84NMN9iQ/ZdnQdESVQodYMMsC8AA0vqGOlUv+q/njtIrNbwEu2R/gQYUcFFoOZiD/ypOGSE0dwPXMZ+1iTnSjqfhMnISEa0N7Hn/rsnY2DFTt2FXq7yZqB/XxM7NxIJXhPqPXZHMEjB4Qze1jkqIf4H2luRk/SuigN0eM5bUY8fCi0uyYOfOTJLVLtZxhUl/oV0Y3vhGBodA3vtXa79xYR/zhg7IxbFUtP1GWIJBg2qAB/SYjP4MdS5lxBWY9jH4pyfGFctLoxaVl
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1e91424-62fc-4e5a-741e-08d832d486fe
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 08:59:25.5452
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xxZ2xFhP9FINoR3nf8yQ3YkOMAXI58IgOEvlhW0LYDF/f3RgJQhUCW4Zw+SjNGaXQ9U2aOrixUBNZPoIKzxEVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2375
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+Drivers using legacy power management .suspen()/.resume() callbacks
+have to manage PCI states and device's PM states themselves. They also
+need to take care of standard configuration registers.
 
-i.MX8MN/P/Q is built with AArch64 hardware, this is to support
-it could run in AArch32 mode with clock and pinctrl driver enabled.
+Switch to generic power management framework using a single
+"struct dev_pm_ops" variable to take the unnecessary load from the driver.
+This also avoids the need for the driver to directly call most of the PCI
+helper functions and device power state control functions, as through
+the generic framework PCI Core takes care of the necessary operations,
+and drivers are required to do only device-specific jobs.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- arch/arm/configs/imx_v6_v7_defconfig | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/can/pch_can.c | 63 +++++++++++++--------------------------
+ 1 file changed, 21 insertions(+), 42 deletions(-)
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 82d3ffb18e70..fbd02365e3b6 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -218,6 +218,9 @@ CONFIG_SPI_GPIO=y
- CONFIG_SPI_IMX=y
- CONFIG_SPI_FSL_DSPI=y
- CONFIG_PINCTRL_IMX8MM=y
-+CONFIG_PINCTRL_IMX8MN=y
-+CONFIG_PINCTRL_IMX8MP=y
-+CONFIG_PINCTRL_IMX8MQ=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_SIOX=m
- CONFIG_GPIO_MAX732X=y
-@@ -407,6 +410,9 @@ CONFIG_STAGING_MEDIA=y
- CONFIG_VIDEO_IMX_MEDIA=y
- CONFIG_COMMON_CLK_PWM=y
- CONFIG_CLK_IMX8MM=y
-+CONFIG_CLK_IMX8MN=y
-+CONFIG_CLK_IMX8MP=y
-+CONFIG_CLK_IMX8MQ=y
- CONFIG_SOC_IMX8M=y
- CONFIG_IIO=y
- CONFIG_MMA8452=y
+diff --git a/drivers/net/can/pch_can.c b/drivers/net/can/pch_can.c
+index db41dddd5771..ca54a6e1c810 100644
+--- a/drivers/net/can/pch_can.c
++++ b/drivers/net/can/pch_can.c
+@@ -957,8 +957,7 @@ static void pch_can_remove(struct pci_dev *pdev)
+ 	free_candev(priv->ndev);
+ }
+ 
+-#ifdef CONFIG_PM
+-static void pch_can_set_int_custom(struct pch_can_priv *priv)
++static void __maybe_unused pch_can_set_int_custom(struct pch_can_priv *priv)
+ {
+ 	/* Clearing the IE, SIE and EIE bits of Can control register. */
+ 	pch_can_bit_clear(&priv->regs->cont, PCH_CTRL_IE_SIE_EIE);
+@@ -969,14 +968,14 @@ static void pch_can_set_int_custom(struct pch_can_priv *priv)
+ }
+ 
+ /* This function retrieves interrupt enabled for the CAN device. */
+-static u32 pch_can_get_int_enables(struct pch_can_priv *priv)
++static u32 __maybe_unused pch_can_get_int_enables(struct pch_can_priv *priv)
+ {
+ 	/* Obtaining the status of IE, SIE and EIE interrupt bits. */
+ 	return (ioread32(&priv->regs->cont) & PCH_CTRL_IE_SIE_EIE) >> 1;
+ }
+ 
+-static u32 pch_can_get_rxtx_ir(struct pch_can_priv *priv, u32 buff_num,
+-			       enum pch_ifreg dir)
++static u32 __maybe_unused pch_can_get_rxtx_ir(struct pch_can_priv *priv,
++					      u32 buff_num, enum pch_ifreg dir)
+ {
+ 	u32 ie, enable;
+ 
+@@ -997,8 +996,8 @@ static u32 pch_can_get_rxtx_ir(struct pch_can_priv *priv, u32 buff_num,
+ 	return enable;
+ }
+ 
+-static void pch_can_set_rx_buffer_link(struct pch_can_priv *priv,
+-				       u32 buffer_num, int set)
++static void __maybe_unused pch_can_set_rx_buffer_link(struct pch_can_priv *priv,
++						      u32 buffer_num, int set)
+ {
+ 	iowrite32(PCH_CMASK_RX_TX_GET, &priv->regs->ifregs[0].cmask);
+ 	pch_can_rw_msg_obj(&priv->regs->ifregs[0].creq, buffer_num);
+@@ -1013,7 +1012,8 @@ static void pch_can_set_rx_buffer_link(struct pch_can_priv *priv,
+ 	pch_can_rw_msg_obj(&priv->regs->ifregs[0].creq, buffer_num);
+ }
+ 
+-static u32 pch_can_get_rx_buffer_link(struct pch_can_priv *priv, u32 buffer_num)
++static u32 __maybe_unused pch_can_get_rx_buffer_link(struct pch_can_priv *priv,
++						     u32 buffer_num)
+ {
+ 	u32 link;
+ 
+@@ -1027,20 +1027,19 @@ static u32 pch_can_get_rx_buffer_link(struct pch_can_priv *priv, u32 buffer_num)
+ 	return link;
+ }
+ 
+-static int pch_can_get_buffer_status(struct pch_can_priv *priv)
++static int __maybe_unused pch_can_get_buffer_status(struct pch_can_priv *priv)
+ {
+ 	return (ioread32(&priv->regs->treq1) & 0xffff) |
+ 	       (ioread32(&priv->regs->treq2) << 16);
+ }
+ 
+-static int pch_can_suspend(struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused pch_can_suspend(struct device *dev_d)
+ {
+ 	int i;
+-	int retval;
+ 	u32 buf_stat;	/* Variable for reading the transmit buffer status. */
+ 	int counter = PCH_COUNTER_LIMIT;
+ 
+-	struct net_device *dev = pci_get_drvdata(pdev);
++	struct net_device *dev = dev_get_drvdata(dev_d);
+ 	struct pch_can_priv *priv = netdev_priv(dev);
+ 
+ 	/* Stop the CAN controller */
+@@ -1058,7 +1057,7 @@ static int pch_can_suspend(struct pci_dev *pdev, pm_message_t state)
+ 		udelay(1);
+ 	}
+ 	if (!counter)
+-		dev_err(&pdev->dev, "%s -> Transmission time out.\n", __func__);
++		dev_err(dev_d, "%s -> Transmission time out.\n", __func__);
+ 
+ 	/* Save interrupt configuration and then disable them */
+ 	priv->int_enables = pch_can_get_int_enables(priv);
+@@ -1081,35 +1080,16 @@ static int pch_can_suspend(struct pci_dev *pdev, pm_message_t state)
+ 
+ 	/* Disable all Receive buffers */
+ 	pch_can_set_rx_all(priv, 0);
+-	retval = pci_save_state(pdev);
+-	if (retval) {
+-		dev_err(&pdev->dev, "pci_save_state failed.\n");
+-	} else {
+-		pci_enable_wake(pdev, PCI_D3hot, 0);
+-		pci_disable_device(pdev);
+-		pci_set_power_state(pdev, pci_choose_state(pdev, state));
+-	}
+ 
+-	return retval;
++	return 0;
+ }
+ 
+-static int pch_can_resume(struct pci_dev *pdev)
++static int __maybe_unused pch_can_resume(struct device *dev_d)
+ {
+ 	int i;
+-	int retval;
+-	struct net_device *dev = pci_get_drvdata(pdev);
++	struct net_device *dev = dev_get_drvdata(dev_d);
+ 	struct pch_can_priv *priv = netdev_priv(dev);
+ 
+-	pci_set_power_state(pdev, PCI_D0);
+-	pci_restore_state(pdev);
+-	retval = pci_enable_device(pdev);
+-	if (retval) {
+-		dev_err(&pdev->dev, "pci_enable_device failed.\n");
+-		return retval;
+-	}
+-
+-	pci_enable_wake(pdev, PCI_D3hot, 0);
+-
+ 	priv->can.state = CAN_STATE_ERROR_ACTIVE;
+ 
+ 	/* Disabling all interrupts. */
+@@ -1146,12 +1126,8 @@ static int pch_can_resume(struct pci_dev *pdev)
+ 	/* Restore Run Mode */
+ 	pch_can_set_run_mode(priv, PCH_CAN_RUN);
+ 
+-	return retval;
++	return 0;
+ }
+-#else
+-#define pch_can_suspend NULL
+-#define pch_can_resume NULL
+-#endif
+ 
+ static int pch_can_get_berr_counter(const struct net_device *dev,
+ 				    struct can_berr_counter *bec)
+@@ -1252,13 +1228,16 @@ static int pch_can_probe(struct pci_dev *pdev,
+ 	return rc;
+ }
+ 
++static SIMPLE_DEV_PM_OPS(pch_can_pm_ops,
++			 pch_can_suspend,
++			 pch_can_resume);
++
+ static struct pci_driver pch_can_pci_driver = {
+ 	.name = "pch_can",
+ 	.id_table = pch_pci_tbl,
+ 	.probe = pch_can_probe,
+ 	.remove = pch_can_remove,
+-	.suspend = pch_can_suspend,
+-	.resume = pch_can_resume,
++	.driver.pm = &pch_can_pm_ops,
+ };
+ 
+ module_pci_driver(pch_can_pci_driver);
 -- 
-2.16.4
+2.27.0
 
