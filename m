@@ -2,239 +2,86 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB53C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E09C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9A420663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:39:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DgR3SBvj"
+	by mail.kernel.org (Postfix) with ESMTP id D4DB5206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:40:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730137AbgG1Njr (ORCPT
+        id S1730145AbgG1Nk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:39:47 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46824 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729044AbgG1Njq (ORCPT
+        Tue, 28 Jul 2020 09:40:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55330 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729044AbgG1Nk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:39:46 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06SDdV4h088972;
-        Tue, 28 Jul 2020 08:39:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595943571;
-        bh=dPv4YxIrwFuV3NudXMrtoCbaLmUQB+hhpnVi9I+m27g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=DgR3SBvj1LP8atxh++0E+OE2NN4HRh9HizQIQ1C4WKvcmMjhRe9Unc33ehKw3jZMC
-         7LELVTFf2bFjD1ZEwt6J3noouEKTErAmVHFtJAvfLFCtO7hfxnKUy93p/hi8jqnUxS
-         n/RM45oGVtfVIDRk+6qOAxsOZTprq9tat9UBZpl4=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SDdVit100388;
-        Tue, 28 Jul 2020 08:39:31 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
- Jul 2020 08:39:31 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 28 Jul 2020 08:39:31 -0500
-Received: from [10.250.35.192] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SDdTx9116558;
-        Tue, 28 Jul 2020 08:39:30 -0500
-Subject: Re: [PATCH v32 1/6] dt: bindings: lp50xx: Introduce the lp50xx family
- of RGB drivers
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
-        <marek.behun@nic.cz>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200722153146.8767-1-dmurphy@ti.com>
- <20200722153146.8767-2-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <285e2038-6a90-e59a-d414-19cc0f8789e6@ti.com>
-Date:   Tue, 28 Jul 2020 08:39:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 09:40:28 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k0Pq5-0004Om-5K; Tue, 28 Jul 2020 13:40:17 +0000
+Date:   Tue, 28 Jul 2020 15:40:15 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Steven Sistare <steven.sistare@oracle.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
+        ktkhai@virtuozzo.com, peterz@infradead.org, esyr@redhat.com,
+        jgg@ziepe.ca, christian@kellner.me, areber@redhat.com,
+        cyphar@cyphar.com, linux-api@vger.kernel.org
+Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
+Message-ID: <20200728134015.tmjy5hy4xden2v5h@wittgenstein>
+References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+ <87pn8glwd2.fsf@x220.int.ebiederm.org>
+ <28125570-4129-bcba-099b-f90481cfbfe8@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200722153146.8767-2-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <28125570-4129-bcba-099b-f90481cfbfe8@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+On Mon, Jul 27, 2020 at 02:00:17PM -0400, Steven Sistare wrote:
+> On 7/27/2020 1:07 PM, ebiederm@xmission.com wrote:
+> > Anthony Yznaga <anthony.yznaga@oracle.com> writes:
+> > 
+> >> This patchset adds support for preserving an anonymous memory range across
+> >> exec(3) using a new madvise MADV_DOEXEC argument.  The primary benefit for
+> >> sharing memory in this manner, as opposed to re-attaching to a named shared
+> >> memory segment, is to ensure it is mapped at the same virtual address in
+> >> the new process as it was in the old one.  An intended use for this is to
+> >> preserve guest memory for guests using vfio while qemu exec's an updated
+> >> version of itself.  By ensuring the memory is preserved at a fixed address,
+> >> vfio mappings and their associated kernel data structures can remain valid.
+> >> In addition, for the qemu use case, qemu instances that back guest RAM with
+> >> anonymous memory can be updated.
+> > 
+> > What is wrong with using a file descriptor to a possibly deleted file
+> > and re-mmaping it?
+> > 
+> > There is already MAP_FIXED that allows you to ensure you have the same
+> > address.
+> 
+> MAP_FIXED blows away any existing mapping in that range, which is not the 
+> desired behavior.  We want to preserve the previously created mapping at
 
-On 7/22/20 10:31 AM, Dan Murphy wrote:
-> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
-> LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
-> can control RGB LEDs individually or as part of a control bank group.
-> These devices have the ability to adjust the mixing control for the RGB
-> LEDs to obtain different colors independent of the overall brightness of
-> the LED grouping.
+There's also MAP_FIXED_NOREPLACE since v4.17 in case that helps.
 
-Were you going to pull this in as a user of the Multicolor framework?
+Note that this should really go to linux-api too. I won't argue to
+resend it since that would mean spamming everyone's inbox with the same
+thread again but in case you send a revised version, please ensure to Cc
+linux-api. The glibc folks are listening on there too.
 
-Dan
-
-
->
-> Datasheet:
-> http://www.ti.com/lit/ds/symlink/lp5012.pdf
-> http://www.ti.com/lit/ds/symlink/lp5024.pdf
-> http://www.ti.com/lit/ds/symlink/lp5036.pdf
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->   .../devicetree/bindings/leds/leds-lp50xx.yaml | 130 ++++++++++++++++++
->   1 file changed, 130 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
-> new file mode 100644
-> index 000000000000..b2dd1672f12a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
-> @@ -0,0 +1,130 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-lp50xx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LED driver for LP50XX RGB LED from Texas Instruments.
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +
-> +description: |
-> +  The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB LEDs into
-> +  a LED group or control them individually.
-> +
-> +  The difference in these RGB LED drivers is the number of supported RGB
-> +  modules.
-> +
-> +  For more product information please see the link below:
-> +  https://www.ti.com/lit/ds/symlink/lp5012.pdf
-> +  https://www.ti.com/lit/ds/symlink/lp5024.pdf
-> +  https://www.ti.com/lit/ds/symlink/lp5036.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,lp5009
-> +      - ti,lp5012
-> +      - ti,lp5018
-> +      - ti,lp5024
-> +      - ti,lp5030
-> +      - ti,lp5036
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description:
-> +      I2C slave address
-> +      lp5009/12 - 0x14, 0x15, 0x16, 0x17
-> +      lp5018/24 - 0x28, 0x29, 0x2a, 0x2b
-> +      lp5030/36 - 0x30, 0x31, 0x32, 0x33
-> +
-> +  enable-gpios:
-> +    maxItems: 1
-> +    description: GPIO pin to enable/disable the device.
-> +
-> +  vled-supply:
-> +    description: LED supply.
-> +
-> +patternProperties:
-> +  '^multi-led@[0-9a-f]$':
-> +    type: object
-> +    allOf:
-> +      - $ref: leds-class-multicolor.yaml#
-> +    properties:
-> +      reg:
-> +        minItems: 1
-> +        maxItems: 12
-> +        description:
-> +          This property denotes the LED module number(s) that is used on the
-> +          for the child node.  The LED modules can either be used stand alone
-> +          or grouped into a module bank.
-> +
-> +    patternProperties:
-> +      "(^led-[0-9a-f]$|led)":
-> +        type: object
-> +        $ref: common.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +   #include <dt-bindings/gpio/gpio.h>
-> +   #include <dt-bindings/leds/common.h>
-> +
-> +   i2c {
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +
-> +       led-controller@14 {
-> +           compatible = "ti,lp5009";
-> +           reg = <0x14>;
-> +           #address-cells = <1>;
-> +           #size-cells = <0>;
-> +           enable-gpios = <&gpio1 16>;
-> +
-> +           multi-led@1 {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               reg = <0x1>;
-> +               color = <LED_COLOR_ID_MULTI>;
-> +               function = LED_FUNCTION_CHARGING;
-> +
-> +               led-0 {
-> +                   color = <LED_COLOR_ID_RED>;
-> +               };
-> +
-> +               led-1 {
-> +                   color = <LED_COLOR_ID_GREEN>;
-> +               };
-> +
-> +               led-2 {
-> +                   color = <LED_COLOR_ID_BLUE>;
-> +               };
-> +          };
-> +
-> +          multi-led@2 {
-> +            #address-cells = <1>;
-> +            #size-cells = <2>;
-> +            reg = <0x2 0x3 0x5>;
-> +            color = <LED_COLOR_ID_MULTI>;
-> +            function = LED_FUNCTION_STANDBY;
-> +
-> +            led-6 {
-> +              color = <LED_COLOR_ID_RED>;
-> +            };
-> +
-> +            led-7 {
-> +              color = <LED_COLOR_ID_GREEN>;
-> +            };
-> +
-> +            led-8 {
-> +              color = <LED_COLOR_ID_BLUE>;
-> +            };
-> +         };
-> +       };
-> +    };
-> +
-> +...
+Thanks!
+Christian
