@@ -2,194 +2,174 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A737C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B751DC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6876220714
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666B620714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gh+RNdjJ"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="PDGYSP0O";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fTAbfbFu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbgG1MoE (ORCPT
+        id S1729893AbgG1MoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729379AbgG1MoD (ORCPT
+        Tue, 28 Jul 2020 08:44:12 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:53679 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729379AbgG1MoK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:44:03 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4902EC0619D2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:44:03 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id 4so1754341uav.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lamag6Aa8xzEi9MNZwHnYxjBf9+2A6cpklCTrsDoh4A=;
-        b=Gh+RNdjJTAk6ipjYlV7bdCb0w+2JUMWgSRCx5z5IcDAjithhxopl7Z92M6ic/T1YzF
-         CFRypxrbYTuYAO756tYXsKbuPUPT4VSgS6YJSPF6XlC3D3R6xEeJkWroI3DfzZYRM1LL
-         vmO6CnSsssfs+K+zaog/rGp7NTttzSG8kgnYnz7LF5WJGq65zgk1HddQqsK4uVv604h8
-         A0aB6ggLpK3J8cvqPUr+9jgC8ed9isGdtLNr5+SyVYt9zXKFyehHsIE+bmu3wSE76/j5
-         ayEapCBEVj0u7dGIWP/pvewiOUuAbSdxbKkJpds8lwRPNOFwrhgmg2zkPdDAcFV/BRek
-         yFhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lamag6Aa8xzEi9MNZwHnYxjBf9+2A6cpklCTrsDoh4A=;
-        b=F35EMYZNe2fB+udA5EPaup4RdnMVIr3ToAxcauxu7kHY5o3aQwBaGqg3ep5fm3F+aL
-         M88p6SpuPLJjoI0qsVe/b3NLi57qzByVwpMY9CW30/CY9AZSY7hJ3YdI0dyQO8D8qFqX
-         RCAAS+oTJao3tysVdJvpqNzzZjrWZm0vp8mH1XKeTBXNtoYMvKGaXHAEsLOIJq5giq0D
-         VGkIV+ULvn15Ymwm/J/yV1q4RcTXBaW2FNIhKjKuY1rdi09JDIPYxO4KSR208jB5xSc5
-         HZaULw0L4hIIJMHGomZLJsOY5Nz2Obe88q6OmJ6AWjXIlHY5WM7kzCsdJBKETI+U5nlq
-         ME3Q==
-X-Gm-Message-State: AOAM531JGNmZcgzuVIYnylQWzFRzkhZS89CCo9EqQbs8YizIF0AUvoBy
-        ROt/9iBVRY29p4TzPe2c6emLmsnGH+Lb785c7naAfw==
-X-Google-Smtp-Source: ABdhPJz8eUEacBI5xGPA1ODM83K3paHnnu+pjfbLJLVF+MbS+nbHVLCtgJw9MrHvNcK5mlOlZKsZHsEPMhLmkB6dTmg=
-X-Received: by 2002:ab0:5963:: with SMTP id o32mr19678822uad.142.1595940242118;
- Tue, 28 Jul 2020 05:44:02 -0700 (PDT)
+        Tue, 28 Jul 2020 08:44:10 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 1EF895802D6;
+        Tue, 28 Jul 2020 08:44:09 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 28 Jul 2020 08:44:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=3
+        zW4tWcFHAaD/UFG0J62346g4/8MQMozUhPE9nWQcAQ=; b=PDGYSP0OsFCNrzpHC
+        yOtNOXSD+UMusIIf928WPNocPn1Gf1aQKpxo833s+0wj59VasKVroUq8ZNDI+d3F
+        PeSLvqXlDOTjoHukGJHGZ2W71fl5QoMAy0DsdzC8Na3JqOo06NYPnqzURw4ERhXA
+        kmoDudUs9NSKOTuqvVnwdyzL+SuEbUb4HNgS05110bN3jWema8H5dVw9LB+6mNFI
+        t3eb8oQlT/GiOmgtE1ArIWUSVizIn1BzOi3DAh64h1x5Dd661D5bZKpWCepbAATE
+        18avLINXhcBuf7necpwJlRyrUgTRMn2dIYjyHvIF7liXgCtEmL7uXhwdwndKcPqo
+        58mng==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=3zW4tWcFHAaD/UFG0J62346g4/8MQMozUhPE9nWQc
+        AQ=; b=fTAbfbFuCXisbkE4lvc9HyOH0IbYLfPbkYxKpMXgj3AN7VFiXABj5+4UU
+        /t3v6ivneh/t0Lp8wZiYpJ8HGlGBKdX9RgFTJxdYyxgJYhHwFWvtKITHxzCzwTQ7
+        z8GKERkJAz2/EaClpCjKzDKvpurfzu1ciWdiH04ZlU6Bhfk26hE7fzLbpeUuCmGo
+        qI72xbQbUEcTKW63j5H/GqW5pJ//mpMhosBL8nma+fTG3FpgJVhVf17MW9fgW/dd
+        yhQLh5fhHO0MN1LhsXb7PaPgQN2M6ORUZRU3pyykxB1orp6zT/uPYG1Az+8bpqlq
+        xhuFLN3aHcORn6h/vJDrQ/KPmg9Sw==
+X-ME-Sender: <xms:mB0gXzBTU3jEYnxQoy13xi3LBgvf4zF50ZL08EEj1HlrgkO_jLmDAQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedriedvgdehfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepgfejtedtjefggfffvdetuedthedtheegheeuteekfeeghfdtteejkeeludeg
+    vddunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:mB0gX5inbbCQ8UBq3vsYo32_ONz_dqoMqRhoH8KluLzUfVVGl-qclA>
+    <xmx:mB0gX-lDw-pCTGkuBDz20_uyA5Is-WaSIRsfXwanNh1pqtm94NPOFg>
+    <xmx:mB0gX1ys1lEXKEe06CZVO0-i5ZAZrqgufUgOIblaP8cx7N4TLblJgQ>
+    <xmx:mR0gX7H4Xn8jelQjfYxg84ioU_mybIBccgE9y8IuP8xcUALEduurrg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B531D328005D;
+        Tue, 28 Jul 2020 08:44:07 -0400 (EDT)
+Date:   Tue, 28 Jul 2020 14:44:05 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Alexandre Courbot <acourbot@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH 08/10] media: uapi: h264: Clean slice invariants syntax
+ elements
+Message-ID: <20200728124405.ziuwaabp4fnv7lw2@gilmour.lan>
+References: <20200715202233.185680-1-ezequiel@collabora.com>
+ <20200715202233.185680-9-ezequiel@collabora.com>
+ <CAPBb6MVMXeTcUfb-98McYCKjh=eM=BTo2dSY=L1c6dv2jHqXcg@mail.gmail.com>
+ <636aab0a2be83e751a82a84ac3946afec2c87a17.camel@collabora.com>
 MIME-Version: 1.0
-References: <20200727134911.020675249@linuxfoundation.org>
-In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 28 Jul 2020 18:13:50 +0530
-Message-ID: <CA+G9fYs+EJiUDP-nibgM4A+nS5EauvVNuPVafM_iAFPfPD3a3A@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/64] 4.14.190-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <636aab0a2be83e751a82a84ac3946afec2c87a17.camel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020 at 19:37, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.190 release.
-> There are 64 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 29 Jul 2020 13:48:51 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.190-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+Hi,
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+On Mon, Jul 27, 2020 at 11:39:12AM -0300, Ezequiel Garcia wrote:
+> On Sat, 2020-07-25 at 23:34 +0900, Alexandre Courbot wrote:
+> > On Thu, Jul 16, 2020 at 5:23 AM Ezequiel Garcia <ezequiel@collabora.com=
+> wrote:
+> > > The H.264 specification requires in its "Slice header semantics"
+> > > section that the following values shall be the same in all slice head=
+ers:
+> > >=20
+> > >   pic_parameter_set_id
+> > >   frame_num
+> > >   field_pic_flag
+> > >   bottom_field_flag
+> > >   idr_pic_id
+> > >   pic_order_cnt_lsb
+> > >   delta_pic_order_cnt_bottom
+> > >   delta_pic_order_cnt[ 0 ]
+> > >   delta_pic_order_cnt[ 1 ]
+> > >   sp_for_switch_flag
+> > >   slice_group_change_cycle
+> > >=20
+> > > and can therefore be moved to the per-frame decode parameters control.
+> >=20
+> > I am really not a H.264 expert, so this question may not be relevant,
+>=20
+> All questions are welcome. I'm more than happy to discuss this patchset.
+>=20
+> > but are these values specified for every slice header in the
+> > bitstream, or are they specified only once per frame?
+> >=20
+> > I am asking this because it would certainly make user-space code
+> > simpler if we could remain as close to the bitstream as possible. If
+> > these values are specified once per slice, then factorizing them would
+> > leave user-space with the burden of deciding what to do if they change
+> > across slices.
+> >=20
+> > Note that this is a double-edged sword, because it is not necessarily
+> > better to leave the firmware in charge of deciding what to do in such
+> > a case. :) So hopefully these are only specified once per frame in the
+> > bitstream, in which case your proposal makes complete sense.
+>=20
+> Frame-based hardwares accelerators such as Hantro and Rockchip VDEC
+> are doing the slice header parsing themselves. Therefore, the
+> driver is not really parsing these fields on each slice header.
+>=20
+> Currently, we are already using only the first slice in a frame,
+> as you can see from:
+>=20
+>         if (slices[0].flags & V4L2_H264_SLICE_FLAG_FIELD_PIC)
+>                 reg |=3D G1_REG_DEC_CTRL0_PIC_FIELDMODE_E;
+>=20
+> Even if these fields are transported in the slice header,
+> I think it makes sense for us to split them into the decode params
+> (per-frame) control.
 
-Summary
-------------------------------------------------------------------------
+I don't really get it though. The initial plan that was asked was to
+mimic as much as possible the bitstream and that's what we did.
 
-kernel: 4.14.190-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: f238f865e7549f70e465fb28f92c863900e76455
-git describe: v4.14.189-65-gf238f865e754
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.189-65-gf238f865e754
+But that requirement seems to have changed now?
 
-No regressions (compared to build v4.14.189)
+Even if it did change though, if this is defined as a slice parameter in
+the spec, why would we want to move it to some other control entirely if
+we are to keep the slice parameters control?
 
-No fixes (compared to build v4.14.189)
+Especially if the reason is to make the life easier on a couple of
+drivers, that's really not the point of a userspace API, and we can
+always add an helper if it really shows up as a pattern.
 
-Ran 31258 total tests in the following environments and test suites.
+> They are really specified to be the same across all slices,
+> so even I'd say if a bitstream violates this, it's likely
+> either a corrupted bitstream or an encoder bug.
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
+That doesn't look like something we should worry about though. Or at
+least, this is true for pretty much any other field in the bitstream and
+we won't change those.
 
-Test Suites
------------
-* build
-* igt-gpu-tools
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-dio-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-mm-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-commands-tests
-* ltp-controllers-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Maxime
