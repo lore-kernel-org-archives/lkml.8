@@ -2,124 +2,156 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C4FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F9AC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC7B720663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5324C20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:24:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tCr1heuS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GtVsFuqy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgG1OYq (ORCPT
+        id S1730394AbgG1OYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:24:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730089AbgG1OYq (ORCPT
+        Tue, 28 Jul 2020 10:24:09 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53689 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730089AbgG1OYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:24:46 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D194EC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:24:45 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id l23so18819686qkk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:24:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MWRFI7Cr0Uwgm5dsy6ruH9K3Q6HQlGNoCK45U52FYiQ=;
-        b=tCr1heuSvPmt5jXKf8Iu6VNc9z3I5OpkMkWQoiH+XTQmhONE4L+OWhLqwf1tKEPzob
-         Ii1kdw2FWvh4ZgrlKcqogL/4ZVn8E7lARtAFddkrarYxhbaVy+WDrHj8WYDpOCZqpC8W
-         S9M7NcreX/JvIs7sgi8QZ8ArTREwbAkqvPV5Yb9yoPD0UMFOqIBGULopBmcHzjnp3cGC
-         CQSwGKpthOebWo2/+O+x/xPdaOe2iwKoS+xJ6f7B0Fbn1oUPU/+s5dXnZKynr5X7XrkA
-         WiWr6W8FIC4MIwN6bJUxNlbxqAXMD5MtZBXapGzgdF+gRreFfVgXEc929EYlg1kzDpHW
-         8U4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=MWRFI7Cr0Uwgm5dsy6ruH9K3Q6HQlGNoCK45U52FYiQ=;
-        b=ojJCSmJxKY3Wj5bPYOzSO1PFHc9cFRgqjkOc2CToGaOqiFA19GjYsQ+p4TOPxgpPJ5
-         EaA2SPkvdbUFls2JYhALgtaol6fVGdWXzwkovvfdSSPOg1zjQu9Sl4VlvG6GEJBJauHV
-         qV8un5xF+NRuC502D2KXDhMJmnc95CMeeog+yWi8ZCH0oumUwUKOSOTEa7EC/EEr4bfH
-         wjNLo4GiB8Hu494cx0XBt6EN8ds2R9enCi4+JMwQ1iAhMc0Fcf20v+xYbeI/+he4De5l
-         nSWCC30gD4T0vzEfbvd9SER3NPf6ZlZOrL/BtRfGeYJW9+o2ORSOON1KCIBHQs7mg67B
-         huBA==
-X-Gm-Message-State: AOAM532qa3CN+2A4W9rK+Do8BlQ50Hpc++F5806GFygIGMcJEpHqOJBH
-        1WTyjzeln5GD2Vy1Hq1d+NE=
-X-Google-Smtp-Source: ABdhPJwWqhRKg+bpR3CFbMj7+HWQ7169YXRxZ7/bHc+gQQYwrJdRXt1vxGYZ6995WJJCastPluwDkw==
-X-Received: by 2002:a37:34c:: with SMTP id 73mr9668910qkd.262.1595946285034;
-        Tue, 28 Jul 2020 07:24:45 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id e4sm12213878qts.57.2020.07.28.07.24.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 07:24:44 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 28 Jul 2020 10:24:42 -0400
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Kees Cook <keescook@chromium.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/8] x86/kaslr: Cleanup and small bugfixes
-Message-ID: <20200728142442.GA3869481@rani.riverdale.lan>
-References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
- <20200727230801.3468620-1-nivedita@alum.mit.edu>
- <20200728110617.GF222284@gmail.com>
+        Tue, 28 Jul 2020 10:24:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595946246;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=06rCqpwu1j4S1S47vgUTPXYPKKso17TGQwzOaoYSYfs=;
+        b=GtVsFuqyRfS1RkT25da+EhuUFf5MK+pGegTD127A0pLyWVLsTtxR3jny/u2SUL9VKue0wR
+        zjkYY8l6DX8mAQJRrLoC7J+CTbzHM0/D8/VS0/RR8HLuez7E+VJ6vt9Qjh1l+QjbHxeH2N
+        rsZkLJZxu1iQGHes548R3D8PVHuaLK4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-XL5fGaBiOsyWEWGpA51xEg-1; Tue, 28 Jul 2020 10:24:02 -0400
+X-MC-Unique: XL5fGaBiOsyWEWGpA51xEg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B54D1B18BC1;
+        Tue, 28 Jul 2020 14:23:54 +0000 (UTC)
+Received: from localhost (ovpn-12-117.pek2.redhat.com [10.72.12.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 303B41010427;
+        Tue, 28 Jul 2020 14:23:51 +0000 (UTC)
+Date:   Tue, 28 Jul 2020 22:23:48 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        clang-built-linux@googlegroups.com,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
+Subject: Re: [PATCH 14/15] x86/numa: remove redundant iteration over
+ memblock.reserved
+Message-ID: <20200728142348.GE10792@MiWiFi-R3L-srv>
+References: <20200728051153.1590-1-rppt@kernel.org>
+ <20200728051153.1590-15-rppt@kernel.org>
+ <20200728110254.GA14854@MiWiFi-R3L-srv>
+ <20200728141504.GC3655207@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200728110617.GF222284@gmail.com>
+In-Reply-To: <20200728141504.GC3655207@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 01:06:17PM +0200, Ingo Molnar wrote:
-> 
-> * Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> 
-> > The first 7 patches are cleanup and minor bugfixes on the x86 KASLR
-> > code.
+On 07/28/20 at 05:15pm, Mike Rapoport wrote:
+> On Tue, Jul 28, 2020 at 07:02:54PM +0800, Baoquan He wrote:
+> > On 07/28/20 at 08:11am, Mike Rapoport wrote:
+> > > From: Mike Rapoport <rppt@linux.ibm.com>
+> > > 
+> > > numa_clear_kernel_node_hotplug() function first traverses numa_meminfo
+> > > regions to set node ID in memblock.reserved and than traverses
+> > > memblock.reserved to update reserved_nodemask to include node IDs that were
+> > > set in the first loop.
+> > > 
+> > > Remove redundant traversal over memblock.reserved and update
+> > > reserved_nodemask while iterating over numa_meminfo.
+> > > 
+> > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > > ---
+> > >  arch/x86/mm/numa.c | 26 ++++++++++----------------
+> > >  1 file changed, 10 insertions(+), 16 deletions(-)
+> > > 
+> > > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> > > index 8ee952038c80..4078abd33938 100644
+> > > --- a/arch/x86/mm/numa.c
+> > > +++ b/arch/x86/mm/numa.c
+> > > @@ -498,31 +498,25 @@ static void __init numa_clear_kernel_node_hotplug(void)
+> > >  	 * and use those ranges to set the nid in memblock.reserved.
+> > >  	 * This will split up the memblock regions along node
+> > >  	 * boundaries and will set the node IDs as well.
+> > > +	 *
+> > > +	 * The nid will also be set in reserved_nodemask which is later
+> > > +	 * used to clear MEMBLOCK_HOTPLUG flag.
+> > > +	 *
+> > > +	 * [ Note, when booting with mem=nn[kMG] or in a kdump kernel,
+> > > +	 *   numa_meminfo might not include all memblock.reserved
+> > > +	 *   memory ranges, because quirks such as trim_snb_memory()
+> > > +	 *   reserve specific pages for Sandy Bridge graphics.
+> > > +	 *   These ranges will remain with nid == MAX_NUMNODES. ]
+> > >  	 */
+> > >  	for (i = 0; i < numa_meminfo.nr_blks; i++) {
+> > >  		struct numa_memblk *mb = numa_meminfo.blk + i;
+> > >  		int ret;
+> > >  
+> > >  		ret = memblock_set_node(mb->start, mb->end - mb->start, &memblock.reserved, mb->nid);
+> > > +		node_set(mb->nid, reserved_nodemask);
 > > 
-> > The last one is a bit of an RFC. The memory regions used for KASLR are
-> > stored as 64-bit even on a 32-bit kernel. However there are still a few
-> > local variables that are 32-bit, but should be ok as far as I can see
-> > because they are assigned values that have been already limited to
-> > 32-bit. It does make it a little harder to verify that the code is
-> > correct. Since KASLR cannot actually use 64-bit regions for the 32-bit
-> > kernel, the patch reduces regions to their below-4G segment when
-> > creating them, making the actual variables 32-bit. Alternatively, the
-> > few local variables could be upgraded to 64-bit.
-> > 
-> > v1->v2:
-> > - Fix a bug in the bugfix 5/8: overlap.start can be smaller than
-> >   region.start, so shouldn't subtract before comparing.
-> > 
-> > Arvind Sankar (8):
-> >   x86/kaslr: Make command line handling safer
-> >   x86/kaslr: Remove bogus warning and unnecessary goto
-> >   x86/kaslr: Fix process_efi_entries comment
-> >   x86/kaslr: Initialize mem_limit to the real maximum address
-> >   x86/kaslr: Simplify __process_mem_region
-> >   x86/kaslr: Simplify process_gb_huge_pages
-> >   x86/kaslr: Clean up slot handling
-> >   x86/kaslr: Don't use 64-bit mem_vector for 32-bit kernel
-> > 
-> >  arch/x86/boot/compressed/acpi.c  |   7 +-
-> >  arch/x86/boot/compressed/kaslr.c | 228 ++++++++++++-------------------
-> >  arch/x86/boot/compressed/misc.h  |  19 ++-
-> >  3 files changed, 111 insertions(+), 143 deletions(-)
+> > Really? This will set all node id into reserved_nodemask. But in the
+> > current code, it's setting nid into memblock reserved region which
+> > interleaves with numa_memoinfo, then get those nid and set it in
+> > reserved_nodemask. This is so different, with my understanding. Please
+> > correct me if I am wrong.
 > 
-> I've applied patches 1-4 to x86/kaslr and will push them out if they 
-> pass testing - see the review feedback for the others.
+> You are right, I've missed the intersections of numa_meminfo with
+> memblock.reserved.
 > 
-> Thanks,
-> 
-> 	Ingo
+> x86 interaction with membock is so, hmm, interesting...
 
-Ok, thanks, I will send them split out and replace the last patch.
+Yeah, numa_clear_kernel_node_hotplug() intends to find out any memory node
+which has reserved memory, then make it as unmovable. Setting all node
+id into reserved_nodemask will break the use case of hot removing hotpluggable
+boot memory after system bootup.
+
