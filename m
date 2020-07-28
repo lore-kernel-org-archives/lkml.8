@@ -2,194 +2,179 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1F5C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 124B9C43445
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77B9D2074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0AED2074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="bICUAXN8"
+	dkim=pass (1024-bit key) header.d=mail.ustc.edu.cn header.i=@mail.ustc.edu.cn header.b="C5d3mtrX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731033AbgG1Phm (ORCPT
+        id S1731017AbgG1Phk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:37:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730979AbgG1Phk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jul 2020 11:37:40 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C41C061794;
-        Tue, 28 Jul 2020 08:37:40 -0700 (PDT)
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 128D51FF10;
-        Tue, 28 Jul 2020 15:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1595950660; bh=Dq9Fd1D4T3cB1coSZCOwx/CX9dxAaAo3bdZhd0RaPvw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bICUAXN8jX7oP8ISzKwh4hbY2CxNn4SC7TQh2wDtnERpIY0pX7u4msmd3325IR+Vr
-         MtQtCMAi7ZsjCwFkqXpxRu41GAxcLg81EjHLTNoT3xTRtIH+Ek0DBihoggaiMwxZ+K
-         mPe6UWk7dql1yB60F71t9vEBJ9fzmLgF1Nn3qbg8g1bb23t6ouleKJAStL+tb5JtBB
-         VvQoMon625mkPbQ0SLITQpM4gIqGZGv5hrxoVneTuzLwPX5+Z/7mB0N8KbmChQ2Ccg
-         1PNQ/lnKeiUCxmrIhlxsG1TxWvlXhcQjWgPYoTidaSsgEN1mvYJalZYIHTHYKk9bHi
-         u6fZlCYbw5XUw==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730979AbgG1Ph1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:37:27 -0400
+Received: from ustc.edu.cn (email6.ustc.edu.cn [IPv6:2001:da8:d800::8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0841CC0619D4;
+        Tue, 28 Jul 2020 08:37:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mail.ustc.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
+        Message-ID:In-Reply-To:References:MIME-Version:Content-Type:
+        Content-Transfer-Encoding; bh=h+0pP1uEU51MnCBvLri0WdjAedk8MQ25Uk
+        FDBKwheRg=; b=C5d3mtrXz2tvbGAO7LkdNnSNHBmpJYgYB3oRS4wchRG1q/4nEM
+        lYFp4IbNSl8vLylt5ynltQGOqArbeFlNzVya2l/eCV77mLQh6M0Ar61zyEpTS8kr
+        2jB2GO0VGD4UCzW9L0xIkps6gDxUBI1isq4/IhqKbam0Gcq4YtEmbiJIw=
+Received: from xhacker (unknown [101.86.17.135])
+        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygCHj_diRCBfgxI2AA--.17695S6;
+        Tue, 28 Jul 2020 23:29:47 +0800 (CST)
+Date:   Tue, 28 Jul 2020 23:26:10 +0800
+From:   Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/5] MIPS: Loongson64: Process ISA Node in DeviceTree
-Date:   Tue, 28 Jul 2020 23:36:56 +0800
-Message-Id: <20200728153708.1296374-3-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.28.0.rc1
-In-Reply-To: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
-References: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
+        Saravanan Sekar <sravanhome@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH 4/4] regulator: mp886x: support setting switch freq
+Message-ID: <20200728232610.10197f23@xhacker>
+In-Reply-To: <20200728232327.71ab3729@xhacker>
+References: <20200728232327.71ab3729@xhacker>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: LkAmygCHj_diRCBfgxI2AA--.17695S6
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF1rArW7Ar1xAw43WrW5trb_yoW5XF4kpw
+        45GF4Ykr4kJ3WSgr4fCFn2ka43Kr4kC34fArW2yw4Ska13tFZxJFy8JFy2yF1rGryrJFyY
+        y34093yqgw1UJ3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU92b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
+        8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28C
+        jxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI
+        8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2
+        jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4
+        CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvj
+        eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4
+        IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
+        MI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
+        WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
+        6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
+        BIdaVFxhVjvjDU0xZFpf9x07j0uWLUUUUU=
+X-CM-SenderInfo: xmv2xttqjtqzxdloh3xvwfhvlgxou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously, we're hardcoding reserved ISA I/O Space in, now
-we're processing it I/O via DeviceTree directly.
-The ranges property if ISA node is used to determine the size and address
-of reserved I/O space.
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
---
-v2: Use range_parser instead of pci_range_parser
-v4: Fix typos & grammar problem thanks to Xuerui.
+Both MP8867 and MP8869 support different switch frequency.
+
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 ---
- arch/mips/loongson64/init.c | 87 ++++++++++++++++++++++++++-----------
- 1 file changed, 62 insertions(+), 25 deletions(-)
+ drivers/regulator/mp886x.c | 42 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
-index 59ddadace83f..8ba22c30f312 100644
---- a/arch/mips/loongson64/init.c
-+++ b/arch/mips/loongson64/init.c
-@@ -7,6 +7,8 @@
- #include <linux/irqchip.h>
- #include <linux/logic_pio.h>
- #include <linux/memblock.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
- #include <asm/bootinfo.h>
- #include <asm/traps.h>
- #include <asm/smp-ops.h>
-@@ -63,41 +65,76 @@ void __init prom_free_prom_memory(void)
- {
+diff --git a/drivers/regulator/mp886x.c b/drivers/regulator/mp886x.c
+index 3c9a6605b115..e3c7813bed4b 100644
+--- a/drivers/regulator/mp886x.c
++++ b/drivers/regulator/mp886x.c
+@@ -22,10 +22,14 @@
+ #define  MP886X_SLEW_MASK	(0x7 << MP886X_SLEW_SHIFT)
+ #define  MP886X_GO		(1 << 6)
+ #define  MP886X_EN		(1 << 7)
++#define MP8869_SYSCNTLREG2	0x02
+ 
+ struct mp886x_cfg_info {
+ 	const struct regulator_ops *rops;
+ 	const int slew_rates[8];
++	const int switch_freq[4];
++	const u8 fs_reg;
++	const u8 fs_shift;
+ };
+ 
+ struct mp886x_device_info {
+@@ -60,6 +64,24 @@ static int mp886x_set_ramp(struct regulator_dev *rdev, int ramp)
+ 				  MP886X_SLEW_MASK, reg << MP886X_SLEW_SHIFT);
  }
  
--static __init void reserve_pio_range(void)
-+static int __init add_legacy_isa_io(struct fwnode_handle *fwnode, resource_size_t hw_start,
-+				    resource_size_t size)
- {
-+	int ret = 0;
- 	struct logic_pio_hwaddr *range;
-+	unsigned long vaddr;
- 
- 	range = kzalloc(sizeof(*range), GFP_ATOMIC);
- 	if (!range)
--		return;
-+		return -ENOMEM;
- 
--	range->fwnode = &of_root->fwnode;
--	range->size = MMIO_LOWER_RESERVED;
--	range->hw_start = LOONGSON_PCIIO_BASE;
-+	range->fwnode = fwnode;
-+	range->size = size;
-+	range->hw_start = hw_start;
- 	range->flags = LOGIC_PIO_CPU_MMIO;
- 
--	if (logic_pio_register_range(range)) {
--		pr_err("Failed to reserve PIO range for legacy ISA\n");
--		goto free_range;
-+	ret = logic_pio_register_range(range);
-+	if (ret) {
-+		kfree(range);
-+		return ret;
++static void mp886x_set_switch_freq(struct mp886x_device_info *di,
++				   struct regmap *regmap,
++				   u32 freq)
++{
++	const struct mp886x_cfg_info *ci = di->ci;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(ci->switch_freq); i++) {
++		if (freq == ci->switch_freq[i]) {
++			regmap_update_bits(regmap, ci->fs_reg,
++				  0x3 << ci->fs_shift, i << ci->fs_shift);
++			return;
++		}
 +	}
 +
-+	/* Legacy ISA must placed at the start of PCI_IOBASE */
-+	if (range->io_start != 0) {
-+		logic_pio_unregister_range(range);
-+		kfree(range);
-+		return -EINVAL;
- 	}
- 
--	if (WARN(range->io_start != 0,
--			"Reserved PIO range does not start from 0\n"))
--		goto unregister;
--
--	/*
--	 * i8259 would access I/O space, so mapping must be done here.
--	 * Please remove it when all drivers can be managed by logic_pio.
--	 */
--	ioremap_page_range(PCI_IOBASE, PCI_IOBASE + MMIO_LOWER_RESERVED,
--				LOONGSON_PCIIO_BASE,
--				pgprot_device(PAGE_KERNEL));
--
--	return;
--unregister:
--	logic_pio_unregister_range(range);
--free_range:
--	kfree(range);
-+	vaddr = PCI_IOBASE + range->io_start;
-+
-+	ioremap_page_range(vaddr, vaddr + size, hw_start, pgprot_device(PAGE_KERNEL));
-+
-+	return 0;
++	dev_err(di->dev, "invalid frequency %d\n", freq);
 +}
 +
-+static __init void reserve_pio_range(void)
-+{
-+	struct device_node *np;
-+
-+	for_each_node_by_name(np, "isa") {
-+		struct of_range range;
-+		struct of_range_parser parser;
-+
-+		pr_info("ISA Bridge: %pOF\n", np);
-+
-+		if (of_range_parser_init(&parser, np)) {
-+			pr_info("Failed to parse resources.\n");
-+			break;
-+		}
-+
-+		for_each_of_range(&parser, &range) {
-+			switch (range.flags & IORESOURCE_TYPE_BITS) {
-+			case IORESOURCE_IO:
-+				pr_info(" IO 0x%016llx..0x%016llx  ->  0x%016llx\n",
-+					range.cpu_addr,
-+					range.cpu_addr + range.size - 1,
-+					range.bus_addr);
-+				if (add_legacy_isa_io(&np->fwnode, range.cpu_addr, range.size))
-+					pr_warn("Failed to reserve legacy IO in Logic PIO\n");
-+				break;
-+			case IORESOURCE_MEM:
-+				pr_info(" MEM 0x%016llx..0x%016llx  ->  0x%016llx\n",
-+					range.cpu_addr,
-+					range.cpu_addr + range.size - 1,
-+					range.bus_addr);
-+				break;
-+			}
-+		}
-+	}
- }
+ static int mp886x_set_mode(struct regulator_dev *rdev, unsigned int mode)
+ {
+ 	switch (mode) {
+@@ -162,6 +184,14 @@ static const struct mp886x_cfg_info mp8869_ci = {
+ 		1250,
+ 		625,
+ 	},
++	.switch_freq = {
++		500000,
++		750000,
++		1000000,
++		1250000,
++	},
++	.fs_reg = MP8869_SYSCNTLREG2,
++	.fs_shift = 4,
+ };
  
- void __init arch_init_irq(void)
+ static int mp8867_set_voltage_sel(struct regulator_dev *rdev, unsigned int sel)
+@@ -233,6 +263,14 @@ static const struct mp886x_cfg_info mp8867_ci = {
+ 		1000,
+ 		500,
+ 	},
++	.switch_freq = {
++		500000,
++		750000,
++		1000000,
++		1500000,
++	},
++	.fs_reg = MP886X_SYSCNTLREG1,
++	.fs_shift = 1,
+ };
+ 
+ static int mp886x_regulator_register(struct mp886x_device_info *di,
+@@ -274,6 +312,7 @@ static int mp886x_i2c_probe(struct i2c_client *client,
+ 	struct mp886x_device_info *di;
+ 	struct regulator_config config = { };
+ 	struct regmap *regmap;
++	u32 freq;
+ 	int ret;
+ 
+ 	di = devm_kzalloc(dev, sizeof(struct mp886x_device_info), GFP_KERNEL);
+@@ -311,6 +350,9 @@ static int mp886x_i2c_probe(struct i2c_client *client,
+ 	config.driver_data = di;
+ 	config.of_node = np;
+ 
++	if (!of_property_read_u32(np, "mps,switch-frequency", &freq))
++		mp886x_set_switch_freq(di, regmap, freq);
++
+ 	ret = mp886x_regulator_register(di, &config);
+ 	if (ret < 0)
+ 		dev_err(dev, "Failed to register regulator!\n");
 -- 
-2.28.0.rc1
+2.28.0.rc0
+
 
