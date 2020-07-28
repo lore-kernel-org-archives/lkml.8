@@ -2,82 +2,137 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74708C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3AE20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 535DB207CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:34:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="I58nrlo8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUj0kRjo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgG1DUI (ORCPT
+        id S1726981AbgG1De2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 23:20:08 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:5094 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726620AbgG1DUH (ORCPT
+        Mon, 27 Jul 2020 23:34:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbgG1De1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 23:20:07 -0400
-X-UUID: f8d60d4d80cc4b638e1ddc5c08e7b297-20200728
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=GjxkIM1k042UVhE+KHYwiPMh+DeoglMOkaNl5efUmuI=;
-        b=I58nrlo8AS3MmTwFC6QbCDOnllml4oeXTJQnyTnqCIop886oT9/V6PTwkiKWAlwLYNmXu2lPE2W8il8czR6el7LcNpw2hII+sInxP2Sk0E6gwlw6t4CI+5+1vpXNAORUuWPv5KKqd3ypHzV8Nc2MSM2356jkg7a7M7X26xlF91Q=;
-X-UUID: f8d60d4d80cc4b638e1ddc5c08e7b297-20200728
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <frankie.chang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1122908193; Tue, 28 Jul 2020 11:20:06 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 28 Jul 2020 11:20:03 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 28 Jul 2020 11:20:00 +0800
-From:   Frankie Chang <Frankie.Chang@mediatek.com>
-To:     Todd Kjos <tkjos@google.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Jian-Min Liu <Jian-Min.Liu@mediatek.com>,
-        Frankie Chang <Frankie.Chang@mediatek.com>
-Subject: [PATCH v6] binder: transaction latency tracking for user build
-Date:   Tue, 28 Jul 2020 11:19:58 +0800
-Message-ID: <1595906401-11985-1-git-send-email-Frankie.Chang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1595252430.5899.6.camel@mtkswgap22>
-References: <1595252430.5899.6.camel@mtkswgap22>
+        Mon, 27 Jul 2020 23:34:27 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86651C061794;
+        Mon, 27 Jul 2020 20:34:27 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id u185so10190021pfu.1;
+        Mon, 27 Jul 2020 20:34:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=i6IDKVv/shVEq6irgZZFcLvF1FRkf6GgTDbDcMbNEAs=;
+        b=mUj0kRjoi+GkfsEEulsR8I1ODkKxm2yMW1q4DFRYoT2WuM/K1HJF18QaoGvF51V/BY
+         vM83LGIhB6ZjJqLPPHT9uFlSBP3KReVY8HB79V4M8Wu/vF+xgORhq7DMZEQQ++NH0ZAV
+         mFK4Xn6j0PeyM+RyBFjURcrBjsahRZ/ZJI3c3pzHIdF5ztbBCzR8pUV3rViN1Dm9oFQ1
+         RZGL/vy0pzgwTBdTrrp2WpxcIcp2doMnFvbFH+fq2Yofew4xjI0Bk+jVA47kOwv5RZ2q
+         eng4HHv3cWyaJuK54Ux9nmmi9vtCNW+EBWiEzxhDxn7JpTKe7JiIdHXfBIS4yOBwJGA7
+         bmTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=i6IDKVv/shVEq6irgZZFcLvF1FRkf6GgTDbDcMbNEAs=;
+        b=kEr9LgKk7jVvcCxCq0fyM9uVjXhbNNr/zVFLrk9UOkgGW2xFutJCuZvsnYk+C0IMkN
+         NncPWNmtDnReCmbmvqNaYkgtyVOXMO+9Kh/3oST7Jvc8Ap27uQ2dn0uwzhIHIezSgyt7
+         J7a91aMrSrZWyJF24a96GJ74qptHR6i84oKaankDkjzzDHrDs2LzP554IMzwy6sZIM3K
+         CYVJJourdQy9E7T+yerYacMsZYCSbuoH49phJAOArV8GAtcUolSqDxfMA9qlzovdflHD
+         x7nSVNLlVTEmQzdqvfUedL9pdGVbLSZ6dL9nSZ5w7EH+ZftawF7HHAGaOOXNNEVgvk0g
+         2tEw==
+X-Gm-Message-State: AOAM530Y3U8pY9PfGFmDbI10LwHWanqS4KGZWY0r29EgDTLR/3OeXn7b
+        IofbuUTsKb0XrsZ5LWZHr1IKyPLB
+X-Google-Smtp-Source: ABdhPJxXK0fAvVm2vGx0kybaDVzbf7EyPsM4mvSci9SPK3buL1yg9sAfhTTS/zJLffLE9MCTeN62IQ==
+X-Received: by 2002:a62:fb0e:: with SMTP id x14mr8626171pfm.34.1595907266776;
+        Mon, 27 Jul 2020 20:34:26 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id r4sm998707pji.37.2020.07.27.20.34.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 20:34:26 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org
+Subject: [PATCH 02/24] alpha: use asm-generic/mmu_context.h for no-op implementations
+Date:   Tue, 28 Jul 2020 13:33:43 +1000
+Message-Id: <20200728033405.78469-3-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200728033405.78469-1-npiggin@gmail.com>
+References: <20200728033405.78469-1-npiggin@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: E6DE5ABF50AF220296EFE4677D610D98FF0928400BA42DD430BEBA16C5A5101E2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpDaGFuZ2UgZnJvbSB2NjoNCiAgLSBjaGFuZ2UgQ09ORklHX0JJTkRFUl9UUkFOU0FDVElPTl9M
-QVRFTkNZX1RSQUNLSU5HIHR5cGUgZnJvbSBib29sIHRvIHRyaXN0YXRlDQogIC0gYWRkIGNvbW1l
-bnRzIHRvIEB0aW1lc3RhbXAgYW5kIEB0diB1bmRlciBzdHJ1Y3QgYmluZGVyX3RyYW5zYWN0aW9u
-DQogIC0gbWFrZSBiaW5kZXJfdHhuX2xhdGVuY3kgdGhyZXNob2xkIGNvbmZpZ3VyYWJsZQ0KICAt
-IGVuaGFuY2UgbG9jayBwcm90ZWN0aW9uDQoNCkNoYW5nZSBmcm9tIHY1Og0KICAtIGNoYW5nZSBj
-b25maWcgbmFtZSB0byB0aGUgcHJvcGVyIG9uZSwgQ09ORklHX0JJTkRFUl9UUkFOU0FDVElPTl9M
-QVRFTkNZX1RSQUNLSU5HLg0KICAtIGNoYW5nZSB0cmFjZXBvaW50IG5hbWUgdG8gbW9yZSBkZXNj
-cmlwdGl2ZSBvbmUsIHRyYWNlX2JpbmRlcl90eG5fbGF0ZW5jeV8oYWxsb2N8aW5mb3xmcmVlKQ0K
-ICAtIGVuaGFuY2Ugc29tZSBsb2NrIHByb3RlY3Rpb24uDQoNCkNoYW5nZSBmcm9tIHY0Og0KICAt
-IHNwbGl0IHVwIGludG8gcGF0Y2ggc2VyaWVzLg0KDQpDaGFuZ2UgZnJvbSB2MzoNCiAgLSB1c2Ug
-dHJhY2Vwb2ludHMgZm9yIGJpbmRlcl91cGRhdGVfaW5mbyBhbmQgcHJpbnRfYmluZGVyX3RyYW5z
-YWN0aW9uX2V4dCwNCiAgICBpbnN0ZWFkIG9mIGN1c3RvbSByZWdpc3RyYXRpb24gZnVuY3Rpb25z
-Lg0KDQpDaGFuZ2UgZnJvbSB2MjoNCiAgLSBjcmVhdGUgdHJhbnNhY3Rpb24gbGF0ZW5jeSBtb2R1
-bGUgdG8gbW9uaXRvciBzbG93IHRyYW5zYWN0aW9uLg0KDQpDaGFuZ2UgZnJvbSB2MToNCiAgLSBm
-aXJzdCBwYXRjaHNldC4NCg==
+Cc: Richard Henderson <rth@twiddle.net>
+Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: linux-alpha@vger.kernel.org
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
+ arch/alpha/include/asm/mmu_context.h | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
+
+diff --git a/arch/alpha/include/asm/mmu_context.h b/arch/alpha/include/asm/mmu_context.h
+index 6d7d9bc1b4b8..4eea7c616992 100644
+--- a/arch/alpha/include/asm/mmu_context.h
++++ b/arch/alpha/include/asm/mmu_context.h
+@@ -214,8 +214,6 @@ ev4_activate_mm(struct mm_struct *prev_mm, struct mm_struct *next_mm)
+ 	tbiap();
+ }
+ 
+-#define deactivate_mm(tsk,mm)	do { } while (0)
+-
+ #ifdef CONFIG_ALPHA_GENERIC
+ # define switch_mm(a,b,c)	alpha_mv.mv_switch_mm((a),(b),(c))
+ # define activate_mm(x,y)	alpha_mv.mv_activate_mm((x),(y))
+@@ -229,6 +227,7 @@ ev4_activate_mm(struct mm_struct *prev_mm, struct mm_struct *next_mm)
+ # endif
+ #endif
+ 
++#define init_new_context init_new_context
+ static inline int
+ init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+ {
+@@ -242,12 +241,7 @@ init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+ 	return 0;
+ }
+ 
+-extern inline void
+-destroy_context(struct mm_struct *mm)
+-{
+-	/* Nothing to do.  */
+-}
+-
++#define enter_lazy_tlb enter_lazy_tlb
+ static inline void
+ enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+ {
+@@ -255,6 +249,8 @@ enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+ 	  = ((unsigned long)mm->pgd - IDENT_ADDR) >> PAGE_SHIFT;
+ }
+ 
++#include <asm-generic/mmu_context.h>
++
+ #ifdef __MMU_EXTERN_INLINE
+ #undef __EXTERN_INLINE
+ #undef __MMU_EXTERN_INLINE
+-- 
+2.23.0
 
