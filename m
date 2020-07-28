@@ -2,131 +2,230 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FE6C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4794A20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FEB320775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQpw3Dg2"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="Jtgwn639"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbgG1Kaw (ORCPT
+        id S1728665AbgG1KcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 06:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55256 "EHLO
+        Tue, 28 Jul 2020 06:32:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728547AbgG1Kav (ORCPT
+        with ESMTP id S1728547AbgG1KcG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 06:30:51 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCF5DC061794;
-        Tue, 28 Jul 2020 03:30:50 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q7so20565126ljm.1;
-        Tue, 28 Jul 2020 03:30:50 -0700 (PDT)
+        Tue, 28 Jul 2020 06:32:06 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A82BC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:32:06 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f18so17671617wml.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:32:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=e64gRt1McL8oFj3/qgie+MEUtDHl7yc27Ox+TPY2v1w=;
-        b=UQpw3Dg2VBKkCK7p31udbkD4bwRyUahlHGrHBTN3d8xe290GQuPr9vqvRcVUGcjjmX
-         ZhKQSf9sS01aMoQAUlH/DjtuNWlxsMzvViO0rHeWcnGNNHLwtg1ZieX6MNEnIu0tfxAj
-         vN01FJpHJN8HorVG7AgtlLMq2LfblspGUQ0Tkw3nUcMHTDAISy1vOBctLeN11ckAqDSF
-         vdihpYtv0z2ZnXqlSXe/VtiADzx46//7OEj825OnBCYxbGy4PdEHIsMSWy2koGwsSYee
-         EWqvDkbkFUDSEuqyx2QOlUnE4mzqtWHBn+vyrMp6EOUyli5easKTAk2tyEAtEIjiumHQ
-         mdGA==
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=klH9XyrVq3uSlEXE3zAfesJXPnrCV0J6mB3bxXXeLHI=;
+        b=Jtgwn639L7rCcHeF8Su+nhnl0wfh/jljZ8QPs8S+BQVQGFRp/n90hrkBTzk5eteqae
+         /5M61JjXkFkxNAWZS9PKf55QSCBl2rlavEN7xHeSOywsXapHDLfbNofwV2LXh+rNQHLl
+         WE4mtf9rrjnf/sJYX3KOujasNbmo1wIK90X8LnGiHr8J9Whd0N8ZFWi+WNC90s88OIED
+         11L33ZyZrNWsys+OeK6GF5TRHAd3ZVrgX6kGbzTrV4TpjMqOOCUpuIkywspjHeBxYjro
+         lXpXwom60ETpdTSGfc80jbou+ftATvrdrHdatj4egO4RV4bGAwL/6Zds604o41XmneDv
+         K1oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=e64gRt1McL8oFj3/qgie+MEUtDHl7yc27Ox+TPY2v1w=;
-        b=EGiwCXr+kTaJgW5lbcF7OSWDxegQXDommYTzv53P4SHjn5Yuqsu80YCZsPqr5tIWAq
-         3p+8Jurz4mf1jBURmUj7fhjfCrwpUqIZP/65hhrnqswOZpUFV8klyMzYc9hBiQPfTuHK
-         sCwnMb+wuvEnveBroW7B50xzhAYf39tAmIFrwFVGCf7keMqzlltOEQUBpADdxF+nUOPd
-         u/e86H20XumXLI6SysBwkZvPszWoiHyKTrUyPzvFDCDdrE/73kSaaeaV8Wq3GKMWTwJ8
-         uwluxHicTPTfBD1JI5N0rN44P/aQSdy1xb/2xtiY3rfbB8qKelOwCor2iafpgd/OcgLH
-         /pEA==
-X-Gm-Message-State: AOAM530L2f4OnU4lcgcoe99zSN1KG4QRI6imah9ifBb2nnwq5bjiDsPa
-        L5vRAA5zDWFObTyWGYpqs6u8Q/TN
-X-Google-Smtp-Source: ABdhPJz46tCr6CW+PTJsXEbxKg9+0sMlL264bMhMsnNpyA2iOhGHds2jS25HqrU7xyrwFKqVUm8+WA==
-X-Received: by 2002:a2e:b4bb:: with SMTP id q27mr8024317ljm.277.1595932249003;
-        Tue, 28 Jul 2020 03:30:49 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
-        by smtp.googlemail.com with ESMTPSA id u9sm2884825ljk.44.2020.07.28.03.30.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 03:30:48 -0700 (PDT)
-Subject: Re: [RFC PATCH v5 13/14] media: tegra-video: Add CSI MIPI pads
- calibration
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
- <1595883452-17343-14-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c3d40261-9d77-3634-3e04-f20efad9d3d8@gmail.com>
-Date:   Tue, 28 Jul 2020 13:30:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=klH9XyrVq3uSlEXE3zAfesJXPnrCV0J6mB3bxXXeLHI=;
+        b=Ck/TYO+t3DxSjhWegDifF3STyNAqQ0drrC0TDWGAjF6yQL94nxoqLrDJdyIBBhX5Pm
+         9hbEPVtsw6TMZ8xIp9NgmYWPu7iAHifKn4YXDAH4t9HkiT7YTql6bKeQfyGTQQNZym+U
+         MxPshZq8AjF1uUwl/92W204hrYI1Ivoq3w5NtUEEezctgUX8kVoDu6tyHsE/FWVPyB41
+         I5/QcTJhyHkmQaJM4bRULJLRW8Xw9RK9ZGYH5Go1hRr+y09MMb8Y1+urhMdAnSf2NPWz
+         oeWDMBVqSbOj6GtYi0Q3y4uSqFgeM+WfCjBz3YWAGvTo/mSKSbOg7wGroIMMOS2Ptr/c
+         +ddQ==
+X-Gm-Message-State: AOAM533ptYGZmddiJ1GbsPlepyJBL2L5Vwb3QVcDrUnuTdQ130OSKY+D
+        n1N9RThigVCHgcmmAZhI1uzt7sdK6Q+sq4t4i7V+1w==
+X-Google-Smtp-Source: ABdhPJz8Mn129klT2Z8C5717SOIojFV7FscbpxEGGVx1FGUmDzUkvja4xu2G7NB9uooMLEC7pKyMk/eDXyTyxpqWxew=
+X-Received: by 2002:a1c:e382:: with SMTP id a124mr3176329wmh.96.1595932324875;
+ Tue, 28 Jul 2020 03:32:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1595883452-17343-14-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+ <840cb5324364e431b15d4105c85cebf8d12257f0.1594230107.git-series.maxime@cerno.tech>
+In-Reply-To: <840cb5324364e431b15d4105c85cebf8d12257f0.1594230107.git-series.maxime@cerno.tech>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Tue, 28 Jul 2020 11:31:49 +0100
+Message-ID: <CAPY8ntCSEH58GDzT4=N_eExpJCfsdaEpNFZ0aq=xessBhFfiZg@mail.gmail.com>
+Subject: Re: [PATCH v4 22/78] drm/vc4: crtc: Move HVS init and close to a function
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-27.07.2020 23:57, Sowjanya Komatineni пишет:
-> +	/*
-> +	 * TRM has incorrectly documented to wait for done status from
-> +	 * calibration logic after CSI interface power on.
-> +	 * As per the design, calibration results are latched and applied
-> +	 * to the pads only when the link is in LP11 state which will happen
-> +	 * during the sensor stream-on.
-> +	 * CSI subdev stream-on triggers start of MIPI pads calibration.
-> +	 * Wait for calibration to finish here after sensor subdev stream-on
-> +	 * and in case of sensor stream-on failure, cancel the calibration.
-> +	 */
->  	subdev = on ? src_subdev : csi_subdev;
->  	ret = v4l2_subdev_call(subdev, video, s_stream, on);
-> -	if (ret < 0 && ret != -ENOIOCTLCMD)
-> +	if (ret < 0 && ret != -ENOIOCTLCMD) {
+Hi Maxime
 
-I assume -ENOIOCTLCMD means that camera wasn't turned ON, so why
--ENOIOCTLCMD is special?
+On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> In order to make further refactoring easier, let's move the HVS channel
+> setup / teardown to their own function.
+>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
-> +		if (on && csi_chan->mipi)
-> +			tegra_mipi_cancel_calibration(csi_chan->mipi);
->  		return ret;
-> +	}
-> +
-> +	if (on && csi_chan->mipi) {
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-Does finish_calibration() really need to be called for ret=-ENOIOCTLCMD?
-
-Shouldn't it be cancel_calibration( for the -ENOIOCTLCMD?
-
-> +		ret = tegra_mipi_finish_calibration(csi_chan->mipi);
-> +		if (ret < 0)
-> +			dev_err(csi_chan->csi->dev,
-> +				"MIPI calibration failed: %d\n", ret);
-
-Doesn't v4l2_subdev_call(OFF) need to be invoked here on error?
-
-> +		return ret;
-> +	}
->  
->  	return 0;
+> ---
+>  drivers/gpu/drm/vc4/vc4_hvs.c | 104 +++++++++++++++++++----------------
+>  1 file changed, 58 insertions(+), 46 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
+> index 50f9a9674a7e..78bb1c0b0b76 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hvs.c
+> +++ b/drivers/gpu/drm/vc4/vc4_hvs.c
+> @@ -196,6 +196,62 @@ static void vc4_hvs_update_gamma_lut(struct drm_crtc *crtc)
+>         vc4_hvs_lut_load(crtc);
 >  }
-
+>
+> +static int vc4_hvs_init_channel(struct vc4_dev *vc4, struct drm_crtc *crtc,
+> +                               struct drm_display_mode *mode, bool oneshot)
+> +{
+> +       struct vc4_crtc_state *vc4_crtc_state = to_vc4_crtc_state(crtc->state);
+> +       unsigned int chan = vc4_crtc_state->assigned_channel;
+> +       u32 dispctrl;
+> +
+> +       /* Turn on the scaler, which will wait for vstart to start
+> +        * compositing.
+> +        * When feeding the transposer, we should operate in oneshot
+> +        * mode.
+> +        */
+> +       dispctrl = SCALER_DISPCTRLX_ENABLE;
+> +
+> +       if (!vc4->hvs->hvs5)
+> +               dispctrl |= VC4_SET_FIELD(mode->hdisplay,
+> +                                         SCALER_DISPCTRLX_WIDTH) |
+> +                           VC4_SET_FIELD(mode->vdisplay,
+> +                                         SCALER_DISPCTRLX_HEIGHT) |
+> +                           (oneshot ? SCALER_DISPCTRLX_ONESHOT : 0);
+> +       else
+> +               dispctrl |= VC4_SET_FIELD(mode->hdisplay,
+> +                                         SCALER5_DISPCTRLX_WIDTH) |
+> +                           VC4_SET_FIELD(mode->vdisplay,
+> +                                         SCALER5_DISPCTRLX_HEIGHT) |
+> +                           (oneshot ? SCALER5_DISPCTRLX_ONESHOT : 0);
+> +
+> +       HVS_WRITE(SCALER_DISPCTRLX(chan), dispctrl);
+> +
+> +       return 0;
+> +}
+> +
+> +static void vc4_hvs_stop_channel(struct drm_device *dev, unsigned int chan)
+> +{
+> +       struct vc4_dev *vc4 = to_vc4_dev(dev);
+> +
+> +       if (HVS_READ(SCALER_DISPCTRLX(chan)) & SCALER_DISPCTRLX_ENABLE)
+> +               return;
+> +
+> +       HVS_WRITE(SCALER_DISPCTRLX(chan),
+> +                 HVS_READ(SCALER_DISPCTRLX(chan)) | SCALER_DISPCTRLX_RESET);
+> +       HVS_WRITE(SCALER_DISPCTRLX(chan),
+> +                 HVS_READ(SCALER_DISPCTRLX(chan)) & ~SCALER_DISPCTRLX_ENABLE);
+> +
+> +       /* Once we leave, the scaler should be disabled and its fifo empty. */
+> +       WARN_ON_ONCE(HVS_READ(SCALER_DISPCTRLX(chan)) & SCALER_DISPCTRLX_RESET);
+> +
+> +       WARN_ON_ONCE(VC4_GET_FIELD(HVS_READ(SCALER_DISPSTATX(chan)),
+> +                                  SCALER_DISPSTATX_MODE) !=
+> +                    SCALER_DISPSTATX_MODE_DISABLED);
+> +
+> +       WARN_ON_ONCE((HVS_READ(SCALER_DISPSTATX(chan)) &
+> +                     (SCALER_DISPSTATX_FULL | SCALER_DISPSTATX_EMPTY)) !=
+> +                    SCALER_DISPSTATX_EMPTY);
+> +}
+> +
+>  int vc4_hvs_atomic_check(struct drm_crtc *crtc,
+>                          struct drm_crtc_state *state)
+>  {
+> @@ -268,63 +324,19 @@ void vc4_hvs_atomic_enable(struct drm_crtc *crtc,
+>         struct vc4_crtc_state *vc4_state = to_vc4_crtc_state(crtc->state);
+>         struct drm_display_mode *mode = &crtc->state->adjusted_mode;
+>         bool oneshot = vc4_state->feed_txp;
+> -       u32 dispctrl;
+>
+>         vc4_hvs_update_dlist(crtc);
+> -
+> -       /* Turn on the scaler, which will wait for vstart to start
+> -        * compositing.
+> -        * When feeding the transposer, we should operate in oneshot
+> -        * mode.
+> -        */
+> -       dispctrl = SCALER_DISPCTRLX_ENABLE;
+> -
+> -       if (!vc4->hvs->hvs5)
+> -               dispctrl |= VC4_SET_FIELD(mode->hdisplay,
+> -                                         SCALER_DISPCTRLX_WIDTH) |
+> -                           VC4_SET_FIELD(mode->vdisplay,
+> -                                         SCALER_DISPCTRLX_HEIGHT) |
+> -                           (oneshot ? SCALER_DISPCTRLX_ONESHOT : 0);
+> -       else
+> -               dispctrl |= VC4_SET_FIELD(mode->hdisplay,
+> -                                         SCALER5_DISPCTRLX_WIDTH) |
+> -                           VC4_SET_FIELD(mode->vdisplay,
+> -                                         SCALER5_DISPCTRLX_HEIGHT) |
+> -                           (oneshot ? SCALER5_DISPCTRLX_ONESHOT : 0);
+> -
+> -       HVS_WRITE(SCALER_DISPCTRLX(vc4_state->assigned_channel), dispctrl);
+> +       vc4_hvs_init_channel(vc4, crtc, mode, oneshot);
+>  }
+>
+>  void vc4_hvs_atomic_disable(struct drm_crtc *crtc,
+>                             struct drm_crtc_state *old_state)
+>  {
+>         struct drm_device *dev = crtc->dev;
+> -       struct vc4_dev *vc4 = to_vc4_dev(dev);
+>         struct vc4_crtc_state *vc4_state = to_vc4_crtc_state(old_state);
+>         unsigned int chan = vc4_state->assigned_channel;
+>
+> -       if (HVS_READ(SCALER_DISPCTRLX(chan)) &
+> -           SCALER_DISPCTRLX_ENABLE) {
+> -               HVS_WRITE(SCALER_DISPCTRLX(chan),
+> -                         SCALER_DISPCTRLX_RESET);
+> -
+> -               /* While the docs say that reset is self-clearing, it
+> -                * seems it doesn't actually.
+> -                */
+> -               HVS_WRITE(SCALER_DISPCTRLX(chan), 0);
+> -       }
+> -
+> -       /* Once we leave, the scaler should be disabled and its fifo empty. */
+> -
+> -       WARN_ON_ONCE(HVS_READ(SCALER_DISPCTRLX(chan)) & SCALER_DISPCTRLX_RESET);
+> -
+> -       WARN_ON_ONCE(VC4_GET_FIELD(HVS_READ(SCALER_DISPSTATX(chan)),
+> -                                  SCALER_DISPSTATX_MODE) !=
+> -                    SCALER_DISPSTATX_MODE_DISABLED);
+> -
+> -       WARN_ON_ONCE((HVS_READ(SCALER_DISPSTATX(chan)) &
+> -                     (SCALER_DISPSTATX_FULL | SCALER_DISPSTATX_EMPTY)) !=
+> -                    SCALER_DISPSTATX_EMPTY);
+> +       vc4_hvs_stop_channel(dev, chan);
+>  }
+>
+>  void vc4_hvs_atomic_flush(struct drm_crtc *crtc,
+> --
+> git-series 0.9.1
