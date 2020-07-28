@@ -2,146 +2,118 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0B0C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C68CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58D3E20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A52CE20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UROp/V/b"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KXX8Mkn7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgG1ULu (ORCPT
+        id S1728495AbgG1UM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:11:50 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:13231 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728245AbgG1ULt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 16:11:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595967109; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=z/j1eXS9EsRM+o+Wag/W7GMKYxap+SCTtlHOOgi+aoQ=; b=UROp/V/bfqEWo+9ihaizCTrewHPImEjEiuCcOTfPGRlogDb82r8IqS0NLA7zH+HErq/eYbP4
- nXsXmGHuV596b98eiE/XZj/Xu/0sIYqNIDFTp1zb4dJD1BtYeQy76T6qGLSxEAT6JkyLX6X4
- xc7AthR/VTcm0Xf5cHX2JE3m8S0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n20.prod.us-west-2.postgun.com with SMTP id
- 5f208677aa44a6db05bd5e35 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 20:11:35
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9DA97C43391; Tue, 28 Jul 2020 20:11:35 +0000 (UTC)
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B8721C433C6;
-        Tue, 28 Jul 2020 20:11:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B8721C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Tue, 28 Jul 2020 14:11:33 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
- power-domains for venus
-Message-ID: <20200728201133.GB32586@codeaurora.org>
-References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
- <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
- <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
- <654e0fcb-ae4d-c151-fa8a-4d029fc823fb@codeaurora.org>
- <20200724162825.GH9185@codeaurora.org>
- <159589714088.1360974.13205114501389777927@swboyd.mtv.corp.google.com>
- <20200728165212.GA32586@codeaurora.org>
- <159596590401.1360974.283437162250734878@swboyd.mtv.corp.google.com>
+        Tue, 28 Jul 2020 16:12:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728245AbgG1UM2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 16:12:28 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89FFDC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:12:28 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k4so10551512pld.12
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lGODvQAyFgiIakAvcuOrB55CdYdcOaQbABBPHmSlK8A=;
+        b=KXX8Mkn7MNftP6mJ42ju7ovK7oMAAX0wGRB0ry7w+mD/hsCbKEyPUIfLQgdll+U1Hq
+         4xQS018nhgkGgLPtgROQlYsblo5NoExjDQhzJknpZmFPr1lJDow/rdW50/9T5e1TGb0u
+         4gJoD0vzQnv64fwnh0m/ejgnfnf0ndm6GA1nQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lGODvQAyFgiIakAvcuOrB55CdYdcOaQbABBPHmSlK8A=;
+        b=uOW5LwpL7op0WYa3paKlDWSmyf+w76sW/Vf5vKoa3tbz5PkX2so8Lpm2KN++a89aZW
+         Qa/VUjnrii46G/Kb5M6r5pN5xnjcisTN76Dqm133MoeTb/g+bEhaQUDSg1YbeEASTsJE
+         Am6QLe0uVGuhv7UskaPhRMOzwvvuOPrm7FSbRYR3pd3VXPIA6vse5c8WAItK4hAe/ssN
+         3NELTyXBYs1Jj7HCCk5JGhYRHVMMqROLD1fpmC3Skm8G6WX6mqotdunisGiqSZZhKWur
+         UyO7AOBK4bbNvcBh25DxfVzLvG9vwiA8Z5Ik4gmbCm0W38eG1K1FkwWER69l39FFGmIO
+         +vAQ==
+X-Gm-Message-State: AOAM532m8VlcSmH8CjvZ5Of8nNeMjKCyg55RNRTj45qyEEvdt2w0TPW7
+        BYuf5xMXXtby6xon2leGneu0lQ==
+X-Google-Smtp-Source: ABdhPJyFIgRmVJfBhFlzPKJj5terbzmemlEZoh3fyIw7tCG0VwJkPldmQbeJoogxX3pMzlVW5vctfw==
+X-Received: by 2002:a17:90a:2207:: with SMTP id c7mr6611771pje.206.1595967148091;
+        Tue, 28 Jul 2020 13:12:28 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q17sm22220199pfk.0.2020.07.28.13.12.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 13:12:27 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 13:12:26 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mimi Zohar <zohar@kernel.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 15/19] IMA: Add support for file reads without contents
+Message-ID: <202007281311.F2F5A7ED5@keescook>
+References: <20200724213640.389191-1-keescook@chromium.org>
+ <20200724213640.389191-16-keescook@chromium.org>
+ <1595856214.4841.86.camel@kernel.org>
+ <202007281244.2F2681AE9@keescook>
+ <20200728195640.GA342741@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <159596590401.1360974.283437162250734878@swboyd.mtv.corp.google.com>
+In-Reply-To: <20200728195640.GA342741@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28 2020 at 13:51 -0600, Stephen Boyd wrote:
->Quoting Lina Iyer (2020-07-28 09:52:12)
->> On Mon, Jul 27 2020 at 18:45 -0600, Stephen Boyd wrote:
->> >Quoting Lina Iyer (2020-07-24 09:28:25)
->> >> On Fri, Jul 24 2020 at 03:03 -0600, Rajendra Nayak wrote:
->> >> >Hi Maulik/Lina,
->> >> >
->> >> >On 7/23/2020 11:36 PM, Stanimir Varbanov wrote:
->> >> >>Hi Rajendra,
->> >> >>
->> >> >>After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
->> >> >>below messages on db845:
->> >> >>
->> >> >>qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
->> >> >>current OPP for freq 533000097 (-34)
->> >> >>
->> >> >>^^^ This one is new.
->> >> >>
->> >> >>qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
->> >> >>
->> >> >>^^^ and this message is annoying, can we make it pr_debug in rpmh?
->> >> >
->> >> How annoyingly often do you see this message?
->> >> Usually, this is an indication of bad system state either on remote
->> >> processors in the SoC or in Linux itself. On a smooth sailing build you
->> >> should not see this 'warning'.
->> >>
->> >> >Would you be fine with moving this message to a pr_debug? Its currently
->> >> >a pr_info_ratelimited()
->> >> I would rather not, moving this out of sight will mask a lot serious
->> >> issues that otherwise bring attention to the developers.
->> >>
->> >
->> >I removed this warning message in my patch posted to the list[1]. If
->> >it's a serious problem then I suppose a timeout is more appropriate, on
->> >the order of several seconds or so and then a pr_warn() and bail out of
->> >the async call with an error.
->> >
->> The warning used to capture issues that happen within a second and it
->> helps capture system related issues. Timing out after many seconds
->> overlooks the system issues that generally tend to resolve itself, but
->> nevertheless need to be investigated.
->>
->
->Is it correct to read "system related issues" as performance problems
->where the thread is spinning forever trying to send a message and it
->can't? So the problem is mostly that it's an unbounded amount of time
->before the message is sent to rpmh and this printk helps identify those
->situations where that is happening?
->
-Yes, but mostly a short period of time like when other processors are in
-the middle of a restart or resource states changes have taken unusual
-amounts of time. The system will generally recover from this without
-crashing in this case. User action is investigation of the situation
-leading to these messages.
+On Tue, Jul 28, 2020 at 09:56:40PM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Jul 28, 2020 at 12:44:50PM -0700, Kees Cook wrote:
+> > On Mon, Jul 27, 2020 at 09:23:34AM -0400, Mimi Zohar wrote:
+> > > On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
+> > > > From: Scott Branden <scott.branden@broadcom.com>
+> > > > 
+> > > > When the kernel_read_file LSM hook is called with contents=false, IMA
+> > > > can appraise the file directly, without requiring a filled buffer. When
+> > > > such a buffer is available, though, IMA can continue to use it instead
+> > > > of forcing a double read here.
+> > > > 
+> > > > Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> > > > Link: https://lore.kernel.org/lkml/20200706232309.12010-10-scott.branden@broadcom.com/
+> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > 
+> > > After adjusting the comment below.
+> > > 
+> > > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> > 
+> > Sure!
+> > 
+> > Greg, shall I send a v4 with added Reviews and the comment change or is
+> > that minor enough that you're able to do it?
+> 
+> v4 is needed, as this series is a mess of reviewes and you will have to
+> redo at least one patch and drop some others, right?
 
->Otherwise as you say above it's a bad system state where the rpmh
->processor has gotten into a bad state like a crash? Can we recover from
->that? Or is the only recovery a reboot of the system? Does the rpmh
->processor reboot the system if it crashes?
-We cannot recover from such a state. The remote processor will reboot if
-it detects a failure at it's end. If the system entered a bad state, it
-is possible that RPMH requests start timing out in Linux and remote
-processor may not detect it. Hence, the timeout in rpmh_write() API. The
-advised course of action is a restart as there is no way to recover from
-this state.
+Well, I wasn't sure what your desire was, given the weirdness of taking
+some and reverting others. I will do a v4 based on driver-core-next.
 
---Lina
+Thanks!
 
-
+-- 
+Kees Cook
