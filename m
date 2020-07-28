@@ -2,210 +2,83 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BEEC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526B7C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09E34207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 266462065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:07:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Gs12OxdJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MX+dtKIr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731259AbgG1QGd (ORCPT
+        id S1731307AbgG1QHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:06:33 -0400
-Received: from mail-co1nam11on2069.outbound.protection.outlook.com ([40.107.220.69]:29249
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730821AbgG1QGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:06:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A1X7j1DHFm0PcaXCE+5f84DcAxEO1U+/H/K5zQdDLwj6p3ubKzMP3YRf5FuXcguWREL/QO0pETSm63ZwAn0qyQDhOFqXzZXQX4b9W0Ntq2ukoEPCqspVho9qIsRyEN1kTdiLSR+8Tqa7RcGznU7zidQu1RHT2zaG5ZrWTI9vd1EC/bogMqyuv+9HWJiexsgTIIIIdCfrR1EEZtXd6RYo4jJqplT6W8q2+99D27/WRkyn/Jj3kb8OAVqrDcTd9VZ0OiCFZ6zRamJ/LRldxc8sFhRlggJbU68VEjbqHdXJs15+g8xuYixQSsOacFNExOzOxqbhl+2NRAxcPRaAffDNFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c+Bq6dBJaEwdEvTToJIyqtBNqxHpOJm5uLebIh7lLYw=;
- b=FSVDVEjC359EaVtflMv07FFNhrdNcD7AnPllXtrpV5bdsByDlGntbE2y1F/yX3D9BtnszOJ5XBfynJlCNhBvN4KWxYjtW+aHpjY1jx4Fp52KSCcXlELY/WBP0Lgce6k6achAhk6OzoWnBgYHlu7sGMzqqMkaJU5jR9nRWJdcVgHNzenlPFVsHmlOOOyxqJnoJzH3gPvA+dEC+OiNXYihwPQnybfe7uY+zcXpz82yOxC3zX+DvVYfqsutiStHsReBIQ5uRSmQSoyJxDR3rTHO1qUwE3F3O9PJ7i9ZJS8NIo2w4E4GHosCi7pOuDduQXSyQBncD6rqfQhQeI5rEXpniQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com;
- dmarc=permerror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c+Bq6dBJaEwdEvTToJIyqtBNqxHpOJm5uLebIh7lLYw=;
- b=Gs12OxdJsm6rVa4odil7V3/i0z4W9cd5yojSiQyA8o4V1jr9z4/zTtEe28QemXO6/2Fpg9mI2SmB5mBog/iZhKLLJD7xt3PiY12AX+LtSa5DAkzsaMzmHkbGsElEDPUT1Ey+Gu8pURsF719dOMLPWaW+F9PPFgNp9JyLEJRfvr4=
-Received: from BN6PR13CA0014.namprd13.prod.outlook.com (2603:10b6:404:10a::24)
- by CY4PR12MB1318.namprd12.prod.outlook.com (2603:10b6:903:38::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Tue, 28 Jul
- 2020 16:06:29 +0000
-Received: from BN8NAM11FT012.eop-nam11.prod.protection.outlook.com
- (2603:10b6:404:10a:cafe::6a) by BN6PR13CA0014.outlook.office365.com
- (2603:10b6:404:10a::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9 via Frontend
- Transport; Tue, 28 Jul 2020 16:06:29 +0000
-X-MS-Exchange-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=permerror action=none header.from=amd.com;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-Received: from SATLEXMB02.amd.com (165.204.84.17) by
- BN8NAM11FT012.mail.protection.outlook.com (10.13.177.55) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.3216.10 via Frontend Transport; Tue, 28 Jul 2020 16:06:28 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB02.amd.com
- (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 28 Jul
- 2020 11:06:28 -0500
-Received: from SATLEXMB01.amd.com (10.181.40.142) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 28 Jul
- 2020 11:06:28 -0500
-Received: from vishnu-All-Series.amd.com (10.180.168.240) by
- SATLEXMB01.amd.com (10.181.40.142) with Microsoft SMTP Server id 15.1.1713.5
- via Frontend Transport; Tue, 28 Jul 2020 11:06:24 -0500
-From:   Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-CC:     <Alexander.Deucher@amd.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>,
-        Akshu Agrawal <akshu.agrawal@amd.com>,
-        "Kuninori Morimoto" <kuninori.morimoto.gx@renesas.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 1/5] ASoC: amd: Renaming snd-soc-card structure and fields
-Date:   Tue, 28 Jul 2020 21:32:51 +0530
-Message-ID: <20200728160255.31020-2-Vishnuvardhanrao.Ravulapati@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200728160255.31020-1-Vishnuvardhanrao.Ravulapati@amd.com>
-References: <20200728160255.31020-1-Vishnuvardhanrao.Ravulapati@amd.com>
+        Tue, 28 Jul 2020 12:07:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60317 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731272AbgG1QHA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:07:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595952419;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=z+gquV6V93SZjNhpxmQp1P7xpjOdqg2rKp5124tI0vU=;
+        b=MX+dtKIrzFtokLVKjGpdlnwUVcDHXJkkUrtw6Uw5z07PXTPqVRJJWnZbUu3hE4l+MG4FI2
+        w0gvZRLY8HTIP+m/Sy3IuqIqxVMXe+0iMs/JP36ekNWpeNfP4+TUQ5tdD7vuYC8WXwNs4V
+        WoPMDurhwY2dv+zAXP2lw1vz6zOXbDA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-214-wqHAHkFqOp6s6jbiuk_hkA-1; Tue, 28 Jul 2020 12:06:55 -0400
+X-MC-Unique: wqHAHkFqOp6s6jbiuk_hkA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4FACB801E6A;
+        Tue, 28 Jul 2020 16:06:53 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.181])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 18C4F1001B2C;
+        Tue, 28 Jul 2020 16:06:50 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 28 Jul 2020 18:06:52 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 18:06:49 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v1 1/4] [RFC] fs/trampfd: Implement the trampoline file
+ descriptor API
+Message-ID: <20200728160649.GB9972@redhat.com>
+References: <aefc85852ea518982e74b233e11e16d2e707bc32>
+ <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <20200728131050.24443-2-madvenka@linux.microsoft.com>
+ <20200728145013.GA9972@redhat.com>
+ <dc41589a-647a-ba59-5376-abbf5d07c6e7@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 921352b3-f828-4713-9f68-08d833102fd7
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1318:
-X-Microsoft-Antispam-PRVS: <CY4PR12MB13183912AB4FE895D3C14230E7730@CY4PR12MB1318.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1169;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hQyCVcV0gMP2xW/JKWDecm0b7E7QQ/XxZjzEUDpTZZKBdrzzCNLwYXpv1as85MaORyfB7stNTkYpxdjenUK+/q+3v+InjM0140ILcyEO/ous1zIOtr57P8enyK9ix7isiFAorN5Eo4L8IfINFg+kuifu7gRhYgJ2mX8hoyy7oE+dr1QY9C1hdJnlq3gUb9hjFGO/rB9ndFIG9SJdTEqCDLws+pdB7bV6gh+N3BpYeHMv9TDGtzPStcxtObTrH36Q7Z6NuVz4Gu3kziowNZAD6rLZxSV+2N4afvcGzL1dHOCRSBnRkI1Vmb+9Lej14uIdCK7YXxJUupUs4X6mT78x8BCOoq+yM0zOatAk8On9s0GuhQYVZEwPk94wpI7rRCvC5418DOx/vqedonfks7VEJ4ehtvb73fCRnKCmESGgLYw=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB02.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(136003)(39860400002)(346002)(46966005)(4326008)(426003)(86362001)(70206006)(26005)(70586007)(7696005)(8676002)(2906002)(186003)(109986005)(478600001)(8936002)(2616005)(82740400003)(81166007)(356005)(316002)(36756003)(47076004)(336012)(1076003)(5660300002)(83380400001)(6666004)(82310400002)(54906003)(266003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 16:06:28.7618
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 921352b3-f828-4713-9f68-08d833102fd7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB02.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT012.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1318
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dc41589a-647a-ba59-5376-abbf5d07c6e7@linux.microsoft.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As in future our machine driver supports multiple codecs
-So changing naming convention of snd_soc_card struct and its fields.
+On 07/28, Madhavan T. Venkataraman wrote:
+>
+> I guess since the symbol is not used by any modules, I don't need to
+> export it.
 
-Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
----
- sound/soc/amd/acp3x-rt5682-max9836.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+Yes,
 
-diff --git a/sound/soc/amd/acp3x-rt5682-max9836.c b/sound/soc/amd/acp3x-rt5682-max9836.c
-index 6009e444b858..8b5af064864f 100644
---- a/sound/soc/amd/acp3x-rt5682-max9836.c
-+++ b/sound/soc/amd/acp3x-rt5682-max9836.c
-@@ -290,7 +290,7 @@ static const struct snd_kcontrol_new acp3x_dmic_mux_control =
- 	SOC_DAPM_ENUM_EXT("DMIC Select Mux", acp3x_dmic_enum,
- 			  dmic_get, dmic_set);
- 
--static const struct snd_soc_dapm_widget acp3x_widgets[] = {
-+static const struct snd_soc_dapm_widget acp3x_5682_widgets[] = {
- 	SND_SOC_DAPM_HP("Headphone Jack", NULL),
- 	SND_SOC_DAPM_SPK("Spk", NULL),
- 	SND_SOC_DAPM_MIC("Headset Mic", NULL),
-@@ -298,7 +298,7 @@ static const struct snd_soc_dapm_widget acp3x_widgets[] = {
- 			 &acp3x_dmic_mux_control),
- };
- 
--static const struct snd_soc_dapm_route acp3x_audio_route[] = {
-+static const struct snd_soc_dapm_route acp3x_5682_audio_route[] = {
- 	{"Headphone Jack", NULL, "HPOL"},
- 	{"Headphone Jack", NULL, "HPOR"},
- 	{"IN1P", NULL, "Headset Mic"},
-@@ -307,23 +307,23 @@ static const struct snd_soc_dapm_route acp3x_audio_route[] = {
- 	{"Dmic Mux", "Rear Mic", "DMIC"},
- };
- 
--static const struct snd_kcontrol_new acp3x_mc_controls[] = {
-+static const struct snd_kcontrol_new acp3x_5682_mc_controls[] = {
- 	SOC_DAPM_PIN_SWITCH("Headphone Jack"),
- 	SOC_DAPM_PIN_SWITCH("Spk"),
- 	SOC_DAPM_PIN_SWITCH("Headset Mic"),
- };
- 
--static struct snd_soc_card acp3x_card = {
-+static struct snd_soc_card acp3x_5682 = {
- 	.name = "acp3xalc5682m98357",
- 	.owner = THIS_MODULE,
- 	.dai_link = acp3x_dai_5682_98357,
- 	.num_links = ARRAY_SIZE(acp3x_dai_5682_98357),
--	.dapm_widgets = acp3x_widgets,
--	.num_dapm_widgets = ARRAY_SIZE(acp3x_widgets),
--	.dapm_routes = acp3x_audio_route,
--	.num_dapm_routes = ARRAY_SIZE(acp3x_audio_route),
--	.controls = acp3x_mc_controls,
--	.num_controls = ARRAY_SIZE(acp3x_mc_controls),
-+	.dapm_widgets = acp3x_5682_widgets,
-+	.num_dapm_widgets = ARRAY_SIZE(acp3x_5682_widgets),
-+	.dapm_routes = acp3x_5682_audio_route,
-+	.num_dapm_routes = ARRAY_SIZE(acp3x_5682_audio_route),
-+	.controls = acp3x_5682_mc_controls,
-+	.num_controls = ARRAY_SIZE(acp3x_5682_mc_controls),
- };
- 
- static int acp3x_probe(struct platform_device *pdev)
-@@ -336,8 +336,8 @@ static int acp3x_probe(struct platform_device *pdev)
- 	if (!machine)
- 		return -ENOMEM;
- 
--	card = &acp3x_card;
--	acp3x_card.dev = &pdev->dev;
-+	card = &acp3x_5682;
-+	acp3x_5682.dev = &pdev->dev;
- 	platform_set_drvdata(pdev, card);
- 	snd_soc_card_set_drvdata(card, machine);
- 
-@@ -348,11 +348,11 @@ static int acp3x_probe(struct platform_device *pdev)
- 		return PTR_ERR(dmic_sel);
- 	}
- 
--	ret = devm_snd_soc_register_card(&pdev->dev, &acp3x_card);
-+	ret = devm_snd_soc_register_card(&pdev->dev, &acp3x_5682);
- 	if (ret) {
- 		dev_err(&pdev->dev,
- 				"devm_snd_soc_register_card(%s) failed: %d\n",
--				acp3x_card.name, ret);
-+				acp3x_5682.name, ret);
- 		return ret;
- 	}
- 	return 0;
--- 
-2.17.1
+Oleg.
 
