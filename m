@@ -2,149 +2,116 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953A2C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F1EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A230207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1096420663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:25:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731371AbgG1QYF (ORCPT
+        id S1731311AbgG1QZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:24:05 -0400
-Received: from mga03.intel.com ([134.134.136.65]:38462 "EHLO mga03.intel.com"
+        Tue, 28 Jul 2020 12:25:28 -0400
+Received: from mga18.intel.com ([134.134.136.126]:2871 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731358AbgG1QYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:24:04 -0400
-IronPort-SDR: pjAdoghT3dIQ4BdsXPIP6jxl3EVsRAH83EAfnImj5SzIrX243WWIRjcLvz8L4k2IG8qjHtZrI/
- 570qg0f2kOqg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="151236180"
+        id S1730679AbgG1QZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:25:28 -0400
+IronPort-SDR: j9HYufdvPC8mybHGZP8sBdzH6L4Slak0UVRx6JOXTtbl+5/yIs+MJNYyDe/f28L5WaSfEAMIJn
+ BEdk0X8Db0jA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="138772585"
 X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="151236180"
+   d="scan'208";a="138772585"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 09:20:56 -0700
-IronPort-SDR: M1iOCrXIwQVbYblO1JTLgs5Wv/lcEYHyN+gMzYqV9suGvZ5PKuBTGNpWTsx4dkNM0sLKO2jUnH
- Ixd+FRBS+pTw==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 09:25:28 -0700
+IronPort-SDR: YAW0CaxbxjIeOA9o7ZaCbA5yvLUgv88BYxvkLjskK3Y4+SilGEzhvrR8BL2HdV5/HfpcSnkpiB
+ nEQiVb0Gabcw==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="328383867"
-Received: from kmolinar-mobl4.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.212.162.155])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 09:20:54 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     linux-doc@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v2] scripts/kernel-doc: optionally treat warnings as errors
-Date:   Tue, 28 Jul 2020 11:20:40 -0500
-Message-Id: <20200728162040.92467-1-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+   d="scan'208";a="290231385"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga006.jf.intel.com with ESMTP; 28 Jul 2020 09:25:24 -0700
+Date:   Tue, 28 Jul 2020 09:25:24 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Chenyi Qiang <chenyi.qiang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [RFC 2/2] KVM: VMX: Enable bus lock VM exit
+Message-ID: <20200728162524.GE5300@linux.intel.com>
+References: <20200628085341.5107-1-chenyi.qiang@intel.com>
+ <20200628085341.5107-3-chenyi.qiang@intel.com>
+ <878sg3bo8b.fsf@vitty.brq.redhat.com>
+ <0159554d-82d5-b388-d289-a5375ca91323@intel.com>
+ <87366bbe1y.fsf@vitty.brq.redhat.com>
+ <adad61e8-8252-0491-7feb-992a52c1b4f3@intel.com>
+ <87zh8j9to2.fsf@vitty.brq.redhat.com>
+ <20200723012114.GP9114@linux.intel.com>
+ <a1c2a7dc-d52a-daad-4078-3097579ffef2@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1c2a7dc-d52a-daad-4078-3097579ffef2@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kbuild bot recently added the W=1 option, which triggered
-documentation cleanups to squelch hundreds of kernel-doc warnings.
+On Mon, Jul 27, 2020 at 12:38:53PM +0800, Xiaoyao Li wrote:
+> On 7/23/2020 9:21 AM, Sean Christopherson wrote:
+> >On Wed, Jul 01, 2020 at 04:49:49PM +0200, Vitaly Kuznetsov wrote:
+> >>Xiaoyao Li <xiaoyao.li@intel.com> writes:
+> >>>So you want an exit to userspace for every bus lock and leave it all to
+> >>>userspace. Yes, it's doable.
+> >>
+> >>In some cases we may not even want to have a VM exit: think
+> >>e.g. real-time/partitioning case when even in case of bus lock we may
+> >>not want to add additional latency just to count such events.
+> >
+> >Hmm, I suspect this isn't all that useful for real-time cases because they'd
+> >probably want to prevent the split lock in the first place, e.g. would prefer
+> >to use the #AC variant in fatal mode.  Of course, the availability of split
+> >lock #AC is a whole other can of worms.
+> >
+> >But anyways, I 100% agree that this needs either an off-by-default module
+> >param or an opt-in per-VM capability.
+> >
+> 
+> Maybe on-by-default or an opt-out per-VM capability?
+> Turning it on introduces no overhead if no bus lock happens in guest but
+> gives KVM the capability to track every potential bus lock. If user doesn't
+> want the extra latency due to bus lock VM exit, it's better try to fix the
+> bus lock, which also incurs high latency.
 
-To make sure new kernel contributions don't add regressions to
-kernel-doc descriptors, this patch suggests an option to treat
-warnings as errors in CI/automated tests.
+Except that I doubt the physical system owner and VM owner are the same
+entity in the vast majority of KVM use cases.  So yeah, in a perfect world
+the guest application that's causing bus locks would be fixed, but in
+practice there is likely no sane way for the KVM owner to inform the guest
+application owner that their application is broken, let alone fix said
+application.
 
-A -Werror command-line option is added to the kernel-doc script. When
-this option is set, the script will return the number of warnings
-found. The caller can then treat this positive return value as an
-error and stop the build.
+The caveat would be that we may need to enable this by default if the host
+kernel policy mandates it.
 
-Using this command line option is however not straightforward when the
-kernel-doc script is called from other scripts. To align with typical
-kernel compilation or documentation generation, the Werror option is
-also set by checking the KCFLAGS environment variable, or if
-KDOC_WERROR is defined, as in the following examples:
-
-KCFLAGS="-Wall -Werror" make W=1 sound/
-KCFLAGS="-Wall -Werror" make W=1 drivers/soundwire/
-KDOC_WERROR=1 make htmldocs
-
-Note that in the last example the documentation build does not stop,
-only an additional log is provided.
-
-Credits to Randy Dunlap for suggesting the use of environment variables.
-
-Suggested-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
-v2: reworded ChangeLog as suggested by Jonathan Corbet.
-
- scripts/kernel-doc | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
-
-diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-index e991d7f961e9..d1b445665ad6 100755
---- a/scripts/kernel-doc
-+++ b/scripts/kernel-doc
-@@ -81,6 +81,7 @@ Output selection modifiers:
- Other parameters:
-   -v			Verbose output, more warnings and other information.
-   -h			Print this help.
-+  -Werror		Treat warnings as errors.
- 
- EOF
-     print $message;
-@@ -273,6 +274,7 @@ my $kernelversion;
- my $dohighlight = "";
- 
- my $verbose = 0;
-+my $Werror = 0;
- my $output_mode = "rst";
- my $output_preformatted = 0;
- my $no_doc_sections = 0;
-@@ -319,6 +321,18 @@ if (defined($ENV{'KBUILD_VERBOSE'})) {
- 	$verbose = "$ENV{'KBUILD_VERBOSE'}";
- }
- 
-+if (defined($ENV{'KDOC_WERROR'})) {
-+	$Werror = "$ENV{'KDOC_WERROR'}";
-+}
-+
-+if (defined($ENV{'KCFLAGS'})) {
-+	my $kcflags = "$ENV{'KCFLAGS'}";
-+
-+	if ($kcflags =~ /Werror/) {
-+		$Werror = 1;
-+	}
-+}
-+
- # Generated docbook code is inserted in a template at a point where
- # docbook v3.1 requires a non-zero sequence of RefEntry's; see:
- # https://www.oasis-open.org/docbook/documentation/reference/html/refentry.html
-@@ -433,6 +447,8 @@ while ($ARGV[0] =~ m/^--?(.*)/) {
- 	push(@export_file_list, $file);
-     } elsif ($cmd eq "v") {
- 	$verbose = 1;
-+    } elsif ($cmd eq "Werror") {
-+	$Werror = 1;
-     } elsif (($cmd eq "h") || ($cmd eq "help")) {
- 	usage();
-     } elsif ($cmd eq 'no-doc-sections') {
-@@ -2262,4 +2278,9 @@ if ($verbose && $warnings) {
-   print STDERR "$warnings warnings\n";
- }
- 
--exit($output_mode eq "none" ? 0 : $errors);
-+if ($Werror && $warnings) {
-+    print STDERR "$warnings warnings as Errors\n";
-+    exit($warnings);
-+} else {
-+    exit($output_mode eq "none" ? 0 : $errors)
-+}
--- 
-2.25.1
-
+> >>I'd suggest we make the new capability tri-state:
+> >>- disabled (no vmexit, default)
+> >>- stats only (what this patch does)
+> >>- userspace exit
+> >>But maybe this is an overkill, I'd like to hear what others think.
+> >
+> >Userspace exit would also be interesting for debug.  Another throttling
+> >option would be schedule() or cond_reched(), though that's probably getting
+> >into overkill territory.
+> >
+> 
+> We're going to leverage host's policy, i.e., calling handle_user_bus_lock(),
+> for throttling, as proposed in https://lkml.kernel.org/r/1595021700-68460-1-git-send-email-fenghua.yu@intel.com
+> 
