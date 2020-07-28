@@ -7,63 +7,62 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83909C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51120C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63307206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B342065E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595938298;
-	bh=z7k6UOCnAozQaZ5b9+HbexJNfnxw8lOBXCJ8+UaN1r8=;
+	s=default; t=1595938304;
+	bh=pU8MUcoYV2cXwU3q9lEF0MJoiYrzCgumuupX5Sdl4E8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gMikIc6aXE4PAWL4nq11pHi90xPuH1Xh2fhTkXhBtnWeWmK0k4C68bkFd/NcV6JmV
-	 j/51lZMT59EniQQNM1ekg7wOUqPYrWid2jEExg7blzGcl2hXyPNO6wl5ZCMWG6Sd6j
-	 BXZDwzTzRYRMgiW6XwRWA8kCEZlUc5QVl2MHDOCU=
+	b=NXDu12cziAB++zqlyyILJEwDRiu/v3BvXQ35Q1uLsins3MR0neRLG/CrjpEwdxzQc
+	 CWKpaIt42QVQlGfKax2RJloD3A03YSonbDn1kEuyvIfr4bkD1fgm2I0f9vXEPLHPIs
+	 +k917IWUX9rSswYd8v3OC+Q/MV9vtt7hkFVzCapk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbgG1MLh (ORCPT
+        id S1729411AbgG1MLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:11:37 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43489 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728840AbgG1MLe (ORCPT
+        Tue, 28 Jul 2020 08:11:42 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46216 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728953AbgG1MLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:11:34 -0400
-Received: by mail-lj1-f196.google.com with SMTP id f5so20838297ljj.10;
-        Tue, 28 Jul 2020 05:11:32 -0700 (PDT)
+        Tue, 28 Jul 2020 08:11:35 -0400
+Received: by mail-lf1-f65.google.com with SMTP id i80so10854317lfi.13;
+        Tue, 28 Jul 2020 05:11:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hTBfJmBRO5Rb64D0GBJ0IiAqZ76bUdrzaMxwh1TXFb0=;
-        b=SxtkdkwgMSjEAcuV1Dh1I50cvoCjAQVjCl6D++s/CsUzq8Z4qf+3NfcCl/eI1Q2m1G
-         4jGS6LQ9YBUvW2OAaqTPtO/usjPSpS/OjWpDEDlCohJMpIa4tJe0LUZT8caKFoQDWQ2Q
-         YV1R1sFhQOUblymsyM2PMkXKHq+p7v2pmVOztJMqLrXHVv6DsI6W8sdlnAYkBpT0eagR
-         BFRf2ebsn2E0SzKma0GRnsmXNnL6a5B0t9GRu8lTwpfWsjqAJMxy5R3ibXqa2xbvT1zh
-         tWkSrI98H2j8w6c+UM7bb4ThimPM2+UoA8WqBoey6p5A3qfRKLR2Q9C1rYtqoKt/Ip/S
-         nycg==
-X-Gm-Message-State: AOAM533WefW2+4CXk3+Lc3q0ZftEBgQWBk/KSAxMRZ31BSlhHtbmAE3d
-        /71S/8HLtXmNfE+EY48ZP2vdBjQF
-X-Google-Smtp-Source: ABdhPJzC1SMcuOdVj/5aYJlv/u9WFtJAP1KL6sA78L8BZzYm79E/lc2vkanmCzzPMo2ko/B+G5/ZlQ==
-X-Received: by 2002:a05:651c:294:: with SMTP id b20mr5420677ljo.4.1595938291950;
-        Tue, 28 Jul 2020 05:11:31 -0700 (PDT)
+        bh=XfaoFQeDT9YRusOqXGtxXFyLqPpgWHyL5Hg1Y49medM=;
+        b=H1nSy84+USqSXRADm5cUlRl2UCU8/xrtFHg0olIU2BeCBX75smcc5UH6XztR54QFdd
+         yaoT+SQG3yQUhIp+DujU4jrQqSvIQ4NsWxG2M7lPWCuCEi7dAjGgZDxDfDvTDkmNyc4i
+         XNNqPyalKSfrOrgBrkEJAP8Kw/9qYWrrciolWEGkpLSnU4He/FhdvakvuZ2a67ADxzAu
+         vCLSnec0y8LADWUSOMwSgqsyEfEENKMNj/pxm4l5wFlRoPsGp7tkHAJXaLWBEG62+u60
+         jfk6n/zgTrZYaTeAu7EY8tP00Y5m+OowVX5jJbfm+2j2sLKfi6PJR64Hfa5qWvU3XdIV
+         S9QA==
+X-Gm-Message-State: AOAM533xHgdqsnnNxhHkjXGA3QoM3vE1MJk/Y4MaxBhg+OTyyL1iVA5g
+        sobskvKNeBwrIHQA8Hjli7U=
+X-Google-Smtp-Source: ABdhPJzuHSUFPp+H0bFaE2pdfSypeZV94zayFlixueTWeM/Qj7KGWqg9C1SAl0XLNXCRPrNMfX0u4Q==
+X-Received: by 2002:a19:e50:: with SMTP id 77mr9715495lfo.188.1595938292907;
+        Tue, 28 Jul 2020 05:11:32 -0700 (PDT)
 Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id o16sm1728264ljc.66.2020.07.28.05.11.30
+        by smtp.gmail.com with ESMTPSA id 11sm2931980lju.102.2020.07.28.05.11.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 05:11:30 -0700 (PDT)
+        Tue, 28 Jul 2020 05:11:31 -0700 (PDT)
 Received: from johan by xi.terra with local (Exim 4.93.0.4)
         (envelope-from <johan@xi.terra>)
-        id 1k0OS6-0003Dn-A8; Tue, 28 Jul 2020 14:11:26 +0200
+        id 1k0OS6-0003Dx-ES; Tue, 28 Jul 2020 14:11:26 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Woojung Huh <woojung.huh@microchip.com>
 Cc:     Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>,
-        "Woojung . Huh @ microchip . com" <Woojung.Huh@microchip.com>
-Subject: [PATCH net 1/3] net: lan78xx: add missing endpoint sanity check
-Date:   Tue, 28 Jul 2020 14:10:29 +0200
-Message-Id: <20200728121031.12323-2-johan@kernel.org>
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH net 3/3] net: lan78xx: replace bogus endpoint lookup
+Date:   Tue, 28 Jul 2020 14:10:31 +0200
+Message-Id: <20200728121031.12323-4-johan@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200728121031.12323-1-johan@kernel.org>
 References: <20200728121031.12323-1-johan@kernel.org>
@@ -74,37 +73,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the missing endpoint sanity check to prevent a NULL-pointer
-dereference should a malicious device lack the expected endpoints.
+Drop the bogus endpoint-lookup helper which could end up accepting
+interfaces based on endpoints belonging to unrelated altsettings.
 
-Note that the driver has a broken endpoint-lookup helper,
-lan78xx_get_endpoints(), which can end up accepting interfaces in an
-altsetting without endpoints as long as *some* altsetting has a bulk-in
-and a bulk-out endpoint.
+Note that the returned bulk pipes and interrupt endpoint descriptor
+were never actually used. Instead the bulk-endpoint numbers are
+hardcoded to 1 and 2 (matching the specification), while the interrupt-
+endpoint descriptor was assumed to be the third descriptor created by
+USB core.
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-Cc: Woojung.Huh@microchip.com <Woojung.Huh@microchip.com>
+Try to bring some order to this by dropping the bogus lookup helper and
+adding the missing endpoint sanity checks while keeping the interrupt-
+descriptor assumption for now.
+
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/usb/lan78xx.c | 117 ++++++++++----------------------------
+ 1 file changed, 30 insertions(+), 87 deletions(-)
 
 diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index eccbf4cd7149..d7162690e3f3 100644
+index ee062b27cfa7..442507f25aad 100644
 --- a/drivers/net/usb/lan78xx.c
 +++ b/drivers/net/usb/lan78xx.c
-@@ -3759,6 +3759,11 @@ static int lan78xx_probe(struct usb_interface *intf,
- 	netdev->max_mtu = MAX_SINGLE_PACKET_SIZE;
- 	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
+@@ -377,10 +377,6 @@ struct lan78xx_net {
+ 	struct tasklet_struct	bh;
+ 	struct delayed_work	wq;
+ 
+-	struct usb_host_endpoint *ep_blkin;
+-	struct usb_host_endpoint *ep_blkout;
+-	struct usb_host_endpoint *ep_intr;
+-
+ 	int			msg_enable;
+ 
+ 	struct urb		*urb_intr;
+@@ -2860,78 +2856,12 @@ lan78xx_start_xmit(struct sk_buff *skb, struct net_device *net)
+ 	return NETDEV_TX_OK;
+ }
+ 
+-static int
+-lan78xx_get_endpoints(struct lan78xx_net *dev, struct usb_interface *intf)
+-{
+-	int tmp;
+-	struct usb_host_interface *alt = NULL;
+-	struct usb_host_endpoint *in = NULL, *out = NULL;
+-	struct usb_host_endpoint *status = NULL;
+-
+-	for (tmp = 0; tmp < intf->num_altsetting; tmp++) {
+-		unsigned ep;
+-
+-		in = NULL;
+-		out = NULL;
+-		status = NULL;
+-		alt = intf->altsetting + tmp;
+-
+-		for (ep = 0; ep < alt->desc.bNumEndpoints; ep++) {
+-			struct usb_host_endpoint *e;
+-			int intr = 0;
+-
+-			e = alt->endpoint + ep;
+-			switch (e->desc.bmAttributes) {
+-			case USB_ENDPOINT_XFER_INT:
+-				if (!usb_endpoint_dir_in(&e->desc))
+-					continue;
+-				intr = 1;
+-				/* FALLTHROUGH */
+-			case USB_ENDPOINT_XFER_BULK:
+-				break;
+-			default:
+-				continue;
+-			}
+-			if (usb_endpoint_dir_in(&e->desc)) {
+-				if (!intr && !in)
+-					in = e;
+-				else if (intr && !status)
+-					status = e;
+-			} else {
+-				if (!out)
+-					out = e;
+-			}
+-		}
+-		if (in && out)
+-			break;
+-	}
+-	if (!alt || !in || !out)
+-		return -EINVAL;
+-
+-	dev->pipe_in = usb_rcvbulkpipe(dev->udev,
+-				       in->desc.bEndpointAddress &
+-				       USB_ENDPOINT_NUMBER_MASK);
+-	dev->pipe_out = usb_sndbulkpipe(dev->udev,
+-					out->desc.bEndpointAddress &
+-					USB_ENDPOINT_NUMBER_MASK);
+-	dev->ep_intr = status;
+-
+-	return 0;
+-}
+-
+ static int lan78xx_bind(struct lan78xx_net *dev, struct usb_interface *intf)
+ {
+ 	struct lan78xx_priv *pdata = NULL;
+ 	int ret;
+ 	int i;
+ 
+-	ret = lan78xx_get_endpoints(dev, intf);
+-	if (ret) {
+-		netdev_warn(dev->net, "lan78xx_get_endpoints failed: %d\n",
+-			    ret);
+-		return ret;
+-	}
+-
+ 	dev->data[0] = (unsigned long)kzalloc(sizeof(*pdata), GFP_KERNEL);
+ 
+ 	pdata = (struct lan78xx_priv *)(dev->data[0]);
+@@ -3700,6 +3630,7 @@ static void lan78xx_stat_monitor(struct timer_list *t)
+ static int lan78xx_probe(struct usb_interface *intf,
+ 			 const struct usb_device_id *id)
+ {
++	struct usb_host_endpoint *ep_blkin, *ep_blkout, *ep_intr;
+ 	struct lan78xx_net *dev;
+ 	struct net_device *netdev;
+ 	struct usb_device *udev;
+@@ -3748,6 +3679,34 @@ static int lan78xx_probe(struct usb_interface *intf,
+ 
+ 	mutex_init(&dev->stats.access_lock);
  
 +	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
 +		ret = -ENODEV;
-+		goto out3;
++		goto out2;
 +	}
 +
- 	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
- 	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
- 	dev->ep_intr = (intf->cur_altsetting)->endpoint + 2;
++	dev->pipe_in = usb_rcvbulkpipe(udev, BULK_IN_PIPE);
++	ep_blkin = usb_pipe_endpoint(udev, dev->pipe_in);
++	if (!ep_blkin || !usb_endpoint_is_bulk_in(&ep_blkin->desc)) {
++		ret = -ENODEV;
++		goto out2;
++	}
++
++	dev->pipe_out = usb_sndbulkpipe(udev, BULK_OUT_PIPE);
++	ep_blkout = usb_pipe_endpoint(udev, dev->pipe_out);
++	if (!ep_blkout || !usb_endpoint_is_bulk_out(&ep_blkout->desc)) {
++		ret = -ENODEV;
++		goto out2;
++	}
++
++	ep_intr = &intf->cur_altsetting->endpoint[2];
++	if (!usb_endpoint_is_int_in(&ep_intr->desc)) {
++		ret = -ENODEV;
++		goto out2;
++	}
++
++	dev->pipe_intr = usb_rcvintpipe(dev->udev,
++					usb_endpoint_num(&ep_intr->desc));
++
+ 	ret = lan78xx_bind(dev, intf);
+ 	if (ret < 0)
+ 		goto out2;
+@@ -3759,23 +3718,7 @@ static int lan78xx_probe(struct usb_interface *intf,
+ 	netdev->max_mtu = MAX_SINGLE_PACKET_SIZE;
+ 	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
+ 
+-	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
+-		ret = -ENODEV;
+-		goto out3;
+-	}
+-
+-	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
+-	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
+-	dev->ep_intr = (intf->cur_altsetting)->endpoint + 2;
+-
+-	dev->pipe_in = usb_rcvbulkpipe(udev, BULK_IN_PIPE);
+-	dev->pipe_out = usb_sndbulkpipe(udev, BULK_OUT_PIPE);
+-
+-	dev->pipe_intr = usb_rcvintpipe(dev->udev,
+-					dev->ep_intr->desc.bEndpointAddress &
+-					USB_ENDPOINT_NUMBER_MASK);
+-	period = dev->ep_intr->desc.bInterval;
+-
++	period = ep_intr->desc.bInterval;
+ 	maxp = usb_maxpacket(dev->udev, dev->pipe_intr, 0);
+ 	buf = kmalloc(maxp, GFP_KERNEL);
+ 	if (buf) {
 -- 
 2.26.2
 
