@@ -2,139 +2,181 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE6FC433FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43882C4345D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCB2204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2366920829
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Co88SDhC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U7+6MXXJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730840AbgG1PN4 (ORCPT
+        id S1730822AbgG1PNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:13:56 -0400
-Received: from mout.web.de ([212.227.15.3]:45731 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730517AbgG1PNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:13:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1595949206;
-        bh=4eS2iDAsbrOdOLLedYtvazSxMT8ynSJcUjaM53JHyJU=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=Co88SDhC2gL/zmdY+fbkzv1NAfIlGlgv8OG5TVmg+KxuZLX/exIKgJNw63aIEMbrB
-         R2JfqcG9nk1N/mQG+CNv9LbnBhYrr0Ytbq3WiVjlNMQo6FVRsolJqv3cgZRJcKHy4+
-         sYjA2R1FfK8HW3YS+bmtPyDAfxQOVSmIQ/fEDdmM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.153.150]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LrYLd-1km80R0Qtp-013QFs; Tue, 28
- Jul 2020 17:13:26 +0200
-To:     Qinglang Miao <miaoqinglang@huawei.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jun Nie <jun.nie@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: zx: remove redundant dev_err call in
- zx296702_pd_probe()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <3b237263-33eb-d7dc-b6cf-d341f35824de@web.de>
-Date:   Tue, 28 Jul 2020 17:13:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 11:13:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730762AbgG1PNY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:13:24 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D74A6C0619D6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:13:23 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id r12so16470831ilh.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:13:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5QD2zMnkde3qFVDG/0jVGmkVeNpBgY28HlienvJxu1M=;
+        b=U7+6MXXJbfJhJboNeaOQcjn/6u4Z0sOQn4YYtsAU5jeIIHHLmIBWWjhfEptqNyIunS
+         lQok0lgKmNtFpnjYFHQihk5T5K7DBgJGj1Q4bRmDXZg5W23G2Vqz9TE6hlZbaDmC7GD6
+         nG2wiYdxg6klUZrFlGHPBnqjcoaSXKRx9szvE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5QD2zMnkde3qFVDG/0jVGmkVeNpBgY28HlienvJxu1M=;
+        b=k3JmpCk2bBLx4qbbUmwYpdACfuBpCeTefmTVlt2ANhwBpVDtTvMOOW2zZIT6Bw24Fh
+         JK0ICWp8G3pwE08P3kgpekx+Z704nSEdWMz30s776kOZRFDmcPS+1TzuWhzFWzPlwtLu
+         RFYWC9zXbd3pg2giQ5diPGD4MT22zlvURvDrwdBPx3sVBnkR7ezYVS+by2tV/KI7EFXN
+         bjSVlFvccDSivQIhWQxar+1WheRGdovxt2KiD7ClWDUVJgH3mF4FopY3Q0YHA8yK3z7f
+         SN5r2uojKKUX9j33NJCc6qijlS/caBArsC7utBJqHKyA/m2jCMAeue8rOca7mJaSuMPI
+         VhFQ==
+X-Gm-Message-State: AOAM533yoIkZpUjE183gWTw23Zvk47VQCPS8wBqzW+xTzWreoiZXIt7/
+        bJltpMe/xPVju+lQoXXO5HynGA==
+X-Google-Smtp-Source: ABdhPJyXVY5GbwA+/x0E3BUwZmX7S5nD9TvLV4rfdjrILbG+w5vt7+4jxBQT0a0zZbjdnOp8qBvR/A==
+X-Received: by 2002:a92:ad01:: with SMTP id w1mr23769254ilh.301.1595949203284;
+        Tue, 28 Jul 2020 08:13:23 -0700 (PDT)
+Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
+        by smtp.gmail.com with ESMTPSA id q70sm6399781ili.49.2020.07.28.08.13.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 08:13:22 -0700 (PDT)
+From:   Daniel Campello <campello@chromium.org>
+To:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org
+Subject: [PATCH 11/15] iio: sx9310: Use variable to hold &client->dev
+Date:   Tue, 28 Jul 2020 09:12:54 -0600
+Message-Id: <20200728091057.11.I126c3f697e0b7ee951ea24ac60ce79d368790de9@changeid>
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+In-Reply-To: <20200728151258.1222876-1-campello@chromium.org>
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
+ <20200728151258.1222876-1-campello@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:dp+alhTncV94SLwTQ3joEOA5CSU+4wi6zTlpmB2soO0qYoLY7EQ
- Ei7YHEMRHQSXPBsYYWZRl7w4XoqawrDBfamWITQw4c51hchbTPFiBYa+FBd7m6bwaabahcn
- 83070brcjHLm/ayy8pq+n+nK0s7q4LMIiZtGAgnUK7B/kjk6N10T13eWZjN7gQ2PG01/EYd
- zcAp1gpGVaKejKqH33OXw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:k6AZQT6+m9k=:XtkfNmNpgqv7oL3BLW+NI5
- IJpKGKpvKVDvRVvWvXz7xbSeXvJxqbNDQESPx87zCDEMQCZT+y6VoUruBeR5UCKWTwNmbupAm
- xl2ULYN8ZQihYHkgs6RoGjG86fex81LHnB9fb29UbmpydjRHG/l5Epi+aAjBaNn7eXp59AfPx
- ysU+wMXfJdnNQdsCjdxmgfVwhxMyOaavrnl4DnPIxzqyBipo/bx509tBjIxFOEUbORi/TeemZ
- QOluhHrs1eBGDBs+ESQ6rTrsbgi8+7RPKannWqpVIBjIVzC4sJRiWxaFGLALzOiSdOWSrCMMx
- zjJkEPMVsuBDf1qaD/slMmJhltHTu0KBS0qJxX1XwKCQbBVGM2NjfEoBDxIHMlaa927hUnBJ5
- B+C6nJK42uq4EvTuSndpRRNPcV4vn7Z5ebXP3vvHMqbr0wnx7dct84vRYm1uW3H5l0sWb2YCB
- VQ6yOwodhaqBWzVj7+qr3/NmzBI9Krt0UIJqLz75LIfXKNtLX7tnoXdZmHLcev+xB7qHTmFz0
- s77Locnou4W4rlupb2/ak9ST1TZvms+gusoicUAZ1RNueqOJ7mlcXKDVq3uzVD3xiDT79zsGb
- 7CLgyQS79ZyaLJwYZI4ZvGQ6FXjpjgGMdIE9e+4TkdqhVC9DGa+qy6KbPNDno/y9e01WKGuyI
- I9Oz7O3vkZm8aCXkley6B9/V13nASED2HpJfvPQJyUsrIhdX/+RdMTGWiqjqp0zlsTctCRqyK
- 66Itp8B9mTWiMYxjIN0no9IuWRrszwRCK/wFwYSBjY4JL6mb6Hgyi2M+MIUEYCUrAWYyuVNCj
- cqtm0D7+ECzgUBWsDsnovHch2k9IeCvtkb+bGIgiJxH7LWW10dC/+gP0THHHcljaX6ulCg/0w
- QDxFl8UE5miFEZq+iaDxHUR5EO6T4lsooQx1/ojzfeX/B1LwM76NsnVmLay7gQFfeKcPtum7z
- BFHR4fQ84MZbR1Yr87Q55rWV+bkufI/uybCf92SWjyLJN+e1XwOfAqEGnMC25cQpy3LKqfhzs
- UNP4aR6gkwYkMFhJgcufdIu/SXoaJMpIbNSeDRr9Qx3UhXWMQmxeNpsmg1x5Ra/kTC7+lRE6V
- sMSCkIAtVaoxCzCk1So4wPw4tIJelTUvT/h13qZ2jxe8Dc+q++1VKUqcP1atdozHOg6ZzHLJf
- Np9IJliwtFoDj7XAdgafLbisHvcEYLE8dOM/1iAXuFvQ11s9VXFomgPaZ7bfnINDVOCam0gbB
- oPI0lu+9IWjPrDYnZGjLqIuftsCCB+Oe8zcSY1A==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/arch/arm/mach-zx/zx296702-pm-domain.c
-> @@ -170,7 +170,6 @@ static int zx296702_pd_probe(struct platform_device =
-*pdev)
->
->  	pcubase =3D devm_ioremap_resource(&pdev->dev, res);
->  	if (IS_ERR(pcubase)) {
-> -		dev_err(&pdev->dev, "ioremap fail.\n");
->  		return -EIO;
->  	}
+Improves readability by storing &client->dev in a local variable.
 
-Would you like to delete also the curly brackets besides the error message=
-?
+Signed-off-by: Daniel Campello <campello@chromium.org>
+---
 
-Regards,
-Markus
+ drivers/iio/proximity/sx9310.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+index 051c6515e62c18..ba383710ef0dcf 100644
+--- a/drivers/iio/proximity/sx9310.c
++++ b/drivers/iio/proximity/sx9310.c
+@@ -884,11 +884,12 @@ static int sx9310_set_indio_dev_name(struct device *dev,
+ static int sx9310_probe(struct i2c_client *client)
+ {
+ 	int ret;
++	struct device *dev = &client->dev;
+ 	struct iio_dev *indio_dev;
+ 	struct sx9310_data *data;
+ 
+-	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+-	if (indio_dev == NULL)
++	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
++	if (!indio_dev)
+ 		return -ENOMEM;
+ 
+ 	data = iio_priv(indio_dev);
+@@ -902,17 +903,16 @@ static int sx9310_probe(struct i2c_client *client)
+ 
+ 	ret = regmap_read(data->regmap, SX9310_REG_WHOAMI, &data->whoami);
+ 	if (ret) {
+-		dev_err(&client->dev, "error in reading WHOAMI register: %d",
+-			ret);
++		dev_err(dev, "error in reading WHOAMI register: %d", ret);
+ 		return ret;
+ 	}
+ 
+-	ret = sx9310_set_indio_dev_name(&client->dev, indio_dev, data->whoami);
++	ret = sx9310_set_indio_dev_name(dev, indio_dev, data->whoami);
+ 	if (ret)
+ 		return ret;
+ 
+-	ACPI_COMPANION_SET(&indio_dev->dev, ACPI_COMPANION(&client->dev));
+-	indio_dev->dev.parent = &client->dev;
++	ACPI_COMPANION_SET(&indio_dev->dev, ACPI_COMPANION(dev));
++	indio_dev->dev.parent = dev;
+ 	indio_dev->channels = sx9310_channels;
+ 	indio_dev->num_channels = ARRAY_SIZE(sx9310_channels);
+ 	indio_dev->info = &sx9310_info;
+@@ -924,7 +924,7 @@ static int sx9310_probe(struct i2c_client *client)
+ 		return ret;
+ 
+ 	if (client->irq) {
+-		ret = devm_request_threaded_irq(&client->dev, client->irq,
++		ret = devm_request_threaded_irq(dev, client->irq,
+ 						sx9310_irq_handler,
+ 						sx9310_irq_thread_handler,
+ 						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+@@ -932,29 +932,29 @@ static int sx9310_probe(struct i2c_client *client)
+ 		if (ret)
+ 			return ret;
+ 
+-		data->trig =
+-			devm_iio_trigger_alloc(&client->dev, "%s-dev%d",
+-					       indio_dev->name, indio_dev->id);
++		data->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
++						    indio_dev->name,
++						    indio_dev->id);
+ 		if (!data->trig)
+ 			return -ENOMEM;
+ 
+-		data->trig->dev.parent = &client->dev;
++		data->trig->dev.parent = dev;
+ 		data->trig->ops = &sx9310_trigger_ops;
+ 		iio_trigger_set_drvdata(data->trig, indio_dev);
+ 
+-		ret = devm_iio_trigger_register(&client->dev, data->trig);
++		ret = devm_iio_trigger_register(dev, data->trig);
+ 		if (ret)
+ 			return ret;
+ 	}
+ 
+-	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev,
++	ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
+ 					      iio_pollfunc_store_time,
+ 					      sx9310_trigger_handler,
+ 					      &sx9310_buffer_setup_ops);
+ 	if (ret)
+ 		return ret;
+ 
+-	return devm_iio_device_register(&client->dev, indio_dev);
++	return devm_iio_device_register(dev, indio_dev);
+ }
+ 
+ static int __maybe_unused sx9310_suspend(struct device *dev)
+-- 
+2.28.0.rc0.142.g3c755180ce-goog
+
