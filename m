@@ -2,215 +2,509 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29265C433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33158C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0707920714
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC97420672
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:58:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="SNQADGVn"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="cJ4OP5mM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbgG1M5T (ORCPT
+        id S1729817AbgG1M6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:57:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729780AbgG1M5S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:57:18 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44EC0C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:57:18 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id a9so11533490pjd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:57:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jGv59OL3eBSwcPKc8/h9cDYwkm0Ga9KFVIVK1NEWRJE=;
-        b=SNQADGVnE0GT2O1e70IvNnIdtBVC4WTc8bSWAD5HxNOIq9P1xHSKpegGI6WKHj2wz6
-         1gz19deudrkxNb9cNbrDAXXSOkqEdWfAquJnQu1/sPK7we2vCeOB9tYCa88Czg/oqkd2
-         a2+OCvZ/gy2eUX8qxOx0YGJ9RROfHCz+duDtMWGV3xV9/Wk/rs8iyqBe8irr2jETNMl3
-         K5fNojIW+bkRFjYqCrEUTDq1SHAnJ0ONf972MRoy9gaFBxUcy5pv2sEAp2h6Q82ek7AE
-         Q0B+C2WLgtVFYWLO4+DDDDEqCNpw8XCzvbpDXb5h8d8OVGiB2zQ1yZ0rjpZ1aqeG2+qX
-         Oorw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jGv59OL3eBSwcPKc8/h9cDYwkm0Ga9KFVIVK1NEWRJE=;
-        b=Karz/nIazN31XTQlZ+m0wich4dt82tw8nEo/8o3nH7mQBLiSbrFWX2zSrYFsYrElOv
-         EjANBaqP9JNXLWxF1tbKbeXAV29TBGK326+t884eiTnT2GTqyXH6GUqyMG2Mv5fIdVMJ
-         +PAw5ja1DXqhw3ZROeeX3CVkEXCa0wnI0ICWchtYfatzlZ5LMK/C9WzIOXIx7/FdEmqK
-         xqH6jDFwAEGAJ/MFZUfmJEokRYwjb8zVHadAak9TKW1LD/IZHqv17vxN4j9fE2ANuNJU
-         4bGS+0TahK0QCV6QqAVFNbr5jo9GDk+nig9zHlPaU05Jd+RzvM8SgJ18zFNJqVJIO8IF
-         7QPA==
-X-Gm-Message-State: AOAM530VoNmhpjoRSoZZtv6bt+ph80Ka/gIbOtKt0F6jCuwOcD5YYM+v
-        xmdU5VEjdiTbMPaNPT7xcV1+kReaeR83o1tOflT88w==
-X-Google-Smtp-Source: ABdhPJzkoNBZsvO7dZrfGpe7loV05LDnvZRT8DVZMLBwOq1H+rzaEz8juFb93qjBu8kbRj7UBAau9HT+us4b4tJg66A=
-X-Received: by 2002:a17:902:9b97:: with SMTP id y23mr23964341plp.189.1595941037785;
- Tue, 28 Jul 2020 05:57:17 -0700 (PDT)
+        Tue, 28 Jul 2020 08:58:22 -0400
+Received: from ozlabs.org ([203.11.71.1]:52979 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728990AbgG1M6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:58:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BGGtz14vHz9sRX;
+        Tue, 28 Jul 2020 22:58:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1595941099;
+        bh=bD2rycoJ0hiwGk7Z/KL447U0tALy2QIjw0hCWG8FMC4=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=cJ4OP5mM0kwBMaNLh2945qpFlgdChwEGOZk4QVM6Ysbuel7WNRg2JS6u0D7xU8KFI
+         NO1rCzdb9/sEn+QSCdHk53wQsJp1MsWWr3m1NgxR7uz6Mbj5fpKI7AniW13fqQ5+V7
+         5dIhnUUsd22E5y1KQ+IuOiTYVaZLsfIJ87Qpaxbrjd0pdY90wGyuyFF26RLOVEXAQ7
+         tYRFNXOcE0dp5UMjSRvqafE4obJmrlshkZLg4zkqX5jf2xU8vLVZh7cq00UHxCX5Py
+         Ft/E5JmY83XBMkrU5vlB4XcFuqvLmvogfaJqhN9i/cglUs+shGp5kgHs5OecRFXDTk
+         3Bj63msjWs4TQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Hari Bathini <hbathini@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Pingfan Liu <piliu@redhat.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Pingfan Liu <piliu@redhat.com>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Pingfan Liu <piliu@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: [RESEND PATCH v5 03/11] powerpc/kexec_file: add helper functions for getting memory ranges
+In-Reply-To: <159579222211.5790.10294144969496171475.stgit@hbathini>
+References: <159579157320.5790.6748078824637688685.stgit@hbathini> <159579222211.5790.10294144969496171475.stgit@hbathini>
+Date:   Tue, 28 Jul 2020 22:58:15 +1000
+Message-ID: <87a6zj7q54.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200727134914.312934924@linuxfoundation.org> <20200727134918.205538211@linuxfoundation.org>
-In-Reply-To: <20200727134918.205538211@linuxfoundation.org>
-From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Tue, 28 Jul 2020 20:56:41 +0800
-Message-ID: <CAMZfGtWVtGeMfu=04LiNVcLrBpmexUryHjy-dujo77CpJhcwGg@mail.gmail.com>
-Subject: Re: [External] [PATCH 4.19 76/86] mm: memcg/slab: fix memory leak at
- non-root kmem_cache destroy
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 10:12 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> From: Muchun Song <songmuchun@bytedance.com>
->
-> commit d38a2b7a9c939e6d7329ab92b96559ccebf7b135 upstream.
->
-> If the kmem_cache refcount is greater than one, we should not mark the
-> root kmem_cache as dying.  If we mark the root kmem_cache dying
-> incorrectly, the non-root kmem_cache can never be destroyed.  It
-> resulted in memory leak when memcg was destroyed.  We can use the
-> following steps to reproduce.
->
->   1) Use kmem_cache_create() to create a new kmem_cache named A.
->   2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
->      so the refcount of B is just increased.
->   3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
->      decrease the B's refcount but mark the B as dying.
->   4) Create a new memory cgroup and alloc memory from the kmem_cache
->      B. It leads to create a non-root kmem_cache for allocating memory.
->   5) When destroy the memory cgroup created in the step 4), the
->      non-root kmem_cache can never be destroyed.
->
-> If we repeat steps 4) and 5), this will cause a lot of memory leak.  So
-> only when refcount reach zero, we mark the root kmem_cache as dying.
->
-> Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> Reviewed-by: Shakeel Butt <shakeelb@google.com>
-> Acked-by: Roman Gushchin <guro@fb.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Pekka Enberg <penberg@kernel.org>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> Cc: Shakeel Butt <shakeelb@google.com>
-> Cc: <stable@vger.kernel.org>
-> Link: http://lkml.kernel.org/r/20200716165103.83462-1-songmuchun@bytedance.com
-> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->
-> ---
->  mm/slab_common.c |   35 ++++++++++++++++++++++++++++-------
->  1 file changed, 28 insertions(+), 7 deletions(-)
->
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -310,6 +310,14 @@ int slab_unmergeable(struct kmem_cache *
->         if (s->refcount < 0)
->                 return 1;
->
-> +#ifdef CONFIG_MEMCG_KMEM
-> +       /*
-> +        * Skip the dying kmem_cache.
-> +        */
-> +       if (s->memcg_params.dying)
-> +               return 1;
-> +#endif
+Hi Hari,
+
+Some comments inline ...
+
+Hari Bathini <hbathini@linux.ibm.com> writes:
+> diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
+> new file mode 100644
+> index 000000000000..21bea1b78443
+> --- /dev/null
+> +++ b/arch/powerpc/kexec/ranges.c
+> @@ -0,0 +1,417 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * powerpc code to implement the kexec_file_load syscall
+> + *
+> + * Copyright (C) 2004  Adam Litke (agl@us.ibm.com)
+> + * Copyright (C) 2004  IBM Corp.
+> + * Copyright (C) 2004,2005  Milton D Miller II, IBM Corporation
+> + * Copyright (C) 2005  R Sharada (sharada@in.ibm.com)
+> + * Copyright (C) 2006  Mohan Kumar M (mohan@in.ibm.com)
+> + * Copyright (C) 2020  IBM Corporation
+> + *
+> + * Based on kexec-tools' kexec-ppc64.c, fs2dt.c.
+> + * Heavily modified for the kernel by
+> + * Hari Bathini <hbathini@linux.ibm.com>.
+
+Please just use your name, email addresses bit rot. It's in the commit
+log anyway.
+
+> + */
 > +
->         return 0;
->  }
->
-> @@ -832,12 +840,15 @@ static int shutdown_memcg_caches(struct
->         return 0;
->  }
->
-> -static void flush_memcg_workqueue(struct kmem_cache *s)
-> +static void memcg_set_kmem_cache_dying(struct kmem_cache *s)
->  {
->         mutex_lock(&slab_mutex);
->         s->memcg_params.dying = true;
->         mutex_unlock(&slab_mutex);
+> +#undef DEBUG
+    ^
+Dont do that in new code please.
 
-We should remove mutex_lock/unlock(&slab_mutex) here, because
-we already hold the slab_mutex from kmem_cache_destroy().
-
-
-> +}
->
-> +static void flush_memcg_workqueue(struct kmem_cache *s)
+> +#define pr_fmt(fmt) "kexec ranges: " fmt
+> +
+> +#include <linux/sort.h>
+> +#include <linux/kexec.h>
+> +#include <linux/of_device.h>
+> +#include <linux/slab.h>
+> +#include <asm/sections.h>
+> +#include <asm/kexec_ranges.h>
+> +
+> +/**
+> + * get_max_nr_ranges - Get the max no. of ranges crash_mem structure
+> + *                     could hold, given the size allocated for it.
+> + * @size:              Allocation size of crash_mem structure.
+> + *
+> + * Returns the maximum no. of ranges.
+> + */
+> +static inline unsigned int get_max_nr_ranges(size_t size)
 > +{
->         /*
->          * SLUB deactivates the kmem_caches through call_rcu_sched. Make
->          * sure all registered rcu callbacks have been invoked.
-> @@ -858,10 +869,6 @@ static inline int shutdown_memcg_caches(
->  {
->         return 0;
->  }
-> -
-> -static inline void flush_memcg_workqueue(struct kmem_cache *s)
-> -{
-> -}
->  #endif /* CONFIG_MEMCG_KMEM */
->
->  void slab_kmem_cache_release(struct kmem_cache *s)
-> @@ -879,8 +886,6 @@ void kmem_cache_destroy(struct kmem_cach
->         if (unlikely(!s))
->                 return;
->
-> -       flush_memcg_workqueue(s);
-> -
->         get_online_cpus();
->         get_online_mems();
->
-> @@ -890,6 +895,22 @@ void kmem_cache_destroy(struct kmem_cach
->         if (s->refcount)
->                 goto out_unlock;
->
-> +#ifdef CONFIG_MEMCG_KMEM
-> +       memcg_set_kmem_cache_dying(s);
+> +	return ((size - sizeof(struct crash_mem)) /
+> +		sizeof(struct crash_mem_range));
+> +}
 > +
-> +       mutex_unlock(&slab_mutex);
+> +/**
+> + * get_mem_rngs_size - Get the allocated size of mrngs based on
+> + *                     max_nr_ranges and chunk size.
+> + * @mrngs:             Memory ranges.
+
+mrngs is not a great name, what about memory_ranges or ranges?
+
+Ditto everywhere else you use mrngs.
+
+> + *
+> + * Returns the maximum size of @mrngs.
+> + */
+> +static inline size_t get_mem_rngs_size(struct crash_mem *mrngs)
+> +{
+> +	size_t size;
 > +
-> +       put_online_mems();
-> +       put_online_cpus();
+> +	if (!mrngs)
+> +		return 0;
 > +
-> +       flush_memcg_workqueue(s);
+> +	size = (sizeof(struct crash_mem) +
+> +		(mrngs->max_nr_ranges * sizeof(struct crash_mem_range)));
 > +
-> +       get_online_cpus();
-> +       get_online_mems();
+> +	/*
+> +	 * Memory is allocated in size multiple of MEM_RANGE_CHUNK_SZ.
+> +	 * So, align to get the actual length.
+> +	 */
+> +	return ALIGN(size, MEM_RANGE_CHUNK_SZ);
+> +}
 > +
-> +       mutex_lock(&slab_mutex);
+> +/**
+> + * __add_mem_range - add a memory range to memory ranges list.
+> + * @mem_ranges:      Range list to add the memory range to.
+> + * @base:            Base address of the range to add.
+> + * @size:            Size of the memory range to add.
+> + *
+> + * (Re)allocates memory, if needed.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +static int __add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
+> +{
+> +	struct crash_mem *mrngs = *mem_ranges;
+> +
+> +	if ((mrngs == NULL) || (mrngs->nr_ranges == mrngs->max_nr_ranges)) {
+
+(mrngs == NULL) should just be !mrngs.
+
+> +		mrngs = realloc_mem_ranges(mem_ranges);
+> +		if (!mrngs)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	mrngs->ranges[mrngs->nr_ranges].start = base;
+> +	mrngs->ranges[mrngs->nr_ranges].end = base + size - 1;
+> +	pr_debug("Added memory range [%#016llx - %#016llx] at index %d\n",
+> +		 base, base + size - 1, mrngs->nr_ranges);
+> +	mrngs->nr_ranges++;
+> +	return 0;
+> +}
+> +
+> +/**
+> + * __merge_memory_ranges - Merges the given memory ranges list.
+> + * @mem_ranges:            Range list to merge.
+> + *
+> + * Assumes a sorted range list.
+> + *
+> + * Returns nothing.
+> + */
+
+A lot of this code is annoyingly similar to the memblock code, though
+the internals of that are all static these days.
+
+I guess for now we'll just have to add all this. Maybe in future it can
+be consolidated.
+
+> +static void __merge_memory_ranges(struct crash_mem *mrngs)
+> +{
+> +	struct crash_mem_range *rngs;
+> +	int i, idx;
+> +
+> +	if (!mrngs)
+> +		return;
+> +
+> +	idx = 0;
+> +	rngs = &mrngs->ranges[0];
+> +	for (i = 1; i < mrngs->nr_ranges; i++) {
+> +		if (rngs[i].start <= (rngs[i-1].end + 1))
+> +			rngs[idx].end = rngs[i].end;
+> +		else {
+> +			idx++;
+> +			if (i == idx)
+> +				continue;
+> +
+> +			rngs[idx] = rngs[i];
+> +		}
+> +	}
+> +	mrngs->nr_ranges = idx + 1;
+> +}
+> +
+> +/**
+> + * realloc_mem_ranges - reallocate mem_ranges with size incremented
+> + *                      by MEM_RANGE_CHUNK_SZ. Frees up the old memory,
+> + *                      if memory allocation fails.
+> + * @mem_ranges:         Memory ranges to reallocate.
+> + *
+> + * Returns pointer to reallocated memory on success, NULL otherwise.
+> + */
+> +struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges)
+> +{
+> +	struct crash_mem *mrngs = *mem_ranges;
+> +	unsigned int nr_ranges;
+> +	size_t size;
+> +
+> +	size = get_mem_rngs_size(mrngs);
+> +	nr_ranges = mrngs ? mrngs->nr_ranges : 0;
+> +
+> +	size += MEM_RANGE_CHUNK_SZ;
+> +	mrngs = krealloc(*mem_ranges, size, GFP_KERNEL);
+> +	if (!mrngs) {
+> +		kfree(*mem_ranges);
+> +		*mem_ranges = NULL;
+> +		return NULL;
+> +	}
+> +
+> +	mrngs->nr_ranges = nr_ranges;
+> +	mrngs->max_nr_ranges = get_max_nr_ranges(size);
+> +	*mem_ranges = mrngs;
+> +
+> +	return mrngs;
+> +}
+> +
+> +/**
+> + * add_mem_range - Updates existing memory range, if there is an overlap.
+> + *                 Else, adds a new memory range.
+> + * @mem_ranges:    Range list to add the memory range to.
+> + * @base:          Base address of the range to add.
+> + * @size:          Size of the memory range to add.
+> + *
+> + * (Re)allocates memory, if needed.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
+> +{
+> +	struct crash_mem *mrngs = *mem_ranges;
+> +	u64 mstart, mend, end;
+> +	unsigned int i;
+> +
+> +	if (!size)
+> +		return 0;
+> +
+> +	end = base + size - 1;
+> +
+> +	if ((mrngs == NULL) || (mrngs->nr_ranges == 0))
+> +		return __add_mem_range(mem_ranges, base, size);
+> +
+> +	for (i = 0; i < mrngs->nr_ranges; i++) {
+> +		mstart = mrngs->ranges[i].start;
+> +		mend = mrngs->ranges[i].end;
+> +		if (base < mend && end > mstart) {
+> +			if (base < mstart)
+> +				mrngs->ranges[i].start = base;
+> +			if (end > mend)
+> +				mrngs->ranges[i].end = end;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return __add_mem_range(mem_ranges, base, size);
+> +}
+> +
+> +/**
+> + * add_tce_mem_ranges - Adds tce-table range to the given memory ranges list.
+> + * @mem_ranges:         Range list to add the memory range(s) to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_tce_mem_ranges(struct crash_mem **mem_ranges)
+
+Not sure this and the other add_foo_mem_ranges() really belong in this patch.
+
+> +{
+> +	struct device_node *dn;
+> +	int ret = 0;
+> +
+> +	for_each_node_by_type(dn, "pci") {
+> +		u64 base;
+> +		u32 size;
+> +		int rc;
+
+Do you really need ret and rc?
+
+> +		/*
+> +		 * It is ok to have pci nodes without tce. So, ignore
+> +		 * any read errors here.
+> +		 */
+> +		rc = of_property_read_u64(dn, "linux,tce-base", &base);
+> +		rc |= of_property_read_u32(dn, "linux,tce-size", &size);
+> +		if (rc)
+> +			continue;
+> +
+> +		ret = add_mem_range(mem_ranges, base, size);
+> +		if (ret)
+> +			break;
+                        ^
+                        dn leaked.
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * add_initrd_mem_range - Adds initrd range to the given memory ranges list,
+> + *                        if the initrd was retained.
+> + * @mem_ranges:           Range list to add the memory range to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_initrd_mem_range(struct crash_mem **mem_ranges)
+> +{
+> +	u64 base, end;
+> +	char *str;
+> +	int ret;
+> +
+> +	/* This range means something only if initrd was retained */
+> +	str = strstr(saved_command_line, "retain_initrd");
+> +	if (!str)
+> +		return 0;
+
+Unfortunate that we have to go and scan the command line again. But I
+don't see a better way ATM.
+
+Could be more concise:
+
+	if (!strstr(saved_command_line, "retain_initrd"))
+		return 0;
+
+> +
+> +	ret = of_property_read_u64(of_chosen, "linux,initrd-start", &base);
+> +	ret |= of_property_read_u64(of_chosen, "linux,initrd-end", &end);
+> +	if (!ret)
+> +		ret = add_mem_range(mem_ranges, base, end - base + 1);
+> +	return ret;
+> +}
+> +
+> +#ifdef CONFIG_PPC_BOOK3S_64
+> +/**
+> + * add_htab_mem_range - Adds htab range to the given memory ranges list,
+> + *                      if it exists
+> + * @mem_ranges:         Range list to add the memory range to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_htab_mem_range(struct crash_mem **mem_ranges)
+> +{
+> +	if (!htab_address)
+> +		return 0;
+> +
+> +	return add_mem_range(mem_ranges, __pa(htab_address), htab_size_bytes);
+> +}
 > +#endif
 > +
->         err = shutdown_memcg_caches(s);
->         if (!err)
->                 err = shutdown_cache(s);
->
->
+> +/**
+> + * add_kernel_mem_range - Adds kernel text region to the given
+> + *                        memory ranges list.
+> + * @mem_ranges:           Range list to add the memory range to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_kernel_mem_range(struct crash_mem **mem_ranges)
+> +{
+> +	return add_mem_range(mem_ranges, 0, __pa(_end));
+> +}
+> +
+> +/**
+> + * add_rtas_mem_range - Adds RTAS region to the given memory ranges list.
+> + * @mem_ranges:         Range list to add the memory range to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_rtas_mem_range(struct crash_mem **mem_ranges)
+> +{
+> +	struct device_node *dn;
+> +	int ret = 0;
+> +
+> +	dn = of_find_node_by_path("/rtas");
+> +	if (dn) {
+> +		u32 base, size;
+> +
+> +		ret = of_property_read_u32(dn, "linux,rtas-base", &base);
+> +		ret |= of_property_read_u32(dn, "rtas-size", &size);
+> +		if (ret)
+> +			goto out;
+> +
+> +		ret = add_mem_range(mem_ranges, base, size);
+> +	}
+> +
+> +out:
+> +	of_node_put(dn);
+> +	return ret;
+> +}
+
+Or:
+	struct device_node *dn;
+        u32 base, size;
+	int rc;
+
+	dn = of_find_node_by_path("/rtas");
+	if (!dn)
+        	return 0;
+
+	rc  = of_property_read_u32(dn, "linux,rtas-base", &base);
+	rc |= of_property_read_u32(dn, "rtas-size", &size);
+	if (rc == 0)
+		rc = add_mem_range(mem_ranges, base, size);
+
+	of_node_put(dn);
+	return rc;
+}
 
 
---
-Yours,
-Muchun
+> +
+> +/**
+> + * add_opal_mem_range - Adds OPAL region to the given memory ranges list.
+> + * @mem_ranges:         Range list to add the memory range to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_opal_mem_range(struct crash_mem **mem_ranges)
+> +{
+> +	struct device_node *dn;
+> +	int ret = 0;
+> +
+> +	dn = of_find_node_by_path("/ibm,opal");
+> +	if (dn) {
+> +		u64 base, size;
+> +
+> +		ret = of_property_read_u64(dn, "opal-base-address", &base);
+> +		ret |= of_property_read_u64(dn, "opal-runtime-size", &size);
+> +		if (ret)
+> +			goto out;
+> +
+> +		ret = add_mem_range(mem_ranges, base, size);
+> +	}
+> +
+> +out:
+> +	of_node_put(dn);
+> +	return ret;
+> +}
+> +
+> +/**
+> + * add_reserved_ranges - Adds "/reserved-ranges" regions exported by f/w
+> + *                       to the given memory ranges list.
+> + * @mem_ranges:          Range list to add the memory ranges to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_reserved_ranges(struct crash_mem **mem_ranges)
+> +{
+> +	int n_mem_addr_cells, n_mem_size_cells, i, len, cells, ret = 0;
+> +	const __be32 *prop;
+> +
+> +	prop = of_get_property(of_root, "reserved-ranges", &len);
+> +	if (!prop)
+> +		return 0;
+> +
+> +	of_node_get(of_root);
+
+You shouldn't need to get the root node, you already used it above anyway.
+
+> +	n_mem_addr_cells = of_n_addr_cells(of_root);
+> +	n_mem_size_cells = of_n_size_cells(of_root);
+> +	cells = n_mem_addr_cells + n_mem_size_cells;
+> +
+> +	/* Each reserved range is an (address,size) pair */
+> +	for (i = 0; i < (len / (sizeof(*prop) * cells)); i++) {
+                                       ^
+                                       just u32 would be clearer I think.
+
+
+
+cheers
