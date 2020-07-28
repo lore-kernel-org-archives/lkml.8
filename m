@@ -2,103 +2,127 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A691EC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A015220829
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:51:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OEgxRW7y"
+	by mail.kernel.org (Postfix) with ESMTP id 8AA5E22CA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgG1IvB (ORCPT
+        id S1728320AbgG1IwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:51:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbgG1IvA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:51:00 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C3F4C061794;
-        Tue, 28 Jul 2020 01:51:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=aEFlg03VmtZOr/NYRmyuz84VepVVyyUYcNOy0JnX5T8=; b=OEgxRW7y0wSoCYnQSUKvzfN1OH
-        Q6XAKE4+evLVmDJklilk347gso//k5jl+hjwnyAY0+jRKCm2CwvRXUefBdtx/yo4gzIM71vFWzxHA
-        o4clIClpbhHUkxulqyj5Y4T7prAFTrOdS+JLRai2B92/cktkIfDrTdxLIaRUSdgEMVTedDG9NEb4T
-        YY5PgfRffGnYKyxOTCkzTOdFfRbOBAAuIjKH2fKlUiCRl8DmHzOvCcPb4QAUYIXs1HDQJXGmBnXal
-        xFPcdcTOqFlHH57ng5gv2tWSbHVA9Fj9N4d65FfDSwOYpZDdFHuphpd4IM4DkZ9xygtnSBCq8SjJa
-        Rr392w5g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0LJz-0002iJ-Nb; Tue, 28 Jul 2020 08:50:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1E410304D58;
-        Tue, 28 Jul 2020 10:50:50 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 00B55203D4252; Tue, 28 Jul 2020 10:50:49 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 10:50:49 +0200
-From:   peterz@infradead.org
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc:     hpa@zytor.com, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Cathy Zhang <cathy.zhang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-edac@vger.kernel.org, frederic@kernel.org
-Subject: Re: [PATCH 4/4] x86/cpu: Use SERIALIZE in sync_core() when available
-Message-ID: <20200728085049.GS119549@hirez.programming.kicks-ass.net>
-References: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
- <20200727043132.15082-5-ricardo.neri-calderon@linux.intel.com>
- <D51F2DC3-3C56-44E6-A1F2-434E7D27133C@zytor.com>
- <20200727083619.GF119549@hirez.programming.kicks-ass.net>
- <49251CFA-8AC3-462D-A60F-0337593BE9CD@zytor.com>
- <20200727130536.GM119549@hirez.programming.kicks-ass.net>
- <20200727133020.GN119549@hirez.programming.kicks-ass.net>
- <20200728044114.GA24129@ranerica-svr.sc.intel.com>
+        Tue, 28 Jul 2020 04:52:21 -0400
+Received: from mga06.intel.com ([134.134.136.31]:42527 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbgG1IwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:52:21 -0400
+IronPort-SDR: HAoIyWTWtz5Dyp+kXH6hwDFNmLR1MfhbCpSKOQEWm9JQB85s5VWqFassPpD9btkuq7pRaJnloy
+ Ds5rJ9I3MXpw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="212696884"
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="212696884"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 01:52:20 -0700
+IronPort-SDR: 7Eu85jCfqD2RtO1KPp5GMOXZv1sOFQPa57rGgy8qas5XMQeBLn5hEPXT3JVtqi179nK69V5eEu
+ V5gmhNa7ce/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="312534773"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Jul 2020 01:52:16 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v6 0/2] pwm: intel: Add PWM driver for a new SoC
+Date:   Tue, 28 Jul 2020 16:52:11 +0800
+Message-Id: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728044114.GA24129@ranerica-svr.sc.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 09:41:14PM -0700, Ricardo Neri wrote:
-> I think I got a little lost here.
+Patch 1 adds dt binding document in YAML format.
+Patch 2 add PWM fan controller driver for LGM SoC.
 
-Hehe, sorry. I got carried away, it's just that recently people
-expressed interest in 'fixing' some of the text_poke_sync() issues
-again.
+v6:
+- Readjust .apply op as per review feedback.
+- Add back pwm-cells property to resolve make dt_binding_check error.
+  pwm-cells is a required property for PWM driver.
+- Add back fan related optional properties.
 
-> If I understand correctly, there are
-> two alternatives to implement support for serialize better:
-> 
->   a) alternative(IRET_TO_SELF, SERIALIZE, X86_FEATURE_SERIALIZE); or
->   b) asm volatile("1:.byte 0xf, 0x1, 0xe8;2:" _ASM_EXTABLE(1b:2b)
-> 
-> a) would be the traditional and simpler solution. b) would rely on
-> causing an #UD and getting an IRET on existing hardware b) would need some
-> more optimization work when handling the exception and a few reworks on
-> the poke patching code.
-> 
-> Which option should I focus on? Which option would be more desirable/better?
+v5:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve comments about Limitations.
+  * Use return value of regmap_update_bits if container function returns
+    error code.
+  * Modify .apply op to have strict checking for fixed period supported
+    by PWM HW.
+  * Use u64 as type when use min_t for duty_cycle.
+  * Add reset_control_assert() in failure case in probe where it was missing
+    earlier.
+- Remove fan specific optional properties from pwm dt binding document (Rob Herring)
 
-I'd say go with (a) for now. We can always go overboard later ;-)
+v4:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve notes and limitations comments.
+  * Add common prefixes for all #defines.
+  * Modify/Improve logic in .apply & .get_state ops as advised.
+  * Skip error messages in probe when error is -EPROBE_DEFER.
+  * Add dependencies in Kconfig (OF & HAS_IOMEM) and add select REGMAP_MMIO.
+  * Address other code quality related review concerns.
+- Fix make dt_binding_check reported error in YAML file.
+
+v3:
+- Address below review concerns from Uwe Kleine-König.
+  * Remove fan rpm calibration task from the driver.
+  * Modify apply op as per the review feedback.
+  * Add roundup & round down where necessary.
+  * Address other misc code quality related review concerns.
+  * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
+  * Improve dt binding document.
+
+v2:
+- Address below review concerns from Uwe Kleine-König.
+  * Add notes and limitations about PWM HW.
+  * Rename all functions and structure to lgm_pwm_* 
+  * Readjust space aligninment in structure fields to single space.
+  * Switch to using apply instead of config/enable/disable.
+  * Address other code quality related concerns.
+  * Rebase to 5.8-rc1.
+- Address review concerns in dt binding YAML from Rob Herring.
+
+v1:
+- Initial version.
+
+
+
+Rahul Tanwar (2):
+  Add DT bindings YAML schema for PWM fan controller of LGM SoC
+  Add PWM fan controller driver for LGM SoC
+
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  54 +++++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-intel-lgm.c                        | 268 +++++++++++++++++++++
+ 4 files changed, 334 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-intel-lgm.c
+
+-- 
+2.11.0
+
