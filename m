@@ -2,161 +2,139 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D404DC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC61A206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F63206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:02:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k6wjXpFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730295AbgG1OB3 (ORCPT
+        id S1730299AbgG1OC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:01:29 -0400
-Received: from mga05.intel.com ([192.55.52.43]:4697 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730248AbgG1OB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:01:29 -0400
-IronPort-SDR: AdXN3RxOhYXkZI+w16hAX+xx3zJz2eAnjSg4c7UKMJKkF5oIWDj8wkHACL/nccQJWXAIfLZ8Dl
- 4vREmwOLlfCA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="236073205"
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="236073205"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 07:01:28 -0700
-IronPort-SDR: w2etQZcEy/vnSpL4WuObiNTD4tpbcHE+V6FMLmCy8iibX5rsq1MxwmUIov44AtE1MjSSrwZ4tE
- SkXEbQGQ/Cgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="328348023"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 Jul 2020 07:01:28 -0700
-Received: from [10.252.128.28] (kliang2-mobl.ccr.corp.intel.com [10.252.128.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 715F7580295;
-        Tue, 28 Jul 2020 07:01:27 -0700 (PDT)
-Subject: Re: [PATCH V7 08/14] perf/x86/intel: Generic support for hardware
- TopDown metrics
-To:     peterz@infradead.org
-Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-        like.xu@linux.intel.com
-References: <20200723171117.9918-1-kan.liang@linux.intel.com>
- <20200723171117.9918-9-kan.liang@linux.intel.com>
- <20200724131906.GW119549@hirez.programming.kicks-ass.net>
- <20200724152755.GK43129@hirez.programming.kicks-ass.net>
- <d7ae2272-52ea-c5a9-2937-9a51c544ade8@linux.intel.com>
- <ddeae082-c38d-a961-4d90-1fbc1c9f2726@linux.intel.com>
- <20200728130956.GK10769@hirez.programming.kicks-ass.net>
- <25a630c6-2fa2-5dfd-bcd3-92e809c51d61@linux.intel.com>
- <20200728134412.GX119549@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <4313ed1f-03b2-48e7-36fe-6a112fa6c70f@linux.intel.com>
-Date:   Tue, 28 Jul 2020 10:01:25 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 10:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730155AbgG1OC5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 10:02:57 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85987C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:02:57 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id n24so1266595ooc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:02:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jL69nX+B0Hx8u7JYf58E+XYay/YU8aCHKDCqftm6Jow=;
+        b=k6wjXpFRtv5x15wt6DJdM0L4rO3whmGRX2Q8SaF9R2IG8WNwjhtcJVE3hk/WdhZJJ0
+         7P7dWRayCH5GJ1KKywwpc6ussSFtA4ZLH9yKZnb3afhgBylKUHa7dH5fMkPvZ983d+RR
+         WmtO5vyDWgRNuxyYeoLVyD4mSi++/pz6bG6qQXRY74CMSQSBLlvjfQacETc/zBbCyC3T
+         qXvpvcEUzddgPHE5tXX6UPMGo1OCcOBM/Nf5TikK8CeGE1mfzxCOYkR5vjkdvxuX4lfu
+         DcQTkfoLS2fmblyYlYtBVxo8Y6hWczqtEuthfFxdoBK3WcxZvIHQySZ9Yr4rvCiFJyCM
+         L+3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jL69nX+B0Hx8u7JYf58E+XYay/YU8aCHKDCqftm6Jow=;
+        b=HmbnonYI1IeK0pXgSPdLl4PkeAaeJ+KMu/o5OttRn7xNK5S/8Co5ZOvE5hLa3cgdmN
+         zbY5m8pPqOvUEvow9sZL2Yx7gd8D5ausA7MwJskgcXBXqhbQ6DMPrV0OvMikQ6G30l08
+         Uw3NquletrHHgUbQvhPqzp2NCcbtmtiUnuH4TsjnbhUp2Jf2SOAybEb5dgICzd0yojN3
+         8rR35/rJLR5WH6+UnZqiZlV9WgaLNUK2h1vvoVIwSlsW1AOu3EbDzUg8fT62j5uICjfA
+         iKzScuXzCPeQYDIklJesUddIjVgMceKfbphrEb9lCue/2n+JBP/F+rfSF0nQF/hGozdx
+         IYTw==
+X-Gm-Message-State: AOAM532vyTCBdcAu3dJdPFvMeD6gocuPAqhzeO+Jjft3bH7hgWLseykX
+        HukWbQILV6gNixZMoDDNznObrfqGDkpil9Szdds=
+X-Google-Smtp-Source: ABdhPJy59m8Y7DkF+E9GWxzb8eZ+7RGaM33JtKndprA8Kb1UzGoWYfpy+k1WnCSY4O/AUCJouIL7k6YGk0QT5m7RYHE=
+X-Received: by 2002:a4a:d4d9:: with SMTP id r25mr25151088oos.51.1595944976680;
+ Tue, 28 Jul 2020 07:02:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200728134412.GX119549@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1595601083-10183-1-git-send-email-qianjun.kernel@gmail.com> <87sgddaru7.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87sgddaru7.fsf@nanos.tec.linutronix.de>
+From:   jun qian <qianjun.kernel@gmail.com>
+Date:   Tue, 28 Jul 2020 22:02:45 +0800
+Message-ID: <CAKc596+vF4eYa4h55P2cssQbRKqBV_-9c_v35SXVMdonP3HBHA@mail.gmail.com>
+Subject: Re: [PATCH V4] Softirq:avoid large sched delay from the pending softirqs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     peterz@infradead.org, will@kernel.org, luto@kernel.org,
+        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
+        Uladzislau Rezki <urezki@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 27, 2020 at 11:41 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Qian,
+>
+> qianjun.kernel@gmail.com writes:
+> >  /*
+> >   * We restart softirq processing for at most MAX_SOFTIRQ_RESTART times,
+> >   * but break the loop if need_resched() is set or after 2 ms.
+> > - * The MAX_SOFTIRQ_TIME provides a nice upper bound in most cases, but in
+> > - * certain cases, such as stop_machine(), jiffies may cease to
+> > - * increment and so we need the MAX_SOFTIRQ_RESTART limit as
+> > - * well to make sure we eventually return from this method.
+> > + * In the loop, if the processing time of the softirq has exceeded 2
+> > + * milliseconds, we also need to break the loop to wakeup the
+> > ksofirqd.
+>
+> You are removing the MAX_SOFTIRQ_RESTART limit explanation and I rather
+> have MAX_SOFTIRQ_TIME_NS there than '2 milliseconds' in case the value
+> gets adjusted later on. Also while sched_clock() is granular on many
+> systems it still can be jiffies based and then the above problem
+> persists.
+>
+> > @@ -299,6 +298,19 @@ asmlinkage __visible void __softirq_entry __do_softirq(void)
+> >               }
+> >               h++;
+> >               pending >>= softirq_bit;
+> > +
+> > +             /*
+> > +              * the softirq's action has been running for too much time
+> > +              * so it may need to wakeup the ksoftirqd
+> > +              */
+> > +             if (need_resched() && sched_clock() > end) {
+> > +                     /*
+> > +                      * Ensure that the remaining pending bits are
+> > +                      * handled.
+> > +                      */
+> > +                     or_softirq_pending(pending << (vec_nr + 1));
+>
+> To or the value interrupts need to be disabled because otherwise you can
+> lose a bit when an interrupt happens in the middle of the RMW operation
+> and raises a softirq which is not in @pending and not in the per CPU
+> local softirq pending storage.
+>
+I can't understand the problem described above, could you explain in detail.
 
+thanks.
 
-On 7/28/2020 9:44 AM, peterz@infradead.org wrote:
-> On Tue, Jul 28, 2020 at 09:28:39AM -0400, Liang, Kan wrote:
->>
->>
->> On 7/28/2020 9:09 AM, Peter Zijlstra wrote:
->>> On Fri, Jul 24, 2020 at 03:10:52PM -0400, Liang, Kan wrote:
->>>
->>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>>> index 6cb079e0c9d9..010ac74afc09 100644
->>>> --- a/arch/x86/events/intel/core.c
->>>> +++ b/arch/x86/events/intel/core.c
->>>> @@ -2405,27 +2405,18 @@ static u64 icl_update_topdown_event(struct
->>>> perf_event *event)
->>>>    	return slots;
->>>>    }
->>>>
->>>> -static void intel_pmu_read_topdown_event(struct perf_event *event)
->>>> +static void intel_pmu_read_event(struct perf_event *event)
->>>>    {
->>>> -	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->>>> -
->>>> -	/* Only need to call update_topdown_event() once for group read. */
->>>> -	if ((cpuc->txn_flags & PERF_PMU_TXN_READ) &&
->>>> -	    !is_slots_event(event))
->>>>    		return;
->>>>
->>>> -	perf_pmu_disable(event->pmu);
->>>> -	x86_pmu.update_topdown_event(event);
->>>> -	perf_pmu_enable(event->pmu);
->>>> -}
->>>> -
->>>> -static void intel_pmu_read_event(struct perf_event *event)
->>>> -{
->>>>    	if (event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD)
->>>>    		intel_pmu_auto_reload_read(event);
->>>> -	else if (is_topdown_count(event) && x86_pmu.update_topdown_event)
->>>> -		intel_pmu_read_topdown_event(event);
->>>> -	else
->>>> +	else if (is_slots_count(event) && x86_pmu.update_topdown_event) {
->>>> +		perf_pmu_disable(event->pmu);
->>>> +		x86_pmu.update_topdown_event(event);
->>>> +		perf_pmu_enable(event->pmu);
->>>> +	} else
->>>>    		x86_perf_event_update(event);
->>>>    }
->>>
->>> I'm a little puzzled by this; what happens if you:
->>>
->>> 	fd = sys_perf_event_open(&attr_slots);
->>> 	fd1 = sys_perf_event_open(&attr_metric, .group_fd=fd);
->>>
->>> 	read(fd1);
->>>
->>> ?
->>>
->>
->> I did a quick test. It depends on the .read_format of attr_metric.
->> If PERF_FORMAT_GROUP is applied for attr_metric, perf_read_group() will be
->> invoked. The value of fd1 is updated correctly.
->> If the flag is not applied, 0 will be returned.
-> 
-> Exactly :-), was that intentional?
+> There is another problem. Assume bit 0 and 1 are pending when the
+> processing starts. Now it breaks out after bit 0 has been handled and
+> stores back bit 1 as pending. Before ksoftirqd runs bit 0 gets raised
+> again. ksoftirqd runs and handles bit 0, which takes more than the
+> timeout. As a result the bit 0 processing can starve all other softirqs.
+>
+May I use a percpu val to record the order of processing softirq, by the order
+val, when it is in ksoftirqd we can process the pending softirq in order. In the
+scenario you described above, before ksoftirqd runs, bit 0 gets raised again,
+ksoftirqd runs and handles bit 1 by the percpu val. just like a ring.
 
-Kind of, because a metric event must be in a group with the leader slots 
-event. If a user reads (treats) the metric event as a singleton event, 
-an invalid value should be expected.
+Looking forward to your suggestions
 
-> Because prior to this change that
-> would've worked just fine.
-> 
-> Now, I agree it's a daft thing, because that value is pretty useless
-> without also having the slots value, but I feel we should be explicit in
-> our choices here.
-> 
-> If for example, we would've had hardware provide us the raw metric
-> counters, instead of us having to reconstruct them, this would've been a
-> semi useful thing.
-> 
-> So I'm tempted to leave things as it, and keep this 'working'.
-
-I will update the perf tool document to force the PERF_FORMAT_GROUP flag 
-for each metric events.
-
-Thanks,
-Kan
-
+Thanks
+> So this needs more thought.
+>
+> Thanks,
+>
+>         tglx
