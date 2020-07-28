@@ -2,113 +2,129 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7869BC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA5BC43468
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50B2920656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A87420656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:37:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TkMDP6Ze"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EwLsMt2G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729832AbgG1VhB (ORCPT
+        id S1729912AbgG1VhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 17:37:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728149AbgG1Vg6 (ORCPT
+        Tue, 28 Jul 2020 17:37:19 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:47402 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729617AbgG1Vgb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 17:36:58 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70B61C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 14:36:58 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k13so2911053plk.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 14:36:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=I+u/jJVuOl4Tt6bR3GTQhwRJ5pXoO4J/DZnB10u/ssM=;
-        b=TkMDP6ZegCZZNlpwjtYuA8ZS26v7I0GINLRYmD9+VVPyJxGU4qqF0jBKA0KUtU8zsR
-         pdq8UKphCd3tm8HkiOdI/Jzz5N5s+8KMykbwbbXPR0dBxB8eZmXveaSZ7Ju5PM9V8T30
-         216DlgoINignBaCoz6GO0or5gplDbj9afLAH4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=I+u/jJVuOl4Tt6bR3GTQhwRJ5pXoO4J/DZnB10u/ssM=;
-        b=kebxP5BZUOpwLSaRIcl9Ie+f/pBU4Tw5n94+NuEFuMW8wOrOsdJIQRgMB8F8b1xiqE
-         mEcOxUV38fwvGke9Smvx4ihcAfJxBJERTmBzSxxBuEpqK8cdzphr/T0aN1dkDS/uHmgI
-         nouhGvwMrm9TvWGlSQI1FFQCa4jhzcvGCm2toz95ccBsuglm3rmfSdEoDrg+TLeDKzhX
-         e/85ohoV5rYjsbANymJ2GFrjm94nUAwmcye3tkdiLF1uUt9Ll6lfIyJI+bMZdxttTz/P
-         zaFKOFO3Qu58u61l+GeCQyRwuzWESoJnxks0cEUsev1KJ4xvOfd9IeWvl8LOuDPGLGuG
-         bo4w==
-X-Gm-Message-State: AOAM532S6Mab19GNFOcFJFxP2chlsYMHYKaRGwiIpzc9OCMnaHdeYM65
-        pW178osLQb4d7NA6CP7DqdONrg==
-X-Google-Smtp-Source: ABdhPJxnh+1AFY5KueYE9vINO/eArVxK/D8hyRZdUw8kcXZz+KcuYbh7GWP01/WIHIU2CsI02TEeCQ==
-X-Received: by 2002:a17:90a:8e:: with SMTP id a14mr6596006pja.206.1595972217935;
-        Tue, 28 Jul 2020 14:36:57 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:a28c:fdff:fef0:49dd])
-        by smtp.gmail.com with ESMTPSA id nk22sm73563pjb.51.2020.07.28.14.36.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 14:36:57 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 14:36:55 -0700
-From:   Prashant Malani <pmalani@chromium.org>
-To:     Azhar Shaikh <azhar.shaikh@intel.com>
-Cc:     bleung@chromium.org, enric.balletbo@collabora.com,
-        groeck@chromium.org, linux-kernel@vger.kernel.org,
-        heikki.krogerus@linux.intel.com, utkarsh.h.patel@intel.com,
-        casey.g.bowman@intel.com, rajmohan.mani@intel.com
-Subject: Re: [PATCH] platform/chrome: cros_ec_typec: Send enum values to
- usb_role_switch_set_role()
-Message-ID: <20200728213655.GC2996678@google.com>
-References: <20200728212446.2699-1-azhar.shaikh@intel.com>
+        Tue, 28 Jul 2020 17:36:31 -0400
+Received: from dede-linux-virt.corp.microsoft.com (unknown [131.107.160.54])
+        by linux.microsoft.com (Postfix) with ESMTPSA id B738F20B491A;
+        Tue, 28 Jul 2020 14:36:29 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B738F20B491A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595972189;
+        bh=BO1cenWUnGNayuyBmKqbXIIbsqyXRIWwZdTmlpXz42M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EwLsMt2Gl0vLtrkeueHcRW+yvC6erjEIL+ShXG7u8Rgui7HO6pcVWh7MT/gKYI4W1
+         ofEouC72hqfzbke2OC5gkGFEVodrhKqD9KD7AVBbiI2Fu8/+xX6H3SuNDMlVcvz/hS
+         zCPDiv/lMq0gEOFlQHiy1sVyHSIM9pV7bD1+9UJI=
+From:   Deven Bowers <deven.desai@linux.microsoft.com>
+To:     agk@redhat.com, axboe@kernel.dk, snitzer@redhat.com,
+        jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
+        viro@zeniv.linux.org.uk, paul@paul-moore.com, eparis@redhat.com,
+        jannh@google.com, dm-devel@redhat.com,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-audit@redhat.com
+Cc:     tyhicks@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, sashal@kernel.org,
+        jaskarankhurana@linux.microsoft.com, mdsakib@microsoft.com,
+        nramas@linux.microsoft.com, pasha.tatashin@soleen.com
+Subject: [RFC PATCH v5 11/11] cleanup: uapi/linux/audit.h
+Date:   Tue, 28 Jul 2020 14:36:12 -0700
+Message-Id: <20200728213614.586312-13-deven.desai@linux.microsoft.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
+References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728212446.2699-1-azhar.shaikh@intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Azhar,
+Remove trailing whitespaces and align the integrity #defines in
+linux/uapi/audit.h
 
-On Tue, Jul 28, 2020 at 02:24:46PM -0700, Azhar Shaikh wrote:
-> usb_role_switch_set_role() has the second argument as enum for usb_role.
-> Currently depending upon the data role i.e. UFP(0) or DFP(1) is sent.
-> This eventually translates to USB_ROLE_NONE in case of UFP and
-> USB_ROLE_DEVICE in case of DFP. Correct this by sending correct enum
-> values as USB_ROLE_DEVICE in case of UFP and USB_ROLE_HOST in case of
-> UFP.
-nit: DFP
-> 
-> Fixes: 7e7def15fa4b ("platform/chrome: cros_ec_typec: Add USB mux control")
-> Signed-off-by: Azhar Shaikh <azhar.shaikh@intel.com>
-> Cc: Prashant Malani <pmalani@chromium.org>
-Reviewed-by: Prashant Malani <pmalani@chromium.org>
-> ---
->  drivers/platform/chrome/cros_ec_typec.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> index 3eae01f4c9f7..eb4713b7ae14 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -590,7 +590,8 @@ static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
->  		dev_warn(typec->dev, "Configure muxes failed, err = %d\n", ret);
->  
->  	return usb_role_switch_set_role(typec->ports[port_num]->role_sw,
-> -					!!(resp.role & PD_CTRL_RESP_ROLE_DATA));
-> +				       resp.role & PD_CTRL_RESP_ROLE_DATA
-> +				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
->  }
->  
->  static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
-> -- 
-> 2.17.1
-> 
+Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
+---
+ include/uapi/linux/audit.h | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
+index 5a634cca1d42..609b4a5e8a80 100644
+--- a/include/uapi/linux/audit.h
++++ b/include/uapi/linux/audit.h
+@@ -48,7 +48,7 @@
+  * 2500 - 2999 future user space (maybe integrity labels and related events)
+  *
+  * Messages from 1000-1199 are bi-directional. 1200-1299 & 2100 - 2999 are
+- * exclusively user space. 1300-2099 is kernel --> user space 
++ * exclusively user space. 1300-2099 is kernel --> user space
+  * communication.
+  */
+ #define AUDIT_GET		1000	/* Get status */
+@@ -78,7 +78,7 @@
+ #define AUDIT_LAST_USER_MSG	1199
+ #define AUDIT_FIRST_USER_MSG2	2100	/* More user space messages */
+ #define AUDIT_LAST_USER_MSG2	2999
+- 
++
+ #define AUDIT_DAEMON_START      1200    /* Daemon startup record */
+ #define AUDIT_DAEMON_END        1201    /* Daemon normal stop record */
+ #define AUDIT_DAEMON_ABORT      1202    /* Daemon error stop record */
+@@ -140,20 +140,20 @@
+ #define AUDIT_MAC_CALIPSO_ADD	1418	/* NetLabel: add CALIPSO DOI entry */
+ #define AUDIT_MAC_CALIPSO_DEL	1419	/* NetLabel: del CALIPSO DOI entry */
+ 
+-#define AUDIT_FIRST_KERN_ANOM_MSG   1700
+-#define AUDIT_LAST_KERN_ANOM_MSG    1799
+-#define AUDIT_ANOM_PROMISCUOUS      1700 /* Device changed promiscuous mode */
+-#define AUDIT_ANOM_ABEND            1701 /* Process ended abnormally */
+-#define AUDIT_ANOM_LINK		    1702 /* Suspicious use of file links */
+-#define AUDIT_ANOM_CREAT	    1703 /* Suspicious file creation */
+-#define AUDIT_INTEGRITY_DATA	    1800 /* Data integrity verification */
+-#define AUDIT_INTEGRITY_METADATA    1801 /* Metadata integrity verification */
+-#define AUDIT_INTEGRITY_STATUS	    1802 /* Integrity enable status */
+-#define AUDIT_INTEGRITY_HASH	    1803 /* Integrity HASH type */
+-#define AUDIT_INTEGRITY_PCR	    1804 /* PCR invalidation msgs */
+-#define AUDIT_INTEGRITY_RULE	    1805 /* policy rule */
+-#define AUDIT_INTEGRITY_EVM_XATTR   1806 /* New EVM-covered xattr */
+-#define AUDIT_INTEGRITY_POLICY_RULE 1807 /* IMA policy rules */
++#define AUDIT_FIRST_KERN_ANOM_MSG	1700
++#define AUDIT_LAST_KERN_ANOM_MSG	1799
++#define AUDIT_ANOM_PROMISCUOUS		1700 /* Device changed promiscuous mode */
++#define AUDIT_ANOM_ABEND		1701 /* Process ended abnormally */
++#define AUDIT_ANOM_LINK			1702 /* Suspicious use of file links */
++#define AUDIT_ANOM_CREAT		1703 /* Suspicious file creation */
++#define AUDIT_INTEGRITY_DATA		1800 /* Data integrity verification */
++#define AUDIT_INTEGRITY_METADATA	1801 /* Metadata integrity verification */
++#define AUDIT_INTEGRITY_STATUS		1802 /* Integrity enable status */
++#define AUDIT_INTEGRITY_HASH		1803 /* Integrity HASH type */
++#define AUDIT_INTEGRITY_PCR		1804 /* PCR invalidation msgs */
++#define AUDIT_INTEGRITY_RULE		1805 /* policy rule */
++#define AUDIT_INTEGRITY_EVM_XATTR	1806 /* New EVM-covered xattr */
++#define AUDIT_INTEGRITY_POLICY_RULE	1807 /* IMA policy rules */
+ #define AUDIT_INTEGRITY_POLICY_LOAD	1808 /* IPE Policy Load */
+ #define AUDIT_INTEGRITY_POLICY_ACTIVATE	1809 /* IPE Policy Activation */
+ #define AUDIT_INTEGRITY_EVENT		1810 /* IPE Evaluation Event */
+-- 
+2.27.0
+
