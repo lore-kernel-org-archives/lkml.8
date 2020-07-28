@@ -4,130 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDA7C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E31CC433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFFF2250E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E4F2177B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="nEjdWpcU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mRFjYSup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbgG1IRs (ORCPT
+        id S1728102AbgG1ISM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:17:48 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:36909 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727916AbgG1IRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:17:46 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 1f508000;
-        Tue, 28 Jul 2020 07:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=K4YAt33ilBR3hd1+7JojCPxtvSA=; b=nEjdWp
-        cUQVj0KWRd87puFx0fk1HADPVt/5ckkL0vcSiVAoyePGSTncp+KafcroE0itJJAR
-        hvCKOHIgNqwby+4I13HG5z9ibnxBmqHfVx+jKtrPfvHTnJrmPNg1WsagEKVyYT8s
-        0wLLBcv/NIyWIJ2xwHqa/F7Ekuot/H5qUld6hDSAXP06OIRI6q+V7cdk8Ye2E95N
-        oE2iYHJELOZGqN2H10I58K4qjsUNSGzPFklfgHdPIOfnKUBe2eF7SiuhT2DW4gmx
-        Zlh/4Lwi80eH4MYYZz1R0kvQtczs/XnszWGNGZW6geww/y9D6tsJ0FqJg7QkrUqh
-        r9lHeJJo9aIu1+DA==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id d27e76da (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Tue, 28 Jul 2020 07:54:16 +0000 (UTC)
-Received: by mail-io1-f54.google.com with SMTP id a5so4613572ioa.13;
-        Tue, 28 Jul 2020 01:17:41 -0700 (PDT)
-X-Gm-Message-State: AOAM5326njdztPe3VkZjU3njFuLXGQOjJ86c1ItnwgBvIww26i5yBNmp
-        mf7+bJPIr4+tDgdochtGaglyFVJWyqL1zhmrfeY=
-X-Google-Smtp-Source: ABdhPJwruWEMSl6lI3SS18Iq/8cGmq7nVWSaRamLRaM9jzUJiajMF+UBN6XkUtAb0UlYhZIkk+zlhZ92oa7Pvf4Iz8s=
-X-Received: by 2002:a05:6638:250f:: with SMTP id v15mr8210865jat.75.1595924260418;
- Tue, 28 Jul 2020 01:17:40 -0700 (PDT)
+        Tue, 28 Jul 2020 04:18:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727976AbgG1ISL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:18:11 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C79DC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:18:11 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id s16so4938989ljc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:18:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=afN9owJVn9khLrk5jWz5DEIVJ98lhYCwTBibJb7loqo=;
+        b=mRFjYSupoXR0XFvmFMkwtXGrXyUBHtmJKcaEdMJH5VxH2rkBVVDAf4HxakGAUipVow
+         Q5ZlZrIdM0JftkLGg6uaoGNUSY+cwJ77bVgY80akUkSB947ydVQUshWLPCpHk8pjyqAx
+         SJAdO3AhjVzvraV4ziXvgZPQMun83Y7qfIioBZfYbTZ5Ps9lSu8nPBStu2hYAwmm0YMq
+         Gwa6h5UKFJ8AG4TrDmAAXJMAmP0XoFVm36oq/iHCnnstmWB2KP1SipH2U3EcyteA+RKm
+         9N9/L954a21H/+FXSHyQpQBtNLqr7SE9yrmvahjN2Zvy4Bu+Hc8feBW12pfwktFI5U4a
+         aF6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=afN9owJVn9khLrk5jWz5DEIVJ98lhYCwTBibJb7loqo=;
+        b=ktdBo0RG8Z5MzaCGypcxH3AoWvA9GYJI5XAroVX0Jw8tu/gzEbD210pEtI2awa+P9Z
+         7ZWlv5qbR2ghA6gjv7D6e0cncYIJ7lGmgqgZ+ZZwiZqBE2MJFfDue6ncePTkWodyztsK
+         jDTfLi52SpvQQr5qGJewHAYfY2Xuql7qX1ZjFPwDJo81sREcNZhE9rWrvzKswa+l147w
+         vPlMeM8sOGPHYktXajzDNYraTgPlMOqEGBs35oYF3CHlIZCf9IIOhKS+jMDBSjmI5NTH
+         3Kg8v2Ov5au4YvZ9BbnxA+hfdmoO62viza9sS3T6+E0+FFY7HokrmFar840Q9C7ENsj7
+         wHdQ==
+X-Gm-Message-State: AOAM530ICDEHJrQwKFWoWpnsQ7+7CiamdcXsoop6LBICHEe0mh9XxHVG
+        GHXcTAAuaGFFed2mtE+/57+bEg0CfgU0hg6C8AsYFw==
+X-Google-Smtp-Source: ABdhPJxLzCKouWNzSG+h4CcFUhBlC/Zenvbz8WAoy+mp/kcKtWdhpbDb/CIitCOUbQvcACM1R/1X2U3858EvljGMEtA=
+X-Received: by 2002:a2e:8597:: with SMTP id b23mr10817583lji.338.1595924289696;
+ Tue, 28 Jul 2020 01:18:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200723060908.50081-1-hch@lst.de> <20200723060908.50081-13-hch@lst.de>
- <20200727150310.GA1632472@zx2c4.com> <20200727150601.GA3447@lst.de>
- <CAHmME9ric=chLJayn7Erve7WBa+qCKn-+Gjri=zqydoY6623aA@mail.gmail.com>
- <20200727162357.GA8022@lst.de> <908ed73081cc42d58a5b01e0c97dbe47@AcuMS.aculab.com>
-In-Reply-To: <908ed73081cc42d58a5b01e0c97dbe47@AcuMS.aculab.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 28 Jul 2020 10:17:28 +0200
-X-Gmail-Original-Message-ID: <CAHmME9pUbRmJq1Qcj10eENt15cuQHkiXJNKrUDmmC18n2mLKDA@mail.gmail.com>
-Message-ID: <CAHmME9pUbRmJq1Qcj10eENt15cuQHkiXJNKrUDmmC18n2mLKDA@mail.gmail.com>
-Subject: Re: [PATCH 12/26] netfilter: switch nf_setsockopt to sockptr_t
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+ <20200723100317.GJ3703480@smile.fi.intel.com> <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+ <CAHp75Vdeg6v_yLYjxZPJM7SgDP-fou6SEuaE8+TFCNW4c2r_rA@mail.gmail.com> <20200727215010.qzhvavmskfoaapi5@mobilestation>
+In-Reply-To: <20200727215010.qzhvavmskfoaapi5@mobilestation>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Jul 2020 10:17:58 +0200
+Message-ID: <CACRpkda5Ki+itbvLsxSLj4o1NRKdf9P48kbYXEgArDqcEcWA7w@mail.gmail.com>
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 10:07 AM David Laight <David.Laight@aculab.com> wrote:
->
-> From: Christoph Hellwig
-> > Sent: 27 July 2020 17:24
-> >
-> > On Mon, Jul 27, 2020 at 06:16:32PM +0200, Jason A. Donenfeld wrote:
-> > > Maybe sockptr_advance should have some safety checks and sometimes
-> > > return -EFAULT? Or you should always use the implementation where
-> > > being a kernel address is an explicit bit of sockptr_t, rather than
-> > > being implicit?
-> >
-> > I already have a patch to use access_ok to check the whole range in
-> > init_user_sockptr.
->
-> That doesn't make (much) difference to the code paths that ignore
-> the user-supplied length.
-> OTOH doing the user/kernel check on the base address (not an
-> incremented one) means that the correct copy function is always
-> selected.
+On Mon, Jul 27, 2020 at 11:50 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
 
-Right, I had the same reaction in reading this, but actually, his code
-gets rid of the sockptr_advance stuff entirely and never mutates, so
-even though my point about attacking those pointers was missed, the
-code does the better thing now -- checking the base address and never
-mutating the pointer. So I think we're good.
+> It turns out my "mostly" was wrong in this matter. It's 4 out of 17 patches,
+> which make the initialization in the same order as mine:
 
->
-> Perhaps the functions should all be passed a 'const sockptr_t'.
-> The typedef could be made 'const' - requiring non-const items
-> explicitly use the union/struct itself.
+I'll think about fixing them up to all look the same at some point
+if noone beats me to it. Sorry for the mess, I was just hacking
+along to get this work item finalized.
 
-I was thinking the same, but just by making the pointers inside the
-struct const. However, making the whole struct const via the typedef
-is a much better idea. That'd probably require changing the signature
-of init_user_sockptr a bit, which would be fine, but indeed I think
-this would be a very positive change.
-
-Jason
+Yours,
+Linus Walleij
