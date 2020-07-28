@@ -2,111 +2,232 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12678C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAD4D20792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC1D621744
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:50:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iAV/XMBQ"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="HQAuzdLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgG1FtK (ORCPT
+        id S1726962AbgG1FuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 01:49:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgG1FtJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 01:49:09 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 677D4C061794;
-        Mon, 27 Jul 2020 22:49:09 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BG5Mj6hMwz9sTm;
-        Tue, 28 Jul 2020 15:49:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595915346;
-        bh=7pmVD8Xdvv4c9LCnzIqpgqptaxY1J/8r1eRxOVHym24=;
-        h=Date:From:To:Cc:Subject:From;
-        b=iAV/XMBQKiPYSh+PsNrDpamjdpVDsZvLA2MyoC6R6WA+r5wty37lisenAPTpivjQP
-         E3+AW2NzRQW8h3Q67PyhE2DSD6mogXFBZjYOkQgV6rtTx3ksuomA18RXR92P2buCgU
-         dbUuFmnzcpxbeLglppi6RWRXhjybqwzUkdLjhkdO5y26FRTqPxz1SXEkCky3BFNmYB
-         4+DGiQU2GP7GjVwhIGknVfFWmyMjxmNAxc7kPOWwcCk6sHAeSyNeyroY3OSZ6zBhFN
-         HgsNBJHaO9/qs+ncoinq6s2TRewFxaYVGioPRDvnznh6zZKlOCyWZG2z3hrkMjMbiL
-         T9/9q1H2iVBdg==
-Date:   Tue, 28 Jul 2020 15:49:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Herring <robherring2@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: linux-next: manual merge of the devicetree tree with the pci tree
-Message-ID: <20200728154903.51a60b8e@canb.auug.org.au>
+        Tue, 28 Jul 2020 01:50:16 -0400
+Received: from mail-bn7nam10on2089.outbound.protection.outlook.com ([40.107.92.89]:14944
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726369AbgG1FuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 01:50:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ldLe8VHuEScYBO1HUU/UrkuMAtxnc75ILxj71OkKnh8C2fz/wDLhNLijR/qnX1fEg1M6J3HtESmNo+sZ1XlgyKZj4oxMfQrJfCFe9m3hcFTMqi4Gv2Ru80zOMx2mSGENw0JCjNLhEpzIjtv3vtjArjrUFNI54XqtWnTTENN4U5GotzVQyRblWDyGydmgUKBvGAZ7vniDh1fhrE6Wya0RzpJHdPqVG5nLivzw0dbBAgM9Ue24UpIMZB2klqsI62dum1UsP1CvYW4pA9/vEbchjpGadGF1lGwXcY1FdcDe8/BAj9yuqCx9SJr74R+JCaZ/OzOSIVpa8rGjcRtnrfJ2fQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ph05vRWDJJAGmWgF0c/SV36MPAaeyE/x282LusFhpvY=;
+ b=YczA9Qwt0vigkig45x1XwPHAEnVY/8U1UWsH9K82ooWUGGAEmnP/K7eovLd3Zl1tMyN0h/8EeNgcJ7498AAfWW5X5ef56dI8yLwBV1WJb5HtxLzYAkJ/KYckEX9c3ijYk2X2156iDOhXFxUkywP+M0hMsYC2d6zIB60NqqqXRGtopd1FbChv5GjhMpEN1PdsOhg6lP5Z3pe/KFdkDsDAPUxmvuIQluBXg8kg/RZ0cY4OJ0Njfp5AFFK1RBSKLdVloaLfMfqM+gxt2UTBxdGELrJq8fETK5uyMoeauReRE5WQ02fkju0LqSXU7rtXmeEnJXGebQVy7etTs0cKB5l0uw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ph05vRWDJJAGmWgF0c/SV36MPAaeyE/x282LusFhpvY=;
+ b=HQAuzdLiT7DV3MWF96Y5pxDIPLNQGWr5p5Je8LvqbJE7QOrvtEjRGUvVxPWXSRykT7qxKtCvhNu9JjXns0hkmndjx6gRn6xj4kSwM6mNt7w5DBTJDcLSWFPXVHZ9qZGccIHANI6qluRJ2UEqSSqgaR0WqxhqJhWa8bLn8r0i7MY=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR1201MB0188.namprd12.prod.outlook.com (2603:10b6:4:56::12)
+ by DM5PR1201MB0185.namprd12.prod.outlook.com (2603:10b6:4:55::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Tue, 28 Jul
+ 2020 05:50:12 +0000
+Received: from DM5PR1201MB0188.namprd12.prod.outlook.com
+ ([fe80::41b7:b11a:c6d8:1e0e]) by DM5PR1201MB0188.namprd12.prod.outlook.com
+ ([fe80::41b7:b11a:c6d8:1e0e%10]) with mapi id 15.20.3216.033; Tue, 28 Jul
+ 2020 05:50:12 +0000
+Subject: Re: [PATCH 1/4] ACPI: APD: Change name from ST to FCH
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200720050500.23357-1-akshu.agrawal@amd.com>
+ <20200720050500.23357-2-akshu.agrawal@amd.com>
+ <CAJZ5v0j264hcr0AbwXou240K73xfQ5Q0pF4TEP11SAOT2nuOjA@mail.gmail.com>
+From:   "Agrawal, Akshu" <aagrawal2@amd.com>
+Message-ID: <27966cc7-cb5a-fd18-2244-5106d8853ea1@amd.com>
+Date:   Tue, 28 Jul 2020 11:20:00 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <CAJZ5v0j264hcr0AbwXou240K73xfQ5Q0pF4TEP11SAOT2nuOjA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: MAXPR01CA0098.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:5d::16) To DM5PR1201MB0188.namprd12.prod.outlook.com
+ (2603:10b6:4:56::12)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qzxUCl99eEfApvkgx+E75GL";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.105] (122.171.179.172) by MAXPR01CA0098.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:5d::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22 via Frontend Transport; Tue, 28 Jul 2020 05:50:10 +0000
+X-Originating-IP: [122.171.179.172]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 1094a65f-d32c-4fee-851a-08d832ba184c
+X-MS-TrafficTypeDiagnostic: DM5PR1201MB0185:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR1201MB01859265B1CABBD47FE1F5A0F8730@DM5PR1201MB0185.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: V57gYslpPtlJAjNmziaAYpVwC49SsZ7aJB0PlzasqcNf+ctEbo2cO+7w11l2Jx8eomf1tphVbKa+8ZxXwm2yUoa+/l06kMDSntm0sod6DQkxspEYalu0W3DLq6NDPmErhs1lVQswCSHUfsv2J0QTQe933bCsYEQc6Hd6t87wRCzWrLUHi9sk6/5e/CSCy+O0q9kRaqsorSxkyfUyaJjLFcBDmPOdq76FaYEwGANm2grHreaOe/sAsrPOfBdu/58l+AB3iHhX3veiSumJcULIjrxb3sd73nww04ZN4pUl+v2rYus0Pj3H9XGL7l4/BI/g6AU0p6/mtsMv32YzAEF7G9ml8EN/RRovMHFgsORJnI0G4siJ3uc/KvLcCD55Cpj1wKMLJV4ei465L9cU9MV6KD7xaSqwQUAWRotK7cqTDVjzOLQE1qRw8C/L28J7JyFtpMTN3q+8zcPtoZ/hQOIKmw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0188.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(366004)(136003)(396003)(376002)(966005)(316002)(16576012)(31686004)(6486002)(8936002)(8676002)(83380400001)(6636002)(4326008)(2906002)(186003)(5660300002)(16526019)(6666004)(53546011)(26005)(2616005)(956004)(66556008)(66476007)(66946007)(110136005)(54906003)(478600001)(36756003)(31696002)(52116002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: NQFZXgrL1JJM0EQaLFm4ZuvZnxkeDCbhqkjxq2n1W3xhHPmsJy/avlZmSZx6Io0wUNDANr9sxtKIQ7NsNidcrh1sD7TvhF3acHzomgVXAXbrzypwJ2i4CCdl1FZsGqDDXciv906PQa4NbXoDhFufr+/6QJ+i9tqDwNVNTXhcvQ3EqH0Syp/KYlLCeZTuYuuJAyaFKjUUPWCqB1yNcZpL9dnn3hfYC0F8zSBaYxrDZ/kh3yQyTJEZLZz7flIkMqGIbTV6b9RBxTh2Zux1+7/NdeNuhWC9CB9g8MKFQvH/VwgWSE94MAhRcLkBW/AZthQwz+lwnC10S/WQuWajYUBOkp9PJ2jMIwDxQrGZqW/9qow6A2CIiQLb5Ak28RFN0vx0sDjB5TlwHDgRHj7ZauoMOVh17Et9uqfqIGKSjNxzLurjmomzbRGRLKc5I5LCW1sQOAw/yBk+Ddw6wcsRXYXwvwMLLYgRjzG51y1/zeqxBIvOtdlaEhITRPdyCYZTp0hP
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1094a65f-d32c-4fee-851a-08d832ba184c
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR1201MB0188.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 05:50:12.8267
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gIkxDNRwuvTyxzT2vnVg3VVYX/vj8MtQyFjkBA+/+je8ZQMUvN0r9YBQBTxjTy3evAI306KrtuVN4LlMArWHvw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qzxUCl99eEfApvkgx+E75GL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 7/27/2020 6:58 PM, Rafael J. Wysocki wrote:
+> On Mon, Jul 20, 2020 at 7:06 AM Akshu Agrawal <akshu.agrawal@amd.com> wrote:
+>> AMD SoC general pupose clk is present in new platforms with
+>> same MMIO mappings. We can reuse the same clk handler support
+>> for other platforms. Hence, changing name from ST(SoC) to FCH(IP)
+>>
+>> Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
+> This patch and the [3/4] appear to be part of a larger series which
+> isn't visible to me as a whole.
 
-Today's linux-next merge of the devicetree tree got a conflict in:
+Link to other patches:
 
-  Documentation/devicetree/bindings/pci/qcom,pcie.txt
+https://patchwork.kernel.org/patch/11672857/
 
-between commits:
+https://patchwork.kernel.org/patch/11672861/
 
-  736ae5c91712 ("dt-bindings: PCI: qcom: Add missing clks")
-  b11b8cc161de ("dt-bindings: PCI: qcom: Add ext reset")
-  d511580ea9c2 ("dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant")
+>
+> Do you want me to apply them nevertheless?
 
-from the pci tree and commit:
+This patch on its own will cause compilation error as we need the second 
+patch.
 
-  70172d196947 ("dt-bindings: pci: convert QCOM pci bindings to YAML")
+Since, there is dependency we need them to be merged together. Can you 
+or Stephen please suggest a way forward.
 
-from the devicetree tree.
 
-I don;t know how to fixed it up so I just left the latter one . This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+Thanks,
 
---=20
-Cheers,
-Stephen Rothwell
+Akshu
 
---Sig_/qzxUCl99eEfApvkgx+E75GL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8fvFAACgkQAVBC80lX
-0GyZGwf/dObb8tS2w5gHpUiENUNXKmqVUovTJzGcrtrG7AO4dwIcSq/DQ9SE773W
-dU7X2BF9Deo5BHNj7x+2o4759mRpYAaBU1q3mdc8te9/1RUgWHmyeyJMVgKF8B7n
-/UhNx68ITaoiFNVU6UFviHNKR5XIWxPCgsXtmeF7NRUYfcuJHa0vOX4SM8Gh6e1q
-AfZRUFr7dJXnWr8X9CeSwxpuDjNv16YOVonLOTSxkmaQETA/Xg2AH38YInjOSKYm
-IC+zQK+i/aCHWm/ck0lCEpeTIgrZnbMVaYhPWGTsi0106fU7a2JbHK6gxJoVTgM0
-CTdRa8gC7OX5E6jV8h4qcU/LhPtDpw==
-=c64L
------END PGP SIGNATURE-----
-
---Sig_/qzxUCl99eEfApvkgx+E75GL--
+>> ---
+>>   drivers/acpi/acpi_apd.c                            | 14 +++++++-------
+>>   .../linux/platform_data/{clk-st.h => clk-fch.h}    | 10 +++++-----
+>>   2 files changed, 12 insertions(+), 12 deletions(-)
+>>   rename include/linux/platform_data/{clk-st.h => clk-fch.h} (53%)
+>>
+>> diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
+>> index ba2612e9a0eb..2d99e46add1a 100644
+>> --- a/drivers/acpi/acpi_apd.c
+>> +++ b/drivers/acpi/acpi_apd.c
+>> @@ -8,7 +8,7 @@
+>>    */
+>>
+>>   #include <linux/clk-provider.h>
+>> -#include <linux/platform_data/clk-st.h>
+>> +#include <linux/platform_data/clk-fch.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/pm_domain.h>
+>>   #include <linux/clkdev.h>
+>> @@ -79,11 +79,11 @@ static int misc_check_res(struct acpi_resource *ares, void *data)
+>>          return !acpi_dev_resource_memory(ares, &res);
+>>   }
+>>
+>> -static int st_misc_setup(struct apd_private_data *pdata)
+>> +static int fch_misc_setup(struct apd_private_data *pdata)
+>>   {
+>>          struct acpi_device *adev = pdata->adev;
+>>          struct platform_device *clkdev;
+>> -       struct st_clk_data *clk_data;
+>> +       struct fch_clk_data *clk_data;
+>>          struct resource_entry *rentry;
+>>          struct list_head resource_list;
+>>          int ret;
+>> @@ -106,7 +106,7 @@ static int st_misc_setup(struct apd_private_data *pdata)
+>>
+>>          acpi_dev_free_resource_list(&resource_list);
+>>
+>> -       clkdev = platform_device_register_data(&adev->dev, "clk-st",
+>> +       clkdev = platform_device_register_data(&adev->dev, "clk-fch",
+>>                                                 PLATFORM_DEVID_NONE, clk_data,
+>>                                                 sizeof(*clk_data));
+>>          return PTR_ERR_OR_ZERO(clkdev);
+>> @@ -135,8 +135,8 @@ static const struct apd_device_desc cz_uart_desc = {
+>>          .properties = uart_properties,
+>>   };
+>>
+>> -static const struct apd_device_desc st_misc_desc = {
+>> -       .setup = st_misc_setup,
+>> +static const struct apd_device_desc fch_misc_desc = {
+>> +       .setup = fch_misc_setup,
+>>   };
+>>   #endif
+>>
+>> @@ -239,7 +239,7 @@ static const struct acpi_device_id acpi_apd_device_ids[] = {
+>>          { "AMD0020", APD_ADDR(cz_uart_desc) },
+>>          { "AMDI0020", APD_ADDR(cz_uart_desc) },
+>>          { "AMD0030", },
+>> -       { "AMD0040", APD_ADDR(st_misc_desc)},
+>> +       { "AMD0040", APD_ADDR(fch_misc_desc)},
+>>   #endif
+>>   #ifdef CONFIG_ARM64
+>>          { "APMC0D0F", APD_ADDR(xgene_i2c_desc) },
+>> diff --git a/include/linux/platform_data/clk-st.h b/include/linux/platform_data/clk-fch.h
+>> similarity index 53%
+>> rename from include/linux/platform_data/clk-st.h
+>> rename to include/linux/platform_data/clk-fch.h
+>> index 7cdb6a402b35..850ca776156d 100644
+>> --- a/include/linux/platform_data/clk-st.h
+>> +++ b/include/linux/platform_data/clk-fch.h
+>> @@ -1,17 +1,17 @@
+>>   /* SPDX-License-Identifier: MIT */
+>>   /*
+>> - * clock framework for AMD Stoney based clock
+>> + * clock framework for AMD misc clocks
+>>    *
+>>    * Copyright 2018 Advanced Micro Devices, Inc.
+>>    */
+>>
+>> -#ifndef __CLK_ST_H
+>> -#define __CLK_ST_H
+>> +#ifndef __CLK_FCH_H
+>> +#define __CLK_FCH_H
+>>
+>>   #include <linux/compiler.h>
+>>
+>> -struct st_clk_data {
+>> +struct fch_clk_data {
+>>          void __iomem *base;
+>>   };
+>>
+>> -#endif /* __CLK_ST_H */
+>> +#endif /* __CLK_FCH_H */
+>> --
+>> 2.20.1
+>>
