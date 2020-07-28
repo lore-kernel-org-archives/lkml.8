@@ -2,104 +2,105 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10187C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE89C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDF062075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC3D22075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:24:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zqc3wYsR"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lhwRCRZX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgG1CYN (ORCPT
+        id S1726859AbgG1CYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:24:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36494 "EHLO
+        Mon, 27 Jul 2020 22:24:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgG1CYM (ORCPT
+        with ESMTP id S1726269AbgG1CYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 22:24:12 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1730C061794;
-        Mon, 27 Jul 2020 19:24:11 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id x69so17385261qkb.1;
-        Mon, 27 Jul 2020 19:24:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lIlJ51rGXRMUnJksSFkB+ZvhhBvB4xCOXzVc7Skm02k=;
-        b=Zqc3wYsRnhwYE3AP5dWsxTAUSpUOqKMdI1SbLqN9V1qpJFZtvauPY1OOFP32EptMGh
-         9THvCr+lwyhvYarjR1SlJb4RH53buPSxYQJaATgiJBayCcAIO0Pv4ZJ2T6WD8GEC1HM1
-         mp5/24o1x3GPSlUtllsXCvX9nRhaQ1AW++V5RM+XhF31rYquGMI8MstAyUoiUm846Enj
-         /UPBuO89A6RBNZ2Pt/pxHAQOSxJii4O5S57uCUUaUi4B4vHJevIkiwwaGW6vVWhGJN5G
-         UVohTbj6GuniOog/anNGi6TceCzmGFX8T15smHJo1Eq24NzQVuL2HlllmMDm1etEVBwn
-         dGZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=lIlJ51rGXRMUnJksSFkB+ZvhhBvB4xCOXzVc7Skm02k=;
-        b=MA484JNnoAgwloDB42EKavEC7nUd/pPPeA1tdCHZdz16rh0Ur4i9sxGsegERTawWny
-         48xyBp0ZX2Dz+0qRhWlC6LkARqVDGMWtaf/Vy5CHDai2O9AbNqeQd24ldX9YsHKJD33p
-         3mvg0s0cE5Bd1rBfEIegPiPh0WKV4O6DQpUJJBNnUmAK3eMNbtUtFiwGY0JMzRbn/hmu
-         V1VQjVceBsR45/CWqksQIEujyKASmVx8CPUB6gAtOoBOfZI+vvafqJq82JonnkqNCw2s
-         FMmJtRvhZPmb1F/uooDKqpayIPeFL9t5pm3bm7lCF3wIQSPQamevVBJLuZOSp6l7Igku
-         c8cA==
-X-Gm-Message-State: AOAM533VOKPyT6n4zgdTOxRi29rdJHhk1fX2n6w3xtxAnUTDPOlB3QxO
-        AHeNWfJP7+f7TJ50XchIkE8=
-X-Google-Smtp-Source: ABdhPJzFokcEU90QjcaaExhllaSgZzo4ReUkGE1Cymq3kb1TSqEdcR8HlaIdS6xD/WlZvgI2i5+Qyw==
-X-Received: by 2002:a05:620a:227:: with SMTP id u7mr25613448qkm.75.1595903051099;
-        Mon, 27 Jul 2020 19:24:11 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id 103sm11598103qta.31.2020.07.27.19.24.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 19:24:10 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 27 Jul 2020 22:24:08 -0400
-To:     Nick Terrell <nickrterrell@gmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
-        linux-kbuild@vger.kernel.org, x86@kernel.org,
-        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
-        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Norbert Lange <nolange79@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alex Xu <alex_y_xu@yahoo.ca>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Terrell <terrelln@fb.com>
-Subject: Re: [PATCH v9 6/7] x86: Add support for ZSTD compressed kernel
-Message-ID: <20200728022408.GA3553606@rani.riverdale.lan>
-References: <20200727230606.906598-1-nickrterrell@gmail.com>
- <20200727230606.906598-7-nickrterrell@gmail.com>
+        Mon, 27 Jul 2020 22:24:08 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F1CDC061794;
+        Mon, 27 Jul 2020 19:24:08 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BG0qB2bQ5z9sPf;
+        Tue, 28 Jul 2020 12:24:06 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595903046;
+        bh=QYrh6JuegVXs91CocDLskgRYXIAujIO6EJFuR5xiVLE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lhwRCRZXh9BxJhb4EuPO9hNBOAWGd0Z69GH/kua/gPpLqLLM3Jyt9HE78tbysoSn3
+         kEyIdu0nzNkTiEKqzM7VJQW7ou3C7h6A2SozN5aDGET8rfMVyeuVPMVD+pq95mtpYq
+         f87lvSeyAUg7v/q0gqNtPhRMayqh8PF7g2bseGa98hN85v8UwTo4ZBZzFq+DcjRprR
+         sr+AsrJGRVXbfYjCDVwSN7wDYJDgObw3qGsvyOuHPwpaNofQGc2SpAWd2iCSwXZAfM
+         zN5UjjSmIASjTbTQnQ8QGwNFuBLbWavIn3VAToEnougLNwEnhNyF5Wkm80wOElDCPh
+         OirFZ7EF3mMiw==
+Date:   Tue, 28 Jul 2020 12:24:05 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: Re: linux-next: build failure after merge of the printk tree
+Message-ID: <20200728122405.338efd5a@canb.auug.org.au>
+In-Reply-To: <20200728015408.GA1296462@jagdpanzerIV.localdomain>
+References: <20200728114927.4590731f@canb.auug.org.au>
+        <20200728015408.GA1296462@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200727230606.906598-7-nickrterrell@gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/5UA1WCnIQWn5qG15w/WzNGI";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 04:06:05PM -0700, Nick Terrell wrote:
-> From: Nick Terrell <terrelln@fb.com>
-> 
-> * Define __DISABLE_EXPORTS in misc.c
-...
-> __DISABLE_EXPORTS is defined in misc.c instead of the Makefile because
-> kaslr.c defines __DISABLE_EXPORTS, and defining it in the Makefile gives
-> duplicate definition warnings.
-> 
-I think the commit message missed getting updated?
+--Sig_/5UA1WCnIQWn5qG15w/WzNGI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.
+Hi Sergey,
+
+On Tue, 28 Jul 2020 10:54:08 +0900 Sergey Senozhatsky <sergey.senozhatsky@g=
+mail.com> wrote:
+>
+>> Sorry about that. This will be fixed for tomorrow's build. The problems
+> is that we have commit dependency between printk and locking tree. So I
+> pulled the
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=3Dl=
+ocking/core&id=3Dc935cd62d3fe985d7f0ebea185d2759e8992e96f
+>=20
+> into printk/for-next.
+
+OK, thanks.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/5UA1WCnIQWn5qG15w/WzNGI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8fjEUACgkQAVBC80lX
+0GxnbQf/Ww514Pxz0skSGmh5AgxHTJeB3jAbOoenAEFYOFtnBZ7blBWyCdStiYnd
+8T0TTDwQfRS1OpV42UFpcn8r92m2BirFwLDJsnJlrEdGhwf0+meudGVQVS9Uu0n6
+9PAau3UUB7g7Wag7e2479X5iUNMzpK2cwqmoOPcuv6DfEaCxcDCxEMscukJ6nOeH
+Ol3CaSdaBs9vf+5ozrPqjMd3QoTWatAksDRGTFZfjjYATnl9OHXCWUnOLud+Nuj7
+5QG0lq4Zo6ckmu02DnE9r4swVpsIME81WphBfCql5+TaGbzW6PDnmu9ulgwTuG24
+Su6pQ359K+BUjGFXA43gc7kKBMnt5A==
+=T7Es
+-----END PGP SIGNATURE-----
+
+--Sig_/5UA1WCnIQWn5qG15w/WzNGI--
