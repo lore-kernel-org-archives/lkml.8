@@ -2,312 +2,143 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF35C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4018DC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D40B20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BEA9207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:30:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcNywvwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732411AbgG1S2m (ORCPT
+        id S1732417AbgG1SaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:28:42 -0400
-Received: from mga14.intel.com ([192.55.52.115]:27787 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728179AbgG1S2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 14:28:41 -0400
-IronPort-SDR: wO0AG7HgmpOTdZBKnkSb58Mb45TSdRfXFnuz7gb1rPEkpLyxrL5m7UmS0O5gvwvnfbRqGFv1VL
- hF3+PZMzvmBQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="150454095"
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="150454095"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 11:28:40 -0700
-IronPort-SDR: vFWg421+e6I6v69KoL5FPUb6j/UyEtTjmCltRwzqpg509efuSUD5oWSI6ti6FiIw3RPlGqx+x+
- 40dtL3arX6SQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="490461913"
-Received: from twinkler-lnx.jer.intel.com ([10.12.91.138])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Jul 2020 11:28:39 -0700
-From:   Tomas Winkler <tomas.winkler@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [char-misc-next V2] mei: add device kind to sysfs
-Date:   Tue, 28 Jul 2020 21:28:36 +0300
-Message-Id: <20200728182836.3112138-1-tomas.winkler@intel.com>
-X-Mailer: git-send-email 2.25.4
+        Tue, 28 Jul 2020 14:30:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729310AbgG1SaQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 14:30:16 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FDEFC061794;
+        Tue, 28 Jul 2020 11:30:16 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id b79so19619313qkg.9;
+        Tue, 28 Jul 2020 11:30:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7bECQ5mdJV9juPwLlMc+XOTBw4TPn5avVxK6LBxKok4=;
+        b=kcNywvwojc3NoFO2SgOzoHAllB1MTBbfYdhAMh5lJNKh4Bk2YpCzRmK8UDqHmGp1ST
+         tsu9/yAJl50OODjnIHDdymdTaK3b1NpSIBg93JYkSTL5x5c0LrDNPDJH5iN6sJE1SWHw
+         ETgmMMaHeqTAJCU79vCxIa7tWfRz9czHJEILMRcSjW1MsuprWPCdDZuFrpjRGrScFJwB
+         KJ0LYwH4Hry29AOdEJPST9Zo6ZXIosi8OaqOFY9f6xTswrHYNyk9GnChtS1cle1L45BD
+         hLEQA9lEPZM4ND6M+45id3MCB4R5unEpL3iIu9UjMuHsc8VxL1bz2PWQdWPgOe6Ttf0Y
+         iOuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7bECQ5mdJV9juPwLlMc+XOTBw4TPn5avVxK6LBxKok4=;
+        b=dm+ojlMWZK/llLIGxFa+rXpOS7sug3tnBYqikK5VKJ+t7o5kP1HHEzSFVyHMMIoHQU
+         AIb5vWSpQSBbYpJU5UDywIps/stqCl/gXWaUheIkGfwB+3ZILVLNFTM60+MNyBnqXruP
+         +QLnzJz9bnr2mwZ2SO7I3U3MebHctEdwY6i+xrB+xio8iLf9GyqlVtceW3eEWrh95JD8
+         KQuhGPwqLk/5Mqp306kQnYsShRDoqhG8xe2HWyqzvlhYy6Fwg0lHHI26ewYhmhKZOIvB
+         Ilw1eAbb7AidZ2O2WqRGRbPWt1ev5oFZGe/Y4JWHk+uhJVe0H+VhwF7oicQEX+1pcD7i
+         if1w==
+X-Gm-Message-State: AOAM530Oe9VVB8GH7tFB4bJ5xF9qT3HI6JAT3/s8x9MViC8F+NcMt90w
+        8L3Wbij1/M6rWEQZ6yjmPYdEdYW/LvnvuG4NLac=
+X-Google-Smtp-Source: ABdhPJyJZITUBGPqppMcW0XhAR41Q00ZO+emE5RAHkhnRoTntX2fDp1VBhQTwfBqjxBZMhTB8hioVnmJPJb0IbSIphI=
+X-Received: by 2002:a37:a655:: with SMTP id p82mr28886863qke.92.1595961015352;
+ Tue, 28 Jul 2020 11:30:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-33-guro@fb.com>
+ <CAEf4BzbCzEOKx2GMOcp6CTxBBN+BRAY-Z_mCJ26hoSto956KBQ@mail.gmail.com> <C739D492-23E2-4823-8A9A-81BF00FD450E@fb.com>
+In-Reply-To: <C739D492-23E2-4823-8A9A-81BF00FD450E@fb.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 28 Jul 2020 11:30:04 -0700
+Message-ID: <CAEf4BzaNEnK6UpfvPpEPpU+fLi=Zsrr5YUc0+t20a_TK_oj22A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 32/35] bpf: selftests: delete bpf_rlimit.h
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Roman Gushchin <guro@fb.com>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+On Mon, Jul 27, 2020 at 11:11 PM Song Liu <songliubraving@fb.com> wrote:
+>
+>
+>
+> > On Jul 27, 2020, at 11:06 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Mon, Jul 27, 2020 at 12:25 PM Roman Gushchin <guro@fb.com> wrote:
+> >>
+> >> As rlimit-based memory accounting is not used by bpf anymore,
+> >> there are no more reasons to play with memlock rlimit.
+> >>
+> >> Delete bpf_rlimit.h which contained a code to bump the limit.
+> >>
+> >> Signed-off-by: Roman Gushchin <guro@fb.com>
+> >> ---
+> >
+> > We run test_progs on old kernels as part of libbpf Github CI. We'll
+> > need to either leave setrlimit() or do it conditionally, depending on
+> > detected kernel feature support.
+>
+> Hmm... I am surprised that running test_progs on old kernels is not
+> too noisy. Have we got any issue with that?
+>
 
-Some of the mei device heads are not generic and have
-a specific purpose, we need to announce it to the user space
-so it is possible to detect the correct device node via
-matching attributes.
+For libbpf CI we maintain a list of enabled/disabled tests that are
+not supposed to succeed on a given kernel. So it works OK in practice,
+just needs an occasional update to those lists.
 
-Generic heads are marked as 'mei' while special purpose heads
-have their own names. Currently we are adding 'itouch' string
-for Intel IPTS 1.0, 2.0 devices.
 
-This is done via new sysfs attribute 'kind'.
-
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
----
-V2: Correct version of the patch.
-
- Documentation/ABI/testing/sysfs-class-mei | 13 +++++++++++
- drivers/misc/mei/hw-me.c                  | 22 ++++++++++++++----
- drivers/misc/mei/hw-me.h                  |  7 +++++-
- drivers/misc/mei/main.c                   | 27 +++++++++++++++++++++++
- drivers/misc/mei/mei_dev.h                |  4 ++++
- drivers/misc/mei/pci-me.c                 | 10 ++++-----
- 6 files changed, 73 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-class-mei b/Documentation/ABI/testing/sysfs-class-mei
-index e9dc110650ae..5c52372b43cb 100644
---- a/Documentation/ABI/testing/sysfs-class-mei
-+++ b/Documentation/ABI/testing/sysfs-class-mei
-@@ -90,3 +90,16 @@ Description:	Display trc status register content
- 		The ME FW writes Glitch Detection HW (TRC)
- 		status information into trc status register
- 		for BIOS and OS to monitor fw health.
-+
-+What:		/sys/class/mei/meiN/kind
-+Date:		Jul 2020
-+KernelVersion:	5.8
-+Contact:	Tomas Winkler <tomas.winkler@intel.com>
-+Description:	Display kind of the device
-+
-+		Generic devices are marked as "mei"
-+		while special purpose have their own
-+		names.
-+		Available options:
-+		- mei:  generic mei device.
-+		- itouch:  itouch (ipts) mei device.
-diff --git a/drivers/misc/mei/hw-me.c b/drivers/misc/mei/hw-me.c
-index 7692b69abcb5..cda0829ac589 100644
---- a/drivers/misc/mei/hw-me.c
-+++ b/drivers/misc/mei/hw-me.c
-@@ -1430,6 +1430,9 @@ static bool mei_me_fw_type_sps(const struct pci_dev *pdev)
- 	return fw_type == PCI_CFG_HFS_3_FW_SKU_SPS;
- }
- 
-+#define MEI_CFG_KIND_ITOUCH                     \
-+	.kind = "itouch"
-+
- #define MEI_CFG_FW_SPS                          \
- 	.quirk_probe = mei_me_fw_type_sps
- 
-@@ -1499,6 +1502,13 @@ static const struct mei_cfg mei_me_pch8_cfg = {
- 	MEI_CFG_FW_VER_SUPP,
- };
- 
-+/* PCH8 Lynx Point and newer devices - iTouch */
-+static const struct mei_cfg mei_me_pch8_itouch_cfg = {
-+	MEI_CFG_KIND_ITOUCH,
-+	MEI_CFG_PCH8_HFS,
-+	MEI_CFG_FW_VER_SUPP,
-+};
-+
- /* PCH8 Lynx Point with quirk for SPS Firmware exclusion */
- static const struct mei_cfg mei_me_pch8_sps_4_cfg = {
- 	MEI_CFG_PCH8_HFS,
-@@ -1528,10 +1538,11 @@ static const struct mei_cfg mei_me_pch12_sps_cfg = {
- 	MEI_CFG_FW_SPS,
- };
- 
--/* Cannon Lake with quirk for SPS 5.0 and newer Firmware exclusion
-- * w/o DMA support
-+/* Cannon Lake itouch with quirk for SPS 5.0 and newer Firmware exclusion
-+ * w/o DMA support.
-  */
--static const struct mei_cfg mei_me_pch12_nodma_sps_cfg = {
-+static const struct mei_cfg mei_me_pch12_itouch_sps_cfg = {
-+	MEI_CFG_KIND_ITOUCH,
- 	MEI_CFG_PCH8_HFS,
- 	MEI_CFG_FW_VER_SUPP,
- 	MEI_CFG_FW_SPS,
-@@ -1566,11 +1577,12 @@ static const struct mei_cfg *const mei_cfg_list[] = {
- 	[MEI_ME_PCH7_CFG] = &mei_me_pch7_cfg,
- 	[MEI_ME_PCH_CPT_PBG_CFG] = &mei_me_pch_cpt_pbg_cfg,
- 	[MEI_ME_PCH8_CFG] = &mei_me_pch8_cfg,
-+	[MEI_ME_PCH8_ITOUCH_CFG] = &mei_me_pch8_itouch_cfg,
- 	[MEI_ME_PCH8_SPS_4_CFG] = &mei_me_pch8_sps_4_cfg,
- 	[MEI_ME_PCH12_CFG] = &mei_me_pch12_cfg,
- 	[MEI_ME_PCH12_SPS_4_CFG] = &mei_me_pch12_sps_4_cfg,
- 	[MEI_ME_PCH12_SPS_CFG] = &mei_me_pch12_sps_cfg,
--	[MEI_ME_PCH12_SPS_NODMA_CFG] = &mei_me_pch12_nodma_sps_cfg,
-+	[MEI_ME_PCH12_SPS_ITOUCH_CFG] = &mei_me_pch12_itouch_sps_cfg,
- 	[MEI_ME_PCH15_CFG] = &mei_me_pch15_cfg,
- 	[MEI_ME_PCH15_SPS_CFG] = &mei_me_pch15_sps_cfg,
- };
-@@ -1614,6 +1626,8 @@ struct mei_device *mei_me_dev_init(struct device *parent,
- 
- 	dev->fw_f_fw_ver_supported = cfg->fw_ver_supported;
- 
-+	dev->kind = cfg->kind;
-+
- 	return dev;
- }
- 
-diff --git a/drivers/misc/mei/hw-me.h b/drivers/misc/mei/hw-me.h
-index 560c8ebb17be..00a7132ac7a2 100644
---- a/drivers/misc/mei/hw-me.h
-+++ b/drivers/misc/mei/hw-me.h
-@@ -19,6 +19,7 @@
-  *
-  * @fw_status: FW status
-  * @quirk_probe: device exclusion quirk
-+ * @kind: MEI head kind
-  * @dma_size: device DMA buffers size
-  * @fw_ver_supported: is fw version retrievable from FW
-  * @hw_trc_supported: does the hw support trc register
-@@ -26,6 +27,7 @@
- struct mei_cfg {
- 	const struct mei_fw_status fw_status;
- 	bool (*quirk_probe)(const struct pci_dev *pdev);
-+	const char *kind;
- 	size_t dma_size[DMA_DSCR_NUM];
- 	u32 fw_ver_supported:1;
- 	u32 hw_trc_supported:1;
-@@ -76,6 +78,8 @@ struct mei_me_hw {
-  *                         with quirk for Node Manager exclusion.
-  * @MEI_ME_PCH8_CFG:       Platform Controller Hub Gen8 and newer
-  *                         client platforms.
-+ * @MEI_ME_PCH8_ITOUCH_CFG:Platform Controller Hub Gen8 and newer
-+ *                         client platforms (iTouch).
-  * @MEI_ME_PCH8_SPS_4_CFG: Platform Controller Hub Gen8 and newer
-  *                         servers platforms with quirk for
-  *                         SPS firmware exclusion.
-@@ -100,11 +104,12 @@ enum mei_cfg_idx {
- 	MEI_ME_PCH7_CFG,
- 	MEI_ME_PCH_CPT_PBG_CFG,
- 	MEI_ME_PCH8_CFG,
-+	MEI_ME_PCH8_ITOUCH_CFG,
- 	MEI_ME_PCH8_SPS_4_CFG,
- 	MEI_ME_PCH12_CFG,
- 	MEI_ME_PCH12_SPS_4_CFG,
- 	MEI_ME_PCH12_SPS_CFG,
--	MEI_ME_PCH12_SPS_NODMA_CFG,
-+	MEI_ME_PCH12_SPS_ITOUCH_CFG,
- 	MEI_ME_PCH15_CFG,
- 	MEI_ME_PCH15_SPS_CFG,
- 	MEI_ME_NUM_CFG,
-diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
-index 05e6ad6d4d54..3fd0d42e89c0 100644
---- a/drivers/misc/mei/main.c
-+++ b/drivers/misc/mei/main.c
-@@ -885,6 +885,32 @@ void mei_set_devstate(struct mei_device *dev, enum mei_dev_state state)
- 	}
- }
- 
-+/**
-+ * kind_show - display device kind
-+ *
-+ * @device: device pointer
-+ * @attr: attribute pointer
-+ * @buf: char out buffer
-+ *
-+ * Return: number of the bytes printed into buf or error
-+ */
-+static ssize_t kind_show(struct device *device,
-+			 struct device_attribute *attr, char *buf)
-+{
-+	struct mei_device *dev = dev_get_drvdata(device);
-+	ssize_t ret = 0;
-+
-+	mutex_lock(&dev->device_lock);
-+	if (dev->kind)
-+		ret = sprintf(buf, "%s\n", dev->kind);
-+	else
-+		ret = sprintf(buf, "%s\n", "mei");
-+	mutex_unlock(&dev->device_lock);
-+
-+	return ret;
-+}
-+static DEVICE_ATTR_RO(kind);
-+
- static struct attribute *mei_attrs[] = {
- 	&dev_attr_fw_status.attr,
- 	&dev_attr_hbm_ver.attr,
-@@ -893,6 +919,7 @@ static struct attribute *mei_attrs[] = {
- 	&dev_attr_fw_ver.attr,
- 	&dev_attr_dev_state.attr,
- 	&dev_attr_trc.attr,
-+	&dev_attr_kind.attr,
- 	NULL
- };
- ATTRIBUTE_GROUPS(mei);
-diff --git a/drivers/misc/mei/mei_dev.h b/drivers/misc/mei/mei_dev.h
-index 3a29db07211d..d3a4f54c0ae7 100644
---- a/drivers/misc/mei/mei_dev.h
-+++ b/drivers/misc/mei/mei_dev.h
-@@ -445,6 +445,8 @@ struct mei_fw_version {
-  * @device_list : mei client bus list
-  * @cl_bus_lock : client bus list lock
-  *
-+ * @kind        : kind of mei device
-+ *
-  * @dbgfs_dir   : debugfs mei root directory
-  *
-  * @ops:        : hw specific operations
-@@ -528,6 +530,8 @@ struct mei_device {
- 	struct list_head device_list;
- 	struct mutex cl_bus_lock;
- 
-+	const char *kind;
-+
- #if IS_ENABLED(CONFIG_DEBUG_FS)
- 	struct dentry *dbgfs_dir;
- #endif /* CONFIG_DEBUG_FS */
-diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
-index 159e40a2505d..1de9ef7a272b 100644
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -68,7 +68,7 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT, MEI_ME_PCH8_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_2, MEI_ME_PCH8_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_3, MEI_ME_PCH8_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_3, MEI_ME_PCH8_ITOUCH_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H, MEI_ME_PCH8_SPS_4_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H_2, MEI_ME_PCH8_SPS_4_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_LBG, MEI_ME_PCH12_SPS_4_CFG)},
-@@ -85,15 +85,15 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_KBP_3, MEI_ME_PCH8_CFG)},
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_LP, MEI_ME_PCH12_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_LP_3, MEI_ME_PCH8_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_LP_3, MEI_ME_PCH8_ITOUCH_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_H, MEI_ME_PCH12_SPS_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_H_3, MEI_ME_PCH12_SPS_NODMA_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_H_3, MEI_ME_PCH12_SPS_ITOUCH_CFG)},
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP, MEI_ME_PCH12_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP_3, MEI_ME_PCH8_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP_3, MEI_ME_PCH8_ITOUCH_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_V, MEI_ME_PCH12_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H, MEI_ME_PCH12_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H_3, MEI_ME_PCH8_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H_3, MEI_ME_PCH8_ITOUCH_CFG)},
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
- 
--- 
-2.25.4
-
+> Thanks,
+> Song
+>
+> >
+> >> samples/bpf/hbm.c                             |  1 -
+> >> tools/testing/selftests/bpf/bpf_rlimit.h      | 28 -------------------
+> >> .../selftests/bpf/flow_dissector_load.c       |  1 -
+> >> .../selftests/bpf/get_cgroup_id_user.c        |  1 -
+> >> .../bpf/prog_tests/select_reuseport.c         |  1 -
+> >> .../selftests/bpf/prog_tests/sk_lookup.c      |  1 -
+> >> tools/testing/selftests/bpf/test_btf.c        |  1 -
+> >> .../selftests/bpf/test_cgroup_storage.c       |  1 -
+> >> tools/testing/selftests/bpf/test_dev_cgroup.c |  1 -
+> >> tools/testing/selftests/bpf/test_lpm_map.c    |  1 -
+> >> tools/testing/selftests/bpf/test_lru_map.c    |  1 -
+> >> tools/testing/selftests/bpf/test_maps.c       |  1 -
+> >> tools/testing/selftests/bpf/test_netcnt.c     |  1 -
+> >> tools/testing/selftests/bpf/test_progs.c      |  1 -
+> >> .../selftests/bpf/test_skb_cgroup_id_user.c   |  1 -
+> >> tools/testing/selftests/bpf/test_sock.c       |  1 -
+> >> tools/testing/selftests/bpf/test_sock_addr.c  |  1 -
+> >> .../testing/selftests/bpf/test_sock_fields.c  |  1 -
+> >> .../selftests/bpf/test_socket_cookie.c        |  1 -
+> >> tools/testing/selftests/bpf/test_sockmap.c    |  1 -
+> >> tools/testing/selftests/bpf/test_sysctl.c     |  1 -
+> >> tools/testing/selftests/bpf/test_tag.c        |  1 -
+> >> .../bpf/test_tcp_check_syncookie_user.c       |  1 -
+> >> .../testing/selftests/bpf/test_tcpbpf_user.c  |  1 -
+> >> .../selftests/bpf/test_tcpnotify_user.c       |  1 -
+> >> tools/testing/selftests/bpf/test_verifier.c   |  1 -
+> >> .../testing/selftests/bpf/test_verifier_log.c |  2 --
+> >> 27 files changed, 55 deletions(-)
+> >> delete mode 100644 tools/testing/selftests/bpf/bpf_rlimit.h
+> >>
+> >
+> > [...]
+>
