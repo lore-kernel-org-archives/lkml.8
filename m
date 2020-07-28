@@ -2,74 +2,55 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E403FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95677C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2F052075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:00:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=students-iitmandi-ac-in.20150623.gappssmtp.com header.i=@students-iitmandi-ac-in.20150623.gappssmtp.com header.b="wSiJJlaW"
+	by mail.kernel.org (Postfix) with ESMTP id 795D62075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbgG1XAV (ORCPT
+        id S1729884AbgG1W5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 19:00:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729913AbgG1XAU (ORCPT
+        Tue, 28 Jul 2020 18:57:25 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38990 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729724AbgG1W5Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 19:00:20 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63394C0619D2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 16:00:20 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id p3so13130741pgh.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 16:00:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=students-iitmandi-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+AGKaODfQyJlnmbVWmu1S2WmuwIYu+1OBfVfzl9nDbI=;
-        b=wSiJJlaW4Nf3Z4qC1BYYeErvnyAaxGazqwv+5vS8Ohoi9wIoC5ShcWVwNvmUC4fxN9
-         N+kZt5l9fJ7JOsJYXZGVugPArIg8ZmjE2d/llMs/V0sSE0l4mom3QlwPQ/ZbDkGmWydr
-         k0T6JKoYyjCvMkeYYmWzZTg2PX4VYFkTPN4AqpVIzU0JEhpCnzUlhqYMV/ANpxjqESNU
-         kig9iezcgZMt6WtqUq97RLf/AL6UjD8QAfNNDGs9uAv0yB/jpuoQieNXfjTLY5FFKXND
-         VzNrllBYEWkJLjT0Glw4gp2Sd2kye9ezjm3PPrxhoSpHco5rEjFNhcV4IIWn5fNOxpy8
-         f0ig==
+        Tue, 28 Jul 2020 18:57:24 -0400
+Received: by mail-qt1-f196.google.com with SMTP id w9so16228061qts.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 15:57:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+AGKaODfQyJlnmbVWmu1S2WmuwIYu+1OBfVfzl9nDbI=;
-        b=WaQNyGDqyyWL4/sUiDCrhsuNI0U3/6yeONsN8b4m8ye0ZUlZHrZES8L/ivP7bieeOC
-         ui7WuO6ITo9/9irDZXosUdbYPMsC/HhFrD24aIMMtSNQmF+qanRX+VgjRM58t274WkuR
-         Bz5lplXvShNHFe5KEh/HQwHDFQfCH/qvQSB+BSt8wwH4n8c1Rj50tfPn2EAmEqPNnCQk
-         60kglSzIKVnVgzioiLkKYReEBugD1G5bZMhGRag66EZ5XVk1LGq9+s8bH3PDp1+ErUvG
-         LyxdY2Z83zxBXmCm4MQGT96CFu5oei0Hu23ZXEcTt81HbnJbh82unobtJgyF0gSEP9am
-         1Hjg==
-X-Gm-Message-State: AOAM533maHf6lvFosvMWC4f2si6AWsETKwbYFMIdo6aBrq7mgYp4syQj
-        HbNt2BiD1wVvNYPIM/HUVSpGpQ==
-X-Google-Smtp-Source: ABdhPJzGVY0Wek05CSIAilbGSc/iC2BNuIxuZVqGpgfu+wb+W8o+Sa5WL16MSEaBgLGfrxfyolhdAA==
-X-Received: by 2002:a63:444b:: with SMTP id t11mr27226150pgk.134.1595977219750;
-        Tue, 28 Jul 2020 16:00:19 -0700 (PDT)
-Received: from devil-VirtualBox.www.tendawifi.com ([103.198.174.215])
-        by smtp.gmail.com with ESMTPSA id 76sm105516pfu.139.2020.07.28.16.00.04
+        bh=jurQF93+85jwDZNwqfmqXsgKLM5ROOgolOX/GMRL9vk=;
+        b=uT+Jy7+WX8yXLByXdr7y5gbxN24pSCqW7UoFKQoXiku6WydFVHBM3At+8A28yLQIIK
+         qFAcI1x9NrIC+kyfjJfAA4SyBovUntTawPTIcN/+XgezzwmSX1kzHu+auoa6EzhMZJD9
+         2IUfwWvw1UMX3lkKKChAQGGJKvvWQvOsmKCgoFBUhAGwDS8i3tVbq2LlJ8Q8xw4IdhzB
+         hMHqcPvnmBUGZ/R/wjGwe4+PboCj+0VGRhsbkJ3oyfbG9ssKoHZGEPAUbTix8U6VBGf6
+         2vUuqrHizqGVUarE/P3ILS2q6QVvv2WvB6Ih7qnGDfB6oswggPYLTkhUUZqiQwgoo0uI
+         QMaA==
+X-Gm-Message-State: AOAM532utE5H+2RwBpRDsrQ5S9psDcsMT1PfQ8pWlPRNN3jmoX3mSEv/
+        AqeoMFiFPXgU6p7zklxgmLA=
+X-Google-Smtp-Source: ABdhPJwzAG77024gLGy3/O8wRBtBBMtjtcehAvVp+4oNxomR2s32VbinxBKeHDuwMhOdoXP787dtnA==
+X-Received: by 2002:ac8:4e2f:: with SMTP id d15mr28808653qtw.20.1595977043478;
+        Tue, 28 Jul 2020 15:57:23 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id o187sm88118qkd.112.2020.07.28.15.57.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 16:00:19 -0700 (PDT)
-From:   Ankit <b18007@students.iitmandi.ac.in>
-To:     mchehab@kernel.org, gregkh@linuxfoundation.org,
-        sakari.ailus@linux.intel.com, andriy.shevchenko@linux.intel.com
-Cc:     linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, b18007@students.iitmandi.ac.in
-Subject: [PATCH v2] Staging : media : atomisp : fixed a brace coding sytle issue
-Date:   Wed, 29 Jul 2020 04:29:35 +0530
-Message-Id: <20200728225935.28880-1-b18007@students.iitmandi.ac.in>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200728084341.GA1795795@kroah.com>
-References: <20200728084341.GA1795795@kroah.com>
+        Tue, 28 Jul 2020 15:57:23 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Kees Cook <keescook@chromium.org>, x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/21] x86/kaslr: Cleanup and small bugfixes
+Date:   Tue, 28 Jul 2020 18:57:01 -0400
+Message-Id: <20200728225722.67457-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200727230801.3468620-1-nivedita@alum.mit.edu>
+References: <20200727230801.3468620-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,38 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ankit Baluni <b18007@students.iitmandi.ac.in>
+v2->v3:
+- Fix the first patch: command line size should be strlen + 1 to account
+  for terminating NUL. Avoid calling add_identity_map if cmdline was
+  NULL, though it should do nothing in that case anyway.
+- Add a patch to drop the check to see if there are arguments we care
+  about before parsing the command line.
+- Split up patches (Ingo/Kees).
+- The gb_huge_pages change now also gets rid of parsing the argument
+  altogether for 32-bit.
+- Slot number is changed to unsigned long instead of unsigned int
+  (Kees).
+- Make everything u64 instead of trying to use 32-bit on x86-32, and add
+  check in find_random_phys_addr to make sure the address is within the
+  required range (Ingo/Kees).
 
-Removed braces for a 'if' condition as it contain only single line & 
-there is no need for braces for such case according to coding style
-rules.
+v1->v2:
+- Fix a bug in the bugfix 5/8: overlap.start can be smaller than
+  region.start, so shouldn't subtract before comparing.
 
-Signed-off-by: Ankit Baluni <b18007@students.iitmandi.ac.in>
 
----
-Changes in v2:
-	-Added more description about the patch.
-	-Added space before the symobol '<' in 'From'
-	 and 'Signed-off-by' line.
+Arvind Sankar (21):
+  x86/kaslr: Make command line handling safer
+  x86/kaslr: Remove bogus warning and unnecessary goto
+  x86/kaslr: Fix process_efi_entries comment
+  x86/kaslr: Initialize mem_limit to the real maximum address
+  x86/kaslr: Fix off-by-one error in __process_mem_region
+  x86/kaslr: Drop redundant cur_entry from __process_mem_region
+  x86/kaslr: Eliminate start_orig from __process_mem_region
+  x86/kaslr: Drop redundant variable in __process_mem_region
+  x86/kaslr: Drop some redundant checks from __process_mem_region
+  x86/kaslr: Fix off-by-one error in process_gb_huge_pages
+  x86/kaslr: Short-circuit gb_huge_pages on x86-32
+  x86/kaslr: Simplify process_gb_huge_pages
+  x86/kaslr: Drop test for command-line parameters before parsing
+  x86/kaslr: Make the type of number of slots/slot areas consistent
+  x86/kaslr: Drop redundant check in store_slot_info
+  x86/kaslr: Drop unnecessary alignment in find_random_virt_addr
+  x86/kaslr: Small cleanup of find_random_phys_addr
+  x86/kaslr: Make minimum/image_size unsigned long
+  x86/kaslr: Replace unsigned long long with u64
+  x86/kaslr: Make local variables 64-bit
+  x86/kaslr: Add a check that the random address is in range
 
- drivers/staging/media/atomisp/pci/atomisp_cmd.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/boot/compressed/kaslr.c | 233 +++++++++++++------------------
+ arch/x86/boot/compressed/misc.h  |   4 +-
+ 2 files changed, 102 insertions(+), 135 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_cmd.c b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-index 8ea65bef35d2..28b96b66f4f3 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-@@ -4981,9 +4981,8 @@ enum mipi_port_id __get_mipi_port(struct atomisp_device *isp,
- 	case ATOMISP_CAMERA_PORT_SECONDARY:
- 		return MIPI_PORT1_ID;
- 	case ATOMISP_CAMERA_PORT_TERTIARY:
--		if (MIPI_PORT1_ID + 1 != N_MIPI_PORT_ID) {
-+		if (MIPI_PORT1_ID + 1 != N_MIPI_PORT_ID)
- 			return MIPI_PORT1_ID + 1;
--		}
- 	/* fall through */
- 	default:
- 		dev_err(isp->dev, "unsupported port: %d\n", port);
 -- 
-2.25.1
+2.26.2
 
