@@ -2,107 +2,92 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AB5C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 504DEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5482065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21685207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:43:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZUOdSiSu"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lGILnOI2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732945AbgG1TmK (ORCPT
+        id S1732949AbgG1TnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:42:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55890 "EHLO
+        Tue, 28 Jul 2020 15:43:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732919AbgG1TmJ (ORCPT
+        with ESMTP id S1730016AbgG1TnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:42:09 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B1DC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:42:09 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id dm12so9689470qvb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:42:09 -0700 (PDT)
+        Tue, 28 Jul 2020 15:43:00 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4A27C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:43:00 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id s26so11550183pfm.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:43:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Suawz9Cepe9SlpfuSMPAOovHufOGD0v6BIGWG6sQ+tc=;
-        b=ZUOdSiSuKMR6t3+4nhxzrUdcF+Y+05h16qdSGTOpiF7kCyT/WBzJOuTFumOJYK0yDB
-         pXpD2sSvQuL+CgzOVPL4su6YA62k5nom6jpXTNRY0qpvxLGWgUEEzhr14Rj9bl+LXVE3
-         OGPiermHYTYCj6zq71A+Sj53qv5L5uEMT9zgqfNKTFg033xYhesFfzBlHFjx4LbDuCOO
-         //TmWeV+3eKaAeKdLCHMwrUk2YlUfAluoXCeof2d9wWlxH6mGwDsHd7H1Rf4TBeTGDzl
-         dw+Kqv9wV9iAjdUffTnLrYgtzBre/LxHXZGpdi5brAV6w8GNMLXOrupgrkyswb6vSubq
-         PVzQ==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=vnxwi5iPCJkQKF4flCKDFiMcmGVkTk/FZPhjrVn7vQ8=;
+        b=lGILnOI2EA2ePNYpXzRAJhVcrhFB5Z+3mS7RTR0wzoPvklGepKua58mr9TZ3zuL0VU
+         dYg64ioAyhPP6TnZY+ZxqgWDb5liZYowK2t4+fhaQCN+o5WeoEU0z4A6AXz1+4TQ3fnr
+         Zbge8OACGr5Fj8DXtHimT1BBBOOPSv4jI1IKs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=Suawz9Cepe9SlpfuSMPAOovHufOGD0v6BIGWG6sQ+tc=;
-        b=elVBgZQlkscdLKUlbNlyYpPxhPZTNgy4Qn8tS7FRm8SWCN/aLPwBTHzDdf88gxjCtv
-         cfKdex3AeafLaYggHUSlGzbFGDdcMqIbYsZo//I43pNnfh//y49vl7mTGRUTe5yQcCG0
-         HirM1UJ6IexkVhyNJ9Zhf52N8NM1pWwQB/TfF/oRqklFwLPuEQG85BkTQ76D3W7OwHk8
-         PRI6hVz6LmXgPWU98sfU0PKW81rF4ZwPRykqMNs6j8Eyxv3FNk6v8TuHb9H8UjWzDjnm
-         LfE/+DH7/cNgGGpUyI0pU009HBE4Y9roOM8PrnLXc1xpdPZXDXUxOS1W1FEftqa1CiDl
-         pYZg==
-X-Gm-Message-State: AOAM533Yw478zGN+4Pz1iINjFebxz4/f2JCsp+o0uvwMDSAZDYfinMjm
-        hRvriP3PEF/Jwdqwki/UdOY=
-X-Google-Smtp-Source: ABdhPJwRZRNqwaIGFtJNpOMCdGLwP+NBDGspR2smvefgS0dBtfuMyR4bH4L11eehxAcvm+JwUX2pyw==
-X-Received: by 2002:ad4:4c0a:: with SMTP id bz10mr7275406qvb.78.1595965328577;
-        Tue, 28 Jul 2020 12:42:08 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id t5sm23541963qkh.46.2020.07.28.12.42.07
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=vnxwi5iPCJkQKF4flCKDFiMcmGVkTk/FZPhjrVn7vQ8=;
+        b=FkjU1jANG+er3qh50O/g6ktNKOqzLIlGXvAA8cQZtsnGxSQnqj1XGU+O6uzMXNMDH6
+         WuJFwTNJwoilMjAKNX9t1jNf21AY7yA6Bub17lW93NrNlDP1GFLx72XMpSl0YNIM2JF1
+         pbhUAnW+/G2qm6hqCt9NUXNXRjhkiltQR9tdccj7Xs7cSrYvUW7+EAl/slHPnm2FPTJ8
+         VpQQpUjoS6TrBmzmUSwOcSrsnGZ0tJEoUjSGzZIrObejJxkaum4LLpBYry9CmefpkRp6
+         Q9hy9G9sV0kN4JG9AHUaB72a8TciPaIcAvpOq3vfjUYYZbmdaaJlnGeQqz66MqQgVktX
+         /Ykg==
+X-Gm-Message-State: AOAM530xX34BVYmM3hyYvqHc1ulMElbWKU75Mf2KtnMBmuyaK9UJRLpF
+        /UKE0iOBqMta4CG3pFu8+iVf9w==
+X-Google-Smtp-Source: ABdhPJx/Gpp+X34yyUGrc2pTEF69GOO3vQr5iwhFpQeyJ7MgTI61ZKxOdL1srQX1mC2VDW9ZhI+mXQ==
+X-Received: by 2002:a62:2e45:: with SMTP id u66mr1993692pfu.121.1595965380254;
+        Tue, 28 Jul 2020 12:43:00 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id o11sm19315046pfp.88.2020.07.28.12.42.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 12:42:08 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 28 Jul 2020 15:42:06 -0400
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/8] x86/kaslr: Simplify __process_mem_region
-Message-ID: <20200728194206.GA4150860@rani.riverdale.lan>
-References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
- <20200727230801.3468620-6-nivedita@alum.mit.edu>
- <202007281152.6B15179@keescook>
+        Tue, 28 Jul 2020 12:42:59 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202007281152.6B15179@keescook>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200728091057.2.Idb6af9292f18f54be0b62cede52b481063738707@changeid>
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid> <20200728151258.1222876-1-campello@chromium.org> <20200728091057.2.Idb6af9292f18f54be0b62cede52b481063738707@changeid>
+Subject: Re: [PATCH 02/15] iio: sx9310: Update macros declarations
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+To:     Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Tue, 28 Jul 2020 12:42:58 -0700
+Message-ID: <159596537832.1360974.10421899531703700889@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 12:25:16PM -0700, Kees Cook wrote:
-> On Mon, Jul 27, 2020 at 07:07:58PM -0400, Arvind Sankar wrote:
-> > Get rid of unnecessary temporary variables and redundant tests in
-> > __process_mem_region.
-> > 
-> > Fix one minor bug: in case of an overlap, the beginning of the region
-> > should be used even if it is exactly image_size, not just strictly
-> > larger.
-> > 
-> > Change type of minimum/image_size arguments in process_mem_region to
-> > unsigned long. These actually can never be above 4G (even on x86_64),
-> > and they're unsigned long in every other function except this one.
-> > 
-> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> 
-> Please split this up (which I think is already planned):
-> 
-> - bug fix (which looks like a correct fix to me)
-> - arg type size changes
-> - refactoring
-> 
-> I don't currently agree that the refactoring makes things easier to
-> read, but let's see v3. :)
-> 
-> -- 
-> Kees Cook
+Quoting Daniel Campello (2020-07-28 08:12:45)
+> Follows spec sheet for macro declarations.
+>=20
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> ---
 
-Yep
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
