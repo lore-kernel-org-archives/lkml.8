@@ -2,128 +2,89 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=BAYES_00,
-	CHARSET_FARAWAY_HEADER,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7211AC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C04C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 562EC20792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D111120792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595915238;
+	bh=qaTaq8Zfiec/SysD6CW7W71Vn7qAmrNYsR1c7ErTEQE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cVQnEtxdnBGmqPNuzQUObJH0be0g5hjrEZKDPlRiECotgd+edFrXzhwghw2MTU9L1
+	 c6upYLSsAisINL+ScgN3i47G1VI3QDwgR8hIZSBzdsxjuL3GIXVAbb/MvQ5deNGEqN
+	 ZclkXGABcTIBCdE22FXQe36TJiYWQlTqjMHXu098=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgG1Fq5 (ORCPT
+        id S1726883AbgG1FrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 01:46:57 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:42314 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgG1Fq4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 01:46:56 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 06S5kR9p9000735, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 06S5kR9p9000735
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 28 Jul 2020 13:46:27 +0800
-Received: from RTEXMB02.realtek.com.tw (172.21.6.95) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 28 Jul 2020 13:46:27 +0800
-Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
- RTEXMB02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 28 Jul 2020 13:46:27 +0800
-Received: from RTEXMB01.realtek.com.tw ([fe80::d53a:d9a5:318:7cd8]) by
- RTEXMB01.realtek.com.tw ([fe80::d53a:d9a5:318:7cd8%5]) with mapi id
- 15.01.1779.005; Tue, 28 Jul 2020 13:46:27 +0800
-From:   =?big5?B?p2Sp/rzhIFJpY2t5?= <ricky_wu@realtek.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        James Ettle <james@ettle.org.uk>
-CC:     Rui Feng <rui_feng@realsil.com.cn>, Arnd Bergmann <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Len Brown <lenb@kernel.org>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jacopo De Simoi <wilderkde@gmail.com>
-Subject: RE: rtsx_pci not restoring ASPM state after suspend/resume
-Thread-Topic: rtsx_pci not restoring ASPM state after suspend/resume
-Thread-Index: AQHWZF98DDVxZTXVzky/7XhwfZkLR6kccXXg
-Date:   Tue, 28 Jul 2020 05:46:27 +0000
-Message-ID: <bbbf5619b17e43029a75ef60b6f4fc40@realtek.com>
-References: <f02332767323fc3ecccea13dd47ecfff12526112.camel@ettle.org.uk>
- <20200727214712.GA1777201@bjorn-Precision-5520>
-In-Reply-To: <20200727214712.GA1777201@bjorn-Precision-5520>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.88.99]
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
+        Tue, 28 Jul 2020 01:47:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726536AbgG1FrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 01:47:17 -0400
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A144621D95;
+        Tue, 28 Jul 2020 05:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595915237;
+        bh=qaTaq8Zfiec/SysD6CW7W71Vn7qAmrNYsR1c7ErTEQE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JPKCPuBHT9PNSZDfSkpYSU1Lwcjb9YnYSPCQWLZXKaaadBPnd5gXtE0Y3ZocORvsC
+         6jHhHW/NxIDCbxyzaj9HQJUljlBEBp4o81YkqGH8FDd6zCq1hrJnyYe730aNHM0eRz
+         dJQx5CfTmo0jaHF1uITDmG63afX4qQW+eY2fXx/c=
+Received: by mail-lj1-f177.google.com with SMTP id x9so19777224ljc.5;
+        Mon, 27 Jul 2020 22:47:16 -0700 (PDT)
+X-Gm-Message-State: AOAM530HkDwj6Ww/kSjVx6Aslg5Ij0VR2o2+bJXzuGjPYw7cleh2b8ID
+        GHrT3L8V27O8VlavlCAigQl9qqx5VyI8sE7yq6E=
+X-Google-Smtp-Source: ABdhPJyzkiEMwJ4rAbnZzFJ5hvFxoKM2cOBCCAXqEQzukrJJfzMXKWWBguqlYFZXJhOaNTCS1Dt2MgbalWFNoeGj3WA=
+X-Received: by 2002:a2e:8707:: with SMTP id m7mr11093793lji.350.1595915234960;
+ Mon, 27 Jul 2020 22:47:14 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-28-guro@fb.com>
+In-Reply-To: <20200727184506.2279656-28-guro@fb.com>
+From:   Song Liu <song@kernel.org>
+Date:   Mon, 27 Jul 2020 22:47:03 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7jWztOVeeiRNBRK4JC_MS41qUSxzEDMywb-6=Don-ndA@mail.gmail.com>
+Message-ID: <CAPhsuW7jWztOVeeiRNBRK4JC_MS41qUSxzEDMywb-6=Don-ndA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 27/35] bpf: eliminate rlimit-based memory
+ accounting infra for bpf maps
+To:     Roman Gushchin <guro@fb.com>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IE9uIE1vbiwgSnVsIDI3LCAyMDIwIGF0IDA4OjUyOjI1UE0gKzAxMDAsIEphbWVzIEV0dGxl
-IHdyb3RlOg0KPiA+IE9uIE1vbiwgMjAyMC0wNy0yNyBhdCAwOToxNCAtMDUwMCwgQmpvcm4gSGVs
-Z2FhcyB3cm90ZToNCj4gPiA+IEkgZG9uJ3Qga25vdyB0aGUgY29ubmVjdGlvbiBiZXR3ZWVuIEFT
-UE0gYW5kIHBhY2thZ2UgQy1zdGF0ZXMsIHNvIEkNCj4gPiA+IG5lZWQgdG8gc2ltcGxpZnkgdGhp
-cyBldmVuIG1vcmUuICBBbGwgSSB3YW50IHRvIGRvIHJpZ2h0IG5vdyBpcw0KPiA+ID4gdmVyaWZ5
-DQo+ID4gPiB0aGF0IGlmIHdlIGRvbid0IGhhdmUgYW55IG91dHNpZGUgaW5mbHVlbmNlcyBvbiB0
-aGUgQVNQTQ0KPiA+ID4gY29uZmlndXJhdGlvbg0KPiA+ID4gKGVnLCBubyBtYW51YWwgY2hhbmdl
-cyBhbmQgbm8gdWRldiBydWxlcyksIGl0IHN0YXlzIHRoZSBzYW1lIGFjcm9zcw0KPiA+ID4gc3Vz
-cGVuZC9yZXN1bWUuDQo+ID4NCj4gPiBCYXNpY2FsbHkgdGhpcyBzdGFydGVkIGZyb20gbWUgb2Jz
-ZXJ2aW5nIGRlZXAgcGFja2FnZSBDLXN0YXRlcyB3ZXJlbid0DQo+ID4gYmVpbmcgdXNlZCwgdW50
-aWwgSSB3ZW50IGFuZCBmaWRkbGVkIHdpdGggdGhlIEFTUE0gc3RhdGUgb2YgdGhlDQo+ID4gcnRz
-eF9wY2kgY2FyZCByZWFkZXIgdW5kZXIgc3lzZnMgLS0gc28gcGhlbm9tZW5vbG9naWNhbCBwb2tp
-bmcgb24gbXkNCj4gPiBwYXJ0Lg0KPiA+DQo+ID4gPiBTbyBsZXQncyByZWFkIHRoZSBBU1BNIHN0
-YXRlIGRpcmVjdGx5IGZyb20gdGhlDQo+ID4gPiBoYXJkd2FyZSBsaWtlIHRoaXM6DQo+ID4gPg0K
-PiA+ID4gICBzdWRvIGxzcGNpIC12dnMgMDA6MWQuMCB8IGVncmVwICJeMHxMbmt8TDF8TFRSfHNu
-b29wIg0KPiA+ID4gICBzdWRvIGxzcGNpIC12dnMgMDE6MDAgICB8IGVncmVwICJeMHxMbmt8TDF8
-TFRSfHNub29wIg0KPiA+ID4NCj4gPiA+IENhbiB5b3UgdHJ5IHRoYXQgYmVmb3JlIGFuZCBhZnRl
-ciBzdXNwZW5kL3Jlc3VtZT8NCj4gPg0KPiA+IEkndmUgYXR0YWNoZWQgdGhlc2UgdG8gdGhlIGJ1
-Z3ppbGxhIGVudHJ5IGF0Og0KPiA+DQo+ID4gaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3No
-b3dfYnVnLmNnaT9pZD0yMDgxMTcNCj4gPg0KPiA+IFNwb2lsZXI6IFdpdGggbm8gdWRldiBydWxl
-cyBvciBzdXNwZW5kIGhvb2tzLCB0aGluZ3MgYXJlIHRoZSBzYW1lDQo+ID4gYmVmb3JlIGFuZCBh
-ZnRlciBzdXNwZW5kL3Jlc3VtZS4gT25lIHRoaW5nIEkgZG8gc2VlIChib3RoIGJlZm9yZSBhbmQN
-Cj4gPiBhZnRlcikgaXMgdGhhdCBBU1BNIEwwcyBhbmQgTDEgaXMgZW5hYmxlZCBmb3IgdGhlIGNh
-cmQgcmVhZGVyLCBidXQNCj4gPiBkaXNhYmxlZCBmb3IgdGhlIGV0aGVybmV0IGNoaXAgKGRvZXMg
-cjgxNjkgZmlkZGxlIHdpdGggQVNQTSB0b28/KS4NCj4gDQo+IFRoYW5rIHlvdSEgIEl0J3MgZ29v
-ZCB0aGF0IHRoaXMgc3RheXMgdGhlIHNhbWUgYWNyb3NzIHN1c3BlbmQvcmVzdW1lLg0KPiBEbyB5
-b3Ugc2VlIGRpZmZlcmVudCBDLXN0YXRlIGJlaGF2aW9yIGJlZm9yZSB2cyBhZnRlcj8NCj4gDQo+
-IFRoaXMgaXMgdGhlIGNvbmZpZyBJIHNlZToNCj4gDQo+ICAgMDA6MWQuMCBicmlkZ2UgdG8gW2J1
-cyAwMV06IEFTUE0gTDEgc3VwcG9ydGVkOyAgICAgQVNQTSBEaXNhYmxlZA0KPiAgIDAxOjAwLjAg
-Y2FyZCByZWFkZXI6ICAgICAgICBBU1BNIEwwcyBMMSBzdXBwb3J0ZWQ7IEwwcyBMMSBFbmFibGVk
-DQo+ICAgMDE6MDAuMSBHaWdFIE5JQzogICAgICAgICAgIEFTUE0gTDBzIEwxIHN1cHBvcnRlZDsg
-QVNQTSBEaXNhYmxlZA0KPiANCj4gVGhpcyBpcyBhY3R1YWxseSBpbGxlZ2FsIGJlY2F1c2UgUENJ
-ZSByNS4wLCBzZWMgNS40LjEuMywgc2F5cyBzb2Z0d2FyZQ0KPiBtdXN0IG5vdCBlbmFibGUgTDBz
-IGluIGVpdGhlciBkaXJlY3Rpb24gdW5sZXNzIGNvbXBvbmVudHMgb24gYm90aCBlbmRzDQo+IG9m
-IHRoZSBsaW5rIHN1cHBvcnQgTDBzLiAgVGhlIGJyaWRnZSAoMDA6MWQuMCkgZG9lcyBub3Qgc3Vw
-cG9ydCBMMHMsDQo+IHNvIGl0J3MgaWxsZWdhbCB0byBlbmFibGUgTDBzIG9uIDAxOjAwLjAuICBJ
-IGRvbid0IGtub3cgd2hldGhlciB0aGlzDQo+IGNhdXNlcyBwcm9ibGVtcyBpbiBwcmFjdGljZS4N
-Cj4gDQoNCklmIHN5c3RlbSB3YW50IHRvIGVudHJ5IGRlZXAgQy1zdGF0ZSwgc3lzdGVtIGhhdmUg
-dG8gc3VwcG9ydCBMMS4gSG9zdCBicmlkZ2UgaGFuZHNoYWtlIHdpdGggZGV2aWNlIHRvIGRldGVy
-bWluZSB3aGV0aGVyIHRvIGVudGVyIHRoZSBMMSBzdGF0ZS4NCk91ciBjYXJkIHJlYWRlciBkcml2
-ZXIgZGlkIG5vdCBzZXQgTDBzLCBoZXJlIG5lZWQgdG8gY2hlY2sgd2hvIHNldCB0aGlzLCBidXQg
-d2UgdGhvdWdodCB0aGlzIEwwcyBlbmFibGUgc2hvdWxkIG5vdCBjYXVzZSBIb3N0IGJyaWRnZSBB
-U1BNIGRpc2FibGUNCiANCg0KPiBJIGRvbid0IHNlZSBhbnl0aGluZyBpbiBydHN4IHRoYXQgZW5h
-YmxlcyBMMHMuICBDYW4geW91IGNvbGxlY3QgdGhlDQo+IGRtZXNnIGxvZyB3aGVuIGJvb3Rpbmcg
-d2l0aCAicGNpPWVhcmx5ZHVtcCI/ICBUaGF0IHdpbGwgc2hvdyB3aGV0aGVyDQo+IHRoZSBCSU9T
-IGxlZnQgaXQgdGhpcyB3YXkuICBUaGUgUENJIGNvcmUgaXNuJ3Qgc3VwcG9zZWQgdG8gZG8gdGhp
-cywgc28NCj4gaWYgaXQgZGlkLCB3ZSBuZWVkIHRvIGZpeCB0aGF0Lg0KPiANCj4gSSBkb24ndCBr
-bm93IHdoZXRoZXIgcjgxNjkgbXVja3Mgd2l0aCBBU1BNLiAgSXQgaXMgbGVnYWwgdG8gaGF2ZQ0K
-PiBkaWZmZXJlbnQgY29uZmlndXJhdGlvbnMgZm9yIHRoZSB0d28gZnVuY3Rpb25zLCBldmVuIHRo
-b3VnaCB0aGV5IHNoYXJlDQo+IHRoZSBzYW1lIGxpbmsuICBTZWMgNS40LjEgaGFzIHJ1bGVzIGFi
-b3V0IGhvdyBoYXJkd2FyZSByZXNvbHZlcw0KPiBkaWZmZXJlbmNlcy4NCj4gDQo+ID4gW09kZGx5
-IHdoZW4gSSBzZXQgQVNQTSAoZS5nLiB1c2luZyB1ZGV2KSB0aGUgbHNwY2kgdG9vbHMgc2hvdyBB
-U1BNDQo+ID4gZW5hYmxlZCBhZnRlciBhIHN1c3BlbmQvcmVzdW1lLCBidXQgc3RpbGwgbm8gZGVl
-cCBwYWNrYWdlIEMtc3RhdGVzDQo+ID4gdW50aWwgSSBtYW51YWxseSBmaWRkbGUgdmlhIHN5c2Zz
-IG9uIHRoZSBjYXJkIHJlYWRlci4gU29ycnkgaWYgdGhpcw0KPiA+IG9ubHkgbXVkZGllcyB0aGUg
-d2F0ZXIgZnVydGhlciFdDQo+IA0KPiBMZXQncyBkZWZlciB0aGlzIGZvciBub3cuICBJdCBzb3Vu
-ZHMgd29ydGggcHVyc3VpbmcsIGJ1dCBJIGNhbid0IGtlZXANCj4gZXZlcnl0aGluZyBpbiBteSBo
-ZWFkIGF0IG9uY2UuDQo+IA0KPiBCam9ybg0KPiANCj4gLS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRo
-ZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBlLW1haWwuDQo=
+On Mon, Jul 27, 2020 at 12:26 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> Remove rlimit-based accounting infrastructure code, which is not used
+> anymore.
+>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+[...]
+>
+>  static void bpf_map_put_uref(struct bpf_map *map)
+> @@ -541,7 +484,7 @@ static void bpf_map_show_fdinfo(struct seq_file *m, struct file *filp)
+>                    "value_size:\t%u\n"
+>                    "max_entries:\t%u\n"
+>                    "map_flags:\t%#x\n"
+> -                  "memlock:\t%llu\n"
+> +                  "memlock:\t%llu\n" /* deprecated */
+
+I am not sure whether we can deprecate this one.. How difficult is it
+to keep this statistics?
+
+Thanks,
+Song
