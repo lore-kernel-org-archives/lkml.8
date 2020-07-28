@@ -2,147 +2,121 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C755C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F91C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFC9B2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC0A2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:08:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Q8b9c3XZ"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="MqmwwGLK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732153AbgG1SHC (ORCPT
+        id S1732166AbgG1SI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:07:02 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:57466 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728625AbgG1SHC (ORCPT
+        Tue, 28 Jul 2020 14:08:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732157AbgG1SI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 14:07:02 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595959621; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=wH1XeUIpKUi87lDduI+MZ/7qwzN50GTis63htVEvvHE=; b=Q8b9c3XZ/D6wgsgUjNzfE0FzS+C8MX7vwHMZFoGQq06LVNCubsnr3aqv1pAJGu4K+0YAKOCB
- UzigY6sUhcNrEKS3ST7XlzrLVR5bADmzI6bGuaCTAPVNhPzh9vU592cWa/xqbKAFgRrThrcY
- vpA/B+6D8Kifij3hISY+9YhFYuA=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
- 5f206935c7e7bf09e06380a2 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 18:06:45
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 563CAC433A0; Tue, 28 Jul 2020 18:06:45 +0000 (UTC)
-Received: from [192.168.8.168] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8BA89C433C6;
-        Tue, 28 Jul 2020 18:06:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8BA89C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
-Subject: Re: [PATCH v7 7/8] scsi: ufs: Move dumps in IRQ handler to error
- handler
-To:     Can Guo <cang@codeaurora.org>, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        sh425.lee@samsung.com, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1595912460-8860-1-git-send-email-cang@codeaurora.org>
- <1595912460-8860-8-git-send-email-cang@codeaurora.org>
-From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Message-ID: <7e5e942d-449b-bd52-32da-7f5beed116b7@codeaurora.org>
-Date:   Tue, 28 Jul 2020 11:06:42 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 14:08:27 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05220C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 11:08:27 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id w2so12385105pgg.10
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 11:08:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s/9beP98f98Vf1zxiKQSOkO8IXWG5BYB+nIvxcLtCTU=;
+        b=MqmwwGLKgjBAB1MvvthLY8ID+OloHNBejgeU6MMoJezNO42uXn3uZCYB1cN1v2egf0
+         gcnexjKCOv6L1HwkKoFojdwikyJDk/A+bWF/vAgzjBCJO4jbSUBCMvD5e6U8HmrcQjSI
+         pjgCNgmCmOS/3RS2TLVwDHr/Qp2FzXL23YCYZae3vOsDtCjLsExAyVaE/g19SkahSExe
+         pGSBud28VXtHmkZQBQUm+5L7biZF2p9HezxIEGrbPJ7F0AVLHy+tVve9hXexAvI9Gbi0
+         vo41QNWCXEl8+rRyFL8xOC1hWUHkzw32wez11r4JGgz/DQJbH/R9sob4HFBKTjoo3aX4
+         G5Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s/9beP98f98Vf1zxiKQSOkO8IXWG5BYB+nIvxcLtCTU=;
+        b=JQOqoArfCLyRLPHQTKJd6x6kIzrjk4M+ef68qqE59DCFMrsavXll36BDEUuX03tbva
+         LyLvsRmejJbXB+Bdu6sVXCZjGg94bzDTHEarTBjuzECX6BRUHYx6ku4YS/rJCAwjGxhG
+         6yJaS0QVeiibnpijXiJ+9ygyyxCqUzyofXfFpOu9BEmH/siPsIhCCfq5r/2n13/nPlYG
+         oBAr49K1DBu5ws24Jz1fi0PsjNsWYyg7RRHIqbdaHmTxha4f0OgV3GeLvwfiB/A/D+wc
+         kK1CSynbuRFDOdzTtJvwcJisUBx2tbPpAU2/38dpGEz3oW8NCzyEV4aSL5bXrExgOKAW
+         1Cfg==
+X-Gm-Message-State: AOAM530ULV5l+M1fJhjicZOxf/ga7HlTUd9ZJsmG2yQicMEg8B1nV6ED
+        dXZry0P3aNCSk+EY4KH16JBszBvyBr5PQKrg
+X-Google-Smtp-Source: ABdhPJzU6O+QFw+Lofj9skIB8yD44AlqL1FAgPp36utq6qkUjLqLKInjfqnO91j7BH3OIABWGQEIwg==
+X-Received: by 2002:aa7:9f5a:: with SMTP id h26mr7794558pfr.114.1595959706541;
+        Tue, 28 Jul 2020 11:08:26 -0700 (PDT)
+Received: from C02CV1DAMD6P.sso.bytedance.com ([103.136.221.69])
+        by smtp.gmail.com with ESMTPSA id n2sm19539822pfq.140.2020.07.28.11.08.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Jul 2020 11:08:26 -0700 (PDT)
+From:   Chengming Zhou <zhouchengming@bytedance.com>
+To:     rostedt@goodmis.org, mingo@redhat.com, linux-kernel@vger.kernel.org
+Cc:     zhouchengming@bytedance.com, songmuchun@bytedance.com
+Subject: [PATCH 1/2] ftrace: setup correct FTRACE_FL_REGS flags for module
+Date:   Wed, 29 Jul 2020 02:05:53 +0800
+Message-Id: <20200728180554.65203-1-zhouchengming@bytedance.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 MIME-Version: 1.0
-In-Reply-To: <1595912460-8860-8-git-send-email-cang@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/2020 10:00 PM, Can Guo wrote:
-> Sometime dumps in IRQ handler are heavy enough to cause system stability
-> issues, move them to error handler.
-> 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> ---
->   drivers/scsi/ufs/ufshcd.c | 31 +++++++++++++++----------------
->   1 file changed, 15 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index c480823..b2bafa3 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -5682,6 +5682,21 @@ static void ufshcd_err_handler(struct work_struct *work)
->   				    UFSHCD_UIC_DL_TCx_REPLAY_ERROR))))
->   		needs_reset = true;
->   
-> +	if (hba->saved_err & (INT_FATAL_ERRORS | UIC_ERROR |
-> +			      UFSHCD_UIC_HIBERN8_MASK)) {
-> +		bool pr_prdt = !!(hba->saved_err & SYSTEM_BUS_FATAL_ERROR);
-> +
-> +		dev_err(hba->dev, "%s: saved_err 0x%x saved_uic_err 0x%x\n",
-> +				__func__, hba->saved_err, hba->saved_uic_err);
-> +		spin_unlock_irqrestore(hba->host->host_lock, flags);
-> +		ufshcd_print_host_state(hba);
-> +		ufshcd_print_pwr_info(hba);
-> +		ufshcd_print_host_regs(hba);
-> +		ufshcd_print_tmrs(hba, hba->outstanding_tasks);
-> +		ufshcd_print_trs(hba, hba->outstanding_reqs, pr_prdt);
-> +		spin_lock_irqsave(hba->host->host_lock, flags);
-> +	}
-> +
->   	/*
->   	 * if host reset is required then skip clearing the pending
->   	 * transfers forcefully because they will get cleared during
-> @@ -5900,22 +5915,6 @@ static irqreturn_t ufshcd_check_errors(struct ufs_hba *hba)
->   
->   		/* block commands from scsi mid-layer */
->   		ufshcd_scsi_block_requests(hba);
-> -
-> -		/* dump controller state before resetting */
-> -		if (hba->saved_err & (INT_FATAL_ERRORS | UIC_ERROR)) {
-> -			bool pr_prdt = !!(hba->saved_err &
-> -					SYSTEM_BUS_FATAL_ERROR);
-> -
-> -			dev_err(hba->dev, "%s: saved_err 0x%x saved_uic_err 0x%x\n",
-> -					__func__, hba->saved_err,
-> -					hba->saved_uic_err);
-> -
-> -			ufshcd_print_host_regs(hba);
-> -			ufshcd_print_pwr_info(hba);
-How about keep the above prints and move the tmrs and trs to eh?
-Sometimes in system instability, the eh may not get a chance to run 
-even. Still the above prints would provide some clues.
-> -			ufshcd_print_tmrs(hba, hba->outstanding_tasks);
-> -			ufshcd_print_trs(hba, hba->outstanding_reqs,
-> -					pr_prdt);
-> -		}
->   		ufshcd_schedule_eh_work(hba);
->   		retval |= IRQ_HANDLED;
->   	}
-> 
+When module loaded and enabled, we will use __ftrace_replace_code
+for module if any ftrace_ops referenced it found. But we will get
+wrong ftrace_addr for module rec in ftrace_get_addr_new, because
+rec->flags has not been setup correctly. It can cause the callback
+function of a ftrace_ops has FTRACE_OPS_FL_SAVE_REGS to be called
+with pt_regs set to NULL.
+So setup correct FTRACE_FL_REGS flags for rec when we call
+referenced_filters to find ftrace_ops references it.
 
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+---
+ kernel/trace/ftrace.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index fca01a168ae5..a3d141f53c9e 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6190,8 +6190,11 @@ static int referenced_filters(struct dyn_ftrace *rec)
+ 	int cnt = 0;
+ 
+ 	for (ops = ftrace_ops_list; ops != &ftrace_list_end; ops = ops->next) {
+-		if (ops_references_rec(ops, rec))
+-		    cnt++;
++		if (ops_references_rec(ops, rec)) {
++			cnt++;
++			if (ops->flags & FTRACE_OPS_FL_SAVE_REGS)
++				rec->flags |= FTRACE_FL_REGS;
++		}
+ 	}
+ 
+ 	return cnt;
+@@ -6372,8 +6375,8 @@ void ftrace_module_enable(struct module *mod)
+ 		if (ftrace_start_up)
+ 			cnt += referenced_filters(rec);
+ 
+-		/* This clears FTRACE_FL_DISABLED */
+-		rec->flags = cnt;
++		rec->flags &= ~FTRACE_FL_DISABLED;
++		rec->flags += cnt;
+ 
+ 		if (ftrace_start_up && cnt) {
+ 			int failed = __ftrace_replace_code(rec, 1);
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-Linux Foundation Collaborative Project
+2.20.1
+
