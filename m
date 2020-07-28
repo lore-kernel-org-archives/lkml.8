@@ -2,134 +2,144 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4103C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AD0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF3520714
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:23:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="PwD/AoUo";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="QxItiRav"
+	by mail.kernel.org (Postfix) with ESMTP id 284F6206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbgG1MXY (ORCPT
+        id S1729297AbgG1MYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:23:24 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:50387 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728300AbgG1MXW (ORCPT
+        Tue, 28 Jul 2020 08:24:43 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52196 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728300AbgG1MYm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:23:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1595939002; x=1627475002;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
-  b=PwD/AoUoCODzcuWQDM/WxDTZ3VqrJdl8wM50xgrppVvVcMDKwnB0oLvj
-   qQAnYRP8NzJJ3obaH56MlQUPqwPPtaEMXgSepmhH1H85nuRRWAHci8J/u
-   XJ4DWm6Qp4PIv+Z/4Del5Ikl4JbGXsfVg9AHxz7Vmkfk7UYqCxo/CKkBe
-   gVXSZxpfb5XRXWr3GqHVvpBPIqf+tvHYYhqIleQ+OtCg+pBvCpLHA4zYa
-   Mj++FbnxTL+41R8WzbChuHJDLyCUNN+QXFlTXsMLf6e5AypU7xCLcCFSs
-   +mhN+U5swU/4fQ69qXwa9PBdXldIdSGnaCyMRM+5vw+Kda/xbq7ApV3B5
-   Q==;
-IronPort-SDR: nHwbTT2+vn9pF4EhYRMEHd7dKsa9G1qeLWUPXheti+Pz3Zc6oYAIeAym0RRYqLmfr3T7gCN13G
- hGUz1YRjBCThLrtiqVTJa8cS1sQp4CPgdkA9in8VzEE5kTj2vnkwgaK64Iii88kcCzIgmi6wen
- AUEmIBeY8P41CBdaTiqKM/XwD5j3Fpul8EVgqwwd7Es16E9eGa2oOEVE1xqXnBJ/5VcRhq1v5+
- 5E8EKshIWQwQZ0tKScwy/wyU9aex3Q0n5Z6OBelkg73aa73WV6Apm74oXSQgjsQi4xYXvn3a1B
- VXY=
-X-IronPort-AV: E=Sophos;i="5.75,406,1589212800"; 
-   d="scan'208";a="147859977"
-Received: from mail-bl2nam02lp2050.outbound.protection.outlook.com (HELO NAM02-BL2-obe.outbound.protection.outlook.com) ([104.47.38.50])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Jul 2020 20:23:20 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dS58XHLfiOtAEZJ+0Nn9Kp1Y+ynt023kt+dNFh1PIXxff/XCNva3qhpj660DpW8+OZryh/j5l2/uaShUIP4YoKZH9Ns9F1XwjO6V+cdtF3pVVCEJxwsHdip/+NIAT2sQHpibPzk4X007cIlY7FdM1lTxIImQ9m3A9ZGjkbGsFzmCBzGcBx8MTKAO/uKwt43ikXDTK6MaRAytzvOreBMqAaOE9OeePpYy1qhtstjx4Q8a0xRGS0syWeFWXhlGPvwFuksyurODsDk73eaWMUjNsovF0kDrQ82DTL8MhfUVcsBdEEMF/H5KHgTOOMWNB++eBdLx2PK+O/kN944MEOvKyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=UUrVjbjEDAVWVmx7RzmSwpZrceWs22zKEfHHwqQIBJUh0n9k7hN8FGmQxMRTt6qmuCu4MnZfBP709cFx7zZ4NExyZQkfA8iamW2zux1d6678qGdsTJYToE9MRHXHlem+qQrvAVPA7FptHR0F1NPqWCOq4qJ/o3DOWOYtb8qLqbFU5VJsFwV3KHi3j1GpFNbTd0laipFgYCEmzh4nJj9wV0FIpr7AbHMyAoqXZEOGVf3vRmtgralmh92iVQF5jAlxkKFzZMASK4cc6DCSWw5eKBwNb7U5e+2DhaPZb6XDUq0x+T2kXWDnNbsKCzjO71Tv1hOQSBXXee85Qqke8FW8ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=QxItiRavHzYveDOEBW0UFViPWLwou38pbhYILYA52HxEGG6xoH1TcyNk5d4ns+x4D29on9arDMVefwoulp+6ZW4Xz21E5Y0RbdPrrH+Z9xiDAw3FbBAgR2Oo+pHcMCf1U3yTO1onnBdWoZmPCw0D8As+T1yeKLZXQiVl3fqsoUM=
-Received: from DM5PR0401MB3591.namprd04.prod.outlook.com (2603:10b6:4:7e::15)
- by DM6PR04MB6042.namprd04.prod.outlook.com (2603:10b6:5:128::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Tue, 28 Jul
- 2020 12:23:18 +0000
-Received: from DM5PR0401MB3591.namprd04.prod.outlook.com
- ([fe80::c862:9cd5:689a:8573]) by DM5PR0401MB3591.namprd04.prod.outlook.com
- ([fe80::c862:9cd5:689a:8573%5]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
- 12:23:18 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-CC:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>
-Subject: Re: [PATCH 06/14] block: lift setting the readahead size into the
- block layer
-Thread-Topic: [PATCH 06/14] block: lift setting the readahead size into the
- block layer
-Thread-Index: AQHWYYzl+a7Eqk4s2ka3fXGEsbV2jg==
-Date:   Tue, 28 Jul 2020 12:23:18 +0000
-Message-ID: <DM5PR0401MB359169BADDBE6B9F611B9BF19B730@DM5PR0401MB3591.namprd04.prod.outlook.com>
-References: <20200724073313.138789-1-hch@lst.de>
- <20200724073313.138789-7-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.240.72]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 41c6ceb7-578c-4100-8b52-08d832f102a7
-x-ms-traffictypediagnostic: DM6PR04MB6042:
-x-microsoft-antispam-prvs: <DM6PR04MB6042DE20A315424F8D2533529B730@DM6PR04MB6042.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CZdHaPqnktjMFEGBYJsxb6FTC8d0ugTzRNcXhnKqt0egUiYzymkMqsNmW+Sz+Zf41My3LEET5GE2/h6rewehBYCLLmhpPoo95Jknf2TLBh2ODw5HyNAVk811121hHOZaQKEhJ8PaWKQ0WIn+2hlH4+DiVdTWbCHeLI3cHqi7uDqxu2Ge9rav/L2d3nEceqktRk9ElOjv7nz/t+9qpwh4PnvZWbaytY1p/n+KxPI+g+IOo3NHQxqw2ky/VaNZ6lv4gFc2o+RBLt8SFnutCas2YVU9Ap4wrWe3FuH9TMibD597SVAKof4PlE8G8nYCwICGH9AN87jzKgfEkXpDUNA7Xw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0401MB3591.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(136003)(396003)(366004)(346002)(54906003)(7696005)(110136005)(19618925003)(558084003)(64756008)(66446008)(66946007)(6506007)(66556008)(66476007)(71200400001)(186003)(76116006)(26005)(91956017)(52536014)(478600001)(4270600006)(5660300002)(33656002)(86362001)(8936002)(55016002)(9686003)(4326008)(7416002)(316002)(2906002)(8676002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: whG+n3jqlXJuOd6kui3pyChonTerxMiCSOqI7YGRrP+w2/lRGm2YL+RH+sZDESLaYiv+hXSVyC+hCanAINAYHE3T0cIiuj7qMZyyVBMaSRh74e/m6YCVa1XRy+rIzSUrGV3Veif+hGffucuTeI5wfVIGfDGpkdjEwCrjfY1qMWUuIcWi4rFl5NZjezh6zdAiR4swYp/L0bWIRaeDmQCWR3DiHT4tYWidkpdCFupctf6ZVCbcp4J5w1FPd3rezNFP8RdDSrQNtKXvs5AWWDOltg2cTlcCRgJV6xZcDn6mkMBPEodOUhcWCzHAZfSVkKTBEPthT/VmbhGxAe/gGXOU8PV+YNRoXlozvPTtHS8781xPEAoDyhl6uvsegR9WK4jZ6a5IpllTfEeZ/5vo1mIlSyca0+Z8kXeiRYCFQg3cX2GstzQQ13tQjfCYKMeKVI3Q5dxbr67m8RD87SwzKzc3JXcRSLx0XyGkKxOX5aWrA9zqA3oCRgcYu/PP+wDuBt/6
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 Jul 2020 08:24:42 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id 87866297427
+Subject: Re: [PATCH v2 3/3] media: vimc: Join pipeline if one already exists
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>
+References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
+ <20200724120213.17119-4-kgupta@es.iitr.ac.in>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <e70ecfa2-695f-70ca-eccc-841477700445@collabora.com>
+Date:   Tue, 28 Jul 2020 14:24:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR0401MB3591.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41c6ceb7-578c-4100-8b52-08d832f102a7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 12:23:18.5057
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: T9oxUAcaQH+FRTbrT5RxUaoJfIoRjFxeQz8cgTzgE7hbb+uOz8DI/06Y5E+Q81ZT8diU2rriYFvNdP2IraoC0vrCA3qPZPm+bSa7MmJ1F+k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB6042
+In-Reply-To: <20200724120213.17119-4-kgupta@es.iitr.ac.in>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+
+
+On 24.07.20 14:02, Kaaira Gupta wrote:
+> An output which is running is already part of a pipeline and trying to
+> start a new pipeline is not possible. This prevents two capture devices
+> from streaming at the same time.
+> 
+> Instead of failing to start the second capture device allow it to join
+> the already running pipeline. This allows two (or more) capture devices
+> to independently be started and stopped.
+> 
+> [Kaaira: Changed the search for an existing connected sensor, to search
+> for a non-NULL pipe instead, this helps to terminate the search at
+> output itself instead of going till the sensor, changed variable names,
+> commit message and conditions accordingly]
+> 
+> Signed-off-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> ---
+>   .../media/test-drivers/vimc/vimc-capture.c    | 35 ++++++++++++++++++-
+>   1 file changed, 34 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/test-drivers/vimc/vimc-capture.c b/drivers/media/test-drivers/vimc/vimc-capture.c
+> index c63496b17b9a..423d5e5a508d 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-capture.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-capture.c
+> @@ -237,16 +237,49 @@ static void vimc_cap_return_all_buffers(struct vimc_cap_device *vcap,
+>   	spin_unlock(&vcap->qlock);
+>   }
+>   
+> +static struct media_entity *vimc_cap_get_output(struct vimc_cap_device *vcap)
+> +{
+> +	struct media_entity *entity = &vcap->vdev.entity;
+> +	struct media_device *mdev = entity->graph_obj.mdev;
+> +	struct media_graph graph;
+> +
+> +	mutex_lock(&mdev->graph_mutex);
+> +	if (media_graph_walk_init(&graph, mdev)) {
+> +		mutex_unlock(&mdev->graph_mutex);
+> +		return NULL;
+> +	}
+> +
+> +	media_graph_walk_start(&graph, entity);
+> +
+> +	while ((entity = media_graph_walk_next(&graph)))
+> +		if (entity->pipe)
+> +			break;
+> +
+> +	mutex_unlock(&mdev->graph_mutex);
+> +
+> +	media_graph_walk_cleanup(&graph);
+> +
+> +	return entity;
+> +}
+> +
+>   static int vimc_cap_start_streaming(struct vb2_queue *vq, unsigned int count)
+>   {
+>   	struct vimc_cap_device *vcap = vb2_get_drv_priv(vq);
+>   	struct media_entity *entity = &vcap->vdev.entity;
+> +	struct media_pipeline *pipe = NULL;
+> +	struct media_entity *oent;
+>   	int ret;
+>   
+>   	vcap->sequence = 0;
+>   
+>   	/* Start the media pipeline */
+> -	ret = media_pipeline_start(entity, &vcap->stream.pipe);
+> +	oent = vimc_cap_get_output(vcap);
+> +	if (oent)
+> +		pipe = oent->pipe;
+> +	else
+> +		pipe = &vcap->stream.pipe;
+> +
+> +	ret = media_pipeline_start(entity, pipe);
+>   	if (ret) {
+>   		vimc_cap_return_all_buffers(vcap, VB2_BUF_STATE_QUEUED);
+>   		return ret;
+>
+
+I think there is actually no need to iterate the graph. If the capture is already connected to another capture
+that streams, it means that they both have the same pipe in the media core.
+So actually the code can just be:
+
+if (vcap->ved.ent->pipe)
+	pipe = vcap->ved.ent->pipe;
+else
+	pipe = &vcap->stream.pipe;
+
+
+(and no need the function vimc_cap_get_output)
+
+Thanks,
+Dafna
+  
