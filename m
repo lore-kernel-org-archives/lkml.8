@@ -3,137 +3,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B966C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F780C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECA9A21D95
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570A820759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:08:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iEACU+jg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M42esjLI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbgG1GIH (ORCPT
+        id S1727775AbgG1GIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42628 "EHLO
+        Tue, 28 Jul 2020 02:08:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbgG1GIG (ORCPT
+        with ESMTP id S1726407AbgG1GIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:08:06 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CB1CC0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 23:08:06 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id l6so9336438plt.7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 23:08:06 -0700 (PDT)
+        Tue, 28 Jul 2020 02:08:44 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47CCBC061794;
+        Mon, 27 Jul 2020 23:08:44 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id j187so17627848qke.11;
+        Mon, 27 Jul 2020 23:08:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=v4H93n5r5JaaHCincZZJ4YGqo0Cw0aIhg3WvTO7qLbA=;
-        b=iEACU+jgodAOUswG7u+iQZCpSK9FvuqqcVb/9Y7eifUCb28xEnCe8L20gK6WLrjGYZ
-         IBjsL/SYk9g3GMnctvQd9SDv957KlTkkNCprZaHmEDGwn2/bKs7mWw1DQFV4FQiG0slJ
-         9RrbO+OyEHu5xLrOAz1QOE2x1CWja4gr+eWtjwgct+w3YMPBtcFfT51Asq9ykEnFLivR
-         U/kXyk787cD4gHygZoUQ4Uj7IXG/dT1SVsNe3AzHhI+jQQQhjgUc0cavjswmfb3bBJYK
-         dxNNVAFs0UljW/pwq2+AJ2hA9HAaAx46YhqoXMmMvOYgmOSVMKlLLoffi3lURdovzoBD
-         Xi2g==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NBkYNLK/UsU+H/NI4eZY+7e5iBngk/v8pGC3lNVjOpc=;
+        b=M42esjLI82UA6Y99wBsskZzJOPHQ9lgJOQgkSVEwTakQwBqm/KtT6UHl+sgOVwiMgJ
+         4vbEEdwKHwYeCu0QlvbijXMW20PwS8xJ7xuIfNISci+te1/99aNz7clMJXG7tSJfmTIu
+         /sj+tgDSC+/oet97egbTsS2xRZwlzH8nhy0/odSwURO7VZ7lrf6lJZuxU3sLYr7We9xM
+         qsWHlNSgwE803Q06t/0PqW9Z5WlrAP5ZqCX91x2p5VY0RvAlUdGojpOEEZBKY8KbWhO8
+         VJ2TKjiX0SuuHEjqirw3g5QYqik5r4NgqaLWACQlduSNe+QzLAXoo0ANQRqpYBnDgwjq
+         huuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=v4H93n5r5JaaHCincZZJ4YGqo0Cw0aIhg3WvTO7qLbA=;
-        b=QN9GI+PnDBqnfsp+2SiJ6QQmLFvmOzTGoxuth0keaV1zpy2o7v5yRSHlwAHFjShUJq
-         kxbVAwACvLxXHs/DoZqyZgNB/5aBUFSfwGGzvgRsutd40JkIRMkt0F9VsSw+p9H8shem
-         PDORTR3TDG4wM6nLMbwH36Y9q4b9o9Nd6UFCFZoHivZcTiUMbxgSlxmZsoBNvaedTHQs
-         Awf8vIFgkf7tMK94of0VauXwU+ZY5OxKTDZ3oYda5Fa5QDn4y9cgcDoHZuu6KMM7CFmE
-         n98nrCqcyzhWi4M0H/U7QwKchMe+RpUhZt3D9GOjndR+ZpYICQyXYvTW/m/mO9isnZ7V
-         P89A==
-X-Gm-Message-State: AOAM533A6G+ZlSnbFpSK3Uhu6AzXABC8UFPjKA45NOi588NHHaS59OTv
-        k6nbrKXYr/KzujBrDgpjHOFGFQ==
-X-Google-Smtp-Source: ABdhPJyE4pUdK3j4dSXViWaGSXStD7VAB/cLjDC6rNjrup5urqzpMaqeeFgMyWSW2sljZgqjwp310A==
-X-Received: by 2002:a17:90a:f192:: with SMTP id bv18mr2636648pjb.21.1595916485617;
-        Mon, 27 Jul 2020 23:08:05 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h23sm17187642pfo.166.2020.07.27.23.08.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 23:08:04 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 23:04:33 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        evgreen@chromium.org, ohad@wizery.com, stable@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] remoteproc: qcom_q6v5_mss: Validate modem blob
- firmware size before load
-Message-ID: <20200728060433.GC349841@builder.lan>
-References: <20200722201047.12975-1-sibis@codeaurora.org>
- <20200722201047.12975-3-sibis@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NBkYNLK/UsU+H/NI4eZY+7e5iBngk/v8pGC3lNVjOpc=;
+        b=R0xDo/mm4z179fjkY+sO5DgPurroCN4GBy21Hhu/EzFJL4bflLmgDHLduiMZg9rj9o
+         k4PcNfmK4QDGOzRkccr73TkQigntWHpcrQzLE0FHwRGJsRQUfBEv7Dr6ZcB8BC2qPfMU
+         WXL5IiRNBAj3Sah4W+0N1pS/2rcQxYdf3EEhsyMNsGHs3Gn3S+06RD8asQ3f6B0VdaL2
+         1np5ErDOJeFUhog2rwLbscWq+foF4vH5QJlV/f22BCVXTTO39NudWy4crHWE9A8uKGaz
+         VF01NYLt6SuASgVNOClz8GsqPJQFqhhQgrJitMdOVUjrXCwe4oNb6Mtf0WwQxNF2OG0q
+         nh2A==
+X-Gm-Message-State: AOAM531FLReEwt8i66bzQ1x76hbWP2ER9qU4kuFvvjwhtUmy2hEVBNVd
+        yk93Y69ydstAWR59TmjNmg/EugMTVP8iaHgZHMs=
+X-Google-Smtp-Source: ABdhPJxokalrbaUzwpFZWvQPpacH5i8/pkU+Rxm819+B22P/hzsBkezw9FEKEz50N6BvgQ+bbHzMQi5X8WS2QuMziwg=
+X-Received: by 2002:a37:a655:: with SMTP id p82mr25994500qke.92.1595916523518;
+ Mon, 27 Jul 2020 23:08:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722201047.12975-3-sibis@codeaurora.org>
+References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-34-guro@fb.com>
+In-Reply-To: <20200727184506.2279656-34-guro@fb.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 27 Jul 2020 23:08:32 -0700
+Message-ID: <CAEf4BzYoxGqU=qnXz68F+vasgdr9Xj1CPtjMVDkwNbxnymGDZA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 33/35] bpf: selftests: don't touch RLIMIT_MEMLOCK
+To:     Roman Gushchin <guro@fb.com>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 22 Jul 13:10 PDT 2020, Sibi Sankar wrote:
-
-> The following mem abort is observed when one of the modem blob firmware
-> size exceeds the allocated mpss region. Fix this by restricting the copy
-> size to segment size using request_firmware_into_buf before load.
-> 
-> Err Logs:
-> Unable to handle kernel paging request at virtual address
-> Mem abort info:
-> ...
-> Call trace:
->   __memcpy+0x110/0x180
->   rproc_start+0xd0/0x190
->   rproc_boot+0x404/0x550
->   state_store+0x54/0xf8
->   dev_attr_store+0x44/0x60
->   sysfs_kf_write+0x58/0x80
->   kernfs_fop_write+0x140/0x230
->   vfs_write+0xc4/0x208
->   ksys_write+0x74/0xf8
-> ...
-> 
-> Fixes: 051fb70fd4ea4 ("remoteproc: qcom: Driver for the self-authenticating Hexagon v5")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
+On Mon, Jul 27, 2020 at 12:21 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> Since bpf is not using memlock rlimit for memory accounting,
+> there are no more reasons to bump the limit.
+>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 > ---
->  drivers/remoteproc/qcom_q6v5_mss.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> index 4e72c9e30426c..f4aa61ba220dc 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -1174,15 +1174,14 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
->  		} else if (phdr->p_filesz) {
->  			/* Replace "xxx.xxx" with "xxx.bxx" */
->  			sprintf(fw_name + fw_name_len - 3, "b%02d", i);
-> -			ret = request_firmware(&seg_fw, fw_name, qproc->dev);
-> +			ret = request_firmware_into_buf(&seg_fw, fw_name, qproc->dev,
-> +							ptr, phdr->p_filesz);
->  			if (ret) {
->  				dev_err(qproc->dev, "failed to load %s\n", fw_name);
->  				iounmap(ptr);
->  				goto release_firmware;
->  			}
->  
-> -			memcpy(ptr, seg_fw->data, seg_fw->size);
+
+Similarly for bench, it's a tool that's not coupled with the latest
+kernel version, it will be a big step down if the tool doesn't bump
+rlimit on its own on slightly older kernels. Let's just keep it for
+now.
+
+>  tools/testing/selftests/bpf/bench.c           | 16 ---------------
+>  .../selftests/bpf/progs/bpf_iter_bpf_map.c    |  5 ++---
+>  tools/testing/selftests/bpf/xdping.c          |  6 ------
+>  tools/testing/selftests/net/reuseport_bpf.c   | 20 -------------------
+>  4 files changed, 2 insertions(+), 45 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftests/bpf/bench.c
+> index 944ad4721c83..f66610541c8a 100644
+> --- a/tools/testing/selftests/bpf/bench.c
+> +++ b/tools/testing/selftests/bpf/bench.c
+> @@ -29,25 +29,9 @@ static int libbpf_print_fn(enum libbpf_print_level level,
+>         return vfprintf(stderr, format, args);
+>  }
+>
+> -static int bump_memlock_rlimit(void)
+> -{
+> -       struct rlimit rlim_new = {
+> -               .rlim_cur       = RLIM_INFINITY,
+> -               .rlim_max       = RLIM_INFINITY,
+> -       };
 > -
->  			release_firmware(seg_fw);
->  		}
->  
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+> -       return setrlimit(RLIMIT_MEMLOCK, &rlim_new);
+> -}
+> -
+>  void setup_libbpf()
+>  {
+> -       int err;
+> -
+>         libbpf_set_print(libbpf_print_fn);
+> -
+> -       err = bump_memlock_rlimit();
+> -       if (err)
+> -               fprintf(stderr, "failed to increase RLIMIT_MEMLOCK: %d", err);
+>  }
+>
+
+[...]
