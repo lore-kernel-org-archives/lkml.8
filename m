@@ -2,139 +2,109 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3672FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96F63206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B99A206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:04:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k6wjXpFR"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LdI8BzQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730299AbgG1OC6 (ORCPT
+        id S1730304AbgG1OEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:02:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730155AbgG1OC5 (ORCPT
+        Tue, 28 Jul 2020 10:04:15 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58244 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730211AbgG1OEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:02:57 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85987C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:02:57 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id n24so1266595ooc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:02:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jL69nX+B0Hx8u7JYf58E+XYay/YU8aCHKDCqftm6Jow=;
-        b=k6wjXpFRtv5x15wt6DJdM0L4rO3whmGRX2Q8SaF9R2IG8WNwjhtcJVE3hk/WdhZJJ0
-         7P7dWRayCH5GJ1KKywwpc6ussSFtA4ZLH9yKZnb3afhgBylKUHa7dH5fMkPvZ983d+RR
-         WmtO5vyDWgRNuxyYeoLVyD4mSi++/pz6bG6qQXRY74CMSQSBLlvjfQacETc/zBbCyC3T
-         qXvpvcEUzddgPHE5tXX6UPMGo1OCcOBM/Nf5TikK8CeGE1mfzxCOYkR5vjkdvxuX4lfu
-         DcQTkfoLS2fmblyYlYtBVxo8Y6hWczqtEuthfFxdoBK3WcxZvIHQySZ9Yr4rvCiFJyCM
-         L+3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jL69nX+B0Hx8u7JYf58E+XYay/YU8aCHKDCqftm6Jow=;
-        b=HmbnonYI1IeK0pXgSPdLl4PkeAaeJ+KMu/o5OttRn7xNK5S/8Co5ZOvE5hLa3cgdmN
-         zbY5m8pPqOvUEvow9sZL2Yx7gd8D5ausA7MwJskgcXBXqhbQ6DMPrV0OvMikQ6G30l08
-         Uw3NquletrHHgUbQvhPqzp2NCcbtmtiUnuH4TsjnbhUp2Jf2SOAybEb5dgICzd0yojN3
-         8rR35/rJLR5WH6+UnZqiZlV9WgaLNUK2h1vvoVIwSlsW1AOu3EbDzUg8fT62j5uICjfA
-         iKzScuXzCPeQYDIklJesUddIjVgMceKfbphrEb9lCue/2n+JBP/F+rfSF0nQF/hGozdx
-         IYTw==
-X-Gm-Message-State: AOAM532vyTCBdcAu3dJdPFvMeD6gocuPAqhzeO+Jjft3bH7hgWLseykX
-        HukWbQILV6gNixZMoDDNznObrfqGDkpil9Szdds=
-X-Google-Smtp-Source: ABdhPJy59m8Y7DkF+E9GWxzb8eZ+7RGaM33JtKndprA8Kb1UzGoWYfpy+k1WnCSY4O/AUCJouIL7k6YGk0QT5m7RYHE=
-X-Received: by 2002:a4a:d4d9:: with SMTP id r25mr25151088oos.51.1595944976680;
- Tue, 28 Jul 2020 07:02:56 -0700 (PDT)
+        Tue, 28 Jul 2020 10:04:15 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06SE4D6C110713;
+        Tue, 28 Jul 2020 09:04:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595945053;
+        bh=XRCyFICfAbzoSRKBaeClzmOc5bpzSUxQPEJq6VvvJi8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=LdI8BzQj93XvNZkZ4d4oESBsQm56cgloU20cB8l7PycNEa3+0aQqKRs0t3l667Hdv
+         OnvPzyHESd0qTXUbz4bDMZFJKl8zP3o2HbwYRvOEPxHN2qGnV5UuopVDlI8HDPchXP
+         QOo5hNE1gGSE2sqqHtxkJaNbzO32ABIypk1bDxfM=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06SE4Dvx057786
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jul 2020 09:04:13 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
+ Jul 2020 09:04:13 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 28 Jul 2020 09:04:13 -0500
+Received: from [10.250.35.192] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SE4D1n101658;
+        Tue, 28 Jul 2020 09:04:13 -0500
+Subject: Re: [PATCH v3 2/4] power: supply: bq27xxx_battery: Add the BQ27561
+ Battery monitor
+To:     Sebastian Reichel <sre@kernel.org>
+CC:     <afd@ti.com>, <pali@kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh@kernel.org>
+References: <20200721163206.25438-1-dmurphy@ti.com>
+ <20200721163206.25438-2-dmurphy@ti.com>
+ <20200727223646.vjnkyrmipwin3pj6@earth.universe>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <bc31b9d8-d114-e776-84fd-e05a014b74eb@ti.com>
+Date:   Tue, 28 Jul 2020 09:04:08 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1595601083-10183-1-git-send-email-qianjun.kernel@gmail.com> <87sgddaru7.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87sgddaru7.fsf@nanos.tec.linutronix.de>
-From:   jun qian <qianjun.kernel@gmail.com>
-Date:   Tue, 28 Jul 2020 22:02:45 +0800
-Message-ID: <CAKc596+vF4eYa4h55P2cssQbRKqBV_-9c_v35SXVMdonP3HBHA@mail.gmail.com>
-Subject: Re: [PATCH V4] Softirq:avoid large sched delay from the pending softirqs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     peterz@infradead.org, will@kernel.org, luto@kernel.org,
-        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
-        Uladzislau Rezki <urezki@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200727223646.vjnkyrmipwin3pj6@earth.universe>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:41 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Qian,
->
-> qianjun.kernel@gmail.com writes:
-> >  /*
-> >   * We restart softirq processing for at most MAX_SOFTIRQ_RESTART times,
-> >   * but break the loop if need_resched() is set or after 2 ms.
-> > - * The MAX_SOFTIRQ_TIME provides a nice upper bound in most cases, but in
-> > - * certain cases, such as stop_machine(), jiffies may cease to
-> > - * increment and so we need the MAX_SOFTIRQ_RESTART limit as
-> > - * well to make sure we eventually return from this method.
-> > + * In the loop, if the processing time of the softirq has exceeded 2
-> > + * milliseconds, we also need to break the loop to wakeup the
-> > ksofirqd.
->
-> You are removing the MAX_SOFTIRQ_RESTART limit explanation and I rather
-> have MAX_SOFTIRQ_TIME_NS there than '2 milliseconds' in case the value
-> gets adjusted later on. Also while sched_clock() is granular on many
-> systems it still can be jiffies based and then the above problem
-> persists.
->
-> > @@ -299,6 +298,19 @@ asmlinkage __visible void __softirq_entry __do_softirq(void)
-> >               }
-> >               h++;
-> >               pending >>= softirq_bit;
-> > +
-> > +             /*
-> > +              * the softirq's action has been running for too much time
-> > +              * so it may need to wakeup the ksoftirqd
-> > +              */
-> > +             if (need_resched() && sched_clock() > end) {
-> > +                     /*
-> > +                      * Ensure that the remaining pending bits are
-> > +                      * handled.
-> > +                      */
-> > +                     or_softirq_pending(pending << (vec_nr + 1));
->
-> To or the value interrupts need to be disabled because otherwise you can
-> lose a bit when an interrupt happens in the middle of the RMW operation
-> and raises a softirq which is not in @pending and not in the per CPU
-> local softirq pending storage.
->
-I can't understand the problem described above, could you explain in detail.
+Sebastian
 
-thanks.
-
-> There is another problem. Assume bit 0 and 1 are pending when the
-> processing starts. Now it breaks out after bit 0 has been handled and
-> stores back bit 1 as pending. Before ksoftirqd runs bit 0 gets raised
-> again. ksoftirqd runs and handles bit 0, which takes more than the
-> timeout. As a result the bit 0 processing can starve all other softirqs.
+On 7/27/20 5:36 PM, Sebastian Reichel wrote:
+> Hi,
 >
-May I use a percpu val to record the order of processing softirq, by the order
-val, when it is in ksoftirqd we can process the pending softirq in order. In the
-scenario you described above, before ksoftirqd runs, bit 0 gets raised again,
-ksoftirqd runs and handles bit 1 by the percpu val. just like a ring.
-
-Looking forward to your suggestions
-
-Thanks
-> So this needs more thought.
+> On Tue, Jul 21, 2020 at 11:32:04AM -0500, Dan Murphy wrote:
+>> Add the Texas Instruments BQ27561 battery monitor.  The register address
+>> map is laid out the same as compared to other devices within the file.
+>> The battery status register has differing bits to determine if the
+>> battery is full, discharging or dead.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+> Looks mostly good to me, but
 >
-> Thanks,
+> [...]
 >
->         tglx
+>> @@ -1710,6 +1769,13 @@ static int bq27xxx_battery_capacity_level(struct bq27xxx_device_info *di,
+>>   			level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+>>   		else
+>>   			level = POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
+>> +	} else if (di->opts & BQ27561_O_BITS) {
+>> +		if (di->cache.flags & BQ27561_FLAG_FC)
+>> +			level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
+>> +		else if (di->cache.flags & BQ27561_FLAG_DIS_CH)
+>> +			level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+> Shouldn't this be checking for FLAG_FDC instead of FLAG_DIS_CH?
+
+Yes.
+
+Dan
+
+
+> -- Sebastian
