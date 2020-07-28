@@ -2,197 +2,127 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A23C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FC1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CECFD20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:01:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nPqbrV7D"
+	by mail.kernel.org (Postfix) with ESMTP id D8A7D20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729925AbgG1NBm (ORCPT
+        id S1729936AbgG1NCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:01:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729857AbgG1NBl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:01:41 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7943C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:01:40 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id p138so1472819yba.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:01:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc
-         :content-transfer-encoding;
-        bh=Ya+X644CIpKsu+82u267rP7HaSbeBJBhbsTwGl4hFHQ=;
-        b=nPqbrV7DC1dyJE0ydgyu3pBUTlTM1knV1rD2zKoyI4ZFEgp/qomKbc4jkGR/xU0D2k
-         AGUi8yp+/M17ScdyzCfZixdlXUJhE3sCyoRmBOch35bQsSMeSQOfZGUQQ8Ucu6Kj5bvp
-         +GdYhMAefN2C61kWnH9HF6PfesS0k63dlm/VQ2ua+Nikh2KkGjpv7Rqp29SX3QRnHpEE
-         zbhNjMaffKv6/RJ/McYzQr9ZjylEnE2SzBjYyidi9UmF7DOLJCYMaTwJDSXffoLCN/qp
-         j4db66drGJlDAw/P5AvAt0PsKz20Uj6s/zNlXPJ0212XbVlaLSgBxT5RjIO4evss2+qB
-         j7jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
-         :content-transfer-encoding;
-        bh=Ya+X644CIpKsu+82u267rP7HaSbeBJBhbsTwGl4hFHQ=;
-        b=PbzHSdQXNxBcOeIflqeZMws5WuV7ENxg3EgeB5SXgAjkyf16snRNJZcI7ZprA0Qc7c
-         Q68cgKwJth6r+ANUgrFKrUyDfqbN8SK4HU4WRZ/ICoktMvXTsO+SYupry5ufAvjuW3cG
-         wpVszFY28b2rTv0dF4AcX8PPg/uJ8VMcX4PbGZWIr8Ts+q84cDfrXXdjQODkg6yPfzbU
-         1M0VEzeT2baM+2pf6tr0ABQ9QrKhH6PiVgxm+cDTogWzK0SRNkTtMBjdvo4UxnoaxO0q
-         IpJF5mbKMEVG9/F3jA/6NhUrCFmpCNbBRkpLIPuNB2o9vSICUnWJgg1899+LooH2em+n
-         KTCw==
-X-Gm-Message-State: AOAM531b6M1ywaRRfR83apkxBfArDmjFtUst5LnPXLllXPiXLi+kDn0c
-        HMawGdMqUh38GnI2KY8EXmeJyZ910g==
-X-Google-Smtp-Source: ABdhPJy4hzucmW0xAq9k3SvB7xnSJEQ4n7JtK2bmteR8LMMvdZaP74tgxJV1oY1S3YTTAhoeu/jMAo8mlQ==
-X-Received: by 2002:a05:6902:512:: with SMTP id x18mr13070478ybs.496.1595941300068;
- Tue, 28 Jul 2020 06:01:40 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 15:01:04 +0200
-Message-Id: <20200728130120.3633360-1-tweek@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-Subject: [PATCH v2] selinux: add tracepoint on denials
-From:   "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Nick Kralevich <nnk@google.com>,
-        "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 Jul 2020 09:02:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729393AbgG1NCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 09:02:14 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FAB5206D8;
+        Tue, 28 Jul 2020 13:02:13 +0000 (UTC)
+Date:   Tue, 28 Jul 2020 09:02:11 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Chengming Zhou <zhouchengming@bytedance.com>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        songmuchun@bytedance.com
+Subject: Re: [PATCH 2/2] ftrace: setup correct flags before replace code of
+ module rec
+Message-ID: <20200728090211.4c94a14d@oasis.local.home>
+In-Reply-To: <20200728102720.46837-2-zhouchengming@bytedance.com>
+References: <20200728102720.46837-1-zhouchengming@bytedance.com>
+        <20200728102720.46837-2-zhouchengming@bytedance.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The audit data currently captures which process and which target
-is responsible for a denial. There is no data on where exactly in the
-process that call occurred. Debugging can be made easier by being able to
-reconstruct the unified kernel and userland stack traces [1]. Add a
-tracepoint on the SELinux denials which can then be used by userland
-(i.e. perf).
+On Tue, 28 Jul 2020 18:27:20 +0800
+Chengming Zhou <zhouchengming@bytedance.com> wrote:
 
-Although this patch could manually be added by each OS developer to
-trouble shoot a denial, adding it to the kernel streamlines the
-developers workflow.
+> When module loaded and enabled, we will use __ftrace_replace_code
+> for module if any ftrace_ops referenced it found. But we will get
+> wrong ftrace_addr for module rec in ftrace_get_addr_new, because
+> rec->flags has not been setup correctly.
+> So setup correct rec->flags when we call referenced_filters to find
+> ftrace_ops references it.
 
-[1] https://source.android.com/devices/tech/debug/native_stack_dump
+This is somewhat correct ;-)
 
-Signed-off-by: Thi=C3=A9baud Weksteen <tweek@google.com>
-Signed-off-by: Joel Fernandes <joelaf@google.com>
----
-Changes in v2:
-- Replace %d formatter with %x
-- Replace TRACE_EVENT with TRACE_EVENT_CONDITION
-- Add pid to structure and printk
-- Rename structure fields for clarity
+> 
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> ---
+>  kernel/trace/ftrace.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index fca01a168ae5..00087dea0174 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -6190,8 +6190,17 @@ static int referenced_filters(struct dyn_ftrace *rec)
+>  	int cnt = 0;
+>  
+>  	for (ops = ftrace_ops_list; ops != &ftrace_list_end; ops = ops->next) {
+> -		if (ops_references_rec(ops, rec))
+> -		    cnt++;
+> +		if (ops_references_rec(ops, rec)) {
 
+> +			cnt++;
+> +			if (ops->flags & FTRACE_OPS_FL_DIRECT)
+> +				rec->flags |= FTRACE_FL_DIRECT;
 
- MAINTAINERS                    |  1 +
- include/trace/events/selinux.h | 39 ++++++++++++++++++++++++++++++++++
- security/selinux/avc.c         |  5 +++++
- 3 files changed, 45 insertions(+)
- create mode 100644 include/trace/events/selinux.h
+The above should be:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f0569cf304ca..0f74c8f073ab 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15369,6 +15369,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/gi=
-t/pcmoore/selinux.git
- F:	Documentation/ABI/obsolete/sysfs-selinux-checkreqprot
- F:	Documentation/ABI/obsolete/sysfs-selinux-disable
- F:	Documentation/admin-guide/LSM/SELinux.rst
-+F:	include/trace/events/selinux.h
- F:	include/uapi/linux/selinux_netlink.h
- F:	scripts/selinux/
- F:	security/selinux/
-diff --git a/include/trace/events/selinux.h b/include/trace/events/selinux.=
-h
-new file mode 100644
-index 000000000000..287e1ecb4451
---- /dev/null
-+++ b/include/trace/events/selinux.h
-@@ -0,0 +1,39 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM selinux
-+
-+#if !defined(_TRACE_SELINUX_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_SELINUX_H
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT_CONDITION(selinux_denied,
-+
-+	TP_PROTO(struct selinux_audit_data *sad, pid_t pid),
-+
-+	TP_ARGS(sad, pid),
-+
-+	TP_CONDITION(sad->denied),
-+
-+	TP_STRUCT__entry(
-+		__field(pid_t, pid)
-+		__field(int, tclass)
-+		__field(int, audited)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->pid =3D pid;
-+		__entry->tclass =3D sad->tclass;
-+		__entry->audited =3D sad->audited;
-+	),
-+
-+	TP_printk("denied pid=3D%d tclass=3D%x audited=3D%x",
-+		__entry->pid,
-+		__entry->tclass,
-+		__entry->audited)
-+);
-+
-+#endif
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/security/selinux/avc.c b/security/selinux/avc.c
-index d18cb32a242a..ca8206f38d8a 100644
---- a/security/selinux/avc.c
-+++ b/security/selinux/avc.c
-@@ -31,6 +31,9 @@
- #include "avc_ss.h"
- #include "classmap.h"
-=20
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/selinux.h>
-+
- #define AVC_CACHE_SLOTS			512
- #define AVC_DEF_CACHE_THRESHOLD		512
- #define AVC_CACHE_RECLAIM		16
-@@ -665,6 +668,8 @@ static void avc_audit_pre_callback(struct audit_buffer =
-*ab, void *a)
- 	const char **perms;
- 	int i, perm;
-=20
-+	trace_selinux_denied(sad, task_tgid_nr(current));
-+
- 	audit_log_format(ab, "avc:  %s ", sad->denied ? "denied" : "granted");
-=20
- 	if (av =3D=3D 0) {
---=20
-2.28.0.rc0.142.g3c755180ce-goog
+			if (WARN_ON_ONCE(ops->flags & FTRACE_OPS_FL_DIRECT))
+				continue;
+			cnt++;
+
+The direct flag is *very* special, and should not be set automatically
+like this.
+
+Probably should add the same kind of warning and skip for
+FTRACE_OPS_FL_IPMODIFY.
+
+> +			if (ops->flags & FTRACE_OPS_FL_SAVE_REGS)
+> +				rec->flags |= FTRACE_FL_REGS;
+
+The above is definitely a bug fix. I'm thinking this patch should be
+broken up into two. One with just this update (and the clear below),
+and the rest later. As this should be backported to stable.
+
+> +			if (cnt == 1 && ops->trampoline)
+> +				rec->flags |= FTRACE_FL_TRAMP;
+> +			else
+> +				rec->flags &= ~FTRACE_FL_TRAMP;
+
+The above is correct, but not critical that it would need to be
+backported.
+
+Thanks!
+
+-- Steve
+
+> +		}
+>  	}
+>  
+>  	return cnt;
+> @@ -6373,7 +6382,8 @@ void ftrace_module_enable(struct module *mod)
+>  			cnt += referenced_filters(rec);
+>  
+>  		/* This clears FTRACE_FL_DISABLED */
+> -		rec->flags = cnt;
+> +		rec->flags &= ~FTRACE_FL_DISABLED;
+> +		rec->flags += cnt;
+>  
+>  		if (ftrace_start_up && cnt) {
+>  			int failed = __ftrace_replace_code(rec, 1);
 
