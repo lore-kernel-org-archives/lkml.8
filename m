@@ -2,139 +2,90 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A8CC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5D32065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA66020792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:13:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b4BG6qoc"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="zRqLODBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731332AbgG1QKM (ORCPT
+        id S1731282AbgG1QNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:10:12 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58137 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730977AbgG1QKJ (ORCPT
+        Tue, 28 Jul 2020 12:13:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730586AbgG1QNI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:10:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595952608;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=68skKtohRktSUhcQpYcMA5A6ChuyWmL7uEqYzTC6xtA=;
-        b=b4BG6qoct7s+K+/zGSWEA0yHoBkOMBkTiyXTpRyUIXi+Y6JdBTp9AJssl4394H6I2wtmhk
-        meQRyiS9UHSKu3398nK2YU5xgrq2KsE6XgraishWtVU/4UjMZhi0ucqSiD9QS/pYB8AyYp
-        w51+GImJ+ykeS/FpEghYedo4AvXvH4g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-327-4ns7HXGvPnuVKPsA6urTIw-1; Tue, 28 Jul 2020 12:10:04 -0400
-X-MC-Unique: 4ns7HXGvPnuVKPsA6urTIw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9C443106B247;
-        Tue, 28 Jul 2020 16:10:00 +0000 (UTC)
-Received: from krava (unknown [10.40.192.211])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D295A60CD0;
-        Tue, 28 Jul 2020 16:09:55 +0000 (UTC)
-Date:   Tue, 28 Jul 2020 18:09:54 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 2/5] perf record: Prevent override of
- attr->sample_period for libpfm4 events
-Message-ID: <20200728160954.GD1319041@krava>
-References: <20200728085734.609930-1-irogers@google.com>
- <20200728085734.609930-3-irogers@google.com>
- <20200728155940.GC1319041@krava>
+        Tue, 28 Jul 2020 12:13:08 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2FA1C0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:13:08 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id z3so6432879ilh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:13:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bNCg05tz8T72EfbSHUoOieVHqqb0riUeyvEBdt6ssUM=;
+        b=zRqLODBQdmGL+KkPjeEEQSogroxZboQc6kVDb/r8scjUQ6sGp2YTamenSoheM1wlLf
+         nA76+rvaUPd7MDUuJ1LHgS+mtm00OI7G3gOCgKPBm1eF3MVGMnl+BbIG0x+OlItmlQu7
+         VAilduQlrQNaA6sFrnqTgaw7q0Dgl2sx/uPSKIhTXag0Z68ccFn7crG9fWf1m+JHlIJW
+         yWVonxz6q8KBdNxKRLPxp7+315BKGfTxF+dBHu0sHutbBdqivmUxoKbxYU07jReMfkFn
+         MOpK1aOnBU7aAzMkod2ic1D0bxeWFBv+l+ul7e0zuIXUOmcoNdpE74V5JhKnUS0rsK1P
+         QHbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bNCg05tz8T72EfbSHUoOieVHqqb0riUeyvEBdt6ssUM=;
+        b=YgPYtn6t9qjBNeSDvnVy+6H061qYd2g/VF3V6genDGj8EzlnuiwbCRz+VoYc6uY0qL
+         LzSL8Jlklj8FzvlvoDfsRVgi5o76lGpdPClvefjRanFesSpGvAW+4pd80byDdXUwkVh7
+         ilBeDqA4rm0PlCxtJaMwJDPBaaHeiYK9l1errPe9eco/rUOJqaq2ZNIahqEe+ZCxBq8r
+         wi7BVqXvO12H0Tyg2TmnIWSOWFVAGLnv70hx24WgfXfJSgxmYmI7D4x2iBlM7cAuBVTz
+         yWhofDXnWCp/rzMB9OumA/QA+qULM40jlKwmR3VHFYdWsQcG6erVfuWBAQLd/p3MO8Vk
+         +w/Q==
+X-Gm-Message-State: AOAM531qv3WpWjBbePef7ozmaFLJjZTotiAIEj8weeviQKwNa74gAVx/
+        HF93n5z4oh48LaS7qUc01LioYUH7BQc=
+X-Google-Smtp-Source: ABdhPJygWd3DZFbqrmNj+NlTJncfFZ4Jk6PoWI5sJWANGD2rMWY5YmMV6WXHLsnjoXhITX9avqgECg==
+X-Received: by 2002:a92:b112:: with SMTP id t18mr20855664ilh.172.1595952787893;
+        Tue, 28 Jul 2020 09:13:07 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id 4sm10149248ilt.6.2020.07.28.09.13.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 09:13:07 -0700 (PDT)
+Subject: Re: [PATCH] block: Remove callback typedefs for blk_mq_ops
+To:     Daniel Wagner <dwagner@suse.de>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200728160506.92926-1-dwagner@suse.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <7a26c550-934b-a188-b910-3d21d006df41@kernel.dk>
+Date:   Tue, 28 Jul 2020 10:13:06 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728155940.GC1319041@krava>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200728160506.92926-1-dwagner@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 05:59:46PM +0200, Jiri Olsa wrote:
-> On Tue, Jul 28, 2020 at 01:57:31AM -0700, Ian Rogers wrote:
-> > From: Stephane Eranian <eranian@google.com>
-> > 
-> > Before:
-> > $ perf record -c 10000 --pfm-events=cycles:period=77777
-> > 
-> > Would yield a cycles event with period=10000, instead of 77777.
-> > 
-> > This was due to an ordering issue between libpfm4 parsing
-> > the event string and perf record initializing the event.
-> > 
-> > This patch fixes the problem by preventing override for
-> > events with attr->sample_period != 0 by the time
-> > perf_evsel__config() is invoked. This seems to have been the
-> > intent of the author.
-> > 
-> > Signed-off-by: Stephane Eranian <eranian@google.com>
-> > Reviewed-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/evsel.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index 811f538f7d77..8afc24e2ec52 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -976,8 +976,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
-> >  	 * We default some events to have a default interval. But keep
-> >  	 * it a weak assumption overridable by the user.
-> >  	 */
-> > -	if (!attr->sample_period || (opts->user_freq != UINT_MAX ||
-> > -				     opts->user_interval != ULLONG_MAX)) {
-> > +	if (!attr->sample_period) {
-> 
-> I was wondering why this wouldn't break record/top
-> but we take care of the via record_opts__config
-> 
-> as long as 'perf test attr' works it looks ok to me
+On 7/28/20 10:05 AM, Daniel Wagner wrote:
+> No need to define typedefs for the callbacks, because there is not a
+> single user except blk_mq_ops.
 
-hum ;-)
+Concept looks fine to me, but you're mixing indentations a bit. Just
+remove the indentation bits, we don't need them here.
 
-[jolsa@krava perf]$ sudo ./perf test 17 -v
-17: Setup struct perf_event_attr                          :
-...
-running './tests/attr/test-record-C0'
-expected sample_period=4000, got 3000
-FAILED './tests/attr/test-record-C0' - match failure
-
-jirka
-
-> 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
-> 
-> thanks,
-> jirka
+-- 
+Jens Axboe
 
