@@ -2,125 +2,129 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF82BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A727CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B825C2065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:52:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gq6HFa7X"
+	by mail.kernel.org (Postfix) with ESMTP id 8A2C82065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgG1Tww (ORCPT
+        id S1728616AbgG1Txc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:52:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728521AbgG1Twv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:52:51 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 707A3C0619D4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:52:51 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p3so12680535pgh.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:52:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Lw5Yo6LYMJj0wtDoaefLNGkgc5QTYl1SaK6AazO3v2w=;
-        b=gq6HFa7X7QMj2DalmEMErYJdwibaHGKntgGODdJmOjnvl71XNlf89WdFly/p/8zUsD
-         adf6UQmHbEE2XxscjVPyDBuPLHifM78QvAfOfX0iBq+iwH0lfV4yGvEBEVtksCgn6YyM
-         K7ENcyD3xpKYwQsxBe6eWsKzfX5e3ZKuSjRas=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Lw5Yo6LYMJj0wtDoaefLNGkgc5QTYl1SaK6AazO3v2w=;
-        b=dilVqKbuQs5K7qtvcIL+AuPqDldxKzipBxANuMElIPyHCMch2X8+9SjE50Av+uCkyv
-         MyiQx9w7p49kIThgAX6wK5bJHuLEFdTiqwq6l3nMfsk+3ypOw/lWODR7DuKJtxd6Gnyc
-         SeEpEu0sMQpcHLvbJu1gHfm3t/K1W1fQBdApiaEi8uU4HNJ9RgMqlz5BCAnppwLsZ/Fg
-         InbxFIoZ5LWLvWC1jZgdiouzdl9hG7kZQmhjGrhgWZuy6kBFV0/VrNT5mtMfZotNbcO/
-         BN9BETbZDcBE/Oj8kHNtA5BzX6QsYj3IwrWIVPqPzPrqCeoLb6eXcIv2jcm0LvV5ACqk
-         rpAQ==
-X-Gm-Message-State: AOAM5301lp4KtbmsSOK7Rk9SVKjG/1w47/zMWSnHSgbemcfnsTlNq3/R
-        l1sLLlUWefV3A3u1nIV8pjZetA==
-X-Google-Smtp-Source: ABdhPJxJqtls1b+2yIeqoQ4yw+g1Ffg2V2qfKF4iRJprNIEuQoawrqtPab00sIL7S6F97Eul4B6+kw==
-X-Received: by 2002:aa7:93c3:: with SMTP id y3mr25907842pff.206.1595965970613;
-        Tue, 28 Jul 2020 12:52:50 -0700 (PDT)
-Received: from google.com ([2620:15c:202:1:8edc:d4ff:fe53:350d])
-        by smtp.gmail.com with ESMTPSA id e8sm8677827pfd.34.2020.07.28.12.52.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 12:52:49 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 12:52:46 -0700
-From:   Brian Norris <briannorris@chromium.org>
-To:     Xie He <xie.he.0141@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Subject: Re: [PATCH] drivers/net/wan/lapbether: Use needed_headroom instead
- of hard_header_len
-Message-ID: <20200728195246.GA482576@google.com>
-References: <20200726110524.151957-1-xie.he.0141@gmail.com>
+        Tue, 28 Jul 2020 15:53:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:40494 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728149AbgG1Txc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 15:53:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 459F731B;
+        Tue, 28 Jul 2020 12:53:31 -0700 (PDT)
+Received: from e120877-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13BEC3F66E;
+        Tue, 28 Jul 2020 12:53:29 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 20:53:21 +0100
+From:   Vincent Donnefort <vincent.donnefort@arm.com>
+To:     peterz@infradead.org
+Cc:     mingo@redhat.com, vincent.guittot@linaro.org,
+        linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
+        lukasz.luba@arm.com, valentin.schneider@arm.com
+Subject: Re: [PATCH] sched/fair: provide u64 read for 32-bits arch helper
+Message-ID: <20200728195320.GA426859@e120877-lin.cambridge.arm.com>
+References: <1595847564-239957-1-git-send-email-vincent.donnefort@arm.com>
+ <20200727123801.GJ119549@hirez.programming.kicks-ass.net>
+ <20200727152303.GA301827@e120877-lin.cambridge.arm.com>
+ <20200728111302.GV119549@hirez.programming.kicks-ass.net>
+ <20200728120027.GN43129@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200726110524.151957-1-xie.he.0141@gmail.com>
+In-Reply-To: <20200728120027.GN43129@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Reviewing as requested; I'm not familiar with this driver either, or
-really any WAN driver. It also seems that hard_header_len vs.
-needed_headroom aren't very well documented, and even I can't guarantee
-I understand them completely. So take my thoughts with a grain of salt.)
-
 Hi,
 
-On Sun, Jul 26, 2020 at 04:05:24AM -0700, Xie He wrote:
-> In net/packet/af_packet.c, the function packet_snd first reserves a
-> headroom of length (dev->hard_header_len + dev->needed_headroom).
-> Then if the socket is a SOCK_DGRAM socket, it calls dev_hard_header,
-> which calls dev->header_ops->create, to create the link layer header.
-> If the socket is a SOCK_RAW socket, it "un-reserves" a headroom of
-> length (dev->hard_header_len), and assumes the user to provide the
-> appropriate link layer header.
+On Tue, Jul 28, 2020 at 02:00:27PM +0200, peterz@infradead.org wrote:
+> On Tue, Jul 28, 2020 at 01:13:02PM +0200, peterz@infradead.org wrote:
+> > On Mon, Jul 27, 2020 at 04:23:03PM +0100, Vincent Donnefort wrote:
+> > 
+> > > For 32-bit architectures, both min_vruntime and last_update_time are using
+> > > similar access. This patch is simply an attempt to unify their usage by
+> > > introducing two macros to rely on when accessing those. At the same time, it
+> > > brings a comment regarding the barriers usage, as per the kernel policy. So
+> > > overall this is just a clean-up without any functional changes.
+> > 
+> > Ah, I though there was perhaps the idea to make use of armv7-lpae
+> > instructions.
+> > 
+> > Aside of that, I think we need to spend a little time bike-shedding the
+> > API/naming here:
+> > 
+> > > +# define u64_32read(val, copy) (val)
+> > > +# define u64_32read_set_copy(val, copy) do { } while (0)
+> > 
+> > How about something like:
+> > 
+> > #ifdef CONFIG_64BIT
+> > 
+> > #define DEFINE_U64_U32(name)	u64 name
+> > #define u64_u32_load(name)	name
+> > #define u64_u32_store(name, val)name = val
+> > 
+> > #else
+> > 
+> > #define DEFINE_U64_U32(name)			\
+> > 	struct {				\
+> > 		u64 name;			\
+> > 		u64 name##_copy;		\
+> > 	}
+> > 
+> > #define u64_u32_load(name)			\
+> > 	({					\
+> > 		u64 val, copy;			\
+> > 		do {				\
+> > 			val = name;		\
+> > 			smb_rmb();		\
+> > 			copy = name##_copy;	\
+> > 		} while (val != copy);		\
 > 
-> So according to the logic of af_packet.c, dev->hard_header_len should
-> be the length of the header that would be created by
-> dev->header_ops->create.
-
-I believe I'm with you up to here, but:
-
-> However, this driver doesn't provide dev->header_ops, so logically
-> dev->hard_header_len should be 0.
-
-I'm not clear on this part.
-
-What's to say you shouldn't be implementing header_ops instead? Note
-that with WiFi drivers, they're exposing themselves as ARPHRD_ETHER, and
-only the Ethernet headers are part of the upper "protocol" headers. So
-my patch deferred to the eth headers.
-
-What is the intention with this X25 protocol? I guess the headers added
-in lapbeth_data_transmit() are supposed to be "invisible", as with this
-note in af_packet.c?
-
-   - if device has no dev->hard_header routine, it adds and removes ll header
-     inside itself. In this case ll header is invisible outside of device,
-     but higher levels still should reserve dev->hard_header_len.
-
-If that's the case, then yes, I believe this patch should be correct.
-
-Brian
-
-> So we should use dev->needed_headroom instead of dev->hard_header_len
-> to request necessary headroom to be allocated.
+> wrong order there; we should first read _copy and then the regular one
+> of course.
 > 
-> Signed-off-by: Xie He <xie.he.0141@gmail.com>
+> > 		val;
+> > 	})
+> > 
+> > #define u64_u32_store(name, val)		\
+> > 	do {					\
+> > 		typeof(val) __val = (val);	\
+> > 		name = __val;			\
+> > 		smp_wmb();			\
+> > 		name##_copy = __val;		\
+> > 	} while (0)
+> > 
+> > #endif
+> 
+> The other approach is making it a full type and inline functions I
+> suppose.
+
+I didn't pick this approach originally, as I thought it would be way too
+invasive. If the API looks way cleaner, it nonetheless doesn't match
+last_update_time usage. The variable is declared in sched_avg while its copy
+is in struct cfs_rq.
+
+Moving the copy in sched_avg would mean:
+
+ * Setting the copy for all struct sched_avg in ___update_load_sum(), instead
+   of just the cfs_rq.avg in update_cfs_rq_load_avg().
+
+ * Having the DEFINE_U64_U32 declaration in include/linux/sched.h to cover
+   struct sched_avg.
+
+-- 
+Vincent
