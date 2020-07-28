@@ -2,78 +2,82 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5FDC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A64C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0015620792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:08:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZuOaQbdU"
+	by mail.kernel.org (Postfix) with ESMTP id E367920792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595956117;
+	bh=J+IjkUW3t6+Z48T6sJ6E00JRYLjetsG85a5bs6k5OlU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DXi1FH1q6EWj/V43NZJRscajsAETYDURo/8bO+CPg3dKiqs+9/ZjuU8myuWkHP/AE
+	 X1lH1LtDQPRaI3qF5wSidf8oAe6lSYaVmv/3XD6OtK3MA9mDeSK7UNw+jZVK46Grkp
+	 VBciq6NOFBNYEhe7cG0ku9CVlcUIBi8lJBWLo8js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731869AbgG1RIv (ORCPT
+        id S1731842AbgG1RIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 13:08:51 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:41328 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731510AbgG1RIu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 13:08:50 -0400
-Received: from [192.168.254.32] (unknown [47.187.206.220])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 3CB1720B4908;
-        Tue, 28 Jul 2020 10:08:49 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3CB1720B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1595956129;
-        bh=/7IJcSJkmnGhyvhTN0w/k6D0iSgWl3GbtIXdsg8Fv5A=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZuOaQbdU5uYtFJaEiOblvnFbeGROFNYKRjF3F43kJ1vUkhEErX0fbDaPkJowjRf06
-         4DasCLQblFzecv0eF8w7mUhf1hXAgudt5JEdU8ofWsRvm0zC9iTlBhH+fSyTWj70K7
-         RgZPV6XJ7g6uzFeyOC7P2FKqWtU5gXy/jZ/r8ZHI=
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-To:     James Morris <jmorris@namei.org>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, oleg@redhat.com,
-        x86@kernel.org
-References: <aefc85852ea518982e74b233e11e16d2e707bc32>
- <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <3fd22f92-7f45-1b0f-e4fe-857f3bceedd0@schaufler-ca.com>
- <alpine.LRH.2.21.2007290300400.31310@namei.org>
-From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Message-ID: <a909e0b0-0d82-d869-fe49-cc974680ac23@linux.microsoft.com>
-Date:   Tue, 28 Jul 2020 12:08:48 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.21.2007290300400.31310@namei.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Tue, 28 Jul 2020 13:08:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731623AbgG1RIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 13:08:34 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 318A9207F5;
+        Tue, 28 Jul 2020 17:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595956113;
+        bh=J+IjkUW3t6+Z48T6sJ6E00JRYLjetsG85a5bs6k5OlU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DngtZ7nV6HZqTP9AT77+BrH88xt3gXMhEMbTVjYz2uX7V5ZQ3baGe1Ylz5TJAKCeC
+         gShx0nGR8GIMlVDo+WELY8i6c+JnXwy2WHrOtIvZagoTXIRCvYlZwY0G/xSA0gowDt
+         J+iNuCb6OFYBza8ssyyNQeKSvrSTan84MyfUY9uc=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Gustavo Padovan <gustavo@padovan.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 2/2] dma-buf: fence-chain: Document missing dma_fence_chain_init() parameter in kerneldoc
+Date:   Tue, 28 Jul 2020 19:08:21 +0200
+Message-Id: <20200728170821.28050-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200728170821.28050-1-krzk@kernel.org>
+References: <20200728170821.28050-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix W=1 compile warnings (invalid kerneldoc):
 
+    drivers/dma-buf/dma-fence-chain.c:233: warning: Function parameter or member 'seqno' not described in 'dma_fence_chain_init'
 
-On 7/28/20 12:05 PM, James Morris wrote:
-> On Tue, 28 Jul 2020, Casey Schaufler wrote:
->
->> You could make a separate LSM to do these checks instead of limiting
->> it to SELinux. Your use case, your call, of course.
-> It's not limited to SELinux. This is hooked via the LSM API and 
-> implementable by any LSM (similar to execmem, execstack etc.)
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/dma-buf/dma-fence-chain.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yes. I have an implementation that I am testing right now that
-defines the hook for exectramp and implements it for
-SELinux. That is why I mentioned SELinux.
+diff --git a/drivers/dma-buf/dma-fence-chain.c b/drivers/dma-buf/dma-fence-chain.c
+index 3d123502ff12..7d129e68ac70 100644
+--- a/drivers/dma-buf/dma-fence-chain.c
++++ b/drivers/dma-buf/dma-fence-chain.c
+@@ -222,6 +222,7 @@ EXPORT_SYMBOL(dma_fence_chain_ops);
+  * @chain: the chain node to initialize
+  * @prev: the previous fence
+  * @fence: the current fence
++ * @seqno: the sequence number to use for the fence chain
+  *
+  * Initialize a new chain node and either start a new chain or add the node to
+  * the existing chain of the previous fence.
+-- 
+2.17.1
 
-Madhavan
