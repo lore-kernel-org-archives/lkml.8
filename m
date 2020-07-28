@@ -2,168 +2,416 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3C1C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94745C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4A22177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 616772177B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:57:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="aJnGZRBX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgG1H4i (ORCPT
+        id S1728016AbgG1H5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:56:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58470 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727858AbgG1H4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:56:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 1C64EB0BF;
-        Tue, 28 Jul 2020 07:56:47 +0000 (UTC)
-Subject: Re: [PATCH v2] drm/hisilicon: Fixed the warning: Assignment of 0/1 to
- bool variable
-To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
-        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
-        alexander.deucher@amd.com, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
-        linux-kernel@vger.kernel.org
-Cc:     linuxarm@huawei.com
-References: <1594090701-45741-1-git-send-email-tiantao6@hisilicon.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Message-ID: <194e751e-cb16-4452-2da6-6b2aedc85e36@suse.de>
-Date:   Tue, 28 Jul 2020 09:56:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 03:57:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727798AbgG1H5x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 03:57:53 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E76BC061794;
+        Tue, 28 Jul 2020 00:57:53 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id A69F222F00;
+        Tue, 28 Jul 2020 09:57:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1595923068;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=k5vr5u2CwCzWonURU4FUJ7Qx0KdSzpRO+jGgc5tpaZ4=;
+        b=aJnGZRBXgjyowmj1Nw/blJsXNKWHvVlXJjqofsf24qgiRvczfkyVePpySUTExaysc7Ag/E
+        3oO2fWhzUREsA8aeFk6XHMA4tXxdT4nGgpTnTuo9BGeHqIJuI/xPzaZSh0/g4QxcMPBSgB
+        AEMmw8OIZ8zoAlbuwZ1a09xXi3rYnCQ=
 MIME-Version: 1.0
-In-Reply-To: <1594090701-45741-1-git-send-email-tiantao6@hisilicon.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="eAQhCconB9NfLxVvDygvYacHUTyQ8swq5"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Jul 2020 09:57:47 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
+In-Reply-To: <20200728072422.GF1850026@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-3-michael@walle.cc> <20200728072422.GF1850026@dell>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---eAQhCconB9NfLxVvDygvYacHUTyQ8swq5
-Content-Type: multipart/mixed; boundary="UBBn2HpU0PRPRbVDldfZtByP6AjrBLxZK";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
- airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
- alexander.deucher@amd.com, tglx@linutronix.de,
- dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
- linux-kernel@vger.kernel.org
-Cc: linuxarm@huawei.com
-Message-ID: <194e751e-cb16-4452-2da6-6b2aedc85e36@suse.de>
-Subject: Re: [PATCH v2] drm/hisilicon: Fixed the warning: Assignment of 0/1 to
- bool variable
-References: <1594090701-45741-1-git-send-email-tiantao6@hisilicon.com>
-In-Reply-To: <1594090701-45741-1-git-send-email-tiantao6@hisilicon.com>
+Am 2020-07-28 09:24, schrieb Lee Jones:
+> On Sun, 26 Jul 2020, Michael Walle wrote:
+> 
+>> Add a device tree bindings for the board management controller found 
+>> on
+>> the Kontron SMARC-sAL28 board.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> ---
+>> Changes since v5:
+>>  - none
+>> 
+>> Changes since v4:
+>>  - fix the regex of the unit-address
+>> 
+>> Changes since v3:
+>>  - see cover letter
+>> 
+>>  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 +++++++
+>>  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++++
+>>  .../kontron,sl28cpld-intc.yaml                |  54 +++++++
+>>  .../bindings/mfd/kontron,sl28cpld.yaml        | 153 
+>> ++++++++++++++++++
+>>  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
+>>  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
+>>  6 files changed, 358 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml 
+>> b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+>> new file mode 100644
+>> index 000000000000..9a63a158a796
+>> --- /dev/null
+>> +++ 
+>> b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+>> @@ -0,0 +1,54 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/gpio/kontron,sl28cpld-gpio.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: GPIO driver for the sl28cpld board management controller
+>> +
+>> +maintainers:
+>> +  - Michael Walle <michael@walle.cc>
+>> +
+>> +description: |
+>> +  This module is part of the sl28cpld multi-function device. For more
+>> +  details see 
+>> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
+> 
+> Paths are normally relative.
 
---UBBn2HpU0PRPRbVDldfZtByP6AjrBLxZK
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+grep Documentation/ Documentation
 
-Hi
+I know there are a lot false positives (esp in the first one)..
 
-Am 07.07.20 um 04:58 schrieb Tian Tao:
-> fixed the following warning:
-> hibmc_drm_drv.c:296:1-18:WARNING: Assignment of 0/1 to bool variable.
-> hibmc_drm_drv.c:301:2-19: WARNING: Assignment of 0/1 to bool variable.
->=20
-> v2:
-> using the pci_dev.msi_enabled instead of priv->msi_enabled.
->=20
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-> ---
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 6 +++---
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h | 1 -
->  2 files changed, 3 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/=
-gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> index 249c298..83c7bb5 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> @@ -254,7 +254,7 @@ static int hibmc_unload(struct drm_device *dev)
-> =20
->  	if (dev->irq_enabled)
->  		drm_irq_uninstall(dev);
-> -	if (priv->msi_enabled)
-> +	if (dev->pdev->msi_enabled)
+$ grep -r "\.\./" Documentation | wc -l
+1826
+$ grep -r "Documentation/" Documentation|wc -l
+2862
 
-You don't need these tests and you don't have to set
-dev->pdev->msi_enabled by yourself. Just call pci_enable_msi() and
-pci_disable_msi() and they should do the right thing.
+> 
+>> +  There are three flavors of the GPIO controller, one full featured
+>> +  input/output with interrupt support (kontron,sl28cpld-gpio), one
+>> +  output-only (kontron,sl28-gpo) and one input-only 
+>> (kontron,sl28-gpi).
+>> +
+>> +  Each controller supports 8 GPIO lines.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - kontron,sl28cpld-gpio
+>> +      - kontron,sl28cpld-gpi
+>> +      - kontron,sl28cpld-gpo
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  "#interrupt-cells":
+>> +    const: 2
+>> +
+>> +  interrupt-controller: true
+>> +
+>> +  "#gpio-cells":
+>> +    const: 2
+>> +
+>> +  gpio-controller: true
+>> +
+>> +  gpio-line-names:
+>> +      minItems: 1
+>> +      maxItems: 8
+>> +
+>> +required:
+>> +  - compatible
+>> +  - "#gpio-cells"
+>> +  - gpio-controller
+>> +
+>> +additionalProperties: false
+>> diff --git 
+>> a/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml 
+>> b/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+>> new file mode 100644
+>> index 000000000000..1cebd61c6c32
+>> --- /dev/null
+>> +++ 
+>> b/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+>> @@ -0,0 +1,27 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/hwmon/kontron,sl28cpld-hwmon.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Hardware monitoring driver for the sl28cpld board management 
+>> controller
+>> +
+>> +maintainers:
+>> +  - Michael Walle <michael@walle.cc>
+>> +
+>> +description: |
+>> +  This module is part of the sl28cpld multi-function device. For more
+>> +  details see 
+>> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - kontron,sl28cpld-fan
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +
+>> +additionalProperties: false
+>> diff --git 
+>> a/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml 
+>> b/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
+>> new file mode 100644
+>> index 000000000000..4c39e9ff9aea
+>> --- /dev/null
+>> +++ 
+>> b/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
+>> @@ -0,0 +1,54 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: 
+>> http://devicetree.org/schemas/interrupt-controller/kontron,sl28cpld-intc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Interrupt controller driver for the sl28cpld board management 
+>> controller
+>> +
+>> +maintainers:
+>> +  - Michael Walle <michael@walle.cc>
+>> +
+>> +description: |
+>> +  This module is part of the sl28cpld multi-function device. For more
+>> +  details see 
+>> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
+>> +
+>> +  The following interrupts are available. All types and levels are 
+>> fixed
+>> +  and handled by the board management controller.
+>> +
+>> +  ==== ============= ==================================
+>> +   IRQ line/device   description
+>> +  ==== ============= ==================================
+>> +    0  RTC_INT#      Interrupt line from on-board RTC
+>> +    1  SMB_ALERT#    Event on SMB_ALERT# line (P1)
+>> +    2  ESPI_ALERT0#  Event on ESPI_ALERT0# line (S43)
+>> +    3  ESPI_ALERT1#  Event on ESPI_ALERT1# line (S44)
+>> +    4  PWR_BTN#      Event on PWR_BTN# line (P128)
+>> +    5  SLEEP#        Event on SLEEP# line (S149)
+>> +    6  watchdog      Interrupt of the internal watchdog
+>> +    7  n/a           not used
+>> +  ==== ============= ==================================
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - kontron,sl28cpld-intc
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  "#interrupt-cells":
+>> +    const: 2
+>> +
+>> +  interrupt-controller: true
+>> +
+>> +required:
+>> +  - compatible
+>> +  - interrupts
+>> +  - "#interrupt-cells"
+>> +  - interrupt-controller
+>> +
+>> +additionalProperties: false
+>> diff --git 
+>> a/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml 
+>> b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+>> new file mode 100644
+>> index 000000000000..e3a62db678e7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+>> @@ -0,0 +1,153 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Kontron's sl28cpld board management controller
+> 
+> "S128CPLD" ?
 
-Best regards
-Thomas
+still not, its sl28cpld, think of a project/code name, not the product
+appended with CPLD.
 
->  		pci_disable_msi(dev->pdev);
-> =20
->  	hibmc_kms_fini(priv);
-> @@ -294,12 +294,12 @@ static int hibmc_load(struct drm_device *dev)
->  		goto err;
->  	}
-> =20
-> -	priv->msi_enabled =3D 0;
-> +	dev->pdev->msi_enabled =3D 0;
->  	ret =3D pci_enable_msi(dev->pdev);
->  	if (ret) {
->  		DRM_WARN("enabling MSI failed: %d\n", ret);
->  	} else {
-> -		priv->msi_enabled =3D 1;
-> +		dev->pdev->msi_enabled =3D 1;
->  		ret =3D drm_irq_install(dev, dev->pdev->irq);
->  		if (ret)
->  			DRM_WARN("install irq failed: %d\n", ret);
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/=
-gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-> index 6097687..a683763 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-> @@ -25,7 +25,6 @@ struct hibmc_drm_private {
->  	void __iomem   *fb_map;
->  	unsigned long  fb_base;
->  	unsigned long  fb_size;
-> -	bool msi_enabled;
-> =20
->  	/* drm */
->  	struct drm_device  *dev;
->=20
+> "Board Management Controller (BMC)" ?
 
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+sounds like IPMI, which I wanted to avoid.
 
+> 
+>> +maintainers:
+>> +  - Michael Walle <michael@walle.cc>
+>> +
+>> +description: |
+>> +  The board management controller may contain different IP blocks 
+>> like
+>> +  watchdog, fan monitoring, PWM controller, interrupt controller and 
+>> a
+>> +  GPIO controller.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: kontron,sl28cpld-r1
+> 
+> We don't usually code revision numbers in compatible strings.
+> 
+> Is there any way to pull this from the H/W?
 
---UBBn2HpU0PRPRbVDldfZtByP6AjrBLxZK--
+No, unfortunately you can't. And I really want to keep that, in case
+in the future there are some backwards incompatible changes.
 
---eAQhCconB9NfLxVvDygvYacHUTyQ8swq5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+>> +  reg:
+>> +    description:
+>> +      I2C device address.
+>> +    maxItems: 1
+>> +
+>> +  "#address-cells":
+>> +    const: 1
+>> +
+>> +  "#size-cells":
+>> +    const: 0
+>> +
+>> +  "#interrupt-cells":
+>> +    const: 2
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  interrupt-controller: true
+>> +
+>> +patternProperties:
+>> +  "^gpio(@[0-9a-f]+)?$":
+>> +    $ref: ../gpio/kontron,sl28cpld-gpio.yaml
+>> +
+>> +  "^hwmon(@[0-9a-f]+)?$":
+>> +    $ref: ../hwmon/kontron,sl28cpld-hwmon.yaml
+>> +
+>> +  "^interrupt-controller(@[0-9a-f]+)?$":
+>> +    $ref: ../interrupt-controller/kontron,sl28cpld-intc.yaml
+>> +
+>> +  "^pwm(@[0-9a-f]+)?$":
+>> +    $ref: ../pwm/kontron,sl28cpld-pwm.yaml
+>> +
+>> +  "^watchdog(@[0-9a-f]+)?$":
+>> +    $ref: ../watchdog/kontron,sl28cpld-wdt.yaml
+>> +
+>> +required:
+>> +  - "#address-cells"
+>> +  - "#size-cells"
+>> +  - compatible
+>> +  - reg
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +    i2c {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        sl28cpld@4a {
+>> +            #address-cells = <1>;
+>> +            #size-cells = <0>;
+>> +            compatible = "kontron,sl28cpld-r1";
+>> +            reg = <0x4a>;
+> 
+> Nit: Could you put the 'reg' and 'compatible' at the top please?
+> 
+> Same for all nodes.
 
------BEGIN PGP SIGNATURE-----
+Sure, I've looked at previous examples, but they are not
+consistent, but it looked to me if the "#" properties are
+listed first.
 
-iQFIBAEBCAAyFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl8f2jMUHHR6aW1tZXJt
-YW5uQHN1c2UuZGUACgkQaA3BHVMLeiPEFgf/c8zukRGHTyczn9vPaWKkrgfxe/92
-CgrnzikvcyU3LzYRIgq0P9K76kYdDE2EfEclfbADXF3k9cib4J97T7IknNN0QH53
-PJB2sMHri2GtQmD1bAnEs0Mb53AVhbfsap1ODDcmA4kuOQXFEU2kFbGERMDAlnGW
-Sr5La9vXdMZrQiDYsPf0vIKa+BA1TCcLEaK401d5bp+hRGQLs9QpY2Bcb+5P6QU7
-ZLBT29GO10hAe7r79CtB0Okgat2OPFKC4NeY6IoxDMeOA/+cDSRVt5rAMz4PsHMa
-3vRipUMvrhAFzYRykCN4bgFvOH+waDKEI71hue+IrSZDuIDEko/MSDGr2g==
-=JmGA
------END PGP SIGNATURE-----
-
---eAQhCconB9NfLxVvDygvYacHUTyQ8swq5--
+-michael
