@@ -2,112 +2,104 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B2CC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59088C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6C56207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399C2207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:49:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen.org header.i=@xen.org header.b="0EjygVLr"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WcBQe+fl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731575AbgG1Qsi (ORCPT
+        id S1731596AbgG1QtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:48:38 -0400
-Received: from mail.xenproject.org ([104.130.215.37]:46960 "EHLO
-        mail.xenproject.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731268AbgG1Qsi (ORCPT
+        Tue, 28 Jul 2020 12:49:13 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:38868 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731474AbgG1QtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:48:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=xen.org;
-        s=20200302mail; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=W/q3EC2xp/1uSlfzKWEodtbt8+Hkh9fk7Ot5gVkNxDI=; b=0EjygVLrDEeM7fxzEKp2ZCZfyW
-        cCJP1O+If5bhP4xNNzbCXDP+PxlwyNtosVREbzqftCtJMDJxbBiLcvc4YspOaTvnKcrrHu2hK0nTJ
-        1oEy0V5ch4ZjpSEb84qfhoA5KsAiF8/udmsoizbh1NJwVVwacNWHhuOak4ho4Awlprt8=;
-Received: from xenbits.xenproject.org ([104.239.192.120])
-        by mail.xenproject.org with esmtp (Exim 4.92)
-        (envelope-from <julien@xen.org>)
-        id 1k0SmB-00059l-9Z; Tue, 28 Jul 2020 16:48:27 +0000
-Received: from 54-240-197-239.amazon.com ([54.240.197.239] helo=a483e7b01a66.ant.amazon.com)
-        by xenbits.xenproject.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <julien@xen.org>)
-        id 1k0SmA-0007yB-V2; Tue, 28 Jul 2020 16:48:27 +0000
-Subject: Re: [PATCH v3 4/4] xen: add helpers to allocate unpopulated memory
-To:     Roger Pau Monne <roger.pau@citrix.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Wei Liu <wl@xen.org>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        David Airlie <airlied@linux.ie>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        dri-devel@lists.freedesktop.org, Michal Hocko <mhocko@kernel.org>,
-        linux-mm@kvack.org, Daniel Vetter <daniel@ffwll.ch>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-References: <20200727091342.52325-1-roger.pau@citrix.com>
- <20200727091342.52325-5-roger.pau@citrix.com>
-From:   Julien Grall <julien@xen.org>
-Message-ID: <b5460659-88a5-c2aa-c339-815d5618bcb5@xen.org>
-Date:   Tue, 28 Jul 2020 17:48:23 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Tue, 28 Jul 2020 12:49:12 -0400
+Received: from [192.168.254.32] (unknown [47.187.206.220])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 00A5820B4908;
+        Tue, 28 Jul 2020 09:49:10 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 00A5820B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595954951;
+        bh=Wp9lMVW/v/maF95Uhld2YeppHP7BkSsiQSbIpc2iGG8=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=WcBQe+flSDX55q/ewMf9Af18CEdGVpPWvr4lx2WIFz5MF35ysP3AWSLhovuuIPJcA
+         R3zbmGw3qgHmAG6CF4LvqSk2K2IKdZOIS5Qx4ZwAsGDJLulERBJPTE+dh47a06ZwIC
+         G6ZCs/L/b81Zc5VW94CZcASUxH6PlX38Z+nqyTKc=
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, oleg@redhat.com,
+        x86@kernel.org
+References: <aefc85852ea518982e74b233e11e16d2e707bc32>
+ <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <3fd22f92-7f45-1b0f-e4fe-857f3bceedd0@schaufler-ca.com>
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Message-ID: <80dd0421-062b-bfaa-395a-e52b169acea4@linux.microsoft.com>
+Date:   Tue, 28 Jul 2020 11:49:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200727091342.52325-5-roger.pau@citrix.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <3fd22f92-7f45-1b0f-e4fe-857f3bceedd0@schaufler-ca.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Thanks.
 
-On 27/07/2020 10:13, Roger Pau Monne wrote:
-> To be used in order to create foreign mappings. This is based on the
-> ZONE_DEVICE facility which is used by persistent memory devices in
-> order to create struct pages and kernel virtual mappings for the IOMEM
-> areas of such devices. Note that on kernels without support for
-> ZONE_DEVICE Xen will fallback to use ballooned pages in order to
-> create foreign mappings.
-> 
-> The newly added helpers use the same parameters as the existing
-> {alloc/free}_xenballooned_pages functions, which allows for in-place
-> replacement of the callers. Once a memory region has been added to be
-> used as scratch mapping space it will no longer be released, and pages
-> returned are kept in a linked list. This allows to have a buffer of
-> pages and prevents resorting to frequent additions and removals of
-> regions.
-> 
-> If enabled (because ZONE_DEVICE is supported) the usage of the new
-> functionality untangles Xen balloon and RAM hotplug from the usage of
-> unpopulated physical memory ranges to map foreign pages, which is the
-> correct thing to do in order to avoid mappings of foreign pages depend
-> on memory hotplug.
-I think this is going to break Dom0 on Arm if the kernel has been built 
-with hotplug. This is because you may end up to re-use region that will 
-be used for the 1:1 mapping of a foreign map.
+On 7/28/20 11:05 AM, Casey Schaufler wrote:
+>> In this solution, the kernel recognizes certain sequences of instructions
+>> as "well-known" trampolines. When such a trampoline is executed, a page
+>> fault happens because the trampoline page does not have execute permission.
+>> The kernel recognizes the trampoline and emulates it. Basically, the
+>> kernel does the work of the trampoline on behalf of the application.
+> What prevents a malicious process from using the "well-known" trampoline
+> to its own purposes? I expect it is obvious, but I'm not seeing it. Old
+> eyes, I suppose.
 
-Note that I don't know whether hotplug has been tested on Xen on Arm 
-yet. So it might be possible to be already broken.
+You are quite right. As I note below, the attack surface is the
+buffer that contains the trampoline code. Since the kernel does
+check the instruction sequence, the sequence cannot be
+changed by a hacker. But the hacker can presumably change
+the register values and redirect the PC to his desired location.
 
-Meanwhile, my suggestion would be to make the use of hotplug in the 
-balloon code conditional (maybe using CONFIG_ARM64 and CONFIG_ARM)?
+The assumption with trampoline emulation is that the
+system will have security settings that will prevent pages from
+having both write and execute permissions. So, a hacker
+cannot load his own code in a page and redirect the PC to
+it and execute his own code. But he can probably set the
+PC to point to arbitrary locations. For instance, jump to
+the middle of a C library function.
+>
+>> Here, the attack surface is the buffer that contains the trampoline.
+>> The attack surface is narrower than before. A hacker may still be able to
+>> modify what gets loaded in the registers or modify the target PC to point
+>> to arbitrary locations.
+...
+>> Work that is pending
+>> --------------------
+>>
+>> - I am working on implementing an SELinux setting called "exectramp"
+>>   similar to "execmem" to allow the use of trampfd on a per application
+>>   basis.
+> You could make a separate LSM to do these checks instead of limiting
+> it to SELinux. Your use case, your call, of course.
 
-Cheers,
+OK. I will research this.
 
--- 
-Julien Grall
+Madhavan
