@@ -2,104 +2,165 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF08C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023AAC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E225620663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:46:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595943980;
-	bh=2l4nZ5zEun3ITHFRFbhR5oj+u34Wm7h0bAZkj3TkoYU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ElpfcqsLf8p/acW8+d0JSNWhLD37XJENGJWIf6R78ZwhFV0weTJQHPdxpSWu1qyXJ
-	 rALbwdLDKODHxni3ixQ+15ju0aJnyvI4Vr+A1M3Z08RNX48juNdct3OZEi21qYPeOS
-	 Buv5zR3JG/gDOalQMN3DrP6G4AWkgqypk5hVOhxo=
+	by mail.kernel.org (Postfix) with ESMTP id D666520663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:46:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="SneZ7VsG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbgG1NqU (ORCPT
+        id S1730208AbgG1NqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:46:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57232 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 09:46:21 -0400
+Received: from ozlabs.org ([203.11.71.1]:49183 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730149AbgG1NqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730142AbgG1NqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jul 2020 09:46:19 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93BC7206D7;
-        Tue, 28 Jul 2020 13:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595943978;
-        bh=2l4nZ5zEun3ITHFRFbhR5oj+u34Wm7h0bAZkj3TkoYU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EOlS+6JoJuSj9+Yx5l+IHRPcQCwPSoO9EgS/DmRloNif3HD9f1rUEmBmCqPuu4/1E
-         IQ6MpBtNipOLmwcYStorTyMeevlXl39vouJJ1qOLOreKBTyzMSwBRuCCGvgd+AkpFD
-         OQjl0fSdqVzY8uH3uz/Qagx8Ql8+OYCozBJu5LDA=
-Received: by mail-ot1-f47.google.com with SMTP id a65so5736304otc.8;
-        Tue, 28 Jul 2020 06:46:18 -0700 (PDT)
-X-Gm-Message-State: AOAM533hhLvckwuiox2/2jKK41lwx3nFKtHlpdRYAuL3bKIyCX2N76dH
-        d5GkFJJiu+whT9nC7DI20uMEIkKRhr8HHHGkjQ==
-X-Google-Smtp-Source: ABdhPJyGMvLSy2o12/O4HMAGmyUT2I5c4ZQOAvLI2HQi1RCoYju+FyDtWZCrssFH21dUA3s0muQ53gKip1xGHsvcb+g=
-X-Received: by 2002:a9d:46c:: with SMTP id 99mr24620844otc.192.1595943977984;
- Tue, 28 Jul 2020 06:46:17 -0700 (PDT)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BGHyK044Dz9sRK;
+        Tue, 28 Jul 2020 23:46:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1595943977;
+        bh=3y2tXBtxH9v1JkU8HT+t2K5rruo9PDsqNSeSePCEevY=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=SneZ7VsGkX6I5SYitiDPjdb/NKRSzJte8DNHWSKuV0p5f/vnKMX8dFfvbWVtVBQyY
+         MPY4Z/WkYtRQsm8Jdq3ANnNSNrQPrxPneKZ7AcxF3YLUGzVcDPCsPW4uXSBsGX0ZMQ
+         nqIUkH3pultd1Fml9MIsYCYTOLu8CYVZdobYH/XOpHKHnYLex2Eptc+MONqlBTEzn0
+         LA+aLPgWJ4mdQYOWSeh9UAv2HfXz73P2J68n5Omf796X3FvVKN9QQv95/E1wfR0gAh
+         q3sfuqAcmEBp82lI37FWBvu0yVlK9p3r2x5NLZvxSQQ243btSFSu8hSqRWciV8ZMGf
+         gJCdITLviKJNg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Hari Bathini <hbathini@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Pingfan Liu <piliu@redhat.com>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Pingfan Liu <piliu@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: [RESEND PATCH v5 07/11] ppc64/kexec_file: enable early kernel's OPAL calls
+In-Reply-To: <159579233676.5790.10701756666641782647.stgit@hbathini>
+References: <159579157320.5790.6748078824637688685.stgit@hbathini> <159579233676.5790.10701756666641782647.stgit@hbathini>
+Date:   Tue, 28 Jul 2020 23:46:15 +1000
+Message-ID: <87365b7nx4.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200725014529.1143208-1-jiaxun.yang@flygoat.com>
- <20200725014529.1143208-2-jiaxun.yang@flygoat.com> <CAL_JsqKePrUW3-HoSnQawqhgg23XJ7MxzawD7TKt-__q3jM55g@mail.gmail.com>
- <20200728083308.GD9062@alpha.franken.de>
-In-Reply-To: <20200728083308.GD9062@alpha.franken.de>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 28 Jul 2020 07:46:04 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+oswHvuF0BaM27CP0j9aHg1whAOv7bZneFjdkDX=MnSg@mail.gmail.com>
-Message-ID: <CAL_Jsq+oswHvuF0BaM27CP0j9aHg1whAOv7bZneFjdkDX=MnSg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] of_address: Add bus type match for pci ranges parser
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 2:39 AM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
->
-> On Mon, Jul 27, 2020 at 11:50:14AM -0600, Rob Herring wrote:
-> > On Fri, Jul 24, 2020 at 7:45 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
-> > >
-> > > So the parser can be used to parse range property of ISA bus.
-> > >
-> > > As they're all using PCI-like method of range property, there is no need
-> > > start a new parser.
-> > >
-> > > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > >
-> > > --
-> > > v2: Drop useless check, fix some na for bus_addr
-> > >         add define of of_range_parser_init according to
-> > >         Rob's suggestion.
-> > > v3: Abstract out has_flags. simplify define.
-> > > ---
-> > >  drivers/of/address.c       | 29 +++++++++++++++++------------
-> > >  include/linux/of_address.h |  4 ++++
-> > >  2 files changed, 21 insertions(+), 12 deletions(-)
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
->
-> Rob, are you ok with merging this via the mips-next tree ?
+Hari Bathini <hbathini@linux.ibm.com> writes:
+> Kernel built with CONFIG_PPC_EARLY_DEBUG_OPAL enabled expects r8 & r9
+> to be filled with OPAL base & entry addresses respectively. Setting
+> these registers allows the kernel to perform OPAL calls before the
+> device tree is parsed.
 
-That's my expectation hence the Reviewed-by.
+I'm not convinced we want to do this.
 
-Rob
+If we do it becomes part of the kexec ABI and we have to honour it into
+the future.
+
+And in practice there are no non-development kernels built with OPAL early
+debugging enabled, so it's not clear it actually helps anyone other than
+developers.
+
+cheers
+
+> v4 -> v5:
+> * New patch. Updated opal_base & opal_entry values in r8 & r9 respectively.
+>   This change was part of the below dropped patch in v4:
+>     - https://lore.kernel.org/patchwork/patch/1275667/
+>
+>
+>  arch/powerpc/kexec/file_load_64.c      |   16 ++++++++++++++++
+>  arch/powerpc/purgatory/trampoline_64.S |   15 +++++++++++++++
+>  2 files changed, 31 insertions(+)
+>
+> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+> index 8df085a22fd7..a5c1442590b2 100644
+> --- a/arch/powerpc/kexec/file_load_64.c
+> +++ b/arch/powerpc/kexec/file_load_64.c
+> @@ -713,6 +713,8 @@ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
+>  			  const void *fdt, unsigned long kernel_load_addr,
+>  			  unsigned long fdt_load_addr)
+>  {
+> +	struct device_node *dn = NULL;
+> +	uint64_t val;
+>  	int ret;
+>  
+>  	ret = setup_purgatory(image, slave_code, fdt, kernel_load_addr,
+> @@ -735,9 +737,23 @@ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
+>  			goto out;
+>  	}
+>  
+> +	/* Setup OPAL base & entry values */
+> +	dn = of_find_node_by_path("/ibm,opal");
+> +	if (dn) {
+> +		of_property_read_u64(dn, "opal-base-address", &val);
+> +		ret = kexec_purgatory_get_set_symbol(image, "opal_base", &val,
+> +						     sizeof(val), false);
+> +		if (ret)
+> +			goto out;
+> +
+> +		of_property_read_u64(dn, "opal-entry-address", &val);
+> +		ret = kexec_purgatory_get_set_symbol(image, "opal_entry", &val,
+> +						     sizeof(val), false);
+> +	}
+>  out:
+>  	if (ret)
+>  		pr_err("Failed to setup purgatory symbols");
+> +	of_node_put(dn);
+>  	return ret;
+>  }
+>  
+> diff --git a/arch/powerpc/purgatory/trampoline_64.S b/arch/powerpc/purgatory/trampoline_64.S
+> index a5a83c3f53e6..464af8e8a4cb 100644
+> --- a/arch/powerpc/purgatory/trampoline_64.S
+> +++ b/arch/powerpc/purgatory/trampoline_64.S
+> @@ -61,6 +61,10 @@ master:
+>  	li	%r4,28
+>  	STWX_BE	%r17,%r3,%r4	/* Store my cpu as __be32 at byte 28 */
+>  1:
+> +	/* Load opal base and entry values in r8 & r9 respectively */
+> +	ld	%r8,(opal_base - 0b)(%r18)
+> +	ld	%r9,(opal_entry - 0b)(%r18)
+> +
+>  	/* load the kernel address */
+>  	ld	%r4,(kernel - 0b)(%r18)
+>  
+> @@ -102,6 +106,17 @@ dt_offset:
+>  	.8byte  0x0
+>  	.size dt_offset, . - dt_offset
+>  
+> +	.balign 8
+> +	.globl opal_base
+> +opal_base:
+> +	.8byte  0x0
+> +	.size opal_base, . - opal_base
+> +
+> +	.balign 8
+> +	.globl opal_entry
+> +opal_entry:
+> +	.8byte  0x0
+> +	.size opal_entry, . - opal_entry
+>  
+>  	.data
+>  	.balign 8
