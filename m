@@ -2,111 +2,174 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF30C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6ACC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04C01206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A80206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:24:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k0OoYPGs"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="q9lmQALf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730804AbgG1PXG (ORCPT
+        id S1730818AbgG1PYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:23:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730586AbgG1PXF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:23:05 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B8CC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:23:05 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id v22so9178525qtq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:23:05 -0700 (PDT)
+        Tue, 28 Jul 2020 11:24:46 -0400
+Received: from mail-dm6nam12on2077.outbound.protection.outlook.com ([40.107.243.77]:33641
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730669AbgG1PYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:24:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LPoNlqX2fT2TTd9ZJG2O3ZwYYlZdC6+VLIq+qJCLzZ2V4j2JtfMbS9L0V2sb3yFykDkLykpvZ2EYE3XR0K5Vvbgh2RvU4cYA5sDwewwKXH4aVdAObi4Q3CrLHURXKb1brKvCAN+c+vYT7tx7nuKVDsPeEchphFPZxXfRp7Hw800pVTeIMLXvzdVcBYAd0HDGuStKXDJNBDRr7LGbJBAKh84xzRFlCzmnwVT/eLewIWWzCcGuBAq9qu+zBmt/sEQsGeHEN88tnU6rmIH6cWndQKfZgVgb8QNCDwKYg3MiakaBUWPLJ4UdryE3wH1DlTz9JPrs80PVME7r7iNAUrBLPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iaMUln79GxgSkRGYEsPQx2uQ2IAm8MxWZS0aB3Ib+Ns=;
+ b=OsJfoE35FL5G7Jzs/nxizutilTmY8ZkzJb4bV6W5IwrXYKRyG7x5CVctyFGPe6mi94bzfBoQUMHcbAKqDRiqr69T9UV/bBUKRt/VT03jNemCk7jp6DDV1YdQjhcer1yif6fQsrztDJEkbEUXpMhZ92VoRP9AdHxGRIdnu7ay4rhcm2tRGfa9f59OmHqtCx1zElwou7nDsZtEAlVUHgKHctUB9ADw/m6tKR0cPwtwPebivWr2Pyzdnyo7dPG+SgQuZ0yVNzGj8rYXcmcdSoY/b4tJpWcrL8Ws2+D0gVgpKmty8arTtBjt3kweaurV8Yd6aBIUxBYMOWsHKf6xeMtx5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HmI/sv0QX+R/BppNr1xfIVqkHjAsa6rJb/xBjwtMkO4=;
-        b=k0OoYPGsrWcDnJDBrtDmMOXYH44154lhl2vIeXr8cWPeZzoXZLk2WW6vIXJ98+h3ym
-         YXk1rSXRDQZr/I7c6a/DHGfGSA1C5HSOhBi+daQvX2YeGhJMuGLvxBfWRHxacovePjDH
-         bbij7yp3WQjUUFmBRKVbsFJl3bFQYGA1D2QXaN9UN2hZJfEFZfXx763I+d/xikQ7Ginu
-         Ekev7ePE0gI3+wb3d1Su+VeLeYfQaWFdwfRpXfvfd00e0zwRFWSyVQLPI0fnggduiKKe
-         1z92CaOAS0bFKlnPfkg0pMqLlqjZM1bfhNRXZVhP2E2Jc8seQfTU3uwZiLFLn1ujvEAB
-         c9XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HmI/sv0QX+R/BppNr1xfIVqkHjAsa6rJb/xBjwtMkO4=;
-        b=JaJCwvNW588Kw8a3n3k5fz4D3lEVrdo4+Cx6RGXE0xQ0CLJKfPCmkuTOeF6kPY976I
-         aLjlA607Ww02a734hQ7wT/mNPkj3GKew4qmSBEPBHCdEfYjRaOoQ4feoU4euQS27fnF6
-         g4vUH0TuWmird1jrzgQpWw8VpT3xqE4RxBNmPw7GXoBNH127wk1o5Yrw4ObhC19BtYQD
-         ou0tXyU/fW+ASvY3yrXkux72AcpQ3VJqDRqVWd0pgvFO1+R7598q+C4LowAPKTRzFviP
-         moIOq/YpMwGc9X82Oum9yoh+Hwg7Mq3SEvRXep7vGI7wXufgut47nvKb8P2cMT0et0dq
-         gXoQ==
-X-Gm-Message-State: AOAM531/YLT1Aye4L1CkAQen0e4cSNavPotUXSNSDyvSgZosDS7lhs2Z
-        bM/Fz9d90clUj0nVdE2fSdbKqqu5xctopyd8SIT4Jw==
-X-Google-Smtp-Source: ABdhPJyahQHLn2+4zTnx8Mcd9s+rEe2J50gkBT9tNcMY2WW5C7XyJ6/yCqwA5veYW5IgF6r8oKpot6NiZHQAYBqp5J8=
-X-Received: by 2002:ac8:660f:: with SMTP id c15mr10023288qtp.34.1595949784633;
- Tue, 28 Jul 2020 08:23:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200724091520.880211-1-tweek@google.com>
-In-Reply-To: <20200724091520.880211-1-tweek@google.com>
-From:   Joel Fernandes <joelaf@google.com>
-Date:   Tue, 28 Jul 2020 11:22:52 -0400
-Message-ID: <CAJWu+orndyKTVTO-StUxnPsQ-TkbQHU5WxzOJ35EhckGfUzD1A@mail.gmail.com>
-Subject: Re: [PATCH] selinux: add tracepoint on denials
-To:     =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
-Cc:     Paul Moore <paul@paul-moore.com>, Nick Kralevich <nnk@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iaMUln79GxgSkRGYEsPQx2uQ2IAm8MxWZS0aB3Ib+Ns=;
+ b=q9lmQALfLqeWivgT6kTvcOIuifgK0/vMxnH4VEWi3pIRHkOSWcUcW9xDbww/di+TnUznrtxu2ZIbA+o3P2Ii4o43qQNp643xr4VS9O9Q3EnEpxMxP5nxnjDhXfRb97kUn687AEYU7HeDa0PfasU9l3fqPGhYegit5sPPdO3hYic=
+Received: from DM5PR1201MB0139.namprd12.prod.outlook.com (2603:10b6:4:4e::8)
+ by DM6PR12MB2908.namprd12.prod.outlook.com (2603:10b6:5:185::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.33; Tue, 28 Jul
+ 2020 15:24:42 +0000
+Received: from DM5PR1201MB0139.namprd12.prod.outlook.com
+ ([fe80::213d:5180:d4b:467b]) by DM5PR1201MB0139.namprd12.prod.outlook.com
+ ([fe80::213d:5180:d4b:467b%10]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
+ 15:24:42 +0000
+From:   "RAVULAPATI, VISHNU VARDHAN RAO" 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>, Arnd Bergmann <arnd@arndb.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "Agrawal, Akshu" <Akshu.Agrawal@amd.com>
+Subject: RE: [PATCH 3/6] ASoC: amd: SND_SOC_RT5682_I2C does not build rt5682
+Thread-Topic: [PATCH 3/6] ASoC: amd: SND_SOC_RT5682_I2C does not build rt5682
+Thread-Index: AQHWZCbm+DcS7P+G90ayphwZlFTok6kbjasAgAAKsoCAAPTPkIAAWbgAgAADLQCAADOsQA==
+Date:   Tue, 28 Jul 2020 15:24:42 +0000
+Message-ID: <DM5PR1201MB0139AC067DF7F2E2AB9FCC96E7730@DM5PR1201MB0139.namprd12.prod.outlook.com>
+References: <20200727145840.25142-1-Vishnuvardhanrao.Ravulapati@amd.com>
+ <20200727145840.25142-3-Vishnuvardhanrao.Ravulapati@amd.com>
+ <c467e2ee-727d-4bf5-8ceb-90c784245a43@linux.intel.com>
+ <20200727160941.GE6275@sirena.org.uk>
+ <DM5PR1201MB01393D93D69F1552408BFE79E7730@DM5PR1201MB0139.namprd12.prod.outlook.com>
+ <20200728120700.GA5055@sirena.org.uk>
+ <44e86246-516f-3a32-af66-e1c23f560e77@linux.intel.com>
+In-Reply-To: <44e86246-516f-3a32-af66-e1c23f560e77@linux.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ActionId=ff9c74f7-fbdb-4fa0-8e8f-708dcc81dd75;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ContentBits=0;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Enabled=true;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Method=Standard;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Name=Internal
+ Use Only -
+ Unrestricted;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SetDate=2020-07-28T15:23:19Z;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=amd.com;
+x-originating-ip: [124.123.115.91]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ff2cd390-b6c3-4942-ed7e-08d8330a5a1e
+x-ms-traffictypediagnostic: DM6PR12MB2908:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB29089D75F332AA82ECFEDB8CE7730@DM6PR12MB2908.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pNbaVJ7avHxPFeITh1M3tUl4t+rAbJy3yFKonwvBHeQzOaEgTLZReD5W0rQcjKetFia83umlUmvH5NUqJDXzPswAExSNsYavJw4N4SKOJ+RArFsanP1Afc8TkjEw9qkxtxrVnN7e0qcv2zgRyF6y/PXI7/PcbxMmyV7mBHzicCFRv7ywPCCHCn8s/rQnGA6e5U1QaEoKZZ4zR+z0odtlofiocYyldSk7MYNVyZsJrD3tOMiTHcBpDOW8Oh7K9Hj5Pv2OtfH1sPyjXR4KpRpGKtD7BjACDsrfhOLxcZfBRh6pHjsLtQWb2AmetKLnrmpM
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0139.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(376002)(346002)(366004)(66476007)(66446008)(52536014)(66556008)(5660300002)(478600001)(71200400001)(64756008)(4326008)(54906003)(110136005)(8676002)(8936002)(2906002)(66946007)(316002)(9686003)(86362001)(76116006)(83380400001)(33656002)(26005)(186003)(6506007)(53546011)(7696005)(55016002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: O4nJ27LaxUn+QVCihIqQLAHnhiT6H1xA7g9DLRqi/CYfYBhaBVxuu/AndgZIhpqRUGViqW7DR8SgyLEdKSlNg+SiPITQ4Ju6AsKVKAsPH6iEzTzxcmvv8UQRTKPNjv3stm0/m1GR7WHWk58lQbR4z19cyJ+jt/SKsaDSBqsiTE9gCRNMQsoY44ly+UuOorbrDD7htrtSueM+xSEzketm0+ltz3FZAn+7gKtJ3xcT72G5oeVxQuJC993fxQJg5w3ItL15hGqqb1EgEkeorEZppUbtNPB0JVVi5UyM9su81MoAHqQklg3LrWUAzzLMvJW5oP3mA+QLG1lR1tPJS0B28PHgKrdaK2LpNVdfHM0gtq0PgdU6/LspH7YE8q86LhAsWrqvfG8np/QyQt1UcwURklx1jseuy3gLlLqmkaKpxZaNUBYDU3YVSlZUciSfrlj5A7VJ8xBRpwPDJxqmipPffuvUkzu3S3xV+GaYd+qITue5CORxyPSlk0qMMtjDmGeO
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR1201MB0139.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff2cd390-b6c3-4942-ed7e-08d8330a5a1e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 15:24:42.5731
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xec293yxFzj/Mq6NrzDoVZnz7IIktf2+ucdYxaCdLCbl20yUNTlqax7iQ7p9nyFHW/0w9RJbh1MWpQuHDmNtmA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2908
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 5:15 AM Thi=C3=A9baud Weksteen <tweek@google.com> w=
-rote:
->
-> The audit data currently captures which process and which target
-> is responsible for a denial. There is no data on where exactly in the
-> process that call occurred. Debugging can be made easier by being able to
-> reconstruct the unified kernel and userland stack traces [1]. Add a
-> tracepoint on the SELinux denials which can then be used by userland
-> (i.e. perf).
->
-> Although this patch could manually be added by each OS developer to
-> trouble shoot a denial, adding it to the kernel streamlines the
-> developers workflow.
->
-> [1] https://source.android.com/devices/tech/debug/native_stack_dump
->
-> Signed-off-by: Thi=C3=A9baud Weksteen <tweek@google.com>
-> Signed-off-by: Joel Fernandes <joelaf@google.com>
+[AMD Official Use Only - Internal Distribution Only]
 
-While I am in support of the general idea, could you change my SOB to
-something like Inspired-by?
+-----Original Message-----
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Sent: Tuesday, July 28, 2020 5:48 PM
+To: Mark Brown <broonie@kernel.org>; RAVULAPATI, VISHNU VARDHAN RAO <Vishnu=
+vardhanrao.Ravulapati@amd.com>
+Cc: moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM... <alsa=
+-devel@alsa-project.org>; Arnd Bergmann <arnd@arndb.de>; Liam Girdwood <lgi=
+rdwood@gmail.com>; open list <linux-kernel@vger.kernel.org>; YueHaibing <yu=
+ehaibing@huawei.com>; Takashi Iwai <tiwai@suse.com>; Deucher, Alexander <Al=
+exander.Deucher@amd.com>; Mukunda, Vijendar <Vijendar.Mukunda@amd.com>; Enr=
+ic Balletbo i Serra <enric.balletbo@collabora.com>; Agrawal, Akshu <Akshu.A=
+grawal@amd.com>
+Subject: Re: [PATCH 3/6] ASoC: amd: SND_SOC_RT5682_I2C does not build rt568=
+2
 
-This is really your patch, but I did demonstrate the idea in an
-article where the intention was to apply a patch out of tree to do
-stack dumps / tracing.  SOB on the other hand is supposed to track the
-flow of a patch (the people who the patch goes through) when it is
-sent upstream.
+
+
+On 7/28/20 7:07 AM, Mark Brown wrote:
+> On Tue, Jul 28, 2020 at 06:59:50AM +0000, RAVULAPATI, VISHNU VARDHAN RAO =
+wrote:
+>
+>> So Actually for rt5682 codec Now in 5.8 there are three flags :
+>> SND_SOC_RT5682
+>> SND_SOC_RT5682_I2C
+>> SND_SOC_RT5682_SDW
+>
+>> But till 5.7.8 we have
+>> SND_SOC_RT5682
+>> SND_SOC_RT5682_SDW
+>
+>> So in our design we were using SND_SOC_RT5682 which build
+>> snd_soc_rt5682.ko Creates the respective codec_dais as defined in
+>> that .ko
+>
+>> If we use SND_SOC_RT5682_I2C we get snd_soc_rt5682_I2c.ko , it is not cr=
+eating the expected codec_dai links.
+>
+> Could you be more specific about the way in which "it is not creating
+> the expected codec_dai links" please?  What are you expecting to
+> happen and what happens instead?  Do you see any error messages for examp=
+le?
+>
+>> As there are three flags defined in codecs, I expect that previous
+>> one which we were using(SND_SOC_RT5682) is not a wrong flag and I
+>> expect to use
+>> SND_SOC_RT5682 as it is still available.
+>
+> Given that the core module does not register with any bus it is
+> difficult to see how that could possibly work - the core module
+> doesn't contain a driver at all.  Have you tested this change?
+
+I share Mark's point. Have you tested this change on top of Mark's tree, or=
+ only on top of the stable kernel?
+Ok. I will drop that patch and send the other series.
 
 Thanks,
 
- - Joel
