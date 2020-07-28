@@ -2,163 +2,152 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E76DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93F5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD4F720759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C585D20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:54:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="cz3hnmN9";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Dnir9b70"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HWH0jdlS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgG1D6h (ORCPT
+        id S1726987AbgG1Dy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 23:58:37 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:48292 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726814AbgG1D6g (ORCPT
+        Mon, 27 Jul 2020 23:54:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgG1Dy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 23:58:36 -0400
-Received: from mailhost.synopsys.com (badc-mailhost3.synopsys.com [10.192.0.81])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D24B0C00AD;
-        Tue, 28 Jul 2020 03:58:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1595908715; bh=IAl7K3B41JaE3eRFg2+RB+w+Zr7UPO4FrGHHRjmprwc=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=cz3hnmN9W/DfwufuiVC7YYXoho6OxqD3JnR1fD69vCwRc3JIsdbDbfbGIL/qjvIWx
-         dpRqXvlkGnlbc6kurOVkVGhFYNow15bFsWje4NHpURsqcTr9mDzEEV7cAoCuJJ7gdj
-         FN+ivUlT/D5qeshFfxYh1xGqBuW511oKtl92ZkImNsgFQ32RcWWRwwz6wXrtdnPztH
-         8Fi0sS321DXAgHY1/zBL2+ymsUtvfM9rSZ7kPD9lSOPNSiacS4jWN46RYwH0k6a8EL
-         Oao9iAK4ohHndB3DMOaCsysioKXuxvEJ3yYZnxPUyLq3dCaNLtR730quKZskEiQGXS
-         fnei1VBjAZOhw==
-Received: from o365relay-in.synopsys.com (sv2-o365relay3.synopsys.com [10.202.1.139])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 78B70A0068;
-        Tue, 28 Jul 2020 03:58:28 +0000 (UTC)
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2104.outbound.protection.outlook.com [104.47.58.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
-        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 19D4D400BE;
-        Tue, 28 Jul 2020 03:58:27 +0000 (UTC)
-Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=vgupta@synopsys.com
-Authentication-Results: o365relay-in.synopsys.com;
-        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="Dnir9b70";
-        dkim-atps=neutral
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dh18bOYFf2f0sPbWWLB75WMdCoSqsUSJcCbzVQdAEct38SNX810RJkNYWseXY2tcEkUezLrugxx+eLKaCG4FH3o7Yrys0/tilUHrDeZjU/29zFfWT54EuzgCy4z56BbpVOvBrKSVEGNnSQokwl7vCM9vjU5sungQS4fqjX7L21oQiKmRQkKowQcTK0hWH5rHjzLYF1ffiDuoPHuLjmkd0Vfz1MuwwxWROnb6W7OfPEZyBHEsO9M6HZ/PG0/0F+4S3ziDSvAS2VjnpX7YYRg+GhvRYGBXtI+3Vh6HYB9fq0tye7n6jwGT5i1CukMLkdqrra1AF6UdmWKEf7kjJ1Rnbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IAl7K3B41JaE3eRFg2+RB+w+Zr7UPO4FrGHHRjmprwc=;
- b=kY+M6eC8a4tiqgiL2loQGHCudpZ3Tmn09gYvrrXAkIJiAYzFoxjqPu8s+wEZIzrOiyMtvZjSbvr+mRwqKL06a5fKG4f2GLxyqRD3KLgLMBDjWMc+gfuKyNv6xdJDb+cF+tqiwssmc1+b1un2OJZ30XThdNAaCWBSP0INiJ/kjYRteQTaxRd9X4BUJPMJTH/jOjaqhUIX8U2sFdsZwkGQG7UHnRRg5Mw4YZK8tUOS1p8mV4plTmYFzGfyj7HXKSrcZ+HLjzmUJSjvOTFhJ5OYgh5oRnFqw2e+Aq0JEb86liWFOnz+NBd5m4xhtq6yPUZ8Bk+RDKnDOoOGzIxgpTz/yw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IAl7K3B41JaE3eRFg2+RB+w+Zr7UPO4FrGHHRjmprwc=;
- b=Dnir9b70is3ccrnT4se5/u4uDpJ0zb6Y86bsqQka1Ld8rI15yqK6uycwX5q2fRpm7wG53dT8mF0clbxmDqIKzwZDfGRh7OK0GRv9BRvqTU3clzyyREwbD+3pSX53dttN6psBhwDYF4MZtVf1Sqt2wEDa5jl4apzmKt5W6fvG/wE=
-Received: from BYAPR12MB3479.namprd12.prod.outlook.com (2603:10b6:a03:dc::26)
- by BY5PR12MB3938.namprd12.prod.outlook.com (2603:10b6:a03:1af::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Tue, 28 Jul
- 2020 03:58:25 +0000
-Received: from BYAPR12MB3479.namprd12.prod.outlook.com
- ([fe80::3d4f:7ae8:8767:75a4]) by BYAPR12MB3479.namprd12.prod.outlook.com
- ([fe80::3d4f:7ae8:8767:75a4%7]) with mapi id 15.20.3216.034; Tue, 28 Jul 2020
- 03:58:25 +0000
-X-SNPS-Relay: synopsys.com
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Nicholas Piggin <npiggin@gmail.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-Subject: Re: [PATCH 03/24] arc: use asm-generic/mmu_context.h for no-op
- implementations
-Thread-Topic: [PATCH 03/24] arc: use asm-generic/mmu_context.h for no-op
- implementations
-Thread-Index: AQHWZJADsknRIKY1fkK0FgCGpMpua6kcXY2A
-Date:   Tue, 28 Jul 2020 03:58:25 +0000
-Message-ID: <04b9872c-e9d8-2221-0bf6-595dbd15d8eb@synopsys.com>
-References: <20200728033405.78469-1-npiggin@gmail.com>
- <20200728033405.78469-4-npiggin@gmail.com>
-In-Reply-To: <20200728033405.78469-4-npiggin@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=synopsys.com;
-x-originating-ip: [73.222.250.45]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6ecf330e-391f-43d9-891a-08d832aa7a8f
-x-ms-traffictypediagnostic: BY5PR12MB3938:
-x-microsoft-antispam-prvs: <BY5PR12MB3938F7E1BE03ED32CF471CABB6730@BY5PR12MB3938.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Szit7jZZF/F1woIkZIbCsI6NmRHDIUWobXf+brVoh4XSJ2O7jV+yk0+SnQ4YmCiMHVGGczmKSMli8lmZorOuqxBd+SVBs90M3SK68ghzWerkRwO8teTnJec5e3bAzk0WSc9iSNhntTI0BW9p+eiuSufbURfRio+q4HbOVH6en7n/CeAlOX8PNsmxNhXxzDiufmirml/MiZRVZ+pBOqhStVahyndrQhCBO9vh56nfYMs9Qb7DEP+ZfZSqjvHX16LZivwVPJvUjw2/TSwUW+gXSDVi4u6XBTWJQ7ciwI1qGtxqLNzE7n/Q7mVQklnfGDU/LbaUE21+doSth5Q+srgls6uZdq0aLImsY9sqI9DcVA/R5IoiPRMSfn0KngM8LO1JSgoVzQW9nx6wCrPiEjsuuA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3479.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(136003)(39860400002)(396003)(366004)(5660300002)(316002)(54906003)(6512007)(110136005)(6486002)(4326008)(83380400001)(8936002)(8676002)(36756003)(71200400001)(2616005)(26005)(86362001)(53546011)(6506007)(31696002)(2906002)(66556008)(31686004)(64756008)(66476007)(66446008)(186003)(76116006)(478600001)(66946007)(41533002)(43740500002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: ROp8ekgVp9lI4M3/NAlakrqLF9e3z8E9LBOn9sCwBf2PceYcDy85Vy1GkMm5hr/VHOKFUrZtFJevy71pmP1UgMSZTuDwvFWVkKv4MCm7RlNLCe6iXbdFM+Qd8klfLetGa6vB1MuM6cFZfYXgIsC+6A18jr1PC46rFsC2ekUDegBFyLPY6DvMuXF8NaIq4gpT6G3Wf4sbczHFVp7eWMjyBS2w3hGEyEn7hO8e7IOzLxk/5U0ReyLJIC7Al9vvbDLRlJM/TmEMsyhEf4xM23/eBp/1QpYqZ+hDaFW9Xvrpx4JVTW7rS6dX93Sw6wpB8Vn3C4Y7tOZ01PGIAaMxGsrJdbL+U9Ar+Uncwqg9efh1LZpVe5ny66xG0wrRCPixS7ph/2anDqhQxgmVW8nt+FjLzqFtHbGaF+foP7DBitrDCiqqbqFOP3VTCNbPc8g+SeJF5xErBLA0p0xFcSCDjn/P97XXTXDF8jn+VXzzzMhxlx0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D5326CEBC1A9364D90F83A08A49FA43D@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 27 Jul 2020 23:54:27 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D45C061794;
+        Mon, 27 Jul 2020 20:54:27 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id y134so4647407yby.2;
+        Mon, 27 Jul 2020 20:54:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=r0Ob3USH6EZXFhicv046mK2EZvXGxjgCtpckOHpH4z0=;
+        b=HWH0jdlShBg+VmFjWuGKsOI9Lc/YXzv7++WuqpHxe2aPsRHe0DkDVeMAz4Gqq+6HVx
+         DxBNQGvj1wSY0dBCgV/Z6lGR4fAeosOkUNEOZohNgEcpTmsofP4rK+ubdpYOzkoHrZMU
+         AHhN9Q8ooYUV5n+ClU+ADuqLQxig2lzT04PXs/vXxs8Vxz/e/knu0bOOdL8iU/BRQ+G5
+         GWIKcEZAKxf2Lbd4VPngJ08ui45YA01dXQv/ymsGnutgTCUvf5Uo6KDjDQErM3kulBo0
+         r2u1N2Mygt8LlHdM8/X0SdI28WDezGRbY1dTz2+fV5ar72OQnghFrGpmAAlv+HOCk1ei
+         VqNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=r0Ob3USH6EZXFhicv046mK2EZvXGxjgCtpckOHpH4z0=;
+        b=MUe/FUgNfkzFG+ePNytfflE+iapG1C3OoAEO9xMS/lMMM+MlLBLuLH7ddRGAW83YbP
+         FK0Ei0bh5lXoRh2ygOCFEOPk9Ov4HXOVymPBdufpOKirj5BKHXV7M8MN9OYrt6P2Eenf
+         Coa5TkT+wSIanBi4MT9a/mVqmOAFO+8szfstgGsOivivUCWIc1UsdMEfIo5PPg343PsC
+         tegnuH+eKaEl7D1lUW9TCOFeS+MDhkA4VgCa76iX0DYRamN2P5ZqW42gP3Pa3pStC2Qd
+         U7qZ4obWrCs7RCO5Bx9wQNv6nSylpgBLSKyPaTmtdqi8hwUkILXuJ+AaIVbp9b2f9HGC
+         A19w==
+X-Gm-Message-State: AOAM531TcjpUNMQyqj+zFvGYafdtj+ijkHs+Mwq3NsFtew+Lu4rlkHti
+        pNdd4Xyiaw3ZqhuTzRcWLHKFq68nSx8BvcuPfuA=
+X-Google-Smtp-Source: ABdhPJykBFadHVlFLRCIySq0Oncq7PZNEdDsLZ1zkTrGJkqqbtI4dszMpcnN75GdJWd5xM0RZ+otjBpc6aZUWEtcv8g=
+X-Received: by 2002:a25:9843:: with SMTP id k3mr37697556ybo.292.1595908467016;
+ Mon, 27 Jul 2020 20:54:27 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: synopsys.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3479.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ecf330e-391f-43d9-891a-08d832aa7a8f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 03:58:25.3662
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4ymrAdFH1ZvUPKPq7LAAQslD7Xx43k4eNgGDav2nWMarDC6zH6+bqFKu586fRWPnDtvinRHZLkZxt53HebUKQw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3938
+References: <CAF12kFsOrFOQBrZv6qBbcQ971acEM0XxLWKqBJvEspoQ3UOHUQ@mail.gmail.com>
+ <CAFd5g47cQ6tC3cLOqFiHHNO9XjgpTQLNsw=-bBKvsPMs+DGrLg@mail.gmail.com>
+In-Reply-To: <CAFd5g47cQ6tC3cLOqFiHHNO9XjgpTQLNsw=-bBKvsPMs+DGrLg@mail.gmail.com>
+From:   Cixi Geng <gengcixi@gmail.com>
+Date:   Tue, 28 Jul 2020 11:53:51 +0800
+Message-ID: <CAF12kFvO6GA7G7soNJN5WS=8x6NnmqCUE-4M43ppP9t3-=OjNQ@mail.gmail.com>
+Subject: Re: kunit compile failed on um
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>, zhang.lyra@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNy8yNy8yMCA4OjMzIFBNLCBOaWNob2xhcyBQaWdnaW4gd3JvdGU6DQoNCj4gIC8qDQo+IC0g
-KiBDYWxsZWQgYXQgdGhlIHRpbWUgb2YgZXhlY3ZlKCkgdG8gZ2V0IGEgbmV3IEFTSUQNCj4gLSAq
-IE5vdGUgdGhlIHN1YnRsZXR5IGhlcmU6IGdldF9uZXdfbW11X2NvbnRleHQoKSBiZWhhdmVzIGRp
-ZmZlcmVudGx5IGhlcmUNCj4gLSAqIHZzLiBpbiBzd2l0Y2hfbW0oKS4gSGVyZSBpdCBhbHdheXMg
-cmV0dXJucyBhIG5ldyBBU0lELCBiZWNhdXNlIG1tIGhhcw0KPiAtICogYW4gdW5hbGxvY2F0ZWQg
-ImluaXRpYWwiIHZhbHVlLCB3aGlsZSBpbiBsYXR0ZXIsIGl0IG1vdmVzIHRvIGEgbmV3IEFTSUQs
-DQo+IC0gKiBvbmx5IGlmIGl0IHdhcyB1bmFsbG9jYXRlZA0KPiArICogYWN0aXZhdGVfbW0gZGVm
-YXVsdHMgdG8gc3dpdGNoX21tIGFuZCBpcyBjYWxsZWQgYXQgdGhlIHRpbWUgb2YgZXhlY3ZlKCkg
-dG8NCg0KV2l0aCBhY3RpdmF0ZV9tbSgpIGRlZmluaXRpb24gYWN0dWFsbHkgZ29uZSwgcGVyaGFw
-cyBhZGQgImFjdGl2YXRlX21tKCkgY29tZXMgZnJvbQ0KZ2VuZXJpYyBjb2RlLi4uIiB0byBwcm92
-aWRlIG5leHQgcmVhZGVyIGFib3V0IHRoZSAic3B1cmlvdXMgbG9va2luZyBjb21tZW50Ig0KDQo+
-ICsgKiBnZXQgYSBuZXcgQVNJRCBOb3RlIHRoZSBzdWJ0bGV0eSBoZXJlOiBnZXRfbmV3X21tdV9j
-b250ZXh0KCkgYmVoYXZlcw0KPiArICogZGlmZmVyZW50bHkgaGVyZSB2cy4gaW4gc3dpdGNoX21t
-KCkuIEhlcmUgaXQgYWx3YXlzIHJldHVybnMgYSBuZXcgQVNJRCwNCj4gKyAqIGJlY2F1c2UgbW0g
-aGFzIGFuIHVuYWxsb2NhdGVkICJpbml0aWFsIiB2YWx1ZSwgd2hpbGUgaW4gbGF0dGVyLCBpdCBt
-b3ZlcyB0bw0KPiArICogYSBuZXcgQVNJRCwgb25seSBpZiBpdCB3YXMgdW5hbGxvY2F0ZWQNCj4g
-ICAqLw0KPiAtI2RlZmluZSBhY3RpdmF0ZV9tbShwcmV2LCBuZXh0KQkJc3dpdGNoX21tKHByZXYs
-IG5leHQsIE5VTEwpDQo+ICANCj4gIC8qIGl0IHNlZW1lZCB0aGF0IGRlYWN0aXZhdGVfbW0oICkg
-aXMgYSByZWFzb25hYmxlIHBsYWNlIHRvIGRvIGJvb2sta2VlcGluZw0KPiAgICogZm9yIHJldGly
-aW5nLW1tLiBIb3dldmVyIGRlc3Ryb3lfY29udGV4dCggKSBzdGlsbCBuZWVkcyB0byBkbyB0aGF0
-IGJlY2F1c2UNCj4gQEAgLTE2OCw4ICsxNjksNyBAQCBzdGF0aWMgaW5saW5lIHZvaWQgc3dpdGNo
-X21tKHN0cnVjdCBtbV9zdHJ1Y3QgKnByZXYsIHN0cnVjdCBtbV9zdHJ1Y3QgKm5leHQsDQo+ICAg
-KiB0aGVyZSBpcyBhIGdvb2QgY2hhbmNlIHRoYXQgdGFzayBnZXRzIHNjaGVkLW91dC9pbiwgbWFr
-aW5nIGl0J3MgQVNJRCB2YWxpZA0KPiAgICogYWdhaW4gKHRoaXMgdGVhc2VkIG1lIGZvciBhIHdo
-b2xlIGRheSkuDQo+ICAgKi8NCj4gLSNkZWZpbmUgZGVhY3RpdmF0ZV9tbSh0c2ssIG1tKSAgIGRv
-IHsgfSB3aGlsZSAoMCkNCg0Kc2FtZSBmb3IgZGVhY3RpdmF0ZV9tbSgpDQo=
+Here I found my error rootcause:
+
+My Makefile add a Werror flag, So it wil build waring as error as the
+follow code
+
+../arch/um/os-Linux/signal.c: In function
+\xe2\x80\x98sig_handler_common\xe2\x80\x99:
+../arch/um/os-Linux/signal.c:51:1: error: the frame size of 2960 bytes
+is larger than 2048 bytes [-Werror=3Dframe-larger-than=3D]
+ }
+ ^
+../arch/um/os-Linux/signal.c: In function
+\xe2\x80\x98timer_real_alarm_handler\xe2\x80\x99:
+../arch/um/os-Linux/signal.c:95:1: error: the frame size of 2960 bytes
+is larger than 2048 bytes [-Werror=3Dframe-larger-than=3D]
+ }
+
+and I add the CONFIG_FRAME_WARN=3D4096  in arch/um/x86_64_defconfig  so
+there was no error when I use make ARCH=3Dum defconfig && make ARCH=3Dum
+BUT I found the commit ff7b437f36b026dcd7351f86a90a0424c891dc06 has
+changed use  make ARCH=3Dum  kunit_defconfig in kunit.py. So the error
+happened.
+
+Further More, I compare the different between use x86_64_defconfig and
+kunit_defconfig, there is a big difference.
+Can We use kunit_defconfig on the basis of the x86_64_defconfig ?
+If the answer is ok=EF=BC=8C I would like to help add this functions
+
+Brendan Higgins <brendanhiggins@google.com> =E4=BA=8E2020=E5=B9=B47=E6=9C=
+=8828=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=885:29=E5=86=99=E9=81=93=
+=EF=BC=9A
+>
+> On Mon, Jul 27, 2020 at 3:01 AM Cixi Geng <gengcixi@gmail.com> wrote:
+> >
+> > Hi Brendan:
+> > When I run kunit test in um , it failed on kernel 5.8-rc* while
+> > succeeded  in v5.7 with same configuration. is this a bug?
+> >
+> > Here is my operation:
+> >  gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
+> >
+> > the kunitconfig:
+> > Cixi.Geng:~/git-projects/torvals-linux$ cat .kunitconfig
+> > CONFIG_KUNIT=3Dy
+> > CONFIG_KUNIT_TEST=3Dy
+> > CONFIG_KUNIT_EXAMPLE_TEST=3Dy
+> >
+> > command:
+> > Cixi.Geng:~/git-projects/torvals-linux$ ./tools/testing/kunit/kunit.py =
+run
+> >
+> > the Error log:
+> > [17:51:14] Configuring KUnit Kernel ...
+> > [17:51:14] Building KUnit Kernel ...
+> > ERROR:root:b"make[1]:
+> > \xe8\xbf\x9b\xe5\x85\xa5\xe7\x9b\xae\xe5\xbd\x95\xe2\x80\x9c/home/cixi.=
+geng1/git-projects/torvals-linux/.kunit\xe2\x80\x9d\n/home/cixi.geng1/git-p=
+rojects/torvals-linux/Makefile:551:
+> > recipe for target 'outputmakefile' failed\nmake[1]:
+> > \xe7\xa6\xbb\xe5\xbc\x80\xe7\x9b\xae\xe5\xbd\x95\xe2\x80\x9c/home/cixi.=
+geng1/git-projects/torvals-linux/.kunit\xe2\x80\x9d\nMakefile:185:
+> > recipe for target '__sub-make' failed\n"
+>
+> So we have a fix out for the cryptic error messages:
+>
+> https://patchwork.kernel.org/patch/11652711/
+>
+> But I believe it has not been picked up yet.
+>
+> In the meantime, you should get more information by running
+>
+> ls .kunit
+> make ARCH=3Dum O=3D.kunit
+>
+> Let us know if you have any additional questions.
