@@ -2,193 +2,92 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCF0C43459
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6984EC433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91D9120656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4A120656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:32:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DnBLXKs2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lH4opCzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732818AbgG1Tbf (ORCPT
+        id S1732827AbgG1TcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:31:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54210 "EHLO
+        Tue, 28 Jul 2020 15:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732685AbgG1Tbe (ORCPT
+        with ESMTP id S1732813AbgG1TcH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:31:34 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74D06C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:31:34 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id o22so15529881qtt.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:31:34 -0700 (PDT)
+        Tue, 28 Jul 2020 15:32:07 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3C97C0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:32:06 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s15so1088969pgc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:32:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UjriuwUrFe3JnfpGcdrsyLfiemXOEMJgHirDygAb170=;
-        b=DnBLXKs29zvI1lqMHtzOQmUYICRL0HV7SdVxAYUWpDzp+OeQNWAsihxrWRmrLqx5hw
-         V/mz4yk8dR+/HiOKLkukQF+iH/1wV+lXCEU5IpLdFR+Nr4KvMDIOV4IpAaa4Sc1a6cI5
-         uEZO4sFf0YAiOi8NlYlVXqof05YNkMYlNhcHzOKDtCcZgqKaN6JLihS+FXwhlVssJ5nC
-         ZFXXkrQW6Ck691VYbNY77aXTTJSUE5cW+/D4gUKH18Q3ilU7/qdTfRP2V7nhHjvdKcId
-         H4TbmeefL4EYTkjGeTSy9mhEGEPi9HlVpoHAxyxY/VcwiFn4Ff4lVcQlgQoqlJlIfzS/
-         UcDQ==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=kMhjJ3hvBgwbKsHhi3fqlBSIcNca41e66swSh7pO1VQ=;
+        b=lH4opCzKcnaxkoNblG1ud2QZbtBFLhw2H3rp5dDPbiW3HhSPtCkBbyCHXIbINNXpxP
+         UAyojB0odJhtwfhIB2tej5Wk3vnVMjUCsvDj6ltv/ot3+DN06yuN8vjzaiHPzYhCrhS3
+         pkCOpuBQ2Ud2WwjRbvNxw+zE1ouOO4fW+DxY0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UjriuwUrFe3JnfpGcdrsyLfiemXOEMJgHirDygAb170=;
-        b=NEr5ukZ+4QYwBvyBHOa9oLNo37Ui2EnKS2tquI0cTuBQtSmmQBI/yPh0UVTGe0Kc0S
-         MeqYPIEVLB3AkIFnst+E90eMgi0ZNTv6BoEQ549FUexLdUfLRJT8H2FUS1MCrZidMuyU
-         u/uBl64humFVm6TgZQs1aST7Wd/WEIZ32rv3Zo9xJxecQD1DS3Zkjj/d4urvVCtpLj/X
-         zVmzQr+Al5KHKbwRghnBYcHWN4mBqqcqfTiSvO9LL+9b503CkNJ2q0YqDGyYlv7IbwcM
-         DoHxoueXZjHjKyBMmgle8ofGaTiEdtDejiTC+41BlpaYOQOkTyKqUmr5RtEVg7iYSuf5
-         bsYQ==
-X-Gm-Message-State: AOAM532q7Vt6ydMzlBOYJg06sMrfzm0QvY/lQbulOlqVXLmqQta9xh+Z
-        QMmdtYolAgklK89HzJpiCQ==
-X-Google-Smtp-Source: ABdhPJwlAVn0RKlarj2u/vVBCsz1lO9982RRjCktsDisJ/Vchh3TVzj5DBbDoXFoTnmL0GLH7OmGGA==
-X-Received: by 2002:ac8:6f4a:: with SMTP id n10mr24304675qtv.363.1595964693541;
-        Tue, 28 Jul 2020 12:31:33 -0700 (PDT)
-Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
-        by smtp.gmail.com with ESMTPSA id k48sm21410544qtc.14.2020.07.28.12.31.31
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=kMhjJ3hvBgwbKsHhi3fqlBSIcNca41e66swSh7pO1VQ=;
+        b=E7O2T3LeCxLPxc0kQArnBj1c7CRByYtF+ZXxgX7UiEt4EbxuXZQlvG7flk4Ek/7dqK
+         EvAiIHkDHio8QMUtMnI+AMJfPtWgRxcwAKzzI3QxOCzl+3BQdfTtANX6Ivf0xhWMo6mp
+         ZzteKlSSHyW/s2unUGgIG5RBKeuxluGr5EnxiBe/hR2WYKwS/Dp7ra9ue270L1gaKOQI
+         V+0Jnd7zMBYEpjHY/6HZt376EkeDOmXpGC5N1O1UQmk5vLGh8TI1cA9PgQVgClHHH2ku
+         QogX6JxoZ1yQYbBuIVRqxCJACeOBiKIBUmo3bNfbCVErhovHETqWeUZu4LK2yuejA870
+         skjQ==
+X-Gm-Message-State: AOAM531tQoNFw5eSIXWaHOQkIAAoeWYi/xk0910UfuUiwyCS5sx4E89x
+        K+3uv7SezD+yJBgz50TTaFsisg==
+X-Google-Smtp-Source: ABdhPJwf4+mQndf+Efryc8XYmv3htvQaK+VS/A7pthKtDJT/NG+gtXYtnhykek9ejf8PLjN7bw9d4g==
+X-Received: by 2002:aa7:9186:: with SMTP id x6mr26598292pfa.103.1595964726370;
+        Tue, 28 Jul 2020 12:32:06 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id w3sm19358687pff.56.2020.07.28.12.32.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 12:31:33 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Evan Quan <evan.quan@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Xiaojie Yuan <xiaojie.yuan@amd.com>,
-        =?UTF-8?q?Marek=20Ol=C5=A1=C3=A1k?= <marek.olsak@amd.com>,
-        Trek <trek00@inbox.ru>, Leo Liu <leo.liu@amd.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH] drm/amdgpu: Prevent kernel-infoleak in amdgpu_info_ioctl()
-Date:   Tue, 28 Jul 2020 15:29:24 -0400
-Message-Id: <20200728192924.441570-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 28 Jul 2020 12:32:05 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200728091057.5.I0ea31fe183b99838b28213df05b0e7912db3ba29@changeid>
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid> <20200728151258.1222876-1-campello@chromium.org> <20200728091057.5.I0ea31fe183b99838b28213df05b0e7912db3ba29@changeid>
+Subject: Re: [PATCH 05/15] iio: sx9310: Change from .probe to .probe_new
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+To:     Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Tue, 28 Jul 2020 12:32:04 -0700
+Message-ID: <159596472439.1360974.16024041965670839787@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compiler leaves a 4-byte hole near the end of `dev_info`, causing
-amdgpu_info_ioctl() to copy uninitialized kernel stack memory to userspace
-when `size` is greater than 356.
+Quoting Daniel Campello (2020-07-28 08:12:48)
+> Uses .probe_new in place of .probe. Also uses device_get_match_data()
+> for whoami matching.
+>=20
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> ---
 
-In 2015 we tried to fix this issue by doing `= {};` on `dev_info`, which
-unfortunately does not initialize that 4-byte hole. Fix it by using
-memset() instead.
-
-Cc: stable@vger.kernel.org
-Fixes: c193fa91b918 ("drm/amdgpu: information leak in amdgpu_info_ioctl()")
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
-$ pahole -C "drm_amdgpu_info_device" drivers/gpu/drm/amd/amdgpu/amdgpu_kms.o
-struct drm_amdgpu_info_device {
-	__u32                      device_id;            /*     0     4 */
-	__u32                      chip_rev;             /*     4     4 */
-	__u32                      external_rev;         /*     8     4 */
-	__u32                      pci_rev;              /*    12     4 */
-	__u32                      family;               /*    16     4 */
-	__u32                      num_shader_engines;   /*    20     4 */
-	__u32                      num_shader_arrays_per_engine; /*    24     4 */
-	__u32                      gpu_counter_freq;     /*    28     4 */
-	__u64                      max_engine_clock;     /*    32     8 */
-	__u64                      max_memory_clock;     /*    40     8 */
-	__u32                      cu_active_number;     /*    48     4 */
-	__u32                      cu_ao_mask;           /*    52     4 */
-	__u32                      cu_bitmap[4][4];      /*    56    64 */
-	/* --- cacheline 1 boundary (64 bytes) was 56 bytes ago --- */
-	__u32                      enabled_rb_pipes_mask; /*   120     4 */
-	__u32                      num_rb_pipes;         /*   124     4 */
-	/* --- cacheline 2 boundary (128 bytes) --- */
-	__u32                      num_hw_gfx_contexts;  /*   128     4 */
-	__u32                      _pad;                 /*   132     4 */
-	__u64                      ids_flags;            /*   136     8 */
-	__u64                      virtual_address_offset; /*   144     8 */
-	__u64                      virtual_address_max;  /*   152     8 */
-	__u32                      virtual_address_alignment; /*   160     4 */
-	__u32                      pte_fragment_size;    /*   164     4 */
-	__u32                      gart_page_size;       /*   168     4 */
-	__u32                      ce_ram_size;          /*   172     4 */
-	__u32                      vram_type;            /*   176     4 */
-	__u32                      vram_bit_width;       /*   180     4 */
-	__u32                      vce_harvest_config;   /*   184     4 */
-	__u32                      gc_double_offchip_lds_buf; /*   188     4 */
-	/* --- cacheline 3 boundary (192 bytes) --- */
-	__u64                      prim_buf_gpu_addr;    /*   192     8 */
-	__u64                      pos_buf_gpu_addr;     /*   200     8 */
-	__u64                      cntl_sb_buf_gpu_addr; /*   208     8 */
-	__u64                      param_buf_gpu_addr;   /*   216     8 */
-	__u32                      prim_buf_size;        /*   224     4 */
-	__u32                      pos_buf_size;         /*   228     4 */
-	__u32                      cntl_sb_buf_size;     /*   232     4 */
-	__u32                      param_buf_size;       /*   236     4 */
-	__u32                      wave_front_size;      /*   240     4 */
-	__u32                      num_shader_visible_vgprs; /*   244     4 */
-	__u32                      num_cu_per_sh;        /*   248     4 */
-	__u32                      num_tcc_blocks;       /*   252     4 */
-	/* --- cacheline 4 boundary (256 bytes) --- */
-	__u32                      gs_vgt_table_depth;   /*   256     4 */
-	__u32                      gs_prim_buffer_depth; /*   260     4 */
-	__u32                      max_gs_waves_per_vgt; /*   264     4 */
-	__u32                      _pad1;                /*   268     4 */
-	__u32                      cu_ao_bitmap[4][4];   /*   272    64 */
-	/* --- cacheline 5 boundary (320 bytes) was 16 bytes ago --- */
-	__u64                      high_va_offset;       /*   336     8 */
-	__u64                      high_va_max;          /*   344     8 */
-	__u32                      pa_sc_tile_steering_override; /*   352     4 */
-
-	/* XXX 4 bytes hole, try to pack */
-
-	__u64                      tcc_disabled_mask;    /*   360     8 */
-
-	/* size: 368, cachelines: 6, members: 49 */
-	/* sum members: 364, holes: 1, sum holes: 4 */
-	/* last cacheline: 48 bytes */
-};
-
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-index a8c47aecd342..0047da06041f 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-@@ -707,9 +707,10 @@ static int amdgpu_info_ioctl(struct drm_device *dev, void *data, struct drm_file
- 		return n ? -EFAULT : 0;
- 	}
- 	case AMDGPU_INFO_DEV_INFO: {
--		struct drm_amdgpu_info_device dev_info = {};
-+		struct drm_amdgpu_info_device dev_info;
- 		uint64_t vm_size;
- 
-+		memset(&dev_info, 0, sizeof(dev_info));
- 		dev_info.device_id = dev->pdev->device;
- 		dev_info.chip_rev = adev->rev_id;
- 		dev_info.external_rev = adev->external_rev_id;
--- 
-2.25.1
-
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
