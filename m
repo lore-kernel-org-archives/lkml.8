@@ -2,109 +2,107 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB0AC433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59BCC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44E5F206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:57:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ulyQe9g+"
+	by mail.kernel.org (Postfix) with ESMTP id B88B3206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbgG1U5a (ORCPT
+        id S1729242AbgG1U5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:57:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728993AbgG1U53 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 16:57:29 -0400
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95E8CC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:57:29 -0700 (PDT)
-Received: by mail-io1-xd2c.google.com with SMTP id t15so13332445iob.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:57:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=FSwie7gbecv3LuLSKvysGeFpSnlyQ0HY+UfcoC3l9Ls=;
-        b=ulyQe9g+Gek/4SCJMk2jaRWt44ckJ2J4m9qhbNva6/NUosWt03AVeXgjwvd6r6rLLz
-         OQlFWyUY5QV2n5Dx/5qHN2E0QRVguMDIC0om0Yd4SdZbP8cLsFluymYRy788FUoD7G2M
-         Ytu1Pnki/NyqU506n7xZC3VkyL1Ov/d5nkyt4/0pD76p1Ct45op0qvsk4vY9w06NqDx7
-         fjR8gkTD6wAgPyszY9DaEqAWyF+1NxrhNHqrrKFC/8IbMlXOFypLVU8ImsGpMqIHiyVX
-         dstEkJkTZsBIh5SFo7UM3BM3JFcbyz8Nvlw3TYwa7gt6aO6CPJZ4NP3eMT/NMDB9s0V3
-         Fyuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=FSwie7gbecv3LuLSKvysGeFpSnlyQ0HY+UfcoC3l9Ls=;
-        b=jmH6zX//T6La5TIFYGpjEuyiKAeFjUWBE4bbqAxA7LMsvx6RtM4mJxRbDAldUJs3IQ
-         QluTRvlbQdl7bZiJq8lbkfaSNoYhacof8UeLHJL5iewz9lSpwXFzQ05DPi9Nd5AlUYJC
-         hN5wPkM0gUliJLFuNPcptpd5hbALTyholbgnM6VyWO9dPiJBPHfy8EkP4Gwpu1Pbm3AX
-         5lJxABNsjz7x2kGuNgDSKEoOUApWFhvKXqybenq2TASR358vt2RXqTRExbIIc3w7vC60
-         R90C5g7KPJsLWk2HMp3m7SG2hGXnAEVY2JhyrcIw5qmbWraUD3x1tuoFlTJX8bvRbSSB
-         NNWw==
-X-Gm-Message-State: AOAM531wSrJ7fmzEF86TkoRkm2Nkv2d62MrU9mNQBj1DKSeH5Mmk7xqY
-        kZHQV5eyOAQPS+6QOqvfnW2JFZc+nbeTBTSmLrpiNw==
-X-Google-Smtp-Source: ABdhPJy8W3kXCOhBuTi0UpoKm6nSp8vdamibTtQHu4xCmOnTQmF4SuI0SzX/+hL0XobeY91vFRi2P9vQ8jyq4onYJI8=
-X-Received: by 2002:a05:6638:22d0:: with SMTP id j16mr34246940jat.92.1595969848379;
- Tue, 28 Jul 2020 13:57:28 -0700 (PDT)
+        Tue, 28 Jul 2020 16:57:19 -0400
+Received: from elvis.franken.de ([193.175.24.41]:52456 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728202AbgG1U5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 16:57:19 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1k0Wez-0007gK-01; Tue, 28 Jul 2020 22:57:17 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 7636FC0A9B; Tue, 28 Jul 2020 22:51:55 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 22:51:55 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 2/2] MIPS: ingenic: Enable JZ4780_NEMC manually
+Message-ID: <20200728205155.GB22052@alpha.franken.de>
+References: <20200728104503.23655-1-krzk@kernel.org>
+ <20200728104503.23655-2-krzk@kernel.org>
+ <B4F6EQ.WB2WZOY40FDR@crapouillou.net>
+ <20200728111935.GA26683@kozik-lap>
+ <20200728113702.GB13443@alpha.franken.de>
+ <20200728120035.GA28766@kozik-lap>
+ <NPJ6EQ.I4K2FZ2BHH1E@crapouillou.net>
+ <20200728125308.GA344@kozik-lap>
 MIME-Version: 1.0
-From:   Giuliano Procida <gprocida@google.com>
-Date:   Tue, 28 Jul 2020 21:56:52 +0100
-Message-ID: <CAGvU0H=AAPt0wSTh1dyb-aTnG9zeUY6U2uBkmi6K9Bvpuc9YAA@mail.gmail.com>
-Subject: BTF_KIND_FWD enums
-To:     Yonghong Song <yhs@fb.com>
-Cc:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200728125308.GA344@kozik-lap>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+On Tue, Jul 28, 2020 at 02:53:08PM +0200, Krzysztof Kozlowski wrote:
+> On Tue, Jul 28, 2020 at 02:51:23PM +0200, Paul Cercueil wrote:
+> > 
+> > 
+> > Le mar. 28 juil. 2020 à 14:00, Krzysztof Kozlowski <krzk@kernel.org> a écrit
+> > :
+> > > On Tue, Jul 28, 2020 at 01:37:02PM +0200, Thomas Bogendoerfer wrote:
+> > > >  On Tue, Jul 28, 2020 at 01:19:35PM +0200, Krzysztof Kozlowski wrote:
+> > > >  > On Tue, Jul 28, 2020 at 01:12:11PM +0200, Paul Cercueil wrote:
+> > > >  > > Hi Krzysztof,
+> > > >  > >
+> > > >  > > Le mar. 28 juil. 2020 à 12:45, Krzysztof Kozlowski
+> > > > <krzk@kernel.org> a écrit
+> > > >  > > :
+> > > >  > > > The CONFIG_JZ4780_NEMC was previously a default on MIPS but
+> > > > now it has
+> > > >  > > > to be enabled manually.
+> > > >  > > >
+> > > >  > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > >  > >
+> > > >  > > I think you should swap the two so that there are no problems
+> > > > when
+> > > >  > > bisecting.
+> > > >  >
+> > > >  > Good point. I was thinking that it will go via some of MIPS trees
+> > > > and
+> > > >  > the patch #1 will just wait a cycle.  However with acks, I can
+> > > > take it
+> > > >  > through drivers/memory tree.
+> > > > 
+> > > >  I've acked the patch.
+> > > > 
+> > > >  Thomas.
+> > > 
+> > > Thanks but now I noticed that one of changed configs
+> > > (arch/mips/configs/rs90_defconfig) is only in MIPS tree.
+> > > 
+> > > I think it is easier then to take the patch #2 (configs) via MIPS and
+> > > wait with #1 for the next cycle or also take it via MIPS if it applies
+> > > cleanly.
+> > 
+> > Why not take them both in the MIPS tree then? Would that conflict with
+> > changes in your tree?
+> 
+> Exactly (last part of my sentence). There should be no conflicts.
 
-Re: https://github.com/torvalds/linux/commit/9d5f9f701b1891466fb3dbb1806ad97716f95cc3
+I've applied both patches to mips-next.
 
-Both GCC and LLVM support forward-declared (a.k.a. incomplete) enums
-as a language extension -
-https://gcc.gnu.org/onlinedocs/gcc/Incomplete-Enums.html.
+Thomas.
 
-(C++11 has a different notion of incomplete enum type - opaque enum
-declaration - storage size is known but enumerators are not)
-
-Forward-declared enums feature in various places in kernel code and
-allow the usual things to be done (passing around pointers to such).
-I'm curious as to if and how they are they are handled by BTF and
-whether a further change to btf_type is needed:
-
-1. Use BTF_KIND_FWD, with another spare bit to allow up to 4 kinds of
-forward-declaration; or
-2. use BTF_KIND_ENUM, kind_flag 0 and vlen 0 (as empty enums are
-currently illegal C); or
-3. use BTF_KIND_ENUM, kind_flag 1 and vlen 0.
-
-If I had a working pahole -J, I'd test this myself. :-)
-
-$ cat /tmp/en.c
-enum H;
-enum H * fun(enum H * x) { return x; }
-$ clang -Wall -Wextra -ggdb -c /tmp/en.c
-$ build/pahole -J /tmp/en.o
-Segmentation fault
-$ build/pahole -J /dev/null
-btf_elf__new: cannot get elf header.
-ctf__new: cannot get elf header.
-Segmentation fault
-
-My interest here is that I helped add support for incomplete enums to
-libabigail which we're using to monitor kernel ABIs.
-
-Regards,
-Giuliano.
-
-(resend due to email address typo)
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
