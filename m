@@ -2,131 +2,165 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FROM_LOCAL_NOVOWEL,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2266C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC4AC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C78422B49
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6A420656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:11:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNG6JL/O"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BloFnMYM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgG1IJ6 (ORCPT
+        id S1727973AbgG1ILI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:09:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727957AbgG1IJ5 (ORCPT
+        Tue, 28 Jul 2020 04:11:08 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:54328 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727856AbgG1ILH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:09:57 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B5DBC061794;
-        Tue, 28 Jul 2020 01:09:57 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id c6so4500536pje.1;
-        Tue, 28 Jul 2020 01:09:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mO4UW6jhce2IwLYWJIjyNoNVa+Gr5PBQ2rV1LkhhIeA=;
-        b=bNG6JL/O5TVQki3sHfHEOfTczEIMUXR0OLqZGWSVnVXN0YvSLXQj4R1CZin1hIrLmj
-         rDRSSHKktD8YAK18dQ3Ix7Lo07yJ8erIxBxxxxqVLyUXKDeyjbkBvyU6KTuEXDNL+VQr
-         1QQzuFpqB0CYmf+5pX3A4eJDz9R/FeezQPycBuGnXY4EFLSYZVijwWE1t6E2M5B99qAH
-         FniHRX5RxN1gZw65OKCdqnG/UzIrS3ICQ278hYR6IoGyzyd6ykow+PajTtCN7ldzFD83
-         Hcz6o03i9dPHjv0yz+B7ucVCSupfsp/DKM7XkQQq14g4beE60uqTFBLLU79wWmkWweg4
-         xE4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mO4UW6jhce2IwLYWJIjyNoNVa+Gr5PBQ2rV1LkhhIeA=;
-        b=iKbMqv6YWFfTuQyp7LJGhYnHsT7VISK/ULa68hwOyFUZI/8BDvhjrTMntvHOyAhDX4
-         UynKhAIJxwNiSXzNkFYp9E/GcRGLfyKXv2A7lVy8936IjWzzNF44XcisMb6IcKP2rL1M
-         ba3qj5ONlWNertiHBRm8KTIjMBjBocdNSSuOpsWKSGLPBHbo50DY3YUd6BX7+bKEqTrC
-         Ht51HhDDxhNQDotRTCLm9rjvL3zBmGOuVlXUdmTCU65DPAcCGEGdbs88oLpFR64hEZgM
-         DCJ1+I+bAMi8ySkhYONeVzPUaisUoBFYTXkHv5YycxyaqxfS56oAoZFmFYsqR0oFhMzy
-         7QiA==
-X-Gm-Message-State: AOAM533neudT2JA6Nl4ernTNisviKdbOXElKFmdL60zeWfA5qp27R35M
-        hcLkeZiVaZitgDHBJ6PcWz6FUQVmul333YbMd9I=
-X-Google-Smtp-Source: ABdhPJwl2tr9ClL3asn7D0daWCLxpbWcicGBHl3RglmUadciWpYNtKvtb4F0xzOXS215QqSA9z2se3QNEhc8iGYlMEA=
-X-Received: by 2002:a17:90a:8918:: with SMTP id u24mr3082134pjn.7.1595923796912;
- Tue, 28 Jul 2020 01:09:56 -0700 (PDT)
+        Tue, 28 Jul 2020 04:11:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1595923866; x=1627459866;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=4348zSQswPRrH20ua261huy5XthZgYClc7uZbxDiXss=;
+  b=BloFnMYMDUNlfRnyraH1QD+B6QqXi8D6yahBhbSmU7Rn6rIygDFoutO6
+   u1gubUlWHJP1Nin5KJrdtPf24tUGu5NToQD25fMw054axTMYuZl2kI5pb
+   jG+LomAq41K4p9G0e52b5IcxrrgETbmBvnyjZrxu4v7Kh+ZjsnRxb2wDE
+   SjorAN/XwUkGjjQlCs4yRK9NFYGjG6VOANWb2UVxq0NFH1v5+WTfUmxnk
+   Qg+lvl3vqRSVFZhQ/1bPN/FUYpqs0deGPsE3wPMmkYsj9Tnly3VftLlYE
+   3U45BDPl1ZTaSLzdQvm8UrvjMjs0gwcdG3sWupJYIV6ZuDdlI2jeYSJiq
+   w==;
+IronPort-SDR: u0DQ0eKwBMew6XCiVSZ6TNgz94sf4p5fEp5KHy8R4066+bkamL02aFIDa/PnprqNt7eLr68+0O
+ bdwaZdRFNX3d+PZCspEgWoLORjBExQfhW1PLxMGaME/1kwbkmFz8kyYFa9qIp3tufYwjk+pPtN
+ yA1WkCcvGJwbSgD2GHiaHUjIV/LjQK2/8u8bNmSJdo3H8SmAWPfolmFlnNV80IoZpcshXAYiPe
+ q7Cms7O27/x1xxDD5OZksFJvaZIS2LZWhn70jtDPdXSklcadkY8v3um+VybJnSOzHzkwoVqZR1
+ 3LQ=
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="83485204"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Jul 2020 01:11:06 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 28 Jul 2020 01:10:19 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Tue, 28 Jul 2020 01:11:03 -0700
+References: <20200724111404.13293-1-lars.povlsen@microchip.com> <20200724111404.13293-5-lars.povlsen@microchip.com> <20200727203847.GA782308@bogus>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>,
+        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v4 4/6] dt-bindings: snps,dw-apb-ssi: Add sparx5 support, plus rx-sample-delay-ns property
+In-Reply-To: <20200727203847.GA782308@bogus>
+Date:   Tue, 28 Jul 2020 10:11:02 +0200
+Message-ID: <87sgdcf4a1.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-References: <20200728051153.1590-1-rppt@kernel.org> <20200728051153.1590-4-rppt@kernel.org>
-In-Reply-To: <20200728051153.1590-4-rppt@kernel.org>
-From:   Max Filippov <jcmvbkbc@gmail.com>
-Date:   Tue, 28 Jul 2020 01:09:45 -0700
-Message-ID: <CAMo8Bf+VKHmAm1GV=0D9Um2mpsxjnwp9WrAJq_eKW1MK+_8r6g@mail.gmail.com>
-Subject: Re: [PATCH 03/15] arm, xtensa: simplify initialization of high memory pages
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-riscv@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        "open list:SUPERH" <linux-sh@vger.kernel.org>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org,
-        "open list:SPARC + UltraSPAR..." <sparclinux@vger.kernel.org>,
-        "moderated list:H8/300 ARCHITECTURE" 
-        <uclinux-h8-devel@lists.sourceforge.jp>,
-        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 10:12 PM Mike Rapoport <rppt@kernel.org> wrote:
->
-> From: Mike Rapoport <rppt@linux.ibm.com>
->
-> The function free_highpages() in both arm and xtensa essentially open-code
-> for_each_free_mem_range() loop to detect high memory pages that were not
-> reserved and that should be initialized and passed to the buddy allocator.
->
-> Replace open-coded implementation of for_each_free_mem_range() with usage
-> of memblock API to simplify the code.
->
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/arm/mm/init.c    | 48 +++++++------------------------------
->  arch/xtensa/mm/init.c | 55 ++++++++-----------------------------------
->  2 files changed, 18 insertions(+), 85 deletions(-)
 
-For the xtensa part:
-Reviewed-by: Max Filippov <jcmvbkbc@gmail.com>
-Tested-by: Max Filippov <jcmvbkbc@gmail.com>
+Rob Herring writes:
+
+> On Fri, Jul 24, 2020 at 01:14:02PM +0200, Lars Povlsen wrote:
+>> This has the following changes for the snps,dw-apb-ss DT bindings:
+>>
+>> - Add "microchip,sparx5-spi" as the compatible for the Sparx5 SoC
+>>   controller
+>>
+>> - Add the property "rx-sample-delay-ns"
+>>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>> ---
+>>  .../bindings/spi/snps,dw-apb-ssi.yaml         | 21 +++++++++++++++++++
+>>  1 file changed, 21 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+>> index c62cbe79f00dd..c0adaad1aa695 100644
+>> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+>> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+>> @@ -36,6 +36,8 @@ properties:
+>>                - mscc,ocelot-spi
+>>                - mscc,jaguar2-spi
+>>            - const: snps,dw-apb-ssi
+>> +      - description: Microchip Sparx5 SoC SPI Controller
+>> +        const: microchip,sparx5-spi
+>>        - description: Amazon Alpine SPI Controller
+>>          const: amazon,alpine-dw-apb-ssi
+>>        - description: Renesas RZ/N1 SPI Controller
+>> @@ -93,6 +95,12 @@ properties:
+>>        - const: tx
+>>        - const: rx
+>>
+>> +  rx-sample-delay-ns:
+>> +    description: Default value of the rx-sample-delay-ns property.
+>> +      This value will be used if the property is not explicitly defined
+>> +      for a SPI slave device. Default value is 0. See below.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>
+> Don't need a type for properties with unit suffixes.
+>
+> Also, add:
+>
+> 'default: 0'
+>
+
+Hi Rob!
+
+Thank you for your input, all duly noted.
+
+---Lars
+
+>> +
+>>  patternProperties:
+>>    "^.*@[0-9a-f]+$":
+>>      type: object
+>> @@ -107,6 +115,13 @@ patternProperties:
+>>        spi-tx-bus-width:
+>>          const: 1
+>>
+>> +      rx-sample-delay-ns:
+>> +        description: SPI Rx sample delay offset, unit is nanoseconds.
+>> +          The delay from the default sample time before the actual
+>> +          sample of the rxd input signal occurs. The "rx_sample_delay"
+>> +          is an optional feature of the designware controller, and the
+>> +          upper limit is also subject to controller configuration.
+>> +
+>>  unevaluatedProperties: false
+>>
+>>  required:
+>> @@ -129,5 +144,11 @@ examples:
+>>        num-cs = <2>;
+>>        cs-gpios = <&gpio0 13 0>,
+>>                   <&gpio0 14 0>;
+>> +      rx-sample-delay-ns = <3>;
+>> +      spi-flash@1 {
+>> +        compatible = "spi-nand";
+>> +        reg = <1>;
+>> +        rx-sample-delay-ns = <7>;
+>> +      };
+>>      };
+>>  ...
+>> --
+>> 2.27.0
+>>
 
 -- 
-Thanks.
--- Max
+Lars Povlsen,
+Microchip
