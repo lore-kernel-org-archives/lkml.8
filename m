@@ -2,80 +2,127 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67112C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF43C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD3C206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:53:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KSqMSEQh"
+	by mail.kernel.org (Postfix) with ESMTP id CD8BB206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:53:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595940795;
+	bh=MUYeD3GgXET3a0ZBeONuYlRGXszH+aPH/3QIHvyXtSI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uW6L2KQByztfvmWwJrm8ukJNiNgAY/ARPEndtgWkZmvyWyN3gspGr4aTlg6Rx73z9
+	 +7c0hWWl88lip04tkgf0MyKW98KQs6b/eavlSqV9zh9ioFVfHKbchRkmRESAxFAiqa
+	 EPg3ZPf9n3VCPyeDVWrtCyiU0+0apfWab87pHSDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729917AbgG1MxB (ORCPT
+        id S1729938AbgG1MxN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:53:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729334AbgG1MxA (ORCPT
+        Tue, 28 Jul 2020 08:53:13 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44250 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729334AbgG1MxN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:53:00 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68798C061794;
-        Tue, 28 Jul 2020 05:53:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=UgVQRvZJixUv6JYF5NwVa4T32Vg00H3gT3hmhAxa1kQ=; b=KSqMSEQhA17NtjqHKn38xSqgt6
-        zHXQfifZ84Dd/efwyw+dirBDJqvLC1ttSvegpdnN33kR1bp/fCib/TlHEXuKnVQT1HmvSbSk3njbb
-        9LtNUsK8XHesz0Mt23dTG9VhCrlAwlobY/ULokJMsD5xzuLP4dzjDnOOumMqQfeV1/tk5L6wOkiiP
-        Dv/dioQHpy1SnvQZB/A7dRpyQzvcKuDQfQKPZZAHrejYtJQd5OazIYgTL7tSaBOklThF3COFZKdql
-        ZPjlim/3ReNbMJTVnVpjgP/YnRA9k5k4N7vkKUe3zGyDgUCDZR3eOvzFknYZZJG2Y9F/Zvr7Z8nHm
-        URVU2h3A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0P6E-0003Fs-2g; Tue, 28 Jul 2020 12:52:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5751A304B6D;
-        Tue, 28 Jul 2020 14:52:53 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E5B7B29DE295A; Tue, 28 Jul 2020 14:52:52 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 14:52:52 +0200
-From:   peterz@infradead.org
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, Neil Brown <neilb@suse.de>
-Subject: Re: Minor RST rant
-Message-ID: <20200728125252.GW119549@hirez.programming.kicks-ass.net>
-References: <20200724132200.51fd2065@oasis.local.home>
- <20200724113325.44923f75@lwn.net>
+        Tue, 28 Jul 2020 08:53:13 -0400
+Received: by mail-ed1-f65.google.com with SMTP id l23so1025273edv.11;
+        Tue, 28 Jul 2020 05:53:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=aoCohgM246EUm7c+IU2iz8TlLWtEE6nHvR4AuaMzzq0=;
+        b=A+RWy9RG/DaVQmClxni0+PQRH0Aq7wf4TN3x02G/8HQ8wXr9ZXUJdBtQMtfhVdNjPp
+         UN7CCgPdFf8gDkvGnz51TavYCuJ+FtX3T0Xhv5NEldOeDJV1d158AK+UfgntsV7T5EPF
+         PeZCD8vCjN2fHHpJ2SbbUXjG4BAVVOK8BTMsEgJStxu0dS2yPwkg+Z+4+x51/gNIlR/d
+         4/dtdJ7Ma8fU0825tsQ1gJe0NWwP0YCvK0nDjqPFhGX2PqtQoaV5R/HdTEw3WKP8k/Rs
+         x0aW2fOgZE8CakI7IJfaSlRYxJ/Z23Kw9z3zKC7pxxKaN4FxTXAAc14zmAu+v2VAU2ZA
+         dIYQ==
+X-Gm-Message-State: AOAM530SED0xhSSVB6in9U2c/LqrUyLKHx04ctQOSEvm5oRPowNXK6fX
+        h4H2QMqDufrevcp9u10RgmcPDPf/ETyB2g==
+X-Google-Smtp-Source: ABdhPJxH8Aapziu8x9pLUdnaSQlT6hli/1SMb8+n9iq8PlALrH7ZCRzaMDSKEa4FQvyxrSaFbhW38w==
+X-Received: by 2002:aa7:d607:: with SMTP id c7mr531808edr.184.1595940791369;
+        Tue, 28 Jul 2020 05:53:11 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id dc12sm7681660ejb.124.2020.07.28.05.53.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jul 2020 05:53:10 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 14:53:08 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 2/2] MIPS: ingenic: Enable JZ4780_NEMC manually
+Message-ID: <20200728125308.GA344@kozik-lap>
+References: <20200728104503.23655-1-krzk@kernel.org>
+ <20200728104503.23655-2-krzk@kernel.org>
+ <B4F6EQ.WB2WZOY40FDR@crapouillou.net>
+ <20200728111935.GA26683@kozik-lap>
+ <20200728113702.GB13443@alpha.franken.de>
+ <20200728120035.GA28766@kozik-lap>
+ <NPJ6EQ.I4K2FZ2BHH1E@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200724113325.44923f75@lwn.net>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <NPJ6EQ.I4K2FZ2BHH1E@crapouillou.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 11:33:25AM -0600, Jonathan Corbet wrote:
+On Tue, Jul 28, 2020 at 02:51:23PM +0200, Paul Cercueil wrote:
+> 
+> 
+> Le mar. 28 juil. 2020 à 14:00, Krzysztof Kozlowski <krzk@kernel.org> a écrit
+> :
+> > On Tue, Jul 28, 2020 at 01:37:02PM +0200, Thomas Bogendoerfer wrote:
+> > >  On Tue, Jul 28, 2020 at 01:19:35PM +0200, Krzysztof Kozlowski wrote:
+> > >  > On Tue, Jul 28, 2020 at 01:12:11PM +0200, Paul Cercueil wrote:
+> > >  > > Hi Krzysztof,
+> > >  > >
+> > >  > > Le mar. 28 juil. 2020 à 12:45, Krzysztof Kozlowski
+> > > <krzk@kernel.org> a écrit
+> > >  > > :
+> > >  > > > The CONFIG_JZ4780_NEMC was previously a default on MIPS but
+> > > now it has
+> > >  > > > to be enabled manually.
+> > >  > > >
+> > >  > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > >  > >
+> > >  > > I think you should swap the two so that there are no problems
+> > > when
+> > >  > > bisecting.
+> > >  >
+> > >  > Good point. I was thinking that it will go via some of MIPS trees
+> > > and
+> > >  > the patch #1 will just wait a cycle.  However with acks, I can
+> > > take it
+> > >  > through drivers/memory tree.
+> > > 
+> > >  I've acked the patch.
+> > > 
+> > >  Thomas.
+> > 
+> > Thanks but now I noticed that one of changed configs
+> > (arch/mips/configs/rs90_defconfig) is only in MIPS tree.
+> > 
+> > I think it is easier then to take the patch #2 (configs) via MIPS and
+> > wait with #1 for the next cycle or also take it via MIPS if it applies
+> > cleanly.
+> 
+> Why not take them both in the MIPS tree then? Would that conflict with
+> changes in your tree?
 
-> I'm not sure what to do other than to continue to push for minimal use of
-> intrusive markup.
+Exactly (last part of my sentence). There should be no conflicts.
 
-Perhaps make it clearer in:
+Best regards,
+Krzysztof
 
-  Documentation/doc-guide/
-
-because people claim they follow that, but the result is that I get
-completely unreadable garbage from them.
-
-Like I've written many times before, I'm starting to loathe RST, it's an
-absolute failure. I'm near the point where I'm looking to write a script
-that will silently convert any RST crap to plain text in my commit
-script.
