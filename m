@@ -2,206 +2,138 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E11B4C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE718C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0EDA206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF120206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:25:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="IkEQ1WD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbgG1NZK (ORCPT
+        id S1730136AbgG1NZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:25:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8845 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729991AbgG1NZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:25:10 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 54E0D1848A8AC4BCBBAC;
-        Tue, 28 Jul 2020 21:24:51 +0800 (CST)
-Received: from [10.174.178.63] (10.174.178.63) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 28 Jul 2020 21:24:43 +0800
-Subject: Re: [PATCH 1/4] drivers/perf: Add support for ARMv8.3-SPE
-To:     Leo Yan <leo.yan@linaro.org>, Will Deacon <will@kernel.org>
-CC:     Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        <zhangshaokun@hisilicon.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, <guohanjun@huawei.com>
-References: <20200724091607.41903-1-liwei391@huawei.com>
- <20200724091607.41903-2-liwei391@huawei.com>
- <20200728122742.GB4343@leoy-ThinkPad-X240s>
-From:   "liwei (GF)" <liwei391@huawei.com>
-Message-ID: <c2ce17a9-bd3a-e828-fe76-769c9feabece@huawei.com>
-Date:   Tue, 28 Jul 2020 21:24:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.0
+        Tue, 28 Jul 2020 09:25:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729991AbgG1NZU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 09:25:20 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86F6C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:25:19 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b6so18281703wrs.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:25:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BnkqZuh++8Nyz7qDB61TIgg/e9h5HC3HmU88l0fPREc=;
+        b=IkEQ1WD+oaOYJMt5V3vCBqnKqZKVOHp8IcfCmTzu+QgfrApn64nxDuQpGAigx7KDcM
+         LLcdPwmr1jSXVhKAatNz03GzLs/6Vlh39NC/O6LMa3vzgjAobOFGkZUu6uHjRP7JWYCo
+         MCkZ0nbEhKkbR82cTawPX+gM0Pk10AhqCeaKm/m/KXCgWpZh2h2Kej6t/7FaDi+Cm8q/
+         lPZwDiS7RXO/UymIExdM6ThIecB8y8005n0nmGVDr9uXishRVOb3iTtgJ2AD/nyJL9hy
+         XhKOeGQ71pP32Y5y8Q5rEIQdYxSfzCReD1hBJj+xRGf+EPGkpsaDW52Pnq0Lbfr1sNzl
+         lOdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BnkqZuh++8Nyz7qDB61TIgg/e9h5HC3HmU88l0fPREc=;
+        b=kkWxNOjrwtaoV5q0S9yR/HBvbcOe0/UZt5f6HH2pnTtnlOQ/HN9GuxL+Hxcp3c3MT8
+         1CTNhfVbQ+Wl16HzebK5HX0O9LhxZ6M5fKN2ZFehEvaHRlMPVWcAgz/OtrD2uAnP5WYF
+         AfLnP6y3Uzbd3n3RGt8mtA0kwFKr/jeemECQ5Luh2QCkVNuVVVs21vbVbbPNG0bX9NqH
+         smccxcbJm061SmFGfSBdSK0+k8Je9AHl2I5NfpjaAkJH7oX3w52vnxpE2ufaF9ykL3ss
+         fO/O1dR1yLzUvlTK3RCjWMKhjP+28vi1j/8LwfDYabyf4L0EOEWAQF1KYcjdbOrV0RmO
+         QZcw==
+X-Gm-Message-State: AOAM533Z1ILv9jd63qlEtRgBCdXtRgi/drGjxNqjmnb8Zp2FUs67fadE
+        NtGQPeDIHKCh7W23qnS5LSjqqIxD4Gc0GB7qAc+rUQ==
+X-Google-Smtp-Source: ABdhPJzKZMW4yeHYoMhjbyXIdKK5EP7J/ukIUn/pmswXVcXcrqcKNtmYRDkd8iXjV/fJdX3O+1cYpgFt/HQXuTMKnNc=
+X-Received: by 2002:a5d:6681:: with SMTP id l1mr23866783wru.47.1595942718473;
+ Tue, 28 Jul 2020 06:25:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200728122742.GB4343@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.178.63]
-X-CFilter-Loop: Reflected
+References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+ <73684b1e4872a1113f6c3bb5404bc6b4a20f130d.1594230107.git-series.maxime@cerno.tech>
+In-Reply-To: <73684b1e4872a1113f6c3bb5404bc6b4a20f130d.1594230107.git-series.maxime@cerno.tech>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Tue, 28 Jul 2020 14:25:02 +0100
+Message-ID: <CAPY8ntAtRJYRi6mG19zQEWLjbnVKaQKvTZcP8EB+-csOeSz6rg@mail.gmail.com>
+Subject: Re: [PATCH v4 59/78] drm/vc4: hdmi: Add CEC support flag
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Leo,
+Hi Maxime
 
-On 2020/7/28 20:27, Leo Yan wrote:
-> Hi Wei,
-> 
-> On Fri, Jul 24, 2020 at 05:16:04PM +0800, Wei Li wrote:
->> Armv8.3 extends the SPE by adding:
->> - Alignment field in the Events packet, and filtering on this event
->>   using PMSEVFR_EL1.
->> - Support for the Scalable Vector Extension (SVE).
->>
->> The main additions for SVE are:
->> - Recording the vector length for SVE operations in the Operation Type
->>   packet. It is not possible to filter on vector length.
->> - Incomplete predicate and empty predicate fields in the Events packet,
->>   and filtering on these events using PMSEVFR_EL1.
->>
->> Update the check of pmsevfr for empty/partial predicated SVE and
->> alignment event in kernel driver.
->>
->> Signed-off-by: Wei Li <liwei391@huawei.com>
->> ---
->>  arch/arm64/include/asm/sysreg.h |  4 +++-
->>  drivers/perf/arm_spe_pmu.c      | 18 ++++++++++++++----
->>  2 files changed, 17 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
->> index 463175f80341..be4c44ccdb56 100644
->> --- a/arch/arm64/include/asm/sysreg.h
->> +++ b/arch/arm64/include/asm/sysreg.h
->> @@ -281,7 +281,6 @@
->>  #define SYS_PMSFCR_EL1_ST_SHIFT		18
->>  
->>  #define SYS_PMSEVFR_EL1			sys_reg(3, 0, 9, 9, 5)
->> -#define SYS_PMSEVFR_EL1_RES0		0x0000ffff00ff0f55UL
->>  
->>  #define SYS_PMSLATFR_EL1		sys_reg(3, 0, 9, 9, 6)
->>  #define SYS_PMSLATFR_EL1_MINLAT_SHIFT	0
->> @@ -769,6 +768,9 @@
->>  #define ID_AA64DFR0_PMUVER_8_5		0x6
->>  #define ID_AA64DFR0_PMUVER_IMP_DEF	0xf
->>  
->> +#define ID_AA64DFR0_PMSVER_8_2		0x1
->> +#define ID_AA64DFR0_PMSVER_8_3		0x2
->> +
->>  #define ID_DFR0_PERFMON_SHIFT		24
->>  
->>  #define ID_DFR0_PERFMON_8_1		0x4
->> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
->> index e51ddb6d63ed..5ec7ee0c8fa1 100644
->> --- a/drivers/perf/arm_spe_pmu.c
->> +++ b/drivers/perf/arm_spe_pmu.c
->> @@ -54,7 +54,7 @@ struct arm_spe_pmu {
->>  	struct hlist_node			hotplug_node;
->>  
->>  	int					irq; /* PPI */
->> -
->> +	int					pmuver;
-> 
-> Since the version number is only 4 bits width, 'u16' would be enough
-> to record SPE version number.
+On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Similarly to the audio support, CEC support is not there yet for the
+> BCM2711, so let's skip entirely the CEC initialization through a variant
+> flag.
 
-Sounds reasonable, i can change it to 'u16' if you insist.
+CEC is sorted now, but it's easier & cleaner to keep this patch and
+add a new patchset that enables CEC at a later date.
 
->>  	u16					min_period;
->>  	u16					counter_sz;
->>  
->> @@ -80,6 +80,15 @@ struct arm_spe_pmu {
->>  /* Keep track of our dynamic hotplug state */
->>  static enum cpuhp_state arm_spe_pmu_online;
->>  
->> +static u64 sys_pmsevfr_el1_mask[] = {
->> +	[ID_AA64DFR0_PMSVER_8_2] = GENMASK_ULL(63, 48) | GENMASK_ULL(31, 24) |
->> +		GENMASK_ULL(15, 12) | BIT_ULL(7) | BIT_ULL(5) | BIT_ULL(3) |
->> +		BIT_ULL(1),
->> +	[ID_AA64DFR0_PMSVER_8_3] = GENMASK_ULL(63, 48) | GENMASK_ULL(31, 24) |
->> +		GENMASK_ULL(18, 17) | GENMASK_ULL(15, 11) | BIT_ULL(7) |
->> +		BIT_ULL(5) | BIT_ULL(3) | BIT_ULL(1),
->> +};
-> 
-> Seems to me, the definitions for Aarch64 system registers should be
-> placed into the file 'arch/arm64/include/asm/sysreg.h'.  Like below
-> two macros:
-> 
->   #define SYS_PMSEVFR_EL1_RES0_8_2		0x0000ffff00ff0f55UL
->   #define SYS_PMSEVFR_EL1_RES0_8_3		...
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
-I really think using GENMASK_ULL() to generate the mask is better than a definition
-with magic number. It is beneficial to be reviewed and extended later.
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-> Let's wait for Will or Mark Rutland's comments for this, in case I
-> mislead for this.
->> +
->>  enum arm_spe_pmu_buf_fault_action {
->>  	SPE_PMU_BUF_FAULT_ACT_SPURIOUS,
->>  	SPE_PMU_BUF_FAULT_ACT_FATAL,
->> @@ -670,7 +679,7 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
->>  	    !cpumask_test_cpu(event->cpu, &spe_pmu->supported_cpus))
->>  		return -ENOENT;
->>  
->> -	if (arm_spe_event_to_pmsevfr(event) & SYS_PMSEVFR_EL1_RES0)
->> +	if (arm_spe_event_to_pmsevfr(event) & ~sys_pmsevfr_el1_mask[spe_pmu->pmuver])
->>  		return -EOPNOTSUPP;
->>  
->>  	if (attr->exclude_idle)
->> @@ -937,6 +946,7 @@ static void __arm_spe_pmu_dev_probe(void *info)
->>  			fld, smp_processor_id());
->>  		return;
->>  	}
->> +	spe_pmu->pmuver = fld;
->>  
->>  	/* Read PMBIDR first to determine whether or not we have access */
->>  	reg = read_sysreg_s(SYS_PMBIDR_EL1);
->> @@ -1027,8 +1037,8 @@ static void __arm_spe_pmu_dev_probe(void *info)
->>  	}
->>  
->>  	dev_info(dev,
->> -		 "probed for CPUs %*pbl [max_record_sz %u, align %u, features 0x%llx]\n",
->> -		 cpumask_pr_args(&spe_pmu->supported_cpus),
->> +		 "v%d probed for CPUs %*pbl [max_record_sz %u, align %u, features 0x%llx]\n",
-> 
-> Let's output explict info, like:
-> 
->   "probed for CPUs %*pbl [pmuver %d, max_record_sz %u, align %u, features 0x%llx]\n",
-> 
-
-Agree, and i have a little question here:
-Currently, the of_compatible of SPE PMU is "arm,statistical-profiling-extension-v1", and
-the platform_device name is "arm,spe-v1". So this message looks weird when supporting
-ARMv8.3-SPE because the pmuver is 2.
-
-As the version of SPE can be probed by reading 'ID_AA64DFR0_EL1.PMSVer', can we remove
-the version hint in of_compatible and platform_device name?
-
-> 
->> +		 spe_pmu->pmuver, cpumask_pr_args(&spe_pmu->supported_cpus),
->>  		 spe_pmu->max_record_sz, spe_pmu->align, spe_pmu->features);
->>  
->>  	spe_pmu->features |= SPE_PMU_FEAT_DEV_PROBED;
->> -- 
->> 2.17.1
->>
-
-Thanks,
-Wei
+> ---
+>  drivers/gpu/drm/vc4/vc4_hdmi.c | 4 ++++
+>  drivers/gpu/drm/vc4/vc4_hdmi.h | 3 +++
+>  2 files changed, 7 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> index 8cd08b541c14..86e21de6c578 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> @@ -1179,6 +1179,9 @@ static int vc4_hdmi_cec_init(struct vc4_hdmi *vc4_hdmi)
+>         u32 value;
+>         int ret;
+>
+> +       if (!vc4_hdmi->variant->cec_available)
+> +               return 0;
+> +
+>         vc4_hdmi->cec_adap = cec_allocate_adapter(&vc4_hdmi_cec_adap_ops,
+>                                                   vc4_hdmi, "vc4",
+>                                                   CEC_CAP_DEFAULTS |
+> @@ -1477,6 +1480,7 @@ static int vc4_hdmi_dev_remove(struct platform_device *pdev)
+>  static const struct vc4_hdmi_variant bcm2835_variant = {
+>         .encoder_type           = VC4_ENCODER_TYPE_HDMI0,
+>         .debugfs_name           = "hdmi_regs",
+> +       .cec_available          = true,
+>         .registers              = vc4_hdmi_fields,
+>         .num_registers          = ARRAY_SIZE(vc4_hdmi_fields),
+>
+> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
+> index 794216f3228d..3f07aebe89f1 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
+> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
+> @@ -33,6 +33,9 @@ struct vc4_hdmi_variant {
+>         /* Filename to expose the registers in debugfs */
+>         const char *debugfs_name;
+>
+> +       /* Set to true when the CEC support is available */
+> +       bool cec_available;
+> +
+>         /* List of the registers available on that variant */
+>         const struct vc4_hdmi_register *registers;
+>
+> --
+> git-series 0.9.1
