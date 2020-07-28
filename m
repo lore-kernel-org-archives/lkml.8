@@ -2,194 +2,204 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EDAC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908D5C433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58406206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DEA520663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:05:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JoitJ2UP"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="VDauPB6q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730605AbgG1PFI (ORCPT
+        id S1730615AbgG1PFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:05:08 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:53395 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730558AbgG1PFI (ORCPT
+        Tue, 28 Jul 2020 11:05:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730558AbgG1PFO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:05:08 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200728150506euoutp027fff04737d43944d232e78095bb1ebf4~l8uSht_ro0522505225euoutp025
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 15:05:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200728150506euoutp027fff04737d43944d232e78095bb1ebf4~l8uSht_ro0522505225euoutp025
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1595948706;
-        bh=+jPJ4jLPZRlRRWDMyw7UrrbUfNlzvkLzijZOathISTs=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=JoitJ2UPs2jBibLt7w/WwDp6Tbm0ijMBZ6o3rAS12jgldGHIsCQQepamP7CnSSiVj
-         Lw+Sh9Zl1Cr4BfkJrs75jig0VQLV+nBIVmd0TPJPAWpXuDCLMMGkH80nAf9KehJhaN
-         /QH8QNCJpQeHFsr/eEqQ5d51nxRrh/Nrr2xT0iMk=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200728150506eucas1p214e6b64b60b624fef376c8cf9320d31e~l8uSB1xV62602526025eucas1p2U;
-        Tue, 28 Jul 2020 15:05:06 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id B9.EB.06318.2AE302F5; Tue, 28
-        Jul 2020 16:05:06 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200728150505eucas1p28f7907c32b5cdb2259520197e602d9d4~l8uRteI7a2196021960eucas1p2h;
-        Tue, 28 Jul 2020 15:05:05 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200728150505eusmtrp1a911fed0ff536f13ff87e5a554885c6c~l8uRsya7v2594525945eusmtrp1S;
-        Tue, 28 Jul 2020 15:05:05 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-ec-5f203ea2e55d
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id E8.53.06314.1AE302F5; Tue, 28
-        Jul 2020 16:05:05 +0100 (BST)
-Received: from [106.210.85.205] (unknown [106.210.85.205]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200728150504eusmtip17a30673d18eef82b371bf0f3e7d88d37~l8uQC7qFf3170531705eusmtip1h;
-        Tue, 28 Jul 2020 15:05:03 +0000 (GMT)
-Subject: Re: [PATCH v9 0/4] driver core: add probe error check helper
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-kernel@vger.kernel.org,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        andy.shevchenko@gmail.com, Mark Brown <broonie@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <e55a23bf-59bb-43c6-f7d7-467c282b8648@samsung.com>
-Date:   Tue, 28 Jul 2020 17:05:03 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        Tue, 28 Jul 2020 11:05:14 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B41CC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:05:14 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id k20so10874490wmi.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:05:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QxDxVmK0BEhYtrvSw5SuThDITVSJ95nih7WzyiY6TNg=;
+        b=VDauPB6qRa6EVmiLT86Ab8sjixBlVTgYVNP2bABJh0xjtT82MKXtQJK3Z5h7KqZ3d4
+         uSpRCjnz0Yg9q9x1ZbVj153pUmP+mCTVPXtxJ6IP5eOAdGIJSU4nKxLS+8cSaHnoiQao
+         CB2BD8pizBCd9Ha4rSekIKmR2fhY7FnWKT7XJW57jUuZZwCYEtR7u14Ru7AGMPBh0OTO
+         Q6g33s+bCkq3Q0zZV7yRzeQMhJMXu4Ca2zbTHYwozgqWmdKaAj4Bum6EWT5HPEStgfXL
+         sXMe0jfVI1jninOuMAHb+YTlPnO1lhcuEC3qr0TZsH41UeiOAghvZZCJsStR8CIjV4sU
+         HJCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QxDxVmK0BEhYtrvSw5SuThDITVSJ95nih7WzyiY6TNg=;
+        b=D+XQa04YDIyHSrHl3ZVKB8MtoQGVwmRuk2IhKA4fPXMz3COlR/f58DG0fYYBqyoBIv
+         vZos9gHZB55a/Dl0mwFGZ363xMQtgNG39mMpXWiW2Ep8ROy27R5VdLT5y4FzzwUFM/jY
+         quTnJtV6MpZZPZraVffPP5lCgaH96POLSC7+j4BYNEwXLI9RkVV9W+df0uQ0ZSgl6jf/
+         Qoc+FrmSrVAVRAYOrZOwWjM6y3j1G+riJod+xPizTOjtWcAAVqV8rGIFH68s5U5AtMC0
+         UbjnUUXIyaSeI/wRnd9GpSIur4E7z4I2eqAg6VaJdMixQGImmfcqqAaBZNLTd/sYGR8D
+         cizw==
+X-Gm-Message-State: AOAM533BJ5rywnVZ+KiJ19ds4jAMa/5xyNdTBKCCrGaoRrEfUwbTzz6h
+        9JHMr1PbtgeAU9Sn1Ye6+C4bWeG0dA9sWc2YduhutA==
+X-Google-Smtp-Source: ABdhPJxHDPQtTTZrTbY1UZTbWSdu5PQ3WiVqQT+/t87lD4d4Ysa2XPJ/+sSgBPjyp+BLtkMVXpvAwGoDl0RydJrSoIw=
+X-Received: by 2002:a7b:cf18:: with SMTP id l24mr4400512wmg.116.1595948713057;
+ Tue, 28 Jul 2020 08:05:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200713144324.23654-1-a.hajda@samsung.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+XbOzo7W5HNZezErG/SHRa2cxRFD7EYn6IagUZE686ClM9u0
-        zAqHN9TKrLByqYkpmVnm3Fpaac3IzEy7iUIxYoVZ2govqWnk8Szyv9/3Ps97eeCjCdl3sSd9
-        ID6R08ar4xSUK3n36VjH8rJA7/CVn4dppi+/GTG1l2vETMHHTxTzdthBMenXaijm3a8+gmnt
-        f0cyOefKJYzR3iVm3jQUUYy14CFibj35IGGseXuZ4qECIsiNfdP1imAd3ZkStt7wQcJeyS4U
-        s8aqHIp9lv9axDYVV0tY26kWEVtXnsrmmaoQ++jMBZIdNC7cOXuP69ooLu7AEU6rDIxwjbn9
-        e1KUMOCePN5ipfTILs1FLjRgPxhsyxLlIldahisRpF3MEguPIQTV3bVOZRBB50iX5F/LkHmQ
-        4FmGryOw9LoJJgeCiZIBES/MwZugymImefbAKjjbbpDwJgKbSDhnKRDzAoV9YLKuh+JZigNB
-        3587zSReAhef1CGe5+IwqOmziASPO7QWfpoaStMu2B+u5u3iywReBJaBIkJgOaQN3ZiOALiQ
-        hka7jRCu3ghF/U9FAs+Bry0mZxovaLtwmhQ4FWyVGYTQnI3AfKfe2RwA71+OU/xiYuromgal
-        UF4HIyW9BF8G7AbdA+7CDW5w/u4lZ1kK2Vkywb0YbO1m50A5VHQOU/lIYZgRzDAjjWFGGsP/
-        vaWIrEJyLkmnieZ0qnju6AqdWqNLio9esf+QxoimfmHbn5bhe6hxItKKMI0Us6WX53qHy8Tq
-        I7pjGisCmlB4SNe3t4XJpFHqYymc9lC4NimO01nRfJpUyKWqsr59MhytTuRiOS6B0/5TRbSL
-        px4RnsXBQT0deduWncjw2asaDTXZvX3O7Av1xiURmuaS3ck/M/UvbPN3dCx4/sX3ODps7t5S
-        WNqQru+sPuj32F/5IOekvf5+fcj2EDbFPkZu2BKlQXKTP3daqQzb+i14W7YjQRGwefXNg7GR
-        PY9l80ZDKtZI9T9MsxzhyNjk26vyUpC6GPWqpYRWp/4LOK3SioEDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42I5/e/4Xd2FdgrxBsd7jSxeTjjMaLFxxnpW
-        i6kPn7BZXPn6ns2iefF6Nour318yW5x8c5XFonPiEnaLTY+vsVpc3jWHzeLQ1L2MFmuP3GW3
-        ONQXbTH3y1RmBz6Py9cuMnu8v9HK7rFz1l12j9kdM1k9Nq3qZPM4MeESk8f+uWvYPe53H2fy
-        2Lyk3qNvyypGjwO9k1k8Pm+SC+CJ0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7Uy
-        MlXSt7NJSc3JLEst0rdL0MtY9/svU8FbwYpfxw+xNTA+5u1i5OSQEDCR+LL1M3MXIxeHkMBS
-        RomVb7pYIBLiErvnv2WGsIUl/lzrYoMoessosWD+cXaQhLCAq8Sq7VvBGkQEjCX6z85iByli
-        FtjFIrF60kNWiI4eRokDbw4yglSxCWhK/N18kw3E5hWwk2h40wVmswioSkw7shmsRlQgTmL5
-        lvnsEDWCEidnPgHawMHBKWApMb8vHCTMLGAmMW/zQ2YIW15i+9s5ULa4RNOXlawTGIVmIeme
-        haRlFpKWWUhaFjCyrGIUSS0tzk3PLTbUK07MLS7NS9dLzs/dxAiM/23Hfm7ewXhpY/AhRgEO
-        RiUe3g/iCvFCrIllxZW5hxglOJiVRHidzp6OE+JNSaysSi3Kjy8qzUktPsRoCvTbRGYp0eR8
-        YGrKK4k3NDU0t7A0NDc2NzazUBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAyGHMY6BoUNj+
-        4+xEozXpdfn7ilfn/7mR/7Q++PC1d6EloY9+CyeJ6t6LKHrFfXvvCYdFedVb2m69cxPwDn08
-        4Vzg0vXrFSJNvlpu+1FROkdFSGCyurxiyu/JFzx28HxxUDpy4aLQLO9YFqXcw8rhHgzJvLf+
-        m3QzJnBL+Av3vTjQ9DmZY46cEktxRqKhFnNRcSIA9crzRBUDAAA=
-X-CMS-MailID: 20200728150505eucas1p28f7907c32b5cdb2259520197e602d9d4
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200713144331eucas1p25911c4ffa9315f632d8f6dd833588981
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200713144331eucas1p25911c4ffa9315f632d8f6dd833588981
-References: <CGME20200713144331eucas1p25911c4ffa9315f632d8f6dd833588981@eucas1p2.samsung.com>
-        <20200713144324.23654-1-a.hajda@samsung.com>
+References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+ <496aecbe04aa460572d4ff02a64e77ca01368316.1594230107.git-series.maxime@cerno.tech>
+In-Reply-To: <496aecbe04aa460572d4ff02a64e77ca01368316.1594230107.git-series.maxime@cerno.tech>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Tue, 28 Jul 2020 16:04:55 +0100
+Message-ID: <CAPY8ntDwJfBFLmJA8cHpkKXu5EicsZWoa8f7Pvh8jPuXYQ_ScQ@mail.gmail.com>
+Subject: Re: [PATCH v4 71/78] drm/vc4: hdmi: Implement finer-grained hooks
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hi Maxime
 
-Apparently the patchset has no more comments.
+On Wed, 8 Jul 2020 at 18:44, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> In order to prevent some pixels getting stuck in an unflushable FIFO on
+> bcm2711, we need to enable the HVS, the pixelvalve (the CRTC) and the HDMI
+> controller (the encoder) in an intertwined way, and with tight delays.
+>
+> However, the atomic callbacks don't really provide a way to work with
+> either constraints, so we need to roll our own callbacks so that we can
+> provide those guarantees.
+>
+> Since those callbacks have been implemented and called in the CRTC code, we
+> can just implement them in the HDMI driver now.
+>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
-Could you take the patches to your tree? At least 1st and 2nd.
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-
-Regards
-
-Andrzej
-
-
-On 13.07.2020 16:43, Andrzej Hajda wrote:
-> Hi All,
+> ---
+>  drivers/gpu/drm/vc4/vc4_hdmi.c | 39 +++++++++++++++++++++++++++++++----
+>  1 file changed, 35 insertions(+), 4 deletions(-)
 >
-> Thanks for comments.
+> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> index 00592c1ada73..bbe521ab000b 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> @@ -320,12 +320,17 @@ static void vc4_hdmi_set_infoframes(struct drm_encoder *encoder)
+>                 vc4_hdmi_set_audio_infoframe(encoder);
+>  }
 >
-> Changes since v8:
-> - fixed typo in function name,
-> - removed cocci script (added by mistake)
+> -static void vc4_hdmi_encoder_disable(struct drm_encoder *encoder)
+> +static void vc4_hdmi_encoder_post_crtc_disable(struct drm_encoder *encoder)
+>  {
+>         struct vc4_hdmi *vc4_hdmi = encoder_to_vc4_hdmi(encoder);
+> -       int ret;
 >
-> Changes since v7:
-> - improved commit message
-> - added R-Bs
+>         HDMI_WRITE(HDMI_RAM_PACKET_CONFIG, 0);
+> +}
+> +
+> +static void vc4_hdmi_encoder_post_crtc_powerdown(struct drm_encoder *encoder)
+> +{
+> +       struct vc4_hdmi *vc4_hdmi = encoder_to_vc4_hdmi(encoder);
+> +       int ret;
 >
-> Changes since v6:
-> - removed leftovers from old naming scheme in commit descritions,
-> - added R-Bs.
+>         if (vc4_hdmi->variant->phy_disable)
+>                 vc4_hdmi->variant->phy_disable(vc4_hdmi);
+> @@ -341,6 +346,10 @@ static void vc4_hdmi_encoder_disable(struct drm_encoder *encoder)
+>                 DRM_ERROR("Failed to release power domain: %d\n", ret);
+>  }
 >
-> Changes since v5:
-> - removed patch adding macro, dev_err_probe(dev, PTR_ERR(ptr), ...) should be used instead,
-> - added dev_dbg logging in case of -EPROBE_DEFER,
-> - renamed functions and vars according to comments,
-> - extended docs,
-> - cosmetics.
+> +static void vc4_hdmi_encoder_disable(struct drm_encoder *encoder)
+> +{
+> +}
+> +
+>  static void vc4_hdmi_csc_setup(struct vc4_hdmi *vc4_hdmi, bool enable)
+>  {
+>         u32 csc_ctl;
+> @@ -449,11 +458,10 @@ static void vc4_hdmi_recenter_fifo(struct vc4_hdmi *vc4_hdmi)
+>                   "VC4_HDMI_FIFO_CTL_RECENTER_DONE");
+>  }
 >
-> Original message (with small adjustments):
+> -static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+> +static void vc4_hdmi_encoder_pre_crtc_configure(struct drm_encoder *encoder)
+>  {
+>         struct drm_display_mode *mode = &encoder->crtc->state->adjusted_mode;
+>         struct vc4_hdmi *vc4_hdmi = encoder_to_vc4_hdmi(encoder);
+> -       struct vc4_hdmi_encoder *vc4_encoder = to_vc4_hdmi_encoder(encoder);
+>         unsigned long pixel_rate, hsm_rate;
+>         int ret;
 >
-> Recently I took some time to re-check error handling in drivers probe code,
-> and I have noticed that number of incorrect resource acquisition error handling
-> increased and there are no other propositions which can cure the situation.
+> @@ -521,6 +529,13 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
 >
-> So I have decided to resend my old proposition of probe_err helper which should
-> simplify resource acquisition error handling, it also extend it with adding defer
-> probe reason to devices_deferred debugfs property, which should improve debugging
-> experience for developers/testers.
+>         if (vc4_hdmi->variant->set_timings)
+>                 vc4_hdmi->variant->set_timings(vc4_hdmi, mode);
+> +}
+> +
+> +static void vc4_hdmi_encoder_pre_crtc_enable(struct drm_encoder *encoder)
+> +{
+> +       struct drm_display_mode *mode = &encoder->crtc->state->adjusted_mode;
+> +       struct vc4_hdmi_encoder *vc4_encoder = to_vc4_hdmi_encoder(encoder);
+> +       struct vc4_hdmi *vc4_hdmi = encoder_to_vc4_hdmi(encoder);
 >
-> I have also added two patches showing usage and benefits of the helper.
+>         if (vc4_encoder->hdmi_monitor &&
+>             drm_default_rgb_quant_range(mode) == HDMI_QUANTIZATION_RANGE_LIMITED) {
+> @@ -536,6 +551,13 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+>         }
 >
-> My dirty/ad-hoc cocci scripts shows that this helper can be used in at least 2700 places
-> saving about 3500 lines of code.
+>         HDMI_WRITE(HDMI_FIFO_CTL, VC4_HDMI_FIFO_CTL_MASTER_SLAVE_N);
+> +}
+> +
+> +static void vc4_hdmi_encoder_post_crtc_enable(struct drm_encoder *encoder)
+> +{
+> +       struct vc4_hdmi *vc4_hdmi = encoder_to_vc4_hdmi(encoder);
+> +       struct vc4_hdmi_encoder *vc4_encoder = to_vc4_hdmi_encoder(encoder);
+> +       int ret;
 >
-> Regards
-> Andrzej
+>         HDMI_WRITE(HDMI_VID_CTL,
+>                    HDMI_READ(HDMI_VID_CTL) |
+> @@ -582,6 +604,10 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+>         vc4_hdmi_recenter_fifo(vc4_hdmi);
+>  }
 >
+> +static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+> +{
+> +}
+> +
+>  static enum drm_mode_status
+>  vc4_hdmi_encoder_mode_valid(struct drm_encoder *encoder,
+>                             const struct drm_display_mode *mode)
+> @@ -1362,6 +1388,11 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
+>         dev_set_drvdata(dev, vc4_hdmi);
+>         encoder = &vc4_hdmi->encoder.base.base;
+>         vc4_hdmi->encoder.base.type = variant->encoder_type;
+> +       vc4_hdmi->encoder.base.pre_crtc_configure = vc4_hdmi_encoder_pre_crtc_configure;
+> +       vc4_hdmi->encoder.base.pre_crtc_enable = vc4_hdmi_encoder_pre_crtc_enable;
+> +       vc4_hdmi->encoder.base.post_crtc_enable = vc4_hdmi_encoder_post_crtc_enable;
+> +       vc4_hdmi->encoder.base.post_crtc_disable = vc4_hdmi_encoder_post_crtc_disable;
+> +       vc4_hdmi->encoder.base.post_crtc_powerdown = vc4_hdmi_encoder_post_crtc_powerdown;
+>         vc4_hdmi->pdev = pdev;
+>         vc4_hdmi->variant = variant;
 >
-> Andrzej Hajda (4):
->    driver core: add device probe log helper
->    driver core: add deferring probe reason to devices_deferred property
->    drm/bridge/sii8620: fix resource acquisition error handling
->    drm/bridge: lvds-codec: simplify error handling
->
->   drivers/base/base.h                  |  3 ++
->   drivers/base/core.c                  | 46 ++++++++++++++++++++++++++++
->   drivers/base/dd.c                    | 23 +++++++++++++-
->   drivers/gpu/drm/bridge/lvds-codec.c  | 10 ++----
->   drivers/gpu/drm/bridge/sil-sii8620.c | 21 ++++++-------
->   include/linux/device.h               |  3 ++
->   6 files changed, 86 insertions(+), 20 deletions(-)
->
+> --
+> git-series 0.9.1
