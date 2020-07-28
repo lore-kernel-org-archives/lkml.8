@@ -2,105 +2,151 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF0BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7A0C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5832820786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F252520759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:06:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="uV1+pGhc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgG1JE4 (ORCPT
+        id S1728369AbgG1JGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:04:56 -0400
-Received: from m17616.mail.qiye.163.com ([59.111.176.16]:21905 "EHLO
-        m17616.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728368AbgG1JEz (ORCPT
+        Tue, 28 Jul 2020 05:06:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728296AbgG1JGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 05:04:55 -0400
-X-Greylist: delayed 381 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Jul 2020 05:04:55 EDT
-Received: from wwh-vos.localdomain (unknown [58.251.74.227])
-        by m17616.mail.qiye.163.com (Hmail) with ESMTPA id C46B9107E9C;
-        Tue, 28 Jul 2020 16:58:27 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        John Stultz <john.stultz@linaro.org>,
+        Tue, 28 Jul 2020 05:06:05 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E992C061794;
+        Tue, 28 Jul 2020 02:06:05 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 8BAFE22FEB;
+        Tue, 28 Jul 2020 11:06:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1595927163;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+qDlqdqnrq63mY3zRI+KJrgTKuzim4rp3TqdEiL1TrU=;
+        b=uV1+pGhcvzIch3KaWSEO4peivbsttnPu6bAB5yDvHKD9/huxFx5wREsoGhVj3FQ1BZTi3f
+        7eLiluHJKu5CBhGP4cA4MN+oohWSpB8t9yWLECZdrFFot0qB+92L6q1k9gj8Ltxmak3yKv
+        OfFyMiseV14azylQP0wV94+3NmQi+dM=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Jul 2020 11:06:02 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Wang Wenhu <wenhu.wang@vivo.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] sched: loadavg: delete useless param ticks for calc_global_load
-Date:   Tue, 28 Jul 2020 16:58:07 +0800
-Message-Id: <20200728085809.60132-1-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
-        oVCBIfWUFZGk1OTB4fShlLQkJMVkpOQk5CSU1MSklOSEpVEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
-        FZT0tIVUpKS0hKTFVKS0tZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MAw6KAw6HD8qPQ8#Dg8RGCEt
-        KQxPFEtVSlVKTkJOQklNTEpJQkJCVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlMWVdZCAFZQUhLQ0g3Bg++
-X-HM-Tid: 0a7394a501109374kuwsc46b9107e9c
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
+In-Reply-To: <20200728085616.GD2419169@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-3-michael@walle.cc> <20200728072422.GF1850026@dell>
+ <1065b0107ce6fd88b2bdd704bf45346b@walle.cc> <20200728082707.GB2419169@dell>
+ <a47993ca4c77ab1ee92f6693debb3c87@walle.cc> <20200728085616.GD2419169@dell>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <2fd3b880e36aa65e880b801092b51945@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only parameter "unsigned long ticks" for calc_global_load is
-never used inside the function definition. Delete it now.
+Am 2020-07-28 10:56, schrieb Lee Jones:
+>> > > > > +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
+>> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> > > > > +
+>> > > > > +title: Kontron's sl28cpld board management controller
+>> > > >
+>> > > > "S128CPLD" ?
+>> > >
+>> > > still not, its sl28cpld, think of a project/code name, not the product
+>> > > appended with CPLD.
+>> > >
+>> > > > "Board Management Controller (BMC)" ?
+>> > >
+>> > > sounds like IPMI, which I wanted to avoid.
+>> >
+>> > Is there a datasheet?
+>> 
+>> No there isn't.
+> 
+> Then what are you working from?
 
-Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
----
- include/linux/sched/loadavg.h | 2 +-
- kernel/sched/loadavg.c        | 2 +-
- kernel/time/timekeeping.c     | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Ok, there is no public datasheet. If that wasn't clear before, I'm 
+working
+for that company that also implemented that CPLD.
 
-diff --git a/include/linux/sched/loadavg.h b/include/linux/sched/loadavg.h
-index 4859bea47a7b..83ec54b65e79 100644
---- a/include/linux/sched/loadavg.h
-+++ b/include/linux/sched/loadavg.h
-@@ -43,6 +43,6 @@ extern unsigned long calc_load_n(unsigned long load, unsigned long exp,
- #define LOAD_INT(x) ((x) >> FSHIFT)
- #define LOAD_FRAC(x) LOAD_INT(((x) & (FIXED_1-1)) * 100)
- 
--extern void calc_global_load(unsigned long ticks);
-+extern void calc_global_load(void);
- 
- #endif /* _LINUX_SCHED_LOADAVG_H */
-diff --git a/kernel/sched/loadavg.c b/kernel/sched/loadavg.c
-index de22da666ac7..d2a655643a02 100644
---- a/kernel/sched/loadavg.c
-+++ b/kernel/sched/loadavg.c
-@@ -347,7 +347,7 @@ static inline void calc_global_nohz(void) { }
-  *
-  * Called from the global timer code.
-  */
--void calc_global_load(unsigned long ticks)
-+void calc_global_load(void)
- {
- 	unsigned long sample_window;
- 	long active, delta;
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index d20d489841c8..63a632f9896c 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -2193,7 +2193,7 @@ EXPORT_SYMBOL(ktime_get_coarse_ts64);
- void do_timer(unsigned long ticks)
- {
- 	jiffies_64 += ticks;
--	calc_global_load(ticks);
-+	calc_global_load();
- }
- 
- /**
--- 
-2.17.1
+>> > > > > +maintainers:
+>> > > > > +  - Michael Walle <michael@walle.cc>
+>> > > > > +
+>> > > > > +description: |
+>> > > > > +  The board management controller may contain different IP blocks
+>> > > > > like
+>> > > > > +  watchdog, fan monitoring, PWM controller, interrupt controller
+>> > > > > and a
+>> > > > > +  GPIO controller.
+>> > > > > +
+>> > > > > +properties:
+>> > > > > +  compatible:
+>> > > > > +    const: kontron,sl28cpld-r1
+>> > > >
+>> > > > We don't usually code revision numbers in compatible strings.
+>> > > >
+>> > > > Is there any way to pull this from the H/W?
+>> > >
+>> > > No, unfortunately you can't. And I really want to keep that, in case
+>> > > in the future there are some backwards incompatible changes.
+>> >
+>> > Rob,
+>> >
+>> > I know you reviewed this already, but you can give your opinion on
+>> > this specifically please?  I know that we have pushed back on this in
+>> > the past.
+>> 
+>> Oh, come one. That is an arbitrary string. "sl28cpld-r1" is the first
+>> implementation of this. A future "sl28cpld-r2" might look completely
+>> different and might not suite the simple MFD at all. "sl28cpld" is
+>> a made up name - as "sl28cpld-r1" is, too.
+> 
+> Well that sounds bogus for a start.  I guess that's one of the
+> problems with trying to support programmable H/W in S/W.
 
+What sounds bogus? That we name the implementation sl28cpld? How
+is that different to like adt7411? Its just a name made up by the
+vendor. So if there is a new version of the adt7411 the vendor
+might name it adt7412. We name it sl28cpld-r2. So what is the
+problem here?
+
+-michael
