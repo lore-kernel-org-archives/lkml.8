@@ -2,119 +2,114 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DCCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFC9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA0A206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:15:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b/7l3miI"
+	by mail.kernel.org (Postfix) with ESMTP id 2CB49206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730068AbgG1NPJ (ORCPT
+        id S1730003AbgG1NQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:15:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729853AbgG1NPI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:15:08 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 604A5C061794;
-        Tue, 28 Jul 2020 06:15:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ZHMkQDJHn0zeY8FYCEBJ2eds7Y8bNR+OKpl6shmcGbI=; b=b/7l3miILmZezVLADSpph+v5Or
-        Xn6wZxOT4Aa7YplNd7piMOxm73z0wsg6c709ExUWYVuIh6qVekx78kXSHmB1TigNQlG4OWgaqydae
-        /ljo9oqOdRgDmBlhGej+pTENWzR9KAER2L5RQQnF7VAPr6fcNelXyvggF00BeO7oQim50GaFjS3xv
-        zseW3J0Ps0Xtpb9ji5+/m5G9M6szb4vLNjcEJAAbUoETTYdvQJr1902KyTcfnszq0K04vZ4Nae6gL
-        LdAWObKGeK3HqYvhyaGX69eFD0FHSW1OLAJMlHjkvoAB/qK1CduggVaApPJeftgsph60MsUGx+s8f
-        0iWrzlBQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0PRh-0004V8-63; Tue, 28 Jul 2020 13:15:05 +0000
-Date:   Tue, 28 Jul 2020 14:15:05 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Brian Foster <bfoster@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iomap: Ensure iop->uptodate matches PageUptodate
-Message-ID: <20200728131505.GQ23808@casper.infradead.org>
-References: <20200726091052.30576-1-willy@infradead.org>
- <20200726230657.GT2005@dread.disaster.area>
- <20200726232022.GH23808@casper.infradead.org>
- <20200726235335.GU2005@dread.disaster.area>
- <20200728092301.GA32142@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728092301.GA32142@infradead.org>
+        Tue, 28 Jul 2020 09:16:57 -0400
+Received: from mga18.intel.com ([134.134.136.126]:46314 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729815AbgG1NQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 09:16:57 -0400
+IronPort-SDR: 0BX2zmYYAzYYoDZ3lhGRBz9VzcapNAgBdnMgoZqwo+MbZEBVfMqlroEKOjcCDnUjgNn5PeaJWF
+ aVYopg0uN6Iw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="138720452"
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="138720452"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 06:16:56 -0700
+IronPort-SDR: mLYBLhV0Rr0bgzl8YUEgbAlZG+BPbvPprwXO4KFMfByhgxAoZivS0VsYoXcZnEfJxqljsvDnll
+ JRGXE9w40pPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="303850244"
+Received: from wenkema-mobl.ccr.corp.intel.com ([10.255.29.50])
+  by orsmga002.jf.intel.com with ESMTP; 28 Jul 2020 06:16:53 -0700
+Message-ID: <1f2ef9915cbc7f1d55c8ad54b3efa3d93a9ef608.camel@intel.com>
+Subject: Re: [PATCH 1/3] perf/x86/rapl: Fix missing psys sysfs attributes
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        kan.liang@linux.intel.com, len.brown@intel.com
+Date:   Tue, 28 Jul 2020 21:16:52 +0800
+In-Reply-To: <20200717083328.GA528602@krava>
+References: <20200716151859.6854-1-rui.zhang@intel.com>
+         <20200717083328.GA528602@krava>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 10:23:01AM +0100, Christoph Hellwig wrote:
-> On Mon, Jul 27, 2020 at 09:53:35AM +1000, Dave Chinner wrote:
-> > Yes, I understand the code accepts it can happen; what I dislike is
-> > code that asserts subtle behaviour can happen, then doesn't describe
-> > that exactly why/how that condition can occur. And then, because we
-> > don't know exactly how something happens, we add work arounds to
-> > hide issues we can't reason through fully. That's .... suboptimal.
+On Fri, 2020-07-17 at 10:33 +0200, Jiri Olsa wrote:
+> On Thu, Jul 16, 2020 at 11:18:57PM +0800, Zhang Rui wrote:
+> > This fixes a problem introduced by
+> > commit 5fb5273a905c ("perf/x86/rapl: Use new MSR detection
+> > interface")
+> > that perf event sysfs attributes for psys RAPL domain are missing.
 > > 
-> > Christoph might know off the top of his head how we get into this
-> > state. Once we work it out, then we need to add comments...
-> 
-> Unfortunately I don't know offhand.  I'll need to spend some more
-> quality time with this code first.
-
-The code reads like you had several ideas for how the uptodate array
-works, changing your mind as you went along, and it didn't quite get to
-a coherent state before it was merged.  For example, there are parts
-of the code which think that a clear bit in the uptodate array means
-there's a hole in the file, eg
-
-fs/iomap/seek.c:page_seek_hole_data() calls iomap_is_partially_uptodate()
-
-but we set the uptodate bits when zeroing the parts of the page which
-are covered by holes in iomap_readpage_actor()
-
-> > > Way ahead of you
-> > > http://git.infradead.org/users/willy/pagecache.git/commitdiff/5a1de6fc4f815797caa4a2f37c208c67afd7c20b
+> > Fixes: 5fb5273a905c ("perf/x86/rapl: Use new MSR detection
+> > interface")
+> > Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+> > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> > Reviewed-by: Len Brown <len.brown@intel.com>
+> > ---
+> >  arch/x86/events/rapl.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > > 
-> > *nod*
+> > diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+> > index 0f2bf59f4354..51ff9a3618c9 100644
+> > --- a/arch/x86/events/rapl.c
+> > +++ b/arch/x86/events/rapl.c
+> > @@ -665,7 +665,7 @@ static const struct attribute_group
+> > *rapl_attr_update[] = {
+> >  	&rapl_events_pkg_group,
+> >  	&rapl_events_ram_group,
+> >  	&rapl_events_gpu_group,
+> > -	&rapl_events_gpu_group,
+> > +	&rapl_events_psys_group,
+> 
+> I did copy & paste but did not change to psys :-\
+> 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+Hi, jirka,
+
+Thanks for your ACK.
+
+
+Hi, Peter,
+
+A gentle ping on this patch series.
+
+thanks,
+rui
+> 
+> thanks,
+> jirka
+> 
+> >  	NULL,
+> >  };
+> >  
+> > -- 
+> > 2.17.1
 > > 
-> > I would suggest breaking that out as a separate cleanup patch and
-> > not hide is in a patch that contains both THP modifications and bug
-> > fixes. It stands alone as a valid cleanup.
 > 
-> I'm pretty sure I already suggested that when it first showed up.
 > 
-> That being said I have another somewhat related thing in this area
-> that I really want to get done before THP support, and maybe I can
-> offload it to willy:
-> 
-> Currently we always allocate the iomap_page structure for blocksize
-> < PAGE_SIZE.  While this was easy to implement and a major improvement
-> over the buffer heads it actually is quite silly, as we only actually
-> need it if we either have sub-page uptodate state, or have extents
-> boundaries in the page.  So what I'd like to do is to only actually
-> allocate it in that case.  By doing the allocation lazy it should also
-> help to never allocate one that is marked all uptodate from the start.
 
-Hah, I want to do that too, and I was afraid I was going to have to
-argue with you about it!
-
-My thinking was to skip the allocation if the page lies entirely within
-an iomap extent.  That will let us skip the allocation even for THPs
-unless the file is fragmented.
-
-I don't think it needs to get done before THP support, they're pretty
-orthogonal.
