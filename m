@@ -2,106 +2,110 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7614C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C16AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E702074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DBFB207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:28:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ms8WzW9f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgG1J2L (ORCPT
+        id S1728271AbgG1J2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:28:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:59398 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728093AbgG1J2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 05:28:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AD0830E;
-        Tue, 28 Jul 2020 02:28:10 -0700 (PDT)
-Received: from [192.168.178.2] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D6EE3F66E;
-        Tue, 28 Jul 2020 02:28:08 -0700 (PDT)
-Subject: Re: [PATCH] sched: loadavg: delete useless param ticks for
- calc_global_load
-To:     Wang Wenhu <wenhu.wang@vivo.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
-References: <20200728085809.60132-1-wenhu.wang@vivo.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <940ac672-8fed-66f0-c37a-87f9ed2c5dd4@arm.com>
-Date:   Tue, 28 Jul 2020 11:28:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 05:28:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727845AbgG1J2s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 05:28:48 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D15BC061794;
+        Tue, 28 Jul 2020 02:28:47 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id i92so2767946pje.0;
+        Tue, 28 Jul 2020 02:28:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y5s9edaIzkddCgobfmY3uqcn7wmzvnyo8IQdQIisAEg=;
+        b=ms8WzW9fy2JOJRlxGxRty1F7izoJ1DiSavf0TwZDK5owazISbPe2BdEia2Q6JjkGtI
+         YO3AdTlqY99dOM01esgxBxR6l7Xi+F/gidMUU3m8UP1iX01ebs6rODmju1pJAfhgze6p
+         yu/toL1lopVUU/fbcJ3B7dNhJsX9Yy30R9yp5SEMOgZiMXw0ayqSR8sN5VcEqbEOEoKg
+         B9Bbc1pN437Kl13AxCWBofOXcHnjCe5ExOPaZIZKScFToeVlNs+9QBkJiyCoIMrcqhbJ
+         ofFq9sfte0SEOBCEgjD+gOzK97YshhI62x0e3E0TxVoeNjOaOVMvgmP09SlXeww75HEj
+         m3MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y5s9edaIzkddCgobfmY3uqcn7wmzvnyo8IQdQIisAEg=;
+        b=evw14D8nkH9MYrJgYZFzZm8ymwQxRvt1Xqw5H0bE3NUH7k9zCW+30OsRSOn23RWtFg
+         PQ3rf1TivZFYG9yAfrzJc80HreRKzP67vUBGb4EIqBq1L09w+S/uod1LVEgF70gh9s8d
+         EzuGZpPH+WHUKSNG09YB7qp/3OmS0MnCfbwFfyegPeDEWu4j70xiFX7QozKd6mbElsTe
+         GL66rbHRwmV9rQ6bM7ZVWgxGZV2+2P6CeZ04M3eTWVUQZYSszAfynhqwjlN7Y+bjZBcp
+         LR/J/EY+fVwZGPc+ypem6pvBI6ssI4eyjVKBo6SPFRJsaHVA6Ux5ysyN6vctFrnbauJo
+         tXWg==
+X-Gm-Message-State: AOAM531WK3Fyh2aoGNyDTxozHTN1FMZbc/5Zw2rNzv6hKzOE9TQ27d+A
+        S4UO4+08GizBZjPARMK6vK8=
+X-Google-Smtp-Source: ABdhPJwQn0Kxf+lANu9Wff8D3FwTjJZmSHuynPC36O2mlh26UdMyd75qxUVAeTUbfxaypdwyL2aqwg==
+X-Received: by 2002:a17:90a:1388:: with SMTP id i8mr3744902pja.210.1595928527010;
+        Tue, 28 Jul 2020 02:28:47 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id k63sm18526319pge.0.2020.07.28.02.28.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 02:28:46 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sergey Kozlov <serjk@netup.ru>, Abylay Ospan <aospan@netup.ru>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v1] [media] netup_unidvb: use generic power management
+Date:   Tue, 28 Jul 2020 14:57:17 +0530
+Message-Id: <20200728092717.937023-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200728085809.60132-1-wenhu.wang@vivo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/07/2020 10:58, Wang Wenhu wrote:
-> The only parameter "unsigned long ticks" for calc_global_load is
-> never used inside the function definition. Delete it now.
-> 
-> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
-> ---
->  include/linux/sched/loadavg.h | 2 +-
->  kernel/sched/loadavg.c        | 2 +-
->  kernel/time/timekeeping.c     | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/sched/loadavg.h b/include/linux/sched/loadavg.h
-> index 4859bea47a7b..83ec54b65e79 100644
-> --- a/include/linux/sched/loadavg.h
-> +++ b/include/linux/sched/loadavg.h
-> @@ -43,6 +43,6 @@ extern unsigned long calc_load_n(unsigned long load, unsigned long exp,
->  #define LOAD_INT(x) ((x) >> FSHIFT)
->  #define LOAD_FRAC(x) LOAD_INT(((x) & (FIXED_1-1)) * 100)
->  
-> -extern void calc_global_load(unsigned long ticks);
-> +extern void calc_global_load(void);
->  
->  #endif /* _LINUX_SCHED_LOADAVG_H */
-> diff --git a/kernel/sched/loadavg.c b/kernel/sched/loadavg.c
-> index de22da666ac7..d2a655643a02 100644
-> --- a/kernel/sched/loadavg.c
-> +++ b/kernel/sched/loadavg.c
-> @@ -347,7 +347,7 @@ static inline void calc_global_nohz(void) { }
->   *
->   * Called from the global timer code.
->   */
-> -void calc_global_load(unsigned long ticks)
-> +void calc_global_load(void)
->  {
->  	unsigned long sample_window;
->  	long active, delta;
-> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-> index d20d489841c8..63a632f9896c 100644
-> --- a/kernel/time/timekeeping.c
-> +++ b/kernel/time/timekeeping.c
-> @@ -2193,7 +2193,7 @@ EXPORT_SYMBOL(ktime_get_coarse_ts64);
->  void do_timer(unsigned long ticks)
->  {
->  	jiffies_64 += ticks;
-> -	calc_global_load(ticks);
-> +	calc_global_load();
->  }
->  
->  /**
+The .suspend() and .resume() callbacks are not defined for this driver.
+Still, their power management structure follows the legacy framework. To
+bring it under the generic framework, simply remove the binding of
+callbacks from "struct pci_driver".
 
-There is already commit 46132e3ac58c ("sched: nohz: stop passing around
-unused "ticks" parameter.") in linux-next master.
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/media/pci/netup_unidvb/netup_unidvb_core.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/media/pci/netup_unidvb/netup_unidvb_core.c b/drivers/media/pci/netup_unidvb/netup_unidvb_core.c
+index 80a7c41baa90..6f3125c2d097 100644
+--- a/drivers/media/pci/netup_unidvb/netup_unidvb_core.c
++++ b/drivers/media/pci/netup_unidvb/netup_unidvb_core.c
+@@ -1016,8 +1016,6 @@ static struct pci_driver netup_unidvb_pci_driver = {
+ 	.id_table = netup_unidvb_pci_tbl,
+ 	.probe    = netup_unidvb_initdev,
+ 	.remove   = netup_unidvb_finidev,
+-	.suspend  = NULL,
+-	.resume   = NULL,
+ };
+ 
+ module_pci_driver(netup_unidvb_pci_driver);
+-- 
+2.27.0
+
