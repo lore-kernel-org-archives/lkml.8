@@ -2,95 +2,85 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8D4C433F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E685C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 237C3207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:24:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1A3ts3+"
+	by mail.kernel.org (Postfix) with ESMTP id DE07D20809
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:25:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595960729;
+	bh=qp1ca15nlchOHHWpb0GDZ73wbp+5RJCEQgUj8cnylfQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KLJSq1rY6uIiJRGOODSGj1S6muz0t8g8XNYO92wvAFOUHhlfyXkb6cSbI/jd0YnyB
+	 BVzU+BaLRpcT0/ro/Sb1phVbIqbNE/ujgSGZG23xjgiBANRvPHN00kbcUgvQtZmNGi
+	 eYaiUT9LMa5x/cTbKDrqcI8b9k1aOorfal8drpew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732342AbgG1SYK (ORCPT
+        id S1732354AbgG1SZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:24:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732328AbgG1SYJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 14:24:09 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08DB8C061794;
-        Tue, 28 Jul 2020 11:24:09 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id d1so10346793plr.8;
-        Tue, 28 Jul 2020 11:24:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ACcl0I0FKCHzoJlruhy1bok/ASRUZLSp8wFM6Lmuq68=;
-        b=E1A3ts3+nMgEKHtIp8mDRHd7xZB76rnpuBiq6FLMbI8cRd7KunW7PhP+mmQM21//Ur
-         UlIt2cu/YvXe0YN/ymnYfPL6k3urFQ8Bx+wHrleM0yX663ixAeSZZED8CVyAHTgl+ov5
-         FNCB2+3yzMPfTynrVH9E8dz7JQYwQkLph6TDqKwS/mBoGkAHFMYwUcuNHyxcWSAs3dpe
-         mwLb6oZ0ig+28grXipGzieY/21Fc3GDad/oEEciaMfAkQc23mYmYSFnHq3NbrKRVcb9L
-         r41GbkOrywjkdZLAtfrJmp0bwlNrQfkG3QTCqBuONhw9nW3EuHr0WKew2MFbDMaeEe9S
-         aYZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ACcl0I0FKCHzoJlruhy1bok/ASRUZLSp8wFM6Lmuq68=;
-        b=UrfjD60/HQ7euHU97h0KlvcLwtwpK6dP1yDdQKAT4d4h9/lTUj1lZ254N4mbUiPh9A
-         +lF6T9LpkxSimvOf8zFDKBB9MrhOajXJkYb/9WagsNDY4KnBFn4YCM4ONO9lDGF4V3WD
-         mMV6FSfaEo+GZQJMuLTFIYNeTuOdGZPUoWSA9f7H5rusWeZTE7dj9fqg05pTeWoOwVH3
-         VCkZ4LqJPEExNz/8fjY0RUkPM158Qz0/a/SUZlsR60co3DKVTLMT85vIvknBHfi8Ol3g
-         3TwPjJmN8Ib2g2Shq9oJdn0F8tsKrX2v9xKmO2WdIud7EcCTjs7ilaOyVoIwx82qXXQn
-         Wpkg==
-X-Gm-Message-State: AOAM531Da3AovZ9unjowEq00HryG3Wi1gOKheaf2YXqNjBKUDijLzr/Y
-        2Us6izzVDHnqvRJHkb8jYZ0=
-X-Google-Smtp-Source: ABdhPJwGZPWDNJbeTIO2g+HL081gj60enjvDpuHMFDg2FBAci9zt8L08ovxSnOrOpj605PzxKt3iDA==
-X-Received: by 2002:a17:902:9307:: with SMTP id bc7mr25507635plb.213.1595960648647;
-        Tue, 28 Jul 2020 11:24:08 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k23sm18577881pgb.92.2020.07.28.11.24.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Jul 2020 11:24:08 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 11:24:07 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.7 000/179] 5.7.11-rc1 review
-Message-ID: <20200728182407.GD183563@roeck-us.net>
-References: <20200727134932.659499757@linuxfoundation.org>
+        Tue, 28 Jul 2020 14:25:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728401AbgG1SZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 14:25:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5646220714;
+        Tue, 28 Jul 2020 18:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595960727;
+        bh=qp1ca15nlchOHHWpb0GDZ73wbp+5RJCEQgUj8cnylfQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ff0DX65e31G0m+5Hgz2THK4PAsZcNMAcPSBMJ4drm6k/yNHzucgxwUjxzJ2zUtGfF
+         BRdS7iGEG4jO6FwIPpqa/CSzQJihlZ9IkEtyAr9GwODy4o6JPtkpuVPgQeyaB3eZsd
+         sth0X63UplVmflYZb88E+Ca9IDr+HDobPgpo7qMU=
+Date:   Tue, 28 Jul 2020 20:25:19 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
+Cc:     arve@android.com, tkjos@android.com, maco@android.com,
+        joel@joelfernandes.org, christian@brauner.io, hridya@google.com,
+        surenb@google.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: android: ashmem: used const keyword
+Message-ID: <20200728182519.GA328787@kroah.com>
+References: <20200728175935.2130-1-dhiraj.sharma0024@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200728175935.2130-1-dhiraj.sharma0024@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 04:02:55PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.7.11 release.
-> There are 179 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue, Jul 28, 2020 at 11:29:35PM +0530, Dhiraj Sharma wrote:
+> I ran checkpatch.pl script which reported a warning to use const keyword
+> on line 370.Therefore I made this change.
 > 
-> Responses should be made by Wed, 29 Jul 2020 13:48:51 +0000.
-> Anything received after that time might be too late.
+> Signed-off-by: Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
+> ---
+>  drivers/staging/android/ashmem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
+> index c05a214191da..f9cfa15b785f 100644
+> --- a/drivers/staging/android/ashmem.c
+> +++ b/drivers/staging/android/ashmem.c
+> @@ -367,7 +367,7 @@ ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
+> 
+>  static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
+>  {
+> -	static struct file_operations vmfile_fops;
+> +	static const struct file_operations vmfile_fops;
 
-Build results:
-	total: 155 pass: 155 fail: 0
-Qemu test results:
-	total: 431 pass: 431 fail: 0
+You have now submitted two patches that you obviously never even built,
+which is the first step in kernel development :(
 
-Guenter
+Please be more careful next time.
+
+greg k-h
