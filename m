@@ -2,92 +2,90 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9A2C433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D428C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25D5C2078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:38:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="li/cSlM2"
+	by mail.kernel.org (Postfix) with ESMTP id 2B790206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:34:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595950488;
+	bh=K88UYTw4JWXr/HkLNZCJOUr4i1DsCWzcJYkeSkhItfU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ks1j47VIcrHwOTGA+IVeoG/vKw4ugyKrakI/RR6XQNYJnV2NtroQ6zVrEsBHzjOaZ
+	 i4bwsfcGHttzq7g0lMYxBKx4MVEEmi/y7NnfPb8ZCfhJXabHz/SvEZqCilBNqEC32P
+	 0hW85bk3OcIx43d1bL0iCixQx4nR+VyDugWJLu5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730946AbgG1PiQ (ORCPT
+        id S1730893AbgG1Per (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:38:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730694AbgG1PiP (ORCPT
+        Tue, 28 Jul 2020 11:34:47 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:42312 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730701AbgG1Peq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:38:15 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5863C061794;
-        Tue, 28 Jul 2020 08:38:15 -0700 (PDT)
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 8AC2F1FF16;
-        Tue, 28 Jul 2020 15:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1595950695; bh=vaKD7IUjG1etsvFupW6edy8t9lQ2LBk8C1F1iGCfaLk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=li/cSlM2F3UMdtc81nCh4jvrGEteH9GvUeH960QB1Ux3/jnmHiYXA/ADeiynIOgRZ
-         vCJOrkdQ+eHPHdhwenddzWXUsbR2MScD131Duwv1zwq9sEZGvZ+e6Wa281bmjpDHnT
-         haqG+orBN7dOp6wNb4UWZxCObVPXAPo11hC45MWXi7ZFzlxVe1MpXlhaSftaP5SlR5
-         /xk520HeyhQFRkhZNIvdLEKbgZXWvIbLfghCsIcP8XcNRkkZWNhGyKQH5SKsUW6ioE
-         3aNg/EC3r6aQEx/vBruDF1wI+Jf2jj2KlM63Mj1uKZNNTzG8np0pGSJKZvWnrHNWj/
-         K5G8fpHKn4dRA==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 5/5] MIPS: Loongson64: Add ISA node for LS7A PCH
-Date:   Tue, 28 Jul 2020 23:36:59 +0800
-Message-Id: <20200728153708.1296374-6-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.28.0.rc1
-In-Reply-To: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
-References: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
+        Tue, 28 Jul 2020 11:34:46 -0400
+Received: by mail-ej1-f66.google.com with SMTP id g19so7277872ejc.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:34:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6Gt0QHwtzdH4z262wIb70iMKw+A0SGUVc8Tn0FAViKU=;
+        b=JlBcAlfY+3CNhUNtkIasbzWm3KWI9thdJLC4MHEJSLzldjbNm1/2QHXtdyTMFejMN9
+         EVJ6BiPaO/Y0wNMc6GQNZlORX3bo12iVz2mwMshK8zOJdiMqf0h/biX2s2p2EbdlPJyi
+         VDSdGa7hKyuB4PtFmoWAFJkoAChZbFKy4SFNsqghxdxuOlNRkn068jYE1ZohWS+F0ER5
+         UlY3FU++TO75gh7sv+saR2nKd2ujjBVpPKMQvZ4eAumdZq5RhQRomDp9M45wUWnvBuU3
+         kFbc2VpKByqhH+wqrqDq9ObUgUPK9PrrDe82ARF5d33g25Ck9BC3dL5UsQEiRDUmrkwa
+         dIUw==
+X-Gm-Message-State: AOAM532q/9nppWfjOAgk1c9VIjFvPgju/dFREQji8OAjkA09s/TWPwxT
+        KZB6YCliGfABrfVJPDGvkGk=
+X-Google-Smtp-Source: ABdhPJwfnB21m8a4Fuk44HDkuAi2hrixWDa4/7urjvF4eeV0L4xhSM1bpHjKRFF0s/xoDfrFx3fESg==
+X-Received: by 2002:a17:907:41dc:: with SMTP id og20mr27042300ejb.183.1595950484801;
+        Tue, 28 Jul 2020 08:34:44 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id ck6sm10070701edb.18.2020.07.28.08.34.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jul 2020 08:34:44 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 17:34:41 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     od@zcrc.me, linux-kernel@vger.kernel.org,
+        "H . Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v2] memory: jz4780_nemc: Only request IO memory the
+ driver will use
+Message-ID: <20200728153441.GA15034@kozik-lap>
+References: <20200728152629.28878-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200728152629.28878-1-paul@crapouillou.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although currently we're not enabling any ISA device in devicetree,
-but this node is required to express the ranges of address reserved
-for ISA.
+On Tue, Jul 28, 2020 at 05:26:29PM +0200, Paul Cercueil wrote:
+> The driver only uses the registers up to offset 0x54. Since the EFUSE
+> registers are in the middle of the NEMC registers, we only request
+> the registers we will use for now - that way the EFUSE driver can
+> probe too.
+> 
+> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+> 
+> Notes:
+>     v2: Only ioremap() the registers we will use
+> 
+>  drivers/memory/jz4780-nemc.c | 17 ++++++++++++++++-
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/boot/dts/loongson/ls7a-pch.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Thanks, applied.
 
-diff --git a/arch/mips/boot/dts/loongson/ls7a-pch.dtsi b/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-index 1c286bb8c703..e574a062dfae 100644
---- a/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-+++ b/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-@@ -367,5 +367,12 @@ pci_bridge@14,0 {
- 				interrupt-map = <0 0 0 0 &pic 39 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 		};
-+
-+		isa {
-+			compatible = "isa";
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+			ranges = <1 0 0 0x18000000 0x20000>;
-+		};
- 	};
- };
--- 
-2.28.0.rc1
+Best regards,
+Krzysztof
 
