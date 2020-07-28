@@ -2,123 +2,124 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F4CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41224C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6CDF20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:18:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DZjUvggI"
+	by mail.kernel.org (Postfix) with ESMTP id 1085720809
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:19:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595895581;
+	bh=vsiTrIcZ56SSOxyiEUoEwv+DpHiWDpQ4NqHzGqLqy3o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x4V4Nlldm4Xz9Bl+lxrg1DhzfgWwgaSexdxGF4LdZny0rIfNAHzQq+LfQl7FKzES7
+	 flV7FpW7LufRgWcht8TG09N5UD0UXao3hv/rI9o6zrmqhFiV3UAl7r6xmgJCPrnZ+x
+	 j2VNg3HnFNMacSfE0ids2RIF1d7s5CNmgVbaM88o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgG1ASz (ORCPT
+        id S1726957AbgG1ATk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 20:18:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgG1ASz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 20:18:55 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 547FBC061794;
-        Mon, 27 Jul 2020 17:18:55 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 27 Jul 2020 20:19:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbgG1ATj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 20:19:39 -0400
+Received: from earth.universe (unknown [185.213.155.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFy2f07z3z9sSt;
-        Tue, 28 Jul 2020 10:18:49 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595895532;
-        bh=8Elas+GZy4aG143LOZC08U5Il/Mlcion7Q0KOmbQfEg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DZjUvggIf+h98zuWFbPFq5NgD1p9bbyJrP9fztkIhumWsbaKV6D9po5/pozSSqZRS
-         iaqw7OygVe7yKBUAlLuvJTi4ICP1OkvhqqNGpS4lzO56ASbsTMJBh36fgLaksFpP09
-         GzCNZxy5iPNfLy/elGCEDCOnBMJLhqJl+KfP2ZmvA4nB3FqLR5t87K5uTqwsqRVXL0
-         O4OV56G/+Q2UnOFBcZFdsJ/D7AjZwXK7goWMwzlo3WMsA/Qgv0iaSBeIeThoLs4j1e
-         0Rgkf4Uq9iccZEEUykHVI1L8HpsmKAG0iaWY2dNHw15P+OpQvwAngTCwfeQODMDQtC
-         CxewCn09BUpAQ==
-Date:   Tue, 28 Jul 2020 10:18:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rich Felker <dalias@libc.org>, Guo Ren <ren_guo@c-sky.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
-Subject: linux-next: manual merge of the sh tree with the csky tree
-Message-ID: <20200728101846.73cf063c@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 12FA420786;
+        Tue, 28 Jul 2020 00:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595895579;
+        bh=vsiTrIcZ56SSOxyiEUoEwv+DpHiWDpQ4NqHzGqLqy3o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QYCMeK0MW7pG2TuN8wCprFNbGTxiU0frezxvvY/Brck/TqRWqtKMY6p6ZDqYHgpzm
+         UYDLLpsfd6AVXo63eI70TvuKt7nSTWho9ggj2+P/cUKNT+sk7JbB0rWgFbmRyVjyhw
+         Gd5MZU0gk9jAAI7JRaR06EVHaKjML1OMPRUni7OQ=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 4F75B3C0B87; Tue, 28 Jul 2020 02:19:37 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 02:19:37 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Peng Fan <fanpeng@loongson.cn>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH] power: supply: rt5033_battery: Fix error code in
+ rt5033_battery_probe()
+Message-ID: <20200728001937.vtvneczrskc6cs4u@earth.universe>
+References: <1593680332-31884-1-git-send-email-fanpeng@loongson.cn>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/R4JPgLYyfUn4NvlA+F+kfWi";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7od7w7hhl7sikvqk"
+Content-Disposition: inline
+In-Reply-To: <1593680332-31884-1-git-send-email-fanpeng@loongson.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/R4JPgLYyfUn4NvlA+F+kfWi
-Content-Type: text/plain; charset=US-ASCII
+
+--7od7w7hhl7sikvqk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi,
 
-Today's linux-next merge of the sh tree got a conflict in:
+On Thu, Jul 02, 2020 at 04:58:52PM +0800, Peng Fan wrote:
+> In the function rt5033_battery_probe(), it should return -ENOMEM
+> instead of -EINVAL when call function devm_kzalloc() failed.
+>=20
+> Signed-off-by: Peng Fan <fanpeng@loongson.cn>
+> ---
 
-  tools/testing/selftests/seccomp/seccomp_bpf.c
+Thanks, queued.
 
-between commit:
+-- Sebastian
 
-  f4dd2edafba0 ("csky: add support for SECCOMP and SECCOMP_FILTER")
+>  drivers/power/supply/rt5033_battery.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/power/supply/rt5033_battery.c b/drivers/power/supply=
+/rt5033_battery.c
+> index d8667a9..f330452 100644
+> --- a/drivers/power/supply/rt5033_battery.c
+> +++ b/drivers/power/supply/rt5033_battery.c
+> @@ -125,7 +125,7 @@ static int rt5033_battery_probe(struct i2c_client *cl=
+ient,
+> =20
+>  	battery =3D devm_kzalloc(&client->dev, sizeof(*battery), GFP_KERNEL);
+>  	if (!battery)
+> -		return -EINVAL;
+> +		return -ENOMEM;
+> =20
+>  	battery->client =3D client;
+>  	battery->regmap =3D devm_regmap_init_i2c(client,
+> --=20
+> 2.1.0
+>=20
 
-from the csky tree and commit:
-
-  469023465e79 ("sh: Add SECCOMP_FILTER")
-
-from the sh tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc tools/testing/selftests/seccomp/seccomp_bpf.c
-index 8d18a0ddafdd,6eb21685c88f..000000000000
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@@ -1703,8 -1699,7 +1709,8 @@@ void change_syscall(struct __test_metad
-  	EXPECT_EQ(0, ret) {}
- =20
-  #if defined(__x86_64__) || defined(__i386__) || defined(__powerpc__) || \
- -	defined(__s390__) || defined(__hppa__) || defined(__riscv) || defined(__=
-sh__)
- +	defined(__s390__) || defined(__hppa__) || defined(__riscv) || \
-- 	defined(__csky__)
-++	defined(__csky__) || defined(__sh__)
-  	{
-  		regs.SYSCALL_NUM =3D syscall;
-  	}
-
---Sig_/R4JPgLYyfUn4NvlA+F+kfWi
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--7od7w7hhl7sikvqk
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8fbuYACgkQAVBC80lX
-0GyAHQf/dg9qwOF7ATm1BDj7lL98hYGbzbCkgID7JNK/dHx8iFn7rJMuajdOyX7d
-JbwbdtA9DseCWnVq9JYm2QKxXctopnqDLPTP+ZrhnbN9je3fnH3F5p2Di9sY6ifE
-u6x8MyskofVAWmGOM6lXCmrvytlmRnvJIqo56lOOMevefTfae1UifwqiVqc7XsAf
-Id+LhtGtvbgs2mWjS0XZ7jvlS5vCMInvOfgvFh17Bn7GgiZbXmqMZfb+RwVUKn3f
-63SuCdi1eQmvkLqiOn4tfR+SJK5Lkaae/t5C1Nfwa0vDQQlDsIikLvIdNSK/dGEc
-BKz9VOhKDnvsdjo+HILwcsVpHVg2kw==
-=hTCd
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8fbxkACgkQ2O7X88g7
++pog2A/8DVU5QYgx87Or/U3pWkw+/hgTRmm5UVuocenyM22SgCXnd+SHVLLpF12P
+NinS8uhYlufo7HRznagwQr1t2uy2AT8IpQ13VpwjcidHZYbCqudJtUNL9gJ0VYVO
+OKmwlQeROyXnjqiM5dKA48TXcFvXFmzsg9vOphwsN+uY0DsoZOimHmGHc2XRZ+dc
+x3HmlBNX9z8C+y1JoiP/b7H8oXXUhxXnZZ0Ogs04jmlE38CSClPwAhVvcd8umqyZ
+sZgnGlaG2uCV8/ZvSvstBzEJAwaP23VLEZoqccs+9v3nI97JVml0oAP1U8yq7Xah
+XF1h8bxRsxzxZ2cq1htGlXy7TlwNmHqgBiskM+AyuHOOViKyGJR5ug/RCUEGc5y+
+JT39Yk6rhrowEIZlsAaJGOWGeuXAHO1UwE1bg6nZDazRPZ9GExk9bmu7vrhnLODS
+CHnnaMh2oK+KW2oVenfm1y7Du1GAa3jiDCLTXXFV6ZACQu9jh7N55BzdfdnvmInR
+NzHV9+55pcbk9U/blUGn4A4LTzBdptv6z/Y42URoghn2ks4dxNlhtwKCWWIVEm3p
+uc24pzQJJp4YpexNlZr+giQ/jD6muqgUdS5lml8rPTw7Dui5Ya9Z4Q8YHNfhnzit
+ZwZfH8dlK7Z8uoKco4TeafPi91n25hyPgx//TgqyhMNvBCYaRvE=
+=xY1+
 -----END PGP SIGNATURE-----
 
---Sig_/R4JPgLYyfUn4NvlA+F+kfWi--
+--7od7w7hhl7sikvqk--
