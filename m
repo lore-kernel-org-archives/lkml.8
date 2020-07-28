@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A85AEC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452CCC433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 852E7207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AAA9207FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595954023;
-	bh=CyO+KG7FzzjL3u5xcfWSbfuodTo1aFszHfxmh23DayQ=;
+	s=default; t=1595954036;
+	bh=P3s2vLrUkoPtpWsgHnMNHnfzyTA1ZnLqpfxWfpMaeyg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ykoWmK3bAIu7CO+kJwmjeLBY/49Plg5bgWdLAMie8DELhbfLujJKZzi6E72IaPrM3
-	 7NLJuu6GzJ/grN1WNBq1Nhkqgim6sCQq6zIcdVM+oPUkwciUtWS2kfDb9p1LAf5ViT
-	 ufO8huvvRtlts2jakq/y2IpygDnxsWP4/QEaB3iY=
+	b=hwQT95Vg5Kh+V9I6f1XxcFxgC8KSpV8WaJYgMu9STuFQdoFGeCzE3p8dOSCK+E84C
+	 NmFaMRAR0j2jRyGsMQ35NxnPjIPngp/ZQXaJ3ImVAI281hQENAqwuwjtE2O+awQdhF
+	 fJVjGe/7qy3zSn/u/UTo/zjPu+5vakm+/nbA7R1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731511AbgG1Qdm (ORCPT
+        id S1731534AbgG1Qdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:33:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48598 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 12:33:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731191AbgG1Qdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:33:41 -0400
+        id S1731191AbgG1Qdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:33:54 -0400
 Received: from localhost (p54b330d0.dip0.t-ipconnect.de [84.179.48.208])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E09B2074F;
-        Tue, 28 Jul 2020 16:33:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92DA22074F;
+        Tue, 28 Jul 2020 16:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595954020;
-        bh=CyO+KG7FzzjL3u5xcfWSbfuodTo1aFszHfxmh23DayQ=;
+        s=default; t=1595954034;
+        bh=P3s2vLrUkoPtpWsgHnMNHnfzyTA1ZnLqpfxWfpMaeyg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s3QrGWs6r41cwRLi3jaM7WnG9VMjZ38NgXikHq81mnPXeHly87gXe1Gdnt+Oa8ILn
-         WMcPea7hK8lcMan/78/gjXWYPQk8o5bsU8IP7f3qqXCgtMTZzifwpGkNNbSfGPhFlc
-         hXJoX0fJrdTMFqYhxTXf5OLU+QgCqZWvduAImpek=
-Date:   Tue, 28 Jul 2020 18:33:37 +0200
+        b=VmVzQijZMe3MQ8CgPNz02MhvuDClbYbJWKDHBgb8RiMP5VQ7zSFhV6prXFGsoXl+l
+         rGdW/hhCRPW5n1MNFjclalgwC1LmlMPxni9n2sdgl9/YEd7x1vWLN06dWI1ERRtvSF
+         j+UeL3T5KdzmPcwoAbFXFSG3ouwh35hy/jGBIrwI=
+Date:   Tue, 28 Jul 2020 18:33:51 +0200
 From:   Wolfram Sang <wsa@kernel.org>
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>
 Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
@@ -48,16 +48,16 @@ Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
         gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
         devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [RFC PATCH v5 01/14] i2c: tegra: Don't mark VI I2C as IRQ safe
- runtime PM
-Message-ID: <20200728163337.GA3736@ninjato>
+Subject: Re: [RFC PATCH v5 03/14] i2c: tegra: Fix the error path in
+ tegra_i2c_runtime_resume
+Message-ID: <20200728163351.GC3736@ninjato>
 References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
- <1595883452-17343-2-git-send-email-skomatineni@nvidia.com>
+ <1595883452-17343-4-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
+        protocol="application/pgp-signature"; boundary="2/5bycvrmDh4d1IB"
 Content-Disposition: inline
-In-Reply-To: <1595883452-17343-2-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1595883452-17343-4-git-send-email-skomatineni@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -65,23 +65,16 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---pf9I7BMVVzbSWLtt
+--2/5bycvrmDh4d1IB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 27, 2020 at 01:57:19PM -0700, Sowjanya Komatineni wrote:
-> Tegra VI I2C is part of VE power domain and typically used for
-> camera usecases.
+On Mon, Jul 27, 2020 at 01:57:21PM -0700, Sowjanya Komatineni wrote:
+> tegra_i2c_runtime_resume does not disable prior enabled clocks
+> properly.
 >=20
-> VE power domain is not always on and is non-IRQ safe. So, IRQ safe
-> device cannot be attached to a non-IRQ safe domain as it prevents
-> powering off the PM domain and generic power domain driver will warn.
->=20
-> Current driver marks all I2C devices as IRQ safe and VI I2C device
-> does not require IRQ safe as it will not be used for atomic transfers.
->=20
-> This patch has fix to make VI I2C as non-IRQ safe.
+> This patch fixes it.
 >=20
 > Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
 > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
@@ -89,24 +82,24 @@ On Mon, Jul 27, 2020 at 01:57:19PM -0700, Sowjanya Komatineni wrote:
 Applied to for-next, thanks!
 
 
---pf9I7BMVVzbSWLtt
+--2/5bycvrmDh4d1IB
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8gU10ACgkQFA3kzBSg
-KbZ3Hw/+JjUetYWJoT3e1Gow35An6YJAiMVml8O8As0dKNoOqQxvKRwPzWLycd/a
-+KvB6iWzLLth8Fd74qmC9ksj3aQcI3ABTZJtkFmi9l1xui/AnfzrqwUHrLqxBqo0
-URq5URAUQDd0qRkk5t65otVrSSLf9V04KQL53VriUefnvKUk8TMq1GTHG5T7a+Z5
-Pk/4mUV5QcdPMv4j5H83ri/0JJZw2EAMRQFKCK7Vr3Mj0/4y3W5DNkJb7u368wZ3
-z7KOT6x5vgt3NKwe4x8bPRjeIn6R7BPgaiIrYoO3XDCgN7JBAShVOkCquvhXGR7u
-amYZ1YkXtv8hL0eGin4Stc2NFt/WTYz7FP0WtDoJ7Yx/x/ilIA17C7dw7iNBqVY9
-Ra05N4oKGROtl5XgdcLIV0skNuVunJ5p2iqci1xIO/Q3gnH6cCRIBOeN1xtNjEIR
-wr4pKBBpuU6UlJcfg08r5epbGTEach07HiijY5H5CVkQa0hg5eWWu4KRdFYgvJUb
-rWoH96/4oxZZRMORpMUw1bA9AkZFUXTH/6zZ3VTadkznUCYjO8fqzDNYKpwcxUG3
-8FbT/x7WL52H+J0ZwRlAxWBU297l0V6JpdO+YHfRp9p2oi9LbUF6nl+kkOZR07zW
-76nFW+M44VWlKxeCmgRLtVTHTIUZTRMw4GKalr7c3pwSetzEpo0=
-=tHZF
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8gU28ACgkQFA3kzBSg
+KbbmDhAAoX1GzWiktnMfjqHwm3rkcqamBWXVqsWEGRjEdMUDfeD6uPttYDx8YGph
+NUaP4CjvNwdoATSH2geHWjJ59/Aj5mzDZfTil2c3uQtfczA+CtMjNX7h9sh1qpY0
+m5kqnnOytv6nn07R6R6htknVhMRLMlAuOqtnyBgd2hSaNo/3i2oe3XldtwFnwVQg
+4b5J8ohKh27fqfYXIqMzTkBOmH7qjNX9flgdik5T4V3Jx3zKGOA2P7Somp8pRwWk
+HwHCUiWEBF6lCKFFvGkSXJEin3lmL5xBk9Mxg1YO8xUlA8L3/6bmIUKXZaDHz2Ez
+8sKfqHx1wy2PqLHMK4RK6pCCRkLmFw+qemZC9QEl2/4BY5MT8ZvGNhjxD5+ThT1u
+T8QZkBDLTjvcKIilQ43mHMplMsHYvdfi6Do4de4TXkif6uDWc+nGbYNJPxxpEoen
+HnZO7jPCTvoG7uPlJGjcIeoIiqlJIDc2LIecBA8V89xX9T5Cw5vpKyFPhZbqyOCC
+o55rDDsnaWZvDFMEzsX4gQIOjXYyE7QjN1W8l4VkYaEEjIkLDclFfv9DGJ46gWPs
+kU+sBU6bpR53Vfpv76ocU7B+yDKR6vTZvYzsAUeZ7R+DgNkMzj2CCa5UQLxbcMHL
+9B4RMSTnGYRe8XEqQ/zCZ+Qq8TZvOnJ/M+VKYPmkgSUw4vryzpE=
+=gkYV
 -----END PGP SIGNATURE-----
 
---pf9I7BMVVzbSWLtt--
+--2/5bycvrmDh4d1IB--
