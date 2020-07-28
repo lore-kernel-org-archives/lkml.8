@@ -2,208 +2,104 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042A6C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3194C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D348E20829
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B361320829
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595933818;
-	bh=FgcTnYXgA0rEllPu4tLOBKhCeVE/MwrCLcbdciPSbZY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jGL99ejEvXr5XM7WCBoQI3T63RlWT6DO012GlXvw/wLx70uLmqQ+PvJnf131nqWcS
-	 OpYaUwnA4WVj4Pq10hIl7idqUk+1sijcRI9N5A5xc/aTsVyMKUSX3NuxIhymFKLGUM
-	 gO8DBOFPK8nWlXSR5UNAUKNmhdKw/adKOh+Y+HWc=
+	s=default; t=1595933853;
+	bh=QmkjTL4+ot64Yxfj5gl0faqIndw3TZ3OSft3MSYRtJk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BnqS/PyJcnQDk5niqskDbX695O9I7s34FFKtRtWHv8VqH5fdGbBH5ez8z220TujNx
+	 vtz1yiGo/0l9tXFYs4JIk+cYIkJcJWraK5VhsHIn3KaZKDDw7sO+crjPptRufHt5C/
+	 5vfqL6I+u69Q4rg48ZZ0BFMjZez98oc3UgJ0QSi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbgG1K45 (ORCPT
+        id S1728975AbgG1K5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 06:56:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728588AbgG1K44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 06:56:56 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7018208E4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 10:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595933815;
-        bh=FgcTnYXgA0rEllPu4tLOBKhCeVE/MwrCLcbdciPSbZY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JWZMBJ83jcH+bMosW6PNvkNvoWQPeb7JhsUAcIsXH0RZeNllMlPJT1xMLvgmjTKPp
-         vUm6eCWf+sHFJ3LKfsBi4FI6OX2BHOaj8nhfqe2CxFJR1ERRt0Km/1EDolfGIxGQla
-         Qv2zNsS8W/alO3sphsiOVCTdgD560qEw8lMxAVG0=
-Received: by mail-ot1-f53.google.com with SMTP id o72so8991278ota.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:56:55 -0700 (PDT)
-X-Gm-Message-State: AOAM530FjhwZAwWhFNjMBQXDnxdsuEbvyjSItjwxt3lQnTEBA9Z3Edki
-        +QTsE2eoOrYzQOBZvAj+vdZ6u9y6dtEheUTeTq0=
-X-Google-Smtp-Source: ABdhPJxsfIEG3PipIScO0TY7NQcbqjqsDYShQhVLbQymjWiMKVdLOw1doMOSzbAJxKAyUboo7j0mFL1lx5xjSiClMhU=
-X-Received: by 2002:a9d:3a04:: with SMTP id j4mr10807490otc.108.1595933815109;
- Tue, 28 Jul 2020 03:56:55 -0700 (PDT)
+        Tue, 28 Jul 2020 06:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59354 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728588AbgG1K5c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 06:57:32 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E13ACC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:57:31 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id dk23so8311183ejb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:57:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZmQ3dkwrohmJdjRb+T+ntOxqQdIdD0pDYwQoPTPtnBo=;
+        b=SrFLQ3/XqSIUt8W/CB7ZwPcVQHOAyNfAAwEdoHSWUQsaz1fheSYLb49l9yVXWmkQjw
+         vc0KUKexpJ2W+DgPfEAwZ9B4U/PN01/Tu0NVHZBKMZY5NO+GFqf/BevC3MLwdtVYdttB
+         UTxBjYCeooNvyPV2DySXjvLbdFmZXjKqMfKzy9EGhRj5OzJ9rA3r4Bca9KSSjBFcnvD8
+         PB28BGihHXu0aXeTR3dcbE6MnKgt0s5xFwqTsUFHSqzdkkUsc3P0Ke0jPZL/KN7skCTh
+         McFzqTsTKzm7V6fTV943bRirmw+iTkwEJmSHg35l7F8N9YXP/D13OBy5ojS9pmSoj+Te
+         e2QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=ZmQ3dkwrohmJdjRb+T+ntOxqQdIdD0pDYwQoPTPtnBo=;
+        b=tq0Uov+gfViv8rq7Zyma3SkFsrQmSqJ2x5e5v2mT7/ujBpSRSzhRjvPJ4HgpgzQjZQ
+         hUcZaDEhsG0b4Q1z/Q2tuoUi74K+Klla/P7foexOhVxrUVynsRbVtJG7LKDkG02x5H2e
+         vMx6WzrUky8uSIs9mg6VmDMd5PnUITCCbnClV1xMtgnxwHVViHCB6WiMGMp0Tuk4f9bP
+         wl5wcx8/ZMcJnnWFfhKOS32n0fKo9/xAuuKloeiZ3X0XrOdMJFzDfSjkZLlIcXJe7IS1
+         D8q8GTxs4VvavX1MOInZpid0F9JauV82eos1AsgX+pifvOg1INmLPZcAnHIsKok7gp1M
+         Qvuw==
+X-Gm-Message-State: AOAM533NCq3waWUS9PiCRS6ZgpDXWIWyYMM5wJUtjQyzfAjoCU9VFVsX
+        QvFsysNdhCUlQQqFVezdIZs=
+X-Google-Smtp-Source: ABdhPJzbso46BRXFiIITHCOBcbcfUVaVfaUZSQaIOAeeJWxfGQ+d8ozyN3pw2giVhMIFtW25suoKJg==
+X-Received: by 2002:a17:906:9399:: with SMTP id l25mr17112464ejx.212.1595933850672;
+        Tue, 28 Jul 2020 03:57:30 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id h24sm8840984ejg.53.2020.07.28.03.57.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 03:57:29 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 12:57:28 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Kees Cook <keescook@chromium.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/8] x86/kaslr: Simplify __process_mem_region
+Message-ID: <20200728105728.GB222284@gmail.com>
+References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
+ <20200727215047.3341098-6-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
- <20200724050553.1724168-6-jarkko.sakkinen@linux.intel.com>
- <20200724092746.GD517988@gmail.com> <20200725031648.GG17052@linux.intel.com>
- <20200726081408.GB2927915@kernel.org> <CAMj1kXHDK5RSbTu3SG1AzbLRJD_FsdAmCnjmf31P=Db6J0ktww@mail.gmail.com>
- <20200728171715.0800093e2226e3d72b04a3ae@kernel.org>
-In-Reply-To: <20200728171715.0800093e2226e3d72b04a3ae@kernel.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 28 Jul 2020 13:56:43 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXGJ_7mUtFHWsLaBj-MSK_VxpBet=wi1Z7frkKRVEgozpQ@mail.gmail.com>
-Message-ID: <CAMj1kXGJ_7mUtFHWsLaBj-MSK_VxpBet=wi1Z7frkKRVEgozpQ@mail.gmail.com>
-Subject: Re: [PATCH v5 5/6] kprobes: Use text_alloc() and text_free()
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jessica Yu <jeyu@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727215047.3341098-6-nivedita@alum.mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jul 2020 at 11:17, Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> On Sun, 26 Jul 2020 19:06:20 +0300
-> Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> > On Sun, 26 Jul 2020 at 11:14, Mike Rapoport <rppt@kernel.org> wrote:
-> > >
-> > > On Sat, Jul 25, 2020 at 06:16:48AM +0300, Jarkko Sakkinen wrote:
-> > > > On Fri, Jul 24, 2020 at 11:27:46AM +0200, Ingo Molnar wrote:
-> > > > >
-> > > > > * Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-> > > > >
-> > > > > > Use text_alloc() and text_free() instead of module_alloc() and
-> > > > > > module_memfree() when an arch provides them.
-> > > > > >
-> > > > > > Cc: linux-mm@kvack.org
-> > > > > > Cc: Andi Kleen <ak@linux.intel.com>
-> > > > > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > > > > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > > > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > > ---
-> > > > > >  kernel/kprobes.c | 9 +++++++++
-> > > > > >  1 file changed, 9 insertions(+)
-> > > > > >
-> > > > > > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > > > > > index 4e46d96d4e16..611fcda9f6bf 100644
-> > > > > > --- a/kernel/kprobes.c
-> > > > > > +++ b/kernel/kprobes.c
-> > > > > > @@ -40,6 +40,7 @@
-> > > > > >  #include <asm/cacheflush.h>
-> > > > > >  #include <asm/errno.h>
-> > > > > >  #include <linux/uaccess.h>
-> > > > > > +#include <linux/vmalloc.h>
-> > > > > >
-> > > > > >  #define KPROBE_HASH_BITS 6
-> > > > > >  #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
-> > > > > > @@ -111,12 +112,20 @@ enum kprobe_slot_state {
-> > > > > >
-> > > > > >  void __weak *alloc_insn_page(void)
-> > > > > >  {
-> > > > > > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > > > > > + return text_alloc(PAGE_SIZE);
-> > > > > > +#else
-> > > > > >   return module_alloc(PAGE_SIZE);
-> > > > > > +#endif
-> > > > > >  }
-> > > > > >
-> > > > > >  void __weak free_insn_page(void *page)
-> > > > > >  {
-> > > > > > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > > > > > + text_free(page);
-> > > > > > +#else
-> > > > > >   module_memfree(page);
-> > > > > > +#endif
-> > > > > >  }
-> > > > >
-> > > > > I've read the observations in the other threads, but this #ifdef
-> > > > > jungle is silly, it's a de-facto open coded text_alloc() with a
-> > > > > module_alloc() fallback...
-> > > >
-> > > > In the previous version I had:
-> > > >
-> > > >   https://lore.kernel.org/lkml/20200717030422.679972-4-jarkko.sakkinen@linux.intel.com/
-> > > >
-> > > > and I had just calls to text_alloc() and text_free() in corresponding
-> > > > snippet to the above.
-> > > >
-> > > > I got this feedback from Mike:
-> > > >
-> > > >   https://lore.kernel.org/lkml/20200718162359.GA2919062@kernel.org/
-> > > >
-> > > > I'm not still sure that I fully understand this feedback as I don't see
-> > > > any inherent and obvious difference to the v4. In that version fallbacks
-> > > > are to module_alloc() and module_memfree() and text_alloc() and
-> > > > text_memfree() can be overridden by arch.
-> > >
-> > > Let me try to elaborate.
-> > >
-> > > There are several subsystems that need to allocate memory for executable
-> > > text. As it happens, they use module_alloc() with some abilities for
-> > > architectures to override this behaviour.
-> > >
-> > > For many architectures, it would be enough to rename modules_alloc() to
-> > > text_alloc(), make it built-in and this way allow removing dependency on
-> > > MODULES.
-> > >
-> > > Yet, some architectures have different restrictions for code allocation
-> > > for different subsystems so it would make sense to have more than one
-> > > variant of text_alloc() and a single config option ARCH_HAS_TEXT_ALLOC
-> > > won't be sufficient.
-> > >
-> > > I liked Mark's suggestion to have text_alloc_<something>() and proposed
-> > > a way to introduce text_alloc_kprobes() along with
-> > > HAVE_KPROBES_TEXT_ALLOC to enable arch overrides of this function.
-> > >
-> > > The major difference between your v4 and my suggestion is that I'm not
-> > > trying to impose a single ARCH_HAS_TEXT_ALLOC as an alternative to
-> > > MODULES but rather to use per subsystem config option, e.g.
-> > > HAVE_KPROBES_TEXT_ALLOC.
-> > >
-> > > Another thing, which might be worth doing regardless of the outcome of
-> > > this discussion is to rename alloc_insn_pages() to text_alloc_kprobes()
-> > > because the former is way too generic and does not emphasize that the
-> > > instruction page is actually used by kprobes only.
->
-> The name of the insn_pages came from the struct kprobe_insn_page, so
-> if there is a text_alloc_kprobe(), I'm OK to rename it. (anyway, that
-> is an allocation operator, we don't call it directly.)
->
-> > Masami or Peter should correct me if I am wrong, but it seems to me
-> > that the way kprobes uses these pages does not require them to be in
-> > relative branching range of the core kernel on any architecture, given
-> > that they are populated with individual instruction opcodes that are
-> > executed in single step mode, and relative branches are emulated (when
-> > needed)
->
-> Actually, x86 and arm has the "relative branching range" requirements
-> for the jump optimized kprobes. For the other architectures, I think
-> we don't need it. Only executable text buffer is needed.
->
 
-Thanks for the explanation. Today, arm64 uses the definition below.
+* Arvind Sankar <nivedita@alum.mit.edu> wrote:
 
-void *alloc_insn_page(void)
-{
-  return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
-    GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
-    NUMA_NO_NODE, __builtin_return_address(0));
-}
+> Get rid of unnecessary temporary variables and redundant tests in
+> __process_mem_region.
+> 
+> Fix one minor bug: in case of an overlap, the beginning of the region
+> should be used even if it is exactly image_size, not just strictly
+> larger.
+> 
+> Change type of minimum/image_size arguments in process_mem_region to
+> unsigned long. These actually can never be above 4G (even on x86_64),
+> and they're unsigned long in every other function except this one.
 
-Do you think we could use that as the generic implementation if we use
-MODULES_START/_END as the allocation window?
+Please split this up into 3 separate patches. The KASLR code is 
+difficult to debug, so we want to approach changes as conservatively 
+as possible. This is also reinforced by the fact that this patch was 
+buggy in v1 already.
+
+Thanks,
+
+	Ingo
