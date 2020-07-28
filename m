@@ -2,132 +2,301 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D14C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4940C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9882070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:32:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="coMmgj3c";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="lBW2YXfU"
+	by mail.kernel.org (Postfix) with ESMTP id 8AE342070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:32:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595939558;
+	bh=ZbZwYZdM78qSDbFfYE+8AstHXUYz25gnm4B0I/ih8Fg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GXJwHyI5Eitbn+IyZfx5BLnxDuPDA0i+VYXxN6bTbnXmg6VWfxzSOFklEwcgtl7ZB
+	 4BpDLXLy8pfjxNg90FcC8cxQNPqcCajnuV5UQIJyjOTj+6B6/rYHRGc59AIceBsRN1
+	 9vMrFPYzQ3azIYbURfWkQUWBVQWRHjeAIFPH78IA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbgG1Mca (ORCPT
+        id S1729730AbgG1Mch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:32:30 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:38452 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729456AbgG1Mc3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:32:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1595939549; x=1627475549;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
-  b=coMmgj3cOhqVq3/jSTGLy3c7QIqos+/uC8GMnzmP+3ARXZV79A/tIbU9
-   hWIwMgdRDy5+i74fP+ttyC5OflW9vCwpgx6tUXPQ8jKIGl0Ivcj7xTTmA
-   1sUKfSw8luXOI40UPI24Q5Bi/0+HiM7HrhBYa4Ut9HPDbI5Gq/GJJIhMc
-   AfFrG45Tkq7CBknSOSrWtBXGrTC6U7plGopEnXTVz3gOI4/R9SHpZNRpI
-   EOVTVPBj8bQWqlMJEsyY8chOtpaQtSMrsBYZpYvq18Kn3NdQuY5ddOuqB
-   NhzagCidDaQ7rOw9dCyPsyr5A6U28if25NTD0+V6RnoFA0l5r1U74v3md
-   Q==;
-IronPort-SDR: JE13P1BMHLoj89jVU4/EmhOTBuTlfSgneD0QCPaQ/vse4GE4e049GBUZgE2kW61BuxyeP5k0I3
- 6MuYVpq3QtA5tzmKL1sicegGsRYVLIJtvcCCwVoRj+9rytNVIFGiMBfLizxfBAHkkFXhBnNMKl
- LKSEu3i+bhUIGZ4IA/pU7hxAjxQLV1FV7uap5IsFazd1KpMhFZeFfWWpFpsdXD6uvgjeqF6bNr
- AgsahQGU4ejIxmiLYtySas3vRUAwUWB5vvX8QChYDVCM32FAfTbbtKbThlK3TFTHomeNSEKtE5
- 90Y=
-X-IronPort-AV: E=Sophos;i="5.75,406,1589212800"; 
-   d="scan'208";a="143551334"
-Received: from mail-dm6nam11lp2175.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.175])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Jul 2020 20:32:27 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kJLLRgf7UoqnIcEt59GKCXoJxcvcQMHG4G5XyZf8jKnSyqpTOmLdq0IXnQTfkybNIYXTgIlgc4Xi0KMFmabl+hHzPF6p9q6Efo259GQxVc0Y/3JiXf5q4z0+QwQlQvBY/9EgaojP8wQPXOcbQ9dIMbNAOhs6DvDULkyjCjxAVZtL4PipNBkAcLQW4TY30OgmRiwZLL04P+e+NSSUTs0LZyxpkQqt7BbrD0971PPirCb8nFwk0lumYwIumsTO1rssBKzOBqsdf4HFDP+yoxNu0jDqo/m5S4Vw8qobp5JUBSk4RZnEmkbBsoo4H2v66WJ+8oZxk+Z4J9EG52ScyC6I7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=TFesnzgH5vMmVF2OITu+bjPqR016RaLNRvOtmpIhfuJif3PjqzV5UvJX+mR9PmLs4HOj49FaZG1J7PWpetZMM/K3le0vj2Yu035UbppiALMkpdaneK5j5uCOsxKa8buiQmfC35KhBhdsM/2ux8LugjocrGRktOHeRNpCJOMyWy23A1Cr0hj4+AS646FSmF2kUn68TYbNJdHejDTO799grzE9T7XSDB9t9oQf4/FGy+swo7HLblqSyUVuJgY2DuKHLkaoaUBq4WDuN2PvZ+5UCRCWM4UEoR9CgVrdEw5GyfAPWxMZhzbKccggNoLpSkkvyVh5N8l1TBL3w+7H0JmtAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=lBW2YXfUP9SStzN/93CIhiPOL35rp/NXiEh1x0WsfKlP1UTmpOxZBe0+TXo4uhNPXypBxV+f90Caz7XUZ6wnzywMnseJHwkpJRVn5nZ8XZVpXbQu7G5Q4HJP7fNI8NsXCKHBzpbDI2MGt9LLa+rdvswWj0ACvkqjI0QDcacWGZo=
-Received: from DM5PR0401MB3591.namprd04.prod.outlook.com (2603:10b6:4:7e::15)
- by DM5PR0401MB3590.namprd04.prod.outlook.com (2603:10b6:4:78::34) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Tue, 28 Jul
- 2020 12:32:26 +0000
-Received: from DM5PR0401MB3591.namprd04.prod.outlook.com
- ([fe80::c862:9cd5:689a:8573]) by DM5PR0401MB3591.namprd04.prod.outlook.com
- ([fe80::c862:9cd5:689a:8573%5]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
- 12:32:26 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-CC:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>
-Subject: Re: [PATCH 13/14] bdi: invert BDI_CAP_NO_ACCT_WB
-Thread-Topic: [PATCH 13/14] bdi: invert BDI_CAP_NO_ACCT_WB
-Thread-Index: AQHWYYzZAPYqjABppU2mZeEMm4kZyA==
-Date:   Tue, 28 Jul 2020 12:32:26 +0000
-Message-ID: <DM5PR0401MB3591D067A9C4146859BE83BC9B730@DM5PR0401MB3591.namprd04.prod.outlook.com>
-References: <20200724073313.138789-1-hch@lst.de>
- <20200724073313.138789-14-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.240.72]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f57ee145-7191-498b-ec75-08d832f2497f
-x-ms-traffictypediagnostic: DM5PR0401MB3590:
-x-microsoft-antispam-prvs: <DM5PR0401MB3590FB1F17B89990D2FF002A9B730@DM5PR0401MB3590.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ylVA0yChln8JJ8IChNgbfAB1et2p0Gw82Iti4THRh8KF0/lGbDXVX2wD7V0pDGEv2TPs9zhUBUrs1r2Frf68OKmke5X1h7WJbCXipLfsKwNK74S5uh2/1VI95gcbcqJL6wUQQdP8NyRkKBIJcf8qXT1bDn67S81i6RZkeQl0OVDQPnJY9p0MOyImfDxzJXpmMtDP9TttrCBhJngqkW3rFxA67kJeWJaRfEPDT58jc+dxSzwrGuwRcKHyUxomPtEUMV08S+Ib5O5BY/j3A7gRvuMvZBNenydhtN91uneidlGsyLTqcX7q85yGxbCcKN6ztWJrjLAlNJo6CZ21wctKqQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0401MB3591.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(346002)(376002)(136003)(33656002)(558084003)(52536014)(4326008)(66946007)(5660300002)(66476007)(66556008)(7696005)(55016002)(64756008)(91956017)(19618925003)(316002)(76116006)(66446008)(6506007)(4270600006)(9686003)(110136005)(54906003)(186003)(26005)(7416002)(2906002)(478600001)(86362001)(8676002)(8936002)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: mr/TPk+gsvwHIxGjSB8h7hiRrLCh3oUV5CQz1ShZ32dXuqQoorJ+jpHfZOeTyQaXH7XSAwrztG81YFtXxt927I2uHO9HcFVwwMtYGRhZSIUL9otxKk3Ek2mfTew6gl1n2LJnRwtlrm8WQWlZAZX5Aig7QtI1bmYOc+GJKNGkShMwhFosGMeZ9jJRVgsEVsvOYmoe6W1bV4FN9pVjcySAoHT4uaYm2HDCMVWLz+LSqbDg5ktmmTCCby3bLmCz8I9PwAHQJhtP4mtN0fhv4Ds8DbczXilGI7y0P07SPWuSQsBlmUmRh6LoIg5ExwDm/PX5s6lpKE8Kfgzzsykad/AFZrdNZYmwwLflgPIoBaogrKA36Ws5/OFRC6fZoA7oLo1ndvVpn1mWJtNzZ0QtRZjRmDmqxQ9eglqZs1KHYhAjGjUBGL/XpUaoPRCBi+I6JWf/XEkUMLIpjdWEQfSlP5uhuyIxojZqOQsUbEozWKhx8CHqWVDdEIongGUbnsrujfTN
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 Jul 2020 08:32:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729723AbgG1Mcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:32:35 -0400
+Received: from quaco.ghostprotocols.net (179.176.1.55.dynamic.adsl.gvt.net.br [179.176.1.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E53B22074F;
+        Tue, 28 Jul 2020 12:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595939554;
+        bh=ZbZwYZdM78qSDbFfYE+8AstHXUYz25gnm4B0I/ih8Fg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wwSkO/lGGf4VTjDXl7HsrnGvqDlRAgHTFIZ7NltfaJRXgUBSXQu3VBbKTPzUQYXRJ
+         v2EvnpVQNWnumg+MzD4rVatWI4tJpPDTkJI+11clTa1RmFdbEKXia6AK74L1bzWK0t
+         dyYW7qJ2ucO85heVWTFp5yV8DHDIJPsR6CJrxAiw=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E9ED4404B1; Tue, 28 Jul 2020 09:32:31 -0300 (-03)
+Date:   Tue, 28 Jul 2020 09:32:31 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 10/19] perf metric: Add referenced metrics to hash data
+Message-ID: <20200728123231.GQ40195@kernel.org>
+References: <20200719181320.785305-1-jolsa@kernel.org>
+ <20200719181320.785305-11-jolsa@kernel.org>
+ <CAP-5=fVQ8Bu=YroJZH-uKmhKYoiK4VqbEnDjVw8f+7dA0+6y1g@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR0401MB3591.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f57ee145-7191-498b-ec75-08d832f2497f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 12:32:26.8290
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lJoQSZGlhKznEX5oWkgVl+HFz8leXCCRuWjDL8DzebwUqtGZ92d3aJwK3opzUNE5USNAmFEOJl1GmZZeTx+fcKRh0yq5ov1uk/5Kp4P+js4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR0401MB3590
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVQ8Bu=YroJZH-uKmhKYoiK4VqbEnDjVw8f+7dA0+6y1g@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+Em Sun, Jul 19, 2020 at 03:32:26PM -0700, Ian Rogers escreveu:
+> On Sun, Jul 19, 2020 at 11:14 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Adding referenced metrics to the parsing context so they
+> > can be resolved during the metric processing.
+> >
+> > Adding expr__add_ref function to store referenced metrics
+> > into parse context.
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
+
+Thanks, applied.
+
+- Arnaldo
+ 
+> Thanks,
+> Ian
+> 
+> > ---
+> >  tools/perf/util/expr.c        | 54 +++++++++++++++++++++++++++++++++++
+> >  tools/perf/util/expr.h        | 13 ++++++++-
+> >  tools/perf/util/stat-shadow.c | 20 +++++++++----
+> >  3 files changed, 80 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> > index f726211f49d4..d3997c2b4a90 100644
+> > --- a/tools/perf/util/expr.c
+> > +++ b/tools/perf/util/expr.c
+> > @@ -4,10 +4,14 @@
+> >  #include <errno.h>
+> >  #include <stdlib.h>
+> >  #include <string.h>
+> > +#include "metricgroup.h"
+> > +#include "debug.h"
+> >  #include "expr.h"
+> >  #include "expr-bison.h"
+> >  #include "expr-flex.h"
+> >  #include <linux/kernel.h>
+> > +#include <linux/zalloc.h>
+> > +#include <ctype.h>
+> >
+> >  #ifdef PARSER_DEBUG
+> >  extern int expr_debug;
+> > @@ -63,6 +67,7 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
+> >         if (!data_ptr)
+> >                 return -ENOMEM;
+> >         data_ptr->val = val;
+> > +       data_ptr->is_ref = false;
+> >
+> >         ret = hashmap__set(&ctx->ids, id, data_ptr,
+> >                            (const void **)&old_key, (void **)&old_data);
+> > @@ -73,6 +78,55 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
+> >         return ret;
+> >  }
+> >
+> > +int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
+> > +{
+> > +       struct expr_id_data *data_ptr = NULL, *old_data = NULL;
+> > +       char *old_key = NULL;
+> > +       char *name, *p;
+> > +       int ret;
+> > +
+> > +       data_ptr = zalloc(sizeof(*data_ptr));
+> > +       if (!data_ptr)
+> > +               return -ENOMEM;
+> > +
+> > +       name = strdup(ref->metric_name);
+> > +       if (!name) {
+> > +               free(data_ptr);
+> > +               return -ENOMEM;
+> > +       }
+> > +
+> > +       /*
+> > +        * The jevents tool converts all metric expressions
+> > +        * to lowercase, including metric references, hence
+> > +        * we need to add lowercase name for metric, so it's
+> > +        * properly found.
+> > +        */
+> > +       for (p = name; *p; p++)
+> > +               *p = tolower(*p);
+> > +
+> > +       /*
+> > +        * Intentionally passing just const char pointers,
+> > +        * originally from 'struct pmu_event' object.
+> > +        * We don't need to change them, so there's no
+> > +        * need to create our own copy.
+> > +        */
+> > +       data_ptr->ref.metric_name = ref->metric_name;
+> > +       data_ptr->ref.metric_expr = ref->metric_expr;
+> > +       data_ptr->is_ref = true;
+> > +
+> > +       ret = hashmap__set(&ctx->ids, name, data_ptr,
+> > +                          (const void **)&old_key, (void **)&old_data);
+> > +       if (ret)
+> > +               free(data_ptr);
+> > +
+> > +       pr_debug2("adding ref metric %s: %s\n",
+> > +                 ref->metric_name, ref->metric_expr);
+> > +
+> > +       free(old_key);
+> > +       free(old_data);
+> > +       return ret;
+> > +}
+> > +
+> >  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+> >                  struct expr_id_data **data)
+> >  {
+> > diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+> > index 2462abd0ac65..81d04ff7f857 100644
+> > --- a/tools/perf/util/expr.h
+> > +++ b/tools/perf/util/expr.h
+> > @@ -11,12 +11,22 @@
+> >  #include "util/hashmap.h"
+> >  //#endif
+> >
+> > +struct metric_ref;
+> > +
+> >  struct expr_parse_ctx {
+> >         struct hashmap ids;
+> >  };
+> >
+> >  struct expr_id_data {
+> > -       double  val;
+> > +       union {
+> > +               double val;
+> > +               struct {
+> > +                       const char *metric_name;
+> > +                       const char *metric_expr;
+> > +               } ref;
+> > +       };
+> > +
+> > +       bool is_ref;
+> >  };
+> >
+> >  struct expr_scanner_ctx {
+> > @@ -29,6 +39,7 @@ void expr__ctx_clear(struct expr_parse_ctx *ctx);
+> >  void expr__del_id(struct expr_parse_ctx *ctx, const char *id);
+> >  int expr__add_id(struct expr_parse_ctx *ctx, const char *id);
+> >  int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
+> > +int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref);
+> >  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+> >                  struct expr_id_data **data);
+> >  int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
+> > diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> > index fc9ac4b4218e..e1ba6c1b916a 100644
+> > --- a/tools/perf/util/stat-shadow.c
+> > +++ b/tools/perf/util/stat-shadow.c
+> > @@ -731,13 +731,14 @@ static void print_smi_cost(struct perf_stat_config *config,
+> >  }
+> >
+> >  static int prepare_metric(struct evsel **metric_events,
+> > +                         struct metric_ref *metric_refs,
+> >                           struct expr_parse_ctx *pctx,
+> >                           int cpu,
+> >                           struct runtime_stat *st)
+> >  {
+> >         double scale;
+> >         char *n, *pn;
+> > -       int i;
+> > +       int i, j, ret;
+> >
+> >         expr__ctx_init(pctx);
+> >         for (i = 0; metric_events[i]; i++) {
+> > @@ -778,12 +779,19 @@ static int prepare_metric(struct evsel **metric_events,
+> >                         expr__add_id_val(pctx, n, avg_stats(stats)*scale);
+> >         }
+> >
+> > +       for (j = 0; metric_refs && metric_refs[j].metric_name; j++) {
+> > +               ret = expr__add_ref(pctx, &metric_refs[j]);
+> > +               if (ret)
+> > +                       return ret;
+> > +       }
+> > +
+> >         return i;
+> >  }
+> >
+> >  static void generic_metric(struct perf_stat_config *config,
+> >                            const char *metric_expr,
+> >                            struct evsel **metric_events,
+> > +                          struct metric_ref *metric_refs,
+> >                            char *name,
+> >                            const char *metric_name,
+> >                            const char *metric_unit,
+> > @@ -798,7 +806,7 @@ static void generic_metric(struct perf_stat_config *config,
+> >         int i;
+> >         void *ctxp = out->ctx;
+> >
+> > -       i = prepare_metric(metric_events, &pctx, cpu, st);
+> > +       i = prepare_metric(metric_events, metric_refs, &pctx, cpu, st);
+> >         if (i < 0)
+> >                 return;
+> >
+> > @@ -847,7 +855,7 @@ double test_generic_metric(struct metric_expr *mexp, int cpu, struct runtime_sta
+> >         struct expr_parse_ctx pctx;
+> >         double ratio;
+> >
+> > -       if (prepare_metric(mexp->metric_events, &pctx, cpu, st) < 0)
+> > +       if (prepare_metric(mexp->metric_events, mexp->metric_refs, &pctx, cpu, st) < 0)
+> >                 return 0.;
+> >
+> >         if (expr__parse(&ratio, &pctx, mexp->metric_expr, 1))
+> > @@ -1064,8 +1072,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+> >                 else
+> >                         print_metric(config, ctxp, NULL, NULL, name, 0);
+> >         } else if (evsel->metric_expr) {
+> > -               generic_metric(config, evsel->metric_expr, evsel->metric_events, evsel->name,
+> > -                               evsel->metric_name, NULL, 1, cpu, out, st);
+> > +               generic_metric(config, evsel->metric_expr, evsel->metric_events, NULL,
+> > +                               evsel->name, evsel->metric_name, NULL, 1, cpu, out, st);
+> >         } else if (runtime_stat_n(st, STAT_NSECS, 0, cpu) != 0) {
+> >                 char unit = 'M';
+> >                 char unit_buf[10];
+> > @@ -1093,7 +1101,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+> >                         if (num++ > 0)
+> >                                 out->new_line(config, ctxp);
+> >                         generic_metric(config, mexp->metric_expr, mexp->metric_events,
+> > -                                       evsel->name, mexp->metric_name,
+> > +                                       mexp->metric_refs, evsel->name, mexp->metric_name,
+> >                                         mexp->metric_unit, mexp->runtime, cpu, out, st);
+> >                 }
+> >         }
+> > --
+> > 2.25.4
+> >
+
+-- 
+
+- Arnaldo
