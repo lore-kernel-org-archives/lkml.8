@@ -2,116 +2,89 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E565C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1096420663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF05120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:25:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Z/LMp3e9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731311AbgG1QZ2 (ORCPT
+        id S1731344AbgG1QZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:25:28 -0400
-Received: from mga18.intel.com ([134.134.136.126]:2871 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730679AbgG1QZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:25:28 -0400
-IronPort-SDR: j9HYufdvPC8mybHGZP8sBdzH6L4Slak0UVRx6JOXTtbl+5/yIs+MJNYyDe/f28L5WaSfEAMIJn
- BEdk0X8Db0jA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="138772585"
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="138772585"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 09:25:28 -0700
-IronPort-SDR: YAW0CaxbxjIeOA9o7ZaCbA5yvLUgv88BYxvkLjskK3Y4+SilGEzhvrR8BL2HdV5/HfpcSnkpiB
- nEQiVb0Gabcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="290231385"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga006.jf.intel.com with ESMTP; 28 Jul 2020 09:25:24 -0700
-Date:   Tue, 28 Jul 2020 09:25:24 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Chenyi Qiang <chenyi.qiang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [RFC 2/2] KVM: VMX: Enable bus lock VM exit
-Message-ID: <20200728162524.GE5300@linux.intel.com>
-References: <20200628085341.5107-1-chenyi.qiang@intel.com>
- <20200628085341.5107-3-chenyi.qiang@intel.com>
- <878sg3bo8b.fsf@vitty.brq.redhat.com>
- <0159554d-82d5-b388-d289-a5375ca91323@intel.com>
- <87366bbe1y.fsf@vitty.brq.redhat.com>
- <adad61e8-8252-0491-7feb-992a52c1b4f3@intel.com>
- <87zh8j9to2.fsf@vitty.brq.redhat.com>
- <20200723012114.GP9114@linux.intel.com>
- <a1c2a7dc-d52a-daad-4078-3097579ffef2@intel.com>
+        Tue, 28 Jul 2020 12:25:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731318AbgG1QZn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:25:43 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C17C0619D4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:25:43 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id d18so21394039ion.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:25:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MYT8/3K7R/c49QbezBV5IoadxtpkYqUZBsW74I/Bodo=;
+        b=Z/LMp3e9hgnHv/y2/1uciK3aP6hkPDVj/2+kga+pm4sBvwUogma5yUVi7EjxmSiq0s
+         y4mmWN0OT92cwabH8ObN26Eqc6Bvq4m+BI7e4nXCq00b/h9A/gavGlUsmj0sBaFkeHet
+         jGUJQBGnWgORdiaHk27mg1Efw6KMWcSzTpzGXgQNinC8/yfKrva8LA6PMI4ntPLz/Md5
+         cN1YEYjYhm8TwgrM/N9CVTR7aE7/ZVAEqztrMnlIbc+ASgV9YV9uwPIgI34V40N5zztF
+         o47SCW6+KLK/qPdCzDAYMhmiY98BPdbUPhrqwPTfMsErfUcD4V98qs8z2amEXizeHX/k
+         s2qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MYT8/3K7R/c49QbezBV5IoadxtpkYqUZBsW74I/Bodo=;
+        b=MuYlUn8YncSy/wsxKcA3TPgiJcZ2G7djW6eDt7qwRoWWeCdWWBGWFAX5P0QRhFdKJd
+         HQuEem0uSHWZJhji3Kk7A+HVWGBM/lFYXV0PtQBI0tZQHWz3kR53CoBKNZu2YrAPIPqg
+         qBCkmzSUn+75L9yx4vLYSFAJ2yeHL/sH8FcNJCnrt33+6uqAjlvkVa8KTC1meXX9YlgX
+         6r7D6VBbKKsD13PLoz9hZfSL0JA1S7p2SDx3OyECKaoXV8/zeSV70kivxUWXwicbKKVK
+         iMKHkQcCe3n/sxYG+OFPHzwg/nMV2jsy3rfP1XtKKh/H4WIW7HOzARLeicTVDsEoQm7x
+         dy5w==
+X-Gm-Message-State: AOAM533v7zF/0u8L4yXhLAeCWN3AK3wb7kQyjTRwcS+B7hdemymLzbNg
+        P8e61B5t3cXdsDwtmOyEpze2KWNU7FU=
+X-Google-Smtp-Source: ABdhPJw8sHeo47ArDKOoHMnkgkespNRtWnRKYH0up0DtDleqyzXsk3UPU+IsEQ13pvkIrpXiPvGVIQ==
+X-Received: by 2002:a02:a389:: with SMTP id y9mr5185167jak.82.1595953542342;
+        Tue, 28 Jul 2020 09:25:42 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id m184sm6240904ioa.12.2020.07.28.09.25.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 09:25:41 -0700 (PDT)
+Subject: Re: [PATCH v1] block: Remove callback typedefs for blk_mq_ops
+To:     Daniel Wagner <dwagner@suse.de>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200728162036.118211-1-dwagner@suse.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <edd5e5ce-f389-3416-0d9a-929f1f7ab110@kernel.dk>
+Date:   Tue, 28 Jul 2020 10:25:41 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a1c2a7dc-d52a-daad-4078-3097579ffef2@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200728162036.118211-1-dwagner@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:38:53PM +0800, Xiaoyao Li wrote:
-> On 7/23/2020 9:21 AM, Sean Christopherson wrote:
-> >On Wed, Jul 01, 2020 at 04:49:49PM +0200, Vitaly Kuznetsov wrote:
-> >>Xiaoyao Li <xiaoyao.li@intel.com> writes:
-> >>>So you want an exit to userspace for every bus lock and leave it all to
-> >>>userspace. Yes, it's doable.
-> >>
-> >>In some cases we may not even want to have a VM exit: think
-> >>e.g. real-time/partitioning case when even in case of bus lock we may
-> >>not want to add additional latency just to count such events.
-> >
-> >Hmm, I suspect this isn't all that useful for real-time cases because they'd
-> >probably want to prevent the split lock in the first place, e.g. would prefer
-> >to use the #AC variant in fatal mode.  Of course, the availability of split
-> >lock #AC is a whole other can of worms.
-> >
-> >But anyways, I 100% agree that this needs either an off-by-default module
-> >param or an opt-in per-VM capability.
-> >
-> 
-> Maybe on-by-default or an opt-out per-VM capability?
-> Turning it on introduces no overhead if no bus lock happens in guest but
-> gives KVM the capability to track every potential bus lock. If user doesn't
-> want the extra latency due to bus lock VM exit, it's better try to fix the
-> bus lock, which also incurs high latency.
+On 7/28/20 10:20 AM, Daniel Wagner wrote:
+> No need to define typedefs for the callbacks, because there is not a
+> single user except blk_mq_ops.
 
-Except that I doubt the physical system owner and VM owner are the same
-entity in the vast majority of KVM use cases.  So yeah, in a perfect world
-the guest application that's causing bus locks would be fixed, but in
-practice there is likely no sane way for the KVM owner to inform the guest
-application owner that their application is broken, let alone fix said
-application.
+v2 I guess, but looks good to me, thanks.
 
-The caveat would be that we may need to enable this by default if the host
-kernel policy mandates it.
+-- 
+Jens Axboe
 
-> >>I'd suggest we make the new capability tri-state:
-> >>- disabled (no vmexit, default)
-> >>- stats only (what this patch does)
-> >>- userspace exit
-> >>But maybe this is an overkill, I'd like to hear what others think.
-> >
-> >Userspace exit would also be interesting for debug.  Another throttling
-> >option would be schedule() or cond_reched(), though that's probably getting
-> >into overkill territory.
-> >
-> 
-> We're going to leverage host's policy, i.e., calling handle_user_bus_lock(),
-> for throttling, as proposed in https://lkml.kernel.org/r/1595021700-68460-1-git-send-email-fenghua.yu@intel.com
-> 
