@@ -2,99 +2,68 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDB9C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCBBC433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5BC3206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0CF3206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:14:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730398AbgG1ONQ (ORCPT
+        id S1730124AbgG1OO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:13:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33168 "EHLO mx2.suse.de"
+        Tue, 28 Jul 2020 10:14:26 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:59938 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730298AbgG1ONQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:13:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4D5AFB1DD;
-        Tue, 28 Jul 2020 14:13:25 +0000 (UTC)
-Subject: Re: [PATCH] block: Use non _rcu version of list functions for
- tag_set_list
-To:     Daniel Wagner <dwagner@suse.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ming Lei <ming.lei@redhat.com>
-References: <20200728132951.29459-1-dwagner@suse.de>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <e9e63b09-c077-edb9-ea28-cbbc96b99261@suse.de>
-Date:   Tue, 28 Jul 2020 16:13:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1730340AbgG1OO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 10:14:26 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1k0QMs-007I2f-6T; Tue, 28 Jul 2020 16:14:10 +0200
+Date:   Tue, 28 Jul 2020 16:14:10 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     linux-mediatek@lists.infradead.org,
+        Landen Chao <landen.chao@mediatek.com>,
+        Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>
+Subject: Re: [PATCH v3] net: ethernet: mtk_eth_soc: fix mtu warning
+Message-ID: <20200728141410.GG1705504@lunn.ch>
+References: <20200728122743.78489-1-frank-w@public-files.de>
 MIME-Version: 1.0
-In-Reply-To: <20200728132951.29459-1-dwagner@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200728122743.78489-1-frank-w@public-files.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/20 3:29 PM, Daniel Wagner wrote:
-> tag_set_list is only accessed under the tag_set_lock lock. There is
-> no need for using the _rcu list functions.
+On Tue, Jul 28, 2020 at 02:27:43PM +0200, Frank Wunderlich wrote:
+> From: Landen Chao <landen.chao@mediatek.com>
 > 
-> The _rcu list function were introduced to allow read access to the
-> tag_set_list protected under RCU, see 705cda97ee3a ("blk-mq: Make it
-> safe to use RCU to iterate over blk_mq_tag_set.tag_list") and
-> 05b79413946d ("Revert "blk-mq: don't handle TAG_SHARED in restart"").
-> Those changes got reverted later but the cleanup commit missed a
-> couple of places to undo the changes.
+> in recent Kernel-Versions there are warnings about incorrect MTU-Size
+> like these:
 > 
-> Fixes: 97889f9ac24f ("blk-mq: remove synchronize_rcu() from blk_mq_del_queue_tag_set()"
-> Cc: Ming Lei <ming.lei@redhat.com>
-> Signed-off-by: Daniel Wagner <dwagner@suse.de>
-> ---
->   block/blk-mq.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+> eth0: mtu greater than device maximum
+> mtk_soc_eth 1b100000.ethernet eth0: error -22 setting MTU to include DSA overhead
 > 
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index e32cb0217135..14ee7506f32f 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -2792,7 +2792,7 @@ static void blk_mq_del_queue_tag_set(struct request_queue *q)
->   	struct blk_mq_tag_set *set = q->tag_set;
->   
->   	mutex_lock(&set->tag_list_lock);
-> -	list_del_rcu(&q->tag_set_list);
-> +	list_del(&q->tag_set_list);
->   	if (list_is_singular(&set->tag_list)) {
->   		/* just transitioned to unshared */
->   		set->flags &= ~BLK_MQ_F_TAG_SHARED;
-> @@ -2819,7 +2819,7 @@ static void blk_mq_add_queue_tag_set(struct blk_mq_tag_set *set,
->   	}
->   	if (set->flags & BLK_MQ_F_TAG_SHARED)
->   		queue_set_hctx_shared(q, true);
-> -	list_add_tail_rcu(&q->tag_set_list, &set->tag_list);
-> +	list_add_tail(&q->tag_set_list, &set->tag_list);
->   
->   	mutex_unlock(&set->tag_list_lock);
->   }
-> 
-Indeed.
+> Fixes: bfcb813203e6 ("net: dsa: configure the MTU for switch ports")
+> Fixes: 72579e14a1d3 ("net: dsa: don't fail to probe if we couldn't set the MTU")
+> Fixes: 7a4c53bee332 ("net: report invalid mtu value via netlink extack")
+> Signed-off-by: Ren� van Dorst <opensource@vdorst.com>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+    Andrew
