@@ -2,120 +2,135 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8027C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9213C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1DEB206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C45E20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dHFpNLnB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LwgWJaS0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgG1EbW (ORCPT
+        id S1726407AbgG1Ekt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 00:31:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgG1EbV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 00:31:21 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD253C061794;
-        Mon, 27 Jul 2020 21:31:21 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id k18so3005011pfp.7;
-        Mon, 27 Jul 2020 21:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v+vZ5D4lzefV/m6Wri5yBEiubcUZ9dLbHVAGhnF8Sco=;
-        b=dHFpNLnBI7i7q/GgeRddp2ijwrw3IwVr0tWLgS+N0fmjwKV853MwLy70ChD1bZFUO1
-         wl5wRHC1MgjqvggoTT3AuZo57TTkAr11qpEHEFbTpsHOUWNb6tfx16bX0tp7sRZ3A0J9
-         66dIYDQ6dWJz2IVqGpRng1iNq7TN36GtwWceIsL70xAvFWh12VyD4QLWPhEiBuD3uhZe
-         c6yN0+iQaREWBLptbBivah1QzKhJniHcb0w42gUgyQwwcM/+GtJ3EkYBy02AEiNT1G5c
-         W5IVhAOqoSOkNPkZm1PVZ9LBCVJnf9SYFbDdviBAMqc6BzE/TFCdytDb5k1QNMu7yZb9
-         XmGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v+vZ5D4lzefV/m6Wri5yBEiubcUZ9dLbHVAGhnF8Sco=;
-        b=MKovf2/i+BIrGRViI8UPaXxJdZDHT+Lyqun6ScJh58v3BXtIFQSx+H9tBw/PiecfPd
-         DrWlav4a1XIV7FZfQtnavojkpZST8pyl2O8TPOxC8aZgpZp/+h27hvaXCUELEV0uDgdx
-         GxciixBYsMwKthqOqXHESGCrYe3VuwfpkSw49MlrRX+H/UvjjcwLKvT1JmD1VItjzAw7
-         vACvtJTkM12SWtON8HjgMn7xTCtKfR2YBj9N7dlOsMgejNX7+vH3X9Y26ZSCR7jAyVyg
-         BQ0ljZPsC/MNWIu33pZth7h2mYN15amMoHgLaauokJOy646ai7DbTVK45fxTsUNIdG11
-         9LoQ==
-X-Gm-Message-State: AOAM531I8rtIGY/yaFaHsIZNFduOecinRKu1sZ23HpbAxkZdQ9Yy0zYF
-        O8fnlbS7tMRTZEPCmIGwCR0=
-X-Google-Smtp-Source: ABdhPJxNSKY8nqzWNqUmpduCVcvLv5t3RJfq1EJosoCcXwZzA8Tp2Mh5firF6Od4Bd4KmDGn77+BDQ==
-X-Received: by 2002:a62:e202:: with SMTP id a2mr23719262pfi.8.1595910680994;
-        Mon, 27 Jul 2020 21:31:20 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id b82sm16914992pfb.215.2020.07.27.21.31.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 21:31:20 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kevin Curtis <kevin.curtis@farsite.co.uk>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v1] farsync: use generic power management
-Date:   Tue, 28 Jul 2020 09:58:10 +0530
-Message-Id: <20200728042809.91436-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 28 Jul 2020 00:40:49 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:62653 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726299AbgG1Eks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 00:40:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595911248; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=0jt/lIUS0O6MgqaTNYHqWmRMSlQq28krUPIbICxs6KU=;
+ b=LwgWJaS0OFBE1fo+2qLvmNFwpGK9K6LA8nhimkAPc/H/6HFvRPcR6uREFr4bVaJQxHpU6se1
+ d55j8j4rjFnOJeif5o5hNFdcR5z19lQnAozf8t9S06HtVVc0+RIWFrb6LfWDOX7Ah7N/yMp8
+ vOlYrQJsStx9Kp+62qTn/QLpoUA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n17.prod.us-west-2.postgun.com with SMTP id
+ 5f1fac2c49176bd382b7879e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 04:40:12
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4052CC43391; Tue, 28 Jul 2020 04:40:12 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 933BEC433C6;
+        Tue, 28 Jul 2020 04:40:11 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Jul 2020 10:10:11 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        mike.leach@linaro.org, Jonathan Marek <jonathan@marek.ca>
+Subject: Re: [PATCH 2/4] arm64: dts: qcom: sc7180: Add iommus property to ETR
+In-Reply-To: <20200727205834.GA202429@builder.lan>
+References: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
+ <2312c9a10e7251d69e31e4f51c0f1d70e6f2f2f5.1591708204.git.saiprakash.ranjan@codeaurora.org>
+ <20200621072213.GG128451@builder.lan>
+ <f40621b2b01f836a8a97686707599dd0@codeaurora.org>
+ <e270acd3f7db076c043f1b982b1efea0@codeaurora.org>
+ <20200727205834.GA202429@builder.lan>
+Message-ID: <207e6b6a297d5ce1bdcac204e297389b@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The .suspend() and .resume() callbacks are not defined for this driver.
-Still, their power management structure follows the legacy framework. To
-bring it under the generic framework, simply remove the binding of
-callbacks from "struct pci_driver".
+On 2020-07-28 02:28, Bjorn Andersson wrote:
+> On Tue 23 Jun 23:56 PDT 2020, Sai Prakash Ranjan wrote:
+> 
+>> Hi Bjorn,
+>> 
+>> On 2020-06-21 13:39, Sai Prakash Ranjan wrote:
+>> > Hi Bjorn,
+>> >
+>> > On 2020-06-21 12:52, Bjorn Andersson wrote:
+>> > > On Tue 09 Jun 06:30 PDT 2020, Sai Prakash Ranjan wrote:
+>> > >
+>> > > > Define iommus property for Coresight ETR component in
+>> > > > SC7180 SoC with the SID and mask to enable SMMU
+>> > > > translation for this master.
+>> > > >
+>> > >
+>> > > We don't have &apps_smmu in linux-next, as we've yet to figure out how
+>> > > to disable the boot splash or support the stream mapping handover.
+>> > >
+>> > > So I'm not able to apply this.
+>> > >
+>> >
+>> > This is for SC7180 which has apps_smmu not SM8150.
+>> >
+>> 
+>> Please let me know if this needs further explanation.
+>> 
+> 
+> I must have commented on the wrong patch, sorry about that. The SM8150
+> patch in this series does not compile due to the lack of &apps_smmu.
+> 
+> I've picked the other 3 patches.
+> 
 
-Change code indentation from space to tab in "struct pci_driver".
+Thanks Bjorn, I can resend SM8150 coresight change when SMMU support 
+lands for it
+since coresight ETR won't work without it on android bootloaders.
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/net/wan/farsync.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+As for the other 3 patches, Patch 1 and Patch 2 will apply cleanly to 
+the right coresight
+nodes but due to the missing unique context in Patch 3, it could be 
+applied to some other node.
+We had to upload this change 3 times in chromium tree to get it applied 
+to the right replicator node :)
+and this property in Patch 3 is important to fix a hard lockup. I'm not 
+sure why this patch is missing
+the proper context :/
 
-diff --git a/drivers/net/wan/farsync.c b/drivers/net/wan/farsync.c
-index 7916efce7188..15dacfde6b83 100644
---- a/drivers/net/wan/farsync.c
-+++ b/drivers/net/wan/farsync.c
-@@ -2636,12 +2636,10 @@ fst_remove_one(struct pci_dev *pdev)
- }
- 
- static struct pci_driver fst_driver = {
--        .name		= FST_NAME,
--        .id_table	= fst_pci_dev_id,
--        .probe		= fst_add_one,
--        .remove	= fst_remove_one,
--        .suspend	= NULL,
--        .resume	= NULL,
-+	.name		= FST_NAME,
-+	.id_table	= fst_pci_dev_id,
-+	.probe		= fst_add_one,
-+	.remove		= fst_remove_one,
- };
- 
- static int __init
+I couldn't find the changes yet in qcom/for-next or other branches to 
+see if it is
+applied to right replicator node. In case you haven't applied it yet, 
+Patch 3 change
+should be applied to "replicator@6b06000" node.
+
+Thanks,
+Sai
+
 -- 
-2.27.0
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
