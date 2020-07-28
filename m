@@ -2,232 +2,494 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22636C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 954F2C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF07120786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623FB20809
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:09:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="soVI1NoR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Rt2kMTj8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgG1JHt (ORCPT
+        id S1728365AbgG1JJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:07:49 -0400
-Received: from mail-eopbgr80053.outbound.protection.outlook.com ([40.107.8.53]:51511
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728371AbgG1JHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 05:07:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ij8HeKCjv1XegyOHGi+5Alj7IlRUt1M3KBOMrWj7KDTDJff9AGJpbU6Gg7ToB5qKU3jMWGDGi9JtUPpKcdcROIZ0bFRMP4hM96TCBC8+1So6h5P7IUR98mToPR642lWiDja8gRn9Zm7WOEVdl0vzjD2PmElbAkymW+lLahrfB6ZxWR9xiyR2UKiTH6vA6hmRDc+uBx5MBXL5cwzVVHaK6Mr/QyVptN+C2KM2+kZeHAeU792ZFRBG33b26d4oEU9DAQ/7lL8O1dG0fcMttMrGzeqzgg/Qcsn7GmtAZPrtrs6bxIHPpmfmE3diUCUklU7mGP85QRFjZ6IDJC5fKcBJBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2pBQfuFfMMUxAbNqrQ4N53MfGP2GBD766xtZz7WkBD0=;
- b=ERAwdYbn9sWWXMKAHocLqgG79+D3n5IdV62wYJzHKPtVQOfDfuvR7iY1zXTGz8Lh2NH96hrvczrZ4NDJvGJ/p/QSjiuhTDjr1WmkJkSDRHpiyTFg4dJWdFkFkqQf4cDecjcoFVlD+wEF8Lg+K00KaDk2cgCxTetn7VGKOwBqA7JF8mZl4bn+C4DQ7tpgi41EQiZnKKObUDgDLWuk5WM+2gaXjk1YRVB+9V6/C7M7y9gKck2DeHJUx5QAmwXVIG3oNevY86DqKwWWoF+UHsGUq1NBR3VEBh/L1mDdBbUmSuzJgT21ZbMQu9SySdZtJUHx0223o1cZWXLJwIJQn7XANQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2pBQfuFfMMUxAbNqrQ4N53MfGP2GBD766xtZz7WkBD0=;
- b=soVI1NoR9A7Io4tF7pBWzz0TTrC/EARykXwPEqJiXbSK39401iaThTBKGRHvPHpEruksE1EJvXaXHyI0eAXQ34bK78pGGYX9cCfkRcJsEe82N9JfF/9/vHtJRz7LE5VIM2uqCxSOJWs3N7zEnx5XYW+LYztDDTxkSBaz1ke5Gr0=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB7PR04MB5466.eurprd04.prod.outlook.com (2603:10a6:10:8a::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Tue, 28 Jul
- 2020 09:07:43 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::2d36:b569:17c:7701]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::2d36:b569:17c:7701%4]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
- 09:07:43 +0000
-From:   peng.fan@nxp.com
-To:     sboyd@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, abel.vesa@nxp.com
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com, Anson.Huang@nxp.com,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH v2 2/2] clk: imx: imx8m: use devm_of_clk_add_hw_provider()
-Date:   Tue, 28 Jul 2020 17:03:19 +0800
-Message-Id: <1595926999-14934-2-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595926999-14934-1-git-send-email-peng.fan@nxp.com>
-References: <1595926999-14934-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0174.apcprd06.prod.outlook.com
- (2603:1096:1:1e::28) To DB6PR0402MB2760.eurprd04.prod.outlook.com
- (2603:10a6:4:a1::14)
+        Tue, 28 Jul 2020 05:09:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728253AbgG1JJC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 05:09:02 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA75DC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 02:09:01 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g10so15102491wmc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 02:09:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=u55INkZWirsK6NQAZxkEs5ZVazhhRGpWntp9Ofr7sR8=;
+        b=Rt2kMTj88D08Uugt49awJBzJvdwWdVWsAt4NmFFzNu38ZtkQw7GlCk8JwEpxhkClxX
+         PbqyEcMFX/Q08dWO85av6MGjwRRO9SsgcFXJojwaQ2lVSP3JqDVPckL4yhm4aNCIFR6s
+         iaHJQR3Rk8i6yQMYYXTT5AMMuCxzN+Qch4eF4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=u55INkZWirsK6NQAZxkEs5ZVazhhRGpWntp9Ofr7sR8=;
+        b=SqXsi9Pi4vc1Fdn4B8duptoa9WiA6UUe82O42rkqr5oqlXK7PzwEXRA/QOwm42AK1X
+         V0+8H7XrGAFSgsLbFKzamRYiToR/SKd/R2qu0EMd9mcra3nVRJUEtb9XpZFiNKvJblOX
+         4wG/ldgHYMLY99lvQSKtSF5I9ncfoRZqsA1aSVonZ6fLbZ5TcwNvFWAKrnHbbHIWrwKQ
+         cGSSlSPc/Z9bgCPq/hAiFt8HRSvYZeRlYvjjdmuqQvyXXC9LORW1kdmJlfreTLxJqzIJ
+         EHBTV8KxZZ/XBDSjof4N0q46cXFEccCzcUDDggweCBpUm4t18+pmcNzTpktmCIygOqQw
+         0I4g==
+X-Gm-Message-State: AOAM533pJZeckO/HxBGCOb1IM4m+Neg7GhZVjHPFrdlsa7T/zgVHycB5
+        h0Q2KwTtMbIRDrR0zTdLh8mmuA==
+X-Google-Smtp-Source: ABdhPJxrZc03v97sNH4i4UTTHjPVDu2m03vOCqlNBmz6FfdNbT9H2NGkD+XQtKd1H5B/3CaZfYdTRw==
+X-Received: by 2002:a1c:9e06:: with SMTP id h6mr2898411wme.45.1595927340195;
+        Tue, 28 Jul 2020 02:09:00 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id t189sm3281581wmf.47.2020.07.28.02.08.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 02:08:57 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 11:08:55 +0200
+From:   daniel@ffwll.ch
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Mazin Rezk <mnrzk@protonmail.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        "anthony.ruhier@gmail.com" <anthony.ruhier@gmail.com>,
+        Duncan <1i5t5.duncan@cox.net>, Kees Cook <keescook@chromium.org>,
+        "sunpeng.li@amd.com" <sunpeng.li@amd.com>,
+        "regressions@leemhuis.info" <regressions@leemhuis.info>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "mphantomx@yahoo.com.br" <mphantomx@yahoo.com.br>
+Subject: Re: [PATCH] drm/amd/display: Clear dm_state for fast updates
+Message-ID: <20200728090855.GZ6419@phenom.ffwll.local>
+Mail-Followup-To: "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>,
+        Mazin Rezk <mnrzk@protonmail.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        "anthony.ruhier@gmail.com" <anthony.ruhier@gmail.com>,
+        Duncan <1i5t5.duncan@cox.net>, Kees Cook <keescook@chromium.org>,
+        "sunpeng.li@amd.com" <sunpeng.li@amd.com>,
+        "regressions@leemhuis.info" <regressions@leemhuis.info>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "mphantomx@yahoo.com.br" <mphantomx@yahoo.com.br>
+References: <M0lxN5AUlPvzBKULfIBe5BZRwfQGXeMQCdWItYcQ-9P79y32WzExYK2Y0DwyNVtyGelqbvV07_lFk1oeT4cApbT-P_oH0bnxQbMmFsJv_xg=@protonmail.com>
+ <ba078fb0-0dbc-df06-cfe9-f9537883f82a@amd.com>
+ <e2f55480-c24f-6c85-08d3-21131a22d0bf@amd.com>
+ <3b7e3e50-2ff7-eff3-2ffc-abaa4b36ce7f@amd.com>
+ <CAKMK7uHCu02P4tvhF4LQbtYeNciU61ONC9EZRmQ-0wEGFPzZgg@mail.gmail.com>
+ <Fnx2lsAReNccvQbyMYBgghvef4ekiQ_ZWL0m5BwF-2h48gvnNLghI4zkIWhQwy-H6CiytTXaxEtZ83dYRlzAXeKHujBRLc_tffmcJVWjwuo=@protonmail.com>
+ <CAKMK7uFAnedLTp6LJYum6gYj3xaWkuuXJr70UJ48Pxxr-4dA7w@mail.gmail.com>
+ <dcc84e05-54ef-4314-a32b-3c596fccb327@amd.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.67) by SG2PR06CA0174.apcprd06.prod.outlook.com (2603:1096:1:1e::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3216.22 via Frontend Transport; Tue, 28 Jul 2020 09:07:40 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: f5756b5e-5f07-4f9a-80fd-08d832d5afeb
-X-MS-TrafficTypeDiagnostic: DB7PR04MB5466:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB7PR04MB5466B533FACB9EA17F82E02088730@DB7PR04MB5466.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:176;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gicjUBPbjmxir+ML+FYwqWF+ltT2AnUzsjlDJthuDq59sURRlWkSorcE6Ku+xTqSsj6OMgXYCDAf7X8sCZ8lzhBg4nd4PfAkggavBc6shDUTYr2US7JBuFExWWSSjOLgrz78CS+i5Da6ps3+kjinyHDqn8CoIbG64FBdgaPobrRbL9BSrvzo8w0znmy3+YykgPQAB0RgfFmqBpk6ZVFs6C6yn53HL6sZZxIqrEInU+GjHv3vGYDIUMkHdPhLNWxHNq3xy98rLcBqNgZ9ZQd7MNHtDO7jKgzp1K1HnzfyD04bz8qyl9eDbpsl21PoG6sV2Jr6qDZRO81BwrM/XVIQ0LYSh6MFePTQZiBqcor0kJKVU1HF8CtTLk/pzlHzKe4VZzUcEUy31qidTtWHmR2PAb6o61g/15gT/nxS6wSsQ4w=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(396003)(346002)(39860400002)(366004)(8936002)(6666004)(478600001)(316002)(2906002)(6486002)(8676002)(52116002)(36756003)(4326008)(26005)(9686003)(69590400007)(86362001)(83380400001)(6506007)(5660300002)(6512007)(66556008)(66476007)(66946007)(16526019)(186003)(2616005)(956004)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: KZnTW4rrejXG4RdaANcGyoGnetzx2Nu/hlKpt4JALVmTRDHGww0U25Secm8rjtmoqaE7Uqgp+HPzwwpTyni/Aba+yMIUyxN1skKBfQYfP5zu83ehLMHIDygQKjhQF9uUcpvdv1vGvPYFd/O8e01xPcWRo29MSJsyBDDaIpySmP2ltDmGj6ihOTqFd54N0MiX2kPSpOtQu6RZxndHkRv0bRRXRVmpo0I8fV77Pyw3bffxcwSO4W7bXKjSdsIALR3Gin2BLzQWANd4wl5PgIRZLPSw77WsAJkOLJu8OVRw8xIyzYMu+KS0/59zO92T5wmKSowhofYN75HbkPO/F6j8lDo+4D6Gt2T5+pyk78jek0F1M81Sx9Beg4BtVyHk62pqNeS4xsY1g7p29PhWLL0BoX+E0lyg5AbvgxW5M+ZY4GIsL5siJWyl6C7BYoURhq+ZBLd43kJiftIdf5Z5OZEq54LvWQiVqVyaUGRbyouhVykDejjdkOE7JxY2eGq5t9YC
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5756b5e-5f07-4f9a-80fd-08d832d5afeb
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 09:07:43.5693
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XM14TY01zaKUsOT0fnDA4/mrj5dixVmbWpmr8loObtSUuUyqJRCJzxLuFHlfm7wQxZZg7cBHLGtHiAC6M7bZXA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5466
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dcc84e05-54ef-4314-a32b-3c596fccb327@amd.com>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On Mon, Jul 27, 2020 at 10:49:48PM -0400, Kazlauskas, Nicholas wrote:
+> On 2020-07-27 5:32 p.m., Daniel Vetter wrote:
+> > On Mon, Jul 27, 2020 at 11:11 PM Mazin Rezk <mnrzk@protonmail.com> wrote:
+> > > 
+> > > On Monday, July 27, 2020 4:29 PM, Daniel Vetter <daniel@ffwll.ch> wrote:
+> > > 
+> > > > On Mon, Jul 27, 2020 at 9:28 PM Christian König
+> > > > <christian.koenig@amd.com> wrote:
+> > > > > 
+> > > > > Am 27.07.20 um 16:05 schrieb Kazlauskas, Nicholas:
+> > > > > > On 2020-07-27 9:39 a.m., Christian König wrote:
+> > > > > > > Am 27.07.20 um 07:40 schrieb Mazin Rezk:
+> > > > > > > > This patch fixes a race condition that causes a use-after-free during
+> > > > > > > > amdgpu_dm_atomic_commit_tail. This can occur when 2 non-blocking
+> > > > > > > > commits
+> > > > > > > > are requested and the second one finishes before the first.
+> > > > > > > > Essentially,
+> > > > > > > > this bug occurs when the following sequence of events happens:
+> > > > > > > > 
+> > > > > > > > 1. Non-blocking commit #1 is requested w/ a new dm_state #1 and is
+> > > > > > > > deferred to the workqueue.
+> > > > > > > > 
+> > > > > > > > 2. Non-blocking commit #2 is requested w/ a new dm_state #2 and is
+> > > > > > > > deferred to the workqueue.
+> > > > > > > > 
+> > > > > > > > 3. Commit #2 starts before commit #1, dm_state #1 is used in the
+> > > > > > > > commit_tail and commit #2 completes, freeing dm_state #1.
+> > > > > > > > 
+> > > > > > > > 4. Commit #1 starts after commit #2 completes, uses the freed dm_state
+> > > > > > > > 1 and dereferences a freelist pointer while setting the context.
+> > > > > > > 
+> > > > > > > Well I only have a one mile high view on this, but why don't you let
+> > > > > > > the work items execute in order?
+> > > > > > > 
+> > > > > > > That would be better anyway cause this way we don't trigger a cache
+> > > > > > > line ping pong between CPUs.
+> > > > > > > 
+> > > > > > > Christian.
+> > > > > > 
+> > > > > > We use the DRM helpers for managing drm_atomic_commit_state and those
+> > > > > > helpers internally push non-blocking commit work into the system
+> > > > > > unbound work queue.
+> > > > > 
+> > > > > Mhm, well if you send those helper atomic commits in the order A,B and
+> > > > > they execute it in the order B,A I would call that a bug :)
+> > > > 
+> > > > The way it works is it pushes all commits into unbound work queue, but
+> > > > then forces serialization as needed. We do _not_ want e.g. updates on
+> > > > different CRTC to be serialized, that would result in lots of judder.
+> > > > And hw is funny enough that there's all kinds of dependencies.
+> > > > 
+> > > > The way you force synchronization is by adding other CRTC state
+> > > > objects. So if DC is busted and can only handle a single update per
+> > > > work item, then I guess you always need all CRTC states and everything
+> > > > will be run in order. But that also totally kills modern multi-screen
+> > > > compositors. Xorg isn't modern, just in case that's not clear :-)
+> > > > 
+> > > > Lucking at the code it seems like you indeed have only a single dm
+> > > > state, so yeah global sync is what you'll need as immediate fix, and
+> > > > then maybe fix up DM to not be quite so silly ... or at least only do
+> > > > the dm state stuff when really needed.
+> > > > 
+> > > > We could also sprinkle the drm_crtc_commit structure around a bit
+> > > > (it's the glue that provides the synchronization across commits), but
+> > > > since your dm state is global just grabbing all crtc states
+> > > > unconditionally as part of that is probably best.
+> > > > 
+> > > > > > While we could duplicate a copy of that code with nothing but the
+> > > > > > workqueue changed that isn't something I'd really like to maintain
+> > > > > > going forward.
+> > > > > 
+> > > > > I'm not talking about duplicating the code, I'm talking about fixing the
+> > > > > helpers. I don't know that code well, but from the outside it sounds
+> > > > > like a bug there.
+> > > > > 
+> > > > > And executing work items in the order they are submitted is trivial.
+> > > > > 
+> > > > > Had anybody pinged Daniel or other people familiar with the helper code
+> > > > > about it?
+> > > > 
+> > > > Yeah something is wrong here, and the fix looks horrible :-)
+> > > > 
+> > > > Aside, I've also seen some recent discussion flare up about
+> > > > drm_atomic_state_get/put used to paper over some other use-after-free,
+> > > > but this time related to interrupt handlers. Maybe a few rules about
+> > > > that:
+> > > > - dont
+> > > > - especially not when it's interrupt handlers, because you can't call
+> > > > drm_atomic_state_put from interrupt handlers.
+> > > > 
+> > > > Instead have an spin_lock_irq to protect the shared date with your
+> > > > interrupt handler, and _copy_ the date over. This is e.g. what
+> > > > drm_crtc_arm_vblank_event does.
+> > > 
+> > > Nicholas wrote a patch that attempted to resolve the issue by adding every
+> > > CRTC into the commit to use use the stall checks. [1] While this forces
+> > > synchronisation on commits, it's kind of a hacky method that may take a
+> > > toll on performance.
+> > > 
+> > > Is it possible to have a DRM helper that forces synchronisation on some
+> > > commits without having to add every CRTC into the commit?
+> > > 
+> > > Also, is synchronisation really necessary for fast updates in amdgpu?
+> > > I'll admit, the idea of eliminating the use-after-free bug by eliminating
+> > > the use entirely doesn't seem ideal; but is forcing synchronisation on
+> > > these updates that much better?
+> > 
+> > Well clearing the dc_state pointer here and then allocating another
+> > one in atomic_commit_tail also looks fishy. The proper fix is probably
+> > a lot more involved, but yeah interim fix is to grab all crtc states
+> > iff you also grabbed the dm_atomic_state structure. Real fix is to
+> > only do this when necessary, which pretty much means the dc_state
+> > needs to be somehow split up, or there needs to be some guarantees
+> > about when it's necessary and when not. Otherwise parallel commits on
+> > different CRTC are not possible with the current dc backend code.
+> 
+> Thanks for spending some time to help take a look at this as well.
+> 
+> The DRM documentation (at least at the time) seemed to imply that
+> subclassing DRM private state was for legacy usage only and DRM wanted to
+> move away from it. DRM private objects seemed to fit as the nicer atomic
+> method for handling this since they have old/new, but as you can guess from
+> this issue it's a mess (from our end).
 
-Use devm_of_clk_add_hw_provider() to simplify code.
-To i.MX8MP, also add err handling.
+Yeah, if it's actual state you put in there. But this dc_state structure
+is more like a container of state pointers, like drm_atomic_state. It's
+not 100% clear-cut, e.g. the bw stuff is more like a real state object I
+guess, or maybe it's just temporary storage for computation results?
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
+> The first step to fixing this is going back to subclassing DRM state.
+> 
+> It's actually the right tool for the job for allocating temporary state
+> outside of the core DRM objects, and we need this to form the DC state
+> object and necessary stream update bundles which might be too big to fit on
+> the stack for commit check/commit tail. We'll be a lot closer to fixing the
+> lockdep issues this way once we get around to getting rid of allocations in
+> the DC commit paths.
 
-V2:
- Add () to functions in commit log
+So on the stream bundles ... where do these pointers point to? Are the
+streams themselves in the crtc/plane states?
 
- drivers/clk/imx/clk-imx8mm.c | 9 ++-------
- drivers/clk/imx/clk-imx8mn.c | 9 ++-------
- drivers/clk/imx/clk-imx8mp.c | 8 ++++++--
- drivers/clk/imx/clk-imx8mq.c | 9 ++-------
- 4 files changed, 12 insertions(+), 23 deletions(-)
+> The second step is to fix validation itself. The old state requirement for
+> checking stream/plane updates was actually an entirely pointless endeavor
+> since dc global validation doesn't every look at updates, just the final
+> state for a set streams/planes - it's stateless.
 
-diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
-index b43dbe305e7a..fc2c1a0c9ff2 100644
---- a/drivers/clk/imx/clk-imx8mm.c
-+++ b/drivers/clk/imx/clk-imx8mm.c
-@@ -615,10 +615,10 @@ static int imx8mm_clocks_probe(struct platform_device *pdev)
- 
- 	imx_check_clk_hws(hws, IMX8MM_CLK_END);
- 
--	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_hw_data);
-+	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, clk_hw_data);
- 	if (ret < 0) {
- 		dev_err(dev, "failed to register clks for i.MX8MM\n");
--		goto unregister_hws;
-+		return ret;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(uart_clk_ids); i++) {
-@@ -630,11 +630,6 @@ static int imx8mm_clocks_probe(struct platform_device *pdev)
- 	imx_register_uart_clocks(uart_hws);
- 
- 	return 0;
--
--unregister_hws:
--	imx_unregister_hw_clocks(hws, IMX8MM_CLK_END);
--
--	return ret;
- }
- 
- static const struct of_device_id imx8mm_clk_of_match[] = {
-diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
-index 4189f7f6980e..3620a419eb83 100644
---- a/drivers/clk/imx/clk-imx8mn.c
-+++ b/drivers/clk/imx/clk-imx8mn.c
-@@ -562,10 +562,10 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
- 
- 	imx_check_clk_hws(hws, IMX8MN_CLK_END);
- 
--	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_hw_data);
-+	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, clk_hw_data);
- 	if (ret < 0) {
- 		dev_err(dev, "failed to register hws for i.MX8MN\n");
--		goto unregister_hws;
-+		return ret;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(uart_clk_ids); i++) {
-@@ -577,11 +577,6 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
- 	imx_register_uart_clocks(uart_hws);
- 
- 	return 0;
--
--unregister_hws:
--	imx_unregister_hw_clocks(hws, IMX8MN_CLK_END);
--
--	return ret;
- }
- 
- static const struct of_device_id imx8mn_clk_of_match[] = {
-diff --git a/drivers/clk/imx/clk-imx8mp.c b/drivers/clk/imx/clk-imx8mp.c
-index f6ec7b2b8038..43117f387460 100644
---- a/drivers/clk/imx/clk-imx8mp.c
-+++ b/drivers/clk/imx/clk-imx8mp.c
-@@ -432,7 +432,7 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
- 	void __iomem *anatop_base, *ccm_base;
--	int i;
-+	int ret, i;
- 
- 	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mp-anatop");
- 	anatop_base = of_iomap(np, 0);
-@@ -741,7 +741,11 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
- 
- 	imx_check_clk_hws(hws, IMX8MP_CLK_END);
- 
--	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_hw_data);
-+	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, clk_hw_data);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to register hws for i.MX8MN\n");
-+		return ret;
-+	}
- 
- 	for (i = 0; i < ARRAY_SIZE(uart_clk_ids); i++) {
- 		int index = uart_clk_ids[i];
-diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
-index 0106a33c24a4..7c0a84cc9501 100644
---- a/drivers/clk/imx/clk-imx8mq.c
-+++ b/drivers/clk/imx/clk-imx8mq.c
-@@ -600,10 +600,10 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
- 
- 	imx_check_clk_hws(hws, IMX8MQ_CLK_END);
- 
--	err = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_hw_data);
-+	err = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, clk_hw_data);
- 	if (err < 0) {
- 		dev_err(dev, "failed to register hws for i.MX8MQ\n");
--		goto unregister_hws;
-+		return err;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(uart_clk_ids); i++) {
-@@ -615,11 +615,6 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
- 	imx_register_uart_clocks(uart_hws);
- 
- 	return 0;
--
--unregister_hws:
--	imx_unregister_hw_clocks(hws, IMX8MQ_CLK_END);
--
--	return err;
- }
- 
- static const struct of_device_id imx8mq_clk_of_match[] = {
+Uh, is your hw that good, i.e. there's no impossible state transitions? Or
+do you simply force a modeset in such cases? In which case, are the
+modeset flags correctly updated so that userspace can control this with
+ALLOW_MODESET?
+
+> We wanted to rely on DC to internally notify DM when DRM changes would do
+> this, but DM actually requires this logic as well to know when to use a fast
+> path vs a full programming path to recreate planes/streams based on the new
+> DRM state to pass into validation.
+> 
+> State updates will change to be formed from a delta of the old/new plane
+> state, but the new one can be discarded if not needed.
+> 
+> Any update that requires clock/bandwidth changes will have to add all the
+> CRTCs and stall for any fast updates to complete first. This is because they
+> could potentially reshuffle around the pipes as well, but these updates
+> happen infrequently enough that the stall isn't too bad here.
+> 
+> DC state unfortunately still does need to exist due to requirements on
+> hardware resources/pipe splitting that don't fit nicely into the DRM
+> infrastructure. It's really hard to shift everything over into the DRM
+> infrastructure as well because of the DKMS problem we chatted about briefly
+> last year at XDC.
+
+Uh this is awkward, holding up upstream because of downstream kernels ...
+
+Can't you fix this with a lot more glue in the downstream kernels, stuff
+like copying the entire atomic helpers into your driver when there's new
+stuff?
+
+For the multi-pipe stuff, how other drivers handle this is by internally
+remapping userspace visible crtc/plane objects to underlying hw objects.
+And then if you have remapping going on you add the userspace state
+structs for all underlying remmapped crtc/plane in use by the current
+update. That should be enough to force just enough synchronization.
+
+Then in your hw commit functions you simple iterate over all the states in
+your update, as if you'd iterate over streams directly. So example:
+
+struct amdgpu_crtc_state {
+	struct drm_crtc_state base;
+	struct dm_stream_mapping_state mapping;
+	/* this crtc might not be using this stream! */
+	struct dm_stream_state stream;
+};
+
+I think msm works like this, but there's also other drivers.
+
+When you have to change the mapping then you grab the global mapping
+private state, but in any other cases you use the read-only copy in the
+crtc state. And the global state is only for book-keeping, so no sync
+needed (aside from the sync provided by adding the crtc states for each
+stream you touch).
+
+Ofc might have gotten the stream lingo wrong, but this is roughly how to
+do this in atomic.
+
+> I'd really like to tackle a third step as well at some point, and that's
+> cleaning up our IRQ management. Our interrupt handlers unfortunately access
+> DRM state directly (since it's so easy to do) and thus introduce a
+> requirement that it doesn't get changed while these are still enabled. This
+> requires us to introduce our own stall checks in atomic_check and perform
+> the interrupt disable in commit before the state swap.
+
+Yeah don't do that :-) It might work if you guarantee that the atomic
+commit_tail is waiting for all your irq handlers to complete, plus use rcu
+dereferencing on these pointers.
+
+Copying the relevant bits over should be much nicer imo, also passing
+explicit pointers at least. I.e. if you don't want to copy, have a
+dedicated pointer protected by irqsave spin_lock that you share with the
+interrupt handler. Stopping interrupt handlers before swap_state isn't
+really how this should work.
+
+> The fix for this one isn't too bad, but it's tedious - copying all the state
+> we need to the interrupt handlers before enabling them and letting them
+> continue to work off of that state. This way we can remove the stall from
+> atomic_check and actually disable/enable interrupts from commit_tail like we
+> should be doing.
+
+Yup. I think you can have some pointers to specific state, _iff_ you make
+sure the commit_tail waits for all the interrupt handlers to complete
+somewhere (depending upon how this all works). But copying is probably
+simpler to understand - interrupt races are tricky.
+> 
+> > 
+> > See also my dma-fence annotation fixup patch, there dc_state also gets
+> > in the way:
+> > 
+> > https://lore.kernel.org/dri-devel/20200707201229.472834-21-daniel.vetter@ffwll.ch/
+> > 
+> > Nicholas, btw I'm still waiting for some dc feedback on that entire
+> > series, and what/if there's plans to fix these issues properly.
+> > 
+> > Maybe even going back to the subclassed drm_atomic_state might be
+> > better than what we currently have.
+> > -Daniel
+> 
+> I've taken a look at that series but forgot to ACK. While this isn't the
+> same thread for it, you can have my:
+> 
+> Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+> 
+> ...on the DC/DM bits. Everything you've identified there is correct and it's
+> something I'd really like to get around to taking a look at by the end of
+> the year, hopefully.
+> 
+> State allocations will be solved by the DM state allocation rework and the
+> tiling flags thing needs to be solved by storing those in atomic_check
+> instead on the plane.
+> 
+> Regards,
+> Nicholas Kazlauskas
+> 
+> > > 
+> > > [1] https://bugzilla.kernel.org/show_bug.cgi?id=207383#c96
+> > > 
+> > > Thanks,
+> > > Mazin Rezk
+> > > 
+> > > > 
+> > > > Cheers, Daniel
+> > > > 
+> > > > > 
+> > > > > Regards,
+> > > > > Christian.
+> > > > > 
+> > > > > > 
+> > > > > > Regards,
+> > > > > > Nicholas Kazlauskas
+> > > > > > 
+> > > > > > > 
+> > > > > > > > 
+> > > > > > > > Since this bug has only been spotted with fast commits, this patch
+> > > > > > > > fixes
+> > > > > > > > the bug by clearing the dm_state instead of using the old dc_state for
+> > > > > > > > fast updates. In addition, since dm_state is only used for its dc_state
+> > > > > > > > and amdgpu_dm_atomic_commit_tail will retain the dc_state if none is
+> > > > > > > > found,
+> > > > > > > > removing the dm_state should not have any consequences in fast updates.
+> > > > > > > > 
+> > > > > > > > This use-after-free bug has existed for a while now, but only caused a
+> > > > > > > > noticeable issue starting from 5.7-rc1 due to 3202fa62f ("slub:
+> > > > > > > > relocate
+> > > > > > > > freelist pointer to middle of object") moving the freelist pointer from
+> > > > > > > > dm_state->base (which was unused) to dm_state->context (which is
+> > > > > > > > dereferenced).
+> > > > > > > > 
+> > > > > > > > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207383
+> > > > > > > > Fixes: bd200d190f45 ("drm/amd/display: Don't replace the dc_state
+> > > > > > > > for fast updates")
+> > > > > > > > Reported-by: Duncan <1i5t5.duncan@cox.net>
+> > > > > > > > Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
+> > > > > > > > ---
+> > > > > > > >    .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 36
+> > > > > > > > ++++++++++++++-----
+> > > > > > > >    1 file changed, 27 insertions(+), 9 deletions(-)
+> > > > > > > > 
+> > > > > > > > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > > > > > > > b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > > > > > > > index 86ffa0c2880f..710edc70e37e 100644
+> > > > > > > > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > > > > > > > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > > > > > > > @@ -8717,20 +8717,38 @@ static int amdgpu_dm_atomic_check(struct
+> > > > > > > > drm_device *dev,
+> > > > > > > >             * the same resource. If we have a new DC context as part of
+> > > > > > > >             * the DM atomic state from validation we need to free it and
+> > > > > > > >             * retain the existing one instead.
+> > > > > > > > +         *
+> > > > > > > > +         * Furthermore, since the DM atomic state only contains the DC
+> > > > > > > > +         * context and can safely be annulled, we can free the state
+> > > > > > > > +         * and clear the associated private object now to free
+> > > > > > > > +         * some memory and avoid a possible use-after-free later.
+> > > > > > > >             */
+> > > > > > > > -        struct dm_atomic_state *new_dm_state, *old_dm_state;
+> > > > > > > > 
+> > > > > > > > -        new_dm_state = dm_atomic_get_new_state(state);
+> > > > > > > > -        old_dm_state = dm_atomic_get_old_state(state);
+> > > > > > > > +        for (i = 0; i < state->num_private_objs; i++) {
+> > > > > > > > +            struct drm_private_obj *obj = state->private_objs[i].ptr;
+> > > > > > > > 
+> > > > > > > > -        if (new_dm_state && old_dm_state) {
+> > > > > > > > -            if (new_dm_state->context)
+> > > > > > > > -                dc_release_state(new_dm_state->context);
+> > > > > > > > +            if (obj->funcs == adev->dm.atomic_obj.funcs) {
+> > > > > > > > +                int j = state->num_private_objs-1;
+> > > > > > > > 
+> > > > > > > > -            new_dm_state->context = old_dm_state->context;
+> > > > > > > > +                dm_atomic_destroy_state(obj,
+> > > > > > > > +                        state->private_objs[i].state);
+> > > > > > > > +
+> > > > > > > > +                /* If i is not at the end of the array then the
+> > > > > > > > +                 * last element needs to be moved to where i was
+> > > > > > > > +                 * before the array can safely be truncated.
+> > > > > > > > +                 */
+> > > > > > > > +                if (i != j)
+> > > > > > > > +                    state->private_objs[i] =
+> > > > > > > > +                        state->private_objs[j];
+> > > > > > > > 
+> > > > > > > > -            if (old_dm_state->context)
+> > > > > > > > -                dc_retain_state(old_dm_state->context);
+> > > > > > > > +                state->private_objs[j].ptr = NULL;
+> > > > > > > > +                state->private_objs[j].state = NULL;
+> > > > > > > > +                state->private_objs[j].old_state = NULL;
+> > > > > > > > +                state->private_objs[j].new_state = NULL;
+> > > > > > > > +
+> > > > > > > > +                state->num_private_objs = j;
+> > > > > > > > +                break;
+> > > > > > > > +            }
+> > > > > > > >            }
+> > > > > > > >        }
+> > > > > > > > 
+> > > > > > > > --
+> > > > > > > > 2.27.0
+> > > > > > > > 
+> > > > > > > 
+> > > > > > 
+> > > > > 
+> > > > > _______________________________________________
+> > > > > dri-devel mailing list
+> > > > > dri-devel@lists.freedesktop.org
+> > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > > 
+> > > > 
+> > > > 
+> > > > --
+> > > > Daniel Vetter
+> > > > Software Engineer, Intel Corporation
+> > > > http://blog.ffwll.ch/
+> > 
+> > 
+> > 
+> 
+
 -- 
-2.16.4
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
