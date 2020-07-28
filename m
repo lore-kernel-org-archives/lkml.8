@@ -2,446 +2,170 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D19C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74495C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 622DC2177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A8D2250E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mf9FNmQd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KFEJSXKx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgG1H7F (ORCPT
+        id S1728041AbgG1H7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:59:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59934 "EHLO
+        Tue, 28 Jul 2020 03:59:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727798AbgG1H7E (ORCPT
+        with ESMTP id S1727798AbgG1H7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:59:04 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45F9AC0619D4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:59:03 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g10so14981312wmc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:59:03 -0700 (PDT)
+        Tue, 28 Jul 2020 03:59:23 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED54AC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:59:21 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id r19so20069946ljn.12
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:59:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=XvzdyrAp+x7F3eELUs10pEpzk9iTwE1+D4iQltTfwX0=;
-        b=mf9FNmQd1q8v4rNzkngKybgB4ZpZ0H2V5vyJztQCBqIDKZeeizYKswHQ+XnKbrRJCE
-         ItzZe5y15XQKyEqvf9U5KjOsZPXUaM3RMglhY8vG8hHkTB0+1wctMwUL09qykdCDdVpw
-         hBLac3Dlrh/QkiCJHZlVWdX8ud6sE+WuhgoBu1nT4cyw0FCinKreKLxl4iqs0tNSNcL6
-         Kf5TAIWAg8+gBQfncGHlb506+IWw+FRLkriguzKNIXNQmOlsh/AEIGRHCKdtkhfqY3U0
-         /k/lh13mLO8bBSLuM3O+Ud2kVSYXXV1GDW5qrHBl1R72aIcOxoGUfJ7WiZWNZE/Um0Dx
-         0v7A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2KLjPmHtt09LPvfgj7g2oSkZYAImQc8MPSPeld1Rcms=;
+        b=KFEJSXKx9mTJGwSqcBgX9mxSd7dWW6zjdmO//1OAFN2wL8ptcszwKLmUWRdauB/drZ
+         P0/Sfht9PFKrQzV+yt0IOwAvFsSCZO/6CwE9XZqbLHjuS6W0vPf0RPj4HsXTICSjIVUX
+         eGoxDZHZPdWaGfUfaumWHDG25uQt2zVkppRVQhtxMSi1HMWBDuKG6YDFzEBwspwjFNUP
+         kJe/NRhAMICeP8BszFzNTfXdbc0k8YjtNIoGr41oyM9EuwK7OswfVcjAUY6UMIrqdg3O
+         FcnQBZxFlfZYml/YnFzpstFQZP+zh1PUY1JhO0dbe2X/tW45FlSnIvWQjwlIo8frh3Fs
+         mT0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=XvzdyrAp+x7F3eELUs10pEpzk9iTwE1+D4iQltTfwX0=;
-        b=p05qRbnLrpw0LWCppokU9JdacTDSjQqJF/KZznX0UoJWa0XB5/pVyEWqpm08Fj9BSA
-         zUcWXZLUnH9d5eVOKIq7UfxJruTMdcbRu8zzLN11G80Vtl8ljFOS3SY0j0cm9zrLvTfk
-         u16FfO4nfwWnk3hwdy4fJKQPYFuj6YEMYWyeJ24GVUk4Il6ssO05dyIFhy6VnKYd1R/m
-         LWgEdx3aaY4Jib8fmZT0HpLyOsdmmAMShL1D6YLRtoBhmqIvgIZSpZ5ovp4hi043pPKS
-         toA6af8UpTBJL7gi2ckCtJrcbbIK8W2ej3zZ2ji8VYTmmuZiIiByD6e+Gszy/OD+0WVo
-         jbzg==
-X-Gm-Message-State: AOAM532a0aEgSbKE7uAWHObcNIpZU+06iUuLJA9A0bgQCT2vZKgqjCJr
-        qKwSPt2mIAYRhzvjghGg1Guoog==
-X-Google-Smtp-Source: ABdhPJxNM9FngXrj+ydayrPeJjZVYwN8NF/LQE/dM5w4mzrIhPbgMrRHl66Negt1WT27AehVRFXCFw==
-X-Received: by 2002:a1c:7f91:: with SMTP id a139mr2675522wmd.153.1595923141639;
-        Tue, 28 Jul 2020 00:59:01 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id m14sm7375016wrx.76.2020.07.28.00.59.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 00:59:00 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 08:58:59 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
-        alexander.h.duyck@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH V4 2/3] mfd: Intel Platform Monitoring Technology support
-Message-ID: <20200728075859.GH1850026@dell>
-References: <20200714062323.19990-1-david.e.box@linux.intel.com>
- <20200717190620.29821-3-david.e.box@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2KLjPmHtt09LPvfgj7g2oSkZYAImQc8MPSPeld1Rcms=;
+        b=lFSAX/ZmPHaNi+QFA3Z5eOuPB/frfRJF9gcqXMFlzLhSQJh6zakyxL5akU1es/Ahai
+         zHMma5+2/lU8EvH2EUVJ4TluJSF1LbA/DAGCyfzDNzZv2GgIQxlwbdH/7pmizKgZ6m0/
+         9erie4EsoyHS0IzyQpD0KTP+/vCuvDIbibeP1bNxU2dofKWqFTAo0Kw2cn0H+YvGn/ni
+         JUc0uJdrr8Ve1X08XbTcYKiUQm6Q3UooxwqFCM7X/qDys/R4cbb21TN19FEo08yAM6HR
+         t24OTQq2njNOaywGMZVVj8iiWGcSIwrFWG2/63yzNIvrI9it5XhFCjJqhNFbnCyDxCVh
+         oM5Q==
+X-Gm-Message-State: AOAM533FS7IpDQH7fzrHtDzPa4C31Hqz9SRNh85lHq/PxgoJJGppHSLT
+        /CsD2h29K25+tHk69TKK+xIuQHfTwUvmCja5XKrxpg==
+X-Google-Smtp-Source: ABdhPJyeAt95Wz+o2VKFP+7wM5gyrPB+KKI+3eQ8R+Ubel9xs84GsZEg7Nm2MffyMAQJb+trStenCPJYstKDh4JFbuE=
+X-Received: by 2002:a2e:9d4a:: with SMTP id y10mr7016604ljj.104.1595923160378;
+ Tue, 28 Jul 2020 00:59:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200717190620.29821-3-david.e.box@linux.intel.com>
+References: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
+ <CAK8P3a13gcF_+dkfxZW0u_YuJ92hY1JukWfzM+e30iM=YUhraQ@mail.gmail.com>
+ <DB3PR0402MB3916F080E4912B27B18BEADEF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a2CBYV2xEkedQYmzL4XgHPeu02=vmLffq+RWwvEvuUGKQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a2CBYV2xEkedQYmzL4XgHPeu02=vmLffq+RWwvEvuUGKQ@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Jul 2020 09:59:09 +0200
+Message-ID: <CACRpkdb0=9K4-F2xFWN6OvnOi5-jwLXihdphTgMCA1vTejB_Qw@mail.gmail.com>
+Subject: Re: [PATCH V2 1/4] gpio: mxc: Support module build
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Anson Huang <anson.huang@nxp.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Peng Fan <peng.fan@nxp.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020, David E. Box wrote:
+On Mon, Jul 27, 2020 at 12:44 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Mon, Jul 27, 2020 at 10:18 AM Anson Huang <anson.huang@nxp.com> wrote:
 
-> Intel Platform Monitoring Technology (PMT) is an architecture for
-> enumerating and accessing hardware monitoring facilities. PMT supports
-> multiple types of monitoring capabilities. This driver creates platform
-> devices for each type so that they may be managed by capability specific
-> drivers (to be introduced). Capabilities are discovered using PCIe DVSEC
-> ids. Support is included for the 3 current capability types, Telemetry,
-> Watcher, and Crashlog. The features are available on new Intel platforms
-> starting from Tiger Lake for which support is added.
-> 
-> Also add a quirk mechanism for several early hardware differences and bugs.
-> For Tiger Lake, do not support Watcher and Crashlog capabilities since they
-> will not be compatible with future product. Also, fix use a quirk to fix
-> the discovery table offset.
-> 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > > Why is this driver using syscore_ops rather than
+> > > SIMPLE_DEV_PM_OPS() or similar?
+> >
+> > Below is the original patch of using syscore_ops, it has explanation:
+> >
+> > commit 1a5287a3dbc34cd0c02c8f64c9131bd23cdfe2bb
+> > Author: Anson Huang <anson.huang@nxp.com>
+> > Date:   Fri Nov 9 04:56:56 2018 +0000
+> >
+> >     gpio: mxc: move gpio noirq suspend/resume to syscore phase
+> >
+> >     During noirq suspend/resume phase, GPIO irq could arrive
+> >     and its registers like IMR will be changed by irq handle
+> >     process, to make the GPIO registers exactly when it is
+> >     powered ON after resume, move the GPIO noirq suspend/resume
+> >     callback to syscore suspend/resume phase, local irq is
+> >     disabled at this phase so GPIO registers are atomic.
 
-This should be in chronological order.
+This looks like it would have been easier to use
+SET_NOIRQ_SYSTEM_SLEEP_PM_OPS
+as pointed out later...
 
-> ---
->  MAINTAINERS             |   5 +
->  drivers/mfd/Kconfig     |  10 ++
->  drivers/mfd/Makefile    |   1 +
->  drivers/mfd/intel_pmt.c | 215 ++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 231 insertions(+)
->  create mode 100644 drivers/mfd/intel_pmt.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b4a43a9e7fbc..2e42bf0c41ab 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8845,6 +8845,11 @@ F:	drivers/mfd/intel_soc_pmic*
->  F:	include/linux/mfd/intel_msic.h
->  F:	include/linux/mfd/intel_soc_pmic*
->  
-> +INTEL PMT DRIVER
-> +M:	"David E. Box" <david.e.box@linux.intel.com>
-> +S:	Maintained
-> +F:	drivers/mfd/intel_pmt.c
-> +
->  INTEL PRO/WIRELESS 2100, 2200BG, 2915ABG NETWORK CONNECTION SUPPORT
->  M:	Stanislav Yakovlev <stas.yakovlev@gmail.com>
->  L:	linux-wireless@vger.kernel.org
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index a37d7d171382..1a62ce2c68d9 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -670,6 +670,16 @@ config MFD_INTEL_PMC_BXT
->  	  Register and P-unit access. In addition this creates devices
->  	  for iTCO watchdog and telemetry that are part of the PMC.
->  
-> +config MFD_INTEL_PMT
-> +	tristate "Intel Platform Monitoring Technology support"
+> The description makes sense, but this must be a problem that
+> other gpio/pinctrl irqchip drivers have as well.
+>
+> Linus, could you have a look? I see these other pinctrl drivers
+> using SIMPLE_DEV_PM_OPS:
+>
+> drivers/pinctrl/nomadik/pinctrl-nomadik.c:static
+> SIMPLE_DEV_PM_OPS(nmk_pinctrl_pm_ops,
 
-Nit: "Intel Platform Monitoring Technology (PMT) support"
+This one does not involve IRQs rather calls
+pinctrl_force_sleep/default which sets up hogged
+pins for energy saving while sleeping.
 
-> +	depends on PCI
-> +	select MFD_CORE
-> +	help
-> +	  The Intel Platform Monitoring Technology (PMT) is an interface that
-> +	  provides access to hardware monitor registers. This driver supports
-> +	  Telemetry, Watcher, and Crashlog PMT capabilities/devices for
-> +	  platforms starting from Tiger Lake.
-> +
->  config MFD_IPAQ_MICRO
->  	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
->  	depends on SA1100_H3100 || SA1100_H3600
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 9367a92f795a..1961b4737985 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -216,6 +216,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
->  obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
->  obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
->  obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+= intel_pmc_bxt.o
-> +obj-$(CONFIG_MFD_INTEL_PMT)	+= intel_pmt.o
->  obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
->  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
->  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
-> diff --git a/drivers/mfd/intel_pmt.c b/drivers/mfd/intel_pmt.c
-> new file mode 100644
-> index 000000000000..6857eaf4ff86
-> --- /dev/null
-> +++ b/drivers/mfd/intel_pmt.c
-> @@ -0,0 +1,215 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Intel Platform Monitoring Technology MFD driver
+> drivers/pinctrl/pinctrl-rockchip.c:static
+> SIMPLE_DEV_PM_OPS(rockchip_pinctrl_dev_pm_ops,
+> rockchip_pinctrl_suspend,
 
-s/MFD/(PMT)/
+Pretty much the same as Nomadik, with some extra
+register (also not IRQ-related).
 
-> + * Copyright (c) 2020, Intel Corporation.
-> + * All Rights Reserved.
-> + *
-> + * Authors: David E. Box <david.e.box@linux.intel.com>
+> drivers/pinctrl/pinctrl-stmfx.c:static
+> SIMPLE_DEV_PM_OPS(stmfx_pinctrl_dev_pm_ops,
 
-Looks odd to use a plural for a single author.
+This one is problematic. However this is on an I2C
+expander meaning the slow bus traffic needs to be
+working and if IRQs are off at syscore suspend/resume
+time, I2C will not work. I think Amelie has tested this thing
+pretty thoroughly, and that expanders are less sensitive
+to this.
 
-> + */
-> +
-> +#include <linux/bits.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/types.h>
+> drivers/pinctrl/qcom/pinctrl-msm.c:SIMPLE_DEV_PM_OPS(msm_pinctrl_dev_pm_ops,
+> msm_pinctrl_suspend,
 
-Alphabetical please.
+This one is like the Nomadik: just forcing some hogs to
+go into low power mode.
 
-> +/* Intel DVSEC capability vendor space offsets */
-> +#define INTEL_DVSEC_ENTRIES		0xA
-> +#define INTEL_DVSEC_SIZE		0xB
-> +#define INTEL_DVSEC_TABLE		0xC
-> +#define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
-> +#define INTEL_DVSEC_TABLE_OFFSET(x)	((x) & GENMASK(31, 3))
-> +#define INTEL_DVSEC_ENTRY_SIZE		4
-> +
-> +/* PMT capabilities */
-> +#define DVSEC_INTEL_ID_TELEMETRY	2
-> +#define DVSEC_INTEL_ID_WATCHER		3
-> +#define DVSEC_INTEL_ID_CRASHLOG		4
-> +
-> +#define TELEMETRY_DEV_NAME		"pmt_telemetry"
-> +#define WATCHER_DEV_NAME		"pmt_watcher"
-> +#define CRASHLOG_DEV_NAME		"pmt_crashlog"
+> drivers/pinctrl/spear/pinctrl-plgpio.c:static
+> SIMPLE_DEV_PM_OPS(plgpio_dev_pm_ops, plgpio_suspend, plgpio_resume);
 
-Please don't define names of things.  It makes grepping a pain, at the
-very least.  Just use the 'raw' string in-place.
+This one is affected by the same problem, I don't know if anyone
+really has this hardware anymore, but there are some
+SPEAr products deployed so the users should be notified
+that they may need to move this to syscore ops.
 
-> +struct intel_dvsec_header {
-> +	u16	length;
-> +	u16	id;
-> +	u8	num_entries;
-> +	u8	entry_size;
-> +	u8	tbir;
-> +	u32	offset;
-> +};
-> +
-> +enum pmt_quirks {
-> +	/* Watcher capability not supported */
-> +	PMT_QUIRK_NO_WATCHER	= BIT(0),
-> +
-> +	/* Crashlog capability not supported */
-> +	PMT_QUIRK_NO_CRASHLOG	= BIT(1),
-> +
-> +	/* Use shift instead of mask to read discovery table offset */
-> +	PMT_QUIRK_TABLE_SHIFT	= BIT(2),
-> +};
-> +
-> +struct pmt_platform_info {
-> +	unsigned long quirks;
-> +};
-> +
-> +static const struct pmt_platform_info tgl_info = {
-> +	.quirks = PMT_QUIRK_NO_WATCHER | PMT_QUIRK_NO_CRASHLOG |
-> +		  PMT_QUIRK_TABLE_SHIFT,
-> +};
-> +
-> +static int
-> +pmt_add_dev(struct pci_dev *pdev, struct intel_dvsec_header *header,
-> +	    struct pmt_platform_info *info)
+Viresh?
 
-My personal preference is to a) only break when you have to and b) to
-align with the '('.  Perhaps point b) is satisfied and it's just the
-patch format that's shifting the tab though?
+> It seems that some drivers use SET_NOIRQ_SYSTEM_SLEEP_PM_OPS()
+> instead, which looks like it is meant to address the same problem, but
+> as I have not used that myself, I may be misunderstanding the problem
+> or what this one does.
 
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res, *tmp;
-> +	struct mfd_cell *cell;
-> +	const char *name;
-> +	int count = header->num_entries;
-> +	int size = header->entry_size;
-> +	int i;
-> +
-> +	switch (header->id) {
-> +	case DVSEC_INTEL_ID_TELEMETRY:
-> +		name = TELEMETRY_DEV_NAME;
-> +		break;
-> +	case DVSEC_INTEL_ID_WATCHER:
-> +		if (info->quirks & PMT_QUIRK_NO_WATCHER) {
-> +			dev_info(dev, "Watcher not supported\n");
-> +			return 0;
-> +		}
-> +		name = WATCHER_DEV_NAME;
-> +		break;
-> +	case DVSEC_INTEL_ID_CRASHLOG:
-> +		if (info->quirks & PMT_QUIRK_NO_CRASHLOG) {
-> +			dev_info(dev, "Crashlog not supported\n");
-> +			return 0;
-> +		}
-> +		name = CRASHLOG_DEV_NAME;
-> +		break;
-> +	default:
-> +		return -EINVAL;
+IIUC that callback is for exactly this, and occurs after IRQs
+are disabled and before IRQs are
+re-enabled. Again the same problem if you need slow bus
+traffic in your callback (I2C/SPI devices): it is not going to work.
 
-Doesn't deserve an error message?
-
-> +	}
-> +
-> +	if (!header->num_entries || !header->entry_size) {
-> +		dev_warn(dev, "Invalid count or size for %s header\n", name);
-> +		return -EINVAL;
-
-If you're returning an error, this should be dev_err().
-
-Even if you only handle it as a warning at the call site.
-
-> +	}
-> +
-> +	cell = devm_kzalloc(dev, sizeof(*cell), GFP_KERNEL);
-> +	if (!cell)
-> +		return -ENOMEM;
-> +
-> +	res = devm_kcalloc(dev, count, sizeof(*res), GFP_KERNEL);
-> +	if (!res)
-> +		return -ENOMEM;
-> +
-> +	if (info->quirks & PMT_QUIRK_TABLE_SHIFT)
-> +		header->offset >>= 3;
-> +
-> +	for (i = 0, tmp = res; i < count; i++, tmp++) {
-> +		tmp->start = pdev->resource[header->tbir].start +
-> +			     header->offset + i * (size << 2);
-
-Deserves a comment I think.
-
-> +		tmp->end = tmp->start + (size << 2) - 1;
-> +		tmp->flags = IORESOURCE_MEM;
-> +	}
-> +
-> +	cell->resources = res;
-> +	cell->num_resources = count;
-> +	cell->name = name;
-> +
-> +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, cell, 1, NULL, 0,
-> +				    NULL);
-> +}
-> +
-> +static int
-> +pmt_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> +{
-> +	struct intel_dvsec_header header;
-> +	struct pmt_platform_info *info;
-> +	bool found_devices = false;
-> +	int ret, pos = 0;
-> +	u32 table;
-> +	u16 vid;
-> +
-> +	ret = pcim_enable_device(pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	info = devm_kmemdup(&pdev->dev, (void *)id->driver_data, sizeof(*info),
-> +			    GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
-> +	while (pos) {
-
-If you do:
-
-	do {
-		int pos;
-
-		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
-		if (!pos)
-			break;
-
-Then you can invoke pci_find_next_ext_capability() once, no?
-
-> +		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vid);
-> +		if (vid != PCI_VENDOR_ID_INTEL)
-> +			continue;
-> +
-> +		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2,
-> +				     &header.id);
-> +		pci_read_config_byte(pdev, pos + INTEL_DVSEC_ENTRIES,
-> +				     &header.num_entries);
-> +		pci_read_config_byte(pdev, pos + INTEL_DVSEC_SIZE,
-> +				     &header.entry_size);
-> +		pci_read_config_dword(pdev, pos + INTEL_DVSEC_TABLE,
-> +				      &table);
-> +
-> +		header.tbir = INTEL_DVSEC_TABLE_BAR(table);
-> +		header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
-> +
-> +		ret = pmt_add_dev(pdev, &header, info);
-> +		if (ret)
-> +			dev_warn(&pdev->dev,
-> +				 "Failed to add devices for DVSEC id %d\n",
-
-"device", so not all devices, right?
-
-> +				 header.id);
-
-Don't you want to continue here?
-
-Else you're going to set found_devices for a failed device.
-
-> +		found_devices = true;
-> +
-> +		pos = pci_find_next_ext_capability(pdev, pos,
-> +						   PCI_EXT_CAP_ID_DVSEC);
-> +	}
-> +
-> +	if (!found_devices) {
-> +		dev_err(&pdev->dev, "No supported PMT capabilities found.\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	pm_runtime_put(&pdev->dev);
-> +	pm_runtime_allow(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static void pmt_pci_remove(struct pci_dev *pdev)
-> +{
-> +	pm_runtime_forbid(&pdev->dev);
-> +	pm_runtime_get_sync(&pdev->dev);
-> +}
-> +
-> +#define PCI_DEVICE_ID_INTEL_PMT_TGL	0x9a0d
-
-What's this for?
-
-If this is PCI_DEVICE_DATA magic, it would be worth tying it to the
-struct i.e. remove the empty line between it and the table below.
-
-> +static const struct pci_device_id pmt_pci_ids[] = {
-> +	{ PCI_DEVICE_DATA(INTEL, PMT_TGL, &tgl_info) },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(pci, pmt_pci_ids);
-> +
-> +static struct pci_driver pmt_pci_driver = {
-> +	.name = "intel-pmt",
-> +	.id_table = pmt_pci_ids,
-> +	.probe = pmt_pci_probe,
-> +	.remove = pmt_pci_remove,
-> +};
-> +module_pci_driver(pmt_pci_driver);
-> +
-> +MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
-> +MODULE_DESCRIPTION("Intel Platform Monitoring Technology MFD driver");
-
-s/MFD/(PMT)/
-
-> +MODULE_LICENSE("GPL v2");
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Yours,
+Linus Walleij
