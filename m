@@ -2,123 +2,90 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DCCC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A96482065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:04:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKKf6n8X"
+	by mail.kernel.org (Postfix) with ESMTP id EF59220656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbgG1UEt (ORCPT
+        id S1728553AbgG1UHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:04:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728050AbgG1UEt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 16:04:49 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC1C0C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:04:48 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id b79so19951032qkg.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:04:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hB4I8gbXPDAOrRPhS1xStEqtCyznRgbpVs2xbFH4Fn0=;
-        b=gKKf6n8XLIBJG3vLHKbPS7KVDqzXFwmDNYwVWBH88E66gNvHvS3fjfCzuLuL3OU4yz
-         o5Wsw1rfvufaLj1fKbx7bb5ZsSZFQfhmgQMLGv3a4q4l1GDVFK0nBO7/DNc0nQmVdOhE
-         oFm7Wp7H1jCDRP4dAGBgnzilYwxJI9pkuRK3Lxbrdh3j8WNXsLsjWwx7kKZzpzgm2xz3
-         Mtilmc7nDIF3RYoUYXNTHBVgBmvbaSZ/sovexVU8r74iktJ1HEay2tRAF+MgWPHB2L9A
-         dpQnFISaD3rAp0NppDl3dmmLVBmBMmvRSHYJsjWjVwW//WPq0o6l9T7RXa1iLylq0P9u
-         9Z1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=hB4I8gbXPDAOrRPhS1xStEqtCyznRgbpVs2xbFH4Fn0=;
-        b=ojIsnwS7Z89Wx/XlvVN3KrFdf6DwSwDqWaniCwlt1rwf/r2GgI8ryOa6Bpac6HvgVI
-         /4BJ87AJGjEudX92wXbDIY4JkGsf0grIVbblxZ4/NdqiXTflcC2VvcNws4eu82xLFuJZ
-         DpWgwfarsaWw+321Fm7jHMXzYt5AHSFb8ppZn06dNb6gQhQ0pye6kX15Zp0pUE6BejRZ
-         ZZ1P6oh9au8Yxb1tvaR4gDPixFTX0whvbckWpduHfJo4Y2o5gUcFCELrXFKizo4eio9u
-         zb3hxkezPDvKwIwvHuISoON/82xsO1i30fBEFIxIXTHm2VXz2fEWoqkmAmhkXl5f93IR
-         t2gQ==
-X-Gm-Message-State: AOAM531OLo4vpIYDeDZL8MUTyFiiWF8WtJWJyGl+2cGxNd0XBq9w0WQY
-        e6QiGG/wdPkBgw0M8zuQkO0=
-X-Google-Smtp-Source: ABdhPJxatdFA3lKyHiFyIdhYr0HpHcLTz+1t/L2+Xm3ea7W5WGPs3FR186LQIqeNcwSlqMeHh4TQAw==
-X-Received: by 2002:a37:8a06:: with SMTP id m6mr29459075qkd.191.1595966688057;
-        Tue, 28 Jul 2020 13:04:48 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id s184sm6759918qkf.50.2020.07.28.13.04.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 13:04:47 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 28 Jul 2020 16:04:45 -0400
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/8] x86/kaslr: Clean up slot handling
-Message-ID: <20200728200445.GC4150860@rani.riverdale.lan>
-References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
- <20200727230801.3468620-8-nivedita@alum.mit.edu>
- <202007281228.B5011DC7@keescook>
+        Tue, 28 Jul 2020 16:07:04 -0400
+Received: from mga03.intel.com ([134.134.136.65]:63202 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728053AbgG1UHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 16:07:04 -0400
+IronPort-SDR: I476TLL5f/Aom0cr2Dxh9J5X/aQPYkvNNaJrS/bxBVEmIZnfu7sXgNXk41oKd4HBoXooBOIajy
+ pxzSY+M/8rFQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="151287325"
+X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
+   d="scan'208";a="151287325"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 13:07:03 -0700
+IronPort-SDR: TO+0uiPdkYj4iseKQ3HuEWf0eq30qM/DaBxXGP7ml9lx553Xu2n5b7PM1/q/upIBbj22MxqHSb
+ ZZuRphpZZsuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
+   d="scan'208";a="312756371"
+Received: from unknown (HELO nsgsw-wilsonpoint.lm.intel.com) ([10.232.116.124])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Jul 2020 13:07:02 -0700
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Andrzej Jakowski <andrzej.jakowski@linux.intel.com>,
+        Sushma Kalakota <sushmax.kalakota@intel.com>,
+        <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        Jon Derrick <jonathan.derrick@intel.com>
+Subject: [PATCH 0/6] VMD MSI Remapping Bypass
+Date:   Tue, 28 Jul 2020 13:49:39 -0600
+Message-Id: <20200728194945.14126-1-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202007281228.B5011DC7@keescook>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 12:34:45PM -0700, Kees Cook wrote:
-> On Mon, Jul 27, 2020 at 07:08:00PM -0400, Arvind Sankar wrote:
-> > The number of slots and slot areas can be unsigned int, since on 64-bit,
-> > the maximum amount of memory is 2^52, the minimum alignment is 2^21, so
-> > the slot number cannot be greater than 2^31. The slot areas are limited
-> > by MAX_SLOT_AREA, currently 100. Replace the type used for slot number,
-> > which is currently a mix of int and unsigned long, with unsigned int
-> > consistently.
-> 
-> I think it's good to standardize the type, but let's go to unsigned long
-> then we don't have to think about this again in the future.
+The Intel Volume Management Device acts similar to a PCI-to-PCI bridge in that
+it changes downstream devices' requester-ids to its own. As VMD supports PCIe
+devices, it has its own MSI/X table and transmits child device MSI/X by
+remapping child device MSI/X and handling like a demultiplexer.
 
-Ok, I can do that instead.
+Some newer VMD devices (Icelake Server and client) have an option to bypass the
+VMD MSI/X remapping table. This allows for better performance scaling as the
+child device MSI/X won't be limited by VMD's MSI/X count and IRQ handler.
 
-> 
-> > Drop unnecessary check that number of slots is not zero in
-> > store_slot_info, it's guaranteed to be at least 1 by the calculation.
-> > 
-> > Drop unnecessary alignment of image_size to CONFIG_PHYSICAL_ALIGN in
-> > find_random_virt_addr, it cannot change the result: the largest valid
-> > slot is the largest n that satisfies
-> 
-> I view all of these things as robustness checks. It doesn't hurt to do
-> these checks and it'll avoid crashing into problems if future
-> refactoring breaks assumptions.
+It's expected that most users don't want MSI/X remapping when they can get
+better performance without this limitation. This set includes some long overdue
+cleanup of overgrown VMD code and introduces the MSI/X remapping disable.
 
-Well, at least the first one should really be unnecessary: the previous
-line sets it as 1 + x. When I see that it actually confuses me: I think
-I must be missing some edge case where it could be zero.
+Applies on top of e3beca48a45b ("irqdomain/treewide: Keep firmware node
+unconditionally allocated") and ec0160891e38 ("irqdomain/treewide: Free
+firmware node after domain removal") in tip/urgent
 
-The second one is also unnecessary, but I agree it might require a bit
-of analysis to see that it is.
 
-> > -	slots = (KERNEL_IMAGE_SIZE - minimum - image_size) /
-> > -		 CONFIG_PHYSICAL_ALIGN + 1;
-> > +	slots = 1 + (KERNEL_IMAGE_SIZE - minimum - image_size) / CONFIG_PHYSICAL_ALIGN;
-> 
-> These are the same -- why change the code?
-> 
+Jon Derrick (6):
+  PCI: vmd: Create physical offset helper
+  PCI: vmd: Create bus offset configuration helper
+  PCI: vmd: Create IRQ Domain configuration helper
+  PCI: vmd: Create IRQ allocation helper
+  x86/apic/msi: Use Real PCI DMA device when configuring IRTE
+  PCI: vmd: Disable MSI/X remapping when possible
 
-It's just reformatting now that we can have more than 80-column lines. I
-think it's clearer this way, more obvious that you're dividing by
-CONFIG_PHYSICAL_ALIGN and adding one, rather than "did he forget the
-parentheses here".
+ arch/x86/kernel/apic/msi.c   |   2 +-
+ drivers/pci/controller/vmd.c | 344 +++++++++++++++++++++++------------
+ 2 files changed, 224 insertions(+), 122 deletions(-)
+
+
+base-commit: ec0160891e387f4771f953b888b1fe951398e5d9
+-- 
+2.27.0
+
