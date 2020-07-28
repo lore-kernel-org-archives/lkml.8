@@ -2,97 +2,150 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F52C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1194FC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D44A82070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D622070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:23:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lVzc1QF1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tG4rNdPI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbgG1WU5 (ORCPT
+        id S1729745AbgG1WXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 18:20:57 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55419 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729491AbgG1WU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 18:20:57 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BGWN61YVXz9sRW;
-        Wed, 29 Jul 2020 08:20:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595974855;
-        bh=ZVLGAg/BfNIQdaEOdEl4wWM/s0iM0lz1SCngCBK6O70=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lVzc1QF1xnSZWt2r1pjb0L7yu540u93SYMBxJGu5/LREONtpMoRZJJpwVYZC8PGsl
-         8sg/DMxp3YNR9e3Tkt+00CXp3SwZm5abA3swvQ+2kA+QTtaps2lFE+WwbDmkVgMnbz
-         loDk/v8/pEqKHWIknMAloWe9fXIm2LFbZbw+p8qgYKyJTlGArEsj5JOzq0Y0BnFSW9
-         DdqeArEd991ZkCEzigf3tmQh2CKUBsQTTVK4LrxP03+RYMX/lr6ql2kBwlgpBMc0JX
-         cPe0492rb8mO0Xad20AiDjy9UWIezdHFvtxcgyN84glQ0NtVJ9QyImYjD021f5SYHS
-         mUKHqPzZTpgYQ==
-Date:   Wed, 29 Jul 2020 08:20:53 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org
-Subject: Re: mmotm 2020-07-27-18-18 uploaded (mm/page_alloc.c)
-Message-ID: <20200729082053.6c2fb654@canb.auug.org.au>
-In-Reply-To: <20200728145553.2a69fa2080de01922b3a74e0@linux-foundation.org>
-References: <20200728011914.S-8vAYUK0%akpm@linux-foundation.org>
-        <ae87385b-f830-dbdf-ebc7-1afb82a7fed0@infradead.org>
-        <20200728145553.2a69fa2080de01922b3a74e0@linux-foundation.org>
+        Tue, 28 Jul 2020 18:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729428AbgG1WXe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 18:23:34 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6B42C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 15:23:33 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l6so20368170qkc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 15:23:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8wMDzveqXMcU7qz1vEvMmj5Kh0jEuVD57A0b/vJIJrw=;
+        b=tG4rNdPI8R5LdMMO8xwPde56cVxcwd5fZAw2kzauifqgPFPeBuZ9hEyUHhD85W8bcI
+         M1T/PlI64ZhklmxrEyELMjberZDJ4KzNnazmhwE09VlAAj0XK22zP/a/RK+PvrSp+Dnw
+         /kkHshyydV5SLhk3KWYkA4xDfl/IEjoYJ5GkZ4EoshWFgVSVIYnqm32wkBDc1LGr7m0N
+         HgzWw9A3e0iQmRej8ZPgpGbNn9sSZ2XIGEd3opB1tb8IvxSd7SFVVhcpRuKxcTXFy7C+
+         nDujLhiAkU2NKuhnqQJRM1pocRepvEnfkf/zdOdHFkbxcH1jSPE5wsMu/GvGsW2QmqB5
+         Cq2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8wMDzveqXMcU7qz1vEvMmj5Kh0jEuVD57A0b/vJIJrw=;
+        b=OH9iufyVn/sMmMq7wKzIQqkBmQmoEDhRKN1689cB0maFyN+si3jvxjiSW8NYxlcOf7
+         0I6teUOgRRITfMERmxE1hPPIl3eik/xxFLDk920ecbXXcRHGs/47ez73fRYogaoo06yb
+         /Yu1pCklKsnaVJAeTGSevxfNYpyDca3k+ugy+buG13uoyzaBt4R4RuyS/9eQXBIcvojD
+         xWmY44vHVRHGqGJvcpOVj5AGLhGwBKpiZDn5/jBngM62mUqjhouA8uNw3buMazZObci6
+         rYzdKa4vLeVnqHkYtGTO4gsF9wvEIQuZuV62vZWzamkLVUmo4OgLZQR2oZLW0OiGoFKF
+         GnnQ==
+X-Gm-Message-State: AOAM533ALyChpbpEFHenU3uesQ3Vvcvax/bf4tZENXYA79ByLw0M1Y3n
+        HRN23VNE9XB1UzAVbTWZRrhXBHAdwD6d2VO8t4Mg8A==
+X-Google-Smtp-Source: ABdhPJzBuFDwbTuAKAxLAKDoRVzjoMzJAgky0l1xUfwlCP1+u+1EBHu/d0wQurDqGyYI3vgcw/PLrAXzP60vhB16MLo=
+X-Received: by 2002:a05:620a:4ca:: with SMTP id 10mr27297992qks.306.1595975012973;
+ Tue, 28 Jul 2020 15:23:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rT8WB0UAOgwnA+IPIfD1zSv";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1595927918-19845-4-git-send-email-grzegorz.jaszczyk@linaro.org> <1ae8b42d0e7a09caf01197b11cea2fff@kernel.org>
+In-Reply-To: <1ae8b42d0e7a09caf01197b11cea2fff@kernel.org>
+From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Date:   Wed, 29 Jul 2020 00:23:22 +0200
+Message-ID: <CAMxfBF7uaFMhGDTmVjZiAEiUxNFSBnh-qcEz3rSDhFTkWkrLkw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] irqchip/irq-pruss-intc: Add logic for handling
+ reserved interrupts
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net,
+        "Anna, Suman" <s-anna@ti.com>, robh+dt@kernel.org,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
+        "Mills, William" <wmills@ti.com>,
+        "Bajjuri, Praneeth" <praneeth@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/rT8WB0UAOgwnA+IPIfD1zSv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Marc
 
-Hi Andrew,
+On Tue, 28 Jul 2020 at 18:37, Marc Zyngier <maz@kernel.org> wrote:
+>
+> On 2020-07-28 10:18, Grzegorz Jaszczyk wrote:
+> > From: Suman Anna <s-anna@ti.com>
+> >
+> > The PRUSS INTC has a fixed number of output interrupt lines that are
+> > connected to a number of processors or other PRUSS instances or other
+> > devices (like DMA) on the SoC. The output interrupt lines 2 through 9
+> > are usually connected to the main Arm host processor and are referred
+> > to as host interrupts 0 through 7 from ARM/MPU perspective.
+> >
+> > All of these 8 host interrupts are not always exclusively connected
+> > to the Arm interrupt controller. Some SoCs have some interrupt lines
+> > not connected to the Arm interrupt controller at all, while a few
+> > others
+> > have the interrupt lines connected to multiple processors in which they
+> > need to be partitioned as per SoC integration needs. For example,
+> > AM437x
+> > and 66AK2G SoCs have 2 PRUSS instances each and have the host interrupt
+> > 5
+> > connected to the other PRUSS, while AM335x has host interrupt 0 shared
+> > between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU
+> > and
+> > a DMA controller.
+> >
+> > Add logic to the PRUSS INTC driver to ignore both these shared and
+> > invalid interrupts.
+> >
+> > Signed-off-by: Suman Anna <s-anna@ti.com>
+> > Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+> > ---
+> > v3->v4:
+> > - Due to changes in DT bindings which converts irqs-reserved
+> >   property from uint8-array to bitmask requested by Rob introduce
+> >   relevant changes in the driver.
+> > - Merge the irqs-reserved and irqs-shared to one property since they
+> >   can be handled by one logic (relevant change was introduced to DT
+> >   binding).
+>
+> This isn't what I asked for in my initial review.
+>
+> I repeatedly asked for the *handling* to be common, not for the
+> properties to be merged. I don't mind either way, but I understood
+> there were two properties for a good reason. Has this reason gone?
 
-On Tue, 28 Jul 2020 14:55:53 -0700 Andrew Morton <akpm@linux-foundation.org=
-> wrote:
-> config CONTIG_ALLOC
->         def_bool (MEMORY_ISOLATION && COMPACTION) || CMA
->=20
-> says this is an improper combination.  And `make oldconfig' fixes it up.
->=20
-> What's happening here?
+Yes, I am aware that you've asked for common handling. Nevertheless
+due to this change the usage of irqs-shared had to change. Previously
+Suman's intention was to always skip the irqs-reserved, while allowing
+to try getting interrupts even from irqs-shared list but in case of
+failure (during platform_get_irq_byname) it wasn't treated as an
+error.
+In other words: in the previous approach if the interrupt from
+irqs-shared was present in DT interrupts property it was treated as a
+valid resource. If the irqs-shared interrupt wasn't present in DT
+interrupts property it was skipped (similar to the irqs-reserved
+case).
 
-CONFIG_VIRTIO_MEM selects CONFIG_CONTIG_ALLOC ...
+Now after your request for handling both in a common way the
+interpretation of irqs-shared had to change. Therefore there's no need
+to have seperate property for them. Now it is simpler: if some
+interrupt is present in irqs-reserved it will be skipped.
 
---=20
-Cheers,
-Stephen Rothwell
+>
+> Anyway, I'll come back to it once I start reviewing the series
+> again.
+>
 
---Sig_/rT8WB0UAOgwnA+IPIfD1zSv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8gpMUACgkQAVBC80lX
-0GwNKQf/QX7KlFtaGxTQ0s5RqFpgwyRGQnYGg5hoPCMo4nb2H3LgAFkUHxcFBZba
-pNPoRwFf4/rfAECAjQ63okrk1C8A6W/cf8et+TkZ2Kk9mXjC6iQue8OCeX1DY55o
-8kf68mr/1NbWhnDSgQrGUZLbatUNfMPWpXCBlusib0gIfExxPqw8vi4qlMg5weRN
-ewL0RRK8ob0RxDxRSxNzdlajmrgKSkliGHI+5GLG14ESrAxriI3riJQS/q+3BGQ9
-jFa41W4+wuBuhb0EOj1f83W8KrNR2ntDmzGQOOq2xqOYDQg+5ifgybDH+vDfOKEk
-hUHhXVYc9rNRoTmO2lWQ4bAd2qzReg==
-=lqYF
------END PGP SIGNATURE-----
-
---Sig_/rT8WB0UAOgwnA+IPIfD1zSv--
+Ok, thank you,
+Grzegorz
