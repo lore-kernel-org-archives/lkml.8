@@ -8,57 +8,56 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B88C433F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EE0C433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F82A20829
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1A120775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:45:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zos4drdq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfYnzTVa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgG1Jp0 (ORCPT
+        id S1728563AbgG1JpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:45:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728564AbgG1JpV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jul 2020 05:45:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728197AbgG1JpR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 05:45:17 -0400
 Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71394C061794;
-        Tue, 28 Jul 2020 02:45:21 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k13so1791533plk.13;
-        Tue, 28 Jul 2020 02:45:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79CD0C061794;
+        Tue, 28 Jul 2020 02:45:16 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id u10so108778plr.7;
+        Tue, 28 Jul 2020 02:45:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=v4hzsRw11Wiw6xr0GvgfYpPF0Q4BnW/4rsf/8GkZyQw=;
-        b=Zos4drdqzuG48wXtTv4pVVnjusmQl20abj+Kz1EqvewUtCnxXvkgMu0kwocJVglioq
-         IGYaSAvrCj7Xt1MwTvrLt/GTXjliBxkNT+YTiZJWKuJI+F0eQxtzPsKj37plB7VyuTSn
-         7xN+UTf26Hu/SartpedeJofd3RnImxX3lAT0j1Nfq5AjCYKn8uWbFigOEevIfBzcay0l
-         Chljv6Gk/6ZrD3mlVeQHl367jg/cxrG0PLHltEBZnT1E8sat9X3g9KRPskDUUch0z9Cp
-         f+L5WVGo7e8klo7kB0PhQ51xQNZaf6u0hk5/VNPMhXxpUZizcUoJbpsXMSTJHN7duWKc
-         AmWQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=YW61uT4gs7NLfpC0VAfH7u18rjoR4roJ54bakldbt1o=;
+        b=RfYnzTVaaiIcgr+9v6Qpt+9Sn4A6BP7Q9yIcBs4oG6bfhviw+3JSTCk5bxF1v0Q9VP
+         CUq/x8J/Q5xlyidW5jaxO5+QUJ1nIMYZT95rI6r8HwIvVYcixErDeg97g06HHpbEo/7F
+         LwwNFv4NhVm7TKSdT4zHjQsYvZhtIh6u86VYKcMqCJCod6yK6Tl5nqYYVoMm8ubtdCGH
+         quJmKGjBIogttIL6DsrSLmV1jPalEf2Fq+43Dty6I0iwCNBjfVc23hz+lt+1g9YQV+SJ
+         3TP1vfw0eBPVO9iLug6dQSoZVxRimiRsV98IQ6Ahh8vFpJK16eXVvpLLG6ndwl95wNg4
+         mHkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=v4hzsRw11Wiw6xr0GvgfYpPF0Q4BnW/4rsf/8GkZyQw=;
-        b=luCF/VdCih1z/QADt95HH5yiJhJmj/yisYGTE3ssq0eO0aNm65iSzYkYPkZHH/ePGa
-         Xv6QvC/0AyUMXBt/NJYh+8jUMRMWghgvXahQjv6U9frPUsMpPjEpoPbqUENXODLsu7XU
-         ZVODNg33Cx8mvTf3gGu3/IR69d+RuxcFUP5jTDERrM08CcoDYxSoXVpld6kcerCyFSKk
-         ZfzRbj9SDnyQ4tTew40ZHCJ7776t1P6NciqSE22xMfRIK+mI6Yv9mgnXQvhOVuOFRzs8
-         1oFiSON4MO2zABdqNU1q+5Em9C64uk/3wn72O0eqfOOOkptQOkefH5fr6eVKqOGuRahS
-         PfQw==
-X-Gm-Message-State: AOAM5326Ox1o8QitFORgMJc8/NgHmbwFI/BxAYiAM9/G22nxG8dnJiGh
-        2PCM7tet8B3wjDI1bB0VXHmfpekJ
-X-Google-Smtp-Source: ABdhPJxsZ5mYTWHDw/CZGoeaB7OeyI6mv6+zZ2Fpowq9ZFMFVYcxatXVTbH9YxF75bc0dzckLtbQUQ==
-X-Received: by 2002:a17:902:59d2:: with SMTP id d18mr11673509plj.243.1595929520819;
-        Tue, 28 Jul 2020 02:45:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YW61uT4gs7NLfpC0VAfH7u18rjoR4roJ54bakldbt1o=;
+        b=S/277hyXeTjAkmgbQCqdwINDdJJWLN12opdg270kTVxjc18S4U4LlQqtNRp3h6DoqW
+         hmfJBS0E/2aPOY8u+8/FBpk4qCPhilA6K8/8PPfbDTvB6bcbrTgDSwqpgtlFPEWBG7qy
+         BhTPoxjwZO7hFV4s8dIuJweqwNCoyUm6dM+SSC74myDwWkaxja6c7KWPozLWrkSzSneB
+         2VwBSSpbBL6P9S0Q1b1+rt53FtcW1BbtDGRh1knnfbDHtAoIrnagK3F1lOqhOW/TnZcy
+         zCzjj15FAQ+mc7hPYH1bESIMp0kvcH9oSeew5I0/a65t/VTQIaLakn+SXfHAhIY8tF2W
+         +3DA==
+X-Gm-Message-State: AOAM5321UOlqULWQu45mXdZcC5m+wpiwPbc8Zadf7gKr3JvTSPkbg53F
+        EroCfbUVz8I7Xqe4xn3dT4mrm2Nc
+X-Google-Smtp-Source: ABdhPJxD6tzllfcRVDmb1xoKhd2jMzTzXphKdkN4ooTcK2t2IBIzxcYpjGFm4Em3KQhe2BXXOgUfSA==
+X-Received: by 2002:a17:90a:d30c:: with SMTP id p12mr3843893pju.4.1595929515664;
+        Tue, 28 Jul 2020 02:45:15 -0700 (PDT)
 Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id r17sm17969173pfg.62.2020.07.28.02.45.18
+        by smtp.googlemail.com with ESMTPSA id r17sm17969173pfg.62.2020.07.28.02.45.12
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Jul 2020 02:45:20 -0700 (PDT)
+        Tue, 28 Jul 2020 02:45:15 -0700 (PDT)
 From:   Wanpeng Li <kernellwp@gmail.com>
 X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
@@ -67,13 +66,11 @@ Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH v2 3/3] KVM: SVM: Fix disable pause loop exit/pause filtering capability on SVM
-Date:   Tue, 28 Jul 2020 17:45:06 +0800
-Message-Id: <1595929506-9203-3-git-send-email-wanpengli@tencent.com>
+        Joerg Roedel <joro@8bytes.org>, stable@vger.kernel.org
+Subject: [PATCH v2 1/3] KVM: LAPIC: Prevent setting the tscdeadline timer if the lapic is hw disabled
+Date:   Tue, 28 Jul 2020 17:45:04 +0800
+Message-Id: <1595929506-9203-1-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595929506-9203-1-git-send-email-wanpengli@tencent.com>
-References: <1595929506-9203-1-git-send-email-wanpengli@tencent.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -81,65 +78,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wanpeng Li <wanpengli@tencent.com>
 
-Commit 8566ac8b (KVM: SVM: Implement pause loop exit logic in SVM) drops
-disable pause loop exit/pause filtering capability completely, I guess it
-is a merge fault by Radim since disable vmexits capabilities and pause
-loop exit for SVM patchsets are merged at the same time. This patch
-reintroduces the disable pause loop exit/pause filtering capability
-support.
+Prevent setting the tscdeadline timer if the lapic is hw disabled.
 
-We can observe 2.9% hackbench improvement for a 92 vCPUs guest on AMD 
-Rome Server.
-
-Reported-by: Haiwei Li <lihaiwei@tencent.com>
-Tested-by: Haiwei Li <lihaiwei@tencent.com>
-Fixes: 8566ac8b (KVM: SVM: Implement pause loop exit logic in SVM)
+Fixes: bce87cce88 (KVM: x86: consolidate different ways to test for in-kernel LAPIC)
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- arch/x86/kvm/svm/svm.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/kvm/lapic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index c0da4dd..c20f127 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -1090,7 +1090,7 @@ static void init_vmcb(struct vcpu_svm *svm)
- 	svm->nested.vmcb = 0;
- 	svm->vcpu.arch.hflags = 0;
- 
--	if (pause_filter_count) {
-+	if (pause_filter_count && !kvm_pause_in_guest(svm->vcpu.kvm)) {
- 		control->pause_filter_count = pause_filter_count;
- 		if (pause_filter_thresh)
- 			control->pause_filter_thresh = pause_filter_thresh;
-@@ -2693,7 +2693,7 @@ static int pause_interception(struct vcpu_svm *svm)
- 	struct kvm_vcpu *vcpu = &svm->vcpu;
- 	bool in_kernel = (svm_get_cpl(vcpu) == 0);
- 
--	if (pause_filter_thresh)
-+	if (!kvm_pause_in_guest(vcpu->kvm))
- 		grow_ple_window(vcpu);
- 
- 	kvm_vcpu_on_spin(vcpu, in_kernel);
-@@ -3780,7 +3780,7 @@ static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
- 
- static void svm_sched_in(struct kvm_vcpu *vcpu, int cpu)
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 5bf72fc..4ce2ddd 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -2195,7 +2195,7 @@ void kvm_set_lapic_tscdeadline_msr(struct kvm_vcpu *vcpu, u64 data)
  {
--	if (pause_filter_thresh)
-+	if (!kvm_pause_in_guest(vcpu->kvm))
- 		shrink_ple_window(vcpu);
- }
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
  
-@@ -3958,6 +3958,9 @@ static void svm_vm_destroy(struct kvm *kvm)
+-	if (!lapic_in_kernel(vcpu) || apic_lvtt_oneshot(apic) ||
++	if (!kvm_apic_present(vcpu) || apic_lvtt_oneshot(apic) ||
+ 			apic_lvtt_period(apic))
+ 		return;
  
- static int svm_vm_init(struct kvm *kvm)
- {
-+	if (!pause_filter_thresh)
-+		kvm->arch.pause_in_guest = true;
-+
- 	if (avic) {
- 		int ret = avic_vm_init(kvm);
- 		if (ret)
 -- 
 2.7.4
 
