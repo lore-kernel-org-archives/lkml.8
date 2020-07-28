@@ -2,100 +2,119 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F004C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 677A3C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66464207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C902070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:33:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CcKHElp5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgG1HdZ (ORCPT
+        id S1728037AbgG1Hdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:33:25 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:59395 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbgG1HdY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:33:24 -0400
-Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M5wY1-1jstSr2c6V-007SDZ; Tue, 28 Jul 2020 09:33:22 +0200
-Received: by mail-qk1-f182.google.com with SMTP id d14so17758976qke.13;
-        Tue, 28 Jul 2020 00:33:22 -0700 (PDT)
-X-Gm-Message-State: AOAM532BQ+s5ICG6L12NLE9Hs+FfQYc0wbilyCn6Kwj4XGW6/2v/5AcH
-        Dwo0TOcF9S2lstanQijrSzHQk+6iP+WkYWCa890=
-X-Google-Smtp-Source: ABdhPJyH+gWHXjrGEuHOeWvO276kXhceg1tMppa3WwG/C7HXdHfY+pk3TGktoWb4j9eUkwKsfNI2wnx9708ArU04HS8=
-X-Received: by 2002:a37:b942:: with SMTP id j63mr12955439qkf.138.1595921601417;
- Tue, 28 Jul 2020 00:33:21 -0700 (PDT)
+        Tue, 28 Jul 2020 03:33:38 -0400
+Received: from ozlabs.org ([203.11.71.1]:54405 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727996AbgG1Hdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 03:33:37 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BG7hG1nCKz9sTj;
+        Tue, 28 Jul 2020 17:33:33 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595921614;
+        bh=/7AKHiCbpH7BHVjS0hDfofRHEgga2Dx7rWmwTAvMLhA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CcKHElp5n01oIJ85ejksPetpMrwz7fg2huNnffVhLixPXoaRjrrOv1STdQeGmkrel
+         oj66Zr6gQVV5Of/FqCUHStmCJlti4pPTZiw9WXmNERkeXUwuvVG84KdcLdnBbjIICT
+         J6nYTxNDr4ohKhvV7khhpF0LIKxtOmKh4gD9XtaB96iPBkWirTMRGxHiiP1FoMd2n3
+         sRJ4fiH5Sie2ZIs/UoCFmu5sEBbD8t5hFBVsIFD3Qu/1fJ8BFgxnWq1VehcvmkdOJA
+         /jILQF7okVFpwggP9PIEMB3+QuCcUnpKhSmHLBB9Dd1kr4sgLhw2ygu5SS+aJy1XkF
+         YaQ2oUW3addcQ==
+Date:   Tue, 28 Jul 2020 17:33:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Omer Shpigelman <oshpigelman@habana.ai>
+Subject: Re: linux-next: build failure after merge of the char-misc tree
+Message-ID: <20200728173331.5bf1f438@canb.auug.org.au>
+In-Reply-To: <20200727092448.GB1764157@kroah.com>
+References: <20200727180831.6c356fc1@canb.auug.org.au>
+        <20200727092448.GB1764157@kroah.com>
 MIME-Version: 1.0
-References: <20200626080642.4244-1-krzk@kernel.org> <20200728143650.32818d3c@xhacker.debian>
-In-Reply-To: <20200728143650.32818d3c@xhacker.debian>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 28 Jul 2020 09:33:05 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a26kvOP=3EEDaOFtO5YbqTwBsUr_eKDc5nWxw=NgzZ0MQ@mail.gmail.com>
-Message-ID: <CAK8P3a26kvOP=3EEDaOFtO5YbqTwBsUr_eKDc5nWxw=NgzZ0MQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: berlin: Align L2 cache-controller nodename with dtschema
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>, SoC Team <soc@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:KC+4x0xayWr25E4c58DHjwTtcrQ/oG63hi4Ypr6VRrcziXCQJDu
- ceUoZfQuoucqHFJxB7NwxCZOtdLgXZycTOd6eVEVBW4rTGNqXh2B2jIAUl6KxZpk6wXUD0a
- 1Nyity52Cep2K4IQ7gF4vsvTHn4DXltoJtozIDT+XfdnIkuzfFxQ8vlWuCNnYfv89s9WUmy
- cnT2t9MJQMFShc4N/Dg+Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0fLPHurEOpY=:BaNYWA0+5811ripqKSxdCe
- 6/S66Kj94Y2wM8os4wJ6JEXkKFzMwDDKD+lVmrT3Gjf+GWbcLxHVEamVhfwP47gE69sG3C99R
- o5RoHxuCreDK+4FR+wkEIElIycYtdSJJtVf2INXuB4vxFIoRTFCHv41W71feWBS3Et/2F7xxe
- jDBlHgH4BL10MXAYiXnmsFYnrOSQeulTVmyGXTUieYkGR1duceuU0SEiO7yLU6bKwDJ8Cu6nT
- m0zEl4gjskqY4HSbvmQjH3h2jv0t0cWAyHhJTgUi0z2eB5AVALinvUGsK4w2QYRnMVm8UCjH0
- OZdTghrhnvlamKAP4UDILWtV3dUBnHHN1PdCqHNO6HwMYnXWBWh1atZMer3/0F7kYFpMrC4IJ
- LfPFb9KBZvfFGd1zXVySrFcDh3hGhBv6u1errfSFiJmksX9IvJZ9xVt9w3bxfpmgm/MIWTtt+
- Rp5/82ioNoYianyB6Lvh8qpe5QwLwPcv2luRVF2B206IydYxFetqfR7kKO6yKIA7J/k0FmJ0P
- cYx8MDaRFf0QguSSmQnOt3HzWiHiHjkelb1elTu7Txso8wvSnSwIrkyBAfC29fOAabvnYJ8kA
- vb5uDMUQPqSfP0wBumOtLc6Y36mIowuC5DmVD4shoNmtDGqujX0R/X3UOMmoHRdLOU2JakWDR
- +16nXo34E5p5/RWFNVWl1FCsALRLoGs5BwRX1fcr79m06z7OCTp2IHzqhyREJiYkLxsOeSFIK
- GOgrwFaD1+2LV7nyUebRxze5MF2Vlv4UTd9bQeo4H4JlouVS6bfaf/7C/rAsh9cLBi7D61hvD
- QLbgACCREmKsSjoLzqK6G9DKEPVWeghf3Zlcqb97MD+a2peo8fn1PHwTlyIUgHIwZMRk4wC
+Content-Type: multipart/signed; boundary="Sig_/INkSETqbTX5k7nBLuVIGx7u";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 8:37 AM Jisheng Zhang
-<Jisheng.Zhang@synaptics.com> wrote:
->
-> Hi arm-soc,
->
->
-> On Fri, 26 Jun 2020 10:06:41 +0200 Krzysztof Kozlowski wrote:
->
-> >
-> >
-> > Fix dtschema validator warnings like:
-> >     l2-cache-controller@ac0000: $nodename:0:
-> >         'l2-cache-controller@ac0000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> Reviewed-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
->
-> As for berlin linux-5.9, we only have this one patch, could you please
-> directly take this patch?
+--Sig_/INkSETqbTX5k7nBLuVIGx7u
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied now. To ensure we actually see the patch, it's better if you can just
-send a new copy with your added Signed-off-by to soc@kernel.org than to
-reply to the original email.
+Hi Greg,
 
-Thanks,
+On Mon, 27 Jul 2020 11:24:48 +0200 Greg KH <greg@kroah.com> wrote:
+>
+> On Mon, Jul 27, 2020 at 06:08:31PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > After merging the char-misc tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this:
+> >=20
+> > In file included from drivers/misc/habanalabs/goya/goya.c:8:
+> > drivers/misc/habanalabs/goya/goyaP.h:12:10: fatal error: habanalabs.h: =
+No such file or directory
+> >    12 | #include "habanalabs.h"
+> >       |          ^~~~~~~~~~~~~~
+> > In file included from drivers/misc/habanalabs/goya/goya_security.c:8:
+> > drivers/misc/habanalabs/goya/goyaP.h:12:10: fatal error: habanalabs.h: =
+No such file or directory
+> >    12 | #include "habanalabs.h"
+> >       |          ^~~~~~~~~~~~~~
+> >=20
+> > Presumably caused by commit
+> >=20
+> >   70b2f993ea4a ("habanalabs: create common folder")
+> >=20
+> > I have used the char-misc tree from next-20200724 for today. =20
+>=20
+> Ugh, this is a mess of a merge with this driver.
+>=20
+> Oded, I'll take Stephen's merge resolutions here and push out a new
+> version, and try to resolve this error, but if you could verify I got it
+> correct, that would be great.
 
-     Arnd
+The conflicts are gone, but I still get these errors.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/INkSETqbTX5k7nBLuVIGx7u
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8f1MsACgkQAVBC80lX
+0Gzn4ggAlwPeDU1PJawL/3dmABE3hzjj8uoJwMRQRF2Zt9jt3qkNDesiBe8qO1zT
+hcpAwA086TQeF9EyXbJ1e5NYxKJJZczaw/Y92ZETsXS/tQWlxumw1XHbXs4qyXK7
+GzVkXlCT8DSeELXcM50HlSZhkAS8q0fLg3R/fse0N7aJ6Y/mt4/41EZtlB1VuCaX
+EKWbODdLZNPbYBFFREjNp0cNfdjZJxsqvzZkw/1UE00qx4mM4O2QNveg1EnIB9TX
+LY3fVN6K4ou1ZihcOJiC26WbQPNuEIf5nPQmsQn4kt+ymtR2+Lrh+caVXNN7K9hB
+vh5eyxcBYLhCT8DxKLhrLPRkLHfsKw==
+=+zqG
+-----END PGP SIGNATURE-----
+
+--Sig_/INkSETqbTX5k7nBLuVIGx7u--
