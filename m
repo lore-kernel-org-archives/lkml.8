@@ -2,121 +2,142 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C565C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4005BC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7564D20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C7A320656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:09:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WfCuIF+N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgG1IHS convert rfc822-to-8bit (ORCPT
+        id S1727948AbgG1IJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:07:18 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:32802 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727808AbgG1IHR (ORCPT
+        Tue, 28 Jul 2020 04:09:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbgG1IJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:07:17 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-122-o5x9Q9SyNzqkeSG6S-qBgw-1; Tue, 28 Jul 2020 09:07:12 +0100
-X-MC-Unique: o5x9Q9SyNzqkeSG6S-qBgw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 28 Jul 2020 09:07:11 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 28 Jul 2020 09:07:11 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Christoph Hellwig' <hch@lst.de>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "Linux Crypto Mailing List" <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Subject: RE: [PATCH 12/26] netfilter: switch nf_setsockopt to sockptr_t
-Thread-Topic: [PATCH 12/26] netfilter: switch nf_setsockopt to sockptr_t
-Thread-Index: AQHWZDJbUYsuJ1QOc0ujZBN9RDfEqKkcofVA
-Date:   Tue, 28 Jul 2020 08:07:11 +0000
-Message-ID: <908ed73081cc42d58a5b01e0c97dbe47@AcuMS.aculab.com>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200723060908.50081-13-hch@lst.de> <20200727150310.GA1632472@zx2c4.com>
- <20200727150601.GA3447@lst.de>
- <CAHmME9ric=chLJayn7Erve7WBa+qCKn-+Gjri=zqydoY6623aA@mail.gmail.com>
- <20200727162357.GA8022@lst.de>
-In-Reply-To: <20200727162357.GA8022@lst.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 28 Jul 2020 04:09:47 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E49FEC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:09:45 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id b25so20148946ljp.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:09:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=refqiK2IWlQ3mOTyFeqnVmB/kSEzmm9CW2c4TQojIKs=;
+        b=WfCuIF+N2NmU60NsCa/JwDfZ/2Nv3VdLtl+PsjLet0Nzca6wYbZhf3KLfYAcH+yG6N
+         LaR9+097mHxfUn8gn7Be8CFNnGBmtnA/zxEpDJV/ocsagkHix4jVu3EVG6FrI64jWHYI
+         M+PzasI6lq60ee4UopcVSOqHZ2rmhBcou1LSLGPdsYSqBNegBgB1DWqpolUEmgNk0ju4
+         CBCGJrhfdr5TCA4JVBROBndTQtCW+wqbRJegLmMyk5uVj7QvYvbvRVhkOWcs5kLLW5ui
+         HOqodhXVOpi6VXsxgX/17k48jouG1wJLBMVXy14roEsN2uWmc+DdP+Mq7Tr986xY3Y5I
+         qdWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=refqiK2IWlQ3mOTyFeqnVmB/kSEzmm9CW2c4TQojIKs=;
+        b=LN8EXaWqK6jr6SQinxgekbD29VJBL1gQSebQRKksYvTy/nwNNVeZLRmEVvrojsmmAb
+         qkuiKlv0K3lrS2V0eUu2zq3LyEkoXG86p0rnawCPHuqGVudv+d5OJSnf1Nccjiu73/cB
+         rcI9eBFUCkAHuABopdLImQuy3sXnp+FZg4P5mrk5fuo8tzdOzaSIMO4dMdWYCYPG0906
+         oX1621jZbEqLBtjruDmTiRvc7Y2nYI8yHpjR7IvNZyJWRa809q7UakZlyL/hhcsg0MpV
+         uEstfmlKUzZrSmIbVbKPY32Hxjn6S+jDghshsqg/YbNiERXKlhanZee3EYcYNv7JFctN
+         s8jw==
+X-Gm-Message-State: AOAM531WUD8N3x6Wcov/QY3cVSOKlHrWoDj09szA/vAIZxcRNgaZyQzo
+        ttCnkqa9fQvRmUpSVDlzuA4jV2XW5jP9uElGjpqjWA==
+X-Google-Smtp-Source: ABdhPJztqYIekifUAkogxvmP6cFAfSb8mD1OJ06MuDN7GJEQY/Tvu7YCiuhZGtOCnc4NehwkSNKZYCHWWEIIOHWVZ8w=
+X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr12792312ljc.286.1595923784397;
+ Tue, 28 Jul 2020 01:09:44 -0700 (PDT)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
+ <CAK8P3a13gcF_+dkfxZW0u_YuJ92hY1JukWfzM+e30iM=YUhraQ@mail.gmail.com>
+ <DB3PR0402MB3916F080E4912B27B18BEADEF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a2CBYV2xEkedQYmzL4XgHPeu02=vmLffq+RWwvEvuUGKQ@mail.gmail.com>
+ <DB3PR0402MB391674F67A1B9F2732883C0BF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a0XpKnbz79dH4i7HofGgpAodtmgdBmVBVQOKfCiJMkpPw@mail.gmail.com>
+In-Reply-To: <CAK8P3a0XpKnbz79dH4i7HofGgpAodtmgdBmVBVQOKfCiJMkpPw@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Jul 2020 10:09:33 +0200
+Message-ID: <CACRpkdb4CCNYtMpPOAB6hF8gSCHa4NtpO8TzH0pVEuh-Spe44w@mail.gmail.com>
+Subject: Re: [PATCH V2 1/4] gpio: mxc: Support module build
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Anson Huang <anson.huang@nxp.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Peng Fan <peng.fan@nxp.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Olof Johansson <olof@lixom.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Joel Stanley <joel@jms.id.au>, Lubomir Rintel <lkundrak@v3.sk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "michael@walle.cc" <michael@walle.cc>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig
-> Sent: 27 July 2020 17:24
-> 
-> On Mon, Jul 27, 2020 at 06:16:32PM +0200, Jason A. Donenfeld wrote:
-> > Maybe sockptr_advance should have some safety checks and sometimes
-> > return -EFAULT? Or you should always use the implementation where
-> > being a kernel address is an explicit bit of sockptr_t, rather than
-> > being implicit?
-> 
-> I already have a patch to use access_ok to check the whole range in
-> init_user_sockptr.
+On Mon, Jul 27, 2020 at 1:57 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-That doesn't make (much) difference to the code paths that ignore
-the user-supplied length.
-OTOH doing the user/kernel check on the base address (not an
-incremented one) means that the correct copy function is always
-selected.
+> Overall, my feeling is that making sure all drivers that depend on the pinctrl
+> driver can deal with deferred probing is a prerequisite before this can be
+> made a loadable module itself (same for clk, irqchip, etc drivers that others
+> may rely on).
+>
+> I understand that your primary motivation is to fit into Google's GKI framework,
+> but I think that doing the conversion only partially would neither serve to
+> improve the kernel nor actually meet the GKI requirements.
 
-Perhaps the functions should all be passed a 'const sockptr_t'.
-The typedef could be made 'const' - requiring non-const items
-explicitly use the union/struct itself.
+This has been my worry as well when it comes to these GKI-initiated
+patches that are flying right now.
 
-	David
+> Most pinctrl drivers are currently always built-in to work around the
+> load order dependencies. This of course is a bit of a hack and we'd be
+> better off if all drivers managed to avoid the dependencies, but this
+> can also require a lot of work.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Several people have argued that it is reasonable to cut corners to
+achieve the "greater good" of GKI.
 
+I try to handle it on a "does the kernel look better after than
+before" basis, while pushing gently for at least trying to
+properly modularize the whole thing. It can become pretty hard
+to test I think. If it is things like GPIO expanders on I2C
+that can be used by several SoCs I would be more hard on
+this, on a single SoC not as much.
+
+One discussion thread got inflamed because of ARM vs x86
+discussions "x86 is better modularized" which is something I want
+to avoid, it is easy to be modularized when your irqs, clocks,
+regulators and pins are handled by the BIOS. This is a SoC
+problem and x86 SoCs with no BIOS, RISCV, ARM and whatever
+doesn't have a fix-it-all-BIOS have this problem. :/
+
+Yours,
+Linus Walleij
