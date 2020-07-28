@@ -2,185 +2,239 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F923C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4648D2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CCDB20838
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:27:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KNilb2ZR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qhg6T58a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgG1IYJ (ORCPT
+        id S1728057AbgG1I1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:24:09 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:38549 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbgG1IYG (ORCPT
+        Tue, 28 Jul 2020 04:27:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727975AbgG1I1M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:24:06 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200728082403epoutp03fe94840a0c0bba42e321553b0e3c5208~l3QHiyVqP0196701967epoutp034
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:24:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200728082403epoutp03fe94840a0c0bba42e321553b0e3c5208~l3QHiyVqP0196701967epoutp034
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1595924643;
-        bh=lffFS9Qk7KyQhIt5idZnIw+cL7XP2ngNX4A36tfUE/E=;
-        h=From:To:In-Reply-To:Subject:Date:References:From;
-        b=KNilb2ZR8+G/UcIymCi8skSL8P3o0uPtosfBmyHGC+EIen5Tt8k7rW1yu6Nnemgz4
-         uitykU3XG1dQKOZu53XrClZ417uTq4baeg3eJ4KtnpCGS0uOptsKUsB7yRY6pdFNUf
-         oedzPBvuDWiIfoKXuBdinYxRSRHOD5nmf1wyzT8k=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20200728082402epcas5p28795d7bdd17e9f01703f028ca02ee1a8~l3QHKB8JP2028320283epcas5p2P;
-        Tue, 28 Jul 2020 08:24:02 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        31.96.09475.2A0EF1F5; Tue, 28 Jul 2020 17:24:02 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200728082402epcas5p333b3017f433ad9998564fbb8f3816f30~l3QGfRnz32645526455epcas5p3_;
-        Tue, 28 Jul 2020 08:24:02 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200728082401epsmtrp26ec2661f02fd4598740d88b635619f6c~l3QGeXCrz2759827598epsmtrp2h;
-        Tue, 28 Jul 2020 08:24:01 +0000 (GMT)
-X-AuditID: b6c32a4b-389ff70000002503-36-5f1fe0a2901b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D3.C1.08303.1A0EF1F5; Tue, 28 Jul 2020 17:24:01 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.111.84.49]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200728082400epsmtip2aeb1eebe4e35d5115587fdb564990b7b~l3QEpektJ1407014070epsmtip2O;
-        Tue, 28 Jul 2020 08:23:59 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Randy Dunlap'" <rdunlap@infradead.org>,
-        "'Andrew Morton'" <akpm@linux-foundation.org>,
-        <broonie@kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-next@vger.kernel.org>, <mhocko@suse.cz>,
-        <mm-commits@vger.kernel.org>, <sfr@canb.auug.org.au>,
-        "'linux-scsi'" <linux-scsi@vger.kernel.org>,
-        "'Seungwon Jeon'" <essuuj@gmail.com>
-In-Reply-To: <c99c3cef-1b03-0adf-62a6-373e692425b5@infradead.org>
-Subject: RE: mmotm 2020-07-27-18-18 uploaded (drivers/scsi/ufs/:
- SCSI_UFS_EXYNOS)
-Date:   Tue, 28 Jul 2020 13:53:58 +0530
-Message-ID: <000001d664b8$72cbd790$586386b0$@samsung.com>
+        Tue, 28 Jul 2020 04:27:12 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B3E5C0619D6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:27:11 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id t142so10926195wmt.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:27:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=uGdSTLXzLPoQW4Vv8n7QiN3IXRkY2j1N9K5+wvpg67A=;
+        b=Qhg6T58aAmKWjza2llHFtcN/M5ktqlCBTRyY1BmuOUBUdpKwrXhpz5iTJ+7+tiz7Z8
+         V7n08jcrpM9bhjhsNch1R3b8038XgvDYN4L4lofGSiCZro7bCM2IEHqIlGck39tEouUZ
+         A4r3xC4z/eB4g2zUV7A83vu3lTrDaA9wh5L6Z1W2fU8ATi/A5bBKcqTmWGXnlGh0Nf6y
+         GQYntzxG6o4GCGfR+Ozuy99qbQ1co4mdt+HUnTWNGpXgu3F2G7sBHTHUUfYhG4gEfXtG
+         vCSiH0h4kn4XTvDSo8UU0KwWmMz++xzcD+srqkyl4/3SY3U3JJRBkzLPQ5tjvgVw0sIS
+         Dgwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=uGdSTLXzLPoQW4Vv8n7QiN3IXRkY2j1N9K5+wvpg67A=;
+        b=Cv600n64eOO16QxQcDYSP8pVd3Naz8I1rZUYvpml5J9ZGyxpBtr0GM3MX5p8KtrP5h
+         KJRz85TZagZc/4s/xRivwxPk5KU2iAbPzOKIeKSGpdM8xkAEpbj0nB5xHkomZZluxvU3
+         5pydIdo89eOHcU+qsDlXNsfIsj5JG6foKNKQ4wA6+fof5aA6aQmOyoSOkYilurcpnG6e
+         UqJ7ZBf1EXQXBYgaxy/A7sXNAAQhwZSJdFZh3Ux7QIszOxsGrD4FIfu2bxdou89F51dd
+         /VwA5C+BMYXvPvtzQ1qLBghzDPYjAw78uAAQyIog5mGy3swGBtmb4aE3UH3d66SJl1V7
+         0l0w==
+X-Gm-Message-State: AOAM533+cWRsrpzQNYFa+XQXhwGo5K2Tl7SJnfMYufqwqslhguNWdGFf
+        qA1XLP8os2mWVS0CtJic+e3q5A==
+X-Google-Smtp-Source: ABdhPJxOdhDnn+eNqujllDon1GsS0dEIq8GDpDLR1DsQSiCtVl87rdAMEtcC8WUAdFNx/vl1MVi7VA==
+X-Received: by 2002:a1c:b007:: with SMTP id z7mr2792839wme.37.1595924829954;
+        Tue, 28 Jul 2020 01:27:09 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id s205sm3405256wme.7.2020.07.28.01.27.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 01:27:09 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 09:27:07 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
+Message-ID: <20200728082707.GB2419169@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-3-michael@walle.cc>
+ <20200728072422.GF1850026@dell>
+ <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQH6RHqNssVmezboDnOhfcuciV9AnAIQbK05Ag8N1j2os+oSEA==
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOKsWRmVeSWpSXmKPExsWy7bCmlu6iB/LxBvMvKFvMWb+GzWLqwyds
-        FssvLGGy2LP3JIvF5V1z2CzurfnPanFwYRujRff1HWwWr5q/s1q8nniB1eLtneksFlv3XmV3
-        4PFovHGDzWPnrLvsHptXaHlsWtXJ5rHp0yR2jxMzfrN4nFlwhN3j8ya5AI4oLpuU1JzMstQi
-        fbsErowv+z+zFVzkr7jS18zWwPiPp4uRk0NCwESi4ec1FhBbSGA3o8TXv7xdjFxA9idGiS0T
-        zjJCOJ8ZJS6ceMwE03FsXS9UYhejxJOVr1khnFeMEh+eHGUHqWIT0JXYsbiNDSQhItDNLPH5
-        YwsbSIJTwFHi2LVNYKOEBYIl9s4+zwxiswioSkzc+xPM5hWwlHg8eSsjhC0ocXLmE7ADmQW0
-        JZYtfM0McYaCxM+ny1hBbBEBJ4nnS0+wQ9SISxz92cMMslhC4AiHxK75ExkhGlwk3vR2skLY
-        whKvjm9hh7ClJD6/2wt0HAeQnS3Rs8sYIlwjsXTeMRYI217iwJU5LCAlzAKaEut36UOs4pPo
-        /f2ECaKTV6KjTQiiWlWi+d1VqE5piYnd3VBLPSR6evugYXWaUWJ6SzPjBEaFWUi+nIXky1lI
-        vpmFsHkBI8sqRsnUguLc9NRi0wLjvNRyveLE3OLSvHS95PzcTYzgtKblvYPx0YMPeocYmTgY
-        DzFKcDArifByi8rEC/GmJFZWpRblxxeV5qQWH2KU5mBREudV+nEmTkggPbEkNTs1tSC1CCbL
-        xMEp1cDkoBKWt9yjoVpCRTJjLsvXGzeTmc9rNZ/7UmbwQ6nL02nDto6in8liF+8r6jKnfpjZ
-        aCt+tbJH6/uH65ETWlqWzC6f8T3FcqpF2lIRTwGvA37KE7n+euyfOvvAaaPFTD/a0s39Eiz1
-        +i6/ygrYm9PBvjvrwULp/cJmzHMyDjhfsLr75lRliEzir+ZXDK/sVmYVJQtHdGmfPDzfvN3u
-        +ww25y0cvWJ3JixbHm147+nnQ1ZHex6orXybc4DNL3HvDi9n7t02s2IX5Zs6NP4qUM28GmN9
-        tbalbcc67RlnzDoTxM+1bHBX+MfXsm9KlWTYTpfNv36wWYjYPHmb/fje6kutri7P6iOU7H6L
-        l/g2dSmxFGckGmoxFxUnAgChHnJk2gMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPIsWRmVeSWpSXmKPExsWy7bCSvO7CB/LxBmtvGlvMWb+GzWLqwyds
-        FssvLGGy2LP3JIvF5V1z2CzurfnPanFwYRujRff1HWwWr5q/s1q8nniB1eLtneksFlv3XmV3
-        4PFovHGDzWPnrLvsHptXaHlsWtXJ5rHp0yR2jxMzfrN4nFlwhN3j8ya5AI4oLpuU1JzMstQi
-        fbsErox9D/rZC97zVaz4sYmpgXEBTxcjJ4eEgInEsXW9jF2MXBxCAjsYJRYu62KCSEhLXN84
-        gR3CFpZY+e85O0TRC0aJ8/u3soAk2AR0JXYsbmMDSYgITGeW+DHpOjNE1XFGiWmv1oCN4hRw
-        lDh2bROQzcEhLBAosWqnK0iYRUBVYuLen8wgNq+ApcTjyVsZIWxBiZMzn4AtYBbQlnh68ymc
-        vWzha2aIixQkfj5dxgpiiwg4STxfeoIdokZc4ujPHuYJjEKzkIyahWTULCSjZiFpWcDIsopR
-        MrWgODc9t9iwwCgvtVyvODG3uDQvXS85P3cTIzgOtbR2MO5Z9UHvECMTB+MhRgkOZiURXm5R
-        mXgh3pTEyqrUovz4otKc1OJDjNIcLErivF9nLYwTEkhPLEnNTk0tSC2CyTJxcEo1MLXOk19S
-        IlLVqlhmdz3GobpbUWr9or+ij643Kr24u8LJaZ/MCr0fNYn+P4M8BfZHO4Xs8T7u9J77/Wff
-        Rfckph3byNAvNZu7b97MipeZhkKKFt+2iJ7sjijl+e/GlLN6stavI8tOtOdwbbb+nxrTv/9k
-        vod74ZslN3tlb51zuNKW/yVN8lx7iYSRptzqi0GvotqkuiXmPGJrtDziJLTGb8KPjRbvojqK
-        8gstLa984J7E86NSsbg/MylH/6jt5u/7ll072HXJ/rm4y6x3rdIbf9XtiJFt7Dy30Tl/zb0T
-        91wKPT+2Kj78FDllvtlkDfO3zXI/Das7OyrZGcXnNhV+nWPT+fvJRq+epA8eJU/WK7EUZyQa
-        ajEXFScCAH7AEroyAwAA
-X-CMS-MailID: 20200728082402epcas5p333b3017f433ad9998564fbb8f3816f30
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200728032310epcas5p27226ae967b93325ca145e70a14a8bdf8
-References: <20200728011914.S-8vAYUK0%akpm@linux-foundation.org>
-        <CGME20200728032310epcas5p27226ae967b93325ca145e70a14a8bdf8@epcas5p2.samsung.com>
-        <c99c3cef-1b03-0adf-62a6-373e692425b5@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+On Tue, 28 Jul 2020, Michael Walle wrote:
 
-> -----Original Message-----
-> From: Randy Dunlap <rdunlap=40infradead.org>
-> Sent: 28 July 2020 08:53
-> To: Andrew Morton <akpm=40linux-foundation.org>; broonie=40kernel.org; li=
-nux-
-> fsdevel=40vger.kernel.org; linux-kernel=40vger.kernel.org; linux-mm=40kva=
-ck.org;
-> linux-next=40vger.kernel.org; mhocko=40suse.cz; mm-commits=40vger.kernel.=
-org;
-> sfr=40canb.auug.org.au; linux-scsi <linux-scsi=40vger.kernel.org>; Alim A=
-khtar
-> <alim.akhtar=40samsung.com>; Seungwon Jeon <essuuj=40gmail.com>
-> Subject: Re: mmotm 2020-07-27-18-18 uploaded (drivers/scsi/ufs/:
-> SCSI_UFS_EXYNOS)
->=20
-> On 7/27/20 6:19 PM, Andrew Morton wrote:
-> > The mm-of-the-moment snapshot 2020-07-27-18-18 has been uploaded to
-> >
-> >    http://www.ozlabs.org/=7Eakpm/mmotm/
-> >
-> > mmotm-readme.txt says
-> >
-> > README for mm-of-the-moment:
-> >
-> > http://www.ozlabs.org/=7Eakpm/mmotm/
-> >
-> > This is a snapshot of my -mm patch queue.  Uploaded at random
-> > hopefully more than once a week.
-> >
-> > You will need quilt to apply these patches to the latest Linus release
-> > (5.x or 5.x-rcY).  The series file is in broken-out.tar.gz and is
-> > duplicated in http://ozlabs.org/=7Eakpm/mmotm/series
-> >
->=20
-> on i386:
->=20
-> when CONFIG_OF is not set/enabled:
->=20
-> WARNING: unmet direct dependencies detected for PHY_SAMSUNG_UFS
->   Depends on =5Bn=5D: OF =5B=3Dn=5D && (ARCH_EXYNOS =7C=7C COMPILE_TEST =
-=5B=3Dy=5D)
->   Selected by =5Bm=5D:
->   - SCSI_UFS_EXYNOS =5B=3Dm=5D && SCSI_LOWLEVEL =5B=3Dy=5D && SCSI =5B=3D=
-y=5D &&
-> SCSI_UFSHCD_PLATFORM =5B=3Dm=5D && (ARCH_EXYNOS =7C=7C COMPILE_TEST =5B=
-=3Dy=5D)
->=20
-Have already posted a fix for this =5B1=5D
-=5B1=5D https://www.spinics.net/lists/linux-scsi/msg144970.html
+> Am 2020-07-28 09:24, schrieb Lee Jones:
+> > On Sun, 26 Jul 2020, Michael Walle wrote:
+> > 
+> > > Add a device tree bindings for the board management controller found
+> > > on
+> > > the Kontron SMARC-sAL28 board.
+> > > 
+> > > Signed-off-by: Michael Walle <michael@walle.cc>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > Changes since v5:
+> > >  - none
+> > > 
+> > > Changes since v4:
+> > >  - fix the regex of the unit-address
+> > > 
+> > > Changes since v3:
+> > >  - see cover letter
+> > > 
+> > >  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 +++++++
+> > >  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++++
+> > >  .../kontron,sl28cpld-intc.yaml                |  54 +++++++
+> > >  .../bindings/mfd/kontron,sl28cpld.yaml        | 153
+> > > ++++++++++++++++++
+> > >  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
+> > >  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
+> > >  6 files changed, 358 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+> > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
+> > > 
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+> > > b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+> > > new file mode 100644
+> > > index 000000000000..9a63a158a796
+> > > --- /dev/null
+> > > +++
+> > > b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+> > > @@ -0,0 +1,54 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/gpio/kontron,sl28cpld-gpio.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: GPIO driver for the sl28cpld board management controller
+> > > +
+> > > +maintainers:
+> > > +  - Michael Walle <michael@walle.cc>
+> > > +
+> > > +description: |
+> > > +  This module is part of the sl28cpld multi-function device. For more
+> > > +  details see
+> > > Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
+> > 
+> > Paths are normally relative.
+> 
+> grep Documentation/ Documentation
+> 
+> I know there are a lot false positives (esp in the first one)..
+> 
+> $ grep -r "\.\./" Documentation | wc -l
+> 1826
+> $ grep -r "Documentation/" Documentation|wc -l
+> 2862
 
->=20
-> Full randconfig file is attached.
->=20
-Thanks for config file, I can reproduce it and confirm that =5B1=5D above f=
-ixes this Warning.
+I actually meant just for Device Tree bindings, but it does appear
+that 'Documentation' is used a bunch there too.
 
->=20
-> --
-> =7ERandy
-> Reported-by: Randy Dunlap <rdunlap=40infradead.org>
+My reasons for not liking full paths is that the intention was always
+to move 'Documentation/devicetree' to a new location outside of the
+kernel source tree.
 
+[...]
+
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Kontron's sl28cpld board management controller
+> > 
+> > "S128CPLD" ?
+> 
+> still not, its sl28cpld, think of a project/code name, not the product
+> appended with CPLD.
+> 
+> > "Board Management Controller (BMC)" ?
+> 
+> sounds like IPMI, which I wanted to avoid.
+
+Is there a datasheet?
+
+> > > +maintainers:
+> > > +  - Michael Walle <michael@walle.cc>
+> > > +
+> > > +description: |
+> > > +  The board management controller may contain different IP blocks
+> > > like
+> > > +  watchdog, fan monitoring, PWM controller, interrupt controller
+> > > and a
+> > > +  GPIO controller.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: kontron,sl28cpld-r1
+> > 
+> > We don't usually code revision numbers in compatible strings.
+> > 
+> > Is there any way to pull this from the H/W?
+> 
+> No, unfortunately you can't. And I really want to keep that, in case
+> in the future there are some backwards incompatible changes.
+
+Rob,
+
+I know you reviewed this already, but you can give your opinion on
+this specifically please?  I know that we have pushed back on this in
+the past.
+
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
