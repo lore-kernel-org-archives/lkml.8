@@ -2,91 +2,97 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F01C433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE906206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59BA206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:50:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jF9O5dfq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gL5GVj/1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730520AbgG1OuQ (ORCPT
+        id S1730537AbgG1Ou0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:50:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730335AbgG1OuQ (ORCPT
+        Tue, 28 Jul 2020 10:50:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41529 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730523AbgG1OuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:50:16 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C2ABC061794;
-        Tue, 28 Jul 2020 07:50:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=QTqHP6bK9W4RFpKAMBcspR5sA1/+rrn6GZmLT6RFR2o=; b=jF9O5dfqNDC0lWxB7y/eY27PpJ
-        XVJ1Zl6Xh6YxEBwVfJ7AV+OcbuFxqaCPr1o1Ko/I/V8dZfo49zDUPE42Y2plHlxH+MNcoXw+b6trg
-        i03meS7XFWkTrrM2aFbUwNpXUvOWqlIhhrTGN8E5HhfkjKAFYqqmvl/q909D5aPWbgfwoYHog+Sd2
-        q3BlVtdubcUIopYG8CURT7UrAcyiiJITcbWxjyvRpvB/UnvQcJWunC3Fvqx7/a6HmokqaY6/2jeIw
-        VA3uFOYJs0zt9FTLtonZzQK+nCaKyk/DbimLBV/hyzuHT9MR/e4aV72HJunpTlDDbwWzCZxyMJYF9
-        +LNnf8Sw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0Qvk-0001Bt-Rh; Tue, 28 Jul 2020 14:50:13 +0000
-Subject: Re: linux-next: Tree for Jul 28 (drivers/net/usb/)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Oliver Neukum <oliver@neukum.org>
-References: <20200728215731.00cb56d3@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d8e712fa-65c8-f616-3411-a41b88950eba@infradead.org>
-Date:   Tue, 28 Jul 2020 07:50:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 10:50:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595947824;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SWjykGqBMInyrV21RjBwz09v26RfChOpFP7bkHaZWz0=;
+        b=gL5GVj/1Sh/8xRJw5I5V5ugR3rF5SX7ApolewQ5v8l+CqxPmRkEddfBM2fWKmPr5o+xPcN
+        PO6qbLkt9MGtlOYHlicpnJv6zjgDQ5AuueMDgHom+I/0sfySeNluYbmZPiFsddK1nz64LJ
+        V/D+dzbLdGSR7NAT/pKGzovSnc4LnMk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-39-Zrerl_7zO_amUtxi0bg-EA-1; Tue, 28 Jul 2020 10:50:20 -0400
+X-MC-Unique: Zrerl_7zO_amUtxi0bg-EA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 31BB6193F560;
+        Tue, 28 Jul 2020 14:50:18 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.181])
+        by smtp.corp.redhat.com (Postfix) with SMTP id BE9C069324;
+        Tue, 28 Jul 2020 14:50:15 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 28 Jul 2020 16:50:17 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 16:50:14 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     madvenka@linux.microsoft.com
+Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v1 1/4] [RFC] fs/trampfd: Implement the trampoline file
+ descriptor API
+Message-ID: <20200728145013.GA9972@redhat.com>
+References: <aefc85852ea518982e74b233e11e16d2e707bc32>
+ <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <20200728131050.24443-2-madvenka@linux.microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <20200728215731.00cb56d3@canb.auug.org.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728131050.24443-2-madvenka@linux.microsoft.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/20 4:57 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20200727:
-> 
+On 07/28, madvenka@linux.microsoft.com wrote:
+>
+> +bool is_trampfd_vma(struct vm_area_struct *vma)
+> +{
+> +	struct file	*file = vma->vm_file;
+> +
+> +	if (!file)
+> +		return false;
+> +	return !strcmp(file->f_path.dentry->d_name.name, trampfd_name);
 
-on i386:
+Hmm, this looks obviously wrong or I am totally confused. A user can
+create a file named "[trampfd]", mmap it, and fool trampfd_fault() ?
 
-CONFIG_USB_USBNET=y
-# CONFIG_USB_NET_AX8817X is not set
-CONFIG_USB_NET_AX88179_178A=y
-CONFIG_USB_NET_CDCETHER=m
-CONFIG_USB_NET_CDC_EEM=m
-CONFIG_USB_NET_CDC_NCM=y
-CONFIG_USB_NET_HUAWEI_CDC_NCM=m
-CONFIG_USB_NET_CDC_MBIM=m
+Why not
 
-ld: drivers/net/usb/cdc_ncm.o:(.rodata+0x27c): undefined reference to `usbnet_cdc_update_filter'
-ld: drivers/net/usb/cdc_ncm.o:(.rodata+0x2dc): undefined reference to `usbnet_cdc_update_filter'
-ld: drivers/net/usb/cdc_ncm.o:(.rodata+0x33c): undefined reference to `usbnet_cdc_update_filter'
+	return file->f_op == trampfd_fops;
 
-because 'usbnet_cdc_update_filter' lives in cdc_ether.c, which is being built
-as a loadable module while cdc_ncm.o is builtin.
+?
 
+> +EXPORT_SYMBOL_GPL(is_trampfd_vma);
 
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+why is it exported?
+
+Oleg.
+
