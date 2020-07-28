@@ -2,199 +2,130 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2689EC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2613C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEFA72083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595935058;
-	bh=8cWIEcIxAMoEcv22ADKiBly1ykSpDfM0U+4sTr4DVUk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ruNfo9VIrsLFrF5TuIyBRrJl3AEK/T6tBbdpsptk1rWO1bkH+7+OSLz67f1hcWKSg
-	 5Oi3lK3nCL847v/fCkDFNPslLR68dxQRPy9o/k4XG7mGR7ffmRKzbojZv/haO1TOOt
-	 XR8IsNEgBfzNctadYDvFbx4+8OM9HgmuMDlVT1nA=
+	by mail.kernel.org (Postfix) with ESMTP id 7C779206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:18:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DhAuVmRn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgG1LRg (ORCPT
+        id S1729019AbgG1LSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 07:17:36 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35490 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728934AbgG1LRf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 07:17:35 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 93so4434479otx.2;
-        Tue, 28 Jul 2020 04:17:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KnPUjAu22SOUCOm6g1IeFJhvhpLRbJ0m88Fl/eGEXik=;
-        b=KvgW/E8Bzg1+rRhX/jTEV9Feu1A3rhdwSxBJus3+70/TvQ8PwSpN7L7SZrGBpvU6ar
-         tjfTZNcAdjMmuitjkO+V52PuMaxCiNKGdp8/FaneARReHU5S++r3q8ddMYIsom+A+caE
-         hy5ycunBwiXbnTO3La4lrd6dxjzjN77U3vM9SeZ8OxBbGiDHgI70L7y557e87sbW0EZ7
-         7JUINhzG5lsUOgVBV1ZW30egf8oHZQjTVGRAxvfq1T9rXRYm+Fl6LXzSoEVTQLX9CUwM
-         tOMqGZZ34Tl3b0cFzMk7RM1v2osphAJXDT1f+fk+A4FWP7UMYMHqdWitkXo/bRJJCVAP
-         gzOg==
-X-Gm-Message-State: AOAM530Nr/0mA/ZMPnt72omT4DtHHfuPXDHZ7+cXeZvEeTO8KkB6PDa9
-        voHbgiKqtm2DvEoJIsztd0kEf7kYXDBgGBAkgBQ=
-X-Google-Smtp-Source: ABdhPJwEafv59CVs5A2UJPEZNyJdT+8/NxOgu+3o+fqap2JowBj1l35GlCM4GXeZmBxNQU4lwA/8MSL1J5CW83FJF2c=
-X-Received: by 2002:a05:6830:1e5c:: with SMTP id e28mr5693951otj.118.1595935053275;
- Tue, 28 Jul 2020 04:17:33 -0700 (PDT)
+        Tue, 28 Jul 2020 07:18:40 -0400
+Received: from mout.gmx.net ([212.227.17.20]:55827 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728934AbgG1LSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 07:18:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1595935097;
+        bh=kKz6J2TJMa/GicbvTCv76Ky9V4fO/FV3yZh5V+NhgHA=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=DhAuVmRnZtbvXh5bWCK6YnKHZjfPtkWhtW9RWOCYS3tJ2NDqtLyTQDs93pIXH/U2h
+         xZ9ZIMzkvYNgM521DovcY5ByOMhKH4g8PeCAgIHxKLN2rh4YcaapUG/Rx0zeY0yfHQ
+         jbK6fD5cq/tu0XuLekls9fWXa0etcLhnriLQ1KgQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([80.208.215.239]) by mail.gmx.com
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MEUz4-1jym7135gI-00FzVD; Tue, 28 Jul 2020 13:18:17 +0200
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     linux-mediatek@lists.infradead.org
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] make hdmi work on bananapi-r2
+Date:   Tue, 28 Jul 2020 13:17:55 +0200
+Message-Id: <20200728111800.77641-1-frank-w@public-files.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200720050500.23357-1-akshu.agrawal@amd.com> <20200720050500.23357-2-akshu.agrawal@amd.com>
- <CAJZ5v0j264hcr0AbwXou240K73xfQ5Q0pF4TEP11SAOT2nuOjA@mail.gmail.com> <27966cc7-cb5a-fd18-2244-5106d8853ea1@amd.com>
-In-Reply-To: <27966cc7-cb5a-fd18-2244-5106d8853ea1@amd.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 28 Jul 2020 13:17:20 +0200
-Message-ID: <CAJZ5v0jh6SUK=8Px4+=9OSt8PDF=UvzOejhbjVU-7G69Pj9SVA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] ACPI: APD: Change name from ST to FCH
-To:     "Agrawal, Akshu" <aagrawal2@amd.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Akshu Agrawal <akshu.agrawal@amd.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:+y5CoX8QurDPY0IO98TiGJ9LRNcAE9xACEixzFfMq7Rc9pJV6/F
+ VIOEtUITqe74q6u2ezJ4CIbpDVVJNTJugvVeL9HglsnPh8Husf3ag6TligX+Syc5hziPW09
+ ER2o83PdhsHrZ1mvkVFnWBMYpn1ixkPjVaA30e4evKXJ+WzDhFbNGkKNRPet6RUPF6aFX69
+ ZYJDeR5cZL/ysODW/uUsg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ys97Xj7rYoM=:a2DM49E19qlfep+w6GoeVe
+ KmnKZW/nZPa/niTEv9psAQfd3aObxG1KHuYQK3bIRH75w0tXG62bpW6gvn3qRfViJFp17izFV
+ p+RM9df5EhTfRB/URExSFm2KcZKD/DDB+m2lsoV4rJroaBw9nk1/SSGjG/+d2l+aQYc4mlbAe
+ YytkwsBLeDHxy4ZyJKhWpAI+ehfhMByhyXD1uomM8uEGIRc4sDhakLPYT5awU4o6juCogq7X6
+ OwoA3URregNhMsV7XgRRT8u5+NhlINBiCLDY46tONhPlcpOS6DMvvxUVFwmH+jkL4x7/dWiZJ
+ m3/puDezNlrAFjlkRdgCv0WGYxZmc8+A3zNC8eY6WI+0WJeLmS+G3Z55rl3FK+Z7nZ+Dj43wC
+ 9E5aS7iM7yA0OsKzVPI843uBOeEoHbHgcNPViBOv91U63AVmdvfWdxqVyXpZRfy2OgCYSGFWh
+ gWBWTiRKvqi3DF4Ppg/LadfMsanx+ApS28uTZcfptOUhBOd2trh19fg2rW1PqiH/HEAq2Bbqr
+ jGd+sVwwTl0ECvi5SiqnDrd0Jb899gzbCgjGoD/zoIeTD+zGKAxEk/cIqF9ft5BKlYpG9h4++
+ yzOJefKFu1xBZMBM8asVfDo8uEUuFL+lHlF5QtYW+gZVaKkqrpFotVcDZOOKBypK6YvSkOg9P
+ 3lR+qhg0OctkqEIUp5JZ6zKRtMoVBFaiJAA0DrPnfGIwKJ4teByUalyeLcM+qBKtjt0dmCdR0
+ Tgw9AOXqYqPnbcIcp3Sr4uoTrmQ4+mPMdNJj7VwHq/SpeCvXq14jmVuem2QPW8wVbz2i4Jtua
+ gPenREzLtHBEalNRZjoPltvxlGSd1VwN5j4hhT7G+4vY1jVxCSycV17nD55hErVL8XCiPUgJ0
+ prkepYSZXF+ximHqIZBrnltz3HBvDB8alTf7EorUDhV6o6LwZwvsjrhOgJHb7WAGASeCiki+7
+ /8vsmeBJsKKanOgRc+of8QK1nkeAQn7CwlkXQpJM1XAYvT0oHNl20uPEb/yUBT8eJKgFjfqbF
+ ZYVzB9bwkKSnLNLCS6DB27Jw2vsQoaKfLSe2EoRl6g/bZLQTqWVcs2obYP8TReui3HDfSBBiF
+ TIhXp45Rsdj6Pgl7kVYPOFwdjobSDC/l0TY5BLJVmYphnLey7tERym3IdSzVMdgNmj/wUfjdq
+ xyVs0/6c1uOvrshxWSZU2YVQm1S1aaRHjEznc8AaEtG5AR2fIkmd7SjIPjwnVFCnh1Glad/yj
+ JKLV8UCCepLQfdrdienTYEVV9BcWJm8n22bI+5Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 7:50 AM Agrawal, Akshu <aagrawal2@amd.com> wrote:
->
->
-> On 7/27/2020 6:58 PM, Rafael J. Wysocki wrote:
-> > On Mon, Jul 20, 2020 at 7:06 AM Akshu Agrawal <akshu.agrawal@amd.com> wrote:
-> >> AMD SoC general pupose clk is present in new platforms with
-> >> same MMIO mappings. We can reuse the same clk handler support
-> >> for other platforms. Hence, changing name from ST(SoC) to FCH(IP)
-> >>
-> >> Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
-> > This patch and the [3/4] appear to be part of a larger series which
-> > isn't visible to me as a whole.
->
-> Link to other patches:
->
-> https://patchwork.kernel.org/patch/11672857/
->
-> https://patchwork.kernel.org/patch/11672861/
->
-> >
-> > Do you want me to apply them nevertheless?
->
-> This patch on its own will cause compilation error as we need the second
-> patch.
->
-> Since, there is dependency we need them to be merged together. Can you
-> or Stephen please suggest a way forward.
+This Patch-Series adds missing Patches/Bugfixes to get hdmi working
+on BPI-R2
+This is v2 of series https://patchwork.kernel.org/cover/10903309/ after
+getting mmsys done
 
-I would prefer it to be routed through the clock tree.
+v1->v2:
+ - using get_possible_crtc API instead of hardcoded
+ - drop unused dts-nodes
+ - refine commit-messages as far as i can :)
+   "config component output by device node port" is needed to fix a WARN_O=
+N()
+   "fix boot up for 720 and 480 but 1080" fixes flickering,
+     which may cause also some resolutions not working on some TFT (had so=
+me problems on my smaller TFT)
 
-The APD changes are simple enough and I don't have any issues with them.
+2 Patches were already posted, but not yet merged into mainline
+- config component output by device node port
+  https://patchwork.kernel.org/patch/10609007/
+- add display subsystem related device nodes (resend)
+  https://patchwork.kernel.org/patch/10588951/
 
-Thanks!
+Bibby Hsieh (1):
+  drm/mediatek: config component output by device node port
 
+Jitao Shi (1):
+  drm/mediatek: dpi/dsi: change the getting possible_crtc way
 
-> >> ---
-> >>   drivers/acpi/acpi_apd.c                            | 14 +++++++-------
-> >>   .../linux/platform_data/{clk-st.h => clk-fch.h}    | 10 +++++-----
-> >>   2 files changed, 12 insertions(+), 12 deletions(-)
-> >>   rename include/linux/platform_data/{clk-st.h => clk-fch.h} (53%)
-> >>
-> >> diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
-> >> index ba2612e9a0eb..2d99e46add1a 100644
-> >> --- a/drivers/acpi/acpi_apd.c
-> >> +++ b/drivers/acpi/acpi_apd.c
-> >> @@ -8,7 +8,7 @@
-> >>    */
-> >>
-> >>   #include <linux/clk-provider.h>
-> >> -#include <linux/platform_data/clk-st.h>
-> >> +#include <linux/platform_data/clk-fch.h>
-> >>   #include <linux/platform_device.h>
-> >>   #include <linux/pm_domain.h>
-> >>   #include <linux/clkdev.h>
-> >> @@ -79,11 +79,11 @@ static int misc_check_res(struct acpi_resource *ares, void *data)
-> >>          return !acpi_dev_resource_memory(ares, &res);
-> >>   }
-> >>
-> >> -static int st_misc_setup(struct apd_private_data *pdata)
-> >> +static int fch_misc_setup(struct apd_private_data *pdata)
-> >>   {
-> >>          struct acpi_device *adev = pdata->adev;
-> >>          struct platform_device *clkdev;
-> >> -       struct st_clk_data *clk_data;
-> >> +       struct fch_clk_data *clk_data;
-> >>          struct resource_entry *rentry;
-> >>          struct list_head resource_list;
-> >>          int ret;
-> >> @@ -106,7 +106,7 @@ static int st_misc_setup(struct apd_private_data *pdata)
-> >>
-> >>          acpi_dev_free_resource_list(&resource_list);
-> >>
-> >> -       clkdev = platform_device_register_data(&adev->dev, "clk-st",
-> >> +       clkdev = platform_device_register_data(&adev->dev, "clk-fch",
-> >>                                                 PLATFORM_DEVID_NONE, clk_data,
-> >>                                                 sizeof(*clk_data));
-> >>          return PTR_ERR_OR_ZERO(clkdev);
-> >> @@ -135,8 +135,8 @@ static const struct apd_device_desc cz_uart_desc = {
-> >>          .properties = uart_properties,
-> >>   };
-> >>
-> >> -static const struct apd_device_desc st_misc_desc = {
-> >> -       .setup = st_misc_setup,
-> >> +static const struct apd_device_desc fch_misc_desc = {
-> >> +       .setup = fch_misc_setup,
-> >>   };
-> >>   #endif
-> >>
-> >> @@ -239,7 +239,7 @@ static const struct acpi_device_id acpi_apd_device_ids[] = {
-> >>          { "AMD0020", APD_ADDR(cz_uart_desc) },
-> >>          { "AMDI0020", APD_ADDR(cz_uart_desc) },
-> >>          { "AMD0030", },
-> >> -       { "AMD0040", APD_ADDR(st_misc_desc)},
-> >> +       { "AMD0040", APD_ADDR(fch_misc_desc)},
-> >>   #endif
-> >>   #ifdef CONFIG_ARM64
-> >>          { "APMC0D0F", APD_ADDR(xgene_i2c_desc) },
-> >> diff --git a/include/linux/platform_data/clk-st.h b/include/linux/platform_data/clk-fch.h
-> >> similarity index 53%
-> >> rename from include/linux/platform_data/clk-st.h
-> >> rename to include/linux/platform_data/clk-fch.h
-> >> index 7cdb6a402b35..850ca776156d 100644
-> >> --- a/include/linux/platform_data/clk-st.h
-> >> +++ b/include/linux/platform_data/clk-fch.h
-> >> @@ -1,17 +1,17 @@
-> >>   /* SPDX-License-Identifier: MIT */
-> >>   /*
-> >> - * clock framework for AMD Stoney based clock
-> >> + * clock framework for AMD misc clocks
-> >>    *
-> >>    * Copyright 2018 Advanced Micro Devices, Inc.
-> >>    */
-> >>
-> >> -#ifndef __CLK_ST_H
-> >> -#define __CLK_ST_H
-> >> +#ifndef __CLK_FCH_H
-> >> +#define __CLK_FCH_H
-> >>
-> >>   #include <linux/compiler.h>
-> >>
-> >> -struct st_clk_data {
-> >> +struct fch_clk_data {
-> >>          void __iomem *base;
-> >>   };
-> >>
-> >> -#endif /* __CLK_ST_H */
-> >> +#endif /* __CLK_FCH_H */
-> >> --
-> >> 2.20.1
-> >>
+Ryder Lee (1):
+  arm: dts: mt7623: add display subsystem related device nodes
+
+Stu Hsieh (1):
+  drm: Add get_possible_crtc API for dpi, dsi
+
+chunhui dai (1):
+  drm/mediatek: fix boot up for 720 and 480 but 1080
+
+ arch/arm/boot/dts/mt7623.dtsi                 | 177 ++++++++++++++++++
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  85 +++++++++
+ arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  85 +++++++++
+ drivers/gpu/drm/mediatek/mtk_dpi.c            |   3 +-
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c   |  42 +++++
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h   |   2 +
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c        |  46 ++++-
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h        |   4 +-
+ drivers/gpu/drm/mediatek/mtk_dsi.c            |   3 +-
+ drivers/gpu/drm/mediatek/mtk_hdmi_phy.c       |   3 +
+ drivers/gpu/drm/mediatek/mtk_hdmi_phy.h       |   1 +
+ .../gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c    |   1 +
+ 12 files changed, 442 insertions(+), 10 deletions(-)
+
+=2D-
+2.25.1
+
