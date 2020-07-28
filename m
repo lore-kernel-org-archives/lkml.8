@@ -2,117 +2,128 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=BAYES_00,
+	CHARSET_FARAWAY_HEADER,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7211AC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3883421883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:42:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595914968;
-	bh=lj3FNQ1UDqad2e0mCQmLxeBO4aVJvqcXp3FfYr1yaKs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hhrxhe7N2QS1biDeviDBBLKw3hcYBNQCpqIopgKLyTA0BB1GzGXh9wP6DHHRF9TIC
-	 E19BltSVV0Os6k9OnVZ36k1Sdvei8F8HwSM+hAqW2g9Q8c8JcKz06kLtXkeEfisPls
-	 KgIKOdB6JSjVzNhdc4jl++t8ETua4J2kYN0bOT2k=
+	by mail.kernel.org (Postfix) with ESMTP id 562EC20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgG1Fmr (ORCPT
+        id S1726802AbgG1Fq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 01:42:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbgG1Fmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 01:42:46 -0400
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9829D21883;
-        Tue, 28 Jul 2020 05:42:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595914965;
-        bh=lj3FNQ1UDqad2e0mCQmLxeBO4aVJvqcXp3FfYr1yaKs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Hirz63esA2VGBgqPzEHyFgMOc8WlNGlLrR1ie0210JBHeNfO9ib9yDnUl7QnJLKbE
-         VsrFxtJIDPwuaP1BAQ9lRkC6vC2da4X6yGZ6Uftx+uXoQSm+N2yMywFwJ1zuEDDWQy
-         0NmvkeOp2iaY3uzgpPyX0NQtpiO6q+YYqGfgSoq4=
-Received: by mail-lf1-f45.google.com with SMTP id j22so4416877lfm.2;
-        Mon, 27 Jul 2020 22:42:45 -0700 (PDT)
-X-Gm-Message-State: AOAM531bgJIRP56/zQ2xxYkJMb7s/iwYqqLQkDiDQZ5syzWsuL9cJWRg
-        GzgDUb5UZ7NP0FHcSW4TxTx0ZB5LccUJ46El4Rc=
-X-Google-Smtp-Source: ABdhPJwyH+WSjHjYgU1gw0yiKhX4F2dJYfdOacs8MdbY26DOXkMyXb0Jk/TQrnIt3t9PjDKoB60Duy4DkaZsdJuuHGY=
-X-Received: by 2002:a19:be53:: with SMTP id o80mr13458103lff.33.1595914963845;
- Mon, 27 Jul 2020 22:42:43 -0700 (PDT)
+        Tue, 28 Jul 2020 01:46:57 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:42314 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgG1Fq4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 01:46:56 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 06S5kR9p9000735, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 06S5kR9p9000735
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 28 Jul 2020 13:46:27 +0800
+Received: from RTEXMB02.realtek.com.tw (172.21.6.95) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 28 Jul 2020 13:46:27 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTEXMB02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 28 Jul 2020 13:46:27 +0800
+Received: from RTEXMB01.realtek.com.tw ([fe80::d53a:d9a5:318:7cd8]) by
+ RTEXMB01.realtek.com.tw ([fe80::d53a:d9a5:318:7cd8%5]) with mapi id
+ 15.01.1779.005; Tue, 28 Jul 2020 13:46:27 +0800
+From:   =?big5?B?p2Sp/rzhIFJpY2t5?= <ricky_wu@realtek.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        James Ettle <james@ettle.org.uk>
+CC:     Rui Feng <rui_feng@realsil.com.cn>, Arnd Bergmann <arnd@arndb.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Len Brown <lenb@kernel.org>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jacopo De Simoi <wilderkde@gmail.com>
+Subject: RE: rtsx_pci not restoring ASPM state after suspend/resume
+Thread-Topic: rtsx_pci not restoring ASPM state after suspend/resume
+Thread-Index: AQHWZF98DDVxZTXVzky/7XhwfZkLR6kccXXg
+Date:   Tue, 28 Jul 2020 05:46:27 +0000
+Message-ID: <bbbf5619b17e43029a75ef60b6f4fc40@realtek.com>
+References: <f02332767323fc3ecccea13dd47ecfff12526112.camel@ettle.org.uk>
+ <20200727214712.GA1777201@bjorn-Precision-5520>
+In-Reply-To: <20200727214712.GA1777201@bjorn-Precision-5520>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.88.99]
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-27-guro@fb.com>
-In-Reply-To: <20200727184506.2279656-27-guro@fb.com>
-From:   Song Liu <song@kernel.org>
-Date:   Mon, 27 Jul 2020 22:42:32 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5cXxf8E-QR4k7tXJXqfgBRapBEvvWMUCLSDrU-0MU5dw@mail.gmail.com>
-Message-ID: <CAPhsuW5cXxf8E-QR4k7tXJXqfgBRapBEvvWMUCLSDrU-0MU5dw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 26/35] bpf: eliminate rlimit-based memory
- accounting for xskmap maps
-To:     Roman Gushchin <guro@fb.com>
-Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:21 PM Roman Gushchin <guro@fb.com> wrote:
->
-> Do not use rlimit-based memory accounting for xskmap maps.
-> It has been replaced with the memcg-based memory accounting.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-
-Acked-by: Song Liu <songliubraving@fb.com>
-
-
-> ---
->  net/xdp/xskmap.c | 10 +---------
->  1 file changed, 1 insertion(+), 9 deletions(-)
->
-> diff --git a/net/xdp/xskmap.c b/net/xdp/xskmap.c
-> index e574b22defe5..0366013f13c6 100644
-> --- a/net/xdp/xskmap.c
-> +++ b/net/xdp/xskmap.c
-> @@ -74,7 +74,6 @@ static void xsk_map_sock_delete(struct xdp_sock *xs,
->
->  static struct bpf_map *xsk_map_alloc(union bpf_attr *attr)
->  {
-> -       struct bpf_map_memory mem;
->         int err, numa_node;
->         struct xsk_map *m;
->         u64 size;
-> @@ -90,18 +89,11 @@ static struct bpf_map *xsk_map_alloc(union bpf_attr *attr)
->         numa_node = bpf_map_attr_numa_node(attr);
->         size = struct_size(m, xsk_map, attr->max_entries);
->
-> -       err = bpf_map_charge_init(&mem, size);
-> -       if (err < 0)
-> -               return ERR_PTR(err);
-> -
->         m = bpf_map_area_alloc(size, numa_node);
-> -       if (!m) {
-> -               bpf_map_charge_finish(&mem);
-> +       if (!m)
->                 return ERR_PTR(-ENOMEM);
-> -       }
->
->         bpf_map_init_from_attr(&m->map, attr);
-> -       bpf_map_charge_move(&m->map.memory, &mem);
->         spin_lock_init(&m->lock);
->
->         return &m->map;
-> --
-> 2.26.2
->
+DQo+IE9uIE1vbiwgSnVsIDI3LCAyMDIwIGF0IDA4OjUyOjI1UE0gKzAxMDAsIEphbWVzIEV0dGxl
+IHdyb3RlOg0KPiA+IE9uIE1vbiwgMjAyMC0wNy0yNyBhdCAwOToxNCAtMDUwMCwgQmpvcm4gSGVs
+Z2FhcyB3cm90ZToNCj4gPiA+IEkgZG9uJ3Qga25vdyB0aGUgY29ubmVjdGlvbiBiZXR3ZWVuIEFT
+UE0gYW5kIHBhY2thZ2UgQy1zdGF0ZXMsIHNvIEkNCj4gPiA+IG5lZWQgdG8gc2ltcGxpZnkgdGhp
+cyBldmVuIG1vcmUuICBBbGwgSSB3YW50IHRvIGRvIHJpZ2h0IG5vdyBpcw0KPiA+ID4gdmVyaWZ5
+DQo+ID4gPiB0aGF0IGlmIHdlIGRvbid0IGhhdmUgYW55IG91dHNpZGUgaW5mbHVlbmNlcyBvbiB0
+aGUgQVNQTQ0KPiA+ID4gY29uZmlndXJhdGlvbg0KPiA+ID4gKGVnLCBubyBtYW51YWwgY2hhbmdl
+cyBhbmQgbm8gdWRldiBydWxlcyksIGl0IHN0YXlzIHRoZSBzYW1lIGFjcm9zcw0KPiA+ID4gc3Vz
+cGVuZC9yZXN1bWUuDQo+ID4NCj4gPiBCYXNpY2FsbHkgdGhpcyBzdGFydGVkIGZyb20gbWUgb2Jz
+ZXJ2aW5nIGRlZXAgcGFja2FnZSBDLXN0YXRlcyB3ZXJlbid0DQo+ID4gYmVpbmcgdXNlZCwgdW50
+aWwgSSB3ZW50IGFuZCBmaWRkbGVkIHdpdGggdGhlIEFTUE0gc3RhdGUgb2YgdGhlDQo+ID4gcnRz
+eF9wY2kgY2FyZCByZWFkZXIgdW5kZXIgc3lzZnMgLS0gc28gcGhlbm9tZW5vbG9naWNhbCBwb2tp
+bmcgb24gbXkNCj4gPiBwYXJ0Lg0KPiA+DQo+ID4gPiBTbyBsZXQncyByZWFkIHRoZSBBU1BNIHN0
+YXRlIGRpcmVjdGx5IGZyb20gdGhlDQo+ID4gPiBoYXJkd2FyZSBsaWtlIHRoaXM6DQo+ID4gPg0K
+PiA+ID4gICBzdWRvIGxzcGNpIC12dnMgMDA6MWQuMCB8IGVncmVwICJeMHxMbmt8TDF8TFRSfHNu
+b29wIg0KPiA+ID4gICBzdWRvIGxzcGNpIC12dnMgMDE6MDAgICB8IGVncmVwICJeMHxMbmt8TDF8
+TFRSfHNub29wIg0KPiA+ID4NCj4gPiA+IENhbiB5b3UgdHJ5IHRoYXQgYmVmb3JlIGFuZCBhZnRl
+ciBzdXNwZW5kL3Jlc3VtZT8NCj4gPg0KPiA+IEkndmUgYXR0YWNoZWQgdGhlc2UgdG8gdGhlIGJ1
+Z3ppbGxhIGVudHJ5IGF0Og0KPiA+DQo+ID4gaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3No
+b3dfYnVnLmNnaT9pZD0yMDgxMTcNCj4gPg0KPiA+IFNwb2lsZXI6IFdpdGggbm8gdWRldiBydWxl
+cyBvciBzdXNwZW5kIGhvb2tzLCB0aGluZ3MgYXJlIHRoZSBzYW1lDQo+ID4gYmVmb3JlIGFuZCBh
+ZnRlciBzdXNwZW5kL3Jlc3VtZS4gT25lIHRoaW5nIEkgZG8gc2VlIChib3RoIGJlZm9yZSBhbmQN
+Cj4gPiBhZnRlcikgaXMgdGhhdCBBU1BNIEwwcyBhbmQgTDEgaXMgZW5hYmxlZCBmb3IgdGhlIGNh
+cmQgcmVhZGVyLCBidXQNCj4gPiBkaXNhYmxlZCBmb3IgdGhlIGV0aGVybmV0IGNoaXAgKGRvZXMg
+cjgxNjkgZmlkZGxlIHdpdGggQVNQTSB0b28/KS4NCj4gDQo+IFRoYW5rIHlvdSEgIEl0J3MgZ29v
+ZCB0aGF0IHRoaXMgc3RheXMgdGhlIHNhbWUgYWNyb3NzIHN1c3BlbmQvcmVzdW1lLg0KPiBEbyB5
+b3Ugc2VlIGRpZmZlcmVudCBDLXN0YXRlIGJlaGF2aW9yIGJlZm9yZSB2cyBhZnRlcj8NCj4gDQo+
+IFRoaXMgaXMgdGhlIGNvbmZpZyBJIHNlZToNCj4gDQo+ICAgMDA6MWQuMCBicmlkZ2UgdG8gW2J1
+cyAwMV06IEFTUE0gTDEgc3VwcG9ydGVkOyAgICAgQVNQTSBEaXNhYmxlZA0KPiAgIDAxOjAwLjAg
+Y2FyZCByZWFkZXI6ICAgICAgICBBU1BNIEwwcyBMMSBzdXBwb3J0ZWQ7IEwwcyBMMSBFbmFibGVk
+DQo+ICAgMDE6MDAuMSBHaWdFIE5JQzogICAgICAgICAgIEFTUE0gTDBzIEwxIHN1cHBvcnRlZDsg
+QVNQTSBEaXNhYmxlZA0KPiANCj4gVGhpcyBpcyBhY3R1YWxseSBpbGxlZ2FsIGJlY2F1c2UgUENJ
+ZSByNS4wLCBzZWMgNS40LjEuMywgc2F5cyBzb2Z0d2FyZQ0KPiBtdXN0IG5vdCBlbmFibGUgTDBz
+IGluIGVpdGhlciBkaXJlY3Rpb24gdW5sZXNzIGNvbXBvbmVudHMgb24gYm90aCBlbmRzDQo+IG9m
+IHRoZSBsaW5rIHN1cHBvcnQgTDBzLiAgVGhlIGJyaWRnZSAoMDA6MWQuMCkgZG9lcyBub3Qgc3Vw
+cG9ydCBMMHMsDQo+IHNvIGl0J3MgaWxsZWdhbCB0byBlbmFibGUgTDBzIG9uIDAxOjAwLjAuICBJ
+IGRvbid0IGtub3cgd2hldGhlciB0aGlzDQo+IGNhdXNlcyBwcm9ibGVtcyBpbiBwcmFjdGljZS4N
+Cj4gDQoNCklmIHN5c3RlbSB3YW50IHRvIGVudHJ5IGRlZXAgQy1zdGF0ZSwgc3lzdGVtIGhhdmUg
+dG8gc3VwcG9ydCBMMS4gSG9zdCBicmlkZ2UgaGFuZHNoYWtlIHdpdGggZGV2aWNlIHRvIGRldGVy
+bWluZSB3aGV0aGVyIHRvIGVudGVyIHRoZSBMMSBzdGF0ZS4NCk91ciBjYXJkIHJlYWRlciBkcml2
+ZXIgZGlkIG5vdCBzZXQgTDBzLCBoZXJlIG5lZWQgdG8gY2hlY2sgd2hvIHNldCB0aGlzLCBidXQg
+d2UgdGhvdWdodCB0aGlzIEwwcyBlbmFibGUgc2hvdWxkIG5vdCBjYXVzZSBIb3N0IGJyaWRnZSBB
+U1BNIGRpc2FibGUNCiANCg0KPiBJIGRvbid0IHNlZSBhbnl0aGluZyBpbiBydHN4IHRoYXQgZW5h
+YmxlcyBMMHMuICBDYW4geW91IGNvbGxlY3QgdGhlDQo+IGRtZXNnIGxvZyB3aGVuIGJvb3Rpbmcg
+d2l0aCAicGNpPWVhcmx5ZHVtcCI/ICBUaGF0IHdpbGwgc2hvdyB3aGV0aGVyDQo+IHRoZSBCSU9T
+IGxlZnQgaXQgdGhpcyB3YXkuICBUaGUgUENJIGNvcmUgaXNuJ3Qgc3VwcG9zZWQgdG8gZG8gdGhp
+cywgc28NCj4gaWYgaXQgZGlkLCB3ZSBuZWVkIHRvIGZpeCB0aGF0Lg0KPiANCj4gSSBkb24ndCBr
+bm93IHdoZXRoZXIgcjgxNjkgbXVja3Mgd2l0aCBBU1BNLiAgSXQgaXMgbGVnYWwgdG8gaGF2ZQ0K
+PiBkaWZmZXJlbnQgY29uZmlndXJhdGlvbnMgZm9yIHRoZSB0d28gZnVuY3Rpb25zLCBldmVuIHRo
+b3VnaCB0aGV5IHNoYXJlDQo+IHRoZSBzYW1lIGxpbmsuICBTZWMgNS40LjEgaGFzIHJ1bGVzIGFi
+b3V0IGhvdyBoYXJkd2FyZSByZXNvbHZlcw0KPiBkaWZmZXJlbmNlcy4NCj4gDQo+ID4gW09kZGx5
+IHdoZW4gSSBzZXQgQVNQTSAoZS5nLiB1c2luZyB1ZGV2KSB0aGUgbHNwY2kgdG9vbHMgc2hvdyBB
+U1BNDQo+ID4gZW5hYmxlZCBhZnRlciBhIHN1c3BlbmQvcmVzdW1lLCBidXQgc3RpbGwgbm8gZGVl
+cCBwYWNrYWdlIEMtc3RhdGVzDQo+ID4gdW50aWwgSSBtYW51YWxseSBmaWRkbGUgdmlhIHN5c2Zz
+IG9uIHRoZSBjYXJkIHJlYWRlci4gU29ycnkgaWYgdGhpcw0KPiA+IG9ubHkgbXVkZGllcyB0aGUg
+d2F0ZXIgZnVydGhlciFdDQo+IA0KPiBMZXQncyBkZWZlciB0aGlzIGZvciBub3cuICBJdCBzb3Vu
+ZHMgd29ydGggcHVyc3VpbmcsIGJ1dCBJIGNhbid0IGtlZXANCj4gZXZlcnl0aGluZyBpbiBteSBo
+ZWFkIGF0IG9uY2UuDQo+IA0KPiBCam9ybg0KPiANCj4gLS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRo
+ZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBlLW1haWwuDQo=
