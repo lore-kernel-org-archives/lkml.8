@@ -8,177 +8,111 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B09BC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9893C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E67F2074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 881A620786
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:35:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GXR+wOlg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPIMIt06"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732456AbgG1Sck (ORCPT
+        id S1732461AbgG1Sfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:32:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45136 "EHLO
+        Tue, 28 Jul 2020 14:35:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729290AbgG1Scj (ORCPT
+        with ESMTP id S1729475AbgG1Sfx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 14:32:39 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE826C061794;
-        Tue, 28 Jul 2020 11:32:39 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e8so12460916pgc.5;
-        Tue, 28 Jul 2020 11:32:39 -0700 (PDT)
+        Tue, 28 Jul 2020 14:35:53 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF9DCC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 11:35:52 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id a26so6824022otf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 11:35:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0CJZdiTv9YjW5gmkn7MZ3onrZp2HvYjHfrFhdh1hacc=;
-        b=GXR+wOlgxjJHTTlAsjSNyBWwI67JSO5Goy9s9gzQSRj3GA55xgDpw0wTHqk6fQRShk
-         rs4oprTE6N6/KGedLmiXuv0tdepVZqEQGj7P4HIwYZSk5toaK3CfQH78TAgqSh19ghse
-         DmhLzczBwCOqwmN7ZPNYRfyis2wWM78LZfWZUxug2zVsYgdK3I7U40bsJDgegQA9K/uA
-         G3Xhlm7YyOqUwYEhWDTCcqIHPWzcRfhsPN6BgoDmdh5B3FGnOLPOHXITxo8PxfQQaSrP
-         rk5VQxbyui4QJPC9ZyFwAFnirjidLNDn010PCIQYLOIwMoLshmsvEvqgtdRfcfnrbJ1n
-         WyPA==
+        bh=0Z63JKAOHq4FmpWz4KBmz4cVqOLwzIvbRITRXwRUNMg=;
+        b=GPIMIt06GdktXH/MGPQAgShkUf3xRghQYf+l+eRGqs2hhNLnYxeu0YJcUSVm4aWq6+
+         JnLC4qT6HYzxvFFz3ZJcvfVQgPuAgo8WKeUb8jkHnnRV+HukPiceUAjuOiCRPfqcn4Rf
+         8s5ENREcr1d5c48Aj7xQ3o6qcvLkQ4XGumU/Zj3YyTt1XPJeuhuPZsrpvUcQvFfEk68N
+         IXV7CWoENQ1ufiO8hAuitfNaTEL3xyb8IGjI/q3MSvio2EQU3OQnGhSZFBe3nJbHzIlA
+         7uiqk9pMyc0ymqN60xtYwQTbpaRjrKhbYIibaO6d3GQvqyN5TLiZax4obJ1JpOGM1fED
+         sF2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0CJZdiTv9YjW5gmkn7MZ3onrZp2HvYjHfrFhdh1hacc=;
-        b=qD0Rja0S8eRFn/oT8fdz3pskCuWlYIhx2l5C42sIEKA6RqkJS+wpqTZInwDd+GmK8C
-         U5GMey7B1tYZFJmcyqUR2AT3BW+enJdjiKapuHeIzglr8XLOHwPFBxFyponajo/kphIZ
-         aSDgl+yrODaThM50cLjVD8GuO+GvHsIuwxX0BYV/tb8pP6k+OylljozC4Gt1W/sNeFt4
-         FZTQKzNUXA/a8r1qH4occuAWMbwl3x9uLUWDXvdj6dpJsuUkAnZZf+GHvpGgD6ayCJsE
-         l8KefM/bKTXQWWqSkQ6utMOsIaf+wU0YaaNTG16LFxl4ftT/P4I8d3Zv44rib74bofch
-         8qrQ==
-X-Gm-Message-State: AOAM532MIg+95qf2EaWDa915h9j8+V8QbKlzRmkQobAsNOC6T9soDsqZ
-        5genwhU04g8ICpRLIeHpK517k/ltDtzjUoFX0vwadTDl3Zo=
-X-Google-Smtp-Source: ABdhPJyzqp0OZvelN5rU3slTQ04M1PavIytmSAd91VE5xBLhL5DeXjaBZbXWcCxv7h9tvhtgI4kMhPhqJJHuzlBotzg=
-X-Received: by 2002:a63:ce41:: with SMTP id r1mr26272462pgi.203.1595961158424;
- Tue, 28 Jul 2020 11:32:38 -0700 (PDT)
+        bh=0Z63JKAOHq4FmpWz4KBmz4cVqOLwzIvbRITRXwRUNMg=;
+        b=ncqnYQFjW8rlquzdhhMkQj0EvJDF9dN1q4euflIsIH8x3BkEDKqPFEySwNTidLLY3e
+         FnTaOwCbF19hJFi2bmmUATBZm5jeHPCU97y4hURxUAe0MiYQMDa4vtPLNTR39CkdybZo
+         wRBaYUzJ4GefEw+BQ9VeRWX1x9UVzoqDMZywfW+Kev7nLbZfHzWaXJPfDm9LFSOnEzKM
+         RC19SAAhmIzNEUv+FxDpYrakhh71koyo0YzdzOb4jed2+O5P/Dv6BxbvwhdimWAj6rSX
+         8IKIg2L2WVsf9Np2/A+8PwJgbTMl4rQnuqEsydr2dplrL71+z9gFoQaTA8DebTr2025y
+         2Q9A==
+X-Gm-Message-State: AOAM530ptc0h2Ph+DXe5y+z3qa48WTQmHkXwlNjl3V2HJyTEVhdHLbVt
+        1A1eE3HBr6lHLOjm3KAHav881XJQmVwguCucP98=
+X-Google-Smtp-Source: ABdhPJyzWjrRD0PrwzvQqD83SQdnWksQWGtydVmK8bWLCVtscOqjbdlaXNKFDL1fEPN2+nshHblWyt37hJyOEDw7PQQ=
+X-Received: by 2002:a05:6830:4c8:: with SMTP id s8mr24921273otd.368.1595961352281;
+ Tue, 28 Jul 2020 11:35:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
- <20200728151258.1222876-1-campello@chromium.org> <20200728091057.13.I14600506d0f725bf800c8da4ef89fdb3c3fb45cd@changeid>
- <CAHp75VdSxkgd-+CBTNUJD+WUdOX3e1x3Ysap=D9+33Yo1Kk+yA@mail.gmail.com> <855ea08a4c41bc107f88699230309675bd9075b0.camel@perches.com>
-In-Reply-To: <855ea08a4c41bc107f88699230309675bd9075b0.camel@perches.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Jul 2020 21:32:22 +0300
-Message-ID: <CAHp75VcyZohv3SoGZ5OoMafzVuRDL7ih85zXBZwHPMsXwoaxJg@mail.gmail.com>
-Subject: Re: [PATCH 13/15] iio: sx9310: Add newlines to printks
-To:     Joe Perches <joe@perches.com>
-Cc:     Daniel Campello <campello@chromium.org>,
-        LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>
+References: <20200728175935.2130-1-dhiraj.sharma0024@gmail.com> <20200728182519.GA328787@kroah.com>
+In-Reply-To: <20200728182519.GA328787@kroah.com>
+From:   Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
+Date:   Wed, 29 Jul 2020 00:05:39 +0530
+Message-ID: <CAPRy4h3RWzY0nStJzvLUJuEyxN4Pc03LiqJxie-_GWhzuZEmgA@mail.gmail.com>
+Subject: Re: [PATCH] staging: android: ashmem: used const keyword
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     arve@android.com, tkjos@android.com, maco@android.com,
+        joel@joelfernandes.org, christian@brauner.io,
+        Hridya Valsaraju <hridya@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 9:24 PM Joe Perches <joe@perches.com> wrote:
-> On Tue, 2020-07-28 at 21:19 +0300, Andy Shevchenko wrote:
-> > On Tue, Jul 28, 2020 at 6:14 PM Daniel Campello <campello@chromium.org> wrote:
-> > > From: Stephen Boyd <swboyd@chromium.org>
-> > >
-> > > Printks in the kernel have newlines at the end. Add them to the few
-> >
-> > Printk()s
-> >
-> > > printks in this driver.
-> >
-> > printk()s
+Alright, I have understood now that I should not trust on
+checkpatch.pl script fully but partially it is indeed helpful. Please
+don't criticize this script, it was my fault instead.
+
+Before submitting code changes I would test them all, sorry for
+wasting your time please ignore this patch changes now.
+
+I will not commit such foolish mistakes now.
+
+
+Thank you
+Dhiraj Sharma
+
+On Tue, Jul 28, 2020 at 11:55 PM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
-> Random kernel pedantry.
-> This patch should not need to be respun for any of these.
-
-If for above I can agree with you, below is definitely subject to improvement.
-
+> On Tue, Jul 28, 2020 at 11:29:35PM +0530, Dhiraj Sharma wrote:
+> > I ran checkpatch.pl script which reported a warning to use const keyword
+> > on line 370.Therefore I made this change.
+> >
+> > Signed-off-by: Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
+> > ---
+> >  drivers/staging/android/ashmem.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
+> > index c05a214191da..f9cfa15b785f 100644
+> > --- a/drivers/staging/android/ashmem.c
+> > +++ b/drivers/staging/android/ashmem.c
+> > @@ -367,7 +367,7 @@ ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
+> >
+> >  static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
+> >  {
+> > -     static struct file_operations vmfile_fops;
+> > +     static const struct file_operations vmfile_fops;
 >
-> > > Reviewed-by: Daniel Campello <campello@chromium.org>
-> > > Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> > > Fixes: 72ad02b15d63 ("iio: Add SEMTECH SX9310/9311 sensor driver")
-> > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > > Signed-off-by: Daniel Campello <campello@chromium.org>
-> >
-> > It has ordering issues
-> > Should be
-> >
-> > Fixes:
-> > SoB: Stephen
-> > Rb: Douglas
-> > Rb: Daniel
-> > SoB: Daniel
-> >
-> >
-> > > ---
-> > >
-> > >  drivers/iio/proximity/sx9310.c | 8 ++++----
-> > >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> > > index 3f981d28ee4056..4553ee83a016a3 100644
-> > > --- a/drivers/iio/proximity/sx9310.c
-> > > +++ b/drivers/iio/proximity/sx9310.c
-> > > @@ -809,7 +809,7 @@ static int sx9310_init_compensation(struct iio_dev *indio_dev)
-> > >         if (ret) {
-> > >                 if (ret == -ETIMEDOUT)
-> > >                         dev_err(&data->client->dev,
-> > > -                               "0x02 << 3l compensation timed out: 0x%02x",
-> > > +                               "0x02 << 3l compensation timed out: 0x%02x\n",
-> >
-> > Looks like ping-pong style in the series, i.e. you may fix this when
-> > you introduced this line.
-> >
-> > Check the rest (and not only printk()s) for the similar style and
-> > avoid the latter.
-> >
-> > >                                 val);
-> > >                 return ret;
-> > >         }
-> > > @@ -855,7 +855,7 @@ static int sx9310_set_indio_dev_name(struct device *dev,
-> > >
-> > >         ddata = (uintptr_t)device_get_match_data(dev);
-> > >         if (ddata != whoami) {
-> > > -               dev_err(dev, "WHOAMI does not match device data: %u", whoami);
-> > > +               dev_err(dev, "WHOAMI does not match device data: %u\n", whoami);
-> > >                 return -ENODEV;
-> > >         }
-> > >
-> > > @@ -867,7 +867,7 @@ static int sx9310_set_indio_dev_name(struct device *dev,
-> > >                 indio_dev->name = "sx9311";
-> > >                 break;
-> > >         default:
-> > > -               dev_err(dev, "unexpected WHOAMI response: %u", whoami);
-> > > +               dev_err(dev, "unexpected WHOAMI response: %u\n", whoami);
-> > >                 return -ENODEV;
-> > >         }
-> > >
-> > > @@ -896,7 +896,7 @@ static int sx9310_probe(struct i2c_client *client)
-> > >
-> > >         ret = regmap_read(data->regmap, SX9310_REG_WHOAMI, &data->whoami);
-> > >         if (ret) {
-> > > -               dev_err(dev, "error in reading WHOAMI register: %d", ret);
-> > > +               dev_err(dev, "error in reading WHOAMI register: %d\n", ret);
-> > >                 return ret;
-> > >         }
-> > >
-> > > --
-> > > 2.28.0.rc0.142.g3c755180ce-goog
-> > >
-> >
-> >
+> You have now submitted two patches that you obviously never even built,
+> which is the first step in kernel development :(
 >
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+> Please be more careful next time.
+>
+> greg k-h
