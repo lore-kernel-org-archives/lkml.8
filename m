@@ -2,253 +2,183 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F56C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A483C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D049A20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5CAF206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:35:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dqIEAHN9"
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="evCfYUge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730440AbgG1OeL (ORCPT
+        id S1730447AbgG1OfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729410AbgG1OeL (ORCPT
+        Tue, 28 Jul 2020 10:35:21 -0400
+Received: from m15114.mail.126.com ([220.181.15.114]:36171 "EHLO
+        m15114.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730392AbgG1OfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:34:11 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6EBAC061794;
-        Tue, 28 Jul 2020 07:34:10 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k4so9970908pld.12;
-        Tue, 28 Jul 2020 07:34:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Gol3YEjZg+DdUDqVA5CTPFx2cwX3l9O5rj/E8q5KIWU=;
-        b=dqIEAHN9Gj6nRHFrLPP3id5phRX61Jo38NkPro7IU3G6ipk9Sno/mdjfeZRB/G8use
-         xqYknq3XvnUqmHaH725q0w8Ef6Rj9rjRJ/N46bnMrTqwKTaJXkHSmOANUVwSnQ+SMwlO
-         t6MixwiEbxRPV4XhwvU3bGwpfpD6PFzHbyH+vi7OBT8OkhnceYKHoAZ8bmQyrcYMJIeA
-         JR97BYgNWgizLXobVkKTh15WnONOInOc2L9zxB7FXr+BGZOm+B4teM6JVkTqiYUYaTh+
-         4fjs1FVCAdau3aR1RDYdC2W//HPl4xjhBaL6hpOTSqc97HHL6KcRCYFmC4REODumSR2x
-         HpDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Gol3YEjZg+DdUDqVA5CTPFx2cwX3l9O5rj/E8q5KIWU=;
-        b=sMnhvafK6/tcKtUuXjUveGzO618QcFijWfe7SUM71YZXzzMkD4fZX7RIwjmeXnRGsU
-         N0vQuOEdaU8yxi+Id9/16Rn5UGiNqXk+CbGlrVc+GHarbM6u7vQvR5E66aFmO+v2wx/a
-         AfrZN/ezswvoGgb8KYMWsXdvkHxaZ/Y+5Ot6BgxiR+srCFHK1GJ2+eKaKl4bZ5lxHgLS
-         nuR6bQ7JtTFwbDb7fZ4a9HuwAXizyAWA0SNn7jEyGcl0BUuL9XGtFz9Hmo3/nbxW290o
-         o3csmK8N3J415dpFghbBxRf0eblPk4DBP8xwGfDSo2ZtXN9iIbyFY8inRO0WGE9h4jGq
-         Ne8w==
-X-Gm-Message-State: AOAM532W8c6SJXr0FCe6Wfr4fUoA+bMTCBlrVzYrRPJCl+yrrx3iXg3w
-        pSxelXYsio3j4NmJgmcz86c=
-X-Google-Smtp-Source: ABdhPJy93uhGYKVvztyUXpnZL/qAuBttRC4YS6R4ru0UvimGlBwcTqGIqXqK3s8PoQfypbrdn8yHXg==
-X-Received: by 2002:a17:902:ff16:: with SMTP id f22mr10219128plj.269.1595946850409;
-        Tue, 28 Jul 2020 07:34:10 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d29sm17673991pgb.54.2020.07.28.07.34.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 07:34:09 -0700 (PDT)
-Subject: Re: [PATCH 1/2] watchdog: imx7ulp: Strictly follow the sequence for
- wdog operations
-To:     Anson Huang <Anson.Huang@nxp.com>, wim@linux-watchdog.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-References: <1595918567-2017-1-git-send-email-Anson.Huang@nxp.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <566adde7-c397-72f1-145d-fbca9de77cd7@roeck-us.net>
-Date:   Tue, 28 Jul 2020 07:34:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <1595918567-2017-1-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 28 Jul 2020 10:35:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=UqT1ceSRxaZJpNsBkd
+        +RC5H0ROXAaLpgilicqUTfRaM=; b=evCfYUgeWgC3RVeFPzhHpZDhXANReEV1za
+        hI2iklNb7FLu98w0F4tSWIpnOLivzwhweDtblIbY5LvBGrhuKyIMmTLrfErsI9fi
+        g5toOOdwpVetx/QJ718cegsb9PENR9mvJ6z7fQuaP/UO/RlxL/bh5foC0013TRaZ
+        cM/RMPzyU=
+Received: from 192.168.137.249 (unknown [112.10.84.202])
+        by smtp7 (Coremail) with SMTP id DsmowAAHhXZQNyBfrooqHw--.29196S3;
+        Tue, 28 Jul 2020 22:33:53 +0800 (CST)
+From:   Xianting Tian <xianting_tian@126.com>
+To:     tytso@mit.edu, adilger.kernel@dilger.ca
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ext4: check superblock mapped prior to get write access
+Date:   Tue, 28 Jul 2020 10:33:53 -0400
+Message-Id: <1595946833-13011-1-git-send-email-xianting_tian@126.com>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: DsmowAAHhXZQNyBfrooqHw--.29196S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Gw1kCFyrCw17uw4kKFW7Arb_yoW7Gw4xpF
+        y5CryjkFW09F4YvF4UAF4UJrW7GrsrAFW7GryfCryYqa15Gwn5ta4xta1Uuay5JrZ5Xa47
+        JF1UGw10934UtaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jC7KsUUUUU=
+X-Originating-IP: [112.10.84.202]
+X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbiwRFvpFpD+4nFaQAAsc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/20 11:42 PM, Anson Huang wrote:
-> According to reference manual, the i.MX7ULP WDOG's operations should
-> follow below sequence:
-> 
-> 1. disable global interrupts;
-> 2. unlock the wdog and wait unlock bit set;
-> 3. reconfigure the wdog and wait for reconfiguration bit set;
-> 4. enabel global interrupts.
-> 
-> Strictly follow the recommended sequence can make it more robust.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/watchdog/imx7ulp_wdt.c | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
-> index 7993c8c..b414ecf 100644
-> --- a/drivers/watchdog/imx7ulp_wdt.c
-> +++ b/drivers/watchdog/imx7ulp_wdt.c
-> @@ -4,6 +4,7 @@
->   */
->  
->  #include <linux/clk.h>
-> +#include <linux/delay.h>
->  #include <linux/io.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> @@ -48,17 +49,32 @@ struct imx7ulp_wdt_device {
->  	struct clk *clk;
->  };
->  
-> +static inline void imx7ulp_wdt_wait(void __iomem *base, u32 mask)
-> +{
-> +	int retries = 100;
-> +
-> +	do {
-> +		if (readl_relaxed(base + WDOG_CS) & mask)
-> +			return;
-> +		usleep_range(200, 1000);
-> +	} while (retries--);
+One crash issue happened when directly down the network interface,
+which nbd device is connected to. The kernel version is kernel
+4.14.0-115.
+According to the debug log and call trace, the buffer of ext4
+superblock already unmapped after the network of nbd device down.
+But the code continue to run until crash.
+I checked latest kernel code of 5.8-rc7 based on the call trace,
+no function checked if buffer of ext4 superblock unmapped.
+The patch is similar to commit 742b06b, aim to check superblock
+mapped prior to get write access.
 
-Sleep with interrupts disabled ? I can not imagine that this works well
-in a single CPU system. On top of that, it seems quite pointless.
-Either you don't want to be interrupted or you do, but sleeping
-with interrupts disabled really doesn't make sense. And does it really
-take 200-1000 uS for the watchdog subsystem to react, and sometimes up
-to 200 * 100 = 20 mS ? That seems highly unlikely. If such a delay loop
-is indeed needed, it should be limited by a time, not by number of
-repetitions.
+The crash reason described as below:
+struct journal_head *jbd2_journal_add_journal_head(struct buffer_head *bh)
+{
+        ... ...
+	jbd_lock_bh_journal_head(bh);
+	if (buffer_jbd(bh)) {
+		jh = bh2jh(bh); <<== jh is null!!!
+	} else {
+                ... ...
+	}
+	jh->b_jcount++; <<==crash here!!!!
+	jbd_unlock_bh_journal_head(bh);
+        ... ...
+}
 
-Unless there is evidence that there is a problem that needs to be solved,
-I am not going to accept this code.
+Debug code added to __ext4_journal_get_write_access:
+int __ext4_journal_get_write_access(const char *where, unsigned int line,
+                                handle_t *handle, struct buffer_head *bh)
+{
+        int err = 0;
 
-Thanks,
-Guenter
+        might_sleep();
 
-> +}
-> +
->  static void imx7ulp_wdt_enable(struct watchdog_device *wdog, bool enable)
->  {
->  	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
->  
->  	u32 val = readl(wdt->base + WDOG_CS);
->  
-> +	local_irq_disable();
->  	writel(UNLOCK, wdt->base + WDOG_CNT);
-> +	imx7ulp_wdt_wait(wdt->base, WDOG_CS_ULK);
->  	if (enable)
->  		writel(val | WDOG_CS_EN, wdt->base + WDOG_CS);
->  	else
->  		writel(val & ~WDOG_CS_EN, wdt->base + WDOG_CS);
-> +	imx7ulp_wdt_wait(wdt->base, WDOG_CS_RCS);
-> +	local_irq_enable();
->  }
->  
->  static bool imx7ulp_wdt_is_enabled(void __iomem *base)
-> @@ -72,7 +88,12 @@ static int imx7ulp_wdt_ping(struct watchdog_device *wdog)
->  {
->  	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
->  
-> +	local_irq_disable();
-> +	writel(UNLOCK, wdt->base + WDOG_CNT);
-> +	imx7ulp_wdt_wait(wdt->base, WDOG_CS_ULK);
->  	writel(REFRESH, wdt->base + WDOG_CNT);
-> +	imx7ulp_wdt_wait(wdt->base, WDOG_CS_RCS);
-> +	local_irq_enable();
->  
->  	return 0;
->  }
-> @@ -98,8 +119,12 @@ static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
->  	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
->  	u32 val = WDOG_CLOCK_RATE * timeout;
->  
-> +	local_irq_disable();
->  	writel(UNLOCK, wdt->base + WDOG_CNT);
-> +	imx7ulp_wdt_wait(wdt->base, WDOG_CS_ULK);
->  	writel(val, wdt->base + WDOG_TOVAL);
-> +	imx7ulp_wdt_wait(wdt->base, WDOG_CS_RCS);
-> +	local_irq_enable();
->  
->  	wdog->timeout = timeout;
->  
-> @@ -140,15 +165,19 @@ static void imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
->  {
->  	u32 val;
->  
-> +	local_irq_disable();
->  	/* unlock the wdog for reconfiguration */
->  	writel_relaxed(UNLOCK_SEQ0, base + WDOG_CNT);
->  	writel_relaxed(UNLOCK_SEQ1, base + WDOG_CNT);
-> +	imx7ulp_wdt_wait(base, WDOG_CS_ULK);
->  
->  	/* set an initial timeout value in TOVAL */
->  	writel(timeout, base + WDOG_TOVAL);
->  	/* enable 32bit command sequence and reconfigure */
->  	val = WDOG_CS_CMD32EN | WDOG_CS_CLK | WDOG_CS_UPDATE;
->  	writel(val, base + WDOG_CS);
-> +	imx7ulp_wdt_wait(base, WDOG_CS_RCS);
-> +	local_irq_enable();
->  }
->  
->  static void imx7ulp_wdt_action(void *data)
-> 
+        if (ext4_handle_valid(handle)) {
+                struct super_block *sb;
+                struct buffer_head *sbh;
+
+                sb = handle->h_transaction->t_journal->j_private;
+                if (unlikely(ext4_forced_shutdown(EXT4_SB(sb)))) {
+                        jbd2_journal_abort_handle(handle);
+                        return -EIO;
+                }
+
+                sbh = EXT4_SB(sb)->s_sbh;
+                if (!buffer_mapped(sbh)) {
+                        ext4 sb bh not mapped\n");  <<==debug code
+                }
+
+                err = jbd2_journal_get_write_access(handle, bh);
+                if (err)
+                        ext4_journal_abort_handle(where, line, __func__, bh,
+                                                  handle, err);
+        }
+        return err;
+}
+
+Call trace of crash:
+[ 1715.669527] print_req_error: I/O error, dev nbd3, sector 42211904
+
+[ 1715.674940] ext4 sb bh not mapped   <<== debug log, which is added and printed by the
+                                            function "__ext4_journal_get_write_access"
+
+[ 1715.674946] BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+[ 1715.674955] IP: jbd2_journal_add_journal_head+0x9d/0x110 [jbd2]
+[ 1715.674956] PGD 2010004067 P4D 2010004067 PUD 201000b067 PMD 0
+[ 1715.674961] Oops: 0002 [#1] SMP
+[ 1715.675020] task: ffff8808a4d3dac0 task.stack: ffffc9002e78c000
+[ 1715.675024] RIP: 0010:jbd2_journal_add_journal_head+0x9d/0x110 [jbd2] <== the crash is caused
+[ 1715.675025] RSP: 0018:ffffc9002e78fb50 EFLAGS: 00010206
+[ 1715.675026] RAX: 0000000000000000 RBX: ffff8816b71cad00 RCX: 0000000000000000
+[ 1715.675026] RDX: 0000000000000000 RSI: ffff8816b71cad00 RDI: ffff8816b71cad00
+[ 1715.675027] RBP: ffffc9002e78fb58 R08: 000000000000001b R09: ffff88207f82fe07
+[ 1715.675028] R10: 000000000000113d R11: 0000000000000000 R12: ffff8820223a5ab0
+[ 1715.675028] R13: 0000000000000000 R14: ffff8816b71cad00 R15: ffff88196053d930
+[ 1715.675029] FS:  00007fc2ce9e9700(0000) GS:ffff88203d740000(0000) knlGS:0000000000000000
+[ 1715.675030] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1715.675031] CR2: 0000000000000008 CR3: 0000002016d2c004 CR4: 00000000007606e0
+[ 1715.675033] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1715.675034] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1715.675034] PKRU: 55555554
+[ 1715.675035] Call Trace:
+[ 1715.675041]  jbd2_journal_get_write_access+0x6c/0xc0 [jbd2]
+[ 1715.675057]  __ext4_journal_get_write_access+0x8f/0x120 [ext4]
+[ 1715.675069]  ext4_reserve_inode_write+0x7b/0xb0 [ext4]
+[ 1715.675079]  ? ext4_dirty_inode+0x48/0x70 [ext4]
+[ 1715.675088]  ext4_mark_inode_dirty+0x53/0x1e0 [ext4]
+[ 1715.675096]  ? __ext4_journal_start_sb+0x6d/0xf0 [ext4]
+[ 1715.675104]  ext4_dirty_inode+0x48/0x70 [ext4]
+[ 1715.675111]  __mark_inode_dirty+0x17f/0x350
+[ 1715.675116]  generic_update_time+0x87/0xd0
+[ 1715.675119]  file_update_time+0xbc/0x110
+[ 1715.675122]  ? try_to_wake_up+0x59/0x470
+[ 1715.675125]  __generic_file_write_iter+0x9d/0x1e0
+[ 1715.675134]  ext4_file_write_iter+0xca/0x420 [ext4]
+[ 1715.675136]  __vfs_write+0xf3/0x170
+[ 1715.675138]  vfs_write+0xb2/0x1b0
+[ 1715.675141]  ? syscall_trace_enter+0x1d0/0x2b0
+[ 1715.675142]  SyS_write+0x55/0xc0
+[ 1715.675144]  do_syscall_64+0x67/0x1b0
+[ 1715.675147]  entry_SYSCALL64_slow_path+0x25/0x25
+
+Signed-off-by: Xianting Tian <xianting_tian@126.com>
+---
+ fs/ext4/ext4_jbd2.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/fs/ext4/ext4_jbd2.c b/fs/ext4/ext4_jbd2.c
+index 0c76cdd..9a60ca7 100644
+--- a/fs/ext4/ext4_jbd2.c
++++ b/fs/ext4/ext4_jbd2.c
+@@ -203,6 +203,15 @@ int __ext4_journal_get_write_access(const char *where, unsigned int line,
+ 	might_sleep();
+ 
+ 	if (ext4_handle_valid(handle)) {
++		struct super_block *sb;
++		struct buffer_head *sbh;
++
++		sb = handle->h_transaction->t_journal->j_private;
++		sbh = EXT4_SB(sb)->s_sbh;
++		if (unlikely(!buffer_mapped(sbh))) {
++			return -EIO;
++		}
++
+ 		err = jbd2_journal_get_write_access(handle, bh);
+ 		if (err)
+ 			ext4_journal_abort_handle(where, line, __func__, bh,
+-- 
+1.8.3.1
 
