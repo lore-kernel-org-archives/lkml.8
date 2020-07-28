@@ -2,92 +2,142 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D43CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020D6C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37EF620775
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE2C620775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:47:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728604AbgG1Jq0 (ORCPT
+        id S1728288AbgG1JrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:46:26 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:58298 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728441AbgG1JqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 05:46:25 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 06S9iHF0005340
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Tue, 28 Jul 2020 02:44:28 -0700
-Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 28 Jul 2020 02:44:07 -0700
-From:   <qiang.zhang@windriver.com>
-To:     <cl@linux.com>, <penberg@kernel.org>, <rientjes@google.com>,
-        <iamjoonsoo.kim@lge.com>, <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] mm/slab.c: add node spinlock protect in __cache_free_alien
-Date:   Tue, 28 Jul 2020 17:55:51 +0800
-Message-ID: <20200728095551.30634-1-qiang.zhang@windriver.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 28 Jul 2020 05:47:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728050AbgG1JrZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 05:47:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15874C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 02:47:25 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k0MCf-0006Wm-VV; Tue, 28 Jul 2020 11:47:21 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k0MCe-00025Z-98; Tue, 28 Jul 2020 11:47:20 +0200
+Date:   Tue, 28 Jul 2020 11:47:20 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 06/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200728094720.x6pucwxsfwvz6nvv@pengutronix.de>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-7-michael@walle.cc>
+ <20200728074352.ckyfso5zwsfgupjx@pengutronix.de>
+ <58b53cacc5289f17f669159beeeada03@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="htulbp2bdc2ny5pv"
+Content-Disposition: inline
+In-Reply-To: <58b53cacc5289f17f669159beeeada03@walle.cc>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Qiang <qiang.zhang@windriver.com>
 
-We should add node spinlock protect "n->alien" which may be
-assigned to NULL in cpuup_canceled func. cause address access
-exception.
+--htulbp2bdc2ny5pv
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 18bf854117c6 ("slab: use get_node() and kmem_cache_node() functions")
-Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
----
- mm/slab.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Hallo,
 
-diff --git a/mm/slab.c b/mm/slab.c
-index a89633603b2d..290523c90b4e 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -759,8 +759,10 @@ static int __cache_free_alien(struct kmem_cache *cachep, void *objp,
- 
- 	n = get_node(cachep, node);
- 	STATS_INC_NODEFREES(cachep);
-+	spin_lock(&n->list_lock);
- 	if (n->alien && n->alien[page_node]) {
- 		alien = n->alien[page_node];
-+		spin_unlock(&n->list_lock);
- 		ac = &alien->ac;
- 		spin_lock(&alien->lock);
- 		if (unlikely(ac->avail == ac->limit)) {
-@@ -769,14 +771,15 @@ static int __cache_free_alien(struct kmem_cache *cachep, void *objp,
- 		}
- 		ac->entry[ac->avail++] = objp;
- 		spin_unlock(&alien->lock);
--		slabs_destroy(cachep, &list);
- 	} else {
-+		spin_unlock(&n->list_lock);
- 		n = get_node(cachep, page_node);
- 		spin_lock(&n->list_lock);
- 		free_block(cachep, &objp, 1, page_node, &list);
- 		spin_unlock(&n->list_lock);
--		slabs_destroy(cachep, &list);
- 	}
-+
-+	slabs_destroy(cachep, &list);
- 	return 1;
- }
- 
--- 
-2.26.2
+On Tue, Jul 28, 2020 at 10:21:22AM +0200, Michael Walle wrote:
+> Am 2020-07-28 09:43, schrieb Uwe Kleine-K=F6nig:
+> > On Sun, Jul 26, 2020 at 01:18:27AM +0200, Michael Walle wrote:
+> > > +static int sl28cpld_pwm_probe(struct platform_device *pdev)
+> > > +{
+> > > +	struct sl28cpld_pwm *priv;
+> > > +	struct pwm_chip *chip;
+> > > +	int ret;
+> > > +
+> > > +	if (!pdev->dev.parent)
+> > > +		return -ENODEV;
+> > > +
+> > > +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> > > +	if (!priv)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	priv->regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
+> > > +	if (!priv->regmap)
+> >=20
+> > Error message here?
+>=20
+> This shouldn't really happen and I put it into the same category
+> as the two above and report no error. But I can add it.
 
+For kzalloc it is right to not emit an error because a failing kzalloc
+is already loud on its own. I missed the first error path, that should
+get a message, too.
+
+> Generally, it looked to me that more and more drivers don't
+> really report errors anymore, but just return with an -EWHATEVER.
+> So if someone can shed some light here, I'm all ears.
+
+IMHO it's wrong not to add error messages. At one point in time it will
+fail and then you're happy if you don't have to add printks all over the
+place first to debug that.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--htulbp2bdc2ny5pv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8f9CUACgkQwfwUeK3K
+7AlkpAf9GX/MdqMREp3J4dX8H7TLp3wVx7/FOTFnrRDTkszIftG16IG7J9g1qiyY
+lN54gRXDEtuTo7PfeKcJ09lh/jT2xRPE/Y6kHSW6BQKNw2C0S74Pv2UMc1aYWsvZ
+GlE/2BL1tB7F7+OLVIFRhL5N5O0QKaBO5bxaC/DKd4ZAnvbLPloAcysP0kHzqvXP
+H72qdOstHSP5znm4z6+Vcb7xiI9XiT9GWgnumpwo1f6s58SEGsbQUiLRLXIkRURN
+LKzxXtqSMbW1n+U34jSgI6BI+wyDAGQz0iJ0WxKV6DUa5IO7IqucION92J9s7w32
+ntP5cEULmXHKeTvOGXgM59juqdxEtg==
+=KNkY
+-----END PGP SIGNATURE-----
+
+--htulbp2bdc2ny5pv--
