@@ -2,177 +2,208 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D522C4345F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA576C4345A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E143C20829
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:06:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595977572;
-	bh=B+2S5YhP4tk2MBOwTpLzH1FWv0DJxUuyH1vXMpqRmAE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=FMpLn31R+g5xYwtd94XT1qGmv4iJbgfJM0l2ciLe1X4prE/sDC/GSB+DQWiI0eYEX
-	 mHLF9j5MzafyrIF1GwjwAwZhScw5ECRj/RWV6eC/MMvjkHmBR6wDAqVBq0sYX/iIgB
-	 jQGzqRC2kXPNNkaXSgnMKR4t2zIUGrZLqIqWMW7c=
+	by mail.kernel.org (Postfix) with ESMTP id B1D93207FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:06:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ar1Q0CC+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbgG1XGL (ORCPT
+        id S1730293AbgG1XGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 19:06:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50550 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730323AbgG1XGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 19:06:06 -0400
-Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A2FD207FC;
-        Tue, 28 Jul 2020 23:06:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595977565;
-        bh=B+2S5YhP4tk2MBOwTpLzH1FWv0DJxUuyH1vXMpqRmAE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=yZc7OgrKqign9LaIBGmAgropcpP8jWuRJsqn/dRYetPxrtP750S30CTfAIjXJ3ubk
-         dZr37R2yv2gSUpF1EVS6ENca2qEcU3t1wVFRX2GYVjcIB1jUhSHNjw9eStZ3ypjd5j
-         yXBy+Fu3j4kPPW+bV53R3O29MQ8EnsKlIljlI/C0=
-Date:   Tue, 28 Jul 2020 18:06:03 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     James Ettle <james@ettle.org.uk>
-Cc:     =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>,
-        Rui Feng <rui_feng@realsil.com.cn>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <lenb@kernel.org>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jacopo De Simoi <wilderkde@gmail.com>
-Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
-Message-ID: <20200728230603.GA1870954@bjorn-Precision-5520>
+        Tue, 28 Jul 2020 19:06:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59294 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730180AbgG1XFr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 19:05:47 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF124C0619D6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 16:05:46 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id a5so7329773ioa.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 16:05:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ZoIceDzyOzo8oSN5q+ZQ3kqnLsUP5CmBy4V/6mK8Uy8=;
+        b=ar1Q0CC+7xS6v1htrVCRIy+QU+trBYqbuLah7n2UtdSyFb+O8HqzybyUm3bpGoPEbp
+         PMJIFSTij9ZTGN5TiMLP+PuzoIEaCw4rCzIIjXPXVMTukw2+1BPSR7190LBw1UsCkBu1
+         d9rGSg/jNv4YRp3OVep6+BdwaOZIqjgihbsec=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZoIceDzyOzo8oSN5q+ZQ3kqnLsUP5CmBy4V/6mK8Uy8=;
+        b=SqBKxRlXdhNmscjzcMArU55j5RZdkD8CPIpWIqTYMsLh9PNPsyXaQ27WQpYhBazEjm
+         zjenG5AVM89R+B0KrvNg9PG2mopwpdErLIe04YHLK9zGqdv39UyF+6BD+Ee1jVajsjDc
+         YmhRWepwDQiHphweF1DFNg1Z5sZjeC12pML4t0K8+uyBeL6M3Kj5IeidD5ZPzPmUR4qS
+         x1LBtwBZM5dTrLD49sIWYmeUi2R1F5kwY8hJU9UiFkRIgGULTOV7qnlCQbV4rMR1SCuH
+         a7A9H7ToYxtD85iWYE4KFYhz1cvxx/u2d8Z16TKLT/a0hyMnFZEB9G0pEd1tBLJTTbTR
+         BBgQ==
+X-Gm-Message-State: AOAM530DvRMQ3FYRqzgpuKdlzxWsIcZvox+CH6sv47mwda/JEEnYerwz
+        wxRgaU2jocsfYVF8Mm/bPakXIA==
+X-Google-Smtp-Source: ABdhPJxK7IVTA4qCh9UMWrQq2q73f27W1gI9ka/2ubR3CWpSum8+prox/b02gvSKoP23X2CH8yx2NA==
+X-Received: by 2002:a05:6638:250f:: with SMTP id v15mr12274154jat.75.1595977546193;
+        Tue, 28 Jul 2020 16:05:46 -0700 (PDT)
+Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
+        by smtp.gmail.com with ESMTPSA id w10sm148945ilo.10.2020.07.28.16.05.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 16:05:45 -0700 (PDT)
+From:   Daniel Campello <campello@chromium.org>
+To:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: [PATCH v2 12/14] iio: sx9310: Miscellaneous format fixes
+Date:   Tue, 28 Jul 2020 17:05:18 -0600
+Message-Id: <20200728170317.v2.12.I426355a035f0394dfccba5bb2bc6f8db872c4be3@changeid>
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+In-Reply-To: <20200728230520.2011240-1-campello@chromium.org>
+References: <20200728151258.1222876-1-campello@chromium.org>
+ <20200728230520.2011240-1-campello@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e051ac790380f04be4eec6937032b7dcd411ec77.camel@ettle.org.uk>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 09:57:55PM +0100, James Ettle wrote:
-> On Mon, 2020-07-27 at 16:47 -0500, Bjorn Helgaas wrote:
-> > 
-> > I don't see anything in rtsx that enables L0s.  Can you collect
-> > the dmesg log when booting with "pci=earlydump"?  That will show
-> > whether the BIOS left it this way.  The PCI core isn't supposed to
-> > do this, so if it did, we need to fix that.
-> 
-> dmesg log attached to the bugzilla as:
-> 
-> https://bugzilla.kernel.org/attachment.cgi?id=290655
+Miscellaneous format fixes throughout the whole file.
 
-Thank you!  BIOS left the Root Port and both Endpoints with L1 enabled
-but L0s disabled.
+Signed-off-by: Daniel Campello <campello@chromium.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+---
 
-Next question is how L0s got enabled.  We don't see anything in the
-driver that does that.  And lspci claims L0s was enabled on the
-Endpoints even without any udev or other manual fiddling.
+Changes in v2: None
 
-I tried to deduce the problem from the code in aspm.c, but I didn't
-see the problem.  If you have the ability to build a kernel with a
-debug patch, can you boot with the patch below and collect the dmesg
-log?
+ drivers/iio/proximity/sx9310.c | 28 ++++++++++------------------
+ 1 file changed, 10 insertions(+), 18 deletions(-)
 
-FWIW, here's the analysis of the earlydump output that shows L0s
-disabled:
-
-  #define PCI_CAPABILITY_LIST     0x34
-  #define  PCI_CAP_ID_MSI         0x05
-  #define  PCI_CAP_ID_EXP         0x10    /* PCI Express */
-  #define PCI_EXP_LNKCTL          16
-  #define  PCI_EXP_LNKCTL_ASPM_L0S 0x0001
-  #define  PCI_EXP_LNKCTL_ASPM_L1  0x0002
-  #define  PCI_EXP_LNKCTL_CCC     0x0040
-  #define  PCI_EXP_LNKCTL_CLKREQ_EN 0x0100
-
-  00:1d.0:
-    0034: 40        Offset of first capability
-    0040: 8010      PCIe capability ID, next cap at 0x80
-    0050: 0042      PCIe Link Control: CCC L1
-  01:00.0:
-    0034: 40        Offset of first capability
-    0040: 7005      MSI capability ID (0x05), next cap at 0x70
-    0070: b010      PCIe capability ID (0x10), next cap at 0xb0
-    0080: 0142      PCIe Link Control: CLKREQ_EN CCC L1
-  01:00.1:
-    0034: 40        Offset of first capability
-    0040: 7005      MSI capability ID (0x05), next cap at 0x70
-    0070: b010      PCIe capability ID (0x10), next cap at 0xb0
-    0080: 0142      PCIe Link Control: CLKREQ_EN CCC L1
-
-
-commit 555db6d25963 ("debug")
-Author: Bjorn Helgaas <bhelgaas@google.com>
-Date:   Tue Jul 28 17:52:58 2020 -0500
-
-    debug
-    
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index b17e5ffd31b1..262f35883a2a 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -577,6 +577,11 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- 	pcie_get_aspm_reg(parent, &upreg);
- 	pcie_get_aspm_reg(child, &dwreg);
+diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+index 517ff76acd00a0..b15ace422862ff 100644
+--- a/drivers/iio/proximity/sx9310.c
++++ b/drivers/iio/proximity/sx9310.c
+@@ -91,28 +91,21 @@
+ #define   SX9310_REG_SAR_CTRL2_SAROFFSET_DEFAULT	0x3c
  
-+	pci_info(parent, "%s support %x enabled %x\n", __func__, upreg.support,
-+		 upreg.enabled);
-+	pci_info(child, "%s support %x enabled %x\n", __func__, dwreg.support,
-+		 dwreg.enabled);
-+
- 	/*
- 	 * Setup L0s state
- 	 *
-@@ -629,6 +634,10 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- 	/* Setup initial capable state. Will be updated later */
- 	link->aspm_capable = link->aspm_support;
+ #define SX9310_REG_SENSOR_SEL				0x30
+-
+ #define SX9310_REG_USE_MSB				0x31
+ #define SX9310_REG_USE_LSB				0x32
+-
+ #define SX9310_REG_AVG_MSB				0x33
+ #define SX9310_REG_AVG_LSB				0x34
+-
+ #define SX9310_REG_DIFF_MSB				0x35
+ #define SX9310_REG_DIFF_LSB				0x36
+-
+ #define SX9310_REG_OFFSET_MSB				0x37
+ #define SX9310_REG_OFFSET_LSB				0x38
+-
+ #define SX9310_REG_SAR_MSB				0x39
+ #define SX9310_REG_SAR_LSB				0x3a
+-
+ #define SX9310_REG_I2C_ADDR				0x40
+ #define SX9310_REG_PAUSE				0x41
+ #define SX9310_REG_WHOAMI				0x42
+ #define   SX9310_WHOAMI_VALUE				0x01
+ #define   SX9311_WHOAMI_VALUE				0x02
+-
+ #define SX9310_REG_RESET				0x7f
+ #define   SX9310_SOFT_RESET				0xde
  
-+	pci_info(parent, "%s link support %x enabled %x capable %x default %x disable %x\n",
-+		 __func__, link->aspm_support, link->aspm_enabled,
-+		 link->aspm_capable, link->aspm_default, link->aspm_disable);
-+
- 	/* Get and check endpoint acceptable latencies */
- 	list_for_each_entry(child, &linkbus->devices, bus_list) {
- 		u32 reg32, encoding;
-@@ -744,6 +753,7 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+@@ -403,7 +396,7 @@ static int sx9310_read_proximity(struct sx9310_data *data,
+ 		goto out_disable_irq;
  
- static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+ 	*val = sign_extend32(be16_to_cpu(rawval),
+-			     (chan->address == SX9310_REG_DIFF_MSB ? 11 : 15));
++			     chan->address == SX9310_REG_DIFF_MSB ? 11 : 15);
+ 
+ 	if (data->client->irq) {
+ 		ret = sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
+@@ -433,8 +426,9 @@ static int sx9310_read_proximity(struct sx9310_data *data,
+ static int sx9310_read_samp_freq(struct sx9310_data *data, int *val, int *val2)
  {
-+	pci_info(pdev, "%s set state %x\n", __func__, val);
- 	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
- 					   PCI_EXP_LNKCTL_ASPMC, val);
+ 	unsigned int regval;
+-	int ret = regmap_read(data->regmap, SX9310_REG_PROX_CTRL0, &regval);
++	int ret;
+ 
++	ret = regmap_read(data->regmap, SX9310_REG_PROX_CTRL0, &regval);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -519,10 +513,9 @@ static irqreturn_t sx9310_irq_handler(int irq, void *private)
+ 		iio_trigger_poll(data->trig);
+ 
+ 	/*
+-	 * Even if no event is enabled, we need to wake the thread to
+-	 * clear the interrupt state by reading SX9310_REG_IRQ_SRC.  It
+-	 * is not possible to do that here because regmap_read takes a
+-	 * mutex.
++	 * Even if no event is enabled, we need to wake the thread to clear the
++	 * interrupt state by reading SX9310_REG_IRQ_SRC.
++	 * It is not possible to do that here because regmap_read takes a mutex.
+ 	 */
+ 	return IRQ_WAKE_THREAD;
  }
-@@ -754,6 +764,9 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
- 	struct pci_dev *child = link->downstream, *parent = link->pdev;
- 	struct pci_bus *linkbus = parent->subordinate;
+@@ -639,7 +632,7 @@ static int sx9310_write_event_config(struct iio_dev *indio_dev,
  
-+	pci_info(parent, "%s requesting state %x (%s)\n", __func__,
-+		 state, policy_str[state]);
-+
- 	/* Enable only the states that were not explicitly disabled */
- 	state &= (link->aspm_capable & ~link->aspm_disable);
+ static struct attribute *sx9310_attributes[] = {
+ 	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
+-	NULL,
++	NULL
+ };
  
-@@ -767,6 +780,10 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
- 		state |= (link->aspm_enabled & ASPM_STATE_L1_SS_PCIPM);
- 	}
+ static const struct attribute_group sx9310_attribute_group = {
+@@ -970,7 +963,6 @@ static int __maybe_unused sx9310_suspend(struct device *dev)
+ 	mutex_lock(&data->mutex);
+ 	ret = regmap_read(data->regmap, SX9310_REG_PROX_CTRL0,
+ 			  &data->suspend_ctrl0);
+-
+ 	if (ret)
+ 		goto out;
  
-+	pci_info(parent, "%s link support %x enabled %x capable %x default %x disable %x\n",
-+		 __func__, link->aspm_support, link->aspm_enabled,
-+		 link->aspm_capable, link->aspm_default, link->aspm_disable);
-+
- 	/* Nothing to do if the link is already in the requested state */
- 	if (link->aspm_enabled == state)
- 		return;
+@@ -1016,21 +1008,21 @@ static const struct dev_pm_ops sx9310_pm_ops = {
+ static const struct acpi_device_id sx9310_acpi_match[] = {
+ 	{ "STH9310", SX9310_WHOAMI_VALUE },
+ 	{ "STH9311", SX9311_WHOAMI_VALUE },
+-	{},
++	{}
+ };
+ MODULE_DEVICE_TABLE(acpi, sx9310_acpi_match);
+ 
+ static const struct of_device_id sx9310_of_match[] = {
+ 	{ .compatible = "semtech,sx9310", (void *)SX9310_WHOAMI_VALUE },
+ 	{ .compatible = "semtech,sx9311", (void *)SX9311_WHOAMI_VALUE },
+-	{},
++	{}
+ };
+ MODULE_DEVICE_TABLE(of, sx9310_of_match);
+ 
+ static const struct i2c_device_id sx9310_id[] = {
+ 	{ "sx9310", SX9310_WHOAMI_VALUE },
+ 	{ "sx9311", SX9311_WHOAMI_VALUE },
+-	{},
++	{}
+ };
+ MODULE_DEVICE_TABLE(i2c, sx9310_id);
+ 
+-- 
+2.28.0.163.g6104cc2f0b6-goog
+
