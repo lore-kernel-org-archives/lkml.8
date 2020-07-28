@@ -2,117 +2,105 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8CAC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5A2820714
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDC62070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595940436;
+	bh=UsGWWrwmfV5aaZQ/xi9YKkAi2LA0NuVnnnUH/pZMbpc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IopKKTVGLoBtfTrh19wuLDnJCzLaKVCUIcJmbR4jJP/4EVuJ749wp85MdoZUpEeDw
+	 Nnnaw8mxDvl+GiZCiB7iOGu28aPlDHyiZ8FBkQ1K4DbZz0EwKz2sORyoqAMTkIGoIT
+	 b6TqHPg3Ze4h8DoxAkXqZM5dvvxTP0S6aSwxGUPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729897AbgG1Mog (ORCPT
+        id S1729891AbgG1MrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:44:36 -0400
-Received: from 107-174-27-60-host.colocrossing.com ([107.174.27.60]:36460 "EHLO
-        ozlabs.ru" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1729379AbgG1Mog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:44:36 -0400
-Received: from fstn1-p1.ozlabs.ibm.com (localhost [IPv6:::1])
-        by ozlabs.ru (Postfix) with ESMTP id AE9DDAE80225;
-        Tue, 28 Jul 2020 08:41:25 -0400 (EDT)
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-To:     linux-serial@vger.kernel.org
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Tue, 28 Jul 2020 08:47:15 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36743 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729576AbgG1MrL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:47:11 -0400
+Received: by mail-ed1-f68.google.com with SMTP id c15so5056458edj.3;
+        Tue, 28 Jul 2020 05:47:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=T/pqmbhLh7sKGJACzLPiIlQzkqQ8XjFefTZhyBvXBXA=;
+        b=P1tumZy99UaJrzhb/iV9NVe/+Oc6ycDDWE3D04ml/nkJcVroeiQyMJkmp2XKChbqpZ
+         F/KC4mn9Et9TiYX0ld0Hhp0M5ZDmdsge8ux/Ckfni3iDBDYPoSk5RMKp5aOxg/gXNA2D
+         Mu1bTkGy9s/KARPwzmV+8oZ4uOOZtuBTgcos/FShLRjLwRXA2EBES68gvfrefcsmosj7
+         PIIUqnq4q2HUkBRR0XiWoGhJjGkIRCMcgpXmOJQQK1PChwU8QiBK3ij4kOutIUiX52aU
+         57h2FnfopyFaojmjaCWHz2A4zdpSn4KhiDca3UUMTGzV2imdU9FUZXLvV4lN+iOhxi4q
+         R8mA==
+X-Gm-Message-State: AOAM533d7VAwGC2ReB4JLNKvwLV1fWn+Y11nP0avvQXrKoR07+hbwLXW
+        66eD2p8U34Lejr5dOJRk4UY=
+X-Google-Smtp-Source: ABdhPJxqpRPRTtJr4gwvC8HABlrPkJOd0W1I02Qx/TUd4FrazEXvNoO6XEeihc+npOZ43QoBZUN7zw==
+X-Received: by 2002:a05:6402:1a54:: with SMTP id bf20mr14060285edb.217.1595940429122;
+        Tue, 28 Jul 2020 05:47:09 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id c7sm8221178ejr.77.2020.07.28.05.47.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jul 2020 05:47:08 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 14:47:06 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Qinglang Miao <miaoqinglang@huawei.com>
+Cc:     Kukjin Kim <kgene@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH kernel] serial_core: Check for port state when tty is in error state
-Date:   Tue, 28 Jul 2020 22:43:59 +1000
-Message-Id: <20200728124359.980-1-aik@ozlabs.ru>
-X-Mailer: git-send-email 2.17.1
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] ARM: s3c: fix return value check in
+ s3c_usb_otgphy_init()
+Message-ID: <20200728124706.GA32233@kozik-lap>
+References: <20200728022756.87687-1-miaoqinglang@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200728022756.87687-1-miaoqinglang@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the moment opening a serial device node (such as /dev/ttyS3)
-succeeds even if there is no actual serial device behind it.
-Reading/writing/ioctls (most) expectantly fail as the uart port is not
-initialized (the type is PORT_UNKNOWN) and the TTY_IO_ERROR error state
-bit is set fot the tty.
+On Tue, Jul 28, 2020 at 10:27:56AM +0800, Qinglang Miao wrote:
+> the function clk_get() returns ERR_PTR() in case of error and
+> never returns NULL. So there's no need to test whether xusbxti
+> is NULL, just remove the redundant part in the return value check.
+> 
+> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+> ---
+>  arch/arm/mach-s3c64xx/setup-usb-phy.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-However syzkaller (a syscall fuzzer) found that setting line discipline
-does not have these checks all the way down to io_serial_out() in
-8250_port.c (8250 is the default choice made by univ8250_console_init()).
-As the result of PORT_UNKNOWN, uart_port::iobase is NULL which
-a platform translates onto some address accessing which produces a crash
-like below.
+Looks good, thanks. I don't plan to take anything before merge window
+(it is quite late in the cycle) so I will apply it after the window.
 
-This adds tty_io_error() to uart_set_ldisc() to prevent the crash.
+Best regards,
+Krzysztof
 
-The example of crash on PPC64/pseries:
-
-BUG: Unable to handle kernel data access on write at 0xc00a000000000001
-Faulting instruction address: 0xc000000000c9c9cc
-cpu 0x0: Vector: 300 (Data Access) at [c00000000c6d7800]
-    pc: c000000000c9c9cc: io_serial_out+0xcc/0xf0
-    lr: c000000000c9c9b4: io_serial_out+0xb4/0xf0
-    sp: c00000000c6d7a90
-   msr: 8000000000009033
-   dar: c00a000000000001
- dsisr: 42000000
-  current = 0xc00000000cd22500
-  paca    = 0xc0000000035c0000   irqmask: 0x03   irq_happened: 0x01
-    pid   = 1371, comm = syz-executor.0
-Linux version 5.8.0-rc7-le-guest_syzkaller_a+fstn1 (aik@fstn1-p1) (gcc (Ubunt
-untu) 2.30) #660 SMP Tue Jul 28 22:29:22 AEST 2020
-enter ? for help
-[c00000000c6d7a90] c0000000018a8cc0 _raw_spin_lock_irq+0xb0/0xe0 (unreliable)
-[c00000000c6d7ad0] c000000000c9bdc0 serial8250_do_set_ldisc+0x140/0x180
-[c00000000c6d7b10] c000000000c9bea4 serial8250_set_ldisc+0xa4/0xb0
-[c00000000c6d7b50] c000000000c91138 uart_set_ldisc+0xb8/0x160
-[c00000000c6d7b90] c000000000c5a22c tty_set_ldisc+0x23c/0x330
-[c00000000c6d7c20] c000000000c4c220 tty_ioctl+0x990/0x12f0
-[c00000000c6d7d20] c00000000056357c ksys_ioctl+0x14c/0x180
-[c00000000c6d7d70] c0000000005635f0 sys_ioctl+0x40/0x60
-[c00000000c6d7db0] c00000000003b814 system_call_exception+0x1a4/0x330
-[c00000000c6d7e20] c00000000000d368 system_call_common+0xe8/0x214
-
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
----
-
-While looking at it, I noticed that a bunch of callbacks are prone to
-this bug and since I wanted to fix them all with minimum effort,
-I tried checking for PORT_UNKNOWN in uart_port_check() but it breaks
-device opening. Another approach could be checking for uart_port::iobase
-in 8250 (and probably uart_port::membase as well) but this will make
-the rest of the code to think the device is ok while there is no device
-at all.
-
-What would the correct approach be and what is the expectation?
-
-The fact that /dev/ttyS3 opened in the first place is confusing already.
-
----
- drivers/tty/serial/serial_core.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index c15e208d9bec..cdece1c8e123 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -1467,6 +1467,9 @@ static void uart_set_ldisc(struct tty_struct *tty)
- 	struct uart_state *state = tty->driver_data;
- 	struct uart_port *uport;
- 
-+	if (tty_io_error(tty))
-+		return;
-+
- 	mutex_lock(&state->port.mutex);
- 	uport = uart_port_check(state);
- 	if (uport && uport->ops && uport->ops->set_ldisc)
--- 
-2.17.1
-
+> diff --git a/arch/arm/mach-s3c64xx/setup-usb-phy.c b/arch/arm/mach-s3c64xx/setup-usb-phy.c
+> index d6b0e3b26..99d743884 100644
+> --- a/arch/arm/mach-s3c64xx/setup-usb-phy.c
+> +++ b/arch/arm/mach-s3c64xx/setup-usb-phy.c
+> @@ -31,7 +31,7 @@ static int s3c_usb_otgphy_init(struct platform_device *pdev)
+>  	phyclk = readl(S3C_PHYCLK) & ~S3C_PHYCLK_CLKSEL_MASK;
+>  
+>  	xusbxti = clk_get(&pdev->dev, "xusbxti");
+> -	if (xusbxti && !IS_ERR(xusbxti)) {
+> +	if (!IS_ERR(xusbxti)) {
+>  		switch (clk_get_rate(xusbxti)) {
+>  		case 12 * MHZ:
+>  			phyclk |= S3C_PHYCLK_CLKSEL_12M;
+> -- 
+> 2.25.1
+> 
