@@ -2,142 +2,120 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C724C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CC4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D91C2207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF642053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:01:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="C1MPTM42"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MTBCNFvU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731220AbgG1QAQ (ORCPT
+        id S1731232AbgG1QB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:00:16 -0400
-Received: from mail.efficios.com ([167.114.26.124]:44346 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730963AbgG1QAQ (ORCPT
+        Tue, 28 Jul 2020 12:01:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60095 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730821AbgG1QBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:00:16 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id BC8B129A885;
-        Tue, 28 Jul 2020 12:00:14 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id obXD5Ex2Fd8J; Tue, 28 Jul 2020 12:00:14 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 68EF029A729;
-        Tue, 28 Jul 2020 12:00:14 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 68EF029A729
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1595952014;
-        bh=EsIILeHJT4NfTbu7fm/u4BIXkEOajS4ZSBPxyFmkiW0=;
-        h=From:To:Date:Message-Id;
-        b=C1MPTM42Z8g6VHgVCF52mmaOC722/ltqP/9Td0PZxGWmxIBqwzPf5rhpWwK+ovU8S
-         RNYUsiIAExsUtnDuRD2kexQx2gsoSdjCoJeGf5+22xrz6IK122fJjhRMKyg26jMIIl
-         +BdBndIZpuZVNE27j6+l9TuZ9F8Wdw2Lw7W5p1bQCLjfFtudEPoQ5DJVFKDM1P+Un+
-         sGSD1Kdfq1tc1MQBmDFETevVpK/EcDh/0EEaViQvOR13mONOw8Wb9MJvuqxkRS6f/J
-         XawgQ6ejD8LLdi2YQ/rgA/zy49gonxTgYtch690QCl3J3FZ9LaJUxQtTTaVq+ck7vA
-         LidJ6g/fIp3Qg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id nWA6AhyGx8a1; Tue, 28 Jul 2020 12:00:14 -0400 (EDT)
-Received: from thinkos.etherlink (unknown [192.222.236.144])
-        by mail.efficios.com (Postfix) with ESMTPSA id 2F97229A724;
-        Tue, 28 Jul 2020 12:00:14 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>, linux-mm@kvack.org
-Subject: [RFC PATCH 1/2] sched: Fix exit_mm vs membarrier
-Date:   Tue, 28 Jul 2020 12:00:09 -0400
-Message-Id: <20200728160010.3314-1-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.11.0
+        Tue, 28 Jul 2020 12:01:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595952084;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=0fc1uAttsGy8w1em246ZebEdbW8vUt+X7/u6oIFpaS0=;
+        b=MTBCNFvUe4/uZ7qwXhVRKam7rtDay6GM224dcpEZLVunXzTwdum6/JzbJyqnSMT0veqh2y
+        IL6X1W2rkG5QCH7OJeZIo6m2bkCpZZVKlEHvVFtbsMDQ+uk4p608/pSxckv3hy7De4or1Z
+        /X2hK36HTXr4nXBWu86CWOb1O72b85w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-365-JNkooa47PDmLLs1bZyICfw-1; Tue, 28 Jul 2020 12:01:20 -0400
+X-MC-Unique: JNkooa47PDmLLs1bZyICfw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9CCA419200D5;
+        Tue, 28 Jul 2020 16:01:18 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-112-109.ams2.redhat.com [10.36.112.109])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C1C475D9CD;
+        Tue, 28 Jul 2020 16:01:02 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Aleksa Sarai <asarai@suse.de>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>
+Subject: [PATCH v3 0/3] io_uring: add restrictions to support untrusted
+ applications and guests
+Date:   Tue, 28 Jul 2020 18:00:58 +0200
+Message-Id: <20200728160101.48554-1-sgarzare@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-exit_mm should issue memory barriers after user-space memory accesses,
-before clearing current->mm, to order user-space memory accesses
-performed prior to exit_mm before clearing tsk->mm, which has the
-effect of skipping the membarrier private expedited IPIs.
+v3:
+ - added IORING_RESTRICTION_SQE_FLAGS_ALLOWED and
+   IORING_RESTRICTION_SQE_FLAGS_REQUIRED
+ - removed IORING_RESTRICTION_FIXED_FILES_ONLY opcode
+ - enabled restrictions only when the rings start
 
-The membarrier system call can be issued concurrently with do_exit
-if we have thread groups created with CLONE_VM but not CLONE_THREAD.
+RFC v2: https://lore.kernel.org/io-uring/20200716124833.93667-1-sgarzare@redhat.com
 
-The following comment in exit_mm() seems rather puzzling though:
+RFC v1: https://lore.kernel.org/io-uring/20200710141945.129329-1-sgarzare@redhat.com
 
-        /* more a memory barrier than a real lock */
-        task_lock(current);
+Following the proposal that I send about restrictions [1], I wrote this series
+to add restrictions in io_uring.
 
-So considering that spinlocks are not full memory barriers nowadays,
-some digging into the origins of this comment led me to 2002, at the
-earliest commit tracked by Thomas Gleixner's bitkeeper era's history
-at https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/
+I also wrote helpers in liburing and a test case (test/register-restrictions.c)
+available in this repository:
+https://github.com/stefano-garzarella/liburing (branch: io_uring_restrictions)
 
-At that point, this comment was followed by:
+Just to recap the proposal, the idea is to add some restrictions to the
+operations (sqe opcode and flags, register opcode) to safely allow untrusted
+applications or guests to use io_uring queues.
 
-+               /* more a memory barrier than a real lock */
-+               task_lock(tsk);
-+               tsk->mm = NULL;
-+               task_unlock(tsk);
+The first patch changes io_uring_register(2) opcodes into an enumeration to
+keep track of the last opcode available.
 
-Which seems to indicate that grabbing the lock is really about acting as
-a memory barrier, but I wonder if it is meant to be a full barrier or
-just an acquire.
+The second patch adds IOURING_REGISTER_RESTRICTIONS opcode and the code to
+handle restrictions.
 
-If a full memory barrier happens to be needed even without membarrier,
-perhaps this fix also corrects other issues ? It unclear from the
-comment what this memory barrier orders though. Is it the chain
-exit -> waitpid, or is it related to entering lazy TLB ?
+The third patch adds IORING_SETUP_R_DISABLED flag to start the rings disabled,
+allowing the user to register restrictions, buffers, files, before to start
+processing SQEs.
 
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: linux-mm@kvack.org
----
- kernel/exit.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Comments and suggestions are very welcome.
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 727150f28103..ce272ec55cdc 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -474,6 +474,14 @@ static void exit_mm(void)
- 	BUG_ON(mm != current->active_mm);
- 	/* more a memory barrier than a real lock */
- 	task_lock(current);
-+	/*
-+	 * When a thread stops operating on an address space, the loop
-+	 * in membarrier_{private,global}_expedited() may not observe
-+	 * that tsk->mm, and not issue an IPI. Membarrier requires a
-+	 * memory barrier after accessing user-space memory, before
-+	 * clearing tsk->mm.
-+	 */
-+	smp_mb();
- 	current->mm = NULL;
- 	mmap_read_unlock(mm);
- 	enter_lazy_tlb(mm, current);
+Thank you in advance,
+Stefano
+
+[1] https://lore.kernel.org/io-uring/20200609142406.upuwpfmgqjeji4lc@steredhat/
+
+Stefano Garzarella (3):
+  io_uring: use an enumeration for io_uring_register(2) opcodes
+  io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
+  io_uring: allow disabling rings during the creation
+
+ fs/io_uring.c                 | 167 ++++++++++++++++++++++++++++++++--
+ include/uapi/linux/io_uring.h |  60 +++++++++---
+ 2 files changed, 207 insertions(+), 20 deletions(-)
+
 -- 
-2.11.0
+2.26.2
 
