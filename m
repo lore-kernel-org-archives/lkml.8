@@ -2,86 +2,152 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027B6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC45C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD07220792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:30:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595953850;
-	bh=QH/fNpriLdWfgqzqml0LW6l6Cmgll/uf1nxBcMvnPWc=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=ujgPMadKb4eBFrm/H+gLZBpSAvq0fsY30YUEcuopSH/F5+VtaOVhHGzpVb7muevmK
-	 31uK1Qk4YHNsMLZnY+2yXsH6VrrqsLdDSvCM+Bxh7hVySQlp+ODi2pTsfFCBy+KS4D
-	 ECn10HNd/oXyAMSQixuMbCCQLfNS9j9yg7bYvKEk=
+	by mail.kernel.org (Postfix) with ESMTP id C3B6A20809
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731318AbgG1Qat (ORCPT
+        id S1731407AbgG1QbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:30:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46370 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 12:31:22 -0400
+Received: from mga11.intel.com ([192.55.52.93]:43593 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731070AbgG1Qat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:30:49 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62FCD2074F;
-        Tue, 28 Jul 2020 16:30:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595953848;
-        bh=QH/fNpriLdWfgqzqml0LW6l6Cmgll/uf1nxBcMvnPWc=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Sypy9P7CThuG/PVUmHOtNiWyyBtkreQbISYFIhWCpycCFVMaVPwsc0h6ZsNglEMiQ
-         59R+yIvDg3i3ReGH2Vr8W4TYXvMRyCfwzRCMSOfBlybDtl+e7B3/zVQe9oVhQ52foV
-         7FwVZCT3nNCAvN2bNSn9uQoHxnYW8ckN1Bna32ps=
-Date:   Tue, 28 Jul 2020 17:30:31 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     robh@kernel.org, perex@perex.cz, Dan Murphy <dmurphy@ti.com>,
-        lgirdwood@gmail.com, tiwai@suse.com
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200612171412.25423-1-dmurphy@ti.com>
-References: <20200612171412.25423-1-dmurphy@ti.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: tas2562: Convert the tas2562 binding to yaml
-Message-Id: <159595383112.15027.8364475369374911747.b4-ty@kernel.org>
+        id S1731070AbgG1QbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:31:22 -0400
+IronPort-SDR: A1KLpSDw7n/8uQjaYkQUHZDNIyvUOWw9pdA3O6jR6My5SM880iYmXzh+VDlBQL3/lOXgtPY+m2
+ u4YsR/cp9ssA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="149115433"
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="149115433"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 09:31:20 -0700
+IronPort-SDR: FVqAeH1LLFVhb4Lu6gBvZkqAQJvIrGgzbbkNoTPQdFgSd4E1/g0DVdAUfKN0IQuFjFhKOgaADS
+ 3xF7Ml2zbh7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="272366761"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by fmsmga007.fm.intel.com with ESMTP; 28 Jul 2020 09:31:20 -0700
+Date:   Tue, 28 Jul 2020 09:31:20 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.com>, Lu Baolu <baolu.lu@intel.com>,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v3 1/1] PCI/ATS: Check PRI supported on the PF device
+ when SRIOV is enabled
+Message-ID: <20200728163120.GA31231@otc-nc-03>
+References: <1595543849-19692-1-git-send-email-ashok.raj@intel.com>
+ <20200727212436.03103207BB@mail.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727212436.03103207BB@mail.kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jun 2020 12:14:11 -0500, Dan Murphy wrote:
-> Convert the TAS2562 text file to yaml format.
+Hi Sasha
 
-Applied to
+On Mon, Jul 27, 2020 at 09:24:35PM +0000, Sasha Levin wrote:
+> Hi
+> 
+> [This is an automated email]
+> 
+> This commit has been processed because it contains a "Fixes:" tag
+> fixing commit: b16d0cb9e2fc ("iommu/vt-d: Always enable PASID/PRI PCI capabilities before ATS").
+> 
+> The bot has tested the following trees: v5.7.10, v5.4.53, v4.19.134, v4.14.189, v4.9.231, v4.4.231.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Looks like the dependency is making this more involved with the backport. I
 
-Thanks!
+We could pursue a simpler fix for these older versions where there is a
+conflict, but I'm not sure if that's recommended. 
 
-[1/2] dt-bindings: tas2562: Convert the tas2562 binding to yaml
-      (no commit info)
-[2/2] ASoC: tas2562: Update shutdown GPIO property
-      commit: f78a97003b8babb1c49e2e4a6b46f15ac31ecf49
+In addition from our perspective 5.7 and above if there are other products
+that require PASID/PRI on prior versions for SRIOV devices  we can drop the
+backports. I see the same issue with other IOMMU's, for e.g. AMD as
+well, I'm not sure if there are real regressions. 
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+> 
+> v5.7.10: Build OK!
+> v5.4.53: Failed to apply! Possible dependencies:
+>     2b0ae7cc3bfc ("PCI/ATS: Handle sharing of PF PASID Capability with all VFs")
+>     751035b8dc06 ("PCI/ATS: Cache PASID Capability offset")
+>     8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
+>     9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
+>     c065190bbcd4 ("PCI/ATS: Cache PRI Capability offset")
+>     e5adf79a1d80 ("PCI/ATS: Cache PRI PRG Response PASID Required bit")
+> 
+> v4.19.134: Failed to apply! Possible dependencies:
+>     2b0ae7cc3bfc ("PCI/ATS: Handle sharing of PF PASID Capability with all VFs")
+>     4f802170a861 ("PCI/DPC: Save and restore config state")
+>     6e1ffbb7c2ab ("PCI: Move ATS declarations outside of CONFIG_PCI")
+>     751035b8dc06 ("PCI/ATS: Cache PASID Capability offset")
+>     8c938ddc6df3 ("PCI/ATS: Add pci_ats_page_aligned() interface")
+>     8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
+>     9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
+>     9c2120090586 ("PCI: Provide pci_match_id() with CONFIG_PCI=n")
+>     b92b512a435d ("PCI: Make pci_ats_init() private")
+>     c065190bbcd4 ("PCI/ATS: Cache PRI Capability offset")
+>     e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required() interface.")
+>     e5adf79a1d80 ("PCI/ATS: Cache PRI PRG Response PASID Required bit")
+>     fff42928ade5 ("PCI/ATS: Add inline to pci_prg_resp_pasid_required()")
+> 
+> v4.14.189: Failed to apply! Possible dependencies:
+>     1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
+>     1e4511604dfa ("PCI/AER: Expose internal API for obtaining AER information")
+>     3133e6dd07ed ("PCI: Tidy Makefiles")
+>     37dddf14f1ae ("PCI: cadence: Add EndPoint Controller driver for Cadence PCIe controller")
+>     4696b828ca37 ("PCI/AER: Hoist aerdrv.c, aer_inject.c up to drivers/pci/pcie/")
+>     4f802170a861 ("PCI/DPC: Save and restore config state")
+>     8c938ddc6df3 ("PCI/ATS: Add pci_ats_page_aligned() interface")
+>     8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
+>     9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
+>     9de0eec29c07 ("PCI: Regroup all PCI related entries into drivers/pci/Makefile")
+>     b92b512a435d ("PCI: Make pci_ats_init() private")
+>     c065190bbcd4 ("PCI/ATS: Cache PRI Capability offset")
+>     d3252ace0bc6 ("PCI: Restore resized BAR state on resume")
+>     e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required() interface.")
+>     e5adf79a1d80 ("PCI/ATS: Cache PRI PRG Response PASID Required bit")
+>     fff42928ade5 ("PCI/ATS: Add inline to pci_prg_resp_pasid_required()")
+> 
+> v4.9.231: Failed to apply! Possible dependencies:
+>     4ebeb1ec56d4 ("PCI: Restore PRI and PASID state after Function-Level Reset")
+>     8c938ddc6df3 ("PCI/ATS: Add pci_ats_page_aligned() interface")
+>     8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
+>     9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
+>     a4f4fa681add ("PCI: Cache PRI and PASID bits in pci_dev")
+>     c065190bbcd4 ("PCI/ATS: Cache PRI Capability offset")
+>     e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required() interface.")
+>     e5adf79a1d80 ("PCI/ATS: Cache PRI PRG Response PASID Required bit")
+>     fff42928ade5 ("PCI/ATS: Add inline to pci_prg_resp_pasid_required()")
+> 
+> v4.4.231: Failed to apply! Possible dependencies:
+>     2a2aca316aed ("PCI: Include <asm/dma.h> for isa_dma_bridge_buggy")
+>     4d3f13845957 ("PCI: Add pci_unmap_iospace() to unmap I/O resources")
+>     4ebeb1ec56d4 ("PCI: Restore PRI and PASID state after Function-Level Reset")
+>     8cbb8a9374a2 ("PCI/ATS: Move pci_prg_resp_pasid_required() to CONFIG_PCI_PRI")
+>     9bf49e36d718 ("PCI/ATS: Handle sharing of PF PRI Capability with all VFs")
+>     a4f4fa681add ("PCI: Cache PRI and PASID bits in pci_dev")
+>     c5076cfe7689 ("PCI, of: Move PCI I/O space management to PCI core code")
+>     e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required() interface.")
+> 
+> 
+> NOTE: The patch will not be queued to stable trees until it is upstream.
+> 
+> How should we proceed with this patch?
+> 
+> -- 
+> Thanks
+> Sasha
