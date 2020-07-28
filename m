@@ -2,99 +2,109 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B29EC433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA90C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A07B20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:41:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="eOS9kCUG"
+	by mail.kernel.org (Postfix) with ESMTP id 13E8C20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:41:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731016AbgG1Plc (ORCPT
+        id S1731037AbgG1Plq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:41:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46766 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730821AbgG1Plb (ORCPT
+        Tue, 28 Jul 2020 11:41:46 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:59548 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731019AbgG1Plp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:41:31 -0400
-Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 336E8C0619D4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:41:31 -0700 (PDT)
-Received: by mail-il1-x12a.google.com with SMTP id z17so1457838ill.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:41:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vSWx1/Sr/gJvV92Fd2QuTQjvx6hegEt2EdSzZRTJZXM=;
-        b=eOS9kCUGWozMEgHSZJcSVDFO0AHLhz5u13Hzr4euy1SfrsO3wctZ6YAEcFh81LUEFe
-         qKEx883RdFNlnU/ciLWMOG+Vj2O3UtdPLRGu3wVgO4m2BQ37DnVzwEQRW6UlEXPC6X4+
-         6qy3MKLhkiUeg2Gj1Hl5rFfX2WIKMSYf+TvHUXJLRYjJhA2RqWzGfAYi3i7oAIMDIOGN
-         kWmCj7CoLh5z5B/OHRT7/QrMunwFyL57wmiHBTZtYJy1FwxdlHKoWKtw+zsNgVUo2ZHx
-         EpjXSF+5KBb5kwwDmys2D0JqmY/qrmWuFn2WVlWcfsS5xNRgrwNQRXJP5bi8Bs1TigZW
-         btwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vSWx1/Sr/gJvV92Fd2QuTQjvx6hegEt2EdSzZRTJZXM=;
-        b=PcnX2B/1B0m+FPbMQ5x/4W8ndAsdU8WRoD28y4KDxjVcPtAeN0L0AkDWwNTteV467z
-         VanVXnv4iQMh3VXHFYJypgt69FAYlxH9dkVkFwJzbNxMDGlJjPAQ+SfTyfQP8QgqkGr5
-         DRPMoD33ZKHikTw5dL8X7czMgoQDNvUMb4NshNj22Hfi9avlwUDgmOuWOvToo6beoJG9
-         T1CGPyfrNRTg4itJFMT1ipo90AaHuRdtikjEMG3JCR8fgUUz7ycb8Iz0j1hi+ryyhzIa
-         EwKp5oyW8Sw7PBFjjkyWvLDmajVlwFUcuhwNgBXIM61xEptXTdG3eao8D4RUhA8Fjvo/
-         SNRg==
-X-Gm-Message-State: AOAM533nqOuiGiDxa3WqdXhAM0DXPG6dwsU8FwypgZDhXUPD5lO7+z/C
-        p+5keLqagKCfe9uJk7OPxG6I9A==
-X-Google-Smtp-Source: ABdhPJyDr3/VSL/Sd0AZTRTnDaDXbKtAPJuxtlG2XtO6yQjepAU3x+9xL+YVZgu/NKlxbtyZpuHMhw==
-X-Received: by 2002:a05:6e02:c6b:: with SMTP id f11mr411495ilj.272.1595950890232;
-        Tue, 28 Jul 2020 08:41:30 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id u6sm2827959ilk.13.2020.07.28.08.41.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 08:41:29 -0700 (PDT)
-Subject: Re: bdi cleanups v3
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>,
-        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        cgroups@vger.kernel.org
-References: <20200724073313.138789-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <0b2b59d4-da4c-33df-82b4-0d4935b91e6e@kernel.dk>
-Date:   Tue, 28 Jul 2020 09:41:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 11:41:45 -0400
+Received: from 89-64-88-69.dynamic.chello.pl (89.64.88.69) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id a18b10c115136856; Tue, 28 Jul 2020 17:41:43 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Francisco Jerez <currojerez@riseup.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Documentation <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Doug Smythies <dsmythies@telus.net>
+Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
+Date:   Tue, 28 Jul 2020 17:41:42 +0200
+Message-ID: <1884886.tmXHBG24oC@kreacher>
+In-Reply-To: <87mu3thiz5.fsf@riseup.net>
+References: <3955470.QvD6XneCf3@kreacher> <CAJZ5v0g2U+1wD5rUQwJ4_x9sQyvGyGiBiLFs7MA-xdhRBX9zBQ@mail.gmail.com> <87mu3thiz5.fsf@riseup.net>
 MIME-Version: 1.0
-In-Reply-To: <20200724073313.138789-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/24/20 1:32 AM, Christoph Hellwig wrote:
-> Hi Jens,
+On Tuesday, July 21, 2020 1:20:14 AM CEST Francisco Jerez wrote:
 > 
-> this series contains a bunch of different BDI cleanups.  The biggest item
-> is to isolate block drivers from the BDI in preparation of changing the
-> lifetime of the block device BDI in a follow up series.
 
-Applied, thanks.
+[cut]
 
--- 
-Jens Axboe
+> > If there is a bug, then what exactly is it, from the users' perspective?
+> >
+> 
+> It can be reproduced easily as follows:
+> 
+> | echo 1 > /sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost
+> | for p in /sys/devices/system/cpu/cpufreq/policy*/energy_performance_preference; do echo performance > $p; done
+> 
+> Let's make sure that the EPP updates landed on the turbostat output:
+> 
+> |[..]
+> | Core    CPU     Avg_MHz Busy%   Bzy_MHz            HWP_REQ
+> | -       -       1       0.05    2396    0x0000000000000000
+> | 0       0       1       0.05    2153    0x0000000000002704
+> | 0       4       1       0.04    2062    0x0000000000002704
+> | 1       1       1       0.02    2938    0x0000000000002704
+> | 1       5       2       0.09    2609    0x0000000000002704
+> | 2       2       1       0.04    1857    0x0000000000002704
+> | 2       6       1       0.05    2561    0x0000000000002704
+> | 3       3       0       0.01    1883    0x0000000000002704
+> | 3       7       2       0.07    2703    0x0000000000002704
+> |[..]
+> 
+> Now let's do some non-trivial IO activity in order to trigger HWP
+> dynamic boost, and watch while random CPUs start losing their EPP
+> setting requested via sysfs:
+> 
+> |[..]
+> | Core    CPU     Avg_MHz Busy%   Bzy_MHz            HWP_REQ
+> | -       -       16      0.81    2023    0x0000000000000000
+> | 0       0       7       0.66    1069    0x0000000080002704
+>                                                     ^^
+> | 0       4       24      2.19    1116    0x0000000080002704
+>                                                     ^^
+> | 1       1       18      0.68    2618    0x0000000000002704
+> | 1       5       1       0.03    2005    0x0000000000002704
+> | 2       2       2       0.07    2512    0x0000000000002704
+> | 2       6       33      1.35    2402    0x0000000000002704
+> | 3       3       1       0.04    2470    0x0000000000002704
+> | 3       7       45      1.42    3185    0x0000000080002704
+>                                                     ^^
+
+Actually, that's because intel_pstate_hwp_boost_up() and
+intel_pstate_hwp_boost_down() use the hwp_req_cached value
+for updating the HWP Request MSR and that is only written to
+by intel_pstate_hwp_set() which is only invoked on policy changes,
+so the MSR writes from intel_pstate_set_energy_pref_index()
+basically get discarded.
+
+So this is a matter of synchronizing intel_pstate_set_policy() with
+intel_pstate_set_energy_pref_index() and they both acquire
+intel_pstate_limits_lock already, so this shouldn't be too difficult to fix.
+
+Let me cut a patch for that.
+
+
 
