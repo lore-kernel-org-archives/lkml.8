@@ -2,89 +2,116 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD887C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D321EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8F2821744
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1AEF21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:59:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="MO0WxJyC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="guXqFEi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbgG1Exg (ORCPT
+        id S1726615AbgG1E7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 00:53:36 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:52547 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgG1Exg (ORCPT
+        Tue, 28 Jul 2020 00:59:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgG1E7H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 00:53:36 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 8EECF8066C;
-        Tue, 28 Jul 2020 16:53:32 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1595912012;
-        bh=c8Sth13n0TSxhUF7C9X9Qt0unw2FETHySTn87JDXkps=;
-        h=From:To:Subject:Date;
-        b=MO0WxJyCJ5MBgTUG2pRIpDwBS2GvEE8OaCNW8UVhBt66MCCFIzijQBuoN9UDuzKD9
-         9UkeVYpBImkf9vk5MsxhXr0Wyjl79dajBe9MtfQNYk0yEMFpmDF0OWKpRvy4MM6bIh
-         8yomuOLw7bGOw6JtXziZ2ELJ8rqmymTq7Bf95skMVuYQkQSPgCnFz3GVUOfxMhVzmh
-         2nqpDQ5UDMjsgOGdijChJB5SJQQNZ4EyiaNNH3ejLe1INbAQZHNrhmAeko3bi12FJL
-         MRPt32CmebYzJsGEdMsRdU0wAbfwoEm51iPt2PS+Gthj0o1dTo/aOmjWiBRyWfQghJ
-         PbxyLmG0wWIlg==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f1faf4c0001>; Tue, 28 Jul 2020 16:53:32 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 28 Jul 2020 16:53:31 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Tue, 28 Jul 2020 16:53:31 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: pinctrl: kirkwood: gpio mode not being selected
-Thread-Topic: pinctrl: kirkwood: gpio mode not being selected
-Thread-Index: AQHWZJsKop0hXSCVP0S3idoJEe2QKw==
-Date:   Tue, 28 Jul 2020 04:53:31 +0000
-Message-ID: <cd7367f5-d08f-44a4-33b8-3667e7ca735a@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <53B3DE3F2867DA4CB4F2D4AE42BD2E6B@atlnz.lc>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Tue, 28 Jul 2020 00:59:07 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F12C061794;
+        Mon, 27 Jul 2020 21:59:05 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id di22so6611524edb.12;
+        Mon, 27 Jul 2020 21:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qwT94/2d5vMLNnP3aSonuZ5wA6OYYOi5iOIf8fUcfiE=;
+        b=guXqFEi/Daunmiz5/09ztCjMyaX9nl/DG7fSEBBnCM1H84PwnPC2j3u0XZEDw2I98A
+         INfQLT6kVsJDAuhBqM3uUSeBpZdY0A2w0RQwYEyBth/a90TvLOlklx/OpJ5R+wvWsBWQ
+         +WZ4EQLle8hKzLix2n+ShgAAcNWm0sQvxHjtefkH9PDGKhsKRFPJ1+lw4qLGgZrktrC7
+         9j8aqIZFIu5Nq7mLTmklXXaGr0+FUDdwFVuCz7LfF/XVCq+SXxMA94g15gj2b77r7kB0
+         Q8u7S2V6HKKCxJAWWM4rxGOrJBJNIIskq8rfSGRBqJVYC4EKM6VOg9doyrgaQKo+vYrg
+         WexQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qwT94/2d5vMLNnP3aSonuZ5wA6OYYOi5iOIf8fUcfiE=;
+        b=P8VW3PmswKj1o1wdU7cW4RJGidY4fFt6FwokNq/VdrqDHvQNB4y8FGjYYFBDwu/rQ6
+         kMwCdMYn3Skq3T7i/I2UmW2HcLnSiuxxiQssH4zl1G167UBaYMrkJljIWeJujJ6iECyM
+         Ea5DWrHUIRCJtRnMVPcUg9VCUBpC7hZjbKWn8UEKIYUkbs9Vs6avvlqAbOdqXUGoF3M9
+         HUKtZ5rA0leMOAmDLaGBmowDVapIWJtpbaCFhPmwJyfnZZUANkoLjO3YUPAJTEPqn0UV
+         QCPNCH1k7kBDTz9UWIXmZoifGclMVlYDrrSTrvlKCP/1nPX4BVXQdEu0xjTTHDhfORoY
+         Q1QA==
+X-Gm-Message-State: AOAM530Ox0MhDOkZprktRKasdKibbce4mgvCpQ/E/abYQOhGKwY+D2Sb
+        pyjb2rW6KYZx4NuotrC1rk2sgHcOMKY=
+X-Google-Smtp-Source: ABdhPJys0wyfvlOiKfT8X3K5UcykXzPKQlSmRCRZ0K5sBjw/kY8acLU8Kux2FLegMUzaBa6q+qyP+Q==
+X-Received: by 2002:aa7:d989:: with SMTP id u9mr24317597eds.85.1595912344289;
+        Mon, 27 Jul 2020 21:59:04 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2d6c:b00:cd97:e2be:76a3:65a9])
+        by smtp.gmail.com with ESMTPSA id q3sm6840596edc.88.2020.07.27.21.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 21:59:03 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-msm@vger.kernel.org
+Cc:     Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
+        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
+        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: update entry to thermal governors file name prefixing
+Date:   Tue, 28 Jul 2020 06:58:50 +0200
+Message-Id: <20200728045850.22661-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCkknbSBpbiB0aGUgcHJvY2VzcyB1cGRhdGluZyBvdXIgcGxhdGZvcm1zIGZyb20gYSB2
-NC40LnggYmFzZWQga2VybmVsIHRvIA0KYSB2NS43IGJhc2VkIG9uZS4NCg0KT24gb25lIG9mIG91
-ciBNYXJ2ZWxsIEtpcmt3b29kIGJhc2VkIGJvYXJkcyBJJ20gc2VlaW5nIGEgcHJvYmxlbSB3aGVy
-ZSBhIA0KZ3BpbyBpc24ndCBiZWluZyBkcml2ZW4gKHRoZSBncGlvIGhhcHBlbnMgdG8gYmUgYSBy
-ZXNldCB0byBhIFBIWSBjaGlwIA0KdGhhdCBvdXIgdXNlcnNwYWNlIHN3aXRjaGluZyBjb2RlIGlz
-IGF0dGVtcHRpbmcgdG8gdGFsayB0bykuDQoNCk91ciBib290bG9hZGVyIGlzIGluYWR2ZXJ0ZW50
-bHkgY29uZmlndXJpbmcgTVBQMTUgaW50byB1YXJ0MCBSVFMgbW9kZSANCihwcm9iYWJseSBhIGNv
-cHkgYW5kIHBhc3RlIGZyb20gdGhlIHJlZmVyZW5jZSBib2FyZCkuDQoNClVuZGVyIHRoZSB2NC40
-IGtlcm5lbCBieSB0aGUgdGltZSB1c2Vyc3BhY2UgZ2V0cyBzdGFydGVkIHRoZSBNUFAxNSBwaW4g
-DQpoYXMgYmVlbiBwdXQgaW50byBHUElPIG1vZGUuIFdpdGggdGhlIGxhdGVzdCB2NS43IGtlcm5l
-bCB0aGUgaW5jb3JyZWN0IA0KbW9kZSBpcyByZXRhaW5lZC4NCg0KSSBoYXZlbid0IGdvbmUgYmlz
-ZWN0aW5nIGJ1dCBJJ20gZ3Vlc3Npbmcgc29tZXRoaW5nIHNvbWV3aGVyZSBoYXMgDQpkZWNpZGVk
-IG5vdCB0byBwdXQgdGhlIHBpbiBpbnRvIEdQSU8gbW9kZSAoYmVjYXVzZSB0aGF0IGlzIHRoZSBo
-YXJkd2FyZSANCmRlZmF1bHQpLg0KDQpJIHByb2JhYmx5IG5lZWQgdG8gZGVmaW5lIGFuIGV4cGxp
-Y2l0IHBpbmN0cmwgbm9kZSBpbiBteSBkdHMsIGJ1dCBJIA0Kd2FudGVkIHRvIG1ha2Ugc3VyZSB0
-aGF0IHRoaXMgd2FzIGFuIGludGVudGlvbmFsIGNoYW5nZSBpbiBiZWhhdmlvdXIuDQoNClRoYW5r
-cywNCkNocmlzDQo=
+Commit 0015d9a2a727 ("thermal/governors: Prefix all source files with
+gov_") renamed power_allocator.c to gov_power_allocator.c in
+./drivers/thermal amongst some other file renames, but missed to adjust
+the MAINTAINERS entry.
+
+Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
+
+  warning: no file matches    F:    drivers/thermal/power_allocator.c
+
+Update the file entry in MAINTAINERS to the new file name.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Amit, please ack.
+
+Daniel, please pick this non-urgent minor patch for your -next tree.
+
+applies cleanly on next-20200727
+
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index aad65cc8f35d..aa5a11d71f71 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17164,7 +17164,7 @@ M:	Lukasz Luba <lukasz.luba@arm.com>
+ L:	linux-pm@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/driver-api/thermal/power_allocator.rst
+-F:	drivers/thermal/power_allocator.c
++F:	drivers/thermal/gov_power_allocator.c
+ F:	include/trace/events/thermal_power_allocator.h
+ 
+ THINKPAD ACPI EXTRAS DRIVER
+-- 
+2.17.1
+
