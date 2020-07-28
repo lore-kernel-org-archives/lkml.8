@@ -2,141 +2,133 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5364EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7367EC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB0A20792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:32:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KSigIXFs"
+	by mail.kernel.org (Postfix) with ESMTP id 50B2D20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595914354;
+	bh=SjP3OhxJM4KR5LPl+D64JmqvXI73XHO2Y8ZSVez5psY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=17mwN+Rfw0uwapqTmeX1MlH78G8Hj8IHoEClcwCUrHvOwVkXFjkbAnfzwrN9eVF6c
+	 jJX+F78obFVGN7fh8XMhUQfnxeRJ1ltLHGJEbNTRV26ZqM8x9HDg44VkFGiXQBMUZK
+	 cBNw5dArSbnh9DIfL8xK06NWne9WJ9pAQGJU0+O4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgG1FcM (ORCPT
+        id S1727062AbgG1Fcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 01:32:12 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:49386 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726245AbgG1FcM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 01:32:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595914331; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=AGgIwDCiB5b28ItgH/sAXlvyffIT5/nijh9m34NzZuY=;
- b=KSigIXFs4fh2cg8V1ldOI6PLuRcdrwk989Wxj294SY3+hMKKhdbIc5ifEAJD9dAn3yKGqmSO
- YMZ2/BlTF1znvlPuIi4xUT5RWcU7sF5UCERG1WdBFwJxHpiZL7qb+xK2BkbtRTjID0LYMH2Q
- I/M6qfuhv+iD9e2qCYBZAu1Wki8=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
- 5f1fb85a634c4259e3281646 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 05:32:10
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 64731C433AD; Tue, 28 Jul 2020 05:32:10 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Tue, 28 Jul 2020 01:32:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726299AbgG1Fcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 01:32:33 -0400
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: hongwus)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 791EDC433C6;
-        Tue, 28 Jul 2020 05:32:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE45D21D95;
+        Tue, 28 Jul 2020 05:32:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595914352;
+        bh=SjP3OhxJM4KR5LPl+D64JmqvXI73XHO2Y8ZSVez5psY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hBXGz0cHx5wyT53ywCcD0oe/PaUMXLhXm9PxYciIeycMN/N1F8/SypnySQuBUqXVU
+         s6iSXMK9n51S+9zse+A+y4ohRBRwvnSt9sGj/bUUHVGyzvOfh4oONUwDUztkbBfKvc
+         QMvunRhUEvDKSUefG98Dslp1MsZU6qrqsI96hfA8=
+Received: by mail-lf1-f42.google.com with SMTP id i80so10282090lfi.13;
+        Mon, 27 Jul 2020 22:32:31 -0700 (PDT)
+X-Gm-Message-State: AOAM533fHrNNDd8JRhC8gFEOBjHm6axw72h3n4bKpOQa7nAIvdkB+o9s
+        lPsYcmdKsmAoMy/ptNdau0vUC7GJVlNRRab4RqA=
+X-Google-Smtp-Source: ABdhPJwi26yq612N370yndwXmjvcClKqs7mQKPmd3mY7tvi7kkqYvBqZsCgkaOEuFu0g6ZciE7UvaurIrNpDUahjOeQ=
+X-Received: by 2002:a19:ec12:: with SMTP id b18mr13527150lfa.52.1595914350086;
+ Mon, 27 Jul 2020 22:32:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jul 2020 13:32:09 +0800
-From:   hongwus@codeaurora.org
-To:     Can Guo <cang@codeaurora.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, sh425.lee@samsung.com,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi-owner@vger.kernel.org
-Subject: Re: [PATCH v7 3/8] scsi: ufs-qcom: Remove testbus dump in
- ufs_qcom_dump_dbg_regs
-In-Reply-To: <1595912460-8860-4-git-send-email-cang@codeaurora.org>
-References: <1595912460-8860-1-git-send-email-cang@codeaurora.org>
- <1595912460-8860-4-git-send-email-cang@codeaurora.org>
-Message-ID: <8121784a3019723997a16cc6791e5e5a@codeaurora.org>
-X-Sender: hongwus@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-19-guro@fb.com>
+In-Reply-To: <20200727184506.2279656-19-guro@fb.com>
+From:   Song Liu <song@kernel.org>
+Date:   Mon, 27 Jul 2020 22:32:18 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4xooQEup9twRHcYNRn=JRuRO-VWxkz7SSKfi8ozLc9Yg@mail.gmail.com>
+Message-ID: <CAPhsuW4xooQEup9twRHcYNRn=JRuRO-VWxkz7SSKfi8ozLc9Yg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 18/35] bpf: eliminate rlimit-based memory
+ accounting for hashtab maps
+To:     Roman Gushchin <guro@fb.com>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-28 13:00, Can Guo wrote:
-> Dumping testbus registers is heavy enough to cause stability issues
-> sometime, just remove them as of now.
-> 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> ---
->  drivers/scsi/ufs/ufs-qcom.c | 32 --------------------------------
->  1 file changed, 32 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index 7da27ee..96e0999 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -1620,44 +1620,12 @@ int ufs_qcom_testbus_config(struct 
-> ufs_qcom_host *host)
->  	return 0;
->  }
-> 
-> -static void ufs_qcom_testbus_read(struct ufs_hba *hba)
-> -{
-> -	ufshcd_dump_regs(hba, UFS_TEST_BUS, 4, "UFS_TEST_BUS ");
-> -}
-> -
-> -static void ufs_qcom_print_unipro_testbus(struct ufs_hba *hba)
-> -{
-> -	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> -	u32 *testbus = NULL;
-> -	int i, nminor = 256, testbus_len = nminor * sizeof(u32);
-> -
-> -	testbus = kmalloc(testbus_len, GFP_KERNEL);
-> -	if (!testbus)
-> -		return;
-> -
-> -	host->testbus.select_major = TSTBUS_UNIPRO;
-> -	for (i = 0; i < nminor; i++) {
-> -		host->testbus.select_minor = i;
-> -		ufs_qcom_testbus_config(host);
-> -		testbus[i] = ufshcd_readl(hba, UFS_TEST_BUS);
-> -	}
-> -	print_hex_dump(KERN_ERR, "UNIPRO_TEST_BUS ", DUMP_PREFIX_OFFSET,
-> -			16, 4, testbus, testbus_len, false);
-> -	kfree(testbus);
-> -}
-> -
->  static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
->  {
->  	ufshcd_dump_regs(hba, REG_UFS_SYS1CLK_1US, 16 * 4,
->  			 "HCI Vendor Specific Registers ");
-> 
-> -	/* sleep a bit intermittently as we are dumping too much data */
->  	ufs_qcom_print_hw_debug_reg_all(hba, NULL, 
-> ufs_qcom_dump_regs_wrapper);
-> -	udelay(1000);
-> -	ufs_qcom_testbus_read(hba);
-> -	udelay(1000);
-> -	ufs_qcom_print_unipro_testbus(hba);
-> -	udelay(1000);
->  }
-> 
->  /**
+On Mon, Jul 27, 2020 at 12:21 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> Do not use rlimit-based memory accounting for hashtab maps.
+> It has been replaced with the memcg-based memory accounting.
+>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
+Acked-by: Song Liu <songliubraving@fb.com>
+
+> ---
+>  kernel/bpf/hashtab.c | 19 +------------------
+>  1 file changed, 1 insertion(+), 18 deletions(-)
+>
+> diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+> index 9d0432170812..9372b559b4e7 100644
+> --- a/kernel/bpf/hashtab.c
+> +++ b/kernel/bpf/hashtab.c
+> @@ -422,7 +422,6 @@ static struct bpf_map *htab_map_alloc(union bpf_attr *attr)
+>         bool percpu_lru = (attr->map_flags & BPF_F_NO_COMMON_LRU);
+>         bool prealloc = !(attr->map_flags & BPF_F_NO_PREALLOC);
+>         struct bpf_htab *htab;
+> -       u64 cost;
+>         int err;
+>
+>         htab = kzalloc(sizeof(*htab), GFP_USER | __GFP_ACCOUNT);
+> @@ -459,26 +458,12 @@ static struct bpf_map *htab_map_alloc(union bpf_attr *attr)
+>             htab->n_buckets > U32_MAX / sizeof(struct bucket))
+>                 goto free_htab;
+>
+> -       cost = (u64) htab->n_buckets * sizeof(struct bucket) +
+> -              (u64) htab->elem_size * htab->map.max_entries;
+> -
+> -       if (percpu)
+> -               cost += (u64) round_up(htab->map.value_size, 8) *
+> -                       num_possible_cpus() * htab->map.max_entries;
+> -       else
+> -              cost += (u64) htab->elem_size * num_possible_cpus();
+> -
+> -       /* if map size is larger than memlock limit, reject it */
+> -       err = bpf_map_charge_init(&htab->map.memory, cost);
+> -       if (err)
+> -               goto free_htab;
+> -
+>         err = -ENOMEM;
+>         htab->buckets = bpf_map_area_alloc(htab->n_buckets *
+>                                            sizeof(struct bucket),
+>                                            htab->map.numa_node);
+>         if (!htab->buckets)
+> -               goto free_charge;
+> +               goto free_htab;
+>
+>         if (htab->map.map_flags & BPF_F_ZERO_SEED)
+>                 htab->hashrnd = 0;
+> @@ -508,8 +493,6 @@ static struct bpf_map *htab_map_alloc(union bpf_attr *attr)
+>         prealloc_destroy(htab);
+>  free_buckets:
+>         bpf_map_area_free(htab->buckets);
+> -free_charge:
+> -       bpf_map_charge_finish(&htab->map.memory);
+>  free_htab:
+>         kfree(htab);
+>         return ERR_PTR(err);
+> --
+> 2.26.2
+>
