@@ -2,107 +2,84 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59BCC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DB0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B88B3206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDEDD206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbgG1U5T (ORCPT
+        id S1729236AbgG1U7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:57:19 -0400
-Received: from elvis.franken.de ([193.175.24.41]:52456 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728202AbgG1U5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 16:57:19 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1k0Wez-0007gK-01; Tue, 28 Jul 2020 22:57:17 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 7636FC0A9B; Tue, 28 Jul 2020 22:51:55 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 22:51:55 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 2/2] MIPS: ingenic: Enable JZ4780_NEMC manually
-Message-ID: <20200728205155.GB22052@alpha.franken.de>
-References: <20200728104503.23655-1-krzk@kernel.org>
- <20200728104503.23655-2-krzk@kernel.org>
- <B4F6EQ.WB2WZOY40FDR@crapouillou.net>
- <20200728111935.GA26683@kozik-lap>
- <20200728113702.GB13443@alpha.franken.de>
- <20200728120035.GA28766@kozik-lap>
- <NPJ6EQ.I4K2FZ2BHH1E@crapouillou.net>
- <20200728125308.GA344@kozik-lap>
+        Tue, 28 Jul 2020 16:59:50 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:34489 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728728AbgG1U7t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 16:59:49 -0400
+Received: from dante.cb.ettle ([143.159.226.70]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.179]) with ESMTPSA (Nemesis) id
+ 1N4Q4m-1kk9592UdC-011ScG; Tue, 28 Jul 2020 22:57:57 +0200
+Message-ID: <e051ac790380f04be4eec6937032b7dcd411ec77.camel@ettle.org.uk>
+Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
+From:   James Ettle <james@ettle.org.uk>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     =?UTF-8?Q?=E5=90=B3=E6=98=8A=E6=BE=84?= Ricky 
+        <ricky_wu@realtek.com>, Rui Feng <rui_feng@realsil.com.cn>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <lenb@kernel.org>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jacopo De Simoi <wilderkde@gmail.com>
+Date:   Tue, 28 Jul 2020 21:57:55 +0100
+In-Reply-To: <20200727214712.GA1777201@bjorn-Precision-5520>
+References: <20200727214712.GA1777201@bjorn-Precision-5520>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4 (3.36.4-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200728125308.GA344@kozik-lap>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:ngSr6pffow2MrQKByZsOgkOjw+48NYsh/QNN7LLUjsPAUCqjVX8
+ tL1Q5y77Y/Bs2y+PjxM3AhKLg7QCGAYBHkpKPbeoKgVN8NP/QG2k/yRXk5++m3OetQh41Ya
+ DJ9/QeTBamu7kmt8fHgxdHGFq50o1X95ELCiESFFKaeYfotykVdh+uABvrcDJjdSac5fzVX
+ uWHE9VjHfUjE5Zz/8vLvw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:I1+llK0lwZA=:1+7ikQm0qnZ3cRtuwgvMtX
+ xVzHZJ6LvJC74PFGUjYCPmw3FKUWyqLBJQMp0zpRCSj43yEiwBsyFbTfNv/B+8Wkoeb2zzpGy
+ GhCVDU1/m5pBYkJzF5gawSoJPIOSgVbY8K4iIJ8e3ByWO/wY1J9sVydnsXDsmzq2o3orfIp+s
+ 50xonzRQw0XJL9rMHfWjydEYRz9FG6NsVB/KHtktEgtGHm+8enL+TvaG0aAbE5brVgZC2DH5z
+ cGXfdFdylZrWxk+mK6tOFGIL00ZAd/mJZXBuh+/yk8SWyDUMT8OXVumjEISQygo28sh5Mdj4g
+ 6q+2OjpjYZrPlpdmN1gug540sln/YMFlpaNsl1ci+K9wFPQ693Lob5A0XUH6IXnyhOGPncsMF
+ mepD7X7E1QWOxMLXlolu1pbD6gsLlvTzysFnnJwx1OzY2y/G/lFbu/kQtLnOHX/iy/SZ0iZFp
+ ag4VHsTYBGUZI37IKeyDAECD86XZXh9VWLQvyUF6V0oWqcq4zcdcnQyiHpHufB9cHzLJGVqcA
+ ZDImJnreNYTTQQwYM7odkgnMyEax4axPqNweoGdeNYPREP4LTFloRFh1cMF6G/8j6jRIIA/S0
+ Cmz91i9mqs40hGtCEieLqMhsU+wMUeJh9F2xtQESk0x9s13MWs1FSEsATuc2f24eyjJrjsK5g
+ fNP9TRaWl6HKmE5bGCZnu57fruv4HdDYBE6bxQhETFzgoydlWx6F//luMGPvEZOJ5R8nyNpI8
+ /Kndv/TTIPcPa7eLH/79LABiQ7hmWKL78/+LDZ4n+myEyIxCUlF7OuwDPad+K+NIMN/6kX4pv
+ +aHhPB53pBMOfBaOpK99C/NMnnrsHscaKPHzeQ9xAqLMczpHuD5o03ee0Gd1y7kt4ZFjDhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 02:53:08PM +0200, Krzysztof Kozlowski wrote:
-> On Tue, Jul 28, 2020 at 02:51:23PM +0200, Paul Cercueil wrote:
-> > 
-> > 
-> > Le mar. 28 juil. 2020 à 14:00, Krzysztof Kozlowski <krzk@kernel.org> a écrit
-> > :
-> > > On Tue, Jul 28, 2020 at 01:37:02PM +0200, Thomas Bogendoerfer wrote:
-> > > >  On Tue, Jul 28, 2020 at 01:19:35PM +0200, Krzysztof Kozlowski wrote:
-> > > >  > On Tue, Jul 28, 2020 at 01:12:11PM +0200, Paul Cercueil wrote:
-> > > >  > > Hi Krzysztof,
-> > > >  > >
-> > > >  > > Le mar. 28 juil. 2020 à 12:45, Krzysztof Kozlowski
-> > > > <krzk@kernel.org> a écrit
-> > > >  > > :
-> > > >  > > > The CONFIG_JZ4780_NEMC was previously a default on MIPS but
-> > > > now it has
-> > > >  > > > to be enabled manually.
-> > > >  > > >
-> > > >  > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > >  > >
-> > > >  > > I think you should swap the two so that there are no problems
-> > > > when
-> > > >  > > bisecting.
-> > > >  >
-> > > >  > Good point. I was thinking that it will go via some of MIPS trees
-> > > > and
-> > > >  > the patch #1 will just wait a cycle.  However with acks, I can
-> > > > take it
-> > > >  > through drivers/memory tree.
-> > > > 
-> > > >  I've acked the patch.
-> > > > 
-> > > >  Thomas.
-> > > 
-> > > Thanks but now I noticed that one of changed configs
-> > > (arch/mips/configs/rs90_defconfig) is only in MIPS tree.
-> > > 
-> > > I think it is easier then to take the patch #2 (configs) via MIPS and
-> > > wait with #1 for the next cycle or also take it via MIPS if it applies
-> > > cleanly.
-> > 
-> > Why not take them both in the MIPS tree then? Would that conflict with
-> > changes in your tree?
+On Mon, 2020-07-27 at 16:47 -0500, Bjorn Helgaas wrote:
 > 
-> Exactly (last part of my sentence). There should be no conflicts.
+> I don't see anything in rtsx that enables L0s.  Can you collect the
+> dmesg log when booting with "pci=earlydump"?  That will show whether
+> the BIOS left it this way.  The PCI core isn't supposed to do this,
+> so
+> if it did, we need to fix that.
+> 
 
-I've applied both patches to mips-next.
+dmesg log attached to the bugzilla as:
 
-Thomas.
+https://bugzilla.kernel.org/attachment.cgi?id=290655
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+(to keep everything in one place).
+
+Thanks,
+-James
+
