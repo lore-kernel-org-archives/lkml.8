@@ -2,198 +2,191 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BA4C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB8E20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:05:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595916344;
-	bh=wUcRh1alC1nmJdjxU/quIxyAxC+5YyHs0Sj2210Arn0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=UTH2/SeRO1tnraclz9EzTQIaT+jTe0pcVaiXuy/2Svp6pr8LHydFwqvfo8Y6T7lfq
-	 pgVP1hmuDQpUENCRdUBabDMNP0qAMM3UzG//yWLL8xnq0a6p+UxSIOx8O/MZk/H5fl
-	 cm1HTAXannnYPvttMPzfGzOcRnsYI7xLdv8wRyks=
+	by mail.kernel.org (Postfix) with ESMTP id 233D220759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:11:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="f7W+MZS+";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="lReO2LoM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgG1GFm (ORCPT
+        id S1727050AbgG1GL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:05:42 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:40778 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgG1GFm (ORCPT
+        Tue, 28 Jul 2020 02:11:58 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:27844 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726407AbgG1GL5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:05:42 -0400
-Received: by mail-ej1-f68.google.com with SMTP id o18so19401099eje.7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 23:05:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=b4IbY9WUyckchLHsneUtoMbWbn+o5rLWzdBmrGROULY=;
-        b=BG+33hyFYo2mqZ4Drt4rk2LpoZpmv2mBmYb7QSE0iBNJ6skG7P1rTIRoLOEFlHcFZb
-         Th2r40hyZkN3fBUOwieYrvTdiq/aRP8gR0MQ5MUzP4K8TAIY7WcswAXNJmGzpK34Datv
-         qAB4vlLUg0m7mJ1U/cWKedo3+usYq/AkaUZJ18/zVdNctjfoBKP5z64/UxphvQGlC0Cw
-         z08EzxD5g5FhXc8I+A2Q1NLgxVTbanWlQzcDm5TY1CJD6GUewTAqMz5QW//ibV4iktA2
-         psCfs70GY20SDJTj9ZuHopXZTQIIUs4kks41yi180RkE36u+ptysSMrO5s99OZIiSWX3
-         m0Cw==
-X-Gm-Message-State: AOAM530ooaMcieC/HRW4uecmb2j9IcJePvqWxxSo7sd8B2HES0yAD2O/
-        hbgilHnNjHo6Tl4ZYXfZvqzv390i
-X-Google-Smtp-Source: ABdhPJxEzM2UngoUfb1xAA3sdiwe32+/omIzoWBV376Jycyk4uTR7yNdWtrf0TeqLh1C/J3xoHSG/g==
-X-Received: by 2002:a17:906:8417:: with SMTP id n23mr23554813ejx.192.1595916337919;
-        Mon, 27 Jul 2020 23:05:37 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id i8sm9018291edt.19.2020.07.27.23.05.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 23:05:37 -0700 (PDT)
-Subject: Re: [PATCH] tty/synclink: remove leftover bits of non-PCI card
- support
-To:     Christoph Hellwig <hch@lst.de>, gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20200727130501.31005-1-hch@lst.de>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <8a015ca4-e837-8fa5-684c-46fca8104ea5@kernel.org>
-Date:   Tue, 28 Jul 2020 08:05:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200727130501.31005-1-hch@lst.de>
-Content-Type: text/plain; charset=iso-8859-2
+        Tue, 28 Jul 2020 02:11:57 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 06S6A760010007;
+        Mon, 27 Jul 2020 23:11:43 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=JAEBT4DeFTJJp4SAa7DKz5Y7Sd3AyBOZqjEh739OSVA=;
+ b=f7W+MZS+zCFRTXaP9wlTq5cI4UXfC1RyShrzBl2lCL0xadr1pbFU09+ExhIM8RyzKpZy
+ rfV1C2G+bYfuczHOW3YMBVrFnvb4C6gInxD2rEvT5qEkjS53v/V92nbBM8faE5HHj0c2
+ E1ptUgXedlf5PNSPXdiOst1WVGvIWOQt4hY= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by m0089730.ppops.net with ESMTP id 32gg7xts4e-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 27 Jul 2020 23:11:42 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 27 Jul 2020 23:11:32 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NxBpU3XaFfkCxl38/4+e6Mg/zz5kc5TKXnr2WuAuDh0tG8RN2CkGeV4z5Ov89QgI3pYBbmMEFeKSg8J9oy+YKw4Iut71LOQNN7LXUE9lcAbFIQ9w51NCu4cE1vPJrUSNx0clW4toW7WJ3UKa5H+SyBNZt/xOD32DgS4fl3XJn/QwsIj0iyCpE5wSWd7NclgR5pPsKxFKlCncHOBpa7/kY+eH4HiYue8Z0MZGMZHinY1aBAlACazECxGfFTCtcZdxD2VMs4Qcg99pV3yetd7u7SKPra8Y9nDXkFvfNZuOARrHwjsyna1kgORdvfOpcNK5dyKALTk0rVN4GZ+37K2PiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JAEBT4DeFTJJp4SAa7DKz5Y7Sd3AyBOZqjEh739OSVA=;
+ b=CymVNgleEYXAyTmrAD7ovkFKJVW8xDfPR7aGttIwUAJkXk4Qdb7j8im1YaiBU1doRqw68LyZmN0++QdFp1KnPmtReaqJqQq+CzE6sEoxsWw/fx9I1P/+lQ8WHkGens/f5X1t7bWIedrXVsfzI8A+l9nUMGfYs8GHUXA1/GFuRxvQh2yNfljqRDBBb+DYF7PIpicxeOxaRWoqOTV/ygc1SBtHoUcvqhh7f05DWSRv03PiLw3ixUg5r9oLXYWyzNgBQyo4X6L1H4ZvxHHJci27ybMuPWLmNM+khycE+fe/RGnHwuCl1K8wMobJd9svJ7OcPd5mJYdSah2LjBQHWlSlkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JAEBT4DeFTJJp4SAa7DKz5Y7Sd3AyBOZqjEh739OSVA=;
+ b=lReO2LoMuRK0/DjBsWXdFGlF5twwen9bTxxjSTtIk9ca799uYKDEF0eLV26udMBEK7uVb5/P5lWVA+ZyfecBvwQn+tTfdzPhSyYWIkK4aRXcvYVUEwmYvex7wKkJFGSdnb0W/tXIZSpU5onLLumoU8BMsyKswiyyGrlBdz9rceY=
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
+ by BYAPR15MB3046.namprd15.prod.outlook.com (2603:10b6:a03:fa::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Tue, 28 Jul
+ 2020 06:11:17 +0000
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::543:b185:ef4a:7e8]) by BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::543:b185:ef4a:7e8%5]) with mapi id 15.20.3216.034; Tue, 28 Jul 2020
+ 06:11:16 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC:     Roman Gushchin <guro@fb.com>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf-next v2 32/35] bpf: selftests: delete bpf_rlimit.h
+Thread-Topic: [PATCH bpf-next v2 32/35] bpf: selftests: delete bpf_rlimit.h
+Thread-Index: AQHWZEZCJ8RCuONiBk2bTp6gKFH2SqkcggeAgAABOgA=
+Date:   Tue, 28 Jul 2020 06:11:16 +0000
+Message-ID: <C739D492-23E2-4823-8A9A-81BF00FD450E@fb.com>
+References: <20200727184506.2279656-1-guro@fb.com>
+ <20200727184506.2279656-33-guro@fb.com>
+ <CAEf4BzbCzEOKx2GMOcp6CTxBBN+BRAY-Z_mCJ26hoSto956KBQ@mail.gmail.com>
+In-Reply-To: <CAEf4BzbCzEOKx2GMOcp6CTxBBN+BRAY-Z_mCJ26hoSto956KBQ@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3608.80.23.2.2)
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
+x-originating-ip: [2620:10d:c090:400::5:395d]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d19bde36-3b03-45c5-acb9-08d832bd09db
+x-ms-traffictypediagnostic: BYAPR15MB3046:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR15MB30466E7A8FDB4CBC87A92ACDB3730@BYAPR15MB3046.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zhAWJa8qgCn7lZ7ZzlmJ5KBpFVmuofceW6dzYlEO8y2KSYo7FT/pLDAJsYXc6CcrHEAJtBV6Cf5WRfjn4WHSOa6NKVKrFaA10H+vUg9hsy6j1P7/I4J9XsR6NrGJf1ycMco40WBChwkdwNQL905ordrvFgdDAS99M7FK/OvzcUlqcbNCWj0wMdBy+Jmm9wb2OqPIz30B8lmCcw9w22p5pxaYtHzoV3S+bV5bTOM9SSpK3v9ImpoYFuSJBqi6OqElRLcrcio2X19KLz6lc8xOkml15SoEUcRgkzbZT0R0U3aKPuo/9mPuTVvWhSj+IY1HdLPFEub8efnsLHsO2ReVYQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(136003)(346002)(396003)(39860400002)(83380400001)(66946007)(64756008)(8936002)(66446008)(66476007)(66556008)(2906002)(76116006)(6512007)(8676002)(186003)(478600001)(53546011)(2616005)(316002)(6486002)(6506007)(36756003)(86362001)(71200400001)(5660300002)(6916009)(4326008)(33656002)(54906003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 5i6joeKpVqaAoAB91rq8NdzsknukQdy6OYDV/NJBmg07oYIbOaQBulQf3jXqyhTn0w/9GXv9opHYYBqR63c78bhb9P9sNzD+qJPhpyy8Qb2kEBp8x8QEj7Uosp9b2/lPi8PVkctXfNXU93FgUV5BNqaG2hqTfEwXcS3s0ftUqO8FgFTQhanI2liHB3izs5GjPIyVylNGMkcm8ATXZTWa0GAVSin8kLS2CfPDybfdyjOwPkcxvOtj/egu2zIJH+8flzNnxD4kNEfdOzYNy4lrF6NlrfNTud/RnFvlbbgLR5a43dFlB+GWbKhc4KJ9hf9DySekTmGxC7v9+QYowJhXEFCIovwdhto7DsZrQMVtgvm8UxZifIjfDOUzbJ5xJV4EKgRubQG4H9JqWGFeuhC/i3MLZ10tK5F0u85/RV/p7zLAEDg2OowTpiI8kbIyZ3apQ444g0rwGloCt3O9AjvAyUtQpwyZQIRA1mZEWkvJhiMMTt+D8eBiae1lgzYcZnfXa9p88d/Ck+D6LhHJOa/JJQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E8760BD57A70A14CB1C63BE14E681951@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d19bde36-3b03-45c5-acb9-08d832bd09db
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 06:11:16.6395
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 15DhWErW0ndH86a1M7/SfQet7xB7dDa7Ssl6D6OUsleSxskZ9yqfg64jZe019yLtp7RHyClkaEGGjr1urz+5gA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3046
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-28_01:2020-07-27,2020-07-28 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 clxscore=1015
+ spamscore=0 adultscore=0 phishscore=0 mlxscore=0 bulkscore=0
+ mlxlogscore=999 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007280048
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27. 07. 20, 15:05, Christoph Hellwig wrote:
-> Since commit 1355cba9c3ba ("tty/synclink: remove ISA support"), the
-> synlink driver only supports PCI card.  Remove any leftover dead code
-> to support other cards.
 
-So now you can remove also the defines and bus_type completely:
-$ git grep -E 'MGSL_BUS_TYPE_(E?ISA|PCI)'
-drivers/tty/synclink_gt.c:              info->bus_type = MGSL_BUS_TYPE_PCI;
-drivers/tty/synclinkmp.c:               info->bus_type = MGSL_BUS_TYPE_PCI;
-include/uapi/linux/synclink.h:#define MGSL_BUS_TYPE_ISA 1
-include/uapi/linux/synclink.h:#define MGSL_BUS_TYPE_EISA        2
-include/uapi/linux/synclink.h:#define MGSL_BUS_TYPE_PCI 5
 
-$ git grep -w bus_type drivers/tty/synclink*
-drivers/tty/synclink_gt.c:      unsigned int bus_type;
-drivers/tty/synclink_gt.c:              info->bus_type = MGSL_BUS_TYPE_PCI;
-drivers/tty/synclinkmp.c:       unsigned int bus_type;
-/* expansion bus type (ISA,EISA,PCI) */
-drivers/tty/synclinkmp.c:               info->bus_type = MGSL_BUS_TYPE_PCI;
+> On Jul 27, 2020, at 11:06 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com>=
+ wrote:
+>=20
+> On Mon, Jul 27, 2020 at 12:25 PM Roman Gushchin <guro@fb.com> wrote:
+>>=20
+>> As rlimit-based memory accounting is not used by bpf anymore,
+>> there are no more reasons to play with memlock rlimit.
+>>=20
+>> Delete bpf_rlimit.h which contained a code to bump the limit.
+>>=20
+>> Signed-off-by: Roman Gushchin <guro@fb.com>
+>> ---
+>=20
+> We run test_progs on old kernels as part of libbpf Github CI. We'll
+> need to either leave setrlimit() or do it conditionally, depending on
+> detected kernel feature support.
 
-> --- a/drivers/tty/synclink.c
-> +++ b/drivers/tty/synclink.c
-...
-> @@ -4040,58 +3977,40 @@ static int mgsl_claim_resources(struct mgsl_struct *info)
-...
-> -	} else {
-> -		/* claim DMA channel */
-> +	if ( !mgsl_memory_test(info) ) {
-> +		printk( "%s(%d):Failed shared memory test %s MemAddr=%08X\n",
-> +			__FILE__,__LINE__,info->device_name, info->phys_memory_base );
-> +		goto errout;
-> +	}
->  		
-> -		if (request_dma(info->dma_level,info->device_name) < 0){
-> -			printk( "%s(%d):Can't request DMA channel on device %s DMA=%d\n",
-> -				__FILE__,__LINE__,info->device_name, info->dma_level );
-> -			goto errout;
-> -		}
-> -		info->dma_requested = true;
-> -
-> -		/* ISA adapter uses bus master DMA */		
-> -		set_dma_mode(info->dma_level,DMA_MODE_CASCADE);
-> -		enable_dma(info->dma_level);
-> +	info->lcr_base = ioremap(info->phys_lcr_base, PAGE_SIZE);
-> +	if (!info->lcr_base) {
-> +		printk( "%s(%d):Can't map LCR memory on device %s MemAddr=%08X\n",
-> +			__FILE__,__LINE__,info->device_name, info->phys_lcr_base );
-> +		goto errout;
->  	}
-> -	
-> +	info->lcr_base += info->lcr_offset;
-> +		
+Hmm... I am surprised that running test_progs on old kernels is not=20
+too noisy. Have we got any issue with that?
 
-Could you fix up the whitespace git show warns about (git show outputs
-red background, if you use colors). Like this one? It looks like you
-added one more \t on an empty line here.
+Thanks,
+Song
 
->  	if ( mgsl_allocate_dma_buffers(info) < 0 ) {
->  		printk( "%s(%d):Can't allocate DMA buffers on device %s DMA=%d\n",
->  			__FILE__,__LINE__,info->device_name, info->dma_level );
-> @@ -4200,16 +4119,10 @@ static void mgsl_add_device( struct mgsl_struct *info )
->  	else if ( info->max_frame_size > 65535 )
->  		info->max_frame_size = 65535;
->  	
-> -	if ( info->bus_type == MGSL_BUS_TYPE_PCI ) {
-> -		printk( "SyncLink PCI v%d %s: IO=%04X IRQ=%d Mem=%08X,%08X MaxFrameSize=%u\n",
-> -			info->hw_version + 1, info->device_name, info->io_base, info->irq_level,
-> -			info->phys_memory_base, info->phys_lcr_base,
-> -		     	info->max_frame_size );
-> -	} else {
-> -		printk( "SyncLink ISA %s: IO=%04X IRQ=%d DMA=%d MaxFrameSize=%u\n",
-> -			info->device_name, info->io_base, info->irq_level, info->dma_level,
-> -		     	info->max_frame_size );
-> -	}
-> +	printk( "SyncLink PCI v%d %s: IO=%04X IRQ=%d Mem=%08X,%08X MaxFrameSize=%u\n",
-> +		info->hw_version + 1, info->device_name, info->io_base, info->irq_level,
-> +		info->phys_memory_base, info->phys_lcr_base,
-> +	     	info->max_frame_size );
+>=20
+>> samples/bpf/hbm.c                             |  1 -
+>> tools/testing/selftests/bpf/bpf_rlimit.h      | 28 -------------------
+>> .../selftests/bpf/flow_dissector_load.c       |  1 -
+>> .../selftests/bpf/get_cgroup_id_user.c        |  1 -
+>> .../bpf/prog_tests/select_reuseport.c         |  1 -
+>> .../selftests/bpf/prog_tests/sk_lookup.c      |  1 -
+>> tools/testing/selftests/bpf/test_btf.c        |  1 -
+>> .../selftests/bpf/test_cgroup_storage.c       |  1 -
+>> tools/testing/selftests/bpf/test_dev_cgroup.c |  1 -
+>> tools/testing/selftests/bpf/test_lpm_map.c    |  1 -
+>> tools/testing/selftests/bpf/test_lru_map.c    |  1 -
+>> tools/testing/selftests/bpf/test_maps.c       |  1 -
+>> tools/testing/selftests/bpf/test_netcnt.c     |  1 -
+>> tools/testing/selftests/bpf/test_progs.c      |  1 -
+>> .../selftests/bpf/test_skb_cgroup_id_user.c   |  1 -
+>> tools/testing/selftests/bpf/test_sock.c       |  1 -
+>> tools/testing/selftests/bpf/test_sock_addr.c  |  1 -
+>> .../testing/selftests/bpf/test_sock_fields.c  |  1 -
+>> .../selftests/bpf/test_socket_cookie.c        |  1 -
+>> tools/testing/selftests/bpf/test_sockmap.c    |  1 -
+>> tools/testing/selftests/bpf/test_sysctl.c     |  1 -
+>> tools/testing/selftests/bpf/test_tag.c        |  1 -
+>> .../bpf/test_tcp_check_syncookie_user.c       |  1 -
+>> .../testing/selftests/bpf/test_tcpbpf_user.c  |  1 -
+>> .../selftests/bpf/test_tcpnotify_user.c       |  1 -
+>> tools/testing/selftests/bpf/test_verifier.c   |  1 -
+>> .../testing/selftests/bpf/test_verifier_log.c |  2 --
+>> 27 files changed, 55 deletions(-)
+>> delete mode 100644 tools/testing/selftests/bpf/bpf_rlimit.h
+>>=20
+>=20
+> [...]
 
-Or here, there is \t, 4 spaces and \t again.
-
-thanks,
--- 
-js
