@@ -2,75 +2,69 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAA3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765E4C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E28D207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54D552070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:32:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HiYjCKJ7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O6EF1b8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbgG1Hb7 (ORCPT
+        id S1727937AbgG1Hcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:31:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55708 "EHLO
+        Tue, 28 Jul 2020 03:32:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbgG1Hb6 (ORCPT
+        with ESMTP id S1727801AbgG1Hcp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:31:58 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75C76C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:31:58 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id a17so9662305vsq.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:31:58 -0700 (PDT)
+        Tue, 28 Jul 2020 03:32:45 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32449C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:32:45 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id b127so6729998ybh.21
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:32:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZbFCXvxP+fFHGR4N/FgG+HjU9RmHsV1+bMr4E/Gbzz4=;
-        b=HiYjCKJ7qFiquKjeAi7xfxFQDgvUCQ+Y/xpb3aC0T02t3qOFfixU4TbXF+sBtFkuA9
-         /dvL6yzxt9qBuGXSWLtO3q96Nm11IG9KiFmtoGQErPRmVG8bxmglI3oIbXwP2YophnOw
-         nqILny8rMxCHUBb10ViKuLo6/rfGYsetOjhaGRGfRdK3vZUsKKyUHD81jOHgJvyFikUM
-         DGNg57rlZJU5MGw9kJ9C4FrOW8XJN1UaIE8G6Xx0xZaJKWWCxhRvMPCnr2tjJYjyB/Vi
-         dYIV9lPP3JaR+4as2vaAWb9H2THCBRDzv3cbGt4Hj05sV770Q9MkPpwodXIQUu/HheT2
-         ByUQ==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=DpK+2SdGdyPZ4USsui5L2+ozA8NnkYVB7Ef4YkZgDHI=;
+        b=O6EF1b8YQUuAnfH+V0f3DoV1MARX+vycSPRUCvp6ysS9A3x0lF8kEzkMXv35N76c90
+         byeVulwqilohyz8z2O79ZhVDirzVMbSoJNS9qpBzhqt8nW5JK6BavAsV+1WDeGRpl7HG
+         Zzo1VdPrhrDH6QXVMFZniMXX+fEvzs/KTSinx0o5GPE7gmdsc2YxVWONDLw3yQUecNPk
+         bIPhUqb+/3iC73Nj8AfdJikTicZSbBTR6yhn7M+SsrNCTgkfl1XgUoxNNRGClwHNr/se
+         G62RICelzlRFQDS0uZZlqCaBOtP9mJ19AQPlJONgJLohvwTGI61jZbMnitslv4aZ6UVG
+         NlLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZbFCXvxP+fFHGR4N/FgG+HjU9RmHsV1+bMr4E/Gbzz4=;
-        b=PzPr5MWz4Rnro4SGfokLHCcHGrTW+BpwCagbOEy6LkxTrKd9cjLS5Wcj9LNHl+vmzP
-         4mS+aONW2G61uz80TCd8O6kYRPq2dCDvsgaAfv3gCxnmXOW1kHvE6nhxSpstVFyTmVNc
-         k3IcNdPkczPv2H9VGYu3VbNzbRGhT1iqEnEl5urthJkQFkBXITH7HksbAB9eJFSArPlB
-         2k3RRs2KQbBB/fKRYJeCq76FPXQ4EGhswLfotXZ1ZbX6mlC5qzGNe31dO3Po7MoblE0h
-         hZeDk2QsKQQB/YvEIbv1aAHxDKbY+LjTmmhGVbP/foc/k0BopjYghhgTU9cQgHG5UHF1
-         bWNQ==
-X-Gm-Message-State: AOAM5324boLIvWgKhR58YO1fJbJUuNUMEajdw+xGGJtNAx2YDDdW3AJh
-        tFoGGsZ2k277Rwob8B2OrdBFaXT+Ev1Agmsuow/zH8LYHw6tyQ==
-X-Google-Smtp-Source: ABdhPJy5KcCcYrS0tQ9VwURE39nUC89Gqy5ZFM+Ty7HbgwYuTRut4e4O6KLZKzMWG6dwNLbDDoHY+UPqvoo5g2kBFpg=
-X-Received: by 2002:a67:fbd6:: with SMTP id o22mr18393761vsr.120.1595921517278;
- Tue, 28 Jul 2020 00:31:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200727134925.228313570@linuxfoundation.org>
-In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 28 Jul 2020 13:01:45 +0530
-Message-ID: <CA+G9fYt10HsK+=LpunPzguWoQB4WbMaBkTuSCh1diE0QFmfGyA@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/138] 5.4.54-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=DpK+2SdGdyPZ4USsui5L2+ozA8NnkYVB7Ef4YkZgDHI=;
+        b=X3mxyXd+3R63MJyOexSysc+2WKYovIIxSfPsoi2PxkZ2SWY3BU7d0nKtw5TX+XlCrf
+         Yq55MWPnuUngE1c86Ce8Y5L+SLdQ1a+P1fQqotPM/FYUpWAMCXg3K2rdKR6tSDJfRK5t
+         wfYyUOZdykvJ/zeHzjO0D6HVQFWiAnijwFp/P1ICTQ77spZj30rLTGMXI4CTi5QRW2fA
+         uYvxWOmLJR8conFUYKisNl0xKx7nBIpq2ekU8mcIcp4ROTuZv//ODXmbvnAh7Tfy5XB5
+         ax5wJrmdl4Ew0pgxmq53pHppXmGFpwJ+isn3DBqVTMWPSmLkdZzYaKQFNe84w2ClOk6R
+         V2SQ==
+X-Gm-Message-State: AOAM5303vS3OA/+8zd1n8aMeVcDsscSub00v8YggmUQ/iAjJg57Fch/8
+        m8icBFSfFegCYCqgIOHsijqBSfs6ogBk
+X-Google-Smtp-Source: ABdhPJxJoSMx7T9ET5f8UjAYX2Cky5oBQZ764w5cRoTcjaSql758njpgCfITmUIx4xDcLbkEKvqGw85UDW0i
+X-Received: by 2002:a5b:992:: with SMTP id c18mr41024065ybq.252.1595921564297;
+ Tue, 28 Jul 2020 00:32:44 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 00:32:41 -0700
+Message-Id: <20200728073241.3625015-1-gthelen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+Subject: [PATCH] selftests: more general make nesting support
+From:   Greg Thelen <gthelen@google.com>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Greg Thelen <gthelen@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,117 +72,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020 at 19:48, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.54 release.
-> There are 138 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 29 Jul 2020 13:48:51 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.54-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+selftests can be built from the toplevel kernel makefile (e.g. make
+kselftest-all) or directly (make -C tools/testing/selftests all).
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+The toplevel kernel makefile explicitly disables implicit rules with
+"MAKEFLAGS +=3D -rR", which is passed to tools/testing/selftests.  Some
+selftest makefiles require implicit make rules, which is why
+commit 67d8712dcc70 ("selftests: Fix build failures when invoked from
+kselftest target") reenables implicit rules by clearing MAKEFLAGS if
+MAKELEVEL=3D1.
 
-Summary
-------------------------------------------------------------------------
+So far so good.  However, if the toplevel makefile is called from an
+outer makefile then MAKELEVEL will be elevated, which breaks the
+MAKELEVEL equality test.
+Example wrapped makefile error:
+  $ cat ~/Makefile
+  all:
+  	$(MAKE) defconfig
+  	$(MAKE) kselftest-all
+  $ make -sf ~/Makefile
+    futex_wait_timeout.c /src/tools/testing/selftests/kselftest_harness.h  =
+ /src/tools/testing/selftests/kselftest.h ../include/futextest.h ../include=
+/atomic.h ../include/logging.h -lpthread -lrt -o /src/tools/testing/selftes=
+ts/futex/functional/futex_wait_timeout
+  make[4]: futex_wait_timeout.c: Command not found
 
-kernel: 5.4.54-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 7a4613493cc30754cf5159b126623d26314454bd
-git describe: v5.4.53-139-g7a4613493cc3
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.53-139-g7a4613493cc3
+Rather than checking $(MAKELEVEL), check for $(LINK.c), which is a more
+direct side effect of "make -R".  This enables arbitrary makefile
+nesting.
 
-No regressions (compared to build v5.4.53)
+Signed-off-by: Greg Thelen <gthelen@google.com>
+---
+ tools/testing/selftests/Makefile | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-No fixes (compared to build v5.4.53)
-
-Ran 35091 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kvm-unit-tests
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* network-basic-tests
-* kselftest/net
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* ssuite
-
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Mak=
+efile
+index 1195bd85af38..289a2e4b3f6f 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -84,10 +84,10 @@ endif
+ # of the targets gets built.
+ FORCE_TARGETS ?=3D
+=20
+-# Clear LDFLAGS and MAKEFLAGS if called from main
+-# Makefile to avoid test build failures when test
+-# Makefile doesn't have explicit build rules.
+-ifeq (1,$(MAKELEVEL))
++# Clear LDFLAGS and MAKEFLAGS when implicit rules are missing.  This provi=
+des
++# implicit rules to sub-test Makefiles which avoids build failures in test
++# Makefile that don't have explicit build rules.
++ifeq (,$(LINK.c))
+ override LDFLAGS =3D
+ override MAKEFLAGS =3D
+ endif
 --=20
-Linaro LKFT
-https://lkft.linaro.org
+2.28.0.rc0.142.g3c755180ce-goog
+
