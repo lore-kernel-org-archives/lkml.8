@@ -2,175 +2,266 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48639C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FC1C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF9A2083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E22D206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:11:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="uLfkoqS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbgG1MHe (ORCPT
+        id S1729077AbgG1MLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:07:34 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51848 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728560AbgG1MHe (ORCPT
+        Tue, 28 Jul 2020 08:11:05 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:22622 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728560AbgG1MLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:07:34 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: dafna)
-        with ESMTPSA id 54B30297F53
-Subject: Re: [PATCH v2 0/3] media: vimc: Allow multiple capture devices to use
- the same sensor
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Helen Koike <helen.koike@collabora.com>
-Cc:     kieran.bingham@ideasonboard.com,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
- <20200724121521.GA2705690@oden.dyn.berto.se>
- <20200724122104.GA18482@kaaira-HP-Pavilion-Notebook>
- <a6f4eabf-6cd5-950b-f2e3-853370c77629@ideasonboard.com>
- <2a6cb067-283d-ca65-2698-1fae66a17d02@collabora.com>
- <20200728113959.GA6350@kaaira-HP-Pavilion-Notebook>
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Message-ID: <3a9ac970-77b8-1bc5-536a-5b4f2bd60745@collabora.com>
-Date:   Tue, 28 Jul 2020 14:07:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 08:11:04 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06SC7AiF024873;
+        Tue, 28 Jul 2020 14:10:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=STMicroelectronics;
+ bh=+5nB9GADXKPK20a1oCkaU1lxTo4GEfj7N0qwNz9LeR0=;
+ b=uLfkoqS3YKeq+2Nk0wszWJ6lT2g8KkOQuJIoShT4SUoOZIYCt1iSTshVvw1WuZa0F2p6
+ DgdkhsMwmLlXak1Hx0Lx5yAWheDaDBqv96a+ydlSeL+WHG4uAgGxiC8d7SLoco6DLvbu
+ MS4sdN0BLFgxaVYk7Da4fepVj3nZw8OpGTLUj1GrW3SM2SPrGgNIQOhOA/e4df6Q30Nk
+ jYSgR7FaaWof8y4KR3oW4vC1Avs4W4TenIftvCyetw5DZOoF6RsqbceFHHY17QU/QALI
+ 2YsXvAIz9PGE4xYjj9KFYQGPANUwovHNqWhW6+L+24luoP35yKYVpwP/sSwJXAxP/NHd Tw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32g9v9ebys-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jul 2020 14:10:53 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3840110002A;
+        Tue, 28 Jul 2020 14:10:52 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 256E12C38AF;
+        Tue, 28 Jul 2020 14:10:52 +0200 (CEST)
+Received: from gnbcxd0016.gnb.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jul
+ 2020 14:10:51 +0200
+Date:   Tue, 28 Jul 2020 14:10:50 +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     Wolfram Sang <wsa@kernel.org>
+CC:     Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2 1/2] i2c: smbus: add core function handling SMBus
+ host-notify
+Message-ID: <20200728121050.GC8715@gnbcxd0016.gnb.st.com>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+References: <1593776168-17867-1-git-send-email-alain.volmat@st.com>
+ <1593776168-17867-2-git-send-email-alain.volmat@st.com>
+ <20200725202733.GA946@kunai>
 MIME-Version: 1.0
-In-Reply-To: <20200728113959.GA6350@kaaira-HP-Pavilion-Notebook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200725202733.GA946@kunai>
+X-Disclaimer: ce message est personnel / this message is private
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-28_07:2020-07-28,2020-07-28 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Hi Wolfram,
 
-On 28.07.20 13:39, Kaaira Gupta wrote:
-> On Mon, Jul 27, 2020 at 02:54:30PM -0300, Helen Koike wrote:
->> Hi,
->>
->> On 7/27/20 11:31 AM, Kieran Bingham wrote:
->>> Hi all,
->>>
->>> +Dafna for the thread discussion, as she's missed from the to/cc list.
->>>
->>>
->>> On 24/07/2020 13:21, Kaaira Gupta wrote:
->>>> On Fri, Jul 24, 2020 at 02:15:21PM +0200, Niklas Söderlund wrote:
->>>> Hi,
->>>>
->>>>> Hi Kaaira,
->>>>>
->>>>> Thanks for your work.
->>>>
->>>> Thanks for yours :D
->>>>
->>>>>
->>>>> On 2020-07-24 17:32:10 +0530, Kaaira Gupta wrote:
->>>>>> This is version 2 of the patch series posted by Niklas for allowing
->>>>>> multiple streams in VIMC.
->>>>>> The original series can be found here:
->>>>>> https://patchwork.kernel.org/cover/10948831/
->>>>>>
->>>>>> This series adds support for two (or more) capture devices to be
->>>>>> connected to the same sensors and run simultaneously. Each capture device
->>>>>> can be started and stopped independent of each other.
->>>>>>
->>>>>> Patch 1/3 and 2/3 deals with solving the issues that arises once two
->>>>>> capture devices can be part of the same pipeline. While 3/3 allows for
->>>>>> two capture devices to be part of the same pipeline and thus allows for
->>>>>> simultaneously use.
+I've taken your comments and prepared a new serie including them.
+I'll wait for the conclusion regarding the bindings before pushing it.
+I also have an additional patch ready in order to add again the SMBus Alert
+support within the stm32f7 driver since it has been removed from the
+current serie. Hopefully I can push it once binding is acked so that it
+can get merged also in this cycle.
 
-I wonder if these two patches are enough, since each vimc entity also have
-a 'process_frame' callback, but only one allocated frame. That means
-that the 'process_frame' can be called concurrently by two different streams
-on the same frame and cause corruption.
-
-Thanks,
-Dafna
-
->>>>>
->>>>> I'm just curious if you are aware of this series? It would replace the
->>>>> need for 1/3 and 2/3 of this series right?
->>>>
->>>> v3 of this series replaces the need for 1/3, but not the current version
->>>> (ie v4). v4 of patch 2/5 removes the stream_counter that is needed to
->>>> keep count of the calls to s_stream. Hence 1/3 becomes relevant again.
->>>
->>> So the question really is, how do we best make use of the two current
->>> series, to achieve our goal of supporting multiple streams.
->>>
->>> Having not parsed Dafna's series yet, do we need to combine elements of
->>> both ? Or should we work towards starting with this series and get
->>> dafna's patches built on top ?
->>>
->>> Or should patch 1/3 and 3/3 of this series be on top of Dafna's v4 ?
->>>
->>> (It might be noteworthy to say that Kaaira has reported successful
->>> multiple stream operation from /this/ series and her development branch
->>> on libcamera).
->>
->> Dafna's patch seems still under discussion, but I don't want to block progress in Vimc either.
->>
->> So I was wondering if we can move forward with Vimc support for multistreaming,
->> without considering Dafna's patchset, and we can do the clean up later once we solve that.
->>
->> What do you think?
+> > SMBus Host-Notify protocol, from the adapter point of view
+> > consist of receiving a message from a client, including the
+> > client address and some other data.
+> > 
+> > It can be simply handled by creating a new slave device
+> > and registering a callback performing the parsing of the
+> > message received from the client.
+> > 
+> > This commit introduces two new core functions
+> >   * i2c_new_slave_host_notify_device
+> >   * i2c_free_slave_host_notify_device
+> > that take care of registration of the new slave device and
+> > callback and will call i2c_handle_smbus_host_notify once a
+> > Host-Notify event is received.
+> > 
+> > Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> > ---
+> >  v2: identical to v1
+> > 
+> >  drivers/i2c/i2c-core-smbus.c | 114 +++++++++++++++++++++++++++++++++++++++++++
 > 
-> I agree with supporting multiple streams with VIMC with this patchset,
-> and then we can refactor the counters for s_stream in VIMC later (over
-> this series) if dafna includes them in subsequent version of her patchset.
+> I came to the conclusion that this code should be in i2c-smbus.c.
+> Because it is SMBus only. I agree that the current code layout is
+> confusing. I will try to move the whole host-notify support to i2c-smbus
+> in the next cycle.
 > 
+> Yes, that means that one needs to select I2C_SMBUS in the config, too
+> (unless you want to 'select' it with your driver). But most people won't
+> need it so they can compile it away. This is what I2C_SMBUS is for.
 
-I also think that adding support in the code will take much longer and should not
-stop us from supporting vimc independently.
+Ok, code is now moved into i2c-smbus.c
+In case of the stm32f7 anyway I2C_SMBUS was already selected hence there is no
+impact.
 
-Thanks,
-Dafna
+> > +static int i2c_slave_host_notify_cb(struct i2c_client *client,
+> > +				    enum i2c_slave_event event, u8 *val)
+> > +{
+> > +	struct i2c_slave_host_notify_status *status = client->dev.platform_data;
+> > +	int ret;
+> > +
+> 
+> Can't we simplify 'index' handling similar to the testunit driver...
+> 
+> > +	switch (event) {
+> > +	case I2C_SLAVE_WRITE_REQUESTED:
+> > +		status->index = 0;
+> 
+> ... by removing this line...
+> 
+> > +		break;
+> > +	case I2C_SLAVE_WRITE_RECEIVED:
+> > +		/* We only retrieve the first byte received (addr)
+> > +		 * since there is currently no support to retrieve the data
+> > +		 * parameter from the client.
+> > +		 */
+> > +		if (status->index == 0)
+> > +			status->addr = *val;
+> > +		if (status->index < U8_MAX)
+> > +			status->index++;
+> > +		break;
+> > +	case I2C_SLAVE_STOP:
+> > +		/* Handle host-notify if whole message received only */
+> > +		if (status->index != SMBUS_HOST_NOTIFY_LEN) {
+> > +			status->index = U8_MAX;
+> > +			break;
+> > +		}
+> > +
+> > +		ret = i2c_handle_smbus_host_notify(client->adapter,
+> > +						   status->addr);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +		status->index = U8_MAX;
+> 
+> ... and handling the logic here like:
+> 
+> +		if (status->index == SMBUS_HOST_NOTIFY_LEN)
+> +			i2c_handle_smbus_host_notify(client->adapter, status->addr);
+> +		status->index = 0;
+> 
+> Note that I2C_SLAVE_STOP doesn't return a retval, so we don't need to check
+> i2c_handle_smbus_host_notify().
+> 
+> > +		break;
+> > +	case I2C_SLAVE_READ_REQUESTED:
+> > +	case I2C_SLAVE_READ_PROCESSED:
+> > +		*val = 0xff;
+> > +		break;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/**
+> > + * i2c_new_slave_host_notify_device - get a client for SMBus host-notify support
+> > + * @adapter: the target adapter
+> > + * Context: can sleep
+> > + *
+> > + * Setup handling of the SMBus host-notify protocol on a given I2C bus segment.
+> > + *
+> > + * Handling is done by creating a device and its callback and handling data
+> > + * received via the SMBus host-notify address (0x8)
+> > + *
+> > + * This returns the client, which should be ultimately freed using
+> > + * i2c_free_slave_host_notify_device(); or an ERRPTR to indicate an error.
+> > + */
+> > +struct i2c_client *i2c_new_slave_host_notify_device(struct i2c_adapter *adapter)
+> > +{
+> > +	struct i2c_board_info host_notify_board_info = {
+> > +		I2C_BOARD_INFO("smbus_host_notify", 0x08),
+> > +		.flags  = I2C_CLIENT_SLAVE,
+> > +	};
+> > +	struct i2c_slave_host_notify_status *status;
+> > +	struct i2c_client *client;
+> > +	int ret;
+> > +
+> > +	status = kzalloc(sizeof(struct i2c_slave_host_notify_status),
+> > +			 GFP_KERNEL);
+> > +	if (!status)
+> > +		return ERR_PTR(-ENOMEM);
+> > +	status->index = U8_MAX;
+> 
+> This line could go, too, if my simplification above works.
 
->>
->> Regards,
->> Helen
->>
->>>
->>>
->>>>> 1.  https://lore.kernel.org/linux-media/20200522075522.6190-1-dafna.hirschfeld@collabora.com/
->>>>>
->>>>>>
->>>>>> Changes since v1:
->>>>>> 	- All three patches rebased on latest media-tree.
->>>>>> 	Patch 3:
->>>>>> 	- Search for an entity with a non-NULL pipe instead of searching
->>>>>> 	  for sensor. This terminates the search at output itself.
->>>>>>
->>>>>> Kaaira Gupta (3):
->>>>>>    media: vimc: Add usage count to subdevices
->>>>>>    media: vimc: Serialize vimc_streamer_s_stream()
->>>>>>    media: vimc: Join pipeline if one already exists
->>>>>>
->>>>>>   .../media/test-drivers/vimc/vimc-capture.c    | 35 ++++++++++++++++++-
->>>>>>   .../media/test-drivers/vimc/vimc-debayer.c    |  8 +++++
->>>>>>   drivers/media/test-drivers/vimc/vimc-scaler.c |  8 +++++
->>>>>>   drivers/media/test-drivers/vimc/vimc-sensor.c |  9 ++++-
->>>>>>   .../media/test-drivers/vimc/vimc-streamer.c   | 23 +++++++-----
->>>>>>   5 files changed, 73 insertions(+), 10 deletions(-)
->>>>>>
->>>>>> -- 
->>>>>> 2.17.1
->>>>>>
->>>>>
->>>>> -- 
->>>>> Regards,
->>>>> Niklas Söderlund
->>>
+I've simplified the index handling as you suggested. The only impact is that
+finally we do not consider anymore the I2C_SLAVE_WRITE_REQUESTED event as the
+beginning of the transaction since we don't perform the "reset" of the
+handling upon this event.
+
+> > +void i2c_free_slave_host_notify_device(struct i2c_client *client)
+> > +{
+> > +	i2c_slave_unregister(client);
+> > +	kfree(client->dev.platform_data);
+> > +	i2c_unregister_device(client);
+> > +}
+> > +EXPORT_SYMBOL_GPL(i2c_free_slave_host_notify_device);
+> 
+> Sidenote: With my recent series "i2c: slave: improve sanity checks when
+> un-/registering" this code became NULL-safe (and IS_ERR safe, too).
+
+Sanity test on client added at the beginning of i2c_free_slave_host_notify_device
+in order to ensure that we do not dereference a null pointer.
+
+> > +static inline struct i2c_client *i2c_new_slave_host_notify_device(struct i2c_adapter *adapter)
+> > +{
+> > +	return NULL;
+> 
+> return ERR_PTR(-ENOSYS);
+> 
+> As the docs say, this function either returns a valid client or an
+> ERR_PTR.
+
+Done.
+
+> 
+> > +}
+> > +static inline void i2c_free_slave_host_notify_device(struct i2c_client *client)
+> > +{
+> > +}
+> > +#endif
+> >  
+> >  #if IS_ENABLED(CONFIG_I2C_SMBUS) && IS_ENABLED(CONFIG_DMI)
+> >  void i2c_register_spd(struct i2c_adapter *adap);
+> > -- 
+> > 2.7.4
+> > 
+
+
