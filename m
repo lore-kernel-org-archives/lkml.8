@@ -2,150 +2,159 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF37C43446
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA6DC433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF9C20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180F820714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:06:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="aZjlb1Tl"
+	dkim=pass (2048-bit key) header.d=foundries-io.20150623.gappssmtp.com header.i=@foundries-io.20150623.gappssmtp.com header.b="Rgc3hv+0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgG1KDi (ORCPT
+        id S1728573AbgG1KGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 06:03:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51014 "EHLO
+        Tue, 28 Jul 2020 06:06:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728413AbgG1KDf (ORCPT
+        with ESMTP id S1728496AbgG1KF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 06:03:35 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C72C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:03:34 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id m16so9624121pls.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:03:34 -0700 (PDT)
+        Tue, 28 Jul 2020 06:05:59 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DA27C0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:05:59 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id c80so16739683wme.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:05:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UGsiii/VuwmqPfClt9nZik7lgTCfAI/hYH2Kw3sm0tw=;
-        b=aZjlb1TlqNvnHjgbpdqBb3Zqpxfsv5kqxXU5K0hc7pxtuRjGdbxT99bec2EbRjReh0
-         Lcr0m7kvXywHYDcrxwdqcmRpq06W1qwMj5Ie3iZyNh7vNUwGiVS0iam9CK5iXvt++CU+
-         McY66LsbpIcc74LqmkM6683uVifmqZWHfif+0=
+        d=foundries-io.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=acftKy5haTTez29DldMveP4DByaH/OvKD4GTibGUU4c=;
+        b=Rgc3hv+0TiPIPSmJyeuNzphIlAXlhB57Ndn3MyQQjhGIRo7fBOZm0ddElDeMWTuygZ
+         dRjmlW9ouLZrHpVmLNTsw5F8YzqPnchsPuj2Cp2NtvtEiUwEwfBSoH4odVJmHnJnGvNj
+         ZU7+Jlag9E0ffsFq77QUbAE/vznnG4tQCQ1ivZhMFZdROTfoFMcmOO+b7ZaZB5HMpSv3
+         L5dahpKCwrcOQcp5Rq8BJFAWUEBFhMdwLUSSPyF8G+AbkXhzSUhy0ZUZBukxzZr9VFhi
+         a9ZertakXO+gT9GioNeRWN6ytFTIETHAcEJBIvBse019ratABWkASFXNxtE3aSY/GN1/
+         EZ1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UGsiii/VuwmqPfClt9nZik7lgTCfAI/hYH2Kw3sm0tw=;
-        b=FNDq7jb2K74n44N0F8SQnyC8hiPdfQgmRBbF23vXZY9sK+oKX+YHWGxIChUKTZM9kd
-         EBLD8sMVC+DLaZJBvBivm7CsK0iAsrXXiQKIubl/qnTWkFoWJoAj2LSllJNZCtW4n0BN
-         FqFzK+f5PmClfCBceKArqwaBLWXdDUOa9O0AwWTakLlxFmGXwQmV6st6y2fyIGE5GJcX
-         yoy2ZAxaNj28ddYvMN/5HvOfxDRkyLC4G2oZtBO8Nqet9DuUSb2ln6VAmo7Rlo4nW81/
-         5n020IHo7c41LxHjsJEjSJAlryQhG+53QbyBtgaOf6wk1LLnbs/GSDqgEjvpogZ3ImfR
-         2O3g==
-X-Gm-Message-State: AOAM531/XlA0yf6VA2eDGlkj9G164iFnZSt1JWBx7opKRNkvYjyShiVx
-        hwJzpyqU8meqaVAVFmp/UBRa3w==
-X-Google-Smtp-Source: ABdhPJw6UyQBkFA772dimnjAycW9U2WNs/tw98zNz7om7aaCJC9iZPBD3XhE6+p0Oh65J2mhjvouBA==
-X-Received: by 2002:a17:902:b693:: with SMTP id c19mr22444382pls.102.1595930614254;
-        Tue, 28 Jul 2020 03:03:34 -0700 (PDT)
-Received: from shiro.work (p532183-ipngn200506sizuokaden.shizuoka.ocn.ne.jp. [153.199.2.183])
-        by smtp.googlemail.com with ESMTPSA id u66sm17779018pfb.191.2020.07.28.03.03.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 03:03:33 -0700 (PDT)
-From:   Daniel Palmer <daniel@0x0f.com>
-List-Id: <soc.lore.kernel.org>
-To:     soc@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, arnd@arndb.de, robh@kernel.org,
-        Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH v2 1/9] dt-bindings: arm: mstar: Add binding details for mstar,pmsleep
-Date:   Tue, 28 Jul 2020 19:03:13 +0900
-Message-Id: <20200728100321.1691745-2-daniel@0x0f.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200728100321.1691745-1-daniel@0x0f.com>
-References: <20200728100321.1691745-1-daniel@0x0f.com>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=acftKy5haTTez29DldMveP4DByaH/OvKD4GTibGUU4c=;
+        b=BsUWydoww/snyHsc7SwswyG1RkaBFbCqRT4g5IBQb6+dvVadoATF0XBQiVhJhSttlR
+         6N4LmuC/7WisbJP/wGgcXqeiOHt/meZTBaimPbqvgZYS72Lm0ncKuVYCdKe72nbJ8RyZ
+         mRQmv+EiVzGVtsgdSvZmrWw2SrJkuTAZV0cb1HXLjDhOnpie6sShZGUb3SWQjKZUN9JW
+         W12HyPhaKYcyoTayDMl7Z6uXde9rEcr+YkbJUppcPGMnNF/1o+ZIXTZxQHamVuvKJwSP
+         JmPzq2TAqdBTgCdaS7Zgm+YwegaoWXgKP5+qpV96vrMFe3pjUUHqeItqYTdPo5QU3l2h
+         sKSA==
+X-Gm-Message-State: AOAM531CJzomtLonFHa8brvm6kZDAoUOJtDX3DhItLIWKThP9kOWq4Kf
+        zPaS8or2QOZPl3VUBv4ypylpCg==
+X-Google-Smtp-Source: ABdhPJwMEO6MXfxPWKVzQyfOwgd+Lnn1mfBFwcsn5n3Aff24Y/ORpbQAQBqKE1qjHnpg35DJaCfWOQ==
+X-Received: by 2002:a1c:1b93:: with SMTP id b141mr3393238wmb.150.1595930757237;
+        Tue, 28 Jul 2020 03:05:57 -0700 (PDT)
+Received: from trex (239.red-83-34-184.dynamicip.rima-tde.net. [83.34.184.239])
+        by smtp.gmail.com with ESMTPSA id x4sm17668932wru.81.2020.07.28.03.05.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jul 2020 03:05:56 -0700 (PDT)
+From:   "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
+X-Google-Original-From: "Jorge Ramirez-Ortiz, Foundries" <JorgeRamirez-Ortiz>
+Date:   Tue, 28 Jul 2020 12:05:55 +0200
+To:     "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
+Cc:     Sumit Garg <sumit.garg@linaro.org>, Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, ricardo@foundries.io,
+        Michael Scott <mike@foundries.io>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        op-tee@lists.trustedfirmware.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv2 2/2] hwrng: optee: fix wait use case
+Message-ID: <20200728100555.GA2074@trex>
+References: <20200723084622.31134-1-jorge@foundries.io>
+ <20200723084622.31134-2-jorge@foundries.io>
+ <CAFA6WYPQ3GGYostoHU=6qg4c_LqoqOZVbZ8gbQbGkNfyGydQjQ@mail.gmail.com>
+ <20200724142305.GA24164@trex>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724142305.GA24164@trex>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a YAML description of the pmsleep node used by
-MStar/SigmaStar Armv7 SoCs.
+On 24/07/20, Jorge Ramirez-Ortiz, Foundries wrote:
+> On 24/07/20, Sumit Garg wrote:
+> > On Thu, 23 Jul 2020 at 14:16, Jorge Ramirez-Ortiz <jorge@foundries.io> wrote:
+> > >
+> > > The current code waits for data to be available before attempting a
+> > > second read. However the second read would not be executed as the
+> > > while loop exits.
+> > >
+> > > This fix does not wait if all data has been read and reads a second
+> > > time if only partial data was retrieved on the first read.
+> > >
+> > > This fix also does not attempt to read if not data is requested.
+> > 
+> > I am not sure how this is possible, can you elaborate?
+> 
+> currently, if the user sets max 0, get_optee_rng_data will regardless
+> issuese a call to the secure world requesting 0 bytes from the RNG
+> 
+> with this patch, this request is avoided.
+> 
+> > 
+> > >
+> > > Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
+> > > ---
+> > >  v2: tidy up the while loop to avoid reading when no data is requested
+> > >
+> > >  drivers/char/hw_random/optee-rng.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/char/hw_random/optee-rng.c b/drivers/char/hw_random/optee-rng.c
+> > > index 5bc4700c4dae..a99d82949981 100644
+> > > --- a/drivers/char/hw_random/optee-rng.c
+> > > +++ b/drivers/char/hw_random/optee-rng.c
+> > > @@ -122,14 +122,14 @@ static int optee_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+> > >         if (max > MAX_ENTROPY_REQ_SZ)
+> > >                 max = MAX_ENTROPY_REQ_SZ;
+> > >
+> > > -       while (read == 0) {
+> > > +       while (read < max) {
+> > >                 rng_size = get_optee_rng_data(pvt_data, data, (max - read));
+> > >
+> > >                 data += rng_size;
+> > >                 read += rng_size;
+> > >
+> > >                 if (wait && pvt_data->data_rate) {
+> > > -                       if (timeout-- == 0)
+> > > +                       if ((timeout-- == 0) || (read == max))
+> > 
+> > If read == max, would there be any sleep?
+> 
+> no but I see no reason why there should be a wait since we already have
+> all the data that we need; the msleep is only required when we need to
+> wait for the RNG to generate entropy for the number of bytes we are
+> requesting. if we are requesting 0 bytes, the entropy is already
+> available. at leat this is what makes sense to me.
+> 
+>
 
-Signed-off-by: Daniel Palmer <daniel@0x0f.com>
----
- .../bindings/arm/mstar/mstar,pmsleep.yaml     | 43 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/mstar/mstar,pmsleep.yaml
+any further comments?
 
-diff --git a/Documentation/devicetree/bindings/arm/mstar/mstar,pmsleep.yaml b/Documentation/devicetree/bindings/arm/mstar/mstar,pmsleep.yaml
-new file mode 100644
-index 000000000000..ef78097a7087
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mstar/mstar,pmsleep.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2020 thingy.jp.
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/arm/mstar/mstar,pmsleep.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: MStar/SigmaStar Armv7 SoC pmsleep register region
-+
-+maintainers:
-+  - Daniel Palmer <daniel@thingy.jp>
-+
-+description: |
-+  MStar/Sigmastar's Armv7 SoCs contain a region of registers that are
-+  in the always on domain that the vendor code calls the "pmsleep" area.
-+
-+  This area contains registers and bits for a broad range of functionality
-+  ranging from registers that control going into deep sleep to bits that
-+  turn things like the internal temperature sensor on and off.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+         - enum:
-+             - mstar,pmsleep
-+         - const: syscon
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pmsleep: pmsleep@1c00 {
-+        compatible = "mstar,pmsleep", "syscon";
-+        reg = <0x0x1c00 0x100>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 991814ea6f76..432fcc867ed6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2140,6 +2140,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- W:	http://linux-chenxing.org/
- F:	Documentation/devicetree/bindings/arm/mstar.yaml
-+F:	Documentation/devicetree/bindings/arm/mstar/*
- F:	arch/arm/boot/dts/infinity*.dtsi
- F:	arch/arm/boot/dts/mercury*.dtsi
- F:	arch/arm/boot/dts/mstar-v7.dtsi
--- 
-2.27.0
-
+> > 
+> > -Sumit
+> > 
+> > >                                 return read;
+> > >                         msleep((1000 * (max - read)) / pvt_data->data_rate);
+> > >                 } else {
+> > > --
+> > > 2.17.1
+> > >
