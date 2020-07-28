@@ -2,116 +2,120 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D321EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA18C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1AEF21744
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:59:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="guXqFEi/"
+	by mail.kernel.org (Postfix) with ESMTP id B777621744
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:01:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgG1E7I (ORCPT
+        id S1726757AbgG1FBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 00:59:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgG1E7H (ORCPT
+        Tue, 28 Jul 2020 01:01:34 -0400
+Received: from labrats.qualcomm.com ([199.106.110.90]:40291 "EHLO
+        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgG1FBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 00:59:07 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F12C061794;
-        Mon, 27 Jul 2020 21:59:05 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id di22so6611524edb.12;
-        Mon, 27 Jul 2020 21:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=qwT94/2d5vMLNnP3aSonuZ5wA6OYYOi5iOIf8fUcfiE=;
-        b=guXqFEi/Daunmiz5/09ztCjMyaX9nl/DG7fSEBBnCM1H84PwnPC2j3u0XZEDw2I98A
-         INfQLT6kVsJDAuhBqM3uUSeBpZdY0A2w0RQwYEyBth/a90TvLOlklx/OpJ5R+wvWsBWQ
-         +WZ4EQLle8hKzLix2n+ShgAAcNWm0sQvxHjtefkH9PDGKhsKRFPJ1+lw4qLGgZrktrC7
-         9j8aqIZFIu5Nq7mLTmklXXaGr0+FUDdwFVuCz7LfF/XVCq+SXxMA94g15gj2b77r7kB0
-         Q8u7S2V6HKKCxJAWWM4rxGOrJBJNIIskq8rfSGRBqJVYC4EKM6VOg9doyrgaQKo+vYrg
-         WexQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qwT94/2d5vMLNnP3aSonuZ5wA6OYYOi5iOIf8fUcfiE=;
-        b=P8VW3PmswKj1o1wdU7cW4RJGidY4fFt6FwokNq/VdrqDHvQNB4y8FGjYYFBDwu/rQ6
-         kMwCdMYn3Skq3T7i/I2UmW2HcLnSiuxxiQssH4zl1G167UBaYMrkJljIWeJujJ6iECyM
-         Ea5DWrHUIRCJtRnMVPcUg9VCUBpC7hZjbKWn8UEKIYUkbs9Vs6avvlqAbOdqXUGoF3M9
-         HUKtZ5rA0leMOAmDLaGBmowDVapIWJtpbaCFhPmwJyfnZZUANkoLjO3YUPAJTEPqn0UV
-         QCPNCH1k7kBDTz9UWIXmZoifGclMVlYDrrSTrvlKCP/1nPX4BVXQdEu0xjTTHDhfORoY
-         Q1QA==
-X-Gm-Message-State: AOAM530Ox0MhDOkZprktRKasdKibbce4mgvCpQ/E/abYQOhGKwY+D2Sb
-        pyjb2rW6KYZx4NuotrC1rk2sgHcOMKY=
-X-Google-Smtp-Source: ABdhPJys0wyfvlOiKfT8X3K5UcykXzPKQlSmRCRZ0K5sBjw/kY8acLU8Kux2FLegMUzaBa6q+qyP+Q==
-X-Received: by 2002:aa7:d989:: with SMTP id u9mr24317597eds.85.1595912344289;
-        Mon, 27 Jul 2020 21:59:04 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2d6c:b00:cd97:e2be:76a3:65a9])
-        by smtp.gmail.com with ESMTPSA id q3sm6840596edc.88.2020.07.27.21.59.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 21:59:03 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-msm@vger.kernel.org
-Cc:     Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: update entry to thermal governors file name prefixing
-Date:   Tue, 28 Jul 2020 06:58:50 +0200
-Message-Id: <20200728045850.22661-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 28 Jul 2020 01:01:34 -0400
+IronPort-SDR: Fyk/wJDUDjjzWdiBFt/+P2dQCWjLdDrUiNn2KieoowoCNL8w7opDEe8AdCw96tytJKheze9ibe
+ 6ezf0QyZeyKpHFjmmGCgobkUKXmlyidetvvR7l8Iffg2x+dKoTMOZXfjMNQZ4zxfFG27dcv7Ce
+ DbPuMJ8gwFFzXYhQOGFUf/eJW6P2JuIGwRAeXOOB1sRZ7rQGdKVEPXYUR7BCSX1oJDAWyo9Lgt
+ NIwzMpvH7MNqaAe1tVbfHhte6q767m87/CP9zz8gjHlItMAoJmJOZzaEtqD94p9CFyc3ZYIZUI
+ QtM=
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="29056444"
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by labrats.qualcomm.com with ESMTP; 27 Jul 2020 22:01:33 -0700
+Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
+  by ironmsg01-sd.qualcomm.com with ESMTP; 27 Jul 2020 22:01:32 -0700
+Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
+        id E4EC622DA6; Mon, 27 Jul 2020 22:01:32 -0700 (PDT)
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        sh425.lee@samsung.com, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v7 7/8] scsi: ufs: Move dumps in IRQ handler to error handler
+Date:   Mon, 27 Jul 2020 22:00:58 -0700
+Message-Id: <1595912460-8860-8-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595912460-8860-1-git-send-email-cang@codeaurora.org>
+References: <1595912460-8860-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 0015d9a2a727 ("thermal/governors: Prefix all source files with
-gov_") renamed power_allocator.c to gov_power_allocator.c in
-./drivers/thermal amongst some other file renames, but missed to adjust
-the MAINTAINERS entry.
+Sometime dumps in IRQ handler are heavy enough to cause system stability
+issues, move them to error handler.
 
-Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
-
-  warning: no file matches    F:    drivers/thermal/power_allocator.c
-
-Update the file entry in MAINTAINERS to the new file name.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
 ---
-Amit, please ack.
+ drivers/scsi/ufs/ufshcd.c | 31 +++++++++++++++----------------
+ 1 file changed, 15 insertions(+), 16 deletions(-)
 
-Daniel, please pick this non-urgent minor patch for your -next tree.
-
-applies cleanly on next-20200727
-
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aad65cc8f35d..aa5a11d71f71 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17164,7 +17164,7 @@ M:	Lukasz Luba <lukasz.luba@arm.com>
- L:	linux-pm@vger.kernel.org
- S:	Maintained
- F:	Documentation/driver-api/thermal/power_allocator.rst
--F:	drivers/thermal/power_allocator.c
-+F:	drivers/thermal/gov_power_allocator.c
- F:	include/trace/events/thermal_power_allocator.h
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index c480823..b2bafa3 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5682,6 +5682,21 @@ static void ufshcd_err_handler(struct work_struct *work)
+ 				    UFSHCD_UIC_DL_TCx_REPLAY_ERROR))))
+ 		needs_reset = true;
  
- THINKPAD ACPI EXTRAS DRIVER
++	if (hba->saved_err & (INT_FATAL_ERRORS | UIC_ERROR |
++			      UFSHCD_UIC_HIBERN8_MASK)) {
++		bool pr_prdt = !!(hba->saved_err & SYSTEM_BUS_FATAL_ERROR);
++
++		dev_err(hba->dev, "%s: saved_err 0x%x saved_uic_err 0x%x\n",
++				__func__, hba->saved_err, hba->saved_uic_err);
++		spin_unlock_irqrestore(hba->host->host_lock, flags);
++		ufshcd_print_host_state(hba);
++		ufshcd_print_pwr_info(hba);
++		ufshcd_print_host_regs(hba);
++		ufshcd_print_tmrs(hba, hba->outstanding_tasks);
++		ufshcd_print_trs(hba, hba->outstanding_reqs, pr_prdt);
++		spin_lock_irqsave(hba->host->host_lock, flags);
++	}
++
+ 	/*
+ 	 * if host reset is required then skip clearing the pending
+ 	 * transfers forcefully because they will get cleared during
+@@ -5900,22 +5915,6 @@ static irqreturn_t ufshcd_check_errors(struct ufs_hba *hba)
+ 
+ 		/* block commands from scsi mid-layer */
+ 		ufshcd_scsi_block_requests(hba);
+-
+-		/* dump controller state before resetting */
+-		if (hba->saved_err & (INT_FATAL_ERRORS | UIC_ERROR)) {
+-			bool pr_prdt = !!(hba->saved_err &
+-					SYSTEM_BUS_FATAL_ERROR);
+-
+-			dev_err(hba->dev, "%s: saved_err 0x%x saved_uic_err 0x%x\n",
+-					__func__, hba->saved_err,
+-					hba->saved_uic_err);
+-
+-			ufshcd_print_host_regs(hba);
+-			ufshcd_print_pwr_info(hba);
+-			ufshcd_print_tmrs(hba, hba->outstanding_tasks);
+-			ufshcd_print_trs(hba, hba->outstanding_reqs,
+-					pr_prdt);
+-		}
+ 		ufshcd_schedule_eh_work(hba);
+ 		retval |= IRQ_HANDLED;
+ 	}
 -- 
-2.17.1
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
