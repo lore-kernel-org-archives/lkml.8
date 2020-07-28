@@ -2,417 +2,280 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC691C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D98E42070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:54:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595948097;
-	bh=SVN9KwmFR1+HYXmkw6AaG1yThXM/tvbY75ekuEY1Jy4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t19He6LPidXngtxmOaPjwoPC1ckvFRclvcnwd3bpWs+QQz5tFu3BGRbjKp8FedUOk
-	 gb0XD+uGggdrfc3qKV/DvYCVu6I/C8wgB4zMQAnEVEqy28E+d4blbrSMbctzoOT6d4
-	 /AJ6k2O1HJLe8oQzDuLcmLxJVw4sFFhqKfS7fW2M=
+	by mail.kernel.org (Postfix) with ESMTP id 824F4206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:57:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="T+KBCkLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730550AbgG1Oy4 (ORCPT
+        id S1730532AbgG1O5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:54:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730529AbgG1Oy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:54:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80642206D8;
-        Tue, 28 Jul 2020 14:54:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595948095;
-        bh=SVN9KwmFR1+HYXmkw6AaG1yThXM/tvbY75ekuEY1Jy4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RDyWWBV7s9oUpIFrMXJUTwdJUs4PJrMio9jN2+XtavQl0ZAhxn8P4r7yhA1rKuTrW
-         /Jxdnz6u0L2Wto87S7Tfn14d080ashAlWnkXtlKaE9O5N3EyD7EmKgszTJzzB736Em
-         qPMtQOg7X+cf8GhtvqOyClGX1voJ+nWeuoDoqmRI=
-Date:   Tue, 28 Jul 2020 16:54:47 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
-Cc:     hverkuil@xs4all.nl, stern@rowland.harvard.edu, arnd@arndb.de,
-        jrdr.linux@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH] media: usbvision: fixed coding style
-Message-ID: <20200728145447.GB3537020@kroah.com>
-References: <20200728143004.3228-1-dhiraj.sharma0024@gmail.com>
+        Tue, 28 Jul 2020 10:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730483AbgG1O5L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 10:57:11 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F164C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:57:11 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f7so18622770wrw.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:57:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7qDejTgdQJPnpQcdqB4JyZv5kja/nbfO94rs4bcB9lY=;
+        b=T+KBCkLZuAaJ01uiCexsujrpochsGpmLQ1GqWPpt2bdlSJSaKE4zPHN6YySwjwTqn1
+         u5tDBoa2pZqK/KsP8RiThqvI9BDpSRjBdeZKqxbRf8wKjAHyL1BsonEbQgzmdibq6VdY
+         vC/dTJ6WEO6X0RhmLmEQ4b3WtVPYOm+ncM6/9orXDlB37X/4sCRWTUmtFMM/y2+cQtO5
+         zFWUAIrzdE7kNl4JKXTJWFvA3idxq0mD61A0SFGX6Gm5HGG/2zJDgf1vPon6VZNPJ/8V
+         2ttX2ldLx0E8Fm/QbAI3l/DtuNxBxndsDYBfcSNAXasiPMVqc+F0RIp8LcvVHNIbdF65
+         TPyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7qDejTgdQJPnpQcdqB4JyZv5kja/nbfO94rs4bcB9lY=;
+        b=jStoNm3/3NvCwWsTJVSMJ/1edutTy4JOBmu+mYoXRZt77ToMJlbPH2Ag6bSxaedpIl
+         13K0cmSdvqbuF0NsEG/Sghqt2THONva00QA4zs4qjWtwtZIrTY4mjoLuHCDIaMuVULBY
+         P7/zf/3dHq3fGHNv2Y4NIohjFQn43OtzPjBhtAHSwbkIdpKJQbGBFfqIEjW8RQeobVKy
+         nub93Xn8jx7xtQXuu8EFt6epoy7WbnKJXKh3n7DxIl4LoB/O0AnFK9Ss/2R4vK7DMnYh
+         OZdqbRlmE3scjH+SVfIS61nrfSbKwUpkNNHudHrc+T/jLE4gnFxcVr7xffcS/gThdVkv
+         Ccgg==
+X-Gm-Message-State: AOAM532VFUpBLMOtyj/XyLj/I3iD6j9rqZj/10fDbhvdXu24UqendDeO
+        bVZEI4mFF8UsccqStmpC1/HRn1KJALaGeDs/2nkS0w==
+X-Google-Smtp-Source: ABdhPJyz4niSjUB9Yt22jUMO5TjPQucPwrvpw7nvnKlhXU4tsTSf9vfV1nXysoYyZ8RP0N7eE0Fd5eeDqqBRePmholc=
+X-Received: by 2002:adf:fe50:: with SMTP id m16mr7964656wrs.27.1595948230084;
+ Tue, 28 Jul 2020 07:57:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728143004.3228-1-dhiraj.sharma0024@gmail.com>
+References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+ <5919dccdd4a792936e6cb7eb55983c530c9a468d.1594230107.git-series.maxime@cerno.tech>
+In-Reply-To: <5919dccdd4a792936e6cb7eb55983c530c9a468d.1594230107.git-series.maxime@cerno.tech>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Tue, 28 Jul 2020 15:56:53 +0100
+Message-ID: <CAPY8ntAuc4ySQBH7Q8MMhY3a0LkVp01nuWf-bCja53PMQ=0KVA@mail.gmail.com>
+Subject: Re: [PATCH v4 62/78] drm/vc4: hdmi: Adjust HSM clock rate depending
+ on pixel rate
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 08:00:04PM +0530, Dhiraj Sharma wrote:
-> As per eudyptula challenge task 10 I had to fix coding styles. Thus I
-> used checkpatch.pl script and fixed a chunk of warnings and few errors.
-> 
-> Signed-off-by: Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
+Hi Maxime
+
+On Wed, 8 Jul 2020 at 18:44, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> The HSM clock needs to be setup at around 101% of the pixel rate. This
+> was done previously by setting the clock rate to 163.7MHz at probe time and
+> only check in mode_valid whether the mode pixel clock was under the pixel
+> clock +1% or not.
+>
+> However, with 4k we need to change that frequency to a higher frequency
+> than 163.7MHz, and yet want to have the lowest clock as possible to have a
+> decent power saving.
+>
+> Let's change that logic a bit by setting the clock rate of the HSM clock
+> to the pixel rate at encoder_enable time. This would work for the
+> BCM2711 that support 4k resolutions and has a clock that can provide it,
+> but we still have to take care of a 4k panel plugged on a BCM283x SoCs
+> that wouldn't be able to use those modes, so let's define the limit in
+> the variant.
+>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+
 > ---
->  .../staging/media/usbvision/usbvision-video.c | 91 +++++++++++--------
->  1 file changed, 52 insertions(+), 39 deletions(-)
-> 
-> diff --git a/drivers/staging/media/usbvision/usbvision-video.c b/drivers/staging/media/usbvision/usbvision-video.c
-> index 3ea25fdcf767..8b68e99a2813 100644
-> --- a/drivers/staging/media/usbvision/usbvision-video.c
-> +++ b/drivers/staging/media/usbvision/usbvision-video.c
-> @@ -67,8 +67,8 @@
->  #ifdef USBVISION_DEBUG
->  	#define PDEBUG(level, fmt, args...) { \
->  		if (video_debug & (level)) \
-> -			printk(KERN_INFO KBUILD_MODNAME ":[%s:%d] " fmt, \
-> -				__func__, __LINE__ , ## args); \
-> +			pr_debug(KBUILD_MODNAME ":[%s:%d] " fmt, \
-> +				__func__, __LINE__, ## args); \
->  	}
->  #else
->  	#define PDEBUG(level, fmt, args...) do {} while (0)
-> @@ -79,8 +79,8 @@
->  #define DBG_MMAP	(1 << 3)
-> 
->  /* String operations */
-> -#define rmspace(str)	while (*str == ' ') str++;
-> -#define goto2next(str)	while (*str != ' ') str++; while (*str == ' ') str++;
-> +#define rmspace(str)	do { str++; } while (*str == ' ')
-> +#define goto2next(str)	do { str++; } while (*str != ' ' || *str == ' ')
-> 
-> 
->  /* sequential number of usbvision device */
-> @@ -145,27 +145,29 @@ MODULE_ALIAS(DRIVER_ALIAS);
->  static inline struct usb_usbvision *cd_to_usbvision(struct device *cd)
->  {
->  	struct video_device *vdev = to_video_device(cd);
+>  drivers/gpu/drm/vc4/vc4_hdmi.c | 79 ++++++++++++++++-------------------
+>  drivers/gpu/drm/vc4/vc4_hdmi.h |  3 +-
+>  2 files changed, 41 insertions(+), 41 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> index 17797b14cde4..9f30fab744f2 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> @@ -53,7 +53,6 @@
+>  #include "vc4_hdmi_regs.h"
+>  #include "vc4_regs.h"
+>
+> -#define HSM_CLOCK_FREQ 163682864
+>  #define CEC_CLOCK_FREQ 40000
+>
+>  static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
+> @@ -326,6 +325,7 @@ static void vc4_hdmi_encoder_disable(struct drm_encoder *encoder)
+>         HDMI_WRITE(HDMI_VID_CTL,
+>                    HDMI_READ(HDMI_VID_CTL) & ~VC4_HD_VID_CTL_ENABLE);
+>
+> +       clk_disable_unprepare(vc4_hdmi->hsm_clock);
+>         clk_disable_unprepare(vc4_hdmi->pixel_clock);
+>
+>         ret = pm_runtime_put(&vc4_hdmi->pdev->dev);
+> @@ -423,6 +423,7 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+>         struct vc4_hdmi *vc4_hdmi = encoder_to_vc4_hdmi(encoder);
+>         struct vc4_hdmi_encoder *vc4_encoder = to_vc4_hdmi_encoder(encoder);
+>         bool debug_dump_regs = false;
+> +       unsigned long pixel_rate, hsm_rate;
+>         int ret;
+>
+>         ret = pm_runtime_get_sync(&vc4_hdmi->pdev->dev);
+> @@ -431,9 +432,8 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+>                 return;
+>         }
+>
+> -       ret = clk_set_rate(vc4_hdmi->pixel_clock,
+> -                          mode->clock * 1000 *
+> -                          ((mode->flags & DRM_MODE_FLAG_DBLCLK) ? 2 : 1));
+> +       pixel_rate = mode->clock * 1000 * ((mode->flags & DRM_MODE_FLAG_DBLCLK) ? 2 : 1);
+> +       ret = clk_set_rate(vc4_hdmi->pixel_clock, pixel_rate);
+>         if (ret) {
+>                 DRM_ERROR("Failed to set pixel clock rate: %d\n", ret);
+>                 return;
+> @@ -445,6 +445,36 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+>                 return;
+>         }
+>
+> +       /*
+> +        * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
+> +        * be faster than pixel clock, infinitesimally faster, tested in
+> +        * simulation. Otherwise, exact value is unimportant for HDMI
+> +        * operation." This conflicts with bcm2835's vc4 documentation, which
+> +        * states HSM's clock has to be at least 108% of the pixel clock.
+> +        *
+> +        * Real life tests reveal that vc4's firmware statement holds up, and
+> +        * users are able to use pixel clocks closer to HSM's, namely for
+> +        * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
+> +        * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
+> +        * 162MHz.
+> +        *
+> +        * Additionally, the AXI clock needs to be at least 25% of
+> +        * pixel clock, but HSM ends up being the limiting factor.
+> +        */
+> +       hsm_rate = max_t(unsigned long, 120000000, (pixel_rate / 100) * 101);
+> +       ret = clk_set_rate(vc4_hdmi->hsm_clock, hsm_rate);
+> +       if (ret) {
+> +               DRM_ERROR("Failed to set HSM clock rate: %d\n", ret);
+> +               return;
+> +       }
 > +
->  	return video_get_drvdata(vdev);
->  }
-> 
-> -static ssize_t show_version(struct device *cd,
-> +static ssize_t version_show(struct device *cd,
->  			    struct device_attribute *attr, char *buf)
->  {
->  	return sprintf(buf, "%s\n", USBVISION_VERSION_STRING);
->  }
-> -static DEVICE_ATTR(version, S_IRUGO, show_version, NULL);
-> +static DEVICE_ATTR_RO(version, 0444, version_show, NULL);
-> 
-> -static ssize_t show_model(struct device *cd,
-> +static ssize_t model_show(struct device *cd,
->  			  struct device_attribute *attr, char *buf)
->  {
->  	struct video_device *vdev = to_video_device(cd);
->  	struct usb_usbvision *usbvision = video_get_drvdata(vdev);
+> +       ret = clk_prepare_enable(vc4_hdmi->hsm_clock);
+> +       if (ret) {
+> +               DRM_ERROR("Failed to turn on HSM clock: %d\n", ret);
+> +               clk_disable_unprepare(vc4_hdmi->pixel_clock);
+> +               return;
+> +       }
 > +
->  	return sprintf(buf, "%s\n",
->  		       usbvision_device_data[usbvision->dev_model].model_string);
->  }
-> -static DEVICE_ATTR(model, S_IRUGO, show_model, NULL);
-> +static DEVICE_ATTR_RO(model, 0444, model_show, NULL);
-> 
-> -static ssize_t show_hue(struct device *cd,
-> +static ssize_t hue_show(struct device *cd,
->  			struct device_attribute *attr, char *buf)
+>         if (vc4_hdmi->variant->reset)
+>                 vc4_hdmi->variant->reset(vc4_hdmi);
+>
+> @@ -559,23 +589,9 @@ static enum drm_mode_status
+>  vc4_hdmi_encoder_mode_valid(struct drm_encoder *encoder,
+>                             const struct drm_display_mode *mode)
 >  {
->  	struct video_device *vdev = to_video_device(cd);
-> @@ -175,9 +177,9 @@ static ssize_t show_hue(struct device *cd,
-> 
->  	return sprintf(buf, "%d\n", val);
->  }
-> -static DEVICE_ATTR(hue, S_IRUGO, show_hue, NULL);
-> +static DEVICE_ATTR_RO(hue, 0444, hue_show, NULL);
-> 
-> -static ssize_t show_contrast(struct device *cd,
-> +static ssize_t contrast_show(struct device *cd,
->  			     struct device_attribute *attr, char *buf)
->  {
->  	struct video_device *vdev = to_video_device(cd);
-> @@ -187,9 +189,9 @@ static ssize_t show_contrast(struct device *cd,
-> 
->  	return sprintf(buf, "%d\n", val);
->  }
-> -static DEVICE_ATTR(contrast, S_IRUGO, show_contrast, NULL);
-> +static DEVICE_ATTR_RO(contrast, 0444, contrast_show, NULL);
-> 
-> -static ssize_t show_brightness(struct device *cd,
-> +static ssize_t brightness_show(struct device *cd,
->  			       struct device_attribute *attr, char *buf)
->  {
->  	struct video_device *vdev = to_video_device(cd);
-> @@ -199,9 +201,9 @@ static ssize_t show_brightness(struct device *cd,
-> 
->  	return sprintf(buf, "%d\n", val);
->  }
-> -static DEVICE_ATTR(brightness, S_IRUGO, show_brightness, NULL);
-> +static DEVICE_ATTR_RO(brightness, 0444, brightness_show, NULL);
-> 
-> -static ssize_t show_saturation(struct device *cd,
-> +static ssize_t saturation_show(struct device *cd,
->  			       struct device_attribute *attr, char *buf)
->  {
->  	struct video_device *vdev = to_video_device(cd);
-> @@ -211,36 +213,39 @@ static ssize_t show_saturation(struct device *cd,
-> 
->  	return sprintf(buf, "%d\n", val);
->  }
-> -static DEVICE_ATTR(saturation, S_IRUGO, show_saturation, NULL);
-> +static DEVICE_ATTR_RO(saturation, 0444, saturation_show, NULL);
-> 
-> -static ssize_t show_streaming(struct device *cd,
-> +static ssize_t streaming_show(struct device *cd,
->  			      struct device_attribute *attr, char *buf)
->  {
->  	struct video_device *vdev = to_video_device(cd);
->  	struct usb_usbvision *usbvision = video_get_drvdata(vdev);
+> -       /*
+> -        * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
+> -        * be faster than pixel clock, infinitesimally faster, tested in
+> -        * simulation. Otherwise, exact value is unimportant for HDMI
+> -        * operation." This conflicts with bcm2835's vc4 documentation, which
+> -        * states HSM's clock has to be at least 108% of the pixel clock.
+> -        *
+> -        * Real life tests reveal that vc4's firmware statement holds up, and
+> -        * users are able to use pixel clocks closer to HSM's, namely for
+> -        * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
+> -        * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
+> -        * 162MHz.
+> -        *
+> -        * Additionally, the AXI clock needs to be at least 25% of
+> -        * pixel clock, but HSM ends up being the limiting factor.
+> -        */
+> -       if (mode->clock > HSM_CLOCK_FREQ / (1000 * 101 / 100))
+> +       struct vc4_hdmi *vc4_hdmi = encoder_to_vc4_hdmi(encoder);
 > +
->  	return sprintf(buf, "%s\n",
->  		       YES_NO(usbvision->streaming == stream_on ? 1 : 0));
->  }
-> -static DEVICE_ATTR(streaming, S_IRUGO, show_streaming, NULL);
-> +static DEVICE_ATTR_RO(streaming, 0444, streaming_show, NULL);
-> 
-> -static ssize_t show_compression(struct device *cd,
-> +static ssize_t compression_show(struct device *cd,
->  				struct device_attribute *attr, char *buf)
->  {
->  	struct video_device *vdev = to_video_device(cd);
->  	struct usb_usbvision *usbvision = video_get_drvdata(vdev);
+> +       if ((mode->clock * 1000) > vc4_hdmi->variant->max_pixel_clock)
+>                 return MODE_CLOCK_HIGH;
+>
+>         return MODE_OK;
+> @@ -1349,23 +1365,6 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
+>                 return -EPROBE_DEFER;
+>         }
+>
+> -       /* This is the rate that is set by the firmware.  The number
+> -        * needs to be a bit higher than the pixel clock rate
+> -        * (generally 148.5Mhz).
+> -        */
+> -       ret = clk_set_rate(vc4_hdmi->hsm_clock, HSM_CLOCK_FREQ);
+> -       if (ret) {
+> -               DRM_ERROR("Failed to set HSM clock rate: %d\n", ret);
+> -               goto err_put_i2c;
+> -       }
+> -
+> -       ret = clk_prepare_enable(vc4_hdmi->hsm_clock);
+> -       if (ret) {
+> -               DRM_ERROR("Failed to turn on HDMI state machine clock: %d\n",
+> -                         ret);
+> -               goto err_put_i2c;
+> -       }
+> -
+>         /* Only use the GPIO HPD pin if present in the DT, otherwise
+>          * we'll use the HDMI core's register.
+>          */
+> @@ -1413,9 +1412,7 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
+>  err_destroy_encoder:
+>         drm_encoder_cleanup(encoder);
+>  err_unprepare_hsm:
+> -       clk_disable_unprepare(vc4_hdmi->hsm_clock);
+>         pm_runtime_disable(dev);
+> -err_put_i2c:
+>         put_device(&vc4_hdmi->ddc->dev);
+>
+>         return ret;
+> @@ -1454,7 +1451,6 @@ static void vc4_hdmi_unbind(struct device *dev, struct device *master,
+>         vc4_hdmi_connector_destroy(&vc4_hdmi->connector);
+>         drm_encoder_cleanup(&vc4_hdmi->encoder.base.base);
+>
+> -       clk_disable_unprepare(vc4_hdmi->hsm_clock);
+>         pm_runtime_disable(dev);
+>
+>         put_device(&vc4_hdmi->ddc->dev);
+> @@ -1479,6 +1475,7 @@ static int vc4_hdmi_dev_remove(struct platform_device *pdev)
+>  static const struct vc4_hdmi_variant bcm2835_variant = {
+>         .encoder_type           = VC4_ENCODER_TYPE_HDMI0,
+>         .debugfs_name           = "hdmi_regs",
+> +       .max_pixel_clock        = 162000000,
+>         .cec_available          = true,
+>         .registers              = vc4_hdmi_fields,
+>         .num_registers          = ARRAY_SIZE(vc4_hdmi_fields),
+> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
+> index 3f07aebe89f1..342f6e0227a2 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
+> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
+> @@ -36,6 +36,9 @@ struct vc4_hdmi_variant {
+>         /* Set to true when the CEC support is available */
+>         bool cec_available;
+>
+> +       /* Maximum pixel clock supported by the controller (in Hz) */
+> +       unsigned long long max_pixel_clock;
 > +
->  	return sprintf(buf, "%s\n",
->  		       YES_NO(usbvision->isoc_mode == ISOC_MODE_COMPRESS));
->  }
-> -static DEVICE_ATTR(compression, S_IRUGO, show_compression, NULL);
-> +static DEVICE_ATTR_RO(compression, 0444, compression_show, NULL);
-> 
->  static ssize_t show_device_bridge(struct device *cd,
->  				  struct device_attribute *attr, char *buf)
->  {
->  	struct video_device *vdev = to_video_device(cd);
->  	struct usb_usbvision *usbvision = video_get_drvdata(vdev);
-> +
->  	return sprintf(buf, "%d\n", usbvision->bridge_type);
->  }
-> -static DEVICE_ATTR(bridge, S_IRUGO, show_device_bridge, NULL);
-> +static DEVICE_ATTR_RO(bridge, 0444, show_device_bridge, NULL);
-> 
->  static void usbvision_create_sysfs(struct video_device *vdev)
->  {
-> @@ -329,7 +334,8 @@ static int usbvision_v4l2_open(struct file *file)
->  		err_code = usbvision_scratch_alloc(usbvision);
->  		if (isoc_mode == ISOC_MODE_COMPRESS) {
->  			/* Allocate intermediate decompression buffers
-> -			   only if needed */
-> +			 * only if needed
-> +			 */
->  			err_code = usbvision_decompress_alloc(usbvision);
->  		}
->  		if (err_code) {
-> @@ -344,6 +350,7 @@ static int usbvision_v4l2_open(struct file *file)
->  		/* Send init sequence only once, it's large! */
->  		if (!usbvision->initialized) {
->  			int setup_ok = 0;
-> +
->  			setup_ok = usbvision_setup(usbvision, isoc_mode);
->  			if (setup_ok)
->  				usbvision->initialized = 1;
-> @@ -400,7 +407,7 @@ static int usbvision_v4l2_close(struct file *file)
->  	mutex_unlock(&usbvision->v4l2_lock);
-> 
->  	if (r) {
-> -		printk(KERN_INFO "%s: Final disconnect\n", __func__);
-> +		pr_debug("%s: Final disconnect\n", __func__);
->  		usbvision_release(usbvision);
->  		return 0;
->  	}
-> @@ -490,7 +497,8 @@ static int vidioc_enum_input(struct file *file, void *priv,
->  		chan = vi->index + 1; /* skip Television string*/
-> 
->  	/* Determine the requested input characteristics
-> -	   specific for each usbvision card model */
-> +	 * specific for each usbvision card model
-> +	 */
->  	switch (chan) {
->  	case 0:
->  		if (usbvision_device_data[usbvision->dev_model].video_channels == 4) {
-> @@ -649,7 +657,8 @@ static int vidioc_reqbufs(struct file *file,
->  	RESTRICT_TO_RANGE(vr->count, 1, USBVISION_NUMFRAMES);
-> 
->  	/* Check input validity:
-> -	   the user must do a VIDEO CAPTURE and MMAP method. */
-> +	 * the user must do a VIDEO CAPTURE and MMAP method.
-> +	 */
->  	if (vr->memory != V4L2_MEMORY_MMAP)
->  		return -EINVAL;
-> 
-> @@ -675,7 +684,8 @@ static int vidioc_querybuf(struct file *file,
->  	struct usbvision_frame *frame;
-> 
->  	/* FIXME : must control
-> -	   that buffers are mapped (VIDIOC_REQBUFS has been called) */
-> +	 * that buffers are mapped (VIDIOC_REQBUFS has been called)
-> +	 */
->  	if (vb->index >= usbvision->num_frames)
->  		return -EINVAL;
->  	/* Updating the corresponding frame state */
-> @@ -813,6 +823,7 @@ static int vidioc_g_fmt_vid_cap(struct file *file, void *priv,
->  					struct v4l2_format *vf)
->  {
->  	struct usb_usbvision *usbvision = video_drvdata(file);
-> +
->  	vf->fmt.pix.width = usbvision->curwidth;
->  	vf->fmt.pix.height = usbvision->curheight;
->  	vf->fmt.pix.pixelformat = usbvision->palette.format;
-> @@ -897,24 +908,27 @@ static ssize_t usbvision_read(struct file *file, char __user *buf,
->  		return -EFAULT;
-> 
->  	/* This entry point is compatible with the mmap routines
-> -	   so that a user can do either VIDIOC_QBUF/VIDIOC_DQBUF
-> -	   to get frames or call read on the device. */
-> +	 * so that a user can do either VIDIOC_QBUF/VIDIOC_DQBUF
-> +	 * to get frames or call read on the device.
-> +	 */
->  	if (!usbvision->num_frames) {
->  		/* First, allocate some frames to work with
-> -		   if this has not been done with VIDIOC_REQBUF */
-> +		 * if this has not been done with VIDIOC_REQBUF
-> +		 */
->  		usbvision_frames_free(usbvision);
->  		usbvision_empty_framequeues(usbvision);
->  		usbvision_frames_alloc(usbvision, USBVISION_NUMFRAMES);
->  	}
-> 
->  	if (usbvision->streaming != stream_on) {
-> -		/* no stream is running, make it running ! */
-> +		// no stream is running, make it running !
->  		usbvision->streaming = stream_on;
->  		call_all(usbvision, video, s_stream, 1);
->  	}
-> 
->  	/* Then, enqueue as many frames as possible
-> -	   (like a user of VIDIOC_QBUF would do) */
-> +	 * (like a user of VIDIOC_QBUF would do)
-> +	 */
->  	for (i = 0; i < usbvision->num_frames; i++) {
->  		frame = &usbvision->frame[i];
->  		if (frame->grabstate == frame_state_unused) {
-> @@ -1125,7 +1139,7 @@ static int usbvision_radio_close(struct file *file)
->  	mutex_unlock(&usbvision->v4l2_lock);
-> 
->  	if (r) {
-> -		printk(KERN_INFO "%s: Final disconnect\n", __func__);
-> +		pr_debug("%s: Final disconnect\n", __func__);
->  		v4l2_fh_release(file);
->  		usbvision_release(usbvision);
->  		return 0;
-> @@ -1273,7 +1287,7 @@ static int usbvision_register_video(struct usb_usbvision *usbvision)
-> 
->  	if (video_register_device(&usbvision->vdev, VFL_TYPE_VIDEO, video_nr) < 0)
->  		goto err_exit;
-> -	printk(KERN_INFO "USBVision[%d]: registered USBVision Video device %s [v4l2]\n",
-> +	pr_debug("USBVision[%d]: registered USBVision Video device %s [v4l2]\n",
->  	       usbvision->nr, video_device_node_name(&usbvision->vdev));
-> 
->  	/* Radio Device: */
-> @@ -1284,7 +1298,7 @@ static int usbvision_register_video(struct usb_usbvision *usbvision)
->  		usbvision->rdev.device_caps = V4L2_CAP_RADIO | V4L2_CAP_TUNER;
->  		if (video_register_device(&usbvision->rdev, VFL_TYPE_RADIO, radio_nr) < 0)
->  			goto err_exit;
-> -		printk(KERN_INFO "USBVision[%d]: registered USBVision Radio device %s [v4l2]\n",
-> +		pr_debug("USBVision[%d]: registered USBVision Radio device %s [v4l2]\n",
->  		       usbvision->nr, video_device_node_name(&usbvision->rdev));
->  	}
->  	/* all done */
-> @@ -1429,7 +1443,7 @@ static int usbvision_probe(struct usb_interface *intf,
->  		ret = -ENODEV;
->  		goto err_usb;
->  	}
-> -	printk(KERN_INFO "%s: %s found\n", __func__,
-> +	pr_debug("%s: %s found\n", __func__,
->  				usbvision_device_data[model].model_string);
-> 
->  	if (usbvision_device_data[model].interface >= 0)
-> @@ -1501,8 +1515,7 @@ static int usbvision_probe(struct usb_interface *intf,
->  			goto err_pkt;
->  		}
-> 
-> -		tmp = le16_to_cpu(uif->altsetting[i].endpoint[1].desc.
-> -				      wMaxPacketSize);
-> +		tmp = le16_to_cpu(uif->altsetting[i].endpoint[1].desc.wMaxPacketSize);
->  		usbvision->alt_max_pkt_size[i] =
->  			(tmp & 0x07ff) * (((tmp & 0x1800) >> 11) + 1);
->  		PDEBUG(DBG_PROBE, "Alternate setting %i, max size= %i", i,
-> @@ -1581,7 +1594,7 @@ static void usbvision_disconnect(struct usb_interface *intf)
->  	mutex_unlock(&usbvision->v4l2_lock);
-> 
->  	if (u) {
-> -		printk(KERN_INFO "%s: In use, disconnect pending\n",
-> +		pr_debug("%s: In use, disconnect pending\n",
->  		       __func__);
->  		wake_up_interruptible(&usbvision->wait_frame);
->  		wake_up_interruptible(&usbvision->wait_stream);
-> @@ -1625,7 +1638,7 @@ static int __init usbvision_init(void)
->  	err_code = usb_register(&usbvision_driver);
-> 
->  	if (err_code == 0) {
-> -		printk(KERN_INFO DRIVER_DESC " : " USBVISION_VERSION_STRING "\n");
-> +		pr_debug(DRIVER_DESC " : " USBVISION_VERSION_STRING "\n");
->  		PDEBUG(DBG_PROBE, "success");
->  	}
->  	return err_code;
+>         /* List of the registers available on that variant */
+>         const struct vc4_hdmi_register *registers;
+>
 > --
-> 2.17.1
-
-
-Hi,
-
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- Your patch did many different things all at once, making it difficult
-  to review.  All Linux kernel patches need to only do one thing at a
-  time.  If you need to do multiple things (such as clean up all coding
-  style issues in a file/driver), do it in a sequence of patches, each
-  one doing only one thing.  This will make it easier to review the
-  patches to ensure that they are correct, and to help alleviate any
-  merge issues that larger patches can cause.
-
-- You did not specify a description of why the patch is needed, or
-  possibly, any description at all, in the email body.  Please read the
-  section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what is needed in order to
-  properly describe the change.
-
-- You did not write a descriptive Subject: for the patch, allowing Greg,
-  and everyone else, to know what this patch is all about.  Please read
-  the section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what a proper Subject: line should
-  look like.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+> git-series 0.9.1
