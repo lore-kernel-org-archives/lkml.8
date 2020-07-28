@@ -2,233 +2,251 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A1FC433FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED206C433FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36BC52065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F6720792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:19:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JXEuNNcH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgG1HUQ (ORCPT
+        id S1727975AbgG1HTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:20:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53884 "EHLO
+        Tue, 28 Jul 2020 03:19:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727988AbgG1HUO (ORCPT
+        with ESMTP id S1727873AbgG1HTy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:20:14 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC115C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:20:13 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1k0JuB-00052U-BM; Tue, 28 Jul 2020 09:20:07 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1k0JuA-0004oF-Cm; Tue, 28 Jul 2020 09:20:06 +0200
-Date:   Tue, 28 Jul 2020 09:20:06 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
-Message-ID: <20200728072006.6lqia5gssfepnpbq@pengutronix.de>
-References: <20200724080813.24884-1-peng.fan@nxp.com>
- <20200724080813.24884-4-peng.fan@nxp.com>
- <20200727062335.v2pxgu6kr6ao2qmh@pengutronix.de>
- <DB6PR0402MB27601C875FF5F1E02DBF5C6488720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
- <20200727064151.767kc7622tcqmqfs@pengutronix.de>
- <DB6PR0402MB276063FBE74FCF222CB00F8588720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
- <20200727073757.r2vq6djh3a4dyfp6@pengutronix.de>
- <DB6PR0402MB2760EFCB8C91680DC719C82C88720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+        Tue, 28 Jul 2020 03:19:54 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77130C0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:19:53 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f18so17211153wrs.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:19:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=A6d3Z8kZUGC925O1zWNYM0bo3uk23MCvzFLEsbquiGg=;
+        b=JXEuNNcHl2rzr+ED0k+nl9svIqEnZlG4uG4Ljc30XUWAj7SnsAlzcGFXU0TA0qySQp
+         2hN8vHtrdyO41dqHRHbNgoPQzccQFeCCY6lxquSVVAhovTXq6dPgHYkQUkx8svw4D+R0
+         S4BMdFPVl/rUzIVO23T1URDRTzQGmFn9sx0zrNCH204f4ED8wjuqjvMVBZi6Ppsks+19
+         hQ7s7EkaKV6A5zuNCyrLunYI0x5kEFw4WpSbXhjth3EzCbft0KrRwaTWixEGNYRb6VuB
+         tNNZE8QWXi5j313UCjrpXPViIvmQh52nbvxLtzHyVIeCG53hZNdFNx7NVcKvUdxb0ZLk
+         0Vug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=A6d3Z8kZUGC925O1zWNYM0bo3uk23MCvzFLEsbquiGg=;
+        b=it0mPuK1ku7tI+LTtr+96X5JDE7beTlYi5XJ9LGqYBHpakzf8qXeJlnRfq7zvQri/8
+         fxKul4H2Oihax9rWt43Tw4oF0WfJxMh2nCY28D9VmA1BsoXlUU6ZdnzdHtooGXur0ChH
+         8dfRnO/BY99OUg3BHmtedV8VrpXfQQD8qRyRUZvyyBc85IdbB4gQ3OjIQD2mMAgKjMOv
+         ROvh1WFcnL8Y8BSwThKImggN8rKWMwwnaGFl0Eudgu7ZJVepTAjHKuqXpkUy5kH+hoiY
+         FAchhGKdVN/cpoW0Ds150wxGSDR0bLiB1YjfxZRCRknAzvoI9DGNi4Bxmbloj3ysFYvR
+         oS4g==
+X-Gm-Message-State: AOAM532wB7Z8HlllwWbbRVeBEsU0vQ6KWjkhMNxi7n0wFvcRSgit+jBa
+        B9b/ENrx1+w48G9shZnn9cdT9Q==
+X-Google-Smtp-Source: ABdhPJz+8EDiCF+tZuc+BFokpxg7sLtYNmRW3CW3BfMrYAARno5y9fdOlWpYou7Mu+g++TZQFZ/NPw==
+X-Received: by 2002:adf:f289:: with SMTP id k9mr24097714wro.203.1595920792029;
+        Tue, 28 Jul 2020 00:19:52 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id j11sm15809923wrq.69.2020.07.28.00.19.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 00:19:51 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 08:19:49 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 01/13] mfd: add simple regmap based I2C driver
+Message-ID: <20200728071949.GE1850026@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-2-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="i5eqgdj3pjiydqz6"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <DB6PR0402MB2760EFCB8C91680DC719C82C88720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:17:41 up 255 days, 22:36, 251 users,  load average: 0.03, 0.06,
- 0.07
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200725231834.25642-2-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 26 Jul 2020, Michael Walle wrote:
 
---i5eqgdj3pjiydqz6
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> There are I2C devices which contain several different functions but
+> doesn't require any special access functions. For these kind of drivers
+> an I2C regmap should be enough.
+> 
+> Create an I2C driver which creates an I2C regmap and enumerates its
+> children. If a device wants to use this as its MFD core driver, it has
+> to add an individual compatible string. It may provide its own regmap
+> configuration.
+> 
+> Subdevices can use dev_get_regmap() on the parent to get their regmap
+> instance.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+> Changes since v5:
+>  - removed "select MFD_CORE" in Kconfig
+>  - removed help text in Kconfig, we assume that the users of this
 
-On Mon, Jul 27, 2020 at 08:11:09AM +0000, Peng Fan wrote:
-> > Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
-> >=20
-> > On Mon, Jul 27, 2020 at 06:51:00AM +0000, Peng Fan wrote:
-> > > > Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
-> > > >
-> > > > On Mon, Jul 27, 2020 at 06:28:20AM +0000, Peng Fan wrote:
-> > > > > Hi Oleksij,
-> > > > >
-> > > > > > Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
-> > > > > >
-> > > > > > On Fri, Jul 24, 2020 at 04:08:06PM +0800, Peng Fan wrote:
-> > > > > > > We might need to map an region multiple times, becaue the
-> > > > > > > region might be shared between remote processors, such i.MX8QM
-> > > > > > > with dual
-> > > > M4 cores.
-> > > > > > > So use devm_ioremap, not devm_ioremap_resource.
-> > > > > >
-> > > > > > Can you please give an example of this kind of shared resources
-> > > > > > and how they should be handled by two separate devices?
-> > > > >
-> > > > > This is to share vdevbuffer space, there is a vdevbuffer in device
-> > > > > tree, it will be shared between M4_0 and M4_1.
-> > > > >
-> > > > > For the buffer, it is Linux DMA API will handle the space.
-> > > >
-> > > > Why remoteproc need to care about it? If I see it correctly, from
-> > > > the linux perspective, it is one buffer and one driver is
-> > > > responsible for it. Or do I missing some thing?
-> > >
-> > > We not have the vdev buffer in resource table, so I added in device t=
-ree, see
-> > below:
-> >=20
-> > Hm.. if vdev is not in resource table and should not be controlled by
-> > remoteproc, why do we need remoteproc?
->=20
-> I use same approach as stm32 rproc driver.
->=20
-> The resource table here only publish vring address.
->=20
-> >=20
-> > >         imx8qm_cm40: imx8qm_cm4@0 {
-> > >                 compatible =3D "fsl,imx8qm-cm4";
-> > >                 rsc-da =3D <0x90000000>;
-> > >                 mbox-names =3D "tx", "rx", "rxdb";
-> > >                 mboxes =3D <&lsio_mu5 0 1
-> > >                           &lsio_mu5 1 1
-> > >                           &lsio_mu5 3 1>;
-> > >                 mub-partition =3D <3>;
-> > >                 memory-region =3D <&vdev0vring0>, <&vdev0vring1>,
-> > <&vdevbuffer>,
-> > >                                 <&vdev1vring0>, <&vdev1vring1>;
-> > >                 core-index =3D <0>;
-> > >                 core-id =3D <IMX_SC_R_M4_0_PID0>;
-> > >                 status =3D "okay";
-> > >                 power-domains =3D <&pd IMX_SC_R_M4_0_PID0>,
-> > >                                 <&pd IMX_SC_R_M4_0_MU_1A>;
-> > >         };
-> > >
-> > >         imx8qm_cm41: imx8x_cm4@1 {
-> > >                 compatible =3D "fsl,imx8qm-cm4";
-> > >                 rsc-da =3D <0x90100000>;
-> > >                 mbox-names =3D "tx", "rx", "rxdb";
-> > >                 mboxes =3D <&lsio_mu6 0 1
-> > >                           &lsio_mu6 1 1
-> > >                           &lsio_mu6 3 1>;
-> > >                 mub-partition =3D <4>;
-> > >                 memory-region =3D <&vdev2vring0>, <&vdev2vring1>,
-> > <&vdevbuffer>,
-> > >                                 <&vdev3vring0>, <&vdev3vring1>;
-> > >                 core-index =3D <1>;
-> > >                 core-id =3D <IMX_SC_R_M4_1_PID0>;
-> > >                 status =3D "okay";
-> > >                 power-domains =3D <&pd IMX_SC_R_M4_1_PID0>,
-> > >                                 <&pd IMX_SC_R_M4_1_MU_1A>;
-> > >         };
-> > >
-> > >                 vdevbuffer: vdevbuffer {
-> > >                         compatible =3D "shared-dma-pool";
-> > >                         reg =3D <0 0x90400000 0 0x100000>;
-> > >                         no-map;
-> > >                 };
-> > >
-> > > I have the upper vdevbuffer node shared between M40 and M41 node.
-> > > The vdevbuffer will be used as virtio data buffer.
-> > >
-> > > And I have the following in rproc_add_virtio_dev to share vdevbuffer:
-> > >         /* Try to find dedicated vdev buffer carveout */
-> > >         mem =3D rproc_find_carveout_by_name(rproc, "vdev%dbuffer",
-> > rvdev->index);
-> > >         if (!mem)
-> > >                 mem =3D rproc_find_carveout_by_name(rproc,
-> > > "vdevbuffer");
-> >=20
-> > With kernel v5.8-rc7 i get following call chain:
->=20
-> Please use Linux-next which has support of M4 booted before Linux in
-> in remoteproc.
->=20
-> > rproc_boot()
-> >   rproc_fw_boot()
-> >     rproc_handle_vdev
-> >       rproc_vdev_do_start()
-> >         rproc_add_virtio_dev()
-> >=20
-> >=20
-> > So, at the end, we will call rproc_add_virtio_dev() only if we boot fir=
-mware by
-> > linux, or if we get at least the resource table.
->=20
->=20
-> Resource table could be got from elf file if it is booted by Linux, or go=
-t from
-> an address if M4 is booted before Linux.
+That's the opposite of what I asked for.
 
-Ok, i see now. Thank you!
+>    driver will have a "select MFD_SIMPLE_MFD_I2C". Instead added
+>    a small description to the driver itself.
+>  - removed "struct simple_mfd_i2c_config" and use regmap_config
+>    directly
+>  - changed builtin_i2c_driver() to module_i2c_driver(), added
+>    MODULE_ boilerplate
+>  - cleaned up the included files
+> 
+> Changes since v4:
+>  - new patch. Lee, please bear with me. I didn't want to delay the
+>    new version (where a lot of remarks on the other patches were
+>    addressed) even more, just because we haven't figured out how
+>    to deal with the MFD part. So for now, I've included this one.
+> 
+>  drivers/mfd/Kconfig          |  5 ++++
+>  drivers/mfd/Makefile         |  1 +
+>  drivers/mfd/simple-mfd-i2c.c | 55 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 61 insertions(+)
+>  create mode 100644 drivers/mfd/simple-mfd-i2c.c
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 33df0837ab41..c08539c7a166 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1162,6 +1162,11 @@ config MFD_SI476X_CORE
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called si476x-core.
+>  
+> +config MFD_SIMPLE_MFD_I2C
+> +	tristate
+> +	depends on I2C
+> +	select REGMAP_I2C
 
-Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Please provide a full help.
 
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>  config MFD_SM501
+>  	tristate "Silicon Motion SM501"
+>  	depends on HAS_DMA
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index a60e5f835283..78d24a3e7c9e 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -264,3 +264,4 @@ obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+>  obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
+>  
+>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+> +obj-$(CONFIG_MFD_SIMPLE_MFD_I2C)	+= simple-mfd-i2c.o
+> diff --git a/drivers/mfd/simple-mfd-i2c.c b/drivers/mfd/simple-mfd-i2c.c
+> new file mode 100644
+> index 000000000000..45090ddad104
+> --- /dev/null
+> +++ b/drivers/mfd/simple-mfd-i2c.c
+> @@ -0,0 +1,55 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * A very simple I2C MFD driver
 
---i5eqgdj3pjiydqz6
-Content-Type: application/pgp-signature; name="signature.asc"
+Simple MFD - I2C
 
------BEGIN PGP SIGNATURE-----
+> + * The driver enumerates its children and registers a common regmap. Use
+> + * dev_get_regmap(pdev->dev.parent, NULL) in the child nodes to fetch that
+> + * regmap instance.
 
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl8f0aEACgkQ4omh9DUa
-UbPAsQ//XBoFlYduiR5diPTVmdX6G5+l7hpLt+H0SBighq2rejKsHq/dH8w/MHT1
-OBlB8JEZJgJIY3VzYIvBwYs9M5qGYYQfLymZVORDi59RDuyYkBDI0LeIBVCxfSxb
-JnmOEXly2nGD/cVRQB2O2NLBCpE1SFiZ/LbQ21DCzm40gfaXFkO7/bxgpMz1r/XY
-Whr7fb3772f4NGOYOTRVUj7n5+jp48yFRoCwEnjeTC/fZ7Jpi1YzJpmfdFq5Hzjt
-9ZRhHITjac2FcicZjJ5Ac92JZvt7lII1tFhh7UGxt7tnkS1mOglehuhynst5RoGk
-NbrzCgozsbJenU6vfdgcsMFHO49Mjj1EP+hITKDClQVbImEgdU4ZmhW4sRY1cAO7
-3FeG9ZH7ru60PnEUR/SUt4e3dIAcGr4vjLdtY0kODpkfgyvYJfrssCzJIkCuboO2
-Xn7DWtoANixGZpr8g00VcBgEQL+zfEUrGcHS8pEIH/P9jippTsYnP7bX3EEDIkJR
-qwqQ/UUyiZ9yGGX2z/ShdUplEho9HaSz0DXl/C64kMikQAROAy/B+bk/Vs0rCgEY
-ESq82Ghy5FBdakZouPA1DfYvWmRTgolIiFALkZT/X1RyaVPjvf5vNG7Ceyb7upn3
-uB5KZu1T1i99l44Ff5yZR5/+hYp+YuO4CLaGYlNoXrtBIlH0iwU=
-=q0i1
------END PGP SIGNATURE-----
+This driver creates a single register map with the intention for it to
+be shared by all sub-devices.  Children can use their parent's device
+structure (dev.parent) in order reference it. 
 
---i5eqgdj3pjiydqz6--
+> + * In the future this driver might be extended to support also other interfaces
+> + * like SPI etc.
+
+Remove this please.
+
+> + */
+
+'\n' here.
+
+> +#include <linux/i2c.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/regmap.h>
+> +
+> +static const struct regmap_config simple_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +};
+> +
+> +static int simple_mfd_i2c_probe(struct i2c_client *i2c)
+> +{
+> +	const struct regmap_config *config;
+> +	struct regmap *regmap;
+> +
+> +	config = device_get_match_data(&i2c->dev);
+> +	if (!config)
+> +		config = &simple_regmap_config;
+> +
+> +	regmap = devm_regmap_init_i2c(i2c, config);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	return devm_of_platform_populate(&i2c->dev);
+> +}
+> +
+> +static const struct of_device_id simple_mfd_i2c_of_match[] = {
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, simple_mfd_i2c_of_match);
+> +
+> +static struct i2c_driver simple_mfd_i2c_driver = {
+> +	.probe_new = simple_mfd_i2c_probe,
+> +	.driver = {
+> +		.name = "simple-mfd-i2c",
+> +		.of_match_table = simple_mfd_i2c_of_match,
+> +	},
+> +};
+> +module_i2c_driver(simple_mfd_i2c_driver);
+> +
+> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+> +MODULE_DESCRIPTION("Simple I2C MFD driver");
+
+Simple MFD - I2C driver
+
+> +MODULE_LICENSE("GPL v2");
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
