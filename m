@@ -2,138 +2,75 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D013CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABBCC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABB13207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8543B20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:06:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hD9NBGeE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgG1GGH (ORCPT
+        id S1727854AbgG1GGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:06:07 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:34833 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726880AbgG1GGG (ORCPT
+        Tue, 28 Jul 2020 02:06:20 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:38353 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727840AbgG1GGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:06:06 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from eli@mellanox.com)
-        with SMTP; 28 Jul 2020 09:06:00 +0300
-Received: from nps-server-21.mtl.labs.mlnx (nps-server-21.mtl.labs.mlnx [10.237.240.120])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06S660eJ016687;
-        Tue, 28 Jul 2020 09:06:00 +0300
-Received: from nps-server-21.mtl.labs.mlnx (localhost [127.0.0.1])
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 06S660IT004221;
-        Tue, 28 Jul 2020 09:06:00 +0300
-Received: (from eli@localhost)
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 06S660HF004220;
-        Tue, 28 Jul 2020 09:06:00 +0300
-From:   Eli Cohen <eli@mellanox.com>
-To:     mst@redhat.com, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com
-Subject: [PATCH V3 vhost next 01/10] vhost-vdpa: support batch updating
-Date:   Tue, 28 Jul 2020 09:05:30 +0300
-Message-Id: <20200728060539.4163-2-eli@mellanox.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200728060539.4163-1-eli@mellanox.com>
-References: <20200728060539.4163-1-eli@mellanox.com>
+        Tue, 28 Jul 2020 02:06:17 -0400
+X-UUID: 92432d80c5c1495f8494ee613d605977-20200728
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=E83uOZs7DyeB7TR4C1odBEb7LAe+3RMTV23poiVNiis=;
+        b=hD9NBGeERDNT/0RgLm5PJPVE/yMeq0D+F8sAF1qePLx6EfmdnE9D1JCMlkQ6SO6b/rJ9syRmRu1pUaE4NI08CfZGoTbELoepiGEEMgIeBbwOgTqpqYWtlpAWza4y9yz2yOHVt7GRXUe5HtdfxZIM0MYc/AuLTRyYvp/tzcP0q9c=;
+X-UUID: 92432d80c5c1495f8494ee613d605977-20200728
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 349812538; Tue, 28 Jul 2020 14:06:13 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs08n1.mediatek.inc
+ (172.21.101.55) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 28 Jul
+ 2020 14:06:05 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 28 Jul 2020 14:06:05 +0800
+Message-ID: <1595916343.21478.4.camel@mhfsdcap03>
+Subject: Re: [PATCH 10/11] usb: mtu3: clear dual mode of u3port when disable
+ device
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>
+CC:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Eddie Hung <eddie.hung@mediatek.com>
+Date:   Tue, 28 Jul 2020 14:05:43 +0800
+In-Reply-To: <e30483ff-e66a-1cba-e166-a1fe590c2f03@gmail.com>
+References: <1595834101-13094-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1595834101-13094-10-git-send-email-chunfeng.yun@mediatek.com>
+         <e30483ff-e66a-1cba-e166-a1fe590c2f03@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
-
-Change-Id: Ifd7139cfbd122dc22493f4bb93fa884f8edbddb6
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vhost/vdpa.c             | 23 +++++++++++++++++------
- include/uapi/linux/vhost_types.h |  2 ++
- 2 files changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-index a54b60d6623f..8827ae31f96d 100644
---- a/drivers/vhost/vdpa.c
-+++ b/drivers/vhost/vdpa.c
-@@ -73,6 +73,7 @@ struct vhost_vdpa {
- 	int virtio_id;
- 	int minor;
- 	struct eventfd_ctx *config_ctx;
-+	bool in_batch;
- };
- 
- static DEFINE_IDA(vhost_vdpa_ida);
-@@ -521,9 +522,9 @@ static int vhost_vdpa_map(struct vhost_vdpa *v,
- 
- 	if (ops->dma_map)
- 		r = ops->dma_map(vdpa, iova, size, pa, perm);
--	else if (ops->set_map)
--		r = ops->set_map(vdpa, dev->iotlb);
--	else
-+	else if (ops->set_map) {
-+
-+	} else
- 		r = iommu_map(v->domain, iova, pa, size,
- 			      perm_to_iommu_flags(perm));
- 
-@@ -540,9 +541,8 @@ static void vhost_vdpa_unmap(struct vhost_vdpa *v, u64 iova, u64 size)
- 
- 	if (ops->dma_map)
- 		ops->dma_unmap(vdpa, iova, size);
--	else if (ops->set_map)
--		ops->set_map(vdpa, dev->iotlb);
--	else
-+	else if (ops->set_map) {
-+	} else
- 		iommu_unmap(v->domain, iova, size);
- }
- 
-@@ -636,6 +636,8 @@ static int vhost_vdpa_process_iotlb_msg(struct vhost_dev *dev,
- 					struct vhost_iotlb_msg *msg)
- {
- 	struct vhost_vdpa *v = container_of(dev, struct vhost_vdpa, vdev);
-+	struct vdpa_device *vdpa = v->vdpa;
-+	const struct vdpa_config_ops *ops = vdpa->config;
- 	int r = 0;
- 
- 	r = vhost_dev_check_owner(dev);
-@@ -649,6 +651,15 @@ static int vhost_vdpa_process_iotlb_msg(struct vhost_dev *dev,
- 	case VHOST_IOTLB_INVALIDATE:
- 		vhost_vdpa_unmap(v, msg->iova, msg->size);
- 		break;
-+	case VHOST_IOTLB_BATCH_BEGIN:
-+		v->in_batch = true;
-+		break;
-+	case VHOST_IOTLB_BATCH_END:
-+		if (v->in_batch && ops->set_map) {
-+			ops->set_map(vdpa, dev->iotlb);
-+		}
-+		v->in_batch = false;
-+		break;
- 	default:
- 		r = -EINVAL;
- 		break;
-diff --git a/include/uapi/linux/vhost_types.h b/include/uapi/linux/vhost_types.h
-index 669457ce5c48..7f52245f8d5d 100644
---- a/include/uapi/linux/vhost_types.h
-+++ b/include/uapi/linux/vhost_types.h
-@@ -60,6 +60,8 @@ struct vhost_iotlb_msg {
- #define VHOST_IOTLB_UPDATE         2
- #define VHOST_IOTLB_INVALIDATE     3
- #define VHOST_IOTLB_ACCESS_FAIL    4
-+#define VHOST_IOTLB_BATCH_BEGIN    5
-+#define VHOST_IOTLB_BATCH_END      6
- 	__u8 type;
- };
- 
--- 
-2.26.0
+T24gTW9uLCAyMDIwLTA3LTI3IGF0IDExOjA3ICswMzAwLCBTZXJnZWkgU2h0eWx5b3Ygd3JvdGU6
+DQo+IEhlbGxvIQ0KPiANCj4gT24gMjcuMDcuMjAyMCAxMDoxNCwgQ2h1bmZlbmcgWXVuIHdyb3Rl
+Og0KPiANCj4gPiBJZiBub3QgY2xlYXIgdTNwb3J0J3MgZHVhbCBtb2RlIHdoZW4gZGlzYWJsZSBk
+ZXZpY2UsIHRoZSBJUA0KPiANCj4gICAgIElmIHdlIGRvbid0IGNsZWFyIC4uLiB3aGVuIGRpc2Fi
+bGluZyAuLi4/DQo+IA0KPiA+IHdpbGwgZmFpbCB0byBlbnRlciBzbGVlcCBtb2RlIHdoZW4gc3Vz
+cGVuZC4NCk9rLCB0aGFua3MgYSBsb3QNCg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IENodW5m
+ZW5nIFl1biA8Y2h1bmZlbmcueXVuQG1lZGlhdGVrLmNvbT4NCj4gWy4uLl0NCj4gDQo+IE1CUiwg
+U2VyZ2VpDQoNCg==
 
