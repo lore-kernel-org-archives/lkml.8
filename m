@@ -2,116 +2,114 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B046C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE040C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C050207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF582074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:58:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eyumjyR+"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="oMNMtjIM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbgG1N5B (ORCPT
+        id S1730266AbgG1N6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:57:01 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60609 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726764AbgG1N5A (ORCPT
+        Tue, 28 Jul 2020 09:58:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730245AbgG1N6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:57:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595944619;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vfTc1Sd6o29rE/cL2xWa+D8N0CUv3nwmUtcS2HIpsf4=;
-        b=eyumjyR+kdaQbwLKZnpainUZ6yqCXVqojQLs2sahjK6/KoAKWZn6syRjGGBLHUWhmzmmaM
-        Z6PNBJ6t1NVmNaUMZFda8qJPSHVa06w8wSR/XZB3LQtNKBWN2Wb2QpcBC3NHsOGTrr1ZMt
-        kt037SfPhuYaY1hJSERpOz8iw9gcpws=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-367-hcivNEh2MGC1nzKRmhLHDg-1; Tue, 28 Jul 2020 09:56:55 -0400
-X-MC-Unique: hcivNEh2MGC1nzKRmhLHDg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 17FA0800460;
-        Tue, 28 Jul 2020 13:56:54 +0000 (UTC)
-Received: from localhost (ovpn-12-117.pek2.redhat.com [10.72.12.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7C9E575543;
-        Tue, 28 Jul 2020 13:56:45 +0000 (UTC)
-Date:   Tue, 28 Jul 2020 21:56:41 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH v1 2/6] mm/page_isolation: don't dump_page(NULL) in
- set_migratetype_isolate()
-Message-ID: <20200728135641.GD14854@MiWiFi-R3L-srv>
-References: <20200630142639.22770-1-david@redhat.com>
- <20200630142639.22770-3-david@redhat.com>
+        Tue, 28 Jul 2020 09:58:11 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C404C0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:58:11 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id f24so247029ejx.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:58:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ymP2tkbCreL/BF43+tTjYnEHkymNa3rchuw1gYfZEfQ=;
+        b=oMNMtjIME3+WubEoBwV0RCzBSd3w/ZacHV0/MIaMQsDsXKVA+ffHU1K+cCfA0pZe5b
+         8cmaUNwUFDPa7F+Oo47Ool4rApNg3xZ/KLqcmxmWlrP0p4y+H0nRUcngVmvfZw9RVRAO
+         RjQhpeAhr763rKw69pCbpurmWe33driw0NlDRsF5667RjxZ/otWwsk8d9+9jzniz1Gn+
+         oWcKZjScOYxJxQDIBjjkoqrBj+z2yY+8xDZNm1AGXQDBWrYMen1kq16oRSXqq2N6pSn3
+         L7In1AgtUHsWRKlzODuHHfqmgaC7C0JL7ioaTxuQCVTzJ16Ehr5qMN0akImSf7QXATJB
+         oiNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ymP2tkbCreL/BF43+tTjYnEHkymNa3rchuw1gYfZEfQ=;
+        b=GexfzwNiKlZC5Si5SLluA64KRxqVCWsamt28UY66D7DjlEW1AcFMxZikHA9GrNOzGA
+         VFfu0he1OIdHQafdhOD5cQhjMpdC5LwcNBSXuArrBi44OIEH8/mol7VmcWll9AsYs1zH
+         uEUQq80J0t46b3VSnf1He3ibfLLm+DYJ9uizELiaiRqAHSz7i81Csn60zAcos5TrfD3p
+         TXiW5OdW0kAJk2K5OPJSGWGYTWkRbbKSTWpXtrc5sVKxkdu2WX2oi6eXgnyBdVGRriA2
+         3k+fPCCEcJY7N7zcdauHSWQntNO5FC5NX6W25/tPzRhVigXV4UA7YRLlMvvV+V2nBTbf
+         Hxog==
+X-Gm-Message-State: AOAM531hmKKxi5rNVO7sSetNVwa5IZsldfLIJt56/3SdJX8r4kDf8SbO
+        VF2HOeK6mlEF6KN4DVsJN0K9hA==
+X-Google-Smtp-Source: ABdhPJwroLo223bNqj6sH/j5TpDMw2I5BPQp3H1jydSIXwW/JzjKbhx2qtE45esrYgcxkGyKrhleWQ==
+X-Received: by 2002:a17:906:7f0e:: with SMTP id d14mr1886365ejr.400.1595944690141;
+        Tue, 28 Jul 2020 06:58:10 -0700 (PDT)
+Received: from localhost (jirka.pirko.cz. [84.16.102.26])
+        by smtp.gmail.com with ESMTPSA id f22sm442617edt.91.2020.07.28.06.58.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 06:58:09 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 15:58:08 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Moshe Shemesh <moshe@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
+ devlink reload command
+Message-ID: <20200728135808.GC2207@nanopsycho>
+References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
+ <1595847753-2234-2-git-send-email-moshe@mellanox.com>
+ <20200727175802.04890dd3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630142639.22770-3-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200727175802.04890dd3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/30/20 at 04:26pm, David Hildenbrand wrote:
-> Right now, if we have two isolations racing, we might trigger the
-> WARN_ON_ONCE() and to dump_page(NULL), dereferencing NULL. Let's just
-> return directly.
-> 
-> In the future, we might want to report -EAGAIN to the caller instead, as
-> this could indicate a temporary isolation failure only.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/page_isolation.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index f6d07c5f0d34d..553b49a34cf71 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -29,10 +29,12 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
->  	/*
->  	 * We assume the caller intended to SET migrate type to isolate.
->  	 * If it is already set, then someone else must have raced and
-> -	 * set it before us.  Return -EBUSY
-> +	 * set it before us.
->  	 */
-> -	if (is_migrate_isolate_page(page))
-> -		goto out;
-> +	if (is_migrate_isolate_page(page)) {
-> +		spin_unlock_irqrestore(&zone->lock, flags);
-> +		return -EBUSY;
+Tue, Jul 28, 2020 at 02:58:02AM CEST, kuba@kernel.org wrote:
+>On Mon, 27 Jul 2020 14:02:21 +0300 Moshe Shemesh wrote:
+>> Add devlink reload level to allow the user to request a specific reload
+>> level. The level parameter is optional, if not specified then driver's
+>> default reload level is used (backward compatible).
+>
+>Please don't leave space for driver-specific behavior. The OS is
+>supposed to abstract device differences away.
 
-Good catch, the fix looks good to me.
+But this is needed to maintain the existing behaviour which is different
+for different drivers.
 
-Reviewed-by: Baoquan He <bhe@redhat.com>
 
-> +	}
->  
->  	/*
->  	 * FIXME: Now, memory hotplug doesn't call shrink_slab() by itself.
-> -- 
-> 2.26.2
-> 
-> 
-
+>
+>Previously the purpose of reload was to activate new devlink params
+>(with driverinit cmode), now you want the ability to activate new
+>firmware. Let users specify their intent and their constraints.
+>
+>> Reload levels supported are:
+>> driver: driver entities re-instantiation only.
+>> fw_reset: firmware reset and driver entities re-instantiation.
+>> fw_live_patch: firmware live patching only.
+>
+>I'm concerned live_patch is not first - it's the lowest impact (since
+>it's live). Please make sure you clearly specify the expected behavior
+>for the new API.
+>
+>The notion of multi-host is key for live patching, so it has to be
+>mentioned.
+>
+>> Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
