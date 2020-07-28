@@ -2,81 +2,215 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55784C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C6BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A54D20838
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 098AC2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:34:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g7VomaSM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgG1Icc (ORCPT
+        id S1728175AbgG1IeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:32:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47724 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727808AbgG1Icb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:32:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C31BDB1EF;
-        Tue, 28 Jul 2020 08:32:40 +0000 (UTC)
-From:   =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
-To:     Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
-Subject: [PATCH] /proc/PID/smaps: Consistent whitespace output format
-Date:   Tue, 28 Jul 2020 10:32:07 +0200
-Message-Id: <20200728083207.17531-1-mkoutny@suse.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 28 Jul 2020 04:34:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727808AbgG1IeO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:34:14 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21129C0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:34:13 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id n4so6243334uae.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:34:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=B0b9UMK24v6NX2X8zYI+BkJ3zJnFD1PM99BHGur3P6E=;
+        b=g7VomaSMeefY7/kItCPm86++8jaIvAKsbmzzeKLH9gUiL1cOCi8q9AktmxuMa4R8pS
+         fV/LB/UayxZFKvDj9HBPDngzrlsQyOwQ7fvrdn+eOeeYySIW7jwC8cFbSKqjkUuXHHji
+         URGlGXhA3soNhC2uDDZAmeM8po9DgP5DMwBv9Wnp4KIMZGLFimi8Snhin8/+KSc8XEbi
+         tdr3f+Ofif2/O5lr2yvnswjVywZd4LiYaKYZZrViWXvKUmtQl85VjCxP7UURlzqfr7pg
+         DTE4mAxqKelkZdSPHM3+PAp4+mBoIUQ1hBZqPbQTgDHoF49TjBwYfnGP+e/DbNL55LCT
+         CSBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=B0b9UMK24v6NX2X8zYI+BkJ3zJnFD1PM99BHGur3P6E=;
+        b=ccP72+5KiOaE/FetI5C4QkZnFwBQDUQuKWVtecHQaU9ziacZhBpl6CWhZ/vZjKEwge
+         YAMIGoVXvUvjt6yCCqAS5/YfViOhDHTC56okgFahVRvo8aMjIbPDNIe9wdznOZcgCOow
+         vWgMJD0ejrAn3XGbh3uN1+32FgI1MsR2N9EH8wMVJCSI5h3KH/+54fBSgef/z8orKEk1
+         8r2KvxftraBg2dADY/xWUwMEozuaLH8VTu2gaq07Cm40Yx2ta6+gEbMvTw8KapCgkaHc
+         RPN4ojuOpPp5t20d1dkqbpJU9ZSiuq/06iEuEHnFBmXZF89ll8wZ5asO/CPzgUq7cQWZ
+         EsGg==
+X-Gm-Message-State: AOAM530he1XMG2cE7WMYo1leZKJn7VW69JVZ6xAk6ZxyRQz0vBMY0TY7
+        e8Y9UEy6CsgKLf1JlIpS1/Y8L7FA2cEsSFWl4q8kzQ==
+X-Google-Smtp-Source: ABdhPJw9Kem7X/V6X+O7xfXZA3c3hpHwIItrswtiz2UQ+rk3CTaZObtbDgJMp5+mMd1VPa3PZcIbNSoqLrCV/vM3weM=
+X-Received: by 2002:ab0:5963:: with SMTP id o32mr19079185uad.142.1595925252099;
+ Tue, 28 Jul 2020 01:34:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200727134914.312934924@linuxfoundation.org>
+In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 28 Jul 2020 14:04:00 +0530
+Message-ID: <CA+G9fYvBRONMYwX36Hcju4JA5TwstkT2Afyuy2DB1zQcBcc1CA@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/86] 4.19.135-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        songmuchun@bytedance.com
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Christoph Lameter <cl@linux.com>, Roman Gushchin <guro@fb.com>,
+        iamjoonsoo.kim@lge.com, linux-mm <linux-mm@kvack.org>,
+        mm-commits@vger.kernel.org, penberg@kernel.org,
+        rientjes@google.com, Shakeel Butt <shakeelb@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The keys in smaps output are padded to fixed width with spaces.
-All except for THPeligible that uses tabs (only since
-commit c06306696f83 ("mm: thp: fix false negative of shmem vma's THP
-eligibility")).
-Unify the output formatting to save time debugging some naïve parsers.
-(Part of the unification is also aligning FilePmdMapped with others.)
+On Mon, 27 Jul 2020 at 19:40, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.135 release.
+> There are 86 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 29 Jul 2020 13:48:51 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.135-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
+> -------------
+> Pseudo-Shortlog of commits:
+<trim>
 
-Signed-off-by: Michal Koutný <mkoutny@suse.com>
----
- fs/proc/task_mmu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Results from Linaro=E2=80=99s test farm.
+Regressions detected on x86_64.
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index dbda4499a859..5066b0251ed8 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -786,7 +786,7 @@ static void __show_smap(struct seq_file *m, const struct mem_size_stats *mss,
- 	SEQ_PUT_DEC(" kB\nLazyFree:       ", mss->lazyfree);
- 	SEQ_PUT_DEC(" kB\nAnonHugePages:  ", mss->anonymous_thp);
- 	SEQ_PUT_DEC(" kB\nShmemPmdMapped: ", mss->shmem_thp);
--	SEQ_PUT_DEC(" kB\nFilePmdMapped: ", mss->file_thp);
-+	SEQ_PUT_DEC(" kB\nFilePmdMapped:  ", mss->file_thp);
- 	SEQ_PUT_DEC(" kB\nShared_Hugetlb: ", mss->shared_hugetlb);
- 	seq_put_decimal_ull_width(m, " kB\nPrivate_Hugetlb: ",
- 				  mss->private_hugetlb >> 10, 7);
-@@ -816,7 +816,7 @@ static int show_smap(struct seq_file *m, void *v)
- 
- 	__show_smap(m, &mss, false);
- 
--	seq_printf(m, "THPeligible:		%d\n",
-+	seq_printf(m, "THPeligible:    %d\n",
- 		   transparent_hugepage_enabled(vma));
- 
- 	if (arch_pkeys_enabled())
--- 
-2.27.0
+Boot failures on x86_64 devices running 4.19.135-rc1 kernel.
 
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.19.135-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: e11702667f84474535b156dbb194deffa0a6cdb4
+git describe: v4.19.134-87-ge11702667f84
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.134-87-ge11702667f84
+
+> Muchun Song <songmuchun@bytedance.com>
+>     mm: memcg/slab: fix memory leak at non-root kmem_cache destroy
+
+[    2.510884] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[    2.510884] WARNING: possible recursive locking detected
+[    2.510884] 4.19.135-rc1 #1 Not tainted
+[    2.510884] --------------------------------------------
+[    2.510884] swapper/0/1 is trying to acquire lock:
+[    2.510884] 0000000088703397 (slab_mutex){+.+.}, at:
+kmem_cache_destroy+0x9a/0x2b0
+[    2.510884]
+[    2.510884] but task is already holding lock:
+[    2.510884] 0000000088703397 (slab_mutex){+.+.}, at:
+kmem_cache_destroy+0x45/0x2b0
+[    2.510884]
+[    2.510884] other info that might help us debug this:
+[    2.510884]  Possible unsafe locking scenario:
+[    2.510884]
+[    2.510884]        CPU0
+[    2.510884]        ----
+[    2.510884]   lock(slab_mutex);
+[    2.510884]   lock(slab_mutex);
+[    2.510884]
+[    2.510884]  *** DEADLOCK ***
+[    2.510884]
+[    2.510884]  May be due to missing lock nesting notation
+[    2.510884]
+[    2.510884] 3 locks held by swapper/0/1:
+[    2.510884]  #0: 000000008702dddc (cpu_hotplug_lock.rw_sem){++++},
+at: kmem_cache_destroy+0x32/0x2b0
+[    2.510884]  #1: 0000000050103e4d (mem_hotplug_lock.rw_sem){++++},
+at: kmem_cache_destroy+0x37/0x2b0
+[    2.510884]  #2: 0000000088703397 (slab_mutex){+.+.}, at:
+kmem_cache_destroy+0x45/0x2b0
+[    2.510884]
+[    2.510884] stack backtrace:
+[    2.510884] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 4.19.135-rc1 #1
+[    2.510884] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.0b 07/27/2017
+[    2.510884] Call Trace:
+[    2.510884]  dump_stack+0x7a/0xa5
+[    2.510884]  __lock_acquire+0x6f1/0x1380
+[    2.510884]  ? ret_from_fork+0x3a/0x50
+[    2.510884]  lock_acquire+0x95/0x190
+[    2.510884]  ? lock_acquire+0x95/0x190
+[    2.510884]  ? kmem_cache_destroy+0x9a/0x2b0
+[    2.510884]  ? kmem_cache_destroy+0x9a/0x2b0
+[    2.510884]  __mutex_lock+0x83/0x990
+[    2.510884]  ? kmem_cache_destroy+0x9a/0x2b0
+[    2.510884]  ? kmem_cache_destroy+0x60/0x2b0
+[    2.510884]  ? set_debug_rodata+0x17/0x17
+[    2.510884]  ? set_debug_rodata+0x17/0x17
+[    2.510884]  mutex_lock_nested+0x1b/0x20
+[    2.510884]  ? get_online_mems+0x5f/0x90
+[    2.510884]  ? mutex_lock_nested+0x1b/0x20
+[    2.510884]  kmem_cache_destroy+0x9a/0x2b0
+[    2.510884]  ? set_debug_rodata+0x17/0x17
+[    2.510884]  intel_iommu_init+0x11c6/0x1326
+[    2.510884]  ? kfree+0xc4/0x240
+[    2.510884]  ? lockdep_hardirqs_on+0xef/0x180
+[    2.510884]  ? kfree+0xc4/0x240
+[    2.510884]  ? trace_hardirqs_on+0x4c/0x100
+[    2.510884]  ? unpack_to_rootfs+0x272/0x29a
+[    2.510884]  ? e820__memblock_setup+0x64/0x64
+[    2.510884]  ? set_debug_rodata+0x17/0x17
+[    2.510884]  pci_iommu_init+0x1a/0x44
+[    2.510884]  ? e820__memblock_setup+0x64/0x64
+[    2.510884]  ? pci_iommu_init+0x1a/0x44
+[    2.510884]  do_one_initcall+0x61/0x2b4
+[    2.510884]  ? set_debug_rodata+0xa/0x17
+[    2.510884]  ? rcu_read_lock_sched_held+0x81/0x90
+[    2.510884]  kernel_init_freeable+0x1d8/0x270
+[    2.510884]  ? rest_init+0x190/0x190
+[    2.510884]  kernel_init+0xe/0x110
+[    2.510884]  ret_from_fork+0x3a/0x50
+
+
+Full test log:
+https://pastebin.com/PWkk0YaF
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
