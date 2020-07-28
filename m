@@ -2,94 +2,78 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64383C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA6AC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47EB32063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B7020786
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:37:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595921844;
+	bh=nHg0yBmAWqsOsobn8G2iptEUXidooZ09VVmDRHvOIpo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=liQ629WGX8C8srXC4KwshlZTALIK2gUjW5+SU8NvvvUS4Q9MknVDJV1ocZe1rKgi9
+	 JgsgJhld7lZlKuPuNr0cHoDWzETK0lrbz6YzG0UjmAAJvK5yHV6slgLcK+F5WMuQQQ
+	 Pa9agNqDELji2OJf7R6Sn+C4pWElNPAjyCdcdELw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgG1HfQ (ORCPT
+        id S1727911AbgG1HhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:35:16 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:55013 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbgG1HfP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:35:15 -0400
-Received: from mail-qt1-f170.google.com ([209.85.160.170]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MuDPf-1knLMT1jCv-00ucez; Tue, 28 Jul 2020 09:35:12 +0200
-Received: by mail-qt1-f170.google.com with SMTP id t23so11082490qto.3;
-        Tue, 28 Jul 2020 00:35:12 -0700 (PDT)
-X-Gm-Message-State: AOAM531bLlf1hTCvlV7+0iPP+VmKnVqyC0bNmn7Y42CWdYosjblaUS1A
-        O2xQYKUZowkVbYKRdZRpHwqd6cAhzo/wmJzTJc0=
-X-Google-Smtp-Source: ABdhPJzm02izO1Ffq0PZdADjKoK3t4vds3+X8L/oZzjLjgpqyxpOvLwSSCIHYnBRr4PgGF+B+aNhgZlxi8N9vDUMUn8=
-X-Received: by 2002:ac8:688e:: with SMTP id m14mr18758364qtq.7.1595921711141;
- Tue, 28 Jul 2020 00:35:11 -0700 (PDT)
+        Tue, 28 Jul 2020 03:37:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59126 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727045AbgG1HhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 03:37:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FF1C20786;
+        Tue, 28 Jul 2020 07:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595921842;
+        bh=nHg0yBmAWqsOsobn8G2iptEUXidooZ09VVmDRHvOIpo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZeqX0DBs30ldEyJ0nnuMTe2YpqY/Sly2qjXTN+TsU4jUvf6J2FMKCbZGwr/mU79Lf
+         Ib84m4TchlLqbONBVCdTmKEVNam8Or+/RC7ijCuByx3BPkkh/L+tZ+2Upt/xpuz/Gr
+         W9mkxaebKHZQj54v1G6JXxz9KZrWoi78ZVaibKmQ=
+Date:   Tue, 28 Jul 2020 09:37:15 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Ankit <b18007@students.iitmandi.ac.in>
+Cc:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging : media : atomisp : fixed a brace coding sytle
+ issue
+Message-ID: <20200728073715.GA351768@kroah.com>
+References: <20200727121635.GT3703480@smile.fi.intel.com>
+ <20200727213010.15156-1-b18007@students.iitmandi.ac.in>
 MIME-Version: 1.0
-References: <20200728022859.381819-1-yepeilin.cs@gmail.com> <20200728053604.404631-1-yepeilin.cs@gmail.com>
-In-Reply-To: <20200728053604.404631-1-yepeilin.cs@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 28 Jul 2020 09:34:54 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2_61F2OT3FkNF4zTdmQ+VtdGkr+dWu1SuL+q6YbN-Ytw@mail.gmail.com>
-Message-ID: <CAK8P3a2_61F2OT3FkNF4zTdmQ+VtdGkr+dWu1SuL+q6YbN-Ytw@mail.gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH net v2] xdp: Prevent
- kernel-infoleak in xsk_getsockopt()
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Song Liu <songliubraving@fb.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ea85R/l0RhqD2jar4GIsAVuSbP8q+tqdgYpDciLzCh2vczIgPY7
- 0U7W0m2+00t53Ngi4QwIblA7e7OymA/4xAtHe2b8aw+7iTNvkrqMKqcI6BkX8Is2/6VTXsx
- VsmbEKJXUIHbzmJRfuYZstroWcFWqHot7DKwQHOsZ9d0vadiyYovN+9l3I20dV2LOIEpQXN
- OPpYUr2IANQwBfCReeGNw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bBIWiQconYU=:etXMGO21NeYgUooWd7eSo8
- KAZRJ8GQXB4d/stO00LAjEEM01ZISG881LiYnQN9QLMq2RBGmdrqneORsJ8WwEtrZPyQPLmSZ
- XxOjdLm9zwQUOKfXnSXWB6yvDchCz6LutZFG3nwlbgPi6/6VOsZlyYaUsHxS5sb798juHqBCn
- DE74HDiIhjBp0c3cGb+Dg7I8E1B8XaDYbpd7rwJuw8n2vGnibK1mpeWFXjqPBOzbDEN/JeS0H
- DLvUWpX0Kaq5SnbXzbQvbBLzV9WEFda1d1TLAlldYDgJrqVZvOrBKB3tc2vJUyt17ZNcc+92Y
- zSoK9/N86OnJhWHT4IlbIer4WfISWLOG10ErIf5A1ym2WGeq+872pU3LvAd4OsoYhCZ+p3YwJ
- WCuhBOjTbBs31dCcektc2o6pvtuSxnbiBMHohEwLi8ZXm4HH24fo9lrwSh09mVGgIMlOyaP6e
- FfC8X1M/MoNba2MbAkApHSjyDWEqUJVVgPHVqEVrIsQMEn6uX2H31bPipfDr1sxw55glBsc/n
- qV6V6Kf6oVJOTMC5swNDQzKtlSybW1gPsMW766UI/M52eB83yfBgPuLyGpuLd0hZQTS8FQkDN
- ZZe+0V7qo8L6jzSFVP8a+vey1Tpvct8MdjmoLUejc1Agc92unH+q7G3qREGj5kwpO+zlLHWv5
- O6z6H2SBjbRik+CVJyhWpMVk5JQiMXfku9mJ0w7NilGRkU0MFwJ8pPtiH4R2AoK1zxmBAgO+n
- k2yVK4RQYURdeGkjriz6bIYKGfMRjDNoO7uJI0622VhDb/+8aC2BnVgBvKUnyFVlEdaNnhpj/
- h/janOHjW+5Y6yVJjxGPZisonAEwxXhIJyJBUr3vDK+upLCCYMO2COzPZPZJE4BVAT33CRp9r
- 23M2m8Ql3mS9UyP1YZMjjS167kxcUmHIgz7rEdlf18ewPLShiAyMIbtvzhCfVZ2wwTJuG/BMS
- mFdXXRr4ELUgnxr2MT5i+49vnbohHmKS+JlQU1nLYkgBqv9aCFuQ4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727213010.15156-1-b18007@students.iitmandi.ac.in>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 7:37 AM Peilin Ye <yepeilin.cs@gmail.com> wrote:
->
-> xsk_getsockopt() is copying uninitialized stack memory to userspace when
-> `extra_stats` is `false`. Fix it.
->
-> Fixes: 8aa5a33578e9 ("xsk: Add new statistics")
-> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+On Tue, Jul 28, 2020 at 03:00:10AM +0530, Ankit wrote:
+> From: Ankit Baluni<b18007@students.iitmandi.ac.in>
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+You need a ' ' before the '<' character.
+
+> 
+> Fixed a coding style issue.
+
+Be more descriptive of what you are doing, this is vague.
+
+> 
+> Signed-off-by: Ankit Baluni<b18007@students.iitmandi.ac.in>
+
+Same here with the ' '.
+
+thanks,
+
+greg k-h
