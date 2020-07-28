@@ -6,58 +6,35 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2972CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9285FC433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 103832065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 752AC2065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:41:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729156AbgG1Ukr (ORCPT
+        id S1729224AbgG1UlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:40:47 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:50042 "EHLO
+        Tue, 28 Jul 2020 16:41:02 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:50106 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728430AbgG1Ukr (ORCPT
+        with ESMTP id S1728828AbgG1UlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 16:40:47 -0400
+        Tue, 28 Jul 2020 16:41:01 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 3489E1C0BED; Tue, 28 Jul 2020 22:40:45 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 22:40:44 +0200
+        id 266ED1C0BEB; Tue, 28 Jul 2020 22:41:00 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 22:40:59 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Stephan M?ller <smueller@chronox.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v31 00/12] /dev/random - a new approach with full
- SP800-90B
-Message-ID: <20200728204044.GD1012@bug>
-References: <2050754.Mh6RI2rZIc@positron.chronox.de>
+To:     Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
+Cc:     rjw@rjwysocki.net, rui.zhang@intel.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        srinivas.pandruvada@linux.intel.com
+Subject: Re: [PATCH v2] powercap: Add Power Limit4 support
+Message-ID: <20200728204059.GF1012@bug>
+References: <1594715306-10411-1-git-send-email-sumeet.r.pawnikar@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2050754.Mh6RI2rZIc@positron.chronox.de>
+In-Reply-To: <1594715306-10411-1-git-send-email-sumeet.r.pawnikar@intel.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -66,17 +43,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi!
 
-> The following patch set provides a different approach to /dev/random which is called 
-> Linux Random Number Generator (LRNG) to collect entropy within the Linux kernel. The 
-> main improvements compared to the existing /dev/random is to provide sufficient entropy 
-> during boot time as well as in virtual environments and when using SSDs. A secondary 
-> design goal is to limit the impact of the entropy collection on massive parallel systems 
-> and also allow the use accelerated cryptographic primitives. Also, all steps of the 
-> entropic data processing are testable.
+> Modern Intel Mobile platforms support power limit4 (PL4), which is
+> the SoC package level maximum power limit (in Watts). It can be used
+> to preemptively limits potential SoC power to prevent power spikes
+> from tripping the power adapter and battery over-current protection.
+> This patch enables this feature by exposing package level peak power
+> capping control to userspace via RAPL sysfs interface. With this,
+> application like DTPF can modify PL4 power limit, the similar way
+> of other package power limit (PL1).
+> As this feature is not tested on previous generations, here it is
+> enabled only for the platform that has been verified to work,
+> for safety concerns.
 
-That sounds good.. maybe too good. Where does LRNG get the entropy? That is the
-part that should be carefully documented..
-
+So what happens when the user sets this too high? Battery on fire? Or just sudden
+poweroff?
 									Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
