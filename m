@@ -2,126 +2,171 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99302C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E020C20809
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:17:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595960279;
-	bh=5vq1INeu5FXV8HgUInTtWnDacbvKHUXhSIMQvzhdJUY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jdi5YTl6Sz5BbGGjgq/xAzKUe5FvLjgp6wgq+IHWJ22Px+X1ZLzQJb/o7SbxhL89Q
-	 fvZfUk45E7zgi40oG62EzBav1cLnQ0CU5c+52W8P8YAFQ40KUV7KvNaiKLSSfKgCam
-	 KXxOhg82TbtzERKPQmXxBRt7e3ach8/TQVyF+sMI=
+	by mail.kernel.org (Postfix) with ESMTP id 7CB712078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:20:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qnNiheKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732165AbgG1SR7 (ORCPT
+        id S1732241AbgG1SUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:17:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728401AbgG1SR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 14:17:58 -0400
-Received: from earth.universe (dyndsl-091-096-060-166.ewe-ip-backbone.de [91.96.60.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1CDF2070B;
-        Tue, 28 Jul 2020 18:17:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595960278;
-        bh=5vq1INeu5FXV8HgUInTtWnDacbvKHUXhSIMQvzhdJUY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sdeKeQ9B8TAahhIF9nk2UVxwCRImgOoHnRfRBo3FBb+Zxv7GSSoI8gC3BsWws9Zhn
-         ibPwLNkijspxEE8F7/fCY9om8Fln1pnXJCxYpkJMf8Tha6H7vE0wqAYE1EUJmPe3Gs
-         v1cd6ViBWzoZRE1sLTRTxRW3GYgIrBIOmObk6BFs=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 8C2AC3C0B87; Tue, 28 Jul 2020 20:17:55 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 20:17:55 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     afd@ti.com, pali@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh@kernel.org
-Subject: Re: [PATCH v4 2/4] power: supply: bq27xxx_battery: Add the BQ27561
- Battery monitor
-Message-ID: <20200728181755.6bkhp7j3cqtpooof@earth.universe>
-References: <20200728141113.31518-1-dmurphy@ti.com>
- <20200728141113.31518-2-dmurphy@ti.com>
+        Tue, 28 Jul 2020 14:20:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728829AbgG1SUD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 14:20:03 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E98C061794;
+        Tue, 28 Jul 2020 11:20:02 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id j19so12427041pgm.11;
+        Tue, 28 Jul 2020 11:20:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WZBzta7lAYJUOw09aiHa5V4Dk9/7UMQ8wjoH5iK9UWo=;
+        b=qnNiheKfcwNExALiaamHgrgGkn6Z2ZsQ5wMoA7wPH2CPmqGPHwo4tqJGkYYeZH/HAP
+         uxeo9k3YaQBcD3eiEQeLj6WpFL5n8p8uA8AURwPEnG9D8V2AD8Wu7tDL9cMt/d1BioB9
+         dcWXCLgE60m9eOhxyd9378D+VcowrlGY5oTDEnZNNSlVp3hFhzc2Xixy27a7acX0RE/q
+         eNKC1YIK8vaxaRiLZqEfydBvFu0B9B6iZmBg91jpESc0iooViHcuMBHIm9i6IEAv1bX1
+         YDgI2LuFyW/wF4ynRroMRY+xfvGPc0iXwONQ19siE4N4zxkjCc48tqirI+PHhdEG8zIG
+         WGdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WZBzta7lAYJUOw09aiHa5V4Dk9/7UMQ8wjoH5iK9UWo=;
+        b=VXq0jY2hMUTubgpdJFC8GbB+D8y/BAD7H2q2gffEpXgg7z2agbad8lc+3LIxrqa2fH
+         tDtkGhEfc9E1+sOgfXmw+OPgNrgZcyOrSkpzg9eOSczkv9DGCZZT1ymjNuSnBosPvlCR
+         K2V+/CtkVuHxYl3kyycv0xJkzMuFIHXzPwvJh3MPD+fvI2FZsiAOiJhwHCPQAp2Fa+Tm
+         +kazt5lBi2ZmR3mNf1qXL2uYUHL4LwFbpSAbYy5whdgOHEirwwtHLUpP7Hz9mjVLSd12
+         fYtyUSjBDpKAm8OE9jhgLAyL9FB/jMWdtVY6Dp5gOMBrEP/RdKVCu9YuDpXuAw220TKP
+         +BgQ==
+X-Gm-Message-State: AOAM530hrPhUgbHMqB5jMcJef1ffZ0eWPc7oQXZyY1U0u5iX2ps0kw1N
+        d2G+VxW6eCpgcdlrqRd4QmYZVGNicoa55+XJGVU=
+X-Google-Smtp-Source: ABdhPJxpZgdYnVr2qsORcDCPC8Re24qRNfIJfjFQhiEGF8anSzvzcoEBrNRm4TSBgh4a4FXYOQhlUSpbencvaymMsig=
+X-Received: by 2002:a63:924b:: with SMTP id s11mr24826083pgn.74.1595960402390;
+ Tue, 28 Jul 2020 11:20:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5wfexptlluq3ij3y"
-Content-Disposition: inline
-In-Reply-To: <20200728141113.31518-2-dmurphy@ti.com>
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
+ <20200728151258.1222876-1-campello@chromium.org> <20200728091057.13.I14600506d0f725bf800c8da4ef89fdb3c3fb45cd@changeid>
+In-Reply-To: <20200728091057.13.I14600506d0f725bf800c8da4ef89fdb3c3fb45cd@changeid>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 28 Jul 2020 21:19:45 +0300
+Message-ID: <CAHp75VdSxkgd-+CBTNUJD+WUdOX3e1x3Ysap=D9+33Yo1Kk+yA@mail.gmail.com>
+Subject: Re: [PATCH 13/15] iio: sx9310: Add newlines to printks
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 28, 2020 at 6:14 PM Daniel Campello <campello@chromium.org> wrote:
+>
+> From: Stephen Boyd <swboyd@chromium.org>
+>
+> Printks in the kernel have newlines at the end. Add them to the few
 
---5wfexptlluq3ij3y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Printk()s
 
-Hi,
+> printks in this driver.
 
-On Tue, Jul 28, 2020 at 09:11:11AM -0500, Dan Murphy wrote:
-> Add the Texas Instruments BQ27561 battery monitor.  The register address
-> map is laid out the same as compared to other devices within the file.
-> The battery status register has differing bits to determine if the
-> battery is full, discharging or dead.
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+printk()s
+
+> Reviewed-by: Daniel Campello <campello@chromium.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Fixes: 72ad02b15d63 ("iio: Add SEMTECH SX9310/9311 sensor driver")
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+
+It has ordering issues
+Should be
+
+Fixes:
+SoB: Stephen
+Rb: Douglas
+Rb: Daniel
+SoB: Daniel
+
+
 > ---
->  drivers/power/supply/bq27xxx_battery.c     | 68 +++++++++++++++++++++-
->  drivers/power/supply/bq27xxx_battery_i2c.c |  2 +
->  include/linux/power/bq27xxx_battery.h      |  1 +
->  3 files changed, 70 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/suppl=
-y/bq27xxx_battery.c
-> index 942c92127b6d..654d38bcd7e0 100644
-> --- a/drivers/power/supply/bq27xxx_battery.c
-> +++ b/drivers/power/supply/bq27xxx_battery.c
-> @@ -43,6 +43,7 @@
->   * http://www.ti.com/product/bq27411-g1
->   * http://www.ti.com/product/bq27441-g1
->   * http://www.ti.com/product/bq27621-g1
-> + * https://www.ti.com/lit/gpn/bq27z561
+>
+>  drivers/iio/proximity/sx9310.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> index 3f981d28ee4056..4553ee83a016a3 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -809,7 +809,7 @@ static int sx9310_init_compensation(struct iio_dev *indio_dev)
+>         if (ret) {
+>                 if (ret == -ETIMEDOUT)
+>                         dev_err(&data->client->dev,
+> -                               "0x02 << 3l compensation timed out: 0x%02x",
+> +                               "0x02 << 3l compensation timed out: 0x%02x\n",
 
-Applying this failed, because I applied a patch converting the
-http urls to https. I would have fixed this silently, but it made
-me notice the chip name is bq27z561 instead of simply bq27561.
+Looks like ping-pong style in the series, i.e. you may fix this when
+you introduced this line.
 
-You named it without the 'z' everywhere, is there a reason?
-Searching for bq27561 basically only finds your patches and
-you decided not to drop the z for the bq28z610.
+Check the rest (and not only printk()s) for the similar style and
+avoid the latter.
 
--- Sebastian
+>                                 val);
+>                 return ret;
+>         }
+> @@ -855,7 +855,7 @@ static int sx9310_set_indio_dev_name(struct device *dev,
+>
+>         ddata = (uintptr_t)device_get_match_data(dev);
+>         if (ddata != whoami) {
+> -               dev_err(dev, "WHOAMI does not match device data: %u", whoami);
+> +               dev_err(dev, "WHOAMI does not match device data: %u\n", whoami);
+>                 return -ENODEV;
+>         }
+>
+> @@ -867,7 +867,7 @@ static int sx9310_set_indio_dev_name(struct device *dev,
+>                 indio_dev->name = "sx9311";
+>                 break;
+>         default:
+> -               dev_err(dev, "unexpected WHOAMI response: %u", whoami);
+> +               dev_err(dev, "unexpected WHOAMI response: %u\n", whoami);
+>                 return -ENODEV;
+>         }
+>
+> @@ -896,7 +896,7 @@ static int sx9310_probe(struct i2c_client *client)
+>
+>         ret = regmap_read(data->regmap, SX9310_REG_WHOAMI, &data->whoami);
+>         if (ret) {
+> -               dev_err(dev, "error in reading WHOAMI register: %d", ret);
+> +               dev_err(dev, "error in reading WHOAMI register: %d\n", ret);
+>                 return ret;
+>         }
+>
+> --
+> 2.28.0.rc0.142.g3c755180ce-goog
+>
 
---5wfexptlluq3ij3y
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8ga8YACgkQ2O7X88g7
-+pq61A/9HALzLbaV2nB6FTOZLs3BMj4LSQ1/WIesGXn03CnKce4akvgjygjlAbhj
-NYTXV/3SbI8BXgfnTd6ooetOqVmRwoHOo7Z7wtNCTyW38v53uM60GX1TGEiEVSb1
-2SD/2W/vzmOjQfsWKm5+xTfhpBPFnV4Y2KTnmgzVBUtiI+dXUdc1FLSBNfksQnlL
-nS2f7BN1IWUaaR0GyUub2yeaExzpEDvYritor9tbDBH3IFjYoRrDsBkyp3DFh9fG
-+9nlNjIz7QkE5yjaCx68/iZfjSSAEWv28DTjSo7dh24fBrshz4dQ1185Tb7Xiz9F
-POa9E+Cl4VhhDd5QWDCgo9VC392TZE5GRhFTJwXT25RJ1sn5A+zFVYxKK35aks92
-DKXLmFVUMG2fF3aULBl2mHFccxKq4TIDR9BZypBgjOkyt74NgW6CrJnCU2cleWet
-N3XrKiyK901IAd/BF+YLthmuTfiolFz3jwkpgIzix4A6fJ1+dOzXamL/TLk2dT8w
-MdR5dRnZwgGNYk3R/GsgE36VXLjIvgMtjvAwbD9ergm8XqiBr5Hk+ooUr3o+CPmF
-ilRQ7h7pwhIjnmnqdr7ZHrzNFgjT9rIBt7lSbKi2SrI2hNBNe/GBoe49AcvJtqlt
-M5nV4tgf91iZ0bTTlHfgcnxtBX5OhDWXdM257OZtjdz8e3Agf/M=
-=pMEP
------END PGP SIGNATURE-----
-
---5wfexptlluq3ij3y--
+-- 
+With Best Regards,
+Andy Shevchenko
