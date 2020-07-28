@@ -2,128 +2,133 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5F9C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B2FC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 294B320809
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:52:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="c9srD6dU"
+	by mail.kernel.org (Postfix) with ESMTP id 367A020829
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgG1Iw3 (ORCPT
+        id S1728334AbgG1Iw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:52:29 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:59844 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728331AbgG1Iw1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:52:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1595926346; x=1627462346;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=O/7K7U+F4Hb9vBOmcbLlJMixNNgJMZmG2fifr+2GFKA=;
-  b=c9srD6dU/0MjULvx9YelTSIMnxQ9VHC1GI18qaf5FalkjdAJMqFINV+r
-   10NL/cQf9O1I0EEWERGVWWvZzKy/k+vp0c8cvWeId1I5UoOwjZIzZEAEF
-   FHpPZnDwoWaA5u0AARfSozzFbaOD4IDkUWEb3OawK7b7deFhtBePaR/MP
-   Y=;
-IronPort-SDR: v5AyA2WaLe/fVEXJlCh/dAYzaCRzy9KqDqZk8MHTdyswVU5rz0vbDEfC+9dZA+H0U+yEWI5vzp
- JsrIxpes6BgQ==
-X-IronPort-AV: E=Sophos;i="5.75,405,1589241600"; 
-   d="scan'208";a="44426518"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 28 Jul 2020 08:52:24 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com (Postfix) with ESMTPS id 04A21A2704;
-        Tue, 28 Jul 2020 08:52:22 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 28 Jul 2020 08:52:22 +0000
-Received: from [192.168.5.124] (10.43.161.145) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 28 Jul
- 2020 08:52:13 +0000
-Subject: Re: [PATCH v8 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
- Labs Memory Controller EDAC
-To:     Rob Herring <robh@kernel.org>
-CC:     <robh+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <mchehab@kernel.org>, <davem@davemloft.net>,
-        <catalin.marinas@arm.com>, <devicetree@vger.kernel.org>,
-        <ronenk@amazon.com>, <james.morse@arm.com>, <bp@alien8.de>,
-        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-        <hhhawa@amazon.com>, <hanochu@amazon.com>, <mark.rutland@arm.com>,
-        <eitan@amazon.com>, <will@kernel.org>,
-        <nicolas.ferre@microchip.com>, <jonnyc@amazon.com>,
-        <gregkh@linuxfoundation.org>
-References: <20200726191555.5210-1-talel@amazon.com>
- <20200726191555.5210-2-talel@amazon.com> <20200727181424.GA639053@bogus>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <a07d6f7e-eae7-aa14-972c-72e69460b1e9@amazon.com>
-Date:   Tue, 28 Jul 2020 11:52:08 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200727181424.GA639053@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.43.161.145]
-X-ClientProxiedBy: EX13D10UWB001.ant.amazon.com (10.43.161.111) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+        Tue, 28 Jul 2020 04:52:26 -0400
+Received: from mga17.intel.com ([192.55.52.151]:5403 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbgG1IwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:52:24 -0400
+IronPort-SDR: DmgeNIOUjOFbCoF2Iec6T9vsD8v4x/FH91iIPWVH78oTuw2CMFbvpfuzT5hxF7W6iXt9Co6H6S
+ 6T32ioOEjEAw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="131237584"
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="131237584"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 01:52:24 -0700
+IronPort-SDR: kS4xVDVSslWOWMjtceIlPcQ2GHRwFY9Ndds33vRiAmPDQdSv+mxXHTBQ26vbMVZlan1cPz4Wo1
+ DJPqqBXsMZ0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="273510467"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga008.fm.intel.com with ESMTP; 28 Jul 2020 01:52:21 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v6 1/2] Add DT bindings YAML schema for PWM fan controller of LGM SoC
+Date:   Tue, 28 Jul 2020 16:52:12 +0800
+Message-Id: <e61e6a05353f6242f5450da130b042f195ac7620.1595926036.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
+References: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
+References: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
+which is only used to control the fan attached to the system. This
+PWM controller does not have any other consumer other than fan.
+Add DT bindings documentation for this PWM fan controller.
 
-On 7/27/2020 9:14 PM, Rob Herring wrote:
-> On Sun, 26 Jul 2020 22:15:54 +0300, Talel Shenhar wrote:
->> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
->>
->> Signed-off-by: Talel Shenhar <talel@amazon.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> ---
->>   .../bindings/edac/amazon,al-mc-edac.yaml      | 52 +++++++++++++++++++
->>   1 file changed, 52 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->>
->
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.example.dt.yaml: example-0: edac@f0080000:reg:0: [0, 4027056128, 0, 65536] is too long
->
->
-> See https://patchwork.ozlabs.org/patch/1336532
->
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
->
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
->
-> Please check and re-submit.
+Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+---
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 54 ++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
 
-Thanks Rob,
+diff --git a/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+new file mode 100644
+index 000000000000..9879972470dc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/intel,lgm-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: LGM SoC PWM fan controller
++
++maintainers:
++  - Rahul Tanwar <rahul.tanwar@intel.com>
++
++properties:
++  compatible:
++    const: intel,lgm-pwm
++
++  reg:
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 2
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  intel,fan-wire:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: Specifies fan mode. Default when unspecified is 2.
++
++  intel,max-rpm:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description:
++      Specifies maximum RPM of fan attached to the system.
++      Default when unspecified is 4000.
++
+++required:
++  - compatible
++  - reg
++  - clocks
++  - resets
++
++additionalProperties: false
++
++examples:
++  - |
++    pwm: pwm@e0d00000 {
++        compatible = "intel,lgm-pwm";
++        reg = <0xe0d00000 0x30>;
++        #pwm-cells = <2>;
++        clocks = <&cgu0 126>;
++        resets = <&rcu0 0x30 21>;
++    };
+-- 
+2.11.0
 
-Indeed I am not able to see this error.
-
-Even tried updating dt-schema.
-
-Even targeted check didn't give anything:
-
-linux-ras$ make dt_binding_check 
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-   CHKDT Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-   DTC 
-Documentation/devicetree/bindings/edac/amazon,al-mc-edac.example.dt.yaml
-   CHECK 
-Documentation/devicetree/bindings/edac/amazon,al-mc-edac.example.dt.yaml
-
-ill look into it and publish v9.
-
->
