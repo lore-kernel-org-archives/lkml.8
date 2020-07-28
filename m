@@ -2,142 +2,139 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020D6C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC54C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE2C620775
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B692E20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:49:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RHGOqG8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgG1JrZ (ORCPT
+        id S1728512AbgG1Jt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:47:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728050AbgG1JrZ (ORCPT
+        Tue, 28 Jul 2020 05:49:27 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42744 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728072AbgG1Jt1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 05:47:25 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15874C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 02:47:25 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k0MCf-0006Wm-VV; Tue, 28 Jul 2020 11:47:21 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k0MCe-00025Z-98; Tue, 28 Jul 2020 11:47:20 +0200
-Date:   Tue, 28 Jul 2020 11:47:20 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Tue, 28 Jul 2020 05:49:27 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06S9lbhf066911;
+        Tue, 28 Jul 2020 09:49:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=rpWZKXpfcgCMYXeQKxkp0jEtjZDm2wSN5bawvDhbAhI=;
+ b=RHGOqG8dTPJ5NALSMpvdeddNQ54+xaa5Q/erBU88ZT/GJLZBlcXYebUjup49HWEgkjDy
+ mwduiRUtCVkrZoznRC5zZmEg0EsXRoQCPZBotgPUB/zj39fjEjVbJbPM6POTWaIZOSKz
+ yq6nK7I5W8q/pYVR8153JE6GwwybwMU4f1nmeB4wauKUPepRAxtdZCIZcge2Ti/lAzu7
+ 3ALbflGCdp/I2O/avjzYSy2iofVckYqg9YHqA+otMOEpx5ZX9i6wFsyTTa85THQpS2Gt
+ +hRt0dZq7q+gq7OlB3w6EdjaWwwuCSbAam4BN8WzdpMtevVvsLI8vy5/Nfy15D2pW+wa ZQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 32hu1jegnx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jul 2020 09:49:20 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06S9dJYF153100;
+        Tue, 28 Jul 2020 09:47:20 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 32hu5scqdf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jul 2020 09:47:20 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06S9lDQ2030023;
+        Tue, 28 Jul 2020 09:47:13 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Jul 2020 02:47:13 -0700
+Date:   Tue, 28 Jul 2020 12:47:07 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Peilin Ye <yepeilin.cs@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 06/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200728094720.x6pucwxsfwvz6nvv@pengutronix.de>
-References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-7-michael@walle.cc>
- <20200728074352.ckyfso5zwsfgupjx@pengutronix.de>
- <58b53cacc5289f17f669159beeeada03@walle.cc>
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
+ kernel-infoleak in video_put_user()
+Message-ID: <20200728094707.GF2571@kadam>
+References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
+ <20200726222703.102701-1-yepeilin.cs@gmail.com>
+ <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
+ <20200727131608.GD1913@kadam>
+ <20200727223357.GA329006@PWN>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="htulbp2bdc2ny5pv"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <58b53cacc5289f17f669159beeeada03@walle.cc>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200727223357.GA329006@PWN>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007280072
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 mlxlogscore=999
+ malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007280073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 27, 2020 at 06:33:57PM -0400, Peilin Ye wrote:
+> On Mon, Jul 27, 2020 at 04:16:08PM +0300, Dan Carpenter wrote:
+> > drivers/block/floppy.c:3132 raw_cmd_copyout() warn: check that 'cmd' doesn't leak information (struct has a hole after 'flags')
+> 
+> (Removed some Cc: recipients from the list.)
+> 
+> I'm not very sure, but I think this one is also a false positive.
 
---htulbp2bdc2ny5pv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No, it's a potential bug.  You're over thinking what Smatch is
+complaining about.  Arnd is right.
 
-Hallo,
+  3123  static int raw_cmd_copyout(int cmd, void __user *param,
+  3124                                    struct floppy_raw_cmd *ptr)
+  3125  {
+  3126          int ret;
+  3127  
+  3128          while (ptr) {
+  3129                  struct floppy_raw_cmd cmd = *ptr;
+                                              ^^^^^^^^^^
+The compiler can either do this assignment as an memcpy() or as a
+series of struct member assignments.  So the assignment can leave the
+struct hole uninitialized.
 
-On Tue, Jul 28, 2020 at 10:21:22AM +0200, Michael Walle wrote:
-> Am 2020-07-28 09:43, schrieb Uwe Kleine-K=F6nig:
-> > On Sun, Jul 26, 2020 at 01:18:27AM +0200, Michael Walle wrote:
-> > > +static int sl28cpld_pwm_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct sl28cpld_pwm *priv;
-> > > +	struct pwm_chip *chip;
-> > > +	int ret;
-> > > +
-> > > +	if (!pdev->dev.parent)
-> > > +		return -ENODEV;
-> > > +
-> > > +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> > > +	if (!priv)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	priv->regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
-> > > +	if (!priv->regmap)
-> >=20
-> > Error message here?
->=20
-> This shouldn't really happen and I put it into the same category
-> as the two above and report no error. But I can add it.
+  3130                  cmd.next = NULL;
+  3131                  cmd.kernel_data = NULL;
+  3132                  ret = copy_to_user(param, &cmd, sizeof(cmd));
+                                                  ^^^^
+potential info leak.
 
-For kzalloc it is right to not emit an error because a failing kzalloc
-is already loud on its own. I missed the first error path, that should
-get a message, too.
+  3133                  if (ret)
+  3134                          return -EFAULT;
+  3135                  param += sizeof(struct floppy_raw_cmd);
+  3136                  if ((ptr->flags & FD_RAW_READ) && ptr->buffer_length) {
+  3137                          if (ptr->length >= 0 &&
+  3138                              ptr->length <= ptr->buffer_length) {
+  3139                                  long length = ptr->buffer_length - ptr->length;
+  3140                                  ret = fd_copyout(ptr->data, ptr->kernel_data,
+  3141                                                   length);
+  3142                                  if (ret)
+  3143                                          return ret;
+  3144                          }
+  3145                  }
+  3146                  ptr = ptr->next;
+  3147          }
+  3148  
+  3149          return 0;
+  3150  }
 
-> Generally, it looked to me that more and more drivers don't
-> really report errors anymore, but just return with an -EWHATEVER.
-> So if someone can shed some light here, I'm all ears.
-
-IMHO it's wrong not to add error messages. At one point in time it will
-fail and then you're happy if you don't have to add printks all over the
-place first to debug that.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---htulbp2bdc2ny5pv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8f9CUACgkQwfwUeK3K
-7AlkpAf9GX/MdqMREp3J4dX8H7TLp3wVx7/FOTFnrRDTkszIftG16IG7J9g1qiyY
-lN54gRXDEtuTo7PfeKcJ09lh/jT2xRPE/Y6kHSW6BQKNw2C0S74Pv2UMc1aYWsvZ
-GlE/2BL1tB7F7+OLVIFRhL5N5O0QKaBO5bxaC/DKd4ZAnvbLPloAcysP0kHzqvXP
-H72qdOstHSP5znm4z6+Vcb7xiI9XiT9GWgnumpwo1f6s58SEGsbQUiLRLXIkRURN
-LKzxXtqSMbW1n+U34jSgI6BI+wyDAGQz0iJ0WxKV6DUa5IO7IqucION92J9s7w32
-ntP5cEULmXHKeTvOGXgM59juqdxEtg==
-=KNkY
------END PGP SIGNATURE-----
-
---htulbp2bdc2ny5pv--
+regards,
+dan carpenter
