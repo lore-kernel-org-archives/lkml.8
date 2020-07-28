@@ -2,111 +2,145 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 996D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CCEC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75EF62065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AED2065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:17:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="otDe5YRw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732661AbgG1TQ7 convert rfc822-to-8bit (ORCPT
+        id S1732676AbgG1TRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:16:59 -0400
-Received: from mga01.intel.com ([192.55.52.88]:37804 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729133AbgG1TQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:16:58 -0400
-IronPort-SDR: oYMgtKw7WgQxnshU1GNf4kwnMLpNCn0XkXiM6d43LFwgbHwPMIub4xSxvcS0VLgePv2QCz8iIa
- VW3NFTBXQ+/A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="169415910"
-X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
-   d="scan'208";a="169415910"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 12:16:58 -0700
-IronPort-SDR: GDgLdRPeToXtmqek9PW4+XwtLwt371zb5zT43jdHLEP6G6Lw3Ux25ZWb+bY/66WxbggDbwWWmT
- JfdQ1P5urrlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
-   d="scan'208";a="490008716"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by fmsmga006.fm.intel.com with ESMTP; 28 Jul 2020 12:16:58 -0700
-Received: from lcsmsx601.ger.corp.intel.com (10.109.210.10) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 28 Jul 2020 12:16:58 -0700
-Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
- LCSMSX601.ger.corp.intel.com (10.109.210.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 28 Jul 2020 22:16:55 +0300
-Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
- HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
- Tue, 28 Jul 2020 22:16:55 +0300
-From:   "Winkler, Tomas" <tomas.winkler@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "Usyskin, Alexander" <alexander.usyskin@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [char-misc-next V2] mei: add device kind to sysfs
-Thread-Topic: [char-misc-next V2] mei: add device kind to sysfs
-Thread-Index: AQHWZQzsP7MTlAgR70GuvAbRthg4rqkdJAuAgAA4N3A=
-Date:   Tue, 28 Jul 2020 19:16:55 +0000
-Message-ID: <8a88b1db0b9447ebaa37636a68e3b018@intel.com>
-References: <20200728182836.3112138-1-tomas.winkler@intel.com>
- <20200728185219.GA332869@kroah.com>
-In-Reply-To: <20200728185219.GA332869@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-x-originating-ip: [10.184.70.1]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 28 Jul 2020 15:17:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729133AbgG1TRD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 15:17:03 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C073C061794;
+        Tue, 28 Jul 2020 12:17:03 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b79so19785279qkg.9;
+        Tue, 28 Jul 2020 12:17:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gOr8dfaejifYw9jU6Kda38E3nkEbRCrHeHIL/mLht1M=;
+        b=otDe5YRwMr9ZjZkUAfDqHdRBs1piZUTe4CTkYv5N3vMilg+mwSd8u3nh4gsItkTo7x
+         keGv4P2iTlq5DIJzJbBMN4GTDiOMD0OpJh1C2xP3g76mfiKGLMDy95jV6wJvHN/3sJmr
+         mfk8p/IBXfxF+72g5+Qndb/0bmn+YszTDATRnNlgDVDtEaz7a4ax1jGDLrpcj2KFhDlm
+         Q7ydb47hnhDV3tab+g7WDUAhUX+rkiq43CLewaraeGHwV047qEpRBRM8Fy5eKU5uNXeY
+         hK52o5YD5CrotoRkYnlXey5UPBLKr8Mvz0KnkI1keJ43PNod7JGSjVNEwkF+sycxnOUC
+         Udxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gOr8dfaejifYw9jU6Kda38E3nkEbRCrHeHIL/mLht1M=;
+        b=WjsS7K/bShsv4h95+KvPV365kVrv7MvjmNC7TbGWF42ZgvKeMrP3G5Y35opFIxzRX3
+         fjijdVG860/kW0ipkK+Pk/WMrpmmrn3yccI33QpMtDtnQ1hR7vz1LLPDBXd6OmTg6EfV
+         6t6AhI1lJrJkJYnuq/ozEVUHp1vRVfgNfd9as2LwTb5YLtZhtEL5nUa+xJ8lqwNdAlHJ
+         CEFyTm6fG9FdcVsSRMs8enoPXRRvIWxDpUqy657hLzyENFU/LHtU9tWZTH6ZkGuhUm65
+         JOhIu3ScmZ9vQE3/zRZQJYVGhcDg/lXAY6fV/O3famQB02NwALF0F15kXtEcQPyfImjl
+         IjTw==
+X-Gm-Message-State: AOAM53175GuBPsR8Yd0FhMvk8AnZWQ4ni7tBpEEqQAE3fbS9GrN4oLex
+        mn6QcbMVsJxQ71tVdkx/H3dp/QzTuNYKmEfOmAw=
+X-Google-Smtp-Source: ABdhPJwbOmokpEJOP1fIf5cZoIesMV+H3fTQ9slHu7TTfq77cCg4b9LhjmIxLd0pBzSqpXX2DL3NsX7P95qN921rMQ0=
+X-Received: by 2002:a05:620a:4c:: with SMTP id t12mr3962581qkt.449.1595963822395;
+ Tue, 28 Jul 2020 12:17:02 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-28-guro@fb.com>
+ <CAPhsuW7jWztOVeeiRNBRK4JC_MS41qUSxzEDMywb-6=Don-ndA@mail.gmail.com>
+ <CAEf4BzaOX_gc8F20xrHxiKFxYbwULK130m1A49rnMoT7T74T3Q@mail.gmail.com>
+ <CAPhsuW5qBxWibkYMAvS0s6yLj-gijHqy9rVxSWCk5Xr+bXqtJg@mail.gmail.com> <20200728190830.GB410810@carbon.DHCP.thefacebook.com>
+In-Reply-To: <20200728190830.GB410810@carbon.DHCP.thefacebook.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 28 Jul 2020 12:16:51 -0700
+Message-ID: <CAEf4BzZuj9d_WT4nJ6c_W4uAnT2_4mBOXCbi1q1w97568rd4eg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 27/35] bpf: eliminate rlimit-based memory
+ accounting infra for bpf maps
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Song Liu <song@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 28, 2020 at 12:09 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> On Mon, Jul 27, 2020 at 11:06:42PM -0700, Song Liu wrote:
+> > On Mon, Jul 27, 2020 at 10:58 PM Andrii Nakryiko
+> > <andrii.nakryiko@gmail.com> wrote:
+> > >
+> > > On Mon, Jul 27, 2020 at 10:47 PM Song Liu <song@kernel.org> wrote:
+> > > >
+> > > > On Mon, Jul 27, 2020 at 12:26 PM Roman Gushchin <guro@fb.com> wrote:
+> > > > >
+> > > > > Remove rlimit-based accounting infrastructure code, which is not used
+> > > > > anymore.
+> > > > >
+> > > > > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > > > [...]
+> > > > >
+> > > > >  static void bpf_map_put_uref(struct bpf_map *map)
+> > > > > @@ -541,7 +484,7 @@ static void bpf_map_show_fdinfo(struct seq_file *m, struct file *filp)
+> > > > >                    "value_size:\t%u\n"
+> > > > >                    "max_entries:\t%u\n"
+> > > > >                    "map_flags:\t%#x\n"
+> > > > > -                  "memlock:\t%llu\n"
+> > > > > +                  "memlock:\t%llu\n" /* deprecated */
+> > > >
+> > > > I am not sure whether we can deprecate this one.. How difficult is it
+> > > > to keep this statistics?
+> > > >
+> > >
+> > > It's factually correct now, that BPF map doesn't use any memlock memory, no?
+>
+> Right.
+>
+> >
+> > I am not sure whether memlock really means memlock for all users... I bet there
+> > are users who use memlock to check total memory used by the map.
+>
+> But this is just the part of struct bpf_map, so I agree with Andrii,
+> it's a safe check.
+>
+> >
+> > >
+> > > This is actually one way to detect whether RLIMIT_MEMLOCK is necessary
+> > > or not: create a small map, check if it's fdinfo has memlock: 0 or not
+> > > :)
+> >
+> > If we do show memlock=0, this is a good check...
+>
+> The only question I have if it's worth checking at all? Bumping the rlimit
+> is a way cheaper operation than creating a temporarily map and checking its
+> properties.
+>
 
-> 
-> On Tue, Jul 28, 2020 at 09:28:36PM +0300, Tomas Winkler wrote:
-> > +/**
-> > + * kind_show - display device kind
-> > + *
-> > + * @device: device pointer
-> > + * @attr: attribute pointer
-> > + * @buf: char out buffer
-> > + *
-> > + * Return: number of the bytes printed into buf or error
-> 
-> No need for kernel doc for static sysfs attributes, but ok...
-> 
-> > + */
-> > +static ssize_t kind_show(struct device *device,
-> > +			 struct device_attribute *attr, char *buf) {
-> > +	struct mei_device *dev = dev_get_drvdata(device);
-> > +	ssize_t ret = 0;
-> 
-> No need to initialize this.
-Right, a leftover from an earlier version. 
-> 
-> > +
-> > +	mutex_lock(&dev->device_lock);
-> > +	if (dev->kind)
-> > +		ret = sprintf(buf, "%s\n", dev->kind);
-> > +	else
-> > +		ret = sprintf(buf, "%s\n", "mei");
-> > +	mutex_unlock(&dev->device_lock);
-> 
-> Why do you need a lock?  kind can not change, so what are you trying to
-> protect from?
-There might be firmware initiated reset but in this particular case you are right,  the lock is not needed.
+for perf and libbpf -- I think it's totally worth it. Bumping
+RLIMIT_MEMLOCK automatically means potentially messing up some other
+parts of the system (e.g., BCC just bumps it to INFINITY allowing to
+over-allocate too much memory, potentially, for unrelated applications
+that do rely on RLIMIT_MEMLOCK). It's one of the reasons why libbpf
+doesn't do it automatically, actually. So knowing when this is not
+necessary, will allow to improve diagnostic messages by libbpf, and
+would just avoid potentially risky operation by perf/BCC/etc.
 
-Will resend. 
-
+> So is there any win in comparison to just leaving the userspace code* as it is
+> for now?
+>
+> * except runqslower and samples
