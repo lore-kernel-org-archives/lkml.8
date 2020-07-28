@@ -2,128 +2,98 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855F2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BC7C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8B7206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89BE206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:23:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FlKygivA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgG1JWQ (ORCPT
+        id S1728278AbgG1JXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:22:16 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:46281 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728072AbgG1JWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 05:22:15 -0400
-Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 4ADE82002EE3C;
-        Tue, 28 Jul 2020 11:22:12 +0200 (CEST)
-Subject: Re: [PATCH] amdgpu_dm: fix nonblocking atomic commit use-after-free
-To:     Mazin Rezk <mnrzk@protonmail.com>, Duncan <1i5t5.duncan@cox.net>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        sunpeng.li@amd.com, Alexander Deucher <Alexander.Deucher@amd.com>,
-        mphantomx@yahoo.com.br, regressions@leemhuis.info,
-        anthony.ruhier@gmail.com
-References: <YIGsJ9LlFquvBI2iWPKhJwjKBwDUr_C-38oVpLJJHJ5rDCY_Zrrv392o6UPNxHoeQrcpLYC9U4fZdpD9ilz6Amg2IxkSexGLQMCQIBek8rc=@protonmail.com>
- <202007231524.A24720C@keescook>
- <a86cba0b-4513-e7c3-ae75-bb331433f664@molgen.mpg.de>
- <202007241016.922B094AAA@keescook>
- <3c92db94-3b62-a70b-8ace-f5e34e8f268f@molgen.mpg.de>
- <_vGVoFJcOuoIAvGYtkyemUvqEFeZ-AdO4Jk8wsyVv3MwO-6NEVtULxnZzuBJNeHNkCsQ5Kxn5TPQ_VJ6qyj9wXXXX8v-hc3HptnCAu0UYsk=@protonmail.com>
- <20200724215914.6297cc7e@ws>
- <c7mHa5xU_kh7K9KM5P1UJoCY00b3Oxj3s_y3vr0LGQzUPtWlhv5JjjhT4CnnbDhuTZhCuHT2uMbjdDCZ-JLmHVlS7B_k-wj1OTmZpMD7cg4=@protonmail.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <0b0fbe35-75cf-ec90-7c3d-bdcedbe217b7@molgen.mpg.de>
-Date:   Tue, 28 Jul 2020 11:22:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 05:23:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728072AbgG1JXF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 05:23:05 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2565BC061794;
+        Tue, 28 Jul 2020 02:23:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=4UCo16YZAgo21iB1/5TNNcfQzePmrfQa/TCIlwmqQMw=; b=FlKygivAItuT2wHUokA1ITYibF
+        wDLTCx3Jy8n1jR9eiAu1S8KOcJaTue2PCQRreXwNhzbUZ+xz1y3Js2FwQ6fJOF/g5WhKk3g8QUe1p
+        QAt5WHGjP7xvK/S9gvVOHHeIKRQcL3bjMNBMuTNL+uDloOxJUyz9h+RV5xkhdEChPnzs8UvuNBEr6
+        OIs4BLl1kzrSi8ETKyjIc32l4MSpwvEm8CU3Qkn8GO7Czgg4pH7/Yabc5psLJsQtL8NO/gqvuY76s
+        Y9BuaM0RR/TFpRMLES6Sjwmh/2P+rzsNdy8Yy3BtH/OR4P1eAMiDdsKoNIW4aEbp/hwThxIrBSoBo
+        FOIeZmmA==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0Lp7-0000ER-2w; Tue, 28 Jul 2020 09:23:01 +0000
+Date:   Tue, 28 Jul 2020 10:23:01 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Brian Foster <bfoster@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iomap: Ensure iop->uptodate matches PageUptodate
+Message-ID: <20200728092301.GA32142@infradead.org>
+References: <20200726091052.30576-1-willy@infradead.org>
+ <20200726230657.GT2005@dread.disaster.area>
+ <20200726232022.GH23808@casper.infradead.org>
+ <20200726235335.GU2005@dread.disaster.area>
 MIME-Version: 1.0
-In-Reply-To: <c7mHa5xU_kh7K9KM5P1UJoCY00b3Oxj3s_y3vr0LGQzUPtWlhv5JjjhT4CnnbDhuTZhCuHT2uMbjdDCZ-JLmHVlS7B_k-wj1OTmZpMD7cg4=@protonmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726235335.GU2005@dread.disaster.area>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Linux folks,
-
-
-Am 25.07.20 um 07:20 schrieb Mazin Rezk:
-> On Saturday, July 25, 2020 12:59 AM, Duncan wrote:
+On Mon, Jul 27, 2020 at 09:53:35AM +1000, Dave Chinner wrote:
+> Yes, I understand the code accepts it can happen; what I dislike is
+> code that asserts subtle behaviour can happen, then doesn't describe
+> that exactly why/how that condition can occur. And then, because we
+> don't know exactly how something happens, we add work arounds to
+> hide issues we can't reason through fully. That's .... suboptimal.
 > 
->> On Sat, 25 Jul 2020 03:03:52 +0000 Mazin Rezk wrote:
->>
->>>> Am 24.07.20 um 19:33 schrieb Kees Cook:
->>>>
->>>>> There was a fix to disable the async path for this driver that
->>>>> worked around the bug too, yes? That seems like a safer and more
->>>>> focused change that doesn't revert the SLUB defense for all
->>>>> users, and would actually provide a complete, I think, workaround
->>>
->>> That said, I haven't seen the async disabling patch. If you could
->>> link to it, I'd be glad to test it out and perhaps we can use that
->>> instead.
->>
->> I'm confused. Not to put words in Kees' mouth; /I/ am confused (which
->> admittedly could well be just because I make no claims to be a
->> coder and am simply reading the bug and thread, but I'd appreciate some
->> "unconfusing" anyway).
->>
->> My interpretation of the "async disabling" reference was that it was to
->> comment #30 on the bug:
->>
->> https://bugzilla.kernel.org/show_bug.cgi?id=207383#c30
->>
->> ... which (if I'm not confused on this point too) appears to be yours.
->> There it was stated...
->>
->> I've also found that this bug exclusively occurs when commit_work is on
->> the workqueue. After forcing drm_atomic_helper_commit to run all of the
->> commits without adding to the workqueue and running the OS, the issue
->> seems to have disappeared.
->> <<<<
->>
->> Would not forcing all commits to run directly, without placing them on
->> the workqueue, be "async disabling"? That's what I /thought/ he was
->> referencing.
-> 
-> Oh, I thought he was referring to a different patch. Kees, could I get
-> your confirmation on this?
-> 
-> The change I made actually affected all of the DRM code, although this could
-> easily be changed to be specific to amdgpu. (By forcing blocking on
-> amdgpu_dm's non-blocking commit code)
-> 
-> That said, I'd still need to test further because I only did test it for a
-> couple of hours then. Although it should work in theory.
-> 
->> OTOH your base/context swap idea sounds like a possibly "less
->> disturbance" workaround, if it works, and given the point in the
->> commit cycle... (But if it's out Sunday it's likely too late to test
->> and get it in now anyway; if it's another week, tho...)
-> 
-> The base/context swap idea should make the use-after-free behave how it
-> did in 5.6. Since the bug doesn't cause an issue in 5.6, it's less of a
-> "less disturbance" workaround and more of a "no disturbance" workaround.
+> Christoph might know off the top of his head how we get into this
+> state. Once we work it out, then we need to add comments...
 
-Sorry for bothering, but is there now a solution, besides reverting the 
-commits, to avoid freezes/crashes *without* performance regressions?
+Unfortunately I don't know offhand.  I'll need to spend some more
+quality time with this code first.
 
+> > Way ahead of you
+> > http://git.infradead.org/users/willy/pagecache.git/commitdiff/5a1de6fc4f815797caa4a2f37c208c67afd7c20b
+> 
+> *nod*
+> 
+> I would suggest breaking that out as a separate cleanup patch and
+> not hide is in a patch that contains both THP modifications and bug
+> fixes. It stands alone as a valid cleanup.
 
-Kind regards,
+I'm pretty sure I already suggested that when it first showed up.
 
-Paul
+That being said I have another somewhat related thing in this area
+that I really want to get done before THP support, and maybe I can
+offload it to willy:
+
+Currently we always allocate the iomap_page structure for blocksize
+< PAGE_SIZE.  While this was easy to implement and a major improvement
+over the buffer heads it actually is quite silly, as we only actually
+need it if we either have sub-page uptodate state, or have extents
+boundaries in the page.  So what I'd like to do is to only actually
+allocate it in that case.  By doing the allocation lazy it should also
+help to never allocate one that is marked all uptodate from the start.
