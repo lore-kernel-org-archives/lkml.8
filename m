@@ -2,132 +2,172 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758BBC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EBEC433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 531E82070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:07:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fw2kRNbp"
+	by mail.kernel.org (Postfix) with ESMTP id B90592070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbgG1UHm (ORCPT
+        id S1729076AbgG1UHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:07:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728050AbgG1UHl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 16:07:41 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE2C9C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:07:40 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id f14so6052123ejb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:07:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qnz0jOHGhQ7071N749Two4h1HroTIuj/RiP18x35OOI=;
-        b=Fw2kRNbpJHyRS+1no8N05uMus3XPhZET++7DGlfe6jJSIZSAzilD13sbJKzlBvIKZU
-         VZxNwziJ0lu/iYgED5pnjaYig4DCwmb0+QuLlzBik3D/tlKW9LuxoTkPxVRciQOOKID1
-         A3x28H2/8Eksk7/cKrMVrDL+p/piLtAk8Szms=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qnz0jOHGhQ7071N749Two4h1HroTIuj/RiP18x35OOI=;
-        b=pzStBK/YduhiNd5PfFjMCnNlPYtIEkHypAfDp3iWMmF0PljDI/DwFsPajnHHcLmNnY
-         Xeb0N5gmlrTYbV4I1bohUE/K4LPw30mOQ7kX/j0uaAI/8yPZ+u96qX7mzYStBPbRKmZM
-         rHvFRAMorl1at9+WQvHlJCVHolHQJW246T4m5dAXnmK5FWn2bVfR1o9Q6f1O/8Tzgbvl
-         r+7ZyLjQtKAC4I9DIN+Z2n0RengMDCSOka/xcUWIa1PE5cd/jfFh6SfeUKwdnh60Q1A8
-         Fv04un8cz0w70VITHZqdvIcMPRUQPuZh5A9V5pfbdLwmQAJpws7SzfEmbpjV4/EV0uMk
-         STRA==
-X-Gm-Message-State: AOAM530ZNaMEZsOxisv7yq5HHNt0HtXl9IoA0++BXx5yEao4rVIRm2Cl
-        GfvQOE9l2HTuEQB/HGSI2dmD9L0ps14=
-X-Google-Smtp-Source: ABdhPJwXbB9bNarPMpyzrSDGvws/F23P4xuPAnG+aj0VDp8/i7O/Q+s6elMsnmCfzg4hzPr1FRiSuA==
-X-Received: by 2002:a17:906:430a:: with SMTP id j10mr26385830ejm.163.1595966859040;
-        Tue, 28 Jul 2020 13:07:39 -0700 (PDT)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com. [209.85.128.54])
-        by smtp.gmail.com with ESMTPSA id g25sm3985826edp.22.2020.07.28.13.07.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 13:07:37 -0700 (PDT)
-Received: by mail-wm1-f54.google.com with SMTP id f18so708908wmc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:07:37 -0700 (PDT)
-X-Received: by 2002:a7b:c953:: with SMTP id i19mr5308631wml.103.1595966856934;
- Tue, 28 Jul 2020 13:07:36 -0700 (PDT)
+        Tue, 28 Jul 2020 16:07:25 -0400
+Received: from mga03.intel.com ([134.134.136.65]:63202 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728559AbgG1UHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 16:07:06 -0400
+IronPort-SDR: RxBq11cZZvcabAlWhpewH031HLbiXj+LfH2BrIAfJ1k0X9VMsfeNuyCZ8jneu2LOagjkBDqtop
+ hr3G4LSyA6gg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="151287334"
+X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
+   d="scan'208";a="151287334"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 13:07:04 -0700
+IronPort-SDR: mnK6quD5Piabw1hA8WNqAwRt8dGmUuKQhUaAjzgXJUuAwwX51XU82pmri4V6kyCjdN+xHlaipv
+ cHPlOMBX2srg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
+   d="scan'208";a="312756381"
+Received: from unknown (HELO nsgsw-wilsonpoint.lm.intel.com) ([10.232.116.124])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Jul 2020 13:07:04 -0700
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Andrzej Jakowski <andrzej.jakowski@linux.intel.com>,
+        Sushma Kalakota <sushmax.kalakota@intel.com>,
+        <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: [PATCH 3/6] PCI: vmd: Create IRQ Domain configuration helper
+Date:   Tue, 28 Jul 2020 13:49:42 -0600
+Message-Id: <20200728194945.14126-4-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200728194945.14126-1-jonathan.derrick@intel.com>
+References: <20200728194945.14126-1-jonathan.derrick@intel.com>
 MIME-Version: 1.0
-References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
- <20200728151258.1222876-1-campello@chromium.org> <20200728091057.3.I2a1314232ace4323af96f9981c1e1a4f31f78049@changeid>
- <CAHp75VfOhoJrHEnC_Wh2qnOMX0pT1Jx92B0TFQ5=cfZsTSNSOg@mail.gmail.com>
-In-Reply-To: <CAHp75VfOhoJrHEnC_Wh2qnOMX0pT1Jx92B0TFQ5=cfZsTSNSOg@mail.gmail.com>
-From:   Daniel Campello <campello@chromium.org>
-Date:   Tue, 28 Jul 2020 14:07:00 -0600
-X-Gmail-Original-Message-ID: <CAHcu+VaDBj87stJ9JJkuerJkr8=-g68FhUUnKvfpN8uYaMBUhQ@mail.gmail.com>
-Message-ID: <CAHcu+VaDBj87stJ9JJkuerJkr8=-g68FhUUnKvfpN8uYaMBUhQ@mail.gmail.com>
-Subject: Re: [PATCH 03/15] iio: sx9310: Fix irq handling
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 12:08 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Tue, Jul 28, 2020 at 6:14 PM Daniel Campello <campello@chromium.org> wrote:
-> >
-> > Fixes enable/disable irq handling at various points. The driver needs to
-> > only enable/disable irqs if there is an actual irq handler installed.
->
-> > -       enable_irq(data->client->irq);
-> > +       if (!ret)
-> > +               enable_irq(data->client->irq);
-> >
-> >         return ret;
-> >  }
->
-> Can it be a usual pattern?
->
->   if (ret)
->     return ret;
->   ...
->   return 0;
+Moves the IRQ and MSI Domain configuration code to new helpers. No
+functional changes.
 
-I think this way is more readable. The alternative would have to be
-something like this:
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+---
+ drivers/pci/controller/vmd.c | 52 ++++++++++++++++++++++++------------
+ 1 file changed, 35 insertions(+), 17 deletions(-)
 
-....
-if (ret)
-  goto out;
-mutex_unlock(&data->mutex);
-enable_irq(data->client->irq);
-return 0;
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index a462719af12a..703c48171993 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -298,6 +298,34 @@ static struct msi_domain_info vmd_msi_domain_info = {
+ 	.chip		= &vmd_msi_controller,
+ };
+ 
++static int vmd_create_irq_domain(struct vmd_dev *vmd)
++{
++	struct fwnode_handle *fn;
++
++	fn = irq_domain_alloc_named_id_fwnode("VMD-MSI", vmd->sysdata.domain);
++	if (!fn)
++		return -ENODEV;
++
++	vmd->irq_domain = pci_msi_create_irq_domain(fn, &vmd_msi_domain_info,
++						    x86_vector_domain);
++	if (!vmd->irq_domain) {
++		irq_domain_free_fwnode(fn);
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
++static void vmd_remove_irq_domain(struct vmd_dev *vmd)
++{
++	if (vmd->irq_domain) {
++		struct fwnode_handle *fn = vmd->irq_domain->fwnode;
++
++		irq_domain_remove(vmd->irq_domain);
++		irq_domain_free_fwnode(fn);
++	}
++}
++
+ static char __iomem *vmd_cfg_addr(struct vmd_dev *vmd, struct pci_bus *bus,
+ 				  unsigned int devfn, int reg, int len)
+ {
+@@ -503,7 +531,6 @@ static int vmd_get_bus_number_start(struct vmd_dev *vmd)
+ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ {
+ 	struct pci_sysdata *sd = &vmd->sysdata;
+-	struct fwnode_handle *fn;
+ 	struct resource *res;
+ 	u32 upper_bits;
+ 	unsigned long flags;
+@@ -598,16 +625,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 
+ 	sd->node = pcibus_to_node(vmd->dev->bus);
+ 
+-	fn = irq_domain_alloc_named_id_fwnode("VMD-MSI", vmd->sysdata.domain);
+-	if (!fn)
+-		return -ENODEV;
+-
+-	vmd->irq_domain = pci_msi_create_irq_domain(fn, &vmd_msi_domain_info,
+-						    x86_vector_domain);
+-	if (!vmd->irq_domain) {
+-		irq_domain_free_fwnode(fn);
+-		return -ENODEV;
+-	}
++	ret = vmd_create_irq_domain(vmd);
++	if (ret)
++		return ret;
+ 
+ 	pci_add_resource(&resources, &vmd->resources[0]);
+ 	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
+@@ -617,13 +637,13 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 				       &vmd_ops, sd, &resources);
+ 	if (!vmd->bus) {
+ 		pci_free_resource_list(&resources);
+-		irq_domain_remove(vmd->irq_domain);
+-		irq_domain_free_fwnode(fn);
++		vmd_remove_irq_domain(vmd);
+ 		return -ENODEV;
+ 	}
+ 
+ 	vmd_attach_resources(vmd);
+-	dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
++	if (vmd->irq_domain)
++		dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
+ 
+ 	pci_scan_child_bus(vmd->bus);
+ 	pci_assign_unassigned_bus_resources(vmd->bus);
+@@ -732,15 +752,13 @@ static void vmd_cleanup_srcu(struct vmd_dev *vmd)
+ static void vmd_remove(struct pci_dev *dev)
+ {
+ 	struct vmd_dev *vmd = pci_get_drvdata(dev);
+-	struct fwnode_handle *fn = vmd->irq_domain->fwnode;
+ 
+ 	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+ 	pci_stop_root_bus(vmd->bus);
+ 	pci_remove_root_bus(vmd->bus);
+ 	vmd_cleanup_srcu(vmd);
+ 	vmd_detach_resources(vmd);
+-	irq_domain_remove(vmd->irq_domain);
+-	irq_domain_free_fwnode(fn);
++	vmd_remove_irq_domain(vmd);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+-- 
+2.27.0
 
-out:
-mutex_unlock(&data->mutex);
-return ret;
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
-
-Regards,
-Daniel Campello
