@@ -2,236 +2,348 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACBAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C815C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36FA92074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21C8207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:32:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YImhjnK1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="H8CqUUaq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbgG1XKM (ORCPT
+        id S1729983AbgG1XcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 19:10:12 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:54080 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729997AbgG1XKJ (ORCPT
+        Tue, 28 Jul 2020 19:32:13 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.38]:33715 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729597AbgG1XcM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 19:10:09 -0400
-X-Greylist: delayed 304 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Jul 2020 19:10:08 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595977807;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=XUmHWaIn8FCqLTurCz3Fw/l96qXWW2bMBVNyIMdJ1Kw=;
-        b=YImhjnK1EfjVKPeDdPF3I3sliKJrpPIvS22Xz2NSJxMy8FHKBAtC7XDVxPMw8KLeHJ5llx
-        bFDASNkN12vwsU4z31oFcAFLRycPOPTPuganO85Tf63F4h841iihz4RUnhD95UVw8cenSQ
-        SzUi+Bd9fcACaEyCRUYF4K7/ktZyHbw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-226-C9CTVi7_MBG799-v11yjuA-1; Tue, 28 Jul 2020 19:03:59 -0400
-X-MC-Unique: C9CTVi7_MBG799-v11yjuA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B65D1005504;
-        Tue, 28 Jul 2020 23:03:58 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 40CC819C71;
-        Tue, 28 Jul 2020 23:03:57 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net] rxrpc: Fix race between recvmsg and sendmsg on immediate
- call failure
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     syzbot+b54969381df354936d96@syzkaller.appspotmail.com,
-        Marc Dionne <marc.dionne@auristor.com>, dhowells@redhat.com,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Wed, 29 Jul 2020 00:03:56 +0100
-Message-ID: <159597743637.3473535.17426270487937799293.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        Tue, 28 Jul 2020 19:32:12 -0400
+X-Greylist: delayed 1274 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Jul 2020 19:32:11 EDT
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 2BAC846C45
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 18:10:55 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 0YkJkJxHG4KQc0YkJkQzPj; Tue, 28 Jul 2020 18:10:55 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=8xFpoRcRW3dX8FFKyT2jpqXNkGs3k/oRHLR/MOPh1jg=; b=H8CqUUaqu4PuXF/UhO+cy5eM87
+        T5UOGLSKjp+McPSvuDdh9lvqR1g+QXvAkltEwrl/SQq0Smv13CK9T9RykZS7Q0bEvyUNXj2gy5SnM
+        IedQzcL8PNFeiID3aBPpRvcaEPEjwwYKM+t3mhVXF4JZK0huto1esShJdp3icgviJb1yaJjDGSAv6
+        tgLBgVBQQkGQkPp5nwFIQ/fEAb+jZWrjUNc0qbGhzZWpFM4RmvggQ4bpYD8Z8a5KVr/89V7zQxfQq
+        rjhUrYX55KuLB0xoa/EP6xhfeYI7RK39cQ7bw6sxupBtlIF5BRIEdLS+JMPKdZaIGXLT5BWyHipLA
+        mTrCYYiQ==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:59820 helo=[192.168.15.2])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1k0YkI-001HGT-Qz; Tue, 28 Jul 2020 18:10:54 -0500
+Subject: Re: [char-misc-next] Revert "mei: hdcp: Replace one-element array
+ with flexible-array member"
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     "Winkler, Tomas" <tomas.winkler@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Usyskin, Alexander" <alexander.usyskin@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>
+References: <20200728214139.3129532-1-tomas.winkler@intel.com>
+ <e80a9e75-4497-1587-deab-b5c6a0fcc48f@embeddedor.com>
+ <8ec7601780b542c2bc0168e03749ec0e@intel.com>
+ <d6ef8ca4-6e11-b758-0e24-75301e1a5303@embeddedor.com>
+ <398e20e8c3f7436bb50d671b9aa9f809@intel.com>
+ <6736aefa05e84b30bcc91003b55c7644@intel.com>
+ <c4a93287-6010-8ea4-cab2-09efa49e3391@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ AP7RWS474w==
+Message-ID: <fe8f4b91-c65e-0664-c5df-52d4a93734b5@embeddedor.com>
+Date:   Tue, 28 Jul 2020 18:16:51 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <c4a93287-6010-8ea4-cab2-09efa49e3391@embeddedor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1k0YkI-001HGT-Qz
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.2]) [187.162.31.110]:59820
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's a race between rxrpc_sendmsg setting up a call, but then failing to
-send anything on it due to an error, and recvmsg() seeing the call
-completion occur and trying to return the state to the user.
-
-An assertion fails in rxrpc_recvmsg() because the call has already been
-released from the socket and is about to be released again as recvmsg deals
-with it.  (The recvmsg_q queue on the socket holds a ref, so there's no
-problem with use-after-free.)
-
-We also have to be careful not to end up reporting an error twice, in such
-a way that both returns indicate to userspace that the user ID supplied
-with the call is no longer in use - which could cause the client to
-malfunction if it recycles the user ID fast enough.
-
-Fix this by the following means:
-
- (1) When sendmsg() creates a call after the point that the call has been
-     successfully added to the socket, don't return any errors through
-     sendmsg(), but rather complete the call and let recvmsg() retrieve
-     them.  Make sendmsg() return 0 at this point.  Further calls to
-     sendmsg() for that call will fail with ESHUTDOWN.
-
-     Note that at this point, we haven't send any packets yet, so the
-     server doesn't yet know about the call.
-
- (2) If sendmsg() returns an error when it was expected to create a new
-     call, it means that the user ID wasn't used.
-
- (3) Mark the call disconnected before marking it completed to prevent an
-     oops in rxrpc_release_call().
-
- (4) recvmsg() will then retrieve the error and set MSG_EOR to indicate
-     that the user ID is no longer known by the kernel.
 
 
-An oops like the following is produced:
+On 7/28/20 18:04, Gustavo A. R. Silva wrote:
+> Tomas,
+> 
+> Please, see some comments below...
+> 
+> On 7/28/20 17:29, Winkler, Tomas wrote:
+>>>>>>
+>>>>>> Hi Tomas,
+>>>>>>
+>>>>>> On 7/28/20 16:41, Tomas Winkler wrote:
+>>>>>>> Greg please revert, this commit it changes size of struct
+>>>>>>> wired_cmd_repeater_auth_stream_req_in, this is not what firmware
+>>>>>>> is expecting.
+>>>>>>
+>>>>>> Could you elaborate on what's the firmware expecting, exactly?
+>>>>> struct wired_cmd_repeater_auth_stream_req_in {
+>>>>>   -	struct hdcp2_streamid_type	streams[1];
+>>>>>   + 	struct hdcp2_streamid_type	streams[];
+>>>>> }
+>>>>>
+>>>>> But then you have, which you haven't changed to + 1 byte =
+>>>>> mei_cldev_send(cldev, (u8 *)&verify_mprime_in,
+>>>>>                               sizeof(verify_mprime_in));
+>>>>>
+> 
+> I don't think the fix for this is to add 1 byte, if any, it seems
+> to be sizeof(*data->streams), or sizeof(struct hdcp2_streamid_type)
+> what needs to be added.
+> 
+> But it might be better to code something like this, instead:
+> 
+> diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c b/drivers/misc/mei/hdcp/mei_hdcp.c
+> index e6c3dc595617..7fe63c915548 100644
+> --- a/drivers/misc/mei/hdcp/mei_hdcp.c
+> +++ b/drivers/misc/mei/hdcp/mei_hdcp.c
+> @@ -572,12 +572,12 @@ static int mei_hdcp_verify_mprime(struct device *dev,
+>                HDCP_2_2_MPRIME_LEN);
+>         drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data->seq_num_m);
+>         memcpy(verify_mprime_in.streams, data->streams,
+> -              (data->k * sizeof(struct hdcp2_streamid_type)));
+> +              (data->k * sizeof(*data->streams)));
+> 
+>         verify_mprime_in.k = cpu_to_be16(data->k);
+> 
+>         byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in,
+> -                             sizeof(verify_mprime_in));
+> +                             struct_size(&verify_mprime_in, streams, data->k));
+>         if (byte < 0) {
+>                 dev_dbg(dev, "mei_cldev_send failed. %zd\n", byte);
+>                 return byte;
+> 
+> struct_size(&verify_mprime_in, streams, data->k) will give us the size, in bytes,
+> of struct wired_cmd_repeater_auth_stream_req_in plus the size in bytes for
+> the streams[] flexible-array, which is determined by struct hdcp2_streamid_type and
+> data->k.
+> 
+> What do you think?
+> 
 
-	kernel BUG at net/rxrpc/recvmsg.c:605!
-	...
-	RIP: 0010:rxrpc_recvmsg+0x256/0x5ae
-	...
-	Call Trace:
-	 ? __init_waitqueue_head+0x2f/0x2f
-	 ____sys_recvmsg+0x8a/0x148
-	 ? import_iovec+0x69/0x9c
-	 ? copy_msghdr_from_user+0x5c/0x86
-	 ___sys_recvmsg+0x72/0xaa
-	 ? __fget_files+0x22/0x57
-	 ? __fget_light+0x46/0x51
-	 ? fdget+0x9/0x1b
-	 do_recvmmsg+0x15e/0x232
-	 ? _raw_spin_unlock+0xa/0xb
-	 ? vtime_delta+0xf/0x25
-	 __x64_sys_recvmmsg+0x2c/0x2f
-	 do_syscall_64+0x4c/0x78
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+This is even better:
 
-Fixes: 357f5ef64628 ("rxrpc: Call rxrpc_release_call() on error in rxrpc_new_client_call()")
-Reported-by: syzbot+b54969381df354936d96@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
----
+diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c b/drivers/misc/mei/hdcp/mei_hdcp.c
+index e6c3dc595617..852374565cba 100644
+--- a/drivers/misc/mei/hdcp/mei_hdcp.c
++++ b/drivers/misc/mei/hdcp/mei_hdcp.c
+@@ -572,12 +572,12 @@ static int mei_hdcp_verify_mprime(struct device *dev,
+               HDCP_2_2_MPRIME_LEN);
+        drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data->seq_num_m);
+        memcpy(verify_mprime_in.streams, data->streams,
+-              (data->k * sizeof(struct hdcp2_streamid_type)));
++              flex_array_size(&verify_mprime_in, streams, data->k));
 
- net/rxrpc/call_object.c |   27 +++++++++++++++++++--------
- net/rxrpc/conn_object.c |    8 +++++---
- net/rxrpc/recvmsg.c     |    2 +-
- net/rxrpc/sendmsg.c     |    3 +++
- 4 files changed, 28 insertions(+), 12 deletions(-)
+        verify_mprime_in.k = cpu_to_be16(data->k);
 
-diff --git a/net/rxrpc/call_object.c b/net/rxrpc/call_object.c
-index f07970207b54..38a46167523f 100644
---- a/net/rxrpc/call_object.c
-+++ b/net/rxrpc/call_object.c
-@@ -288,7 +288,7 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
- 	 */
- 	ret = rxrpc_connect_call(rx, call, cp, srx, gfp);
- 	if (ret < 0)
--		goto error;
-+		goto error_attached_to_socket;
- 
- 	trace_rxrpc_call(call->debug_id, rxrpc_call_connected,
- 			 atomic_read(&call->usage), here, NULL);
-@@ -308,18 +308,29 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
- error_dup_user_ID:
- 	write_unlock(&rx->call_lock);
- 	release_sock(&rx->sk);
--	ret = -EEXIST;
--
--error:
- 	__rxrpc_set_call_completion(call, RXRPC_CALL_LOCAL_ERROR,
--				    RX_CALL_DEAD, ret);
-+				    RX_CALL_DEAD, -EEXIST);
- 	trace_rxrpc_call(call->debug_id, rxrpc_call_error,
--			 atomic_read(&call->usage), here, ERR_PTR(ret));
-+			 atomic_read(&call->usage), here, ERR_PTR(-EEXIST));
- 	rxrpc_release_call(rx, call);
- 	mutex_unlock(&call->user_mutex);
- 	rxrpc_put_call(call, rxrpc_call_put);
--	_leave(" = %d", ret);
--	return ERR_PTR(ret);
-+	_leave(" = -EEXIST");
-+	return ERR_PTR(-EEXIST);
-+
-+	/* We got an error, but the call is attached to the socket and is in
-+	 * need of release.  However, we might now race with recvmsg() when
-+	 * completing the call queues it.  Return 0 from sys_sendmsg() and
-+	 * leave the error to recvmsg() to deal with.
-+	 */
-+error_attached_to_socket:
-+	trace_rxrpc_call(call->debug_id, rxrpc_call_error,
-+			 atomic_read(&call->usage), here, ERR_PTR(ret));
-+	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
-+	__rxrpc_set_call_completion(call, RXRPC_CALL_LOCAL_ERROR,
-+				    RX_CALL_DEAD, ret);
-+	_leave(" = c=%08x [err]", call->debug_id);
-+	return call;
- }
- 
- /*
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 19e141eeed17..8cbe0bf20ed5 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -212,9 +212,11 @@ void rxrpc_disconnect_call(struct rxrpc_call *call)
- 
- 	call->peer->cong_cwnd = call->cong_cwnd;
- 
--	spin_lock_bh(&conn->params.peer->lock);
--	hlist_del_rcu(&call->error_link);
--	spin_unlock_bh(&conn->params.peer->lock);
-+	if (!hlist_unhashed(&call->error_link)) {
-+		spin_lock_bh(&call->peer->lock);
-+		hlist_del_rcu(&call->error_link);
-+		spin_unlock_bh(&call->peer->lock);
-+	}
- 
- 	if (rxrpc_is_client_call(call))
- 		return rxrpc_disconnect_client_call(call);
-diff --git a/net/rxrpc/recvmsg.c b/net/rxrpc/recvmsg.c
-index 490b1927215c..efecc5a8f67d 100644
---- a/net/rxrpc/recvmsg.c
-+++ b/net/rxrpc/recvmsg.c
-@@ -620,7 +620,7 @@ int rxrpc_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
- 			goto error_unlock_call;
- 	}
- 
--	if (msg->msg_name) {
-+	if (msg->msg_name && call->peer) {
- 		struct sockaddr_rxrpc *srx = msg->msg_name;
- 		size_t len = sizeof(call->peer->srx);
- 
-diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
-index 03a30d014bb6..f3f6da6e4ad2 100644
---- a/net/rxrpc/sendmsg.c
-+++ b/net/rxrpc/sendmsg.c
-@@ -681,6 +681,9 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *rx, struct msghdr *msg, size_t len)
- 		if (IS_ERR(call))
- 			return PTR_ERR(call);
- 		/* ... and we have the call lock. */
-+		ret = 0;
-+		if (READ_ONCE(call->state) == RXRPC_CALL_COMPLETE)
-+			goto out_put_unlock;
- 	} else {
- 		switch (READ_ONCE(call->state)) {
- 		case RXRPC_CALL_UNINITIALISED:
+        byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in,
+-                             sizeof(verify_mprime_in));
++                             struct_size(&verify_mprime_in, streams, data->k));
+        if (byte < 0) {
+                dev_dbg(dev, "mei_cldev_send failed. %zd\n", byte);
+                return byte;
 
+the flex_array_size() is a new helper that was designed for this situations. :)
+It calculates the size of a flexible array member within an enclosing structure,
+which is exactly the case.
 
+Thanks
+--
+Gustavo
+
+> See more comments below...
+> 
+>>>>
+>>>> I see, this is the kind of feedback I need from people that knows the
+>>>> code better. Thanks!
+>>>>
+>>>>> But that's not the major point. Point is that we should be able to
+>>>>> review and test the code before it is merged.  You haven't run it, right?
+>>>>> There is MAINTAINERS file for a reason.
+>>>>>
+>>>>
+>>>> I'm using this command:
+>>>>
+>>>> $ scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback
+>>>>
+>>>> and this is the output for both files:
+>>>>
+>>>> $ scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback
+>>>> drivers/misc/mei/hdcp/mei_hdcp.c Arnd Bergmann <arnd@arndb.de>
+>>>> (supporter:CHAR and MISC DRIVERS) Greg Kroah-Hartman
+>>>> <gregkh@linuxfoundation.org> (supporter:CHAR and MISC DRIVERS) linux-
+>>>> kernel@vger.kernel.org (open list) $ scripts/get_maintainer.pl
+>>>> --nokeywords -- nogit --nogit-fallback
+>>>> drivers/misc/mei/hdcp/mei_hdcp.h Arnd Bergmann <arnd@arndb.de>
+>>>> (supporter:CHAR and MISC DRIVERS) Greg Kroah-Hartman
+>>>> <gregkh@linuxfoundation.org> (supporter:CHAR and MISC DRIVERS) linux-
+>>>> kernel@vger.kernel.org (open list)
+>>>
+>>>
+>>>> For some reason you don't appear on the list above. Do you see
+>>>> anything wrong with the command I'm running to get the maintainers and
+>>> lists?
+>>>
+>>> Not sure, it should be caught by drivers/misc/mei/* ?
+>>> Maybe it is not recursive? Need to check the script, frankly I usually check this
+>>> manually.
+>>>
+>>> INTEL MANAGEMENT ENGINE (mei)
+>>> M:      Tomas Winkler <tomas.winkler@intel.com>
+>>> L:      linux-kernel@vger.kernel.org
+>>> S:      Supported
+>>> F:      Documentation/driver-api/mei/*
+>>> F:      drivers/misc/mei/*
+>>> F:      drivers/watchdog/mei_wdt.c
+>>> F:      include/linux/mei_cl_bus.h
+>>> F:      include/uapi/linux/mei.h
+>>> F:      samples/mei/*
+>>>
+>>
+>> It's not recursive, when I add drivers/misc/mei/hdcp/* . It works correctly 
+>> I will post a patch.
+>>
+> 
+> Great. I'm glad we got to the root cause of this issue. :)
+> 
+> Thanks
+> --
+> Gustavo
+> 
+>> Thanks
+>> Tomas
+>>
+>>
+>>>
+>>>>
+>>>> Thanks
+>>>> --
+>>>> Gustavo
+>>>>
+>>>>>>
+>>>>>>> I really do not appreciate that the code is bypassing driver
+>>>>>>> maintaner review, I think this is a minimum we can ask for, this
+>>>>>>> is not for a first time.
+>>>>>>>
+>>>>>>> This reverts commit c56967d674e361ebe716e66992e3c5332b25ac1f.
+>>>>>>>
+>>>>>>> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>>>>>> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+>>>>>>> ---
+>>>>>>>  drivers/misc/mei/hdcp/mei_hdcp.c | 2 +-
+>>>>>>> drivers/misc/mei/hdcp/mei_hdcp.h | 2 +-
+>>>>>>>  2 files changed, 2 insertions(+), 2 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c
+>>>>>>> b/drivers/misc/mei/hdcp/mei_hdcp.c
+>>>>>>> index d1d3e025ca0e..e6c3dc595617 100644
+>>>>>>> --- a/drivers/misc/mei/hdcp/mei_hdcp.c
+>>>>>>> +++ b/drivers/misc/mei/hdcp/mei_hdcp.c
+>>>>>>> @@ -572,7 +572,7 @@ static int mei_hdcp_verify_mprime(struct
+>>>>>>> device
+>>>>>> *dev,
+>>>>>>>  	       HDCP_2_2_MPRIME_LEN);
+>>>>>>>  	drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data-
+>>>> seq_num_m);
+>>>>>>>  	memcpy(verify_mprime_in.streams, data->streams,
+>>>>>>> -	       array_size(data->k, sizeof(*data->streams)));
+>>>>>>> +	       (data->k * sizeof(struct hdcp2_streamid_type)));
+>>>>>>>
+>>>>>>>  	verify_mprime_in.k = cpu_to_be16(data->k);
+>>>>>>>
+>>>>>>> diff --git a/drivers/misc/mei/hdcp/mei_hdcp.h
+>>>>>>> b/drivers/misc/mei/hdcp/mei_hdcp.h
+>>>>>>> index 834757f5e072..18ffc773fa18 100644
+>>>>>>> --- a/drivers/misc/mei/hdcp/mei_hdcp.h
+>>>>>>> +++ b/drivers/misc/mei/hdcp/mei_hdcp.h
+>>>>>>> @@ -358,7 +358,7 @@ struct
+>>> wired_cmd_repeater_auth_stream_req_in
+>>>> {
+>>>>>>>  	u8
+>>>>>> 	seq_num_m[HDCP_2_2_SEQ_NUM_LEN];
+>>>>>>>  	u8				m_prime[HDCP_2_2_MPRIME_LEN];
+>>>>>>>  	__be16				k;
+>>>>>>> -	struct hdcp2_streamid_type	streams[];
+>>>>>>> +	struct hdcp2_streamid_type	streams[1];
+>>>>>>>  } __packed;
+>>>>>>>
+>>>>>>>  struct wired_cmd_repeater_auth_stream_req_out {
+>>>>>>>
