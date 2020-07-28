@@ -2,187 +2,196 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D74DC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2192C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 358772070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CFBF2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:49:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="mJv4cRJa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ktZjHIcS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729873AbgG1Msi (ORCPT
+        id S1729916AbgG1Mtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:48:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48316 "EHLO
+        Tue, 28 Jul 2020 08:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729379AbgG1Msh (ORCPT
+        with ESMTP id S1729890AbgG1Mtm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:48:37 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21271C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:48:37 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id b186so616485pfb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:48:37 -0700 (PDT)
+        Tue, 28 Jul 2020 08:49:42 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27961C0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:49:42 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id q85so4527657vke.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:49:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=5oyTQCyX/ciYl48/sUrXDUPmcBZA+8gagBY19IdeyQw=;
-        b=mJv4cRJaHTSRd26v0XPCC6OuEb27899p3vFDZAeLGdTP7DB4aEi6p5eF4+a8cnzKCw
-         5MwzSIznTSTpJJEC8dSCLzxBxhoW/EEzSkUCb/25q+Kc2Wf+Wj9wbZlM4F9ZaOTtEvk4
-         JL4/iNFN4axOYYA7a4Q+eKkAsBX/zEWROJ1tKgCi1uGgxmSanormQNDOFwJupIAw66YV
-         e6GHp2BKmHKRPLOmx0Eii+TgpPoWFFV81GQjyAAr5WuNE9sFvLEspzkfC1PGo/MgKQmL
-         +Wcb43qgmCJAYtoO7vfJu3RtxoxWmHB/IVQAWVnuyxbHjudvAgEUR3OWIAyOI09otZxe
-         GajA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZNiMEHuT8+pdMAqptzZeWT7zj1wFIC1aVPAo0nMoMBw=;
+        b=ktZjHIcSKPi6h78SKzXBq/EtIpvMrLjjjqSHlPVylZbx2YJgbjQdUh9vVGIDT2E5MH
+         PJ0WXIaDGYaqe8cuv0Xdp1sABdQwSzrCmhlCj6dnkVflP5kMOXzBRwvwUynSuktljIF5
+         qOwhBHPzf2pEClZygy7VrFZyQYCpjvVjzn60OmSaqPikXjoSloTMe9H9od2/Rjxj5y6J
+         XCovimwj00i5CsKpJONKcvb/4iPAVR45I8fN5IerQWetJs2If1NpqPmCGGJJUZc6Vlmv
+         sGVbMJ52fSNmBfiEf9CrHEQpiaZi/jBeHa8j4Kge+aKBw+p8+mNmJG7HTDtjFl3g49oC
+         foQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=5oyTQCyX/ciYl48/sUrXDUPmcBZA+8gagBY19IdeyQw=;
-        b=sWFsj1Msc14HPBVOBwmMwjZicp8+MWF/GuUSgK2GIsgyF+bwvrWXzosLn6qxb1Bq+X
-         tOEWsGhTp9xXGqopH82kXpCmUXrxos/8vxfQFGeIi92lOmbK0qZXJlUF72hSFYYh/bHt
-         EGaPAAGHlUUi8nzd7vXXBcKQTvn3vgP4ddl3UHAmnU9sh6u6sMRB9pHIRllzWgDqtKq6
-         BtV+GdsAuXhWU8Y71nqXQZxkBT/8twqR912iPlA5CklLUWrYid++0o9L2SbtbKrwQBK0
-         Dzj099CGUgdwYTA9MoobUB6MxohCfA84QEwtIoW3HetPSvnehYuq6Bdm8viCbCvmYMc/
-         cORA==
-X-Gm-Message-State: AOAM532brpV8P1HqQhuWyOGKXPigBjGCEw+U+WhrfRENHSX4i3TT/UqN
-        TAuzIhjc/cWUnkKr+j0bSakdAQ==
-X-Google-Smtp-Source: ABdhPJwrNO3hVD9ncE6nw0POJPiH56DghiizCxZUSEDMPelQ3RnDZcitu5WJ+CzfU0hAcmqtp/xbpw==
-X-Received: by 2002:a63:aa42:: with SMTP id x2mr23554140pgo.361.1595940516634;
-        Tue, 28 Jul 2020 05:48:36 -0700 (PDT)
-Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
-        by smtp.gmail.com with ESMTPSA id w4sm17943294pfd.39.2020.07.28.05.48.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Jul 2020 05:48:35 -0700 (PDT)
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-X-Google-Original-From: Kaaira Gupta <Kaairakgupta@es.iitr.ac.in>
-Date:   Tue, 28 Jul 2020 18:18:28 +0530
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH v2 3/3] media: vimc: Join pipeline if one already exists
-Message-ID: <20200728124828.GA8928@kaaira-HP-Pavilion-Notebook>
-References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
- <20200724120213.17119-4-kgupta@es.iitr.ac.in>
- <e70ecfa2-695f-70ca-eccc-841477700445@collabora.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZNiMEHuT8+pdMAqptzZeWT7zj1wFIC1aVPAo0nMoMBw=;
+        b=Gp9WemfVIXWoZasTdDs1cUmgtRbIi19eeLQG5PZYjEKZlq3pJ6oTP2vfCJHtesVhcR
+         p7fd9RxHaYTvnh1bxKA2p6ml6qM2jFy2GGQ6sYnWibMsDLci5QTakR2q2iUlTq5GTH9p
+         AgtxZa5O4u4llZpL6GRFfMGg7v7gGIwn/K8RvWbb36333NV7VHwlzRn/930fCi3jL8Lf
+         dxtOVfo5ULU5R5pwIkKBnw5YiHPQgW3ILbfBChS1TtfrPq1oP3FmUhacBGUXd8Eooohr
+         AQLFVskJxD1Nq9oIAQc7tsyCEmvaTlJA9yu6O0ik2KrvzzvxgXWRioWHxIdngyR15FxJ
+         MjEg==
+X-Gm-Message-State: AOAM5312nRdqwQQ91kj8E8+0XP/g1xMGg/xDk4UFFsGnd+9Y4JQXRvgC
+        AHBkkyzRp3Z/XeneIGSbYLLN4svimH3zq4A9Zacadw==
+X-Google-Smtp-Source: ABdhPJzwTW2xZn0tGCPfUw7SANUU1RLHBQG0L0PQcaYpCrQ5D8gDCWNSYISy8i6qPVZ1d532Mpw/maXbJOc/pFNAApo=
+X-Received: by 2002:a1f:a816:: with SMTP id r22mr8678960vke.99.1595940580992;
+ Tue, 28 Jul 2020 05:49:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e70ecfa2-695f-70ca-eccc-841477700445@collabora.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200724091520.880211-1-tweek@google.com> <CAEjxPJ45ij3obT37ywn_edb9xb89z-SdwzejfN6+jrvAtghXfA@mail.gmail.com>
+ <CAHC9VhS4aXD8kcXnQ2MsYvjc--xXSUpsM1xtgq3X5DBT59ohhw@mail.gmail.com>
+In-Reply-To: <CAHC9VhS4aXD8kcXnQ2MsYvjc--xXSUpsM1xtgq3X5DBT59ohhw@mail.gmail.com>
+From:   =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
+Date:   Tue, 28 Jul 2020 14:49:24 +0200
+Message-ID: <CA+zpnLfczC=9HQA8s1oBGKGQO+OkuydF85o89dhSxdOyKBHMgg@mail.gmail.com>
+Subject: Re: [PATCH] selinux: add tracepoint on denials
+To:     Paul Moore <paul@paul-moore.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Nick Kralevich <nnk@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 02:24:37PM +0200, Dafna Hirschfeld wrote:
-> 
-> 
-> On 24.07.20 14:02, Kaaira Gupta wrote:
-> > An output which is running is already part of a pipeline and trying to
-> > start a new pipeline is not possible. This prevents two capture devices
-> > from streaming at the same time.
-> > 
-> > Instead of failing to start the second capture device allow it to join
-> > the already running pipeline. This allows two (or more) capture devices
-> > to independently be started and stopped.
-> > 
-> > [Kaaira: Changed the search for an existing connected sensor, to search
-> > for a non-NULL pipe instead, this helps to terminate the search at
-> > output itself instead of going till the sensor, changed variable names,
-> > commit message and conditions accordingly]
-> > 
-> > Signed-off-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
-> > Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
-> > ---
-> >   .../media/test-drivers/vimc/vimc-capture.c    | 35 ++++++++++++++++++-
-> >   1 file changed, 34 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/media/test-drivers/vimc/vimc-capture.c b/drivers/media/test-drivers/vimc/vimc-capture.c
-> > index c63496b17b9a..423d5e5a508d 100644
-> > --- a/drivers/media/test-drivers/vimc/vimc-capture.c
-> > +++ b/drivers/media/test-drivers/vimc/vimc-capture.c
-> > @@ -237,16 +237,49 @@ static void vimc_cap_return_all_buffers(struct vimc_cap_device *vcap,
-> >   	spin_unlock(&vcap->qlock);
-> >   }
-> > +static struct media_entity *vimc_cap_get_output(struct vimc_cap_device *vcap)
-> > +{
-> > +	struct media_entity *entity = &vcap->vdev.entity;
-> > +	struct media_device *mdev = entity->graph_obj.mdev;
-> > +	struct media_graph graph;
-> > +
-> > +	mutex_lock(&mdev->graph_mutex);
-> > +	if (media_graph_walk_init(&graph, mdev)) {
-> > +		mutex_unlock(&mdev->graph_mutex);
-> > +		return NULL;
-> > +	}
-> > +
-> > +	media_graph_walk_start(&graph, entity);
-> > +
-> > +	while ((entity = media_graph_walk_next(&graph)))
-> > +		if (entity->pipe)
-> > +			break;
-> > +
-> > +	mutex_unlock(&mdev->graph_mutex);
-> > +
-> > +	media_graph_walk_cleanup(&graph);
-> > +
-> > +	return entity;
-> > +}
-> > +
-> >   static int vimc_cap_start_streaming(struct vb2_queue *vq, unsigned int count)
-> >   {
-> >   	struct vimc_cap_device *vcap = vb2_get_drv_priv(vq);
-> >   	struct media_entity *entity = &vcap->vdev.entity;
-> > +	struct media_pipeline *pipe = NULL;
-> > +	struct media_entity *oent;
-> >   	int ret;
-> >   	vcap->sequence = 0;
-> >   	/* Start the media pipeline */
-> > -	ret = media_pipeline_start(entity, &vcap->stream.pipe);
-> > +	oent = vimc_cap_get_output(vcap);
-> > +	if (oent)
-> > +		pipe = oent->pipe;
-> > +	else
-> > +		pipe = &vcap->stream.pipe;
-> > +
-> > +	ret = media_pipeline_start(entity, pipe);
-> >   	if (ret) {
-> >   		vimc_cap_return_all_buffers(vcap, VB2_BUF_STATE_QUEUED);
-> >   		return ret;
-> > 
-> 
-> I think there is actually no need to iterate the graph. If the capture is already connected to another capture
-> that streams, it means that they both have the same pipe in the media core.
-> So actually the code can just be:
+Thanks for the review! I'll send a new revision of the patch with the
+%x formatter and using the TP_CONDITION macro.
 
-Hi,
-iterating the graph takes care of the case when output already exists.
-So in case where an output is needed from both Capture1 and RGB capture,
-don't they represent two different pipes?
+On adding further information to the trace event, I would prefer
+adding the strict minimum to be able to correlate the event with the
+avc message. The reason is that tracevents have a fixed size (see
+https://www.kernel.org/doc/Documentation/trace/events.txt). For
+instance, we would need to decide on a maximum size for the string
+representation of the list of permissions. This would also duplicate
+the reporting done in the avc audit event. I'll simply add the pid as
+part of the printk, which should be sufficient for the correlation.
 
-> 
-> if (vcap->ved.ent->pipe)
-> 	pipe = vcap->ved.ent->pipe;
-> else
-> 	pipe = &vcap->stream.pipe;
-> 
-> 
-> (and no need the function vimc_cap_get_output)
-> 
-> Thanks,
-> Dafna
+
+On Fri, Jul 24, 2020 at 3:55 PM Paul Moore <paul@paul-moore.com> wrote:
+>
+> On Fri, Jul 24, 2020 at 9:32 AM Stephen Smalley
+> <stephen.smalley.work@gmail.com> wrote:
+> > On Fri, Jul 24, 2020 at 5:15 AM Thi=C3=A9baud Weksteen <tweek@google.co=
+m> wrote:
+> > > The audit data currently captures which process and which target
+> > > is responsible for a denial. There is no data on where exactly in the
+> > > process that call occurred. Debugging can be made easier by being abl=
+e to
+> > > reconstruct the unified kernel and userland stack traces [1]. Add a
+> > > tracepoint on the SELinux denials which can then be used by userland
+> > > (i.e. perf).
+> > >
+> > > Although this patch could manually be added by each OS developer to
+> > > trouble shoot a denial, adding it to the kernel streamlines the
+> > > developers workflow.
+> > >
+> > > [1] https://source.android.com/devices/tech/debug/native_stack_dump
+> > >
+> > > Signed-off-by: Thi=C3=A9baud Weksteen <tweek@google.com>
+> > > Signed-off-by: Joel Fernandes <joelaf@google.com>
+> > > ---
+> > >  MAINTAINERS                    |  1 +
+> > >  include/trace/events/selinux.h | 35 ++++++++++++++++++++++++++++++++=
+++
+> > >  security/selinux/avc.c         |  6 ++++++
+> > >  3 files changed, 42 insertions(+)
+> > >  create mode 100644 include/trace/events/selinux.h
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index e64cdde81851..6b6cd5e13537 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -15358,6 +15358,7 @@ T:      git git://git.kernel.org/pub/scm/linu=
+x/kernel/git/pcmoore/selinux.git
+> > >  F:     Documentation/ABI/obsolete/sysfs-selinux-checkreqprot
+> > >  F:     Documentation/ABI/obsolete/sysfs-selinux-disable
+> > >  F:     Documentation/admin-guide/LSM/SELinux.rst
+> > > +F:     include/trace/events/selinux.h
+> > >  F:     include/uapi/linux/selinux_netlink.h
+> > >  F:     scripts/selinux/
+> > >  F:     security/selinux/
+> > > diff --git a/include/trace/events/selinux.h b/include/trace/events/se=
+linux.h
+> > > new file mode 100644
+> > > index 000000000000..e247187a8135
+> > > --- /dev/null
+> > > +++ b/include/trace/events/selinux.h
+> > > @@ -0,0 +1,35 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +#undef TRACE_SYSTEM
+> > > +#define TRACE_SYSTEM selinux
+> > > +
+> > > +#if !defined(_TRACE_SELINUX_H) || defined(TRACE_HEADER_MULTI_READ)
+> > > +#define _TRACE_SELINUX_H
+> > > +
+> > > +#include <linux/ktime.h>
+> > > +#include <linux/tracepoint.h>
+> > > +
+> > > +TRACE_EVENT(selinux_denied,
+> > > +
+> > > +       TP_PROTO(int cls, int av),
+> > > +
+> > > +       TP_ARGS(cls, av),
+> > > +
+> > > +       TP_STRUCT__entry(
+> > > +               __field(int, cls)
+> > > +               __field(int, av)
+> > > +       ),
+> > > +
+> > > +       TP_fast_assign(
+> > > +               __entry->cls =3D cls;
+> > > +               __entry->av =3D av;
+> > > +       ),
+> > > +
+> > > +       TP_printk("denied %d %d",
+> > > +               __entry->cls,
+> > > +               __entry->av)
+> > > +);
+> >
+> > I would think you would want to log av as %x for easier interpretation
+> > especially when there are multiple permissions being checked at once
+> > (which can happen). Also both cls and av would properly be unsigned
+> > values.  Only other question I have is whether it would be beneficial
+> > to include other information here to help uniquely identify/correlate
+> > the denial with the avc: message and whether any decoding of the
+> > class, av, or other information could/should be done here versus in
+> > some userland helper.
+>
+> It does seem like at the very least it would be nice to see the av as
+> hex values instead of integers, e.g. "%x" in the TP_printk() call.
+> Considering this patch is about making dev's lives easier, I tend to
+> agree with Stephen questioning if you should go a step further and
+> convert both the class and av values into string representations.
+>
+> --
+> paul moore
+> www.paul-moore.com
