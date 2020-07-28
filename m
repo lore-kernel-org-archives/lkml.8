@@ -2,208 +2,96 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B82C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCAEC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4DF12065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E64D4207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="gujDDE58";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="awiQdkHf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rt+ymG5C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgG1GsN (ORCPT
+        id S1727051AbgG1GwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:48:13 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:50988 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726874AbgG1GsN (ORCPT
+        Tue, 28 Jul 2020 02:52:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726994AbgG1GwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:48:13 -0400
-Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06S6ZmKo010183;
-        Tue, 28 Jul 2020 02:48:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=zpO8PzPzx6sxD+sXV0FEjX9CE0r5zTzu11izREKdr/Y=;
- b=gujDDE58zpbWsfTIWSRAlgt3CKlfUbtwxAkphNkVK1KDvDig39MXYZqxyeJisDhx+ryu
- Cp64g0hplVPrPD76P+3+aDDROpR2HgnfsdtQ/uPUdNBHc/OOstb7qxXRA+P6N6lohNiV
- pX9j5kdBqSWtyC5fNQueXqmpNdjtmRv5tGNueiMxECSQi8VqKhg8x4/qGAArid2ooHvC
- wEfRK4HGuX7Q1osJPoGLRoPQf+Vq0EzY6BlfccJKIZ5HgSknwaMuu4CC79R89QTgE6F+
- NTA44xm/UbsTKdeegwGWEZL5ZzESvDiVr6iRMfBi0zd3GguRaoX9NEutDpX0Ik6GiQ6K YQ== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0b-00154904.pphosted.com with ESMTP id 32gfy7t05h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 02:48:07 -0400
-Received: from pps.filterd (m0144103.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06S6bl09050280;
-        Tue, 28 Jul 2020 02:48:07 -0400
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2109.outbound.protection.outlook.com [104.47.55.109])
-        by mx0b-00154901.pphosted.com with ESMTP id 32jeh60c1x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jul 2020 02:48:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QxHbklgPUgnDzEz1OtAeB5so+XKeDYP/J2kmOWqXEBJu4NiY07iJvs/5Wv1rC+FSyivTTKAJxM6Eto055fKHMP6KFD0lTVOkp40oeXqa0BMW3zwcxaNIMVld6xvT90D7Bq6KNpsJDsefkwQLRVWiEmON3chaaC5KzjgMcKQTVMKVYMWH1NC1uqm/WSkunclKS2k56xZ9tYY9elP6slj5mQVqh/MEHQ6KzPG7qOv6pzWxN/j7hAJ9CUNwpdTrk3nyeKXE4vInOALWVWJcTwUPH4g5dD/PQ2j+SK26L1BSNduxhRoeT7w4Leh1X2l0PvSHv9wvayvwrhtWtyFTDoMMQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zpO8PzPzx6sxD+sXV0FEjX9CE0r5zTzu11izREKdr/Y=;
- b=h0cBE4jYu7naF0IHpX4sKcgASxPo4LG1W/MaIrb9L9nRAa9ohSSJdC1QG79kUxneaalV/qWbyr/sr+m2sJSY3UbE7PYIsCajuqt+YulCB3dKBfpTLPcAU1/4AuPuu5cYsqAAaiObiUI7BtDJrxXq7jeh5WFVi4XenzfuGc12c8vdpFJFGXEFtswY0urBBKcXcNfIGvSuWxGiqDnUK8vhLvCWl0919Uzmpc9pktPf8W/kWU7BMQ9y8X1Va3F8aO/mPfgMoHZTopSwzwIIQSqiDn3CD2ookSt3aYpjwTFQGZlS26WaRwxRCneNz1sCllFsthxpbf8f0ljM55ieFMwzdg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
- s=selector1-Dell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zpO8PzPzx6sxD+sXV0FEjX9CE0r5zTzu11izREKdr/Y=;
- b=awiQdkHfismQbb2bXjH8+b1dxR2OejrEKnxUojSezz77n0oznM5mKf3PVo3N85s2h+9earXYzZzqRT7E/lqhCc5e9Vj1KDt+VSGOCPfGugpKSBMJ+vif6ocjQt1p+Mh5KXliA2lvDbnEoUSw6XNr9QActVqiSbKs1kGz/EQB3aM=
-Received: from MN2PR19MB3280.namprd19.prod.outlook.com (2603:10b6:208:13d::22)
- by MN2PR19MB3629.namprd19.prod.outlook.com (2603:10b6:208:190::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Tue, 28 Jul
- 2020 06:48:05 +0000
-Received: from MN2PR19MB3280.namprd19.prod.outlook.com
- ([fe80::44ff:c8ed:66e3:33b9]) by MN2PR19MB3280.namprd19.prod.outlook.com
- ([fe80::44ff:c8ed:66e3:33b9%7]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
- 06:48:04 +0000
-From:   "Wang, Crag" <Crag.Wang@dell.com>
-To:     Sebastian Reichel <sre@kernel.org>, Crag Wang <crag0715@gmail.com>
-CC:     "mathewk@chromium.org" <mathewk@chromium.org>,
-        "Limonciello, Mario" <Mario.Limonciello@dell.com>,
-        "campello@google.com" <campello@google.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH RESEND 1/1] power_supply: wilco_ec: Add permanent long
- life charging mode
-Thread-Topic: [PATCH RESEND 1/1] power_supply: wilco_ec: Add permanent long
- life charging mode
-Thread-Index: AQHWWrjEGvO7WTs4p0K1hlx2cRbv+KkcJ24AgABURTA=
-Date:   Tue, 28 Jul 2020 06:48:04 +0000
-Message-ID: <MN2PR19MB32808EA057889F61C063DB4CE3730@MN2PR19MB3280.namprd19.prod.outlook.com>
-References: <20200715145511.9464-1-crag.wang@dell.com>
- <20200727233414.xu5eqyes76a5hpkw@earth.universe>
-In-Reply-To: <20200727233414.xu5eqyes76a5hpkw@earth.universe>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Crag_Wang@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-07-28T06:48:03.1598338Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=7e83b517-a3a7-4386-86d8-5d45b0147206;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [163.244.185.24]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1d7b3b81-54d5-4447-7007-08d832c22df5
-x-ms-traffictypediagnostic: MN2PR19MB3629:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR19MB362925C7BF1E69A6C6F13C9CE3730@MN2PR19MB3629.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: s9XKR6T9afR8KaGhqESf1H9ABFFXGYRLWegOVSa7N+GtjDSB8bof3I2IQBPiX4BwZlNUnFYREmILPiNaxbK/kmk/zE3TDxw2CAIFA6NGCna4Ih4vJ8vjk4aG4tooEBD2g7NsdFIrpvSCpggAFiUtl6GagjCxW9hZxhZqqCwbAzFuglm+5M+nVCpfBFhEaeQCaNrqnTmGn/qqYipWolGTusbDkM+amfnXmJRSnvBFEBsCWvdMroy8RyLt0wHr0fjVtU7RiAwJ4j9CYgVGv/33MGnejnwka2ER3Ucno5A5i0BnxtPQF3vJCUDfi6BrE2noY1YBv7fAmHGkIu/T0a4nQQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR19MB3280.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(366004)(396003)(376002)(346002)(478600001)(76116006)(66476007)(66556008)(64756008)(66446008)(66946007)(86362001)(7696005)(54906003)(71200400001)(8936002)(9686003)(52536014)(8676002)(5660300002)(33656002)(786003)(4326008)(6506007)(110136005)(2906002)(26005)(186003)(55016002)(316002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: v1LiLbaHboa9M34FJqzg019nYXskZJUCVojtVwef/LvgKfssunzmYpicZCJ/Ica+6SEIIH7BvRf0/sassuzTMhcU2JZNJuT149IZa1vbJOgYMd/vnR41/9nZYLP18T2ZSvgL4omrOpOxxzEHL6hfgZ9J2UENBHWlVRDx/46q22JkycGhLDy0DHNTKQieJmxo5AbKoneHzpB4dko93CEVWZyEmB15MiWS5laV5ygmXAxAwbdlOsdUIJ9DzzJ4pCA2fTDG3T0vNouLlPV7Y81/ikAl0826ExER4vfLdmD47DD0CLTdPTM4MrYO0oJyntWzWxoavWyuzFXY9NdYd8uhGJKLpTOgf6duM76xdOp69gio43szKglSEy+Xc64JDJqxrPG0Xc6703vfcEOc17FkejcmgdAycAE0H94sCta4ramCEpKsxVgxbBXYDT79tlD16j1MMW6BVE+H8wlIU39nVqxn0BZfQNmgf7Mkeq9c8Do8Tu85I3rCRMoNukyZwm+W
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 Jul 2020 02:52:04 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55613C0619D4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 23:52:04 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id l12so250088pgt.13
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 23:52:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/GS/4OHUC58pzoucFVteRuIhHVuqFuzv5eBDbKwTaes=;
+        b=rt+ymG5Cbhfum5rPhzbu2bNlLrOp2IYPr1KhUaVGa/JAf4KFUIgZoNlrcr9ss8BvzG
+         QwIQxBO7tsuKVEqXL4c3rX0VtADAkGcNlf5nIDGY+cRQkp5Umvsg0jlr+YVA9ucRX6Zl
+         9rJOvRnTFaw1+62YFnp0j3qDHqPZPgSoMJ7M4KlvRpvhcyfuvo3Vq92tm5pT/qK1robW
+         pD5CudnsUUBNCVG93MqMptvbYcGnCP0okPFROypwhzqtHhn4yfVf9hm5YpELNmTwdeat
+         TvTd7hKZrmrB02cq/aCptA4N4sj/mUUFU8wzNpS3783wXNxRwLv80AIS8P4T22iDYZuk
+         fAPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/GS/4OHUC58pzoucFVteRuIhHVuqFuzv5eBDbKwTaes=;
+        b=PkfFxcsj7o1ZKdC9mL1n/NtzZK4l+nit9JT5qXPWQTnOUEEbkuz1j3YF3e92+b2cGE
+         iynLFWZv3PF81BGOAIxDrk0RIFHxvoz17p8V8JsdPcssx/4y7xTjb0jWAtFekecZeVbH
+         1H7u4QWl7vAV984LynQfg4RIoVVGaaPbH1PRrfKGuSNDdKmkx6O9wPhQM2txL30jQgwN
+         ac2geQ3VvleXuP1kjuyz4g8D03CSUkWB/7n6AzXktfELhXhl4SlFHYfpTr1RrVdPDuK/
+         Eszib76Wp5NuNBeXJ6V2lLJ5jMbAWaw8SX33ENyFbODEYmAhYuPzsg42yx5jXGhKYlxc
+         Iq0g==
+X-Gm-Message-State: AOAM533qFMm74yXxxTYcjdUmPv5h6LSlgxVTgCRaZzK5M60aTFvKl7fc
+        i00XGdIJxW3gJoquWzcXb97YUw==
+X-Google-Smtp-Source: ABdhPJxfbaZBUKL4RCI1GSa5MCOEQqQ61UEUjQME4GaIZXbAZyAHFPAaz4UlbjqcmBNjh+s0Ky1hDQ==
+X-Received: by 2002:a63:fd44:: with SMTP id m4mr22809692pgj.160.1595919123788;
+        Mon, 27 Jul 2020 23:52:03 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id t73sm16963494pfc.78.2020.07.27.23.52.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 23:52:03 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 23:48:31 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 00/13] msm8992 DTS updates, peripheral enablement
+Message-ID: <20200728064831.GD202429@builder.lan>
+References: <20200625182118.131476-1-konradybcio@gmail.com>
+ <CAMS8qEVKssmOTZTQqgo3y6yUp7KztapQLtek+Q6FewqVaSGYyA@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR19MB3280.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d7b3b81-54d5-4447-7007-08d832c22df5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 06:48:04.7749
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wMuPw9kN5JeL69JCbT644/zGcyM7LD3zTJUwZ7s8/mq5dhqCrSrO4/pD4eZaVnOE1oba8Zfrt0MHWmpU0w5o1Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR19MB3629
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-28_01:2020-07-27,2020-07-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- phishscore=0 priorityscore=1501 mlxlogscore=999 adultscore=0 spamscore=0
- suspectscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007280049
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
- mlxlogscore=999 adultscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007280049
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMS8qEVKssmOTZTQqgo3y6yUp7KztapQLtek+Q6FewqVaSGYyA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +		Permanent Long Life: Last longer battery life, this mode
-> > +			is programmed once in the factory. Switching to a
-> > +			different mode is unavailable.
->=20
-> The documentation lacks one important aspect: What happens if I have a
-> device where the factory did not program "Long Life"?
-> I.e. what happens when
->=20
-> # cat /sys/class/power_supply/wilco-charger/charge_type
-> Standard
-> # echo "Long Life" > /sys/class/power_supply/wilco-charger/charge_type
->=20
-> Will the controller switch into permanent long life battery mode without =
-any
-> exit strategy?
->
+On Mon 27 Jul 11:20 PDT 2020, Konrad Dybcio wrote:
 
-The set_property attempt will convert "Long Life" to its index of charge mo=
-de
-and send a EC command to Property ID 0x0710 for configuration. This try wil=
-l be
-denied by EC because "Long Life" mode must be set (enable/disable) through =
-a
-different PID that isn't publicly known. In the factory there's a proprieta=
-ry tool
-in use for PLL configuration.
+> Bumping this up, in case it just got overlooked.
+> 
 
-In above example after the run the charge mode will remain unchanged i.e.:=
-=20
-"Standard".
+It was just overlooked, thanks for the bump!
 
-> >  What:		/sys/class/power_supply/wilco-
-> charger/charge_control_start_threshold
-> >  Date:		April 2019
-> > diff --git a/drivers/power/supply/power_supply_sysfs.c
-> > b/drivers/power/supply/power_supply_sysfs.c
-> > index bc79560229b5..af3884015ad8 100644
-> > --- a/drivers/power/supply/power_supply_sysfs.c
-> > +++ b/drivers/power/supply/power_supply_sysfs.c
-> > @@ -87,6 +87,7 @@ static const char * const
-> POWER_SUPPLY_CHARGE_TYPE_TEXT[] =3D {
-> >  	[POWER_SUPPLY_CHARGE_TYPE_STANDARD]	=3D "Standard",
-> >  	[POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE]	=3D "Adaptive",
-> >  	[POWER_SUPPLY_CHARGE_TYPE_CUSTOM]	=3D "Custom",
-> > +	[POWER_SUPPLY_CHARGE_TYPE_LONGLIFE]	=3D "Permanent Long
-> Life",
->=20
-> The "Permanent" part is specific to the Wilco EC, so I think it's better =
-to avoid
-> it in the generic API. I think it's better to use just "Long Life" (and k=
-eep the
-> wilco specific sysfs Documentation, that Long Life configuration is
-> permanent).
+I think it looks good, will pick up the patches, and the previous series
+that it depends on.
 
-Agree with you, I will include this modification in the next patch.
-
-
->=20
-> -- Sebastian
->=20
-
+Thanks,
+Bjorn
