@@ -2,68 +2,109 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCBBC433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA590C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0CF3206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DEE206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:14:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Evf1Ur3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730124AbgG1OO0 (ORCPT
+        id S1730338AbgG1OOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:14:26 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:59938 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730340AbgG1OO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:14:26 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1k0QMs-007I2f-6T; Tue, 28 Jul 2020 16:14:10 +0200
-Date:   Tue, 28 Jul 2020 16:14:10 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     linux-mediatek@lists.infradead.org,
-        Landen Chao <landen.chao@mediatek.com>,
-        Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>
-Subject: Re: [PATCH v3] net: ethernet: mtk_eth_soc: fix mtu warning
-Message-ID: <20200728141410.GG1705504@lunn.ch>
-References: <20200728122743.78489-1-frank-w@public-files.de>
+        Tue, 28 Jul 2020 10:14:18 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:47082 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730065AbgG1OOS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 10:14:18 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 50F4120B4908;
+        Tue, 28 Jul 2020 07:14:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 50F4120B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595945657;
+        bh=TdiXmpRni8ubU9ZDCDtSAAikTrjb8aB1OWY4V4JuSWY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Evf1Ur3ATOtpFVAItqhYZ14GV7dEE7G0F8scuvuWY+5YXZid01YBRNk2ADH4dmMxu
+         MzpX0tGWkm375WpScdzy6AkFVS+xpwbJwwNwYVykTP3DSzpCzRVc3V587YZxWplxwU
+         El9Q8CuUBJizQUwxUGDf2TmNl07aAb69+70sBYck=
+Subject: Re: [PATCH 2/2] ima: Fail rule parsing when asymmetric key
+ measurement isn't supportable
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+References: <20200727140831.64251-1-tyhicks@linux.microsoft.com>
+ <20200727140831.64251-3-tyhicks@linux.microsoft.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <b9dc379d-0529-692e-9b7d-dce5ad893eb7@linux.microsoft.com>
+Date:   Tue, 28 Jul 2020 07:14:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200728122743.78489-1-frank-w@public-files.de>
+In-Reply-To: <20200727140831.64251-3-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 02:27:43PM +0200, Frank Wunderlich wrote:
-> From: Landen Chao <landen.chao@mediatek.com>
+On 7/27/20 7:08 AM, Tyler Hicks wrote:
+> Measuring keys is currently only supported for asymmetric keys. In the
+> future, this might change.
 > 
-> in recent Kernel-Versions there are warnings about incorrect MTU-Size
-> like these:
+> For now, the "func=KEY_CHECK" and "keyrings=" options are only
+> appropriate when CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is enabled. Make
+> this clear at policy load so that IMA policy authors don't assume that
+> these policy language constructs are supported.
 > 
-> eth0: mtu greater than device maximum
-> mtk_soc_eth 1b100000.ethernet eth0: error -22 setting MTU to include DSA overhead
+> Fixes: 2b60c0ecedf8 ("IMA: Read keyrings= option from the IMA policy")
+> Fixes: 5808611cccb2 ("IMA: Add KEY_CHECK func to measure keys")
+> Suggested-by: Nayna Jain <nayna@linux.ibm.com>
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> ---
+>   security/integrity/ima/ima_policy.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> Fixes: bfcb813203e6 ("net: dsa: configure the MTU for switch ports")
-> Fixes: 72579e14a1d3 ("net: dsa: don't fail to probe if we couldn't set the MTU")
-> Fixes: 7a4c53bee332 ("net: report invalid mtu value via netlink extack")
-> Signed-off-by: René van Dorst <opensource@vdorst.com>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index c328cfa0fc49..05f012fd3dca 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -1233,7 +1233,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>   				entry->func = POLICY_CHECK;
+>   			else if (strcmp(args[0].from, "KEXEC_CMDLINE") == 0)
+>   				entry->func = KEXEC_CMDLINE;
+> -			else if (strcmp(args[0].from, "KEY_CHECK") == 0)
+> +			else if (IS_ENABLED(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) &&
+> +				 strcmp(args[0].from, "KEY_CHECK") == 0)
+>   				entry->func = KEY_CHECK;
+>   			else
+>   				result = -EINVAL;
+> @@ -1290,7 +1291,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>   		case Opt_keyrings:
+>   			ima_log_string(ab, "keyrings", args[0].from);
+>   
+> -			if (entry->keyrings) {
+> +			if (!IS_ENABLED(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) ||
+> +			    entry->keyrings) {
+>   				result = -EINVAL;
+>   				break;
+>   			}
+> 
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
-    Andrew
