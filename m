@@ -2,156 +2,209 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0BAC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5678A206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFA2206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:07:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="R5hKELuj"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ywu0KlR6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbgG1OFu (ORCPT
+        id S1730322AbgG1OHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:05:50 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:2343 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730211AbgG1OFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:05:49 -0400
-IronPort-SDR: 9rVtzBnD6A5OKhyNl21/X/x5qCc5m8+RXg3wl/dKLgwSuapmG2Fm/gKVgaNfrLMrjMLHR+2wX5
- dMiDTTW8BuXXcTvCT+cO0cVbtJQ3HrfrjAEE3XdgtwDb4RpzgKe2sQcW7NBw37CY8Mht3mSHVl
- IfOF/pHHFku+5MIzCokG91VqithBCYagMgdIRDRFfh81u1YnscN3bQPLHl+O1IFDD/fGVsnvFi
- MfDKte5skXU6zapRsxB59ktCqJPnsuamVDgqEkjzuK7CsIOKDbQi3UbBGwpYnV3oF9CTNZE0eE
- Tw0=
-X-IronPort-AV: E=Sophos;i="5.75,406,1589234400"; 
-   d="scan'208";a="13265251"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 28 Jul 2020 16:05:47 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Tue, 28 Jul 2020 16:05:47 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Tue, 28 Jul 2020 16:05:47 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1595945147; x=1627481147;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8xSG/F2gvCwdxzDaRbBlDsjYKXzG6JG+0E3m3q1z7jA=;
-  b=R5hKELujCuAAgDrHfnlh8BwD5YVvYvG+qdxPH+TTAKRL/l6jZi+RqnQ+
-   +s+Hn+iHh9vyzsIFQH8eOsSTIcLv8VzeYjF+GclqEmTQlwakAsOYPEIz3
-   0gXpEAWnTeJaT5dCPR72OJekvthRlrz3W/20hol33dfVZld7vkRnctu9A
-   OWWq3G3r5lJ61vLigQVTbPot4XKs1tZZ0FX3jfu8aQlqcm+daNjYX//3E
-   7TfOXn+s6HDscHFMSfJYRUyjjjW8KuQOiwFkGFqGfevXGqILo0viSeocs
-   PT/TFKo49Ssy+L7b/p6RiIOW2+TuHh2jg5xo/Md8IZTvimhrpaUDPina4
-   A==;
-IronPort-SDR: Qo4GZXqj6aPQr1FabmXcmOi6BmJI01chr0R5EOpeCzHVZISWjmdIdMk3zcf4c3Xw/OJwGHPmLG
- 0kzG3ci5mb/K2if1KTpVaV0peiEKC80UVL5hy7BHqCq1Urta/ZZI7ZJl0GgzWt2NAu/gL0YT3K
- ewlShmNXUuJ7YaHWNDWMDz0xbE/5Nk+Ys55EybHlRjzi3ptqryWlzkmUhgfHeTCYKbe1RKbNdL
- Hy4lLcr5VuTzzUXx+7k7XrzUhSThxo3ekvVcxgn1tMKG1O+TmfX6VqZgWmi6LJNO6q7jsH4f1x
- fMI=
-X-IronPort-AV: E=Sophos;i="5.75,406,1589234400"; 
-   d="scan'208";a="13265250"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 28 Jul 2020 16:05:47 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 42966280065;
-        Tue, 28 Jul 2020 16:05:47 +0200 (CEST)
-Message-ID: <8ea0b3f655b60be02384f22c0aa4dfee9d788d71.camel@ew.tq-group.com>
-Subject: Re: (EXT) Re: [PATCH] arm: dts: imx7: add QSPI
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Tue, 28 Jul 2020 16:05:47 +0200
-In-Reply-To: <20200728135155.aqz3xkcwpgqmvzro@pengutronix.de>
-References: <20200728112814.14158-1-matthias.schiffer@ew.tq-group.com>
-         <20200728135155.aqz3xkcwpgqmvzro@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
+        Tue, 28 Jul 2020 10:07:10 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:54912 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730211AbgG1OHJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 10:07:09 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06SE2whW012373;
+        Tue, 28 Jul 2020 14:06:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=GWvmtNw2Buotc0Z9pinQFTYuFu4BUOZm0ph5jo3/R5g=;
+ b=Ywu0KlR68UAmPMAMzEijN5sPfsI2RFlNe0ywEuGhVtHAqUHAxSlnPvj+fvBg3CfawQLi
+ O8QV3k70bHHGi+TDE7WzgN3AXyKCHd07itHADpsyvH3bno67SP9WHuF3rt/9+WY6nDaa
+ oVaHl0qxoVGp4tj7fsHlZ4hFcrh0ThlK2GXSUJsCw7RXQ/aIgHMBEqNFg+BLg5O3rc7E
+ cvBKTE+lzbtLOrYV/3yxnTMmzCYchUp+2o6RilnRq3Qy1NrIgaXBPlmUSW/T3VMgtaQo
+ f1lvD3tcoOt41X7/ZLiPEvV4mI0Fkg2/hIkPf5WQ+VuptNKUN8lA/OnPzhQkcA+3Sr8Y +w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 32hu1j7p8b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jul 2020 14:06:27 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06SDxL7i141077;
+        Tue, 28 Jul 2020 14:06:27 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 32hu5ss78y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jul 2020 14:06:27 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06SE6BVF008475;
+        Tue, 28 Jul 2020 14:06:11 GMT
+Received: from [10.39.227.185] (/10.39.227.185)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Jul 2020 07:06:10 -0700
+Subject: Re: [RFC PATCH 5/5] mm: introduce MADV_DOEXEC
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org
+Cc:     mhocko@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        viro@zeniv.linux.org.uk, akpm@linux-foundation.org, arnd@arndb.de,
+        ebiederm@xmission.com, keescook@chromium.org, gerg@linux-m68k.org,
+        christian.brauner@ubuntu.com, peterz@infradead.org,
+        esyr@redhat.com, jgg@ziepe.ca, christian@kellner.me,
+        areber@redhat.com, cyphar@cyphar.com
+References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+ <1595869887-23307-6-git-send-email-anthony.yznaga@oracle.com>
+ <743a51db-dc27-c49c-9c65-ac164f5283ba@virtuozzo.com>
+From:   Steven Sistare <steven.sistare@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <bd50a6f0-670e-6bd3-13f1-c7a96e56a9bb@oracle.com>
+Date:   Tue, 28 Jul 2020 10:06:05 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <743a51db-dc27-c49c-9c65-ac164f5283ba@virtuozzo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007280107
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
+ malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007280107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-28 at 15:51 +0200, Marco Felsch wrote:
-> Hi Matthias,
+On 7/28/2020 9:22 AM, Kirill Tkhai wrote:
+> On 27.07.2020 20:11, Anthony Yznaga wrote:
+>> madvise MADV_DOEXEC preserves a memory range across exec.  Initially
+>> only supported for non-executable, non-stack, anonymous memory.
+>> MADV_DONTEXEC reverts the effect of a previous MADV_DOXEXEC call and
+>> undoes the preservation of the range.  After a successful exec call,
+>> the behavior of all ranges reverts to MADV_DONTEXEC.
+>>
+>> Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
+>> Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
+>> ---
+>>  include/uapi/asm-generic/mman-common.h |  3 +++
+>>  mm/madvise.c                           | 25 +++++++++++++++++++++++++
+>>  2 files changed, 28 insertions(+)
+>>
+>> diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+>> index f94f65d429be..7c5f616b28f7 100644
+>> --- a/include/uapi/asm-generic/mman-common.h
+>> +++ b/include/uapi/asm-generic/mman-common.h
+>> @@ -72,6 +72,9 @@
+>>  #define MADV_COLD	20		/* deactivate these pages */
+>>  #define MADV_PAGEOUT	21		/* reclaim these pages */
+>>  
+>> +#define MADV_DOEXEC	22		/* do inherit across exec */
+>> +#define MADV_DONTEXEC	23		/* don't inherit across exec */
+>> +
+>>  /* compatibility flags */
+>>  #define MAP_FILE	0
+>>  
+>> diff --git a/mm/madvise.c b/mm/madvise.c
+>> index dd1d43cf026d..b447fa748649 100644
+>> --- a/mm/madvise.c
+>> +++ b/mm/madvise.c
+>> @@ -103,6 +103,26 @@ static long madvise_behavior(struct vm_area_struct *vma,
+>>  	case MADV_KEEPONFORK:
+>>  		new_flags &= ~VM_WIPEONFORK;
+>>  		break;
+>> +	case MADV_DOEXEC:
 > 
-> thanks for the patch.
-> 
-> On 20-07-28 13:28, Matthias Schiffer wrote:
-> > In preparation for an update of the TQ-Systems TQMa7x/MBa7x DTS,
-> > add the
-> > QSPI controller to imx7s.dtsi.
-> > 
-> > Based-on-patch-by: Han Xu <han.xu@nxp.com>
-> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
-> > >
-> > ---
-> >  arch/arm/boot/dts/imx7s.dtsi | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx7s.dtsi
-> > b/arch/arm/boot/dts/imx7s.dtsi
-> > index 1cfaf410aa43..e45683e61593 100644
-> > --- a/arch/arm/boot/dts/imx7s.dtsi
-> > +++ b/arch/arm/boot/dts/imx7s.dtsi
-> > @@ -1162,6 +1162,19 @@
-> >  				status = "disabled";
-> >  			};
-> >  
-> > +			qspi1: spi@30bb0000 {
-> 
-> Are there more controllers and why not using "qspi@30bb0000" as node
-> name?
+> For me MADV_KEEPONEXEC sounds better as it's symmetric to MADV_KEEPONFORK.
 
-The vast majority of QSPI controllers use spi@ node names, qspi@ only
-appears in a single example in Documentation/devicetree/bindings/, and
-in no actual DTS(I) files.
+We chose MADV_DOEXEC and MADV_DONTEXEC to match the precedent set by:
 
-There is only one controller. The label "qspi1" is chosen as this has
-been in use in the linux-imx vendor kernels for years; IMHO, switching
-to "qspi" would just cause unnecessary churn for dependent device
-trees. I have no strong opinions on this though.
+#define MADV_DONTFORK   10              /* don't inherit across fork */
 
+
+#define MADV_DOFORK     11              /* do inherit across fork */
+
+
+I do like "keep" as a concise description of the operation.  KEEPONFORK is not a perfect 
+analog because its opposite is wipe ...
+
+#define MADV_WIPEONFORK 18              /* Zero memory on fork, child only */
+#define MADV_KEEPONFORK 19              /* Undo MADV_WIPEONFORK */
+
+... but if folks are ok with that then IMO these are all good choices:
+
+MADV_KEEPONEXEC
+MADV_DROPONEXEC
+
+MADV_KEEPEXEC    (shorter)
+MADV_DROPEXEC 
+
+MADV_KEEP_EXEC   (more legible, but no existing MADV names use 2nd underscores)
+MADV_DROP_EXEC
+
+Whatever folks like best.
+
+- Steve
+
+>> +		/*
+>> +		 * MADV_DOEXEC is only supported on private, non-executable,
+>> +		 * non-stack anonymous memory and if the VM_EXEC_KEEP flag
+>> +		 * is available.
+>> +		 */
+>> +		if (!VM_EXEC_KEEP || vma->vm_file || vma->vm_flags & (VM_EXEC|VM_SHARED|VM_STACK)) {
+>> +			error = -EINVAL;
+>> +			goto out;
+>> +		}
+>> +		new_flags |= (new_flags & ~VM_MAYEXEC) | VM_EXEC_KEEP;
+>> +		break;
+>> +	case MADV_DONTEXEC:
+>> +		if (!VM_EXEC_KEEP) {
+>> +			error = -EINVAL;
+>> +			goto out;
+>> +		}
+>> +		if (new_flags & VM_EXEC_KEEP)
+>> +			new_flags |= (new_flags & ~VM_EXEC_KEEP) | VM_MAYEXEC;
+>> +		break;
+>>  	case MADV_DONTDUMP:
+>>  		new_flags |= VM_DONTDUMP;
+>>  		break;
+>> @@ -983,6 +1003,8 @@ static int madvise_inject_error(int behavior,
+>>  	case MADV_SOFT_OFFLINE:
+>>  	case MADV_HWPOISON:
+>>  #endif
+>> +	case MADV_DOEXEC:
+>> +	case MADV_DONTEXEC:
+>>  		return true;
+>>  
+>>  	default:
+>> @@ -1037,6 +1059,9 @@ static int madvise_inject_error(int behavior,
+>>   *  MADV_DONTDUMP - the application wants to prevent pages in the given range
+>>   *		from being included in its core dump.
+>>   *  MADV_DODUMP - cancel MADV_DONTDUMP: no longer exclude from core dump.
+>> + *  MADV_DOEXEC - On exec, preserve and duplicate this area in the new process
+>> + *		  if the new process allows it.
+>> + *  MADV_DONTEXEC - Undo the effect of MADV_DOEXEC.
+>>   *
+>>   * return values:
+>>   *  zero    - success
+>>
 > 
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +				compatible = "fsl,imx7d-qspi";
-> > +				reg = <0x30bb0000 0x10000>, <0x60000000
-> > 0x10000000>;
-> > +				reg-names = "QuadSPI", "QuadSPI-
-> > memory";
-> 
-> The node should begin with compatible, reg, reg-names properties.
-> Pls check the current .dtsi file for examples.
-
-Thanks, will fix.
-
-> 
-> > +				interrupts = <GIC_SPI 107
-> > IRQ_TYPE_LEVEL_HIGH>;
-> > +				clocks = <&clks IMX7D_QSPI_ROOT_CLK>,
-> > +					<&clks IMX7D_QSPI_ROOT_CLK>;
-> > +				clock-names = "qspi_en", "qspi";
-> > +				status = "disabled";
-> > +			};
-> > +
-> >  			sdma: sdma@30bd0000 {
-> >  				compatible = "fsl,imx7d-sdma",
-> > "fsl,imx35-sdma";
-> >  				reg = <0x30bd0000 0x10000>;
-> 
-> Regards,
->   Marco
-
