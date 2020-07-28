@@ -2,194 +2,78 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA85C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5FDC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8625C20792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0015620792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:08:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="fGoWSRKw"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZuOaQbdU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731725AbgG1RHX (ORCPT
+        id S1731869AbgG1RIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 13:07:23 -0400
-Received: from mail-mw2nam10on2067.outbound.protection.outlook.com ([40.107.94.67]:17120
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731623AbgG1RHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 13:07:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AHNEwqgBu5HClsaG3hNYI7h6FF7ZFoHni2ODcyyFbb2ZXwb8UF/lAjogjNpsGp3qevi/nRZkaWg9WL+uMIBdrPNMjibKIq24I33IimBSS8KN9GdJAmXSB318prpvc8sqWP+KE0I1nesUULSj5TMmlks1I7ZNob5pttVmswvTYOQDILj7OGSIB1Cw0bLeSENL1fbIyPCm2xYNgBBKe40OxXJaWp+PWhcX5j6lcOuS17TRHpLTTzA8MwZFjkCPO1/li43rjGHYPPqsuOocXf6D3a/ZxZS/H08bhI/bdrxbOLBhNOGbVkDzZdAV9UiKZxRAKsxUU5o8zx3xT7naIjw8PA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sic0m2XeOHKVeB+rNI69uDwyE63gbG41+PS5Kk70DNU=;
- b=LUBjfoQIaALCClnKuKTfzWMtBvOMGh3oif7Wyh/LmRF0506eCXfBUGmDa4nqU3RUF0bdSIpgLsHweZcSGxZvjymJZSn8+iUIK2Wa3MflS0m5JWN8H//syJFJMqVIg3Iw9sPN9rur0T3n61thfKsV0laYYt3/I8k0VHeSHBdu779GWIhIp8bds6g/Htr141Mwz8HsPGLEIvnYFY/2KVwA6JqLYXcWL6poiY8XPc+osW+vVviRVE0DQrjpRa4Ihz+DqTiY8kCg5GXmkxLDClP+EEt215pNgy6ioOKbeGe0CkjB9ieSJt0VVpXYEJ1ABFqloFHxrfOidvTs7UWJ3CmOPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sic0m2XeOHKVeB+rNI69uDwyE63gbG41+PS5Kk70DNU=;
- b=fGoWSRKwxis5yCkqxabrPW82vzmNzBlctOm6LEqMSeU73aEuhCmuZsO2GxNp7UxaoDZFQJDErwubsVK4NgkK7AedXYG6mxcK4XMN+s8sClZN1H3KdtWgsPhpiNxu2peYVCRgPvSa92FE7IhZQq27StO/YrRHhidQ4Pth5nie4pE=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB3560.namprd12.prod.outlook.com (2603:10b6:a03:ae::10)
- by BY5PR12MB4115.namprd12.prod.outlook.com (2603:10b6:a03:20f::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Tue, 28 Jul
- 2020 17:07:19 +0000
-Received: from BYAPR12MB3560.namprd12.prod.outlook.com
- ([fe80::7d42:c932:e35f:71b1]) by BYAPR12MB3560.namprd12.prod.outlook.com
- ([fe80::7d42:c932:e35f:71b1%7]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
- 17:07:19 +0000
-Subject: Re: [PATCH] amdgpu_dm: fix nonblocking atomic commit use-after-free
-To:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Mazin Rezk <mnrzk@protonmail.com>,
-        Duncan <1i5t5.duncan@cox.net>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>, sunpeng.li@amd.com,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        mphantomx@yahoo.com.br, regressions@leemhuis.info,
-        anthony.ruhier@gmail.com
-References: <YIGsJ9LlFquvBI2iWPKhJwjKBwDUr_C-38oVpLJJHJ5rDCY_Zrrv392o6UPNxHoeQrcpLYC9U4fZdpD9ilz6Amg2IxkSexGLQMCQIBek8rc=@protonmail.com>
- <202007231524.A24720C@keescook>
- <a86cba0b-4513-e7c3-ae75-bb331433f664@molgen.mpg.de>
- <202007241016.922B094AAA@keescook>
- <3c92db94-3b62-a70b-8ace-f5e34e8f268f@molgen.mpg.de>
- <_vGVoFJcOuoIAvGYtkyemUvqEFeZ-AdO4Jk8wsyVv3MwO-6NEVtULxnZzuBJNeHNkCsQ5Kxn5TPQ_VJ6qyj9wXXXX8v-hc3HptnCAu0UYsk=@protonmail.com>
- <20200724215914.6297cc7e@ws>
- <c7mHa5xU_kh7K9KM5P1UJoCY00b3Oxj3s_y3vr0LGQzUPtWlhv5JjjhT4CnnbDhuTZhCuHT2uMbjdDCZ-JLmHVlS7B_k-wj1OTmZpMD7cg4=@protonmail.com>
- <0b0fbe35-75cf-ec90-7c3d-bdcedbe217b7@molgen.mpg.de>
-From:   "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
-Message-ID: <0edb1498-6c43-27cc-b2fb-71ea5ca1a56c@amd.com>
-Date:   Tue, 28 Jul 2020 13:07:13 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Tue, 28 Jul 2020 13:08:51 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:41328 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731510AbgG1RIu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 13:08:50 -0400
+Received: from [192.168.254.32] (unknown [47.187.206.220])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 3CB1720B4908;
+        Tue, 28 Jul 2020 10:08:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3CB1720B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595956129;
+        bh=/7IJcSJkmnGhyvhTN0w/k6D0iSgWl3GbtIXdsg8Fv5A=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ZuOaQbdU5uYtFJaEiOblvnFbeGROFNYKRjF3F43kJ1vUkhEErX0fbDaPkJowjRf06
+         4DasCLQblFzecv0eF8w7mUhf1hXAgudt5JEdU8ofWsRvm0zC9iTlBhH+fSyTWj70K7
+         RgZPV6XJ7g6uzFeyOC7P2FKqWtU5gXy/jZ/r8ZHI=
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     James Morris <jmorris@namei.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, oleg@redhat.com,
+        x86@kernel.org
+References: <aefc85852ea518982e74b233e11e16d2e707bc32>
+ <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <3fd22f92-7f45-1b0f-e4fe-857f3bceedd0@schaufler-ca.com>
+ <alpine.LRH.2.21.2007290300400.31310@namei.org>
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Message-ID: <a909e0b0-0d82-d869-fe49-cc974680ac23@linux.microsoft.com>
+Date:   Tue, 28 Jul 2020 12:08:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
-In-Reply-To: <0b0fbe35-75cf-ec90-7c3d-bdcedbe217b7@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YT1PR01CA0024.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::37)
- To BYAPR12MB3560.namprd12.prod.outlook.com (2603:10b6:a03:ae::10)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.31.148.234] (165.204.55.211) by YT1PR01CA0024.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend Transport; Tue, 28 Jul 2020 17:07:17 +0000
-X-Originating-IP: [165.204.55.211]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4bca8ad2-657a-432a-a89a-08d83318af62
-X-MS-TrafficTypeDiagnostic: BY5PR12MB4115:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BY5PR12MB41151A2B3C9202C8856B0DC7EC730@BY5PR12MB4115.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oeV8Eo+6kUHEc9jATJ8WqgaLr7XXqIfqkPxpRoucXEhr9yomJ5gFKyHrwxXy8jDdTPIb/UZJssTs6TnH16Ih8n7Zs+j+Dz4VKHlrNvC/S28pMhITDDWQSlkQog0nJAnkVQZR4wjjHtA/Tb4nEJEmU33K55Pz8SuJl+yU7TDH2aQfuz6Jgl5GAer0J0Bj0Lb9qMPhtuJ/mWIthWmNeTNPo5KtuHyMZw9lenrQ0h3Okg4fEKSKVJDWxB9FI3wHRB6QUrZYaVWKvmnLK9dKWnxZqJkKhI6gRlxiHdbcRCkZX5rTH3ZlWut1pBulide2033z7Y+sJ1lqmW+kpm0amQQE5PvJy2VuwpN96JhaofpSAb/JGWmG9Wxh6tEgteb/ZP1PWU2PS9s5qEVXoYZ9mTshF09O3Sj4MQHsjp+QjpHqJPah5MHGRYztMwHVNNljHKW32btDnrLYHGzTaalkkiH4mw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(396003)(39860400002)(136003)(376002)(6666004)(86362001)(52116002)(8676002)(316002)(4326008)(110136005)(54906003)(8936002)(26005)(66946007)(5660300002)(16576012)(66556008)(66476007)(966005)(186003)(83380400001)(7416002)(16526019)(478600001)(6486002)(36756003)(31686004)(53546011)(31696002)(2906002)(2616005)(956004)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: tKObakxShWzy7gnht50gqJVjBiY5OXQz9GeKF+7wocO78vAebgNwFE/A6qHvWNsyJuLu/o/wXuOysgSQAXET2a3TI7btoNOuRIu1/z38CQ16nxtxz0OcVLLPnnCaTeAht6vU2IPtQUtHqxjZ7BwrjmeQ7wjXdy+esoR9YLxNzTp7NeBB15jBjfAOFu4V7/8lTMIGbrqDHgjz+qsWxgTGrPMdVx0FDgil6LHqcwCseVCyipiEqAOtnBY3p5fZ8TMdH8bibjI6mqrabQ3utHVtPawD29KgWGcV2I20HbJzsC9jcGmnAOfdh/kH/UayRotdLfKqojGqPKnWpocL2OeodrsZacmUpjkM8+1fKYnNllbf6v/Zj+f2JxAbloXGQNbfXt9oqmRqzZFwEcu+AyDyJKUYAHKmRLvsKDViOqod+oqxF5fVrlGhjMQC+g/Q12h85wjy0jhKf6DyijcgcG8dFcJ8mZkrJWXRdiqSW748L5YfnHYRo1HeMnoahOAq3p5g
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bca8ad2-657a-432a-a89a-08d83318af62
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3560.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 17:07:19.4271
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dDl/DJuFWcE0q5UIkMV6nLtn9S2/msPX4D4JWgrg6RXZ73C83pfNIrYhfW9WD051re8M4uIQKhMLmZb5BEtvKA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4115
+In-Reply-To: <alpine.LRH.2.21.2007290300400.31310@namei.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-28 5:22 a.m., Paul Menzel wrote:
-> Dear Linux folks,
-> 
-> 
-> Am 25.07.20 um 07:20 schrieb Mazin Rezk:
->> On Saturday, July 25, 2020 12:59 AM, Duncan wrote:
->>
->>> On Sat, 25 Jul 2020 03:03:52 +0000 Mazin Rezk wrote:
->>>
->>>>> Am 24.07.20 um 19:33 schrieb Kees Cook:
->>>>>
->>>>>> There was a fix to disable the async path for this driver that
->>>>>> worked around the bug too, yes? That seems like a safer and more
->>>>>> focused change that doesn't revert the SLUB defense for all
->>>>>> users, and would actually provide a complete, I think, workaround
->>>>
->>>> That said, I haven't seen the async disabling patch. If you could
->>>> link to it, I'd be glad to test it out and perhaps we can use that
->>>> instead.
->>>
->>> I'm confused. Not to put words in Kees' mouth; /I/ am confused (which
->>> admittedly could well be just because I make no claims to be a
->>> coder and am simply reading the bug and thread, but I'd appreciate some
->>> "unconfusing" anyway).
->>>
->>> My interpretation of the "async disabling" reference was that it was to
->>> comment #30 on the bug:
->>>
->>> https://bugzilla.kernel.org/show_bug.cgi?id=207383#c30 
->>>
->>>
->>> ... which (if I'm not confused on this point too) appears to be yours.
->>> There it was stated...
->>>
->>> I've also found that this bug exclusively occurs when commit_work is on
->>> the workqueue. After forcing drm_atomic_helper_commit to run all of the
->>> commits without adding to the workqueue and running the OS, the issue
->>> seems to have disappeared.
->>> <<<<
->>>
->>> Would not forcing all commits to run directly, without placing them on
->>> the workqueue, be "async disabling"? That's what I /thought/ he was
->>> referencing.
->>
->> Oh, I thought he was referring to a different patch. Kees, could I get
->> your confirmation on this?
->>
->> The change I made actually affected all of the DRM code, although this 
->> could
->> easily be changed to be specific to amdgpu. (By forcing blocking on
->> amdgpu_dm's non-blocking commit code)
->>
->> That said, I'd still need to test further because I only did test it 
->> for a
->> couple of hours then. Although it should work in theory.
->>
->>> OTOH your base/context swap idea sounds like a possibly "less
->>> disturbance" workaround, if it works, and given the point in the
->>> commit cycle... (But if it's out Sunday it's likely too late to test
->>> and get it in now anyway; if it's another week, tho...)
->>
->> The base/context swap idea should make the use-after-free behave how it
->> did in 5.6. Since the bug doesn't cause an issue in 5.6, it's less of a
->> "less disturbance" workaround and more of a "no disturbance" workaround.
-> 
-> Sorry for bothering, but is there now a solution, besides reverting the 
-> commits, to avoid freezes/crashes *without* performance regressions?
-> 
-> 
-> Kind regards,
-> 
-> Paul
 
-Mazin's "drm/amd/display: Clear dm_state for fast updates" change 
-accomplishes this, at least as a temporary hack.
 
-I've started work on a more large scale fix that we could get in in after.
+On 7/28/20 12:05 PM, James Morris wrote:
+> On Tue, 28 Jul 2020, Casey Schaufler wrote:
+>
+>> You could make a separate LSM to do these checks instead of limiting
+>> it to SELinux. Your use case, your call, of course.
+> It's not limited to SELinux. This is hooked via the LSM API and 
+> implementable by any LSM (similar to execmem, execstack etc.)
 
-Regards,
-Nicholas Kazlauskas
+Yes. I have an implementation that I am testing right now that
+defines the hook for exectramp and implements it for
+SELinux. That is why I mentioned SELinux.
+
+Madhavan
