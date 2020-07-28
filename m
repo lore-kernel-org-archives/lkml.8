@@ -2,216 +2,194 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C02C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA85C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3811720786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8625C20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:07:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="fGoWSRKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731818AbgG1RGW (ORCPT
+        id S1731725AbgG1RHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 13:06:22 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:56614 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731684AbgG1RGW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 13:06:22 -0400
-Received: by mail-io1-f69.google.com with SMTP id f21so14058293ioo.23
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 10:06:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=gxgsVNgMju6EFb0WmfcBE/0w/FhLwyo5HMozMxfMsks=;
-        b=GHG2ekLS9LtdOOV6RAILvXP7ZVUCmaedRWFgjhg/YK0m/OGO0fg4E6pozvUUZrEAnS
-         tFGRg1tsn35lWYF/5Kdl8pgCgHxx/g2uxj2P94bgdG/1/iSm/1rBNk3iZisad5jMQErB
-         WpE3C5DGLmi6dSZur/j/mfxsj10TBIWCYhnhEfP7llE1FiEEv+S4ObXL1TlT2vA84w9k
-         tHhvEZqljvP6W/Qcf1n+npoUe0UW3m+2cmPnkLTAOZj03ozKX14bWL9UZ7rZHZi13JXL
-         yTUTMvJ3t4bwIeO6N+zZc7A7had43cPdJZuwk/2/AGvWQJcc7GIq+NIcAMjmzAebYBLp
-         fBOg==
-X-Gm-Message-State: AOAM531zZ7dxHnUktLO5ufHtSBmoai5l15Ljng8rx4TacWMSOU8vjqVc
-        vO2tuwutJ8DsQ071rc0QPc8GJRHh8yaaFWEOp2Q7LFWHZCX6
-X-Google-Smtp-Source: ABdhPJyfumVwNMg7hYM9ynDDWhAUQv9Rn2C++jZ2YLGJwgOP1QWYGXa0QiStQHC+tN2CwyutCSwzfYReVkvtKMHU1aC5pKRzPKQY
+        Tue, 28 Jul 2020 13:07:23 -0400
+Received: from mail-mw2nam10on2067.outbound.protection.outlook.com ([40.107.94.67]:17120
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731623AbgG1RHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 13:07:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AHNEwqgBu5HClsaG3hNYI7h6FF7ZFoHni2ODcyyFbb2ZXwb8UF/lAjogjNpsGp3qevi/nRZkaWg9WL+uMIBdrPNMjibKIq24I33IimBSS8KN9GdJAmXSB318prpvc8sqWP+KE0I1nesUULSj5TMmlks1I7ZNob5pttVmswvTYOQDILj7OGSIB1Cw0bLeSENL1fbIyPCm2xYNgBBKe40OxXJaWp+PWhcX5j6lcOuS17TRHpLTTzA8MwZFjkCPO1/li43rjGHYPPqsuOocXf6D3a/ZxZS/H08bhI/bdrxbOLBhNOGbVkDzZdAV9UiKZxRAKsxUU5o8zx3xT7naIjw8PA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Sic0m2XeOHKVeB+rNI69uDwyE63gbG41+PS5Kk70DNU=;
+ b=LUBjfoQIaALCClnKuKTfzWMtBvOMGh3oif7Wyh/LmRF0506eCXfBUGmDa4nqU3RUF0bdSIpgLsHweZcSGxZvjymJZSn8+iUIK2Wa3MflS0m5JWN8H//syJFJMqVIg3Iw9sPN9rur0T3n61thfKsV0laYYt3/I8k0VHeSHBdu779GWIhIp8bds6g/Htr141Mwz8HsPGLEIvnYFY/2KVwA6JqLYXcWL6poiY8XPc+osW+vVviRVE0DQrjpRa4Ihz+DqTiY8kCg5GXmkxLDClP+EEt215pNgy6ioOKbeGe0CkjB9ieSJt0VVpXYEJ1ABFqloFHxrfOidvTs7UWJ3CmOPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Sic0m2XeOHKVeB+rNI69uDwyE63gbG41+PS5Kk70DNU=;
+ b=fGoWSRKwxis5yCkqxabrPW82vzmNzBlctOm6LEqMSeU73aEuhCmuZsO2GxNp7UxaoDZFQJDErwubsVK4NgkK7AedXYG6mxcK4XMN+s8sClZN1H3KdtWgsPhpiNxu2peYVCRgPvSa92FE7IhZQq27StO/YrRHhidQ4Pth5nie4pE=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB3560.namprd12.prod.outlook.com (2603:10b6:a03:ae::10)
+ by BY5PR12MB4115.namprd12.prod.outlook.com (2603:10b6:a03:20f::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Tue, 28 Jul
+ 2020 17:07:19 +0000
+Received: from BYAPR12MB3560.namprd12.prod.outlook.com
+ ([fe80::7d42:c932:e35f:71b1]) by BYAPR12MB3560.namprd12.prod.outlook.com
+ ([fe80::7d42:c932:e35f:71b1%7]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
+ 17:07:19 +0000
+Subject: Re: [PATCH] amdgpu_dm: fix nonblocking atomic commit use-after-free
+To:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Mazin Rezk <mnrzk@protonmail.com>,
+        Duncan <1i5t5.duncan@cox.net>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Harry Wentland <Harry.Wentland@amd.com>, sunpeng.li@amd.com,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        mphantomx@yahoo.com.br, regressions@leemhuis.info,
+        anthony.ruhier@gmail.com
+References: <YIGsJ9LlFquvBI2iWPKhJwjKBwDUr_C-38oVpLJJHJ5rDCY_Zrrv392o6UPNxHoeQrcpLYC9U4fZdpD9ilz6Amg2IxkSexGLQMCQIBek8rc=@protonmail.com>
+ <202007231524.A24720C@keescook>
+ <a86cba0b-4513-e7c3-ae75-bb331433f664@molgen.mpg.de>
+ <202007241016.922B094AAA@keescook>
+ <3c92db94-3b62-a70b-8ace-f5e34e8f268f@molgen.mpg.de>
+ <_vGVoFJcOuoIAvGYtkyemUvqEFeZ-AdO4Jk8wsyVv3MwO-6NEVtULxnZzuBJNeHNkCsQ5Kxn5TPQ_VJ6qyj9wXXXX8v-hc3HptnCAu0UYsk=@protonmail.com>
+ <20200724215914.6297cc7e@ws>
+ <c7mHa5xU_kh7K9KM5P1UJoCY00b3Oxj3s_y3vr0LGQzUPtWlhv5JjjhT4CnnbDhuTZhCuHT2uMbjdDCZ-JLmHVlS7B_k-wj1OTmZpMD7cg4=@protonmail.com>
+ <0b0fbe35-75cf-ec90-7c3d-bdcedbe217b7@molgen.mpg.de>
+From:   "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
+Message-ID: <0edb1498-6c43-27cc-b2fb-71ea5ca1a56c@amd.com>
+Date:   Tue, 28 Jul 2020 13:07:13 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <0b0fbe35-75cf-ec90-7c3d-bdcedbe217b7@molgen.mpg.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YT1PR01CA0024.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::37)
+ To BYAPR12MB3560.namprd12.prod.outlook.com (2603:10b6:a03:ae::10)
 MIME-Version: 1.0
-X-Received: by 2002:a92:194d:: with SMTP id e13mr19463433ilm.125.1595955981022;
- Tue, 28 Jul 2020 10:06:21 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 10:06:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000537dfd05ab837526@google.com>
-Subject: KASAN: out-of-bounds Read in ath9k_hif_usb_rx_cb (2)
-From:   syzbot <syzbot+dbcf296f0cfda711b5c4@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
-        davem@davemloft.net, kuba@kernel.org, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.31.148.234] (165.204.55.211) by YT1PR01CA0024.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend Transport; Tue, 28 Jul 2020 17:07:17 +0000
+X-Originating-IP: [165.204.55.211]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 4bca8ad2-657a-432a-a89a-08d83318af62
+X-MS-TrafficTypeDiagnostic: BY5PR12MB4115:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR12MB41151A2B3C9202C8856B0DC7EC730@BY5PR12MB4115.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oeV8Eo+6kUHEc9jATJ8WqgaLr7XXqIfqkPxpRoucXEhr9yomJ5gFKyHrwxXy8jDdTPIb/UZJssTs6TnH16Ih8n7Zs+j+Dz4VKHlrNvC/S28pMhITDDWQSlkQog0nJAnkVQZR4wjjHtA/Tb4nEJEmU33K55Pz8SuJl+yU7TDH2aQfuz6Jgl5GAer0J0Bj0Lb9qMPhtuJ/mWIthWmNeTNPo5KtuHyMZw9lenrQ0h3Okg4fEKSKVJDWxB9FI3wHRB6QUrZYaVWKvmnLK9dKWnxZqJkKhI6gRlxiHdbcRCkZX5rTH3ZlWut1pBulide2033z7Y+sJ1lqmW+kpm0amQQE5PvJy2VuwpN96JhaofpSAb/JGWmG9Wxh6tEgteb/ZP1PWU2PS9s5qEVXoYZ9mTshF09O3Sj4MQHsjp+QjpHqJPah5MHGRYztMwHVNNljHKW32btDnrLYHGzTaalkkiH4mw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(396003)(39860400002)(136003)(376002)(6666004)(86362001)(52116002)(8676002)(316002)(4326008)(110136005)(54906003)(8936002)(26005)(66946007)(5660300002)(16576012)(66556008)(66476007)(966005)(186003)(83380400001)(7416002)(16526019)(478600001)(6486002)(36756003)(31686004)(53546011)(31696002)(2906002)(2616005)(956004)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: tKObakxShWzy7gnht50gqJVjBiY5OXQz9GeKF+7wocO78vAebgNwFE/A6qHvWNsyJuLu/o/wXuOysgSQAXET2a3TI7btoNOuRIu1/z38CQ16nxtxz0OcVLLPnnCaTeAht6vU2IPtQUtHqxjZ7BwrjmeQ7wjXdy+esoR9YLxNzTp7NeBB15jBjfAOFu4V7/8lTMIGbrqDHgjz+qsWxgTGrPMdVx0FDgil6LHqcwCseVCyipiEqAOtnBY3p5fZ8TMdH8bibjI6mqrabQ3utHVtPawD29KgWGcV2I20HbJzsC9jcGmnAOfdh/kH/UayRotdLfKqojGqPKnWpocL2OeodrsZacmUpjkM8+1fKYnNllbf6v/Zj+f2JxAbloXGQNbfXt9oqmRqzZFwEcu+AyDyJKUYAHKmRLvsKDViOqod+oqxF5fVrlGhjMQC+g/Q12h85wjy0jhKf6DyijcgcG8dFcJ8mZkrJWXRdiqSW748L5YfnHYRo1HeMnoahOAq3p5g
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4bca8ad2-657a-432a-a89a-08d83318af62
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3560.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 17:07:19.4271
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dDl/DJuFWcE0q5UIkMV6nLtn9S2/msPX4D4JWgrg6RXZ73C83pfNIrYhfW9WD051re8M4uIQKhMLmZb5BEtvKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 2020-07-28 5:22 a.m., Paul Menzel wrote:
+> Dear Linux folks,
+> 
+> 
+> Am 25.07.20 um 07:20 schrieb Mazin Rezk:
+>> On Saturday, July 25, 2020 12:59 AM, Duncan wrote:
+>>
+>>> On Sat, 25 Jul 2020 03:03:52 +0000 Mazin Rezk wrote:
+>>>
+>>>>> Am 24.07.20 um 19:33 schrieb Kees Cook:
+>>>>>
+>>>>>> There was a fix to disable the async path for this driver that
+>>>>>> worked around the bug too, yes? That seems like a safer and more
+>>>>>> focused change that doesn't revert the SLUB defense for all
+>>>>>> users, and would actually provide a complete, I think, workaround
+>>>>
+>>>> That said, I haven't seen the async disabling patch. If you could
+>>>> link to it, I'd be glad to test it out and perhaps we can use that
+>>>> instead.
+>>>
+>>> I'm confused. Not to put words in Kees' mouth; /I/ am confused (which
+>>> admittedly could well be just because I make no claims to be a
+>>> coder and am simply reading the bug and thread, but I'd appreciate some
+>>> "unconfusing" anyway).
+>>>
+>>> My interpretation of the "async disabling" reference was that it was to
+>>> comment #30 on the bug:
+>>>
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=207383#c30 
+>>>
+>>>
+>>> ... which (if I'm not confused on this point too) appears to be yours.
+>>> There it was stated...
+>>>
+>>> I've also found that this bug exclusively occurs when commit_work is on
+>>> the workqueue. After forcing drm_atomic_helper_commit to run all of the
+>>> commits without adding to the workqueue and running the OS, the issue
+>>> seems to have disappeared.
+>>> <<<<
+>>>
+>>> Would not forcing all commits to run directly, without placing them on
+>>> the workqueue, be "async disabling"? That's what I /thought/ he was
+>>> referencing.
+>>
+>> Oh, I thought he was referring to a different patch. Kees, could I get
+>> your confirmation on this?
+>>
+>> The change I made actually affected all of the DRM code, although this 
+>> could
+>> easily be changed to be specific to amdgpu. (By forcing blocking on
+>> amdgpu_dm's non-blocking commit code)
+>>
+>> That said, I'd still need to test further because I only did test it 
+>> for a
+>> couple of hours then. Although it should work in theory.
+>>
+>>> OTOH your base/context swap idea sounds like a possibly "less
+>>> disturbance" workaround, if it works, and given the point in the
+>>> commit cycle... (But if it's out Sunday it's likely too late to test
+>>> and get it in now anyway; if it's another week, tho...)
+>>
+>> The base/context swap idea should make the use-after-free behave how it
+>> did in 5.6. Since the bug doesn't cause an issue in 5.6, it's less of a
+>> "less disturbance" workaround and more of a "no disturbance" workaround.
+> 
+> Sorry for bothering, but is there now a solution, besides reverting the 
+> commits, to avoid freezes/crashes *without* performance regressions?
+> 
+> 
+> Kind regards,
+> 
+> Paul
 
-syzbot found the following issue on:
+Mazin's "drm/amd/display: Clear dm_state for fast updates" change 
+accomplishes this, at least as a temporary hack.
 
-HEAD commit:    25252919 xhci: dbgtty: Make some functions static
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-console output: https://syzkaller.appspot.com/x/log.txt?x=164adf28900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fb6677a3d4f11788
-dashboard link: https://syzkaller.appspot.com/bug?extid=dbcf296f0cfda711b5c4
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+I've started work on a more large scale fix that we could get in in after.
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+dbcf296f0cfda711b5c4@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: out-of-bounds in ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:637 [inline]
-BUG: KASAN: out-of-bounds in ath9k_hif_usb_rx_cb+0xe82/0xf80 drivers/net/wireless/ath/ath9k/hif_usb.c:671
-Read of size 4 at addr ffff8881a248c098 by task kworker/0:5/3249
-
-CPU: 0 PID: 3249 Comm: kworker/0:5 Not tainted 5.8.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events request_firmware_work_func
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xf6/0x16e lib/dump_stack.c:118
- print_address_description.constprop.0+0x1a/0x210 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x37/0x7c mm/kasan/report.c:530
- ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:637 [inline]
- ath9k_hif_usb_rx_cb+0xe82/0xf80 drivers/net/wireless/ath/ath9k/hif_usb.c:671
- __usb_hcd_giveback_urb+0x32d/0x560 drivers/usb/core/hcd.c:1650
- usb_hcd_giveback_urb+0x367/0x410 drivers/usb/core/hcd.c:1716
- dummy_timer+0x11f2/0x3240 drivers/usb/gadget/udc/dummy_hcd.c:1967
- call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1415
- expire_timers kernel/time/timer.c:1460 [inline]
- __run_timers.part.0+0x54c/0x9e0 kernel/time/timer.c:1784
- __run_timers kernel/time/timer.c:1756 [inline]
- run_timer_softirq+0x80/0x120 kernel/time/timer.c:1797
- __do_softirq+0x222/0x95b kernel/softirq.c:292
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0xed/0x140 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:387 [inline]
- __irq_exit_rcu kernel/softirq.c:417 [inline]
- irq_exit_rcu+0x150/0x1f0 kernel/softirq.c:429
- sysvec_apic_timer_interrupt+0x49/0xc0 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:585
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
-RIP: 0010:console_unlock+0xbe2/0xcd0 kernel/printk/printk.c:2497
-Code: fc ff ff e8 10 31 16 00 0f 0b e9 b1 fd ff ff e8 04 31 16 00 0f 0b e9 04 fe ff ff e8 f8 30 16 00 e8 43 bc 1b 00 ff 74 24 30 9d <e9> 6b fc ff ff e8 04 e0 3f 00 e9 65 f6 ff ff e8 0a e0 3f 00 e9 1f
-RSP: 0018:ffff8881c8a3fa18 EFLAGS: 00000293
-RAX: 0000000000465681 RBX: 0000000000000200 RCX: 0000000000000006
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8129790d
-RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000000 R12: ffffffff82b05a80
-R13: ffffffff876f53b0 R14: 0000000000000042 R15: dffffc0000000000
- vprintk_emit+0x1b2/0x460 kernel/printk/printk.c:2021
- vprintk_func+0x8b/0x133 kernel/printk/printk_safe.c:393
- printk+0xba/0xed kernel/printk/printk.c:2070
- ath9k_htc_hw_init.cold+0x17/0x2a drivers/net/wireless/ath/ath9k/htc_hst.c:502
- ath9k_hif_usb_firmware_cb+0x274/0x530 drivers/net/wireless/ath/ath9k/hif_usb.c:1220
- request_firmware_work_func+0x126/0x250 drivers/base/firmware_loader/main.c:1001
- process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x392/0x470 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-general protection fault, probably for non-canonical address 0xdead000000000400: 0000 [#1] SMP KASAN
-CPU: 0 PID: 3249 Comm: kworker/0:5 Not tainted 5.8.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events request_firmware_work_func
-RIP: 0010:nearest_obj include/linux/slub_def.h:176 [inline]
-RIP: 0010:print_address_description.constprop.0+0x18e/0x210 mm/kasan/report.c:388
-Code: c4 60 5b 5d 41 5c 41 5d c3 4c 89 e6 48 2b 35 41 e2 a3 05 48 89 e8 49 8b 5c 24 18 48 c1 fe 06 48 c1 e6 0c 48 03 35 3a e2 a3 05 <8b> 4b 18 48 29 f0 48 99 48 89 cf 48 f7 f9 41 0f b7 44 24 2a 48 89
-RSP: 0018:ffff8881db209838 EFLAGS: 00010086
-RAX: ffff8881a248c098 RBX: dead000000000400 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffff8881a248c000 RDI: ffffed103b6412f9
-RBP: ffff8881a248c098 R08: 0000000000000000 R09: ffff8881db21fe8b
-R10: 0000000000000000 R11: 0000000000000004 R12: ffffea0006892300
-R13: ffffffff82e223f2 R14: ffffffff82e223f2 R15: ffffed103a67ee10
-FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fda4b7b9000 CR3: 00000001d1c45000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x37/0x7c mm/kasan/report.c:530
- ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:637 [inline]
- ath9k_hif_usb_rx_cb+0xe82/0xf80 drivers/net/wireless/ath/ath9k/hif_usb.c:671
- __usb_hcd_giveback_urb+0x32d/0x560 drivers/usb/core/hcd.c:1650
- usb_hcd_giveback_urb+0x367/0x410 drivers/usb/core/hcd.c:1716
- dummy_timer+0x11f2/0x3240 drivers/usb/gadget/udc/dummy_hcd.c:1967
- call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1415
- expire_timers kernel/time/timer.c:1460 [inline]
- __run_timers.part.0+0x54c/0x9e0 kernel/time/timer.c:1784
- __run_timers kernel/time/timer.c:1756 [inline]
- run_timer_softirq+0x80/0x120 kernel/time/timer.c:1797
- __do_softirq+0x222/0x95b kernel/softirq.c:292
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0xed/0x140 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:387 [inline]
- __irq_exit_rcu kernel/softirq.c:417 [inline]
- irq_exit_rcu+0x150/0x1f0 kernel/softirq.c:429
- sysvec_apic_timer_interrupt+0x49/0xc0 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:585
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
-RIP: 0010:console_unlock+0xbe2/0xcd0 kernel/printk/printk.c:2497
-Code: fc ff ff e8 10 31 16 00 0f 0b e9 b1 fd ff ff e8 04 31 16 00 0f 0b e9 04 fe ff ff e8 f8 30 16 00 e8 43 bc 1b 00 ff 74 24 30 9d <e9> 6b fc ff ff e8 04 e0 3f 00 e9 65 f6 ff ff e8 0a e0 3f 00 e9 1f
-RSP: 0018:ffff8881c8a3fa18 EFLAGS: 00000293
-RAX: 0000000000465681 RBX: 0000000000000200 RCX: 0000000000000006
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8129790d
-RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000000 R12: ffffffff82b05a80
-R13: ffffffff876f53b0 R14: 0000000000000042 R15: dffffc0000000000
- vprintk_emit+0x1b2/0x460 kernel/printk/printk.c:2021
- vprintk_func+0x8b/0x133 kernel/printk/printk_safe.c:393
- printk+0xba/0xed kernel/printk/printk.c:2070
- ath9k_htc_hw_init.cold+0x17/0x2a drivers/net/wireless/ath/ath9k/htc_hst.c:502
- ath9k_hif_usb_firmware_cb+0x274/0x530 drivers/net/wireless/ath/ath9k/hif_usb.c:1220
- request_firmware_work_func+0x126/0x250 drivers/base/firmware_loader/main.c:1001
- process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x392/0x470 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-Modules linked in:
----[ end trace 6f3e98b95d1a4467 ]---
-RIP: 0010:nearest_obj include/linux/slub_def.h:176 [inline]
-RIP: 0010:print_address_description.constprop.0+0x18e/0x210 mm/kasan/report.c:388
-Code: c4 60 5b 5d 41 5c 41 5d c3 4c 89 e6 48 2b 35 41 e2 a3 05 48 89 e8 49 8b 5c 24 18 48 c1 fe 06 48 c1 e6 0c 48 03 35 3a e2 a3 05 <8b> 4b 18 48 29 f0 48 99 48 89 cf 48 f7 f9 41 0f b7 44 24 2a 48 89
-RSP: 0018:ffff8881db209838 EFLAGS: 00010086
-RAX: ffff8881a248c098 RBX: dead000000000400 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffff8881a248c000 RDI: ffffed103b6412f9
-RBP: ffff8881a248c098 R08: 0000000000000000 R09: ffff8881db21fe8b
-R10: 0000000000000000 R11: 0000000000000004 R12: ffffea0006892300
-R13: ffffffff82e223f2 R14: ffffffff82e223f2 R15: ffffed103a67ee10
-FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fda4b7b9000 CR3: 00000001d1c45000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Regards,
+Nicholas Kazlauskas
