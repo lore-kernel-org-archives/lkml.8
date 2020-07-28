@@ -2,223 +2,74 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7D3C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B56CC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC6F3208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:38:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ET/wyIoS"
+	by mail.kernel.org (Postfix) with ESMTP id 22783206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgG1IiN (ORCPT
+        id S1728278AbgG1IjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:38:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727996AbgG1IiM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:38:12 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8125AC061794;
-        Tue, 28 Jul 2020 01:38:11 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 57FFD22F00;
-        Tue, 28 Jul 2020 10:38:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1595925488;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CeGX2CeZPQ2jTjYJwriGXoWv4Xxv+ZHe+OXyj9uS1EI=;
-        b=ET/wyIoSCwH1qDZuc5g3ByJZKYXpVMpHKMv+CaktCC7I2C6ReAEtjmtWeETGrhH15FDi+T
-        9wunTehr0h4i5sDuG0VbUwxiFKKhTglu10R8mWkPIvyEjifQs62zYuCnuPnpRU+I6xB+/6
-        PV90+P6U7owpDj4+m/4sg8MwCbpTm34=
+        Tue, 28 Jul 2020 04:39:00 -0400
+Received: from elvis.franken.de ([193.175.24.41]:51651 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728017AbgG1Ii7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:38:59 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1k0L8B-0000DV-01; Tue, 28 Jul 2020 10:38:39 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id E208CC0A94; Tue, 28 Jul 2020 10:30:16 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 10:30:16 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, od@zcrc.me,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] MIPS: Remove legacy MIPS_MACHINE option
+Message-ID: <20200728083016.GB9062@alpha.franken.de>
+References: <20200726165828.55175-1-paul@crapouillou.net>
+ <20200726165828.55175-2-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jul 2020 10:38:08 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
-In-Reply-To: <20200728082707.GB2419169@dell>
-References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-3-michael@walle.cc> <20200728072422.GF1850026@dell>
- <1065b0107ce6fd88b2bdd704bf45346b@walle.cc> <20200728082707.GB2419169@dell>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <a47993ca4c77ab1ee92f6693debb3c87@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726165828.55175-2-paul@crapouillou.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-07-28 10:27, schrieb Lee Jones:
-> On Tue, 28 Jul 2020, Michael Walle wrote:
+On Sun, Jul 26, 2020 at 06:58:28PM +0200, Paul Cercueil wrote:
+> The CONFIG_MIPS_MACHINE option is dead code that hasn't been used in
+> years. The Kconfig option is not selected anywhere, and the
+> <asm/mips_machine.h> is not included anywhere either.
 > 
->> Am 2020-07-28 09:24, schrieb Lee Jones:
->> > On Sun, 26 Jul 2020, Michael Walle wrote:
->> >
->> > > Add a device tree bindings for the board management controller found
->> > > on
->> > > the Kontron SMARC-sAL28 board.
->> > >
->> > > Signed-off-by: Michael Walle <michael@walle.cc>
->> > > Reviewed-by: Rob Herring <robh@kernel.org>
->> > > ---
->> > > Changes since v5:
->> > >  - none
->> > >
->> > > Changes since v4:
->> > >  - fix the regex of the unit-address
->> > >
->> > > Changes since v3:
->> > >  - see cover letter
->> > >
->> > >  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 +++++++
->> > >  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++++
->> > >  .../kontron,sl28cpld-intc.yaml                |  54 +++++++
->> > >  .../bindings/mfd/kontron,sl28cpld.yaml        | 153
->> > > ++++++++++++++++++
->> > >  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
->> > >  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
->> > >  6 files changed, 358 insertions(+)
->> > >  create mode 100644
->> > > Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
->> > >  create mode 100644
->> > > Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
->> > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
->> > >  create mode 100644
->> > > Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->> > >  create mode 100644
->> > > Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
->> > >  create mode 100644
->> > > Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
->> > >
->> > > diff --git
->> > > a/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
->> > > b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
->> > > new file mode 100644
->> > > index 000000000000..9a63a158a796
->> > > --- /dev/null
->> > > +++
->> > > b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
->> > > @@ -0,0 +1,54 @@
->> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> > > +%YAML 1.2
->> > > +---
->> > > +$id: http://devicetree.org/schemas/gpio/kontron,sl28cpld-gpio.yaml#
->> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> > > +
->> > > +title: GPIO driver for the sl28cpld board management controller
->> > > +
->> > > +maintainers:
->> > > +  - Michael Walle <michael@walle.cc>
->> > > +
->> > > +description: |
->> > > +  This module is part of the sl28cpld multi-function device. For more
->> > > +  details see
->> > > Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
->> >
->> > Paths are normally relative.
->> 
->> grep Documentation/ Documentation
->> 
->> I know there are a lot false positives (esp in the first one)..
->> 
->> $ grep -r "\.\./" Documentation | wc -l
->> 1826
->> $ grep -r "Documentation/" Documentation|wc -l
->> 2862
+> To make things worse, for years it co-existed with a separate MIPS
+> machine implementation as <asm/machine.h>. The two defined the
+> 'mips_machine' structure with different fields, and the 'MIPS_MACHINE'
+> macro with different parameters. The two used the same memory area
+> (defined by the linker script) to store data, and you could totally use
+> the two at the same time for all kinds of funny results.
 > 
-> I actually meant just for Device Tree bindings, but it does appear
-> that 'Documentation' is used a bunch there too.
-> 
-> My reasons for not liking full paths is that the intention was always
-> to move 'Documentation/devicetree' to a new location outside of the
-> kernel source tree.
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  arch/mips/Kconfig                    |  3 --
+>  arch/mips/include/asm/mips_machine.h | 46 ---------------------
+>  arch/mips/kernel/Makefile            |  1 -
+>  arch/mips/kernel/mips_machine.c      | 62 ----------------------------
+>  4 files changed, 112 deletions(-)
+>  delete mode 100644 arch/mips/include/asm/mips_machine.h
+>  delete mode 100644 arch/mips/kernel/mips_machine.c
 
-I see. I'll change that.
+applied to mips-next.
 
->> > > +%YAML 1.2
->> > > +---
->> > > +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
->> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> > > +
->> > > +title: Kontron's sl28cpld board management controller
->> >
->> > "S128CPLD" ?
->> 
->> still not, its sl28cpld, think of a project/code name, not the product
->> appended with CPLD.
->> 
->> > "Board Management Controller (BMC)" ?
->> 
->> sounds like IPMI, which I wanted to avoid.
-> 
-> Is there a datasheet?
+Thomas.
 
-No there isn't.
-
->> > > +maintainers:
->> > > +  - Michael Walle <michael@walle.cc>
->> > > +
->> > > +description: |
->> > > +  The board management controller may contain different IP blocks
->> > > like
->> > > +  watchdog, fan monitoring, PWM controller, interrupt controller
->> > > and a
->> > > +  GPIO controller.
->> > > +
->> > > +properties:
->> > > +  compatible:
->> > > +    const: kontron,sl28cpld-r1
->> >
->> > We don't usually code revision numbers in compatible strings.
->> >
->> > Is there any way to pull this from the H/W?
->> 
->> No, unfortunately you can't. And I really want to keep that, in case
->> in the future there are some backwards incompatible changes.
-> 
-> Rob,
-> 
-> I know you reviewed this already, but you can give your opinion on
-> this specifically please?  I know that we have pushed back on this in
-> the past.
-
-Oh, come one. That is an arbitrary string. "sl28cpld-r1" is the first
-implementation of this. A future "sl28cpld-r2" might look completely
-different and might not suite the simple MFD at all. "sl28cpld" is
-a made up name - as "sl28cpld-r1" is, too.
-
--michael
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
