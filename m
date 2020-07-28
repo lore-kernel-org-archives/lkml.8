@@ -3,118 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB99C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E75F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 264DE204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595933973;
-	bh=NXsFw2XyW4O0Bp+b0WLr2J2HgG2gKs8jTxH1TJveujQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vxvfh9yRebrFDg28yNcz3wr/iXOlPgax+PjMjdcqDmf3KXi7S//5l0N/kiipwbrbT
-	 CsX052QNSZn+Dsy92/sapkBG+4ZGr1yen1RHdkUwVqE5X8W4oCLpIOAJQjhsNAwk4r
-	 m9BXMpSfkRtHUeGc276ZVAdoXRpl4hWwWepx4ewk=
+	by mail.kernel.org (Postfix) with ESMTP id B459B204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:02:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VcuHUzhC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgG1K7c (ORCPT
+        id S1728863AbgG1LCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 06:59:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728752AbgG1K7b (ORCPT
+        Tue, 28 Jul 2020 07:02:02 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52298 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728688AbgG1LCC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 06:59:31 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 286AAC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:59:30 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id a21so20165097ejj.10
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:59:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TcHWy1ELrGH7/Ll+zfnmos93UO7CrgTD4KI3mqHtxXA=;
-        b=Po0H0vUvDiiD99Qh8zJI2tgXhgLs/QpcMpGnUN2FHkgl1eQGjBdMetm3gCdvsr9c6n
-         piW0c7rKDJCGORK25q9YrTac2OXj5QPHjggoNib6ce314q3sX8xJ7O+4kf1uEs8sQvjP
-         lGyrCwn1QQ3HLcpXRSgsAufdlyN5BLBHOmOJwdcphgmQgCD7gu3+IbJ1GWFeuObVl3O7
-         sDDN+HkyveVe5lmCJHQmXS4KEH/PO+BWZ5rovDzQHBRh8Ca+qmbEteQT+JH9WSKP9ZAE
-         FWOhrVlWFNs31hggVq/l15KRvbVoZXkZwwlW47GaS4zEPZpKgZxSPo6FAMOp8FTIZudy
-         GGRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=TcHWy1ELrGH7/Ll+zfnmos93UO7CrgTD4KI3mqHtxXA=;
-        b=UeT4JUOpPTi9k4lYWjiG2od7awRvZSJT/E6uW6MNsaIJ/K4jCeUjAhPiShBbykgFuM
-         2n5/nClAPkD6Q+GUEdxIYXnvZbqac/7vrCEZHTn0rYzmmcMMCRbVsb1T22w0BFsPeEWi
-         hXqNR53Ewk7qFKbrt5/2bAMVnR7xhL1YVS8sPM8neKIzevgOL3k5VR13+AGSnEvdB1Dw
-         45U4lMg/1WZXMYXlFoU6SS3w0kQh0sUxbahX/AK8de8eac/WR1ttuurRmnOBu1Ip2jhq
-         iIChxFIOU8gv8T+4jAsnCvEZ1efWDg2zWoBCPmKtOqC3O1yn4dOA99bx81L6XCoOQH28
-         z6Ig==
-X-Gm-Message-State: AOAM531BEJ85SCCL2moT5zVXySi17D993HdOCdlA9TPuNWKnSqc7Fojx
-        uHErN1SQ9ro6nzL3iMivqAU=
-X-Google-Smtp-Source: ABdhPJzXcHLPNZ8wROo9PTwCJz0JpJi7nDWvXcOpv1HbsszFPgQUF3hU9aCJAfZalhZv7Hh4Ip6/cg==
-X-Received: by 2002:a17:906:280c:: with SMTP id r12mr24709100ejc.105.1595933968940;
-        Tue, 28 Jul 2020 03:59:28 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id br25sm7784552ejb.25.2020.07.28.03.59.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 03:59:28 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 12:59:26 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Kees Cook <keescook@chromium.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/8] x86/kaslr: Clean up slot handling
-Message-ID: <20200728105926.GD222284@gmail.com>
-References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
- <20200727215047.3341098-8-nivedita@alum.mit.edu>
+        Tue, 28 Jul 2020 07:02:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595934120;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XNR5WY2cWDahy2gyeJK0kb6s2X+lgnpqYhuDhcd8ew8=;
+        b=VcuHUzhCv0/HWuzPt8up0AR2UeTOBbBjktdG4yO7Ov4wl/oVBsN2+k+me6VID71/RJc/k7
+        59KOjHfmxEyn1xWkbMCrzKxaOnq1gCnMWnAIZWdqe8mi5XNriFjTKEh61WBeH3cpQXs88V
+        KuEYubyKip3w8zYulatcdJdQzcqKXEc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-13-kajcVqc3M8WsewvTSNVy_w-1; Tue, 28 Jul 2020 07:01:56 -0400
+X-MC-Unique: kajcVqc3M8WsewvTSNVy_w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4551010059AC;
+        Tue, 28 Jul 2020 11:01:54 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C1518712F6;
+        Tue, 28 Jul 2020 11:01:51 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <202007211144.A68C31D@keescook>
+References: <202007211144.A68C31D@keescook> <202006142054.C00B3E9C9@keescook> <20200612183450.4189588-1-keescook@chromium.org> <7be4d56b-0406-099b-e505-02e074c5173e@huawei.com> <544539.1595328664@warthog.procyon.org.uk>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     dhowells@redhat.com, Xiaoming Ni <nixiaoming@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Windsor <dwindsor@gmail.com>,
+        Hans Liljestrand <ishkamiel@gmail.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Paul Moore <paul@paul-moore.com>, edumazet@google.com,
+        paulmck@kernel.org, shakeelb@google.com,
+        James Morris <jamorris@linux.microsoft.com>,
+        alex.huangjianhui@huawei.com, dylix.dailei@huawei.com,
+        chenzefeng2@huawei.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] Convert nsproxy, groups, and creds to refcount_t
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727215047.3341098-8-nivedita@alum.mit.edu>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3212524.1595934111.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 28 Jul 2020 12:01:51 +0100
+Message-ID: <3212525.1595934111@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Kees Cook <keescook@chromium.org> wrote:
 
-* Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> > I've been gradually undoing some of the conversions as there's no equi=
+valent
+> > of atomic_add_return() and atomic_dec_return() that allow me to log th=
+e
+> > altered refcount through a tracepoint.
+> =
 
-> The number of slots and slot areas can be unsigned int, since on 64-bit,
-> the maximum amount of memory is 2^52, the minimum alignment is 2^21, so
-> the slot number cannot be greater than 2^31. The slot areas are limited
-> by MAX_SLOT_AREA, currently 100. Replace the type used for slot number,
-> which is currently a mix of int and unsigned long, with unsigned int
-> consistently.
-> 
-> Drop unnecessary check that number of slots is not zero in
-> store_slot_info, it's guaranteed to be at least 1 by the calculation.
-> 
-> Drop unnecessary alignment of image_size to CONFIG_PHYSICAL_ALIGN in
-> find_random_virt_addr, it cannot change the result: the largest valid
-> slot is the largest n that satisfies
-> 
->   minimum + n * CONFIG_PHYSICAL_ALIGN + image_size <= KERNEL_IMAGE_SIZE
-> 
-> (since minimum is already aligned) and so n is equal to
-> 
->   (KERNEL_IMAGE_SIZE - minimum - image_size) / CONFIG_PHYSICAL_ALIGN
-> 
-> even if image_size is not aligned to CONFIG_PHYSICAL_ALIGN.
+> Please do not _undo_ the changes; just add the API you need.
 
-Please split this up into a couple of easily bisectable patches as 
-well:
+And _please_ do not convert atomic_inc/dec_return() into refcount_read() +
+refcount_xxx().  They are _not_ equivalent.
 
- - first one harmonizes the integer types used
+David
 
- - patch that drops the unnecessary check
-
- - patch that drops the unnecessary alignment operation
-
-Thanks,
-
-	Ingo
