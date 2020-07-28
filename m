@@ -2,165 +2,128 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC4AC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1761EC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6A420656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:11:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BloFnMYM"
+	by mail.kernel.org (Postfix) with ESMTP id EF8BD20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgG1ILI (ORCPT
+        id S1728036AbgG1IL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:11:08 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:54328 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727856AbgG1ILH (ORCPT
+        Tue, 28 Jul 2020 04:11:28 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:46039 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbgG1IL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:11:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595923866; x=1627459866;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=4348zSQswPRrH20ua261huy5XthZgYClc7uZbxDiXss=;
-  b=BloFnMYMDUNlfRnyraH1QD+B6QqXi8D6yahBhbSmU7Rn6rIygDFoutO6
-   u1gubUlWHJP1Nin5KJrdtPf24tUGu5NToQD25fMw054axTMYuZl2kI5pb
-   jG+LomAq41K4p9G0e52b5IcxrrgETbmBvnyjZrxu4v7Kh+ZjsnRxb2wDE
-   SjorAN/XwUkGjjQlCs4yRK9NFYGjG6VOANWb2UVxq0NFH1v5+WTfUmxnk
-   Qg+lvl3vqRSVFZhQ/1bPN/FUYpqs0deGPsE3wPMmkYsj9Tnly3VftLlYE
-   3U45BDPl1ZTaSLzdQvm8UrvjMjs0gwcdG3sWupJYIV6ZuDdlI2jeYSJiq
-   w==;
-IronPort-SDR: u0DQ0eKwBMew6XCiVSZ6TNgz94sf4p5fEp5KHy8R4066+bkamL02aFIDa/PnprqNt7eLr68+0O
- bdwaZdRFNX3d+PZCspEgWoLORjBExQfhW1PLxMGaME/1kwbkmFz8kyYFa9qIp3tufYwjk+pPtN
- yA1WkCcvGJwbSgD2GHiaHUjIV/LjQK2/8u8bNmSJdo3H8SmAWPfolmFlnNV80IoZpcshXAYiPe
- q7Cms7O27/x1xxDD5OZksFJvaZIS2LZWhn70jtDPdXSklcadkY8v3um+VybJnSOzHzkwoVqZR1
- 3LQ=
-X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
-   d="scan'208";a="83485204"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Jul 2020 01:11:06 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 28 Jul 2020 01:10:19 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Tue, 28 Jul 2020 01:11:03 -0700
-References: <20200724111404.13293-1-lars.povlsen@microchip.com> <20200724111404.13293-5-lars.povlsen@microchip.com> <20200727203847.GA782308@bogus>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>,
-        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH v4 4/6] dt-bindings: snps,dw-apb-ssi: Add sparx5 support, plus rx-sample-delay-ns property
-In-Reply-To: <20200727203847.GA782308@bogus>
-Date:   Tue, 28 Jul 2020 10:11:02 +0200
-Message-ID: <87sgdcf4a1.fsf@soft-dev15.microsemi.net>
+        Tue, 28 Jul 2020 04:11:28 -0400
+Received: from mail-qt1-f173.google.com ([209.85.160.173]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MpUQk-1kaUra2onc-00prHa for <linux-kernel@vger.kernel.org>; Tue, 28 Jul
+ 2020 10:11:26 +0200
+Received: by mail-qt1-f173.google.com with SMTP id o22so14007332qtt.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:11:26 -0700 (PDT)
+X-Gm-Message-State: AOAM533I0MCZMMm4bkcrDqnXkua4Bmq8Tg8TO9EFRR8aV6ZlMS26+VzJ
+        NVK/GpIMEKqS5tTNOFpWN5hF0iFOJU4kgiSgzsI=
+X-Google-Smtp-Source: ABdhPJxCGAB7BbsjfSD7bgaCnwv1WyrC1BKE9mDKkcAW39Ma3IJ37NCcsslzqEKXCuFNjQfzfNsrIHGbS8NsRXh+AwY=
+X-Received: by 2002:aed:2946:: with SMTP id s64mr5570242qtd.204.1595923885496;
+ Tue, 28 Jul 2020 01:11:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200728014343.341303-1-yepeilin.cs@gmail.com>
+In-Reply-To: <20200728014343.341303-1-yepeilin.cs@gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 28 Jul 2020 10:11:09 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a29=CugbGtZRQc0abGXvexp=gBk+LwOCG3yNCPakup+NQ@mail.gmail.com>
+Message-ID: <CAK8P3a29=CugbGtZRQc0abGXvexp=gBk+LwOCG3yNCPakup+NQ@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH] drm/bufs: Prevent kernel-infoleak
+ in copy_one_buf()
+To:     Peilin Ye <yepeilin.cs@gmail.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:4+NRdEqI9UaJWac6rKJR1ddUm9iY1HTXJetD4N7Z1KMrrkx9rtb
+ ALAiPNHYiuisNi+dGEEUz81Yz4lx5dxsG+OI7E7EYDGU/w9RthD1wq+oELe6Q0xAkqofc7a
+ 4Yiq4xEYe4EhXXe8JQAB53DeEi7At6ZxRyoVi2b02UQlbPFwGSQJ6FvNUjMXShiXzc+s7+j
+ 4XyeKjxgFWAD5N1KwBK5Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:28gqUn+saW8=:xhBrTZMAt1g/3Xyc7v9Hkv
+ 1cFfIo7TuuGga3RrVx0SMFQPAqx9DgaJZmb/jF8+9ZJEa3OYlr2HHQN6A8oVwumYvQGbmJ2v4
+ Hx0MNVl1yQITTDl7iUoWhor5VogOg9Lkd7pQfbAgscpfnYQzNb3L3e2/rX8UE/j5tZVja+T9i
+ y8Lz8OTGLeuc38vwN51jzsjOlfuSIJww7a650hVR0zgMUpMNeEKXdurUM5RV/Y2+vrTCY8oFU
+ sxKChQq7/nZHBueeUAqY41CrJi8EWj4e118kGdkoi3ArGGqOLf6ClYjp12V9ZwHu62JHKWNUT
+ OsHP6O8OAAHDXgiEy7uKNplhpGMFyGHzyBZuXMtCmj4T8hEqgMfIF2m3Qcy+5woGyLX6ctXEF
+ blJ40O7LeHYy8sKoAx5PSoa/IJOUSsuVsOogiEXzGWPjyALSHmiBHRhT8xmSwW0ViL1xuIUo5
+ e31U3HFNNoVl3AdkFmM6whI7QhEvb/gsykUQrSVDurbB43lOkoTLgcpv3a9ryGUllsUWyvAyI
+ 1IKe8RsAkDOaLb2BQU0YA/Lq8v6iVQX8W4qMe1jTFldOJYchpvaLKDHmHvtk4cbSymPDElEs2
+ u+pE4iNPqzjlEjFPNlo0Cl5R2AYw35/HgmVTvLVA2zxBtHaImi093wyNNo2fcDSg3h4ssFRXO
+ Yj/fGOu+78PC7NdakuyWeWmHsdq50UBzhA120OnplRusdScFCSaVm+Tyxge5kDmsrz+3A1C35
+ kzghqsYsBv5PAC5rKla1RuM0XO2+ejbZRQqsfns93/b22YXyH/Td0GyBQxI9Ae08sMG6TRFN7
+ 94a2pATfXJ2ziEEIglau5xB6AhhRixgDRYepRCgnoNkmLQSBdSxxQ5yIt5REO3+LAevL7+ouh
+ lWCqXGBAqalDXNDwNb0lBaO3DzGE2d7TQXcXVjj/uHOZ+R1W7F8lO98cYOKHiZPBqYYBD4p+d
+ was/8OUMIAMCMeilshMk3jPsEGeR/OemPX9Z7ZKbeRY4mE5xHSOiQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Rob Herring writes:
-
-> On Fri, Jul 24, 2020 at 01:14:02PM +0200, Lars Povlsen wrote:
->> This has the following changes for the snps,dw-apb-ss DT bindings:
->>
->> - Add "microchip,sparx5-spi" as the compatible for the Sparx5 SoC
->>   controller
->>
->> - Add the property "rx-sample-delay-ns"
->>
->> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->> ---
->>  .../bindings/spi/snps,dw-apb-ssi.yaml         | 21 +++++++++++++++++++
->>  1 file changed, 21 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
->> index c62cbe79f00dd..c0adaad1aa695 100644
->> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
->> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
->> @@ -36,6 +36,8 @@ properties:
->>                - mscc,ocelot-spi
->>                - mscc,jaguar2-spi
->>            - const: snps,dw-apb-ssi
->> +      - description: Microchip Sparx5 SoC SPI Controller
->> +        const: microchip,sparx5-spi
->>        - description: Amazon Alpine SPI Controller
->>          const: amazon,alpine-dw-apb-ssi
->>        - description: Renesas RZ/N1 SPI Controller
->> @@ -93,6 +95,12 @@ properties:
->>        - const: tx
->>        - const: rx
->>
->> +  rx-sample-delay-ns:
->> +    description: Default value of the rx-sample-delay-ns property.
->> +      This value will be used if the property is not explicitly defined
->> +      for a SPI slave device. Default value is 0. See below.
->> +    $ref: /schemas/types.yaml#/definitions/uint32
+On Tue, Jul 28, 2020 at 3:45 AM Peilin Ye <yepeilin.cs@gmail.com> wrote:
 >
-> Don't need a type for properties with unit suffixes.
+> copy_one_buf() is copying uninitialized stack memory to userspace due to
+> the compiler not initializing holes in statically allocated structures.
+> Fix it by initializing `v` with memset().
+
+I would add 'potentially' somewhere in that description: it is architecture
+dependent whether there are holes in this structure as 'enum' types
+and 'long' are both dependent on the ABI, and even if there is a hole,
+it is undefined behavior whether the hold gets initialized.
+
+Other than that, the patch looks good.
+
+> Cc: stable@vger.kernel.org
+> Fixes: 5c7640ab6258 ("switch compat_drm_infobufs() to drm_ioctl_kernel()")
+> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+
+> ---
+>  drivers/gpu/drm/drm_bufs.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
 >
-> Also, add:
+> diff --git a/drivers/gpu/drm/drm_bufs.c b/drivers/gpu/drm/drm_bufs.c
+> index a0735fbc144b..f99cd4a3f951 100644
+> --- a/drivers/gpu/drm/drm_bufs.c
+> +++ b/drivers/gpu/drm/drm_bufs.c
+> @@ -1349,10 +1349,14 @@ static int copy_one_buf(void *data, int count, struct drm_buf_entry *from)
+>  {
+>         struct drm_buf_info *request = data;
+>         struct drm_buf_desc __user *to = &request->list[count];
+> -       struct drm_buf_desc v = {.count = from->buf_count,
+> -                                .size = from->buf_size,
+> -                                .low_mark = from->low_mark,
+> -                                .high_mark = from->high_mark};
+> +       struct drm_buf_desc v;
+> +
+> +       memset(&v, 0, sizeof(v));
+> +
+> +       v.count = from->buf_count;
+> +       v.size = from->buf_size;
+> +       v.low_mark = from->low_mark;
+> +       v.high_mark = from->high_mark;
 >
-> 'default: 0'
+>         if (copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags)))
+>                 return -EFAULT;
+> --
+> 2.25.1
 >
-
-Hi Rob!
-
-Thank you for your input, all duly noted.
-
----Lars
-
->> +
->>  patternProperties:
->>    "^.*@[0-9a-f]+$":
->>      type: object
->> @@ -107,6 +115,13 @@ patternProperties:
->>        spi-tx-bus-width:
->>          const: 1
->>
->> +      rx-sample-delay-ns:
->> +        description: SPI Rx sample delay offset, unit is nanoseconds.
->> +          The delay from the default sample time before the actual
->> +          sample of the rxd input signal occurs. The "rx_sample_delay"
->> +          is an optional feature of the designware controller, and the
->> +          upper limit is also subject to controller configuration.
->> +
->>  unevaluatedProperties: false
->>
->>  required:
->> @@ -129,5 +144,11 @@ examples:
->>        num-cs = <2>;
->>        cs-gpios = <&gpio0 13 0>,
->>                   <&gpio0 14 0>;
->> +      rx-sample-delay-ns = <3>;
->> +      spi-flash@1 {
->> +        compatible = "spi-nand";
->> +        reg = <1>;
->> +        rx-sample-delay-ns = <7>;
->> +      };
->>      };
->>  ...
->> --
->> 2.27.0
->>
-
--- 
-Lars Povlsen,
-Microchip
