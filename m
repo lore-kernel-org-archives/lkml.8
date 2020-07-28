@@ -2,176 +2,90 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6F4C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B17C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDCC12070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:15:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595945723;
-	bh=lUPY2x+FC7QKHEsbHiDvmWaDq+mpMmmwkd+OggYom1s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2XIWEc4qgm64GVx+VSCiqbP6QLFtNZBu3AfUtJFznzBPr8AsJMnjd5wDH3t9T5bhS
-	 01s+JPde6quk064hp8/FD798hUzGduu+2h8JrH1o3vz9oE1zXNHOphPxSj6Whx+X+W
-	 4WrOAR9ektjHfnGjLVaj8u6fMhswghxgKlqEeMgc=
+	by mail.kernel.org (Postfix) with ESMTP id C4FF2206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:11:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="apE8fI/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730382AbgG1OPW (ORCPT
+        id S1730308AbgG1OLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:15:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730012AbgG1OPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:15:20 -0400
-Received: from kernel.org (unknown [87.71.40.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BC04206F5;
-        Tue, 28 Jul 2020 14:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595945719;
-        bh=lUPY2x+FC7QKHEsbHiDvmWaDq+mpMmmwkd+OggYom1s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QgGc4X7YUZ1ckDx2DS7TV0wJ9kprJKWkAHEon+OMgHl2R1sb+tkMTAcVnCBfWfbCy
-         0OtC+wiVDREvJNkkA1XcIE7jDME0kzNs1q63GPOaIsM59WTD15P6atSjYRp+nh+npo
-         fGSf3gFWEKzBxONEs1GYYDPsR5qUaUEQHRNOUSzo=
-Date:   Tue, 28 Jul 2020 17:15:04 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
-Subject: Re: [PATCH 14/15] x86/numa: remove redundant iteration over
- memblock.reserved
-Message-ID: <20200728141504.GC3655207@kernel.org>
-References: <20200728051153.1590-1-rppt@kernel.org>
- <20200728051153.1590-15-rppt@kernel.org>
- <20200728110254.GA14854@MiWiFi-R3L-srv>
+        Tue, 28 Jul 2020 10:11:02 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:7961 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730057AbgG1OLC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 10:11:02 -0400
+X-UUID: c254afc30da74d48aec926f2773c279e-20200728
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=suEMosAXJcsVRBqEPCC9fdQP59XGs0hD3Jn+cHeYz6A=;
+        b=apE8fI/qTpyi8svFmT4raknEZ4iQy/Wg/7sBZGW3hjb99/aLJwdS/ev7cadKXgbVgmbfEu2MyH1/UyK3R4eq2HYi9DWEoDAPYkx9U5uPTvvyzikmHgN3MkYdz1SPPPtkWIQwYlG0KqA3jqduKJsOovY5jL+RSIL/DpaI8mWbQQk=;
+X-UUID: c254afc30da74d48aec926f2773c279e-20200728
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 37312028; Tue, 28 Jul 2020 22:10:57 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 28 Jul 2020 22:10:53 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 28 Jul 2020 22:10:55 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <bvanassche@acm.org>
+CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
+        <cc.chou@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v1] scsi: ufs: Fix possible infinite loop in ufshcd_hold
+Date:   Tue, 28 Jul 2020 22:10:55 +0800
+Message-ID: <20200728141055.22160-1-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728110254.GA14854@MiWiFi-R3L-srv>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 07:02:54PM +0800, Baoquan He wrote:
-> On 07/28/20 at 08:11am, Mike Rapoport wrote:
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > numa_clear_kernel_node_hotplug() function first traverses numa_meminfo
-> > regions to set node ID in memblock.reserved and than traverses
-> > memblock.reserved to update reserved_nodemask to include node IDs that were
-> > set in the first loop.
-> > 
-> > Remove redundant traversal over memblock.reserved and update
-> > reserved_nodemask while iterating over numa_meminfo.
-> > 
-> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> > ---
-> >  arch/x86/mm/numa.c | 26 ++++++++++----------------
-> >  1 file changed, 10 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> > index 8ee952038c80..4078abd33938 100644
-> > --- a/arch/x86/mm/numa.c
-> > +++ b/arch/x86/mm/numa.c
-> > @@ -498,31 +498,25 @@ static void __init numa_clear_kernel_node_hotplug(void)
-> >  	 * and use those ranges to set the nid in memblock.reserved.
-> >  	 * This will split up the memblock regions along node
-> >  	 * boundaries and will set the node IDs as well.
-> > +	 *
-> > +	 * The nid will also be set in reserved_nodemask which is later
-> > +	 * used to clear MEMBLOCK_HOTPLUG flag.
-> > +	 *
-> > +	 * [ Note, when booting with mem=nn[kMG] or in a kdump kernel,
-> > +	 *   numa_meminfo might not include all memblock.reserved
-> > +	 *   memory ranges, because quirks such as trim_snb_memory()
-> > +	 *   reserve specific pages for Sandy Bridge graphics.
-> > +	 *   These ranges will remain with nid == MAX_NUMNODES. ]
-> >  	 */
-> >  	for (i = 0; i < numa_meminfo.nr_blks; i++) {
-> >  		struct numa_memblk *mb = numa_meminfo.blk + i;
-> >  		int ret;
-> >  
-> >  		ret = memblock_set_node(mb->start, mb->end - mb->start, &memblock.reserved, mb->nid);
-> > +		node_set(mb->nid, reserved_nodemask);
-> 
-> Really? This will set all node id into reserved_nodemask. But in the
-> current code, it's setting nid into memblock reserved region which
-> interleaves with numa_memoinfo, then get those nid and set it in
-> reserved_nodemask. This is so different, with my understanding. Please
-> correct me if I am wrong.
+SW4gdWZzaGNkX3N1c3BlbmQoKSwgYWZ0ZXIgY2xrLWdhdGluZyBpcyBzdXNwZW5kZWQgYW5kIGxp
+bmsgaXMgc2V0DQphcyBIaWJlcm44IHN0YXRlLCB1ZnNoY2RfaG9sZCgpIGlzIHN0aWxsIHBvc3Np
+Ymx5IGludm9rZWQgYmVmb3JlDQp1ZnNoY2Rfc3VzcGVuZCgpIHJldHVybnMuIEZvciBleGFtcGxl
+LCBNZWRpYVRlaydzIHN1c3BlbmQgdm9wcyBtYXkNCmlzc3VlIFVJQyBjb21tYW5kcyB3aGljaCB3
+b3VsZCBjYWxsIHVmc2hjZF9ob2xkKCkgZHVyaW5nIHRoZSBjb21tYW5kDQppc3N1aW5nIGZsb3cu
+DQoNCk5vdyBpZiBVRlNIQ0RfQ0FQX0hJQkVSTjhfV0lUSF9DTEtfR0FUSU5HIGNhcGFiaWxpdHkg
+aXMgZW5hYmxlZCwNCnRoZW4gdWZzaGNkX2hvbGQoKSBtYXkgZW50ZXIgaW5maW5pdGUgbG9vcHMg
+YmVjYXVzZSB0aGVyZSBpcyBubw0KY2xrLXVuZ2F0aW5nIHdvcmsgaXMgc2NoZWR1bGVkIG9yIHBl
+bmRpbmcuIEluIHRoaXMgY2FzZSwgdWZzaGNkX2hvbGQoKQ0Kc2hhbGwganVzdCBieXBhc3MsIGFu
+ZCBrZWVwIHRoZSBsaW5rIGFzIEhpYmVybjggc3RhdGUuDQoNClNpZ25lZC1vZmYtYnk6IFN0YW5s
+ZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBBbmR5IFRl
+bmcgPGFuZHkudGVuZ0BtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vmc2hj
+ZC5jIHwgNiArKysrKy0NCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAxIGRlbGV0
+aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jIGIvZHJpdmVy
+cy9zY3NpL3Vmcy91ZnNoY2QuYw0KaW5kZXggNTc3Y2MwZDc0ODdmLi4yNjdiMDJlMWFmZDYgMTAw
+NjQ0DQotLS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQorKysgYi9kcml2ZXJzL3Njc2kv
+dWZzL3Vmc2hjZC5jDQpAQCAtMTU5Miw3ICsxNTkyLDExIEBAIGludCB1ZnNoY2RfaG9sZChzdHJ1
+Y3QgdWZzX2hiYSAqaGJhLCBib29sIGFzeW5jKQ0KIAkJCQlicmVhazsNCiAJCQl9DQogCQkJc3Bp
+bl91bmxvY2tfaXJxcmVzdG9yZShoYmEtPmhvc3QtPmhvc3RfbG9jaywgZmxhZ3MpOw0KLQkJCWZs
+dXNoX3dvcmsoJmhiYS0+Y2xrX2dhdGluZy51bmdhdGVfd29yayk7DQorCQkJcmMgPSBmbHVzaF93
+b3JrKCZoYmEtPmNsa19nYXRpbmcudW5nYXRlX3dvcmspOw0KKwkJCWlmIChoYmEtPmNsa19nYXRp
+bmcuaXNfc3VzcGVuZGVkICYmICFyYykgew0KKwkJCQlyYyA9IDA7DQorCQkJCWdvdG8gb3V0Ow0K
+KwkJCX0NCiAJCQlzcGluX2xvY2tfaXJxc2F2ZShoYmEtPmhvc3QtPmhvc3RfbG9jaywgZmxhZ3Mp
+Ow0KIAkJCWdvdG8gc3RhcnQ7DQogCQl9DQotLSANCjIuMTguMA0K
 
-You are right, I've missed the intersections of numa_meminfo with
-memblock.reserved.
-
-x86 interaction with membock is so, hmm, interesting...
- 
-> Thanks
-> Baoquan
-> 
-> >  		WARN_ON_ONCE(ret);
-> >  	}
-> >  
-> > -	/*
-> > -	 * Now go over all reserved memblock regions, to construct a
-> > -	 * node mask of all kernel reserved memory areas.
-> > -	 *
-> > -	 * [ Note, when booting with mem=nn[kMG] or in a kdump kernel,
-> > -	 *   numa_meminfo might not include all memblock.reserved
-> > -	 *   memory ranges, because quirks such as trim_snb_memory()
-> > -	 *   reserve specific pages for Sandy Bridge graphics. ]
-> > -	 */
-> > -	for_each_memblock(reserved, mb_region) {
-> > -		int nid = memblock_get_region_node(mb_region);
-> > -
-> > -		if (nid != MAX_NUMNODES)
-> > -			node_set(nid, reserved_nodemask);
-> > -	}
-> > -
-> >  	/*
-> >  	 * Finally, clear the MEMBLOCK_HOTPLUG flag for all memory
-> >  	 * belonging to the reserved node mask.
-> > -- 
-> > 2.26.2
-> > 
-> > 
-> 
-
--- 
-Sincerely yours,
-Mike.
