@@ -2,129 +2,113 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E20CC433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95E72206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:35:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1peec51"
+	by mail.kernel.org (Postfix) with ESMTP id 3BE3A20809
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:34:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595900095;
+	bh=wz5fEphdEHFwbTF0r9Ufc3xB+OXgMXkFzETS0fohnBE=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=LzfCshnLcmiKQ8xupMRfCLb1oor6D0fpQFfUcVoyQw3je7Dr7KwxfT+hHmRgCSCBC
+	 5hC5lsa2IXoUYDyu/IrnzhEcoAXNWnlKhlP8PXmFHZIs86v9yvobYjJrMUp+wicpty
+	 ENSu+y387YdgVLql4YmRS1ymyDlPxIKSLR8t8/Cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgG1Bf3 (ORCPT
+        id S1726981AbgG1Bex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 21:35:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57196 "EHLO
+        Mon, 27 Jul 2020 21:34:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbgG1Bf1 (ORCPT
+        with ESMTP id S1726967AbgG1Bev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 21:35:27 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C7B4C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 18:35:27 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id c25so13760111otf.7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 18:35:27 -0700 (PDT)
+        Mon, 27 Jul 2020 21:34:51 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC6EC0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 18:34:51 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id w17so16074939oie.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 18:34:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fI6YwDGtg+joeqOCzuXAQEYG2xJxfhrjUye2AxD2ZBA=;
-        b=G1peec51s0+H5DoRmqJiB4s90sR/1pLFDcucc8EtN3ZN5lp784VVe2JWxcmlZHvHeA
-         t+6FshXP+oBm9pGxuyz2z3ZGU7TbpTNpSYJ06+KisBg/8fCyAzTwmqqytNDY0MZesb5z
-         MScbAshkQ8GQTyRDVjk+JbP8vJDEuIYoKfwVg8kXYFePD7Xn62CkzQPNth8qjDz9W1xA
-         VllCUh/oZrSDLmKLJZ4147as/cyjF6cueAVDE6lT++5iBlmpiZmWpnAU4UFB7glnPV14
-         DgAtrhgzW6KOPZibdoySiGkbiRpUgykvaQfglZ0rF94Zpfsv2hE7WHh3rwcoNSVU7d/x
-         WAWQ==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qZuvweddU5J1p0ldIWDpQIeg9reANpSyYykBNpL31Uw=;
+        b=N1H/5fG+ho1wfw1vPmaFLrfJ49foDv1nj7jiIop7PCQ2amb7rJBcDtfLN+psz8aDSX
+         aHmj0Nhn7GJHSs1fZII7VYceefJYq7uSrd4A0AO4PxMPqiwmToxVq+dqlqZDt7yEfdqQ
+         JRbXn0tKLEcB2bR+hEH7pViIAw+qWrXNAmzbs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fI6YwDGtg+joeqOCzuXAQEYG2xJxfhrjUye2AxD2ZBA=;
-        b=DnZkC7f5OK+VLJ16xUCYYhbv016+zO5v0S4nj4w7E82kgZBSrBmU+NsRaDqwg4nneR
-         FJlJ1DvSgCSnymkf+XzBmascSO5DFb4Cxf26ITUWCEGYMnnaNETx5PhV3vRR6mmTXkMH
-         7qaeHL5R9Q0hx4bPGV6jlw8ZrwwR7BTz3R3G0D6e0eJ1ExEdGRN/Cvv6Oxdkv2vvGb1o
-         nZtdDeUeUHNfELve0qkhArMWKatlllqmaiPq0AjipYLfksEdXMfQq2VXM7gWHoYraSP5
-         FXjImpeC8Pq1Tq1EAzg+H5l5+QBtt5vWbdE1F7jOrJVD4B3aj1jnNWiocZN3TnJuvjld
-         /ETQ==
-X-Gm-Message-State: AOAM530RhBqK3TLs7He2ygA196F6VbadDKlUOqp9S6LmujUBkTeXeKwN
-        lUqu0/zlrgeCKxnBFmiZYNE3OXhubNvAb6kILbs=
-X-Google-Smtp-Source: ABdhPJzOl2kW9LkTqkutjFqeNIU+eJcjuTfsALHmq71or7tSEVJSjXmDcDOfsga4ocMNs+qyrcX3ZIQibx6B9Jow8vI=
-X-Received: by 2002:a05:6830:1e37:: with SMTP id t23mr7621300otr.215.1595900126816;
- Mon, 27 Jul 2020 18:35:26 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qZuvweddU5J1p0ldIWDpQIeg9reANpSyYykBNpL31Uw=;
+        b=uOOGCeEnA+HY68cPUs5i5oIhNafpccJei/MuNeZEthfbhqbK0dCZTjU1MCSNO97U1k
+         1TVwwCHCRpLWP9LrHwyyp4CzVRpJdGyvsrPbK84H79KqOclaQni1pd6LPmSQdwnjJEqu
+         KDeJTjJsDO5/p4nuPULhiliuDwKn0JbYDwyCxqfyZ+DkOmn9+JvDIWfsedgUv7kFFXfP
+         gT8YVPi6URlwlbRK0T6QEhlxKoj/2OtSTk1WsoiJ/+uWclXMDkmKllpKqh87A5nYXz8t
+         ikWFMp21mZdtgIbl3dI1gU6a9ytbDn7Mq0+i4uKijVMe2YQ1MP5i/JtlIaY1PskWMOAz
+         OtzQ==
+X-Gm-Message-State: AOAM532nFrN5tgjVVjsIBI4jK+31jBrafFTkJjb/p45MGOy7PBJ3Wigc
+        3PfDa66S0+0xi8FiuUHUit+uTg==
+X-Google-Smtp-Source: ABdhPJz1sITJi5IKCVov8wsHCStG/A7yy14dwSvPYj3vrFOMIzGhXvPbgBMYiVE4km5BpdFCQGCxIA==
+X-Received: by 2002:aca:bcd6:: with SMTP id m205mr1712566oif.149.1595900090460;
+        Mon, 27 Jul 2020 18:34:50 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id q17sm3678462otc.25.2020.07.27.18.34.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2020 18:34:49 -0700 (PDT)
+Subject: Re: [PATCH 5.4 000/138] 5.4.54-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20200727134925.228313570@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <2ef9cd1c-9bcc-c199-cb36-656f2a8441c8@linuxfoundation.org>
+Date:   Mon, 27 Jul 2020 19:34:48 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1595601083-10183-1-git-send-email-qianjun.kernel@gmail.com> <87sgddaru7.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87sgddaru7.fsf@nanos.tec.linutronix.de>
-From:   jun qian <qianjun.kernel@gmail.com>
-Date:   Tue, 28 Jul 2020 09:35:16 +0800
-Message-ID: <CAKc596+cs7SMT493HjfiX_1E+aGdL9aaPgP_KqT5+gXrgsZVCA@mail.gmail.com>
-Subject: Re: [PATCH V4] Softirq:avoid large sched delay from the pending softirqs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     peterz@infradead.org, will@kernel.org, luto@kernel.org,
-        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
-        Uladzislau Rezki <urezki@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:41 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Qian,
->
-> qianjun.kernel@gmail.com writes:
-> >  /*
-> >   * We restart softirq processing for at most MAX_SOFTIRQ_RESTART times,
-> >   * but break the loop if need_resched() is set or after 2 ms.
-> > - * The MAX_SOFTIRQ_TIME provides a nice upper bound in most cases, but in
-> > - * certain cases, such as stop_machine(), jiffies may cease to
-> > - * increment and so we need the MAX_SOFTIRQ_RESTART limit as
-> > - * well to make sure we eventually return from this method.
-> > + * In the loop, if the processing time of the softirq has exceeded 2
-> > + * milliseconds, we also need to break the loop to wakeup the
-> > ksofirqd.
->
-> You are removing the MAX_SOFTIRQ_RESTART limit explanation and I rather
-> have MAX_SOFTIRQ_TIME_NS there than '2 milliseconds' in case the value
-> gets adjusted later on. Also while sched_clock() is granular on many
-> systems it still can be jiffies based and then the above problem
-> persists.
->
-> > @@ -299,6 +298,19 @@ asmlinkage __visible void __softirq_entry __do_softirq(void)
-> >               }
-> >               h++;
-> >               pending >>= softirq_bit;
-> > +
-> > +             /*
-> > +              * the softirq's action has been running for too much time
-> > +              * so it may need to wakeup the ksoftirqd
-> > +              */
-> > +             if (need_resched() && sched_clock() > end) {
-> > +                     /*
-> > +                      * Ensure that the remaining pending bits are
-> > +                      * handled.
-> > +                      */
-> > +                     or_softirq_pending(pending << (vec_nr + 1));
->
-> To or the value interrupts need to be disabled because otherwise you can
-> lose a bit when an interrupt happens in the middle of the RMW operation
-> and raises a softirq which is not in @pending and not in the per CPU
-> local softirq pending storage.
->
-> There is another problem. Assume bit 0 and 1 are pending when the
-> processing starts. Now it breaks out after bit 0 has been handled and
-> stores back bit 1 as pending. Before ksoftirqd runs bit 0 gets raised
-> again. ksoftirqd runs and handles bit 0, which takes more than the
-> timeout. As a result the bit 0 processing can starve all other softirqs.
->
-I got it. I will try to slove this problem. Thanks.
+On 7/27/20 8:03 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.54 release.
+> There are 138 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 29 Jul 2020 13:48:51 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.54-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-> So this needs more thought.
->
-> Thanks,
->
->         tglx
+Compiled and booted on my test system. No dmesg regressions.
+
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
