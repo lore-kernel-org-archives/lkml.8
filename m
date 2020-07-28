@@ -7,68 +7,71 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F222CC433F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DE4C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4CF02078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DFA8207CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:40:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="pE2T9gbd"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="0EvAbl63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgG1CkC (ORCPT
+        id S1727051AbgG1Cjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:40:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38934 "EHLO
+        Mon, 27 Jul 2020 22:39:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727794AbgG1Cj4 (ORCPT
+        with ESMTP id S1726990AbgG1Cjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 22:39:56 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D3DBC0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 19:39:56 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id k18so13863490qtm.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 19:39:56 -0700 (PDT)
+        Mon, 27 Jul 2020 22:39:46 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C57F5C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 19:39:45 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id l13so2150772qvt.10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 19:39:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yVMPt7oOkfZt8+mUHt1G0xa2MlVS24FjEN8IWHp4iEo=;
-        b=pE2T9gbdYmjqIIlPzOAZd82ha1siBwlQ7+aqGKUBhzB956MvcoSllJKtUgM/vuchFj
-         65XNk38RaKlXMsUVHA2sRcbYfuEWnsz2DuQwDi+9jN0sdyhY8kOEKhTBdJ4+wYI023Xl
-         MFwH5RMrShhwyPE0gf0/v78xNytmH7QkkhaTEPIsWnEL2cLbbGN69zdu32rr77bLOehX
-         KclOQTBEIGUuSXmA9McU/EMfgmovfxTlPHHR1maf9vJU8DcqN8o8RX2IysSmsPT8rRG0
-         w8aC+EQ171zdAiOtG/jSn18vnHo+U3lc1uDMpZ6HgGXzzOYa23M3XKzMFFq/G0J6dXxR
-         KGFA==
+        bh=BsqPZ0XK5KxOBsJDhy4IA2RMRHhLCVsHp4kme64uz/I=;
+        b=0EvAbl63wJZ0o6r0mX2NkvUUN85M2+6KiLtS+P4ptN1Uzw+sjqf7EydA1uXA7HNV9p
+         rm9k1+FO/65etsED8cvXGQoVWFuRQflwM07infMMDwacptAEJq93qbsBsN/zokdhs/G/
+         i4Rrv21/F7Zhi8aGxAaZcDt4DkdhcOLjITBHCdi7a2a2bDIwCK5WJBmTJINFxQPvByuK
+         G9uuzxJW4t9+3UsSF2plh25qdgxCkiMjywWRw1RxbV1RlYkfGMHpk09a6UydRla7gHtn
+         U9grSJ/hgThkO7mgX8+3Bi7xm6azOsQXBr9qzheQwewXxgebpaR0fPEY70y5h2lfNBWz
+         SYJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yVMPt7oOkfZt8+mUHt1G0xa2MlVS24FjEN8IWHp4iEo=;
-        b=LZUTiyX5VIX1qB6gdmm8QkPo7shqY28wgFbRVH2ProDPy4/8FLqxQwXsI9JpF3taSV
-         2uzy9A3eQBKpt0qV9vOn7Y3Bq9fbwIkAwT3k/9Fzz1kWYoIDkz/wPbRaamtWFi4v7f5l
-         1oi6q1HldOS/Em/+owbYKorrZkP9+OMu2/Xhf4ONrQLKhITCyg3ZCCJQPDzQr5fDw8KT
-         sqhpTBSUXzfAVMGbk8gVNz2f0Mcv8VpLDob+Fyz1iHbnZ25s5CC/aFKK4kMLfqn3+e3e
-         0X0lNQaiLljinrmrMbFYhX5ID/4Rh4t+6AjS5hBqoekxnTH6PASRVo9TFvh6nhm06l8e
-         wzfg==
-X-Gm-Message-State: AOAM531+qtlidiyePmtSJXHOIcQk1vUslIgJs+RKgoMzDuMKc3or+drx
-        Tb2zddx9ToWN/ZA04WYq+O05wg==
-X-Google-Smtp-Source: ABdhPJzQfSmnfR0G1sOyYPd3hsEqIvngYIz1b2nbxP+KHp/4YvgtL1f1Ho3I9NvGxE1etSwgHmI7qQ==
-X-Received: by 2002:aed:2f04:: with SMTP id l4mr25452746qtd.227.1595903995355;
-        Mon, 27 Jul 2020 19:39:55 -0700 (PDT)
+        bh=BsqPZ0XK5KxOBsJDhy4IA2RMRHhLCVsHp4kme64uz/I=;
+        b=t6aZeA2GjFFv/TNJh1tuF7CFzCq5gYRYkf3BU8jdk23SCdyl16PWOl58SalzZCBMmh
+         1dZtFUxaRQJX4RVhfMeETDK8FvxWt/qoL/VifapBJ3r9gamArOR1loyWoYNOUBKltpoa
+         5DMkvBsZ3t7WcZs6AsqtCa7Ed2dnUhCKeXklDhOAoAKooT+tiRkeSQfoXlwfZG5pA4C6
+         wRDdnCP4NSwR8xSVVbozh9Z152cSk5V5s1UubemA8K+QWJUF1lR96SkQI4p67PGsY1ll
+         5gHY8ph7LHe/Ip1iSKaEMrtXntBwX7zuYzk2T/+LpirRws3EyF5lE3xomIJqgR0ri6uq
+         zGag==
+X-Gm-Message-State: AOAM532sefSuFFjVVEWMNHmIXeJmOyudv1md1VjwGGRW/JP0YxX4lu+r
+        EZmPOHYmfC0r32dZobu1v98CEw==
+X-Google-Smtp-Source: ABdhPJwSBR9k7+IQldew4BpIXSPT/ksfrunWCNXWeVkUhSbn7nl4/CjiIPbtR+pAHO95zeck6sfWDQ==
+X-Received: by 2002:ad4:5748:: with SMTP id q8mr24551032qvx.1.1595903985030;
+        Mon, 27 Jul 2020 19:39:45 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id z3sm13885548qkc.4.2020.07.27.19.39.54
+        by smtp.gmail.com with ESMTPSA id z3sm13885548qkc.4.2020.07.27.19.39.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 19:39:54 -0700 (PDT)
+        Mon, 27 Jul 2020 19:39:44 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
+        Odelu Kukatla <okukatla@codeaurora.org>,
+        linux-pm@vger.kernel.org (open list:INTERCONNECT API),
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 7/7] arm64: dts: qcom: sm8250: add interconnect nodes
-Date:   Mon, 27 Jul 2020 22:38:06 -0400
-Message-Id: <20200728023811.5607-8-jonathan@marek.ca>
+Subject: [PATCH v3 1/7] dt-bindings: interconnect: single yaml file for RPMh interconnect drivers
+Date:   Mon, 27 Jul 2020 22:38:00 -0400
+Message-Id: <20200728023811.5607-2-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200728023811.5607-1-jonathan@marek.ca>
 References: <20200728023811.5607-1-jonathan@marek.ca>
@@ -79,134 +82,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the interconnect dts nodes for sm8250.
+These two bindings are almost identical, so combine them into one. This
+will make it easier to add the sm8150 and sm8250 interconnect bindings.
 
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 82 ++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+ .../{qcom,sdm845.yaml => qcom,rpmh.yaml}      | 20 ++++-
+ .../bindings/interconnect/qcom,sc7180.yaml    | 85 -------------------
+ 2 files changed, 17 insertions(+), 88 deletions(-)
+ rename Documentation/devicetree/bindings/interconnect/{qcom,sdm845.yaml => qcom,rpmh.yaml} (76%)
+ delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 636e2196138c..945bd4a9d640 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -7,6 +7,7 @@
- #include <dt-bindings/clock/qcom,gcc-sm8250.h>
- #include <dt-bindings/clock/qcom,gpucc-sm8250.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
-+#include <dt-bindings/interconnect/qcom,sm8250.h>
- #include <dt-bindings/mailbox/qcom-ipcc.h>
- #include <dt-bindings/power/qcom-aoss-qmp.h>
- #include <dt-bindings/power/qcom-rpmpd.h>
-@@ -978,6 +979,55 @@ spi13: spi@a94000 {
- 			};
- 		};
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
+similarity index 76%
+rename from Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+rename to Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
+index 74536747b51d..6a457f914bb5 100644
+--- a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
++++ b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
+@@ -1,16 +1,17 @@
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+ %YAML 1.2
+ ---
+-$id: http://devicetree.org/schemas/interconnect/qcom,sdm845.yaml#
++$id: http://devicetree.org/schemas/interconnect/qcom,rpmh.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
  
-+		config_noc: interconnect@1500000 {
-+			compatible = "qcom,sm8250-config-noc";
-+			reg = <0 0x01500000 0 0xa580>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		system_noc: interconnect@1620000 {
-+			compatible = "qcom,sm8250-system-noc";
-+			reg = <0 0x01620000 0 0x1c200>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		mc_virt: interconnect@163d000 {
-+			compatible = "qcom,sm8250-mc-virt";
-+			reg = <0 0x0163d000 0 0x1000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		aggre1_noc: interconnect@16e0000 {
-+			compatible = "qcom,sm8250-aggre1-noc";
-+			reg = <0 0x016e0000 0 0x1f180>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		aggre2_noc: interconnect@1700000 {
-+			compatible = "qcom,sm8250-aggre2-noc";
-+			reg = <0 0x01700000 0 0x33000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		compute_noc: interconnect@1733000 {
-+			compatible = "qcom,sm8250-compute-noc";
-+			reg = <0 0x01733000 0 0xa180>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		mmss_noc: interconnect@1740000 {
-+			compatible = "qcom,sm8250-mmss-noc";
-+			reg = <0 0x01740000 0 0x1f080>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
- 		ufs_mem_hc: ufshc@1d84000 {
- 			compatible = "qcom,sm8250-ufshc", "qcom,ufshc",
- 				     "jedec,ufs-2.0";
-@@ -1050,6 +1100,13 @@ ufs_mem_phy_lanes: lanes@1d87400 {
- 			};
- 		};
+-title:  Qualcomm SDM845 Network-On-Chip Interconnect
++title:  Qualcomm RPMh Network-On-Chip Interconnect
  
-+		ipa_virt: interconnect@1e00000 {
-+			compatible = "qcom,sm8250-ipa-virt";
-+			reg = <0 0x01e00000 0 0x1000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
- 		tcsr_mutex_regs: syscon@1f40000 {
- 			compatible = "syscon";
- 			reg = <0x0 0x01f40000 0x0 0x40000>;
-@@ -1364,6 +1421,27 @@ usb_2_ssphy: lane@88eb200 {
- 			};
- 		};
+ maintainers:
+   - Georgi Djakov <georgi.djakov@linaro.org>
++  - Odelu Kukatla <okukatla@codeaurora.org>
  
-+		dc_noc: interconnect@90c0000 {
-+			compatible = "qcom,sm8250-dc-noc";
-+			reg = <0 0x090c0000 0 0x4200>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		gem_noc: interconnect@9100000 {
-+			compatible = "qcom,sm8250-gem-noc";
-+			reg = <0 0x09100000 0 0xb4000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		npu_noc: interconnect@9990000 {
-+			compatible = "qcom,sm8250-npu-noc";
-+			reg = <0 0x09990000 0 0x1600>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
- 		usb_1: usb@a6f8800 {
- 			compatible = "qcom,sm8250-dwc3", "qcom,dwc3";
- 			reg = <0 0x0a6f8800 0 0x400>;
-@@ -2359,6 +2437,10 @@ rpmhpd_opp_turbo_l1: opp10 {
- 					};
- 				};
- 			};
-+
-+			apps_bcm_voter: bcm_voter {
-+				compatible = "qcom,bcm-voter";
-+			};
- 		};
- 	};
+ description: |
+-   SDM845 interconnect providers support system bandwidth requirements through
++   RPMh interconnect providers support system bandwidth requirements through
+    RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
+    able to communicate with the BCM through the Resource State Coordinator (RSC)
+    associated with each execution environment. Provider nodes must point to at
+@@ -23,6 +24,19 @@ properties:
  
+   compatible:
+     enum:
++      - qcom,sc7180-aggre1-noc
++      - qcom,sc7180-aggre2-noc
++      - qcom,sc7180-camnoc-virt
++      - qcom,sc7180-compute-noc
++      - qcom,sc7180-config-noc
++      - qcom,sc7180-dc-noc
++      - qcom,sc7180-gem-noc
++      - qcom,sc7180-ipa-virt
++      - qcom,sc7180-mc-virt
++      - qcom,sc7180-mmss-noc
++      - qcom,sc7180-npu-noc
++      - qcom,sc7180-qup-virt
++      - qcom,sc7180-system-noc
+       - qcom,sdm845-aggre1-noc
+       - qcom,sdm845-aggre2-noc
+       - qcom,sdm845-config-noc
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+deleted file mode 100644
+index d01bac80d416..000000000000
+--- a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
++++ /dev/null
+@@ -1,85 +0,0 @@
+-# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/interconnect/qcom,sc7180.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title:  Qualcomm SC7180 Network-On-Chip Interconnect
+-
+-maintainers:
+-  - Odelu Kukatla <okukatla@codeaurora.org>
+-
+-description: |
+-   SC7180 interconnect providers support system bandwidth requirements through
+-   RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
+-   able to communicate with the BCM through the Resource State Coordinator (RSC)
+-   associated with each execution environment. Provider nodes must point to at
+-   least one RPMh device child node pertaining to their RSC and each provider
+-   can map to multiple RPMh resources.
+-
+-properties:
+-  reg:
+-    maxItems: 1
+-
+-  compatible:
+-    enum:
+-      - qcom,sc7180-aggre1-noc
+-      - qcom,sc7180-aggre2-noc
+-      - qcom,sc7180-camnoc-virt
+-      - qcom,sc7180-compute-noc
+-      - qcom,sc7180-config-noc
+-      - qcom,sc7180-dc-noc
+-      - qcom,sc7180-gem-noc
+-      - qcom,sc7180-ipa-virt
+-      - qcom,sc7180-mc-virt
+-      - qcom,sc7180-mmss-noc
+-      - qcom,sc7180-npu-noc
+-      - qcom,sc7180-qup-virt
+-      - qcom,sc7180-system-noc
+-
+-  '#interconnect-cells':
+-    const: 1
+-
+-  qcom,bcm-voters:
+-    $ref: /schemas/types.yaml#/definitions/phandle-array
+-    description: |
+-      List of phandles to qcom,bcm-voter nodes that are required by
+-      this interconnect to send RPMh commands.
+-
+-  qcom,bcm-voter-names:
+-    $ref: /schemas/types.yaml#/definitions/string-array
+-    description: |
+-      Names for each of the qcom,bcm-voters specified.
+-
+-required:
+-  - compatible
+-  - reg
+-  - '#interconnect-cells'
+-  - qcom,bcm-voters
+-
+-additionalProperties: false
+-
+-examples:
+-  - |
+-      #include <dt-bindings/interconnect/qcom,sc7180.h>
+-
+-      config_noc: interconnect@1500000 {
+-            compatible = "qcom,sc7180-config-noc";
+-            reg = <0x01500000 0x28000>;
+-            #interconnect-cells = <1>;
+-            qcom,bcm-voters = <&apps_bcm_voter>;
+-      };
+-
+-      system_noc: interconnect@1620000 {
+-            compatible = "qcom,sc7180-system-noc";
+-            reg = <0x01620000 0x17080>;
+-            #interconnect-cells = <1>;
+-            qcom,bcm-voters = <&apps_bcm_voter>;
+-      };
+-
+-      mmss_noc: interconnect@1740000 {
+-            compatible = "qcom,sc7180-mmss-noc";
+-            reg = <0x01740000 0x1c100>;
+-            #interconnect-cells = <1>;
+-            qcom,bcm-voters = <&apps_bcm_voter>;
+-      };
 -- 
 2.26.1
 
