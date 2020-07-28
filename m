@@ -2,138 +2,401 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE55C433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF44EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7662250E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:42:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="RFT78W6R"
+	by mail.kernel.org (Postfix) with ESMTP id AA4E121D95
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgG1Hmu (ORCPT
+        id S1727918AbgG1Hn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:42:50 -0400
-Received: from mail-bn7nam10on2059.outbound.protection.outlook.com ([40.107.92.59]:63521
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727906AbgG1Hmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:42:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MxH+AayICp1CjdQvXIlw5INPK1UIgs0cFVfgCw+Rs14spgyN2p3pUbjKbQAaKUzrLxgwuwxJzeSvSoCmX9+adXRpVsrtyyz0eEz4JiAKJ1ecRop5Un/+Lee8CWRbeLzJz5EtXTYuTp7L/W76dqtq9HERNKUObrQVyxyNQ4Yq7Qu7jtRX0YqOETSBpINbuI0S/rjdMgIo0ANWCnn9ETmIfD2PGIyEpV8MM5HAFtznIeWnWpsQT/WlMYQmIh0mkjwcoAy9GmPCQnvpCe3f6hUJXbrIWQOUKSb93BA0sVMhaI9JS2ql0x7flTGTHzZ6cIvYw61F6r04rv+F2hyzEwu1iA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vszl4LrHCF9qbcL6OTbMaWkgsLFAU/h3wyuvp/3MVvQ=;
- b=mtNpwGk8Tsd6SzWQJDXwDoW1mUHzuRdS49/gKAmCJGTl3PXSvDv82bZU4+VUiYgF4pNXXX31h1OgwrIUhy6PneL9+JLjqTzdpi3xNSrTk9kN18cNDTg4Zia2HGuA8qVU62PawCxUUwYI7fkpMxePgumgyMroiXpRjEtcfkgmO3MMoYoeyEkAHHvX0uzP5i+LDT8wbLymgyqaBJF6ivRsjN4fJtkHw3s/X5Jo2lBDnPceElcDxZuotOiWqZY/I16MmbYuwP7cIaXtH1msK1Xfph0Nv557/LTyiOXt4+KFZ82oj4J80v6FUmiP578kAHTOpA55CjA/LQkJ867NzJloGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vszl4LrHCF9qbcL6OTbMaWkgsLFAU/h3wyuvp/3MVvQ=;
- b=RFT78W6Rks09SKw+W2ZcciNEs/5oZEEi+GEpxs5L6A7hfD5UrhAp3thltdC52cUvWAXiB0nJdf7qLtwfpjaDxVJl/QdKo3wecBa+4pLWpcyTioMAh6iLTTWxdT0bvip576KDHtrz3ck1G5SbtMyWZmHsBwARkJmqWhOD7qgZIRU=
-Authentication-Results: arndb.de; dkim=none (message not signed)
- header.d=none;arndb.de; dmarc=none action=none header.from=synaptics.com;
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
- by BY5PR03MB5094.namprd03.prod.outlook.com (2603:10b6:a03:1f1::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.26; Tue, 28 Jul
- 2020 07:42:42 +0000
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::b5cc:ca6b:3c25:a99c]) by BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::b5cc:ca6b:3c25:a99c%4]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
- 07:42:42 +0000
-Date:   Tue, 28 Jul 2020 15:42:07 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>, SoC Team <soc@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Tue, 28 Jul 2020 03:43:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726775AbgG1Hn6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 03:43:58 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64854C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:43:58 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k0KHD-0007eB-9w; Tue, 28 Jul 2020 09:43:55 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k0KHA-0005TR-HV; Tue, 28 Jul 2020 09:43:52 +0200
+Date:   Tue, 28 Jul 2020 09:43:52 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: berlin: Align L2 cache-controller nodename
- with dtschema
-Message-ID: <20200728154207.444ec4cc@xhacker.debian>
-In-Reply-To: <CAK8P3a26kvOP=3EEDaOFtO5YbqTwBsUr_eKDc5nWxw=NgzZ0MQ@mail.gmail.com>
-References: <20200626080642.4244-1-krzk@kernel.org>
-        <20200728143650.32818d3c@xhacker.debian>
-        <CAK8P3a26kvOP=3EEDaOFtO5YbqTwBsUr_eKDc5nWxw=NgzZ0MQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYAPR01CA0123.jpnprd01.prod.outlook.com
- (2603:1096:404:2d::15) To BYAPR03MB3573.namprd03.prod.outlook.com
- (2603:10b6:a02:ae::15)
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 06/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200728074352.ckyfso5zwsfgupjx@pengutronix.de>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-7-michael@walle.cc>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0123.jpnprd01.prod.outlook.com (2603:1096:404:2d::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Tue, 28 Jul 2020 07:42:39 +0000
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8ac092f2-4515-409f-358c-08d832c9cf21
-X-MS-TrafficTypeDiagnostic: BY5PR03MB5094:
-X-Microsoft-Antispam-PRVS: <BY5PR03MB5094C4037EFA9D9CCFC75D67ED730@BY5PR03MB5094.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FssryRtRN1FotZXBzOSXh2OMchb4z7CaopY/Ed4jDpW2QfrH/k6lb5/Nke4DmobHaCh66eKxibwqhLFvA8T5g1T8hrwyAbwnLupcJeRm7U9KTnSKDegMbkJM96BW5WKkdbwF/HvQLYs23R1vmDkLUIBZpERKjCzRnmLViF6M8Ryk05+OAqbD/yrD4p7iMtYObh8VOt/jD/1Vdo3kIfLQJeQ67OZjzOoKX/G/BUaFBz+kth/ndf9jXCnBmiUjwcYvfoa4IoNi6Gt43CcExvJ4++0Okfuu9RUkS8zCBZl9RV0cThL3aIYPyYqKBgZsO4yZ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(396003)(376002)(366004)(346002)(7416002)(478600001)(4744005)(6506007)(5660300002)(1076003)(53546011)(6916009)(4326008)(8936002)(7696005)(52116002)(54906003)(16526019)(86362001)(55016002)(2906002)(83380400001)(956004)(6666004)(9686003)(316002)(186003)(8676002)(66476007)(66556008)(66946007)(26005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: H0xqy1QZvIO5HzAuF8RUiSnJ3xf47b0z+dPiqLC/XC4ExpVb8Y3wX113275wkM/yqHPRIyg3qrBTHVC4eqGBSnTaBrvXhcjOxtFIWpbnCPAdDyYJQlRrOlfyX21mSOHSiTvegT8t+CQ2Nd1sN6gP0CqkBKSdF07wfVztEYOJmZukznVJTIEG4TpPCNxi20EEt0fM7FlbXIZokPCQ+ilHDjisMDI+mUAqybGUJK84Rs1sCPhpTvfmAZVV6T/S+OymzdmVe88FPlY0vUGF1I91EQ8n+KzCp87HhDVRCpsogpwnVTlLINBfAKd0T987BXhOAHFDAUcZam67pjfpjAaZEK+WYSMJWdSXO4/0uuh0s9jAlWj2MIoXZVl53mbnw0D5EeROLX73nNTlfjL8aszPWYynnU2waAMdBUK4ZFn5ngWBEPG/jaNKUJvEuU9lZx8YZHsiKiUKJJcGcdDjzKFcG6QXemC9kYJeuTUTElCI7hcvJHZoYU5bF8WVTz8lisuB
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ac092f2-4515-409f-358c-08d832c9cf21
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3573.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 07:42:42.1038
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P2XxmWJ6PeApzJlAKQfhCfwbR4kKyd1k5cpIPFct5Lcd9C65cO7i/tv3yV86dtGB17hpN5PUAt/P73ZfDAvayg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR03MB5094
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ieqxdi6df6wn4p4j"
+Content-Disposition: inline
+In-Reply-To: <20200725231834.25642-7-michael@walle.cc>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jul 2020 09:33:05 +0200 Arnd Bergmann wrote:
 
+--ieqxdi6df6wn4p4j
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> 
-> On Tue, Jul 28, 2020 at 8:37 AM Jisheng Zhang
-> <Jisheng.Zhang@synaptics.com> wrote:
-> >
-> > Hi arm-soc,
-> >
-> >
-> > On Fri, 26 Jun 2020 10:06:41 +0200 Krzysztof Kozlowski wrote:
-> >  
-> > >
-> > >
-> > > Fix dtschema validator warnings like:
-> > >     l2-cache-controller@ac0000: $nodename:0:
-> > >         'l2-cache-controller@ac0000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>  
-> >
-> > Reviewed-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> >
-> > As for berlin linux-5.9, we only have this one patch, could you please
-> > directly take this patch?  
-> 
-> Applied now. To ensure we actually see the patch, it's better if you can just
-> send a new copy with your added Signed-off-by to soc@kernel.org than to
-> reply to the original email.
-> 
+Hello,
 
-Got it. Thanks for the your kind reminding
+just a few minor issues left:
+
+On Sun, Jul 26, 2020 at 01:18:27AM +0200, Michael Walle wrote:
+> diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
+> new file mode 100644
+> index 000000000000..956fa09f3aba
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-sl28cpld.c
+> @@ -0,0 +1,223 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * sl28cpld PWM driver
+> + *
+> + * Copyright (c) 2020 Michael Walle <michael@walle.cc>
+> + *
+> + * There is no public datasheet available for this PWM core. But it is e=
+asy
+> + * enough to be briefly explained. It consists of one 8-bit counter. The=
+ PWM
+> + * supports four distinct frequencies by selecting when to reset the cou=
+nter.
+> + * With the prescaler setting you can select which bit of the counter is=
+ used
+> + * to reset it. This implies that the higher the frequency the less rema=
+ining
+> + * bits are available for the actual counter.
+> + *
+> + * Let cnt[7:0] be the counter, clocked at 32kHz:
+> + * +-----------+--------+--------------+-----------+
+> + * | prescaler |  reset | counter bits | frequency |
+> + * +-----------+--------+--------------+-----------+
+> + * |         0 | cnt[7] |     cnt[6:0] |     250Hz |
+> + * |         1 | cnt[6] |     cnt[5:0] |     500Hz |
+> + * |         2 | cnt[5] |     cnt[4:0] |      1kHz |
+> + * |         3 | cnt[4] |     cnt[3:0] |      2kHz |
+> + * +-----------+--------+--------------+-----------+
+
+Very nice. I'd add a "period length" column, as this is what the PWM
+core uses.
+
+For your convenience (and as I created that table anyhow for further
+checking of the formulas below):
+
+ * +-----------+--------+--------------+-----------+--------+
+ * | prescaler |  reset | counter bits | frequency | period |
+ * |           |        |              |           | length |
+ * +-----------+--------+--------------+-----------+--------+
+ * |         0 | cnt[7] |     cnt[6:0] |     250Hz | 4000ns |
+ * |         1 | cnt[6] |     cnt[5:0] |     500Hz | 2000ns |
+ * |         2 | cnt[5] |     cnt[4:0] |      1kHz | 1000ns |
+ * |         3 | cnt[4] |     cnt[3:0] |      2kHz |  500ns |
+ * +-----------+--------+--------------+-----------+--------+
+
+> + *
+> + * Limitations:
+> + * - The hardware cannot generate a 100% duty cycle if the prescaler is =
+0.
+> + * - The hardware cannot atomically set the prescaler and the counter va=
+lue,
+> + *   which might lead to glitches and inconsistent states if a write fai=
+ls.
+> + * - The counter is not reset if you switch the prescaler which leads
+> + *   to glitches, too.
+> + * - The duty cycle will switch immediately and not after a complete cyc=
+le.
+> + * - Depending on the actual implementation, disabling the PWM might have
+> + *   side effects. For example, if the output pin is shared with a GPIO =
+pin
+> + *   it will automatically switch back to GPIO mode.
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+> +
+> +/*
+> + * PWM timer block registers.
+> + */
+> +#define SL28CPLD_PWM_CTRL			0x00
+> +#define   SL28CPLD_PWM_CTRL_ENABLE		BIT(7)
+> +#define   SL28CPLD_PWM_CTRL_PRESCALER_MASK	GENMASK(1, 0)
+> +#define SL28CPLD_PWM_CYCLE			0x01
+> +#define   SL28CPLD_PWM_CYCLE_MAX		GENMASK(6, 0)
+> +
+> +#define SL28CPLD_PWM_CLK			32000 /* 32 kHz */
+> +#define SL28CPLD_PWM_MAX_DUTY_CYCLE(prescaler)	(1 << (7 - (prescaler)))
+> +#define SL28CPLD_PWM_PERIOD(prescaler) \
+> +	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * SL28CPLD_PWM_MAX_DUTY_CYCLE(prescale=
+r))
+> +
+> +/*
+> + * We calculate the duty cycle like this:
+> + *   duty_cycle_ns =3D pwm_cycle_reg * max_period_ns / max_duty_cycle
+> + *
+> + * With
+> + *   max_period_ns =3D (1 << 7 - prescaler) / pwm_clk * NSEC_PER_SEC
+> + *   max_duty_cycle =3D 1 << (7 - prescaler)
+
+If you don't need parenthesis in the max_period_ns around 7 - prescaler,
+you don't need them either in the max_duty_cycle line.
+
+> + * this then simplifies to:
+> + *   duty_cycle_ns =3D pwm_cycle_reg / pwm_clk * NSEC_PER_SEC
+> + */
+> +#define SL28CPLD_PWM_TO_DUTY_CYCLE(reg) \
+> +	(NSEC_PER_SEC / SL28CPLD_PWM_CLK * (reg))
+
+For those who copy from your driver maybe add a comment like:
+
+ * NSEC_PER_SEC / SL28CPLD_PWM_CLK is integer here, so we're not loosing
+ * precision by doing the division first.
+
+> +#define SL28CPLD_PWM_FROM_DUTY_CYCLE(duty_cycle) \
+> +	(DIV_ROUND_DOWN_ULL((duty_cycle), NSEC_PER_SEC / SL28CPLD_PWM_CLK))
+> +
+> +struct sl28cpld_pwm {
+> +	struct pwm_chip pwm_chip;
+> +	struct regmap *regmap;
+> +	u32 offset;
+> +};
+> +
+> +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
+> +				   struct pwm_device *pwm,
+> +				   struct pwm_state *state)
+> +{
+> +	struct sl28cpld_pwm *priv =3D dev_get_drvdata(chip->dev);
+> +	unsigned int reg;
+> +	int prescaler;
+> +
+> +	regmap_read(priv->regmap, priv->offset + SL28CPLD_PWM_CTRL, &reg);
+
+Would it make sense to hide this using e.g.:
+
+	#define sl28cpkd_pwm_read(priv, reg, val)	regmap_read((priv)->regmap, (pri=
+v)->offset + (reg), val)
+
+The line would then become:
+
+	sl28cpkd_pwm_read(priv, SL28CPLD_PWM_CTRL, &reg);
+
+which is a bit prettier. Up to you to decide. If you do it, please do
+the same for write=20
+
+> +	state->enabled =3D reg & SL28CPLD_PWM_CTRL_ENABLE;
+> +
+> +	prescaler =3D FIELD_GET(SL28CPLD_PWM_CTRL_PRESCALER_MASK, reg);
+> +	state->period =3D SL28CPLD_PWM_PERIOD(prescaler);
+> +
+> +	regmap_read(priv->regmap, priv->offset + SL28CPLD_PWM_CYCLE, &reg);
+> +	state->duty_cycle =3D SL28CPLD_PWM_TO_DUTY_CYCLE(reg);
+> +	state->polarity =3D PWM_POLARITY_NORMAL;
+> +}
+> +
+> +static int sl28cpld_pwm_apply(struct pwm_chip *chip, struct pwm_device *=
+pwm,
+> +			      const struct pwm_state *state)
+> +{
+> +	struct sl28cpld_pwm *priv =3D dev_get_drvdata(chip->dev);
+> +	unsigned int cycle, prescaler;
+> +	int ret;
+> +	u8 ctrl;
+> +
+> +	/* Polarity inversion is not supported */
+> +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Calculate the prescaler. Pick the the biggest period that isn't
+> +	 * bigger than the requested period.
+> +	 */
+> +	prescaler =3D DIV_ROUND_UP_ULL(SL28CPLD_PWM_PERIOD(0), state->period);
+> +	prescaler =3D order_base_2(prescaler);
+> +
+> +	if (prescaler > field_max(SL28CPLD_PWM_CTRL_PRESCALER_MASK))
+> +		return -ERANGE;
+
+The calculation looks right.
+Did you check the generated code? Maybe using an if or switch here is
+more effective? (optional task for bonus points :-)
+
+> +	ctrl =3D FIELD_PREP(SL28CPLD_PWM_CTRL_PRESCALER_MASK, prescaler);
+> +	if (state->enabled)
+> +		ctrl |=3D SL28CPLD_PWM_CTRL_ENABLE;
+> +
+> +	cycle =3D SL28CPLD_PWM_FROM_DUTY_CYCLE(state->duty_cycle);
+> +	cycle =3D min_t(unsigned int, cycle, SL28CPLD_PWM_MAX_DUTY_CYCLE(presca=
+ler));
+> +
+> +	/*
+> +	 * Work around the hardware limitation. See also above. Trap 100% duty
+> +	 * cycle if the prescaler is 0. Set prescaler to 1 instead. We don't
+> +	 * care about the frequency because its "all-one" in either case.
+> +	 *
+> +	 * We don't need to check the actual prescaler setting, because only
+> +	 * if the prescaler is 0 we can have this particular value.
+> +	 */
+> +	if (cycle =3D=3D SL28CPLD_PWM_MAX_DUTY_CYCLE(0)) {
+> +		ctrl &=3D ~SL28CPLD_PWM_CTRL_PRESCALER_MASK;
+> +		ctrl |=3D FIELD_PREP(SL28CPLD_PWM_CTRL_PRESCALER_MASK, 1);
+> +		cycle =3D SL28CPLD_PWM_MAX_DUTY_CYCLE(1);
+> +	}
+> +
+> +	ret =3D regmap_write(priv->regmap, priv->offset + SL28CPLD_PWM_CTRL, ct=
+rl);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_write(priv->regmap, priv->offset + SL28CPLD_PWM_CYCLE, (u=
+8)cycle);
+
+This cast isn't needed, is it?
+
+> +}
+> +
+> +static const struct pwm_ops sl28cpld_pwm_ops =3D {
+> +	.apply =3D sl28cpld_pwm_apply,
+> +	.get_state =3D sl28cpld_pwm_get_state,
+> +	.owner =3D THIS_MODULE,
+> +};
+> +
+> +static int sl28cpld_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct sl28cpld_pwm *priv;
+> +	struct pwm_chip *chip;
+> +	int ret;
+> +
+> +	if (!pdev->dev.parent)
+> +		return -ENODEV;
+> +
+> +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!priv->regmap)
+
+Error message here?
+
+> +		return -ENODEV;
+> +
+> +	ret =3D device_property_read_u32(&pdev->dev, "reg", &priv->offset);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "no 'reg' property found (%pe)\n",
+> +			ERR_PTR(ret));
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Initialize the pwm_chip structure */
+> +	chip =3D &priv->pwm_chip;
+> +	chip->dev =3D &pdev->dev;
+> +	chip->ops =3D &sl28cpld_pwm_ops;
+> +	chip->base =3D -1;
+> +	chip->npwm =3D 1;
+> +
+> +	ret =3D pwmchip_add(&priv->pwm_chip);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to add PWM chip (%pe)",
+> +			ERR_PTR(ret));
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sl28cpld_pwm_remove(struct platform_device *pdev)
+> +{
+> +	struct sl28cpld_pwm *priv =3D platform_get_drvdata(pdev);
+> +
+> +	return pwmchip_remove(&priv->pwm_chip);
+> +}
+> +
+> +static const struct of_device_id sl28cpld_pwm_of_match[] =3D {
+> +	{ .compatible =3D "kontron,sl28cpld-pwm" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, sl28cpld_pwm_of_match);
+> +
+> +static struct platform_driver sl28cpld_pwm_driver =3D {
+> +	.probe =3D sl28cpld_pwm_probe,
+> +	.remove	=3D sl28cpld_pwm_remove,
+> +	.driver =3D {
+> +		.name =3D "sl28cpld-pwm",
+> +		.of_match_table =3D sl28cpld_pwm_of_match,
+> +	},
+> +};
+> +module_platform_driver(sl28cpld_pwm_driver);
+> +
+> +MODULE_DESCRIPTION("sl28cpld PWM Driver");
+> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+> +MODULE_LICENSE("GPL");
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ieqxdi6df6wn4p4j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8f1zUACgkQwfwUeK3K
+7AldKgf+LJO55bS0rWoi7kWDwlvUdb79pxs1XfYkg0B40xmCUURauCWGMK2o7HsJ
+N91DQobr7hd/umspwTgQ6+iDh2KTigrk1D0OAgg/sXxvd4CAX0CiqFF4vmYMTLjQ
+bADecGbQxFXk74EXytpNRR6zum43PgwiCYvfVgbGhRZP/mZrNER10+PZctHZBr9h
+99xLEOgd6tW3QjkoQWbuM3AzYaiPSjjPl4eKlK1ylRco+MDiaDlTrkflpBSzAMX6
+ew9AhP/YJW/A6F2027xn5v49w5X6Kw0iOHItzcP9ULw3FSRxfEp+Gf2eZwozA/bd
+AVBzzi4LuULQZuyQu4Fl08pmdkTIog==
+=xkzL
+-----END PGP SIGNATURE-----
+
+--ieqxdi6df6wn4p4j--
