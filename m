@@ -2,185 +2,167 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C17B2C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DE9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A291E20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1010221883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:18:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gMnpbfJo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgG1GVv (ORCPT
+        id S1726901AbgG1GSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:21:51 -0400
-Received: from mga06.intel.com ([134.134.136.31]:26362 "EHLO mga06.intel.com"
+        Tue, 28 Jul 2020 02:18:30 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:15186 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbgG1GVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:21:00 -0400
-IronPort-SDR: 10Qixp0AZO3+60nKY5G7/cPm1n+sgOYabyB8MFUY3tt0PSWcpxrjTeReqvaEK/WnopmeSsq063
- SgrpBK+VnNzQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="212681236"
-X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
-   d="scan'208";a="212681236"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 23:20:55 -0700
-IronPort-SDR: S7zGkWPQoBjR9LpGT59YqNR1s4Dj8G8UfhwFVzd5Z+6NxBwoDYclT4tLH2iDsEitT9o4vRnx1g
- otuo3MyMg2jg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
-   d="scan'208";a="320274382"
-Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga008.jf.intel.com with ESMTP; 27 Jul 2020 23:20:55 -0700
-From:   Liu Yi L <yi.l.liu@intel.com>
-To:     alex.williamson@redhat.com, eric.auger@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, jun.j.tian@intel.com,
-        yi.y.sun@intel.com, jean-philippe@linaro.org, peterx@redhat.com,
-        hao.wu@intel.com, stefanha@gmail.com,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6 02/15] iommu: Report domain nesting info
-Date:   Mon, 27 Jul 2020 23:27:31 -0700
-Message-Id: <1595917664-33276-3-git-send-email-yi.l.liu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
-References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
+        id S1726407AbgG1GSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 02:18:30 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595917109; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=ptC3NElqN7QOiSiiLpeT0GwFnbmdSfadBu5MLmEGp4U=; b=gMnpbfJoJNcnUMOWHIJCWHHic50OLe++5lAqwRlkpIUM3CpbBIJVSZVn+emHVxvm08YFScEq
+ 9nn3VmPC+VvpICKcsuybdHFb5e9XnQxWm9TiBVFgU+vDLIQldPj35CBVkQ3LJVxW8vagPpSj
+ vme3eecodGoaOiATYpDiGRWt62k=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f1fc3347ab15087eb33de4d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 06:18:28
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A947AC43391; Tue, 28 Jul 2020 06:18:27 +0000 (UTC)
+Received: from [192.168.1.117] (ip70-179-20-127.sd.sd.cox.net [70.179.20.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mdtipton)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 70072C433C6;
+        Tue, 28 Jul 2020 06:18:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 70072C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
+Subject: Re: [PATCH v2 1/2] interconnect: Add sync state support
+To:     Saravana Kannan <saravanak@google.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>, okukatla@codeaurora.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200722110139.24778-1-georgi.djakov@linaro.org>
+ <20200722110139.24778-2-georgi.djakov@linaro.org>
+ <CAGETcx-QM8P2nVxcQJZz+m5Zwi==2qLfinb0FkDXJ7dNVP5bEA@mail.gmail.com>
+From:   Mike Tipton <mdtipton@codeaurora.org>
+Message-ID: <e4f68ae5-5cf7-bac4-e7f2-c074327ea659@codeaurora.org>
+Date:   Mon, 27 Jul 2020 23:18:25 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAGETcx-QM8P2nVxcQJZz+m5Zwi==2qLfinb0FkDXJ7dNVP5bEA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IOMMUs that support nesting translation needs report the capability info
-to userspace. It gives information about requirements the userspace needs
-to implement plus other features characterizing the physical implementation.
+On 7/22/2020 10:07 AM, Saravana Kannan wrote:
+> On Wed, Jul 22, 2020 at 4:01 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>>
+>> The bootloaders often do some initial configuration of the interconnects
+>> in the system and we want to keep this configuration until all consumers
+>> have probed and expressed their bandwidth needs. This is because we don't
+>> want to change the configuration by starting to disable unused paths until
+>> every user had a chance to request the amount of bandwidth it needs.
+>>
+>> To accomplish this we will implement an interconnect specific sync_state
+>> callback which will synchronize (aggregate and set) the current bandwidth
+>> settings when all consumers have been probed.
+>>
+>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+>> ---
+>>   drivers/interconnect/core.c           | 61 +++++++++++++++++++++++++++
+>>   include/linux/interconnect-provider.h |  5 +++
+>>   2 files changed, 66 insertions(+)
+>>
+>> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+>> index e5f998744501..0c4e38d9f1fa 100644
+>> --- a/drivers/interconnect/core.c
+>> +++ b/drivers/interconnect/core.c
+>> @@ -26,6 +26,8 @@
+>>
+>>   static DEFINE_IDR(icc_idr);
+>>   static LIST_HEAD(icc_providers);
+>> +static int providers_count;
+>> +static bool synced_state;
+>>   static DEFINE_MUTEX(icc_lock);
+>>   static struct dentry *icc_debugfs_dir;
+>>
+>> @@ -255,6 +257,12 @@ static int aggregate_requests(struct icc_node *node)
+>>                          continue;
+>>                  p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
+>>                               &node->avg_bw, &node->peak_bw);
+>> +
+>> +               /* during boot use the initial bandwidth as a floor value */
+>> +               if (!synced_state) {
+>> +                       node->avg_bw = max(node->avg_bw, node->init_avg);
+>> +                       node->peak_bw = max(node->peak_bw, node->init_peak);
+>> +               }
+> 
+> Sorry I didn't reply earlier.
+> 
+> I liked your previous approach with the get_bw ops. The v2 approach
+> forces every interconnect provider driver to set up these values even
+> if they are okay with just maxing out the bandwidth. Also, if they can
+> actually query their hardware, this adds additional steps for them.
 
-This patch reports nesting info by DOMAIN_ATTR_NESTING. Caller can get
-nesting info after setting DOMAIN_ATTR_NESTING. For VFIO, it is after
-selecting VFIO_TYPE1_NESTING_IOMMU.
+The problem with using something like get_bw() is that while we can 
+dynamically query the HW, we have far less granularity in HW than we 
+have nodes in the framework. We vote at BCM-level granularity, but each 
+BCM can have many nodes. For example, the sdm845 CN0 BCM has 47 nodes. 
+If we implement get_bw() generically, then it would return the BW for 
+each node, which would be the queried BCM vote scaled to account for 
+differences in BCM/node widths. While this could be useful in general as 
+an informational callback, we wouldn't want to use this as a proxy for 
+our initial BW vote requirements. For CN0, we wouldn't want or need to 
+vote 47 times for the same CN0 BCM. Each of the 47 node requests would 
+result in the same BCM request.
 
-Cc: Kevin Tian <kevin.tian@intel.com>
-CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Eric Auger <eric.auger@redhat.com>
-Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
-v5 -> v6:
-*) rephrase the feature notes per comments from Eric Auger.
-*) rename @size of struct iommu_nesting_info to @argsz.
+All we'd really need is a single node per-BCM to serve as the proxy 
+node. We'd query the HW, scale the queried value for the chosen proxy 
+node, and set init_avg/init_peak appropriately. This would save a lot of 
+unnecessary votes. Based on the current implementation, the set() call 
+in icc_node_add() for initial BW wouldn't trigger any actual HW requests 
+since we only queue BCMs that require updating in the aggregate() 
+callback. However, the set() call in icc_sync_state() would, since we 
+re-aggregate each node that has a non-zero init_avg/init_peak.
 
-v4 -> v5:
-*) address comments from Eric Auger.
+There's nothing stopping us from implementing get_bw() as if it were 
+get_initial_bw(), but that only works until the framework decides to use 
+get_bw() for more things than just the initial vote. I suppose we could 
+also just have a "get_initial_bw" callback, but it only needs to be 
+called once, so doesn't necessarily need a callback as opposed to 
+additional init_avg/init_peak members in the icc_node struct.
 
-v3 -> v4:
-*) split the SMMU driver changes to be a separate patch
-*) move the @addr_width and @pasid_bits from vendor specific
-   part to generic part.
-*) tweak the description for the @features field of struct
-   iommu_nesting_info.
-*) add description on the @data[] field of struct iommu_nesting_info
-
-v2 -> v3:
-*) remvoe cap/ecap_mask in iommu_nesting_info.
-*) reuse DOMAIN_ATTR_NESTING to get nesting info.
-*) return an empty iommu_nesting_info for SMMU drivers per Jean'
-   suggestion.
----
- include/uapi/linux/iommu.h | 74 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
-
-diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-index 7c8e075..5e4745a 100644
---- a/include/uapi/linux/iommu.h
-+++ b/include/uapi/linux/iommu.h
-@@ -332,4 +332,78 @@ struct iommu_gpasid_bind_data {
- 	} vendor;
- };
- 
-+/*
-+ * struct iommu_nesting_info - Information for nesting-capable IOMMU.
-+ *			       userspace should check it before using
-+ *			       nesting capability.
-+ *
-+ * @argsz:	size of the whole structure.
-+ * @flags:	currently reserved for future extension. must set to 0.
-+ * @format:	PASID table entry format, the same definition as struct
-+ *		iommu_gpasid_bind_data @format.
-+ * @features:	supported nesting features.
-+ * @addr_width:	The output addr width of first level/stage translation
-+ * @pasid_bits:	Maximum supported PASID bits, 0 represents no PASID
-+ *		support.
-+ * @data:	vendor specific cap info. data[] structure type can be deduced
-+ *		from @format field.
-+ *
-+ * +===============+======================================================+
-+ * | feature       |  Notes                                               |
-+ * +===============+======================================================+
-+ * | SYSWIDE_PASID |  IOMMU vendor driver sets it to mandate userspace    |
-+ * |               |  to allocate PASID from kernel. All PASID allocation |
-+ * |               |  free must be mediated through the TBD API.          |
-+ * +---------------+------------------------------------------------------+
-+ * | BIND_PGTBL    |  IOMMU vendor driver sets it to mandate userspace    |
-+ * |               |  bind the first level/stage page table to associated |
-+ * |               |  PASID (either the one specified in bind request or  |
-+ * |               |  the default PASID of iommu domain), through IOMMU   |
-+ * |               |  UAPI.                                               |
-+ * +---------------+------------------------------------------------------+
-+ * | CACHE_INVLD   |  IOMMU vendor driver sets it to mandate userspace    |
-+ * |               |  explicitly invalidate the IOMMU cache through IOMMU |
-+ * |               |  UAPI according to vendor-specific requirement when  |
-+ * |               |  changing the 1st level/stage page table.            |
-+ * +---------------+------------------------------------------------------+
-+ *
-+ * @data[] types defined for @format:
-+ * +================================+=====================================+
-+ * | @format                        | @data[]                             |
-+ * +================================+=====================================+
-+ * | IOMMU_PASID_FORMAT_INTEL_VTD   | struct iommu_nesting_info_vtd       |
-+ * +--------------------------------+-------------------------------------+
-+ *
-+ */
-+struct iommu_nesting_info {
-+	__u32	argsz;
-+	__u32	flags;
-+	__u32	format;
-+#define IOMMU_NESTING_FEAT_SYSWIDE_PASID	(1 << 0)
-+#define IOMMU_NESTING_FEAT_BIND_PGTBL		(1 << 1)
-+#define IOMMU_NESTING_FEAT_CACHE_INVLD		(1 << 2)
-+	__u32	features;
-+	__u16	addr_width;
-+	__u16	pasid_bits;
-+	__u32	padding;
-+	__u8	data[];
-+};
-+
-+/*
-+ * struct iommu_nesting_info_vtd - Intel VT-d specific nesting info.
-+ *
-+ * @flags:	VT-d specific flags. Currently reserved for future
-+ *		extension. must be set to 0.
-+ * @cap_reg:	Describe basic capabilities as defined in VT-d capability
-+ *		register.
-+ * @ecap_reg:	Describe the extended capabilities as defined in VT-d
-+ *		extended capability register.
-+ */
-+struct iommu_nesting_info_vtd {
-+	__u32	flags;
-+	__u32	padding;
-+	__u64	cap_reg;
-+	__u64	ecap_reg;
-+};
-+
- #endif /* _UAPI_IOMMU_H */
--- 
-2.7.4
-
+> 
+> I think the default should be:
+> 1. Query the current bandwidth at boot and use that.
+> 2. If that's not available, max out the bandwidth.
+> 
+> The interconnect providers that don't like maxing out and don't have
+> real get_bw() capability can just cache and return the last set_bw()
+> values. And they start off with those cached values matching whatever
+> init_bw they need.
+> 
+> That way, the default case (can get bw or don't care about maxing out)
+> would be easy and the extra work would be limited to drivers that want
+> neither. >
+> -Saravana
+> 
