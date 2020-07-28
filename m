@@ -2,110 +2,88 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50007C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F11C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 211B1206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:42:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kMgubnmU"
+	by mail.kernel.org (Postfix) with ESMTP id A793F206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgG1ImA (ORCPT
+        id S1728256AbgG1InG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:42:00 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:42762 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728009AbgG1ImA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:42:00 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06S8bbMY129456;
-        Tue, 28 Jul 2020 08:41:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=z486fM3ZhuFnXdp1xbJVRVkSwBqhKdWlnxMDY3kdnag=;
- b=kMgubnmUmgo7kM82YyziHNH1ujv8Uv2jAZi1T2EEy+yUE2YMEDMtvYIjtc4j1ltM3TT+
- wWgKvMpq3twx7nzMB/+MpXMkL6MHMNj2zV8/vBNn7U6YcijuRC744xqVuU8KeYLobt1C
- u2YhhHLxwHZ8gbKk+wmgXUDEBaI1ozcXnA8OSLfZVdYTE33IDCIqIQcQ4LDoSvI+dF2w
- N0JR5G/hxcbZePeWAx+hE1VoMpHx10q44S18xyVX0KsIxNwtekcaGkq/o/60AYs4WyUH
- D07j6qKhL/q4mABUrYalC2ZsOK3dJzlg9gcyhXg/RnTTLRI/qYo2gICx16+L4Me2Ab5r Zg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 32hu1je402-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 Jul 2020 08:41:51 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06S8cirs084276;
-        Tue, 28 Jul 2020 08:41:50 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 32hu5tu5a5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jul 2020 08:41:50 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06S8fkYw030454;
-        Tue, 28 Jul 2020 08:41:46 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Jul 2020 01:41:45 -0700
-Date:   Tue, 28 Jul 2020 11:41:37 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] scsi/megaraid: Prevent
- kernel-infoleak in kioc_to_mimd()
-Message-ID: <20200728084137.GC2571@kadam>
-References: <20200727210235.327835-1-yepeilin.cs@gmail.com>
+        Tue, 28 Jul 2020 04:43:06 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37692 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727950AbgG1InG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:43:06 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 55916A64C772A4D794EE;
+        Tue, 28 Jul 2020 16:43:01 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.81) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Jul 2020
+ 16:43:00 +0800
+Subject: Re: [PATCH net-next] liquidio: Remove unneeded cast from memory
+ allocation
+To:     Joe Perches <joe@perches.com>, <dchickles@marvell.com>,
+        <sburla@marvell.com>, <fmanlunas@marvell.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200724130001.71528-1-wanghai38@huawei.com>
+ <2cdef8d442bb5da39aed17bf994a800e768942f7.camel@perches.com>
+From:   "wanghai (M)" <wanghai38@huawei.com>
+Message-ID: <ac99bed4-dabc-a003-374f-206753f937cb@huawei.com>
+Date:   Tue, 28 Jul 2020 16:42:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727210235.327835-1-yepeilin.cs@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007280065
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 mlxlogscore=999
- malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
- suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007280065
+In-Reply-To: <2cdef8d442bb5da39aed17bf994a800e768942f7.camel@perches.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.81]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 05:02:35PM -0400, Peilin Ye wrote:
-> hinfo_to_cinfo() does no operation on `cinfo` when `hinfo` is NULL,
-> causing kioc_to_mimd() to copy uninitialized stack memory to userspace.
-> Fix it by initializing `cinfo` with memset().
 
-But "hinfo" can't be NULL so this patch isn't required.  It's a bit
-hard for Smatch to follow the code.
-
-We know that "opcode" is 82 so the buffer is allocated by mimd_to_kioc()
--> mraid_mm_attach_buf().
-
-Generally, don't silence static checker warnings unless it makes the
-code more readable.  It's the checker writer's job to fix their own code.
-In this case, that's me, but parsing the code is quite complicated and I
-don't have a plan for how to fix it.
-
-regards,
-dan carpenter
+在 2020/7/25 5:29, Joe Perches 写道:
+> On Fri, 2020-07-24 at 21:00 +0800, Wang Hai wrote:
+>> Remove casting the values returned by memory allocation function.
+>>
+>> Coccinelle emits WARNING:
+>>
+>> ./drivers/net/ethernet/cavium/liquidio/octeon_device.c:1155:14-36: WARNING:
+>>   casting value returned by memory allocation function to (struct octeon_dispatch *) is useless.
+> []
+>> diff --git a/drivers/net/ethernet/cavium/liquidio/octeon_device.c b/drivers/net/ethernet/cavium/liquidio/octeon_device.c
+> []
+>> @@ -1152,8 +1152,7 @@ octeon_register_dispatch_fn(struct octeon_device *oct,
+>>   
+>>   		dev_dbg(&oct->pci_dev->dev,
+>>   			"Adding opcode to dispatch list linked list\n");
+>> -		dispatch = (struct octeon_dispatch *)
+>> -			   vmalloc(sizeof(struct octeon_dispatch));
+>> +		dispatch = vmalloc(sizeof(struct octeon_dispatch));
+> More the question is why this is vmalloc at all
+> as the structure size is very small.
+>
+> Likely this should just be kmalloc.
+>
+>
+Thanks for your advice.  It is indeed best to use kmalloc here.
+>>   		if (!dispatch) {
+>>   			dev_err(&oct->pci_dev->dev,
+>>   				"No memory to add dispatch function\n");
+> And this dev_err is unnecessary.
+>
+>
+I don't understand why dev_err is not needed here. We can easily know 
+that an error has occurred here through dev_err
+> .
+>
 
