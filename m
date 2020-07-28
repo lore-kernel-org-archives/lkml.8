@@ -2,423 +2,115 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D51C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1E6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E811E2065E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971192070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:47:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i9sjjh5U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbgG1Upq (ORCPT
+        id S1729064AbgG1Urz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:45:46 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:35600 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728728AbgG1Upj (ORCPT
+        Tue, 28 Jul 2020 16:47:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728745AbgG1Ury (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 16:45:39 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id BFA5C2003E;
-        Tue, 28 Jul 2020 22:45:33 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 22:45:32 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Kevin Tang <kevin3.tang@gmail.com>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        zhang.lyra@gmail.com
-Subject: Re: [PATCH RFC v6 2/6] drm/sprd: add Unisoc's drm kms master
-Message-ID: <20200728204532.GC1277651@ravnborg.org>
-References: <1595930879-2478-1-git-send-email-kevin3.tang@gmail.com>
- <1595930879-2478-3-git-send-email-kevin3.tang@gmail.com>
+        Tue, 28 Jul 2020 16:47:54 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5415FC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:47:54 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id f24so1529802ejx.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:47:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ExajQAZpNTd+joqebqoVtMbLAI74qmTPLZGYxWwu4D0=;
+        b=i9sjjh5UAFRZq+C3SoLUFHBEFZe6/rz5SKiFPjmp8dcIsULItKWNbWHaJLPdjgA3Mj
+         TmKlkfab84dkU55DoSBegy1MTK+TCHgJKsRJtDKe0ppHkw9hqFaosw/z/OPlicU5HoFK
+         om2qlX+kETm4XnxUxtAKkwLggUd0PsUuko2zc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ExajQAZpNTd+joqebqoVtMbLAI74qmTPLZGYxWwu4D0=;
+        b=WTfSnGZqatlBspQPi8MPo4uWDUSAtkWrhp/QPk9p8nGYbU2fqbTuycc0SqTWVfHwwa
+         6erBzhhUzHtFHYIkkruM6DGlkiBpw3m+HXmup6u9RxNfirR8qCaJgW07L4PXWuxPtef6
+         Z1HwHYxF+xc9SQmMJyqsEFnVvFgIIMiol3L6QAAtVeD43+KFJau5UK1+4cD7TO0WFWNB
+         Df3Of3svddfzGFRlzRps7lBw6XJYRi88hhW6pEi4ZATbOsl+dzBts2RwDn43Lp+SeO8x
+         DLoJKNg4qc2YH560yGJ4jbarxsi1we2GqPzvjI1vqG7zLKGgtxW//EUxFn84S+5+bTJF
+         LhRA==
+X-Gm-Message-State: AOAM532JocZ3sxpGrpRjSeEUZulb26Z00XKDcu8BG5VRkRTKdnbHy7/j
+        Ed5kHKyU4PB7FQMNUxux3HVq/8HadzM=
+X-Google-Smtp-Source: ABdhPJymc2qZAYfguqRv+YnqBAL2gPEAx9eaVlppvZxfc868eB0NYpzN8wyKwX1NKj1C6vNsBqxxsg==
+X-Received: by 2002:a17:906:ca4f:: with SMTP id jx15mr19633866ejb.449.1595969272694;
+        Tue, 28 Jul 2020 13:47:52 -0700 (PDT)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com. [209.85.128.48])
+        by smtp.gmail.com with ESMTPSA id j7sm6809766ejb.64.2020.07.28.13.47.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 13:47:51 -0700 (PDT)
+Received: by mail-wm1-f48.google.com with SMTP id 3so850424wmi.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:47:51 -0700 (PDT)
+X-Received: by 2002:a7b:cc0b:: with SMTP id f11mr3518054wmh.79.1595969271235;
+ Tue, 28 Jul 2020 13:47:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595930879-2478-3-git-send-email-kevin3.tang@gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=icsG72s9AAAA:8 a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8
-        a=smJmRsUk-V0iNW54c5wA:9 a=CjuIK1q_8ugA:10 a=T89tl0cgrjxRNoSN2Dv0:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
+ <20200728151258.1222876-1-campello@chromium.org> <20200728091057.4.I33c50453845a8167969130d514af86e573b6ef31@changeid>
+ <CAHp75VcRBCmRdGh5WVGDY28AzNhBufkoNkrEZ7uEFCW2MsJ=qg@mail.gmail.com>
+In-Reply-To: <CAHp75VcRBCmRdGh5WVGDY28AzNhBufkoNkrEZ7uEFCW2MsJ=qg@mail.gmail.com>
+From:   Daniel Campello <campello@chromium.org>
+Date:   Tue, 28 Jul 2020 14:47:15 -0600
+X-Gmail-Original-Message-ID: <CAHcu+Va0DVm1Pw__jYF_EhZHSQnSqb_zex2NN1M67zc=FTAitA@mail.gmail.com>
+Message-ID: <CAHcu+Va0DVm1Pw__jYF_EhZHSQnSqb_zex2NN1M67zc=FTAitA@mail.gmail.com>
+Subject: Re: [PATCH 04/15] iio: sx9310: Remove acpi and of table macros
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin.
+On Tue, Jul 28, 2020 at 12:09 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Tue, Jul 28, 2020 at 6:16 PM Daniel Campello <campello@chromium.org> wrote:
+> >
+> > Avoids unused warnings due to acpi/of table macros.
+> >
+>
+> At the same time I would check if mod_devicetable.h is included.
+I did the following and no error showed up:
+#ifndef LINUX_MOD_DEVICETABLE_H
+#error Missing include
+#endif
 
-Nice split of the driver.
-Some feedback in the following.
-Most to bring the driver up-to-date with what have happened since
-we saw it last time.
-Keeping up with the changes in drm is not always easy.
+>
+> > Signed-off-by: Daniel Campello <campello@chromium.org>
+> > Reported-by: kbuild test robot <lkp@intel.com>
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-	Sam
-
-
-On Tue, Jul 28, 2020 at 06:07:55PM +0800, Kevin Tang wrote:
-> From: Kevin Tang <kevin.tang@unisoc.com>
-> 
-> Adds drm support for the Unisoc's display subsystem.
-> 
-> This is drm kms driver, this driver provides support for the
-> application framework in Android, Yocto and more.
-> 
-> Application framework can access Unisoc's display internel
-> peripherals through libdrm or libkms, it's test ok by modetest
-> (DRM/KMS test tool) and Android HWComposer.
-> 
-> Cc: Orson Zhai <orsonzhai@gmail.com>
-> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
-> Signed-off-by: Kevin Tang <kevin.tang@unisoc.com>
-> ---
->  drivers/gpu/drm/Kconfig         |   2 +
->  drivers/gpu/drm/Makefile        |   1 +
->  drivers/gpu/drm/sprd/Kconfig    |  12 +++
->  drivers/gpu/drm/sprd/Makefile   |   5 +
->  drivers/gpu/drm/sprd/sprd_drm.c | 226 ++++++++++++++++++++++++++++++++++++++++
->  drivers/gpu/drm/sprd/sprd_drm.h |  16 +++
->  6 files changed, 262 insertions(+)
->  create mode 100644 drivers/gpu/drm/sprd/Kconfig
->  create mode 100644 drivers/gpu/drm/sprd/Makefile
->  create mode 100644 drivers/gpu/drm/sprd/sprd_drm.c
->  create mode 100644 drivers/gpu/drm/sprd/sprd_drm.h
-> 
-> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> index c4fd57d..7fe7ab91 100644
-> --- a/drivers/gpu/drm/Kconfig
-> +++ b/drivers/gpu/drm/Kconfig
-> @@ -386,6 +386,8 @@ source "drivers/gpu/drm/mcde/Kconfig"
->  
->  source "drivers/gpu/drm/tidss/Kconfig"
->  
-> +source "drivers/gpu/drm/sprd/Kconfig"
-> +
->  # Keep legacy drivers last
->  
->  menuconfig DRM_LEGACY
-> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-> index 2c0e5a7..ee2ccd9 100644
-> --- a/drivers/gpu/drm/Makefile
-> +++ b/drivers/gpu/drm/Makefile
-> @@ -123,3 +123,4 @@ obj-$(CONFIG_DRM_PANFROST) += panfrost/
->  obj-$(CONFIG_DRM_ASPEED_GFX) += aspeed/
->  obj-$(CONFIG_DRM_MCDE) += mcde/
->  obj-$(CONFIG_DRM_TIDSS) += tidss/
-> +obj-$(CONFIG_DRM_SPRD) += sprd/
-> diff --git a/drivers/gpu/drm/sprd/Kconfig b/drivers/gpu/drm/sprd/Kconfig
-> new file mode 100644
-> index 0000000..b189a54
-> --- /dev/null
-> +++ b/drivers/gpu/drm/sprd/Kconfig
-> @@ -0,0 +1,12 @@
-> +config DRM_SPRD
-> +	tristate "DRM Support for Unisoc SoCs Platform"
-> +	depends on ARCH_SPRD || COMPILE_TEST
-> +	depends on DRM && OF
-> +	select DRM_KMS_HELPER
-> +	select DRM_GEM_CMA_HELPER
-> +	select DRM_KMS_CMA_HELPER
-> +	select DRM_MIPI_DSI
-> +	help
-> +	  Choose this option if you have a Unisoc chipsets.
-> +	  If M is selected the module will be called sprd-drm.
-> +
-> diff --git a/drivers/gpu/drm/sprd/Makefile b/drivers/gpu/drm/sprd/Makefile
-> new file mode 100644
-> index 0000000..86d95d9
-> --- /dev/null
-> +++ b/drivers/gpu/drm/sprd/Makefile
-> @@ -0,0 +1,5 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +subdir-ccflags-y += -I$(srctree)/$(src)
-subdir-ccflags-y is not needed - drop it.
-
-> +
-> +obj-y := sprd_drm.o
-> diff --git a/drivers/gpu/drm/sprd/sprd_drm.c b/drivers/gpu/drm/sprd/sprd_drm.c
-> new file mode 100644
-> index 0000000..4706185
-> --- /dev/null
-> +++ b/drivers/gpu/drm/sprd/sprd_drm.c
-> @@ -0,0 +1,226 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020 Unisoc Inc.
-> + */
-> +
-> +#include <linux/component.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/of_platform.h>
-> +
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_crtc_helper.h>
-> +#include <drm/drm_drv.h>
-> +#include <drm/drm_gem_cma_helper.h>
-> +#include <drm/drm_gem_framebuffer_helper.h>
-> +#include <drm/drm_of.h>
-> +#include <drm/drm_probe_helper.h>
-> +#include <drm/drm_vblank.h>
-> +
-> +#include "sprd_drm.h"
-> +
-> +#define DRIVER_NAME	"sprd"
-> +#define DRIVER_DESC	"Spreadtrum SoCs' DRM Driver"
-> +#define DRIVER_DATE	"20200201"
-> +#define DRIVER_MAJOR	1
-> +#define DRIVER_MINOR	0
-> +
-> +static const struct drm_mode_config_helper_funcs sprd_drm_mode_config_helper = {
-> +	.atomic_commit_tail = drm_atomic_helper_commit_tail_rpm,
-> +};
-> +
-> +static const struct drm_mode_config_funcs sprd_drm_mode_config_funcs = {
-> +	.fb_create = drm_gem_fb_create,
-> +	.atomic_check = drm_atomic_helper_check,
-> +	.atomic_commit = drm_atomic_helper_commit,
-> +};
-> +
-> +static void sprd_drm_mode_config_init(struct drm_device *drm)
-> +{
-> +	drm_mode_config_init(drm);
-The documentation of this functions says:
-
-FIXME: This function is deprecated and drivers should be converted over to
-drmm_mode_config_init().
-
-
-> +
-> +	drm->mode_config.min_width = 0;
-> +	drm->mode_config.min_height = 0;
-> +	drm->mode_config.max_width = 8192;
-> +	drm->mode_config.max_height = 8192;
-> +	drm->mode_config.allow_fb_modifiers = true;
-> +
-> +	drm->mode_config.funcs = &sprd_drm_mode_config_funcs;
-> +	drm->mode_config.helper_private = &sprd_drm_mode_config_helper;
-> +}
-> +
-> +DEFINE_DRM_GEM_CMA_FOPS(sprd_drm_fops);
-> +
-> +static struct drm_driver sprd_drm_drv = {
-> +	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
-> +	.fops			= &sprd_drm_fops,
-> +
-> +	/* GEM Operations */
-> +  	DRM_GEM_CMA_VMAP_DRIVER_OPS,
-> +
-> +	.name			= DRIVER_NAME,
-> +	.desc			= DRIVER_DESC,
-> +	.date			= DRIVER_DATE,
-> +	.major			= DRIVER_MAJOR,
-> +	.minor			= DRIVER_MINOR,
-> +};
-> +
-> +static int sprd_drm_bind(struct device *dev)
-> +{
-> +	struct drm_device *drm;
-> +	struct sprd_drm *sprd;
-> +	int err;
-> +
-> +	drm = drm_dev_alloc(&sprd_drm_drv, dev);
-> +	if (IS_ERR(drm))
-> +		return PTR_ERR(drm);
-> +
-> +	dev_set_drvdata(dev, drm);
-> +
-> +	sprd = devm_kzalloc(drm->dev, sizeof(*sprd), GFP_KERNEL);
-> +	if (!sprd)
-> +		err = -ENOMEM;
-
-Embed drm_device in sprd_drm and use devm_drm_dev_alloc
-See other drivers and drm_drv.c how to do it.
-drm_drv.c has a nice example explained in one of the comment blocks.
-
-> +
-> +	drm->dev_private = sprd;
-dev_private is deprecated. Alwyas use upclassing.
-
-> +
-> +	sprd_drm_mode_config_init(drm);
-> +
-> +	/* bind and init sub drivers */
-> +	err = component_bind_all(drm->dev, drm);
-> +	if (err) {
-> +		DRM_ERROR("failed to bind all component.\n");
-> +		goto err_dc_cleanup;
-> +	}
-> +
-> +	/* vblank init */
-> +	err = drm_vblank_init(drm, drm->mode_config.num_crtc);
-> +	if (err) {
-> +		DRM_ERROR("failed to initialize vblank.\n");
-> +		goto err_unbind_all;
-> +	}
-> +	/* with irq_enabled = true, we can use the vblank feature. */
-> +	drm->irq_enabled = true;
-Can drm_irq_install() be used?
-Then this flag shall not be set by the driver.
-
-> +
-> +	/* reset all the states of crtc/plane/encoder/connector */
-> +	drm_mode_config_reset(drm);
-> +
-> +	/* init kms poll for handling hpd */
-> +	drm_kms_helper_poll_init(drm);
-> +
-> +	err = drm_dev_register(drm, 0);
-> +	if (err < 0)
-> +		goto err_kms_helper_poll_fini;
-> +
-> +	return 0;
-> +
-> +err_kms_helper_poll_fini:
-> +	drm_kms_helper_poll_fini(drm);
-> +err_unbind_all:
-> +	component_unbind_all(drm->dev, drm);
-> +err_dc_cleanup:
-> +	drm_mode_config_cleanup(drm);
-> +	return err;
-> +}
-> +
-> +static void sprd_drm_unbind(struct device *dev)
-> +{
-> +	struct drm_device *drm = dev_get_drvdata(dev);
-> +
-> +	drm_dev_unregister(drm);
-> +
-> +	drm_kms_helper_poll_fini(drm);
-> +
-> +	drm_mode_config_cleanup(drm);
-> +
-> +	component_unbind_all(drm->dev, drm);
-> +	drm->dev_private = NULL;
-> +	dev_set_drvdata(dev, NULL);
-> +
-> +	drm_dev_put(drm);
-> +}
-> +
-> +static const struct component_master_ops drm_component_ops = {
-> +	.bind = sprd_drm_bind,
-> +	.unbind = sprd_drm_unbind,
-> +};
-> +
-> +static int compare_of(struct device *dev, void *data)
-> +{
-> +	return dev->of_node == data;
-> +}
-> +
-> +static int sprd_drm_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +
-> +	ret = dma_set_mask_and_coherent(&pdev->dev, ~0);
-> +	if (ret) {
-> +		DRM_ERROR("dma_set_mask_and_coherent failed (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return drm_of_component_probe(&pdev->dev, compare_of, &drm_component_ops);
-> +}
-> +
-> +static int sprd_drm_remove(struct platform_device *pdev)
-> +{
-> +	component_master_del(&pdev->dev, &drm_component_ops);
-> +	return 0;
-> +}
-> +
-> +static void sprd_drm_shutdown(struct platform_device *pdev)
-> +{
-> +	struct drm_device *drm = platform_get_drvdata(pdev);
-> +
-> +	if (!drm) {
-> +		DRM_WARN("drm device is not available, no shutdown\n");
-> +		return;
-> +	}
-> +
-> +	drm_atomic_helper_shutdown(drm);
-> +}
-> +
-> +static const struct of_device_id drm_match_table[] = {
-> +	{ .compatible = "sprd,display-subsystem", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, drm_match_table);
-> +
-> +static struct platform_driver sprd_drm_driver = {
-> +	.probe = sprd_drm_probe,
-> +	.remove = sprd_drm_remove,
-> +	.shutdown = sprd_drm_shutdown,
-> +	.driver = {
-> +		.name = "sprd-drm-drv",
-> +		.of_match_table = drm_match_table,
-> +	},
-> +};
-> +
-> +static struct platform_driver *sprd_drm_drivers[]  = {
-> +	&sprd_drm_driver,
-> +};
-> +
-> +static int __init sprd_drm_init(void)
-> +{
-> +	int ret;
-> +
-> +	ret = platform_register_drivers(sprd_drm_drivers,
-> +					ARRAY_SIZE(sprd_drm_drivers));
-> +	return ret;
-> +}
-> +
-> +static void __exit sprd_drm_exit(void)
-> +{
-> +	platform_unregister_drivers(sprd_drm_drivers,
-> +				    ARRAY_SIZE(sprd_drm_drivers));
-> +}
-> +
-> +module_init(sprd_drm_init);
-> +module_exit(sprd_drm_exit);
-> +
-> +MODULE_AUTHOR("Leon He <leon.he@unisoc.com>");
-> +MODULE_AUTHOR("Kevin Tang <kevin.tang@unisoc.com>");
-> +MODULE_DESCRIPTION("Unisoc DRM KMS Master Driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/gpu/drm/sprd/sprd_drm.h b/drivers/gpu/drm/sprd/sprd_drm.h
-> new file mode 100644
-> index 0000000..edf0881
-> --- /dev/null
-> +++ b/drivers/gpu/drm/sprd/sprd_drm.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2020 Unisoc Inc.
-> + */
-> +
-> +#ifndef _SPRD_DRM_H_
-> +#define _SPRD_DRM_H_
-> +
-> +#include <drm/drm_atomic.h>
-> +#include <drm/drm_print.h>
-> +
-> +struct sprd_drm {
-> +	struct drm_device *drm;
-> +};
-> +
-> +#endif /* _SPRD_DRM_H_ */
-> -- 
-> 2.7.4
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Regards,
+Daniel Campello
