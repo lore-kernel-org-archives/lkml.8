@@ -2,87 +2,86 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5024C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FAEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B38320829
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D17F620838
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595897886;
+	bh=XItDeRD/VOW0c0vh0gxeveqgJidWpf1z1F08rUsRr68=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZecM0kqUKVZdyCJ3nKHsXlpmHM/1I87OIH7+ieTkZwnbaa6CaidEmqd4g+Qfdk5CB
+	 eXXr8WBsSZ5N4jw6uD9pQxAgz2l2mwKU89u7iuUPyydv2CJGYDKW8Jjdf8zrzUPW3e
+	 XHWWxQA3RsZsvye2aC+zpPdjum4ZavfpSeqmPg0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgG1Azz (ORCPT
+        id S1726825AbgG1A6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 20:55:55 -0400
-Received: from mga03.intel.com ([134.134.136.65]:9773 "EHLO mga03.intel.com"
+        Mon, 27 Jul 2020 20:58:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgG1Azy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 20:55:54 -0400
-IronPort-SDR: h5p0olUpGF9ooLhzNfQfIDrrrgTNdKsHyz7GB6QZJRvM30z2WzCLdHZJPh3YA7QqY7p7GPLcm1
- i2z3Ztf14Lmg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="151116580"
-X-IronPort-AV: E=Sophos;i="5.75,404,1589266800"; 
-   d="scan'208";a="151116580"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 17:55:53 -0700
-IronPort-SDR: kffFnXfuJa226G3x+5zKZm7o0hRAail1hqbvUI0+Kzhm5u/CfXd0H4FgT0FvUsj/Of0ROKJhVP
- wVLS52a/mL6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,404,1589266800"; 
-   d="scan'208";a="272157472"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmsmga007.fm.intel.com with ESMTP; 27 Jul 2020 17:55:52 -0700
-Date:   Mon, 27 Jul 2020 17:55:32 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     hpa@zytor.com
-Cc:     peterz@infradead.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Cathy Zhang <cathy.zhang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-edac@vger.kernel.org
-Subject: Re: [PATCH 4/4] x86/cpu: Use SERIALIZE in sync_core() when available
-Message-ID: <20200728005532.GC23421@ranerica-svr.sc.intel.com>
-References: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
- <20200727043132.15082-5-ricardo.neri-calderon@linux.intel.com>
- <20200727082003.GD119549@hirez.programming.kicks-ass.net>
- <2A0D15F3-BAF2-47CE-AF5F-DB681793D07D@zytor.com>
+        id S1726139AbgG1A6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 20:58:05 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D88920809;
+        Tue, 28 Jul 2020 00:58:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595897884;
+        bh=XItDeRD/VOW0c0vh0gxeveqgJidWpf1z1F08rUsRr68=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Q55qY5hjfzZsvbLN/ssXqZAh3kShL5ptHB9qO5ASSnpIKkVFcshi6+1XNovoXyEWa
+         y/BYih70ZzEd+GLlAGHC9I6cRxXz+ru6FpKJLC7T22a8Id9Oz8UIo6H9fpw5IV7ZTJ
+         hRUs4I1367VD5/Yu8gDfT6dsmBpypJ8gPC9RYq7E=
+Date:   Mon, 27 Jul 2020 17:58:02 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Moshe Shemesh <moshe@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
+ devlink reload command
+Message-ID: <20200727175802.04890dd3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <1595847753-2234-2-git-send-email-moshe@mellanox.com>
+References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
+        <1595847753-2234-2-git-send-email-moshe@mellanox.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2A0D15F3-BAF2-47CE-AF5F-DB681793D07D@zytor.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 05:47:32AM -0700, hpa@zytor.com wrote:
-> On July 27, 2020 1:20:03 AM PDT, peterz@infradead.org wrote:
-> >On Sun, Jul 26, 2020 at 09:31:32PM -0700, Ricardo Neri wrote:
-> >> +static inline void serialize(void)
-> >> +{
-> >> +	asm volatile(".byte 0xf, 0x1, 0xe8");
-> >> +}
-> >
-> >Can we pretty please have a comment with the binutils version that has
-> >the mnomic? Such that when we increase the required binutils version we
-> >can grep for this.
-> 
-> It also needs : : : "memory" to be a barrier.
+On Mon, 27 Jul 2020 14:02:21 +0300 Moshe Shemesh wrote:
+> Add devlink reload level to allow the user to request a specific reload
+> level. The level parameter is optional, if not specified then driver's
+> default reload level is used (backward compatible).
 
-Sure Peter, I will make this change.
+Please don't leave space for driver-specific behavior. The OS is
+supposed to abstract device differences away.
 
-Thanks and BR,
-Ricardo
+Previously the purpose of reload was to activate new devlink params
+(with driverinit cmode), now you want the ability to activate new
+firmware. Let users specify their intent and their constraints.
+
+> Reload levels supported are:
+> driver: driver entities re-instantiation only.
+> fw_reset: firmware reset and driver entities re-instantiation.
+> fw_live_patch: firmware live patching only.
+
+I'm concerned live_patch is not first - it's the lowest impact (since
+it's live). Please make sure you clearly specify the expected behavior
+for the new API.
+
+The notion of multi-host is key for live patching, so it has to be
+mentioned.
+
+> Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
