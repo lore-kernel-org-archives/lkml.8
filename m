@@ -2,153 +2,193 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF65C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BCAC433FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99A1C20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31393206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MBcDnC8p"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AUZBUOCz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbgG1JUH (ORCPT
+        id S1728492AbgG1JUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:20:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44278 "EHLO
+        Tue, 28 Jul 2020 05:20:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728403AbgG1JUC (ORCPT
+        with ESMTP id S1728260AbgG1JUU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 05:20:02 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E0DC0619D2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 02:20:01 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id i80so10594756lfi.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 02:20:01 -0700 (PDT)
+        Tue, 28 Jul 2020 05:20:20 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B3F4C0619D4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 02:20:20 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id b6so17546335wrs.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 02:20:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nTEYoYUagTTUVqipQAp692MJ5fXnO5ESwesa/LZYugE=;
-        b=MBcDnC8pYd9WqxK8HbtkHiHIfwhUKE/0KC4CsT/0MK7hoVPMZKd25m80MCMNJkywJn
-         hKjsYXdrnTjtX291O1pBvLfC6fnpDQ8p1j50tkC4fZzLh6d+Ex34/AfnM9Fc0YMq5cAD
-         /+yzYRtQwQbhs1kc426jy2vye2e9fdNYiWt2WMK16g8xGlyN1PBji4UjGB86mdz0/co4
-         D8lB6v4ib634Iq3MEDBNvDojiBl9+9srgDRyVZwZS1aWJLTDB5Xnog/lDrzHbfuwqLXe
-         mTiwLQfqhQJxln4x8rvetnKVzUjGSkWjlVpMA7n9hRwxY94bDBb9toviG89HCtb+O5It
-         1OQQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=beBH51PBvrNiVY21fyB1FDMkBD4/1CfVqZsExUAdGms=;
+        b=AUZBUOCz+C3rUbC09PBQb07wRcuG+Z5atNFGMx6frCJ20iuSZPlI4T6fknCpq3V/8J
+         ojiJjQXoLXIm3nkm0LEBfBv4OXrf6lLG5QUbLRzA1+ixupmRCG4MzcvFiTqizHNPbH0/
+         XzZPxU1YUQ+SgMlRBsA9NL/4k859nPxCoBO9wQkfPvgYBC6dcegsVSQ0fwQnFb4QzrYu
+         42VuVYpxQicy5tc5KWqBaCx7kbfyxq98OarVugo1rGHxL3+GnsB9B7O188y2FlBsK/iu
+         vL/PJFJmQe8WxNKsi7xYRRKw4KqAxMCJXsa9lwAaHXh2uJACBdEFn16gde0U6hWIzf4p
+         1RCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=nTEYoYUagTTUVqipQAp692MJ5fXnO5ESwesa/LZYugE=;
-        b=C0MkbninCoTPF6+bBaz66d0xv7UalAtMl2XEHtdlJrFXIeH4jWqJMrO51qkBX5oH+c
-         EL6akjSdONql3Kjm66UTtg3GyoXqv0QjG67v2Xzcvk25ohPhxQ4gYBBb3wL8ar7uHmUK
-         vElA9Tk78SbviC1vzHEd8RJGivcbCrT0RJJGOSPYP5boFyk/QZDkHwtOLyIAxWlVN+HM
-         az4i4MncgB3AnEIzAwvVC1OglIL9yulpjQPTy5o4lcUeEpIdT0kFzE9NVuMfBeI66SEO
-         TF5Vz5nrtEsmydURv4rTa35oVfLagWBSJVUbnxGDDjXzZROJUreG2NPmqiB+tkAsHWik
-         +jgQ==
-X-Gm-Message-State: AOAM530miXWdIC3rLe/rsy5fyOTXzLErCVf4ioo3SIxlNNsHpNGF+L/g
-        Vdvuaijp8jGznKPlXNHTzliGJHg5MujqUA==
-X-Google-Smtp-Source: ABdhPJwH1yrgceQtuctCUZdXGTlEq9oO+R1j+a2uwf4L7+TbtEoo4Hlf9bOLvPV/4jAYSBe66hEOYw==
-X-Received: by 2002:ac2:4c05:: with SMTP id t5mr3851846lfq.89.1595928000352;
-        Tue, 28 Jul 2020 02:20:00 -0700 (PDT)
-Received: from gilgamesh.semihalf.com (193-106-246-138.noc.fibertech.net.pl. [193.106.246.138])
-        by smtp.gmail.com with ESMTPSA id q22sm3643270lfc.33.2020.07.28.02.19.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Jul 2020 02:19:59 -0700 (PDT)
-From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        s-anna@ti.com
-Cc:     grzegorz.jaszczyk@linaro.org, robh+dt@kernel.org,
-        lee.jones@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
-        wmills@ti.com, praneeth@ti.com
-Subject: [PATCH v4 5/5] irqchip/irq-pruss-intc: Add support for ICSSG INTC on K3 SoCs
-Date:   Tue, 28 Jul 2020 11:18:38 +0200
-Message-Id: <1595927918-19845-6-git-send-email-grzegorz.jaszczyk@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
-References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=beBH51PBvrNiVY21fyB1FDMkBD4/1CfVqZsExUAdGms=;
+        b=repsiD8kp4u+jrGoDphgj9QM9l9duApXXTwWEugc1h9GU4q1RBdLkT64BdpJ77CoHJ
+         I95Q9pQ4Q42tKi+fXJoabQ0MGyqrDdahCAKGBkXV25GsKOYZb9/1jt/QByzaBYbuyUCZ
+         cTKmHlvzXztU0dbCFWsL0rxpADTFV5A9wUyNjyLSYPTYcOVUCnAMOToPWYJOfCzbxzcu
+         KQgKJcDK6i7Hf2e/MhueIgmDG750LGglzGWU5mumUNrU0CBxYp8hes3UOW42RSB9dnCB
+         OvUhL/pGGLPNytcrkN3UcHFQT4iVuWh6YOnnyYJwbVZlwpDgZBcdpez0FG1vOZuwiUG+
+         ry/w==
+X-Gm-Message-State: AOAM5332UiZSoQzXeUSCO3Byj0MjqexvUhp/Y7DX7LZ/NcpsIGywzZEM
+        520OmeowO7oBBnC00Jh+6Maa0w==
+X-Google-Smtp-Source: ABdhPJwnXEtbFH1jcD4yCv++hVxdGTxMKRMWQHHEoQcyflVcKHgUz+6JPotbQr2eHetriRLig3jKsA==
+X-Received: by 2002:adf:e94a:: with SMTP id m10mr12079678wrn.249.1595928019115;
+        Tue, 28 Jul 2020 02:20:19 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id t141sm3376553wmt.26.2020.07.28.02.20.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 02:20:18 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 10:20:16 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
+Message-ID: <20200728092016.GE2419169@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-3-michael@walle.cc>
+ <20200728072422.GF1850026@dell>
+ <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
+ <20200728082707.GB2419169@dell>
+ <a47993ca4c77ab1ee92f6693debb3c87@walle.cc>
+ <20200728085616.GD2419169@dell>
+ <2fd3b880e36aa65e880b801092b51945@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2fd3b880e36aa65e880b801092b51945@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+On Tue, 28 Jul 2020, Michael Walle wrote:
 
-The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS IP,
-commonly called ICSSG. The PRUSS INTC present within the ICSSG supports
-more System Events (160 vs 64), more Interrupt Channels and Host Interrupts
-(20 vs 10) compared to the previous generation PRUSS INTC instances. The
-first 2 and the last 10 of these host interrupt lines are used by the
-PRU and other auxiliary cores and sub-modules within the ICSSG, with 8
-host interrupts connected to MPU. The host interrupts 5, 6, 7 are also
-connected to the other ICSSG instances within the SoC and can be
-partitioned as per system integration through the board dts files.
+> Am 2020-07-28 10:56, schrieb Lee Jones:
+> > > > > > > +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
+> > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > > +
+> > > > > > > +title: Kontron's sl28cpld board management controller
+> > > > > >
+> > > > > > "S128CPLD" ?
+> > > > >
+> > > > > still not, its sl28cpld, think of a project/code name, not the product
+> > > > > appended with CPLD.
+> > > > >
+> > > > > > "Board Management Controller (BMC)" ?
+> > > > >
+> > > > > sounds like IPMI, which I wanted to avoid.
+> > > >
+> > > > Is there a datasheet?
+> > > 
+> > > No there isn't.
+> > 
+> > Then what are you working from?
+> 
+> Ok, there is no public datasheet. If that wasn't clear before, I'm working
+> for that company that also implemented that CPLD.
 
-Enhance the PRUSS INTC driver to add support for this ICSSG INTC
-instance.
+No, that wasn't clear.  You said there was no datasheet.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
----
-v3->v4:
-- Move generic part to "irqchip/irq-pruss-intc: Add a PRUSS irqchip
-  driver for PRUSS interrupts" patch and leave only platform related
-  code.
-v2->v3:
-- Change patch order: use it directly after "irqchip/irq-pruss-intc:
-  Implement irq_{get,set}_irqchip_state ops" and before new
-  "irqchip/irq-pruss-intc: Add event mapping support" in order to reduce
-  diff.
-v1->v2:
-- https://patchwork.kernel.org/patch/11069773/
----
- drivers/irqchip/Kconfig          | 2 +-
- drivers/irqchip/irq-pruss-intc.c | 9 +++++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+> > > > > > > +maintainers:
+> > > > > > > +  - Michael Walle <michael@walle.cc>
+> > > > > > > +
+> > > > > > > +description: |
+> > > > > > > +  The board management controller may contain different IP blocks
+> > > > > > > like
+> > > > > > > +  watchdog, fan monitoring, PWM controller, interrupt controller
+> > > > > > > and a
+> > > > > > > +  GPIO controller.
+> > > > > > > +
+> > > > > > > +properties:
+> > > > > > > +  compatible:
+> > > > > > > +    const: kontron,sl28cpld-r1
+> > > > > >
+> > > > > > We don't usually code revision numbers in compatible strings.
+> > > > > >
+> > > > > > Is there any way to pull this from the H/W?
+> > > > >
+> > > > > No, unfortunately you can't. And I really want to keep that, in case
+> > > > > in the future there are some backwards incompatible changes.
+> > > >
+> > > > Rob,
+> > > >
+> > > > I know you reviewed this already, but you can give your opinion on
+> > > > this specifically please?  I know that we have pushed back on this in
+> > > > the past.
+> > > 
+> > > Oh, come one. That is an arbitrary string. "sl28cpld-r1" is the first
+> > > implementation of this. A future "sl28cpld-r2" might look completely
+> > > different and might not suite the simple MFD at all. "sl28cpld" is
+> > > a made up name - as "sl28cpld-r1" is, too.
+> > 
+> > Well that sounds bogus for a start.  I guess that's one of the
+> > problems with trying to support programmable H/W in S/W.
+> 
+> What sounds bogus? That we name the implementation sl28cpld?
+> How is that different to like adt7411? Its just a name made up by
+> the vendor. So if there is a new version of the adt7411 the vendor 
+> might name it adt7412.
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 03e6ac1..d3297b7 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -495,7 +495,7 @@ config TI_SCI_INTA_IRQCHIP
- 
- config TI_PRUSS_INTC
- 	tristate "TI PRU-ICSS Interrupt Controller"
--	depends on ARCH_DAVINCI || SOC_AM33XX || SOC_AM43XX || SOC_DRA7XX || ARCH_KEYSTONE
-+	depends on ARCH_DAVINCI || SOC_AM33XX || SOC_AM43XX || SOC_DRA7XX || ARCH_KEYSTONE || ARCH_K3
- 	select IRQ_DOMAIN
- 	help
- 	   This enables support for the PRU-ICSS Local Interrupt Controller
-diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
-index c13ba14..a56065b 100644
---- a/drivers/irqchip/irq-pruss-intc.c
-+++ b/drivers/irqchip/irq-pruss-intc.c
-@@ -623,11 +623,20 @@ static const struct pruss_intc_match_data pruss_intc_data = {
- 	.num_host_intrs = 10,
- };
- 
-+static const struct pruss_intc_match_data icssg_intc_data = {
-+	.num_system_events = 160,
-+	.num_host_intrs = 20,
-+};
-+
- static const struct of_device_id pruss_intc_of_match[] = {
- 	{
- 		.compatible = "ti,pruss-intc",
- 		.data = &pruss_intc_data,
- 	},
-+	{
-+		.compatible = "ti,icssg-intc",
-+		.data = &icssg_intc_data,
-+	},
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, pruss_intc_of_match);
+Using an arbitrary string as a compatible would be bogus.
+
+So here 'sl28cpld' is the device name, so it's not actually
+arbitrary.  That's a good start.
+
+> We name it sl28cpld-r2. So what is the problem here?
+
+Do you though?  So 'sl28cpld-r1' is the name of the device?  The name
+that is quoted from the (private) datasheet?  Because looking at the
+implementation and going by the conversation, it sounds as though
+you-re only adding the '-r1' piece to the compatible string for
+revision identification.  Which if true, is not usually allowed and
+warrants intervention by Rob.
+
 -- 
-2.7.4
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
