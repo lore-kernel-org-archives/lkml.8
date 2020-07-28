@@ -2,173 +2,158 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856B5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F50C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA3420759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3998520759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:14:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="AX0JUaJR"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="abJarT5k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgG1COk (ORCPT
+        id S1727015AbgG1COo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:14:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35032 "EHLO
+        Mon, 27 Jul 2020 22:14:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbgG1COj (ORCPT
+        with ESMTP id S1726944AbgG1COm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 22:14:39 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20880C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 19:14:39 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id y10so19090476eje.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 19:14:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ntpZED/bDicwQAEOYBBXCb0Vf/5An8qRDW4/uB32sUk=;
-        b=AX0JUaJRVAWwPRhZXFl39tXHNZFQXPlYY4M/KcRVwsM1iOLno5M25//lHOUHgBDrMW
-         6PIKCAHwgT8eYyTp1Q6JkjIBBqN66b4nxk7K0W7wCX519WVYE0Uf1mKA6+maOFpC/TV3
-         rIBlospISlu1bJfl04H/Hv+QIePz+9S2YtUSAmN3qi6zne/qEzrLw8eT4v5KpiHz4gFW
-         f3oy3e3YuUYnviu+BM3uG98iDsPg/RWJtctm7ZHvbSCLuDne36VEKIfzgCUneJnvt+ce
-         w1W7ClvKoA1Azu+NJRG6RIGlu/WeIy3ujf3+EUQxBvAeJJ889wNLe8NJIQC3h934yjyU
-         5yBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ntpZED/bDicwQAEOYBBXCb0Vf/5An8qRDW4/uB32sUk=;
-        b=dCXcHBK0g2m+KfF2PiJsU86aQ3Ieja9PDd8zmn/OuQBq071EPkMeAilpoEOH3FhQHu
-         8NISKhBDjY7342ow7NQZM1POeMLg0x4Q8mNgraj7EK7mD/+H7cluyTmfmyxejB//KIFn
-         lH6ICAZPmyNSU4BvAGFdYIoEEE/hHpVwXTjGkjHI23mIxHVLESVD55HrTbyK1j60Z1p4
-         Dm7Pk9CAdEMk2qXZHx6nKm/yps201o7B9omX/1BWJTEzFZgUe5nn4Lw2nB4I44QbZRhG
-         NK+J1IYjuygCXTKkLVGm5OgcmvDfBziKJ9nZYOpoz7+KYFhga8WSAvFqx5YfM4Dil8cR
-         Lf0Q==
-X-Gm-Message-State: AOAM532FSdDrv0hc2T+lmHMJr61qec+QqCy65cTYeifw1KkAfxfwoNDa
-        hMgsLfHQ+F82PyJQQS6rdzrkFfI3w911mNfL7pop
-X-Google-Smtp-Source: ABdhPJwc8DqsJGPgarb7e3Hd57xYvw4BfDWTZIFWsDfO8+3vYv71T/BGXu4iQOxPjuRAY3Ia1prjQmG8/cVecbd70J8=
-X-Received: by 2002:a17:906:43c9:: with SMTP id j9mr7595815ejn.542.1595902477608;
- Mon, 27 Jul 2020 19:14:37 -0700 (PDT)
+        Mon, 27 Jul 2020 22:14:42 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB4FC061794;
+        Mon, 27 Jul 2020 19:14:42 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BG0cJ1s3sz9sRW;
+        Tue, 28 Jul 2020 12:14:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595902480;
+        bh=QaZcW7Jf9qMD1DalrmrMmBPYCGe8Qf5ICJMH13G62F0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=abJarT5kJDtHga9hjAWUYG52TZqXJLClWI4fOx2RT9SsXt/slEG2hMhwGUo6oYTdC
+         Y7W149ht+EYYf/yqQ/B5OCKyB47GDZPs3Ly9dDe3ZOx2RsVWrEgRw/S049dy0IVngA
+         s4kWOy+MzWR9JiekTYKk1mDXskwW5lmHQDPUl+yd3avgIrU6gbv3VRpTqdFnnf56pb
+         2thGtZITa4LsEeH0ES3zQuW9pxwKatwgYEJZZom+CWiTcM0CDbMslnPB9EeCJpasaD
+         dy4VpdN5FO7cwFetvssNy8tzAQhHXPeEB3hXIuf3fSj9jyHkt3xIcc3c94K8ujcmqz
+         +zBcGVIKknW1A==
+Date:   Tue, 28 Jul 2020 12:14:39 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org
+Subject: Re: mmotm 2020-07-27-18-18 uploaded
+Message-ID: <20200728121439.6a40591d@canb.auug.org.au>
+In-Reply-To: <20200728011914.S-8vAYUK0%akpm@linux-foundation.org>
+References: <20200723211432.b31831a0df3bc2cbdae31b40@linux-foundation.org>
+        <20200728011914.S-8vAYUK0%akpm@linux-foundation.org>
 MIME-Version: 1.0
-References: <e3e9c9da9115fd233c5a7895dbb4a698a365b1b0.1595884394.git.rgb@redhat.com>
-In-Reply-To: <e3e9c9da9115fd233c5a7895dbb4a698a365b1b0.1595884394.git.rgb@redhat.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 27 Jul 2020 22:14:26 -0400
-Message-ID: <CAHC9VhSx23JiN6GprskxdEcs9uftJOp03Svh7YJbQLOV91AMiQ@mail.gmail.com>
-Subject: Re: [PATCH V3fix ghak120] audit: initialize context values in case of
- mandatory events
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Eric Paris <eparis@parisplace.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/G9hTn9gO9HlIukNdNnh9dpw";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 5:30 PM Richard Guy Briggs <rgb@redhat.com> wrote:
->
-> Issue ghak120 enabled syscall records to accompany required records when
-> no rules are present to trigger the storage of syscall context.  A
-> reported issue showed that the cwd was not always initialized.  That
-> issue was already resolved ...
+--Sig_/G9hTn9gO9HlIukNdNnh9dpw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes and no.  Yes, it appears to be resolved in v5.8-rc1 and above, but
-the problematic commit is in v5.7 and I'm not sure backporting the fix
-in v5.8-rcX plus this patch is the right thing to do for a released
-kernel.  The lowest risk fix for v5.7 at this point is to do a revert;
-regardless of what happens with this patch and v5.8-rcX please post a
-revert for the audit/stable-5.7 tree as soon as you can.
+Hi Andrew,
 
-> ... but a review of all other records that could
-> be triggered at the time of a syscall record revealed other potential
-> values that could be missing or misleading.  Initialize them.
+On Mon, 27 Jul 2020 18:19:14 -0700 Andrew Morton <akpm@linux-foundation.org=
+> wrote:
 >
-> The fds array is reset to -1 after the first syscall to indicate it
-> isn't valid any more, but was never set to -1 when the context was
-> allocated to indicate it wasn't yet valid.
->
-> The audit_inode* functions can be called without going through
-> getname_flags() or getname_kernel() that sets audit_names and cwd, so
-> set the cwd if it has not already been done so due to audit_names being
-> valid.
->
-> The LSM dump_common_audit_data() LSM_AUDIT_DATA_NET:AF_UNIX case was
-> missed with the ghak96 patch, so add that case here.
->
-> Please see issue https://github.com/linux-audit/audit-kernel/issues/120
-> Please see issue https://github.com/linux-audit/audit-kernel/issues/96
-> Passes audit-testsuite.
->
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
->  kernel/auditsc.c     | 3 +++
->  security/lsm_audit.c | 1 +
->  2 files changed, 4 insertions(+)
->
-> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> index 6884b50069d1..2f97618e6a34 100644
-> --- a/kernel/auditsc.c
-> +++ b/kernel/auditsc.c
-> @@ -929,6 +929,7 @@ static inline struct audit_context *audit_alloc_context(enum audit_state state)
->         context->prio = state == AUDIT_RECORD_CONTEXT ? ~0ULL : 0;
->         INIT_LIST_HEAD(&context->killed_trees);
->         INIT_LIST_HEAD(&context->names_list);
-> +       context->fds[0] = -1;
->         return context;
->  }
->
-> @@ -2076,6 +2077,7 @@ void __audit_inode(struct filename *name, const struct dentry *dentry,
->         }
->         handle_path(dentry);
->         audit_copy_inode(n, dentry, inode, flags & AUDIT_INODE_NOEVAL);
-> +       _audit_getcwd(context);
->  }
->
->  void __audit_file(const struct file *file)
-> @@ -2194,6 +2196,7 @@ void __audit_inode_child(struct inode *parent,
->                 audit_copy_inode(found_child, dentry, inode, 0);
->         else
->                 found_child->ino = AUDIT_INO_UNSET;
-> +       _audit_getcwd(context);
->  }
->  EXPORT_SYMBOL_GPL(__audit_inode_child);
->
-> diff --git a/security/lsm_audit.c b/security/lsm_audit.c
-> index 53d0d183db8f..e93077612246 100644
-> --- a/security/lsm_audit.c
-> +++ b/security/lsm_audit.c
-> @@ -369,6 +369,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
->                                         audit_log_untrustedstring(ab, p);
->                                 else
->                                         audit_log_n_hex(ab, p, len);
-> +                               audit_getcwd();
->                                 break;
->                         }
->                 }
+> * mm-madvise-introduce-process_madvise-syscall-an-external-memory-hinting=
+-api-fix-2.patch
 
-I understand the "fds[0] = -1" fix in audit_alloc_context()
-(ironically, the kzalloc() which is supposed to help with cases like
-this, hurts us with this particular field), but I'm still not quite
-seeing why we need to sprinkle audit_getcwd() calls everywhere to fix
-this bug (this seems more like a feature add than a bigfix).  Yes,
-they may fix the problem but it seems like simply adding a
-context->pwd test in audit_log_name() similar to what we do in
-audit_log_exit() is the correct fix.
+These syscall patches have been a pain, sorry.  I have corrected the above =
+to this:
 
-We are currently at -rc7 and this really needs to land before v5.8 is
-released, presumably this weekend; this means a small and limited bug
-fix patch is what is needed.
+From: Andrew Morton <akpm@linux-foundation.org>
+Date: Tue, 28 Jul 2020 11:29:27 +1000
+Subject:=20
+ mm-madvise-introduce-process_madvise-syscall-an-external-memory-hinting-ap=
+i-fix-2
 
--- 
-paul moore
-www.paul-moore.com
+fix include/uapi/asm-generic/unistd.h whoops
+
+Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc: Brian Geffon <bgeffon@google.com>
+Cc: Christian Brauner <christian@brauner.io>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Daniel Colascione <dancol@google.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: John Dias <joaodias@google.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: <linux-man@vger.kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Oleksandr Natalenko <oleksandr@redhat.com>
+Cc: Sandeep Patil <sspatil@google.com>
+Cc: SeongJae Park <sj38.park@gmail.com>
+Cc: SeongJae Park <sjpark@amazon.de>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Sonny Rao <sonnyrao@google.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Tim Murray <timmurray@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/u=
+nistd.h
+index 4d8044ca1bd5..c0b5f8b609eb 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -861,13 +861,13 @@ __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
+ __SYSCALL(__NR_faccessat2, sys_faccessat2)
+ #define __NR_watch_mount 440
+ __SYSCALL(__NR_watch_mount, sys_watch_mount)
+-#define __NR_fsinfo 442
++#define __NR_fsinfo 441
+ __SYSCALL(__NR_fsinfo, sys_fsinfo)
+-#define __NR_fsinfo 443
++#define __NR_process_madvise 442
+ __SC_COMP(__NR_process_madvise, sys_process_madvise, compat_sys_process_ma=
+dvise)
+=20
+ #undef __NR_syscalls
+-#define __NR_syscalls 444
++#define __NR_syscalls 443
+=20
+ /*
+  * 32 bit systems traditionally used different
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/G9hTn9gO9HlIukNdNnh9dpw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8fig8ACgkQAVBC80lX
+0Gz9VQf9G5l+YOY+DnzdmF1UsIt9om60cj4VdrD7gkVghJH599yOYm8REZxC/1YQ
+UuVrbWaXBAOoeIuT4EaYKn+8qyxO8i52uLf+zEucW8uLnRIsVtaVuKtFOjnPuXJP
+9dSTJX9zMWSd4aQI/vhYOW2ECzfyLLjXgp7JRr9UUVqiNSEVu8vALvFZh0EHnXg3
+YF3mzGh+K3PAvYUpMv7p0Mymgy6hgPLu4tcolHy/1az32FF5GqPLwK8Od6oScl0W
+Pb4oGJpkElwJcW5sNioV8R0p7azwgzFjm3An5UH0KLryhMMbkSMHlywJVnhCY0b6
+dPH0eOCYz+vy6LIN8ekOPhOVORw9dA==
+=oyMQ
+-----END PGP SIGNATURE-----
+
+--Sig_/G9hTn9gO9HlIukNdNnh9dpw--
