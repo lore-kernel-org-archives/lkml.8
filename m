@@ -2,106 +2,93 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99469C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7535920809
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:23:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q+Z190UC"
+	by mail.kernel.org (Postfix) with ESMTP id 9A5A420829
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:24:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595899461;
+	bh=ys14D/WWbTgAMo9tUTXuTr8A1pgEYRarJTsZ+VOuolM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=QyjGuEWda2EpExSfe5cVVzT6MQtQ8AnDQ0w5a5phCf7iDnMFjih+MqZqOmjXl/Ifs
+	 I6MkRHxmeAtwPGMdeM3i+ILiaNAQyi6E6zuPrUFw4HXIhUNf0bpi+yT2GghlMQWZDj
+	 hbvJUaLjcReOweA6mgY5jG0iukUI/66S6uMXnHnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgG1BXA (ORCPT
+        id S1726832AbgG1BYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 21:23:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgG1BXA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 21:23:00 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D989C061794;
-        Mon, 27 Jul 2020 18:23:00 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id o13so10985425pgf.0;
-        Mon, 27 Jul 2020 18:23:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jGzRITWnnLVmrJ4L8IGgC61oBoAO/ViNb6Y3fK7a/wM=;
-        b=q+Z190UC8aYsC6knnBXL/JC3AXJP1cutHbFkCohUdaIp8bO8lhmzJxhVmJzEbLg8tQ
-         QQFw6Yb2cLaxe/VQE7SZn0yxS5p87IMoFZtjex8JqZBcA+Lc5H5LaAP4dhJ3Gzsy3KlO
-         0yqLsHNYkqPK2V/EY77dqTmkiIvc9cU0JFQvthBxG3JyG+244z88yRuxlrTkX/20+SUx
-         rpuVBoKmlyspm6jQx/YascK6F+fBN/7mUn7npiDnYcwA4d5Or2vOfhU9/pX0+Vc7G273
-         D3aet+cP1ZFSWlsUW4xmmCrfpwvydhdUVSLVHR0qd7u9uFxXvlyIwJnk8uLql1U4Va5n
-         ozbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jGzRITWnnLVmrJ4L8IGgC61oBoAO/ViNb6Y3fK7a/wM=;
-        b=SXJpYFhcNZ2S6A1htpef/uJCKJRl4pbjn1hcH03+Tbc6anRUYjcSKsX6p3KJDOCcvo
-         m6CXBZ0YYYLu+YqE+flBLyXSF+eEdHQF44anCohkFEqXLDaFHLtZCuegZrYz4wOMqnbn
-         JEaUG6CawUXY4qd1OMW/FaF1Dq39FDQtQ/8Wu5g0Ix/ehb/9kKpI+f8k+GCPb2wyPlHq
-         WiCU06DTmpUF7PXS/+ACFOA/Hc1Jy2DpgA0sid0SQ4NulbT4h49mtBXrJM7xCj+vKyXQ
-         Kno38mJT6uhuJ4qHnqdfG7ZWpoCUcwwPNUiHmcbVt8NY+MAd49xsT1HPp2AGMAapE/eX
-         xreA==
-X-Gm-Message-State: AOAM532R5ysun6mUCL5o7zn/oKzk6TT6Y4pY/50z6MbMJFY4WCAqqrdt
-        fKsTWxKia/Kur3T3LCFupDU=
-X-Google-Smtp-Source: ABdhPJwj1JpuN7EtAiiRfk9N4l+GbcXt+wr++YyB8k0pSk2o5JjZDPpGnxPpQgdprVYLL38Lai8z3g==
-X-Received: by 2002:a62:be04:: with SMTP id l4mr22396155pff.323.1595899379541;
-        Mon, 27 Jul 2020 18:22:59 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id q16sm6048922pfg.153.2020.07.27.18.22.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 18:22:58 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 10:22:57 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Petr Mladek <pmladek@suse.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: linux-next: Fixes tag needs some work in the printk tree
-Message-ID: <20200728012257.GA1282472@jagdpanzerIV.localdomain>
-References: <20200727234612.3037c4a5@canb.auug.org.au>
- <87tuxt3sjj.fsf@jogness.linutronix.de>
- <20200728081959.2df754d0@canb.auug.org.au>
+        Mon, 27 Jul 2020 21:24:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726247AbgG1BYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 21:24:20 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83E6A20809;
+        Tue, 28 Jul 2020 01:24:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595899459;
+        bh=ys14D/WWbTgAMo9tUTXuTr8A1pgEYRarJTsZ+VOuolM=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=AbkXQEtFmkuwJD7v357nl2piay6c727fizXm2rsKN1n7BUqoNIOPPpncYBpCmZLSp
+         4KLKOMO3AR6xo1DFMF3Q5QZ4LJE806WPR8eKdOcWgNcxP49ei20OwPaO6rzRLpnc+i
+         MtVrHLWyC7MnapG+sYdZn7ihwr/ECboL1VxHTN4g=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728081959.2df754d0@canb.auug.org.au>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200720122343.178203-1-jingxiangfeng@huawei.com>
+References: <20200720122343.178203-1-jingxiangfeng@huawei.com>
+Subject: Re: [PATCH] clk: ti: clkctrl: add the missed kfree() for _ti_omap4_clkctrl_setup()
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-omap@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jingxiangfeng@huawei.com
+To:     Jing Xiangfeng <jingxiangfeng@huawei.com>, mturquette@baylibre.com,
+        robh@kernel.org, t-kristo@ti.com, tony@atomide.com
+Date:   Mon, 27 Jul 2020 18:24:18 -0700
+Message-ID: <159589945839.1360974.1977401781355555451@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/07/28 08:19), Stephen Rothwell wrote:
-> On Mon, 27 Jul 2020 17:13:44 +0206 John Ogness <john.ogness@linutronix.de> wrote:
-> >
-> > On 2020-07-27, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-[..]
-> > > Maybe you meant
-> > >
-> > > Fixes: 896fbe20b4e2 ("printk: use the lockless ringbuffer")  
-> >
-> > Yes, sorry. I did not think linux-next SHA1 hashes were used in commit
-> > logs.
+Quoting Jing Xiangfeng (2020-07-20 05:23:43)
+> _ti_omap4_clkctrl_setup() misses to call kfree() in an error path. Add
+> the missed function call to fix it.
+>=20
+> Fixes: 6c3090520554 ("clk: ti: clkctrl: Fix hidden dependency to node nam=
+e")
+> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+> ---
+>  drivers/clk/ti/clkctrl.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
+> index 864c484bde1b..868e50132c21 100644
+> --- a/drivers/clk/ti/clkctrl.c
+> +++ b/drivers/clk/ti/clkctrl.c
+> @@ -655,8 +655,10 @@ static void __init _ti_omap4_clkctrl_setup(struct de=
+vice_node *node)
+>                 }
+> =20
+>                 hw =3D kzalloc(sizeof(*hw), GFP_KERNEL);
+> -               if (!hw)
+> +               if (!hw) {
+> +                       kfree(clkctrl_name);
+>                         return;
+> +               }
 
-Neither did I. The tag made sense to me, because it fixes a regression
-after all.
+Why not goto cleanup?
 
-> Well, it makes sense to use them if they are stable (i.e. the tree they
-> are in does not rebase) which, by this part of the cycle, I would
-> *hope* would be true (but sometimes isn't :-().
-
-So we probably should not have Fixes tags in linux-next commits
-(printk rework branch) then, for the time being. I'll keep an eye
-on that.
-
-	-ss
+> =20
+>                 hw->enable_reg.ptr =3D provider->base + reg_data->offset;
+> =20
+> --=20
+> 2.17.1
+>
