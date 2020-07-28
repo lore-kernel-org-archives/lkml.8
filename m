@@ -2,144 +2,261 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8770AC433FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E99C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5126020714
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:53:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="n3Kesn6r";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="GsWS1ctU"
+	by mail.kernel.org (Postfix) with ESMTP id 085B82177B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:55:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgG1Hxr (ORCPT
+        id S1727939AbgG1Hzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:53:47 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:41614 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727962AbgG1Hxo (ORCPT
+        Tue, 28 Jul 2020 03:55:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727858AbgG1Hzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:53:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1595922823; x=1627458823;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=oU9Z3Gg9K/Z//5uorPXkS15/0a3y53KaU97klfMCIts=;
-  b=n3Kesn6rJds10U9L0noNDj0nIA9gpZM3Md5PyXXkN7IHX16ru7MHLWfM
-   c5UYTQwvP0nisLJBvg136ES/OV5EW4t8OUk0B/PWiKEXA93aUG9M3Zuf2
-   mWvME0EzipOB9UCMtmfZ2YVKq8FjnMtmCw0UbYXYjLAp52kbPVOhaEfXz
-   wBZLZnD44GUQ2gh/Vv9Sy5KXJ3cwIzZ+H7S9trzW0YlcsTjc4wS4sIQ4G
-   cKDP5YKyUEnctdfnicX1TG6fDW39YJmACTl4YlI4eRTgFT9D/0KDC4CI6
-   XRAmYArrMmkQX/rlEXs22ckrQDK50/Ktt+hbrZeC/ub+tZapIqk/fBOuR
-   Q==;
-IronPort-SDR: fIr0L7QG3yaCRnvxQg/Mx6Q/IE50WieoWnMNSRQz8UpDp4UYzbcidiqGO2t8FIfCNQaG/Rdsfv
- 3UapWYDcmBiztFlesj7hzaLBP5GxTrwiugr1unckcsFt9nrTOtY7hlrctjRxeVVaTkHvfAG1/6
- srNsodIdJZUX0VMveErHwLlOD4qZ+1/s9XDyfNJtvAUTrFOZBessJpF+XNEe+NF3dpA6NvKQz2
- YyKJ3oEKXXxqS/6FeystMjprfOywJFz0pAMaemU7rEpMTVvdEDchNfUaYSk1Q5+6RJ7zlinTbD
- W4o=
-X-IronPort-AV: E=Sophos;i="5.75,405,1589212800"; 
-   d="scan'208";a="143534148"
-Received: from mail-bn8nam11lp2174.outbound.protection.outlook.com (HELO NAM11-BN8-obe.outbound.protection.outlook.com) ([104.47.58.174])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Jul 2020 15:53:41 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hsfshJ76Tos4dpBb2Tik8Psnw50IkssinFoYXvBDGBGlplce7yaaM8yDfO9NfA5f9yGUyKKo5t0ir9bkowVf3NCVmxihvNmpPy1Cky01cSCYc7xk+xu6per2GW7MSPqx03jm97TlOJdM4mxrQ+/kkFJsWDZugAcz7oUR6xPVYNg2Fz0n2DUCZH0XUYZxc/E4xj7ncHGI0ozEppsqQ9mj5Vxub/Gc0TxuQbIMUU0UStklwUFwTogxqJeF+DAD44fkMNyRMUPWrj7Kb8jAz8avZl43TtKyWnf0xSn/q1/Dur/inQJwSTYwH7w7LxqU9tr8NR7pYdjmPjneFLmH4vrY2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oU9Z3Gg9K/Z//5uorPXkS15/0a3y53KaU97klfMCIts=;
- b=loiKL7jRRLgrlLAGFxQMDxF9WionaE5mTQn42Wz+1XddNqoz1HSixTJ+oUMmcozyXnUQaoLzASAQ6d1eHQ5LcKhxk6ef5QO3K0HbcQycQxhIcXuPRYDvgjt8La6Ya1t1Mi5RVpz5yncUxScNAfTSQgYLdLuKPjcvewWkoE9MoT7JeTLVd5s7DzoWN8KMRZW9AlxjIkhnGDBOm+hMCxq/izQ8Y1wFP80r4awJCjEaE7Bk42u1pIRsHlmQpcUTcKP2ABnsW3IveiaZU5rZxRpNDM4qHc2vlftckq9KwxmegikdzyDlKbVQJvy6WresFhT+gg/h+t2kaClY2xhRyHsWxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oU9Z3Gg9K/Z//5uorPXkS15/0a3y53KaU97klfMCIts=;
- b=GsWS1ctUIvgQW31/rZfjW3b0NF+oAn0B/3FRrmD9Z1AtLOnymk9MwCse/rdZElNpDcAzdSadg9oVmknNSbPH71VGx79OLBHEBScbDb1Wfa4kOOIAxq+Z2TNTUjvs4BjWcZMvNnhdoHAZQ8D59hnCHAaJnf2MILO9yZlk9oI4aBc=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4638.namprd04.prod.outlook.com (2603:10b6:805:ab::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.25; Tue, 28 Jul
- 2020 07:53:40 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::1c80:dad0:4a83:2ef2]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::1c80:dad0:4a83:2ef2%4]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
- 07:53:39 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Can Guo <cang@codeaurora.org>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
-        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
-        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
-        "sh425.lee@samsung.com" <sh425.lee@samsung.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        "saravanak@google.com" <saravanak@google.com>,
-        "salyzyn@google.com" <salyzyn@google.com>
-CC:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v7 3/8] scsi: ufs-qcom: Remove testbus dump in
- ufs_qcom_dump_dbg_regs
-Thread-Topic: [PATCH v7 3/8] scsi: ufs-qcom: Remove testbus dump in
- ufs_qcom_dump_dbg_regs
-Thread-Index: AQHWZJw8tDsfFHqTOkWsg2EI4/HQvakcnwNg
-Date:   Tue, 28 Jul 2020 07:53:39 +0000
-Message-ID: <SN6PR04MB464084A3D22DD5546399A9F5FC730@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <1595912460-8860-1-git-send-email-cang@codeaurora.org>
- <1595912460-8860-4-git-send-email-cang@codeaurora.org>
-In-Reply-To: <1595912460-8860-4-git-send-email-cang@codeaurora.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: codeaurora.org; dkim=none (message not signed)
- header.d=none;codeaurora.org; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 66f00031-5575-4577-6e8a-08d832cb576a
-x-ms-traffictypediagnostic: SN6PR04MB4638:
-x-microsoft-antispam-prvs: <SN6PR04MB4638472AD0209EE9E29C523EFC730@SN6PR04MB4638.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:644;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: N7Y37qKN2DnML8mJTVCuXz4+PFPpr99RdJlhltBQSy2thR/yd1/jR641RvomWHJ8DFhTzpw2KqOf5JdVnNzjYBezF9YKLN2jMOmNIcOdrg/nVUQPLNCoYp4+cEMZMwusWWMLCXGMsS63dJdjKf/qcPYiGCWSl0idIwvT7gBLuphFxkeLFjYox148VpNME43vbhqabFro/HJYvV/qqSyjIaq2qV6fo86zHU77MS07l84cebPJs7oqQEIv6LJV4gFgeYXkQF9xjFYtfBqcNiGa9ujLjK+cAnWIkXYyOlgcx4m7ThNJdGJsKMD0+mqRhiUtaML6dhrh7t0PXAVLEkzcf9pNIU1e2bdAx0BFOEUOG8LhTR6wAeWwYmXGNhXHzdLW
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(396003)(346002)(366004)(376002)(66446008)(66946007)(86362001)(66556008)(64756008)(26005)(110136005)(8676002)(186003)(2906002)(33656002)(558084003)(478600001)(66476007)(4326008)(6506007)(76116006)(7696005)(9686003)(5660300002)(71200400001)(8936002)(7416002)(55016002)(54906003)(52536014)(316002)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: bd9ioSIwlVm3DYunLgzVmyKngnK3FlnQXP8hjyoT3uw0R8JJIybc8E04BqIgf6NfDQo4fdNgk4p7ELTiaLIGC5lLy4WvJ2mV5eDOLg89WuavB+k+wTOVUodCiIHYMWHE19EFGjc0v7myv/ZpYbW1e3/IXdNrwSiNUQUxcXsIYUkNDhDBdR7z/sr/xHNK+6kt9WwVwoGdvje51TOc7tvdB68UOXo7Yer3BIm3BJmjm/ovYo0hjTOToO6civ8wSiuWipHE+m5rBtYmdisCatIelsttolJ9fS39oaP5VFITq5e/l3OGR6AoCqStKcUtEfKCqz5WxNzOPJdBfs+p0D8uF9TjOtE8JVhbUv5yvl/zHwlRUmhimR9dnsVsx60P15FlOaS02QB8TMWSkIh7+f95W4dTZ8R4gl49u6sEYR9CnJMLMvzVcGoRaE3RG1BZlAhOZCqFEcs7SW47/hgqqj0AGt+wNtTXjzyHt5BbBJuM0dcDZz9WjS4NRMQ03pTi64pW
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 Jul 2020 03:55:52 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0373C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:55:51 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1k0KSi-0000xu-DU; Tue, 28 Jul 2020 09:55:48 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1k0KSi-0005rg-0A; Tue, 28 Jul 2020 09:55:48 +0200
+Date:   Tue, 28 Jul 2020 09:55:47 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 00/10] remoteproc: imx_rproc: support iMX8M and early boot
+Message-ID: <20200728075547.u7bk22xnmu5jjpoo@pengutronix.de>
+References: <20200724080813.24884-1-peng.fan@nxp.com>
+ <20200727063839.kfgrtperzkygvjr2@pengutronix.de>
+ <DB6PR0402MB2760FBC0109E98A447BB716588720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+ <20200727075441.lgscydoj3txupeay@pengutronix.de>
+ <DB6PR0402MB27605640244CE751317E6DE888720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+ <20200728072651.zcflghll4wa7rm55@pengutronix.de>
+ <DB6PR0402MB27603441BEE037ECCB3F021088730@DB6PR0402MB2760.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR04MB4640.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66f00031-5575-4577-6e8a-08d832cb576a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 07:53:39.7498
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +KTnSxvzo1RrQBBKnUm4wPlqnoGPdRwRV1NxPg0OmmTS1UlGgtqfDXTyd7BEa9fj0jc43vMkNr+qVUoQin65RA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4638
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zr56xg4gghcrtcpk"
+Content-Disposition: inline
+In-Reply-To: <DB6PR0402MB27603441BEE037ECCB3F021088730@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:54:57 up 255 days, 23:13, 251 users,  load average: 0.05, 0.08,
+ 0.04
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+
+--zr56xg4gghcrtcpk
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jul 28, 2020 at 07:50:04AM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH 00/10] remoteproc: imx_rproc: support iMX8M and ear=
+ly
+> > boot
+> >=20
+> > On Mon, Jul 27, 2020 at 09:18:31AM +0000, Peng Fan wrote:
+> > > > Subject: Re: [PATCH 00/10] remoteproc: imx_rproc: support iMX8M and
+> > > > early boot
+> > > >
+> > > > On Mon, Jul 27, 2020 at 06:44:32AM +0000, Peng Fan wrote:
+> > > > > Hi Oleksij,
+> > > > >
+> > > > > > Subject: Re: [PATCH 00/10] remoteproc: imx_rproc: support iMX8M
+> > > > > > and early boot
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > On Fri, Jul 24, 2020 at 04:08:03PM +0800, Peng Fan wrote:
+> > > > > > > This patchset is to support i.MX8MQ/M coproc booted before li=
+nux.
+> > > > > > > Since i.MX8MQ/M was not supported, several patches are needed
+> > > > > > > to first support the platform, then support early boot case.
+> > > > > > >
+> > > > > > > I intended to included i.MX8QM/QXP, but that would introduce a
+> > > > > > > large patchset, so not included. But the clk/syscon optional
+> > > > > > > patch for i.MX8QM/QXP was still kept here to avoid rebase err=
+or.
+> > > > > >
+> > > > > > Thank you for your work.
+> > > > > >
+> > > > > > Can you please provide more information about big picture of th=
+is
+> > work.
+> > > > > >
+> > > > > > If I see it correctly, we have here support for i.MX8MM, which
+> > > > > > seems to be able to fully control Cortex M4 (enable CPU core, e=
+tc...).
+> > > > >
+> > > > > Yes.
+> > > >
+> > > > In this case, I would recommend to mainline the i.MX8MM part
+> > > > first/separately.
+> > >
+> > > Only the last patch is to support earlyboot, all others is imx8mm par=
+t.
+> >=20
+> > ok
+> >=20
+> > > >
+> > > > > >
+> > > > > > And other case, where remoteproc is running on application
+> > > > > > processor and can't or should not touch M4 (i.MX7ULP,
+> > > > > > i.MX8QM/QXP..). Since M4 provides some functionality, you are
+> > > > > > trying to reuse remoteproc framework to get resource table
+> > > > > > present in ELF header and to dynamically load things. For some
+> > > > > > reasons this header provides more information then needed, so
+> > > > > > you are changing the ELF parser in the kernel
+> > > > to workaround it.
+> > > > >
+> > > > > Not exactly.
+> > > > >
+> > > > > For i.MX8MM, we support two cases. M4 kicked by U-Boot, M4 kicked
+> > > > > by
+> > > > Linux remoteproc.
+> > > > > For i.MX8QM/QXP, the typical usecase is M4 kicked by SCFW, but we
+> > > > > will also add M4 kicked by Linux remoteproc.
+> > > > > For i.MX7ULP, I would only support M4 dual boot case, M4 control
+> > > > everything.
+> > > >
+> > > > From current state of discussion, i'm not sure what role plays
+> > > > remoteproc in the scenario where M4 is started before linux.
+> > > > Especially if we are not using resource table.
+> > >
+> > > We are using resource table from an address, not in elf file.
+> > > This is the new feature in Linux-next to support coproc booted early.
+> > >
+> > > >
+> > > > > The reason the change the elf parser is that when M4 elf is loaded
+> > > > > by Linux remoteproc, It use memset to clear area.
+> > > >
+> > > > The use of memset, depends on ELF format. Fix/change the linker
+> > > > script on your firmware and memset will be never called.
+> > > >
+> > > > > However we use ioremap, memset on ARM64 will report crash to
+> > > > > device nGnRE memory. And we could not use ioremap_wc to TCM area,
+> > > > > since it could have data correctly written into TCM.
+> > > >
+> > > > I have strong feeling, that we are talking about badly or not
+> > > > properly formatted ELF binary. I would prefer to double check it,
+> > > > before we will apply fixes on wrong place.
+> > > >
+> > > > > Maintainer not wanna to drop memset in common code, and TI guys
+> > > > > suggest add i.MX specific elf stuff. So I add elf handler in i.MX=
+ code.
+> > > >
+> > > > I think, removing memset may damage current users of imx_rproc driv=
+er.
+> > > > Since, like I said: the use of memset depends on ELF format.
+> > >
+> > > In my elf file, the last PT_LOAD contains data/bss/heap/stack. I'll
+> > > check with our MCU guys, we only need the specific data loaded.
+> > >
+> > > Elf file type is EXEC (Executable file) Entry point 0x1ffe0355 There
+> > > are 3 program headers, starting at offset 52
+> > >
+> > > Program Headers:
+> > >   Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz
+> > Flg Align
+> > >   LOAD           0x010000 0x1ffe0000 0x1ffe0000 0x00240 0x00240
+> > R   0x10000
+> > >   LOAD           0x010240 0x1ffe0240 0x1ffe0240 0x03e90 0x03e90
+> > RWE 0x10000
+> > >   LOAD           0x020000 0x20000000 0x1ffe40d0 0x00068 0x0ad00
+> > RW  0x10000
+> > >
+> > >  Section to Segment mapping:
+> > >   Segment Sections...
+> > >    00     .interrupts
+> > >    01     .resource_table .text .ARM .init_array .fini_array
+> > >    02     .data .bss .heap .stack
+> >=20
+> > Here is an example of formatting ELF for remoteproc:
+> > https://git.pengutronix.de/cgit/ore/OSELAS.BSP-Pengutronix-DualKit/tree=
+/loc
+> > al_src/remoteproc-elf/linker.ld
+> > https://git.pengutronix.de/cgit/ore/OSELAS.BSP-Pengutronix-DualKit/tree=
+/loc
+> > al_src/remoteproc-elf/imx7m4.S
+> >=20
+> > In this example I pack linux in to remoteproc elf image and start linux=
+ on
+> > imx7d-m4 part.
+> > Will be interesting if you can do the same on imx8* SoCs ;)
 >=20
-> Dumping testbus registers is heavy enough to cause stability issues
-> sometime, just remove them as of now.
+> In NXP release, the m4 elf files have data/bss/heap/stack in the same
+> data area, so the linker merged them into one segment and cause
+> memsz > filesz.
 >=20
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
+> I think I need to propose platform specific elf memset/memcpy,
+> such as rproc_elf_memcpy, rproc_elf_memset,
+>=20
+> To i.MX, need use memset_io and memcpy_toio, taking TCM
+> as device memory.
+>=20
+> Note: memset without io will cause abort when memsz>filesz.
+> So use memset_io is safe.
+
+Sounds good, i would prefer this way.
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--zr56xg4gghcrtcpk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl8f2f8ACgkQ4omh9DUa
+UbMiRA/9EtUGM3624lRjzYAxczQgqe2vYquaps9/MyZarnC3pL9V01Pu+vor7ac1
+WZRycoYC8kzhKuCLKykSaLda/Z7W/MUZ4kL4C7powYrPpxaRVh5cSIT/baYicR9F
+PNnJkSJrJ35bIYqg7aCGHmzcymZi1q8mJGQ4bycgDjgGwC7c3bbpUYhisWnLaHYt
+DdzR5G9XZ77mXq0pbHa5E9dodRVsTWzy78hHpt6ChR/AKDbQ0iNczdBUDdsUcZE/
+7itAkxsh8l0qBJHchBjmRh4J5W7a85zGte/DG5LKPbzkuIYHXGXCz2D1BLwiJibW
+WpwwU18J1ok7byCUZ3kOw0aanB4IQjpbuzL9YWRYi8Z4sIhLonuZred84I7FiKYq
+2YJ/pJZBdaSLRPlfly2KhoBB6bW0OKpsFY+dUuTMfyI6M3MEZLKUA3aElAC3epYA
+lVHEmiWo4amVELR5okS/XjyHVf/UuZ+KrTZZilI6hN8NU0n6YGWn6te2p26XryCo
+6all/0DGfnFsGhbEnwd+y/+8y7dSTC9yLWoaSWgql4Qyu2Ol2k8x+VOxyW17vt5D
+99n+noDbdCNjtmL6FZ/zXi8qEXITdMXvJ3UxzVy1aa5DxXCsOqNUtUykK/jKQiTq
+bPa8jhymbYw6x/pOXa/HyxmMa4jvlkuQURaDgmaIhgnifwfT+iY=
+=MHWV
+-----END PGP SIGNATURE-----
+
+--zr56xg4gghcrtcpk--
