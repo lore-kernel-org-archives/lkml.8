@@ -2,135 +2,216 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7F3C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C02C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B27F20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:06:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="OyCTe/MK"
+	by mail.kernel.org (Postfix) with ESMTP id 3811720786
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:06:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731829AbgG1RGc (ORCPT
+        id S1731818AbgG1RGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 13:06:32 -0400
-Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:44111 "EHLO
-        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731684AbgG1RGb (ORCPT
+        Tue, 28 Jul 2020 13:06:22 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:56614 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731684AbgG1RGW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 13:06:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1595955990;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=NhQlpfgEzw5uIL26d7//uQgtQ8+lTO6nNMY87duUokQ=;
-  b=OyCTe/MK30lAmmBevQOYaBhc1kTOGCX2+elGbz35mnBRtL+kTDT9XQ4A
-   RJBY4+Hqa9skN6X4Ep2ii6pIa/fD8ahWECBCF1b4rw+V0ZQHpcwQOEzgr
-   flWCDPV9WEK3hKqp76FAwbILAkgVx5cU6d/EFvIfw5xsH48ubnHDhoMQl
-   g=;
-Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: Zv07BbGuPhsiZuK1RAL+MXQS7+DkALPbSOLVSZU6zFhcWsNovWd2ezPA0u0r1ydAx+ftO+5rIq
- NYZIB7Ir83eaSN5NLUnEQUwpkSM93rbTHf5FdDjDIWKAeHW5XlIoRUumb0e9wguAvIvp4K7b+H
- wj1PKHL59HxgJHNABW9nSYRmjho8ubni3kkx1ZFgHlasMw2iQH4TLZsXntv6C0nojnpI0osC1H
- P4GfMlvA6ODgHDaodR3qUiDDbVxaEHvhgheUl2K9TujfOtvBGncUzSfPj+3oWbSEcATqj0RXdv
- ExM=
-X-SBRS: 2.7
-X-MesageID: 23700460
-X-Ironport-Server: esa6.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.75,406,1589256000"; 
-   d="scan'208";a="23700460"
-Subject: Re: [PATCH v3 4/4] xen: add helpers to allocate unpopulated memory
-To:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        Julien Grall <julien@xen.org>
-CC:     Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Wei Liu <wl@xen.org>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        David Airlie <airlied@linux.ie>,
-        "Yan Yankovskyi" <yyankovskyi@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        "Michal Hocko" <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        <xen-devel@lists.xenproject.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>
-References: <20200727091342.52325-1-roger.pau@citrix.com>
- <20200727091342.52325-5-roger.pau@citrix.com>
- <b5460659-88a5-c2aa-c339-815d5618bcb5@xen.org>
- <20200728165919.GA7191@Air-de-Roger>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Message-ID: <cb1790b3-2ad0-2c1b-a632-e4fea4b6bcfa@citrix.com>
-Date:   Tue, 28 Jul 2020 18:06:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 13:06:22 -0400
+Received: by mail-io1-f69.google.com with SMTP id f21so14058293ioo.23
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 10:06:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=gxgsVNgMju6EFb0WmfcBE/0w/FhLwyo5HMozMxfMsks=;
+        b=GHG2ekLS9LtdOOV6RAILvXP7ZVUCmaedRWFgjhg/YK0m/OGO0fg4E6pozvUUZrEAnS
+         tFGRg1tsn35lWYF/5Kdl8pgCgHxx/g2uxj2P94bgdG/1/iSm/1rBNk3iZisad5jMQErB
+         WpE3C5DGLmi6dSZur/j/mfxsj10TBIWCYhnhEfP7llE1FiEEv+S4ObXL1TlT2vA84w9k
+         tHhvEZqljvP6W/Qcf1n+npoUe0UW3m+2cmPnkLTAOZj03ozKX14bWL9UZ7rZHZi13JXL
+         yTUTMvJ3t4bwIeO6N+zZc7A7had43cPdJZuwk/2/AGvWQJcc7GIq+NIcAMjmzAebYBLp
+         fBOg==
+X-Gm-Message-State: AOAM531zZ7dxHnUktLO5ufHtSBmoai5l15Ljng8rx4TacWMSOU8vjqVc
+        vO2tuwutJ8DsQ071rc0QPc8GJRHh8yaaFWEOp2Q7LFWHZCX6
+X-Google-Smtp-Source: ABdhPJyfumVwNMg7hYM9ynDDWhAUQv9Rn2C++jZ2YLGJwgOP1QWYGXa0QiStQHC+tN2CwyutCSwzfYReVkvtKMHU1aC5pKRzPKQY
 MIME-Version: 1.0
-In-Reply-To: <20200728165919.GA7191@Air-de-Roger>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+X-Received: by 2002:a92:194d:: with SMTP id e13mr19463433ilm.125.1595955981022;
+ Tue, 28 Jul 2020 10:06:21 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 10:06:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000537dfd05ab837526@google.com>
+Subject: KASAN: out-of-bounds Read in ath9k_hif_usb_rx_cb (2)
+From:   syzbot <syzbot+dbcf296f0cfda711b5c4@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
+        davem@davemloft.net, kuba@kernel.org, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/07/2020 17:59, Roger Pau Monné wrote:
-> On Tue, Jul 28, 2020 at 05:48:23PM +0100, Julien Grall wrote:
->> Hi,
->>
->> On 27/07/2020 10:13, Roger Pau Monne wrote:
->>> To be used in order to create foreign mappings. This is based on the
->>> ZONE_DEVICE facility which is used by persistent memory devices in
->>> order to create struct pages and kernel virtual mappings for the IOMEM
->>> areas of such devices. Note that on kernels without support for
->>> ZONE_DEVICE Xen will fallback to use ballooned pages in order to
->>> create foreign mappings.
->>>
->>> The newly added helpers use the same parameters as the existing
->>> {alloc/free}_xenballooned_pages functions, which allows for in-place
->>> replacement of the callers. Once a memory region has been added to be
->>> used as scratch mapping space it will no longer be released, and pages
->>> returned are kept in a linked list. This allows to have a buffer of
->>> pages and prevents resorting to frequent additions and removals of
->>> regions.
->>>
->>> If enabled (because ZONE_DEVICE is supported) the usage of the new
->>> functionality untangles Xen balloon and RAM hotplug from the usage of
->>> unpopulated physical memory ranges to map foreign pages, which is the
->>> correct thing to do in order to avoid mappings of foreign pages depend
->>> on memory hotplug.
->> I think this is going to break Dom0 on Arm if the kernel has been built with
->> hotplug. This is because you may end up to re-use region that will be used
->> for the 1:1 mapping of a foreign map.
->>
->> Note that I don't know whether hotplug has been tested on Xen on Arm yet. So
->> it might be possible to be already broken.
->>
->> Meanwhile, my suggestion would be to make the use of hotplug in the balloon
->> code conditional (maybe using CONFIG_ARM64 and CONFIG_ARM)?
-> Right, this feature (allocation of unpopulated memory separated from
-> the balloon driver) is currently gated on CONFIG_ZONE_DEVICE, which I
-> think could be used on Arm.
->
-> IMO the right solution seems to be to subtract the physical memory
-> regions that can be used for the identity mappings of foreign pages
-> (all RAM on the system AFAICT) from iomem_resource, as that would make
-> this and the memory hotplug done in the balloon driver safe?
+Hello,
 
-The right solution is a mechanism for translated guests to query Xen to
-find regions of guest physical address space which are unused, and can
-be safely be used for foreign/grant/other  mappings.
+syzbot found the following issue on:
 
-Please don't waste any more time applying more duct tape to a broken
-system, and instead spend the time organising some proper foundations.
+HEAD commit:    25252919 xhci: dbgtty: Make some functions static
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=164adf28900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fb6677a3d4f11788
+dashboard link: https://syzkaller.appspot.com/bug?extid=dbcf296f0cfda711b5c4
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
-~Andrew
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+dbcf296f0cfda711b5c4@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: out-of-bounds in ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:637 [inline]
+BUG: KASAN: out-of-bounds in ath9k_hif_usb_rx_cb+0xe82/0xf80 drivers/net/wireless/ath/ath9k/hif_usb.c:671
+Read of size 4 at addr ffff8881a248c098 by task kworker/0:5/3249
+
+CPU: 0 PID: 3249 Comm: kworker/0:5 Not tainted 5.8.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events request_firmware_work_func
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xf6/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0+0x1a/0x210 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x37/0x7c mm/kasan/report.c:530
+ ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:637 [inline]
+ ath9k_hif_usb_rx_cb+0xe82/0xf80 drivers/net/wireless/ath/ath9k/hif_usb.c:671
+ __usb_hcd_giveback_urb+0x32d/0x560 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x367/0x410 drivers/usb/core/hcd.c:1716
+ dummy_timer+0x11f2/0x3240 drivers/usb/gadget/udc/dummy_hcd.c:1967
+ call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1415
+ expire_timers kernel/time/timer.c:1460 [inline]
+ __run_timers.part.0+0x54c/0x9e0 kernel/time/timer.c:1784
+ __run_timers kernel/time/timer.c:1756 [inline]
+ run_timer_softirq+0x80/0x120 kernel/time/timer.c:1797
+ __do_softirq+0x222/0x95b kernel/softirq.c:292
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ do_softirq_own_stack+0xed/0x140 arch/x86/kernel/irq_64.c:77
+ invoke_softirq kernel/softirq.c:387 [inline]
+ __irq_exit_rcu kernel/softirq.c:417 [inline]
+ irq_exit_rcu+0x150/0x1f0 kernel/softirq.c:429
+ sysvec_apic_timer_interrupt+0x49/0xc0 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:585
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
+RIP: 0010:console_unlock+0xbe2/0xcd0 kernel/printk/printk.c:2497
+Code: fc ff ff e8 10 31 16 00 0f 0b e9 b1 fd ff ff e8 04 31 16 00 0f 0b e9 04 fe ff ff e8 f8 30 16 00 e8 43 bc 1b 00 ff 74 24 30 9d <e9> 6b fc ff ff e8 04 e0 3f 00 e9 65 f6 ff ff e8 0a e0 3f 00 e9 1f
+RSP: 0018:ffff8881c8a3fa18 EFLAGS: 00000293
+RAX: 0000000000465681 RBX: 0000000000000200 RCX: 0000000000000006
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8129790d
+RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000000 R12: ffffffff82b05a80
+R13: ffffffff876f53b0 R14: 0000000000000042 R15: dffffc0000000000
+ vprintk_emit+0x1b2/0x460 kernel/printk/printk.c:2021
+ vprintk_func+0x8b/0x133 kernel/printk/printk_safe.c:393
+ printk+0xba/0xed kernel/printk/printk.c:2070
+ ath9k_htc_hw_init.cold+0x17/0x2a drivers/net/wireless/ath/ath9k/htc_hst.c:502
+ ath9k_hif_usb_firmware_cb+0x274/0x530 drivers/net/wireless/ath/ath9k/hif_usb.c:1220
+ request_firmware_work_func+0x126/0x250 drivers/base/firmware_loader/main.c:1001
+ process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x392/0x470 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+
+general protection fault, probably for non-canonical address 0xdead000000000400: 0000 [#1] SMP KASAN
+CPU: 0 PID: 3249 Comm: kworker/0:5 Not tainted 5.8.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events request_firmware_work_func
+RIP: 0010:nearest_obj include/linux/slub_def.h:176 [inline]
+RIP: 0010:print_address_description.constprop.0+0x18e/0x210 mm/kasan/report.c:388
+Code: c4 60 5b 5d 41 5c 41 5d c3 4c 89 e6 48 2b 35 41 e2 a3 05 48 89 e8 49 8b 5c 24 18 48 c1 fe 06 48 c1 e6 0c 48 03 35 3a e2 a3 05 <8b> 4b 18 48 29 f0 48 99 48 89 cf 48 f7 f9 41 0f b7 44 24 2a 48 89
+RSP: 0018:ffff8881db209838 EFLAGS: 00010086
+RAX: ffff8881a248c098 RBX: dead000000000400 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: ffff8881a248c000 RDI: ffffed103b6412f9
+RBP: ffff8881a248c098 R08: 0000000000000000 R09: ffff8881db21fe8b
+R10: 0000000000000000 R11: 0000000000000004 R12: ffffea0006892300
+R13: ffffffff82e223f2 R14: ffffffff82e223f2 R15: ffffed103a67ee10
+FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fda4b7b9000 CR3: 00000001d1c45000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x37/0x7c mm/kasan/report.c:530
+ ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:637 [inline]
+ ath9k_hif_usb_rx_cb+0xe82/0xf80 drivers/net/wireless/ath/ath9k/hif_usb.c:671
+ __usb_hcd_giveback_urb+0x32d/0x560 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x367/0x410 drivers/usb/core/hcd.c:1716
+ dummy_timer+0x11f2/0x3240 drivers/usb/gadget/udc/dummy_hcd.c:1967
+ call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1415
+ expire_timers kernel/time/timer.c:1460 [inline]
+ __run_timers.part.0+0x54c/0x9e0 kernel/time/timer.c:1784
+ __run_timers kernel/time/timer.c:1756 [inline]
+ run_timer_softirq+0x80/0x120 kernel/time/timer.c:1797
+ __do_softirq+0x222/0x95b kernel/softirq.c:292
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ do_softirq_own_stack+0xed/0x140 arch/x86/kernel/irq_64.c:77
+ invoke_softirq kernel/softirq.c:387 [inline]
+ __irq_exit_rcu kernel/softirq.c:417 [inline]
+ irq_exit_rcu+0x150/0x1f0 kernel/softirq.c:429
+ sysvec_apic_timer_interrupt+0x49/0xc0 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:585
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
+RIP: 0010:console_unlock+0xbe2/0xcd0 kernel/printk/printk.c:2497
+Code: fc ff ff e8 10 31 16 00 0f 0b e9 b1 fd ff ff e8 04 31 16 00 0f 0b e9 04 fe ff ff e8 f8 30 16 00 e8 43 bc 1b 00 ff 74 24 30 9d <e9> 6b fc ff ff e8 04 e0 3f 00 e9 65 f6 ff ff e8 0a e0 3f 00 e9 1f
+RSP: 0018:ffff8881c8a3fa18 EFLAGS: 00000293
+RAX: 0000000000465681 RBX: 0000000000000200 RCX: 0000000000000006
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8129790d
+RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000000 R12: ffffffff82b05a80
+R13: ffffffff876f53b0 R14: 0000000000000042 R15: dffffc0000000000
+ vprintk_emit+0x1b2/0x460 kernel/printk/printk.c:2021
+ vprintk_func+0x8b/0x133 kernel/printk/printk_safe.c:393
+ printk+0xba/0xed kernel/printk/printk.c:2070
+ ath9k_htc_hw_init.cold+0x17/0x2a drivers/net/wireless/ath/ath9k/htc_hst.c:502
+ ath9k_hif_usb_firmware_cb+0x274/0x530 drivers/net/wireless/ath/ath9k/hif_usb.c:1220
+ request_firmware_work_func+0x126/0x250 drivers/base/firmware_loader/main.c:1001
+ process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x392/0x470 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+Modules linked in:
+---[ end trace 6f3e98b95d1a4467 ]---
+RIP: 0010:nearest_obj include/linux/slub_def.h:176 [inline]
+RIP: 0010:print_address_description.constprop.0+0x18e/0x210 mm/kasan/report.c:388
+Code: c4 60 5b 5d 41 5c 41 5d c3 4c 89 e6 48 2b 35 41 e2 a3 05 48 89 e8 49 8b 5c 24 18 48 c1 fe 06 48 c1 e6 0c 48 03 35 3a e2 a3 05 <8b> 4b 18 48 29 f0 48 99 48 89 cf 48 f7 f9 41 0f b7 44 24 2a 48 89
+RSP: 0018:ffff8881db209838 EFLAGS: 00010086
+RAX: ffff8881a248c098 RBX: dead000000000400 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: ffff8881a248c000 RDI: ffffed103b6412f9
+RBP: ffff8881a248c098 R08: 0000000000000000 R09: ffff8881db21fe8b
+R10: 0000000000000000 R11: 0000000000000004 R12: ffffea0006892300
+R13: ffffffff82e223f2 R14: ffffffff82e223f2 R15: ffffed103a67ee10
+FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fda4b7b9000 CR3: 00000001d1c45000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
