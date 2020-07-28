@@ -2,123 +2,106 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43413C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B2AC433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 220D12074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C1F20809
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595954281;
-	bh=UaTT6eelrtF58zWytNG0egvpELFC0XFjYD4HTtCZOO0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=a+zBpifUPCqCffWx8qibqs7XA4ybwkNx5/cmrHTZI1lZC0Soxyd5gr099CrYqvpFi
-	 P1G7rgJLU8mQYZPhBTWO8l10seqrNffN16CkwO6esnC3gBH75rGrbUHSjXMkzdk+m/
-	 MvEbjjRtLtpA+XjNQhAUwAn8qZbfQBOL06htvTzE=
+	s=default; t=1595954029;
+	bh=DtCFJacsr6CdI0tGB53RDI4b485bWpqMFwYlC6VK2wg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F6HvthhQmo4d620I619gL17h2SrK5pc/ZeuRCGEIiHZfKQXMlSlDM2PsZfGmHXS7W
+	 hiXRIyhz5I2MCFLGUFCiM0ubCzD9m4hrOZ8tDI0q/kZZXqtPdKf32NRo4sSMx7Y4bg
+	 mStkFk386YbdYpjoRETWKkOAaR8RykQyKjy3+F88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731556AbgG1QiA (ORCPT
+        id S1731524AbgG1Qds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:38:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52060 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 12:33:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731443AbgG1Qh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:37:59 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1731191AbgG1Qds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:33:48 -0400
+Received: from localhost (p54b330d0.dip0.t-ipconnect.de [84.179.48.208])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ABAD2053B;
-        Tue, 28 Jul 2020 16:37:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6EEE20792;
+        Tue, 28 Jul 2020 16:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595954279;
-        bh=UaTT6eelrtF58zWytNG0egvpELFC0XFjYD4HTtCZOO0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=2I46v+1m8oKmJ9VQeo6N0nZjzcRmXs1Ru/C4qbubwOnEDs27BOFW3Kl+HdEPSSiBk
-         fu7YtYgh8gzbomyi98+V8kVZYGGWkFSh6gateSBafHcHZIcZ4DjQC26w9JylQyHBzx
-         y4cWhePYSIuGjTcYQT0/UjYg1ZER9QYZh1A14SgU=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k0Sc1-00FiFS-5h; Tue, 28 Jul 2020 17:37:57 +0100
+        s=default; t=1595954027;
+        bh=DtCFJacsr6CdI0tGB53RDI4b485bWpqMFwYlC6VK2wg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Kk/27EblgUcXZbFkpySgRDHWvU9q4nbOdBY7CGgzEM09surZC9Cm1dn6Q3drgVp04
+         I14RirqQkUDrlzwne0ThSDDeKp/VMskCM/8AdAoHq+HrYTOtT9crK930N4HG1rdfuC
+         Qa3EqEH4Tc3Xy7+5+7ClSgKcQuLHsfPABN1eSvOM=
+Date:   Tue, 28 Jul 2020 18:33:44 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [RFC PATCH v5 02/14] i2c: tegra: Remove NULL pointer check
+ before clk_enable/disable/prepare/unprepare
+Message-ID: <20200728163344.GB3736@ninjato>
+References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
+ <1595883452-17343-3-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jul 2020 17:37:57 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com,
-        robh+dt@kernel.org, lee.jones@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        david@lechnology.com, wmills@ti.com, praneeth@ti.com
-Subject: Re: [PATCH v4 3/5] irqchip/irq-pruss-intc: Add logic for handling
- reserved interrupts
-In-Reply-To: <1595927918-19845-4-git-send-email-grzegorz.jaszczyk@linaro.org>
-References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1595927918-19845-4-git-send-email-grzegorz.jaszczyk@linaro.org>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <1ae8b42d0e7a09caf01197b11cea2fff@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com, praneeth@ti.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+g7M9IMkV8truYOl"
+Content-Disposition: inline
+In-Reply-To: <1595883452-17343-3-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-28 10:18, Grzegorz Jaszczyk wrote:
-> From: Suman Anna <s-anna@ti.com>
-> 
-> The PRUSS INTC has a fixed number of output interrupt lines that are
-> connected to a number of processors or other PRUSS instances or other
-> devices (like DMA) on the SoC. The output interrupt lines 2 through 9
-> are usually connected to the main Arm host processor and are referred
-> to as host interrupts 0 through 7 from ARM/MPU perspective.
-> 
-> All of these 8 host interrupts are not always exclusively connected
-> to the Arm interrupt controller. Some SoCs have some interrupt lines
-> not connected to the Arm interrupt controller at all, while a few 
-> others
-> have the interrupt lines connected to multiple processors in which they
-> need to be partitioned as per SoC integration needs. For example, 
-> AM437x
-> and 66AK2G SoCs have 2 PRUSS instances each and have the host interrupt 
-> 5
-> connected to the other PRUSS, while AM335x has host interrupt 0 shared
-> between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU 
-> and
-> a DMA controller.
-> 
-> Add logic to the PRUSS INTC driver to ignore both these shared and
-> invalid interrupts.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-> ---
-> v3->v4:
-> - Due to changes in DT bindings which converts irqs-reserved
->   property from uint8-array to bitmask requested by Rob introduce
->   relevant changes in the driver.
-> - Merge the irqs-reserved and irqs-shared to one property since they
->   can be handled by one logic (relevant change was introduced to DT
->   binding).
 
-This isn't what I asked for in my initial review.
+--+g7M9IMkV8truYOl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I repeatedly asked for the *handling* to be common, not for the
-properties to be merged. I don't mind either way, but I understood
-there were two properties for a good reason. Has this reason gone?
+On Mon, Jul 27, 2020 at 01:57:20PM -0700, Sowjanya Komatineni wrote:
+> clk_enable, clk_disable, clk_prepare, and clk_unprepare APIs have
+> implementation for checking clk pointer not NULL and clock consumers
+> can safely call these APIs without NULL pointer check.
+>=20
+> So, this patch cleans up Tegra i2c driver to remove explicit checks
+> before these APIs.
+>=20
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-Anyway, I'll come back to it once I start reviewing the series
-again.
+Applied to for-next, thanks!
 
-          M.
--- 
-Jazz is not dead. It just smells funny...
+
+--+g7M9IMkV8truYOl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8gU2gACgkQFA3kzBSg
+KbZ4Bg//f73NpFO093mNmSj5dYQr2/bFr8E9IEDPd6Ll/V0fG8mALZzBDssn7igW
+ob+FOzpAm/Chj3WNZOEig1XLfV+Z+z0XyofEN1FN497KXi2TH7JoEsCOutFeJ5YI
+6WaPcUdrvZ0mSMqolzVVuy4SJtuUU2myE9FfQomz5OPICON0ojHQPXgFGTxOVObp
++FbUWu9ROysYJiRyflMIeXN2lZQti81qHxnndifrPiPKX2ksxOHRHHXLfWaDMRmY
+A5gcTtOpKhfZuQbOKVEq89PX9Wfeg8heNlOgZRjWhTHJv6BN6i806UNwwLHwFp9l
+YJ2d/cUAi823jTxcMg7dlLRM2cqcuKGLpZSeh/EHxKkmT6tH+AECTWGNcKLCHHY8
+nVqf2+rpr9cQzukl9FurtTZgbPJeM8qbwl+wRhz5AmAVh7gPRjdkk5TJpAlcPfyk
+8a/NaIQcet1sMv3UxHy9ivya8DcdsVb61zy58uCQGUSvZjD2fq3qxz9seN1haMI3
+rgNYBCWJfYq6lrZlbaZPbVH3R9ipWVT9UMjlS8ZvDqUXt74s1k691HtHsDLRLb6/
+5LTre9Pu8plX/IxQJLNXQUx0syBVQkSQGalvKyqvPQ62JU7qwcT2aY7gzvuviTsH
+Jnwk+rUKR+CFhBlwS4RAYR8zLFF0TxIGypLNMCbPTM4A92tvq/Y=
+=gsR6
+-----END PGP SIGNATURE-----
+
+--+g7M9IMkV8truYOl--
