@@ -2,169 +2,104 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B617BC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 805F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 935B620786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5890420786
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:57:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SgmKbxsh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tAh81aGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgG1I4X (ORCPT
+        id S1728305AbgG1I5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:56:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728253AbgG1I4W (ORCPT
+        Tue, 28 Jul 2020 04:57:35 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53546 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbgG1I5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:56:22 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AF6BC0619D7
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:56:20 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r2so12393311wrs.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:56:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=wxTwrgnq9E/WiNk3kV+5CMVUMO6IYGLUJRsXmpueos0=;
-        b=SgmKbxshWIgy7i/i8vqaI5tcJ2bU9gb64Sjar5YKhBEB9iRFEBzg3k9HrxnHFKOSOs
-         zMcnsMKMr8P3PuxxZvVa0Ir4j3kWZgXjk2nPksQHELB7nSQggAJnMs7JY2nOvsJ+GTyc
-         sIiabW7fz/o12PIx2L6NxjeBcGNbm096zWnTV1cVN3V+7GI56cqEkWoS5K7sGXi1aM9m
-         1knClukA542+MNKmOGARWM3fcYgIfXhxS0F2pay/Q5sEMEVLSN/zk8GkjyMscM7sqgyD
-         YpxFhjMDccQmmVdIisDgzl/kMCQRrp8Zbjd/gxKYKRbEEJIQ6UoCMBONxNgeMkHczaNP
-         XxdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=wxTwrgnq9E/WiNk3kV+5CMVUMO6IYGLUJRsXmpueos0=;
-        b=c13rfh4MkwwZTbThy8NsOBdnI2wz+OSlAZH6ggqtZAVXBR1PCr5WHUUJ/SCOUWfdLK
-         iqc6AYFHO3JHAsJ0Xk+P++SvrKfE4NWT15GVMLXPMSI0MN5AMLS8liPzXcdPy04R1I/r
-         oDwSzdC0XKt1Ko7TBP9CXvat3UHi6vl/BvLuv8/BUEKUPDSeWnFuOBEVKze9byT+ywxu
-         F1REznezgxFuSAPHv1sSdouGHpGkmpOhdTugX3FED7Z6naXcl2THVJUiiDaslOtB+rVv
-         HueqFxNrA5DhcVJdT2s/pMzeFZzuWGQlmxuNSVBPRbrkrDriKHx0G03Jk/M7k0rZLz34
-         8xOQ==
-X-Gm-Message-State: AOAM5311YX/gvKMSB9lqY+ezbYCownHVmnU6/DZvzetXyinblCZfNS/Z
-        WgyAbcb87xul1KPdaO2xLSOXag==
-X-Google-Smtp-Source: ABdhPJzyefbTUcC6FA1OtyHG3ZE+ihx1cIgJ8kJah012w56nbIM6+qpRfcUIjerKX0Iu0TxyY/d/Tw==
-X-Received: by 2002:adf:f045:: with SMTP id t5mr25467199wro.288.1595926579385;
-        Tue, 28 Jul 2020 01:56:19 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id a10sm12662484wro.35.2020.07.28.01.56.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 01:56:18 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 09:56:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Tue, 28 Jul 2020 04:57:35 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06S8v27H068443;
+        Tue, 28 Jul 2020 08:57:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=g2iu+QCMgXo2sAT2PlgYuqn3NjqPMtQtGppvStDwUPE=;
+ b=tAh81aGE6m22XiJtNJu46kyd6LUJKwYgqSAfh30pZxnKOIkMYvA1ul7oQMyJAEhEFKN/
+ ssDLycHG+IAh38HY99EZ6MB+MrIiltVB/hkg+733Ejni9W3PTyvGkZZ2eo3sUVaoOx0h
+ 2hyIMdAwNfik2n0UmJcjpuPa1MBJ+bdwWpsamoRvkWQgI1jVuILselkLeWNdVcXewKNp
+ ykbSVcIR3sFO+Fbe9aZWUH+PP/hLc6RgqVslOFP4XbTNruDCy4FM71cKXylPEyoO2S4l
+ nA8NWcW8r+eL7L00W21sORJBuuuL0p1huyg9BR7iFGkEIIfe+/jjOTin0W7cmdV407KD 6A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 32hu1j68ag-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jul 2020 08:57:24 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06S8qhKL136632;
+        Tue, 28 Jul 2020 08:57:23 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 32hu5tunf3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jul 2020 08:57:23 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06S8vLQ8014135;
+        Tue, 28 Jul 2020 08:57:21 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Jul 2020 01:57:20 -0700
+Date:   Tue, 28 Jul 2020 11:57:12 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Peilin Ye <yepeilin.cs@gmail.com>
+Cc:     Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
-Message-ID: <20200728085616.GD2419169@dell>
-References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-3-michael@walle.cc>
- <20200728072422.GF1850026@dell>
- <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
- <20200728082707.GB2419169@dell>
- <a47993ca4c77ab1ee92f6693debb3c87@walle.cc>
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] scsi/megaraid: Prevent
+ kernel-infoleak in kioc_to_mimd()
+Message-ID: <20200728085712.GE2571@kadam>
+References: <20200727210235.327835-1-yepeilin.cs@gmail.com>
+ <20200728084137.GC2571@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a47993ca4c77ab1ee92f6693debb3c87@walle.cc>
+In-Reply-To: <20200728084137.GC2571@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007280067
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
+ malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007280068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > > > +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
-> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > +
-> > > > > +title: Kontron's sl28cpld board management controller
-> > > >
-> > > > "S128CPLD" ?
-> > > 
-> > > still not, its sl28cpld, think of a project/code name, not the product
-> > > appended with CPLD.
-> > > 
-> > > > "Board Management Controller (BMC)" ?
-> > > 
-> > > sounds like IPMI, which I wanted to avoid.
-> > 
-> > Is there a datasheet?
-> 
-> No there isn't.
+On Tue, Jul 28, 2020 at 11:41:37AM +0300, Dan Carpenter wrote:
+> Generally, don't silence static checker warnings unless it makes the
+> code more readable.  It's the checker writer's job to fix their own code.
+> In this case, that's me, but parsing the code is quite complicated and I
+> don't have a plan for how to fix it.
 
-Then what are you working from?
+Actually, looking at this some more, it's not so complicated.  By this
+time next year hopefully this warning will be silenced.
 
-> > > > > +maintainers:
-> > > > > +  - Michael Walle <michael@walle.cc>
-> > > > > +
-> > > > > +description: |
-> > > > > +  The board management controller may contain different IP blocks
-> > > > > like
-> > > > > +  watchdog, fan monitoring, PWM controller, interrupt controller
-> > > > > and a
-> > > > > +  GPIO controller.
-> > > > > +
-> > > > > +properties:
-> > > > > +  compatible:
-> > > > > +    const: kontron,sl28cpld-r1
-> > > >
-> > > > We don't usually code revision numbers in compatible strings.
-> > > >
-> > > > Is there any way to pull this from the H/W?
-> > > 
-> > > No, unfortunately you can't. And I really want to keep that, in case
-> > > in the future there are some backwards incompatible changes.
-> > 
-> > Rob,
-> > 
-> > I know you reviewed this already, but you can give your opinion on
-> > this specifically please?  I know that we have pushed back on this in
-> > the past.
-> 
-> Oh, come one. That is an arbitrary string. "sl28cpld-r1" is the first
-> implementation of this. A future "sl28cpld-r2" might look completely
-> different and might not suite the simple MFD at all. "sl28cpld" is
-> a made up name - as "sl28cpld-r1" is, too.
+regards,
+dan carpenter
 
-Well that sounds bogus for a start.  I guess that's one of the
-problems with trying to support programmable H/W in S/W.
- 
-If it's okay with Rob, then I'll be okay with it.
-
-Just to note, this has not been okay for others in the past, and this
-use-case is not 'special'.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
