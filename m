@@ -2,184 +2,190 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90571C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D40E92053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:02:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="Sd2ukVlp"
+	by mail.kernel.org (Postfix) with ESMTP id 783802074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:04:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731656AbgG1RCi (ORCPT
+        id S1731660AbgG1REC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 13:02:38 -0400
-Received: from mga09.intel.com ([134.134.136.24]:37677 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731478AbgG1RCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 13:02:37 -0400
-IronPort-SDR: PoFmO8iXzRyEwQUqoAR+hfoF1bhS+j1ONOUGCS1N3+/vIWGSorZz8rENeV+fefZHHXWOGQ1XWc
- IUfEVtiAzJlA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="152510223"
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="152510223"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 10:02:30 -0700
-IronPort-SDR: JJP9zFG8KOEEgwi8HnzP4/UBBAsH/GXHbqMt0YaEj1jD7y0Rh2MZ0flQi/b85/DhmfGLpcTTop
- tm5WXeoR/udg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="489967816"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by fmsmga006.fm.intel.com with ESMTP; 28 Jul 2020 10:02:29 -0700
-Received: from orsmsx111.amr.corp.intel.com (10.22.240.12) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 28 Jul 2020 10:02:29 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX111.amr.corp.intel.com (10.22.240.12) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 28 Jul 2020 10:02:29 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.101)
- by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 28 Jul 2020 10:02:28 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NryF/5bjO6hSADFXE1HrrD1LYE8LEOKlxxaBjpoRTY2bJSmI6tFcw2Dg0Hz0YIrTUvX/Y/wrfx5AsfdP5GdadxU06S2CsaKPvIS1saPtNewIhOIWsIQ8TL+DHQpGhnuyK9xk3Ku5Ks5A3zDlqvg3rNs4yXjTpEB5mWKZ7cqgC1PjbwYTXjJ/aTmmDdwCwmUv9E3pg2SnHq4MHRgj1+ZflYsuo0QZGendcCS5lDvSKRO7tCQ0lxvSsubM4uoAn9bBfCI0vohRm9ZeqsyFep1DDgc+zWUSxgvjmA72MplA+vO5ozUC06EH+UhKe4+kjhOd7Mtz5JD5ydFPQiR7XgE1hA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yik4VYqm2a4y+pV+4ARfFYLiRLg1vmXKMlBrtEGiXrc=;
- b=k3yjtgKFXQM17kaXC7UmzrXZPQWVN+ubm3rOmLFXvNM43J2jXD+QgCxMVxEHYni/p2l2qq3a2JdJxhHRCpEcrC+v79I2SBsUzRLP8IakOp6zMR6ubZ5RXXZn80ZRYS7qnUtZTkdGFEJTOalByX8C3r0EoDIeC/9bDkdLKvfgRrb1LQXEC+irN3Lc+3IpPFohh2xx8UCMtaRUBciupVyGOz+QrGdKbXMuovh27zegYqtZrT27M9xvTbsGU0jYRn6MsQR47pvsydBGLqVwiMjGoIS7ZLQL+X/q7AWr1CXngbkU9nBidCNUXIGjizycGg6eTM/48bUGgi+wOrkwIH1pWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yik4VYqm2a4y+pV+4ARfFYLiRLg1vmXKMlBrtEGiXrc=;
- b=Sd2ukVlpBSHnpRb8JSN72SrfmHMD1RsuR4AUxxKb+0djHMEfF9eaWaQqJC9u1MAVtMn16DljdC1PlHKAwzlHaaN/2NA3+4f19/eyd4YFEUIeUqZGyrwsHDvqbkfbyg60qmAoYdytM++C6GzP6V7Gxx7GlmMrAUAaziMg/bopck4=
-Received: from DM6PR11MB3642.namprd11.prod.outlook.com (2603:10b6:5:138::26)
- by DM6PR11MB3785.namprd11.prod.outlook.com (2603:10b6:5:13f::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Tue, 28 Jul
- 2020 17:02:23 +0000
-Received: from DM6PR11MB3642.namprd11.prod.outlook.com
- ([fe80::f043:4bdc:ef57:1b41]) by DM6PR11MB3642.namprd11.prod.outlook.com
- ([fe80::f043:4bdc:ef57:1b41%5]) with mapi id 15.20.3239.016; Tue, 28 Jul 2020
- 17:02:23 +0000
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: RE: [PATCH] ASoC: Intel: Atom: use hardware counter to update hw_ptr
-Thread-Topic: [PATCH] ASoC: Intel: Atom: use hardware counter to update hw_ptr
-Thread-Index: AQHWY2e1AMm9opfdpkGft589vBQJfqkbeEuAgAC7fpCAALRXgIAASocg
-Date:   Tue, 28 Jul 2020 17:02:23 +0000
-Message-ID: <DM6PR11MB3642AF0905E0CF57B094906297730@DM6PR11MB3642.namprd11.prod.outlook.com>
-References: <1595779727-31404-1-git-send-email-brent.lu@intel.com>
- <7dec7fcd-0381-d279-4dac-77c27ea5f6fe@linux.intel.com>
- <DM6PR11MB3642BE84A5C91504D6AF4ECB97730@DM6PR11MB3642.namprd11.prod.outlook.com>
- <14fde5e9-a11a-077d-b533-1e6db4b7a262@linux.intel.com>
-In-Reply-To: <14fde5e9-a11a-077d-b533-1e6db4b7a262@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [114.25.81.97]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fba68e34-a48d-4b1e-7664-08d83317ff4e
-x-ms-traffictypediagnostic: DM6PR11MB3785:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB3785276D970CA85C55454BD197730@DM6PR11MB3785.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5D+4uaZ5MZPnQJ27yg0yUtEX7hG7+4qL1IGnT+30VY+8bXJ5Xub+thtfDVtLRZwwjNogHmHhg+B09BeQfWB3oZqKPXR+yqVKMHBvLhO2lTpQW790v1OY3z38ZSoJhJAKgetRiznMH01ZO/7USd3q4Pd6ER0Rys7bXOCfDYP0bs8WdWz5JUZHOJkYPXu0PZaViQOuZl2yjI0CF1Lr7XK6KeaRsdTqZv1N2qAk89qTSO4m2jhKUd1OouUSl9/9+MfXUa4CDCNcfqWjpOPQ7Qvf9GOppJj9pWNjFFYY+2GdrFCSClSrwTmbExwgwmQiFxv4uJJT8lIaMhknCEaP5tgyJg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3642.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(136003)(39860400002)(376002)(366004)(64756008)(4326008)(86362001)(2906002)(9686003)(71200400001)(8936002)(55016002)(478600001)(52536014)(66446008)(66556008)(54906003)(316002)(6506007)(76116006)(186003)(15650500001)(8676002)(26005)(5660300002)(83380400001)(110136005)(33656002)(66476007)(66946007)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: BqaHHsyoiQk6lw11s9mWXTtCcVumKlmw+XoPa/yiF+wirbtsU9PvtVoIHm4jZdIcfqa+N/GS8Y5D+0zAJJlvgyvM3cBpTDqOtH8ZoHEPnOg2/v0HORbqki1fyC0VkWK+bu0t1muHF8mT5zfivJVWhSKNR82pFhwxVpq9qkfcMjlMTEfqmKhtfyQil7Fnh3Q0iwQ01/TIY/0MIsitGv/sqZl9HXhVTBuoFJr/Zc+ZfkCNmRO0Xb9Vz+CoGQB0E8WCwMNZy680oHpqCRRB5ZUIA3pWSHj8/+hAezeDRHk1HMC02QfMHj7b/9XJMIwOLmAvmKfKcIAxBAWs8BNI1IFDSnmiBBxTqN9io14GJJ6TvQeTH+E5TtA5wiA/NLWT2Kc6G+nWjIFkkkLdD08LZ9TeEI35N9DlOxE2u+W61LDvKHXqQVtujCp67bVf9PhiKgEIrQQpT2Wp4o0n81FQ/TgN0so5kjzGvZSILwcnllJj00/p55fmFKt8dKGS3Xcchla5iMQRuXS8rPfEDFle+iv1XIy3zp+dOFzcqbdQxGWQf/8nYnKLMP2AJOBfVWz9Kbrn4Gp0f52h3TGxz96ZqJqJltOnR+P3n2qe15/Qsbj8TqpbQM1cMLy5Gr8hoqJJaYZN0RCfFtyaimpoW3N1Ua2P7A==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 28 Jul 2020 13:04:02 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2546 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731406AbgG1REC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 13:04:02 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 2D6E1866C03738CB0E58;
+        Tue, 28 Jul 2020 18:04:00 +0100 (IST)
+Received: from localhost (10.52.121.35) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 28 Jul
+ 2020 18:03:59 +0100
+Date:   Tue, 28 Jul 2020 18:02:35 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Sean V Kelley <sean.v.kelley@intel.com>, <bhelgaas@google.com>,
+        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+CC:     <rjw@rjwysocki.net>, "Luck, Tony" <tony.luck@intel.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+Subject: Re: [RFC PATCH 5/9] PCI/AER: Apply function level reset to RCiEP on
+ fatal error
+Message-ID: <20200728180235.00006ffe@Huawei.com>
+In-Reply-To: <90E63E9B-DCD3-4325-B1FC-FE5C72BA191B@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+        <20200724172223.145608-6-sean.v.kelley@intel.com>
+        <20200727121726.000072a8@Huawei.com>
+        <a79c227f0913438cb5a94dc80a075a7c@intel.com>
+        <90E63E9B-DCD3-4325-B1FC-FE5C72BA191B@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3642.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fba68e34-a48d-4b1e-7664-08d83317ff4e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 17:02:23.2682
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Xhe3gtj+zVx67KSXuxC4k5/IM7JAr3uWutB/FZgy+KsgLjk8K5zkHAI56xzqXpkNx+nWlnCLkksumZmylRL7Yw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3785
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.121.35]
+X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiANCj4gU28gaWYgdGhlcmUgYXJlIGFscmVhZHkgcXVpcmtzIGluIGF0b20gbWFjaGluZSBkcml2
-ZXJzIHRvIGNoYW5nZSB0aGUgcGVyaW9kDQo+IHNpemUsIHdoeSBpcyB0aGlzIHBhdGNoIG5lY2Vz
-c2FyeT8NCj4gDQoNClRoZSBzdG9yeSBpczogZ29vZ2xlIGltcGxlbWVudGVkIHRoZSBjb25zdHJh
-aW50IGJ1dCBkb2Vzbid0IGtub3cgd2h5IGl0IHdvcmtzDQpzbyBhc2tlZCB1cyB0byBleHBsYWlu
-LiBBZnRlciBjaGVja2luZyB0aGUgdHdvIGNvdW50ZXJzIEkgcmVhbGl6ZWQgdGhlIGluY3JlYXNl
-IG9mDQpyaW5nIGJ1ZmZlciBwb2ludGVyIGZvbGxvd3MgdGhlIHBlcmlvZCBzaXplIHNldHRpbmcg
-aW4gaHdfcGFyYW0gKDI1NikgYnV0IHRoZQ0KcGVyaW9kIG9mIGludGVycnVwdCBpcyBhbHdheXMg
-NW1zIGluc3RlYWQgb2YgNS4zMyBzbyBpdCdzIHJ1bm5pbmcgbGl0dGxlIGJpdCB0b28gZmFzdC4N
-Ckl0IHNlZW1zIHRoZSBMUEUga2VlcHMgdHJhY2tpbmcgdGhlIGRpZmZlcmVuY2Ugb2YgdHdvIGNv
-dW50ZXJzLiBXaGVuIHRoZQ0KZGlmZmVyZW5jZSBleGNlZWRzIDIxNjAgc2FtcGxlcywgdGhlIG5l
-eHQgaW50ZXJydXB0IHdpbGwgYmUgY2FuY2VsZWQgc28gdGhlDQpoYXJkd2FyZSBjb3VudGVyIGNv
-dWxkIGNhdGNoIHVwIGEgbGl0dGxlLg0KDQpbICAgNDMuMjA4Mjk5XSBpbnRlbF9zc3RfYWNwaSA4
-MDg2MjJBODowMDogbXJmbGQgcmluZ19idWZmZXJfY291bnRlciAxMDc1MjAgaGFyZHdhcmVfY291
-bnRlciA5ODg4MCBwY20gZGVsYXkgODY0MCAoaW4gYnl0ZXMpDQpbICAgNDMuMjA4MzA2XSBpbnRl
-bF9zc3RfYWNwaSA4MDg2MjJBODowMDogYnVmZmVyIHB0ciAyNjg4MCBwY21fZGVsYXkgcmVwOiAy
-MTYwDQpbICAgNDMuMjA4MzIxXSBzb3VuZCBwY21DMUQwcDogW1FdIHBvcyAyNjg4MCBod19wdHIg
-MjY4ODAgYXBwbF9wdHIgNDAwMDAgYXZhaWwgMTkxNjgwDQo9PiBvbmUgaW50ZXJydXB0IGlzIHNr
-aXBwZWQuDQpbICAgNDMuMjE4Mjk5XSBpbnRlbF9zc3RfYWNwaSA4MDg2MjJBODowMDogbXJmbGQg
-cmluZ19idWZmZXJfY291bnRlciAxMDg1NDQgaGFyZHdhcmVfY291bnRlciAxMDA4MDAgcGNtIGRl
-bGF5IDc3NDQgKGluIGJ5dGVzKQ0KWyAgIDQzLjIxODMwN10gaW50ZWxfc3N0X2FjcGkgODA4NjIy
-QTg6MDA6IGJ1ZmZlciBwdHIgMjcxMzYgcGNtX2RlbGF5IHJlcDogMTkzNg0KWyAgIDQzLjIxODMz
-Nl0gc291bmQgcGNtQzFEMHA6IFtRXSBwb3MgMjcxMzYgaHdfcHRyIDI3MTM2IGFwcGxfcHRyIDQw
-MDAwIGF2YWlsIDE5MTkzNg0KDQpTbyBJIHRoaW5rIHdoeSBub3QgdXNpbmcgdGhlIGhhcmR3YXJl
-IGNvdW50ZXI/IEl0IGluY3JlYXNlcyAyNDAgc2FtcGxlcyBldmVyeSA1bXMNCnBlcmZlY3RseSBt
-YXRjaCB0aGUgNDgwMDAgc2FtcGxlIHJhdGUuIFRoZSB0ZXN0IHJlc3VsdCBpcyBnb29kIGJ1dCBJ
-IGtub3cgdGhlcmUgbXVzdA0KYmUgYSByZWFzb24gZm9yIHRoZSBvcmlnaW5hbCBkZXNpZ25lciB0
-byB1c2UgcmluZyBidWZmZXIgY291bnRlciBpbnN0ZWFkIG9mIGhhcmR3YXJlDQpjb3VudGVyLiBJ
-IHVwbG9hZGVkIHRoaXMgcGF0Y2ggdG8gc2VlIGlmIGFueW9uZSBzdGlsbCByZW1lbWJlciB0aGUg
-cmVhc29uIGFuZCBzaGFyZQ0Kc29tZSBpbnNpZ2h0IHdpdGggbWUuDQoNCkkgdG90YWxseSBhZ3Jl
-ZSB0aGF0IHdlIHNob3VsZG4ndCB0b3VjaCB0aGlzIHBhcnQgb2YgZGVzaWduLiBEbyB5b3UgdGhp
-bmsgaXQgbWFrZSBzZW5zZQ0KdG8gYWRkIGEgY29uc3RyYWludCB0byBlbmZvcmNlIHRoZSBwZXJp
-b2Qgc2l6ZSBpbiBtYWNoaW5lIGRyaXZlcj8gSWYgeWVzIHRoZW4gSSB3b3VsZA0KdXBsb2FkIHBh
-dGNoZXMgZm9yIENocm9tZSBhdG9tIG1hY2hpbmVzIGZvciBnb29nbGUuDQoNCg0KUmVnYXJkcywN
-CkJyZW50DQoNCj4gPiBJJ20gY3VyaW91cyB3aHkgbm90IGp1c3QgdXNpbmcgaGFyZHdhcmUgY291
-bnRlciB0byB1cGRhdGUgaHdfcHRyIGFuZA0KPiA+IGdldCByaWQgb2YgdGhlIHBlcmlvZCBzZXR0
-aW5nIGluIGh3X3BhcmFtPyBJdCBzZWVtcyB0byBtZSB0aGUgcmluZw0KPiA+IGJ1ZmZlciBjb3Vu
-dGVyIGRvZXMgbm90IHJlZmxlY3QgdGhlIHJlYWwgc3RhdHVzLg0KPiANCj4gSSBkb24ndCByZWNh
-bGwgcHJlY2lzZWx5IHdoYXQgdGhpcyBoYXJkd2FyZSBjb3VudGVyIGRvZXMuIEkgdmFndWVseSBy
-ZWNhbGwgaXQncw0KPiB0aWVkIHRvIHRoZSAxOS4yTUh6IGV4dGVybmFsIHRpbWVyIHdoaWNoIGlz
-IGFsc28gdXNlZCB0byBzY2hlZHVsZSB0aGUgMW1zDQo+IFNCQSBtaXhlciBhbmQgdGhlIFNTUCBJ
-T3MuIEFuZCBieSBjb21wYXJpbmcgd2l0aCB0aGUgcmluZyBidWZmZXIgcG9pbnRlcg0KPiB5b3Ug
-Y2FuIGluZmVyIHRoZSBkZWxheSBpbnNpZGUgdGhlIERTUC4gSSB0aGluayB5b3UgYXJlIGFsc28g
-bWFraW5nIGFuDQo+IGFzc3VtcHRpb24gdGhhdCBhbGwgc3RyZWFtcyBhcmUgdGllZCB0byB0aGUg
-b3V0cHV0IHJhdGUsIGJ1dCB0aGF0J3MgbW9zdCBsaWtlbHkNCj4gYSBiYWQgYXNzdW1wdGlvbi4g
-VGhlIGhhcmQtY29kZWQgdG9wb2xvZ3kgc3VwcG9ydGVkIG1lZGlhLCBzcGVlY2ggYW5kDQo+IGNv
-bXByZXNzZWQgZGF0YSBhbmQgdGhlIGNvbnN1bXB0aW9uIHJhdGUgb24gdGhlIERNQSBzaWRlIGNv
-dWxkIGJlIGZhc3Rlcg0KPiB3aXRoIHNvbWUgYnVmZmVyaW5nIGhhcHBlbmluZyBpbiB0aGUgRFNQ
-Lg0KPiBJdCdzIG5vdCBhIHBhc3N0aHJvdWdoIERNQSBpbiBhbGwgY2FzZXMuDQo+IA0KPiBUaGlz
-IGlzIHJlYWxseSBsZWdhY3kgY29kZSB0aGF0IG5vIG9uZSByZWFsbHkgZnVsbHkgdW5kZXJzdGFu
-ZHMgbm9yIHBsYW5zIG9uDQo+IGltcHJvdmluZywgaXQnZCBiZSBhIGJhZCBpZGVhIHRvIGNoYW5n
-ZSB0aGUgcGNtIHBvaW50ZXIgcmVwb3J0cyBub3csIDYgeWVhcnMNCj4gYWZ0ZXIgdGhlIGluaXRp
-YWwgY29kZSByZWxlYXNlIGFuZCBhZnRlciBhbGwgaW5pdGlhbCBjb250cmlidXRvcnMgbW92ZWQg
-b24uIEl0J3MNCj4gd2hhdCBpdCBpcy4NCj4gDQoNCg==
+On Tue, 28 Jul 2020 09:14:11 -0700
+Sean V Kelley <sean.v.kelley@intel.com> wrote:
+
+> On 28 Jul 2020, at 6:27, Zhuo, Qiuxu wrote:
+> 
+> >> From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> >> Sent: Monday, July 27, 2020 7:17 PM
+> >> To: Kelley, Sean V <sean.v.kelley@intel.com>
+> >> Cc: bhelgaas@google.com; rjw@rjwysocki.net; ashok.raj@kernel.org; 
+> >> Luck,
+> >> Tony <tony.luck@intel.com>;
+> >> sathyanarayanan.kuppuswamy@linux.intel.com; 
+> >> linux-pci@vger.kernel.org;
+> >> linux-kernel@vger.kernel.org; Zhuo, Qiuxu <qiuxu.zhuo@intel.com>
+> >> Subject: Re: [RFC PATCH 5/9] PCI/AER: Apply function level reset to 
+> >> RCiEP
+> >> on fatal error
+> >>
+> >> On Fri, 24 Jul 2020 10:22:19 -0700
+> >> Sean V Kelley <sean.v.kelley@intel.com> wrote:
+> >>  
+> >>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> >>>
+> >>> Attempt to do function level reset for an RCiEP associated with an
+> >>> RCEC device on fatal error.  
+> >>
+> >> I'd like to understand more on your reasoning for flr here.
+> >> Is it simply that it is all we can do, or is there some basis in a 
+> >> spec
+> >> somewhere?
+> >>  
+> >
+> > Yes. Though there isn't the link reset for the RCiEP here, I think we 
+> > should still be able to reset the RCiEP via FLR on fatal error, if the 
+> > RCiEP supports FLR.
+> >
+> > -Qiuxu
+> >  
+> 
+> Also see PCIe 5.0-1, Sec. 6.6.2 Function Level Reset (FLR)
+> 
+> Implementation of FLR is optional (not required), but is strongly 
+> recommended. For an example use case consider CXL. Function 0 DVSEC 
+> instances control for the CXL functionality of the entire CXL device. 
+> FLR may succeed in recovering from CXL.io domain errors.
+
+That feels a little bit of a weak argument in favour.  PCI spec lists examples
+of use only for FLR and I can't see this matching any of them, but then they
+are only examples, so we could argue it doesn't exclude this use. It's not
+allowed to affect the link state, but I guess it 'might' recover from some
+other type of error?
+
+I'd have read the statement in the CXL spec you are referring to as matching
+with the first example in the PCIe spec which is about recovering from
+software errors.  For example, unexpected VM tear down.
+
+@Bjorn / All.  What's your view on using FLR as a reset to do when you don't
+have any other hammers to use?
+
+Personally I don't have a particular problem with this, it just doesn't fit
+with my mental model of what FLR is for (which may well need adjusting :)
+
+Jonathan
+
+
+> 
+> Thanks,
+> 
+> Sean
+> 
+> >>>
+> >>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> >>> ---
+> >>>  drivers/pci/pcie/err.c | 31 ++++++++++++++++++++++---------
+> >>>  1 file changed, 22 insertions(+), 9 deletions(-)
+> >>>
+> >>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c index
+> >>> 044df004f20b..9b3ec94bdf1d 100644
+> >>> --- a/drivers/pci/pcie/err.c
+> >>> +++ b/drivers/pci/pcie/err.c
+> >>> @@ -170,6 +170,17 @@ static void pci_walk_dev_affected(struct  
+> >> pci_dev *dev, int (*cb)(struct pci_dev  
+> >>>  }
+> >>>  }
+> >>>
+> >>> +static enum pci_channel_state flr_on_rciep(struct pci_dev *dev) {
+> >>> +if (!pcie_has_flr(dev))
+> >>> +return PCI_ERS_RESULT_NONE;
+> >>> +
+> >>> +if (pcie_flr(dev))
+> >>> +return PCI_ERS_RESULT_DISCONNECT;
+> >>> +
+> >>> +return PCI_ERS_RESULT_RECOVERED;
+> >>> +}
+> >>> +
+> >>>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> >>>  enum pci_channel_state state,
+> >>>  pci_ers_result_t (*reset_link)(struct pci_dev *pdev))  
+> >> @@ -191,15  
+> >>> +202,17 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> >>>  if (state == pci_channel_io_frozen) {
+> >>>  pci_walk_dev_affected(dev, report_frozen_detected,  
+> >> &status);  
+> >>>  if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
+> >>> -pci_warn(dev, "link reset not possible for RCiEP\n");
+> >>> -status = PCI_ERS_RESULT_NONE;
+> >>> -goto failed;
+> >>> -}
+> >>> -
+> >>> -status = reset_link(dev);
+> >>> -if (status != PCI_ERS_RESULT_RECOVERED) {
+> >>> -pci_warn(dev, "link reset failed\n");
+> >>> -goto failed;
+> >>> +status = flr_on_rciep(dev);
+> >>> +if (status != PCI_ERS_RESULT_RECOVERED) {
+> >>> +pci_warn(dev, "function level reset failed\n");
+> >>> +goto failed;
+> >>> +}
+> >>> +} else {
+> >>> +status = reset_link(dev);
+> >>> +if (status != PCI_ERS_RESULT_RECOVERED) {
+> >>> +pci_warn(dev, "link reset failed\n");
+> >>> +goto failed;
+> >>> +}
+> >>>  }
+> >>>  } else {
+> >>>  pci_walk_dev_affected(dev, report_normal_detected,  
+> >> &status);
+> >>  
+
+
