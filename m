@@ -2,95 +2,89 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC7DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A58C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5067120714
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 293EA20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:02:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eR6Tcp1s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgG1CCc (ORCPT
+        id S1726846AbgG1CCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:02:32 -0400
-Received: from mga02.intel.com ([134.134.136.20]:7279 "EHLO mga02.intel.com"
+        Mon, 27 Jul 2020 22:02:36 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:33492 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbgG1CCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 22:02:31 -0400
-IronPort-SDR: dE+EoLQFYU28T4rtALJiwGhWTPQLkwCjPYZu/IMfb3nzsf95/3Fagq8O59QdEv0kBwn0SncWyv
- InJrS8YkMI0Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="139172220"
-X-IronPort-AV: E=Sophos;i="5.75,404,1589266800"; 
-   d="scan'208";a="139172220"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 19:02:30 -0700
-IronPort-SDR: z+bb1G64rsSarO3BomzCJm0/wbGN2TZwe4ZC/HjZYvZoNIlm2LQw/2gc4Y5ILiZjUjLwwWkRFT
- QZA1EcGJwOTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,404,1589266800"; 
-   d="scan'208";a="312432655"
-Received: from ipu5-build.bj.intel.com ([10.238.232.196])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Jul 2020 19:02:18 -0700
-From:   Bingbu Cao <bingbu.cao@intel.com>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        helgaas@kernel.org
-Cc:     sakari.ailus@linux.intel.com, tian.shu.qiu@intel.com,
-        bingbu.cao@intel.com, bingbu.cao@linux.intel.com
-Subject: [PATCH v2] MAINTAINERS: Fix email typo and correct name of Tianshu
-Date:   Tue, 28 Jul 2020 10:01:05 +0800
-Message-Id: <1595901665-17624-1-git-send-email-bingbu.cao@intel.com>
+        id S1726842AbgG1CCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 22:02:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595901754; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=jLz/buOWrCwjxZUbOeBJOUoltnyRt5m3J027he9dm6E=; b=eR6Tcp1sQAGhEsnO9UJNLoAHRdW7uLX4f99Gaa7gCOz5xdrQ1jSEpezI/XmgzwXMYDoS3XZQ
+ yUxRaaswdcsUFstn4pIWDJrIER681OOxlfcKdGnOSXYwIn02c7ghsnMmOwh4ZATrmOubMhGH
+ nDhVgjMPprJG0sJbkWNj6w/Isfk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n20.prod.us-east-1.postgun.com with SMTP id
+ 5f1f873aca55a5604c7acf86 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 02:02:34
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 57E5CC43449; Tue, 28 Jul 2020 02:02:33 +0000 (UTC)
+Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbhatt)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C8848C433C9;
+        Tue, 28 Jul 2020 02:02:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C8848C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
+From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
+        Bhaumik Bhatt <bbhatt@codeaurora.org>
+Subject: [PATCH v6 01/11] bus: mhi: core: Remove double occurrence for mhi_ctrl_ev_task() declaration
+Date:   Mon, 27 Jul 2020 19:02:10 -0700
+Message-Id: <1595901740-27379-2-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595901740-27379-1-git-send-email-bbhatt@codeaurora.org>
+References: <1595901740-27379-1-git-send-email-bbhatt@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the typo in email address of Tianshu Qiu and correct the name.
+mhi_ctrl_ev_task() in the internal header file occurred twice.
+Remove one of the occurrences for clean-up.
 
-Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-Signed-off-by: Tianshu Qiu <tian.shu.qiu@intel.com>
-Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
+Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- MAINTAINERS | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/bus/mhi/core/internal.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5392f00cec46..638dfa99751b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8765,7 +8765,7 @@ INTEL IPU3 CSI-2 CIO2 DRIVER
- M:	Yong Zhi <yong.zhi@intel.com>
- M:	Sakari Ailus <sakari.ailus@linux.intel.com>
- M:	Bingbu Cao <bingbu.cao@intel.com>
--R:	Tian Shu Qiu <tian.shu.qiu@intel.com>
-+R:	Tianshu Qiu <tian.shu.qiu@intel.com>
- L:	linux-media@vger.kernel.org
- S:	Maintained
- F:	Documentation/userspace-api/media/v4l/pixfmt-srggb10-ipu3.rst
-@@ -8774,7 +8774,7 @@ F:	drivers/media/pci/intel/ipu3/
- INTEL IPU3 CSI-2 IMGU DRIVER
- M:	Sakari Ailus <sakari.ailus@linux.intel.com>
- R:	Bingbu Cao <bingbu.cao@intel.com>
--R:	Tian Shu Qiu <tian.shu.qiu@intel.com>
-+R:	Tianshu Qiu <tian.shu.qiu@intel.com>
- L:	linux-media@vger.kernel.org
- S:	Maintained
- F:	Documentation/admin-guide/media/ipu3.rst
-@@ -12609,7 +12609,7 @@ T:	git git://linuxtv.org/media_tree.git
- F:	drivers/media/i2c/ov2685.c
- 
- OMNIVISION OV2740 SENSOR DRIVER
--M:	Tianshu Qiu <tian.shu.qiua@intel.com>
-+M:	Tianshu Qiu <tian.shu.qiu@intel.com>
- R:	Shawn Tu <shawnx.tu@intel.com>
- R:	Bingbu Cao <bingbu.cao@intel.com>
- L:	linux-media@vger.kernel.org
+diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+index b1f640b..bcfa7b6 100644
+--- a/drivers/bus/mhi/core/internal.h
++++ b/drivers/bus/mhi/core/internal.h
+@@ -592,7 +592,6 @@ void mhi_pm_st_worker(struct work_struct *work);
+ void mhi_pm_sys_err_handler(struct mhi_controller *mhi_cntrl);
+ void mhi_fw_load_worker(struct work_struct *work);
+ int mhi_ready_state_transition(struct mhi_controller *mhi_cntrl);
+-void mhi_ctrl_ev_task(unsigned long data);
+ int mhi_pm_m0_transition(struct mhi_controller *mhi_cntrl);
+ void mhi_pm_m1_transition(struct mhi_controller *mhi_cntrl);
+ int mhi_pm_m3_transition(struct mhi_controller *mhi_cntrl);
 -- 
-2.7.4
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
