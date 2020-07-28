@@ -4,60 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E3DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2599C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA62E206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CF3206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:29:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yQ/T/rub";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z6TLcGAx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PERDkGdP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M7ZiMkie"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729609AbgG1M3M (ORCPT
+        id S1729621AbgG1M3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:29:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:34326 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729299AbgG1M3J (ORCPT
+        Tue, 28 Jul 2020 08:29:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729299AbgG1M3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:29:09 -0400
-Date:   Tue, 28 Jul 2020 12:29:07 -0000
+        Tue, 28 Jul 2020 08:29:16 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA54EC061794;
+        Tue, 28 Jul 2020 05:29:15 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 12:29:13 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595939347;
+        s=2020; t=1595939354;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=k+c/cFf7HdBuEHY51YUiB7FeFng8roSM3NNyIgKHNSY=;
-        b=yQ/T/rubqHHj0YHyL8ACAVPSXuMR5MONZkufXtOlfFHGucdQsGdwEWLYuPtQaaOIFXdyc9
-        fOlxqGoMywwhvJg6199It7gMBJsQwioNiKWpCWueKSdGO0gmkl6+2lbjRdE3xK5uLi9klt
-        x90l9QSCMMM1JYUUChHbfJjBkRexEXv/ryoeiEGMkIirptiy/VFYf2SP/hlHNkVuYnt8eH
-        evGZk6kHWcMz+OMvMcOlpsd7Y5SZOfCVN6YfPwZGA/ybC6Gp4BAt3f+JTuGcZomCWtH1xe
-        XHH0nKwW2BE1QLnfw/5GAOAi51mQa7toobTPFtVq/Yb4bTZSOpA3lZ0wDwmtKw==
+        bh=dh6iT19Y5aJMygPkf4BsvdwSUV4vIq90eS9R5b13Ccc=;
+        b=PERDkGdPJmUKrYpTlBc1wg6dDvy2nUJ6n5VMELSQe1VC9BEY+vuJ37yUeHClwUnl41COIX
+        7mZZPV2a/HCEbvrOZs6UOPIiOArngxkzeTua7jr483yMLRML4oeXu5yng6TSKEK7KjTRNo
+        zV4KHr/rYxUYDdjnAUQSShvihuDclXxemNjNBS2nqTh6smlvH5LHtKoqy3TUz2LzqsJpza
+        UzY0THdp+vWZvWh29FzjrC0sdm5wdMZxcZQGHY1w2K/1wR4PDS9O3u2XK9azVTuveZzkEW
+        HOkHBR1i6713dEHpxPQoAwcN1g+6AhMBooANpxyTO/vElIG5y3Njk8Ls5EGWzQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595939347;
+        s=2020e; t=1595939354;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=k+c/cFf7HdBuEHY51YUiB7FeFng8roSM3NNyIgKHNSY=;
-        b=Z6TLcGAxYJPgLI80lnKOCojcQx1vI6UiCkpvqrd+EOwUi0s+ib+R5aXVhbdU6FQ5OBW2dQ
-        1WPk5ncwEyANkSBw==
-From:   "tip-bot2 for Miaohe Lin" <tip-bot2@linutronix.de>
+        bh=dh6iT19Y5aJMygPkf4BsvdwSUV4vIq90eS9R5b13Ccc=;
+        b=M7ZiMkieGpketOvEJHHHyuyrGA4z77SCwAkpG5hltma0S0kqsO4N4lhlH5+3NyBJfrzDr5
+        oCJYN6MJjBA76oAw==
+From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched: Remove duplicated tick_nohz_full_enabled() check
-Cc:     Miaohe Lin <linmiaohe@huawei.com>, Ingo Molnar <mingo@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1595935075-14223-1-git-send-email-linmiaohe@huawei.com>
-References: <1595935075-14223-1-git-send-email-linmiaohe@huawei.com>
+Subject: [tip: x86/kaslr] x86/kaslr: Initialize mem_limit to the real maximum address
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200727230801.3468620-5-nivedita@alum.mit.edu>
+References: <20200727230801.3468620-5-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Message-ID: <159593934725.4006.6683440940945012306.tip-bot2@tip-bot2>
+Message-ID: <159593935381.4006.15286062458507437060.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -67,47 +71,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+The following commit has been merged into the x86/kaslr branch of tip:
 
-Commit-ID:     21a6ee14a8f277766618ef07154432b46528113e
-Gitweb:        https://git.kernel.org/tip/21a6ee14a8f277766618ef07154432b46528113e
-Author:        Miaohe Lin <linmiaohe@huawei.com>
-AuthorDate:    Tue, 28 Jul 2020 19:17:55 +08:00
+Commit-ID:     7f104ea54e69ec45cbc4948cdb7d7f74d46def6d
+Gitweb:        https://git.kernel.org/tip/7f104ea54e69ec45cbc4948cdb7d7f74d46def6d
+Author:        Arvind Sankar <nivedita@alum.mit.edu>
+AuthorDate:    Mon, 27 Jul 2020 19:07:57 -04:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 28 Jul 2020 13:27:54 +02:00
+CommitterDate: Tue, 28 Jul 2020 12:54:43 +02:00
 
-sched: Remove duplicated tick_nohz_full_enabled() check
+x86/kaslr: Initialize mem_limit to the real maximum address
 
-In sched_update_tick_dependency() there's two calls that check
-whether nohz_full is enabled: tick_nohz_full_cpu() does it
-implicitly, while there's also an explicit call to tick_nohz_full_enabled().
+On 64-bit, the kernel must be placed below MAXMEM (64TiB with 4-level
+paging or 4PiB with 5-level paging). This is currently not enforced by
+KASLR, which thus implicitly relies on physical memory being limited to
+less than 64TiB.
 
-Remove the duplicated, open coded check.
+On 32-bit, the limit is KERNEL_IMAGE_SIZE (512MiB). This is enforced by
+special checks in __process_mem_region().
 
-[ mingo: Amended the changelog. ]
+Initialize mem_limit to the maximum (depending on architecture), instead
+of ULLONG_MAX, and make sure the command-line arguments can only
+decrease it. This makes the enforcement explicit on 64-bit, and
+eliminates the 32-bit specific checks to keep the kernel below 512M.
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Check upfront to make sure the minimum address is below the limit before
+doing any work.
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/1595935075-14223-1-git-send-email-linmiaohe@huawei.com
+Link: https://lore.kernel.org/r/20200727230801.3468620-5-nivedita@alum.mit.edu
 ---
- kernel/sched/sched.h | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ arch/x86/boot/compressed/kaslr.c | 41 ++++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 19 deletions(-)
 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 9f33c77..296efd3 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1961,12 +1961,7 @@ extern int __init sched_tick_offload_init(void);
-  */
- static inline void sched_update_tick_dependency(struct rq *rq)
- {
--	int cpu;
--
--	if (!tick_nohz_full_enabled())
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index 207fcb7..758d784 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -94,8 +94,11 @@ static unsigned long get_boot_seed(void)
+ static bool memmap_too_large;
+ 
+ 
+-/* Store memory limit specified by "mem=nn[KMG]" or "memmap=nn[KMG]" */
+-static unsigned long long mem_limit = ULLONG_MAX;
++/*
++ * Store memory limit: MAXMEM on 64-bit and KERNEL_IMAGE_SIZE on 32-bit.
++ * It may be reduced by "mem=nn[KMG]" or "memmap=nn[KMG]" command line options.
++ */
++static unsigned long long mem_limit;
+ 
+ /* Number of immovable memory regions */
+ static int num_immovable_mem;
+@@ -221,7 +224,7 @@ static void mem_avoid_memmap(enum parse_mode mode, char *str)
+ 
+ 		if (start == 0) {
+ 			/* Store the specified memory limit if size > 0 */
+-			if (size > 0)
++			if (size > 0 && size < mem_limit)
+ 				mem_limit = size;
+ 
+ 			continue;
+@@ -311,7 +314,8 @@ static void handle_mem_options(void)
+ 			if (mem_size == 0)
+ 				break;
+ 
+-			mem_limit = mem_size;
++			if (mem_size < mem_limit)
++				mem_limit = mem_size;
+ 		} else if (!strcmp(param, "efi_fake_mem")) {
+ 			mem_avoid_memmap(PARSE_EFI, val);
+ 		}
+@@ -322,7 +326,9 @@ static void handle_mem_options(void)
+ }
+ 
+ /*
+- * In theory, KASLR can put the kernel anywhere in the range of [16M, 64T).
++ * In theory, KASLR can put the kernel anywhere in the range of [16M, MAXMEM)
++ * on 64-bit, and [16M, KERNEL_IMAGE_SIZE) on 32-bit.
++ *
+  * The mem_avoid array is used to store the ranges that need to be avoided
+  * when KASLR searches for an appropriate random address. We must avoid any
+  * regions that are unsafe to overlap with during decompression, and other
+@@ -619,10 +625,6 @@ static void __process_mem_region(struct mem_vector *entry,
+ 	unsigned long start_orig, end;
+ 	struct mem_vector cur_entry;
+ 
+-	/* On 32-bit, ignore entries entirely above our maximum. */
+-	if (IS_ENABLED(CONFIG_X86_32) && entry->start >= KERNEL_IMAGE_SIZE)
 -		return;
 -
--	cpu = cpu_of(rq);
-+	int cpu = cpu_of(rq);
- 
- 	if (!tick_nohz_full_cpu(cpu))
+ 	/* Ignore entries entirely below our minimum. */
+ 	if (entry->start + entry->size < minimum)
  		return;
+@@ -655,11 +657,6 @@ static void __process_mem_region(struct mem_vector *entry,
+ 		/* Reduce size by any delta from the original address. */
+ 		region.size -= region.start - start_orig;
+ 
+-		/* On 32-bit, reduce region size to fit within max size. */
+-		if (IS_ENABLED(CONFIG_X86_32) &&
+-		    region.start + region.size > KERNEL_IMAGE_SIZE)
+-			region.size = KERNEL_IMAGE_SIZE - region.start;
+-
+ 		/* Return if region can't contain decompressed kernel */
+ 		if (region.size < image_size)
+ 			return;
+@@ -844,15 +841,16 @@ static void process_e820_entries(unsigned long minimum,
+ static unsigned long find_random_phys_addr(unsigned long minimum,
+ 					   unsigned long image_size)
+ {
++	/* Bail out early if it's impossible to succeed. */
++	if (minimum + image_size > mem_limit)
++		return 0;
++
+ 	/* Check if we had too many memmaps. */
+ 	if (memmap_too_large) {
+ 		debug_putstr("Aborted memory entries scan (more than 4 memmap= args)!\n");
+ 		return 0;
+ 	}
+ 
+-	/* Make sure minimum is aligned. */
+-	minimum = ALIGN(minimum, CONFIG_PHYSICAL_ALIGN);
+-
+ 	if (process_efi_entries(minimum, image_size))
+ 		return slots_fetch_random();
+ 
+@@ -865,8 +863,6 @@ static unsigned long find_random_virt_addr(unsigned long minimum,
+ {
+ 	unsigned long slots, random_addr;
+ 
+-	/* Make sure minimum is aligned. */
+-	minimum = ALIGN(minimum, CONFIG_PHYSICAL_ALIGN);
+ 	/* Align image_size for easy slot calculations. */
+ 	image_size = ALIGN(image_size, CONFIG_PHYSICAL_ALIGN);
+ 
+@@ -913,6 +909,11 @@ void choose_random_location(unsigned long input,
+ 	/* Prepare to add new identity pagetables on demand. */
+ 	initialize_identity_maps();
+ 
++	if (IS_ENABLED(CONFIG_X86_32))
++		mem_limit = KERNEL_IMAGE_SIZE;
++	else
++		mem_limit = MAXMEM;
++
+ 	/* Record the various known unsafe memory ranges. */
+ 	mem_avoid_init(input, input_size, *output);
+ 
+@@ -922,6 +923,8 @@ void choose_random_location(unsigned long input,
+ 	 * location:
+ 	 */
+ 	min_addr = min(*output, 512UL << 20);
++	/* Make sure minimum is aligned. */
++	min_addr = ALIGN(min_addr, CONFIG_PHYSICAL_ALIGN);
+ 
+ 	/* Walk available memory entries to find a random address. */
+ 	random_addr = find_random_phys_addr(min_addr, output_size);
