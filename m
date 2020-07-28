@@ -2,90 +2,185 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B177C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7DBA20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D2E20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SK9b2UYT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VcNG+Fd3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbgG1Mif (ORCPT
+        id S1729773AbgG1Miy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:38:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46726 "EHLO
+        Tue, 28 Jul 2020 08:38:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728751AbgG1Mif (ORCPT
+        with ESMTP id S1728751AbgG1Miy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:38:35 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 036B3C061794;
-        Tue, 28 Jul 2020 05:38:35 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id i92so2969272pje.0;
-        Tue, 28 Jul 2020 05:38:34 -0700 (PDT)
+        Tue, 28 Jul 2020 08:38:54 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C745C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:38:54 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id q17so9818692pls.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:38:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Fie8IAXWZ8a1f4IBdyXwUsTRAo2+ebUYgUxfo3SFpeA=;
-        b=SK9b2UYTW6naBrk+5Nf+HITJ8jpZ5nTD3wTAGxb37B+Ugb0+FU9daPv5RE6+KoAdKb
-         A52m+AH2ReoUyWjImEbPFcuuY2un3gyDWbhZU3Z5HR0JGsEiqA1T1CGa3DXHpqaIo+m5
-         Yp/IiDKSzac3d2CIz1SHRkAOmLKJrf3CMXujw+d8OHQk39gqh5ocYCpYCuQkSEEneHAm
-         ziS1+TJqLiFpxeDVfdOszutkDUaX3v79cXpqfpA0wIdmevzMmXOzLcHJUYj7r6EU+272
-         JN0pGtGHdHUj2KWf+0LVVONbMmeHkrR8KXJzTrvsOILhKNNvPF/rp9yAIBgwpsLanTAP
-         6ywQ==
+         :content-disposition:in-reply-to:user-agent;
+        bh=4g7iTxi0pQvK+1PDjldeUqyZ+gKf3NktQDHtumchvKQ=;
+        b=VcNG+Fd3VoebKC5oQn3y3iz+BcvT+E2SZOs/g9qfOdqjCaGQTu0lvXrlDi9ibw9rck
+         iKh5+3D05iRYoKukzR7O8KaNFC49Ms+ZEgqfDgBF1KYwvdcK+fZ+m6bnPz9rYtOBECS1
+         XHIwR0omC8k7yjGSKLwn1MjA65gsFM0EAAs2xEyTFLx9Uo2YpyuFowC8QePmvHgqV7Bx
+         5wdFKqJauWyyisfnJdwUBv8GnCBT+spyj3IF0EflkTGBz/2AK+fpxVnuktuZfDpmCEkk
+         +szzDbsb/qgd/y/W0JliNNbOAmnjjD5LLRjXLXmhBtrOp6piLkrpzDwMHxjEfY0OFvDW
+         LTbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Fie8IAXWZ8a1f4IBdyXwUsTRAo2+ebUYgUxfo3SFpeA=;
-        b=PpRE7Qh/MGStL/wzh9eW9GRvp03r61bxU/vqgNIoaFgS0L8OmGZvHDI6ZquoWy3yP2
-         W8bABLImOFGPPP493mBxtaDfhA/DKkROyRL+1g22tujAl3J1bZaA/R3M1uEinw0TXHEg
-         EumFdq0x5L8Y8LaEv59ZBk77T+i5WJl9FhYye7aRe12wUCfDZTgQ1IuQ5RxWrwNq1xaX
-         qYqSKSeewlpbnC7rshoVeN90+MUkiGnS0+3Zl1VgwvgpD/x2vRpuMQFL8q76ZIucB0Hl
-         8VuUAO3yuJ7Ux9t3AkqgVumHWQ18wPraNG3yASDRR8sYZRB6YgsXuLuZo0CHhUlkJ9g6
-         puGg==
-X-Gm-Message-State: AOAM533mF+K82X6IOGhR+Z4Pv+TYImhSry56YCLVBPrwtzUzHcrztY0i
-        chp4MlHQ6BuFuPkCRvP3fQMw5kNIoBjg2g==
-X-Google-Smtp-Source: ABdhPJwekYhSoj1idJB4yjdyuS66TSlXyc2WtTJj9+6S091YCsU5daM2krAGtIehCsmH7jRufibfUw==
-X-Received: by 2002:a17:90b:30d0:: with SMTP id hi16mr4452970pjb.65.1595939914561;
-        Tue, 28 Jul 2020 05:38:34 -0700 (PDT)
-Received: from gmail.com ([2401:4900:2eef:ca92:3545:4a68:f406:d612])
-        by smtp.gmail.com with ESMTPSA id t17sm1684380pgu.30.2020.07.28.05.38.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 05:38:33 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 18:07:03 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v1] pch_can: use generic power management
-Message-ID: <20200728123703.GB1331847@gmail.com>
-References: <20200728085757.888620-1-vaibhavgupta40@gmail.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4g7iTxi0pQvK+1PDjldeUqyZ+gKf3NktQDHtumchvKQ=;
+        b=oLZclVPavQGqE79L3teZXmBbkukJbNf+dgLHi24mOm2hPz21W+4SXX/+4vDMvEi1Pd
+         Yi3QseO29cZxR5hPUZ2Sl/AjIyr5Esgax5PDgXHs+aWZTbSlmD0Ri+6TwuF5JJzAKQQj
+         dnjBIKfIGVEeicZ2zTgI3xTR1/pMXbXhMllotSKzMARpbbuibHkqLVXThuEcu4DqxWzm
+         ku8RB6qtG8PeRjATNv76BRaYEN+UeaK5vAybMGTUkUbgQ6XR22wGw/i8b8VrXUE/APki
+         WK+pTSgP00n5XhwLuNFl76xv984Rp6PukDx/3HSEgxgnHzl0+sPqBEldtlrvXzkAnKCL
+         iWgQ==
+X-Gm-Message-State: AOAM531AxHy9p2cHePCiWFWVZsgVribmmyXbo3L9NcJcrkFklrc7ISCN
+        Mewt1A81YpWfAAa5wmxfF78R0w==
+X-Google-Smtp-Source: ABdhPJxBZLWz+mrfdp81OQw/iibH/lD1K3X9d0oGtG1OIvJ9Veil+ItGUILGfvZeKbL2PBdWjw3sgg==
+X-Received: by 2002:a17:902:6b45:: with SMTP id g5mr23335947plt.42.1595939933649;
+        Tue, 28 Jul 2020 05:38:53 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
+        by smtp.gmail.com with ESMTPSA id x9sm20731774pfq.216.2020.07.28.05.38.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jul 2020 05:38:52 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 20:38:46 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Wei Li <liwei391@huawei.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kim Phillips <kim.phillips@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, guohanjun@huawei.com
+Subject: Re: [PATCH v2 2/2] perf tools: ARM SPE code cleanup
+Message-ID: <20200728123846.GC4343@leoy-ThinkPad-X240s>
+References: <20200724071111.35593-1-liwei391@huawei.com>
+ <20200724071111.35593-3-liwei391@huawei.com>
+ <20200727203436.GC2381376@xps15>
+ <20200728120220.GA40195@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200728085757.888620-1-vaibhavgupta40@gmail.com>
+In-Reply-To: <20200728120220.GA40195@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is compile-tested only.
+Hi Arnaldo,
 
-Thanks
-Vaibhav Gupta
+On Tue, Jul 28, 2020 at 09:02:20AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Jul 27, 2020 at 02:34:36PM -0600, Mathieu Poirier escreveu:
+> > On Fri, Jul 24, 2020 at 03:11:11PM +0800, Wei Li wrote:
+> > > - Firstly, the function auxtrace_record__init() will be invoked only
+> > >   once, the variable "arm_spe_pmus" will not be used afterwards, thus
+> > >   we don't need to check "arm_spe_pmus" is NULL or not;
+> > > - Another reason is, even though SPE is micro-architecture dependent,
+> > >   but so far it only supports "statistical-profiling-extension-v1" and
+> > >   we have no chance to use multiple SPE's PMU events in Perf command.
+> > 
+> > I find the above changelog somewhat out of touch with the patch itself.  The
+> > only thing that is happening here is the removal of a useless check and a fix
+> > for a memory leak.
+> 
+> Humm, I think the original intent of that code was to cache the results
+> of find_all_arm_spe_pmus(), as the variable it is assigned to is static.
+> 
+> So not a leak, as there was that static reference to it to reuse it
+> later, but that is strange in a function named "__init()" which usually
+> is called only once, anyway, so I think that the paragraph with
+> "Firstly" is kinda ok, but confusing, I think it should read:
+> 
+> - auxtrace_record__init() is called only once, so there is no point in
+>   using a static variable to cache the results of
+>   find_all_arm_spe_pmus(), make it local and free the results after use.
+> 
+> The second paragraph is SPE specific, so I'm not qualified to judge on
+> it.
+> 
+> I'm replacing the first paragraph with the version I wrote and keep it
+> in my local branch, please holler if you think I misunderstood.
+
+Thanks a lot for this.  These two paragraphs were coming from reviewing
+and comments, but I think your rephrasing is very sufficient to describe
+what this patch is doing :)
+
+Thanks,
+Leo
+
+> > Once again whether Arnaldo wants to make the changes by hand or not you may have
+> > to resubmit.
+> > 
+> > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > 
+> > > 
+> > > So remove the useless check code to make it clear.
+> > > 
+> > > Signed-off-by: Wei Li <liwei391@huawei.com>
+> > > ---
+> > >  tools/perf/arch/arm/util/auxtrace.c | 9 ++++-----
+> > >  1 file changed, 4 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+> > > index 28a5d0c18b1d..b187bddbd01a 100644
+> > > --- a/tools/perf/arch/arm/util/auxtrace.c
+> > > +++ b/tools/perf/arch/arm/util/auxtrace.c
+> > > @@ -57,17 +57,15 @@ struct auxtrace_record
+> > >  	struct evsel *evsel;
+> > >  	bool found_etm = false;
+> > >  	struct perf_pmu *found_spe = NULL;
+> > > -	static struct perf_pmu **arm_spe_pmus = NULL;
+> > > -	static int nr_spes = 0;
+> > > +	struct perf_pmu **arm_spe_pmus = NULL;
+> > > +	int nr_spes = 0;
+> > >  	int i = 0;
+> > >  
+> > >  	if (!evlist)
+> > >  		return NULL;
+> > >  
+> > >  	cs_etm_pmu = perf_pmu__find(CORESIGHT_ETM_PMU_NAME);
+> > > -
+> > > -	if (!arm_spe_pmus)
+> > > -		arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+> > > +	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+> > >  
+> > >  	evlist__for_each_entry(evlist, evsel) {
+> > >  		if (cs_etm_pmu &&
+> > > @@ -84,6 +82,7 @@ struct auxtrace_record
+> > >  			}
+> > >  		}
+> > >  	}
+> > > +	free(arm_spe_pmus);
+> > >  
+> > >  	if (found_etm && found_spe) {
+> > >  		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
+> > > -- 
+> > > 2.17.1
+> > > 
+> 
+> -- 
+> 
+> - Arnaldo
