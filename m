@@ -2,1900 +2,327 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2D4C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5388C20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD792065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:35:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u3n1pNJB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbgG1Udn (ORCPT
+        id S1728901AbgG1UfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:33:43 -0400
-Received: from pbmsgap02.intersil.com ([192.157.179.202]:47640 "EHLO
-        pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728270AbgG1Udm (ORCPT
+        Tue, 28 Jul 2020 16:35:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728430AbgG1UfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 16:33:42 -0400
-X-Greylist: delayed 1961 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Jul 2020 16:33:39 EDT
-Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
-        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id 06SJqKuS016206;
-        Tue, 28 Jul 2020 16:00:57 -0400
-Received: from pbmxdp03.intersil.corp (pbmxdp03.pb.intersil.com [132.158.200.224])
-        by pbmsgap02.intersil.com with ESMTP id 32gewc9ba1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 16:00:56 -0400
-Received: from pbmxdp02.intersil.corp (132.158.200.223) by
- pbmxdp03.intersil.corp (132.158.200.224) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1979.3; Tue, 28 Jul 2020 16:00:55 -0400
-Received: from localhost (132.158.202.109) by pbmxdp02.intersil.corp
- (132.158.200.223) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Tue, 28 Jul 2020 16:00:54 -0400
-From:   <min.li.xe@renesas.com>
-To:     <richardcochran@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Min Li <min.li.xe@renesas.com>
-Subject: [PATCH net] ptp: ptp_clockmatrix: update to support 4.8.7 firmware
-Date:   Tue, 28 Jul 2020 16:00:30 -0400
-Message-ID: <1595966430-8603-1-git-send-email-min.li.xe@renesas.com>
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-MML: disable
+        Tue, 28 Jul 2020 16:35:20 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1BBEC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:35:19 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id r11so3749891pfl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:35:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OBkwAyTEXypPFrv1L/bcvqGsjN6kL4QWEhz3WakHkuw=;
+        b=u3n1pNJBqmv+wnc325pObRLwelABKFK0TTLaazs9/l3rir9ewi34O5LCVVPgMCtXAp
+         oAa/jHYVa4qB4hNcmIZXKI6sJooGpbWFkaH4ZdH2LlbajzjX2C7vmSxjVQmiD8TitfHh
+         WlZf7MkbgxfqQ1jWo/fS5tkvRgRKTKR4KNPbdfsIaQVaZfv4W0Xap+LMI9nMS28ri5q5
+         O/0k080ddNH4E0QmiYxXooJ4tbtx0Yq2Av/J/MLbTCIwodr56fRgAgrigFTug2W4Xmez
+         3F67G2y5YxnuxqpRjIz/8Dg/81Rkcqk7ockNHRktDoYSCq9UcOZ8ho7Ysp2EeqSjwRgK
+         subQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OBkwAyTEXypPFrv1L/bcvqGsjN6kL4QWEhz3WakHkuw=;
+        b=p/rvlYsqz1XWqASfFyK6ZOo6KectpuYw8+xQgYqVcx2a1QqOmWfT4XZ3/6BH3OjEhd
+         VKaA+659h7XLx/gQP05wLjiqhmnlv7binbBlhWHqgK7Moa0RxeEc5HPJYnM1F4pvBQxX
+         Vy4AVHFOZn7u1lSvLQLYWmdoyr4PIoEDY8Y5T0G3qr+ptbghSrmRfKCAzVtEMcFWvrWI
+         mNNvohH0obOVVOR/V8Zi+/plddeE/MO3zVvpJzmFUfFrVGRPN7B1Sjl4ZkhFDUlpkBSe
+         IDGS/0K3yUwUASPjudquXkwBk62FQcvCJKT4gjFJmbyyZjZ1JRJm5Ia97Ud7HbBkNP83
+         a12w==
+X-Gm-Message-State: AOAM5320jtK5YatMyZhzRVuFM80HXzIN76wLJ7ETIcfFUZDM4FtRFJ5d
+        RK4jbpvJKW6g+kvxRvYSjcWUK7M2BcBcrcf9WzOByA==
+X-Google-Smtp-Source: ABdhPJx8wHjF9qGKptJgatNHt0b1qWH35UqxoZXkEAs5cwCjg6+AuKH85TYZUtDBAiVSRk5ph+7xs65w9V8TuKWNjGU=
+X-Received: by 2002:a62:86cc:: with SMTP id x195mr25927376pfd.39.1595968519048;
+ Tue, 28 Jul 2020 13:35:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-28_16:2020-07-28,2020-07-28 signatures=0
-X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=4 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-2006250000 definitions=main-2007280140
-X-Proofpoint-Spam-Reason: mlx
+References: <CAKwvOdnni_G2tw+0eCLQQvvdcz97Fy1-cBjzPvLwbBNDu1-KqQ@mail.gmail.com>
+ <20200728004736.3590053-1-nhuck@google.com>
+In-Reply-To: <20200728004736.3590053-1-nhuck@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 28 Jul 2020 13:35:08 -0700
+Message-ID: <CAKwvOdnrVP4Ci4MBd2NtW9Jkk60wVrpRwGV_rz1dw5NYVUdaSw@mail.gmail.com>
+Subject: Re: [PATCH v7] Makefile: Add clang-tidy and static analyzer support
+ to makefile
+To:     Nathan Huckleberry <nhuck@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Pirama Arumuga Nainar <pirama@google.com>,
+        Bill Wendling <morbo@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Min Li <min.li.xe@renesas.com>
+On Mon, Jul 27, 2020 at 5:47 PM 'Nathan Huckleberry' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+>
+> This patch adds clang-tidy and the clang static-analyzer as make
+> targets. The goal of this patch is to make static analysis tools
+> usable and extendable by any developer or researcher who is familiar
+> with basic c++.
+>
+> The current static analysis tools require intimate knowledge of the
+> internal workings of the static analysis. Clang-tidy and the clang
+> static analyzers expose an easy to use api and allow users unfamiliar
+> with clang to write new checks with relative ease.
+>
+> ===Clang-tidy===
+>
+> Clang-tidy is an easily extendable 'linter' that runs on the AST.
+> Clang-tidy checks are easy to write and understand. A check consists of
+> two parts, a matcher and a checker. The matcher is created using a
+> domain specific language that acts on the AST
+> (https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
+> nodes are found by the matcher a callback is made to the checker. The
+> checker can then execute additional checks and issue warnings.
+>
+> Here is an example clang-tidy check to report functions that have calls
+> to local_irq_disable without calls to local_irq_enable and vice-versa.
+> Functions flagged with __attribute((annotation("ignore_irq_balancing")))
+> are ignored for analysis. (https://reviews.llvm.org/D65828)
+>
+> ===Clang static analyzer===
+>
+> The clang static analyzer is a more powerful static analysis tool that
+> uses symbolic execution to find bugs. Currently there is a check that
+> looks for potential security bugs from invalid uses of kmalloc and
+> kfree. There are several more general purpose checks that are useful for
+> the kernel.
+>
+> The clang static analyzer is well documented and designed to be
+> extensible.
+> (https://clang-analyzer.llvm.org/checker_dev_manual.html)
+> (https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
+>
+> The main draw of the clang tools is how accessible they are. The clang
+> documentation is very nice and these tools are built specifically to be
+> easily extendable by any developer. They provide an accessible method of
+> bug-finding and research to people who are not overly familiar with the
+> kernel codebase.
+>
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> ---
+> Changes v6->v7
+> * Fix issues with relative paths
+> * Additional style fixes
+>  MAINTAINERS                                   |  1 +
+>  Makefile                                      |  3 +
+>  scripts/clang-tools/Makefile.clang-tools      | 23 ++++++
+>  .../{ => clang-tools}/gen_compile_commands.py |  0
+>  scripts/clang-tools/run-clang-tools.py        | 74 +++++++++++++++++++
+>  5 files changed, 101 insertions(+)
+>  create mode 100644 scripts/clang-tools/Makefile.clang-tools
+>  rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
+>  create mode 100755 scripts/clang-tools/run-clang-tools.py
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1d4aa7f942de..a444564e5572 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4198,6 +4198,7 @@ W:        https://clangbuiltlinux.github.io/
+>  B:     https://github.com/ClangBuiltLinux/linux/issues
+>  C:     irc://chat.freenode.net/clangbuiltlinux
+>  F:     Documentation/kbuild/llvm.rst
+> +F:     scripts/clang-tools/
+>  K:     \b(?i:clang|llvm)\b
+>
+>  CLEANCACHE API
+> diff --git a/Makefile b/Makefile
+> index fe0164a654c7..3e2df010b342 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -747,6 +747,7 @@ KBUILD_CFLAGS       += $(call cc-option,-fno-allow-store-data-races)
+>
+>  include scripts/Makefile.kcov
+>  include scripts/Makefile.gcc-plugins
+> +include scripts/clang-tools/Makefile.clang-tools
+>
+>  ifdef CONFIG_READABLE_ASM
+>  # Disable optimizations that make assembler listings hard to read.
+> @@ -1543,6 +1544,8 @@ help:
+>         @echo  '  export_report   - List the usages of all exported symbols'
+>         @echo  '  headerdep       - Detect inclusion cycles in headers'
+>         @echo  '  coccicheck      - Check with Coccinelle'
+> +       @echo  '  clang-analyzer  - Check with clang static analyzer'
+> +       @echo  '  clang-tidy      - Check with clang-tidy'
+>         @echo  ''
+>         @echo  'Tools:'
+>         @echo  '  nsdeps          - Generate missing symbol namespace dependencies'
+> diff --git a/scripts/clang-tools/Makefile.clang-tools b/scripts/clang-tools/Makefile.clang-tools
+> new file mode 100644
+> index 000000000000..5c9d76f77595
+> --- /dev/null
+> +++ b/scripts/clang-tools/Makefile.clang-tools
+> @@ -0,0 +1,23 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) Google LLC, 2020
+> +#
+> +# Author: Nathan Huckleberry <nhuck@google.com>
+> +#
+> +PHONY += clang-tidy
+> +clang-tidy:
+> +ifdef CONFIG_CC_IS_CLANG
+> +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +       $(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json
+> +else
+> +       $(error clang-tidy requires CC=clang)
+> +endif
+> +
+> +PHONY += clang-analyzer
+> +clang-analyzer:
+> +ifdef CONFIG_CC_IS_CLANG
+> +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +       $(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-analyzer compile_commands.json
+> +else
+> +       $(error clang-analyzer requires CC=clang)
+> +endif
+> diff --git a/scripts/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+> similarity index 100%
+> rename from scripts/gen_compile_commands.py
+> rename to scripts/clang-tools/gen_compile_commands.py
+> diff --git a/scripts/clang-tools/run-clang-tools.py b/scripts/clang-tools/run-clang-tools.py
+> new file mode 100755
+> index 000000000000..fa7655c7cec0
+> --- /dev/null
+> +++ b/scripts/clang-tools/run-clang-tools.py
+> @@ -0,0 +1,74 @@
+> +#!/usr/bin/env python
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) Google LLC, 2020
+> +#
+> +# Author: Nathan Huckleberry <nhuck@google.com>
+> +#
+> +"""A helper routine run clang-tidy and the clang static-analyzer on
+> +compile_commands.json.
+> +"""
+> +
+> +import argparse
+> +import json
+> +import multiprocessing
+> +import os
 
-With 4.8.7 firmware, adjtime can change delta instead of absolute time,
-which greately increases snap accuracy. PPS alignment doesn't have to
-be set for every single TOD change. Other minor changes includes:
-adding more debug logs, increasing snap accuracy for pre 4.8.7 firmware
-and supporting new tcs2bin format.
+^ unused import.  Maybe Masahiro would be so kind as to drop that line
+for you when merging v7?
 
-Signed-off-by: Min Li <min.li.xe@renesas.com>
----
- drivers/ptp/idt8a340_reg.h    |   48 ++
- drivers/ptp/ptp_clockmatrix.c | 1151 ++++++++++++++++++++++++++++++++++-------
- drivers/ptp/ptp_clockmatrix.h |   61 ++-
- 3 files changed, 1048 insertions(+), 212 deletions(-)
+That said, I hammered on this in testing, and it now LGTM.
 
-diff --git a/drivers/ptp/idt8a340_reg.h b/drivers/ptp/idt8a340_reg.h
-index 69eedda..b297c4a 100644
---- a/drivers/ptp/idt8a340_reg.h
-+++ b/drivers/ptp/idt8a340_reg.h
-@@ -20,6 +20,10 @@
- #define HW_DPLL_1                         (0x8b00)
- #define HW_DPLL_2                         (0x8c00)
- #define HW_DPLL_3                         (0x8d00)
-+#define HW_DPLL_4                         (0x8e00)
-+#define HW_DPLL_5                         (0x8f00)
-+#define HW_DPLL_6                         (0x9000)
-+#define HW_DPLL_7                         (0x9100)
- 
- #define HW_DPLL_TOD_SW_TRIG_ADDR__0       (0x080)
- #define HW_DPLL_TOD_CTRL_1                (0x089)
-@@ -57,6 +61,43 @@
- #define SYNCTRL1_Q1_DIV_SYNC_TRIG	BIT(1)
- #define SYNCTRL1_Q0_DIV_SYNC_TRIG	BIT(0)
- 
-+#define HW_Q8_CTRL_SPARE  (0xa7d4)
-+#define HW_Q11_CTRL_SPARE (0xa7ec)
-+
-+/**
-+ * Select FOD5 as sync_trigger for Q8 divider.
-+ * Transition from logic zero to one
-+ * sets trigger to sync Q8 divider.
-+ *
-+ * Unused when FOD4 is driving Q8 divider (normal operation).
-+ */
-+#define Q9_TO_Q8_SYNC_TRIG  BIT(1)
-+
-+/**
-+ * Enable FOD5 as driver for clock and sync for Q8 divider.
-+ * Enable fanout buffer for FOD5.
-+ *
-+ * Unused when FOD4 is driving Q8 divider (normal operation).
-+ */
-+#define Q9_TO_Q8_FANOUT_AND_CLOCK_SYNC_ENABLE_MASK  (BIT(0) | BIT(2))
-+
-+/**
-+ * Select FOD6 as sync_trigger for Q11 divider.
-+ * Transition from logic zero to one
-+ * sets trigger to sync Q11 divider.
-+ *
-+ * Unused when FOD7 is driving Q11 divider (normal operation).
-+ */
-+#define Q10_TO_Q11_SYNC_TRIG  BIT(1)
-+
-+/**
-+ * Enable FOD6 as driver for clock and sync for Q11 divider.
-+ * Enable fanout buffer for FOD6.
-+ *
-+ * Unused when FOD7 is driving Q11 divider (normal operation).
-+ */
-+#define Q10_TO_Q11_FANOUT_AND_CLOCK_SYNC_ENABLE_MASK  (BIT(0) | BIT(2))
-+
- #define RESET_CTRL                        0xc000
- #define SM_RESET                          0x0012
- #define SM_RESET_CMD                      0x5A
-@@ -191,6 +232,7 @@
- 
- #define DPLL_CTRL_0                       0xc600
- #define DPLL_CTRL_DPLL_MANU_REF_CFG       0x0001
-+#define DPLL_CTRL_COMBO_MASTER_CFG        0x003a
- 
- #define DPLL_CTRL_1                       0xc63c
- 
-@@ -646,6 +688,9 @@
- /* Bit definitions for the TOD_WRITE_CMD register */
- #define TOD_WRITE_SELECTION_SHIFT         (0)
- #define TOD_WRITE_SELECTION_MASK          (0xf)
-+/* 4.8.7 */
-+#define TOD_WRITE_TYPE_SHIFT              (4)
-+#define TOD_WRITE_TYPE_MASK               (0x3)
- 
- /* Bit definitions for the TOD_READ_PRIMARY_SEL_CFG_0 register */
- #define RD_PWM_DECODER_INDEX_SHIFT        (4)
-@@ -658,4 +703,7 @@
- #define TOD_READ_TRIGGER_SHIFT            (0)
- #define TOD_READ_TRIGGER_MASK             (0xf)
- 
-+/* Bit definitions for the DPLL_CTRL_COMBO_MASTER_CFG register */
-+#define COMBO_MASTER_HOLD                 BIT(0)
-+
- #endif
-diff --git a/drivers/ptp/ptp_clockmatrix.c b/drivers/ptp/ptp_clockmatrix.c
-index ceb6bc5..73aaae5 100644
---- a/drivers/ptp/ptp_clockmatrix.c
-+++ b/drivers/ptp/ptp_clockmatrix.c
-@@ -13,6 +13,7 @@
- #include <linux/jiffies.h>
- #include <linux/kernel.h>
- #include <linux/timekeeping.h>
-+#include <linux/string.h>
- 
- #include "ptp_private.h"
- #include "ptp_clockmatrix.h"
-@@ -23,6 +24,13 @@ MODULE_AUTHOR("IDT support-1588 <IDT-support-1588@lm.renesas.com>");
- MODULE_VERSION("1.0");
- MODULE_LICENSE("GPL");
- 
-+/*
-+ * The name of the firmware file to be loaded
-+ * over-rides any automatic selection
-+ */
-+static char *firmware;
-+module_param(firmware, charp, 0);
-+
- #define SETTIME_CORRECTION (0)
- 
- static long set_write_phase_ready(struct ptp_clock_info *ptp)
-@@ -95,6 +103,45 @@ static int timespec_to_char_array(struct timespec64 const *ts,
- 	return 0;
- }
- 
-+static int idtcm_strverscmp(const char *ver1, const char *ver2)
-+{
-+	u8 num1;
-+	u8 num2;
-+	int result = 0;
-+
-+	/* loop through each level of the version string */
-+	while (result == 0) {
-+		/* extract leading version numbers */
-+		if (kstrtou8(ver1, 10, &num1) < 0)
-+			return -1;
-+
-+		if (kstrtou8(ver2, 10, &num2) < 0)
-+			return -1;
-+
-+		/* if numbers differ, then set the result */
-+		if (num1 < num2)
-+			result = -1;
-+		else if (num1 > num2)
-+			result = 1;
-+		else {
-+			/* if numbers are the same, go to next level */
-+			ver1 = strchr(ver1, '.');
-+			ver2 = strchr(ver2, '.');
-+			if (!ver1 && !ver2)
-+				break;
-+			else if (!ver1)
-+				result = -1;
-+			else if (!ver2)
-+				result = 1;
-+			else {
-+				ver1++;
-+				ver2++;
-+			}
-+		}
-+	}
-+	return result;
-+}
-+
- static int idtcm_xfer(struct idtcm *idtcm,
- 		      u8 regaddr,
- 		      u8 *buf,
-@@ -104,6 +151,7 @@ static int idtcm_xfer(struct idtcm *idtcm,
- 	struct i2c_client *client = idtcm->client;
- 	struct i2c_msg msg[2];
- 	int cnt;
-+	char *fmt = "i2c_transfer failed at %d in %s for %s, at addr: %04X!\n";
- 
- 	msg[0].addr = client->addr;
- 	msg[0].flags = 0;
-@@ -118,7 +166,12 @@ static int idtcm_xfer(struct idtcm *idtcm,
- 	cnt = i2c_transfer(client->adapter, msg, 2);
- 
- 	if (cnt < 0) {
--		dev_err(&client->dev, "i2c_transfer returned %d\n", cnt);
-+		dev_err(&client->dev,
-+			fmt,
-+			__LINE__,
-+			__func__,
-+			write ? "write" : "read",
-+			regaddr);
- 		return cnt;
- 	} else if (cnt != 2) {
- 		dev_err(&client->dev,
-@@ -144,10 +197,12 @@ static int idtcm_page_offset(struct idtcm *idtcm, u8 val)
- 
- 	err = idtcm_xfer(idtcm, PAGE_ADDR, buf, sizeof(buf), 1);
- 
--	if (err)
-+	if (err) {
-+		idtcm->page_offset = 0xff;
- 		dev_err(&idtcm->client->dev, "failed to set page offset\n");
--	else
-+	} else {
- 		idtcm->page_offset = val;
-+	}
- 
- 	return err;
- }
-@@ -198,6 +253,7 @@ static int _idtcm_gettime(struct idtcm_channel *channel,
- {
- 	struct idtcm *idtcm = channel->idtcm;
- 	u8 buf[TOD_BYTE_COUNT];
-+	u8 timeout = 10;
- 	u8 trigger;
- 	int err;
- 
-@@ -208,16 +264,29 @@ static int _idtcm_gettime(struct idtcm_channel *channel,
- 
- 	trigger &= ~(TOD_READ_TRIGGER_MASK << TOD_READ_TRIGGER_SHIFT);
- 	trigger |= (1 << TOD_READ_TRIGGER_SHIFT);
--	trigger |= TOD_READ_TRIGGER_MODE;
-+	trigger &= ~TOD_READ_TRIGGER_MODE; /* single shot */
- 
- 	err = idtcm_write(idtcm, channel->tod_read_primary,
- 			  TOD_READ_PRIMARY_CMD, &trigger, sizeof(trigger));
--
- 	if (err)
- 		return err;
- 
--	if (idtcm->calculate_overhead_flag)
--		idtcm->start_time = ktime_get_raw();
-+	/* wait trigger to be 0 */
-+	while (trigger & TOD_READ_TRIGGER_MASK) {
-+
-+		if (idtcm->calculate_overhead_flag)
-+			idtcm->start_time = ktime_get_raw();
-+
-+		err = idtcm_read(idtcm, channel->tod_read_primary,
-+				 TOD_READ_PRIMARY_CMD, &trigger,
-+				 sizeof(trigger));
-+
-+		if (err)
-+			return err;
-+
-+		if (--timeout == 0)
-+			return -EIO;
-+	}
- 
- 	err = idtcm_read(idtcm, channel->tod_read_primary,
- 			 TOD_READ_PRIMARY, buf, sizeof(buf));
-@@ -240,6 +309,7 @@ static int _sync_pll_output(struct idtcm *idtcm,
- 	u8 val;
- 	u16 sync_ctrl0;
- 	u16 sync_ctrl1;
-+	u8 temp;
- 
- 	if ((qn == 0) && (qn_plus_1 == 0))
- 		return 0;
-@@ -305,6 +375,50 @@ static int _sync_pll_output(struct idtcm *idtcm,
- 	if (err)
- 		return err;
- 
-+	/* PLL5 can have OUT8 as second additional output. */
-+	if ((pll == 5) && (qn_plus_1 != 0)) {
-+		err = idtcm_read(idtcm, 0, HW_Q8_CTRL_SPARE,
-+				 &temp, sizeof(temp));
-+		if (err)
-+			return err;
-+
-+		temp &= ~(Q9_TO_Q8_SYNC_TRIG);
-+
-+		err = idtcm_write(idtcm, 0, HW_Q8_CTRL_SPARE,
-+				  &temp, sizeof(temp));
-+		if (err)
-+			return err;
-+
-+		temp |= Q9_TO_Q8_SYNC_TRIG;
-+
-+		err = idtcm_write(idtcm, 0, HW_Q8_CTRL_SPARE,
-+				  &temp, sizeof(temp));
-+		if (err)
-+			return err;
-+	}
-+
-+	/* PLL6 can have OUT11 as second additional output. */
-+	if ((pll == 6) && (qn_plus_1 != 0)) {
-+		err = idtcm_read(idtcm, 0, HW_Q11_CTRL_SPARE,
-+				 &temp, sizeof(temp));
-+		if (err)
-+			return err;
-+
-+		temp &= ~(Q10_TO_Q11_SYNC_TRIG);
-+
-+		err = idtcm_write(idtcm, 0, HW_Q11_CTRL_SPARE,
-+				  &temp, sizeof(temp));
-+		if (err)
-+			return err;
-+
-+		temp |= Q10_TO_Q11_SYNC_TRIG;
-+
-+		err = idtcm_write(idtcm, 0, HW_Q11_CTRL_SPARE,
-+				  &temp, sizeof(temp));
-+		if (err)
-+			return err;
-+	}
-+
- 	/* Place master sync out of reset */
- 	val &= ~(SYNCTRL1_MASTER_SYNC_RST);
- 	err = idtcm_write(idtcm, 0, sync_ctrl1, &val, sizeof(val));
-@@ -312,6 +426,30 @@ static int _sync_pll_output(struct idtcm *idtcm,
- 	return err;
- }
- 
-+static int sync_source_dpll_tod_pps(u16 tod_addr, u8 *sync_src)
-+{
-+	int err = 0;
-+
-+	switch (tod_addr) {
-+	case TOD_0:
-+		*sync_src = SYNC_SOURCE_DPLL0_TOD_PPS;
-+		break;
-+	case TOD_1:
-+		*sync_src = SYNC_SOURCE_DPLL1_TOD_PPS;
-+		break;
-+	case TOD_2:
-+		*sync_src = SYNC_SOURCE_DPLL2_TOD_PPS;
-+		break;
-+	case TOD_3:
-+		*sync_src = SYNC_SOURCE_DPLL3_TOD_PPS;
-+		break;
-+	default:
-+		err = -EINVAL;
-+	}
-+
-+	return err;
-+}
-+
- static int idtcm_sync_pps_output(struct idtcm_channel *channel)
- {
- 	struct idtcm *idtcm = channel->idtcm;
-@@ -321,37 +459,68 @@ static int idtcm_sync_pps_output(struct idtcm_channel *channel)
- 	u8 qn;
- 	u8 qn_plus_1;
- 	int err = 0;
-+	u8 out8_mux = 0;
-+	u8 out11_mux = 0;
-+	u8 temp;
- 
- 	u16 output_mask = channel->output_mask;
- 
--	switch (channel->dpll_n) {
--	case DPLL_0:
--		sync_src = SYNC_SOURCE_DPLL0_TOD_PPS;
--		break;
--	case DPLL_1:
--		sync_src = SYNC_SOURCE_DPLL1_TOD_PPS;
--		break;
--	case DPLL_2:
--		sync_src = SYNC_SOURCE_DPLL2_TOD_PPS;
--		break;
--	case DPLL_3:
--		sync_src = SYNC_SOURCE_DPLL3_TOD_PPS;
--		break;
--	default:
--		return -EINVAL;
--	}
-+	err = sync_source_dpll_tod_pps(channel->tod_n, &sync_src);
-+	if (err)
-+		return err;
- 
--	for (pll = 0; pll < 8; pll++) {
-+	err = idtcm_read(idtcm, 0, HW_Q8_CTRL_SPARE,
-+			 &temp, sizeof(temp));
-+	if (err)
-+		return err;
-+
-+	if ((temp & Q9_TO_Q8_FANOUT_AND_CLOCK_SYNC_ENABLE_MASK) ==
-+	    Q9_TO_Q8_FANOUT_AND_CLOCK_SYNC_ENABLE_MASK)
-+		out8_mux = 1;
-+
-+	err = idtcm_read(idtcm, 0, HW_Q11_CTRL_SPARE,
-+			 &temp, sizeof(temp));
-+	if (err)
-+		return err;
-+
-+	if ((temp & Q10_TO_Q11_FANOUT_AND_CLOCK_SYNC_ENABLE_MASK) ==
-+	    Q10_TO_Q11_FANOUT_AND_CLOCK_SYNC_ENABLE_MASK)
-+		out11_mux = 1;
- 
--		qn = output_mask & 0x1;
--		output_mask = output_mask >> 1;
-+	for (pll = 0; pll < 8; pll++) {
-+		qn = 0;
-+		qn_plus_1 = 0;
- 
- 		if (pll < 4) {
- 			/* First 4 pll has 2 outputs */
-+			qn = output_mask & 0x1;
-+			output_mask = output_mask >> 1;
- 			qn_plus_1 = output_mask & 0x1;
- 			output_mask = output_mask >> 1;
--		} else {
--			qn_plus_1 = 0;
-+		} else if (pll == 4) {
-+			if (out8_mux == 0) {
-+				qn = output_mask & 0x1;
-+				output_mask = output_mask >> 1;
-+			}
-+		} else if (pll == 5) {
-+			if (out8_mux) {
-+				qn_plus_1 = output_mask & 0x1;
-+				output_mask = output_mask >> 1;
-+			}
-+			qn = output_mask & 0x1;
-+			output_mask = output_mask >> 1;
-+		} else if (pll == 6) {
-+			qn = output_mask & 0x1;
-+			output_mask = output_mask >> 1;
-+			if (out11_mux) {
-+				qn_plus_1 = output_mask & 0x1;
-+				output_mask = output_mask >> 1;
-+			}
-+		} else if (pll == 7) {
-+			if (out11_mux == 0) {
-+				qn = output_mask & 0x1;
-+				output_mask = output_mask >> 1;
-+			}
- 		}
- 
- 		if ((qn != 0) || (qn_plus_1 != 0))
-@@ -365,7 +534,7 @@ static int idtcm_sync_pps_output(struct idtcm_channel *channel)
- 	return err;
- }
- 
--static int _idtcm_set_dpll_tod(struct idtcm_channel *channel,
-+static int _idtcm_set_dpll_hw_tod(struct idtcm_channel *channel,
- 			       struct timespec64 const *ts,
- 			       enum hw_tod_write_trig_sel wr_trig)
- {
-@@ -439,17 +608,78 @@ static int _idtcm_set_dpll_tod(struct idtcm_channel *channel,
- 	return err;
- }
- 
-+static int _idtcm_set_dpll_scsr_tod(struct idtcm_channel *channel,
-+				    struct timespec64 const *ts,
-+				    enum scsr_tod_write_trig_sel wr_trig,
-+				    enum scsr_tod_write_type_sel wr_type)
-+{
-+	struct idtcm *idtcm = channel->idtcm;
-+	unsigned char buf[TOD_BYTE_COUNT], cmd;
-+	struct timespec64 local_ts = *ts;
-+	int err, count = 0;
-+
-+	timespec64_add_ns(&local_ts, SETTIME_CORRECTION);
-+
-+	err = timespec_to_char_array(&local_ts, buf, sizeof(buf));
-+
-+	if (err)
-+		return err;
-+
-+	err = idtcm_write(idtcm, channel->tod_write, TOD_WRITE,
-+			  buf, sizeof(buf));
-+	if (err)
-+		return err;
-+
-+	/* Trigger the write operation. */
-+	err = idtcm_read(idtcm, channel->tod_write, TOD_WRITE_CMD,
-+			 &cmd, sizeof(cmd));
-+	if (err)
-+		return err;
-+
-+	cmd &= ~(TOD_WRITE_SELECTION_MASK << TOD_WRITE_SELECTION_SHIFT);
-+	cmd &= ~(TOD_WRITE_TYPE_MASK << TOD_WRITE_TYPE_SHIFT);
-+	cmd |= (wr_trig << TOD_WRITE_SELECTION_SHIFT);
-+	cmd |= (wr_type << TOD_WRITE_TYPE_SHIFT);
-+
-+	err = idtcm_write(idtcm, channel->tod_write, TOD_WRITE_CMD,
-+			   &cmd, sizeof(cmd));
-+	if (err)
-+		return err;
-+
-+	/* Wait for the operation to complete. */
-+	while (1) {
-+		/* pps trigger takes up to 1 sec to complete */
-+		if (wr_trig == SCSR_TOD_WR_TRIG_SEL_TODPPS)
-+			msleep(50);
-+
-+		err = idtcm_read(idtcm, channel->tod_write, TOD_WRITE_CMD,
-+				 &cmd, sizeof(cmd));
-+		if (err)
-+			return err;
-+
-+		if (cmd == 0)
-+			break;
-+
-+		if (++count > 20) {
-+			dev_err(&idtcm->client->dev,
-+				"Timed out waiting for the write counter\n");
-+			return -EIO;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int _idtcm_settime(struct idtcm_channel *channel,
- 			  struct timespec64 const *ts,
- 			  enum hw_tod_write_trig_sel wr_trig)
- {
- 	struct idtcm *idtcm = channel->idtcm;
--	s32 retval;
- 	int err;
- 	int i;
- 	u8 trig_sel;
- 
--	err = _idtcm_set_dpll_tod(channel, ts, wr_trig);
-+	err = _idtcm_set_dpll_hw_tod(channel, ts, wr_trig);
- 
- 	if (err)
- 		return err;
-@@ -469,12 +699,24 @@ static int _idtcm_settime(struct idtcm_channel *channel,
- 		err = 1;
- 	}
- 
--	if (err)
-+	if (err) {
-+		dev_err(&idtcm->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 		return err;
-+	}
- 
--	retval = idtcm_sync_pps_output(channel);
-+	return idtcm_sync_pps_output(channel);
-+}
- 
--	return retval;
-+static int _idtcm_settime_v487(struct idtcm_channel *channel,
-+			       struct timespec64 const *ts,
-+			       enum scsr_tod_write_type_sel wr_type)
-+{
-+	return _idtcm_set_dpll_scsr_tod(channel, ts,
-+					SCSR_TOD_WR_TRIG_SEL_IMMEDIATE,
-+					wr_type);
- }
- 
- static int idtcm_set_phase_pull_in_offset(struct idtcm_channel *channel,
-@@ -565,6 +807,50 @@ static int idtcm_do_phase_pull_in(struct idtcm_channel *channel,
- 	return err;
- }
- 
-+static int set_tod_write_overhead(struct idtcm_channel *channel)
-+{
-+	struct idtcm *idtcm = channel->idtcm;
-+	s64 current_ns = 0;
-+	s64 lowest_ns = 0;
-+	int err;
-+	u8 i;
-+
-+	ktime_t start;
-+	ktime_t stop;
-+
-+	char buf[TOD_BYTE_COUNT] = {0};
-+
-+	/* Set page offset */
-+	idtcm_write(idtcm, channel->hw_dpll_n, HW_DPLL_TOD_OVR__0,
-+		    buf, sizeof(buf));
-+
-+	for (i = 0; i < TOD_WRITE_OVERHEAD_COUNT_MAX; i++) {
-+
-+		start = ktime_get_raw();
-+
-+		err = idtcm_write(idtcm, channel->hw_dpll_n,
-+				  HW_DPLL_TOD_OVR__0, buf, sizeof(buf));
-+
-+		if (err)
-+			return err;
-+
-+		stop = ktime_get_raw();
-+
-+		current_ns = ktime_to_ns(stop - start);
-+
-+		if (i == 0) {
-+			lowest_ns = current_ns;
-+		} else {
-+			if (current_ns < lowest_ns)
-+				lowest_ns = current_ns;
-+		}
-+	}
-+
-+	idtcm->tod_write_overhead_ns = lowest_ns;
-+
-+	return err;
-+}
-+
- static int _idtcm_adjtime(struct idtcm_channel *channel, s64 delta)
- {
- 	int err;
-@@ -577,6 +863,11 @@ static int _idtcm_adjtime(struct idtcm_channel *channel, s64 delta)
- 	} else {
- 		idtcm->calculate_overhead_flag = 1;
- 
-+		err = set_tod_write_overhead(channel);
-+
-+		if (err)
-+			return err;
-+
- 		err = _idtcm_gettime(channel, &ts);
- 
- 		if (err)
-@@ -656,93 +947,118 @@ static int idtcm_read_otp_scsr_config_select(struct idtcm *idtcm,
- 			  config_select, sizeof(u8));
- }
- 
--static int process_pll_mask(struct idtcm *idtcm, u32 addr, u8 val, u8 *mask)
--{
--	int err = 0;
--
--	if (addr == PLL_MASK_ADDR) {
--		if ((val & 0xf0) || !(val & 0xf)) {
--			dev_err(&idtcm->client->dev,
--				"Invalid PLL mask 0x%hhx\n", val);
--			err = -EINVAL;
--		}
--		*mask = val;
--	}
--
--	return err;
--}
--
- static int set_pll_output_mask(struct idtcm *idtcm, u16 addr, u8 val)
- {
- 	int err = 0;
- 
- 	switch (addr) {
--	case OUTPUT_MASK_PLL0_ADDR:
-+	case TOD0_OUT_ALIGN_MASK_ADDR:
- 		SET_U16_LSB(idtcm->channel[0].output_mask, val);
- 		break;
--	case OUTPUT_MASK_PLL0_ADDR + 1:
-+	case TOD0_OUT_ALIGN_MASK_ADDR + 1:
- 		SET_U16_MSB(idtcm->channel[0].output_mask, val);
- 		break;
--	case OUTPUT_MASK_PLL1_ADDR:
-+	case TOD1_OUT_ALIGN_MASK_ADDR:
- 		SET_U16_LSB(idtcm->channel[1].output_mask, val);
- 		break;
--	case OUTPUT_MASK_PLL1_ADDR + 1:
-+	case TOD1_OUT_ALIGN_MASK_ADDR + 1:
- 		SET_U16_MSB(idtcm->channel[1].output_mask, val);
- 		break;
--	case OUTPUT_MASK_PLL2_ADDR:
-+	case TOD2_OUT_ALIGN_MASK_ADDR:
- 		SET_U16_LSB(idtcm->channel[2].output_mask, val);
- 		break;
--	case OUTPUT_MASK_PLL2_ADDR + 1:
-+	case TOD2_OUT_ALIGN_MASK_ADDR + 1:
- 		SET_U16_MSB(idtcm->channel[2].output_mask, val);
- 		break;
--	case OUTPUT_MASK_PLL3_ADDR:
-+	case TOD3_OUT_ALIGN_MASK_ADDR:
- 		SET_U16_LSB(idtcm->channel[3].output_mask, val);
- 		break;
--	case OUTPUT_MASK_PLL3_ADDR + 1:
-+	case TOD3_OUT_ALIGN_MASK_ADDR + 1:
- 		SET_U16_MSB(idtcm->channel[3].output_mask, val);
- 		break;
- 	default:
--		err = -EINVAL;
-+		err = -EFAULT; /* Bad address */;
- 		break;
- 	}
- 
- 	return err;
- }
- 
-+static int set_tod_ptp_pll(struct idtcm *idtcm, u8 index, u8 pll)
-+{
-+	if (index >= MAX_TOD) {
-+		dev_err(&idtcm->client->dev, "ToD%d not supported\n", index);
-+		return -EINVAL;
-+	}
-+
-+	if (pll >= MAX_PLL) {
-+		dev_err(&idtcm->client->dev, "Pll%d not supported\n", pll);
-+		return -EINVAL;
-+	}
-+
-+	idtcm->channel[index].pll = pll;
-+
-+	return 0;
-+}
-+
- static int check_and_set_masks(struct idtcm *idtcm,
- 			       u16 regaddr,
- 			       u8 val)
- {
- 	int err = 0;
- 
--	if (set_pll_output_mask(idtcm, regaddr, val)) {
--		/* Not an output mask, check for pll mask */
--		err = process_pll_mask(idtcm, regaddr, val, &idtcm->pll_mask);
-+	switch (regaddr) {
-+	case TOD_MASK_ADDR:
-+		if ((val & 0xf0) || !(val & 0x0f)) {
-+			dev_err(&idtcm->client->dev,
-+				"Invalid TOD mask 0x%hhx\n", val);
-+			err = -EINVAL;
-+		} else {
-+			idtcm->tod_mask = val;
-+		}
-+		break;
-+	case TOD0_PTP_PLL_ADDR:
-+		err = set_tod_ptp_pll(idtcm, 0, val);
-+		break;
-+	case TOD1_PTP_PLL_ADDR:
-+		err = set_tod_ptp_pll(idtcm, 1, val);
-+		break;
-+	case TOD2_PTP_PLL_ADDR:
-+		err = set_tod_ptp_pll(idtcm, 2, val);
-+		break;
-+	case TOD3_PTP_PLL_ADDR:
-+		err = set_tod_ptp_pll(idtcm, 3, val);
-+		break;
-+	default:
-+		err = set_pll_output_mask(idtcm, regaddr, val);
-+		break;
- 	}
- 
- 	return err;
- }
- 
--static void display_pll_and_output_masks(struct idtcm *idtcm)
-+static void display_pll_and_masks(struct idtcm *idtcm)
- {
- 	u8 i;
- 	u8 mask;
- 
--	dev_dbg(&idtcm->client->dev, "pllmask = 0x%02x\n", idtcm->pll_mask);
-+	dev_dbg(&idtcm->client->dev, "tod_mask = 0x%02x\n", idtcm->tod_mask);
- 
--	for (i = 0; i < MAX_PHC_PLL; i++) {
-+	for (i = 0; i < MAX_TOD; i++) {
- 		mask = 1 << i;
- 
--		if (mask & idtcm->pll_mask)
-+		if (mask & idtcm->tod_mask)
- 			dev_dbg(&idtcm->client->dev,
--				"PLL%d output_mask = 0x%04x\n",
--				i, idtcm->channel[i].output_mask);
-+				"TOD%d pll = %d    output_mask = 0x%04x\n",
-+				i, idtcm->channel[i].pll,
-+				idtcm->channel[i].output_mask);
- 	}
- }
- 
- static int idtcm_load_firmware(struct idtcm *idtcm,
- 			       struct device *dev)
- {
-+	char fname[128] = FW_FILENAME;
- 	const struct firmware *fw;
- 	struct idtcm_fwrc *rec;
- 	u32 regaddr;
-@@ -751,12 +1067,20 @@ static int idtcm_load_firmware(struct idtcm *idtcm,
- 	u8 val;
- 	u8 loaddr;
- 
--	dev_dbg(&idtcm->client->dev, "requesting firmware '%s'\n", FW_FILENAME);
-+	if (firmware) /* module parameter */
-+		snprintf(fname, sizeof(fname), "%s", firmware);
- 
--	err = request_firmware(&fw, FW_FILENAME, dev);
-+	dev_dbg(&idtcm->client->dev, "requesting firmware '%s'\n", fname);
- 
--	if (err)
-+	err = request_firmware(&fw, fname, dev);
-+
-+	if (err) {
-+		dev_err(&idtcm->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 		return err;
-+	}
- 
- 	dev_dbg(&idtcm->client->dev, "firmware size %zu bytes\n", fw->size);
- 
-@@ -783,7 +1107,9 @@ static int idtcm_load_firmware(struct idtcm *idtcm,
- 			err = check_and_set_masks(idtcm, regaddr, val);
- 		}
- 
--		if (err == 0) {
-+		if (err != -EINVAL) {
-+			err = 0;
-+
- 			/* Top (status registers) and bottom are read-only */
- 			if ((regaddr < GPIO_USER_CONTROL)
- 			    || (regaddr >= SCRATCH))
-@@ -801,42 +1127,22 @@ static int idtcm_load_firmware(struct idtcm *idtcm,
- 			goto out;
- 	}
- 
--	display_pll_and_output_masks(idtcm);
-+	display_pll_and_masks(idtcm);
- 
- out:
- 	release_firmware(fw);
- 	return err;
- }
- 
--static int idtcm_pps_enable(struct idtcm_channel *channel, bool enable)
-+static int idtcm_output_enable(struct idtcm_channel *channel,
-+			       bool enable, unsigned int outn)
- {
- 	struct idtcm *idtcm = channel->idtcm;
--	u32 module;
--	u8 val;
- 	int err;
-+	u8 val;
- 
--	/*
--	 * This assumes that the 1-PPS is on the second of the two
--	 * output.  But is this always true?
--	 */
--	switch (channel->dpll_n) {
--	case DPLL_0:
--		module = OUTPUT_1;
--		break;
--	case DPLL_1:
--		module = OUTPUT_3;
--		break;
--	case DPLL_2:
--		module = OUTPUT_5;
--		break;
--	case DPLL_3:
--		module = OUTPUT_7;
--		break;
--	default:
--		return -EINVAL;
--	}
--
--	err = idtcm_read(idtcm, module, OUT_CTRL_1, &val, sizeof(val));
-+	err = idtcm_read(idtcm, OUTPUT_MODULE_FROM_INDEX(outn),
-+			 OUT_CTRL_1, &val, sizeof(val));
- 
- 	if (err)
- 		return err;
-@@ -846,14 +1152,50 @@ static int idtcm_pps_enable(struct idtcm_channel *channel, bool enable)
- 	else
- 		val &= ~SQUELCH_DISABLE;
- 
--	err = idtcm_write(idtcm, module, OUT_CTRL_1, &val, sizeof(val));
-+	return idtcm_write(idtcm, OUTPUT_MODULE_FROM_INDEX(outn),
-+			   OUT_CTRL_1, &val, sizeof(val));
-+}
- 
--	if (err)
--		return err;
-+static int idtcm_output_mask_enable(struct idtcm_channel *channel,
-+				    bool enable)
-+{
-+	u16 mask;
-+	int err;
-+	u8 outn;
-+
-+	mask = channel->output_mask;
-+	outn = 0;
-+
-+	while (mask) {
-+
-+		if (mask & 0x1) {
-+
-+			err = idtcm_output_enable(channel, enable, outn);
-+
-+			if (err)
-+				return err;
-+		}
-+
-+		mask >>= 0x1;
-+		outn++;
-+	}
- 
- 	return 0;
- }
- 
-+static int idtcm_perout_enable(struct idtcm_channel *channel,
-+			       bool enable,
-+			       struct ptp_perout_request *perout)
-+{
-+	unsigned int flags = perout->flags;
-+
-+	if (flags == PEROUT_ENABLE_OUTPUT_MASK)
-+		return idtcm_output_mask_enable(channel, enable);
-+
-+	/* Enable/disable individual output instead */
-+	return idtcm_output_enable(channel, enable, perout->index);
-+}
-+
- static int idtcm_set_pll_mode(struct idtcm_channel *channel,
- 			      enum pll_mode pll_mode)
- {
-@@ -940,10 +1282,8 @@ static int _idtcm_adjphase(struct idtcm_channel *channel, s32 delta_ns)
- 	return err;
- }
- 
--static int idtcm_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
-+static int _idtcm_adjfine(struct idtcm_channel *channel, long scaled_ppm)
- {
--	struct idtcm_channel *channel =
--		container_of(ptp, struct idtcm_channel, caps);
- 	struct idtcm *idtcm = channel->idtcm;
- 	u8 i;
- 	bool neg_adj = 0;
-@@ -970,15 +1310,15 @@ static int idtcm_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
- 	 * FCW = -------------
- 	 *         111 * 2^4
- 	 */
--	if (ppb < 0) {
-+	if (scaled_ppm < 0) {
- 		neg_adj = 1;
--		ppb = -ppb;
-+		scaled_ppm = -scaled_ppm;
- 	}
- 
- 	/* 2 ^ -53 = 1.1102230246251565404236316680908e-16 */
--	fcw = ppb * 1000000000000ULL;
-+	fcw = scaled_ppm * 244140625ULL;
- 
--	fcw = div_u64(fcw, 111022);
-+	fcw = div_u64(fcw, 1776);
- 
- 	if (neg_adj)
- 		fcw = -fcw;
-@@ -988,12 +1328,9 @@ static int idtcm_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
- 		fcw >>= 8;
- 	}
- 
--	mutex_lock(&idtcm->reg_lock);
--
- 	err = idtcm_write(idtcm, channel->dpll_freq, DPLL_WR_FREQ,
- 			  buf, sizeof(buf));
- 
--	mutex_unlock(&idtcm->reg_lock);
- 	return err;
- }
- 
-@@ -1008,6 +1345,12 @@ static int idtcm_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
- 
- 	err = _idtcm_gettime(channel, ts);
- 
-+	if (err)
-+		dev_err(&idtcm->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
-+
- 	mutex_unlock(&idtcm->reg_lock);
- 
- 	return err;
-@@ -1025,12 +1368,19 @@ static int idtcm_settime(struct ptp_clock_info *ptp,
- 
- 	err = _idtcm_settime(channel, ts, HW_TOD_WR_TRIG_SEL_MSB);
- 
-+	if (err)
-+		dev_err(&idtcm->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
-+
- 	mutex_unlock(&idtcm->reg_lock);
- 
- 	return err;
- }
- 
--static int idtcm_adjtime(struct ptp_clock_info *ptp, s64 delta)
-+static int idtcm_settime_v487(struct ptp_clock_info *ptp,
-+			 const struct timespec64 *ts)
- {
- 	struct idtcm_channel *channel =
- 		container_of(ptp, struct idtcm_channel, caps);
-@@ -1039,14 +1389,84 @@ static int idtcm_adjtime(struct ptp_clock_info *ptp, s64 delta)
- 
- 	mutex_lock(&idtcm->reg_lock);
- 
--	err = _idtcm_adjtime(channel, delta);
-+	err = _idtcm_settime_v487(channel, ts, SCSR_TOD_WR_TYPE_SEL_ABSOLUTE);
-+
-+	if (err)
-+		dev_err(&idtcm->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 
- 	mutex_unlock(&idtcm->reg_lock);
- 
- 	return err;
- }
- 
--static int idtcm_adjphase(struct ptp_clock_info *ptp, s32 delta)
-+static int idtcm_adjtime(struct ptp_clock_info *ptp, s64 delta)
-+{
-+	struct idtcm_channel *channel =
-+		container_of(ptp, struct idtcm_channel, caps);
-+	struct idtcm *idtcm = channel->idtcm;
-+	int err;
-+
-+	mutex_lock(&idtcm->reg_lock);
-+
-+	err = _idtcm_adjtime(channel, delta);
-+
-+	if (err)
-+		dev_err(&idtcm->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
-+
-+	mutex_unlock(&idtcm->reg_lock);
-+
-+	return err;
-+}
-+
-+static int idtcm_adjtime_v487(struct ptp_clock_info *ptp, s64 delta)
-+{
-+	struct idtcm_channel *channel =
-+		container_of(ptp, struct idtcm_channel, caps);
-+	struct idtcm *idtcm = channel->idtcm;
-+	struct timespec64 ts;
-+	enum scsr_tod_write_type_sel type;
-+	int err;
-+
-+	if (abs(delta) < PHASE_PULL_IN_THRESHOLD_NS_V487) {
-+		err = idtcm_do_phase_pull_in(channel, delta, 0);
-+		if (err)
-+			dev_err(&idtcm->client->dev,
-+				"Failed at line %d in func %s!\n",
-+				__LINE__,
-+				__func__);
-+		return err;
-+	}
-+
-+	if (delta >= 0) {
-+		ts = ns_to_timespec64(delta);
-+		type = SCSR_TOD_WR_TYPE_SEL_DELTA_PLUS;
-+	} else {
-+		ts = ns_to_timespec64(-delta);
-+		type = SCSR_TOD_WR_TYPE_SEL_DELTA_MINUS;
-+	}
-+
-+	mutex_lock(&idtcm->reg_lock);
-+
-+	err = _idtcm_settime_v487(channel, &ts, type);
-+
-+	if (err)
-+		dev_err(&idtcm->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
-+
-+	mutex_unlock(&idtcm->reg_lock);
-+
-+	return err;
-+}
-+
-+static int idtcm_adjphase(struct ptp_clock_info *ptp, s32 delta)
- {
- 	struct idtcm_channel *channel =
- 		container_of(ptp, struct idtcm_channel, caps);
-@@ -1059,6 +1479,36 @@ static int idtcm_adjphase(struct ptp_clock_info *ptp, s32 delta)
- 
- 	err = _idtcm_adjphase(channel, delta);
- 
-+	if (err)
-+		dev_err(&idtcm->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
-+
-+	mutex_unlock(&idtcm->reg_lock);
-+
-+	return err;
-+}
-+
-+static int idtcm_adjfine(struct ptp_clock_info *ptp,  long scaled_ppm)
-+{
-+	struct idtcm_channel *channel =
-+		container_of(ptp, struct idtcm_channel, caps);
-+
-+	struct idtcm *idtcm = channel->idtcm;
-+
-+	int err;
-+
-+	mutex_lock(&idtcm->reg_lock);
-+
-+	err = _idtcm_adjfine(channel, scaled_ppm);
-+
-+	if (err)
-+		dev_err(&idtcm->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
-+
- 	mutex_unlock(&idtcm->reg_lock);
- 
- 	return err;
-@@ -1067,20 +1517,35 @@ static int idtcm_adjphase(struct ptp_clock_info *ptp, s32 delta)
- static int idtcm_enable(struct ptp_clock_info *ptp,
- 			struct ptp_clock_request *rq, int on)
- {
-+	int err;
-+
- 	struct idtcm_channel *channel =
- 		container_of(ptp, struct idtcm_channel, caps);
- 
- 	switch (rq->type) {
- 	case PTP_CLK_REQ_PEROUT:
--		if (!on)
--			return idtcm_pps_enable(channel, false);
-+		if (!on) {
-+			err = idtcm_perout_enable(channel, false, &rq->perout);
-+			if (err)
-+				dev_err(&channel->idtcm->client->dev,
-+					"Failed at line %d in func %s!\n",
-+					__LINE__,
-+					__func__);
-+			return err;
-+		}
- 
- 		/* Only accept a 1-PPS aligned to the second. */
- 		if (rq->perout.start.nsec || rq->perout.period.sec != 1 ||
- 		    rq->perout.period.nsec)
- 			return -ERANGE;
- 
--		return idtcm_pps_enable(channel, true);
-+		err = idtcm_perout_enable(channel, true, &rq->perout);
-+		if (err)
-+			dev_err(&channel->idtcm->client->dev,
-+				"Failed at line %d in func %s!\n",
-+				__LINE__,
-+				__func__);
-+		return err;
- 	default:
- 		break;
- 	}
-@@ -1088,17 +1553,237 @@ static int idtcm_enable(struct ptp_clock_info *ptp,
- 	return -EOPNOTSUPP;
- }
- 
--static int idtcm_enable_tod(struct idtcm_channel *channel)
-+static int _enable_pll_tod_sync(struct idtcm *idtcm,
-+				u8 pll,
-+				u8 sync_src,
-+				u8 qn,
-+				u8 qn_plus_1)
-+{
-+	int err;
-+	u8 val;
-+	u16 dpll;
-+	u16 out0 = 0, out1 = 0;
-+
-+	if ((qn == 0) && (qn_plus_1 == 0))
-+		return 0;
-+
-+	switch (pll) {
-+	case 0:
-+		dpll = DPLL_0;
-+		if (qn)
-+			out0 = OUTPUT_0;
-+		if (qn_plus_1)
-+			out1 = OUTPUT_1;
-+		break;
-+	case 1:
-+		dpll = DPLL_1;
-+		if (qn)
-+			out0 = OUTPUT_2;
-+		if (qn_plus_1)
-+			out1 = OUTPUT_3;
-+		break;
-+	case 2:
-+		dpll = DPLL_2;
-+		if (qn)
-+			out0 = OUTPUT_4;
-+		if (qn_plus_1)
-+			out1 = OUTPUT_5;
-+		break;
-+	case 3:
-+		dpll = DPLL_3;
-+		if (qn)
-+			out0 = OUTPUT_6;
-+		if (qn_plus_1)
-+			out1 = OUTPUT_7;
-+		break;
-+	case 4:
-+		dpll = DPLL_4;
-+		if (qn)
-+			out0 = OUTPUT_8;
-+		break;
-+	case 5:
-+		dpll = DPLL_5;
-+		if (qn)
-+			out0 = OUTPUT_9;
-+		if (qn_plus_1)
-+			out1 = OUTPUT_8;
-+		break;
-+	case 6:
-+		dpll = DPLL_6;
-+		if (qn)
-+			out0 = OUTPUT_10;
-+		if (qn_plus_1)
-+			out1 = OUTPUT_11;
-+		break;
-+	case 7:
-+		dpll = DPLL_7;
-+		if (qn)
-+			out0 = OUTPUT_11;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * Enable OUTPUT OUT_SYNC.
-+	 */
-+	if (out0) {
-+		err = idtcm_read(idtcm, out0, OUT_CTRL_1, &val, sizeof(val));
-+
-+		if (err)
-+			return err;
-+
-+		val &= ~OUT_SYNC_DISABLE;
-+
-+		err = idtcm_write(idtcm, out0, OUT_CTRL_1, &val, sizeof(val));
-+
-+		if (err)
-+			return err;
-+	}
-+
-+	if (out1) {
-+		err = idtcm_read(idtcm, out1, OUT_CTRL_1, &val, sizeof(val));
-+
-+		if (err)
-+			return err;
-+
-+		val &= ~OUT_SYNC_DISABLE;
-+
-+		err = idtcm_write(idtcm, out1, OUT_CTRL_1, &val, sizeof(val));
-+
-+		if (err)
-+			return err;
-+	}
-+
-+	/* enable dpll sync tod pps, must be set before dpll_mode */
-+	err = idtcm_read(idtcm, dpll, DPLL_TOD_SYNC_CFG, &val, sizeof(val));
-+	if (err)
-+		return err;
-+
-+	val &= ~(TOD_SYNC_SOURCE_MASK << TOD_SYNC_SOURCE_SHIFT);
-+	val |= (sync_src << TOD_SYNC_SOURCE_SHIFT);
-+	val |= TOD_SYNC_EN;
-+
-+	return idtcm_write(idtcm, dpll, DPLL_TOD_SYNC_CFG, &val, sizeof(val));
-+}
-+
-+static int idtcm_enable_tod_sync(struct idtcm_channel *channel)
- {
- 	struct idtcm *idtcm = channel->idtcm;
--	struct timespec64 ts = {0, 0};
-+
-+	u8 pll;
-+	u8 sync_src;
-+	u8 qn;
-+	u8 qn_plus_1;
- 	u8 cfg;
--	int err;
-+	int err = 0;
-+	u16 output_mask = channel->output_mask;
-+	u8 out8_mux = 0;
-+	u8 out11_mux = 0;
-+	u8 temp;
- 
--	err = idtcm_pps_enable(channel, false);
-+	/*
-+	 * set tod_out_sync_enable to 0.
-+	 */
-+	err = idtcm_read(idtcm, channel->tod_n, TOD_CFG, &cfg, sizeof(cfg));
- 	if (err)
- 		return err;
- 
-+	cfg &= ~TOD_OUT_SYNC_ENABLE;
-+
-+	err = idtcm_write(idtcm, channel->tod_n, TOD_CFG, &cfg, sizeof(cfg));
-+	if (err)
-+		return err;
-+
-+	switch (channel->tod_n) {
-+	case TOD_0:
-+		sync_src = 0;
-+		break;
-+	case TOD_1:
-+		sync_src = 1;
-+		break;
-+	case TOD_2:
-+		sync_src = 2;
-+		break;
-+	case TOD_3:
-+		sync_src = 3;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	err = idtcm_read(idtcm, 0, HW_Q8_CTRL_SPARE,
-+			 &temp, sizeof(temp));
-+	if (err)
-+		return err;
-+
-+	if ((temp & Q9_TO_Q8_FANOUT_AND_CLOCK_SYNC_ENABLE_MASK) ==
-+	    Q9_TO_Q8_FANOUT_AND_CLOCK_SYNC_ENABLE_MASK)
-+		out8_mux = 1;
-+
-+	err = idtcm_read(idtcm, 0, HW_Q11_CTRL_SPARE,
-+			 &temp, sizeof(temp));
-+	if (err)
-+		return err;
-+
-+	if ((temp & Q10_TO_Q11_FANOUT_AND_CLOCK_SYNC_ENABLE_MASK) ==
-+	    Q10_TO_Q11_FANOUT_AND_CLOCK_SYNC_ENABLE_MASK)
-+		out11_mux = 1;
-+
-+	for (pll = 0; pll < 8; pll++) {
-+		qn = 0;
-+		qn_plus_1 = 0;
-+
-+		if (pll < 4) {
-+			/* First 4 pll has 2 outputs */
-+			qn = output_mask & 0x1;
-+			output_mask = output_mask >> 1;
-+			qn_plus_1 = output_mask & 0x1;
-+			output_mask = output_mask >> 1;
-+		} else if (pll == 4) {
-+			if (out8_mux == 0) {
-+				qn = output_mask & 0x1;
-+				output_mask = output_mask >> 1;
-+			}
-+		} else if (pll == 5) {
-+			if (out8_mux) {
-+				qn_plus_1 = output_mask & 0x1;
-+				output_mask = output_mask >> 1;
-+			}
-+			qn = output_mask & 0x1;
-+			output_mask = output_mask >> 1;
-+		} else if (pll == 6) {
-+			qn = output_mask & 0x1;
-+			output_mask = output_mask >> 1;
-+			if (out11_mux) {
-+				qn_plus_1 = output_mask & 0x1;
-+				output_mask = output_mask >> 1;
-+			}
-+		} else if (pll == 7) {
-+			if (out11_mux == 0) {
-+				qn = output_mask & 0x1;
-+				output_mask = output_mask >> 1;
-+			}
-+		}
-+
-+		if ((qn != 0) || (qn_plus_1 != 0))
-+			err = _enable_pll_tod_sync(idtcm, pll, sync_src, qn,
-+					       qn_plus_1);
-+
-+		if (err)
-+			return err;
-+	}
-+
-+	return err;
-+}
-+
-+static int idtcm_enable_tod(struct idtcm_channel *channel)
-+{
-+	struct idtcm *idtcm = channel->idtcm;
-+	struct timespec64 ts = {0, 0};
-+	u8 cfg;
-+	int err;
-+
- 	/*
- 	 * Start the TOD clock ticking.
- 	 */
-@@ -1134,16 +1819,32 @@ static void idtcm_display_version_info(struct idtcm *idtcm)
- 
- 	idtcm_read_otp_scsr_config_select(idtcm, &config_select);
- 
-+	snprintf(idtcm->version, sizeof(idtcm->version), "%u.%u.%u",
-+		 major, minor, hotfix);
-+
- 	dev_info(&idtcm->client->dev, fmt, major, minor, hotfix,
- 		 product_id, hw_rev_id, config_select);
- }
- 
-+static const struct ptp_clock_info idtcm_caps_v487 = {
-+	.owner		= THIS_MODULE,
-+	.max_adj	= 244000,
-+	.n_per_out	= 12,
-+	.adjphase	= &idtcm_adjphase,
-+	.adjfine	= &idtcm_adjfine,
-+	.adjtime	= &idtcm_adjtime_v487,
-+	.gettime64	= &idtcm_gettime,
-+	.settime64	= &idtcm_settime_v487,
-+	.enable		= &idtcm_enable,
-+	.do_aux_work	= &set_write_phase_ready,
-+};
-+
- static const struct ptp_clock_info idtcm_caps = {
- 	.owner		= THIS_MODULE,
- 	.max_adj	= 244000,
--	.n_per_out	= 1,
-+	.n_per_out	= 12,
- 	.adjphase	= &idtcm_adjphase,
--	.adjfreq	= &idtcm_adjfreq,
-+	.adjfine	= &idtcm_adjfine,
- 	.adjtime	= &idtcm_adjtime,
- 	.gettime64	= &idtcm_gettime,
- 	.settime64	= &idtcm_settime,
-@@ -1151,24 +1852,14 @@ static const struct ptp_clock_info idtcm_caps = {
- 	.do_aux_work	= &set_write_phase_ready,
- };
- 
--
--static int idtcm_enable_channel(struct idtcm *idtcm, u32 index)
-+static int configure_channel_pll(struct idtcm_channel *channel)
- {
--	struct idtcm_channel *channel;
--	int err;
--
--	if (!(index < MAX_PHC_PLL))
--		return -EINVAL;
--
--	channel = &idtcm->channel[index];
-+	int err = 0;
- 
--	switch (index) {
-+	switch (channel->pll) {
- 	case 0:
- 		channel->dpll_freq = DPLL_FREQ_0;
- 		channel->dpll_n = DPLL_0;
--		channel->tod_read_primary = TOD_READ_PRIMARY_0;
--		channel->tod_write = TOD_WRITE_0;
--		channel->tod_n = TOD_0;
- 		channel->hw_dpll_n = HW_DPLL_0;
- 		channel->dpll_phase = DPLL_PHASE_0;
- 		channel->dpll_ctrl_n = DPLL_CTRL_0;
-@@ -1177,9 +1868,6 @@ static int idtcm_enable_channel(struct idtcm *idtcm, u32 index)
- 	case 1:
- 		channel->dpll_freq = DPLL_FREQ_1;
- 		channel->dpll_n = DPLL_1;
--		channel->tod_read_primary = TOD_READ_PRIMARY_1;
--		channel->tod_write = TOD_WRITE_1;
--		channel->tod_n = TOD_1;
- 		channel->hw_dpll_n = HW_DPLL_1;
- 		channel->dpll_phase = DPLL_PHASE_1;
- 		channel->dpll_ctrl_n = DPLL_CTRL_1;
-@@ -1188,9 +1876,6 @@ static int idtcm_enable_channel(struct idtcm *idtcm, u32 index)
- 	case 2:
- 		channel->dpll_freq = DPLL_FREQ_2;
- 		channel->dpll_n = DPLL_2;
--		channel->tod_read_primary = TOD_READ_PRIMARY_2;
--		channel->tod_write = TOD_WRITE_2;
--		channel->tod_n = TOD_2;
- 		channel->hw_dpll_n = HW_DPLL_2;
- 		channel->dpll_phase = DPLL_PHASE_2;
- 		channel->dpll_ctrl_n = DPLL_CTRL_2;
-@@ -1199,31 +1884,129 @@ static int idtcm_enable_channel(struct idtcm *idtcm, u32 index)
- 	case 3:
- 		channel->dpll_freq = DPLL_FREQ_3;
- 		channel->dpll_n = DPLL_3;
--		channel->tod_read_primary = TOD_READ_PRIMARY_3;
--		channel->tod_write = TOD_WRITE_3;
--		channel->tod_n = TOD_3;
- 		channel->hw_dpll_n = HW_DPLL_3;
- 		channel->dpll_phase = DPLL_PHASE_3;
- 		channel->dpll_ctrl_n = DPLL_CTRL_3;
- 		channel->dpll_phase_pull_in = DPLL_PHASE_PULL_IN_3;
- 		break;
-+	case 4:
-+		channel->dpll_freq = DPLL_FREQ_4;
-+		channel->dpll_n = DPLL_4;
-+		channel->hw_dpll_n = HW_DPLL_4;
-+		channel->dpll_phase = DPLL_PHASE_4;
-+		channel->dpll_ctrl_n = DPLL_CTRL_4;
-+		channel->dpll_phase_pull_in = DPLL_PHASE_PULL_IN_4;
-+		break;
-+	case 5:
-+		channel->dpll_freq = DPLL_FREQ_5;
-+		channel->dpll_n = DPLL_5;
-+		channel->hw_dpll_n = HW_DPLL_5;
-+		channel->dpll_phase = DPLL_PHASE_5;
-+		channel->dpll_ctrl_n = DPLL_CTRL_5;
-+		channel->dpll_phase_pull_in = DPLL_PHASE_PULL_IN_5;
-+		break;
-+	case 6:
-+		channel->dpll_freq = DPLL_FREQ_6;
-+		channel->dpll_n = DPLL_6;
-+		channel->hw_dpll_n = HW_DPLL_6;
-+		channel->dpll_phase = DPLL_PHASE_6;
-+		channel->dpll_ctrl_n = DPLL_CTRL_6;
-+		channel->dpll_phase_pull_in = DPLL_PHASE_PULL_IN_6;
-+		break;
-+	case 7:
-+		channel->dpll_freq = DPLL_FREQ_7;
-+		channel->dpll_n = DPLL_7;
-+		channel->hw_dpll_n = HW_DPLL_7;
-+		channel->dpll_phase = DPLL_PHASE_7;
-+		channel->dpll_ctrl_n = DPLL_CTRL_7;
-+		channel->dpll_phase_pull_in = DPLL_PHASE_PULL_IN_7;
-+		break;
-+	default:
-+		err = -EINVAL;
-+	}
-+
-+	return err;
-+}
-+
-+static int idtcm_enable_channel(struct idtcm *idtcm, u32 index)
-+{
-+	struct idtcm_channel *channel;
-+	int err;
-+
-+	if (!(index < MAX_TOD))
-+		return -EINVAL;
-+
-+	channel = &idtcm->channel[index];
-+
-+	/* Set pll addresses */
-+	err = configure_channel_pll(channel);
-+	if (err)
-+		return err;
-+
-+	/* Set tod addresses */
-+	switch (index) {
-+	case 0:
-+		channel->tod_read_primary = TOD_READ_PRIMARY_0;
-+		channel->tod_write = TOD_WRITE_0;
-+		channel->tod_n = TOD_0;
-+		break;
-+	case 1:
-+		channel->tod_read_primary = TOD_READ_PRIMARY_1;
-+		channel->tod_write = TOD_WRITE_1;
-+		channel->tod_n = TOD_1;
-+		break;
-+	case 2:
-+		channel->tod_read_primary = TOD_READ_PRIMARY_2;
-+		channel->tod_write = TOD_WRITE_2;
-+		channel->tod_n = TOD_2;
-+		break;
-+	case 3:
-+		channel->tod_read_primary = TOD_READ_PRIMARY_3;
-+		channel->tod_write = TOD_WRITE_3;
-+		channel->tod_n = TOD_3;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
- 
- 	channel->idtcm = idtcm;
- 
--	channel->caps = idtcm_caps;
-+	if (idtcm_strverscmp(idtcm->version, "4.8.7") >= 0)
-+		channel->caps = idtcm_caps_v487;
-+	else
-+		channel->caps = idtcm_caps;
-+
- 	snprintf(channel->caps.name, sizeof(channel->caps.name),
--		 "IDT CM PLL%u", index);
-+		 "IDT CM TOD%u", index);
-+
-+	if (idtcm_strverscmp(idtcm->version, "4.8.7") >= 0) {
-+		err = idtcm_enable_tod_sync(channel);
-+		if (err) {
-+			dev_err(&idtcm->client->dev,
-+				"Failed at line %d in func %s!\n",
-+				__LINE__,
-+				__func__);
-+			return err;
-+		}
-+	}
- 
- 	err = idtcm_set_pll_mode(channel, PLL_MODE_WRITE_FREQUENCY);
--	if (err)
-+	if (err) {
-+		dev_err(&idtcm->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 		return err;
-+	}
- 
- 	err = idtcm_enable_tod(channel);
--	if (err)
-+	if (err) {
-+		dev_err(&idtcm->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 		return err;
-+	}
- 
- 	channel->ptp_clock = ptp_clock_register(&channel->caps, NULL);
- 
-@@ -1249,7 +2032,7 @@ static void ptp_clock_unregister_all(struct idtcm *idtcm)
- 	u8 i;
- 	struct idtcm_channel *channel;
- 
--	for (i = 0; i < MAX_PHC_PLL; i++) {
-+	for (i = 0; i < MAX_TOD; i++) {
- 
- 		channel = &idtcm->channel[i];
- 
-@@ -1260,7 +2043,12 @@ static void ptp_clock_unregister_all(struct idtcm *idtcm)
- 
- static void set_default_masks(struct idtcm *idtcm)
- {
--	idtcm->pll_mask = DEFAULT_PLL_MASK;
-+	idtcm->tod_mask = DEFAULT_TOD_MASK;
-+
-+	idtcm->channel[0].pll = DEFAULT_TOD0_PTP_PLL;
-+	idtcm->channel[1].pll = DEFAULT_TOD1_PTP_PLL;
-+	idtcm->channel[2].pll = DEFAULT_TOD2_PTP_PLL;
-+	idtcm->channel[3].pll = DEFAULT_TOD3_PTP_PLL;
- 
- 	idtcm->channel[0].output_mask = DEFAULT_OUTPUT_MASK_PLL0;
- 	idtcm->channel[1].output_mask = DEFAULT_OUTPUT_MASK_PLL1;
-@@ -1268,51 +2056,13 @@ static void set_default_masks(struct idtcm *idtcm)
- 	idtcm->channel[3].output_mask = DEFAULT_OUTPUT_MASK_PLL3;
- }
- 
--static int set_tod_write_overhead(struct idtcm *idtcm)
--{
--	int err;
--	u8 i;
--
--	s64 total_ns = 0;
--
--	ktime_t start;
--	ktime_t stop;
--
--	char buf[TOD_BYTE_COUNT];
--
--	struct idtcm_channel *channel = &idtcm->channel[2];
--
--	/* Set page offset */
--	idtcm_write(idtcm, channel->hw_dpll_n, HW_DPLL_TOD_OVR__0,
--		    buf, sizeof(buf));
--
--	for (i = 0; i < TOD_WRITE_OVERHEAD_COUNT_MAX; i++) {
--
--		start = ktime_get_raw();
--
--		err = idtcm_write(idtcm, channel->hw_dpll_n,
--				  HW_DPLL_TOD_OVR__0, buf, sizeof(buf));
--
--		if (err)
--			return err;
--
--		stop = ktime_get_raw();
--
--		total_ns += ktime_to_ns(stop - start);
--	}
--
--	idtcm->tod_write_overhead_ns = div_s64(total_ns,
--					       TOD_WRITE_OVERHEAD_COUNT_MAX);
--
--	return err;
--}
--
- static int idtcm_probe(struct i2c_client *client,
- 		       const struct i2c_device_id *id)
- {
- 	struct idtcm *idtcm;
- 	int err;
- 	u8 i;
-+	char *fmt = "Failed at %d in line %s with channel output %d!\n";
- 
- 	/* Unused for now */
- 	(void)id;
-@@ -1333,25 +2083,24 @@ static int idtcm_probe(struct i2c_client *client,
- 
- 	idtcm_display_version_info(idtcm);
- 
--	err = set_tod_write_overhead(idtcm);
--
--	if (err) {
--		mutex_unlock(&idtcm->reg_lock);
--		return err;
--	}
--
- 	err = idtcm_load_firmware(idtcm, &client->dev);
- 
- 	if (err)
- 		dev_warn(&idtcm->client->dev,
- 			 "loading firmware failed with %d\n", err);
- 
--	if (idtcm->pll_mask) {
--		for (i = 0; i < MAX_PHC_PLL; i++) {
--			if (idtcm->pll_mask & (1 << i)) {
-+	if (idtcm->tod_mask) {
-+		for (i = 0; i < MAX_TOD; i++) {
-+			if (idtcm->tod_mask & (1 << i)) {
- 				err = idtcm_enable_channel(idtcm, i);
--				if (err)
-+				if (err) {
-+					dev_err(&idtcm->client->dev,
-+						fmt,
-+						__LINE__,
-+						__func__,
-+						i);
- 					break;
-+				}
- 			}
- 		}
- 	} else {
-diff --git a/drivers/ptp/ptp_clockmatrix.h b/drivers/ptp/ptp_clockmatrix.h
-index 3de0eb7..ffae56c 100644
---- a/drivers/ptp/ptp_clockmatrix.h
-+++ b/drivers/ptp/ptp_clockmatrix.h
-@@ -13,32 +13,48 @@
- #include "idt8a340_reg.h"
- 
- #define FW_FILENAME	"idtcm.bin"
--#define MAX_PHC_PLL	4
-+#define MAX_TOD		(4)
-+#define MAX_PLL		(8)
- 
- #define MAX_ABS_WRITE_PHASE_PICOSECONDS (107374182350LL)
- 
--#define PLL_MASK_ADDR		(0xFFA5)
--#define DEFAULT_PLL_MASK	(0x04)
-+#define TOD_MASK_ADDR		(0xFFA5)
-+#define DEFAULT_TOD_MASK	(0x04)
- 
- #define SET_U16_LSB(orig, val8) (orig = (0xff00 & (orig)) | (val8))
- #define SET_U16_MSB(orig, val8) (orig = (0x00ff & (orig)) | (val8 << 8))
- 
--#define OUTPUT_MASK_PLL0_ADDR		(0xFFB0)
--#define OUTPUT_MASK_PLL1_ADDR		(0xFFB2)
--#define OUTPUT_MASK_PLL2_ADDR		(0xFFB4)
--#define OUTPUT_MASK_PLL3_ADDR		(0xFFB6)
-+#define TOD0_PTP_PLL_ADDR		(0xFFA8)
-+#define TOD1_PTP_PLL_ADDR		(0xFFA9)
-+#define TOD2_PTP_PLL_ADDR		(0xFFAA)
-+#define TOD3_PTP_PLL_ADDR		(0xFFAB)
-+
-+#define TOD0_OUT_ALIGN_MASK_ADDR	(0xFFB0)
-+#define TOD1_OUT_ALIGN_MASK_ADDR	(0xFFB2)
-+#define TOD2_OUT_ALIGN_MASK_ADDR	(0xFFB4)
-+#define TOD3_OUT_ALIGN_MASK_ADDR	(0xFFB6)
- 
- #define DEFAULT_OUTPUT_MASK_PLL0	(0x003)
- #define DEFAULT_OUTPUT_MASK_PLL1	(0x00c)
- #define DEFAULT_OUTPUT_MASK_PLL2	(0x030)
- #define DEFAULT_OUTPUT_MASK_PLL3	(0x0c0)
- 
-+#define DEFAULT_TOD0_PTP_PLL		(0)
-+#define DEFAULT_TOD1_PTP_PLL		(1)
-+#define DEFAULT_TOD2_PTP_PLL		(2)
-+#define DEFAULT_TOD3_PTP_PLL		(3)
-+
- #define POST_SM_RESET_DELAY_MS		(3000)
- #define PHASE_PULL_IN_THRESHOLD_NS	(150000)
--#define TOD_WRITE_OVERHEAD_COUNT_MAX	(5)
-+#define PHASE_PULL_IN_THRESHOLD_NS_V487	(15000)
-+#define TOD_WRITE_OVERHEAD_COUNT_MAX	(2)
- #define TOD_BYTE_COUNT			(11)
- #define WR_PHASE_SETUP_MS		(5000)
- 
-+#define OUTPUT_MODULE_FROM_INDEX(index)	(OUTPUT_0 + (index) * 0x10)
-+
-+#define PEROUT_ENABLE_OUTPUT_MASK		(0xdeadbeef)
-+
- /* Values of DPLL_N.DPLL_MODE.PLL_MODE */
- enum pll_mode {
- 	PLL_MODE_MIN = 0,
-@@ -48,7 +64,8 @@ enum pll_mode {
- 	PLL_MODE_GPIO_INC_DEC = 3,
- 	PLL_MODE_SYNTHESIS = 4,
- 	PLL_MODE_PHASE_MEASUREMENT = 5,
--	PLL_MODE_MAX = PLL_MODE_PHASE_MEASUREMENT,
-+	PLL_MODE_DISABLED = 6,
-+	PLL_MODE_MAX = PLL_MODE_DISABLED,
- };
- 
- enum hw_tod_write_trig_sel {
-@@ -63,6 +80,26 @@ enum hw_tod_write_trig_sel {
- 	WR_TRIG_SEL_MAX = HW_TOD_WR_TRIG_SEL_FOD_SYNC,
- };
- 
-+/* 4.8.7 only */
-+enum scsr_tod_write_trig_sel {
-+	SCSR_TOD_WR_TRIG_SEL_DISABLE = 0,
-+	SCSR_TOD_WR_TRIG_SEL_IMMEDIATE = 1,
-+	SCSR_TOD_WR_TRIG_SEL_REFCLK = 2,
-+	SCSR_TOD_WR_TRIG_SEL_PWMPPS = 3,
-+	SCSR_TOD_WR_TRIG_SEL_TODPPS = 4,
-+	SCSR_TOD_WR_TRIG_SEL_SYNCFOD = 5,
-+	SCSR_TOD_WR_TRIG_SEL_GPIO = 6,
-+	SCSR_TOD_WR_TRIG_SEL_MAX = SCSR_TOD_WR_TRIG_SEL_GPIO,
-+};
-+
-+/* 4.8.7 only */
-+enum scsr_tod_write_type_sel {
-+	SCSR_TOD_WR_TYPE_SEL_ABSOLUTE = 0,
-+	SCSR_TOD_WR_TYPE_SEL_DELTA_PLUS = 1,
-+	SCSR_TOD_WR_TYPE_SEL_DELTA_MINUS = 2,
-+	SCSR_TOD_WR_TYPE_SEL_MAX = SCSR_TOD_WR_TYPE_SEL_DELTA_MINUS,
-+};
-+
- struct idtcm;
- 
- struct idtcm_channel {
-@@ -79,15 +116,17 @@ struct idtcm_channel {
- 	u16			tod_n;
- 	u16			hw_dpll_n;
- 	enum pll_mode		pll_mode;
-+	u8			pll;
- 	u16			output_mask;
- 	int			write_phase_ready;
- };
- 
- struct idtcm {
--	struct idtcm_channel	channel[MAX_PHC_PLL];
-+	struct idtcm_channel	channel[MAX_TOD];
- 	struct i2c_client	*client;
- 	u8			page_offset;
--	u8			pll_mask;
-+	u8			tod_mask;
-+	char			version[16];
- 
- 	/* Overhead calculation for adjtime */
- 	u8			calculate_overhead_flag;
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+
+For testing, I did `make clean` for x86/arm/arm64/powerpc, then a
+defconfig (pseries_defconfig for ppc) build, then:
+$ make -j71 LLVM=1 clang-tidy 2> log.txt
+$ grep -e linuxkernel- -e clang- log.txt | sort -u | cut -d '[' -f 2 |
+sort | uniq -c
+$ make -j71 LLVM=1 clang-analyzer 2> log.txt
+$ grep -e linuxkernel- -e clang- log.txt | sort -u | cut -d '[' -f 2 |
+sort | uniq -c
+
+Looks like it's already finding a couple bugs.  I'll probably disable
+clang-diagnostic-* in a follow up, as those seem pretty noisy, though
+clang-diagnostic-incompatible-pointer-types will likely be of interest
+for the CFI work.
+
+Thanks for all of the work that went into this, and tolerating my pedantry.
+
+> +import subprocess
+> +import sys
+> +
+> +
+> +def parse_arguments():
+> +    """Set up and parses command-line arguments.
+> +    Returns:
+> +        args: Dict of parsed args
+> +        Has keys: [path, type]
+> +    """
+> +    usage = """Run clang-tidy or the clang static-analyzer on a
+> +        compilation database."""
+> +    parser = argparse.ArgumentParser(description=usage)
+> +
+> +    type_help = "Type of analysis to be performed"
+> +    parser.add_argument("type",
+> +                        choices=["clang-tidy", "clang-analyzer"],
+> +                        help=type_help)
+> +    path_help = "Path to the compilation database to parse"
+> +    parser.add_argument("path", type=str, help=path_help)
+> +
+> +    return parser.parse_args()
+> +
+> +
+> +def init(l, a):
+> +    global lock
+> +    global args
+> +    lock = l
+> +    args = a
+> +
+> +
+> +def run_analysis(entry):
+> +    # Disable all checks, then re-enable the ones we want
+> +    checks = "-checks=-*,"
+> +    if args.type == "clang-tidy":
+> +        checks += "linuxkernel-*"
+> +    else:
+> +        checks += "clang-analyzer-*"
+> +    p = subprocess.run(["clang-tidy", "-p", args.path, checks, entry["file"]],
+> +                       stdout=subprocess.PIPE,
+> +                       stderr=subprocess.STDOUT,
+> +                       cwd=entry["directory"])
+> +    with lock:
+> +        sys.stderr.buffer.write(p.stdout)
+> +
+> +
+> +def main():
+> +    args = parse_arguments()
+> +
+> +    lock = multiprocessing.Lock()
+> +    pool = multiprocessing.Pool(initializer=init, initargs=(lock, args))
+> +    # Read JSON data into the datastore variable
+> +    with open(args.path, "r") as f:
+> +        datastore = json.load(f)
+> +        pool.map(run_analysis, datastore)
+> +
+> +
+> +if __name__ == "__main__":
+> +    main()
+> --
+> 2.28.0.rc0.142.g3c755180ce-goog
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200728004736.3590053-1-nhuck%40google.com.
+
+
+
 -- 
-2.7.4
-
+Thanks,
+~Nick Desaulniers
