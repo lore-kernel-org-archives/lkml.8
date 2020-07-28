@@ -2,118 +2,84 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C68CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8297C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A52CE20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A3520656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:13:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KXX8Mkn7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j+jpFrFa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgG1UM3 (ORCPT
+        id S1728596AbgG1UNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:12:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60670 "EHLO
+        Tue, 28 Jul 2020 16:13:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728245AbgG1UM2 (ORCPT
+        with ESMTP id S1728149AbgG1UNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 16:12:28 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89FFDC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:12:28 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k4so10551512pld.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:12:28 -0700 (PDT)
+        Tue, 28 Jul 2020 16:13:53 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1C03C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:13:52 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u185so11621453pfu.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:13:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=lGODvQAyFgiIakAvcuOrB55CdYdcOaQbABBPHmSlK8A=;
-        b=KXX8Mkn7MNftP6mJ42ju7ovK7oMAAX0wGRB0ry7w+mD/hsCbKEyPUIfLQgdll+U1Hq
-         4xQS018nhgkGgLPtgROQlYsblo5NoExjDQhzJknpZmFPr1lJDow/rdW50/9T5e1TGb0u
-         4gJoD0vzQnv64fwnh0m/ejgnfnf0ndm6GA1nQ=
+        bh=GUGq9o6dBiXsIcvPN0xvh0KVFpMCLExttXK003WiTkk=;
+        b=j+jpFrFaCnHHYNU23TSLdCCXdZGUSpEQRQq6fpxpu0rQT70/xTZe47+lh4YdT86wwW
+         B4rO3L4Ha84q6uZFMH9rFByWQMwF9tqACggZMoGvQRMzRrz4YVG8yxU0fXZLqXu2wCCF
+         fj5KPhJJyLJ0xUu5I7O1A0JdzxedcE4TqFzoY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=lGODvQAyFgiIakAvcuOrB55CdYdcOaQbABBPHmSlK8A=;
-        b=uOW5LwpL7op0WYa3paKlDWSmyf+w76sW/Vf5vKoa3tbz5PkX2so8Lpm2KN++a89aZW
-         Qa/VUjnrii46G/Kb5M6r5pN5xnjcisTN76Dqm133MoeTb/g+bEhaQUDSg1YbeEASTsJE
-         Am6QLe0uVGuhv7UskaPhRMOzwvvuOPrm7FSbRYR3pd3VXPIA6vse5c8WAItK4hAe/ssN
-         3NELTyXBYs1Jj7HCCk5JGhYRHVMMqROLD1fpmC3Skm8G6WX6mqotdunisGiqSZZhKWur
-         UyO7AOBK4bbNvcBh25DxfVzLvG9vwiA8Z5Ik4gmbCm0W38eG1K1FkwWER69l39FFGmIO
-         +vAQ==
-X-Gm-Message-State: AOAM532m8VlcSmH8CjvZ5Of8nNeMjKCyg55RNRTj45qyEEvdt2w0TPW7
-        BYuf5xMXXtby6xon2leGneu0lQ==
-X-Google-Smtp-Source: ABdhPJyFIgRmVJfBhFlzPKJj5terbzmemlEZoh3fyIw7tCG0VwJkPldmQbeJoogxX3pMzlVW5vctfw==
-X-Received: by 2002:a17:90a:2207:: with SMTP id c7mr6611771pje.206.1595967148091;
-        Tue, 28 Jul 2020 13:12:28 -0700 (PDT)
+        bh=GUGq9o6dBiXsIcvPN0xvh0KVFpMCLExttXK003WiTkk=;
+        b=lds8neEHD46wzBxSHtJhUXVcbYAQCchrtJKusaSuqcI+QiWGqCktsjbSdfcjqBi4K9
+         06spAQjWEReuCMFHSHYxl2lVwAWPzJntk0Eyq++jDLDRrUCbbcoh8CRf8aiZ4EwcE9kH
+         gPXg8iwAYTT91mwyIp8VkXsGGCcEHyHSe+rRRm3UwzWLeUztZv/6MxneH5td6SlfmIuP
+         f0CMIoFxugq0Or69NHknVgsJS3D8vo4111dvFt5tXsgz7+Ph2EXFQSZ9GwDaSfv/NVQq
+         I/SbO7SN+XyCX3mefQdUmOTcQF9VpCLcAooE4RUHKb2xwDaLhiVIdVqvODZnCRxurjBT
+         rCsw==
+X-Gm-Message-State: AOAM530KhS9gyazPZqmzY0RowpmQ06bt5GyyH865vWxEKxiTWiZENCA2
+        84VCEVIWkpgXWNWfKJ0KLpvcfA==
+X-Google-Smtp-Source: ABdhPJxZlXlA+o86dFzVP7fJ4h4Y9s9NA6CWrv0lWk05v6VUe4EblWytk81iQ8NgQuv3Uendd5104g==
+X-Received: by 2002:a63:ee0c:: with SMTP id e12mr24290690pgi.83.1595967232539;
+        Tue, 28 Jul 2020 13:13:52 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q17sm22220199pfk.0.2020.07.28.13.12.27
+        by smtp.gmail.com with ESMTPSA id w17sm18909752pge.10.2020.07.28.13.13.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 13:12:27 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 13:12:26 -0700
+        Tue, 28 Jul 2020 13:13:51 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 13:13:50 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mimi Zohar <zohar@kernel.org>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 15/19] IMA: Add support for file reads without contents
-Message-ID: <202007281311.F2F5A7ED5@keescook>
-References: <20200724213640.389191-1-keescook@chromium.org>
- <20200724213640.389191-16-keescook@chromium.org>
- <1595856214.4841.86.camel@kernel.org>
- <202007281244.2F2681AE9@keescook>
- <20200728195640.GA342741@kroah.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/8] x86/kaslr: Simplify process_gb_huge_pages
+Message-ID: <202007281313.0C95B091@keescook>
+References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
+ <20200727230801.3468620-7-nivedita@alum.mit.edu>
+ <202007281225.C24B966D7@keescook>
+ <20200728194511.GB4150860@rani.riverdale.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200728195640.GA342741@kroah.com>
+In-Reply-To: <20200728194511.GB4150860@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 09:56:40PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Jul 28, 2020 at 12:44:50PM -0700, Kees Cook wrote:
-> > On Mon, Jul 27, 2020 at 09:23:34AM -0400, Mimi Zohar wrote:
-> > > On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
-> > > > From: Scott Branden <scott.branden@broadcom.com>
-> > > > 
-> > > > When the kernel_read_file LSM hook is called with contents=false, IMA
-> > > > can appraise the file directly, without requiring a filled buffer. When
-> > > > such a buffer is available, though, IMA can continue to use it instead
-> > > > of forcing a double read here.
-> > > > 
-> > > > Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> > > > Link: https://lore.kernel.org/lkml/20200706232309.12010-10-scott.branden@broadcom.com/
-> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > 
-> > > After adjusting the comment below.
-> > > 
-> > > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> > 
-> > Sure!
-> > 
-> > Greg, shall I send a v4 with added Reviews and the comment change or is
-> > that minor enough that you're able to do it?
-> 
-> v4 is needed, as this series is a mess of reviewes and you will have to
-> redo at least one patch and drop some others, right?
+On Tue, Jul 28, 2020 at 03:45:11PM -0400, Arvind Sankar wrote:
+> But the IS_ENABLED check allows the compiler to eliminate the entire
+> function at compile time.
 
-Well, I wasn't sure what your desire was, given the weirdness of taking
-some and reverting others. I will do a v4 based on driver-core-next.
-
-Thanks!
+Ah, I thought it'd be a const false, which would do the same...
 
 -- 
 Kees Cook
