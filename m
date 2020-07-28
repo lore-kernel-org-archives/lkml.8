@@ -2,192 +2,247 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CFAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F671C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC0EA20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FF02065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:22:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n8nqALom"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbgG1VU2 (ORCPT
+        id S1729414AbgG1VWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 17:20:28 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:38510 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728149AbgG1VU1 (ORCPT
+        Tue, 28 Jul 2020 17:22:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728149AbgG1VWD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 17:20:27 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id AB69A20039;
-        Tue, 28 Jul 2020 23:20:23 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 23:20:22 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Kevin Tang <kevin3.tang@gmail.com>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        zhang.lyra@gmail.com
-Subject: Re: [PATCH RFC v6 0/6] Add Unisoc's drm kms module
-Message-ID: <20200728212022.GF1277651@ravnborg.org>
-References: <1595930879-2478-1-git-send-email-kevin3.tang@gmail.com>
+        Tue, 28 Jul 2020 17:22:03 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44B4C061794;
+        Tue, 28 Jul 2020 14:22:02 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id w12so8707359iom.4;
+        Tue, 28 Jul 2020 14:22:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=Ce2riTt0wp0SdFBRMy7tVXS9nZSaZZUU7x1cmq39pfQ=;
+        b=n8nqALom1tN4Wh2BayQLeqTuLpOQE+ja5YdZsKpKN861hQ9Pr8UkV4lt7EKOoeJoZ9
+         EyDxUcSh3uVNhSq/mWRXsTAKVgIYYfEdfhA26NaSqoOUiDezVNBHusArbvCMcy20Cjj2
+         IaLv5qDzqIRsPtL5ZZ8BUgKjBB/0KBfsO643H5J211c8YYXpHJi2z1T4auYNwyd/lCC2
+         EwAqGN5YOoq5B8cQddl5Mz+Gcnciu37GCiUCadBpV7KjcXMxrw7Qh/Dzr9P9WDb01ndJ
+         uitse3/sk5eGdSCI7+PNFFWvhoJPs2zQt7uFti5LAu5U9iz9aMeif/vEy41X4UkUyQct
+         Xn/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=Ce2riTt0wp0SdFBRMy7tVXS9nZSaZZUU7x1cmq39pfQ=;
+        b=V0x0zO2NGxqkGylwXJMZR4WZE1JNRBnlqgbanzlZZsATgSL+IMVWtmnxRqU5pn5QfY
+         oTAIDIu3LrftvvixxN8ZjTnDbgWLW5Ps1yLDULpVp+U1Jtj284EKXZQX1L4njCbYMrbZ
+         4oHVuvPAvl6NrDZXoS3zh7fMdKjVT4Rb5AtnSmcid5kv1LZWbKNLFvJRbiZcJErCdddK
+         HdUPlBfFDQJF34moHyBorlxdLqq/BffCdLrEG60ixIRIg/gZ8y6UmWQFwevCwDwIzZ4c
+         IPZWpkepY+4vbujy2AlJzGUBJsvrbwq6if/tPKf5iV3C3hFq9MhPcUDnZMj8mVKOlCJj
+         ntmQ==
+X-Gm-Message-State: AOAM531hRoKRsfGha/+rPkz2PBPhLKxfYdiY/ovecrO2pZM7qV/TXuVk
+        SzjNvuQh2bYyOkp37PDSx/eO661hUCH5DFYcOD0=
+X-Google-Smtp-Source: ABdhPJz8q+zpeAcTDeSFUU18MVmKFa+68QwIF6EG438nGZPBd6eDleQtNOLl/7Hir44lz4dFtlauMVFD7aLzMgTzjNs=
+X-Received: by 2002:a6b:5a04:: with SMTP id o4mr28123141iob.171.1595971322061;
+ Tue, 28 Jul 2020 14:22:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595930879-2478-1-git-send-email-kevin3.tang@gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=icsG72s9AAAA:8 a=e5mUnYsNAAAA:8
-        a=uycXCgnwi_-2LEUYQMgA:9 a=CjuIK1q_8ugA:10 a=T89tl0cgrjxRNoSN2Dv0:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+References: <20200727230606.906598-1-nickrterrell@gmail.com>
+In-Reply-To: <20200727230606.906598-1-nickrterrell@gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 28 Jul 2020 23:21:50 +0200
+Message-ID: <CA+icZUW5+53giKTcw-Hv7Yq_azn2FYFygR_hE8rk4+NV=4Yjkg@mail.gmail.com>
+Subject: Re: [GIT PULL][PATCH v9 0/7] Add support for ZSTD-compressed kernel
+ and initramfs
+To:     Nick Terrell <nickrterrell@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Xu <alex_y_xu@yahoo.ca>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Terrell <terrelln@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin.
+On Tue, Jul 28, 2020 at 1:10 AM Nick Terrell <nickrterrell@gmail.com> wrote:
+>
+> From: Nick Terrell <terrelln@fb.com>
+>
+> Please pull from
+>
+>   git@github.com:terrelln/linux.git tags/v9-zstd
+>
+> to get these changes. Alternatively the patchset is included.
+>
+> Hi all,
+>
+> This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
+> initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
+> are supported on all architectures. The ZSTD-compressed kernel is only
+> hooked up to x86 in this patch set.
+>
+> Zstandard requires slightly more memory during the kernel decompression
+> on x86 (192 KB vs 64 KB), and the memory usage is independent of the
+> window size.
+>
+> Zstandard requires memory proprortional to the window size used during
+> compression for decompressing the ramdisk image, since streaming mode is
+> used. Newer versions of zstd (1.3.2+) list the window size of a file
+> with `zstd -lv <file>'. The absolute maximum amount of memory required
+> is just over 8 MB, but it can be controlled at compression time.
+>
+> This patch set has been boot tested with buildroot and QEMU based off
+> of linux-5.6-rc6.
+>
+> On i386 and x86_64 I have tested the following configurations:
+> * zstd compressed kernel and a separate zstd compressed initramfs
+> * zstd compressed kernel and a built-in zstd compressed initramfs
+> * gzip compressed kernel and a separate gzip compressed initramfs
+> * gzip compressed kernel and a built-in gzip compressed initramfs
+>
+> On arm and aarch64 I tested the same configurations, except that the kernel is
+> always gzip compressed.
+>
+> Facebook has been using v1 of these patches on x86_64 devices for more than 6
+> months. When we switched from a xz compressed initramfs to a zstd compressed
+> initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
+> switched from a xz compressed kernel to a zstd compressed kernel we saved 2
+> seconds of boot time.
+>
+> Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
+> When we switched from an lzma compressed initramfs to a zstd compressed initramfs
+> decompression time shrunk from 27 seconds to 8 seconds.
+>
+> The zstd compressed kernel is smaller than the gzip compressed kernel but larger
+> than the xz or lzma compressed kernels, and it decompresses faster than
+> everything except lz4. See the table below for the measurement of an x86_64
+> kernel ordered by compressed size:
+>
+> algo    size
+> xz       6,509,792
+> lzma     6,856,576
+> zstd     7,399,157
+> gzip     8,522,527
+> bzip     8,629,603
+> lzo      9,808,035
+> lz4     10,705,570
+> none    32,565,672
+>
+> Alex Xu ran benchmarks in https://lkml.org/lkml/2020/7/1/722.
+>
+> v1 -> v2:
+> - Rebase
+>   - usr/Makefile and init/Kconfig were changed so the patches were updated
+> - No functional changes except to rebase
+> - Split the patches up into smaller chunks
+>
+> v2 -> v3:
+> - Add *.zst to the .gitignore in patch 8
+> - Style nits in patch 3
+> - Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
+>   1 through 3
+>
+> v3 -> v4:
+> - Increase the ZSTD_IOBUF_SIZE from 4KB to 128KB to improve performance.
+>   With this change I switch from malloc() to large_malloc() for the
+>   buffers.
+> - Increase the maximum allowed window size from 8 MB to 128 MB, which is
+>   the max that zstd in the kernel supports.
+>
+> v4 -> v5:
+> - Update commit message for patch 6 in response to comments
+> - Rebase onto next-20200408
+>
+> v5 -> v6:
+> - Rebase onto v5.8-rc4
+>
+> v6 -> v7:
+> - (1/7) Don't define or use 'ZSTD_PREBOOT' to hide exports
+> - (2/8) Drop 'lib: prepare xxhash for preboot environment'
+> - (2/7) Use '__DISABLE_EXPORTS' in unzstd to hide exports
+> - (3/7) Update zstd compression cmd to follow other compressors
+> - (3/7) Add zstd22 cmd
+> - (6/7) Use zstd -22 --ultra (zstd22) for x86 kernel compression
+>
+> v7 -> v8:
+> - (2/7) Don't define '__DISABLE_EXPORTS'
+> - (6/7) Define '__DISABLE_EXPORTS' in misc.c
+>
+> v8 -> v9:
+> - Rebase onto v5.8-rc7
+> - (2/7) Fix nits about comment style & typos
+> - (3/7) Fix typo in init/Kconfig description
+> - (6/7) Explain BOOT_HEAP_SIZE increase and define __DISABLE_EXPORTS in
+>         Makefile KBUILD_CFLAGS and remove definitions from kaslr.c and misc.c
+>
 
-Thanks for submitting this set of drivers.
+Tested v9 on top of Linux v5.8-rc7 with these combinations:
+#1: GCC v10.2 and GNU/ld v2.35
+#2: LLVM v11.0.0-rc1 (LLVM=1 and LLVM_IAS=1)
 
-To better review the pataches can you please give some kind of high
-level overview.
+- Sedat -
 
-An ascii block diagram that identifies all the relevant blocks and how
-they relate would be great.
-
-This makes it easier to verify if the right modelling is used.
-
-	Sam
-
-On Tue, Jul 28, 2020 at 06:07:53PM +0800, Kevin Tang wrote:
-> From: Kevin Tang <kevin.tang@unisoc.com>
-> 
-> ChangeList:
-> v1:
-> 1. only upstream modeset and atomic at first commit. 
-> 2. remove some unused code;
-> 3. use alpha and blend_mode properties;
-> 3. add yaml support;
-> 4. remove auto-adaptive panel driver;
-> 5. bugfix
-> 
-> v2:
-> 1. add sprd crtc and plane module for KMS, preparing for multi crtc&encoder
-> 2. remove gem drivers, use generic CMA handlers
-> 3. remove redundant "module_init", all the sub modules loading by KMS
-> 
-> v3:
-> 1. multi crtc&encoder design have problem, so rollback to v1
-> 
-> v4:
-> 1. update to gcc-linaro-7.5.0
-> 2. update to Linux 5.6-rc3
-> 3. remove pm_runtime support
-> 4. add COMPILE_TEST, remove unused kconfig
-> 5. "drm_dev_put" on drm_unbind
-> 6. fix some naming convention issue
-> 7. remove semaphore lock for crtc flip
-> 8. remove static variables
-> 
-> v5:
-> 1. optimize encoder and connector code implementation
-> 2. use "platform_get_irq" and "platform_get_resource"
-> 3. drop useless function return type, drop unless debug log
-> 4. custom properties should be separate, so drop it
-> 5. use DRM_XXX replase pr_xxx
-> 6. drop dsi&dphy hal callback ops
-> 7. drop unless callback ops checking
-> 8. add comments for sprd dpu structure
-> 
-> v6:
-> 1. Access registers via readl/writel
-> 2. Checking for unsupported KMS properties (format, rotation, blend_mode, etc) on plane_check ops
-> 3. Remove always true checks for dpu core ops
-> 
-> Kevin Tang (6):
->   dt-bindings: display: add Unisoc's drm master bindings
->   drm/sprd: add Unisoc's drm kms master
->   dt-bindings: display: add Unisoc's dpu bindings
->   drm/sprd: add Unisoc's drm display controller driver
->   dt-bindings: display: add Unisoc's mipi dsi&dphy bindings
->   drm/sprd: add Unisoc's drm mipi dsi&dphy driver
-> 
->  .../devicetree/bindings/display/sprd/dphy.yaml     |   75 +
->  .../devicetree/bindings/display/sprd/dpu.yaml      |   82 ++
->  .../devicetree/bindings/display/sprd/drm.yaml      |   36 +
->  .../devicetree/bindings/display/sprd/dsi.yaml      |   98 ++
->  drivers/gpu/drm/Kconfig                            |    2 +
->  drivers/gpu/drm/Makefile                           |    1 +
->  drivers/gpu/drm/sprd/Kconfig                       |   12 +
->  drivers/gpu/drm/sprd/Makefile                      |   13 +
->  drivers/gpu/drm/sprd/disp_lib.c                    |   57 +
->  drivers/gpu/drm/sprd/disp_lib.h                    |   16 +
->  drivers/gpu/drm/sprd/dphy/Makefile                 |    7 +
->  drivers/gpu/drm/sprd/dphy/pll/Makefile             |    3 +
->  drivers/gpu/drm/sprd/dphy/pll/megacores_sharkle.c  |  473 +++++++
->  drivers/gpu/drm/sprd/dphy/sprd_dphy_api.c          |  201 +++
->  drivers/gpu/drm/sprd/dphy/sprd_dphy_api.h          |   22 +
->  drivers/gpu/drm/sprd/dpu/Makefile                  |    3 +
->  drivers/gpu/drm/sprd/dpu/dpu_r2p0.c                |  503 +++++++
->  drivers/gpu/drm/sprd/dsi/Makefile                  |    8 +
->  drivers/gpu/drm/sprd/dsi/core/Makefile             |    4 +
->  drivers/gpu/drm/sprd/dsi/core/dsi_ctrl_r1p0.c      |  964 +++++++++++++
->  drivers/gpu/drm/sprd/dsi/core/dsi_ctrl_r1p0.h      | 1477 ++++++++++++++++++++
->  drivers/gpu/drm/sprd/dsi/core/dsi_ctrl_r1p0_ppi.c  |  328 +++++
->  drivers/gpu/drm/sprd/dsi/core/dsi_ctrl_r1p0_ppi.h  |   32 +
->  drivers/gpu/drm/sprd/dsi/sprd_dsi_api.c            |  590 ++++++++
->  drivers/gpu/drm/sprd/dsi/sprd_dsi_api.h            |   26 +
->  drivers/gpu/drm/sprd/sprd_dphy.c                   |  209 +++
->  drivers/gpu/drm/sprd/sprd_dphy.h                   |   50 +
->  drivers/gpu/drm/sprd/sprd_dpu.c                    |  668 +++++++++
->  drivers/gpu/drm/sprd/sprd_dpu.h                    |  190 +++
->  drivers/gpu/drm/sprd/sprd_drm.c                    |  227 +++
->  drivers/gpu/drm/sprd/sprd_drm.h                    |   18 +
->  drivers/gpu/drm/sprd/sprd_dsi.c                    |  571 ++++++++
->  drivers/gpu/drm/sprd/sprd_dsi.h                    |  108 ++
->  33 files changed, 7074 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/sprd/dphy.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/sprd/dpu.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/sprd/drm.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/sprd/dsi.yaml
->  create mode 100644 drivers/gpu/drm/sprd/Kconfig
->  create mode 100644 drivers/gpu/drm/sprd/Makefile
->  create mode 100644 drivers/gpu/drm/sprd/disp_lib.c
->  create mode 100644 drivers/gpu/drm/sprd/disp_lib.h
->  create mode 100644 drivers/gpu/drm/sprd/dphy/Makefile
->  create mode 100644 drivers/gpu/drm/sprd/dphy/pll/Makefile
->  create mode 100644 drivers/gpu/drm/sprd/dphy/pll/megacores_sharkle.c
->  create mode 100644 drivers/gpu/drm/sprd/dphy/sprd_dphy_api.c
->  create mode 100644 drivers/gpu/drm/sprd/dphy/sprd_dphy_api.h
->  create mode 100644 drivers/gpu/drm/sprd/dpu/Makefile
->  create mode 100644 drivers/gpu/drm/sprd/dpu/dpu_r2p0.c
->  create mode 100644 drivers/gpu/drm/sprd/dsi/Makefile
->  create mode 100644 drivers/gpu/drm/sprd/dsi/core/Makefile
->  create mode 100644 drivers/gpu/drm/sprd/dsi/core/dsi_ctrl_r1p0.c
->  create mode 100644 drivers/gpu/drm/sprd/dsi/core/dsi_ctrl_r1p0.h
->  create mode 100644 drivers/gpu/drm/sprd/dsi/core/dsi_ctrl_r1p0_ppi.c
->  create mode 100644 drivers/gpu/drm/sprd/dsi/core/dsi_ctrl_r1p0_ppi.h
->  create mode 100644 drivers/gpu/drm/sprd/dsi/sprd_dsi_api.c
->  create mode 100644 drivers/gpu/drm/sprd/dsi/sprd_dsi_api.h
->  create mode 100644 drivers/gpu/drm/sprd/sprd_dphy.c
->  create mode 100644 drivers/gpu/drm/sprd/sprd_dphy.h
->  create mode 100644 drivers/gpu/drm/sprd/sprd_dpu.c
->  create mode 100644 drivers/gpu/drm/sprd/sprd_dpu.h
->  create mode 100644 drivers/gpu/drm/sprd/sprd_drm.c
->  create mode 100644 drivers/gpu/drm/sprd/sprd_drm.h
->  create mode 100644 drivers/gpu/drm/sprd/sprd_dsi.c
->  create mode 100644 drivers/gpu/drm/sprd/sprd_dsi.h
-> 
-> -- 
-> 2.7.4
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> Best,
+> Nick Terrell
+>
+> Adam Borowski (1):
+>   .gitignore: add ZSTD-compressed files
+>
+> Nick Terrell (6):
+>   lib: prepare zstd for preboot environment
+>   lib: add zstd support to decompress
+>   init: add support for zstd compressed kernel
+>   usr: add support for zstd compressed initramfs
+>   x86: bump ZO_z_extra_bytes margin for zstd
+>   x86: Add support for ZSTD compressed kernel
+>
+>  .gitignore                        |   1 +
+>  Documentation/x86/boot.rst        |   6 +-
+>  Makefile                          |   3 +-
+>  arch/x86/Kconfig                  |   1 +
+>  arch/x86/boot/compressed/Makefile |   6 +-
+>  arch/x86/boot/compressed/kaslr.c  |   7 -
+>  arch/x86/boot/compressed/misc.c   |   4 +
+>  arch/x86/boot/header.S            |   8 +-
+>  arch/x86/include/asm/boot.h       |  11 +-
+>  include/linux/decompress/unzstd.h |  11 +
+>  init/Kconfig                      |  15 +-
+>  lib/Kconfig                       |   4 +
+>  lib/Makefile                      |   1 +
+>  lib/decompress.c                  |   5 +
+>  lib/decompress_unzstd.c           | 345 ++++++++++++++++++++++++++++++
+>  lib/zstd/fse_decompress.c         |   9 +-
+>  lib/zstd/zstd_internal.h          |  14 +-
+>  scripts/Makefile.lib              |  22 ++
+>  usr/Kconfig                       |  20 ++
+>  usr/Makefile                      |   1 +
+>  20 files changed, 468 insertions(+), 26 deletions(-)
+>  create mode 100644 include/linux/decompress/unzstd.h
+>  create mode 100644 lib/decompress_unzstd.c
+>
+> --
+> 2.27.0
+>
