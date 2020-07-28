@@ -2,145 +2,93 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D8FC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDC17207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05919207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:59:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AN/2BJ8f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvYlkBGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgG1G40 (ORCPT
+        id S1727115AbgG1G7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:56:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50212 "EHLO
+        Tue, 28 Jul 2020 02:59:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgG1G4Z (ORCPT
+        with ESMTP id S1726924AbgG1G7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:56:25 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 342B1C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 23:56:25 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id p14so15882962wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 23:56:25 -0700 (PDT)
+        Tue, 28 Jul 2020 02:59:39 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F65C061794;
+        Mon, 27 Jul 2020 23:59:39 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id y206so118034pfb.10;
+        Mon, 27 Jul 2020 23:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=EzvrXWpHQNdpSbezzz5RHbcrWIdGyn8mBuYW7/LNbzE=;
-        b=AN/2BJ8ftihaC5U7VYaGUe51vSbgZBy0qgZKto5kdNZYHnMMU0klhv9/thZCz2DkDt
-         dDxR2di/EgMBX5g/fOZXZcBeU6DbcT57YbEGbJG/kTWUuSOzJzV8O4RMU0+EmduM9cMg
-         2YrS+SqmfKDxhdBRo9CudmQrzMu35wRH3I1IJhs5caPwQ/jktBAkwH5iELcp/UkXRYWm
-         S+Nr7PQ10VU16ICkcXkIjg2pYuJo9zNlFLGGib/eOzI2BX80dftzNtJBkpsj+WGeqrUR
-         KHX2zV1SA8I2AjT0Eh4rPiWPbMSSyEu8lfLb+CgqlqnkZpfy93Xsa3lnz7qGBm64apHu
-         76sQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j8ZnOfNbyvBr0XEMDZWI56PsvQaHIfE1fSeq4rdZwUg=;
+        b=XvYlkBGbkIpwwP9YCIrSkPZMFfE79qRMVDhq+0C0e2o6IOPNjAlVA47TPCWELitlUl
+         pkfXruU9G/B7GxeriFXOvvVzRS+d/TqJ8BRkmjzCkSmVC5Ht6s+mj7NMWxNcWOrzbPcm
+         8Yk0KnRZ/bahHCUHMeMezl3DWkEug+5V4cQqsm+1O0cq4euBSippCEb58r8HSj0c6mJk
+         xIgthEPkH5l5xUXx+Dn/Gfh6c3rQRxA5N6vp6mMMqZ5Wa05gm3xV0nU31UZrGcqjZ0ur
+         +tW2cRzABPU2I5WHtD4Dr+pHAerLpX7/yAY3lEwTAgIRN0BzYTxO7eG4TnZAvcJxZXNk
+         LRMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=EzvrXWpHQNdpSbezzz5RHbcrWIdGyn8mBuYW7/LNbzE=;
-        b=FXC650nw4a4XwsQDmaHLLVquHnryAwJx+ZbPK1n97yRFEGtlIrhzo7JHG4OtXYq/c3
-         LFCY9u9EcMjApolkLQr82lU/HveDKYCIN80HGnoQ04vPw1mQUqbfhIdIvDN26S4KJkmH
-         PGHKidTQIh2N6agnxVcTHMM7mS8GMuKl8ksOaXHj60Fhz01jxO1cjWkDiGOqb/hgrzDY
-         Cl06zbhNCoz3ojNlOGy62ieCVtVtiByXhYKcBxNGaZIl/KJkgFR8pzE6cYJk7nfHzD1/
-         KbiXOdeqxUtcxWV7bm7DBv3W8Ei3aHVms9joOwOj+xZ2+FgX7v35Vn81k89yzZ4Q5u+j
-         FsMw==
-X-Gm-Message-State: AOAM5311qa4nbXyJ4zflEvQsKXmhWcvJsgXAIN7V+0raoeZ487I0e3nq
-        +2/ziRH+Y7OkS7DrhhxH7xqGSA==
-X-Google-Smtp-Source: ABdhPJz2E995BnQURgOq+VOSHacfZHoxet9ax0lW2Q3YzkefTZM18rSXI9SMEvORfr9BIIubRt2bgA==
-X-Received: by 2002:a1c:2d89:: with SMTP id t131mr2655127wmt.151.1595919383931;
-        Mon, 27 Jul 2020 23:56:23 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id 78sm2777722wma.31.2020.07.27.23.56.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 23:56:23 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 07:56:21 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gene Chen <gene_chen@richtek.com>, benjamin.chao@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: Re: [PATCH v2 1/9] mfd: mt6360: Rearrange include file
-Message-ID: <20200728065621.GC1850026@dell>
-References: <1594983811-25908-1-git-send-email-gene.chen.richtek@gmail.com>
- <1594983811-25908-2-git-send-email-gene.chen.richtek@gmail.com>
- <20200727110821.GH1850026@dell>
- <CAE+NS34FexE-LwbzkOLepKytKCbKm3RowPQKqROR_a6wCrVLLA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j8ZnOfNbyvBr0XEMDZWI56PsvQaHIfE1fSeq4rdZwUg=;
+        b=XP9RKCZdXa7AdLeCFn8spcB+4kDiX49yMmyzqz1LAyeUxY7FdFHUyenwhABjwbFQXO
+         LWWfRIVtimxGhSTPDzf/DJv9Cq+80vENkTtd3gB6AnwTpWasogKT92LJArkg0q2TYWBR
+         LPQOmouppEmDUSAYxPKj7B5wDqJocF0IVEiAvUJRWlqpkzCpiWqec2wj3R0Yyr6VcPUE
+         YcoCGoGZf7h8tHem79p1sNRJvBCu+BGIDFigBt1SYt/2jGsjN6jt5oWW0IUzbrDK2fDv
+         tx30hWmffUL7kWd0fy0g64PhO3EgC6KOF5hQZvzzxy5cMkmj0AzKdEfKFmMmT21G7Xvf
+         SWEw==
+X-Gm-Message-State: AOAM531LuN6UkGdjggeq0qxU2jU+uFFtoZJSkL1uzr5ffIB24SPdzVQy
+        a8LaBl9qmJqbMr3s0CeW+wIDgJYGByp0CARMev2Zv87n
+X-Google-Smtp-Source: ABdhPJymEJo2G6QXkg8vVV0vatyIM1rgCLgxZiJFdAbZjOaNr0gQxmS+i729Tg6Z8GH4byZI+0iSzIr6Am8EipXCpKE=
+X-Received: by 2002:a05:6a00:789:: with SMTP id g9mr1765866pfu.65.1595919579011;
+ Mon, 27 Jul 2020 23:59:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAE+NS34FexE-LwbzkOLepKytKCbKm3RowPQKqROR_a6wCrVLLA@mail.gmail.com>
+References: <20200726110524.151957-1-xie.he.0141@gmail.com>
+ <CAJht_EOAGFkVXsrJefWNMDn_D5HhH+ODkqE03BULyzb_Ma8A5A@mail.gmail.com> <CAM_iQpV8GDu2U_+4LwSy=uHc6_0FvCx_7ZPCOQ15=hccpaOCig@mail.gmail.com>
+In-Reply-To: <CAM_iQpV8GDu2U_+4LwSy=uHc6_0FvCx_7ZPCOQ15=hccpaOCig@mail.gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Mon, 27 Jul 2020 23:59:28 -0700
+Message-ID: <CAJht_EOFREE7oc_jiA5=OS22D2y0y-6ydh+bvqBx-zJ0HihL3Q@mail.gmail.com>
+Subject: Re: [PATCH] drivers/net/wan/lapbether: Use needed_headroom instead of hard_header_len
+To:     Brian Norris <briannorris@chromium.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jul 2020, Gene Chen wrote:
+Hi Brian Norris,
 
-> Lee Jones <lee.jones@linaro.org> 於 2020年7月27日 週一 下午7:08寫道：
-> >
-> > On Fri, 17 Jul 2020, Gene Chen wrote:
-> >
-> > > From: Gene Chen <gene_chen@richtek.com>
-> > >
-> > > Rearrange include file without sorting by alphabet.
-> >
-> > Why are you making this change?
-> >
-> 
-> Personal coding style references from upstream code.
-> I can discard this change if it doesn't make sense.
+I'm wishing to change a driver from using "hard_header_len" to using
+"needed_headroom" to declare its needed headroom. I submitted a patch
+and it is decided it needs to be reviewed. I see you submitted a similar
+patch in the past. So I think you might be able to help review my patch.
+Can you help review my patch? Thanks!
 
-That is really wrong.
+The patch is at:
+http://patchwork.ozlabs.org/project/netdev/patch/20200726110524.151957-1-xie.he.0141@gmail.com/
 
-This is upstream code.  You should abide by the coding style.
-
-Include files should be arranged alphabetically, not arbitrarily.
-
-> > > Signed-off-by: Gene Chen <gene_chen@richtek.com>
-> > > ---
-> > >  drivers/mfd/mt6360-core.c | 11 +++++------
-> > >  1 file changed, 5 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
-> > > index e9cacc2..df4506f 100644
-> > > --- a/drivers/mfd/mt6360-core.c
-> > > +++ b/drivers/mfd/mt6360-core.c
-> > > @@ -5,15 +5,14 @@
-> > >   * Author: Gene Chen <gene_chen@richtek.com>
-> > >   */
-> > >
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/module.h>
-> > >  #include <linux/i2c.h>
-> > > -#include <linux/init.h>
-> > > +#include <linux/crc8.h>
-> > > +#include <linux/slab.h>
-> > > +#include <linux/regmap.h>
-> > >  #include <linux/interrupt.h>
-> > > -#include <linux/kernel.h>
-> > >  #include <linux/mfd/core.h>
-> > > -#include <linux/module.h>
-> > > -#include <linux/of_irq.h>
-> > > -#include <linux/of_platform.h>
-> > > -#include <linux/version.h>
-> > >
-> > >  #include <linux/mfd/mt6360.h>
-> > >
-> >
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+As you have noted in the commit message of your patch, hard_header_len
+has special meaning in AF_PACKET so we need to use needed_headroom
+instead when we just need to reserve some header space. I believe the
+value of hard_header_len should be the same as the length of the header
+created by dev_hard_header.
