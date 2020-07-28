@@ -2,140 +2,110 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F350C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC872C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0745C2074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:03:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595952195;
-	bh=Nrdi6RbUtjXiYs3BGWNlvAd1Qp355THznjM8Xpt7rHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dB3LEt9JEM/gmpL4dajRQVwXCPDsxKFPAIpclEDxKjBfnR2vUpxMgfI23XzXhOGSK
-	 RThnD4pvYsPwAiUiUEgjftV6cZGKDIB2vAkaIEoHMXZMb9gBiQjwmPlrvGsyyGbxbp
-	 AIRKDBhfjt39OEhRq0THECIfaoZEbmKGgwz5dGOw=
+	by mail.kernel.org (Postfix) with ESMTP id C03092053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731284AbgG1QDN (ORCPT
+        id S1731194AbgG1P7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:03:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33668 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 11:59:23 -0400
+Received: from mga09.intel.com ([134.134.136.24]:30043 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731044AbgG1QDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:03:12 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 032BA2053B;
-        Tue, 28 Jul 2020 16:03:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595952192;
-        bh=Nrdi6RbUtjXiYs3BGWNlvAd1Qp355THznjM8Xpt7rHM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kRBIP/lUOGCQLFimbaXgdiU+ySb4ll3DCS93Emg/zKgvyvq6SA4qKZJcxNhvxwWIq
-         HVWqU+pwq2OeRzjmkzbYA4sqqQOpdDIvyjmHi+9TUJqrdKIYTRxdjOOKFwArzRr+lT
-         b824zOQw0jmr9LIi6fxBF83dEDY+pGi2qQz6eVgo=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A987440E57; Tue, 28 Jul 2020 13:03:09 -0300 (-03)
-Date:   Tue, 28 Jul 2020 13:03:09 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        David Sharp <dhsharp@google.com>
-Subject: Re: [PATCH v2 1/5] perf record: Set PERF_RECORD_PERIOD if attr->freq
- is set.
-Message-ID: <20200728160309.GC374564@kernel.org>
-References: <20200728085734.609930-1-irogers@google.com>
- <20200728085734.609930-2-irogers@google.com>
- <20200728154347.GB1319041@krava>
+        id S1730679AbgG1P7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:59:23 -0400
+IronPort-SDR: hb9ddBj5c99+NOMi7xoavry0r6zdXsv74jEwqQAwAx8TVZqIKDjZD0IwlAvU/d2/1Eg94AOA8S
+ aFHRO70BRCxA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="152492565"
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="152492565"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 08:59:22 -0700
+IronPort-SDR: 3+avlv1CfLZM+1dJZ3q9UKyBJRhsBI18RcjkFTL8a/m36xIVEZe9AmnmWnbnm7aeGNQlWYS5cG
+ utYz7RovAyIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="490410915"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga005.fm.intel.com with ESMTP; 28 Jul 2020 08:59:21 -0700
+Date:   Tue, 28 Jul 2020 08:59:21 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: nVMX: properly pad struct kvm_vmx_nested_state_hdr
+Message-ID: <20200728155921.GC5300@linux.intel.com>
+References: <20200713082824.1728868-1-vkuznets@redhat.com>
+ <20200713151750.GA29901@linux.intel.com>
+ <878sfntnoz.fsf@vitty.brq.redhat.com>
+ <85fd54ff-01f5-0f1f-1bb7-922c740a37c1@redhat.com>
+ <20200727154654.GA8675@linux.intel.com>
+ <5d50ea1e-f2a2-8aa9-1dd3-4cbca6c6f885@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200728154347.GB1319041@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <5d50ea1e-f2a2-8aa9-1dd3-4cbca6c6f885@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jul 28, 2020 at 05:43:47PM +0200, Jiri Olsa escreveu:
-> On Tue, Jul 28, 2020 at 01:57:30AM -0700, Ian Rogers wrote:
-> > From: David Sharp <dhsharp@google.com>
-> > 
-> > evsel__config() would only set PERF_RECORD_PERIOD if it set attr->freq
-> > from perf record options. When it is set by libpfm events, it would not
-> > get set. This changes evsel__config to see if attr->freq is set outside of
-> > whether or not it changes attr->freq itself.
-> > 
-> > Signed-off-by: David Sharp <dhsharp@google.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+On Mon, Jul 27, 2020 at 06:16:56PM +0200, Paolo Bonzini wrote:
+> On 27/07/20 17:46, Sean Christopherson wrote:
+> > All the above being said, after looking at the whole picture I think padding
+> > the header is a moot point.  The header is padded out to 120 bytes[*] when
+> > including in the full nested state, and KVM only ever consumes the header in
+> > the context of the full nested state.  I.e. if there's garbage at offset 6,
+> > odds are there's going to be garbage at offset 18, so internally padding the
+> > header does nothing.
 > 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-So, somebody else complained that its not PERF_RECORD_PERIOD (there is
-no such thing) that is being set, its PERF_SAMPLE_PERIOD.
-
-Since you acked it I merged it now, with that correction,
-
-- Arnaldo
- 
-> thanks,
-> jirka
+> Yes, that was what I was hinting at with "it might as well send it now"
+> (i.e., after the patch).
 > 
-> > ---
-> >  tools/perf/util/evsel.c | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index ef802f6d40c1..811f538f7d77 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -979,13 +979,18 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
-> >  	if (!attr->sample_period || (opts->user_freq != UINT_MAX ||
-> >  				     opts->user_interval != ULLONG_MAX)) {
-> >  		if (opts->freq) {
-> > -			evsel__set_sample_bit(evsel, PERIOD);
-> >  			attr->freq		= 1;
-> >  			attr->sample_freq	= opts->freq;
-> >  		} else {
-> >  			attr->sample_period = opts->default_interval;
-> >  		}
-> >  	}
-> > +	/*
-> > +	 * If attr->freq was set (here or earlier), ask for period
-> > +	 * to be sampled.
-> > +	 */
-> > +	if (attr->freq)
-> > +		evsel__set_sample_bit(evsel, PERIOD);
-> >  
-> >  	if (opts->no_samples)
-> >  		attr->sample_freq = 0;
-> > -- 
-> > 2.28.0.163.g6104cc2f0b6-goog
-> > 
+> (All of this is moot for userspace that just uses KVM_GET_NESTED_STATE
+> and passes it back to KVM_SET_NESTED_STATE).
 > 
+> > KVM should be checking that the unused bytes of (sizeof(pad) - sizeof(vmx/svm))
+> > is zero if we want to expand into the padding in the future.  Right now we're
+> > relying on userspace to zero allocate the struct without enforcing it.
+> 
+> The alternative, which is almost as good, is to only use these extra
+> fields which could be garbage if the flags are not set, and check the
+> flags (see the patches I have sent earlier today).
+> 
+> The chance of the flags passing the check will decrease over time as
+> more flags are added; but the chance of having buggy userspace that
+> sends down garbage also will.
 
--- 
+Ah, I see what you're saying.  Ya, that makes sense.
 
-- Arnaldo
+> > [*] Amusing side note, the comment in the header is wrong.  It states "pad
+> >     the header to 128 bytes", but only pads it to 120 bytes, because union.
+> > 
+> > /* for KVM_CAP_NESTED_STATE */
+> > struct kvm_nested_state {
+> > 	__u16 flags;
+> > 	__u16 format;
+> > 	__u32 size;
+> > 
+> > 	union {
+> > 		struct kvm_vmx_nested_state_hdr vmx;
+> > 		struct kvm_svm_nested_state_hdr svm;
+> > 
+> > 		/* Pad the header to 128 bytes.  */
+> > 		__u8 pad[120];
+> > 	} hdr;
+> 
+> There are 8 bytes before the union, and it's not a coincidence. :)
+> "Header" refers to the stuff before the data region.
+
+Ugh, then 'hdr' probably should be named vendor_header or something. 
