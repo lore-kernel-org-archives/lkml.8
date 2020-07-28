@@ -2,220 +2,152 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D322C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B707C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB7B3206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17647206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:42:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sQCEwezl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Meqw1z2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730488AbgG1OmJ (ORCPT
+        id S1730515AbgG1OmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:42:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730391AbgG1OmJ (ORCPT
+        Tue, 28 Jul 2020 10:42:13 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44846 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730391AbgG1OmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:42:09 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26CD0C061794;
-        Tue, 28 Jul 2020 07:42:09 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p3so11993934pgh.3;
-        Tue, 28 Jul 2020 07:42:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/eHJQLNWjzIejlZ2T4kesqmM/hbY171Zx3dgWw26xXA=;
-        b=sQCEwezlEx1XDt1GSk43CcwwVTvir7FU/FnVdOklhCMoxFG8VHCSml1Fxok75CFZLr
-         4Xt1yVZxuYEYRA/doH/mrv81tK4PWtQojOeWWKklvMMMefpk5jX3nxi/Hz/K9fyRjM9Q
-         kekg/2lw3Zn1vr8KIInOcLhB7e7mxbxU9bBubu6fYHcYQcA8OlKj67y8ylDTeBXAPDpv
-         AO9YYLD6qHwVZXklTRpDc/BA+BwIL40nRaywXaqsL/HJAr5cx+jlfkqDTGmjoJ/M4JNu
-         DMqRrWvc5uh2M17XYXxz4ennPjN7VBoSmG1leO+B+LE3SnagvGUS7xMVt4Xt/PVNIVoo
-         FEeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=/eHJQLNWjzIejlZ2T4kesqmM/hbY171Zx3dgWw26xXA=;
-        b=m9DgrfF28YghQWUZtGljPA205wxZXGqU2PEEhWnIw/+gT4uYFmSSE/Ag/8/WHD6OQ6
-         g2HzPNgB1by72mSEopW7EyzIKr57oMx6LS2A7t5Q4K5bmlRpVMqkmteKRZKRwrx2OR2Z
-         P3581hpDPR4X4lvLrCMg/TiqBil/MbXaOe9hLlpKAv03oktQl/F5ZBlVQ7RlqD9E4fnZ
-         UmT5fRaQJzUVcQhTZmv0yh2YN7sEzFJnynJrQNfRSBh4zF5QqGKO0C1P0zqxfq5UgMVc
-         VojkXEL74EyCvoO3mgyWU2kmqYFANF84Kg6n2OYUs3sCVpzQX559eNVU0uzFcxfFsYeI
-         yaZA==
-X-Gm-Message-State: AOAM530AZh3wjFCNXZMFV0rxa647zQlDT5sXpTnehcIffwT4nKzKJQIy
-        hAy22N5B+72cUrcNHBBefA0o6q6k
-X-Google-Smtp-Source: ABdhPJyQnyJ5RdYKOkI0HIaqRlKvRnxM9YtIC2sh7TjKK77k+YYhwcCnTycKsFjeBQgIOS7oZ7Oo8w==
-X-Received: by 2002:a63:b956:: with SMTP id v22mr24644559pgo.242.1595947328460;
-        Tue, 28 Jul 2020 07:42:08 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j4sm17697538pgk.4.2020.07.28.07.42.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 07:42:07 -0700 (PDT)
-Subject: Re: [PATCH 1/3] watchdog: mtk_wdt: remove mt8xxx-resets.h
-To:     Crystal Guo <crystal.guo@mediatek.com>, robh+dt@kernel.org,
-        matthias.bgg@gmail.com
-Cc:     srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, seiya.wang@mediatek.com
-References: <1595932949-7033-1-git-send-email-crystal.guo@mediatek.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <02a15f39-4b85-e450-defd-2df0e4a1ad87@roeck-us.net>
-Date:   Tue, 28 Jul 2020 07:42:06 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 10:42:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595947331;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Jrn1cXse5+cdwWbo1CALhfkNmTxz9E7sWHguisrKuqA=;
+        b=Meqw1z2j5rS8GaoVwcTeHpsfNak2z8l/Vp7MaUYeTzmxwQoVy6im/JDYAyWx5roT2N3dtF
+        HkrIvB7rKYRbtlTDisk9A+MVwc/B+Zwud9l5E4KORcuPhnzeiGMNHeGDYiixkOx8BXVzb+
+        xerRmt/Hh+RSHZFtbDEIQUa5b6AH3vA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-31-3j7MhVyBP7KzIBIS2mkozg-1; Tue, 28 Jul 2020 10:42:07 -0400
+X-MC-Unique: 3j7MhVyBP7KzIBIS2mkozg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A55D0100AA23;
+        Tue, 28 Jul 2020 14:42:05 +0000 (UTC)
+Received: from krava (unknown [10.40.192.211])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 4B0A610013C4;
+        Tue, 28 Jul 2020 14:42:03 +0000 (UTC)
+Date:   Tue, 28 Jul 2020 16:42:02 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Thomas Hebb <tommyhebb@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        David Carrillo-Cisneros <davidcc@google.com>,
+        Ian Rogers <irogers@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 1/3] tools build feature: Use CC and CXX from parent
+Message-ID: <20200728144202.GA1319041@krava>
+References: <0a6e69d1736b0fa231a648f50b0cce5d8a6734ef.1595822871.git.tommyhebb@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1595932949-7033-1-git-send-email-crystal.guo@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0a6e69d1736b0fa231a648f50b0cce5d8a6734ef.1595822871.git.tommyhebb@gmail.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/20 3:42 AM, Crystal Guo wrote:
-> mt8xxx-resets.h actually just used to define TOPRGU_SW_RST_NUM.
-> Instead of resubmit the mt8xxx-reset.h for a new IC, get the number
-> of reset bits from dtsi is more easier to maintain.
-> > Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
-> ---
->  drivers/watchdog/mtk_wdt.c | 26 +++++---------------------
->  1 file changed, 5 insertions(+), 21 deletions(-)
+On Sun, Jul 26, 2020 at 09:08:14PM -0700, Thomas Hebb wrote:
+> commit c8c188679ccf ("tools build: Use the same CC for feature detection
+> and actual build") changed these assignments from unconditional (:=) to
+> conditional (?=) so that they wouldn't clobber values from the
+> environment. However, conditional assignment does not work properly for
+> variables that Make implicitly sets, among which are CC and CXX. To
+> quote tools/scripts/Makefile.include, which handles this properly:
 > 
-> diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
-> index d6a6393..adc88c2 100644
-> --- a/drivers/watchdog/mtk_wdt.c
-> +++ b/drivers/watchdog/mtk_wdt.c
-> @@ -9,8 +9,6 @@
->   * Based on sunxi_wdt.c
->   */
+>   # Makefiles suck: This macro sets a default value of $(2) for the
+>   # variable named by $(1), unless the variable has been set by
+>   # environment or command line. This is necessary for CC and AR
+>   # because make sets default values, so the simpler ?= approach
+>   # won't work as expected.
+> 
+> In other words, the conditional assignments will not run even if the
+> variables are not overridden in the environment; Make will set CC to
+> "cc" and CXX to "g++" when it starts[1], meaning the variables are not
+> empty by the time the conditional assignments are evaluated. This breaks
+> cross-compilation when CROSS_COMPILE is set but CC isn't, since "cc"
+> gets used for feature detection instead of the cross compiler (and
+> likewise for CXX).
+> 
+> To fix the issue, just pass down the values of CC and CXX computed by
+> the parent Makefile, which gets included by the Makefile that actually
+> builds whatever we're detecting features for and so is guaranteed to
+> have good values. This is a better solution anyway, since it means we
+> aren't trying to replicate the logic of the parent build system and so
+> don't risk it getting out of sync.
+> 
+> Leave PKG_CONFIG alone, since 1) there's no common logic to compute it
+> in Makefile.include, and 2) it's not an implicit variable, so
+> conditional assignment works properly.
+
+looks good, I wonder we might need it also for CLANG in the future
+
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+thanks,
+jirka
+
+> 
+> [1] https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
+> 
+> Fixes: c8c188679ccf ("tools build: Use the same CC for feature detection and actual build")
+> Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+> ---
+> 
+>  tools/build/Makefile.feature | 2 +-
+>  tools/build/feature/Makefile | 2 --
+>  2 files changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index cb152370fdef..774f0b0ca28a 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -8,7 +8,7 @@ endif
 >  
-> -#include <dt-bindings/reset-controller/mt2712-resets.h>
-> -#include <dt-bindings/reset-controller/mt8183-resets.h>
->  #include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/init.h>
-> @@ -64,18 +62,6 @@ struct mtk_wdt_dev {
->  	struct reset_controller_dev rcdev;
->  };
+>  feature_check = $(eval $(feature_check_code))
+>  define feature_check_code
+> -  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
+> +  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC=$(CC) CXX=$(CXX) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
+>  endef
 >  
-> -struct mtk_wdt_data {
-> -	int toprgu_sw_rst_num;
-> -};
-> -
-> -static const struct mtk_wdt_data mt2712_data = {
-> -	.toprgu_sw_rst_num = MT2712_TOPRGU_SW_RST_NUM,
-> -};
-> -
-> -static const struct mtk_wdt_data mt8183_data = {
-> -	.toprgu_sw_rst_num = MT8183_TOPRGU_SW_RST_NUM,
-> -};
-> -
->  static int toprgu_reset_update(struct reset_controller_dev *rcdev,
->  			       unsigned long id, bool assert)
->  {
-> @@ -248,7 +234,7 @@ static int mtk_wdt_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct mtk_wdt_dev *mtk_wdt;
-> -	const struct mtk_wdt_data *wdt_data;
-> +	u32 toprgu_sw_rst_num;
-
-toprgu_sw_ is a completely unnecessary prefix for a local variable.
-
->  	int err;
+>  feature_set = $(eval $(feature_set_code))
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index b1f0321180f5..93b590d81209 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -74,8 +74,6 @@ FILES=                                          \
 >  
->  	mtk_wdt = devm_kzalloc(dev, sizeof(*mtk_wdt), GFP_KERNEL);
-> @@ -284,10 +270,10 @@ static int mtk_wdt_probe(struct platform_device *pdev)
->  	dev_info(dev, "Watchdog enabled (timeout=%d sec, nowayout=%d)\n",
->  		 mtk_wdt->wdt_dev.timeout, nowayout);
+>  FILES := $(addprefix $(OUTPUT),$(FILES))
 >  
-> -	wdt_data = of_device_get_match_data(dev);
-> -	if (wdt_data) {
-> -		err = toprgu_register_reset_controller(pdev,
-> -						       wdt_data->toprgu_sw_rst_num);
-> +	err = of_property_read_u32(pdev->dev.of_node, "rst-num",
-> +				&toprgu_sw_rst_num);
-
-There is no such property. Maybe that is added with a subsequent patch or
-preceding patch, but that is not in -next. If this patch is applied without
-rst-num already present in affected devicetree files, the code will no longer
-work. That means this patch requires context, and can not be applied without it.
-That in turn means it can not be patch 1 of 3.
-
-Guenter
-
-> +	if (!err) {
-> +		err = toprgu_register_reset_controller(pdev, toprgu_sw_rst_num);
->  		if (err)
->  			return err;
->  	}
-> @@ -319,9 +305,7 @@ static int mtk_wdt_resume(struct device *dev)
->  #endif
->  
->  static const struct of_device_id mtk_wdt_dt_ids[] = {
-> -	{ .compatible = "mediatek,mt2712-wdt", .data = &mt2712_data },
->  	{ .compatible = "mediatek,mt6589-wdt" },
-> -	{ .compatible = "mediatek,mt8183-wdt", .data = &mt8183_data },
-
-I don't see the point of removing the mediatek,mt2712-wdt and mediatek,mt8183-wdt
-compatible lines.
-
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, mtk_wdt_dt_ids);
+> -CC ?= $(CROSS_COMPILE)gcc
+> -CXX ?= $(CROSS_COMPILE)g++
+>  PKG_CONFIG ?= $(CROSS_COMPILE)pkg-config
+>  LLVM_CONFIG ?= llvm-config
+>  CLANG ?= clang
+> -- 
+> 2.27.0
 > 
 
