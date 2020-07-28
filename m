@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4044C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AACDE20829
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B18206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbgG1Lhe (ORCPT
+        id S1729153AbgG1Lhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 07:37:34 -0400
-Received: from elvis.franken.de ([193.175.24.41]:51865 "EHLO elvis.franken.de"
+        Tue, 28 Jul 2020 07:37:35 -0400
+Received: from elvis.franken.de ([193.175.24.41]:51866 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729089AbgG1Lhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 07:37:33 -0400
+        id S1729102AbgG1Lhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 07:37:34 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1k0Nuy-0002BT-01; Tue, 28 Jul 2020 13:37:12 +0200
+        id 1k0Nuy-0002BT-00; Tue, 28 Jul 2020 13:37:12 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id F11ADC0A99; Tue, 28 Jul 2020 13:37:02 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 13:37:02 +0200
+        id B504AC0A94; Tue, 28 Jul 2020 13:36:36 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 13:36:36 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 To:     Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     Paul Cercueil <paul@crapouillou.net>,
@@ -33,41 +33,26 @@ Cc:     Paul Cercueil <paul@crapouillou.net>,
         linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
         Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH v4 2/2] MIPS: ingenic: Enable JZ4780_NEMC manually
-Message-ID: <20200728113702.GB13443@alpha.franken.de>
+Message-ID: <20200728113636.GA13443@alpha.franken.de>
 References: <20200728104503.23655-1-krzk@kernel.org>
  <20200728104503.23655-2-krzk@kernel.org>
- <B4F6EQ.WB2WZOY40FDR@crapouillou.net>
- <20200728111935.GA26683@kozik-lap>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200728111935.GA26683@kozik-lap>
+In-Reply-To: <20200728104503.23655-2-krzk@kernel.org>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 01:19:35PM +0200, Krzysztof Kozlowski wrote:
-> On Tue, Jul 28, 2020 at 01:12:11PM +0200, Paul Cercueil wrote:
-> > Hi Krzysztof,
-> > 
-> > Le mar. 28 juil. 2020 à 12:45, Krzysztof Kozlowski <krzk@kernel.org> a écrit
-> > :
-> > > The CONFIG_JZ4780_NEMC was previously a default on MIPS but now it has
-> > > to be enabled manually.
-> > > 
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > 
-> > I think you should swap the two so that there are no problems when
-> > bisecting.
+On Tue, Jul 28, 2020 at 12:45:03PM +0200, Krzysztof Kozlowski wrote:
+> The CONFIG_JZ4780_NEMC was previously a default on MIPS but now it has
+> to be enabled manually.
 > 
-> Good point. I was thinking that it will go via some of MIPS trees and
-> the patch #1 will just wait a cycle.  However with acks, I can take it
-> through drivers/memory tree.
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-I've acked the patch.
+Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 
 Thomas.
 
