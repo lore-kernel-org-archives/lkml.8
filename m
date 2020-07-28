@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E03C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31F10207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 644E6207FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:58:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730141AbgG1W5s (ORCPT
+        id S1730236AbgG1W6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 18:57:48 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34081 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729958AbgG1W5c (ORCPT
+        Tue, 28 Jul 2020 18:58:04 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38107 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730102AbgG1W5m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 18:57:32 -0400
-Received: by mail-qt1-f195.google.com with SMTP id x12so7727270qtp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 15:57:31 -0700 (PDT)
+        Tue, 28 Jul 2020 18:57:42 -0400
+Received: by mail-qt1-f193.google.com with SMTP id e5so2217521qth.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 15:57:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nW2VBq/cRDmniFEJbcbARyqEcq2nkZVSxT1F5MUGWsA=;
-        b=R/9bXLNFYXSxT49BSLgUDWsBLVVJB2kkTVI9cfXHATBFUYT9HCylPJHakdAoA9332x
-         qK5cGKcpwx0shAnkwy66nLlY2JLWtBentNvAZEk/WzaXOJD1llaQ938PF9CjAeVGuf0i
-         AA92xBAUnvGRi76fnMwwlDzST4GCHZA5KOR1DdCiP97oYPZPcXpKBtA/DDFWq3aHeWf7
-         iXD+iRhH0pRi8fUMAdWFc8rvQw7WpLspTPUjZZqzG3R0cJnAIqwiMMcQ2HrTRFhgR/1X
-         C3TPryEvS9jcDFYXbdL4qzmkuGjHCVeC7LNwM72dmFsvq9cBo1Dieu4EVXuQEX99atzd
-         qZGw==
-X-Gm-Message-State: AOAM533JdOES61gmAL2+76NiKMfSBotO/0102LOlaNSGDyyS0ISYjsZF
-        goOohszWCdXJNvqfukI8D90=
-X-Google-Smtp-Source: ABdhPJzyWa62eFDYsRQXofvnI6i1Rqt77uWsU/ZMOLAWOE1gSkKig2aH4aQ4qI0BN1RYOXqpzwZcpA==
-X-Received: by 2002:ac8:7454:: with SMTP id h20mr28348878qtr.84.1595977051396;
-        Tue, 28 Jul 2020 15:57:31 -0700 (PDT)
+        bh=G/0Hv8egtXRA3ZfKQLWZwrjHsDw+rPLpy2TWbxUcFE4=;
+        b=Pb7EJ8/cXrtZICd/7VwSyxSa0mD6ThmcXvrs0BEyWF2DfViXLNYrsByAR3ngYy+qPG
+         D4FYF6oc/F+MRmUdIl5iX3ssfjbtmh1XCMdAgYKG8Pt7ZsqViyNCSq5O9BgwDAUVs8nh
+         WPM4Kx6V2STxSqTXLERz0SztTYhnVxQbomk7zHLvvOtnUs6INN8AYdrf1q+7wGYCftYC
+         uFCkpnN31et535kQXv3yG4OD7iYRGanlUCBPfnomCtFuvcyl5uuu/VEJoEo8Cttr+G8b
+         LV944yBO4jmFa5cVbeaI+0ya0zEK2BpKSXJVh4x0Jix2voab/rXPTQpNx0hsf5DqmVmz
+         FmYA==
+X-Gm-Message-State: AOAM530RHKWwTqJ3xeK6Y+6ok3igoe0UvQSmhN9QYsvmK0+twehGJb7a
+        cNkg1eRzoQobQiaf0HMrCKgQv3jD
+X-Google-Smtp-Source: ABdhPJwXddcqfBErVmabYAWErKRchWfnGb1mA4Hve9Hz0Jby7VczYVKw+drpuBsidyLeY+nQc15bSg==
+X-Received: by 2002:ac8:454f:: with SMTP id z15mr9908929qtn.351.1595977061350;
+        Tue, 28 Jul 2020 15:57:41 -0700 (PDT)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id o187sm88118qkd.112.2020.07.28.15.57.30
+        by smtp.gmail.com with ESMTPSA id o187sm88118qkd.112.2020.07.28.15.57.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 15:57:31 -0700 (PDT)
+        Tue, 28 Jul 2020 15:57:40 -0700 (PDT)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Kees Cook <keescook@chromium.org>, x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v3 10/21] x86/kaslr: Fix off-by-one error in process_gb_huge_pages
-Date:   Tue, 28 Jul 2020 18:57:11 -0400
-Message-Id: <20200728225722.67457-11-nivedita@alum.mit.edu>
+Subject: [PATCH v3 21/21] x86/kaslr: Add a check that the random address is in range
+Date:   Tue, 28 Jul 2020 18:57:22 -0400
+Message-Id: <20200728225722.67457-22-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200727230801.3468620-1-nivedita@alum.mit.edu>
 References: <20200727230801.3468620-1-nivedita@alum.mit.edu>
@@ -59,27 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the remaining size of the region is exactly 1Gb, there is still one
-hugepage that can be reserved.
+Check in find_random_phys_addr that the chosen address is inside the
+range that was required.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 ---
- arch/x86/boot/compressed/kaslr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/boot/compressed/kaslr.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index d074986e8061..0df513e3e2ce 100644
+index 38ecbf2e61c5..903ccdca0551 100644
 --- a/arch/x86/boot/compressed/kaslr.c
 +++ b/arch/x86/boot/compressed/kaslr.c
-@@ -562,7 +562,7 @@ process_gb_huge_pages(struct mem_vector *region, unsigned long image_size)
- 		size = region->size - (addr - region->start);
+@@ -802,6 +802,8 @@ static void process_e820_entries(unsigned long minimum,
+ static unsigned long find_random_phys_addr(unsigned long minimum,
+ 					   unsigned long image_size)
+ {
++	u64 phys_addr;
++
+ 	/* Bail out early if it's impossible to succeed. */
+ 	if (minimum + image_size > mem_limit)
+ 		return 0;
+@@ -815,7 +817,15 @@ static unsigned long find_random_phys_addr(unsigned long minimum,
+ 	if (!process_efi_entries(minimum, image_size))
+ 		process_e820_entries(minimum, image_size);
  
- 	/* Check how many 1GB huge pages can be filtered out: */
--	while (size > PUD_SIZE && max_gb_huge_pages) {
-+	while (size >= PUD_SIZE && max_gb_huge_pages) {
- 		size -= PUD_SIZE;
- 		max_gb_huge_pages--;
- 		i++;
+-	return slots_fetch_random();
++	phys_addr = slots_fetch_random();
++
++	/* Perform a final check to make sure the address is in range. */
++	if (phys_addr < minimum || phys_addr + image_size > mem_limit) {
++		warn("Invalid physical address chosen!\n");
++		return 0;
++	}
++
++	return (unsigned long)phys_addr;
+ }
+ 
+ static unsigned long find_random_virt_addr(unsigned long minimum,
 -- 
 2.26.2
 
