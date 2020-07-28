@@ -2,286 +2,114 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18403C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F22EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8995205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 396F72064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qIbwJIVS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="FvA34UBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbgG1L0m (ORCPT
+        id S1729083AbgG1L23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 07:26:42 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:47106 "EHLO m43-7.mailgun.net"
+        Tue, 28 Jul 2020 07:28:29 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:50096 "EHLO mx1.tq-group.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729065AbgG1L0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 07:26:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595935596; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=/KUU5B36Sv6J9eP5MQX3JEYblUb0IfRYbjfoybX6178=;
- b=qIbwJIVSZa49kDuwIOA7ax9XNNKle8audM7gfKeyOybAqGSLzZQKpcM6OgS8k9mw35xAmXrS
- mbGzCuX/39qKoYoOyIwCumpuzMv6LRfcogCfqJg7NPuQJfWpgoo6Fp0LL7ytE9a8MdgLLXq4
- xCnP3P2OfE2iY+6vRpzqFQeeO+c=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
- 5f200b651db0b33fd895922c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 11:26:29
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2D706C433CB; Tue, 28 Jul 2020 11:26:28 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6E3C6C433C6;
-        Tue, 28 Jul 2020 11:26:26 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jul 2020 16:56:26 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Odelu Kukatla <okukatla@codeaurora.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v3 2/7] dt-bindings: interconnect: Add Qualcomm SM8150 DT
- bindings
-In-Reply-To: <20200728023811.5607-3-jonathan@marek.ca>
-References: <20200728023811.5607-1-jonathan@marek.ca>
- <20200728023811.5607-3-jonathan@marek.ca>
-Message-ID: <ef169d38ae69799c9dccf0246b6b47fa@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        id S1729020AbgG1L22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 07:28:28 -0400
+IronPort-SDR: 4+Eq1WfItBIOCJMB3PK+JeKhRQbamQBbaT1nb9vuVwxrnfL/8yu+89CvXZnD7ffp8gUc6l06QO
+ rE3EaQ9J5/CJ2LHg9lQsj5y+o85B6s3AeVZ3qI3HPS2ADy+lpfZ5JSWQFCdjT8BlJnfyx+gxDe
+ 2eJ7VfU+eCbte8f8yb5xP9dD8viSWgqUbmk9cS5m1urFmic4EGjxkgtIosucGZjq+mZgvwKiV4
+ HUZUBQYbjiTFdOlGFsjO3xfCfiAYSrotOw0LYiXV6hmc7AXHBoenK8Yzo99s4N6KzgyT/s69fX
+ fJ4=
+X-IronPort-AV: E=Sophos;i="5.75,406,1589234400"; 
+   d="scan'208";a="13262243"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 28 Jul 2020 13:28:27 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Tue, 28 Jul 2020 13:28:27 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Tue, 28 Jul 2020 13:28:27 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1595935707; x=1627471707;
+  h=from:to:cc:subject:date:message-id;
+  bh=GTkpCAy+ud0FSlBwFAAC9NVSctuBoE/kJ20sETQOlr4=;
+  b=FvA34UBTJyLN0CSS3zEyF5r9ZOCrPG/EZzlIGiZtj2ERPyEZiJ3Rnz3t
+   y9sXGuMx/jtGnYcLaEqxv6J0CfLRkdFKsZaQUwnI1Ikdh17/x4ASbihSt
+   XgUNOr/GI+PM0CJQEk1FW8a3uhSJlwkFm/vlWNnGAH9hIa22//BJJFg4M
+   wOPpeAIi6tNJMysw5VH3lC9lau2X+QUnlkhvV/rk/pf9MWnifVUe6bulH
+   bmg0mEzmMaj1QHBd1PTd/QA5iFrgqjwc7rTtFAiHTbPPZT0vlA4jqCs1p
+   6ulbI1lAxKracr2Wnv3ZDVT3vle56KF7pimwGeg3AdW8QgEuhFBWPi2Io
+   w==;
+IronPort-SDR: HYgETk8OEE67fVRWrlUBgVhu624UVV8GMFG4hex4OuiJuPdZaYUtkFmpwkUQlNgQ4CbvlYUK91
+ 4c+spQybcNFt3v1hVaDtZerIZPNwekW65SloOz5tZnW26Mneu5rQe/w7fHyUSLi+EQ+9ob/dR/
+ URvROyOrlDp4vfQZHv7C2iOIVG75YzlYqxuNBszcdyh8NNAczgYtUji6xhVhzPeJ16WZ2sSeLB
+ rgJlcJVPg6KSBQJte9udusDr0ujnFO0hBQWHYumggfOFQ/uLkIZP/LwqWP530mxLdHz4PHg9vN
+ tA0=
+X-IronPort-AV: E=Sophos;i="5.75,406,1589234400"; 
+   d="scan'208";a="13262242"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 28 Jul 2020 13:28:27 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id D3DD8280065;
+        Tue, 28 Jul 2020 13:28:26 +0200 (CEST)
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH] arm: dts: imx7: add QSPI
+Date:   Tue, 28 Jul 2020 13:28:14 +0200
+Message-Id: <20200728112814.14158-1-matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-28 08:08, Jonathan Marek wrote:
-> The Qualcomm SM8150 platform has several bus fabrics that could be
-> controlled and tuned dynamically according to the bandwidth demand.
-> 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+In preparation for an update of the TQ-Systems TQMa7x/MBa7x DTS, add the
+QSPI controller to imx7s.dtsi.
 
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Based-on-patch-by: Han Xu <han.xu@nxp.com>
+Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+---
+ arch/arm/boot/dts/imx7s.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-> ---
->  .../bindings/interconnect/qcom,rpmh.yaml      |  11 ++
->  .../dt-bindings/interconnect/qcom,sm8150.h    | 162 ++++++++++++++++++
->  2 files changed, 173 insertions(+)
->  create mode 100644 include/dt-bindings/interconnect/qcom,sm8150.h
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
-> b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
-> index 6a457f914bb5..e95ccd7b4b5a 100644
-> --- a/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
-> @@ -45,6 +45,17 @@ properties:
->        - qcom,sdm845-mem-noc
->        - qcom,sdm845-mmss-noc
->        - qcom,sdm845-system-noc
-> +      - qcom,sm8150-aggre1-noc
-> +      - qcom,sm8150-aggre2-noc
-> +      - qcom,sm8150-camnoc-noc
-> +      - qcom,sm8150-compute-noc
-> +      - qcom,sm8150-config-noc
-> +      - qcom,sm8150-dc-noc
-> +      - qcom,sm8150-gem-noc
-> +      - qcom,sm8150-ipa-virt
-> +      - qcom,sm8150-mc-virt
-> +      - qcom,sm8150-mmss-noc
-> +      - qcom,sm8150-system-noc
-> 
->    '#interconnect-cells':
->      const: 1
-> diff --git a/include/dt-bindings/interconnect/qcom,sm8150.h
-> b/include/dt-bindings/interconnect/qcom,sm8150.h
-> new file mode 100644
-> index 000000000000..a25684680c42
-> --- /dev/null
-> +++ b/include/dt-bindings/interconnect/qcom,sm8150.h
-> @@ -0,0 +1,162 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Qualcomm SM8150 interconnect IDs
-> + *
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_SM8150_H
-> +#define __DT_BINDINGS_INTERCONNECT_QCOM_SM8150_H
-> +
-> +#define MASTER_A1NOC_CFG		0
-> +#define MASTER_QUP_0			1
-> +#define MASTER_EMAC			2
-> +#define MASTER_UFS_MEM			3
-> +#define MASTER_USB3			4
-> +#define MASTER_USB3_1			5
-> +#define A1NOC_SNOC_SLV			6
-> +#define SLAVE_SERVICE_A1NOC		7
-> +
-> +#define MASTER_A2NOC_CFG		0
-> +#define MASTER_QDSS_BAM			1
-> +#define MASTER_QSPI			2
-> +#define MASTER_QUP_1			3
-> +#define MASTER_QUP_2			4
-> +#define MASTER_SENSORS_AHB		5
-> +#define MASTER_TSIF			6
-> +#define MASTER_CNOC_A2NOC		7
-> +#define MASTER_CRYPTO_CORE_0		8
-> +#define MASTER_IPA			9
-> +#define MASTER_PCIE			10
-> +#define MASTER_PCIE_1			11
-> +#define MASTER_QDSS_ETR			12
-> +#define MASTER_SDCC_2			13
-> +#define MASTER_SDCC_4			14
-> +#define A2NOC_SNOC_SLV			15
-> +#define SLAVE_ANOC_PCIE_GEM_NOC		16
-> +#define SLAVE_SERVICE_A2NOC		17
-> +
-> +#define MASTER_CAMNOC_HF0_UNCOMP	0
-> +#define MASTER_CAMNOC_HF1_UNCOMP	1
-> +#define MASTER_CAMNOC_SF_UNCOMP		2
-> +#define SLAVE_CAMNOC_UNCOMP		3
-> +
-> +#define MASTER_NPU			0
-> +#define SLAVE_CDSP_MEM_NOC		1
-> +
-> +#define MASTER_SPDM			0
-> +#define SNOC_CNOC_MAS			1
-> +#define MASTER_QDSS_DAP			2
-> +#define SLAVE_A1NOC_CFG			3
-> +#define SLAVE_A2NOC_CFG			4
-> +#define SLAVE_AHB2PHY_SOUTH		5
-> +#define SLAVE_AOP			6
-> +#define SLAVE_AOSS			7
-> +#define SLAVE_CAMERA_CFG		8
-> +#define SLAVE_CLK_CTL			9
-> +#define SLAVE_CDSP_CFG			10
-> +#define SLAVE_RBCPR_CX_CFG		11
-> +#define SLAVE_RBCPR_MMCX_CFG		12
-> +#define SLAVE_RBCPR_MX_CFG		13
-> +#define SLAVE_CRYPTO_0_CFG		14
-> +#define SLAVE_CNOC_DDRSS		15
-> +#define SLAVE_DISPLAY_CFG		16
-> +#define SLAVE_EMAC_CFG			17
-> +#define SLAVE_GLM			18
-> +#define SLAVE_GRAPHICS_3D_CFG		19
-> +#define SLAVE_IMEM_CFG			20
-> +#define SLAVE_IPA_CFG			21
-> +#define SLAVE_CNOC_MNOC_CFG		22
-> +#define SLAVE_NPU_CFG			23
-> +#define SLAVE_PCIE_0_CFG		24
-> +#define SLAVE_PCIE_1_CFG		25
-> +#define SLAVE_NORTH_PHY_CFG		26
-> +#define SLAVE_PIMEM_CFG			27
-> +#define SLAVE_PRNG			28
-> +#define SLAVE_QDSS_CFG			29
-> +#define SLAVE_QSPI			30
-> +#define SLAVE_QUP_2			31
-> +#define SLAVE_QUP_1			32
-> +#define SLAVE_QUP_0			33
-> +#define SLAVE_SDCC_2			34
-> +#define SLAVE_SDCC_4			35
-> +#define SLAVE_SNOC_CFG			36
-> +#define SLAVE_SPDM_WRAPPER		37
-> +#define SLAVE_SPSS_CFG			38
-> +#define SLAVE_SSC_CFG			39
-> +#define SLAVE_TCSR			40
-> +#define SLAVE_TLMM_EAST			41
-> +#define SLAVE_TLMM_NORTH		42
-> +#define SLAVE_TLMM_SOUTH		43
-> +#define SLAVE_TLMM_WEST			44
-> +#define SLAVE_TSIF			45
-> +#define SLAVE_UFS_CARD_CFG		46
-> +#define SLAVE_UFS_MEM_CFG		47
-> +#define SLAVE_USB3			48
-> +#define SLAVE_USB3_1			49
-> +#define SLAVE_VENUS_CFG			50
-> +#define SLAVE_VSENSE_CTRL_CFG		51
-> +#define SLAVE_CNOC_A2NOC		52
-> +#define SLAVE_SERVICE_CNOC		53
-> +
-> +#define MASTER_CNOC_DC_NOC		0
-> +#define SLAVE_LLCC_CFG			1
-> +#define SLAVE_GEM_NOC_CFG		2
-> +
-> +#define MASTER_AMPSS_M0			0
-> +#define MASTER_GPU_TCU			1
-> +#define MASTER_SYS_TCU			2
-> +#define MASTER_GEM_NOC_CFG		3
-> +#define MASTER_COMPUTE_NOC		4
-> +#define MASTER_GRAPHICS_3D		5
-> +#define MASTER_MNOC_HF_MEM_NOC		6
-> +#define MASTER_MNOC_SF_MEM_NOC		7
-> +#define MASTER_GEM_NOC_PCIE_SNOC	8
-> +#define MASTER_SNOC_GC_MEM_NOC		9
-> +#define MASTER_SNOC_SF_MEM_NOC		10
-> +#define MASTER_ECC			11
-> +#define SLAVE_MSS_PROC_MS_MPU_CFG	12
-> +#define SLAVE_ECC			13
-> +#define SLAVE_GEM_NOC_SNOC		14
-> +#define SLAVE_LLCC			15
-> +#define SLAVE_SERVICE_GEM_NOC		16
-> +
-> +#define MASTER_IPA_CORE			0
-> +#define SLAVE_IPA_CORE			1
-> +
-> +#define MASTER_LLCC			0
-> +#define SLAVE_EBI_CH0			1
-> +
-> +#define MASTER_CNOC_MNOC_CFG		0
-> +#define MASTER_CAMNOC_HF0		1
-> +#define MASTER_CAMNOC_HF1		2
-> +#define MASTER_CAMNOC_SF		3
-> +#define MASTER_MDP_PORT0		4
-> +#define MASTER_MDP_PORT1		5
-> +#define MASTER_ROTATOR			6
-> +#define MASTER_VIDEO_P0			7
-> +#define MASTER_VIDEO_P1			8
-> +#define MASTER_VIDEO_PROC		9
-> +#define SLAVE_MNOC_SF_MEM_NOC		10
-> +#define SLAVE_MNOC_HF_MEM_NOC		11
-> +#define SLAVE_SERVICE_MNOC		12
-> +
-> +#define MASTER_SNOC_CFG			0
-> +#define A1NOC_SNOC_MAS			1
-> +#define A2NOC_SNOC_MAS			2
-> +#define MASTER_GEM_NOC_SNOC		3
-> +#define MASTER_PIMEM			4
-> +#define MASTER_GIC			5
-> +#define SLAVE_APPSS			6
-> +#define SNOC_CNOC_SLV			7
-> +#define SLAVE_SNOC_GEM_NOC_GC		8
-> +#define SLAVE_SNOC_GEM_NOC_SF		9
-> +#define SLAVE_OCIMEM			10
-> +#define SLAVE_PIMEM			11
-> +#define SLAVE_SERVICE_SNOC		12
-> +#define SLAVE_PCIE_0			13
-> +#define SLAVE_PCIE_1			14
-> +#define SLAVE_QDSS_STM			15
-> +#define SLAVE_TCU			16
-> +
-> +#endif
-
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 1cfaf410aa43..e45683e61593 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -1162,6 +1162,19 @@
+ 				status = "disabled";
+ 			};
+ 
++			qspi1: spi@30bb0000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx7d-qspi";
++				reg = <0x30bb0000 0x10000>, <0x60000000 0x10000000>;
++				reg-names = "QuadSPI", "QuadSPI-memory";
++				interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX7D_QSPI_ROOT_CLK>,
++					<&clks IMX7D_QSPI_ROOT_CLK>;
++				clock-names = "qspi_en", "qspi";
++				status = "disabled";
++			};
++
+ 			sdma: sdma@30bd0000 {
+ 				compatible = "fsl,imx7d-sdma", "fsl,imx35-sdma";
+ 				reg = <0x30bd0000 0x10000>;
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+2.17.1
+
