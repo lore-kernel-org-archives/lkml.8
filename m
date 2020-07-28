@@ -2,193 +2,91 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C34C433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7E902053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9932053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:00:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="mGckqmPq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o0JSIB1d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731777AbgG1Q7k (ORCPT
+        id S1731787AbgG1RAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:59:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58946 "EHLO
+        Tue, 28 Jul 2020 13:00:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731523AbgG1Q7i (ORCPT
+        with ESMTP id S1731523AbgG1RAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:59:38 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77645C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:59:38 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l12so1153486pgt.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:59:38 -0700 (PDT)
+        Tue, 28 Jul 2020 13:00:12 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 768CFC061794;
+        Tue, 28 Jul 2020 10:00:12 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id y22so18060900oie.8;
+        Tue, 28 Jul 2020 10:00:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=KQYlcxozd9Duw66kIKYSE/eVpF+aVfn6tBYwJQECVPA=;
-        b=mGckqmPq+IwwMfU2VheWzyGeHzihI/ri9tN13FNCnb0nhcfKLQgZjzptIBGl1qoZmM
-         oFSkn3j/K4HRePJPElGwzYF2cMQhKZ8ATb30Eqzo2W3dZmrsnJDUi8MzgrWn6B9CKU20
-         hkHsdPDz2StUvJrfTbvKRDhPEiPp9GModb1UHVo56GZUZNcBCgXlMq171rBzgS991pOC
-         aMFUwb9YiW4xeMNd/YuR8MBC8dRaptT7Bs6xMOv8DgUcch/DQfrw1k/VfUu1UcHitUVs
-         k4jfAbHS6b77SoZlQyVGQiSuZayE99M25amdkXS/qANpJQQzXJVuh/H3rV2fmf5qvLKl
-         1fXA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TZpDclNNZRMgFEz0oqb9LeYPT9K0M3xP45ARWm+IZRA=;
+        b=o0JSIB1dljduACzj5af9gW2AzX15u3MTM+ZG5sk5CTeVpq4IM2R+EmK49qFNJdL0K3
+         XK2xpayESCykGC99u5VkdMBpve8pH+8YDA8ovL1P2W3hyTeiP/vG+KgnGp+IH5lc1Qhj
+         RNd5TpSq+um87qxs5A8gyQw8qjnJyezqxKZ4RTvNyepoAgEcbcofRUqrVcYkKfmjuXO9
+         Yie1Q20Tncptz8mlve/WpscL/Xh7YvTk6+hflZ0oT2EUhsLmhbZTHgkeXD8lgOd4Vx3Z
+         oKMmRstyCCl4uqnjVT6+Y4o+7HIjdZdJNSqq9MnAaTI+AyRYwgBvr4zBbx3+EGgCkt75
+         bkgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=KQYlcxozd9Duw66kIKYSE/eVpF+aVfn6tBYwJQECVPA=;
-        b=LgXq/i6IqQ75L2dqVwa9uMSsVKSYapc/xW910KL0AD/BQb8tMGBgMPl6QQZ6tCLyEs
-         w6+ja7YGYdoy8c93m+uATOaHsqN07shXowtTTvg2ZCpZUa0akZcJdukUjF3Uly77Qgb+
-         4UIiSF/RszDjAUD4h5G/rtUGuVg2sdMgbzHOBFFuYTgBBnCDCjXa9I9ChpDZCMtmod76
-         ZnDfgfuujZo5/WiRBLZ0FGTH5PfH0+hZWNZC8F53beIXfEfi2mQkda6pOE0xjoWvORGm
-         jj3rpwVTN5LXlrzCi7oS3zDCaXgppqHp7E1bdjPlGoJJ4ASgA576A49EljfndmGIIyvw
-         09zQ==
-X-Gm-Message-State: AOAM53183w89PDOb+H9xSbOYBWpYSBUWQdzu2LZRX2dHqS/+cfetA4yA
-        1Oj/tBF+1uTT16c1aF93idBQNQ==
-X-Google-Smtp-Source: ABdhPJxP8vSt8aHJiXR/kiImLXFg9jqf2AgDWwPDn8RM1kT+YjuOUuZgm4428rbcOHrwE7ra3NqqHQ==
-X-Received: by 2002:a63:4c48:: with SMTP id m8mr25701415pgl.290.1595955578011;
-        Tue, 28 Jul 2020 09:59:38 -0700 (PDT)
-Received: from [10.255.143.11] ([103.136.221.69])
-        by smtp.gmail.com with ESMTPSA id k7sm18914041pgh.46.2020.07.28.09.59.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 09:59:37 -0700 (PDT)
-Subject: Re: [External] Re: [PATCH 1/2] ftrace: clear module from hash of all
- ftrace ops
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
-        songmuchun@bytedance.com
-References: <20200728102720.46837-1-zhouchengming@bytedance.com>
- <20200728085320.6b04e03f@oasis.local.home>
-From:   Chengming Zhou <zhouchengming@bytedance.com>
-Message-ID: <557fa115-1247-e058-4a18-e73f6fb7d636@bytedance.com>
-Date:   Wed, 29 Jul 2020 00:59:33 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TZpDclNNZRMgFEz0oqb9LeYPT9K0M3xP45ARWm+IZRA=;
+        b=E0k4RHnYja4aMvxaLBLy2xUFRI7+9JZKa75wDoSInqDWpxhBT0CxmHz3Gi3kov+54K
+         ZddcZoiPmq9QaW6NtroA6s8sZGfEbkshWlAcaM4mdLOfmUw4SNpJJWlQzqlkUart0aUq
+         FTCA3mXQNa77s3hRD/ugMWCRCKmU97nwKcu4r0ar9QRC/Pb34mU4DmQv9cQhGHm7Or8P
+         vc5kfR4XLzISFk/8jPZn5nVyfiY6gZxPM59retI4i2UphC0rK0H+qOPuIQqxMip7wqPf
+         kaF6mZkQbXBn3Y36v+/HgxMeipv40oxnbhGokdFUdi81oTpF7uAvHDGjJ9e0YoLMqyBm
+         oNVQ==
+X-Gm-Message-State: AOAM532wjY3AAroetO3p1s7yUMA4iKHtzXYe7tDmKIA7sb9SzhagxK5a
+        EyiDhuncRNrnIKW4i/1e/mnODHhSJh2t5mAe5Lw=
+X-Google-Smtp-Source: ABdhPJy0vU1aOpVRhjMrvC2AGOeItsZVY+CvFDtcW5Ntc3n2wH8ZJdKELj2heiQzdzMSULdMXvmDRir7wn0YcSSAW+M=
+X-Received: by 2002:a54:4f1a:: with SMTP id e26mr1765736oiy.171.1595955611873;
+ Tue, 28 Jul 2020 10:00:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200728085320.6b04e03f@oasis.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20200728143004.3228-1-dhiraj.sharma0024@gmail.com>
+ <20200728145419.GA3537020@kroah.com> <CAPRy4h1Xs1JpQinnWm04dOi07Ch0RLL0U4Z5DDCKHmombXE0sA@mail.gmail.com>
+ <20200728155311.GA4178776@kroah.com> <CAPRy4h2Zbw=QwJ7=0+FzGnK_o1esn2GTRSuv5ZE30Vu=Oj=x=Q@mail.gmail.com>
+ <20200728165820.GA42656@kroah.com>
+In-Reply-To: <20200728165820.GA42656@kroah.com>
+From:   Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
+Date:   Tue, 28 Jul 2020 22:29:58 +0530
+Message-ID: <CAPRy4h1byz5_r0GdEagvx6Sini3P3uA5Mm4K6AdmM4wHjk+y9A@mail.gmail.com>
+Subject: Re: [PATCH] media: usbvision: fixed coding style
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        stern@rowland.harvard.edu, jrdr.linux@gmail.com,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Alright sorry, I will ignore this patch and will commit the new patch
+in another file.
 
-在 2020/7/28 下午8:53, Steven Rostedt 写道:
-> On Tue, 28 Jul 2020 18:27:19 +0800
-> Chengming Zhou <zhouchengming@bytedance.com> wrote:
+
+On Tue, Jul 28, 2020 at 10:28 PM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
->> We should clear module from hash of all ops on ftrace_ops_list when
->> module going, or the ops including these modules will be matched
->> wrongly by new module loaded later.
-> This is really up to the owner of the hash and not the registered
-> system.
-
-Agreed!
-
-But ftrace is a very core and independent mechanism of kernel, it's hard to
-
-make sure any user of ftrace, like kprobe, livepatch will handle module 
-going correctly.
-
-At least for now, kprobe does not handle that correctly...
-
-So I think it's safer to fix it too in ftrace : )
-
+> On Tue, Jul 28, 2020 at 10:13:22PM +0530, Dhiraj Sharma wrote:
+> > > As the bot said, only do one type of thing per patch, and "fix all
+> > > checkpatch errors/warnings" is not one type of thing.
+> >
+> > So should I send a fresh patch with minimal fixes? instead of replying
+> > to this mail with [PATCH 01]
 >
-> If we want, we could register some kind of callback table for all
-> ftrace_ops to have this updated, but the current code is incorrect.
->
-> Like:
->
->   register_ftrace_ops_hash()
->
-> Where the hash will get updated on module removal.
-
-Thanks for the suggestion, so in this new function, all ftrace_ops 
-func_hash on
-
-ftrace_ops_list will get updated on module removal.
-
->> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
->> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
->> ---
->>   kernel/trace/ftrace.c | 22 ++++++++++++----------
->>   1 file changed, 12 insertions(+), 10 deletions(-)
->>
->> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
->> index 1903b80db6eb..fca01a168ae5 100644
->> --- a/kernel/trace/ftrace.c
->> +++ b/kernel/trace/ftrace.c
->> @@ -6223,18 +6223,20 @@ clear_mod_from_hash(struct ftrace_page *pg, struct ftrace_hash *hash)
->>   /* Clear any records from hashs */
->>   static void clear_mod_from_hashes(struct ftrace_page *pg)
->>   {
->> -	struct trace_array *tr;
->> +	struct ftrace_ops *op;
->>   
->> -	mutex_lock(&trace_types_lock);
->> -	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
->> -		if (!tr->ops || !tr->ops->func_hash)
-> The tr->ops hashes are persistent without being registered. They match
-> what's in set_ftrace_filter and similar files.
->
-> Your patch just introduced a bug, because those hashes now would not
-> get updated if the ops were not registered.
->
-> i.e.
->
->   # echo some_module_function > set_ftrace_filter
->   # rmmod module_with_that_function
->   # insmod module_with_same_address_of_function
->   # echo function > current_tracer
->
-> Now the tr->ops->hash would still have the function of the original
-> module.
-
-I thought all ftrace_ops has non empty func_hash are on the ftrace 
-global list...
-
-Well, so I just leave this function unmodified.
-
-Just call that new function register_ftrace_ops_hash() from 
-ftrace_release_mod.
-
-Thanks!
-
->
-> Either have all owners of ftrace_ops handle this case, or add a helper
-> function to handle it for them. But using ftarce_ops_list is the wrong
-> place to do it.
->
-> -- Steve
->
->
->> +	mutex_lock(&ftrace_lock);
->> +
->> +	do_for_each_ftrace_op(op, ftrace_ops_list) {
->> +		if (!op->func_hash)
->>   			continue;
->> -		mutex_lock(&tr->ops->func_hash->regex_lock);
->> -		clear_mod_from_hash(pg, tr->ops->func_hash->filter_hash);
->> -		clear_mod_from_hash(pg, tr->ops->func_hash->notrace_hash);
->> -		mutex_unlock(&tr->ops->func_hash->regex_lock);
->> -	}
->> -	mutex_unlock(&trace_types_lock);
->> +		mutex_lock(&op->func_hash->regex_lock);
->> +		clear_mod_from_hash(pg, op->func_hash->filter_hash);
->> +		clear_mod_from_hash(pg, op->func_hash->notrace_hash);
->> +		mutex_unlock(&op->func_hash->regex_lock);
->> +	} while_for_each_ftrace_op(op);
->> +
->> +	mutex_unlock(&ftrace_lock);
->>   }
->>   
->>   static void ftrace_free_mod_map(struct rcu_head *rcu)
+> Why are you ignoring what Hans said?
