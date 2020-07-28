@@ -2,190 +2,57 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90571C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8388AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 783802074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65CAC20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731660AbgG1REC (ORCPT
+        id S1731677AbgG1RFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 13:04:02 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2546 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731406AbgG1REC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 13:04:02 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 2D6E1866C03738CB0E58;
-        Tue, 28 Jul 2020 18:04:00 +0100 (IST)
-Received: from localhost (10.52.121.35) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 28 Jul
- 2020 18:03:59 +0100
-Date:   Tue, 28 Jul 2020 18:02:35 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>, <bhelgaas@google.com>,
-        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
-CC:     <rjw@rjwysocki.net>, "Luck, Tony" <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-Subject: Re: [RFC PATCH 5/9] PCI/AER: Apply function level reset to RCiEP on
- fatal error
-Message-ID: <20200728180235.00006ffe@Huawei.com>
-In-Reply-To: <90E63E9B-DCD3-4325-B1FC-FE5C72BA191B@intel.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
-        <20200724172223.145608-6-sean.v.kelley@intel.com>
-        <20200727121726.000072a8@Huawei.com>
-        <a79c227f0913438cb5a94dc80a075a7c@intel.com>
-        <90E63E9B-DCD3-4325-B1FC-FE5C72BA191B@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 28 Jul 2020 13:05:34 -0400
+Received: from out28-147.mail.aliyun.com ([115.124.28.147]:38300 "EHLO
+        out28-147.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731070AbgG1RFe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 13:05:34 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.250105|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_news_journal|0.077471-0.000474437-0.922055;FP=0|0|0|0|0|-1|-1|-1;HT=e01l10434;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.I8uonft_1595955914;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I8uonft_1595955914)
+          by smtp.aliyun-inc.com(10.147.44.145);
+          Wed, 29 Jul 2020 01:05:28 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     balbi@kernel.org, gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        colin.king@canonical.com, dan.carpenter@oracle.com,
+        paul@crapouillou.net, prasannatsmkumar@gmail.com,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: [PATCH 0/1] Fix static checker warning.
+Date:   Wed, 29 Jul 2020 01:02:50 +0800
+Message-Id: <20200728170251.112484-1-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.35]
-X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jul 2020 09:14:11 -0700
-Sean V Kelley <sean.v.kelley@intel.com> wrote:
+Fix the warning that appears during Static analysis.
 
-> On 28 Jul 2020, at 6:27, Zhuo, Qiuxu wrote:
-> 
-> >> From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> >> Sent: Monday, July 27, 2020 7:17 PM
-> >> To: Kelley, Sean V <sean.v.kelley@intel.com>
-> >> Cc: bhelgaas@google.com; rjw@rjwysocki.net; ashok.raj@kernel.org; 
-> >> Luck,
-> >> Tony <tony.luck@intel.com>;
-> >> sathyanarayanan.kuppuswamy@linux.intel.com; 
-> >> linux-pci@vger.kernel.org;
-> >> linux-kernel@vger.kernel.org; Zhuo, Qiuxu <qiuxu.zhuo@intel.com>
-> >> Subject: Re: [RFC PATCH 5/9] PCI/AER: Apply function level reset to 
-> >> RCiEP
-> >> on fatal error
-> >>
-> >> On Fri, 24 Jul 2020 10:22:19 -0700
-> >> Sean V Kelley <sean.v.kelley@intel.com> wrote:
-> >>  
-> >>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> >>>
-> >>> Attempt to do function level reset for an RCiEP associated with an
-> >>> RCEC device on fatal error.  
-> >>
-> >> I'd like to understand more on your reasoning for flr here.
-> >> Is it simply that it is all we can do, or is there some basis in a 
-> >> spec
-> >> somewhere?
-> >>  
-> >
-> > Yes. Though there isn't the link reset for the RCiEP here, I think we 
-> > should still be able to reset the RCiEP via FLR on fatal error, if the 
-> > RCiEP supports FLR.
-> >
-> > -Qiuxu
-> >  
-> 
-> Also see PCIe 5.0-1, Sec. 6.6.2 Function Level Reset (FLR)
-> 
-> Implementation of FLR is optional (not required), but is strongly 
-> recommended. For an example use case consider CXL. Function 0 DVSEC 
-> instances control for the CXL functionality of the entire CXL device. 
-> FLR may succeed in recovering from CXL.io domain errors.
+周琰杰 (Zhou Yanjie) (1):
+  USB: PHY: JZ4770: Fix static checker warning.
 
-That feels a little bit of a weak argument in favour.  PCI spec lists examples
-of use only for FLR and I can't see this matching any of them, but then they
-are only examples, so we could argue it doesn't exclude this use. It's not
-allowed to affect the link state, but I guess it 'might' recover from some
-other type of error?
+ drivers/usb/phy/phy-jz4770.c | 26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
 
-I'd have read the statement in the CXL spec you are referring to as matching
-with the first example in the PCIe spec which is about recovering from
-software errors.  For example, unexpected VM tear down.
-
-@Bjorn / All.  What's your view on using FLR as a reset to do when you don't
-have any other hammers to use?
-
-Personally I don't have a particular problem with this, it just doesn't fit
-with my mental model of what FLR is for (which may well need adjusting :)
-
-Jonathan
-
-
-> 
-> Thanks,
-> 
-> Sean
-> 
-> >>>
-> >>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> >>> ---
-> >>>  drivers/pci/pcie/err.c | 31 ++++++++++++++++++++++---------
-> >>>  1 file changed, 22 insertions(+), 9 deletions(-)
-> >>>
-> >>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c index
-> >>> 044df004f20b..9b3ec94bdf1d 100644
-> >>> --- a/drivers/pci/pcie/err.c
-> >>> +++ b/drivers/pci/pcie/err.c
-> >>> @@ -170,6 +170,17 @@ static void pci_walk_dev_affected(struct  
-> >> pci_dev *dev, int (*cb)(struct pci_dev  
-> >>>  }
-> >>>  }
-> >>>
-> >>> +static enum pci_channel_state flr_on_rciep(struct pci_dev *dev) {
-> >>> +if (!pcie_has_flr(dev))
-> >>> +return PCI_ERS_RESULT_NONE;
-> >>> +
-> >>> +if (pcie_flr(dev))
-> >>> +return PCI_ERS_RESULT_DISCONNECT;
-> >>> +
-> >>> +return PCI_ERS_RESULT_RECOVERED;
-> >>> +}
-> >>> +
-> >>>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> >>>  enum pci_channel_state state,
-> >>>  pci_ers_result_t (*reset_link)(struct pci_dev *pdev))  
-> >> @@ -191,15  
-> >>> +202,17 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> >>>  if (state == pci_channel_io_frozen) {
-> >>>  pci_walk_dev_affected(dev, report_frozen_detected,  
-> >> &status);  
-> >>>  if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
-> >>> -pci_warn(dev, "link reset not possible for RCiEP\n");
-> >>> -status = PCI_ERS_RESULT_NONE;
-> >>> -goto failed;
-> >>> -}
-> >>> -
-> >>> -status = reset_link(dev);
-> >>> -if (status != PCI_ERS_RESULT_RECOVERED) {
-> >>> -pci_warn(dev, "link reset failed\n");
-> >>> -goto failed;
-> >>> +status = flr_on_rciep(dev);
-> >>> +if (status != PCI_ERS_RESULT_RECOVERED) {
-> >>> +pci_warn(dev, "function level reset failed\n");
-> >>> +goto failed;
-> >>> +}
-> >>> +} else {
-> >>> +status = reset_link(dev);
-> >>> +if (status != PCI_ERS_RESULT_RECOVERED) {
-> >>> +pci_warn(dev, "link reset failed\n");
-> >>> +goto failed;
-> >>> +}
-> >>>  }
-> >>>  } else {
-> >>>  pci_walk_dev_affected(dev, report_normal_detected,  
-> >> &status);
-> >>  
-
+-- 
+2.11.0
 
