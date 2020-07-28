@@ -2,102 +2,138 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE14C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD73DC433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F20A12065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B6D2065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:41:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="E7W+DckP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k5XgwmE9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732914AbgG1Tll (ORCPT
+        id S1732927AbgG1Tlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55800 "EHLO
+        Tue, 28 Jul 2020 15:41:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732905AbgG1Tll (ORCPT
+        with ESMTP id S1732919AbgG1Tlp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:41:41 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14159C0619D2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:41:41 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id s16so15798885qtn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:41:41 -0700 (PDT)
+        Tue, 28 Jul 2020 15:41:45 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 798F2C0619D6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:41:45 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k1so459655pjt.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:41:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+oJXyfHvcy53lAyO2fdrXkaj9azqIokLoWoIQ/55Cdk=;
-        b=E7W+DckP4VNYWqoPpt1xhlyAhlYu7Xo/4QS4BiNfAW6ltpeIwoiAnbMTOOu/TDbRjJ
-         BIEbmU3x1k1lafHKth0kXquy6xPqIpVbeOYBC4NuuS/lfpkqksjsCJUdopnj27+qHDyQ
-         PJ4swEVv70ioK15U9NuZ9iroBkeaGScMGrpN+UrgaU1rTEFMZ7A6Yel3qhiQuSQn4K+i
-         DudoVWgUNDjl7woLgoCxnFjTPRhyO8zE78qmOrP5XXmDIuDuMbBLiNQFRUMDYwgM0EPO
-         WzFrQCios5hDSQWDsVuGkxHyUINc/avYOc2M4OZ4d9MwBpywy8416E9bVN72sBLMl17G
-         ewRg==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=W/yJD4WINhIYjHDSpnZ6fTxiwzLWXNf1PH2+o88F2eI=;
+        b=k5XgwmE9tcOSmpNhY4WIUOwltfP1nOlJSUDS0n99vkcl8B8YnMUbPDxe7YGTs1mMQr
+         76iSMntY5i+fw5H/RDUwlQ0I8nd8NuTI/QS+tkBn1s8zi+fMQktc83D3xj8tuEDdbWc1
+         SPGIc7GDjQULMKCEbKzwKWRabOT0dDEOWSj6w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+oJXyfHvcy53lAyO2fdrXkaj9azqIokLoWoIQ/55Cdk=;
-        b=D5Fj/AxKPnoT3HrkHjXXQ6chS9hCEvCGZiXm3IFYxIIC9mmamn3qBVvkhCWEXQgXGf
-         a/4DYgHow1dc2g0Det33+aiBs8nGcvWZqQwMdonsQi+ntqvAXMAeQrHR4uS9F6wSr3QO
-         mHCMUm01eJS9bWVkHkbXjA1bo7fGGMSLR771osZN6xvMOhlo0v0E9c9GYh62jgjFaXgZ
-         g7WPmz81SO363vIIhtc8fDW6YfKXVA2J7DSifxFJlIPcNTTSAhGrGtTRNoCN36hd5KWj
-         aA+m9mi12GW/ekciuMdUfBpNmJLKRTNyHHpE9GSV4Z7fR/JI2aaGkVsCVLlPH65KzQEY
-         KveQ==
-X-Gm-Message-State: AOAM531ApzSlQ+QwlLwMHS7aLlv5ihljcj5Z7cj3xFQMPLnzYR9cTsb7
-        QAD3Jpz/gC/XKiMEm46tNLGaQw==
-X-Google-Smtp-Source: ABdhPJzaxob4ToiIvp8z+VCL9GUj97VjqHBiBkH19TsREcIHObH1Arz9UB6XAuSLPa4oBiqkiMAWDg==
-X-Received: by 2002:aed:3387:: with SMTP id v7mr27254682qtd.318.1595965300334;
-        Tue, 28 Jul 2020 12:41:40 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id p36sm20735569qte.90.2020.07.28.12.41.39
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=W/yJD4WINhIYjHDSpnZ6fTxiwzLWXNf1PH2+o88F2eI=;
+        b=EtUaZiWgx4fiJJhxFgxJqUshKxBnwUp6ooxPXUaJl0bA3hI9KKeYCU8G3jyfbIvzpu
+         mnIaCn22CO97835xTXFasikm4vydizlyv4bfAFPGPw4ISz6koyoDXFw+Tj560FmoM2uh
+         N4G8TZRjcuKqzRG+3i/f9YYF7rK+FR+zX7TJbDUMr3yCiWg0ytewvvdJLzSbnUZX0Vqv
+         cMTOGP/+HMz92GDTSNfUfdv6etz3aUz2lLfGx8URlxmXSfj+aDtRhl6PcqBRftg3QAta
+         Q7LEXp6bj0lJeZxbgI2Rf7I8GM6KObFqL4Yf5l1AAphOWcuW7fqPC/Tq2JOnLG6EtrZi
+         S/2g==
+X-Gm-Message-State: AOAM533z7OgRLosMtkWpj0jmrxkVVZKkeJYaF2yNuI0SoPq3bEwMvDE2
+        6KySI5eBicBEg6UppXxHjS2P5g==
+X-Google-Smtp-Source: ABdhPJwA0Ct0Nh8rwlpqpca69OHRybL5jNVCYyJwjUessWHEG/MKS2+KIDWm6SaEJTBcGdmRE084Kg==
+X-Received: by 2002:a17:902:7244:: with SMTP id c4mr2350434pll.277.1595965304901;
+        Tue, 28 Jul 2020 12:41:44 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j36sm19509082pgj.39.2020.07.28.12.41.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 12:41:39 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1k0VTm-000fz5-Io; Tue, 28 Jul 2020 16:41:38 -0300
-Date:   Tue, 28 Jul 2020 16:41:38 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 4/4] mm: mmu_notifier: Fix and extend kerneldoc
-Message-ID: <20200728194138.GB24045@ziepe.ca>
-References: <20200728171109.28687-1-krzk@kernel.org>
- <20200728171109.28687-4-krzk@kernel.org>
+        Tue, 28 Jul 2020 12:41:43 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 12:41:42 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Mimi Zohar <zohar@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 11/19] LSM: Introduce kernel_post_load_data() hook
+Message-ID: <202007281240.4EDD6D2E7B@keescook>
+References: <20200724213640.389191-1-keescook@chromium.org>
+ <20200724213640.389191-12-keescook@chromium.org>
+ <1595846951.4841.61.camel@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200728171109.28687-4-krzk@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1595846951.4841.61.camel@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 07:11:09PM +0200, Krzysztof Kozlowski wrote:
-> Fix W=1 compile warnings (invalid kerneldoc):
+On Mon, Jul 27, 2020 at 06:49:11AM -0400, Mimi Zohar wrote:
+> On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
+> > There are a few places in the kernel where LSMs would like to have
+> > visibility into the contents of a kernel buffer that has been loaded or
+> > read. While security_kernel_post_read_file() (which includes the
+> > buffer) exists as a pairing for security_kernel_read_file(), no such
+> > hook exists to pair with security_kernel_load_data().
+> > 
+> > Earlier proposals for just using security_kernel_post_read_file() with a
+> > NULL file argument were rejected (i.e. "file" should always be valid for
+> > the security_..._file hooks, but it appears at least one case was
+> > left in the kernel during earlier refactoring. (This will be fixed in
+> > a subsequent patch.)
+> > 
+> > Since not all cases of security_kernel_load_data() can have a single
+> > contiguous buffer made available to the LSM hook (e.g. kexec image
+> > segments are separately loaded), there needs to be a way for the LSM to
+> > reason about its expectations of the hook coverage. In order to handle
+> > this, add a "contents" argument to the "kernel_load_data" hook that
+> > indicates if the newly added "kernel_post_load_data" hook will be called
+> > with the full contents once loaded. That way, LSMs requiring full contents
+> > can choose to unilaterally reject "kernel_load_data" with contents=false
+> > (which is effectively the existing hook coverage), but when contents=true
+> > they can allow it and later evaluate the "kernel_post_load_data" hook
+> > once the buffer is loaded.
+> > 
+> > With this change, LSMs can gain coverage over non-file-backed data loads
+> > (e.g. init_module(2) and firmware userspace helper), which will happen
+> > in subsequent patches.
+> > 
+> > Additionally prepare IMA to start processing these cases.
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
 > 
->     mm/mmu_notifier.c:187: warning: Function parameter or member 'interval_sub' not described in 'mmu_interval_read_bgin'
->     mm/mmu_notifier.c:708: warning: Function parameter or member 'subscription' not described in 'mmu_notifier_registr'
->     mm/mmu_notifier.c:708: warning: Excess function parameter 'mn' description in 'mmu_notifier_register'
->     mm/mmu_notifier.c:880: warning: Function parameter or member 'subscription' not described in 'mmu_notifier_put'
->     mm/mmu_notifier.c:880: warning: Excess function parameter 'mn' description in 'mmu_notifier_put'
->     mm/mmu_notifier.c:982: warning: Function parameter or member 'ops' not described in 'mmu_interval_notifier_insert'
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  mm/mmu_notifier.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+> At least from an IMA perspective, the original
+> security_kernel_load_data() hook was defined in order to prevent
+> certain syscalls - init_module, kexec_load - and loading firmware via
+> sysfs.  The resulting error messages were generic.
+>   
+> Unlike security_kernel_load_data(), security_kernel_post_load_data()
+> is meant to be used, but without a file desciptor specific
+> information, like the filename associated with the buffer, is missing.
+>  Having the filename isn't actually necessary for verifying the
+> appended signature, but it is needed for auditing signature
+> verification failures and including in the IMA measurement list.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Right -- I'm open to ideas on this, but as it stands, other LSMs (e.g.
+BPF LSM) can benefit from the security_kernel_post_load_data() to
+examine the contents, etc.
 
-Thanks,
-Jason
+Is there anything that needs to change in this patch?
+
+-- 
+Kees Cook
