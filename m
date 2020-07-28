@@ -2,154 +2,149 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC86C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A64C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 239FF20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2480120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:21:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ys6zUE87"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOMKIQEp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730380AbgG1OR7 (ORCPT
+        id S1730321AbgG1OV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:17:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33832 "EHLO
+        Tue, 28 Jul 2020 10:21:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730307AbgG1OR7 (ORCPT
+        with ESMTP id S1730064AbgG1OV2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:17:59 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 008F9C061794;
-        Tue, 28 Jul 2020 07:17:58 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id w12so7283339iom.4;
-        Tue, 28 Jul 2020 07:17:58 -0700 (PDT)
+        Tue, 28 Jul 2020 10:21:28 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50180C061794;
+        Tue, 28 Jul 2020 07:21:28 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id d27so14912282qtg.4;
+        Tue, 28 Jul 2020 07:21:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uiRcDeb6ox2yLj5fXNdoo05VO5CcXhShAkGVYjl04bA=;
-        b=Ys6zUE87HGooZo1PtEgKd0uJDkaEkHFGsY1EOydtoSvjPDQl51Ix2N7rg4aqhB71lC
-         j2VW2HZTKNWlVWHcU7VD2D5+PhV6cpWsdtKKe1/SK8sNiTxNDTNjkGR4BS0y22ANyoCC
-         4aHYx2avcGsIGwy2/PotHxNQwmXTqKRa2HRaUcQWN3yeLutu0lSdYw3Yx73YEYag5hPu
-         QdgUT4EjVX27slSACOg8fzHrZP3TWN0F7LvKm5bkNOY9GRgQr+OVwFVrevJrsqF+FkCR
-         q/sCLBF+MDkBqYZuWXN0ov2yL64I7sPhzA9kdFAHZulnJ9VKWgvOi5PKdoH56dAwi1m3
-         +Vmw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0a7riHkmcNZX+GUojwCDuOWs6tGpRZUtzm7Jn91Fp0E=;
+        b=aOMKIQEpNlogZ8jiHhzLA/GEKWEn/zHsQjaZvchq/hUuV4/z9G7PYgam7xaPvK+XbC
+         +KZJHQ4LQ4Tgx6xDo3Fv31PeriH5Tmo651RamNk/C2F8C7A5PdTDOmnX41aMFCJNhhja
+         +KYI6gi38WMbm+HfI9xlHgB7F3MwUBAWDnLK8I5RFngm+BkcO6FCR8ZSgv1jUucUGoPz
+         9qz1IY2fipMOicd6bOlYRGokwL8gAQwLcprzyRp9p4ysvGuEoPBbmBLrc+N9m+mxTN50
+         2UZOGYCyhqw7eoUQOutmM6w2src1ou6n87VjBVorI7Z3i/kiJm3bR5kZdF2mgRulmCsz
+         qyWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uiRcDeb6ox2yLj5fXNdoo05VO5CcXhShAkGVYjl04bA=;
-        b=YdjxD/gyyDfZrflAMXQ9vqDkFWmrOInZVfVFbc5BfQhjaV4Zmn1uHmnN+getaYZw7j
-         suRF4BS0J2YTFtfx6aj32GLhMLuZ0cFpNZlDMbErn8l3EoXX807x2YCPMAwg8NyITe2O
-         SrZ/Tk9ZeUAvi4Rer868T8LPEVMwl+z+OV9TfCqrWqH0RKLln1uGdSiXtvNdNKvxG2jc
-         PD3NTFahza78ZI/EulJdlkST6zBOX8/EYPYPgnp/IhCoAZGMokK+Tt2Ps4g3IbWuvXcT
-         KtafTqjpt7UIWn87r0mHFvx74Q4ZvFFNXp5i1YUIj+eNm3WpSn/7TYLO74Tzv99A29HC
-         sxUg==
-X-Gm-Message-State: AOAM532xpaqW5vl6fvaBTP5O4coyQzJj+qLkKpF4J3ego9W0wpTIWYpz
-        ef6SeRBFjU1bVvSJhBhGisr8C3wtTO5FTAB7VcFRzf3T
-X-Google-Smtp-Source: ABdhPJwBbS1GB98Y4FyDLwh4H/OtvXDdnPzhnInC0IVz8ECy3gVFmEqGDS9cDDfxjL49EqZh49ZaMH3Ncm+/fBVSf8Q=
-X-Received: by 2002:a5e:980f:: with SMTP id s15mr14176280ioj.5.1595945878359;
- Tue, 28 Jul 2020 07:17:58 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0a7riHkmcNZX+GUojwCDuOWs6tGpRZUtzm7Jn91Fp0E=;
+        b=oC0MnjcX1OEMlMHOVo7kTweT2wwCM/QKVgN8d+/S8cPAu7qGHYtFeVP3WeAvOusOdD
+         ofltgpwgOk6xc8UaZ/ncVv1Z0FYMK8sbcphpvYWPl27efLB6FycBda9BwHLHdALjjiJc
+         oJuuh5zfFJ7G/hIARbfvymzA7WT/pFNNerAKKJh0VpWiqL7qB0yCIjetQQTz/6dT7Vnp
+         XZDKZCA/VS5QeHAbQ38NO/tU4XCLNuN5gE8psrjjnOMIszO3D3tpc++Ujgvze2YEffUH
+         9QbE8cFs2VR6YcNkWUenQVp2+a4mlgVxCU+BoGSfi9xVzF2A+DF6WcZYQwSJgRbMRky3
+         x8Uw==
+X-Gm-Message-State: AOAM5303ZicSvB4Z8UA/dM7lOnlwvA80nZLMfvBfvTqmK1zhCo58vMSH
+        NFRPkSJHojKX8E7XSOwGoA==
+X-Google-Smtp-Source: ABdhPJzzeiRIQxSjsjqXZ9i0X7fm6CZjBthtL+HGvt4+uWmVX+wcM3G8gwQYvj+9df1rB/Ghk+yOcA==
+X-Received: by 2002:ac8:65d3:: with SMTP id t19mr27140594qto.193.1595946087337;
+        Tue, 28 Jul 2020 07:21:27 -0700 (PDT)
+Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
+        by smtp.gmail.com with ESMTPSA id 6sm22142009qkj.134.2020.07.28.07.21.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 07:21:26 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Denis Efremov <efremov@linux.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH] block/floppy: Prevent kernel-infoleak in raw_cmd_copyout()
+Date:   Tue, 28 Jul 2020 10:19:46 -0400
+Message-Id: <20200728141946.426245-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
- <1595681998-19193-4-git-send-email-alex.shi@linux.alibaba.com>
- <CAKgT0UfmbdhpUdGy+4VircovmJfiJy9m-MN_o0LChNT_kWRUng@mail.gmail.com> <3bd60e1b-a74e-050d-ade4-6e8f54e00b92@linux.alibaba.com>
-In-Reply-To: <3bd60e1b-a74e-050d-ade4-6e8f54e00b92@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 28 Jul 2020 07:17:47 -0700
-Message-ID: <CAKgT0UdyVKS00UzSGuVL7WASkz5h3MpnWT4VnYPa7Par08XxAg@mail.gmail.com>
-Subject: Re: [PATCH v17 03/21] mm/compaction: correct the comments of compact_defer_shift
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 4:59 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->
->
-> >>   * Compaction is deferred when compaction fails to result in a page
-> >> - * allocation success. 1 << compact_defer_limit compactions are skipped up
-> >> + * allocation success. compact_defer_shift++, compactions are skipped up
-> >>   * to a limit of 1 << COMPACT_MAX_DEFER_SHIFT
-> >>   */
-> >>  void defer_compaction(struct zone *zone, int order)
-> >
-> > So this doesn't read right. I wouldn't keep the "++," in the
-> > explanation, and if we are going to refer to a limit of "1 <<
-> > COMPACT_MAX_DEFER_SHIFT" then maybe this should be left as "1 <<
-> > compact_defer_shift".
-> >
->
-> Thanks for comments! So is the changed patch fine?
-> --
->
-> From 80ffde4c8e13ba2ad1ad5175dbaef245c2fe49bc Mon Sep 17 00:00:00 2001
-> From: Alex Shi <alex.shi@linux.alibaba.com>
-> Date: Tue, 26 May 2020 09:47:01 +0800
-> Subject: [PATCH] mm/compaction: correct the comments of compact_defer_shift
->
-> There is no compact_defer_limit. It should be compact_defer_shift in
-> use. and add compact_order_failed explanation.
->
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  include/linux/mmzone.h | 1 +
->  mm/compaction.c        | 2 +-
->  2 files changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index f6f884970511..14c668b7e793 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -512,6 +512,7 @@ struct zone {
->          * On compaction failure, 1<<compact_defer_shift compactions
->          * are skipped before trying again. The number attempted since
->          * last failure is tracked with compact_considered.
-> +        * compact_order_failed is the minimum compaction failed order.
->          */
->         unsigned int            compact_considered;
->         unsigned int            compact_defer_shift;
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index 86375605faa9..4950240cd455 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -136,7 +136,7 @@ void __ClearPageMovable(struct page *page)
->
->  /*
->   * Compaction is deferred when compaction fails to result in a page
-> - * allocation success. 1 << compact_defer_limit compactions are skipped up
-> + * allocation success. 1 << compact_defer_shift, compactions are skipped up
->   * to a limit of 1 << COMPACT_MAX_DEFER_SHIFT
->   */
->  void defer_compaction(struct zone *zone, int order)
+raw_cmd_copyout() is potentially copying uninitialized kernel stack memory
+since it is initializing `cmd` by assignment, which may cause the compiler
+to leave uninitialized holes in this structure. Fix it by using memcpy()
+instead.
 
-Yes, that looks better to me.
+Cc: stable@vger.kernel.org
+Fixes: 2145e15e0557 ("floppy: don't write kernel-only members to FDRAWCMD ioctl output")
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+$ pahole -C "floppy_raw_cmd" drivers/block/floppy.o
+struct floppy_raw_cmd {
+	unsigned int               flags;                /*     0     4 */
 
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+	/* XXX 4 bytes hole, try to pack */
+
+	void *                     data;                 /*     8     8 */
+	char *                     kernel_data;          /*    16     8 */
+	struct floppy_raw_cmd *    next;                 /*    24     8 */
+	long int                   length;               /*    32     8 */
+	long int                   phys_length;          /*    40     8 */
+	int                        buffer_length;        /*    48     4 */
+	unsigned char              rate;                 /*    52     1 */
+	unsigned char              cmd_count;            /*    53     1 */
+	union {
+		struct {
+			unsigned char cmd[16];           /*    54    16 */
+			/* --- cacheline 1 boundary (64 bytes) was 6 bytes ago --- */
+			unsigned char reply_count;       /*    70     1 */
+			unsigned char reply[16];         /*    71    16 */
+		};                                       /*    54    33 */
+		unsigned char      fullcmd[33];          /*    54    33 */
+	};                                               /*    54    33 */
+
+	/* XXX 1 byte hole, try to pack */
+
+	/* --- cacheline 1 boundary (64 bytes) was 24 bytes ago --- */
+	int                        track;                /*    88     4 */
+	int                        resultcode;           /*    92     4 */
+	int                        reserved1;            /*    96     4 */
+	int                        reserved2;            /*   100     4 */
+
+	/* size: 104, cachelines: 2, members: 14 */
+	/* sum members: 99, holes: 2, sum holes: 5 */
+	/* last cacheline: 40 bytes */
+};
+
+ drivers/block/floppy.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index 09079aee8dc4..b8ea98f7a9cb 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3126,7 +3126,9 @@ static int raw_cmd_copyout(int cmd, void __user *param,
+ 	int ret;
+ 
+ 	while (ptr) {
+-		struct floppy_raw_cmd cmd = *ptr;
++		struct floppy_raw_cmd cmd;
++
++		memcpy(&cmd, ptr, sizeof(cmd));
+ 		cmd.next = NULL;
+ 		cmd.kernel_data = NULL;
+ 		ret = copy_to_user(param, &cmd, sizeof(cmd));
+-- 
+2.25.1
+
