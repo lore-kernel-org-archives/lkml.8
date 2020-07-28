@@ -2,128 +2,103 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 159B3C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3C802083E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A015220829
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:51:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KlMM7ehH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bgCL+y7E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OEgxRW7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgG1Iud (ORCPT
+        id S1728301AbgG1IvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:50:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33216 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbgG1Iud (ORCPT
+        Tue, 28 Jul 2020 04:51:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbgG1IvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:50:33 -0400
-Date:   Tue, 28 Jul 2020 08:50:29 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595926230;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WyMFGXbZ/EdigNqOkuZ7qYq2FIrdCInji0pyCT+MJxg=;
-        b=KlMM7ehH5yv51XWtJ5301ed+kCz0LfGSoVdzOgGnTW6pBbhNDxhHzzr5EGhzLnDOOuejTm
-        INsiHH+9JB6MNJMm6fCg+OtafopGNmCMzRDpUhkRHQmkTXAXIkQ51Aw49kOMnlwK3l2aUc
-        Hye2SuMIRlhkh0Q+aDi7bj3odMx/OD896sJWXp+pYr7rZx67tB3hPg1r6UBDeDQZJ7qot5
-        vLRQuxHiIS9zUvD6m7+lrUK444ElVh42B+iLwYpxD+2oYBkXIuJTZNemtkhVLAMuStpmAs
-        u27xd7RDGIo1/huflacS1093+7Bx7a5kLIEduQP3MKSQ2uxzpqQFhmsbrizzZQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595926230;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WyMFGXbZ/EdigNqOkuZ7qYq2FIrdCInji0pyCT+MJxg=;
-        b=bgCL+y7EQY4AmErzQk9kAjzw4W+EVwdwUPQR+kdA9grrRXTn8oL5HV5JO6uuzqOw4brf36
-        /84bp9p9+6FSyGCQ==
-From:   "tip-bot2 for Herbert Xu" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/header] lockdep: Move list.h inclusion into lockdep.h
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200716063649.GA23065@gondor.apana.org.au>
-References: <20200716063649.GA23065@gondor.apana.org.au>
+        Tue, 28 Jul 2020 04:51:00 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C3F4C061794;
+        Tue, 28 Jul 2020 01:51:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=aEFlg03VmtZOr/NYRmyuz84VepVVyyUYcNOy0JnX5T8=; b=OEgxRW7y0wSoCYnQSUKvzfN1OH
+        Q6XAKE4+evLVmDJklilk347gso//k5jl+hjwnyAY0+jRKCm2CwvRXUefBdtx/yo4gzIM71vFWzxHA
+        o4clIClpbhHUkxulqyj5Y4T7prAFTrOdS+JLRai2B92/cktkIfDrTdxLIaRUSdgEMVTedDG9NEb4T
+        YY5PgfRffGnYKyxOTCkzTOdFfRbOBAAuIjKH2fKlUiCRl8DmHzOvCcPb4QAUYIXs1HDQJXGmBnXal
+        xFPcdcTOqFlHH57ng5gv2tWSbHVA9Fj9N4d65FfDSwOYpZDdFHuphpd4IM4DkZ9xygtnSBCq8SjJa
+        Rr392w5g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0LJz-0002iJ-Nb; Tue, 28 Jul 2020 08:50:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1E410304D58;
+        Tue, 28 Jul 2020 10:50:50 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 00B55203D4252; Tue, 28 Jul 2020 10:50:49 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 10:50:49 +0200
+From:   peterz@infradead.org
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc:     hpa@zytor.com, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Cathy Zhang <cathy.zhang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-edac@vger.kernel.org, frederic@kernel.org
+Subject: Re: [PATCH 4/4] x86/cpu: Use SERIALIZE in sync_core() when available
+Message-ID: <20200728085049.GS119549@hirez.programming.kicks-ass.net>
+References: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
+ <20200727043132.15082-5-ricardo.neri-calderon@linux.intel.com>
+ <D51F2DC3-3C56-44E6-A1F2-434E7D27133C@zytor.com>
+ <20200727083619.GF119549@hirez.programming.kicks-ass.net>
+ <49251CFA-8AC3-462D-A60F-0337593BE9CD@zytor.com>
+ <20200727130536.GM119549@hirez.programming.kicks-ass.net>
+ <20200727133020.GN119549@hirez.programming.kicks-ass.net>
+ <20200728044114.GA24129@ranerica-svr.sc.intel.com>
 MIME-Version: 1.0
-Message-ID: <159592622946.4006.7922093273246703940.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728044114.GA24129@ranerica-svr.sc.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/header branch of tip:
+On Mon, Jul 27, 2020 at 09:41:14PM -0700, Ricardo Neri wrote:
+> I think I got a little lost here.
 
-Commit-ID:     e885d5d94793ef342e49d55672baabbc16e32bb1
-Gitweb:        https://git.kernel.org/tip/e885d5d94793ef342e49d55672baabbc16e32bb1
-Author:        Herbert Xu <herbert@gondor.apana.org.au>
-AuthorDate:    Thu, 16 Jul 2020 16:36:50 +10:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 28 Jul 2020 10:45:46 +02:00
+Hehe, sorry. I got carried away, it's just that recently people
+expressed interest in 'fixing' some of the text_poke_sync() issues
+again.
 
-lockdep: Move list.h inclusion into lockdep.h
+> If I understand correctly, there are
+> two alternatives to implement support for serialize better:
+> 
+>   a) alternative(IRET_TO_SELF, SERIALIZE, X86_FEATURE_SERIALIZE); or
+>   b) asm volatile("1:.byte 0xf, 0x1, 0xe8;2:" _ASM_EXTABLE(1b:2b)
+> 
+> a) would be the traditional and simpler solution. b) would rely on
+> causing an #UD and getting an IRET on existing hardware b) would need some
+> more optimization work when handling the exception and a few reworks on
+> the poke patching code.
+> 
+> Which option should I focus on? Which option would be more desirable/better?
 
-Currently lockdep_types.h includes list.h without actually using any
-of its macros or functions.  All it needs are the type definitions
-which were moved into types.h long ago.  This potentially causes
-inclusion loops because both are included by many core header
-files.
-
-This patch moves the list.h inclusion into lockdep.h.  Note that
-we could probably remove it completely but that could potentially
-result in compile failures should any end users not include list.h
-directly and also be unlucky enough to not get list.h via some other
-header file.
-
-Reported-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: Petr Mladek <pmladek@suse.com>
-Link: https://lkml.kernel.org/r/20200716063649.GA23065@gondor.apana.org.au
----
- include/linux/lockdep.h       | 1 +
- include/linux/lockdep_types.h | 2 --
- 2 files changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 3b73cf8..b1ad5c0 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -21,6 +21,7 @@ extern int lock_stat;
- #ifdef CONFIG_LOCKDEP
- 
- #include <linux/linkage.h>
-+#include <linux/list.h>
- #include <linux/debug_locks.h>
- #include <linux/stacktrace.h>
- 
-diff --git a/include/linux/lockdep_types.h b/include/linux/lockdep_types.h
-index 7b93506..bb35b44 100644
---- a/include/linux/lockdep_types.h
-+++ b/include/linux/lockdep_types.h
-@@ -32,8 +32,6 @@ enum lockdep_wait_type {
- 
- #ifdef CONFIG_LOCKDEP
- 
--#include <linux/list.h>
--
- /*
-  * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
-  * the total number of states... :-(
+I'd say go with (a) for now. We can always go overboard later ;-)
