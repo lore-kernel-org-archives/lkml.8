@@ -2,145 +2,177 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CCEC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC8CC433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95AED2065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F0C2065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:17:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="otDe5YRw"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QaYU4+is"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732676AbgG1TRE (ORCPT
+        id S1732684AbgG1TRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:17:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729133AbgG1TRD (ORCPT
+        Tue, 28 Jul 2020 15:17:09 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34716 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729133AbgG1TRH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:17:03 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C073C061794;
-        Tue, 28 Jul 2020 12:17:03 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b79so19785279qkg.9;
-        Tue, 28 Jul 2020 12:17:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gOr8dfaejifYw9jU6Kda38E3nkEbRCrHeHIL/mLht1M=;
-        b=otDe5YRwMr9ZjZkUAfDqHdRBs1piZUTe4CTkYv5N3vMilg+mwSd8u3nh4gsItkTo7x
-         keGv4P2iTlq5DIJzJbBMN4GTDiOMD0OpJh1C2xP3g76mfiKGLMDy95jV6wJvHN/3sJmr
-         mfk8p/IBXfxF+72g5+Qndb/0bmn+YszTDATRnNlgDVDtEaz7a4ax1jGDLrpcj2KFhDlm
-         Q7ydb47hnhDV3tab+g7WDUAhUX+rkiq43CLewaraeGHwV047qEpRBRM8Fy5eKU5uNXeY
-         hK52o5YD5CrotoRkYnlXey5UPBLKr8Mvz0KnkI1keJ43PNod7JGSjVNEwkF+sycxnOUC
-         Udxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gOr8dfaejifYw9jU6Kda38E3nkEbRCrHeHIL/mLht1M=;
-        b=WjsS7K/bShsv4h95+KvPV365kVrv7MvjmNC7TbGWF42ZgvKeMrP3G5Y35opFIxzRX3
-         fjijdVG860/kW0ipkK+Pk/WMrpmmrn3yccI33QpMtDtnQ1hR7vz1LLPDBXd6OmTg6EfV
-         6t6AhI1lJrJkJYnuq/ozEVUHp1vRVfgNfd9as2LwTb5YLtZhtEL5nUa+xJ8lqwNdAlHJ
-         CEFyTm6fG9FdcVsSRMs8enoPXRRvIWxDpUqy657hLzyENFU/LHtU9tWZTH6ZkGuhUm65
-         JOhIu3ScmZ9vQE3/zRZQJYVGhcDg/lXAY6fV/O3famQB02NwALF0F15kXtEcQPyfImjl
-         IjTw==
-X-Gm-Message-State: AOAM53175GuBPsR8Yd0FhMvk8AnZWQ4ni7tBpEEqQAE3fbS9GrN4oLex
-        mn6QcbMVsJxQ71tVdkx/H3dp/QzTuNYKmEfOmAw=
-X-Google-Smtp-Source: ABdhPJwbOmokpEJOP1fIf5cZoIesMV+H3fTQ9slHu7TTfq77cCg4b9LhjmIxLd0pBzSqpXX2DL3NsX7P95qN921rMQ0=
-X-Received: by 2002:a05:620a:4c:: with SMTP id t12mr3962581qkt.449.1595963822395;
- Tue, 28 Jul 2020 12:17:02 -0700 (PDT)
+        Tue, 28 Jul 2020 15:17:07 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06SJH0Qn050624;
+        Tue, 28 Jul 2020 14:17:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595963820;
+        bh=0X5/B4tnSjQPL58pYcSzCXVyRs6k1QQQ3t+m1IW2tFY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QaYU4+isr6MKl4fOzk+0EPc6uGHk2BBnivLHX9bg6Iv61ccXbo2dAhej/wnTrPZtt
+         nohBqCyerQDSPkLvXYSBndU4Lfe5SR1dt+LCd+PkoSADyKd4gZRuvLUYrniqTX3F70
+         T+T3bQBwG2GtlZsjah42ktZGVnHHr2z5s+seXIXk=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SJH01s075942;
+        Tue, 28 Jul 2020 14:17:00 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
+ Jul 2020 14:16:59 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 28 Jul 2020 14:16:59 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SJGvCO018644;
+        Tue, 28 Jul 2020 14:16:57 -0500
+Subject: Re: [PATCH 3/4] arm64: dts: ti: Add support for J7200 SoC
+To:     Lokesh Vutla <lokeshvutla@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Suman Anna <s-anna@ti.com>
+References: <20200723084628.19241-1-lokeshvutla@ti.com>
+ <20200723084628.19241-4-lokeshvutla@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <36788bae-ddcd-a880-ea34-a4919945009c@ti.com>
+Date:   Tue, 28 Jul 2020 22:16:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-28-guro@fb.com>
- <CAPhsuW7jWztOVeeiRNBRK4JC_MS41qUSxzEDMywb-6=Don-ndA@mail.gmail.com>
- <CAEf4BzaOX_gc8F20xrHxiKFxYbwULK130m1A49rnMoT7T74T3Q@mail.gmail.com>
- <CAPhsuW5qBxWibkYMAvS0s6yLj-gijHqy9rVxSWCk5Xr+bXqtJg@mail.gmail.com> <20200728190830.GB410810@carbon.DHCP.thefacebook.com>
-In-Reply-To: <20200728190830.GB410810@carbon.DHCP.thefacebook.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 28 Jul 2020 12:16:51 -0700
-Message-ID: <CAEf4BzZuj9d_WT4nJ6c_W4uAnT2_4mBOXCbi1q1w97568rd4eg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 27/35] bpf: eliminate rlimit-based memory
- accounting infra for bpf maps
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Song Liu <song@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200723084628.19241-4-lokeshvutla@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 12:09 PM Roman Gushchin <guro@fb.com> wrote:
->
-> On Mon, Jul 27, 2020 at 11:06:42PM -0700, Song Liu wrote:
-> > On Mon, Jul 27, 2020 at 10:58 PM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Mon, Jul 27, 2020 at 10:47 PM Song Liu <song@kernel.org> wrote:
-> > > >
-> > > > On Mon, Jul 27, 2020 at 12:26 PM Roman Gushchin <guro@fb.com> wrote:
-> > > > >
-> > > > > Remove rlimit-based accounting infrastructure code, which is not used
-> > > > > anymore.
-> > > > >
-> > > > > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > > > [...]
-> > > > >
-> > > > >  static void bpf_map_put_uref(struct bpf_map *map)
-> > > > > @@ -541,7 +484,7 @@ static void bpf_map_show_fdinfo(struct seq_file *m, struct file *filp)
-> > > > >                    "value_size:\t%u\n"
-> > > > >                    "max_entries:\t%u\n"
-> > > > >                    "map_flags:\t%#x\n"
-> > > > > -                  "memlock:\t%llu\n"
-> > > > > +                  "memlock:\t%llu\n" /* deprecated */
-> > > >
-> > > > I am not sure whether we can deprecate this one.. How difficult is it
-> > > > to keep this statistics?
-> > > >
-> > >
-> > > It's factually correct now, that BPF map doesn't use any memlock memory, no?
->
-> Right.
->
-> >
-> > I am not sure whether memlock really means memlock for all users... I bet there
-> > are users who use memlock to check total memory used by the map.
->
-> But this is just the part of struct bpf_map, so I agree with Andrii,
-> it's a safe check.
->
-> >
-> > >
-> > > This is actually one way to detect whether RLIMIT_MEMLOCK is necessary
-> > > or not: create a small map, check if it's fdinfo has memlock: 0 or not
-> > > :)
-> >
-> > If we do show memlock=0, this is a good check...
->
-> The only question I have if it's worth checking at all? Bumping the rlimit
-> is a way cheaper operation than creating a temporarily map and checking its
-> properties.
->
 
-for perf and libbpf -- I think it's totally worth it. Bumping
-RLIMIT_MEMLOCK automatically means potentially messing up some other
-parts of the system (e.g., BCC just bumps it to INFINITY allowing to
-over-allocate too much memory, potentially, for unrelated applications
-that do rely on RLIMIT_MEMLOCK). It's one of the reasons why libbpf
-doesn't do it automatically, actually. So knowing when this is not
-necessary, will allow to improve diagnostic messages by libbpf, and
-would just avoid potentially risky operation by perf/BCC/etc.
 
-> So is there any win in comparison to just leaving the userspace code* as it is
-> for now?
->
-> * except runqslower and samples
+On 23/07/2020 11:46, Lokesh Vutla wrote:
+> The J7200 SoC is a part of the K3 Multicore SoC architecture platform.
+> It is targeted for automotive gateway, vehicle compute systems,
+> Vehicle-to-Vehicle (V2V) and Vehicle-to-Everything (V2X) applications.
+> The SoC aims to meet the complex processing needs of modern embedded
+> products.
+> 
+> Some highlights of this SoC are:
+> * Dual Cortex-A72s in a single cluster, two clusters of lockstep
+>    capable dual Cortex-R5F MCUs and a Centralized Device Management and
+>    Security Controller (DMSC).
+> * Configurable L3 Cache and IO-coherent architecture with high data
+>    throughput capable distributed DMA architecture under NAVSS.
+> * Integrated Ethernet switch supporting up to a total of 4 external ports
+>    in addition to legacy Ethernet switch of up to 2 ports.
+> * Upto 1 PCIe-GEN3 controller, 1 USB3.0 Dual-role device subsystems,
+>    20 MCANs, 3 McASP, eMMC and SD, OSPI/HyperBus memory controller, I3C
+>    and I2C, eCAP/eQEP, eHRPWM among other peripherals.
+> * One hardware accelerator block containing AES/DES/SHA/MD5 called SA2UL
+>    management.
+> 
+> See J7200 Technical Reference Manual (SPRUIU1, June 2020)
+> for further details: https://www.ti.com/lit/pdf/spruiu1
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/k3-j7200-main.dtsi     | 199 ++++++++++++++++++
+>   .../boot/dts/ti/k3-j7200-mcu-wakeup.dtsi      |  84 ++++++++
+>   arch/arm64/boot/dts/ti/k3-j7200.dtsi          | 165 +++++++++++++++
+>   3 files changed, 448 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+>   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
+>   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+> new file mode 100644
+> index 000000000000..70c8f7e941fb
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+> @@ -0,0 +1,199 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Device Tree Source for J7200 SoC Family Main Domain peripherals
+> + *
+> + * Copyright (C) 2020 Texas Instruments Incorporated - https://www.ti.com/
+> + */
+> +
+> +&cbass_main {
+> +	msmc_ram: sram@70000000 {
+> +		compatible = "mmio-sram";
+> +		reg = <0x0 0x70000000 0x0 0x100000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x0 0x0 0x70000000 0x100000>;
+> +
+> +		atf-sram@0 {
+> +			reg = <0x0 0x20000>;
+> +		};
+> +	};
+> +
+> +	gic500: interrupt-controller@1800000 {
+> +		compatible = "arm,gic-v3";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +		#interrupt-cells = <3>;
+> +		interrupt-controller;
+> +		reg = <0x00 0x01800000 0x00 0x10000>,	/* GICD */
+> +		      <0x00 0x01900000 0x00 0x100000>;	/* GICR */
+> +
+> +		/* vcpumntirq: virtual CPU interface maintenance interrupt */
+> +		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +		gic_its: msi-controller@1820000 {
+> +			compatible = "arm,gic-v3-its";
+> +			reg = <0x00 0x01820000 0x00 0x10000>;
+> +			socionext,synquacer-pre-its = <0x1000000 0x400000>;
+> +			msi-controller;
+> +			#msi-cells = <1>;
+> +		};
+> +	};
+> +
+> +	main_navss: navss@30000000 {
+> +		compatible = "simple-mfd";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges = <0x00 0x30000000 0x00 0x30000000 0x00 0x0c400000>;
+
+Can we return back
+ti,sci-dev-id = <199>;
+
+here? it's needed for DMA PSI-L pairing.
+
+Option: add it as part of dma/net submission.
+
+[...]
+
+-- 
+Best regards,
+grygorii
