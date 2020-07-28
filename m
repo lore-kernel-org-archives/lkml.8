@@ -3,123 +3,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E355C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34F8C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B898207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8979D20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:13:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MUg3NliK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mbl+AJvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgG1GMb (ORCPT
+        id S1727794AbgG1GNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:12:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43310 "EHLO
+        Tue, 28 Jul 2020 02:13:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgG1GMa (ORCPT
+        with ESMTP id S1726407AbgG1GNP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:12:30 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BECC4C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 23:12:30 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id lw1so2256052pjb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 23:12:30 -0700 (PDT)
+        Tue, 28 Jul 2020 02:13:15 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D31C0619D2;
+        Mon, 27 Jul 2020 23:13:15 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id k8so6612155wma.2;
+        Mon, 27 Jul 2020 23:13:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FTEn6vC4TzDFRYgBbBTvo3anpjXgbfxoEfVzcA7SkSk=;
-        b=MUg3NliKoM4l5YHCqj5bM6/ricxHDSN+fUGuIqDe/VZsMi11o6T2ZWNrRmiGKK5bXn
-         dLZvVFi/IzR3WXetg3BP7uU3fBwXJssdNdgivnfmBA7cBYg+K5O4ADsLf8uOtjMgwCmW
-         BHVtqNd36wdDmGMHvhmLxiLOiWxKlF+4EXujG3fIufA2TNNIHe5Nz+L91MFOKPFXIVKl
-         SQJdZRQBhdKoCi1prMQzl3mdc4RBqCnSLm8j77reyUikupG/akrM9Siwn4HHjKS03a5W
-         7YnQPphP5IXd+BRNyHBQC9v7DGBNN9AcgsvqcnvlqDDqrmOCT3LpU7oErJhyYlMdKGUO
-         gTgg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2LOYqENCC/eIrr+vps1mwgcYedxxXRrO5H846Z3NgUo=;
+        b=mbl+AJvVCtxBnMFq8DuuLlqHTL4gHyTbIOttBv3k953y68Z+1ntGiEJRFlYBKXDUxq
+         at3beMmZ4nYgwETfxeHttu1lrrMnXw0cW8mc5UZO/1PcdRAhE7gdK6GdySWKB4TKOJxU
+         9q9X9YSryZesE2SCSJhjQXwims5fwEE5U5FGQeR8kMT28xrUEy70mSktfOGDPA9BvZVN
+         yZR3DqusSGWjbi/CwYdY8K4YbMJm1Od95W/nts2/h/sbinAi1cFhnkpDhiL5lsJZtyU5
+         ILD5h9KIxEIMzfohPLpXsk69jBNUJsrgRx+VaRWT1O8A7dc42EcIMrP9QRJ6aLns3yH2
+         Z7KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FTEn6vC4TzDFRYgBbBTvo3anpjXgbfxoEfVzcA7SkSk=;
-        b=JB19ACFx6HF+b6O8EB1gF+SLIhTmxDyI2YyOP6w1ZQkF7lNk4E8zPGFQIsQdF6jJdM
-         FtcYdU/EUpc5OcgUs6KyfxTRcNz5sOizoIK0fjtlsvmzUtRmkyfsrlPrwUEx5P7m5nmK
-         UObL3+z1maSastsi7Z9j3oXrVu6Xbix2TcY/90CPExHxYXfz9Ujmr/8Z7sbo45fkLcT9
-         1raX6sVYwscTySOmZk/9Gnpt4oFaMBZB3wQYNvBDLDKY8RaTeIVMsY53MJ7/3ilrVcvS
-         12Ru4EqTgOuv8GUxRaK16Dyexc+oue+K6NugXbOMTbB8Dqvr7wwnP7Rh7m39+SKosqVe
-         3zRA==
-X-Gm-Message-State: AOAM532xTlTpFSVi8b7DeGoThooJl/4sLBnBpdwjaPjsyaBababLatej
-        I180Xj/CsFdZqeBz5sQcxC6THA==
-X-Google-Smtp-Source: ABdhPJy3fY7LAadwN1KhzxnyyGUckPuRZaBmAV2u3CSU6/2WJqNnkEDPuCSPRvntmZyPct9tGqDxrQ==
-X-Received: by 2002:a17:902:7484:: with SMTP id h4mr7663521pll.139.1595916750072;
-        Mon, 27 Jul 2020 23:12:30 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b22sm1545548pju.26.2020.07.27.23.12.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 23:12:29 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 23:08:57 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     rishabhb@codeaurora.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tsoni@codeaurora.org, sidgup@codeaurora.org, stable@vger.kernel.org
-Subject: Re: [RESEND v1] soc: qcom: pdr: Reorder the PD state indication ack
-Message-ID: <20200728060857.GB202429@builder.lan>
-References: <20200701195954.9007-1-sibis@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2LOYqENCC/eIrr+vps1mwgcYedxxXRrO5H846Z3NgUo=;
+        b=HKzM7HcTey2Dr56NJkhtooWZtHBFVF6BFu6uRmdxjPdsvMOeNANOJHDlrm/vry+ujx
+         GdFl5hq+W5uXSQU8OK5KWoYgnKTbn/1BHujUccdP98R2JBgjvI2/gb90MwFOgJ2+yM5s
+         73sBbr8H8FkEvWaq8GJcJXwMwaC0d6Pn0QlEEoAZOdOmV316AzmrIUh+SnAfa5SxzrWA
+         /Al46VM+wXS9JOdjYqO/mPv+2aYagWHhX7wmO2ULaT+Qy8oBC3iWvQHsdtfIODUHXViX
+         xjLdpwBj2JhWkuOiFkSbd4MgZQOX/MH43jFdBaoMsjLEBR0VmCqa2n8C5WxCpGD/gXXa
+         cJFQ==
+X-Gm-Message-State: AOAM5325uoe0nKCV5kVyjNFtemZ2uWpoxNFH7J2XUlDNHaGUDM0tzhFb
+        ibhIoubV7X9xD+lAB63iE+Zql8TpyusZrNr2ikY=
+X-Google-Smtp-Source: ABdhPJwKUkxs+d357LpYlMASpcmzCNyn5RrFCm2qRWLTxjhfXBdb6r0YA/TsXS8zNQXf6lOL5ngxxwj75vxOnsyr8V0=
+X-Received: by 2002:a7b:c857:: with SMTP id c23mr2586762wml.155.1595916794109;
+ Mon, 27 Jul 2020 23:13:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701195954.9007-1-sibis@codeaurora.org>
+References: <20200728022859.381819-1-yepeilin.cs@gmail.com> <20200728053604.404631-1-yepeilin.cs@gmail.com>
+In-Reply-To: <20200728053604.404631-1-yepeilin.cs@gmail.com>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Date:   Tue, 28 Jul 2020 08:13:05 +0200
+Message-ID: <CAJ+HfNhvM8+nfvEC2h+hjR5SGHU7_qyFkNxtiM1yjod6yVB0vQ@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH net v2] xdp: Prevent
+ kernel-infoleak in xsk_getsockopt()
+To:     Peilin Ye <yepeilin.cs@gmail.com>
+Cc:     Song Liu <songliubraving@fb.com>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 01 Jul 12:59 PDT 2020, Sibi Sankar wrote:
-
-> The Protection Domains (PD) have a mechanism to keep its resources
-> enabled until the PD down indication is acked. Reorder the PD state
-> indication ack so that clients get to release the relevant resources
-> before the PD goes down.
-> 
-> Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart helpers")
-> Reported-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
+On Tue, 28 Jul 2020 at 07:37, Peilin Ye <yepeilin.cs@gmail.com> wrote:
+>
+> xsk_getsockopt() is copying uninitialized stack memory to userspace when
+> `extra_stats` is `false`. Fix it.
+>
+> Fixes: 8aa5a33578e9 ("xsk: Add new statistics")
+> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
 > ---
-> 
-> I couldn't find the previous patch on patchworks. Resending the patch
-> since it would need to land on stable trees as well
-> 
->  drivers/soc/qcom/pdr_interface.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
-> index a90d707da6894..088dc99f77f3f 100644
-> --- a/drivers/soc/qcom/pdr_interface.c
-> +++ b/drivers/soc/qcom/pdr_interface.c
-> @@ -279,13 +279,15 @@ static void pdr_indack_work(struct work_struct *work)
->  
->  	list_for_each_entry_safe(ind, tmp, &pdr->indack_list, node) {
->  		pds = ind->pds;
-> -		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
->  
->  		mutex_lock(&pdr->status_lock);
->  		pds->state = ind->curr_state;
->  		pdr->status(pds->state, pds->service_path, pdr->priv);
->  		mutex_unlock(&pdr->status_lock);
->  
-> +		/* Ack the indication after clients release the PD resources */
-> +		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
-> +
->  		mutex_lock(&pdr->list_lock);
->  		list_del(&ind->node);
->  		mutex_unlock(&pdr->list_lock);
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+
+Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
+
+> Doing `=3D {};` is sufficient since currently `struct xdp_statistics` is
+> defined as follows:
+>
+> struct xdp_statistics {
+>         __u64 rx_dropped;
+>         __u64 rx_invalid_descs;
+>         __u64 tx_invalid_descs;
+>         __u64 rx_ring_full;
+>         __u64 rx_fill_ring_empty_descs;
+>         __u64 tx_ring_empty_descs;
+> };
+>
+> When being copied to the userspace, `stats` will not contain any
+> uninitialized "holes" between struct fields.
+>
+> Changes in v2:
+>     - Remove the "Cc: stable@vger.kernel.org" tag. (Suggested by Song Liu
+>       <songliubraving@fb.com>)
+>     - Initialize `stats` by assignment instead of using memset().
+>       (Suggested by Song Liu <songliubraving@fb.com>)
+>
+>  net/xdp/xsk.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+> index 26e3bba8c204..b2b533eddebf 100644
+> --- a/net/xdp/xsk.c
+> +++ b/net/xdp/xsk.c
+> @@ -840,7 +840,7 @@ static int xsk_getsockopt(struct socket *sock, int le=
+vel, int optname,
+>         switch (optname) {
+>         case XDP_STATISTICS:
+>         {
+> -               struct xdp_statistics stats;
+> +               struct xdp_statistics stats =3D {};
+>                 bool extra_stats =3D true;
+>                 size_t stats_size;
+>
+> --
+> 2.25.1
+>
