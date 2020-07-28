@@ -2,150 +2,127 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B22C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF72BC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E280020774
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA7C20672
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:07:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N6wAtpNO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YSMp1E7R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbgG1WGp (ORCPT
+        id S1729703AbgG1WHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 18:06:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50212 "EHLO
+        Tue, 28 Jul 2020 18:07:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729540AbgG1WGo (ORCPT
+        with ESMTP id S1729654AbgG1WHU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 18:06:44 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81813C0619D2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 15:06:44 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id j19so13019278pgm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 15:06:44 -0700 (PDT)
+        Tue, 28 Jul 2020 18:07:20 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A365C0619D4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 15:07:20 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id x5so940212wmi.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 15:07:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=tjuX+pFwhvhhgmdt7C5E6lKYvSKSrNHXExZ9GWsVSnI=;
-        b=N6wAtpNOFmizd34oOwQzDBKa5iHjGcYvbPkHG549PxO5PlcZ6n/Yxp+E93o24GQcA8
-         CaMeuDWeJkA9kLdYhpa5Mfg7Lb8i21veUpCeUB6z8wxaZ3yaj6oWeu8Z6l9aRw4dYXH0
-         dNqz9b6XcDJaC96nzBpPsCNlSiwIIZTWWTbJE=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yNjtG/Ppk+gQT7Qol4h75D+wSaMe69jZnCwP/w16s9g=;
+        b=YSMp1E7RF4zNZ07R1alwQIvbeDMjPIZWwOYZNtvhdv9dCGDoCauAecZz0txiTF8MYA
+         Cmn0+Ib/Uv9RNGi5cqtJdsBS1l3bCnRjtV0TOhao9EoWJ9dajr9/xpWTZgbqAEgW0AVB
+         QTdMT5EAF5AspHw6YefR+Bg+h6lgvYfd2XyGI0FooYUnnzH8fZddF9SW7EHZXtM40aRh
+         YnHAfisOXakQWfO+khJT4FsZ69YO6V3UVQ2TcHm9X0O6omRlrdwzc0S5O59dHosM3iu8
+         rg89PH87STYM/U3wQrKBrLupiJoLm/HuTNxN8GYeZ+RA/cSm51WOy4qQ/QTgiRwbBVYT
+         U6XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=tjuX+pFwhvhhgmdt7C5E6lKYvSKSrNHXExZ9GWsVSnI=;
-        b=cQojxgumnvaJBzmTiTGc9VvApiqumJbODLtAKvODc2DTG0AV+PMyxYF5ENJ80EmT1U
-         2TrYSRvmP/pyT6fjhiUaI9yQb73WPWxNIVw4WLM1CZ86fPhPAgE/hFjEuIFkmGuRgBWp
-         yrgij/Kjspit9Mtpsbrt7dJqdbZlqs7hM9g8FNOGCDSHUAQXRJWLjJKyqaxeL7KDRcy4
-         9CqMlN392OlERGrXcarrSWq824cfQozT8bTsUxw9BbM5W0Ix8kr3W1YgIfzD5Uf/p6KJ
-         NGIldPL91R1KZOJDYgqQU0baceDtEKxATUpgEyvtHFltuSp0K4A0XdeFMu0SnadIDD4U
-         j8gA==
-X-Gm-Message-State: AOAM532WuvFZsG9xbZ4/fA9H+JbbdvNYIvSUMUlBk+gysT3E2HxyJHdY
-        cvGgDvMDu+n5+TmDdNdwx0giJA==
-X-Google-Smtp-Source: ABdhPJxm2jSMp9UWBjwpogfSuRsV8etm/nCasMNF7xayH25Gtdpeobo52Xb6XBNuSHD9IB7TeitWdg==
-X-Received: by 2002:a62:be02:: with SMTP id l2mr25990420pff.163.1595974003708;
-        Tue, 28 Jul 2020 15:06:43 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id m6sm111594pjb.34.2020.07.28.15.06.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 15:06:43 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yNjtG/Ppk+gQT7Qol4h75D+wSaMe69jZnCwP/w16s9g=;
+        b=JV8XEIRXhPSTxTlz7XYTXwOQTCnjlVLXZXh7Kbxu7EJChID1/PH77YoAiMybcD5Sk+
+         Cjnzbex0KOGj0lQX87DY3pQNuzbNZwcqBTVojPXOT8OgIXNP9PimRrSnZMdad0fVRKKO
+         8i0mR1mXhbfbVS1r3bckdL4urA04n9nY3p8HceRkK7v2U5tJF6bMYiUII/nlVgjnzjwv
+         p+Yp0CZ+kRh7XYedSYBT+7pHzThTMwacIAABpD6MXdTMRgkPJNH6ux6CImrf7E5Pqo6W
+         9HXWc0D9tw4zxtJT/uHiHlrg/t2YlEJ+O99fPGYaiTzydV+fVlGU+CSBJzL7x6u0JZMF
+         aC9A==
+X-Gm-Message-State: AOAM533fmVtaM6S/Bj967elfRjtfzZsMkxcB67v+78flLt08/wUHXoNv
+        UknVIduO5gKjvvCcLNR2FtvIk00v4g2ePp/zCjUM3g==
+X-Google-Smtp-Source: ABdhPJx8ktpw7PKb8X9C7utuR4EGxd5Zemvet/KyKeb+2tSmKYlWKuFXwDYE1wjg1fBRGU9xyTq7VmjUuwJedxftAag=
+X-Received: by 2002:a1c:e908:: with SMTP id q8mr6125255wmc.59.1595974038580;
+ Tue, 28 Jul 2020 15:07:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200728091057.1.I3bf8ece8c303bd9ecfc1573464cdacc47d73784b@changeid>
-References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid> <20200728151258.1222876-1-campello@chromium.org> <20200728091057.1.I3bf8ece8c303bd9ecfc1573464cdacc47d73784b@changeid>
-Subject: Re: [PATCH 01/15] dt-bindings: iio: Add bindings for sx9310 sensor
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Daniel Campello <campello@chromium.org>,
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
+ <20200728151258.1222876-1-campello@chromium.org> <20200728091057.10.Ibe84fae61cd914c116e6d59ffeb644f1cbecd601@changeid>
+ <159596523705.1360974.7169089810545711557@swboyd.mtv.corp.google.com>
+ <CAHcu+VbYrbWStNNaidDygY=d4f6F5tXUxWtsuH0x3oVeELGWVA@mail.gmail.com> <159597194837.1360974.9212489704079396891@swboyd.mtv.corp.google.com>
+In-Reply-To: <159597194837.1360974.9212489704079396891@swboyd.mtv.corp.google.com>
+From:   Daniel Campello <campello@google.com>
+Date:   Tue, 28 Jul 2020 16:06:42 -0600
+Message-ID: <CAHcu+VZ032uZ==-Lqix=x61pdurNXjOiKvrKTaKJqUyUgn8OGQ@mail.gmail.com>
+Subject: Re: [PATCH 10/15] iio: sx9310: Simplify error return handling
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-iio@vger.kernel.org
-To:     Daniel Campello <campello@chromium.org>,
-        LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Tue, 28 Jul 2020 15:06:41 -0700
-Message-ID: <159597400172.1360974.7831683364002070743@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Daniel Campello (2020-07-28 08:12:44)
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx93=
-10.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.ya=
-ml
-> new file mode 100644
-> index 00000000000000..ba734ee868c77f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/proximity/semtech,sx9310.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Semtech's SX9310 capacitive proximity sensor
-> +
-> +maintainers:
-> +  - Daniel Campello <campello@chromium.org>
-> +
-> +description: |
-> +  Semtech's SX9310/SX9311 capacitive proximity/button solution.
-> +
-> +  Specifications about the devices can be found at:
-> +  https://www.semtech.com/products/smart-sensing/sar-sensors/sx9310
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - semtech,sx9310
-> +      - semtech,sx9311
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description:
-> +      The sole interrupt generated by the device used to announce the
-> +      preceding reading request has finished and that data is
-> +      available or that a close/far proximity event has happened.
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: Main power supply
-> +
-> +  svdd-supply:
-> +    description: Host interface power supply
-
-I think we need to add #io-channel-cells =3D <1> here as a required
-property.
-
-   "#io-channel-cells":
-       const: 1
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-
-And=20
-
-  - "#io-channel-cells"
-
-> +
-> +additionalProperties: false
-> +
+On Tue, Jul 28, 2020 at 3:32 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Daniel Campello (2020-07-28 14:23:29)
+> > On Tue, Jul 28, 2020 at 1:40 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >
+> > > Quoting Daniel Campello (2020-07-28 08:12:53)
+> > > > @@ -368,13 +368,13 @@ static int sx9310_wait_for_sample(struct sx9310_data *data)
+> > > >  static int sx9310_read_proximity(struct sx9310_data *data,
+> > > >                                  const struct iio_chan_spec *chan, int *val)
+> > > >  {
+> > > > -       int ret = 0;
+> > > > +       int ret;
+> > > >         __be16 rawval;
+> > > >
+> > > >         mutex_lock(&data->mutex);
+> > > >
+> > > >         ret = sx9310_get_read_channel(data, chan->channel);
+> > > > -       if (ret < 0)
+> > > > +       if (ret)
+> > > >                 goto out;
+> > > >
+> > > >         if (data->client->irq) {
+> > > > @@ -394,11 +394,11 @@ static int sx9310_read_proximity(struct sx9310_data *data,
+> > > >
+> > > >         mutex_lock(&data->mutex);
+> > > >
+> > > > -       if (ret < 0)
+> > > > +       if (ret)
+> > > >                 goto out_disable_irq;
+> > >
+> > > Why is this condition checked after grabbing the mutex? Shouldn't it be
+> > > checked before grabbing the mutex? Or is that supposed to be a
+> > > mutex_unlock()?
+> > We acquire the lock before jumping to out_disable_irq which is before
+> > a mutex_unlock()
+>
+> Does this function need to hold the mutex lock around get/put_read_channel?
+Yes, both get/put_read_channel and get/put_event_channel use
+sx9310_update_chan_en which is updating data->chan_{read,event}
+bitmaps.
+> It drops the lock while waiting and then regrabs it which seems to
+> imply that another reader could come in and try to get the channel again
+> during the wait. So put another way, it may be simpler to shorten the
+> lock area and then bail out of this function to a place where the lock
+> isn't held already on the return path.
