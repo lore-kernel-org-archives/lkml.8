@@ -2,125 +2,99 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56A5C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA29C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C94A20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4114120656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:25:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kq76A0lT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732808AbgG1TZK (ORCPT
+        id S1732812AbgG1TZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:25:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44354 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728896AbgG1TZJ (ORCPT
+        Tue, 28 Jul 2020 15:25:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728949AbgG1TZT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:25:09 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06SJ2bqg045957;
-        Tue, 28 Jul 2020 15:24:57 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32jh6qtf15-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 15:24:57 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06SJ31G8047563;
-        Tue, 28 Jul 2020 15:24:57 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32jh6qtf0b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 15:24:56 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06SJOqEL029015;
-        Tue, 28 Jul 2020 19:24:54 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma02fra.de.ibm.com with ESMTP id 32gcq0thsf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 19:24:54 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06SJOpvU29032810
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jul 2020 19:24:51 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 73BE342042;
-        Tue, 28 Jul 2020 19:24:51 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6AE8B42047;
-        Tue, 28 Jul 2020 19:24:48 +0000 (GMT)
-Received: from [9.85.75.143] (unknown [9.85.75.143])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 28 Jul 2020 19:24:48 +0000 (GMT)
-Subject: Re: [RESEND PATCH v5 07/11] ppc64/kexec_file: enable early kernel's
- OPAL calls
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-References: <159579157320.5790.6748078824637688685.stgit@hbathini>
- <159579233676.5790.10701756666641782647.stgit@hbathini>
- <87365b7nx4.fsf@mpe.ellerman.id.au>
-From:   Hari Bathini <hbathini@linux.ibm.com>
-Message-ID: <23baef6a-6ddc-572a-82c5-21a7fa441485@linux.ibm.com>
-Date:   Wed, 29 Jul 2020 00:54:47 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 15:25:19 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EDB9C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:25:19 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id k27so12626822pgm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:25:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jv1dvYdq8eJEzFdUSscz1BOoXXTkZcjav2RFBunoTFM=;
+        b=kq76A0lTi8jchEwvaC48PBEuds1Wn1jiikAVioJ41DM8T8wrDetkd/hnwQQTiuxVKj
+         D8SSmZS7x5ywaIUtbhQ4RrUBD2Ph2CG4jVRveqKOiuQUBROilqRnGWWwhdAgWk0bpGkn
+         RMsbna6SKCbD/ku74N9KZje7ChYEji4gTzTm8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jv1dvYdq8eJEzFdUSscz1BOoXXTkZcjav2RFBunoTFM=;
+        b=XV/wEl1FlHcWZlg5SNf7RHHbizmQi4c+ehHdEEM7L/UlIgfiRyb2j+OlGivWvu4dqJ
+         UZzc1yqUX4YZRf8ehMu33e936vUYuaempggvj+5MJvgplw74B6wbOOyF3f3hMROPWd5w
+         p+mvx8fr5ZGtfNgrRUXY0gI6Xnty5lBkqs+0m4HTVc2+Jt6LLMD2Z7/u7QCGhjm8rNiz
+         u3lRaH/39L+J/52InuI1F2X/xHll4PBmPtDUr60llau6Sq4Mgtrnx767vrjHRPARjdf8
+         j95EOZ5V/c8VvBm986dgFX2gw2YJ7engmaMV0ojfss0w1FKvLE87Isj5epp9rHg3SdWg
+         xeHg==
+X-Gm-Message-State: AOAM533dcZ4KqXaDwwoAhij5hJgzp61N/hyW2Hr9yNo1na5gQqY5iTJc
+        XGwHz2FiaoCLlGNUnxRNGDu9vmlKcW4=
+X-Google-Smtp-Source: ABdhPJwnNWmKRmXaJycjJGbixKnAzcH0WBAJLNlgax1cXRM4cfbmdEgCqqAjHy2kSpIEdSWNPsk8nA==
+X-Received: by 2002:a65:6384:: with SMTP id h4mr25642129pgv.196.1595964318670;
+        Tue, 28 Jul 2020 12:25:18 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d25sm19239139pgn.2.2020.07.28.12.25.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 12:25:17 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 12:25:16 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/8] x86/kaslr: Simplify __process_mem_region
+Message-ID: <202007281152.6B15179@keescook>
+References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
+ <20200727230801.3468620-6-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <87365b7nx4.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-28_15:2020-07-28,2020-07-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 suspectscore=0 spamscore=0 phishscore=0
- lowpriorityscore=0 mlxlogscore=997 bulkscore=0 mlxscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007280131
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727230801.3468620-6-nivedita@alum.mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 28/07/20 7:16 pm, Michael Ellerman wrote:
-> Hari Bathini <hbathini@linux.ibm.com> writes:
->> Kernel built with CONFIG_PPC_EARLY_DEBUG_OPAL enabled expects r8 & r9
->> to be filled with OPAL base & entry addresses respectively. Setting
->> these registers allows the kernel to perform OPAL calls before the
->> device tree is parsed.
+On Mon, Jul 27, 2020 at 07:07:58PM -0400, Arvind Sankar wrote:
+> Get rid of unnecessary temporary variables and redundant tests in
+> __process_mem_region.
 > 
-> I'm not convinced we want to do this.
+> Fix one minor bug: in case of an overlap, the beginning of the region
+> should be used even if it is exactly image_size, not just strictly
+> larger.
 > 
-> If we do it becomes part of the kexec ABI and we have to honour it into
-> the future.
+> Change type of minimum/image_size arguments in process_mem_region to
+> unsigned long. These actually can never be above 4G (even on x86_64),
+> and they're unsigned long in every other function except this one.
 > 
-> And in practice there are no non-development kernels built with OPAL early
-> debugging enabled, so it's not clear it actually helps anyone other than
-> developers.
-> 
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-Hmmm.. kexec-tools does it since commit d58ad564852c ("kexec/ppc64
-Enable early kernel's OPAL calls") for kexec_load syscall. So, we would
-be breaking kexec ABI either way, I guess.
+Please split this up (which I think is already planned):
 
-Let me put this patch at the end of the series in the respin to let you
-decide whether to have it or not..
+- bug fix (which looks like a correct fix to me)
+- arg type size changes
+- refactoring
 
-Thanks
-Hari
+I don't currently agree that the refactoring makes things easier to
+read, but let's see v3. :)
+
+-- 
+Kees Cook
