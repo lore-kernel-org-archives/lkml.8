@@ -2,181 +2,67 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC85C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4FA321883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:19:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RoJ6MBEz"
+	by mail.kernel.org (Postfix) with ESMTP id 1EC4B20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:20:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgG1GTB (ORCPT
+        id S1726992AbgG1GUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:19:01 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44243 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726407AbgG1GTA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:19:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595917138;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=L19gJxjlvbSfxrLYXKkArq/ADh0RRhZZZKs2hhgA8nw=;
-        b=RoJ6MBEzpiOhGtgVHb3ggiPedPw2gd418EBxxQlx5mp19dKs0Pz/7ghE1tv4cOeCFeK1Wz
-        CUdxg7tlE3mqwPkjMzKhFPwe7YYp+4e1rwsrceyYuWNzEHinzo52PErl/Wznek+4AVSCzO
-        59t0WdSUitlGKejvqks2WGd85CbjtFE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-440-PcCkU7-kMquVvQ8GCS5I4Q-1; Tue, 28 Jul 2020 02:18:54 -0400
-X-MC-Unique: PcCkU7-kMquVvQ8GCS5I4Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B765C106B251;
-        Tue, 28 Jul 2020 06:18:34 +0000 (UTC)
-Received: from [10.72.13.242] (ovpn-13-242.pek2.redhat.com [10.72.13.242])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3ABCD69719;
-        Tue, 28 Jul 2020 06:18:17 +0000 (UTC)
-Subject: Re: [PATCH V3 vhost next 00/10] VDPA support for Mellanox ConnectX
- devices
-To:     Eli Cohen <eli@mellanox.com>, mst@redhat.com,
-        virtualization@lists.linux-foundation.org,
+        Tue, 28 Jul 2020 02:20:49 -0400
+Received: from verein.lst.de ([213.95.11.211]:46784 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726797AbgG1GUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 02:20:48 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 0A1BD68B05; Tue, 28 Jul 2020 08:20:45 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 08:20:45 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jiri Slaby <jirislaby@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, gregkh@linuxfoundation.org,
         linux-kernel@vger.kernel.org
-Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com
-References: <20200728060539.4163-1-eli@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <1dbac14a-5909-ff0a-8e90-534847f93d50@redhat.com>
-Date:   Tue, 28 Jul 2020 14:18:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Subject: Re: [PATCH] tty/synclink: remove leftover bits of non-PCI card
+ support
+Message-ID: <20200728062045.GA20992@lst.de>
+References: <20200727130501.31005-1-hch@lst.de> <8a015ca4-e837-8fa5-684c-46fca8104ea5@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200728060539.4163-1-eli@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8a015ca4-e837-8fa5-684c-46fca8104ea5@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 28, 2020 at 08:05:36AM +0200, Jiri Slaby wrote:
+> On 27. 07. 20, 15:05, Christoph Hellwig wrote:
+> > Since commit 1355cba9c3ba ("tty/synclink: remove ISA support"), the
+> > synlink driver only supports PCI card.  Remove any leftover dead code
+> > to support other cards.
+> 
+> So now you can remove also the defines and bus_type completely:
+> $ git grep -E 'MGSL_BUS_TYPE_(E?ISA|PCI)'
+> drivers/tty/synclink_gt.c:              info->bus_type = MGSL_BUS_TYPE_PCI;
+> drivers/tty/synclinkmp.c:               info->bus_type = MGSL_BUS_TYPE_PCI;
+> include/uapi/linux/synclink.h:#define MGSL_BUS_TYPE_ISA 1
+> include/uapi/linux/synclink.h:#define MGSL_BUS_TYPE_EISA        2
+> include/uapi/linux/synclink.h:#define MGSL_BUS_TYPE_PCI 5
 
-On 2020/7/28 下午2:05, Eli Cohen wrote:
-> Hi Michael,
-> please note that this series depends on mlx5 core device driver patches
-> in mlx5-next branch in
-> git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git.
->
-> git pull git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git mlx5-next
->
-> They also depend Jason Wang's patches submitted a couple of weeks ago.
->
-> vdpa_sim: use the batching API
-> vhost-vdpa: support batch updating
+This is in a uapi header, so I didn't dare to touch it.
 
+> 
+> $ git grep -w bus_type drivers/tty/synclink*
+> drivers/tty/synclink_gt.c:      unsigned int bus_type;
+> drivers/tty/synclink_gt.c:              info->bus_type = MGSL_BUS_TYPE_PCI;
+> drivers/tty/synclinkmp.c:       unsigned int bus_type;
+> /* expansion bus type (ISA,EISA,PCI) */
+> drivers/tty/synclinkmp.c:               info->bus_type = MGSL_BUS_TYPE_PCI;
 
-Just notice that a new version is posted[1] (you were cced). Talked with 
-Michael, and it's better for you to merge the new version in this series.
-
-Sorry for not spotting this before.
-
-[1] https://lkml.org/lkml/2020/7/1/301
-
-Thanks
-
-
->
->
-> The following series of patches provide VDPA support for Mellanox
-> devices. The supported devices are ConnectX6 DX and newer.
->
-> Currently, only a network driver is implemented; future patches will
-> introduce a block device driver. iperf performance on a single queue is
-> around 12 Gbps.  Future patches will introduce multi queue support.
->
-> The files are organized in such a way that code that can be used by
-> different VDPA implementations will be placed in a common are resides in
-> drivers/vdpa/mlx5/core.
->
-> Only virtual functions are currently supported. Also, certain firmware
-> capabilities must be set to enable the driver. Physical functions (PFs)
-> are skipped by the driver.
->
-> To make use of the VDPA net driver, one must load mlx5_vdpa. In such
-> case, VFs will be operated by the VDPA driver. Although one can see a
-> regular instance of a network driver on the VF, the VDPA driver takes
-> precedence over the NIC driver, steering-wize.
->
-> Currently, the device/interface infrastructure in mlx5_core is used to
-> probe drivers. Future patches will introduce virtbus as a means to
-> register devices and drivers and VDPA will be adapted to it.
->
-> The mlx5 mode of operation required to support VDPA is switchdev mode.
-> Once can use Linux or OVS bridge to take care of layer 2 switching.
->
-> In order to provide virtio networking to a guest, an updated version of
-> qemu is required. This version has been tested by the following quemu
-> version:
->
-> url: https://github.com/jasowang/qemu.git
-> branch: vdpa
-> Commit ID: 6f4e59b807db
->
->
-> V2->V3
-> Fix makefile to use include path relative to the root of the kernel
->
-> Eli Cohen (7):
->    net/vdpa: Use struct for set/get vq state
->    vhost: Fix documentation
->    vdpa: Modify get_vq_state() to return error code
->    vdpa/mlx5: Add hardware descriptive header file
->    vdpa/mlx5: Add support library for mlx5 VDPA implementation
->    vdpa/mlx5: Add shared memory registration code
->    vdpa/mlx5: Add VDPA driver for supported mlx5 devices
->
-> Jason Wang (2):
->    vhost-vdpa: support batch updating
->    vdpa_sim: use the batching API
->
-> Max Gurtovoy (1):
->    vdpa: remove hard coded virtq num
->
->   drivers/vdpa/Kconfig                   |   18 +
->   drivers/vdpa/Makefile                  |    1 +
->   drivers/vdpa/ifcvf/ifcvf_base.c        |    4 +-
->   drivers/vdpa/ifcvf/ifcvf_base.h        |    4 +-
->   drivers/vdpa/ifcvf/ifcvf_main.c        |   13 +-
->   drivers/vdpa/mlx5/Makefile             |    4 +
->   drivers/vdpa/mlx5/core/mlx5_vdpa.h     |   91 ++
->   drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h |  168 ++
->   drivers/vdpa/mlx5/core/mr.c            |  473 ++++++
->   drivers/vdpa/mlx5/core/resources.c     |  284 ++++
->   drivers/vdpa/mlx5/net/main.c           |   76 +
->   drivers/vdpa/mlx5/net/mlx5_vnet.c      | 1950 ++++++++++++++++++++++++
->   drivers/vdpa/mlx5/net/mlx5_vnet.h      |   24 +
->   drivers/vdpa/vdpa.c                    |    3 +
->   drivers/vdpa/vdpa_sim/vdpa_sim.c       |   35 +-
->   drivers/vhost/iotlb.c                  |    4 +-
->   drivers/vhost/vdpa.c                   |   46 +-
->   include/linux/vdpa.h                   |   24 +-
->   include/uapi/linux/vhost_types.h       |    2 +
->   19 files changed, 3165 insertions(+), 59 deletions(-)
->   create mode 100644 drivers/vdpa/mlx5/Makefile
->   create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa.h
->   create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h
->   create mode 100644 drivers/vdpa/mlx5/core/mr.c
->   create mode 100644 drivers/vdpa/mlx5/core/resources.c
->   create mode 100644 drivers/vdpa/mlx5/net/main.c
->   create mode 100644 drivers/vdpa/mlx5/net/mlx5_vnet.c
->   create mode 100644 drivers/vdpa/mlx5/net/mlx5_vnet.h
->
-
+Despite the similar names these are actually two drivers entirely
+separate form the main synclink one.
