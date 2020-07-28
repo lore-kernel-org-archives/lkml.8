@@ -2,174 +2,117 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B751DC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 666B620714
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:44:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="PDGYSP0O";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fTAbfbFu"
+	by mail.kernel.org (Postfix) with ESMTP id E5A2820714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:44:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbgG1MoM (ORCPT
+        id S1729897AbgG1Mog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:44:12 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:53679 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729379AbgG1MoK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:44:10 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 1EF895802D6;
-        Tue, 28 Jul 2020 08:44:09 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 28 Jul 2020 08:44:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=3
-        zW4tWcFHAaD/UFG0J62346g4/8MQMozUhPE9nWQcAQ=; b=PDGYSP0OsFCNrzpHC
-        yOtNOXSD+UMusIIf928WPNocPn1Gf1aQKpxo833s+0wj59VasKVroUq8ZNDI+d3F
-        PeSLvqXlDOTjoHukGJHGZ2W71fl5QoMAy0DsdzC8Na3JqOo06NYPnqzURw4ERhXA
-        kmoDudUs9NSKOTuqvVnwdyzL+SuEbUb4HNgS05110bN3jWema8H5dVw9LB+6mNFI
-        t3eb8oQlT/GiOmgtE1ArIWUSVizIn1BzOi3DAh64h1x5Dd661D5bZKpWCepbAATE
-        18avLINXhcBuf7necpwJlRyrUgTRMn2dIYjyHvIF7liXgCtEmL7uXhwdwndKcPqo
-        58mng==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=3zW4tWcFHAaD/UFG0J62346g4/8MQMozUhPE9nWQc
-        AQ=; b=fTAbfbFuCXisbkE4lvc9HyOH0IbYLfPbkYxKpMXgj3AN7VFiXABj5+4UU
-        /t3v6ivneh/t0Lp8wZiYpJ8HGlGBKdX9RgFTJxdYyxgJYhHwFWvtKITHxzCzwTQ7
-        z8GKERkJAz2/EaClpCjKzDKvpurfzu1ciWdiH04ZlU6Bhfk26hE7fzLbpeUuCmGo
-        qI72xbQbUEcTKW63j5H/GqW5pJ//mpMhosBL8nma+fTG3FpgJVhVf17MW9fgW/dd
-        yhQLh5fhHO0MN1LhsXb7PaPgQN2M6ORUZRU3pyykxB1orp6zT/uPYG1Az+8bpqlq
-        xhuFLN3aHcORn6h/vJDrQ/KPmg9Sw==
-X-ME-Sender: <xms:mB0gXzBTU3jEYnxQoy13xi3LBgvf4zF50ZL08EEj1HlrgkO_jLmDAQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedriedvgdehfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepgfejtedtjefggfffvdetuedthedtheegheeuteekfeeghfdtteejkeeludeg
-    vddunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:mB0gX5inbbCQ8UBq3vsYo32_ONz_dqoMqRhoH8KluLzUfVVGl-qclA>
-    <xmx:mB0gX-lDw-pCTGkuBDz20_uyA5Is-WaSIRsfXwanNh1pqtm94NPOFg>
-    <xmx:mB0gX1ys1lEXKEe06CZVO0-i5ZAZrqgufUgOIblaP8cx7N4TLblJgQ>
-    <xmx:mR0gX7H4Xn8jelQjfYxg84ioU_mybIBccgE9y8IuP8xcUALEduurrg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B531D328005D;
-        Tue, 28 Jul 2020 08:44:07 -0400 (EDT)
-Date:   Tue, 28 Jul 2020 14:44:05 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Alexandre Courbot <acourbot@chromium.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH 08/10] media: uapi: h264: Clean slice invariants syntax
- elements
-Message-ID: <20200728124405.ziuwaabp4fnv7lw2@gilmour.lan>
-References: <20200715202233.185680-1-ezequiel@collabora.com>
- <20200715202233.185680-9-ezequiel@collabora.com>
- <CAPBb6MVMXeTcUfb-98McYCKjh=eM=BTo2dSY=L1c6dv2jHqXcg@mail.gmail.com>
- <636aab0a2be83e751a82a84ac3946afec2c87a17.camel@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <636aab0a2be83e751a82a84ac3946afec2c87a17.camel@collabora.com>
+        Tue, 28 Jul 2020 08:44:36 -0400
+Received: from 107-174-27-60-host.colocrossing.com ([107.174.27.60]:36460 "EHLO
+        ozlabs.ru" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1729379AbgG1Mog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:44:36 -0400
+Received: from fstn1-p1.ozlabs.ibm.com (localhost [IPv6:::1])
+        by ozlabs.ru (Postfix) with ESMTP id AE9DDAE80225;
+        Tue, 28 Jul 2020 08:41:25 -0400 (EDT)
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+To:     linux-serial@vger.kernel.org
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH kernel] serial_core: Check for port state when tty is in error state
+Date:   Tue, 28 Jul 2020 22:43:59 +1000
+Message-Id: <20200728124359.980-1-aik@ozlabs.ru>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+At the moment opening a serial device node (such as /dev/ttyS3)
+succeeds even if there is no actual serial device behind it.
+Reading/writing/ioctls (most) expectantly fail as the uart port is not
+initialized (the type is PORT_UNKNOWN) and the TTY_IO_ERROR error state
+bit is set fot the tty.
 
-On Mon, Jul 27, 2020 at 11:39:12AM -0300, Ezequiel Garcia wrote:
-> On Sat, 2020-07-25 at 23:34 +0900, Alexandre Courbot wrote:
-> > On Thu, Jul 16, 2020 at 5:23 AM Ezequiel Garcia <ezequiel@collabora.com=
-> wrote:
-> > > The H.264 specification requires in its "Slice header semantics"
-> > > section that the following values shall be the same in all slice head=
-ers:
-> > >=20
-> > >   pic_parameter_set_id
-> > >   frame_num
-> > >   field_pic_flag
-> > >   bottom_field_flag
-> > >   idr_pic_id
-> > >   pic_order_cnt_lsb
-> > >   delta_pic_order_cnt_bottom
-> > >   delta_pic_order_cnt[ 0 ]
-> > >   delta_pic_order_cnt[ 1 ]
-> > >   sp_for_switch_flag
-> > >   slice_group_change_cycle
-> > >=20
-> > > and can therefore be moved to the per-frame decode parameters control.
-> >=20
-> > I am really not a H.264 expert, so this question may not be relevant,
->=20
-> All questions are welcome. I'm more than happy to discuss this patchset.
->=20
-> > but are these values specified for every slice header in the
-> > bitstream, or are they specified only once per frame?
-> >=20
-> > I am asking this because it would certainly make user-space code
-> > simpler if we could remain as close to the bitstream as possible. If
-> > these values are specified once per slice, then factorizing them would
-> > leave user-space with the burden of deciding what to do if they change
-> > across slices.
-> >=20
-> > Note that this is a double-edged sword, because it is not necessarily
-> > better to leave the firmware in charge of deciding what to do in such
-> > a case. :) So hopefully these are only specified once per frame in the
-> > bitstream, in which case your proposal makes complete sense.
->=20
-> Frame-based hardwares accelerators such as Hantro and Rockchip VDEC
-> are doing the slice header parsing themselves. Therefore, the
-> driver is not really parsing these fields on each slice header.
->=20
-> Currently, we are already using only the first slice in a frame,
-> as you can see from:
->=20
->         if (slices[0].flags & V4L2_H264_SLICE_FLAG_FIELD_PIC)
->                 reg |=3D G1_REG_DEC_CTRL0_PIC_FIELDMODE_E;
->=20
-> Even if these fields are transported in the slice header,
-> I think it makes sense for us to split them into the decode params
-> (per-frame) control.
+However syzkaller (a syscall fuzzer) found that setting line discipline
+does not have these checks all the way down to io_serial_out() in
+8250_port.c (8250 is the default choice made by univ8250_console_init()).
+As the result of PORT_UNKNOWN, uart_port::iobase is NULL which
+a platform translates onto some address accessing which produces a crash
+like below.
 
-I don't really get it though. The initial plan that was asked was to
-mimic as much as possible the bitstream and that's what we did.
+This adds tty_io_error() to uart_set_ldisc() to prevent the crash.
 
-But that requirement seems to have changed now?
+The example of crash on PPC64/pseries:
 
-Even if it did change though, if this is defined as a slice parameter in
-the spec, why would we want to move it to some other control entirely if
-we are to keep the slice parameters control?
+BUG: Unable to handle kernel data access on write at 0xc00a000000000001
+Faulting instruction address: 0xc000000000c9c9cc
+cpu 0x0: Vector: 300 (Data Access) at [c00000000c6d7800]
+    pc: c000000000c9c9cc: io_serial_out+0xcc/0xf0
+    lr: c000000000c9c9b4: io_serial_out+0xb4/0xf0
+    sp: c00000000c6d7a90
+   msr: 8000000000009033
+   dar: c00a000000000001
+ dsisr: 42000000
+  current = 0xc00000000cd22500
+  paca    = 0xc0000000035c0000   irqmask: 0x03   irq_happened: 0x01
+    pid   = 1371, comm = syz-executor.0
+Linux version 5.8.0-rc7-le-guest_syzkaller_a+fstn1 (aik@fstn1-p1) (gcc (Ubunt
+untu) 2.30) #660 SMP Tue Jul 28 22:29:22 AEST 2020
+enter ? for help
+[c00000000c6d7a90] c0000000018a8cc0 _raw_spin_lock_irq+0xb0/0xe0 (unreliable)
+[c00000000c6d7ad0] c000000000c9bdc0 serial8250_do_set_ldisc+0x140/0x180
+[c00000000c6d7b10] c000000000c9bea4 serial8250_set_ldisc+0xa4/0xb0
+[c00000000c6d7b50] c000000000c91138 uart_set_ldisc+0xb8/0x160
+[c00000000c6d7b90] c000000000c5a22c tty_set_ldisc+0x23c/0x330
+[c00000000c6d7c20] c000000000c4c220 tty_ioctl+0x990/0x12f0
+[c00000000c6d7d20] c00000000056357c ksys_ioctl+0x14c/0x180
+[c00000000c6d7d70] c0000000005635f0 sys_ioctl+0x40/0x60
+[c00000000c6d7db0] c00000000003b814 system_call_exception+0x1a4/0x330
+[c00000000c6d7e20] c00000000000d368 system_call_common+0xe8/0x214
 
-Especially if the reason is to make the life easier on a couple of
-drivers, that's really not the point of a userspace API, and we can
-always add an helper if it really shows up as a pattern.
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+---
 
-> They are really specified to be the same across all slices,
-> so even I'd say if a bitstream violates this, it's likely
-> either a corrupted bitstream or an encoder bug.
+While looking at it, I noticed that a bunch of callbacks are prone to
+this bug and since I wanted to fix them all with minimum effort,
+I tried checking for PORT_UNKNOWN in uart_port_check() but it breaks
+device opening. Another approach could be checking for uart_port::iobase
+in 8250 (and probably uart_port::membase as well) but this will make
+the rest of the code to think the device is ok while there is no device
+at all.
 
-That doesn't look like something we should worry about though. Or at
-least, this is true for pretty much any other field in the bitstream and
-we won't change those.
+What would the correct approach be and what is the expectation?
 
-Maxime
+The fact that /dev/ttyS3 opened in the first place is confusing already.
+
+---
+ drivers/tty/serial/serial_core.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index c15e208d9bec..cdece1c8e123 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -1467,6 +1467,9 @@ static void uart_set_ldisc(struct tty_struct *tty)
+ 	struct uart_state *state = tty->driver_data;
+ 	struct uart_port *uport;
+ 
++	if (tty_io_error(tty))
++		return;
++
+ 	mutex_lock(&state->port.mutex);
+ 	uport = uart_port_check(state);
+ 	if (uport && uport->ops && uport->ops->set_ldisc)
+-- 
+2.17.1
+
