@@ -2,152 +2,107 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60499C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B83A20809
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3063C20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:24:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fPxBa1jt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d9BzcXSk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726433AbgG1AXd (ORCPT
+        id S1726676AbgG1AYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 20:23:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbgG1AXd (ORCPT
+        Mon, 27 Jul 2020 20:24:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29758 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726171AbgG1AYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 20:23:33 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 633D9C061794;
-        Mon, 27 Jul 2020 17:23:33 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 27 Jul 2020 20:24:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595895861;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qrrh0VWxhUYOFWXxBgOdHjYFk6pK4h+BN24GbsiZyec=;
+        b=d9BzcXSk3Q4kf22BCqo/tEBJg5oEWo7zVksLX5TFwSEpI878hCXuPJ8HXJAHHdeOmlvO3M
+        H4khVpLUDnLuOf2OiEjPIyOehE5PPFPw8ohoygnSMnAeogeA+N2q2hjgsrdbTbSGUxf6fY
+        ixCzIqE8xowPmN+M8eYGN6aX3tBVc9o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-285-2Lh-TjSvPJ69YeoO6jxvfw-1; Mon, 27 Jul 2020 20:24:18 -0400
+X-MC-Unique: 2Lh-TjSvPJ69YeoO6jxvfw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFy834bPSz9sSt;
-        Tue, 28 Jul 2020 10:23:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595895811;
-        bh=WqnSbOQINj+e0BRk5+oeyscKwd6L/NeTckH2w8CCGeg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fPxBa1jtqAqJ3CXkLtvsr9qtgOwrT2vqnGZEr6zmucydXDgE+2TFzTHokPbyI3c87
-         Sqv6h/OZxSm6W+fQzLX0o9zbfiQQE0ZUBJLy/DjU0Y9XpZ2M2gBRjtWh3qvt13bYCY
-         eRtBkTXvhxcV87D4lbln83mHub4T6I0L5T7K0YBhAtu4byw+3f+nHNjC08WpfOKqpj
-         tJe1oB3xrMpTMWrfmbQnoMuR0SkBlZm5fcrmw655O/hVW5OSFodAypVPaVaHOugDYl
-         I37q/rg/SqWhhA/TQatHpVV3zV67R7eNwcWyrEH7AcG+HDzdyPndLVHXSWc3SgBVgy
-         +U4o1Gg3kUOMg==
-Date:   Tue, 28 Jul 2020 10:23:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Max Filippov <jcmvbkbc@gmail.com>, Rich Felker <dalias@libc.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
-Subject: linux-next: manual merge of the xtensa tree with the sh tree
-Message-ID: <20200728102330.11f78570@canb.auug.org.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B49928005B0;
+        Tue, 28 Jul 2020 00:24:17 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F5FB5D9E8;
+        Tue, 28 Jul 2020 00:24:17 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 20:24:16 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 84/86] dm integrity: fix integrity recalculation
+ that is improperly skipped
+Message-ID: <20200728002416.GB28830@redhat.com>
+References: <20200727134914.312934924@linuxfoundation.org>
+ <20200727134918.614819996@linuxfoundation.org>
+ <20200727205635.t23z72lkdofoewi3@duo.ucw.cz>
+ <20200727233135.GL406581@sasha-vm>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2rZamO_m.SKFKPxCa2a44eO";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727233135.GL406581@sasha-vm>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2rZamO_m.SKFKPxCa2a44eO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jul 27 2020 at  7:31pm -0400,
+Sasha Levin <sashal@kernel.org> wrote:
 
-Hi all,
+> On Mon, Jul 27, 2020 at 10:56:35PM +0200, Pavel Machek wrote:
+> >Hi!
+> >
+> >>From: Mikulas Patocka <mpatocka@redhat.com>
+> >>
+> >>commit 5df96f2b9f58a5d2dc1f30fe7de75e197f2c25f2 upstream.
+> >>
+> >>Commit adc0daad366b62ca1bce3e2958a40b0b71a8b8b3 ("dm: report suspended
+> >>device during destroy") broke integrity recalculation.
+> >>
+> >>The problem is dm_suspended() returns true not only during suspend,
+> >>but also during resume. So this race condition could occur:
+> >>1. dm_integrity_resume calls queue_work(ic->recalc_wq, &ic->recalc_work)
+> >>2. integrity_recalc (&ic->recalc_work) preempts the current thread
+> >>3. integrity_recalc calls if (unlikely(dm_suspended(ic->ti))) goto unlock_ret;
+> >>4. integrity_recalc exits and no recalculating is done.
+> >>
+> >>To fix this race condition, add a function dm_post_suspending that is
+> >>only true during the postsuspend phase and use it instead of
+> >>dm_suspended().
+> >>
+> >>Signed-off-by: Mikulas Patocka <mpatocka redhat com>
+> >
+> >Something is wrong with signoff here...
+> 
+> Heh, and the same thing happened with the stable tag:
+> 
+> 	Cc: stable vger kernel org # v4.18+
+> 
+> But given that this is the way the upstream commit looks like we can't
+> do much here.
 
-Today's linux-next merge of the xtensa tree got a conflict in:
+Hmm, not sure what happened on the Signed-off-by and Cc for commit
+5df96f2b9f.  Sorry about this!
 
-  tools/testing/selftests/seccomp/seccomp_bpf.c
-
-between commit:
-
-  469023465e79 ("sh: Add SECCOMP_FILTER")
-
-from the sh tree and commit:
-
-  deccfc9ce639 ("selftests/seccomp: add xtensa support")
-
-from the xtensa tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc tools/testing/selftests/seccomp/seccomp_bpf.c
-index 06d994a34997,1b445c2e7fbe..000000000000
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@@ -124,8 -122,8 +124,10 @@@ struct seccomp_data=20
-  #  define __NR_seccomp 358
-  # elif defined(__s390__)
-  #  define __NR_seccomp 348
- +# elif defined(__sh__)
- +#  define __NR_seccomp 372
-+ # elif defined(__xtensa__)
-+ #  define __NR_seccomp 337
-  # else
-  #  warning "seccomp syscall number unknown for this architecture"
-  #  define __NR_seccomp 0xffff
-@@@ -1634,10 -1624,14 +1636,18 @@@ TEST_F(TRACE_poke, getpid_runs_normally
-  # define SYSCALL_SYSCALL_NUM regs[4]
-  # define SYSCALL_RET	regs[2]
-  # define SYSCALL_NUM_RET_SHARE_REG
- +#elif defined(__sh__)
- +# define ARCH_REGS	struct pt_regs
- +# define SYSCALL_NUM	gpr[3]
- +# define SYSCALL_RET	gpr[0]
-+ #elif defined(__xtensa__)
-+ # define ARCH_REGS	struct user_pt_regs
-+ # define SYSCALL_NUM	syscall
-+ /*
-+  * On xtensa syscall return value is in the register
-+  * a2 of the current window which is not fixed.
-+  */
-+ #define SYSCALL_RET(reg) a[(reg).windowbase * 4 + 2]
-  #else
-  # error "Do not know how to find your architecture's registers and syscal=
-ls"
-  #endif
-@@@ -1710,7 -1704,7 +1720,7 @@@ void change_syscall(struct __test_metad
- =20
-  #if defined(__x86_64__) || defined(__i386__) || defined(__powerpc__) || \
-  	defined(__s390__) || defined(__hppa__) || defined(__riscv) || \
-- 	defined(__csky__) || defined(__sh__)
- -	defined(__xtensa__)
-++	defined(__csky__) || defined(__sh__) || defined(__xtensa__)
-  	{
-  		regs.SYSCALL_NUM =3D syscall;
-  	}
-
---Sig_/2rZamO_m.SKFKPxCa2a44eO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8fcAIACgkQAVBC80lX
-0GzT1wgAiYfhrIdWA0g6eDyB7M3eGJ2EobrVRNCQ3+w3pBRLo2v9zbTYCuyb3DDL
-ice+2TvDXFFJYcCY8938L+kaj9faS68xkoLsBzLiC6+MGlSwogIeggRm9jo5LlnV
-uYvrj9mJR+OjBTmNaPnIXGjpQWYwcL2GvIPHDNWWmEr9iyqdWLKGrAnLFiuoF/fd
-uQFwjAc/gRlnS+WjMF7oz5750tN6p0nww5WSRhreTXGceINCH0q/y44xj0hChnhz
-96zVFse+QemtgvErPbAyZ8KFXs/4sCAHkZnteB8+nASoPLQ0gO2rx+ATigMvBTPZ
-iToIQgjuFwfngGzUvCgbhLyLbBw/WA==
-=XJm1
------END PGP SIGNATURE-----
-
---Sig_/2rZamO_m.SKFKPxCa2a44eO--
