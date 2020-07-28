@@ -2,98 +2,97 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA8AC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF87320729
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:01:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595894498;
-	bh=5Hcb80XAAu69G78tPEHAD6OQzHkzsXfULdMeDtfyX+g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QO7TiBjO+TJP31SSS+c5tatP+CjqsDG/kO5HFLeCa69XRCTE9nJRMaZkUbKegSlj9
-	 aLhQns92Qgq6C5MkTXI8We549xix+SxC7rCKBTDR0LHyQGcAKpfkdxQjiCGkvlRn7G
-	 dPbz5g1RkfxwnFHcGZgYlxCdeQMj3qPqHVpxQOt4=
+	by mail.kernel.org (Postfix) with ESMTP id EC2BC20729
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgG1ABh (ORCPT
+        id S1726956AbgG1ADU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 20:01:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgG1ABh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 20:01:37 -0400
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90FD020729;
-        Tue, 28 Jul 2020 00:01:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595894496;
-        bh=5Hcb80XAAu69G78tPEHAD6OQzHkzsXfULdMeDtfyX+g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fWpdcb4tLEV5db3gqa4qSwYnSgBQMzVJ8QXp/ZclV2NxqOOmH5akcKAF38HYJsEut
-         z9DlgSbDc50m/eSgbkgyYyOGbxbnQRiAZVhgyv+5JkkIoeeo3MCc5eQPrmEmTl/TiR
-         UuMENUXM2H756XTtDnZFIGQVgS4t8p1mGnzfOi8c=
-Received: by mail-lf1-f50.google.com with SMTP id y18so9965347lfh.11;
-        Mon, 27 Jul 2020 17:01:36 -0700 (PDT)
-X-Gm-Message-State: AOAM530eYnCBWaxMihx1Pgac9qNlQfa1+WJotsq7co6KFQYow89rsNQB
-        jPDX7H2vy9DrvY4h9h1OXr00X+c14AC+OTBnMXo=
-X-Google-Smtp-Source: ABdhPJxEgJQZzV6k1Zb+GKKi6Q7W+dfHBy8e3/bhRjtvslS1qGKhYT5OAk/r1IndCqgqkmJ+NFqW726NdKnW6YKTJu0=
-X-Received: by 2002:a19:ec12:: with SMTP id b18mr12947411lfa.52.1595894494954;
- Mon, 27 Jul 2020 17:01:34 -0700 (PDT)
+        Mon, 27 Jul 2020 20:03:20 -0400
+Received: from smtprelay0237.hostedemail.com ([216.40.44.237]:35802 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726171AbgG1ADU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 20:03:20 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 0EE3F18225DF5;
+        Tue, 28 Jul 2020 00:03:19 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: owner27_5f0264426f65
+X-Filterd-Recvd-Size: 2596
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 28 Jul 2020 00:03:17 +0000 (UTC)
+Message-ID: <940c318b59c3c3e945c80216699299d051f8b4c5.camel@perches.com>
+Subject: Re: [PATCH][next] ath11k: Use fallthrough pseudo-keyword
+From:   Joe Perches <joe@perches.com>
+To:     Julian Calaby <julian.calaby@gmail.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Mon, 27 Jul 2020 17:03:16 -0700
+In-Reply-To: <CAGRGNgW4VB1F9TdHf1Kg6WQtgHyH-ZKAnZ0kU5eKQaqUWHwbqg@mail.gmail.com>
+References: <20200727194415.GA1275@embeddedor>
+         <70ed74d65b5909615c7a9430f3479695465d3b1d.camel@perches.com>
+         <CAGRGNgW4VB1F9TdHf1Kg6WQtgHyH-ZKAnZ0kU5eKQaqUWHwbqg@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-13-guro@fb.com>
-In-Reply-To: <20200727184506.2279656-13-guro@fb.com>
-From:   Song Liu <song@kernel.org>
-Date:   Mon, 27 Jul 2020 17:01:23 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7Bk3Xbu2bcb0aJw_McMWXnUL90jj1qQK1a_e126GpESA@mail.gmail.com>
-Message-ID: <CAPhsuW7Bk3Xbu2bcb0aJw_McMWXnUL90jj1qQK1a_e126GpESA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 12/35] bpf: refine memcg-based memory
- accounting for xskmap maps
-To:     Roman Gushchin <guro@fb.com>
-Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:25 PM Roman Gushchin <guro@fb.com> wrote:
->
-> Extend xskmap memory accounting to include the memory taken by
-> the xsk_map_node structure.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+On Tue, 2020-07-28 at 09:44 +1000, Julian Calaby wrote:
+> Hi Joe,
+> 
+> On Tue, Jul 28, 2020 at 5:48 AM Joe Perches <joe@perches.com> wrote:
+> > On Mon, 2020-07-27 at 14:44 -0500, Gustavo A. R. Silva wrote:
+> > > Replace the existing /* fall through */ comments and its variants with
+> > > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> > > fall-through markings when it is the case.
+> > []
+> > > diff --git a/drivers/net/wireless/ath/ath11k/dp.c b/drivers/net/wireless/ath/ath11k/dp.c
+> > []
+> > > @@ -159,7 +159,7 @@ int ath11k_dp_srng_setup(struct ath11k_base *ab, struct dp_srng *ring,
+> > >                       break;
+> > >               }
+> > >               /* follow through when ring_num >= 3 */
+> > > -             /* fall through */
+> > > +             fallthrough;
+> > 
+> > Likely the /* follow through ... */ comment can be deleted too
+> 
+> If the "when ring_num >= 3" comment is needed, how should this get
+> formatted? Maybe something like:
+> 
+> fallthrough; /* when ring_num >= 3 */
 
-Acked-by: Song Liu <songliubraving@fb.com>
+Likely, or just removed as the test above is fairly clear
 
-> ---
->  net/xdp/xskmap.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/net/xdp/xskmap.c b/net/xdp/xskmap.c
-> index 8367adbbe9df..e574b22defe5 100644
-> --- a/net/xdp/xskmap.c
-> +++ b/net/xdp/xskmap.c
-> @@ -28,7 +28,8 @@ static struct xsk_map_node *xsk_map_node_alloc(struct xsk_map *map,
->         struct xsk_map_node *node;
->         int err;
->
-> -       node = kzalloc(sizeof(*node), GFP_ATOMIC | __GFP_NOWARN);
-> +       node = kzalloc(sizeof(*node),
-> +                      GFP_ATOMIC | __GFP_NOWARN | __GFP_ACCOUNT);
->         if (!node)
->                 return ERR_PTR(-ENOMEM);
->
-> --
-> 2.26.2
->
+Existing code:
+
+	case HAL_WBM2SW_RELEASE:
+		if (ring_num < 3) {
+			params.intr_batch_cntr_thres_entries =
+					HAL_SRNG_INT_BATCH_THRESHOLD_TX;
+			params.intr_timer_thres_us =
+					HAL_SRNG_INT_TIMER_THRESHOLD_TX;
+			break;
+		}
+		/* follow through when ring_num >= 3 */
+		/* fall through */
+	case HAL_REO_EXCEPTION:
+
+
