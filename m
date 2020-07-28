@@ -2,81 +2,153 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC7DC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 238212065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:16:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vU0Bk9vU"
+	by mail.kernel.org (Postfix) with ESMTP id 0257A2065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595949431;
+	bh=iVPJO34OY7XxYoQPxs+Z2edcN9FjEC5up2igQlk6TIM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Jwzn6yu1KZeEzWTQPC/xsCwwUi031pqE4lya10f0ZX476I1TNAG5T7sSnM+QfZJAP
+	 kagAI/L0VOkw6Q05PlexGw4nx5oLAtD1u3rnZMA6FFPt9AukoZKB9JfrILmgUGFkXj
+	 64YLj/NOZfadbAutVtUDEhHLD/C0Lfn/mXrwTdVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730711AbgG1PQ6 (ORCPT
+        id S1730776AbgG1PRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:16:58 -0400
-Received: from crapouillou.net ([89.234.176.41]:38778 "EHLO crapouillou.net"
+        Tue, 28 Jul 2020 11:17:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730586AbgG1PQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:16:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1595949409; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5H/q18tgDo28MY8nE273GGLyuFx/gqWCWD9iMf0JujQ=;
-        b=vU0Bk9vUzSHgl2tFFtaYIhbYSIV/kTIRr1bJTo2Ne3WsXSBS6g4T3DB9B584DfEExtwI5F
-        XB0EpveIsi6UycCyqXAMdXvj2gjIj9+OT/LwBLv5nq//997U+SKdGMHrU5MJL9XS9qViM1
-        ETvi54X38bnEI+ZuwGgzHd+tfls8xxc=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
-Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 1/2] drm/ingenic: Handle errors of drm_atomic_get_plane_state
-Date:   Tue, 28 Jul 2020 17:16:40 +0200
-Message-Id: <20200728151641.26124-2-paul@crapouillou.net>
-In-Reply-To: <20200728151641.26124-1-paul@crapouillou.net>
-References: <20200728151641.26124-1-paul@crapouillou.net>
+        id S1730640AbgG1PRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:17:05 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB27E2065C;
+        Tue, 28 Jul 2020 15:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595949425;
+        bh=iVPJO34OY7XxYoQPxs+Z2edcN9FjEC5up2igQlk6TIM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NOxKdbdNitc7pl98MAMaeiLTMttCJXbZp9OwbzyaxJYI3eFKSMuDtZ32BHx+CTFqK
+         1Cm7V3LhiqjwC/mAohk+7QWpCTjjfdMDeCF0PehwKh4RaVYe+DWpAll9nMNtR9IPBr
+         Xvwk3KNu3qPVpPNgFjp6ahyyAD7fkf/Qp2OLzVh8=
+Date:   Tue, 28 Jul 2020 11:17:03 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Muchun Song <songmuchun@bytedance.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [External] [PATCH 4.19 76/86] mm: memcg/slab: fix memory leak at
+ non-root kmem_cache destroy
+Message-ID: <20200728151703.GM406581@sasha-vm>
+References: <20200727134914.312934924@linuxfoundation.org>
+ <20200727134918.205538211@linuxfoundation.org>
+ <CAMZfGtWVtGeMfu=04LiNVcLrBpmexUryHjy-dujo77CpJhcwGg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAMZfGtWVtGeMfu=04LiNVcLrBpmexUryHjy-dujo77CpJhcwGg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drm_atomic_get_plane_state() can return errors, so we need to handle
-these.
+On Tue, Jul 28, 2020 at 08:56:41PM +0800, Muchun Song wrote:
+>On Mon, Jul 27, 2020 at 10:12 PM Greg Kroah-Hartman
+><gregkh@linuxfoundation.org> wrote:
+>>
+>> From: Muchun Song <songmuchun@bytedance.com>
+>>
+>> commit d38a2b7a9c939e6d7329ab92b96559ccebf7b135 upstream.
+>>
+>> If the kmem_cache refcount is greater than one, we should not mark the
+>> root kmem_cache as dying.  If we mark the root kmem_cache dying
+>> incorrectly, the non-root kmem_cache can never be destroyed.  It
+>> resulted in memory leak when memcg was destroyed.  We can use the
+>> following steps to reproduce.
+>>
+>>   1) Use kmem_cache_create() to create a new kmem_cache named A.
+>>   2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
+>>      so the refcount of B is just increased.
+>>   3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
+>>      decrease the B's refcount but mark the B as dying.
+>>   4) Create a new memory cgroup and alloc memory from the kmem_cache
+>>      B. It leads to create a non-root kmem_cache for allocating memory.
+>>   5) When destroy the memory cgroup created in the step 4), the
+>>      non-root kmem_cache can never be destroyed.
+>>
+>> If we repeat steps 4) and 5), this will cause a lot of memory leak.  So
+>> only when refcount reach zero, we mark the root kmem_cache as dying.
+>>
+>> Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
+>> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+>> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+>> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+>> Acked-by: Roman Gushchin <guro@fb.com>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Christoph Lameter <cl@linux.com>
+>> Cc: Pekka Enberg <penberg@kernel.org>
+>> Cc: David Rientjes <rientjes@google.com>
+>> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+>> Cc: Shakeel Butt <shakeelb@google.com>
+>> Cc: <stable@vger.kernel.org>
+>> Link: http://lkml.kernel.org/r/20200716165103.83462-1-songmuchun@bytedance.com
+>> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>
+>> ---
+>>  mm/slab_common.c |   35 ++++++++++++++++++++++++++++-------
+>>  1 file changed, 28 insertions(+), 7 deletions(-)
+>>
+>> --- a/mm/slab_common.c
+>> +++ b/mm/slab_common.c
+>> @@ -310,6 +310,14 @@ int slab_unmergeable(struct kmem_cache *
+>>         if (s->refcount < 0)
+>>                 return 1;
+>>
+>> +#ifdef CONFIG_MEMCG_KMEM
+>> +       /*
+>> +        * Skip the dying kmem_cache.
+>> +        */
+>> +       if (s->memcg_params.dying)
+>> +               return 1;
+>> +#endif
+>> +
+>>         return 0;
+>>  }
+>>
+>> @@ -832,12 +840,15 @@ static int shutdown_memcg_caches(struct
+>>         return 0;
+>>  }
+>>
+>> -static void flush_memcg_workqueue(struct kmem_cache *s)
+>> +static void memcg_set_kmem_cache_dying(struct kmem_cache *s)
+>>  {
+>>         mutex_lock(&slab_mutex);
+>>         s->memcg_params.dying = true;
+>>         mutex_unlock(&slab_mutex);
+>
+>We should remove mutex_lock/unlock(&slab_mutex) here, because
+>we already hold the slab_mutex from kmem_cache_destroy().
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Good catch! I backported 63b02ef7dc4e ("mm: memcg/slab: synchronize
+access to kmem_cache dying flag using a spinlock") instead of changing
+this patch.
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-index ada990a7f911..64eabab3ef69 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-@@ -215,10 +215,17 @@ static int ingenic_drm_crtc_atomic_check(struct drm_crtc *crtc,
- 
- 	if (priv->soc_info->has_osd) {
- 		f1_state = drm_atomic_get_plane_state(state->state, &priv->f1);
-+		if (IS_ERR(f1_state))
-+			return PTR_ERR(f1_state);
-+
- 		f0_state = drm_atomic_get_plane_state(state->state, &priv->f0);
-+		if (IS_ERR(f0_state))
-+			return PTR_ERR(f0_state);
- 
- 		if (IS_ENABLED(CONFIG_DRM_INGENIC_IPU) && priv->ipu_plane) {
- 			ipu_state = drm_atomic_get_plane_state(state->state, priv->ipu_plane);
-+			if (IS_ERR(ipu_state))
-+				return PTR_ERR(ipu_state);
- 
- 			/* IPU and F1 planes cannot be enabled at the same time. */
- 			if (f1_state->fb && ipu_state->fb) {
 -- 
-2.27.0
-
+Thanks,
+Sasha
