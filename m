@@ -2,117 +2,125 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FROM_LOCAL_NOVOWEL,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F149C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B589C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9AB02070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56EF020714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:39:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CsMPMGwi"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="bqUQy7jh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgG1CjR (ORCPT
+        id S1726988AbgG1Cjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:39:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38780 "EHLO
+        Mon, 27 Jul 2020 22:39:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgG1CjQ (ORCPT
+        with ESMTP id S1726911AbgG1Cjo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 22:39:16 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C54BC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 19:39:16 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id n5so11058834pgf.7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 19:39:16 -0700 (PDT)
+        Mon, 27 Jul 2020 22:39:44 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2AE5C0619D4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 19:39:43 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id y11so5541636qvl.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 19:39:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=oUYI/adhyPiJsueR+/blXGuxT74bedpBLyWN5AzH71w=;
-        b=CsMPMGwi5qjh99+swfSsReaiMN1qq+LT1t0y0ZOTQIXJLGdNORymR9nu4xE/IM1dER
-         79j83O+lMV2cp1RWIIPguXuX+QHPsKMq63S9aoFkycDHNEdPrriBG2+gJ/6SJrVZkfm4
-         tfYaVpb3mfRA94cNvS8CbW1Irh15z/HBoVXu0AdcMTsh2ADSw+N8Ie9FefhGNSS1BvLg
-         AADSh17QNCD6+1s9Jq/GgXPT8IAaEjbDtCXhxGekzj3TAXbRg5IDlYynSgZU4sGkT2Nq
-         i+uNetnqlvLrGcPY7wg5cGkRgPKJbv8IGpyw0rWoOpDYzODQIdxcKZljBtnCQ5VbBNr4
-         aBwg==
+        bh=JpBwI5rh1VmR9dJCXKb+bJH00mu8Lm9wehnoKvU4jcQ=;
+        b=bqUQy7jhnL0rGAZVXzl2pr3NWaTgdIriU12FTryPEPMVY5wt51fHrXJ0vbVkcfIr4d
+         WAYoI66DcIz8Z2qRIvZ5yKiv5D8YgwxBTnylMztk4s16k5XUIlc/re9PODqvhvkRtB5B
+         TVZSkva+UhquRQULicJzDN9icgzBm2blLaIyZTP9OL8mv9ugJTBJiyDe6iSjRBOZvOBv
+         sA1vH0643u/pUW6E2y/lTzK2XhtF6fnFY5q02YCUSNgODaW+bprgm2eXlDdmxyLptMyH
+         yBoE+/88gElgn3TEvFtyRfqbBLxv6nxBgMXkuxf+SNdXWTYMbOiK7VH6fSm1eh9enAGr
+         DsZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=oUYI/adhyPiJsueR+/blXGuxT74bedpBLyWN5AzH71w=;
-        b=psTg+EUqnWjhALykIPO6hiJ4yoUUyrviOWxz1C5QpyEmfaai6oO+1iCQtEvNObJ/6M
-         TEQW9bdTsj4wU9NieYKIcYggKrA3aIkMRiLnFe6/C++ZR4fNtoOLCiwXo/XHPZPJo8DK
-         U22h+ztSnrQ9fMqHghUPErhgP5bfudtCrsbrQTz0+lgWdTv0etugMlpTi4IpsvM8OQos
-         K94kCHLLW/tYm3JUtOLtfQ3SKzESnGND1tBDEcK009KEElTTo7OWJVrTAMowsX92ssqu
-         bsXmfNNB8oEjCyKKisufCleLPKzpE3+jz7GEEIP1uIhSe+Rg9Sz4s4E8/3VaLA2MFuYh
-         AhWQ==
-X-Gm-Message-State: AOAM530IGBqhB6teIsPRbsHfCerzPwGVt+vTKo8TBXJho9rB+zHThhfB
-        rG8dcWjXAU/0x1wdN8o52YQ=
-X-Google-Smtp-Source: ABdhPJwEW/i6cr8yKGUV4iUrV+oc9zuODe5AZFGhlurHT47TWT1ZKuVR/jgiS2zUyWoOzg6xYrAKag==
-X-Received: by 2002:a63:df54:: with SMTP id h20mr21931159pgj.319.1595903956116;
-        Mon, 27 Jul 2020 19:39:16 -0700 (PDT)
-Received: from octofox.cadence.com ([2601:641:400:e00:19b7:f650:7bbe:a7fb])
-        by smtp.gmail.com with ESMTPSA id q66sm16428921pga.29.2020.07.27.19.39.13
+        bh=JpBwI5rh1VmR9dJCXKb+bJH00mu8Lm9wehnoKvU4jcQ=;
+        b=Yf0SXdzXhKcDBASfuNVVcCOsv2Ev36b4uV+Zpn5kWL9ViKwsQL0ec+kSFuMDs5ijje
+         L7p1+2S9zyfXbV9MqmequXSK0ajuB6EkRvJ1GYxbXwGvR/5PqNP8I33lmatpdGFy+jtI
+         7tJ684Y8m4jtkN9OEQiRqAWCfxj5/kULCMSoidgoKkIjn5DVkuCoITKCB66wvekjU6cJ
+         MyPBCBqdbkeSWlUkGu+RK42y0gtpqFmuhYqp9YdDRp4XYtXc8sVD9UnKf8D5qdp1Q6s8
+         v7XXvsjGvqAQJomuFzdfrDMp81L28A9UlrywIRy6yKRNU9Mhh/llCZju+sM93LKG/8Ol
+         TdGQ==
+X-Gm-Message-State: AOAM530gjGW/8ejjPca44Csm/5XYm/RZFJjrLpHD9RhjIJl07/foBkzu
+        bHPXE05/u417q2axgHhw9G8gVw==
+X-Google-Smtp-Source: ABdhPJz9E9SJY8pj6+WMHEhK2Nhev880nCCsyeRYYub0FM05PwJIPJreA7LDFUu+Z4vWX3RN2jcOLA==
+X-Received: by 2002:ad4:49a1:: with SMTP id u1mr7434725qvx.245.1595903982912;
+        Mon, 27 Jul 2020 19:39:42 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id z3sm13885548qkc.4.2020.07.27.19.39.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 19:39:15 -0700 (PDT)
-From:   Max Filippov <jcmvbkbc@gmail.com>
-To:     linux-xtensa@linux-xtensa.org
-Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH] xtensa: fix closing endif comment
-Date:   Mon, 27 Jul 2020 19:38:53 -0700
-Message-ID: <20200721024751.1257-1-jcmvbkbc@gmail.com>
-X-Mailer: git-send-email 2.20.1
-Received: from octofox.cadence.com ([2601:641:400:e00:19b7:f650:7bbe:a7fb])
- by smtp.gmail.com with ESMTPSA id p9sm14336962pgc.77.2020.07.20.19.48.03
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Mon, 20 Jul 2020 19:48:03 -0700 (PDT)
-X-Mailer: git-send-email 2.20.1
+        Mon, 27 Jul 2020 19:39:42 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-pm@vger.kernel.org (open list:INTERCONNECT API),
+        Odelu Kukatla <okukatla@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v3 0/7] Add SM8150 and SM8250 interconnect drivers
+Date:   Mon, 27 Jul 2020 22:37:59 -0400
+Message-Id: <20200728023811.5607-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200728023853.aCKZfShGDVL2ofdGY6josWnhkM7wJK9LwJFbR-BzzkY@z>
 
-Commit 8f74afa22d9b ("xtensa: switch to generic version of pte
-allocation") introduced the following build warning for xtensa
-  arch/xtensa/include/asm/pgalloc.h:67:8: warning: extra tokens at end of
-  #endif directive [-Wendif-labels]
-Fix #endif comment.
+Most of this is generated from downstream dts using a script.
 
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-Fixes: 8f74afa22d9b ("xtensa: switch to generic version of pte allocation")
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
----
-Andrew, could you please take this patch as the change that it fixes is
-currently in the mm tree?
+v2: single yaml file for RPMh interconnect bindings, drop display RSC
+v3:
+ - removed the sc7180 example from the combined yaml file, two
+   examples with conflicting includes doesn't seem possible
+ - Removed MASTER_ALC and bcm_alc (sm8150 and sm8250)
+ - Set keep alive for SH0, MC0, MM0, SN0 and CN0 (both)
+ - Used Sibi Sankar's suggestions for reg base/size in dts
 
- arch/xtensa/include/asm/pgalloc.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Jonathan Marek (7):
+  dt-bindings: interconnect: single yaml file for RPMh interconnect
+    drivers
+  dt-bindings: interconnect: Add Qualcomm SM8150 DT bindings
+  dt-bindings: interconnect: Add Qualcomm SM8250 DT bindings
+  interconnect: qcom: Add SM8150 interconnect provider driver
+  interconnect: qcom: Add SM8250 interconnect provider driver
+  arm64: dts: qcom: sm8150: add interconnect nodes
+  arm64: dts: qcom: sm8250: add interconnect nodes
 
-diff --git a/arch/xtensa/include/asm/pgalloc.h b/arch/xtensa/include/asm/pgalloc.h
-index 699a8fdf9005..d3a22da4d2c9 100644
---- a/arch/xtensa/include/asm/pgalloc.h
-+++ b/arch/xtensa/include/asm/pgalloc.h
-@@ -64,6 +64,6 @@ static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
- }
- 
- #define pmd_pgtable(pmd) pmd_page(pmd)
--#endif CONFIG_MMU
-+#endif /* CONFIG_MMU */
- 
- #endif /* _XTENSA_PGALLOC_H */
+ .../{qcom,sdm845.yaml => qcom,rpmh.yaml}      |  42 +-
+ .../bindings/interconnect/qcom,sc7180.yaml    |  85 ---
+ arch/arm64/boot/dts/qcom/sm8150.dtsi          |  82 +++
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          |  82 +++
+ drivers/interconnect/qcom/Kconfig             |  20 +
+ drivers/interconnect/qcom/Makefile            |   4 +
+ drivers/interconnect/qcom/sm8150.c            | 635 +++++++++++++++++
+ drivers/interconnect/qcom/sm8150.h            | 152 ++++
+ drivers/interconnect/qcom/sm8250.c            | 651 ++++++++++++++++++
+ drivers/interconnect/qcom/sm8250.h            | 162 +++++
+ .../dt-bindings/interconnect/qcom,sm8150.h    | 162 +++++
+ .../dt-bindings/interconnect/qcom,sm8250.h    | 172 +++++
+ 12 files changed, 2161 insertions(+), 88 deletions(-)
+ rename Documentation/devicetree/bindings/interconnect/{qcom,sdm845.yaml => qcom,rpmh.yaml} (60%)
+ delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+ create mode 100644 drivers/interconnect/qcom/sm8150.c
+ create mode 100644 drivers/interconnect/qcom/sm8150.h
+ create mode 100644 drivers/interconnect/qcom/sm8250.c
+ create mode 100644 drivers/interconnect/qcom/sm8250.h
+ create mode 100644 include/dt-bindings/interconnect/qcom,sm8150.h
+ create mode 100644 include/dt-bindings/interconnect/qcom,sm8250.h
+
 -- 
-2.20.1
+2.26.1
 
