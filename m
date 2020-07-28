@@ -2,98 +2,127 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B261EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99393C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7FA20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B1D020825
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:52:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MpLAr6Se"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="N5ASgrJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732512AbgG1St6 (ORCPT
+        id S1732522AbgG1SwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:49:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729124AbgG1St5 (ORCPT
+        Tue, 28 Jul 2020 14:52:04 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:54666 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728782AbgG1SwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 14:49:57 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C712C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 11:49:57 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id lw1so369789pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 11:49:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TaFsAVS0lZBW1E0K1tJXZw+X9y9cUqIZOaViTh1v9Co=;
-        b=MpLAr6SeWtwR4OcpgIILP/A5hI3CfCLGNwNMziorMDAK4dN1Apnl5tsYKGjrPFdGbI
-         1TV987WZwJLg+gnsZBxQ46a8/7uNLnITCm+1xdsYUZ3xkZHZV1c/Wrbz0gXmlCPqQtRd
-         /xn4hPaYnRKvLMF1Pz/NiIay42ZH0xqcJ/kSU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TaFsAVS0lZBW1E0K1tJXZw+X9y9cUqIZOaViTh1v9Co=;
-        b=THsaxRIG1R2y9o5gRnWlG4bpiCe69go99hayC+cqkgl7j9jHO3WYORR2CbAmOiJ5c/
-         LOrbeqW5YQn4jiMA6zivv2wORmxaqihs1mTUaCAUU5032wh4FvOS+SWm+t8cp1jylylA
-         Ur+V2JEYBF0poohXPr3HFPHf/Hgl54VUuHhCHiW9yczcrtetrNnDOaE3Cc1Bh7d1uDlF
-         gP984p8aVA3JnvA3TjFSlJCuazn8t0XwX9VWMTb4QGpIgSNpnBM50rsVf5B2UkuPC5sO
-         rTePqm/yenhwr4HzoeYN0acde4Fhl3l43IWjKhDJOwUTgPfJvmWceCJiPpz9ZXD87TcT
-         0GWQ==
-X-Gm-Message-State: AOAM532A97+Wi3hJ4Um9fwDT/4qeWNboKkzQiRBXTqba7aa/GruCPrxE
-        9nQxogaOGCusrJTfV2picJp2XzbcrTI=
-X-Google-Smtp-Source: ABdhPJzFPzIBq5GyMsMG9TplCJvhPWP413+ahfV1CeFYBM3hnMet6MM2PCqYZO2b+KHfq9C+SbX67Q==
-X-Received: by 2002:a17:90b:138a:: with SMTP id hr10mr5633535pjb.161.1595962197185;
-        Tue, 28 Jul 2020 11:49:57 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a24sm1377812pfg.113.2020.07.28.11.49.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 11:49:56 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 11:49:55 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/8] x86/kaslr: Initialize mem_limit to the real
- maximum address
-Message-ID: <202007281133.739AAFD2AF@keescook>
-References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
- <20200727230801.3468620-5-nivedita@alum.mit.edu>
+        Tue, 28 Jul 2020 14:52:04 -0400
+Received: from [192.168.254.32] (unknown [47.187.206.220])
+        by linux.microsoft.com (Postfix) with ESMTPSA id D9CA720B4908;
+        Tue, 28 Jul 2020 11:52:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D9CA720B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595962323;
+        bh=4VqGIlTMQb0KmRbW1ECdJsuWGdo+ykQfeo4qSABGj8g=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=N5ASgrJbpo8ewcnejqNlOMHW1LlvWw6Pa2UCzET1NHRPpRnwTSki0Dk44+lBNhwyc
+         0Oczcbp+TB0JMzyxyK22fLDJcHQra90UOmtWziVf9oqC+T8MJc1Dn+vnJuvj0FVugv
+         h+6UG1h/10vIpOjMBqWpPTkZqsk7ZujJKLdE1AKo=
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     David Laight <David.Laight@aculab.com>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <c23de6ec47614f489943e1a89a21dfa3@AcuMS.aculab.com>
+ <f5cfd11b-04fe-9db7-9d67-7ee898636edb@linux.microsoft.com>
+ <CALCETrUta5-0TLJ9-jfdehpTAp2Efmukk2npYadFzz9ozOrG2w@mail.gmail.com>
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Message-ID: <59246260-e535-a9f1-d89e-4e953288b977@linux.microsoft.com>
+Date:   Tue, 28 Jul 2020 13:52:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727230801.3468620-5-nivedita@alum.mit.edu>
+In-Reply-To: <CALCETrUta5-0TLJ9-jfdehpTAp2Efmukk2npYadFzz9ozOrG2w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 07:07:57PM -0400, Arvind Sankar wrote:
-> On 64-bit, the kernel must be placed below MAXMEM (64TiB with 4-level
-> paging or 4PiB with 5-level paging). This is currently not enforced by
-> KASLR, which thus implicitly relies on physical memory being limited to
-> less than 64TiB.
-> 
-> On 32-bit, the limit is KERNEL_IMAGE_SIZE (512MiB). This is enforced by
-> special checks in __process_mem_region.
-> 
-> Initialize mem_limit to the maximum (depending on architecture), instead
-> of ULLONG_MAX, and make sure the command-line arguments can only
-> decrease it. This makes the enforcement explicit on 64-bit, and
-> eliminates the 32-bit specific checks to keep the kernel below 512M.
-> 
-> Check upfront to make sure the minimum address is below the limit before
-> doing any work.
-> 
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-Acked-by: Kees Cook <keescook@chromium.org>
 
--- 
-Kees Cook
+On 7/28/20 12:16 PM, Andy Lutomirski wrote:
+> On Tue, Jul 28, 2020 at 9:32 AM Madhavan T. Venkataraman
+> <madvenka@linux.microsoft.com> wrote:
+>> Thanks. See inline..
+>>
+>> On 7/28/20 10:13 AM, David Laight wrote:
+>>> From:  madvenka@linux.microsoft.com
+>>>> Sent: 28 July 2020 14:11
+>>> ...
+>>>> The kernel creates the trampoline mapping without any permissions. When
+>>>> the trampoline is executed by user code, a page fault happens and the
+>>>> kernel gets control. The kernel recognizes that this is a trampoline
+>>>> invocation. It sets up the user registers based on the specified
+>>>> register context, and/or pushes values on the user stack based on the
+>>>> specified stack context, and sets the user PC to the requested target
+>>>> PC. When the kernel returns, execution continues at the target PC.
+>>>> So, the kernel does the work of the trampoline on behalf of the
+>>>> application.
+>>> Isn't the performance of this going to be horrid?
+>> It takes about the same amount of time as getpid(). So, it is
+>> one quick trip into the kernel. I expect that applications will
+>> typically not care about this extra overhead as long as
+>> they are able to run.
+> What did you test this on?  A page fault on any modern x86_64 system
+> is much, much, much, much slower than a syscall.
+
+I sent a response to this. But the mail was returned to me.
+I am resending.
+
+I tested it in on a KVM guest running Ubuntu. So, when you say that a
+page fault is much slower, do you mean a regular page fault that is handled
+through the VM layer? Here is the relevant code in do_user_addr_fault():
+
+        if (unlikely(access_error(hw_error_code, vma))) {
+                /*                 
+                 * If it is a user execute fault, it could be a trampoline
+                 * invocation.
+                 */
+                if ((hw_error_code & tflags) == tflags &&
+                     trampfd_fault(vma, regs)) {
+                         up_read(&mm->mmap_sem);
+                         return;
+                 }
+                 bad_area_access_error(regs, hw_error_code, address, vma);
+                 return;
+         }
+         ...
+         fault = handle_mm_fault(vma, address, flags);
+
+trampfd faults are instruction faults that go through a different code path than
+the one that calls handle_mm_fault(). Perhaps, it is the handle_mm_fault() that
+is time consuming. Could you clarify?
+
+Thanks.
+
+Madhavan
