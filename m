@@ -2,159 +2,233 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BCFC433FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A1FC433FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47832207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:20:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uX2vLSo6"
+	by mail.kernel.org (Postfix) with ESMTP id 36BC52065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:20:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgG1HUO (ORCPT
+        id S1728010AbgG1HUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 Jul 2020 03:20:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbgG1HUO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jul 2020 03:20:14 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:38766 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbgG1HUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:20:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595920811; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=kRmZCJyj9I1SnPZs5XwOYPOfxafRktfoOSamzdqNY1M=;
- b=uX2vLSo6OuTUy0g1fQlQyCuFP0WjWBFx0ChJ8mz301pSiGRqRBwjmW0kd2XeezJ936+PQdEG
- yESucXmTNYFmD+K+r+b4T8NWAnzhHDRMux6vYgoQgFl+0LMWvOs1PcLPL6OPgLHrI55zZvgB
- BE1FiEFYVbCju2UtIwst5iYeHXQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5f1fd1a77ab15087eb4700dc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 07:20:07
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B99AFC433AD; Tue, 28 Jul 2020 07:20:06 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D6338C433C9;
-        Tue, 28 Jul 2020 07:20:05 +0000 (UTC)
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC115C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:20:13 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1k0JuB-00052U-BM; Tue, 28 Jul 2020 09:20:07 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1k0JuA-0004oF-Cm; Tue, 28 Jul 2020 09:20:06 +0200
+Date:   Tue, 28 Jul 2020 09:20:06 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
+Message-ID: <20200728072006.6lqia5gssfepnpbq@pengutronix.de>
+References: <20200724080813.24884-1-peng.fan@nxp.com>
+ <20200724080813.24884-4-peng.fan@nxp.com>
+ <20200727062335.v2pxgu6kr6ao2qmh@pengutronix.de>
+ <DB6PR0402MB27601C875FF5F1E02DBF5C6488720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+ <20200727064151.767kc7622tcqmqfs@pengutronix.de>
+ <DB6PR0402MB276063FBE74FCF222CB00F8588720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+ <20200727073757.r2vq6djh3a4dyfp6@pengutronix.de>
+ <DB6PR0402MB2760EFCB8C91680DC719C82C88720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jul 2020 12:50:05 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        mike.leach@linaro.org, Jonathan Marek <jonathan@marek.ca>
-Subject: Re: [PATCH 2/4] arm64: dts: qcom: sc7180: Add iommus property to ETR
-In-Reply-To: <20200728062850.GC202429@builder.lan>
-References: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
- <2312c9a10e7251d69e31e4f51c0f1d70e6f2f2f5.1591708204.git.saiprakash.ranjan@codeaurora.org>
- <20200621072213.GG128451@builder.lan>
- <f40621b2b01f836a8a97686707599dd0@codeaurora.org>
- <e270acd3f7db076c043f1b982b1efea0@codeaurora.org>
- <20200727205834.GA202429@builder.lan>
- <207e6b6a297d5ce1bdcac204e297389b@codeaurora.org>
- <20200728062850.GC202429@builder.lan>
-Message-ID: <afd1c140aa9893478cd78620de35f853@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i5eqgdj3pjiydqz6"
+Content-Disposition: inline
+In-Reply-To: <DB6PR0402MB2760EFCB8C91680DC719C82C88720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:17:41 up 255 days, 22:36, 251 users,  load average: 0.03, 0.06,
+ 0.07
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-28 11:58, Bjorn Andersson wrote:
-> On Mon 27 Jul 21:40 PDT 2020, Sai Prakash Ranjan wrote:
-> 
->> On 2020-07-28 02:28, Bjorn Andersson wrote:
->> > On Tue 23 Jun 23:56 PDT 2020, Sai Prakash Ranjan wrote:
->> >
->> > > Hi Bjorn,
->> > >
->> > > On 2020-06-21 13:39, Sai Prakash Ranjan wrote:
->> > > > Hi Bjorn,
->> > > >
->> > > > On 2020-06-21 12:52, Bjorn Andersson wrote:
->> > > > > On Tue 09 Jun 06:30 PDT 2020, Sai Prakash Ranjan wrote:
->> > > > >
->> > > > > > Define iommus property for Coresight ETR component in
->> > > > > > SC7180 SoC with the SID and mask to enable SMMU
->> > > > > > translation for this master.
->> > > > > >
->> > > > >
->> > > > > We don't have &apps_smmu in linux-next, as we've yet to figure out how
->> > > > > to disable the boot splash or support the stream mapping handover.
->> > > > >
->> > > > > So I'm not able to apply this.
->> > > > >
->> > > >
->> > > > This is for SC7180 which has apps_smmu not SM8150.
->> > > >
->> > >
->> > > Please let me know if this needs further explanation.
->> > >
->> >
->> > I must have commented on the wrong patch, sorry about that. The SM8150
->> > patch in this series does not compile due to the lack of &apps_smmu.
->> >
->> > I've picked the other 3 patches.
->> >
->> 
->> Thanks Bjorn, I can resend SM8150 coresight change when SMMU support 
->> lands
->> for it
->> since coresight ETR won't work without it on android bootloaders.
->> 
->> As for the other 3 patches, Patch 1 and Patch 2 will apply cleanly to 
->> the
->> right coresight
->> nodes but due to the missing unique context in Patch 3, it could be 
->> applied
->> to some other node.
->> We had to upload this change 3 times in chromium tree to get it 
->> applied to
->> the right replicator node :)
->> and this property in Patch 3 is important to fix a hard lockup. I'm 
->> not sure
->> why this patch is missing
->> the proper context :/
->> 
->> I couldn't find the changes yet in qcom/for-next or other branches to 
->> see if
->> it is
->> applied to right replicator node. In case you haven't applied it yet, 
->> Patch
->> 3 change
->> should be applied to "replicator@6b06000" node.
->> 
-> 
-> Thanks for pointing that out, I've fixed up the incorrectly applied
-> change. (Still not published the branch)
-> 
-> 
-> For the future I believe you can pass -U <n> to git format-patch to get
-> <n> number of lines of context. Making that bigger than the default 3
-> should help for the coresight patches.
-> 
 
-Thanks Bjorn, will use this option going forward.
+--i5eqgdj3pjiydqz6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Sai
+On Mon, Jul 27, 2020 at 08:11:09AM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
+> >=20
+> > On Mon, Jul 27, 2020 at 06:51:00AM +0000, Peng Fan wrote:
+> > > > Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
+> > > >
+> > > > On Mon, Jul 27, 2020 at 06:28:20AM +0000, Peng Fan wrote:
+> > > > > Hi Oleksij,
+> > > > >
+> > > > > > Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
+> > > > > >
+> > > > > > On Fri, Jul 24, 2020 at 04:08:06PM +0800, Peng Fan wrote:
+> > > > > > > We might need to map an region multiple times, becaue the
+> > > > > > > region might be shared between remote processors, such i.MX8QM
+> > > > > > > with dual
+> > > > M4 cores.
+> > > > > > > So use devm_ioremap, not devm_ioremap_resource.
+> > > > > >
+> > > > > > Can you please give an example of this kind of shared resources
+> > > > > > and how they should be handled by two separate devices?
+> > > > >
+> > > > > This is to share vdevbuffer space, there is a vdevbuffer in device
+> > > > > tree, it will be shared between M4_0 and M4_1.
+> > > > >
+> > > > > For the buffer, it is Linux DMA API will handle the space.
+> > > >
+> > > > Why remoteproc need to care about it? If I see it correctly, from
+> > > > the linux perspective, it is one buffer and one driver is
+> > > > responsible for it. Or do I missing some thing?
+> > >
+> > > We not have the vdev buffer in resource table, so I added in device t=
+ree, see
+> > below:
+> >=20
+> > Hm.. if vdev is not in resource table and should not be controlled by
+> > remoteproc, why do we need remoteproc?
+>=20
+> I use same approach as stm32 rproc driver.
+>=20
+> The resource table here only publish vring address.
+>=20
+> >=20
+> > >         imx8qm_cm40: imx8qm_cm4@0 {
+> > >                 compatible =3D "fsl,imx8qm-cm4";
+> > >                 rsc-da =3D <0x90000000>;
+> > >                 mbox-names =3D "tx", "rx", "rxdb";
+> > >                 mboxes =3D <&lsio_mu5 0 1
+> > >                           &lsio_mu5 1 1
+> > >                           &lsio_mu5 3 1>;
+> > >                 mub-partition =3D <3>;
+> > >                 memory-region =3D <&vdev0vring0>, <&vdev0vring1>,
+> > <&vdevbuffer>,
+> > >                                 <&vdev1vring0>, <&vdev1vring1>;
+> > >                 core-index =3D <0>;
+> > >                 core-id =3D <IMX_SC_R_M4_0_PID0>;
+> > >                 status =3D "okay";
+> > >                 power-domains =3D <&pd IMX_SC_R_M4_0_PID0>,
+> > >                                 <&pd IMX_SC_R_M4_0_MU_1A>;
+> > >         };
+> > >
+> > >         imx8qm_cm41: imx8x_cm4@1 {
+> > >                 compatible =3D "fsl,imx8qm-cm4";
+> > >                 rsc-da =3D <0x90100000>;
+> > >                 mbox-names =3D "tx", "rx", "rxdb";
+> > >                 mboxes =3D <&lsio_mu6 0 1
+> > >                           &lsio_mu6 1 1
+> > >                           &lsio_mu6 3 1>;
+> > >                 mub-partition =3D <4>;
+> > >                 memory-region =3D <&vdev2vring0>, <&vdev2vring1>,
+> > <&vdevbuffer>,
+> > >                                 <&vdev3vring0>, <&vdev3vring1>;
+> > >                 core-index =3D <1>;
+> > >                 core-id =3D <IMX_SC_R_M4_1_PID0>;
+> > >                 status =3D "okay";
+> > >                 power-domains =3D <&pd IMX_SC_R_M4_1_PID0>,
+> > >                                 <&pd IMX_SC_R_M4_1_MU_1A>;
+> > >         };
+> > >
+> > >                 vdevbuffer: vdevbuffer {
+> > >                         compatible =3D "shared-dma-pool";
+> > >                         reg =3D <0 0x90400000 0 0x100000>;
+> > >                         no-map;
+> > >                 };
+> > >
+> > > I have the upper vdevbuffer node shared between M40 and M41 node.
+> > > The vdevbuffer will be used as virtio data buffer.
+> > >
+> > > And I have the following in rproc_add_virtio_dev to share vdevbuffer:
+> > >         /* Try to find dedicated vdev buffer carveout */
+> > >         mem =3D rproc_find_carveout_by_name(rproc, "vdev%dbuffer",
+> > rvdev->index);
+> > >         if (!mem)
+> > >                 mem =3D rproc_find_carveout_by_name(rproc,
+> > > "vdevbuffer");
+> >=20
+> > With kernel v5.8-rc7 i get following call chain:
+>=20
+> Please use Linux-next which has support of M4 booted before Linux in
+> in remoteproc.
+>=20
+> > rproc_boot()
+> >   rproc_fw_boot()
+> >     rproc_handle_vdev
+> >       rproc_vdev_do_start()
+> >         rproc_add_virtio_dev()
+> >=20
+> >=20
+> > So, at the end, we will call rproc_add_virtio_dev() only if we boot fir=
+mware by
+> > linux, or if we get at least the resource table.
+>=20
+>=20
+> Resource table could be got from elf file if it is booted by Linux, or go=
+t from
+> an address if M4 is booted before Linux.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Ok, i see now. Thank you!
+
+Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--i5eqgdj3pjiydqz6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl8f0aEACgkQ4omh9DUa
+UbPAsQ//XBoFlYduiR5diPTVmdX6G5+l7hpLt+H0SBighq2rejKsHq/dH8w/MHT1
+OBlB8JEZJgJIY3VzYIvBwYs9M5qGYYQfLymZVORDi59RDuyYkBDI0LeIBVCxfSxb
+JnmOEXly2nGD/cVRQB2O2NLBCpE1SFiZ/LbQ21DCzm40gfaXFkO7/bxgpMz1r/XY
+Whr7fb3772f4NGOYOTRVUj7n5+jp48yFRoCwEnjeTC/fZ7Jpi1YzJpmfdFq5Hzjt
+9ZRhHITjac2FcicZjJ5Ac92JZvt7lII1tFhh7UGxt7tnkS1mOglehuhynst5RoGk
+NbrzCgozsbJenU6vfdgcsMFHO49Mjj1EP+hITKDClQVbImEgdU4ZmhW4sRY1cAO7
+3FeG9ZH7ru60PnEUR/SUt4e3dIAcGr4vjLdtY0kODpkfgyvYJfrssCzJIkCuboO2
+Xn7DWtoANixGZpr8g00VcBgEQL+zfEUrGcHS8pEIH/P9jippTsYnP7bX3EEDIkJR
+qwqQ/UUyiZ9yGGX2z/ShdUplEho9HaSz0DXl/C64kMikQAROAy/B+bk/Vs0rCgEY
+ESq82Ghy5FBdakZouPA1DfYvWmRTgolIiFALkZT/X1RyaVPjvf5vNG7Ceyb7upn3
+uB5KZu1T1i99l44Ff5yZR5/+hYp+YuO4CLaGYlNoXrtBIlH0iwU=
+=q0i1
+-----END PGP SIGNATURE-----
+
+--i5eqgdj3pjiydqz6--
