@@ -2,124 +2,90 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41224C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6899FC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1085720809
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD7C20838
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595895581;
-	bh=vsiTrIcZ56SSOxyiEUoEwv+DpHiWDpQ4NqHzGqLqy3o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x4V4Nlldm4Xz9Bl+lxrg1DhzfgWwgaSexdxGF4LdZny0rIfNAHzQq+LfQl7FKzES7
-	 flV7FpW7LufRgWcht8TG09N5UD0UXao3hv/rI9o6zrmqhFiV3UAl7r6xmgJCPrnZ+x
-	 j2VNg3HnFNMacSfE0ids2RIF1d7s5CNmgVbaM88o=
+	s=default; t=1595895597;
+	bh=6o/MZ1z32u64khpK98VwBkgw43eYbDJxbrdLk66x9Rc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ucQUpDS5HwNj1cG1WDFB5VWew2F4PHwnvbIuCB+vRgv3fm5ol20jepSoqzGVMzPX5
+	 XtXXbAc9w0VSVKOt/9mKNGb4rqtKBbX7+BNGHjBmDF6XINN3oaGRVXbddjwqJEcBm8
+	 NT9VpLs31skSpJB9AYd2EfzsPCq9OyjRtqdVtBLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgG1ATk (ORCPT
+        id S1726976AbgG1ATz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 20:19:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49558 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 20:19:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgG1ATj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 20:19:39 -0400
-Received: from earth.universe (unknown [185.213.155.232])
+        id S1726196AbgG1ATz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 20:19:55 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12FA420786;
-        Tue, 28 Jul 2020 00:19:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B889C20786;
+        Tue, 28 Jul 2020 00:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595895579;
-        bh=vsiTrIcZ56SSOxyiEUoEwv+DpHiWDpQ4NqHzGqLqy3o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QYCMeK0MW7pG2TuN8wCprFNbGTxiU0frezxvvY/Brck/TqRWqtKMY6p6ZDqYHgpzm
-         UYDLLpsfd6AVXo63eI70TvuKt7nSTWho9ggj2+P/cUKNT+sk7JbB0rWgFbmRyVjyhw
-         Gd5MZU0gk9jAAI7JRaR06EVHaKjML1OMPRUni7OQ=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 4F75B3C0B87; Tue, 28 Jul 2020 02:19:37 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 02:19:37 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Peng Fan <fanpeng@loongson.cn>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH] power: supply: rt5033_battery: Fix error code in
- rt5033_battery_probe()
-Message-ID: <20200728001937.vtvneczrskc6cs4u@earth.universe>
-References: <1593680332-31884-1-git-send-email-fanpeng@loongson.cn>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7od7w7hhl7sikvqk"
-Content-Disposition: inline
-In-Reply-To: <1593680332-31884-1-git-send-email-fanpeng@loongson.cn>
+        s=default; t=1595895594;
+        bh=6o/MZ1z32u64khpK98VwBkgw43eYbDJxbrdLk66x9Rc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qJUt0jiTNItMcvuHyogiA2bKZVjg0T5jNVT2Do/aalnvH4F1MTME3XtnpNrg6IHJ4
+         zlCeQvgXPTV5rAG6Fw3ewHkLA4ebXbW8ncqUmkfOSIktqHN/3X+A+xCIjVHpoG94pL
+         vx2NvVjPJpi80W4CxCl+v35SXCmm1yHwKvCS3VYQ=
+Date:   Mon, 27 Jul 2020 17:19:53 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Muchun Song <songmuchun@bytedance.com>
+Cc:     mike.kravetz@oracle.com, mhocko@kernel.org, rientjes@google.com,
+        mgorman@suse.de, walken@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Jianchao Guo <guojianchao@bytedance.com>
+Subject: Re: [PATCH v3] mm/hugetlb: add mempolicy check in the reservation
+ routine
+Message-Id: <20200727171953.443afb897bb88261facf5512@linux-foundation.org>
+In-Reply-To: <20200725080749.70470-1-songmuchun@bytedance.com>
+References: <20200725080749.70470-1-songmuchun@bytedance.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 25 Jul 2020 16:07:49 +0800 Muchun Song <songmuchun@bytedance.com> wrote:
 
---7od7w7hhl7sikvqk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> In the reservation routine, we only check whether the cpuset meets
+> the memory allocation requirements. But we ignore the mempolicy of
+> MPOL_BIND case. If someone mmap hugetlb succeeds, but the subsequent
+> memory allocation may fail due to mempolicy restrictions and receives
+> the SIGBUS signal. This can be reproduced by the follow steps.
+> 
+>  1) Compile the test case.
+>     cd tools/testing/selftests/vm/
+>     gcc map_hugetlb.c -o map_hugetlb
+> 
+>  2) Pre-allocate huge pages. Suppose there are 2 numa nodes in the
+>     system. Each node will pre-allocate one huge page.
+>     echo 2 > /proc/sys/vm/nr_hugepages
+> 
+>  3) Run test case(mmap 4MB). We receive the SIGBUS signal.
+>     numactl --membind=0 ./map_hugetlb 4
+> 
+> With this patch applied, the mmap will fail in the step 3) and throw
+> "mmap: Cannot allocate memory".
 
-Hi,
+This doesn't compile with CONFIG_NUMA=n - ther eis no implementation of
+get_task_policy().
 
-On Thu, Jul 02, 2020 at 04:58:52PM +0800, Peng Fan wrote:
-> In the function rt5033_battery_probe(), it should return -ENOMEM
-> instead of -EINVAL when call function devm_kzalloc() failed.
->=20
-> Signed-off-by: Peng Fan <fanpeng@loongson.cn>
-> ---
+I think it needs more than a simple build fix - can we please rework
+the patch so that its impact (mainly code size) on non-NUMA machines is
+minimized?
 
-Thanks, queued.
-
--- Sebastian
-
->  drivers/power/supply/rt5033_battery.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/supply/rt5033_battery.c b/drivers/power/supply=
-/rt5033_battery.c
-> index d8667a9..f330452 100644
-> --- a/drivers/power/supply/rt5033_battery.c
-> +++ b/drivers/power/supply/rt5033_battery.c
-> @@ -125,7 +125,7 @@ static int rt5033_battery_probe(struct i2c_client *cl=
-ient,
-> =20
->  	battery =3D devm_kzalloc(&client->dev, sizeof(*battery), GFP_KERNEL);
->  	if (!battery)
-> -		return -EINVAL;
-> +		return -ENOMEM;
-> =20
->  	battery->client =3D client;
->  	battery->regmap =3D devm_regmap_init_i2c(client,
-> --=20
-> 2.1.0
->=20
-
---7od7w7hhl7sikvqk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8fbxkACgkQ2O7X88g7
-+pog2A/8DVU5QYgx87Or/U3pWkw+/hgTRmm5UVuocenyM22SgCXnd+SHVLLpF12P
-NinS8uhYlufo7HRznagwQr1t2uy2AT8IpQ13VpwjcidHZYbCqudJtUNL9gJ0VYVO
-OKmwlQeROyXnjqiM5dKA48TXcFvXFmzsg9vOphwsN+uY0DsoZOimHmGHc2XRZ+dc
-x3HmlBNX9z8C+y1JoiP/b7H8oXXUhxXnZZ0Ogs04jmlE38CSClPwAhVvcd8umqyZ
-sZgnGlaG2uCV8/ZvSvstBzEJAwaP23VLEZoqccs+9v3nI97JVml0oAP1U8yq7Xah
-XF1h8bxRsxzxZ2cq1htGlXy7TlwNmHqgBiskM+AyuHOOViKyGJR5ug/RCUEGc5y+
-JT39Yk6rhrowEIZlsAaJGOWGeuXAHO1UwE1bg6nZDazRPZ9GExk9bmu7vrhnLODS
-CHnnaMh2oK+KW2oVenfm1y7Du1GAa3jiDCLTXXFV6ZACQu9jh7N55BzdfdnvmInR
-NzHV9+55pcbk9U/blUGn4A4LTzBdptv6z/Y42URoghn2ks4dxNlhtwKCWWIVEm3p
-uc24pzQJJp4YpexNlZr+giQ/jD6muqgUdS5lml8rPTw7Dui5Ya9Z4Q8YHNfhnzit
-ZwZfH8dlK7Z8uoKco4TeafPi91n25hyPgx//TgqyhMNvBCYaRvE=
-=xY1+
------END PGP SIGNATURE-----
-
---7od7w7hhl7sikvqk--
