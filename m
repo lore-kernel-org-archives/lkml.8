@@ -2,146 +2,217 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6272C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02295206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0462206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tebaVCGF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="byfXRRBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbgG1Lxj (ORCPT
+        id S1729227AbgG1Lzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 07:53:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729183AbgG1Lxi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 07:53:38 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D06FC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 04:53:38 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id ed14so8965972qvb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 04:53:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9b0/x+SNOsArF0QozJjz6aJQuh2KJ70gscVHnalujy4=;
-        b=tebaVCGFtEwcxHEM2mSMLHj+/y/YIqY5F9PfjQr+R28mNZgbYk25oEbZZId/XZ0s3P
-         tyGFy7H5tAKQH/KcvFG7RcKLdtt/qqcX2osS0vTQJ/3rUpnTnbtfiDJ18KDKt9nZIzGb
-         jioEWFF54X/RJ4UBRAI9O+jT36f7HD+T/xOTD9lKZ+UDK636bylzcmIRkD7DOA9185ON
-         jJG7VOHFIS3KDo49DOPfTt8B8gh1BvSt7q/oevhavy3mNdL7jkhDMD98eP3cCfzNmA6a
-         4JHhj/cTKGPEzg0ULWSgB+t3qfMc0wvywvSPhcRbk49lv6ar4UEgPv6Ss42pOY9LvMo+
-         N4zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9b0/x+SNOsArF0QozJjz6aJQuh2KJ70gscVHnalujy4=;
-        b=jcQwQih0c/nlc1Kn/kTHL8B+24CKvKi9t6lGyIryHltZTPTPCJ26gEd9LJsPs/gBHv
-         gH4q8sLcN65ncEOVWcf5R5xW8g1CygVGV4iM5AHING1w7HgwLwSk9FDLeJ2oi7NwUdKL
-         jrtgoC36mlp0H9pXRGfqFzKbFAaJEs12psV/ULOs96mDIZt/RJ3BY0p93H0zAkStEojH
-         mXazQOffXKgwZQDFXbOOvQzD5C813Mlo8NZFhEuTKdtItwmBWbaUG15kZ/+PGxmG9jG5
-         HH8ZYEHTIoHuU56Y2zR50n3hJmfR4HqBHrlSuKqX1+7EXz12nrBhumn0rkZEI2aaoqIw
-         HRKA==
-X-Gm-Message-State: AOAM532gjR34hjPLZ86PgvgZCiBqsMGF/rDqfo3CaaVHQl4AonZtDTyb
-        IbnzDkRePVxpg1og5WYJIA==
-X-Google-Smtp-Source: ABdhPJytWHbSuKSgdqrZHnoY6Cfo5vrUorIiwqfDq+wpVnip+5M/a1iy0umq4my1/dRXaNveQev4oQ==
-X-Received: by 2002:ad4:4152:: with SMTP id z18mr154690qvp.42.1595937217951;
-        Tue, 28 Jul 2020 04:53:37 -0700 (PDT)
-Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
-        by smtp.gmail.com with ESMTPSA id t65sm21273750qkf.119.2020.07.28.04.53.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 04:53:37 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH v2] drm/bufs: Prevent kernel-infoleak in copy_one_buf()
-Date:   Tue, 28 Jul 2020 07:52:10 -0400
-Message-Id: <20200728115210.408486-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200728014343.341303-1-yepeilin.cs@gmail.com>
-References: <20200728014343.341303-1-yepeilin.cs@gmail.com>
+        Tue, 28 Jul 2020 07:55:36 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:59587 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728423AbgG1Lzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 07:55:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595937334; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=aMLCLRF6gA546+4gAdULk8Xwn0G11bwCEDN5G+ke5tQ=;
+ b=byfXRRBAz9cIMYxFcPLD1eEiOiDvyXxDkAklXYEAeHQUXBCtIQgA7SrY9qmrwbZLgoNwpfl9
+ KElMX68/VDLq/H15+B60DHImzeNpdBryJ97Oyg69xZnhj59u4hEEGv+yOT8naUIB5h0F2AGr
+ PR0QZ9fwy+Xbmxzd2R3Ha4qVVe8=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5f201222bd0c3f02966d3ca1 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 11:55:14
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 27302C433C9; Tue, 28 Jul 2020 11:55:14 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4E81AC433C6;
+        Tue, 28 Jul 2020 11:55:13 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Jul 2020 17:25:13 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v3 6/7] arm64: dts: qcom: sm8150: add interconnect nodes
+In-Reply-To: <20200728023811.5607-7-jonathan@marek.ca>
+References: <20200728023811.5607-1-jonathan@marek.ca>
+ <20200728023811.5607-7-jonathan@marek.ca>
+Message-ID: <8eaf4f2df727390963ffe13c29712c2c@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently `struct drm_buf_desc` is defined as follows:
+On 2020-07-28 08:08, Jonathan Marek wrote:
+> Add the interconnect dts nodes for sm8150.
+> 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi | 82 ++++++++++++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> index 33ff99132f4f..e4689c27224b 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> @@ -11,6 +11,7 @@
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/clock/qcom,gcc-sm8150.h>
+>  #include <dt-bindings/clock/qcom,gpucc-sm8150.h>
+> +#include <dt-bindings/interconnect/qcom,sm8150.h>
+>  #include <dt-bindings/thermal/thermal.h>
+> 
+>  / {
+> @@ -440,6 +441,55 @@ uart2: serial@a90000 {
+>  			};
+>  		};
+> 
+> +		config_noc: interconnect@1500000 {
+> +			compatible = "qcom,sm8150-config-noc";
+> +			reg = <0 0x01500000 0 0x7400>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		system_noc: interconnect@1620000 {
+> +			compatible = "qcom,sm8150-system-noc";
+> +			reg = <0 0x01620000 0 0x19400>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		mc_virt: interconnect@163a000 {
+> +			compatible = "qcom,sm8150-mc-virt";
+> +			reg = <0 0x0163a000 0 0x1000>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		aggre1_noc: interconnect@16e0000 {
+> +			compatible = "qcom,sm8150-aggre1-noc";
+> +			reg = <0 0x016e0000 0 0xd080>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		aggre2_noc: interconnect@1700000 {
+> +			compatible = "qcom,sm8150-aggre2-noc";
+> +			reg = <0 0x01700000 0 0x20000>;
 
-struct drm_buf_desc {
-	int count;
-	int size;
-	int low_mark;
-	int high_mark;
-	enum {
-		_DRM_PAGE_ALIGN = 0x01,
-		_DRM_AGP_BUFFER = 0x02,
-		_DRM_SG_BUFFER = 0x04,
-		_DRM_FB_BUFFER = 0x08,
-		_DRM_PCI_BUFFER_RO = 0x10
-	} flags;
-	unsigned long agp_start;
-};
+Though aggre2_noc might need a
+larger space in the future lets
+lands ^^ for now.
 
-copy_one_buf() is potentially copying uninitialized kernel stack memory
-to userspace, since the compiler may leave such "holes" (around `.flags`
-and `.agp_start` fields) in this statically allocated structure. Prevent
-it by initializing `v` with memset().
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-Cc: stable@vger.kernel.org
-Fixes: 5c7640ab6258 ("switch compat_drm_infobufs() to drm_ioctl_kernel()")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
-Change in v2:
-    - Improve commit description. (Suggested by Arnd Bergmann
-      <arnd@arndb.de>)
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		compute_noc: interconnect@1720000 {
+> +			compatible = "qcom,sm8150-compute-noc";
+> +			reg = <0 0x01720000 0 0x7000>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		mmss_noc: interconnect@1740000 {
+> +			compatible = "qcom,sm8150-mmss-noc";
+> +			reg = <0 0x01740000 0 0x1c100>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+>  		ufs_mem_hc: ufshc@1d84000 {
+>  			compatible = "qcom,sm8150-ufshc", "qcom,ufshc",
+>  				     "jedec,ufs-2.0";
+> @@ -510,6 +560,13 @@ ufs_mem_phy_lanes: lanes@1d87400 {
+>  			};
+>  		};
+> 
+> +		ipa_virt: interconnect@1e00000 {
+> +			compatible = "qcom,sm8150-ipa-virt";
+> +			reg = <0 0x01e00000 0 0x1000>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+>  		tcsr_mutex_regs: syscon@1f40000 {
+>  			compatible = "syscon";
+>  			reg = <0x0 0x01f40000 0x0 0x40000>;
+> @@ -860,6 +917,20 @@ usb_2_ssphy: lane@88eb200 {
+>  			};
+>  		};
+> 
+> +		dc_noc: interconnect@9160000 {
+> +			compatible = "qcom,sm8150-dc-noc";
+> +			reg = <0 0x09160000 0 0x3200>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		gem_noc: interconnect@9680000 {
+> +			compatible = "qcom,sm8150-gem-noc";
+> +			reg = <0 0x09680000 0 0x3e200>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+>  		usb_1: usb@a6f8800 {
+>  			compatible = "qcom,sm8150-dwc3", "qcom,dwc3";
+>  			reg = <0 0x0a6f8800 0 0x400>;
+> @@ -950,6 +1021,13 @@ usb_2_dwc3: dwc3@a800000 {
+>  			};
+>  		};
+> 
+> +		camnoc_virt: interconnect@ac00000 {
+> +			compatible = "qcom,sm8150-camnoc-virt";
+> +			reg = <0 0x0ac00000 0 0x1000>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+>  		aoss_qmp: power-controller@c300000 {
+>  			compatible = "qcom,sm8150-aoss-qmp";
+>  			reg = <0x0 0x0c300000 0x0 0x100000>;
+> @@ -1280,6 +1358,10 @@ rpmhpd_opp_turbo_l1: opp11 {
+>  					};
+>  				};
+>  			};
+> +
+> +			apps_bcm_voter: bcm_voter {
+> +				compatible = "qcom,bcm-voter";
+> +			};
+>  		};
+> 
+>  		cpufreq_hw: cpufreq@18323000 {
 
- drivers/gpu/drm/drm_bufs.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_bufs.c b/drivers/gpu/drm/drm_bufs.c
-index a0735fbc144b..f99cd4a3f951 100644
---- a/drivers/gpu/drm/drm_bufs.c
-+++ b/drivers/gpu/drm/drm_bufs.c
-@@ -1349,10 +1349,14 @@ static int copy_one_buf(void *data, int count, struct drm_buf_entry *from)
- {
- 	struct drm_buf_info *request = data;
- 	struct drm_buf_desc __user *to = &request->list[count];
--	struct drm_buf_desc v = {.count = from->buf_count,
--				 .size = from->buf_size,
--				 .low_mark = from->low_mark,
--				 .high_mark = from->high_mark};
-+	struct drm_buf_desc v;
-+
-+	memset(&v, 0, sizeof(v));
-+
-+	v.count = from->buf_count;
-+	v.size = from->buf_size;
-+	v.low_mark = from->low_mark;
-+	v.high_mark = from->high_mark;
- 
- 	if (copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags)))
- 		return -EFAULT;
 -- 
-2.25.1
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
