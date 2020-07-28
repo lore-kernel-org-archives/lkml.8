@@ -2,258 +2,125 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012F5C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A28C433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3DB220775
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:45:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="chyQVmXV"
+	by mail.kernel.org (Postfix) with ESMTP id 07FA320775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgG1KpW (ORCPT
+        id S1728902AbgG1Kp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 06:45:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57484 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728566AbgG1KpV (ORCPT
+        Tue, 28 Jul 2020 06:45:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50238 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728566AbgG1Kp0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 06:45:21 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75EC2C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:45:21 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id h1so14518149otq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:45:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P9qNMY+MaOU7/Uc+GSjibOeYutZuuvmea9JQdtNRlCc=;
-        b=chyQVmXVu0+8jleygyi9eT1uxtxKjJ8sE+QFDKHI8MkbA7rnHmKT+HXDKMJxwOGXm0
-         2JNYBXycpmPeu9l+Q3wSVa1kYEyvvVBAAmqwP23Srs4Gmh1csl6YmmTzPzSNU14ObJCX
-         Jmh1e8P5OKiD8jfdcwwnNCDwBVv3Xo6Cvzo/h/z2EyZoIXAS29F2cLF2cn7BR0goJt27
-         ztIaeWJBu7joauhlfb6RgFk9LZC43duFaPy9176i3rfGYFs/45w+R7jcqKa0+Xpxyx4G
-         RltIeaQ89z7vHfkZuywLwzlkfw4HqDOVkQY4ZSI3clj/fn0yfKhIRK26xF31XQ+R2RaZ
-         MQkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P9qNMY+MaOU7/Uc+GSjibOeYutZuuvmea9JQdtNRlCc=;
-        b=ooXWrDr0BwdJAwOSevwL8yUlNyxE7I65GNMzhvYG9LhyY0ydijUw9ah8ZJZjQhRJUO
-         xQbrinqS1Gh1OZu/1qqqOiMAGrC65bKv6MzxfYI60lFTQJGvm8lG6Xyz8mjID1UMg9eR
-         HfgnQA7juCI2fttEmUFsZQ98Qn8KOCW6v5r6DUM5hMJBnnt4nVMXHScF6fZ02kws7wUT
-         3YIl3c86LgqWoOLPSKwrPCwR6NIUqVos3IzXF54tJL9GxEnxKIZGrgziLlNxry/VyANS
-         qsTHnyPs2F2Dal3fFv0bI9uMWEuTGnYjbc2KTzDBhzRNrwUMBwG/jwOa0TL9bXSYgUJH
-         mMRQ==
-X-Gm-Message-State: AOAM533Gwyv2vP+w3dw5/VFnjgCA+m1dpk5GaRp1jz5cpCPRhBVprk8X
-        8FZvd1SxiI5etO60EgvMqQEDlfKmIT74Yg9X+rH6Sg==
-X-Google-Smtp-Source: ABdhPJxXnDaV69CLaYerEoMeAmN769TjPWPlbDqSutbAzYSiHYia2EsmI7AIccnCuaVqeGZr3qUUEIImgeVsFbKIaSw=
-X-Received: by 2002:a05:6830:1612:: with SMTP id g18mr8111463otr.251.1595933120306;
- Tue, 28 Jul 2020 03:45:20 -0700 (PDT)
+        Tue, 28 Jul 2020 06:45:26 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1k0N6o-0004Vn-VK; Tue, 28 Jul 2020 10:45:23 +0000
+Subject: Re: [PATCH][next] bpf: fix swapped arguments in calls to
+ check_buffer_access
+To:     Daniel Borkmann <daniel@iogearbox.net>, Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200727175411.155179-1-colin.king@canonical.com>
+ <c9ea156a-20fa-5415-0d35-0521e8740ddc@fb.com>
+ <882cd37d-0af2-3412-6bd7-73aa466df23c@iogearbox.net>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <bb2914ff-b2ee-6acb-71da-92e26b9887b1@canonical.com>
+Date:   Tue, 28 Jul 2020 11:45:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200720120348.2406588-1-elver@google.com>
-In-Reply-To: <20200720120348.2406588-1-elver@google.com>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 28 Jul 2020 12:45:08 +0200
-Message-ID: <CANpmjNO7M2gm5=P9Z27_BgT3i=p6=KFBbEUaKm049wtqyBMQcA@mail.gmail.com>
-Subject: Re: [PATCH tip/locking/core] kcsan: Improve IRQ state trace reporting
-To:     Marco Elver <elver@google.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <882cd37d-0af2-3412-6bd7-73aa466df23c@iogearbox.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 at 14:03, Marco Elver <elver@google.com> wrote:
->
-> To improve the general usefulness of the IRQ state trace information
-> with KCSAN enabled, save and restore the trace information when entering
-> and exiting the KCSAN runtime as well as when generating a KCSAN report.
->
-> Without this, reporting the IRQ state trace (whether via a KCSAN report
-> or outside of KCSAN via a lockdep report) is rather useless due to
-> continuously being touched by KCSAN. This is because if KCSAN is
-> enabled, every instrumented memory access causes changes to IRQ state
-> tracking information (either by KCSAN disabling/enabling interrupts or
-> taking report_lock when generating a report).
->
-> Before "lockdep: Prepare for NMI IRQ state tracking", KCSAN avoided
-> touching the IRQ state trace via raw_local_irq_save/restore() and
-> lockdep_off/on().
->
-> Fixes: 248591f5d257 ("kcsan: Make KCSAN compatible with new IRQ state tracking")
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
->
->
-> Hi, Peter,
->
-> If this is reasonable, please take it into the branch that currently has
-> the series around "lockdep: Prepare for NMI IRQ state tracking"
-> (tip/locking/core?).
+On 28/07/2020 11:43, Daniel Borkmann wrote:
+> On 7/27/20 11:39 PM, Yonghong Song wrote:
+>> On 7/27/20 10:54 AM, Colin King wrote:
+>>> From: Colin Ian King <colin.king@canonical.com>
+>>>
+>>> There are a couple of arguments of the boolean flag zero_size_allowed
+>>> and the char pointer buf_info when calling to function
+>>> check_buffer_access
+>>> that are swapped by mistake. Fix these by swapping them to correct
+>>> the argument ordering.
+>>>
+>>> Addresses-Coverity: ("Array compared to 0")
+>>> Fixes: afbf21dce668 ("bpf: Support readonly/readwrite buffers in
+>>> verifier")
+>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>
+>> Thanks for the fix!
+>> Acked-by: Yonghong Song <yhs@fb.com>
+> 
+> Sigh, thanks for the fix Colin, applied! Yonghong, could you follow-up with
+> BPF selftest test cases that exercise these paths? Thx
 
-Just in case -- checking this one wasn't lost.
+No problem. Thanks to static analysis, it catches a lot of subtle bugs
+like this.
 
-Many thanks,
--- Marco
+Colin
 
-> ---
->  include/linux/sched.h | 13 +++++++++++++
->  kernel/kcsan/core.c   | 39 +++++++++++++++++++++++++++++++++++++++
->  kernel/kcsan/kcsan.h  |  7 +++++++
->  kernel/kcsan/report.c |  3 +++
->  4 files changed, 62 insertions(+)
->
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 692e327d7455..ca5324b1657c 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1199,6 +1199,19 @@ struct task_struct {
->  #endif
->  #ifdef CONFIG_KCSAN
->         struct kcsan_ctx                kcsan_ctx;
-> +#ifdef CONFIG_TRACE_IRQFLAGS
-> +       struct {
-> +               unsigned int            irq_events;
-> +               unsigned long           hardirq_enable_ip;
-> +               unsigned long           hardirq_disable_ip;
-> +               unsigned int            hardirq_enable_event;
-> +               unsigned int            hardirq_disable_event;
-> +               unsigned long           softirq_disable_ip;
-> +               unsigned long           softirq_enable_ip;
-> +               unsigned int            softirq_disable_event;
-> +               unsigned int            softirq_enable_event;
-> +       } kcsan_save_irqtrace;
-> +#endif
->  #endif
->
->  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-> index 732623c30359..7e8347c14530 100644
-> --- a/kernel/kcsan/core.c
-> +++ b/kernel/kcsan/core.c
-> @@ -291,6 +291,36 @@ static inline unsigned int get_delay(void)
->                                 0);
->  }
->
-> +void kcsan_save_irqtrace(struct task_struct *task)
-> +{
-> +#ifdef CONFIG_TRACE_IRQFLAGS
-> +       task->kcsan_save_irqtrace.irq_events = task->irq_events;
-> +       task->kcsan_save_irqtrace.hardirq_enable_ip = task->hardirq_enable_ip;
-> +       task->kcsan_save_irqtrace.hardirq_disable_ip = task->hardirq_disable_ip;
-> +       task->kcsan_save_irqtrace.hardirq_enable_event = task->hardirq_enable_event;
-> +       task->kcsan_save_irqtrace.hardirq_disable_event = task->hardirq_disable_event;
-> +       task->kcsan_save_irqtrace.softirq_disable_ip = task->softirq_disable_ip;
-> +       task->kcsan_save_irqtrace.softirq_enable_ip = task->softirq_enable_ip;
-> +       task->kcsan_save_irqtrace.softirq_disable_event = task->softirq_disable_event;
-> +       task->kcsan_save_irqtrace.softirq_enable_event = task->softirq_enable_event;
-> +#endif
-> +}
-> +
-> +void kcsan_restore_irqtrace(struct task_struct *task)
-> +{
-> +#ifdef CONFIG_TRACE_IRQFLAGS
-> +       task->irq_events = task->kcsan_save_irqtrace.irq_events;
-> +       task->hardirq_enable_ip = task->kcsan_save_irqtrace.hardirq_enable_ip;
-> +       task->hardirq_disable_ip = task->kcsan_save_irqtrace.hardirq_disable_ip;
-> +       task->hardirq_enable_event = task->kcsan_save_irqtrace.hardirq_enable_event;
-> +       task->hardirq_disable_event = task->kcsan_save_irqtrace.hardirq_disable_event;
-> +       task->softirq_disable_ip = task->kcsan_save_irqtrace.softirq_disable_ip;
-> +       task->softirq_enable_ip = task->kcsan_save_irqtrace.softirq_enable_ip;
-> +       task->softirq_disable_event = task->kcsan_save_irqtrace.softirq_disable_event;
-> +       task->softirq_enable_event = task->kcsan_save_irqtrace.softirq_enable_event;
-> +#endif
-> +}
-> +
->  /*
->   * Pull everything together: check_access() below contains the performance
->   * critical operations; the fast-path (including check_access) functions should
-> @@ -336,9 +366,11 @@ static noinline void kcsan_found_watchpoint(const volatile void *ptr,
->         flags = user_access_save();
->
->         if (consumed) {
-> +               kcsan_save_irqtrace(current);
->                 kcsan_report(ptr, size, type, KCSAN_VALUE_CHANGE_MAYBE,
->                              KCSAN_REPORT_CONSUMED_WATCHPOINT,
->                              watchpoint - watchpoints);
-> +               kcsan_restore_irqtrace(current);
->         } else {
->                 /*
->                  * The other thread may not print any diagnostics, as it has
-> @@ -396,6 +428,12 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
->                 goto out;
->         }
->
-> +       /*
-> +        * Save and restore the IRQ state trace touched by KCSAN, since KCSAN's
-> +        * runtime is entered for every memory access, and potentially useful
-> +        * information is lost if dirtied by KCSAN.
-> +        */
-> +       kcsan_save_irqtrace(current);
->         if (!kcsan_interrupt_watcher)
->                 local_irq_save(irq_flags);
->
-> @@ -539,6 +577,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
->  out_unlock:
->         if (!kcsan_interrupt_watcher)
->                 local_irq_restore(irq_flags);
-> +       kcsan_restore_irqtrace(current);
->  out:
->         user_access_restore(ua_flags);
->  }
-> diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
-> index 763d6d08d94b..29480010dc30 100644
-> --- a/kernel/kcsan/kcsan.h
-> +++ b/kernel/kcsan/kcsan.h
-> @@ -9,6 +9,7 @@
->  #define _KERNEL_KCSAN_KCSAN_H
->
->  #include <linux/kcsan.h>
-> +#include <linux/sched.h>
->
->  /* The number of adjacent watchpoints to check. */
->  #define KCSAN_CHECK_ADJACENT 1
-> @@ -22,6 +23,12 @@ extern unsigned int kcsan_udelay_interrupt;
->   */
->  extern bool kcsan_enabled;
->
-> +/*
-> + * Save/restore IRQ flags state trace dirtied by KCSAN.
-> + */
-> +void kcsan_save_irqtrace(struct task_struct *task);
-> +void kcsan_restore_irqtrace(struct task_struct *task);
-> +
->  /*
->   * Initialize debugfs file.
->   */
-> diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-> index 6b2fb1a6d8cd..9d07e175de0f 100644
-> --- a/kernel/kcsan/report.c
-> +++ b/kernel/kcsan/report.c
-> @@ -308,6 +308,9 @@ static void print_verbose_info(struct task_struct *task)
->         if (!task)
->                 return;
->
-> +       /* Restore IRQ state trace for printing. */
-> +       kcsan_restore_irqtrace(task);
-> +
->         pr_err("\n");
->         debug_show_held_locks(task);
->         print_irqtrace_events(task);
-> --
-> 2.28.0.rc0.105.gf9edc3c819-goog
->
