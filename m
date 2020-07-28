@@ -2,149 +2,221 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C227C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 813A5C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E317D2065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AFA220656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:34:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PTVl4se9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732840AbgG1Tel (ORCPT
+        id S1732850AbgG1Tes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:34:41 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61832 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729646AbgG1Tel (ORCPT
+        Tue, 28 Jul 2020 15:34:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732843AbgG1Ter (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:34:41 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06SJX1aO120680;
-        Tue, 28 Jul 2020 15:34:33 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32jkw2dfpy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 15:34:32 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06SJY200123410;
-        Tue, 28 Jul 2020 15:34:32 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32jkw2dfnq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 15:34:32 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06SJOcrn028997;
-        Tue, 28 Jul 2020 19:34:29 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 32gcq0thxh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 19:34:29 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06SJYQfe27001110
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jul 2020 19:34:26 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CFA5542045;
-        Tue, 28 Jul 2020 19:34:26 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 930E94203F;
-        Tue, 28 Jul 2020 19:34:23 +0000 (GMT)
-Received: from [9.85.75.143] (unknown [9.85.75.143])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 28 Jul 2020 19:34:23 +0000 (GMT)
-Subject: Re: [RESEND PATCH v5 06/11] ppc64/kexec_file: restrict memory usage
- of kdump kernel
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-References: <159579157320.5790.6748078824637688685.stgit@hbathini>
- <159579231812.5790.16096865978767385505.stgit@hbathini>
- <875za77o05.fsf@mpe.ellerman.id.au>
-From:   Hari Bathini <hbathini@linux.ibm.com>
-Message-ID: <23c4e7a2-6fbc-8007-5e9a-35c3a4d3898b@linux.ibm.com>
-Date:   Wed, 29 Jul 2020 01:04:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 15:34:47 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C12B3C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:34:47 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id gc9so453139pjb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:34:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CVNKrpnm5xCb7negocsdXpYBZglk+rfoTR4NPg9c5rg=;
+        b=PTVl4se9rTOYPS9sCnyw/QuOgKajGaiXJib9l2Td6BKaLS3SUc2z+sDA2MJRyIeo8j
+         nP1OuAO25HRDQywu5MuXynLvacrasbs1PbUHftm2KXDri9/s4Lg1xLW0SuqIF9rr9b7J
+         N8fGXF9ds8ow+UNAodv8t7ZjrpKDgIlnaA+O0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CVNKrpnm5xCb7negocsdXpYBZglk+rfoTR4NPg9c5rg=;
+        b=OlaqqxcU7apBvjz/95hPm7GytzNIin5lNAGypNt5pDqlHWeF47OXkWruv0Keq7GBKM
+         3eLBzygVClWXSNov46yTHQlobKgm2s4q2hAn9WL6tsh3SJrwE2R6oFezowucr0duvhLm
+         x4mpebj1sZPNpqH+WXbHl8CMq/c7WuXAzmKCrAbvBPU11XV1nDpB6srcFzs+DwmD87Ch
+         a/p4JNdvzDGqo5K/c6xH9qjbAFgNPk0EPa3eaWTeAxaUf4z+ZMTEYbqs3jmsgtQGU+lm
+         aUncmVdN+nCkM/w2aMlZs6jI7p7ysM6ZVvJvE5q/MmS1yOcnGKBGfjVHuySmXjaXTi3i
+         BJVw==
+X-Gm-Message-State: AOAM533/Zd19AiQfdBI9XnLC5Z8lnj1YM5Ut45Fj9ixfzMYuzadEUzM9
+        MUwkskJakDsmoK48oOwut8Y70w==
+X-Google-Smtp-Source: ABdhPJzIaEwjba+7nmF4wdaFJpa6GK4wj2auDFPTOQA/PPxCGTeVX5HyDNPaA2VG6gKtqa+2Hfingg==
+X-Received: by 2002:a17:902:a9c1:: with SMTP id b1mr25027259plr.234.1595964887213;
+        Tue, 28 Jul 2020 12:34:47 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j13sm3826058pjf.28.2020.07.28.12.34.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 12:34:46 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 12:34:45 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 7/8] x86/kaslr: Clean up slot handling
+Message-ID: <202007281228.B5011DC7@keescook>
+References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
+ <20200727230801.3468620-8-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <875za77o05.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-28_16:2020-07-28,2020-07-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- phishscore=0 mlxlogscore=999 spamscore=0 clxscore=1015 malwarescore=0
- priorityscore=1501 impostorscore=0 suspectscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007280139
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727230801.3468620-8-nivedita@alum.mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 27, 2020 at 07:08:00PM -0400, Arvind Sankar wrote:
+> The number of slots and slot areas can be unsigned int, since on 64-bit,
+> the maximum amount of memory is 2^52, the minimum alignment is 2^21, so
+> the slot number cannot be greater than 2^31. The slot areas are limited
+> by MAX_SLOT_AREA, currently 100. Replace the type used for slot number,
+> which is currently a mix of int and unsigned long, with unsigned int
+> consistently.
 
+I think it's good to standardize the type, but let's go to unsigned long
+then we don't have to think about this again in the future.
 
-On 28/07/20 7:14 pm, Michael Ellerman wrote:
-> Hari Bathini <hbathini@linux.ibm.com> writes:
->> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
->> index 2df6f4273ddd..8df085a22fd7 100644
->> --- a/arch/powerpc/kexec/file_load_64.c
->> +++ b/arch/powerpc/kexec/file_load_64.c
->> @@ -17,9 +17,21 @@
->>   #include <linux/kexec.h>
->>   #include <linux/of_fdt.h>
->>   #include <linux/libfdt.h>
->> +#include <linux/of_device.h>
->>   #include <linux/memblock.h>
->> +#include <linux/slab.h>
->> +#include <asm/drmem.h>
->>   #include <asm/kexec_ranges.h>
->>   
->> +struct umem_info {
->> +	uint64_t *buf; /* data buffer for usable-memory property */
->> +	uint32_t idx;  /* current index */
->> +	uint32_t size; /* size allocated for the data buffer */
+> Drop unnecessary check that number of slots is not zero in
+> store_slot_info, it's guaranteed to be at least 1 by the calculation.
 > 
-> Use kernel types please, u64, u32.
-> 
->> +	/* usable memory ranges to look up */
->> +	const struct crash_mem *umrngs;
-> 
-> "umrngs".
-> 
-> Given it's part of the umem_info struct could it just be "ranges"?
+> Drop unnecessary alignment of image_size to CONFIG_PHYSICAL_ALIGN in
+> find_random_virt_addr, it cannot change the result: the largest valid
+> slot is the largest n that satisfies
 
-True. Actually, having crash_mem_range *ranges + u32 nr_ranges and 
-populating them seems better. Will do that..
+I view all of these things as robustness checks. It doesn't hurt to do
+these checks and it'll avoid crashing into problems if future
+refactoring breaks assumptions.
 
->> +		return NULL;
->> +	}
-> 
-> 	um_info->size = new_size;
-> 
->> +
->> +	memset(tbuf + um_info->idx, 0, MEM_RANGE_CHUNK_SZ);
-> 
-> Just pass __GFP_ZERO to krealloc?
+But again, let's split this patch up. type changes, refactoring, etc.
 
-There are patches submitted to stable fixing a few modules that use 
-krealloc with __GFP_ZERO. Also, this zeroing is not really needed.
-I will drop the memset instead..
+Notes below...
 
-Thanks
-Hari
+> 
+>   minimum + n * CONFIG_PHYSICAL_ALIGN + image_size <= KERNEL_IMAGE_SIZE
+> 
+> (since minimum is already aligned) and so n is equal to
+> 
+>   (KERNEL_IMAGE_SIZE - minimum - image_size) / CONFIG_PHYSICAL_ALIGN
+> 
+> even if image_size is not aligned to CONFIG_PHYSICAL_ALIGN.
+> 
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> ---
+>  arch/x86/boot/compressed/kaslr.c | 36 ++++++++++++--------------------
+>  1 file changed, 13 insertions(+), 23 deletions(-)
+> 
+> diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+> index 91c5f9771f42..eca2acc65e2a 100644
+> --- a/arch/x86/boot/compressed/kaslr.c
+> +++ b/arch/x86/boot/compressed/kaslr.c
+> @@ -511,16 +511,14 @@ static bool mem_avoid_overlap(struct mem_vector *img,
+>  
+>  struct slot_area {
+>  	unsigned long addr;
+> -	int num;
+> +	unsigned int num;
+>  };
+>  
+>  #define MAX_SLOT_AREA 100
+>  
+>  static struct slot_area slot_areas[MAX_SLOT_AREA];
+> -
+> -static unsigned long slot_max;
+> -
+> -static unsigned long slot_area_index;
+> +static unsigned int slot_area_index;
+> +static unsigned int slot_max;
+>  
+>  static void store_slot_info(struct mem_vector *region, unsigned long image_size)
+>  {
+> @@ -530,13 +528,10 @@ static void store_slot_info(struct mem_vector *region, unsigned long image_size)
+>  		return;
+>  
+>  	slot_area.addr = region->start;
+> -	slot_area.num = (region->size - image_size) /
+> -			CONFIG_PHYSICAL_ALIGN + 1;
+> +	slot_area.num = 1 + (region->size - image_size) / CONFIG_PHYSICAL_ALIGN;
+>  
+> -	if (slot_area.num > 0) {
+> -		slot_areas[slot_area_index++] = slot_area;
+> -		slot_max += slot_area.num;
+> -	}
+> +	slot_areas[slot_area_index++] = slot_area;
+> +	slot_max += slot_area.num;
+>  }
+>  
+>  /*
+> @@ -589,8 +584,7 @@ process_gb_huge_pages(struct mem_vector *region, unsigned long image_size)
+>  
+>  static unsigned long slots_fetch_random(void)
+>  {
+> -	unsigned long slot;
+> -	int i;
+> +	unsigned int slot, i;
+>  
+>  	/* Handle case of no slots stored. */
+>  	if (slot_max == 0)
+> @@ -603,7 +597,7 @@ static unsigned long slots_fetch_random(void)
+>  			slot -= slot_areas[i].num;
+>  			continue;
+>  		}
+> -		return slot_areas[i].addr + slot * CONFIG_PHYSICAL_ALIGN;
+> +		return slot_areas[i].addr + (unsigned long)slot * CONFIG_PHYSICAL_ALIGN;
+>  	}
+>  
+>  	if (i == slot_area_index)
+> @@ -819,28 +813,24 @@ static unsigned long find_random_phys_addr(unsigned long minimum,
+>  		return 0;
+>  	}
+>  
+> -	if (process_efi_entries(minimum, image_size))
+> -		return slots_fetch_random();
+> +	if (!process_efi_entries(minimum, image_size))
+> +		process_e820_entries(minimum, image_size);
+
+I like this change; the double-call to slots_fetch_random() bugged me.
+:)
+
+>  
+> -	process_e820_entries(minimum, image_size);
+>  	return slots_fetch_random();
+>  }
+>  
+>  static unsigned long find_random_virt_addr(unsigned long minimum,
+>  					   unsigned long image_size)
+>  {
+> -	unsigned long slots, random_addr;
+> -
+> -	/* Align image_size for easy slot calculations. */
+> -	image_size = ALIGN(image_size, CONFIG_PHYSICAL_ALIGN);
+> +	unsigned int slots;
+> +	unsigned long random_addr;
+>  
+>  	/*
+>  	 * There are how many CONFIG_PHYSICAL_ALIGN-sized slots
+>  	 * that can hold image_size within the range of minimum to
+>  	 * KERNEL_IMAGE_SIZE?
+>  	 */
+> -	slots = (KERNEL_IMAGE_SIZE - minimum - image_size) /
+> -		 CONFIG_PHYSICAL_ALIGN + 1;
+> +	slots = 1 + (KERNEL_IMAGE_SIZE - minimum - image_size) / CONFIG_PHYSICAL_ALIGN;
+
+These are the same -- why change the code?
+
+>  
+>  	random_addr = kaslr_get_random_long("Virtual") % slots;
+>  
+> -- 
+> 2.26.2
+> 
+
+-- 
+Kees Cook
