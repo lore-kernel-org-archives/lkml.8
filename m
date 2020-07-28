@@ -2,142 +2,125 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00621C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A56A5C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3B3C20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:24:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="Wujqx8gq"
+	by mail.kernel.org (Postfix) with ESMTP id 8C94A20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732804AbgG1TYl (ORCPT
+        id S1732808AbgG1TZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:24:41 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:37918 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728435AbgG1TYl (ORCPT
+        Tue, 28 Jul 2020 15:25:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44354 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728896AbgG1TZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:24:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=HBU/yajmJTUr7b5CjuR1Ew6UpYj43svK56Zc/b1nrgE=; b=Wujqx8gqtDTMQ2QRYEbLKQNs1C
-        pecvlvTR8U6QtGsqyZfZXRpOi8qBR3pYwuUcUrOmfywOE+MuB7/1ge1XcuGxZkGqEvWSzAATVyls9
-        SbO3Dub1EGLKIkUGe6KWYhy336nNhMcR9iJmG/tpzaNqNcEWwqrz1aDvJ9600O7J3KwjHyM7OY9o5
-        Ke9USSNkBG9SpQTexHxlzhPFdh3jtVb24oxZKVUPtIARgu/brX5gtgW8XWRp6hhPYWdx2zqtBwAJT
-        l076kuyDRdzKprOQ1/XnPWs024NWkCuXkWQfUUQ4EsKK4L76XsrvKImxXieE+Icwru2m1BjkDWJXC
-        cB0pScKg==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1k0VDK-00017D-K5; Tue, 28 Jul 2020 13:24:39 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1k0VDI-0004x5-Pb; Tue, 28 Jul 2020 13:24:36 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Kelvin.Cao@microchip.com, Logan Gunthorpe <logang@deltatee.com>
-Date:   Tue, 28 Jul 2020 13:24:33 -0600
-Message-Id: <20200728192434.18993-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 28 Jul 2020 15:25:09 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06SJ2bqg045957;
+        Tue, 28 Jul 2020 15:24:57 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32jh6qtf15-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jul 2020 15:24:57 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06SJ31G8047563;
+        Tue, 28 Jul 2020 15:24:57 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32jh6qtf0b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jul 2020 15:24:56 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06SJOqEL029015;
+        Tue, 28 Jul 2020 19:24:54 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma02fra.de.ibm.com with ESMTP id 32gcq0thsf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jul 2020 19:24:54 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06SJOpvU29032810
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jul 2020 19:24:51 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 73BE342042;
+        Tue, 28 Jul 2020 19:24:51 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6AE8B42047;
+        Tue, 28 Jul 2020 19:24:48 +0000 (GMT)
+Received: from [9.85.75.143] (unknown [9.85.75.143])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Jul 2020 19:24:48 +0000 (GMT)
+Subject: Re: [RESEND PATCH v5 07/11] ppc64/kexec_file: enable early kernel's
+ OPAL calls
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+References: <159579157320.5790.6748078824637688685.stgit@hbathini>
+ <159579233676.5790.10701756666641782647.stgit@hbathini>
+ <87365b7nx4.fsf@mpe.ellerman.id.au>
+From:   Hari Bathini <hbathini@linux.ibm.com>
+Message-ID: <23baef6a-6ddc-572a-82c5-21a7fa441485@linux.ibm.com>
+Date:   Wed, 29 Jul 2020 00:54:47 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, Kelvin.Cao@microchip.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 1/2] PCI/switechtec: Add missing __iomem and __user tags to fix sparse warnings
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+In-Reply-To: <87365b7nx4.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-28_15:2020-07-28,2020-07-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 suspectscore=0 spamscore=0 phishscore=0
+ lowpriorityscore=0 mlxlogscore=997 bulkscore=0 mlxscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007280131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a number of missing __iomem and __user tags in the ioctl functions of
-the switchtec driver. This fixes a number of sparse warnings of the form:
 
-  sparse: sparse: incorrect type in ... (different address spaces)
 
-Fixes: 52eabba5bcdb ("switchtec: Add IOCTLs to the Switchtec driver")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+On 28/07/20 7:16 pm, Michael Ellerman wrote:
+> Hari Bathini <hbathini@linux.ibm.com> writes:
+>> Kernel built with CONFIG_PPC_EARLY_DEBUG_OPAL enabled expects r8 & r9
+>> to be filled with OPAL base & entry addresses respectively. Setting
+>> these registers allows the kernel to perform OPAL calls before the
+>> device tree is parsed.
+> 
+> I'm not convinced we want to do this.
+> 
+> If we do it becomes part of the kexec ABI and we have to honour it into
+> the future.
+> 
+> And in practice there are no non-development kernels built with OPAL early
+> debugging enabled, so it's not clear it actually helps anyone other than
+> developers.
+> 
 
----
+Hmmm.. kexec-tools does it since commit d58ad564852c ("kexec/ppc64
+Enable early kernel's OPAL calls") for kexec_load syscall. So, we would
+be breaking kexec ABI either way, I guess.
 
-Here are a couple quick patches to fix some sparse warnings I was
-notified about a couple weeks ago.
+Let me put this patch at the end of the series in the respin to let you
+decide whether to have it or not..
 
-I've split them into two patches based on Fixes tag, but they could be
-squashed depending on the preference.
-
-Thanks!
-
-drivers/pci/switch/switchtec.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 850cfeb74608..3d5da7f44378 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -940,7 +940,7 @@ static u32 __iomem *event_hdr_addr(struct switchtec_dev *stdev,
- 	size_t off;
-
- 	if (event_id < 0 || event_id >= SWITCHTEC_IOCTL_MAX_EVENTS)
--		return ERR_PTR(-EINVAL);
-+		return (u32 __iomem *)ERR_PTR(-EINVAL);
-
- 	off = event_regs[event_id].offset;
-
-@@ -948,10 +948,10 @@ static u32 __iomem *event_hdr_addr(struct switchtec_dev *stdev,
- 		if (index == SWITCHTEC_IOCTL_EVENT_LOCAL_PART_IDX)
- 			index = stdev->partition;
- 		else if (index < 0 || index >= stdev->partition_count)
--			return ERR_PTR(-EINVAL);
-+			return (u32 __iomem *)ERR_PTR(-EINVAL);
- 	} else if (event_regs[event_id].map_reg == pff_ev_reg) {
- 		if (index < 0 || index >= stdev->pff_csr_count)
--			return ERR_PTR(-EINVAL);
-+			return (u32 __iomem *)ERR_PTR(-EINVAL);
- 	}
-
- 	return event_regs[event_id].map_reg(stdev, off, index);
-@@ -1057,11 +1057,11 @@ static int ioctl_event_ctl(struct switchtec_dev *stdev,
- }
-
- static int ioctl_pff_to_port(struct switchtec_dev *stdev,
--			     struct switchtec_ioctl_pff_port *up)
-+			     struct switchtec_ioctl_pff_port __user *up)
- {
- 	int i, part;
- 	u32 reg;
--	struct part_cfg_regs *pcfg;
-+	struct part_cfg_regs __iomem *pcfg;
- 	struct switchtec_ioctl_pff_port p;
-
- 	if (copy_from_user(&p, up, sizeof(p)))
-@@ -1104,10 +1104,10 @@ static int ioctl_pff_to_port(struct switchtec_dev *stdev,
- }
-
- static int ioctl_port_to_pff(struct switchtec_dev *stdev,
--			     struct switchtec_ioctl_pff_port *up)
-+			     struct switchtec_ioctl_pff_port __user *up)
- {
- 	struct switchtec_ioctl_pff_port p;
--	struct part_cfg_regs *pcfg;
-+	struct part_cfg_regs __iomem *pcfg;
-
- 	if (copy_from_user(&p, up, sizeof(p)))
- 		return -EFAULT;
-
-base-commit: 92ed301919932f777713b9172e525674157e983d
---
-2.20.1
+Thanks
+Hari
