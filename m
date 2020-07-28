@@ -2,101 +2,187 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D051DC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD3AC2074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:20:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="X9zkASWi"
+	by mail.kernel.org (Postfix) with ESMTP id 3EA272074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731078AbgG1QUS (ORCPT
+        id S1731228AbgG1QUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730679AbgG1QUR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:20:17 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 330DFC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:20:17 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id i26so11933363edv.4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JdZsT2eGwbAuU6cqrvpHfhhr/C0FiXQpjb+sn/9k/nA=;
-        b=X9zkASWiHWpjw6+nfqculWmMqamRYe3jn+QpljCcE6rJCor63DWmNH8UXkREdL4LmA
-         hX7JihkSmaISC2e90syV/nPflCE7AL7AEZ1Z+4EgWTRwS6F1oltQA5o7sllAVXXTtOjA
-         tnNZaCWpLrx7cGQ4mcDqtAG5KnT7R9u8iYrT+7Wbanfa6AWhKysZe2sNE10Y9rEP3biP
-         LvBFRmYStOgbfPGCMZ9tS3Prfl6Thygrao4u+wwHdIjNPHXgO0nNBDY8S2hpJIHWjH81
-         RrqgQqigk8TbQaqyAGa5fi6b8NtKy46FAuTe4A877W2VO7H7x39HZK+YYKmAzGAmrUI5
-         2vhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JdZsT2eGwbAuU6cqrvpHfhhr/C0FiXQpjb+sn/9k/nA=;
-        b=YHjZX18eTVQOwf13sZQZlbvahr21w4jxMPyCVhQlJ8KG5CLNn0OqmZkJMNXYWQL1zO
-         0DvFV6B+2HbCQBDrmU6wRbIbEXuiQRSAw/q+fGpzYXGgj+sBQ8v554jp8YgTuzY1C7ws
-         nIj3kIJCRTf7c656f5/Hl7aG1x8eblEspFevVGay+vwR7/0KBCpaClRSpq22dfcz+81t
-         /mvg26vRptEBlXslMyJ/Ub9MmscoYropeGyprSQd7H2l4359eYN3hd6beIXkNv4DCSl1
-         KB5Lz3T+AlncmYBNWLEq9tBrWgM87zRek8t9v2gnhhdIrKdnRk5Av0xzmtEGiO2RsrPD
-         DsIQ==
-X-Gm-Message-State: AOAM531BSaUL28RqXuinaUJWU75X6tycmmUM3vENuHxz3P8c5z6112y5
-        x1Ph0I6hysGNAxgDH6cErXdY01Jltu42dI4gZVVS
-X-Google-Smtp-Source: ABdhPJzz74dgHHHep+KqO57RY1mJjew1iG0Rr5CUV4iYLH0RYRsPHpC3OsJhrBq7IcV6icvPjOOe0+CBPJ68RFWRx0Y=
-X-Received: by 2002:aa7:db10:: with SMTP id t16mr13033990eds.196.1595953215861;
- Tue, 28 Jul 2020 09:20:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200724091520.880211-1-tweek@google.com> <CAEjxPJ45ij3obT37ywn_edb9xb89z-SdwzejfN6+jrvAtghXfA@mail.gmail.com>
- <CAHC9VhS4aXD8kcXnQ2MsYvjc--xXSUpsM1xtgq3X5DBT59ohhw@mail.gmail.com>
- <CA+zpnLfczC=9HQA8s1oBGKGQO+OkuydF85o89dhSxdOyKBHMgg@mail.gmail.com>
- <CAHC9VhT1sGSpfCKojbKR+O2Hf_h+wnKnBwwSo09CbFaCYLcOHA@mail.gmail.com> <CA+zpnLecz_gvXYnrwNGW8SLaJsu==M_n9MuJgjqX9nPJtuTZBg@mail.gmail.com>
-In-Reply-To: <CA+zpnLecz_gvXYnrwNGW8SLaJsu==M_n9MuJgjqX9nPJtuTZBg@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 28 Jul 2020 12:20:04 -0400
-Message-ID: <CAHC9VhReYQwxvHeJ8jAUKZ8P+N2yyGNN3rGRb_9t7hZpW=+HVQ@mail.gmail.com>
-Subject: Re: [PATCH] selinux: add tracepoint on denials
-To:     =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Nick Kralevich <nnk@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 Jul 2020 12:20:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48730 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730679AbgG1QUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:20:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 78388B5CC;
+        Tue, 28 Jul 2020 16:20:48 +0000 (UTC)
+From:   Daniel Wagner <dwagner@suse.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH v1] block: Remove callback typedefs for blk_mq_ops
+Date:   Tue, 28 Jul 2020 18:20:36 +0200
+Message-Id: <20200728162036.118211-1-dwagner@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 12:02 PM Thi=C3=A9baud Weksteen <tweek@google.com> =
-wrote:
-> On Tue, Jul 28, 2020 at 5:12 PM Paul Moore <paul@paul-moore.com> wrote:
-> > Perhaps it would be helpful if you provided an example of how one
-> > would be expected to use this new tracepoint?  That would help put
-> > things in the proper perspective.
->
-> The best example is the one I provided in the commit message, that is
-> using perf (or a perf equivalent), to hook onto that tracepoint.
+No need to define typedefs for the callbacks, because there is not a
+single user except blk_mq_ops.
 
-I probably wasn't as clear as I should have been.  I think it would be
-helpful if you demonstrated how one would take the SELinux data in the
-perf event and translated that into something meaningful.
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+---
 
---=20
-paul moore
-www.paul-moore.com
+v1: updated indentation
+
+ include/linux/blk-mq.h | 50 ++++++++++++++++++--------------------------------
+ 1 file changed, 18 insertions(+), 32 deletions(-)
+
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 23230c1d031e..9d2d5ad367a4 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -267,27 +267,9 @@ struct blk_mq_queue_data {
+ 	bool last;
+ };
+ 
+-typedef blk_status_t (queue_rq_fn)(struct blk_mq_hw_ctx *,
+-		const struct blk_mq_queue_data *);
+-typedef void (commit_rqs_fn)(struct blk_mq_hw_ctx *);
+-typedef bool (get_budget_fn)(struct request_queue *);
+-typedef void (put_budget_fn)(struct request_queue *);
+-typedef enum blk_eh_timer_return (timeout_fn)(struct request *, bool);
+-typedef int (init_hctx_fn)(struct blk_mq_hw_ctx *, void *, unsigned int);
+-typedef void (exit_hctx_fn)(struct blk_mq_hw_ctx *, unsigned int);
+-typedef int (init_request_fn)(struct blk_mq_tag_set *set, struct request *,
+-		unsigned int, unsigned int);
+-typedef void (exit_request_fn)(struct blk_mq_tag_set *set, struct request *,
+-		unsigned int);
+-
+ typedef bool (busy_iter_fn)(struct blk_mq_hw_ctx *, struct request *, void *,
+ 		bool);
+ typedef bool (busy_tag_iter_fn)(struct request *, void *, bool);
+-typedef int (poll_fn)(struct blk_mq_hw_ctx *);
+-typedef int (map_queues_fn)(struct blk_mq_tag_set *set);
+-typedef bool (busy_fn)(struct request_queue *);
+-typedef void (complete_fn)(struct request *);
+-typedef void (cleanup_rq_fn)(struct request *);
+ 
+ /**
+  * struct blk_mq_ops - Callback functions that implements block driver
+@@ -297,7 +279,8 @@ struct blk_mq_ops {
+ 	/**
+ 	 * @queue_rq: Queue a new request from block IO.
+ 	 */
+-	queue_rq_fn		*queue_rq;
++	blk_status_t (*queue_rq)(struct blk_mq_hw_ctx *,
++				 const struct blk_mq_queue_data *);
+ 
+ 	/**
+ 	 * @commit_rqs: If a driver uses bd->last to judge when to submit
+@@ -306,7 +289,7 @@ struct blk_mq_ops {
+ 	 * purpose of kicking the hardware (which the last request otherwise
+ 	 * would have done).
+ 	 */
+-	commit_rqs_fn		*commit_rqs;
++	void (*commit_rqs)(struct blk_mq_hw_ctx *);
+ 
+ 	/**
+ 	 * @get_budget: Reserve budget before queue request, once .queue_rq is
+@@ -314,37 +297,38 @@ struct blk_mq_ops {
+ 	 * reserved budget. Also we have to handle failure case
+ 	 * of .get_budget for avoiding I/O deadlock.
+ 	 */
+-	get_budget_fn		*get_budget;
++	bool (*get_budget)(struct request_queue *);
++
+ 	/**
+ 	 * @put_budget: Release the reserved budget.
+ 	 */
+-	put_budget_fn		*put_budget;
++	void (*put_budget)(struct request_queue *);
+ 
+ 	/**
+ 	 * @timeout: Called on request timeout.
+ 	 */
+-	timeout_fn		*timeout;
++	enum blk_eh_timer_return (*timeout)(struct request *, bool);
+ 
+ 	/**
+ 	 * @poll: Called to poll for completion of a specific tag.
+ 	 */
+-	poll_fn			*poll;
++	int (*poll)(struct blk_mq_hw_ctx *);
+ 
+ 	/**
+ 	 * @complete: Mark the request as complete.
+ 	 */
+-	complete_fn		*complete;
++	void (*complete)(struct request *);
+ 
+ 	/**
+ 	 * @init_hctx: Called when the block layer side of a hardware queue has
+ 	 * been set up, allowing the driver to allocate/init matching
+ 	 * structures.
+ 	 */
+-	init_hctx_fn		*init_hctx;
++	int (*init_hctx)(struct blk_mq_hw_ctx *, void *, unsigned int);
+ 	/**
+ 	 * @exit_hctx: Ditto for exit/teardown.
+ 	 */
+-	exit_hctx_fn		*exit_hctx;
++	void (*exit_hctx)(struct blk_mq_hw_ctx *, unsigned int);
+ 
+ 	/**
+ 	 * @init_request: Called for every command allocated by the block layer
+@@ -353,11 +337,13 @@ struct blk_mq_ops {
+ 	 * Tag greater than or equal to queue_depth is for setting up
+ 	 * flush request.
+ 	 */
+-	init_request_fn		*init_request;
++	int (*init_request)(struct blk_mq_tag_set *set, struct request *,
++			    unsigned int, unsigned int);
+ 	/**
+ 	 * @exit_request: Ditto for exit/teardown.
+ 	 */
+-	exit_request_fn		*exit_request;
++	void (*exit_request)(struct blk_mq_tag_set *set, struct request *,
++			     unsigned int);
+ 
+ 	/**
+ 	 * @initialize_rq_fn: Called from inside blk_get_request().
+@@ -368,18 +354,18 @@ struct blk_mq_ops {
+ 	 * @cleanup_rq: Called before freeing one request which isn't completed
+ 	 * yet, and usually for freeing the driver private data.
+ 	 */
+-	cleanup_rq_fn		*cleanup_rq;
++	void (*cleanup_rq)(struct request *);
+ 
+ 	/**
+ 	 * @busy: If set, returns whether or not this queue currently is busy.
+ 	 */
+-	busy_fn			*busy;
++	bool (*busy)(struct request_queue *);
+ 
+ 	/**
+ 	 * @map_queues: This allows drivers specify their own queue mapping by
+ 	 * overriding the setup-time function that builds the mq_map.
+ 	 */
+-	map_queues_fn		*map_queues;
++	int (*map_queues)(struct blk_mq_tag_set *set);
+ 
+ #ifdef CONFIG_BLK_DEBUG_FS
+ 	/**
+-- 
+2.16.4
+
