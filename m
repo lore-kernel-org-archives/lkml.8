@@ -2,118 +2,236 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7718DC433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E060C20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458D120759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:14:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dbgHyPlc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgG1JNj (ORCPT
+        id S1728440AbgG1JOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:13:39 -0400
-Received: from verein.lst.de ([213.95.11.211]:47388 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728021AbgG1JNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 05:13:39 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id CE5F668B05; Tue, 28 Jul 2020 11:13:35 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 11:13:35 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Rientjes <rientjes@google.com>,
-        linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
-        iommu@lists.linux-foundation.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: Re: [PATCH] dma-pool: Do not allocate pool memory from CMA
-Message-ID: <20200728091335.GA23744@lst.de>
-References: <011994f8a717a00dcd9ed7682a1ddeb421c2c43f.camel@suse.de> <CAMi1Hd0=ZsGhTkSy221EP9Vb3GMOcS0UMczX2u5X9qK37_ea1A@mail.gmail.com> <01831596e4a2a6c9c066138b23bd30435f8e5569.camel@suse.de> <CAMi1Hd3C6kh5E49EgytBAQ_2AE_jvnp+eSNsxBYaux+exSvdbg@mail.gmail.com> <6db722947546221ed99d3f473f78e1a6de65d7d6.camel@suse.de> <CAMi1Hd0Xz6kOJFpA5PEpi6RDDGOcz0RmQ7tTOkuXq4QneOO_vQ@mail.gmail.com> <0dc1e922bf87fa73790e7471b3974528dd261486.camel@suse.de> <CAMi1Hd3O2HHBsnt=sac7FdcW0-3=4S3g_F9f__2h5gTsudfirA@mail.gmail.com> <20200724134114.GA3152@lst.de> <a9b811a84ac21c13693e6ffefd2914b911542e18.camel@suse.de>
+        Tue, 28 Jul 2020 05:14:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728366AbgG1JOL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 05:14:11 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ED2AC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 02:14:11 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id x9so9575999plr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 02:14:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4kYQwuWrs/m4kOPcfnAtivVDPSr+0itm5vip5k2F3bs=;
+        b=dbgHyPlcNQaWVKC7RJHB4RtJ0mFEyk6MrvhfgXOlrqlzIKjFkS9MvMODq1ysgwc8Gd
+         JbKUzpJNPcahklKRSMSZuoCpYG+NQzXqYenQEL6MosvE70fGnlnWrUIKCvqgP4cFj1e0
+         VHaqQTTrmkkPs506fkNPtDpJA9NwUddycaqZc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4kYQwuWrs/m4kOPcfnAtivVDPSr+0itm5vip5k2F3bs=;
+        b=pWDcVju1CtkcBJdjVm5euUCgZTzZVlVzea60Fk1uwZPj5AmxhUbG2cKSOhCXn9T0BQ
+         oAeEUAvsmhFD4dtPRhoR2LnorPhPkIuUrBm1CzSek/Iw52hUOtSB+fJubOPujAqTH8NA
+         BVXh3eeSMTh6a9tdG9vNv5+iyeOscOeKngOEfAf9DAcBRPENPIzaCLVr8jRuPGFmvIfO
+         YY64D1DzsZf7M84p3cVR4rR8Lh8uKzQWf5q+w6i1yOI7dTblpMcCyLfwkTxtABuNw1qM
+         Ar4PZLLMzqs+GzokpblnB8WrXfaVMOotGZljSo8+kv2qrSrO0UwAJqXuN2xcR33o8zR7
+         njmA==
+X-Gm-Message-State: AOAM532DHj+z21GLT7W+QGo36QVmx3HYA/iSZ6sWrTGpQfV1inRnq+yr
+        oYPLlnU/lvVUGzG2iBH5H3KC4Q==
+X-Google-Smtp-Source: ABdhPJwlFZw0DGDuX6gDbbyGa42I13BY/zzhh04pzIcFAY25yafKtB3KPm2eYt2Zeh+Nwsvz25OJ6w==
+X-Received: by 2002:a17:90a:2c0e:: with SMTP id m14mr3572819pjd.166.1595927650724;
+        Tue, 28 Jul 2020 02:14:10 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:7220:84ff:fe09:94fe])
+        by smtp.gmail.com with ESMTPSA id m17sm18293421pfo.182.2020.07.28.02.14.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 02:14:09 -0700 (PDT)
+From:   Gwendal Grignou <gwendal@chromium.org>
+To:     groeck@chromium.org, enric.balletbo@collabora.com,
+        bleung@chromium.org
+Cc:     linux-kernel@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH] platform: cros_ec: sensorhub: Simplify legacy timestamp spreading
+Date:   Tue, 28 Jul 2020 02:13:55 -0700
+Message-Id: <20200728091355.2506827-1-gwendal@chromium.org>
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a9b811a84ac21c13693e6ffefd2914b911542e18.camel@suse.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 07:56:56PM +0200, Nicolas Saenz Julienne wrote:
-> Hi Christoph,
-> thanks for having a look at this!
-> 
-> On Fri, 2020-07-24 at 15:41 +0200, Christoph Hellwig wrote:
-> > Yes, the iommu is an interesting case, and the current code is
-> > wrong for that.
-> 
-> Care to expand on this? I do get that checking dma_coherent_ok() on memory
-> that'll later on be mapped into an iommu is kind of silly, although I think
-> harmless in Amir's specific case, since devices have wide enough dma-ranges. Is
-> there more to it?
+On some machine (nami), interrupt latency cause samples to appear
+to be from the future and are pegged to the current time.
+We would see samples with this pattern:
 
-I think the problem is that it can lead to not finding suitable memory.
+[t, t + ~5ms, t + ~10ms, t + ~10ms + 100us, t + ~10ms + 200us],
+                             (current now)      (current now)
+(t is the last timestamp time)
 
-> 
-> > Can you try the patch below?  It contains a modified version of Nicolas'
-> > patch to try CMA again for the expansion and a new (for now hackish) way to
-> > not apply the addressability check for dma-iommu allocations.
-> > 
-> > diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-> > index 6bc74a2d51273e..ec5e525d2b9309 100644
-> > --- a/kernel/dma/pool.c
-> > +++ b/kernel/dma/pool.c
-> > @@ -3,7 +3,9 @@
-> >   * Copyright (C) 2012 ARM Ltd.
-> >   * Copyright (C) 2020 Google LLC
-> >   */
-> > +#include <linux/cma.h>
-> >  #include <linux/debugfs.h>
-> > +#include <linux/dma-contiguous.h>
-> >  #include <linux/dma-direct.h>
-> >  #include <linux/dma-noncoherent.h>
-> >  #include <linux/init.h>
-> > @@ -55,6 +57,31 @@ static void dma_atomic_pool_size_add(gfp_t gfp, size_t
-> > size)
-> >  		pool_size_kernel += size;
-> >  }
-> >  
-> > +static bool cma_in_zone(gfp_t gfp)
-> > +{
-> > +	phys_addr_t end;
-> > +	unsigned long size;
-> > +	struct cma *cma;
-> > +
-> > +	cma = dev_get_cma_area(NULL);
-> > +	if (!cma)
-> > +		return false;
-> > +
-> > +	size = cma_get_size(cma);
-> > +	if (!size)
-> > +		return false;
-> > +	end = cma_get_base(cma) - memblock_start_of_DRAM() + size - 1;
-> > +
-> > +	/* CMA can't cross zone boundaries, see cma_activate_area() */
-> > +	if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp & GFP_DMA) &&
-> > +	    end <= DMA_BIT_MASK(zone_dma_bits))
-> > +		return true;
-> > +	if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp & GFP_DMA32) &&
-> > +	    end <= DMA_BIT_MASK(32))
-> > +		return true;
-> > +	return true;
-> 
-> IIUC this will always return true given a CMA is present. Which reverts to the
-> previous behaviour (previous as in breaking some rpi4 setups), isn't it?
+Last 2 samples would be barely spread, causing applications to
+complain.
+We now spread the entire sequence. This is not great: in the example
+the sensor was supposed to send samples every 5ms, it now appears to
+send one every 2.5ms, but it is slightly closer to reality:
 
-Was that really what broke the PI?  I'll try to get the split out series
-today, which might have a few more tweaks, and then we'll need to test it
-both on these rpi4 setups and Amits phone.
+sampling time in the example above
+At sensor level
+
+1             2             3             4            5
++-----5ms-----+-----5ms-----+-----5ms-----+----5ms-----+---> t
+
+Before, at host level
+                       1             2             3 4 5
+--interrupt delay------+-----5ms-----+-----5ms-----+-+-+---> t
+
+Afer, at host level
+                       1       2       3       4       5
+--interrupt delay------+-2.5ms-+-2.5ms-+-2.5ms-+-2.5ms-+---> t
+
+Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+---
+ .../platform/chrome/cros_ec_sensorhub_ring.c  | 94 +++++++------------
+ 1 file changed, 33 insertions(+), 61 deletions(-)
+
+diff --git a/drivers/platform/chrome/cros_ec_sensorhub_ring.c b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+index 1b9637655e63e..0b0bf93073c30 100644
+--- a/drivers/platform/chrome/cros_ec_sensorhub_ring.c
++++ b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+@@ -719,29 +719,22 @@ done_with_this_batch:
+  * cros_ec_sensor_ring_spread_add_legacy: Calculate proper timestamps then
+  * add to ringbuffer (legacy).
+  *
+- * Note: This assumes we're running old firmware, where every sample's timestamp
+- * is after the sample. Run if tight_timestamps == false.
+- *
+- * If there is a sample with a proper timestamp
++ * Note: This assumes we're running old firmware, where timestamp
++ * is inserted after its sample(s)e. There can be several samples between
++ * timestamps, so several samples can have the same timestamp.
+  *
+  *                        timestamp | count
+  *                        -----------------
+- * older_unprocess_out --> TS1      | 1
+- *                         TS1      | 2
+- *                out -->  TS1      | 3
+- *           next_out -->  TS2      |
+- *
+- * We spread time for the samples [older_unprocess_out .. out]
+- * between TS1 and TS2: [TS1+1/4, TS1+2/4, TS1+3/4, TS2].
++ *          1st sample --> TS1      | 1
++ *                         TS2      | 2
++ *                         TS2      | 3
++ *                         TS3      | 4
++ *           last_out -->
+  *
+- * If we reach the end of the samples, we compare with the
+- * current timestamp:
+  *
+- * older_unprocess_out --> TS1      | 1
+- *                         TS1      | 2
+- *                 out --> TS1      | 3
++ * We spread time for the samples using perod p = (current - TS1)/4.
++ * between TS1 and TS2: [TS1+p/4, TS1+2p/4, TS1+3p/4, current_timestamp].
+  *
+- * We know have [TS1+1/3, TS1+2/3, current timestamp]
+  */
+ static void
+ cros_ec_sensor_ring_spread_add_legacy(struct cros_ec_sensorhub *sensorhub,
+@@ -754,58 +747,37 @@ cros_ec_sensor_ring_spread_add_legacy(struct cros_ec_sensorhub *sensorhub,
+ 	int i;
+ 
+ 	for_each_set_bit(i, &sensor_mask, sensorhub->sensor_num) {
+-		s64 older_timestamp;
+ 		s64 timestamp;
+-		struct cros_ec_sensors_ring_sample *older_unprocess_out =
+-			sensorhub->ring;
+-		struct cros_ec_sensors_ring_sample *next_out;
+-		int count = 1;
+-
+-		for (out = sensorhub->ring; out < last_out; out = next_out) {
+-			s64 time_period;
++		int count = 0;
++		s64 time_period;
+ 
+-			next_out = out + 1;
++		for (out = sensorhub->ring; out < last_out; out++) {
+ 			if (out->sensor_id != i)
+ 				continue;
+ 
+ 			/* Timestamp to start with */
+-			older_timestamp = out->timestamp;
+-
+-			/* Find next sample. */
+-			while (next_out < last_out && next_out->sensor_id != i)
+-				next_out++;
++			timestamp = out->timestamp;
++			out++;
++			count = 1;
++			break;
++		}
++		for (; out < last_out; out++) {
++			/* Find last sample. */
++			if (out->sensor_id != i)
++				continue;
++			count++;
++		}
++		if (count == 0)
++			continue;
+ 
+-			if (next_out >= last_out) {
+-				timestamp = current_timestamp;
+-			} else {
+-				timestamp = next_out->timestamp;
+-				if (timestamp == older_timestamp) {
+-					count++;
+-					continue;
+-				}
+-			}
++		/* Spread uniformly between the first and last samples. */
++		time_period = div_s64(current_timestamp - timestamp, count);
+ 
+-			/*
+-			 * The next sample has a new timestamp, spread the
+-			 * unprocessed samples.
+-			 */
+-			if (next_out < last_out)
+-				count++;
+-			time_period = div_s64(timestamp - older_timestamp,
+-					      count);
+-
+-			for (; older_unprocess_out <= out;
+-					older_unprocess_out++) {
+-				if (older_unprocess_out->sensor_id != i)
+-					continue;
+-				older_timestamp += time_period;
+-				older_unprocess_out->timestamp =
+-					older_timestamp;
+-			}
+-			count = 1;
+-			/* The next_out sample has a valid timestamp, skip. */
+-			next_out++;
+-			older_unprocess_out = next_out;
++		for (out = sensorhub->ring; out < last_out; out++) {
++			if (out->sensor_id != i)
++				continue;
++			timestamp += time_period;
++			out->timestamp = timestamp;
+ 		}
+ 	}
+ 
+-- 
+2.28.0.rc0.142.g3c755180ce-goog
+
