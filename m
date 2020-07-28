@@ -6,65 +6,70 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C932C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D2AC433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAFA20792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66802074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:31:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595953887;
-	bh=PYdkKnxxcQFMv3YJQCfo1uY3iy0vMXSKSgcJLUonuwA=;
+	s=default; t=1595953892;
+	bh=U2ae0+qxf5T7aHnxqe5Yy151vsXACiOFQ0qZgH3TxhQ=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=cZC2pi8hOVWjzqqDHlF8cHCJxVKQZMPvaTfjlPhAfTRuRML5zK2jB2E0XZ1hRVYXp
-	 S4YspJ1PXqCqpgg9FhX6B4Rc9ybgTCB7c5Gru3GcU5Vjzb94zITUPrGYKpNAXa+6+6
-	 YI1sj9IL7vgmwMP6gdezitutWUACqEDBsBvpNgzk=
+	b=Cc/DgJ8nTmweSWf28d2LTTg8UABagNy4JIMoxbb2sxfx6wSgee5wfwbULXuQ8UxDk
+	 MTu14bW8ZCUv4XP1s/HTU709/wPQxAaU4id326dqTeIadiEDuBMjOt8VnNcjYq1S45
+	 Qy/1/eBRHPu2p4sI/hYJYYvjG9P5+K7nqUPT2qMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731417AbgG1Qb0 (ORCPT
+        id S1731426AbgG1Qba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:31:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46934 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 12:31:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731070AbgG1QbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:31:24 -0400
+        id S1731070AbgG1Qba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:31:30 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFFC920825;
-        Tue, 28 Jul 2020 16:31:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94F0C2074F;
+        Tue, 28 Jul 2020 16:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595953883;
-        bh=PYdkKnxxcQFMv3YJQCfo1uY3iy0vMXSKSgcJLUonuwA=;
+        s=default; t=1595953890;
+        bh=U2ae0+qxf5T7aHnxqe5Yy151vsXACiOFQ0qZgH3TxhQ=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=yv/UdIWHabVmupxBbnxvN2V/4hviSAwkU0frmQc0+sBWuMreFl7R+3jQ2neFgXLsI
-         ghQfM2OzTMLrgzTNmIKO39WIsHG2gLQ4vd35oVPnHcdpaI6x7QIQvdXXiAnmkVGtH2
-         EcbhCqFDxiTdmEy5dppbKv2Iq8ICfyInr7ftgGmY=
-Date:   Tue, 28 Jul 2020 17:31:05 +0100
+        b=ow/wIniTZDzPUVFdpzhFD61DWmtDPjzS+GSVZk0YknUaqHxM89uMWdsnt18pv+4bj
+         fXUUftnu4Vp2f22G8RpxVx14rCeq4ai5kvLUhnvEWGCNuULgWgcr6x1Fbj1VBFFPRx
+         YiV47e9i99mh+vAQVrSaPzGRV4OzbXJEOYwFuoz0=
+Date:   Tue, 28 Jul 2020 17:31:12 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org
-In-Reply-To: <20200724155933.1040501-1-katsuhiro@katsuster.net>
-References: <20200724155933.1040501-1-katsuhiro@katsuster.net>
-Subject: Re: [PATCH v2] dt-bindings: sound: convert Everest ES8316 binding to yaml
-Message-Id: <159595383113.15027.17968086750577561184.b4-ty@kernel.org>
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Guenter Roeck <groeck@chromium.org>,
+        "open list:VOLTAGE AND CURRENT REGULATOR FRAMEWORK" 
+        <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>
+In-Reply-To: <20200728091909.2009771-1-pihsun@chromium.org>
+References: <20200728091909.2009771-1-pihsun@chromium.org>
+Subject: Re: [PATCH] regulator: cros-ec-regulator: Fix double free of desc->name.
+Message-Id: <159595387216.15267.9465724386859282869.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Jul 2020 00:59:33 +0900, Katsuhiro Suzuki wrote:
-> This patch converts Everest Semiconductor ES8316 low power audio
-> CODEC binding to DT schema.
+On Tue, 28 Jul 2020 17:19:09 +0800, Pi-Hsun Shih wrote:
+> The desc->name field is allocated with devm_kstrdup, but is also kfreed
+> on the error path, causing it to be double freed. Remove the kfree on
+> the error path.
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/1] ASoC: convert Everest ES8316 binding to yaml
-      commit: 92e67a9c4f206dc9c859c405e67448a8be59ac5d
+[1/1] regulator: cros-ec-regulator: Fix double free of desc->name.
+      commit: 176cf704425f3d22603d379ffa4a1033a24a779d
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
