@@ -2,45 +2,44 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EAEC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CDDC433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96D8D207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C72B722B45
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgG1GGR (ORCPT
+        id S1727114AbgG1GGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:06:17 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:34885 "EHLO
+        Tue, 28 Jul 2020 02:06:06 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:34834 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727803AbgG1GGM (ORCPT
+        with ESMTP id S1726299AbgG1GGG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:06:12 -0400
+        Tue, 28 Jul 2020 02:06:06 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from eli@mellanox.com)
-        with SMTP; 28 Jul 2020 09:06:07 +0300
+        with SMTP; 28 Jul 2020 09:06:02 +0300
 Received: from nps-server-21.mtl.labs.mlnx (nps-server-21.mtl.labs.mlnx [10.237.240.120])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06S667nA016842;
-        Tue, 28 Jul 2020 09:06:07 +0300
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06S662T9016728;
+        Tue, 28 Jul 2020 09:06:02 +0300
 Received: from nps-server-21.mtl.labs.mlnx (localhost [127.0.0.1])
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 06S667Jq004233;
-        Tue, 28 Jul 2020 09:06:07 +0300
+        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 06S662Tp004224;
+        Tue, 28 Jul 2020 09:06:02 +0300
 Received: (from eli@localhost)
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 06S667Xt004232;
-        Tue, 28 Jul 2020 09:06:07 +0300
+        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 06S662oI004223;
+        Tue, 28 Jul 2020 09:06:02 +0300
 From:   Eli Cohen <eli@mellanox.com>
 To:     mst@redhat.com, jasowang@redhat.com,
         virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
-Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com,
-        Eli Cohen <eli@mellanox.com>
-Subject: [PATCH V3 vhost next 06/10] vdpa: Modify get_vq_state() to return error code
-Date:   Tue, 28 Jul 2020 09:05:35 +0300
-Message-Id: <20200728060539.4163-7-eli@mellanox.com>
+Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com
+Subject: [PATCH V3 vhost next 02/10] vdpa_sim: use the batching API
+Date:   Tue, 28 Jul 2020 09:05:31 +0300
+Message-Id: <20200728060539.4163-3-eli@mellanox.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200728060539.4163-1-eli@mellanox.com>
 References: <20200728060539.4163-1-eli@mellanox.com>
@@ -51,91 +50,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modify get_vq_state() so it returns an error code. In case of hardware
-acceleration, the available index may be retrieved from the device, an
-operation that can possibly fail.
+From: Jason Wang <jasowang@redhat.com>
 
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Eli Cohen <eli@mellanox.com>
+Change-Id: I3751f1aecce285e0f61530c69616852d49e5f547
+Signed-off-by: Jason Wang <jasowang@redhat.com>
 ---
- drivers/vdpa/ifcvf/ifcvf_main.c  | 5 +++--
- drivers/vdpa/vdpa_sim/vdpa_sim.c | 5 +++--
- drivers/vhost/vdpa.c             | 5 ++++-
- include/linux/vdpa.h             | 4 ++--
- 4 files changed, 12 insertions(+), 7 deletions(-)
+ drivers/vdpa/vdpa_sim/vdpa_sim.c | 20 --------------------
+ drivers/vhost/vdpa.c             |  1 -
+ 2 files changed, 21 deletions(-)
 
-diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c b/drivers/vdpa/ifcvf/ifcvf_main.c
-index 69032ee97824..d9b5f465ac81 100644
---- a/drivers/vdpa/ifcvf/ifcvf_main.c
-+++ b/drivers/vdpa/ifcvf/ifcvf_main.c
-@@ -235,12 +235,13 @@ static u16 ifcvf_vdpa_get_vq_num_max(struct vdpa_device *vdpa_dev)
- 	return IFCVF_QUEUE_MAX;
- }
- 
--static void ifcvf_vdpa_get_vq_state(struct vdpa_device *vdpa_dev, u16 qid,
--				    struct vdpa_vq_state *state)
-+static int ifcvf_vdpa_get_vq_state(struct vdpa_device *vdpa_dev, u16 qid,
-+				   struct vdpa_vq_state *state)
- {
- 	struct ifcvf_hw *vf = vdpa_to_vf(vdpa_dev);
- 
- 	state->avail_index = ifcvf_get_vq_state(vf, qid);
-+	return 0;
- }
- 
- static int ifcvf_vdpa_set_vq_state(struct vdpa_device *vdpa_dev, u16 qid,
 diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-index 599519039f8d..ddf6086d43c2 100644
+index c7334cc65bb2..82d1068af3ef 100644
 --- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
 +++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-@@ -427,14 +427,15 @@ static int vdpasim_set_vq_state(struct vdpa_device *vdpa, u16 idx,
- 	return 0;
+@@ -548,24 +548,6 @@ static int vdpasim_set_map(struct vdpa_device *vdpa,
+ 	return ret;
  }
  
--static void vdpasim_get_vq_state(struct vdpa_device *vdpa, u16 idx,
--				 struct vdpa_vq_state *state)
-+static int vdpasim_get_vq_state(struct vdpa_device *vdpa, u16 idx,
-+				struct vdpa_vq_state *state)
+-static int vdpasim_dma_map(struct vdpa_device *vdpa, u64 iova, u64 size,
+-			   u64 pa, u32 perm)
+-{
+-	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
+-
+-	return vhost_iotlb_add_range(vdpasim->iommu, iova,
+-				     iova + size - 1, pa, perm);
+-}
+-
+-static int vdpasim_dma_unmap(struct vdpa_device *vdpa, u64 iova, u64 size)
+-{
+-	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
+-
+-	vhost_iotlb_del_range(vdpasim->iommu, iova, iova + size - 1);
+-
+-	return 0;
+-}
+-
+ static void vdpasim_free(struct vdpa_device *vdpa)
  {
  	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
- 	struct vdpasim_virtqueue *vq = &vdpasim->vqs[idx];
- 	struct vringh *vrh = &vq->vring;
+@@ -598,8 +580,6 @@ static const struct vdpa_config_ops vdpasim_net_config_ops = {
+ 	.set_config             = vdpasim_set_config,
+ 	.get_generation         = vdpasim_get_generation,
+ 	.set_map                = vdpasim_set_map,
+-	.dma_map                = vdpasim_dma_map,
+-	.dma_unmap              = vdpasim_dma_unmap,
+ 	.free                   = vdpasim_free,
+ };
  
- 	state->avail_index = vrh->last_avail_idx;
-+	return 0;
- }
- 
- static u32 vdpasim_get_vq_align(struct vdpa_device *vdpa)
 diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-index af98c11c9d26..fadad74f882e 100644
+index 8827ae31f96d..65195b30133b 100644
 --- a/drivers/vhost/vdpa.c
 +++ b/drivers/vhost/vdpa.c
-@@ -360,7 +360,10 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
- 	}
+@@ -533,7 +533,6 @@ static int vhost_vdpa_map(struct vhost_vdpa *v,
  
- 	if (cmd == VHOST_GET_VRING_BASE) {
--		ops->get_vq_state(v->vdpa, idx, &vq_state);
-+		r = ops->get_vq_state(v->vdpa, idx, &vq_state);
-+		if (r)
-+			return r;
-+
- 		vq->last_avail_idx = vq_state.avail_index;
- 	}
- 
-diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
-index 7b088bebffe8..000d71a9f988 100644
---- a/include/linux/vdpa.h
-+++ b/include/linux/vdpa.h
-@@ -185,8 +185,8 @@ struct vdpa_config_ops {
- 	bool (*get_vq_ready)(struct vdpa_device *vdev, u16 idx);
- 	int (*set_vq_state)(struct vdpa_device *vdev, u16 idx,
- 			    const struct vdpa_vq_state *state);
--	void (*get_vq_state)(struct vdpa_device *vdev, u16 idx,
--			     struct vdpa_vq_state *state);
-+	int (*get_vq_state)(struct vdpa_device *vdev, u16 idx,
-+			    struct vdpa_vq_state *state);
- 	struct vdpa_notification_area
- 	(*get_vq_notification)(struct vdpa_device *vdev, u16 idx);
+ static void vhost_vdpa_unmap(struct vhost_vdpa *v, u64 iova, u64 size)
+ {
+-	struct vhost_dev *dev = &v->vdev;
+ 	struct vdpa_device *vdpa = v->vdpa;
+ 	const struct vdpa_config_ops *ops = vdpa->config;
  
 -- 
 2.26.0
