@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0295C433F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BE5C433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE11620759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3BE820759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgG1GWF (ORCPT
+        id S1728155AbgG1GWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:22:05 -0400
-Received: from mga06.intel.com ([134.134.136.31]:26366 "EHLO mga06.intel.com"
+        Tue, 28 Jul 2020 02:22:17 -0400
+Received: from mga06.intel.com ([134.134.136.31]:26362 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727784AbgG1GU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:20:58 -0400
-IronPort-SDR: q4qJHz0K7RPOSTtyBvs7zAfV8vGhtwrPjj6dTkSPrsGQA8uoslfwQM2XvuUieUBkOL+bFgMwaV
- Nlry21VHdJlg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="212681239"
+        id S1727008AbgG1GU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 02:20:56 -0400
+IronPort-SDR: kp6p6pxK6/OXeD2ylE5UutMNt49m9P61P1UQlI5Jdq8W9/xubVeka2kY1p4rbqKAHECxTred7T
+ 6pCfcGq1Kl4w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="212681241"
 X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
-   d="scan'208";a="212681239"
+   d="scan'208,223";a="212681241"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 23:20:55 -0700
-IronPort-SDR: R9yp9fjv/Xr1U1/Vg5kICdHb57mu/1T3ew1yj0lFdXo1qlnGc29pAjYPrD8oqehSjb9dwqB/Cg
- TxX/M7U5zRlA==
+IronPort-SDR: 4cVCN5VBZ8Ywyg/8l6Gb6KzD2R8Fz5M6RE6j04hF6QJvNMcEqMgdijHD1Lm4IDzMYQBWj/70rs
+ 6dsHf2LRX3kA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
-   d="scan'208";a="320274392"
+   d="scan'208,223";a="320274397"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga008.jf.intel.com with ESMTP; 27 Jul 2020 23:20:55 -0700
 From:   Liu Yi L <yi.l.liu@intel.com>
@@ -45,9 +45,9 @@ Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
         hao.wu@intel.com, stefanha@gmail.com,
         iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 04/15] vfio/type1: Report iommu nesting info to userspace
-Date:   Mon, 27 Jul 2020 23:27:33 -0700
-Message-Id: <1595917664-33276-5-git-send-email-yi.l.liu@intel.com>
+Subject: [PATCH v6 06/15] iommu/vt-d: Support setting ioasid set to domain
+Date:   Mon, 27 Jul 2020 23:27:35 -0700
+Message-Id: <1595917664-33276-7-git-send-email-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
 References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
@@ -56,39 +56,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch exports iommu nesting capability info to user space through
-VFIO. Userspace is expected to check this info for supported uAPIs (e.g.
-PASID alloc/free, bind page table, and cache invalidation) and the vendor
-specific format information for first level/stage page table that will be
-bound to.
+From IOMMU p.o.v., PASIDs allocated and managed by external components
+(e.g. VFIO) will be passed in for gpasid_bind/unbind operation. IOMMU
+needs some knowledge to check the PASID ownership, hence add an interface
+for those components to tell the PASID owner.
 
-The nesting info is available only after container set to be NESTED type.
-Current implementation imposes one limitation - one nesting container
-should include at most one iommu group. The philosophy of vfio container
-is having all groups/devices within the container share the same IOMMU
-context. When vSVA is enabled, one IOMMU context could include one 2nd-
-level address space and multiple 1st-level address spaces. While the
-2nd-level address space is reasonably sharable by multiple groups, blindly
-sharing 1st-level address spaces across all groups within the container
-might instead break the guest expectation. In the future sub/super container
-concept might be introduced to allow partial address space sharing within
-an IOMMU context. But for now let's go with this restriction by requiring
-singleton container for using nesting iommu features. Below link has the
-related discussion about this decision.
-
-https://lore.kernel.org/kvm/20200515115924.37e6996d@w520.home/
-
-This patch also changes the NESTING type container behaviour. Something
-that would have succeeded before will now fail: Before this series, if
-user asked for a VFIO_IOMMU_TYPE1_NESTING, it would have succeeded even
-if the SMMU didn't support stage-2, as the driver would have silently
-fallen back on stage-1 mappings (which work exactly the same as stage-2
-only since there was no nesting supported). After the series, we do check
-for DOMAIN_ATTR_NESTING so if user asks for VFIO_IOMMU_TYPE1_NESTING and
-the SMMU doesn't support stage-2, the ioctl fails. But it should be a good
-fix and completely harmless. Detail can be found in below link as well.
-
-https://lore.kernel.org/kvm/20200717090900.GC4850@myrica/
+In latest kernel design, PASID ownership is managed by IOASID set where
+the PASID is allocated from. This patch adds support for setting ioasid
+set ID to the domains used for nesting/vSVA. Subsequent SVA operations
+will check the PASID against its IOASID set for proper ownership.
 
 Cc: Kevin Tian <kevin.tian@intel.com>
 CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -98,238 +74,87 @@ Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Cc: Joerg Roedel <joro@8bytes.org>
 Cc: Lu Baolu <baolu.lu@linux.intel.com>
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
 v5 -> v6:
 *) address comments against v5 from Eric Auger.
-*) don't report nesting cap to userspace if the nesting_info->format is
-   invalid.
 
 v4 -> v5:
 *) address comments from Eric Auger.
-*) return struct iommu_nesting_info for VFIO_IOMMU_TYPE1_INFO_CAP_NESTING as
-   cap is much "cheap", if needs extension in future, just define another cap.
-   https://lore.kernel.org/kvm/20200708132947.5b7ee954@x1.home/
-
-v3 -> v4:
-*) address comments against v3.
-
-v1 -> v2:
-*) added in v2
 ---
- drivers/vfio/vfio_iommu_type1.c | 106 +++++++++++++++++++++++++++++++++++-----
- include/uapi/linux/vfio.h       |  19 +++++++
- 2 files changed, 113 insertions(+), 12 deletions(-)
+ drivers/iommu/intel/iommu.c | 23 +++++++++++++++++++++++
+ include/linux/intel-iommu.h |  4 ++++
+ include/linux/iommu.h       |  1 +
+ 3 files changed, 28 insertions(+)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 3bd70ff..18ff0c3 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -62,18 +62,20 @@ MODULE_PARM_DESC(dma_entry_limit,
- 		 "Maximum number of user DMA mappings per container (65535).");
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index ed4b71c..b2fe54e 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -1793,6 +1793,7 @@ static struct dmar_domain *alloc_domain(int flags)
+ 	if (first_level_by_default())
+ 		domain->flags |= DOMAIN_FLAG_USE_FIRST_LEVEL;
+ 	domain->has_iotlb_device = false;
++	domain->ioasid_sid = INVALID_IOASID_SET;
+ 	INIT_LIST_HEAD(&domain->devices);
  
- struct vfio_iommu {
--	struct list_head	domain_list;
--	struct list_head	iova_list;
--	struct vfio_domain	*external_domain; /* domain for external user */
--	struct mutex		lock;
--	struct rb_root		dma_list;
--	struct blocking_notifier_head notifier;
--	unsigned int		dma_avail;
--	uint64_t		pgsize_bitmap;
--	bool			v2;
--	bool			nesting;
--	bool			dirty_page_tracking;
--	bool			pinned_page_dirty_scope;
-+	struct list_head		domain_list;
-+	struct list_head		iova_list;
-+	/* domain for external user */
-+	struct vfio_domain		*external_domain;
-+	struct mutex			lock;
-+	struct rb_root			dma_list;
-+	struct blocking_notifier_head	notifier;
-+	unsigned int			dma_avail;
-+	uint64_t			pgsize_bitmap;
-+	bool				v2;
-+	bool				nesting;
-+	bool				dirty_page_tracking;
-+	bool				pinned_page_dirty_scope;
-+	struct iommu_nesting_info	*nesting_info;
- };
- 
- struct vfio_domain {
-@@ -130,6 +132,9 @@ struct vfio_regions {
- #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
- 					(!list_empty(&iommu->domain_list))
- 
-+#define CONTAINER_HAS_DOMAIN(iommu)	(((iommu)->external_domain) || \
-+					 (!list_empty(&(iommu)->domain_list)))
-+
- #define DIRTY_BITMAP_BYTES(n)	(ALIGN(n, BITS_PER_TYPE(u64)) / BITS_PER_BYTE)
- 
- /*
-@@ -1929,6 +1934,13 @@ static void vfio_iommu_iova_insert_copy(struct vfio_iommu *iommu,
- 
- 	list_splice_tail(iova_copy, iova);
- }
-+
-+static void vfio_iommu_release_nesting_info(struct vfio_iommu *iommu)
-+{
-+	kfree(iommu->nesting_info);
-+	iommu->nesting_info = NULL;
-+}
-+
- static int vfio_iommu_type1_attach_group(void *iommu_data,
- 					 struct iommu_group *iommu_group)
- {
-@@ -1959,6 +1971,12 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+ 	return domain;
+@@ -6040,6 +6041,28 @@ intel_iommu_domain_set_attr(struct iommu_domain *domain,
  		}
- 	}
- 
-+	/* Nesting type container can include only one group */
-+	if (iommu->nesting && CONTAINER_HAS_DOMAIN(iommu)) {
-+		mutex_unlock(&iommu->lock);
-+		return -EINVAL;
-+	}
+ 		spin_unlock_irqrestore(&device_domain_lock, flags);
+ 		break;
++	case DOMAIN_ATTR_IOASID_SID:
++	{
++		int sid = *(int *)data;
 +
- 	group = kzalloc(sizeof(*group), GFP_KERNEL);
- 	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
- 	if (!group || !domain) {
-@@ -2029,6 +2047,32 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
- 	if (ret)
- 		goto out_domain;
- 
-+	/* Nesting cap info is available only after attaching */
-+	if (iommu->nesting) {
-+		struct iommu_nesting_info tmp = { .argsz = 0, };
-+
-+		/* First get the size of vendor specific nesting info */
-+		ret = iommu_domain_get_attr(domain->domain,
-+					    DOMAIN_ATTR_NESTING,
-+					    &tmp);
-+		if (ret)
-+			goto out_detach;
-+
-+		iommu->nesting_info = kzalloc(tmp.argsz, GFP_KERNEL);
-+		if (!iommu->nesting_info) {
-+			ret = -ENOMEM;
-+			goto out_detach;
++		spin_lock_irqsave(&device_domain_lock, flags);
++		if (!(dmar_domain->flags & DOMAIN_FLAG_NESTING_MODE)) {
++			ret = -ENODEV;
++			spin_unlock_irqrestore(&device_domain_lock, flags);
++			break;
 +		}
-+
-+		/* Now get the nesting info */
-+		iommu->nesting_info->argsz = tmp.argsz;
-+		ret = iommu_domain_get_attr(domain->domain,
-+					    DOMAIN_ATTR_NESTING,
-+					    iommu->nesting_info);
-+		if (ret)
-+			goto out_detach;
++		if (dmar_domain->ioasid_sid != INVALID_IOASID_SET &&
++		    dmar_domain->ioasid_sid != sid) {
++			pr_warn_ratelimited("multi ioasid_set (%d:%d) setting",
++					    dmar_domain->ioasid_sid, sid);
++			ret = -EBUSY;
++			spin_unlock_irqrestore(&device_domain_lock, flags);
++			break;
++		}
++		dmar_domain->ioasid_sid = sid;
++		spin_unlock_irqrestore(&device_domain_lock, flags);
++		break;
 +	}
-+
- 	/* Get aperture info */
- 	iommu_domain_get_attr(domain->domain, DOMAIN_ATTR_GEOMETRY, &geo);
+ 	default:
+ 		ret = -EINVAL;
+ 		break;
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index 3f23c26..0d0ab32 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -549,6 +549,10 @@ struct dmar_domain {
+ 					   2 == 1GiB, 3 == 512GiB, 4 == 1TiB */
+ 	u64		max_addr;	/* maximum mapped address */
  
-@@ -2138,6 +2182,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
- 	return 0;
- 
- out_detach:
-+	vfio_iommu_release_nesting_info(iommu);
- 	vfio_iommu_detach_group(domain, group);
- out_domain:
- 	iommu_domain_free(domain->domain);
-@@ -2338,6 +2383,8 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
- 					vfio_iommu_unmap_unpin_all(iommu);
- 				else
- 					vfio_iommu_unmap_unpin_reaccount(iommu);
-+
-+				vfio_iommu_release_nesting_info(iommu);
- 			}
- 			iommu_domain_free(domain->domain);
- 			list_del(&domain->next);
-@@ -2546,6 +2593,39 @@ static int vfio_iommu_migration_build_caps(struct vfio_iommu *iommu,
- 	return vfio_info_add_capability(caps, &cap_mig.header, sizeof(cap_mig));
- }
- 
-+static int vfio_iommu_add_nesting_cap(struct vfio_iommu *iommu,
-+				      struct vfio_info_cap *caps)
-+{
-+	struct vfio_info_cap_header *header;
-+	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
-+	size_t size;
-+
-+	/* when nesting_info is null, no need go further */
-+	if (!iommu->nesting_info)
-+		return 0;
-+
-+	/* when @format of nesting_info is 0, fail the call */
-+	if (iommu->nesting_info->format == 0)
-+		return -ENOENT;
-+
-+	size = offsetof(struct vfio_iommu_type1_info_cap_nesting, info) +
-+	       iommu->nesting_info->argsz;
-+
-+	header = vfio_info_cap_add(caps, size,
-+				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
-+	if (IS_ERR(header))
-+		return PTR_ERR(header);
-+
-+	nesting_cap = container_of(header,
-+				   struct vfio_iommu_type1_info_cap_nesting,
-+				   header);
-+
-+	memcpy(&nesting_cap->info, iommu->nesting_info,
-+	       iommu->nesting_info->argsz);
-+
-+	return 0;
-+}
-+
- static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
- 				     unsigned long arg)
- {
-@@ -2581,6 +2661,8 @@ static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
- 	if (!ret)
- 		ret = vfio_iommu_iova_build_caps(iommu, &caps);
- 
-+	ret = vfio_iommu_add_nesting_cap(iommu, &caps);
-+
- 	mutex_unlock(&iommu->lock);
- 
- 	if (ret)
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index 9204705..0cf3d6d 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -14,6 +14,7 @@
- 
- #include <linux/types.h>
- #include <linux/ioctl.h>
-+#include <linux/iommu.h>
- 
- #define VFIO_API_VERSION	0
- 
-@@ -1039,6 +1040,24 @@ struct vfio_iommu_type1_info_cap_migration {
- 	__u64	max_dirty_bitmap_size;		/* in bytes */
++	int		ioasid_sid;	/*
++					 * the ioasid set which tracks all
++					 * PASIDs used by the domain.
++					 */
+ 	int		default_pasid;	/*
+ 					 * The default pasid used for non-SVM
+ 					 * traffic on mediated devices.
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 4a02c9e..b1ff702 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -124,6 +124,7 @@ enum iommu_attr {
+ 	DOMAIN_ATTR_FSL_PAMUV1,
+ 	DOMAIN_ATTR_NESTING,	/* two stages of translation */
+ 	DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
++	DOMAIN_ATTR_IOASID_SID,
+ 	DOMAIN_ATTR_MAX,
  };
  
-+/*
-+ * The nesting capability allows to report the related capability
-+ * and info for nesting iommu type.
-+ *
-+ * The structures below define version 1 of this capability.
-+ *
-+ * Userspace selected VFIO_TYPE1_NESTING_IOMMU type should check
-+ * this capability to get supported features.
-+ *
-+ * @info: the nesting info provided by IOMMU driver.
-+ */
-+#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  3
-+
-+struct vfio_iommu_type1_info_cap_nesting {
-+	struct	vfio_info_cap_header header;
-+	struct iommu_nesting_info info;
-+};
-+
- #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
- 
- /**
 -- 
 2.7.4
 
