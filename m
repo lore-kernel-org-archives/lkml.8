@@ -2,152 +2,229 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B707C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC1AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17647206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E1C206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:49:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Meqw1z2j"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FjxDG1Xp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbgG1OmN (ORCPT
+        id S1730484AbgG1OtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:42:13 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44846 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730391AbgG1OmN (ORCPT
+        Tue, 28 Jul 2020 10:49:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730335AbgG1Os7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:42:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595947331;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Jrn1cXse5+cdwWbo1CALhfkNmTxz9E7sWHguisrKuqA=;
-        b=Meqw1z2j5rS8GaoVwcTeHpsfNak2z8l/Vp7MaUYeTzmxwQoVy6im/JDYAyWx5roT2N3dtF
-        HkrIvB7rKYRbtlTDisk9A+MVwc/B+Zwud9l5E4KORcuPhnzeiGMNHeGDYiixkOx8BXVzb+
-        xerRmt/Hh+RSHZFtbDEIQUa5b6AH3vA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-31-3j7MhVyBP7KzIBIS2mkozg-1; Tue, 28 Jul 2020 10:42:07 -0400
-X-MC-Unique: 3j7MhVyBP7KzIBIS2mkozg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A55D0100AA23;
-        Tue, 28 Jul 2020 14:42:05 +0000 (UTC)
-Received: from krava (unknown [10.40.192.211])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4B0A610013C4;
-        Tue, 28 Jul 2020 14:42:03 +0000 (UTC)
-Date:   Tue, 28 Jul 2020 16:42:02 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Thomas Hebb <tommyhebb@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        David Carrillo-Cisneros <davidcc@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 1/3] tools build feature: Use CC and CXX from parent
-Message-ID: <20200728144202.GA1319041@krava>
-References: <0a6e69d1736b0fa231a648f50b0cce5d8a6734ef.1595822871.git.tommyhebb@gmail.com>
+        Tue, 28 Jul 2020 10:48:59 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 770EBC0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:48:59 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id 4so4142004vsf.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:48:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=240RUtdc08bBCjS0T5ABRYM5kPew5EtFraMIJ4mwkAU=;
+        b=FjxDG1XpayNcd4EmXIjEfVT6GArnbrZGwdT6C+WsUm6JuJjLk7qxvLB1XoXAIw5Eap
+         YLSQ+yBEXlmtkEviS04Z9Vwd0lQe+xMOhO/yE7b45SZ77tPDJGctmvm8yzVd+tTmPIF2
+         AXvUj9cUMgB9HJhAlDpg5AevYDXkD6kFXFdjE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=240RUtdc08bBCjS0T5ABRYM5kPew5EtFraMIJ4mwkAU=;
+        b=UXJvogM3Y/gALnzjtsS2TluOj96/VqGNywCv1y2HfNeytPnLLyweDgFS1n61qazfXc
+         pqZZJm1IZncK6Nzw0hB9shsbo9eXQA/x/bnjzhv115nXMzNEMD8JQsn/kM35v8f5gryG
+         /BY5Uw8w8VSzOgqwabR8YyjlUQ5qqeVq56a6jAVeAcx+mEBKXE9uTn/O49/qtZztrYWn
+         It/HbzHnJRLFWZpehNptszO2GirtLXE1R1KN4mZFkXb+5sVDyqt4v1JEIEItjASE2Xvw
+         DQaoG2r2xwksGmukVyWsbDQJYYoWpRj6jBEe+gziPqlMTRaUK3l7FDqZLJ815nvzJTv+
+         tnmQ==
+X-Gm-Message-State: AOAM5331M35VAdEyWlIURDPjn2hPIPUcDgThjURGu8r9DbNc/3yg5E6i
+        abOY1HBxG2BWF2HEh+NcFzlbUL4S+H4=
+X-Google-Smtp-Source: ABdhPJzZZQRYGv8LffOojx+W9G5s61tgmN9jbPvzi3c8YI1dL0SEsYLKVRKC3RRbmZlLpdsg67EYpg==
+X-Received: by 2002:a67:fd53:: with SMTP id g19mr21532221vsr.187.1595947737853;
+        Tue, 28 Jul 2020 07:48:57 -0700 (PDT)
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
+        by smtp.gmail.com with ESMTPSA id k12sm3128728vsb.10.2020.07.28.07.48.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 07:48:56 -0700 (PDT)
+Received: by mail-vs1-f45.google.com with SMTP id 4so4141918vsf.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:48:56 -0700 (PDT)
+X-Received: by 2002:a67:69c1:: with SMTP id e184mr21296483vsc.119.1595947735977;
+ Tue, 28 Jul 2020 07:48:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0a6e69d1736b0fa231a648f50b0cce5d8a6734ef.1595822871.git.tommyhebb@gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200724211711.810009-1-sboyd@kernel.org> <fb6fbaa9-63d9-e747-906c-335c8be934f3@linaro.org>
+In-Reply-To: <fb6fbaa9-63d9-e747-906c-335c8be934f3@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 28 Jul 2020 07:48:44 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XNw45=NGm9Qj4_Kyq9oQMF6zFaaWz33dfqqDC0A-fF+Q@mail.gmail.com>
+Message-ID: <CAD=FV=XNw45=NGm9Qj4_Kyq9oQMF6zFaaWz33dfqqDC0A-fF+Q@mail.gmail.com>
+Subject: Re: [PATCH v2] soc: qcom: rpmh-rsc: Sleep waiting for tcs slots to be free
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 09:08:14PM -0700, Thomas Hebb wrote:
-> commit c8c188679ccf ("tools build: Use the same CC for feature detection
-> and actual build") changed these assignments from unconditional (:=) to
-> conditional (?=) so that they wouldn't clobber values from the
-> environment. However, conditional assignment does not work properly for
-> variables that Make implicitly sets, among which are CC and CXX. To
-> quote tools/scripts/Makefile.include, which handles this properly:
-> 
->   # Makefiles suck: This macro sets a default value of $(2) for the
->   # variable named by $(1), unless the variable has been set by
->   # environment or command line. This is necessary for CC and AR
->   # because make sets default values, so the simpler ?= approach
->   # won't work as expected.
-> 
-> In other words, the conditional assignments will not run even if the
-> variables are not overridden in the environment; Make will set CC to
-> "cc" and CXX to "g++" when it starts[1], meaning the variables are not
-> empty by the time the conditional assignments are evaluated. This breaks
-> cross-compilation when CROSS_COMPILE is set but CC isn't, since "cc"
-> gets used for feature detection instead of the cross compiler (and
-> likewise for CXX).
-> 
-> To fix the issue, just pass down the values of CC and CXX computed by
-> the parent Makefile, which gets included by the Makefile that actually
-> builds whatever we're detecting features for and so is guaranteed to
-> have good values. This is a better solution anyway, since it means we
-> aren't trying to replicate the logic of the parent build system and so
-> don't risk it getting out of sync.
-> 
-> Leave PKG_CONFIG alone, since 1) there's no common logic to compute it
-> in Makefile.include, and 2) it's not an implicit variable, so
-> conditional assignment works properly.
+Hi,
 
-looks good, I wonder we might need it also for CLANG in the future
+On Sun, Jul 26, 2020 at 2:44 AM Stanimir Varbanov
+<stanimir.varbanov@linaro.org> wrote:
+>
+> Hi Stephen,
+>
+> On 7/25/20 12:17 AM, Stephen Boyd wrote:
+> > From: Stephen Boyd <swboyd@chromium.org>
+> >
+> > The busy loop in rpmh_rsc_send_data() is written with the assumption
+> > that the udelay will be preempted by the tcs_tx_done() irq handler when
+> > the TCS slots are all full. This doesn't hold true when the calling
+> > thread is an irqthread and the tcs_tx_done() irq is also an irqthread.
+> > That's because kernel irqthreads are SCHED_FIFO and thus need to
+> > voluntarily give up priority by calling into the scheduler so that other
+> > threads can run.
+> >
+> > I see RCU stalls when I boot with irqthreads on the kernel commandline
+> > because the modem remoteproc driver is trying to send an rpmh async
+> > message from an irqthread that needs to give up the CPU for the rpmh
+> > irqthread to run and clear out tcs slots.
+> >
+> >  rcu: INFO: rcu_preempt self-detected stall on CPU
+> >  rcu:     0-....: (1 GPs behind) idle=402/1/0x4000000000000002 softirq=2108/2109 fqs=4920
+> >   (t=21016 jiffies g=2933 q=590)
+> >  Task dump for CPU 0:
+> >  irq/11-smp2p    R  running task        0   148      2 0x00000028
+> >  Call trace:
+> >   dump_backtrace+0x0/0x154
+> >   show_stack+0x20/0x2c
+> >   sched_show_task+0xfc/0x108
+> >   dump_cpu_task+0x44/0x50
+> >   rcu_dump_cpu_stacks+0xa4/0xf8
+> >   rcu_sched_clock_irq+0x7dc/0xaa8
+> >   update_process_times+0x30/0x54
+> >   tick_sched_handle+0x50/0x64
+> >   tick_sched_timer+0x4c/0x8c
+> >   __hrtimer_run_queues+0x21c/0x36c
+> >   hrtimer_interrupt+0xf0/0x22c
+> >   arch_timer_handler_phys+0x40/0x50
+> >   handle_percpu_devid_irq+0x114/0x25c
+> >   __handle_domain_irq+0x84/0xc4
+> >   gic_handle_irq+0xd0/0x178
+> >   el1_irq+0xbc/0x180
+> >   save_return_addr+0x18/0x28
+> >   return_address+0x54/0x88
+> >   preempt_count_sub+0x40/0x88
+> >   _raw_spin_unlock_irqrestore+0x4c/0x6c
+> >   ___ratelimit+0xd0/0x128
+> >   rpmh_rsc_send_data+0x24c/0x378
+> >   __rpmh_write+0x1b0/0x208
+> >   rpmh_write_async+0x90/0xbc
+> >   rpmhpd_send_corner+0x60/0x8c
+> >   rpmhpd_aggregate_corner+0x8c/0x124
+> >   rpmhpd_set_performance_state+0x8c/0xbc
+> >   _genpd_set_performance_state+0xdc/0x1b8
+> >   dev_pm_genpd_set_performance_state+0xb8/0xf8
+> >   q6v5_pds_disable+0x34/0x60 [qcom_q6v5_mss]
+> >   qcom_msa_handover+0x38/0x44 [qcom_q6v5_mss]
+> >   q6v5_handover_interrupt+0x24/0x3c [qcom_q6v5]
+> >   handle_nested_irq+0xd0/0x138
+> >   qcom_smp2p_intr+0x188/0x200
+> >   irq_thread_fn+0x2c/0x70
+> >   irq_thread+0xfc/0x14c
+> >   kthread+0x11c/0x12c
+> >   ret_from_fork+0x10/0x18
+> >
+> > This busy loop naturally lends itself to using a wait queue so that each
+> > thread that tries to send a message will sleep waiting on the waitqueue
+> > and only be woken up when a free slot is available. This should make
+> > things more predictable too because the scheduler will be able to sleep
+> > tasks that are waiting on a free tcs instead of the busy loop we
+> > currently have today.
+> >
+> > Cc: Douglas Anderson <dianders@chromium.org>
+> > Cc: Maulik Shah <mkshah@codeaurora.org>
+> > Cc: Lina Iyer <ilina@codeaurora.org>
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >
+> > Changes in v2:
+> >  * Document tcs_wait
+> >  * Move wake_up() outside of the spinlock
+> >  * Document claim_tcs_for_req()
+> >
+> >  drivers/soc/qcom/rpmh-internal.h |   4 ++
+> >  drivers/soc/qcom/rpmh-rsc.c      | 115 +++++++++++++++----------------
+> >  2 files changed, 58 insertions(+), 61 deletions(-)
+>
+> This also fixes an issue related to TCS busy, seen with Venus driver
+> with these [1] patches applied.
+>
+> Tested-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>
+> --
+> regards,
+> Stan
+>
+> [1] https://lkml.org/lkml/2020/7/23/394
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+It worries me that you say that this fixes any issues for you.
+Specifically I don't see how this could fix anything except:
 
-thanks,
-jirka
+1. Fix the problem with irqthreads, which is how Stephen originally found this.
 
-> 
-> [1] https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
-> 
-> Fixes: c8c188679ccf ("tools build: Use the same CC for feature detection and actual build")
-> Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
-> ---
-> 
->  tools/build/Makefile.feature | 2 +-
->  tools/build/feature/Makefile | 2 --
->  2 files changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index cb152370fdef..774f0b0ca28a 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -8,7 +8,7 @@ endif
->  
->  feature_check = $(eval $(feature_check_code))
->  define feature_check_code
-> -  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-> +  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC=$(CC) CXX=$(CXX) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
->  endef
->  
->  feature_set = $(eval $(feature_set_code))
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index b1f0321180f5..93b590d81209 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -74,8 +74,6 @@ FILES=                                          \
->  
->  FILES := $(addprefix $(OUTPUT),$(FILES))
->  
-> -CC ?= $(CROSS_COMPILE)gcc
-> -CXX ?= $(CROSS_COMPILE)g++
->  PKG_CONFIG ?= $(CROSS_COMPILE)pkg-config
->  LLVM_CONFIG ?= llvm-config
->  CLANG ?= clang
-> -- 
-> 2.27.0
-> 
+2. Fix things to be a little more efficient.
 
+3. Avoid the small handful of messages that show up during normal
+usage that look like:
+
+  TCS Busy, retrying RPMH message send: addr=...
+
+I'm guessing you're referring to #3.  Is that correct?
+
+If so, you might want to double-check to confirm that you aren't
+totally spamming the RPMh bus with your patch series.  I found that
+when I was seeing a lot of "TCS Busy, retrying RPMH message send"
+spammed to the console that it was a sign that the code was being
+really inefficient.
+
+Specifically the code to add interconnect bandwidth and OPP to the SPI
+drivers would run at "runtime_suspend" and "runtime_resume".  For our
+SPI drivers this meant that they were running after every single
+transfer, and they were quite slow.  If your code is doing similar
+then you probably have a problem.
+
+The problem was fixed by adding an autosuspend delay.
+
+References (from linuxnext):
+
+8592eb959ad4 spi: spi-qcom-qspi: Set an autosuspend delay of 250 ms
+cfdab2cd85ec spi: spi-geni-qcom: Set an autosuspend delay of 250 ms
+
+
+Also if your code is adjusting its clock rate too frequently it can
+now trigger similar problems.  References:
+
+2124331411a1 spi: spi-qcom-qspi: Avoid clock setting if not needed
+5f219524ec6e spi: spi-geni-qcom: Set the clock properly at runtime resume
+68890e20942b spi: spi-geni-qcom: Avoid clock setting if not needed
+
+
+-Doug
