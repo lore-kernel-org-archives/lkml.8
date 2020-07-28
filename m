@@ -2,98 +2,148 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11537C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C6CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA5C92070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985622074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595939631;
+	bh=zCNo22uiKyrwMBQfvgXdj50JSNeFd2xR6b3wPrgUHow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JEMRxkvf8xYiNCAFJPZstnkdMmw9BDWidv8MsyQGF5Tz/dekmUYAa0xcDHIQE5fqp
+	 QxPjmWzThHJSiG4CxWByGDqRLdp/0QWa59e2QJ7AtA8NU6DyOYgRVICGxixNiECdwX
+	 hYKVqt0g4fzuHnprfLlhpapggXcCBEDQtE5T3UVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbgG1MdT (ORCPT
+        id S1729778AbgG1Mdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:33:19 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:40244 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729470AbgG1MdS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:33:18 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R411e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U43yTeQ_1595939593;
-Received: from 30.27.116.241(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U43yTeQ_1595939593)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 28 Jul 2020 20:33:14 +0800
-Subject: Re: [PATCH v2] tpm: Fix the description error of the help information
- in Kconfig
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christophe Ricard <christophe.ricard@gmail.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        gregkh <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200727082245.32396-1-tianjia.zhang@linux.alibaba.com>
- <CAK8P3a0FkrTKvAgPi=tnsShK+=eysbfiRxUTqoxfs6SJVXXnpw@mail.gmail.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <6153c7d6-306b-9dac-4401-aec3b53da7f5@linux.alibaba.com>
-Date:   Tue, 28 Jul 2020 20:33:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 08:33:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49436 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729444AbgG1Mdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:33:49 -0400
+Received: from quaco.ghostprotocols.net (179.176.1.55.dynamic.adsl.gvt.net.br [179.176.1.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9786206D4;
+        Tue, 28 Jul 2020 12:33:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595939628;
+        bh=zCNo22uiKyrwMBQfvgXdj50JSNeFd2xR6b3wPrgUHow=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MbeLdJp2smymHvcbKMFA+T08aCFygVeLiwFXVb+b7PhCTM8JMWyW4sSIPgGfQSmqK
+         YhgswRzwigWqleCeuBvHREHEMoX47rrSfGm7yPOIjTEElN7F9wqvlh+21PXegRzewE
+         oKJ557ay4LNoqPCuCewlsf9K4M1CqgZe5QafXuvo=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 20C87404B1; Tue, 28 Jul 2020 09:33:46 -0300 (-03)
+Date:   Tue, 28 Jul 2020 09:33:46 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 12/19] perf metric: Add events for the current list
+Message-ID: <20200728123346.GS40195@kernel.org>
+References: <20200719181320.785305-1-jolsa@kernel.org>
+ <20200719181320.785305-13-jolsa@kernel.org>
+ <CAP-5=fXsspq4xBehRZOBrFAEHAnE1tPnH9FybooiCcTxynh6wg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0FkrTKvAgPi=tnsShK+=eysbfiRxUTqoxfs6SJVXXnpw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fXsspq4xBehRZOBrFAEHAnE1tPnH9FybooiCcTxynh6wg@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/7/27 16:32, Arnd Bergmann wrote:
-> On Mon, Jul 27, 2020 at 10:22 AM Tianjia Zhang
-> <tianjia.zhang@linux.alibaba.com> wrote:
->>
->> SPI protocol standardized by the TCG is described in the TCG PTP
->> specification 1.3 (chapter 6.4.6 SPI Bit Protocol), It was published by
->> TCG_PCClientTPMInterfaceSpecification_TIS__1-3_27_03212013.pdf.
+Em Sun, Jul 19, 2020 at 03:34:48PM -0700, Ian Rogers escreveu:
+> On Sun, Jul 19, 2020 at 11:14 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > There's no need to iterate the whole list of groups,
+> > when adding new events. The currently created groups
+> > are the ones we want to add.
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > 
-> I'm still not convinced you got this right, the document you cite only
-> seems to mention TPM 1.2 as the base for TIS 1.3, but not TPM 1.3.
+> Acked-by: Ian Rogers <irogers@google.com>
+
+Thanks, applied.
+
+- Arnaldo
+ 
+> Thanks,
+> Ian
 > 
->       Arnd
-> 
+> > ---
+> >  tools/perf/util/metricgroup.c | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> > index bb5757b9419d..332414d93f7a 100644
+> > --- a/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -813,6 +813,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+> >  {
+> >         struct pmu_event *pe;
+> >         struct egroup *eg;
+> > +       LIST_HEAD(list);
+> >         int i, ret;
+> >         bool has_match = false;
+> >
+> > @@ -820,7 +821,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+> >                 has_match = true;
+> >                 eg = NULL;
+> >
+> > -               ret = add_metric(group_list, pe, metric_no_group, &eg);
+> > +               ret = add_metric(&list, pe, metric_no_group, &eg);
+> >                 if (ret)
+> >                         return ret;
+> >
+> > @@ -829,7 +830,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+> >                  * included in the expression.
+> >                  */
+> >                 ret = resolve_metric(eg, metric_no_group,
+> > -                                    group_list, map);
+> > +                                    &list, map);
+> >                 if (ret)
+> >                         return ret;
+> >         }
+> > @@ -838,7 +839,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+> >         if (!has_match)
+> >                 return -EINVAL;
+> >
+> > -       list_for_each_entry(eg, group_list, nd) {
+> > +       list_for_each_entry(eg, &list, nd) {
+> >                 if (events->len > 0)
+> >                         strbuf_addf(events, ",");
+> >
+> > @@ -850,6 +851,8 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+> >                                                            &eg->pctx);
+> >                 }
+> >         }
+> > +
+> > +       list_splice(&list, group_list);
+> >         return 0;
+> >  }
+> >
+> > --
+> > 2.25.4
+> >
 
-You are right, I was careless, thanks for your reply.
+-- 
 
-Thanks and best,
-Tianjia
-
->> The TPM version number in the help message is wrong, which will
->> cause confusion. This patch fixes it.
->>
->> Fixes: 0edbfea537d1 ("tpm/tpm_tis_spi: Add support for spi phy")
->> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
->> ---
->>   drivers/char/tpm/Kconfig | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
->> index 58b4c573d176..8eedb3e704f3 100644
->> --- a/drivers/char/tpm/Kconfig
->> +++ b/drivers/char/tpm/Kconfig
->> @@ -62,7 +62,7 @@ config TCG_TIS_SPI
->>          help
->>            If you have a TPM security chip which is connected to a regular,
->>            non-tcg SPI master (i.e. most embedded platforms) that is compliant with the
->> -         TCG TIS 1.3 TPM specification (TPM1.2) or the TCG PTP FIFO
->> +         TCG TIS 1.3 TPM specification (TPM1.3) or the TCG PTP FIFO
->>            specification (TPM2.0) say Yes and it will be accessible from
->>            within Linux. To compile this driver as a module, choose  M here;
->>            the module will be called tpm_tis_spi.
->> --
->> 2.17.1
->>
+- Arnaldo
