@@ -2,120 +2,150 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6D9C433FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3035FC43458
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE6A22B3F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE8421D95
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:02:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FFJEqir1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgG1FCG (ORCPT
+        id S1726987AbgG1FCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 01:02:06 -0400
-Received: from labrats.qualcomm.com ([199.106.110.90]:21001 "EHLO
-        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbgG1FCC (ORCPT
+        Tue, 28 Jul 2020 01:02:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgG1FCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 01:02:02 -0400
-IronPort-SDR: QvoV4ImSRw9lOVNlyf7PyssGh+If4BcTpREuD/rr62ngSv3GfmPtFIV42oGsnPcZMgXcx/E9il
- hCS6L7eFTi7kBcJL+uGnLIURDbmAx4ozNgKH0h2Miu5w7tJKvgwCYrpuULeopryiikI6QR6WnQ
- /TIULrYAa451dMD8b7hUBkQLgq3pJFrStwAdkr6VfCqIF0smWmfZRuRy3OIDq//nE4FT5I3zsC
- 1LIrjDOXD2fN6y6F9HwIgEx3qhMr0kskCH1HNFAt4AM5qoUEvwUmZ/HI3ebHgfDbWtLx/GmN/P
- ruQ=
-X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
-   d="scan'208";a="47234205"
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by labrats.qualcomm.com with ESMTP; 27 Jul 2020 22:01:09 -0700
-Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 27 Jul 2020 22:01:08 -0700
-Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
-        id 37E0522DA6; Mon, 27 Jul 2020 22:01:08 -0700 (PDT)
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        sh425.lee@samsung.com, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        cang@codeaurora.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v7 3/8] scsi: ufs-qcom: Remove testbus dump in ufs_qcom_dump_dbg_regs
-Date:   Mon, 27 Jul 2020 22:00:54 -0700
-Message-Id: <1595912460-8860-4-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595912460-8860-1-git-send-email-cang@codeaurora.org>
-References: <1595912460-8860-1-git-send-email-cang@codeaurora.org>
+        Tue, 28 Jul 2020 01:02:07 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE345C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 22:02:06 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id z5so11209684pgb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 22:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=quJpJ8MFVCXxN2uUe5uCTDrzupsmhmPuwJ3x/xpP/Nw=;
+        b=FFJEqir1hVkStEtfk+rEgzo8ZUuB5JUH7sJuO0JVeZhFlRfq6eDnq0M4SOi7xAzJNL
+         Lg/B3hHFlX31yqXoVUvS53JbUcgSOfKFc9jlDruvAYag4p2p8uxI5CayvTuyOTxTzb2Y
+         CmbNlaHf7A4Fl7V3TquMd4DohiBBSI7zhVcCs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=quJpJ8MFVCXxN2uUe5uCTDrzupsmhmPuwJ3x/xpP/Nw=;
+        b=BrzigtoeJRphYe4x3PkbPM4+n81MEOmTIhVMHciJD/Qx6TA10Da9Iz4kY5c0qxa+nn
+         fqw1jCq4GLuVQpE5KBXU8+KdVkPsBQ4pNZjYNdCKPJIgSLHzj6keKcGmB2w+Wp8ZbDpK
+         8RliktJFHJBpH02nWbJ63DSRA9eknkUpwWRugSOtl8yUtFDT5V7yzQsi9IAorp7jwVUD
+         IK22enrfyRjxrGTEW2v5g90wyxcepu5BNXDEOMip24SrVL819b3YXFpTe6Nails2r4AW
+         zseKyKptd4lTSnqA+I2CAH/M8RPWoJ//x2LQlokoeXclAWffJhl5e1fXEBaKHoFcTd1n
+         n55A==
+X-Gm-Message-State: AOAM530QcBDGDmHUrf57o9irJNOux2+m7fjj2ipMU7uL8t56EbdWDD0V
+        ijk+OcICxLgb7Sz+RpGLeonscg==
+X-Google-Smtp-Source: ABdhPJxRMJ3gCBUPChJ2eZ/7cp0FgFLdngDiw44ugrhRF2b1gUjV2mSJdfqzvUQMjkMMzXOG1e/voQ==
+X-Received: by 2002:a65:428d:: with SMTP id j13mr23297111pgp.211.1595912526277;
+        Mon, 27 Jul 2020 22:02:06 -0700 (PDT)
+Received: from localhost ([2401:fa00:1:10:3e52:82ff:fe5e:cc9d])
+        by smtp.gmail.com with ESMTPSA id a26sm17578156pgm.20.2020.07.27.22.02.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2020 22:02:05 -0700 (PDT)
+From:   Claire Chang <tientzu@chromium.org>
+To:     robh+dt@kernel.org, frowand.list@gmail.com, hch@lst.de,
+        m.szyprowski@samsung.com, robin.murphy@arm.com
+Cc:     treding@nvidia.com, gregkh@linuxfoundation.org,
+        saravanak@google.com, suzuki.poulose@arm.com,
+        dan.j.williams@intel.com, heikki.krogerus@linux.intel.com,
+        bgolaszewski@baylibre.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        drinkcat@chromium.org, tfiga@chromium.org, tientzu@chromium.org
+Subject: [RFC v2 4/5] dt-bindings: of: Add plumbing for restricted DMA pool
+Date:   Tue, 28 Jul 2020 13:01:39 +0800
+Message-Id: <20200728050140.996974-5-tientzu@chromium.org>
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+In-Reply-To: <20200728050140.996974-1-tientzu@chromium.org>
+References: <20200728050140.996974-1-tientzu@chromium.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dumping testbus registers is heavy enough to cause stability issues
-sometime, just remove them as of now.
+Introduce the new compatible string, device-swiotlb-pool, for restricted
+DMA. One can specify the address and length of the device swiotlb memory
+region by device-swiotlb-pool in the device tree.
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Claire Chang <tientzu@chromium.org>
 ---
- drivers/scsi/ufs/ufs-qcom.c | 32 --------------------------------
- 1 file changed, 32 deletions(-)
+ .../reserved-memory/reserved-memory.txt       | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index 7da27ee..96e0999 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -1620,44 +1620,12 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host *host)
- 	return 0;
- }
+diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+index 4dd20de6977f..78850896e1d0 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
++++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+@@ -51,6 +51,24 @@ compatible (optional) - standard definition
+           used as a shared pool of DMA buffers for a set of devices. It can
+           be used by an operating system to instantiate the necessary pool
+           management subsystem if necessary.
++        - device-swiotlb-pool: This indicates a region of memory meant to be
++          used as a pool of device swiotlb buffers for a given device. When
++          using this, the no-map and reusable properties must not be set, so the
++          operating system can create a virtual mapping that will be used for
++          synchronization. Also, there must be a restricted-dma property in the
++          device node to specify the indexes of reserved-memory nodes. One can
++          specify two reserved-memory nodes in the device tree. One with
++          shared-dma-pool to handle the coherent DMA buffer allocation, and
++          another one with device-swiotlb-pool for regular DMA to/from system
++          memory, which would be subject to bouncing. The main purpose for
++          restricted DMA is to mitigate the lack of DMA access control on
++          systems without an IOMMU, which could result in the DMA accessing the
++          system memory at unexpected times and/or unexpected addresses,
++          possibly leading to data leakage or corruption. The feature on its own
++          provides a basic level of protection against the DMA overwriting buffer
++          contents at unexpected times. However, to protect against general data
++          leakage and system memory corruption, the system needs to provide a
++          way to restrict the DMA to a predefined memory region.
+         - vendor specific string in the form <vendor>,[<device>-]<usage>
+ no-map (optional) - empty property
+     - Indicates the operating system must not create a virtual mapping
+@@ -117,6 +135,16 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
+ 			compatible = "acme,multimedia-memory";
+ 			reg = <0x77000000 0x4000000>;
+ 		};
++
++		wifi_coherent_mem_region: wifi_coherent_mem_region {
++			compatible = "shared-dma-pool";
++			reg = <0x50000000 0x400000>;
++		};
++
++		wifi_device_swiotlb_region: wifi_device_swiotlb_region {
++			compatible = "device-swiotlb-pool";
++			reg = <0x50400000 0x4000000>;
++		};
+ 	};
  
--static void ufs_qcom_testbus_read(struct ufs_hba *hba)
--{
--	ufshcd_dump_regs(hba, UFS_TEST_BUS, 4, "UFS_TEST_BUS ");
--}
--
--static void ufs_qcom_print_unipro_testbus(struct ufs_hba *hba)
--{
--	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
--	u32 *testbus = NULL;
--	int i, nminor = 256, testbus_len = nminor * sizeof(u32);
--
--	testbus = kmalloc(testbus_len, GFP_KERNEL);
--	if (!testbus)
--		return;
--
--	host->testbus.select_major = TSTBUS_UNIPRO;
--	for (i = 0; i < nminor; i++) {
--		host->testbus.select_minor = i;
--		ufs_qcom_testbus_config(host);
--		testbus[i] = ufshcd_readl(hba, UFS_TEST_BUS);
--	}
--	print_hex_dump(KERN_ERR, "UNIPRO_TEST_BUS ", DUMP_PREFIX_OFFSET,
--			16, 4, testbus, testbus_len, false);
--	kfree(testbus);
--}
--
- static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
- {
- 	ufshcd_dump_regs(hba, REG_UFS_SYS1CLK_1US, 16 * 4,
- 			 "HCI Vendor Specific Registers ");
- 
--	/* sleep a bit intermittently as we are dumping too much data */
- 	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
--	udelay(1000);
--	ufs_qcom_testbus_read(hba);
--	udelay(1000);
--	ufs_qcom_print_unipro_testbus(hba);
--	udelay(1000);
- }
- 
- /**
+ 	/* ... */
+@@ -135,4 +163,11 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
+ 		memory-region = <&multimedia_reserved>;
+ 		/* ... */
+ 	};
++
++	pcie_wifi: pcie_wifi@0,0 {
++		memory-region = <&wifi_coherent_mem_region>,
++			 <&wifi_device_swiotlb_region>;
++		restricted-dma = <0>, <1>;
++		/* ... */
++	};
+ };
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.28.0.rc0.142.g3c755180ce-goog
 
