@@ -2,157 +2,205 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C38C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3D3C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF7C0206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:02:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595937747;
-	bh=z7dxA462LUJmKJCg4mlS1dCd4LQHrxLL33U5tk+KTEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=codwNhN07uj3HSLKwEcFYbtCREjnaC2xRuxCCRbLe1PAeauhP8dGeC/ir9XULMGlY
-	 BMrA40LJWA5t/mTBSz0xIJpUWu4ujiuqEAOQV+KyKjD46heowQ60ZK6cXKhPeXtg4c
-	 WKCu96GfpZ/klKJSS/3JaG0d0B/IszPQTNBL+REU=
+	by mail.kernel.org (Postfix) with ESMTP id D82C1206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:03:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XU7u9xNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbgG1MC0 (ORCPT
+        id S1728801AbgG1MD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:02:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60504 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 08:03:28 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:17674 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728614AbgG1MCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:02:24 -0400
-Received: from quaco.ghostprotocols.net (179.176.1.55.dynamic.adsl.gvt.net.br [179.176.1.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728451AbgG1MD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:03:27 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595937806; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=vm/iIuV+94ECTCG0r3Bpt5nJ2J+WV4KcMzINPa/59UY=;
+ b=XU7u9xNJEdDm4jnHCc5JctGk5HGpFremgSws+v+Bmb37T4sw2zCVj3TxqIzPtoBvMftk3FXU
+ 0JKngUZGJC8MkSzwpQpDFmZWCX+zIVf4gtekE7VpAfsCGXyBsy9DAZn3wYMdPGL83GAsSh6z
+ EX893qijsQcsOSQIgx2o/CmoAXQ=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5f2013ef8db7256a950bee23 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 12:02:55
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id ACE55C433C9; Tue, 28 Jul 2020 12:02:54 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EF98206D7;
-        Tue, 28 Jul 2020 12:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595937743;
-        bh=z7dxA462LUJmKJCg4mlS1dCd4LQHrxLL33U5tk+KTEU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B3phOatux/vKD8LZ21wzdt+/+Cdwsmvxttx0oVHFyBWaC4i8Fr4KK36MWB+avrnEO
-         AJT8DXTu1gCdIQjHXn2C7vmuTpZL3/hvYMP8oirHnV9qx/wYchc4Liq0XOrXwBotuG
-         s1Cixun6RsoAfgZTravgz+2+XWb2P4RLybyMniGI=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0A875404B1; Tue, 28 Jul 2020 09:02:21 -0300 (-03)
-Date:   Tue, 28 Jul 2020 09:02:20 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Wei Li <liwei391@huawei.com>, leo.yan@linaro.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kim Phillips <kim.phillips@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, guohanjun@huawei.com
-Subject: Re: [PATCH v2 2/2] perf tools: ARM SPE code cleanup
-Message-ID: <20200728120220.GA40195@kernel.org>
-References: <20200724071111.35593-1-liwei391@huawei.com>
- <20200724071111.35593-3-liwei391@huawei.com>
- <20200727203436.GC2381376@xps15>
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2E6C2C433C6;
+        Tue, 28 Jul 2020 12:02:54 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727203436.GC2381376@xps15>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Jul 2020 17:32:54 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v3 7/7] arm64: dts: qcom: sm8250: add interconnect nodes
+In-Reply-To: <20200728023811.5607-8-jonathan@marek.ca>
+References: <20200728023811.5607-1-jonathan@marek.ca>
+ <20200728023811.5607-8-jonathan@marek.ca>
+Message-ID: <bbe96cb3a8f1c28310963db2d1b97990@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Jul 27, 2020 at 02:34:36PM -0600, Mathieu Poirier escreveu:
-> On Fri, Jul 24, 2020 at 03:11:11PM +0800, Wei Li wrote:
-> > - Firstly, the function auxtrace_record__init() will be invoked only
-> >   once, the variable "arm_spe_pmus" will not be used afterwards, thus
-> >   we don't need to check "arm_spe_pmus" is NULL or not;
-> > - Another reason is, even though SPE is micro-architecture dependent,
-> >   but so far it only supports "statistical-profiling-extension-v1" and
-> >   we have no chance to use multiple SPE's PMU events in Perf command.
+On 2020-07-28 08:08, Jonathan Marek wrote:
+> Add the interconnect dts nodes for sm8250.
 > 
-> I find the above changelog somewhat out of touch with the patch itself.  The
-> only thing that is happening here is the removal of a useless check and a fix
-> for a memory leak.
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 
-Humm, I think the original intent of that code was to cache the results
-of find_all_arm_spe_pmus(), as the variable it is assigned to is static.
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-So not a leak, as there was that static reference to it to reuse it
-later, but that is strange in a function named "__init()" which usually
-is called only once, anyway, so I think that the paragraph with
-"Firstly" is kinda ok, but confusing, I think it should read:
-
-- auxtrace_record__init() is called only once, so there is no point in
-  using a static variable to cache the results of
-  find_all_arm_spe_pmus(), make it local and free the results after use.
-
-The second paragraph is SPE specific, so I'm not qualified to judge on
-it.
-
-I'm replacing the first paragraph with the version I wrote and keep it
-in my local branch, please holler if you think I misunderstood.
-
-- Arnaldo
- 
-> Once again whether Arnaldo wants to make the changes by hand or not you may have
-> to resubmit.
+> ---
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi | 82 ++++++++++++++++++++++++++++
+>  1 file changed, 82 insertions(+)
 > 
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> index 636e2196138c..945bd4a9d640 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> @@ -7,6 +7,7 @@
+>  #include <dt-bindings/clock/qcom,gcc-sm8250.h>
+>  #include <dt-bindings/clock/qcom,gpucc-sm8250.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+> +#include <dt-bindings/interconnect/qcom,sm8250.h>
+>  #include <dt-bindings/mailbox/qcom-ipcc.h>
+>  #include <dt-bindings/power/qcom-aoss-qmp.h>
+>  #include <dt-bindings/power/qcom-rpmpd.h>
+> @@ -978,6 +979,55 @@ spi13: spi@a94000 {
+>  			};
+>  		};
 > 
-> > 
-> > So remove the useless check code to make it clear.
-> > 
-> > Signed-off-by: Wei Li <liwei391@huawei.com>
-> > ---
-> >  tools/perf/arch/arm/util/auxtrace.c | 9 ++++-----
-> >  1 file changed, 4 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-> > index 28a5d0c18b1d..b187bddbd01a 100644
-> > --- a/tools/perf/arch/arm/util/auxtrace.c
-> > +++ b/tools/perf/arch/arm/util/auxtrace.c
-> > @@ -57,17 +57,15 @@ struct auxtrace_record
-> >  	struct evsel *evsel;
-> >  	bool found_etm = false;
-> >  	struct perf_pmu *found_spe = NULL;
-> > -	static struct perf_pmu **arm_spe_pmus = NULL;
-> > -	static int nr_spes = 0;
-> > +	struct perf_pmu **arm_spe_pmus = NULL;
-> > +	int nr_spes = 0;
-> >  	int i = 0;
-> >  
-> >  	if (!evlist)
-> >  		return NULL;
-> >  
-> >  	cs_etm_pmu = perf_pmu__find(CORESIGHT_ETM_PMU_NAME);
-> > -
-> > -	if (!arm_spe_pmus)
-> > -		arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
-> > +	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
-> >  
-> >  	evlist__for_each_entry(evlist, evsel) {
-> >  		if (cs_etm_pmu &&
-> > @@ -84,6 +82,7 @@ struct auxtrace_record
-> >  			}
-> >  		}
-> >  	}
-> > +	free(arm_spe_pmus);
-> >  
-> >  	if (found_etm && found_spe) {
-> >  		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
-> > -- 
-> > 2.17.1
-> > 
+> +		config_noc: interconnect@1500000 {
+> +			compatible = "qcom,sm8250-config-noc";
+> +			reg = <0 0x01500000 0 0xa580>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		system_noc: interconnect@1620000 {
+> +			compatible = "qcom,sm8250-system-noc";
+> +			reg = <0 0x01620000 0 0x1c200>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		mc_virt: interconnect@163d000 {
+> +			compatible = "qcom,sm8250-mc-virt";
+> +			reg = <0 0x0163d000 0 0x1000>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		aggre1_noc: interconnect@16e0000 {
+> +			compatible = "qcom,sm8250-aggre1-noc";
+> +			reg = <0 0x016e0000 0 0x1f180>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		aggre2_noc: interconnect@1700000 {
+> +			compatible = "qcom,sm8250-aggre2-noc";
+> +			reg = <0 0x01700000 0 0x33000>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		compute_noc: interconnect@1733000 {
+> +			compatible = "qcom,sm8250-compute-noc";
+> +			reg = <0 0x01733000 0 0xa180>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		mmss_noc: interconnect@1740000 {
+> +			compatible = "qcom,sm8250-mmss-noc";
+> +			reg = <0 0x01740000 0 0x1f080>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+>  		ufs_mem_hc: ufshc@1d84000 {
+>  			compatible = "qcom,sm8250-ufshc", "qcom,ufshc",
+>  				     "jedec,ufs-2.0";
+> @@ -1050,6 +1100,13 @@ ufs_mem_phy_lanes: lanes@1d87400 {
+>  			};
+>  		};
+> 
+> +		ipa_virt: interconnect@1e00000 {
+> +			compatible = "qcom,sm8250-ipa-virt";
+> +			reg = <0 0x01e00000 0 0x1000>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+>  		tcsr_mutex_regs: syscon@1f40000 {
+>  			compatible = "syscon";
+>  			reg = <0x0 0x01f40000 0x0 0x40000>;
+> @@ -1364,6 +1421,27 @@ usb_2_ssphy: lane@88eb200 {
+>  			};
+>  		};
+> 
+> +		dc_noc: interconnect@90c0000 {
+> +			compatible = "qcom,sm8250-dc-noc";
+> +			reg = <0 0x090c0000 0 0x4200>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		gem_noc: interconnect@9100000 {
+> +			compatible = "qcom,sm8250-gem-noc";
+> +			reg = <0 0x09100000 0 0xb4000>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+> +		npu_noc: interconnect@9990000 {
+> +			compatible = "qcom,sm8250-npu-noc";
+> +			reg = <0 0x09990000 0 0x1600>;
+> +			#interconnect-cells = <1>;
+> +			qcom,bcm-voters = <&apps_bcm_voter>;
+> +		};
+> +
+>  		usb_1: usb@a6f8800 {
+>  			compatible = "qcom,sm8250-dwc3", "qcom,dwc3";
+>  			reg = <0 0x0a6f8800 0 0x400>;
+> @@ -2359,6 +2437,10 @@ rpmhpd_opp_turbo_l1: opp10 {
+>  					};
+>  				};
+>  			};
+> +
+> +			apps_bcm_voter: bcm_voter {
+> +				compatible = "qcom,bcm-voter";
+> +			};
+>  		};
+>  	};
 
 -- 
-
-- Arnaldo
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
