@@ -2,433 +2,394 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D867C433FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A50C433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7CBB204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25AF206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="Y9Jsxt77"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ZzV4fX9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730643AbgG1PFg (ORCPT
+        id S1730672AbgG1PF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:05:36 -0400
-Received: from lists.nic.cz ([217.31.204.67]:44844 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730530AbgG1PFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:05:35 -0400
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id 9FB9B140BB4;
-        Tue, 28 Jul 2020 17:05:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1595948732; bh=mih9/eMGjTxKCbgxc/tx175Hm4SDJMekqQtelzers28=;
-        h=From:To:Date;
-        b=Y9Jsxt77vKyE1OZe9J2QBS0D4rRgB1m4L1nf6sffqFGq2FyxmE7gixXy5SiXLjCI2
-         NFzX7uqzFr0sg8sUt5iUlvPfkkHkCGNFZbbPoD8ZVePL0g3pU8a2lkPrmV7rBDcIWH
-         e1WNKdawSO2seFpztqr0WA2r9k49C47qrmicbgCU=
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-To:     netdev@vger.kernel.org
-Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH RFC leds + net-next v4 2/2] net: phy: marvell: add support for PHY LEDs via LED class
-Date:   Tue, 28 Jul 2020 17:05:30 +0200
-Message-Id: <20200728150530.28827-3-marek.behun@nic.cz>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200728150530.28827-1-marek.behun@nic.cz>
-References: <20200728150530.28827-1-marek.behun@nic.cz>
+        Tue, 28 Jul 2020 11:05:56 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:51029 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730505AbgG1PFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:05:54 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 0RApktChPuuXO0RAqkIwdS; Tue, 28 Jul 2020 17:05:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1595948750; bh=s/8wU/OYnn+1yy+ZDpmsRLIrFFZsNbp4nosqe4mg8fA=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=ZzV4fX9x4cg4ZWISJqFrnv3589i4yZjtg/3bSj08TrpZF+rpfTnmKNEkPFcSPz67M
+         i7yABAueUm5R+qekUWVi4P2pgR0mM3e6C1IGpjKmUFxWcDBLYNFNf3woFYflbzVrg5
+         Hf98FxjVuCNs90J0bmooLROTrqtJmIYCabmtRgkMLFCaZolovyo9nlSDGaRr+SdI1p
+         wixST7LAtzuwzP1RdtQuKMZB19oRYprd9bAcbqIu5cgxPNqO54ohWRnRAMSNsKYNFo
+         G6DfZJP+ins23RLU+1iKmMnH9YQRmv0qIFzt4hXzO4oMCRBv9j3/yg3DDF1a2N1Vng
+         gQlffU6CF4AsQ==
+Subject: Re: [PATCH] media: usbvision: fixed coding style
+To:     Dhiraj Sharma <dhiraj.sharma0024@gmail.com>,
+        gregkh@linuxfoundation.org, stern@rowland.harvard.edu,
+        arnd@arndb.de, jrdr.linux@gmail.com
+Cc:     linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+References: <20200728143004.3228-1-dhiraj.sharma0024@gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <b357f49c-0ce6-18f5-9f3c-fdead5e4c838@xs4all.nl>
+Date:   Tue, 28 Jul 2020 17:05:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: /
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+In-Reply-To: <20200728143004.3228-1-dhiraj.sharma0024@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfPBZPluvQ8h8v68YkawN5APFdn6ltE1s1f3lLRaceNQF+l8Ir/9EdEgCYWSRfY/HGA6nlYSmDG/UC4+pv0ldQXivqP/QiyXeZk77ZOGK06m18sCjmMCJ
+ /H1/m5RmdXYCXuoNkOGDKbozUJvnrLcaHYX3946C29OUVmxOoFhrZRmTz+kqCMeThfxxCQR8ZMf0Q3qKslOEyn8VoN7z9KBal/KaxrksfgSIpCDoHKa3h22y
+ 8Ysggdzj1oYNvuMbtNwSmPTBjjfEtNLhkS8i9fddfNtphnmTkfAAqnl+NklYZLly3JZKJWpiEoh365C7HcOpvbgdlcWsfBHIVRgA8eejoSS2TLr1leAKB4+N
+ mA5h5LPjLZQshVuxz1Zmg4X39hKjT2/XAWDXUWJi7hVljCmtsFZltgEJEdptisrG9WWUcuOEQomwLY27vRzVvBO6/AkyZSGuBa120JH8S3mMmE9nypbwnxFF
+ jMdUfEhRD1XC7tn6YVqluC+b9DQP2+ocFeJ2PhnJ4syHpoWJWeg3fe5v7mE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for controlling the LEDs connected to several
-families of Marvell PHYs via the PHY HW LED trigger API. These families
-are: 88E1112, 88E1121R, 88E1240, 88E1340S, 88E1510 and 88E1545. More can
-be added.
+Hi Dhiraj,
 
-This patch does not yet add support for compound LED modes. This could
-be achieved via the LED multicolor framework (which is not yet in
-upstream).
+On 28/07/2020 16:30, Dhiraj Sharma wrote:
+> As per eudyptula challenge task 10 I had to fix coding styles. Thus I
+> used checkpatch.pl script and fixed a chunk of warnings and few errors.
 
-Settings such as HW blink rate or pulse stretch duration are not yet
-supported, nor are LED polarity settings.
+As both drivers/staging/media/usbvision/Kconfig and .../TODO say, this
+driver is deprecated and will be removed by the end of this year.
 
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
----
- drivers/net/phy/marvell.c | 287 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 287 insertions(+)
+So don't bother with this driver.
 
-diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
-index bb86ac0bd092..55882ce24e67 100644
---- a/drivers/net/phy/marvell.c
-+++ b/drivers/net/phy/marvell.c
-@@ -148,6 +148,11 @@
- #define MII_88E1510_PHY_LED_DEF		0x1177
- #define MII_88E1510_PHY_LED0_LINK_LED1_ACTIVE	0x1040
- 
-+#define MII_PHY_LED45_CTRL		19
-+
-+#define MII_PHY_LED_CTRL_FORCE_ON	0x9
-+#define MII_PHY_LED_CTRL_FORCE_OFF	0x8
-+
- #define MII_M1011_PHY_STATUS		0x11
- #define MII_M1011_PHY_STATUS_1000	0x8000
- #define MII_M1011_PHY_STATUS_100	0x4000
-@@ -252,6 +257,8 @@
- #define LPA_PAUSE_FIBER		0x180
- #define LPA_PAUSE_ASYM_FIBER	0x100
- 
-+#define MARVELL_PHY_MAX_LEDS	6
-+
- #define NB_FIBER_STATS	1
- 
- MODULE_DESCRIPTION("Marvell PHY driver");
-@@ -662,6 +669,244 @@ static int m88e1510_config_aneg(struct phy_device *phydev)
- 	return err;
- }
- 
-+#if IS_ENABLED(CONFIG_PHY_LEDS)
-+
-+enum {
-+	COMMON			= BIT(0),
-+	L1V0_RECV		= BIT(1),
-+	L1V0_COPPER		= BIT(2),
-+	L1V5_100_FIBER		= BIT(3),
-+	L1V5_100_10		= BIT(4),
-+	L2V2_INIT		= BIT(5),
-+	L2V2_PTP		= BIT(6),
-+	L2V2_DUPLEX		= BIT(7),
-+	L3V0_FIBER		= BIT(8),
-+	L3V0_LOS		= BIT(9),
-+	L3V5_TRANS		= BIT(10),
-+	L3V7_FIBER		= BIT(11),
-+	L3V7_DUPLEX		= BIT(12),
-+};
-+
-+struct marvell_led_mode_info {
-+	const char *name;
-+	s8 regval[MARVELL_PHY_MAX_LEDS];
-+	u32 flags;
-+};
-+
-+static const struct marvell_led_mode_info marvell_led_mode_info[] = {
-+	{ "link",			{ 0x0,  -1, 0x0,  -1,  -1,  -1, }, COMMON },
-+	{ "link/act",			{ 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, }, COMMON },
-+	{ "1Gbps/100Mbps/10Mbps",	{ 0x2,  -1,  -1,  -1,  -1,  -1, }, COMMON },
-+	{ "act",			{ 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, }, COMMON },
-+	{ "blink-act",			{ 0x4, 0x4, 0x4, 0x4, 0x4, 0x4, }, COMMON },
-+	{ "tx",				{ 0x5,  -1, 0x5,  -1, 0x5, 0x5, }, COMMON },
-+	{ "tx",				{  -1,  -1,  -1, 0x5,  -1,  -1, }, L3V5_TRANS },
-+	{ "rx",				{  -1,  -1,  -1,  -1, 0x0, 0x0, }, COMMON },
-+	{ "rx",				{  -1, 0x0,  -1,  -1,  -1,  -1, }, L1V0_RECV },
-+	{ "copper",			{ 0x6,  -1,  -1,  -1,  -1,  -1, }, COMMON },
-+	{ "copper",			{  -1, 0x0,  -1,  -1,  -1,  -1, }, L1V0_COPPER },
-+	{ "1Gbps",			{ 0x7,  -1,  -1,  -1,  -1,  -1, }, COMMON },
-+	{ "link/rx",			{  -1, 0x2,  -1, 0x2, 0x2, 0x2, }, COMMON },
-+	{ "100Mbps-fiber",		{  -1, 0x5,  -1,  -1,  -1,  -1, }, L1V5_100_FIBER },
-+	{ "100Mbps-10Mbps",		{  -1, 0x5,  -1,  -1,  -1,  -1, }, L1V5_100_10 },
-+	{ "1Gbps-100Mbps",		{  -1, 0x6,  -1,  -1,  -1,  -1, }, COMMON },
-+	{ "1Gbps-10Mbps",		{  -1,  -1, 0x6, 0x6,  -1,  -1, }, COMMON },
-+	{ "100Mbps",			{  -1, 0x7,  -1,  -1,  -1,  -1, }, COMMON },
-+	{ "10Mbps",			{  -1,  -1, 0x7,  -1,  -1,  -1, }, COMMON },
-+	{ "fiber",			{  -1,  -1,  -1, 0x0,  -1,  -1, }, L3V0_FIBER },
-+	{ "fiber",			{  -1,  -1,  -1, 0x7,  -1,  -1, }, L3V7_FIBER },
-+	{ "FullDuplex",			{  -1,  -1,  -1, 0x7,  -1,  -1, }, L3V7_DUPLEX },
-+	{ "FullDuplex",			{  -1,  -1,  -1,  -1, 0x6, 0x6, }, COMMON },
-+	{ "FullDuplex/collision",	{  -1,  -1,  -1,  -1, 0x7, 0x7, }, COMMON },
-+	{ "FullDuplex/collision",	{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_DUPLEX },
-+	{ "ptp",			{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_PTP },
-+	{ "init",			{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_INIT },
-+	{ "los",			{  -1,  -1,  -1, 0x0,  -1,  -1, }, L3V0_LOS },
-+	{ "blink",			{ 0xb, 0xb, 0xb, 0xb, 0xb, 0xb, }, COMMON },
-+};
-+
-+struct marvell_leds_info {
-+	u32 family;
-+	int nleds;
-+	u32 flags;
-+};
-+
-+#define LED(fam,n,flg)								\
-+	{									\
-+		.family = MARVELL_PHY_FAMILY_ID(MARVELL_PHY_ID_88E##fam),	\
-+		.nleds = (n),							\
-+		.flags = (flg),							\
-+	}									\
-+
-+static const struct marvell_leds_info marvell_leds_info[] = {
-+	LED(1112,  4, COMMON | L1V0_COPPER | L1V5_100_FIBER | L2V2_INIT | L3V0_LOS | L3V5_TRANS |
-+		      L3V7_FIBER),
-+	LED(1121R, 3, COMMON | L1V5_100_10),
-+	LED(1240,  6, COMMON | L3V5_TRANS),
-+	LED(1340S, 6, COMMON | L1V0_COPPER | L1V5_100_FIBER | L2V2_PTP | L3V0_FIBER | L3V7_DUPLEX),
-+	LED(1510,  3, COMMON | L1V0_RECV | L1V5_100_FIBER | L2V2_DUPLEX),
-+	LED(1545,  6, COMMON | L1V0_COPPER | L1V5_100_FIBER | L3V0_FIBER | L3V7_DUPLEX),
-+};
-+
-+static inline int marvell_led_reg(int led)
-+{
-+	switch (led) {
-+	case 0 ... 3:
-+		return MII_PHY_LED_CTRL;
-+	case 4 ... 5:
-+		return MII_PHY_LED45_CTRL;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int marvell_led_set_regval(struct phy_device *phydev, int led, u16 val)
-+{
-+	u16 mask;
-+	int reg;
-+
-+	reg = marvell_led_reg(led);
-+	if (reg < 0)
-+		return reg;
-+
-+	val <<= (led % 4) * 4;
-+	mask = 0xf << ((led % 4) * 4);
-+
-+	return phy_modify_paged(phydev, MII_MARVELL_LED_PAGE, reg, mask, val);
-+}
-+
-+static int marvell_led_get_regval(struct phy_device *phydev, int led)
-+{
-+	int reg, val;
-+
-+	reg = marvell_led_reg(led);
-+	if (reg < 0)
-+		return reg;
-+
-+	val = phy_read_paged(phydev, MII_MARVELL_LED_PAGE, reg);
-+	if (val < 0)
-+		return val;
-+
-+	val >>= (led % 4) * 4;
-+	val &= 0xf;
-+
-+	return val;
-+}
-+
-+static int marvell_led_brightness_set(struct phy_device *phydev, struct phy_device_led *led,
-+				      enum led_brightness brightness)
-+{
-+	u8 val;
-+
-+	/* don't do anything if HW control is enabled */
-+	if (led->cdev.trigger == &phy_hw_led_trig)
-+		return 0;
-+
-+	val = brightness ? MII_PHY_LED_CTRL_FORCE_ON : MII_PHY_LED_CTRL_FORCE_OFF;
-+
-+	return marvell_led_set_regval(phydev, led->addr, val);
-+}
-+
-+static inline bool is_valid_led_mode(struct phy_device_led *led,
-+				     const struct marvell_led_mode_info *mode)
-+{
-+	return mode->regval[led->addr] != -1 && (led->flags & mode->flags);
-+}
-+
-+static const char *marvell_led_iter_hw_mode(struct phy_device *phydev, struct phy_device_led *led,
-+					    void **iter)
-+{
-+	const struct marvell_led_mode_info *mode = *iter;
-+
-+	if (!mode)
-+		mode = marvell_led_mode_info;
-+
-+	if (mode - marvell_led_mode_info == ARRAY_SIZE(marvell_led_mode_info))
-+		goto end;
-+
-+	while (!is_valid_led_mode(led, mode)) {
-+		++mode;
-+		if (mode - marvell_led_mode_info == ARRAY_SIZE(marvell_led_mode_info))
-+			goto end;
-+	}
-+
-+	*iter = (void *)(mode + 1);
-+	return mode->name;
-+end:
-+	*iter = NULL;
-+	return NULL;
-+}
-+
-+static int marvell_led_set_hw_mode(struct phy_device *phydev, struct phy_device_led *led,
-+				   const char *name)
-+{
-+	const struct marvell_led_mode_info *mode;
-+	int i;
-+
-+	if (!name)
-+		return 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(marvell_led_mode_info); ++i) {
-+		mode = &marvell_led_mode_info[i];
-+
-+		if (!is_valid_led_mode(led, mode))
-+			continue;
-+
-+		if (sysfs_streq(name, mode->name))
-+			return marvell_led_set_regval(phydev, led->addr, mode->regval[led->addr]);
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const char *marvell_led_get_hw_mode(struct phy_device *phydev, struct phy_device_led *led)
-+{
-+	const struct marvell_led_mode_info *mode;
-+	int i, regval;
-+
-+	regval = marvell_led_get_regval(phydev, led->addr);
-+	if (regval < 0)
-+		return NULL;
-+
-+	for (i = 0; i < ARRAY_SIZE(marvell_led_mode_info); ++i) {
-+		mode = &marvell_led_mode_info[i];
-+
-+		if (!is_valid_led_mode(led, mode))
-+			continue;
-+
-+		if (mode->regval[led->addr] == regval)
-+			return mode->name;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int marvell_led_init(struct phy_device *phydev, struct phy_device_led *led)
-+{
-+	const struct marvell_leds_info *info = NULL;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(marvell_leds_info); ++i) {
-+		if (MARVELL_PHY_FAMILY_ID(phydev->phy_id) == marvell_leds_info[i].family) {
-+			info = &marvell_leds_info[i];
-+			break;
-+		}
-+	}
-+
-+	if (!info)
-+		return -ENOTSUPP;
-+
-+	if (led->addr >= info->nleds)
-+		return -EINVAL;
-+
-+	led->flags = info->flags;
-+	led->cdev.max_brightness = 1;
-+
-+	return 0;
-+}
-+
-+#endif /* IS_ENABLED(CONFIG_PHY_LEDS) */
-+
- static void marvell_config_led(struct phy_device *phydev)
- {
- 	u16 def_config;
-@@ -2656,6 +2901,13 @@ static struct phy_driver marvell_drivers[] = {
- 		.get_stats = marvell_get_stats,
- 		.get_tunable = m88e1011_get_tunable,
- 		.set_tunable = m88e1011_set_tunable,
-+#if IS_ENABLED(CONFIG_PHY_LEDS)
-+		.led_init = marvell_led_init,
-+		.led_brightness_set = marvell_led_brightness_set,
-+		.led_iter_hw_mode = marvell_led_iter_hw_mode,
-+		.led_set_hw_mode = marvell_led_set_hw_mode,
-+		.led_get_hw_mode = marvell_led_get_hw_mode,
-+#endif
- 	},
- 	{
- 		.phy_id = MARVELL_PHY_ID_88E1111,
-@@ -2717,6 +2969,13 @@ static struct phy_driver marvell_drivers[] = {
- 		.get_stats = marvell_get_stats,
- 		.get_tunable = m88e1011_get_tunable,
- 		.set_tunable = m88e1011_set_tunable,
-+#if IS_ENABLED(CONFIG_PHY_LEDS)
-+		.led_init = marvell_led_init,
-+		.led_brightness_set = marvell_led_brightness_set,
-+		.led_iter_hw_mode = marvell_led_iter_hw_mode,
-+		.led_set_hw_mode = marvell_led_set_hw_mode,
-+		.led_get_hw_mode = marvell_led_get_hw_mode,
-+#endif
- 	},
- 	{
- 		.phy_id = MARVELL_PHY_ID_88E1318S,
-@@ -2796,6 +3055,13 @@ static struct phy_driver marvell_drivers[] = {
- 		.get_sset_count = marvell_get_sset_count,
- 		.get_strings = marvell_get_strings,
- 		.get_stats = marvell_get_stats,
-+#if IS_ENABLED(CONFIG_PHY_LEDS)
-+		.led_init = marvell_led_init,
-+		.led_brightness_set = marvell_led_brightness_set,
-+		.led_iter_hw_mode = marvell_led_iter_hw_mode,
-+		.led_set_hw_mode = marvell_led_set_hw_mode,
-+		.led_get_hw_mode = marvell_led_get_hw_mode,
-+#endif
- 	},
- 	{
- 		.phy_id = MARVELL_PHY_ID_88E1116R,
-@@ -2844,6 +3110,13 @@ static struct phy_driver marvell_drivers[] = {
- 		.cable_test_start = marvell_vct7_cable_test_start,
- 		.cable_test_tdr_start = marvell_vct5_cable_test_tdr_start,
- 		.cable_test_get_status = marvell_vct7_cable_test_get_status,
-+#if IS_ENABLED(CONFIG_PHY_LEDS)
-+		.led_init = marvell_led_init,
-+		.led_brightness_set = marvell_led_brightness_set,
-+		.led_iter_hw_mode = marvell_led_iter_hw_mode,
-+		.led_set_hw_mode = marvell_led_set_hw_mode,
-+		.led_get_hw_mode = marvell_led_get_hw_mode,
-+#endif
- 	},
- 	{
- 		.phy_id = MARVELL_PHY_ID_88E1540,
-@@ -2896,6 +3169,13 @@ static struct phy_driver marvell_drivers[] = {
- 		.cable_test_start = marvell_vct7_cable_test_start,
- 		.cable_test_tdr_start = marvell_vct5_cable_test_tdr_start,
- 		.cable_test_get_status = marvell_vct7_cable_test_get_status,
-+#if IS_ENABLED(CONFIG_PHY_LEDS)
-+		.led_init = marvell_led_init,
-+		.led_brightness_set = marvell_led_brightness_set,
-+		.led_iter_hw_mode = marvell_led_iter_hw_mode,
-+		.led_set_hw_mode = marvell_led_set_hw_mode,
-+		.led_get_hw_mode = marvell_led_get_hw_mode,
-+#endif
- 	},
- 	{
- 		.phy_id = MARVELL_PHY_ID_88E3016,
-@@ -2964,6 +3244,13 @@ static struct phy_driver marvell_drivers[] = {
- 		.get_stats = marvell_get_stats,
- 		.get_tunable = m88e1540_get_tunable,
- 		.set_tunable = m88e1540_set_tunable,
-+#if IS_ENABLED(CONFIG_PHY_LEDS)
-+		.led_init = marvell_led_init,
-+		.led_brightness_set = marvell_led_brightness_set,
-+		.led_iter_hw_mode = marvell_led_iter_hw_mode,
-+		.led_set_hw_mode = marvell_led_set_hw_mode,
-+		.led_get_hw_mode = marvell_led_get_hw_mode,
-+#endif
- 	},
- 	{
- 		.phy_id = MARVELL_PHY_ID_88E1548P,
--- 
-2.26.2
+Regards,
+
+	Hans
+
+> 
+> Signed-off-by: Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
+> ---
+>  .../staging/media/usbvision/usbvision-video.c | 91 +++++++++++--------
+>  1 file changed, 52 insertions(+), 39 deletions(-)
+> 
+> diff --git a/drivers/staging/media/usbvision/usbvision-video.c b/drivers/staging/media/usbvision/usbvision-video.c
+> index 3ea25fdcf767..8b68e99a2813 100644
+> --- a/drivers/staging/media/usbvision/usbvision-video.c
+> +++ b/drivers/staging/media/usbvision/usbvision-video.c
+> @@ -67,8 +67,8 @@
+>  #ifdef USBVISION_DEBUG
+>  	#define PDEBUG(level, fmt, args...) { \
+>  		if (video_debug & (level)) \
+> -			printk(KERN_INFO KBUILD_MODNAME ":[%s:%d] " fmt, \
+> -				__func__, __LINE__ , ## args); \
+> +			pr_debug(KBUILD_MODNAME ":[%s:%d] " fmt, \
+> +				__func__, __LINE__, ## args); \
+>  	}
+>  #else
+>  	#define PDEBUG(level, fmt, args...) do {} while (0)
+> @@ -79,8 +79,8 @@
+>  #define DBG_MMAP	(1 << 3)
+> 
+>  /* String operations */
+> -#define rmspace(str)	while (*str == ' ') str++;
+> -#define goto2next(str)	while (*str != ' ') str++; while (*str == ' ') str++;
+> +#define rmspace(str)	do { str++; } while (*str == ' ')
+> +#define goto2next(str)	do { str++; } while (*str != ' ' || *str == ' ')
+> 
+> 
+>  /* sequential number of usbvision device */
+> @@ -145,27 +145,29 @@ MODULE_ALIAS(DRIVER_ALIAS);
+>  static inline struct usb_usbvision *cd_to_usbvision(struct device *cd)
+>  {
+>  	struct video_device *vdev = to_video_device(cd);
+> +
+>  	return video_get_drvdata(vdev);
+>  }
+> 
+> -static ssize_t show_version(struct device *cd,
+> +static ssize_t version_show(struct device *cd,
+>  			    struct device_attribute *attr, char *buf)
+>  {
+>  	return sprintf(buf, "%s\n", USBVISION_VERSION_STRING);
+>  }
+> -static DEVICE_ATTR(version, S_IRUGO, show_version, NULL);
+> +static DEVICE_ATTR_RO(version, 0444, version_show, NULL);
+> 
+> -static ssize_t show_model(struct device *cd,
+> +static ssize_t model_show(struct device *cd,
+>  			  struct device_attribute *attr, char *buf)
+>  {
+>  	struct video_device *vdev = to_video_device(cd);
+>  	struct usb_usbvision *usbvision = video_get_drvdata(vdev);
+> +
+>  	return sprintf(buf, "%s\n",
+>  		       usbvision_device_data[usbvision->dev_model].model_string);
+>  }
+> -static DEVICE_ATTR(model, S_IRUGO, show_model, NULL);
+> +static DEVICE_ATTR_RO(model, 0444, model_show, NULL);
+> 
+> -static ssize_t show_hue(struct device *cd,
+> +static ssize_t hue_show(struct device *cd,
+>  			struct device_attribute *attr, char *buf)
+>  {
+>  	struct video_device *vdev = to_video_device(cd);
+> @@ -175,9 +177,9 @@ static ssize_t show_hue(struct device *cd,
+> 
+>  	return sprintf(buf, "%d\n", val);
+>  }
+> -static DEVICE_ATTR(hue, S_IRUGO, show_hue, NULL);
+> +static DEVICE_ATTR_RO(hue, 0444, hue_show, NULL);
+> 
+> -static ssize_t show_contrast(struct device *cd,
+> +static ssize_t contrast_show(struct device *cd,
+>  			     struct device_attribute *attr, char *buf)
+>  {
+>  	struct video_device *vdev = to_video_device(cd);
+> @@ -187,9 +189,9 @@ static ssize_t show_contrast(struct device *cd,
+> 
+>  	return sprintf(buf, "%d\n", val);
+>  }
+> -static DEVICE_ATTR(contrast, S_IRUGO, show_contrast, NULL);
+> +static DEVICE_ATTR_RO(contrast, 0444, contrast_show, NULL);
+> 
+> -static ssize_t show_brightness(struct device *cd,
+> +static ssize_t brightness_show(struct device *cd,
+>  			       struct device_attribute *attr, char *buf)
+>  {
+>  	struct video_device *vdev = to_video_device(cd);
+> @@ -199,9 +201,9 @@ static ssize_t show_brightness(struct device *cd,
+> 
+>  	return sprintf(buf, "%d\n", val);
+>  }
+> -static DEVICE_ATTR(brightness, S_IRUGO, show_brightness, NULL);
+> +static DEVICE_ATTR_RO(brightness, 0444, brightness_show, NULL);
+> 
+> -static ssize_t show_saturation(struct device *cd,
+> +static ssize_t saturation_show(struct device *cd,
+>  			       struct device_attribute *attr, char *buf)
+>  {
+>  	struct video_device *vdev = to_video_device(cd);
+> @@ -211,36 +213,39 @@ static ssize_t show_saturation(struct device *cd,
+> 
+>  	return sprintf(buf, "%d\n", val);
+>  }
+> -static DEVICE_ATTR(saturation, S_IRUGO, show_saturation, NULL);
+> +static DEVICE_ATTR_RO(saturation, 0444, saturation_show, NULL);
+> 
+> -static ssize_t show_streaming(struct device *cd,
+> +static ssize_t streaming_show(struct device *cd,
+>  			      struct device_attribute *attr, char *buf)
+>  {
+>  	struct video_device *vdev = to_video_device(cd);
+>  	struct usb_usbvision *usbvision = video_get_drvdata(vdev);
+> +
+>  	return sprintf(buf, "%s\n",
+>  		       YES_NO(usbvision->streaming == stream_on ? 1 : 0));
+>  }
+> -static DEVICE_ATTR(streaming, S_IRUGO, show_streaming, NULL);
+> +static DEVICE_ATTR_RO(streaming, 0444, streaming_show, NULL);
+> 
+> -static ssize_t show_compression(struct device *cd,
+> +static ssize_t compression_show(struct device *cd,
+>  				struct device_attribute *attr, char *buf)
+>  {
+>  	struct video_device *vdev = to_video_device(cd);
+>  	struct usb_usbvision *usbvision = video_get_drvdata(vdev);
+> +
+>  	return sprintf(buf, "%s\n",
+>  		       YES_NO(usbvision->isoc_mode == ISOC_MODE_COMPRESS));
+>  }
+> -static DEVICE_ATTR(compression, S_IRUGO, show_compression, NULL);
+> +static DEVICE_ATTR_RO(compression, 0444, compression_show, NULL);
+> 
+>  static ssize_t show_device_bridge(struct device *cd,
+>  				  struct device_attribute *attr, char *buf)
+>  {
+>  	struct video_device *vdev = to_video_device(cd);
+>  	struct usb_usbvision *usbvision = video_get_drvdata(vdev);
+> +
+>  	return sprintf(buf, "%d\n", usbvision->bridge_type);
+>  }
+> -static DEVICE_ATTR(bridge, S_IRUGO, show_device_bridge, NULL);
+> +static DEVICE_ATTR_RO(bridge, 0444, show_device_bridge, NULL);
+> 
+>  static void usbvision_create_sysfs(struct video_device *vdev)
+>  {
+> @@ -329,7 +334,8 @@ static int usbvision_v4l2_open(struct file *file)
+>  		err_code = usbvision_scratch_alloc(usbvision);
+>  		if (isoc_mode == ISOC_MODE_COMPRESS) {
+>  			/* Allocate intermediate decompression buffers
+> -			   only if needed */
+> +			 * only if needed
+> +			 */
+>  			err_code = usbvision_decompress_alloc(usbvision);
+>  		}
+>  		if (err_code) {
+> @@ -344,6 +350,7 @@ static int usbvision_v4l2_open(struct file *file)
+>  		/* Send init sequence only once, it's large! */
+>  		if (!usbvision->initialized) {
+>  			int setup_ok = 0;
+> +
+>  			setup_ok = usbvision_setup(usbvision, isoc_mode);
+>  			if (setup_ok)
+>  				usbvision->initialized = 1;
+> @@ -400,7 +407,7 @@ static int usbvision_v4l2_close(struct file *file)
+>  	mutex_unlock(&usbvision->v4l2_lock);
+> 
+>  	if (r) {
+> -		printk(KERN_INFO "%s: Final disconnect\n", __func__);
+> +		pr_debug("%s: Final disconnect\n", __func__);
+>  		usbvision_release(usbvision);
+>  		return 0;
+>  	}
+> @@ -490,7 +497,8 @@ static int vidioc_enum_input(struct file *file, void *priv,
+>  		chan = vi->index + 1; /* skip Television string*/
+> 
+>  	/* Determine the requested input characteristics
+> -	   specific for each usbvision card model */
+> +	 * specific for each usbvision card model
+> +	 */
+>  	switch (chan) {
+>  	case 0:
+>  		if (usbvision_device_data[usbvision->dev_model].video_channels == 4) {
+> @@ -649,7 +657,8 @@ static int vidioc_reqbufs(struct file *file,
+>  	RESTRICT_TO_RANGE(vr->count, 1, USBVISION_NUMFRAMES);
+> 
+>  	/* Check input validity:
+> -	   the user must do a VIDEO CAPTURE and MMAP method. */
+> +	 * the user must do a VIDEO CAPTURE and MMAP method.
+> +	 */
+>  	if (vr->memory != V4L2_MEMORY_MMAP)
+>  		return -EINVAL;
+> 
+> @@ -675,7 +684,8 @@ static int vidioc_querybuf(struct file *file,
+>  	struct usbvision_frame *frame;
+> 
+>  	/* FIXME : must control
+> -	   that buffers are mapped (VIDIOC_REQBUFS has been called) */
+> +	 * that buffers are mapped (VIDIOC_REQBUFS has been called)
+> +	 */
+>  	if (vb->index >= usbvision->num_frames)
+>  		return -EINVAL;
+>  	/* Updating the corresponding frame state */
+> @@ -813,6 +823,7 @@ static int vidioc_g_fmt_vid_cap(struct file *file, void *priv,
+>  					struct v4l2_format *vf)
+>  {
+>  	struct usb_usbvision *usbvision = video_drvdata(file);
+> +
+>  	vf->fmt.pix.width = usbvision->curwidth;
+>  	vf->fmt.pix.height = usbvision->curheight;
+>  	vf->fmt.pix.pixelformat = usbvision->palette.format;
+> @@ -897,24 +908,27 @@ static ssize_t usbvision_read(struct file *file, char __user *buf,
+>  		return -EFAULT;
+> 
+>  	/* This entry point is compatible with the mmap routines
+> -	   so that a user can do either VIDIOC_QBUF/VIDIOC_DQBUF
+> -	   to get frames or call read on the device. */
+> +	 * so that a user can do either VIDIOC_QBUF/VIDIOC_DQBUF
+> +	 * to get frames or call read on the device.
+> +	 */
+>  	if (!usbvision->num_frames) {
+>  		/* First, allocate some frames to work with
+> -		   if this has not been done with VIDIOC_REQBUF */
+> +		 * if this has not been done with VIDIOC_REQBUF
+> +		 */
+>  		usbvision_frames_free(usbvision);
+>  		usbvision_empty_framequeues(usbvision);
+>  		usbvision_frames_alloc(usbvision, USBVISION_NUMFRAMES);
+>  	}
+> 
+>  	if (usbvision->streaming != stream_on) {
+> -		/* no stream is running, make it running ! */
+> +		// no stream is running, make it running !
+>  		usbvision->streaming = stream_on;
+>  		call_all(usbvision, video, s_stream, 1);
+>  	}
+> 
+>  	/* Then, enqueue as many frames as possible
+> -	   (like a user of VIDIOC_QBUF would do) */
+> +	 * (like a user of VIDIOC_QBUF would do)
+> +	 */
+>  	for (i = 0; i < usbvision->num_frames; i++) {
+>  		frame = &usbvision->frame[i];
+>  		if (frame->grabstate == frame_state_unused) {
+> @@ -1125,7 +1139,7 @@ static int usbvision_radio_close(struct file *file)
+>  	mutex_unlock(&usbvision->v4l2_lock);
+> 
+>  	if (r) {
+> -		printk(KERN_INFO "%s: Final disconnect\n", __func__);
+> +		pr_debug("%s: Final disconnect\n", __func__);
+>  		v4l2_fh_release(file);
+>  		usbvision_release(usbvision);
+>  		return 0;
+> @@ -1273,7 +1287,7 @@ static int usbvision_register_video(struct usb_usbvision *usbvision)
+> 
+>  	if (video_register_device(&usbvision->vdev, VFL_TYPE_VIDEO, video_nr) < 0)
+>  		goto err_exit;
+> -	printk(KERN_INFO "USBVision[%d]: registered USBVision Video device %s [v4l2]\n",
+> +	pr_debug("USBVision[%d]: registered USBVision Video device %s [v4l2]\n",
+>  	       usbvision->nr, video_device_node_name(&usbvision->vdev));
+> 
+>  	/* Radio Device: */
+> @@ -1284,7 +1298,7 @@ static int usbvision_register_video(struct usb_usbvision *usbvision)
+>  		usbvision->rdev.device_caps = V4L2_CAP_RADIO | V4L2_CAP_TUNER;
+>  		if (video_register_device(&usbvision->rdev, VFL_TYPE_RADIO, radio_nr) < 0)
+>  			goto err_exit;
+> -		printk(KERN_INFO "USBVision[%d]: registered USBVision Radio device %s [v4l2]\n",
+> +		pr_debug("USBVision[%d]: registered USBVision Radio device %s [v4l2]\n",
+>  		       usbvision->nr, video_device_node_name(&usbvision->rdev));
+>  	}
+>  	/* all done */
+> @@ -1429,7 +1443,7 @@ static int usbvision_probe(struct usb_interface *intf,
+>  		ret = -ENODEV;
+>  		goto err_usb;
+>  	}
+> -	printk(KERN_INFO "%s: %s found\n", __func__,
+> +	pr_debug("%s: %s found\n", __func__,
+>  				usbvision_device_data[model].model_string);
+> 
+>  	if (usbvision_device_data[model].interface >= 0)
+> @@ -1501,8 +1515,7 @@ static int usbvision_probe(struct usb_interface *intf,
+>  			goto err_pkt;
+>  		}
+> 
+> -		tmp = le16_to_cpu(uif->altsetting[i].endpoint[1].desc.
+> -				      wMaxPacketSize);
+> +		tmp = le16_to_cpu(uif->altsetting[i].endpoint[1].desc.wMaxPacketSize);
+>  		usbvision->alt_max_pkt_size[i] =
+>  			(tmp & 0x07ff) * (((tmp & 0x1800) >> 11) + 1);
+>  		PDEBUG(DBG_PROBE, "Alternate setting %i, max size= %i", i,
+> @@ -1581,7 +1594,7 @@ static void usbvision_disconnect(struct usb_interface *intf)
+>  	mutex_unlock(&usbvision->v4l2_lock);
+> 
+>  	if (u) {
+> -		printk(KERN_INFO "%s: In use, disconnect pending\n",
+> +		pr_debug("%s: In use, disconnect pending\n",
+>  		       __func__);
+>  		wake_up_interruptible(&usbvision->wait_frame);
+>  		wake_up_interruptible(&usbvision->wait_stream);
+> @@ -1625,7 +1638,7 @@ static int __init usbvision_init(void)
+>  	err_code = usb_register(&usbvision_driver);
+> 
+>  	if (err_code == 0) {
+> -		printk(KERN_INFO DRIVER_DESC " : " USBVISION_VERSION_STRING "\n");
+> +		pr_debug(DRIVER_DESC " : " USBVISION_VERSION_STRING "\n");
+>  		PDEBUG(DBG_PROBE, "success");
+>  	}
+>  	return err_code;
+> --
+> 2.17.1
+> 
 
