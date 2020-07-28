@@ -2,150 +2,186 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA48C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFD52083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:50:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="t9Acm7eP"
+	by mail.kernel.org (Postfix) with ESMTP id 14AB9206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbgG1Uuu (ORCPT
+        id S1729092AbgG1UwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:50:50 -0400
-Received: from mga12.intel.com ([192.55.52.136]:25753 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728202AbgG1Uut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 16:50:49 -0400
-IronPort-SDR: oa2r0GxL1uVjPdUKKWhTPlVWsu8xxUlV1vSZJeKF2gBXU4otpSfEhiR4fpdFDOkH7LqZJ/E+SJ
- a7KCcboZ5BYQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="130871779"
-X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
-   d="scan'208";a="130871779"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 13:50:48 -0700
-IronPort-SDR: qzhX5Pz0cdVcADAexEAs2usUgT7yPmO3EdXQ8ODJE1nMVAjadyU75KIOzk2JU+hWsH3Pd+IEle
- 7MkFW3ZigoOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
-   d="scan'208";a="364633146"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by orsmga001.jf.intel.com with ESMTP; 28 Jul 2020 13:50:48 -0700
-Received: from orsmsx161.amr.corp.intel.com (10.22.240.84) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 28 Jul 2020 13:50:48 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX161.amr.corp.intel.com (10.22.240.84) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 28 Jul 2020 13:50:48 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.53) by
- edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Tue, 28 Jul 2020 13:49:19 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dEBW5tCGvGonjAhem1adY3Jpc4SxTcjsmHT3oN0q92X/uT3GfPXclKy70K7wGaMykAWnKS3a35ReMU5kqtmBcopU4MWSa79OQFpX13XmHlH+RcpB6fpbHfKZNEe0HiGRjpj3vW+PXtsUSLmOFCHs9BSpt5KIdCjxp05rBwJyJ0Jndy51k+w9Sh4ker1HsT7jllQIW1iduBTHWUqf5t6YpKZcSH4fGdfs+TrWk7AVUxdYHnluAVPlZiTpduzIlmCPE2iyT9R4FGDOtiWWd7XuKgJ5DRAnkBkXTiIrUzNCPxwbzTwET28H6GnnJU9fgBxRQmNlAA1AmjoIvaNdBcSlmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J7NeWXdpSVJfYt00olRWb1kp2bUbr4a5b66qXv+I3pY=;
- b=aSixTrADgq6XQZhoQ1nxhmugZZO8HRqIXhpMx9FtOG9nFTT1yj1wsiD7c79m2vVzslKG6hYMkP6egCGWl1lOGNgdzckFh8NHSPE7/A1wWOD3A+ERSe/srrcq13F00b2kEjsACa+LUrC0Qal3qMMstEaEpBTg89wQeIjOprpHSvVP9sjeiFpjNkiYmnOJaHQyedOeL5b4KTXJ/HgKQ9KloOP+W52hkc50AswE52C5JGiinGCnHIyrnKXKy6dVHDymSyJIzVYffN0KQeCHnZxBafd7hRaolRfo5UUyx3cdf9VAjepUKMc0HAEJBKfcPu0zxjgZqHJYvTjIYyGbecF7qw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J7NeWXdpSVJfYt00olRWb1kp2bUbr4a5b66qXv+I3pY=;
- b=t9Acm7ePuKyq/w4qSVX5/8ZHeGNGX4dj1XnLCfsMWdE/OrPLfAYJYlCoIxx38xLoD973pb899pXGfDIqNpEjpQAygm7EPCFyRHKJibEdRBDlydi5pZGhLs9QzE43o57/u8+gTzXDGsvadu9WNYwPiHC9ag/u60IK3xc8WEydM70=
-Received: from DM6PR11MB2890.namprd11.prod.outlook.com (2603:10b6:5:63::20) by
- DM5PR11MB1259.namprd11.prod.outlook.com (2603:10b6:3:15::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3216.20; Tue, 28 Jul 2020 20:49:18 +0000
-Received: from DM6PR11MB2890.namprd11.prod.outlook.com
- ([fe80::65c2:9ac9:2c52:82bd]) by DM6PR11MB2890.namprd11.prod.outlook.com
- ([fe80::65c2:9ac9:2c52:82bd%6]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
- 20:49:18 +0000
-From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
-To:     Suraj Upadhyay <usuraj35@gmail.com>,
-        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>
-CC:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: RE: [PATCH 3/4] igb/igb_ethtool.c : Remove unnecessary usages of
- memset.
-Thread-Topic: [PATCH 3/4] igb/igb_ethtool.c : Remove unnecessary usages of
- memset.
-Thread-Index: AQHWWhbikUtIhvYSqUqKUmO37o4ufqkdjPGw
-Date:   Tue, 28 Jul 2020 20:49:18 +0000
-Message-ID: <DM6PR11MB28901E92AF05925C1C6488C8BC730@DM6PR11MB2890.namprd11.prod.outlook.com>
-References: <20200714194147.GA21537@blackclown>
-In-Reply-To: <20200714194147.GA21537@blackclown>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [97.120.173.209]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6815bed5-1c09-4457-c26c-08d83337b2b0
-x-ms-traffictypediagnostic: DM5PR11MB1259:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB12596E118D9E493E6EF0D773BC730@DM5PR11MB1259.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:439;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rbqLqdU32j+wkOV+3aMmgDq/HNHCEO0HGLqHwB3XGkLFpHp7TBVTnPN4eaS+6t4bzElq+vu/djtawf9345SJvx1RiITTdenpK9wdSp+IWjJBE2CIAVSVs2pR7+fcRDyoKH1LySdDjJNuPGP9P4cheGNsx02aJxlEi9dzA6J7QxuLdTTBonU7BG8/v8F4IoknCJ8EDdCuUFadxjaMtKB3B2aZ+eP0FHvLEYVKojjQ1XKp9/jOgs8787duOtQzsT1TZvgcPwOJBvfQkJ3ZUlueFCnlJhuFgDZluPfuJZ4VtbomK1OeEJ4CjPfEqhFwU8tEtJrUD03rjogsUYM8K8//mg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2890.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(376002)(346002)(39860400002)(52536014)(6506007)(53546011)(83380400001)(4744005)(4326008)(8676002)(7696005)(5660300002)(33656002)(86362001)(26005)(478600001)(55016002)(2906002)(76116006)(66946007)(66476007)(64756008)(66556008)(9686003)(66446008)(71200400001)(186003)(8936002)(54906003)(110136005)(316002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: UIpYTrL92BtUoJVHNUXWTrGTurOljoQXSjC9zlroc3CftrDKb9c/wHTXieQeJOkICMgMy1NeNYCw0MdIHIyvrj+qsOBjcG7nhgrQ1K2OqnqyfBELyw4N788MX5XSK7els/yKnx/zlJDbi+3dWwYahEZp7zz+tcxWeEqYsDBSWU2xK1TCbeKwO1FjA+8qGjefnnOCbxHrv9Xo15lzMT3zNQpwRs48kDWMW8fJbiMHNyiZQgrGOU6IrSMuNW5KEMuaiCa5Wm0HOj1MfPob4urqU4M8Mt2VschdGJDGv/nqf3jTKhFrW15hvUQk7aZBnJyMA3FCSH8VfFCLHYPVzLZ8OSvz1v05sxu+IWPZAnYH39F1KYct1akuNx6gE8ZtrZe/0CXIabBYhxI5sodSJo7SOTBd1ZzY8rcGYbJbFmUAth/gQUoolKw7JaCtUBygB/LWlX0hyz6kVT26PGK8U2sugm2AUqkVc1vLCvMgCXE5ndqf4qR3OJf7zVrZe8ejV2s8
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 Jul 2020 16:52:02 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:36106 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728202AbgG1UwC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 16:52:02 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id CC35920039;
+        Tue, 28 Jul 2020 22:51:58 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 22:51:57 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Kevin Tang <kevin3.tang@gmail.com>
+Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
+        robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        zhang.lyra@gmail.com
+Subject: Re: [PATCH RFC v6 3/6] dt-bindings: display: add Unisoc's dpu
+ bindings
+Message-ID: <20200728205157.GD1277651@ravnborg.org>
+References: <1595930879-2478-1-git-send-email-kevin3.tang@gmail.com>
+ <1595930879-2478-4-git-send-email-kevin3.tang@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB2890.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6815bed5-1c09-4457-c26c-08d83337b2b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 20:49:18.6022
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TsPKq2EMjYfLulorcGMHHF3+8Tj9NjMcYD9XTwLq4RGKgIKU6m+mCu4oGnLGSq3CBUStLYrlvTlGm/FAccFRKg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1259
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595930879-2478-4-git-send-email-kevin3.tang@gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=icsG72s9AAAA:8 a=pGLkceISAAAA:8 a=gEfo2CItAAAA:8
+        a=7CQSdrXTAAAA:8 a=e5mUnYsNAAAA:8 a=nf-ICS-ZoSeXndDHOMUA:9
+        a=HAnh4mGoJf9lCd-b:21 a=3GzCVPTGihwzIhyW:21 a=CjuIK1q_8ugA:10
+        a=T89tl0cgrjxRNoSN2Dv0:22 a=sptkURWiP4Gy88Gu7hUp:22
+        a=a-qgeE7W1pNrGK8U0ZQC:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Suraj Upadhyay <usuraj35@gmail.com>
-> Sent: Tuesday, July 14, 2020 12:42 PM
-> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; davem@davemloft.net=
-;
-> kuba@kernel.org
-> Cc: intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; kernel-janitors@vger.kernel.org
-> Subject: [PATCH 3/4] igb/igb_ethtool.c : Remove unnecessary usages of
-> memset.
->=20
-> Replace memsets of 1 byte with simple assignment.
-> Issue found with checkpatch.pl
->=20
-> Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
-> ---
->  drivers/net/ethernet/intel/igb/igb_ethtool.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Hi Kevin.
 
+On Tue, Jul 28, 2020 at 06:07:56PM +0800, Kevin Tang wrote:
+> From: Kevin Tang <kevin.tang@unisoc.com>
+> 
+> DPU (Display Processor Unit) is the Display Controller for the Unisoc SoCs
+> which transfers the image data from a video memory buffer to an internal
+> LCD interface.
+> 
+> Cc: Orson Zhai <orsonzhai@gmail.com>
+> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+> Signed-off-by: Kevin Tang <kevin.tang@unisoc.com>
+> ---
+>  .../devicetree/bindings/display/sprd/dpu.yaml      | 82 ++++++++++++++++++++++
+
+Could we name it after the compatible "sharkl3-dpu.yaml"?
+
+>  1 file changed, 82 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/sprd/dpu.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/sprd/dpu.yaml b/Documentation/devicetree/bindings/display/sprd/dpu.yaml
+> new file mode 100644
+> index 0000000..54ba9b6f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/sprd/dpu.yaml
+> @@ -0,0 +1,82 @@
+> +# SPDX-License-Identifier: GPL-2.0
+Can this be: (GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/sprd/dpu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Unisoc SoC Display Processor Unit (DPU)
+> +
+> +maintainers:
+> +  - Mark Rutland <mark.rutland@arm.com>
+> +
+> +description: |
+> +  DPU (Display Processor Unit) is the Display Controller for the Unisoc SoCs
+> +  which transfers the image data from a video memory buffer to an internal
+> +  LCD interface.
+> +
+> +properties:
+> +  compatible:
+> +    const: sprd,sharkl3-dpu
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description:
+> +      Physical base address and length of the DPU registers set
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description:
+> +      The interrupt signal from DPU
+> +
+> +  clocks:
+> +    minItems: 2
+> +
+> +  clock-names:
+> +    items:
+> +      - const: clk_src_128m
+> +      - const: clk_src_384m
+> +
+> +  power-domains:
+> +    description: A phandle to DPU power domain node.
+maxItems: 1
+
+> +
+> +  iommus:
+> +    description: A phandle to DPU iommu node.
+maxItems: 1
+
+> +
+> +  port:
+> +    type: object
+> +    description:
+> +      A port node with endpoint definitions as defined in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +      That port should be the output endpoint, usually output to
+> +      the associated DSI.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - port
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/sprd,sc9860-clk.h>
+> +    dpu: dpu@0x63000000 {
+> +          compatible = "sprd,sharkl3-dpu";
+> +          reg = <0x0 0x63000000 0x0 0x1000>;
+> +          interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+> +          clock-names = "clk_src_128m",
+> +      	        "clk_src_384m";
+> +
+> +          clocks = <&pll CLK_TWPLL_128M>,
+> +                <&pll CLK_TWPLL_384M>;
+> +
+> +          dpu_port: port {
+> +                  dpu_out: endpoint {
+> +                          remote-endpoint = <&dsi_in>;
+> +                  };
+> +          };
+> +    };
+
+Be consistent in indent. Now it is a mix of 6 and 8 spaces.
+(My preference is 4 spaces, but 2,4,6,8 are all OK)
+
+End the file with and end statement like this:
+<empty line>
+...
+
+> -- 
+> 2.7.4
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
