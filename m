@@ -2,97 +2,99 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B620EC433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F98C433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF65206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6512F2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595938430;
+	bh=elgb9VJwDQUV7e8qJKF8s3/erPhoLE4ugpQnXtwPLEk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gE4XbS8ORVd/qed5jmFZhx4rCnbkLQ9Qp1ezh1Z4M/ksAdR2GnWi4xAvVhNPz77GO
+	 0pdO2CSp5C/DfBOV5Ahw0OOIjd1CcLGBJC12vucMEAg9sNEstIYnJWzkith+U/U6Ms
+	 bANNEQ6ktwGwXB2syLzTSDgPIKe7LtQ+YeeD0e8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729502AbgG1MNQ (ORCPT
+        id S1729528AbgG1MNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:13:16 -0400
-Received: from mailout08.rmx.de ([94.199.90.85]:43547 "EHLO mailout08.rmx.de"
+        Tue, 28 Jul 2020 08:13:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728896AbgG1MNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:13:16 -0400
-Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728500AbgG1MNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:13:45 -0400
+Received: from quaco.ghostprotocols.net (179.176.1.55.dynamic.adsl.gvt.net.br [179.176.1.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mailout08.rmx.de (Postfix) with ESMTPS id 4BGFtw4DS3zMvj4;
-        Tue, 28 Jul 2020 14:13:12 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin01.retarus.com (Postfix) with ESMTPS id 4BGFtM6DLyz2xbN;
-        Tue, 28 Jul 2020 14:12:43 +0200 (CEST)
-Received: from n95hx1g2.localnet (192.168.54.29) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 28 Jul
- 2020 14:03:31 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     David Laight <David.Laight@aculab.com>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] eeprom: at25: set minimum read/write access stride to 1
-Date:   Tue, 28 Jul 2020 14:03:30 +0200
-Message-ID: <2379124.UCELOXW4Ax@n95hx1g2>
-Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-In-Reply-To: <02cb3be60abf4a54affe239009c6e157@AcuMS.aculab.com>
-References: <20200728092959.24600-1-ceggers@arri.de> <2225645.EMaFvj1lSc@n95hx1g2> <02cb3be60abf4a54affe239009c6e157@AcuMS.aculab.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id A0880206D8;
+        Tue, 28 Jul 2020 12:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595938424;
+        bh=elgb9VJwDQUV7e8qJKF8s3/erPhoLE4ugpQnXtwPLEk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=He3sp8UikoQ+i7onRo9OVHoDVJacJ//GewEeSnQj/cBZcalKDpHJtL9O2v4CRqSpZ
+         +SPCLFcF8EdaFF81A78dct95GXnDW7AStzDIBIxDDYNhjWGSYA6Ea+RMh5yxTuCOHT
+         lEHHteNEf+CWM83dmq0SQdtDPzAEHobXV5lRROYY=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 85F9E404B1; Tue, 28 Jul 2020 09:13:42 -0300 (-03)
+Date:   Tue, 28 Jul 2020 09:13:42 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Roman Gushchin <guro@fb.com>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf-next v2 35/35] perf: don't touch RLIMIT_MEMLOCK
+Message-ID: <20200728121342.GD40195@kernel.org>
+References: <20200727184506.2279656-1-guro@fb.com>
+ <20200727184506.2279656-36-guro@fb.com>
+ <CAEf4BzYUhybiSz2S-jtuv5+KcaHSxCLoY=nq1g597bvwpUemZw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Originating-IP: [192.168.54.29]
-X-RMX-ID: 20200728-141253-4BGFtM6DLyz2xbN-0@kdin01
-X-RMX-SOURCE: 217.111.95.66
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzYUhybiSz2S-jtuv5+KcaHSxCLoY=nq1g597bvwpUemZw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, 28 July 2020, 13:20:15 CEST, David Laight wrote:
-> From: Christian Eggers
+Em Mon, Jul 27, 2020 at 11:09:43PM -0700, Andrii Nakryiko escreveu:
+> On Mon, Jul 27, 2020 at 12:21 PM Roman Gushchin <guro@fb.com> wrote:
+> >
+> > Since bpf stopped using memlock rlimit to limit the memory usage,
+> > there is no more reason for perf to alter its own limit.
+> >
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > ---
 > 
-> > &spi {
-> >     ....
-> >     fram: fram@0 {
-> >     ...
-> >         mac_address_fec2: mac-address@126 {
-> >             reg = <0x126 6>;
-> >         };
-> >     ...
-> >     };
-> > };
+> Cc'd Armaldo, but I'm guessing it's a similar situation that latest
+> perf might be running on older kernel and should keep working.
+
+Yes, please leave it as is, the latest perf should continue working with
+older kernels, so if there is a way to figure out if the kernel running
+is one where BPF doesn't use memlock rlimit for that purpose, then in
+those cases we shouldn't use it.
+
+- Arnaldo
+ 
+> >  tools/perf/builtin-trace.c      | 10 ----------
+> >  tools/perf/tests/builtin-test.c |  6 ------
+> >  tools/perf/util/Build           |  1 -
+> >  tools/perf/util/rlimit.c        | 29 -----------------------------
+> >  tools/perf/util/rlimit.h        |  6 ------
+> >  5 files changed, 52 deletions(-)
+> >  delete mode 100644 tools/perf/util/rlimit.c
+> >  delete mode 100644 tools/perf/util/rlimit.h
+> >
 > 
-> 
-> Hmmmm.... the 'stride' only constrains the alignment of 'cells'.
-> (ie address ranges from the device tree.)
+> [...]
 
-My mac-address is not aligned to 4 bytes...
+-- 
 
-> It looks as though you can open the entire NVMEM device and
-> then do reads from byte offsets.
-> The 'stride' and 'word_size' are then not checked!
-
-When I set back the stride to 4, I get the following errors:
-[    6.998788] 000: nvmem spi0.00: cell mac-address unaligned to nvmem stride 4
-[    6.998902] 000: at25: probe of spi0.0 failed with error -22
-...
-[    7.146454] 000: fec 20b4000.ethernet: Invalid MAC address: 00:00:00:00:00:00
-[    7.146480] 000: fec 20b4000.ethernet: Using random MAC address: 6e:9d:37:49:6d:15
-
-> Actually it might be that before 01973a01f9ec3 byte aligned
-> 'cells' were allowed.
-
-I use linux-5.4.x (latest), the mentioned patch has been included long time ago.
-
-regards
-Christian
-
-
-
+- Arnaldo
