@@ -2,113 +2,107 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3A4C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D349C433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0576920829
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A25520775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:43:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="XQQ7EDR7"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="L08uOlwa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgG1Kj7 (ORCPT
+        id S1728789AbgG1KnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 06:39:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728417AbgG1Kj7 (ORCPT
+        Tue, 28 Jul 2020 06:43:23 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:18882 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728686AbgG1KnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 06:39:59 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA1E9C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:39:58 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a15so17777577wrh.10
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:39:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+fu6+ncNlNVIIhV52Pfsl1d0V+5R59UwNZjOPfJC9HM=;
-        b=XQQ7EDR7HuZMZJD3WjJJq7nWRd8Z2P7j9S9A0T2jqccFCWRLfpLO9Jz8Hy5yWwQaG8
-         tjE9TaD2veaP8JDdULyGLtJa65N/TH5JH+v2UHtNzpk6ZvuzWfi85HwCnoFbr8LTTWdp
-         tf2cwFRT/pNC2r0cw85SJAeOEhgir+QswQ9ZJO7dWOiwlzzY9IHOwSe1ANodg8laYiGM
-         hCoF8UY+ZieRs6JRtRLKoHMgbYfQTXgpub+Yf2tjFMD7fV9CLAI9qdRfJLCa8b6ELNxK
-         PgqJRuCC2svrJQ6VNuCS9o7I73NPLNOVV66k5Zmc4KkESD8Q0VT/AkuwJTXqr6GlMxm2
-         5UZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+fu6+ncNlNVIIhV52Pfsl1d0V+5R59UwNZjOPfJC9HM=;
-        b=KZw05sdYzCw/AHzNVwWULd3IYXs9slntr8m0hJ+oURh0ZNOsUqy/0mY6I5pfKvrhxQ
-         sNQA/tcsBRl8vgLDKAjVp0ZqiVv2aiummPrVDR7AqiLV170GRldLrKmQ5QhKr5id0+0T
-         4I6aSCEndnHBzWr3qTlDb9kJV0QI3wLGHnaIrD9pYreGuber1xMEr+ilBIzKQNkyvTAK
-         Ty6yHUgye2L+a9oYVJfK/9ZuiASALIWfaa92G/VowJ9c4xNPfgiA8FA4Gai5mBR/38MN
-         NugOY0V652yCIc3Jye6vt+4yRgEYAoCJO9KYuFIdXUYVEJHSWQTXxv5qA7u57FqfEfhW
-         niJg==
-X-Gm-Message-State: AOAM533Ken8DqT5lgaM+hVY0uuTqOECTJydrhwR559tJJO2BFA01PGjM
-        jLbxVSHLRph4LL9GOzexTvq7Xvn8aMQo1VISSA6Ctw==
-X-Google-Smtp-Source: ABdhPJxqveEDF4fD91lIqGjwCXyF+JMIVkyBTc5jthXBrwneUZa2nBo6cUOArXkF5aA9PkKZHsCP0GVYEkw63kCXusk=
-X-Received: by 2002:adf:fe50:: with SMTP id m16mr6982944wrs.27.1595932797360;
- Tue, 28 Jul 2020 03:39:57 -0700 (PDT)
+        Tue, 28 Jul 2020 06:43:22 -0400
+X-UUID: e08ada8fc8f847769d1a5a75c59385a6-20200728
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=fGh635YPSKDx8TpTukFSxvqdKrdqDpycLk2vh1BFhDc=;
+        b=L08uOlwa8o0OzVxkLlQNxVJCWRJ/nuGiMBlG0ISqkQ1S/9aaI3tqoqJdaOtkCQCRHC5/nyY2ay8Oj0ODUVN5D/PT5k/swk659JtO7TY+GYUc5ySgZaRXNrXaVaXFu+Ijr/V3a0+bI7X+LTJ3i7B0WmZVcy87hZbNWEPC1wHn0rI=;
+X-UUID: e08ada8fc8f847769d1a5a75c59385a6-20200728
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <crystal.guo@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2144090476; Tue, 28 Jul 2020 18:43:18 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 28 Jul 2020 18:43:16 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 28 Jul 2020 18:43:14 +0800
+From:   Crystal Guo <crystal.guo@mediatek.com>
+To:     <linux@roeck-us.net>, <robh+dt@kernel.org>,
+        <matthias.bgg@gmail.com>
+CC:     <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <seiya.wang@mediatek.com>, Crystal Guo <crystal.guo@mediatek.com>
+Subject: [PATCH 1/3] watchdog: mtk_wdt: remove mt8xxx-resets.h
+Date:   Tue, 28 Jul 2020 18:42:27 +0800
+Message-ID: <1595932949-7033-1-git-send-email-crystal.guo@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <35c955e88914f4d22f5bfba5b060489850b764ba.1594230107.git-series.maxime@cerno.tech>
-In-Reply-To: <35c955e88914f4d22f5bfba5b060489850b764ba.1594230107.git-series.maxime@cerno.tech>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Tue, 28 Jul 2020 11:39:39 +0100
-Message-ID: <CAPY8ntCgtnSbiaDuY=k+-VXgYb2-A2DeHVN1j=BUw_349MYWbQ@mail.gmail.com>
-Subject: Re: [PATCH v4 26/78] drm/vc4: crtc: Remove redundant pixelvalve reset
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 71B9F2D85162E9CD930E185F74479062C12A56CDD28885323C9E66983C5603302000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime
+bXQ4eHh4LXJlc2V0cy5oIGFjdHVhbGx5IGp1c3QgdXNlZCB0byBkZWZpbmUgVE9QUkdVX1NXX1JT
+VF9OVU0uDQpJbnN0ZWFkIG9mIHJlc3VibWl0IHRoZSBtdDh4eHgtcmVzZXQuaCBmb3IgYSBuZXcg
+SUMsIGdldCB0aGUgbnVtYmVyDQpvZiByZXNldCBiaXRzIGZyb20gZHRzaSBpcyBtb3JlIGVhc2ll
+ciB0byBtYWludGFpbi4NCg0KU2lnbmVkLW9mZi1ieTogQ3J5c3RhbCBHdW8gPGNyeXN0YWwuZ3Vv
+QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvd2F0Y2hkb2cvbXRrX3dkdC5jIHwgMjYgKysr
+KystLS0tLS0tLS0tLS0tLS0tLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCsp
+LCAyMSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvd2F0Y2hkb2cvbXRrX3dk
+dC5jIGIvZHJpdmVycy93YXRjaGRvZy9tdGtfd2R0LmMNCmluZGV4IGQ2YTYzOTMuLmFkYzg4YzIg
+MTAwNjQ0DQotLS0gYS9kcml2ZXJzL3dhdGNoZG9nL210a193ZHQuYw0KKysrIGIvZHJpdmVycy93
+YXRjaGRvZy9tdGtfd2R0LmMNCkBAIC05LDggKzksNiBAQA0KICAqIEJhc2VkIG9uIHN1bnhpX3dk
+dC5jDQogICovDQogDQotI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xsZXIvbXQy
+NzEyLXJlc2V0cy5oPg0KLSNpbmNsdWRlIDxkdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210
+ODE4My1yZXNldHMuaD4NCiAjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4NCiAjaW5jbHVkZSA8bGlu
+dXgvZXJyLmg+DQogI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4NCkBAIC02NCwxOCArNjIsNiBAQCBz
+dHJ1Y3QgbXRrX3dkdF9kZXYgew0KIAlzdHJ1Y3QgcmVzZXRfY29udHJvbGxlcl9kZXYgcmNkZXY7
+DQogfTsNCiANCi1zdHJ1Y3QgbXRrX3dkdF9kYXRhIHsNCi0JaW50IHRvcHJndV9zd19yc3RfbnVt
+Ow0KLX07DQotDQotc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfd2R0X2RhdGEgbXQyNzEyX2RhdGEg
+PSB7DQotCS50b3ByZ3Vfc3dfcnN0X251bSA9IE1UMjcxMl9UT1BSR1VfU1dfUlNUX05VTSwNCi19
+Ow0KLQ0KLXN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX3dkdF9kYXRhIG10ODE4M19kYXRhID0gew0K
+LQkudG9wcmd1X3N3X3JzdF9udW0gPSBNVDgxODNfVE9QUkdVX1NXX1JTVF9OVU0sDQotfTsNCi0N
+CiBzdGF0aWMgaW50IHRvcHJndV9yZXNldF91cGRhdGUoc3RydWN0IHJlc2V0X2NvbnRyb2xsZXJf
+ZGV2ICpyY2RldiwNCiAJCQkgICAgICAgdW5zaWduZWQgbG9uZyBpZCwgYm9vbCBhc3NlcnQpDQog
+ew0KQEAgLTI0OCw3ICsyMzQsNyBAQCBzdGF0aWMgaW50IG10a193ZHRfcHJvYmUoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqcGRldikNCiB7DQogCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5k
+ZXY7DQogCXN0cnVjdCBtdGtfd2R0X2RldiAqbXRrX3dkdDsNCi0JY29uc3Qgc3RydWN0IG10a193
+ZHRfZGF0YSAqd2R0X2RhdGE7DQorCXUzMiB0b3ByZ3Vfc3dfcnN0X251bTsNCiAJaW50IGVycjsN
+CiANCiAJbXRrX3dkdCA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqbXRrX3dkdCksIEdGUF9L
+RVJORUwpOw0KQEAgLTI4NCwxMCArMjcwLDEwIEBAIHN0YXRpYyBpbnQgbXRrX3dkdF9wcm9iZShz
+dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KIAlkZXZfaW5mbyhkZXYsICJXYXRjaGRvZyBl
+bmFibGVkICh0aW1lb3V0PSVkIHNlYywgbm93YXlvdXQ9JWQpXG4iLA0KIAkJIG10a193ZHQtPndk
+dF9kZXYudGltZW91dCwgbm93YXlvdXQpOw0KIA0KLQl3ZHRfZGF0YSA9IG9mX2RldmljZV9nZXRf
+bWF0Y2hfZGF0YShkZXYpOw0KLQlpZiAod2R0X2RhdGEpIHsNCi0JCWVyciA9IHRvcHJndV9yZWdp
+c3Rlcl9yZXNldF9jb250cm9sbGVyKHBkZXYsDQotCQkJCQkJICAgICAgIHdkdF9kYXRhLT50b3By
+Z3Vfc3dfcnN0X251bSk7DQorCWVyciA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKHBkZXYtPmRldi5v
+Zl9ub2RlLCAicnN0LW51bSIsDQorCQkJCSZ0b3ByZ3Vfc3dfcnN0X251bSk7DQorCWlmICghZXJy
+KSB7DQorCQllcnIgPSB0b3ByZ3VfcmVnaXN0ZXJfcmVzZXRfY29udHJvbGxlcihwZGV2LCB0b3By
+Z3Vfc3dfcnN0X251bSk7DQogCQlpZiAoZXJyKQ0KIAkJCXJldHVybiBlcnI7DQogCX0NCkBAIC0z
+MTksOSArMzA1LDcgQEAgc3RhdGljIGludCBtdGtfd2R0X3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpk
+ZXYpDQogI2VuZGlmDQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbXRrX3dk
+dF9kdF9pZHNbXSA9IHsNCi0JeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MTItd2R0Iiwg
+LmRhdGEgPSAmbXQyNzEyX2RhdGEgfSwNCiAJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY1
+ODktd2R0IiB9LA0KLQl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE4My13ZHQiLCAuZGF0
+YSA9ICZtdDgxODNfZGF0YSB9LA0KIAl7IC8qIHNlbnRpbmVsICovIH0NCiB9Ow0KIE1PRFVMRV9E
+RVZJQ0VfVEFCTEUob2YsIG10a193ZHRfZHRfaWRzKTsNCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
 
-On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Since we moved the pixelvalve configuration to atomic_enable, we're now
-> first calling the function that resets the pixelvalve and then the one that
-> configures it.
->
-> However, the first thing the latter is doing is calling the reset function,
-> meaning that we reset twice our pixelvalve. Let's remove the first call.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-
-> ---
->  drivers/gpu/drm/vc4/vc4_crtc.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-> index 2eda2e6429ec..2c5ff45dc315 100644
-> --- a/drivers/gpu/drm/vc4/vc4_crtc.c
-> +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-> @@ -427,7 +427,6 @@ static void vc4_crtc_atomic_enable(struct drm_crtc *crtc,
->
->         require_hvs_enabled(dev);
->
-> -       vc4_crtc_pixelvalve_reset(crtc);
->         vc4_crtc_config_pv(crtc);
->
->         CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) | PV_CONTROL_EN);
-> --
-> git-series 0.9.1
