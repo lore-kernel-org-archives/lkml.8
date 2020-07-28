@@ -8,69 +8,74 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948A2C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8027C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E960206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1DEB206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:31:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dAuDFI9d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dHFpNLnB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgG1EYo (ORCPT
+        id S1726162AbgG1EbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 00:24:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55004 "EHLO
+        Tue, 28 Jul 2020 00:31:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgG1EYo (ORCPT
+        with ESMTP id S1726004AbgG1EbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 00:24:44 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB92CC061794;
-        Mon, 27 Jul 2020 21:24:42 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id x1so1386244oox.6;
-        Mon, 27 Jul 2020 21:24:42 -0700 (PDT)
+        Tue, 28 Jul 2020 00:31:21 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD253C061794;
+        Mon, 27 Jul 2020 21:31:21 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id k18so3005011pfp.7;
+        Mon, 27 Jul 2020 21:31:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=o6By5SfnNIDwmjg0WLVB2DqJYuJR6Qu02u0iZQ5kWyI=;
-        b=dAuDFI9dnbVkbYzFUYi/+2WFElJ2MZxrP8gDpR9By8UvpbItQngZCjl95r4DxqHeNB
-         jso0IlyIvozOlJ0S1bm9cn1aPtHkqjUCmoe1k1up7ICHAGVw8jDVWaZoEcqJu0UW57qi
-         bkENSM+2t6treImeF5HDwD6f1IzoX6Nq7tKEUpus/W7pIwErmvfdZaa1pGLkuiW91ZNX
-         729ZkfUFScal1isl1OJ/Xjaeg7XDrlDeDNMKG1NDbtlfUBT6EVTdImftwQfLzo1R5DpG
-         iQn0mvjU2unYfv9bYPPRhxRd5+vAtblReNEZJWdXB9m3rZMGr168JT9ixFHD4v6AitD+
-         Dilg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v+vZ5D4lzefV/m6Wri5yBEiubcUZ9dLbHVAGhnF8Sco=;
+        b=dHFpNLnBI7i7q/GgeRddp2ijwrw3IwVr0tWLgS+N0fmjwKV853MwLy70ChD1bZFUO1
+         wl5wRHC1MgjqvggoTT3AuZo57TTkAr11qpEHEFbTpsHOUWNb6tfx16bX0tp7sRZ3A0J9
+         66dIYDQ6dWJz2IVqGpRng1iNq7TN36GtwWceIsL70xAvFWh12VyD4QLWPhEiBuD3uhZe
+         c6yN0+iQaREWBLptbBivah1QzKhJniHcb0w42gUgyQwwcM/+GtJ3EkYBy02AEiNT1G5c
+         W5IVhAOqoSOkNPkZm1PVZ9LBCVJnf9SYFbDdviBAMqc6BzE/TFCdytDb5k1QNMu7yZb9
+         XmGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=o6By5SfnNIDwmjg0WLVB2DqJYuJR6Qu02u0iZQ5kWyI=;
-        b=EHGq++2JcOEG+lfgP+EGIZiH0VpvrORZjWoNbuJWqUUryNHqRD2YiyiETynomSMBN4
-         XBa6Y+y92miQU+Ph4YctCL/F2yec6ZPDng59q/d4u0m0fZFJmD4DSUz/ai3DXWxHXcnv
-         bBFBMiIwlfdWH+El6+Oop7O1WPEDvIQpl2loBz4AE+hkuScD3UtAWCr+MT970srYhj69
-         929uNWhy0tJX9MtHsQzgE0vZeHev06TG37CI3AFqZBXiSNf5r0mKxbyDFehy1JOFi3L2
-         Z6Ja/Nc7uShZIi32yi2VRRJyCLcnogsthHjaghPndVpqDL29akoSRbT/fu9rruENIPk+
-         NMhA==
-X-Gm-Message-State: AOAM530RRIq9t46/2GB6TuskOj5rkiEpsqJCtutD+PE5aad7jVY0ak4X
-        WR+e+jJa9Ur/jKgsSZ9LxLfh9sX35To=
-X-Google-Smtp-Source: ABdhPJxcgewRgW8chxnfbttiUp/D8r3Wsm64RD3yBFMqg9eyF8Vi2jV7IVsAROk+CIjrhR/XfmrgsQ==
-X-Received: by 2002:a4a:57c1:: with SMTP id u184mr23382493ooa.41.1595910282016;
-        Mon, 27 Jul 2020 21:24:42 -0700 (PDT)
-Received: from localhost.localdomain ([170.130.31.90])
-        by smtp.gmail.com with ESMTPSA id v3sm765198oiv.45.2020.07.27.21.24.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v+vZ5D4lzefV/m6Wri5yBEiubcUZ9dLbHVAGhnF8Sco=;
+        b=MKovf2/i+BIrGRViI8UPaXxJdZDHT+Lyqun6ScJh58v3BXtIFQSx+H9tBw/PiecfPd
+         DrWlav4a1XIV7FZfQtnavojkpZST8pyl2O8TPOxC8aZgpZp/+h27hvaXCUELEV0uDgdx
+         GxciixBYsMwKthqOqXHESGCrYe3VuwfpkSw49MlrRX+H/UvjjcwLKvT1JmD1VItjzAw7
+         vACvtJTkM12SWtON8HjgMn7xTCtKfR2YBj9N7dlOsMgejNX7+vH3X9Y26ZSCR7jAyVyg
+         BQ0ljZPsC/MNWIu33pZth7h2mYN15amMoHgLaauokJOy646ai7DbTVK45fxTsUNIdG11
+         9LoQ==
+X-Gm-Message-State: AOAM531I8rtIGY/yaFaHsIZNFduOecinRKu1sZ23HpbAxkZdQ9Yy0zYF
+        O8fnlbS7tMRTZEPCmIGwCR0=
+X-Google-Smtp-Source: ABdhPJxNSKY8nqzWNqUmpduCVcvLv5t3RJfq1EJosoCcXwZzA8Tp2Mh5firF6Od4Bd4KmDGn77+BDQ==
+X-Received: by 2002:a62:e202:: with SMTP id a2mr23719262pfi.8.1595910680994;
+        Mon, 27 Jul 2020 21:31:20 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id b82sm16914992pfb.215.2020.07.27.21.31.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 21:24:41 -0700 (PDT)
-From:   Forest Crossman <cyrozap@gmail.com>
-To:     linux-usb@vger.kernel.org
-Cc:     Forest Crossman <cyrozap@gmail.com>, mathias.nyman@intel.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] usb: xhci: define IDs for various ASMedia host controllers
-Date:   Mon, 27 Jul 2020 23:24:07 -0500
-Message-Id: <20200728042408.180529-2-cyrozap@gmail.com>
+        Mon, 27 Jul 2020 21:31:20 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kevin Curtis <kevin.curtis@farsite.co.uk>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v1] farsync: use generic power management
+Date:   Tue, 28 Jul 2020 09:58:10 +0530
+Message-Id: <20200728042809.91436-1-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200728042408.180529-1-cyrozap@gmail.com>
-References: <20200727090629.169701-1-cyrozap@gmail.com>
- <20200728042408.180529-1-cyrozap@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,46 +83,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not all ASMedia host controllers have a device ID that matches its part
-number. #define some of these IDs to make it clearer at a glance which
-chips require what quirks.
+The .suspend() and .resume() callbacks are not defined for this driver.
+Still, their power management structure follows the legacy framework. To
+bring it under the generic framework, simply remove the binding of
+callbacks from "struct pci_driver".
 
-Signed-off-by: Forest Crossman <cyrozap@gmail.com>
+Change code indentation from space to tab in "struct pci_driver".
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- drivers/usb/host/xhci-pci.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/wan/farsync.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index 9234c82e70e4..baa5af88ca67 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -57,7 +57,9 @@
- #define PCI_DEVICE_ID_AMD_PROMONTORYA_3			0x43ba
- #define PCI_DEVICE_ID_AMD_PROMONTORYA_2			0x43bb
- #define PCI_DEVICE_ID_AMD_PROMONTORYA_1			0x43bc
-+#define PCI_DEVICE_ID_ASMEDIA_1042_XHCI			0x1042
- #define PCI_DEVICE_ID_ASMEDIA_1042A_XHCI		0x1142
-+#define PCI_DEVICE_ID_ASMEDIA_2142_XHCI			0x2142
+diff --git a/drivers/net/wan/farsync.c b/drivers/net/wan/farsync.c
+index 7916efce7188..15dacfde6b83 100644
+--- a/drivers/net/wan/farsync.c
++++ b/drivers/net/wan/farsync.c
+@@ -2636,12 +2636,10 @@ fst_remove_one(struct pci_dev *pdev)
+ }
  
- static const char hcd_name[] = "xhci_hcd";
+ static struct pci_driver fst_driver = {
+-        .name		= FST_NAME,
+-        .id_table	= fst_pci_dev_id,
+-        .probe		= fst_add_one,
+-        .remove	= fst_remove_one,
+-        .suspend	= NULL,
+-        .resume	= NULL,
++	.name		= FST_NAME,
++	.id_table	= fst_pci_dev_id,
++	.probe		= fst_add_one,
++	.remove		= fst_remove_one,
+ };
  
-@@ -260,13 +262,13 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
- 		xhci->quirks |= XHCI_LPM_SUPPORT;
- 
- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
--			pdev->device == 0x1042)
-+		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042_XHCI)
- 		xhci->quirks |= XHCI_BROKEN_STREAMS;
- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
--			pdev->device == 0x1142)
-+		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
- 		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
--			pdev->device == 0x2142)
-+		pdev->device == PCI_DEVICE_ID_ASMEDIA_2142_XHCI)
- 		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
- 
- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+ static int __init
 -- 
-2.20.1
+2.27.0
 
