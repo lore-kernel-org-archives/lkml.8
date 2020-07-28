@@ -2,129 +2,76 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E90C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F5BC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 401622070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:25:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klax/3Q/"
+	by mail.kernel.org (Postfix) with ESMTP id EE15520759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595914195;
+	bh=NxGOqzNDCiGqo7SqhZy3eBT1mOYiIlD0oSMzOtfXMNM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rAw1s8+LevbsFwMUbThiR13BBhHB1YTKzpDUJgma9cG+S1NVjglA+1nK6eu1r1UHT
+	 ENVMlp7PhsTlAkAu4yRv5sW8GVlH01Ai5ybAfOSHZ7+uKWIDEvwtbT7ykkJJFuavZu
+	 I1GJdsvNJFIiFbPwMqRCyRkQNw/R0UGPk6R1GMJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbgG1FY7 (ORCPT
+        id S1726787AbgG1F3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 01:24:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgG1FY6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 01:24:58 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B490C061794;
-        Mon, 27 Jul 2020 22:24:57 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id a5so4241746ioa.13;
-        Mon, 27 Jul 2020 22:24:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bJEzDOwJp0ny5xLDIyqDpHcyByjEwZuqOl/iPSQ9qGE=;
-        b=klax/3Q/dpB3FmxME9JntHGTjDCGdpH6466ptElrE2PHnQuwZIphwo3vWsib87seqI
-         J0Xe6Jv43A2RhMJ8H/QA/K7fl3gV1UyA/0y4ma9dRoapiDNNyXHS+9gboxs0C5fDt3ld
-         9TB+A+ZD9Ac1eEIkM6oNKUW2FBxdVAPAy+S02+q+S0UYbDJrbq+LUJ5mou4Juztm9fcB
-         qiYdfdkgdprfGPdV2E6HDtHnRqC1fhIArD3Kv9jB91MXbkfS/Y5AmoOT65JoiEbnxUbY
-         t/u5xBMdta70CXFySjlFETkrWJu47J62Vy5uKgApf5qpeTXq7ekjouE3l/b+9Snsa5xT
-         44Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bJEzDOwJp0ny5xLDIyqDpHcyByjEwZuqOl/iPSQ9qGE=;
-        b=Hl9qeKSgOcCUDylf2tpdoG2jZDk5FAC+ogfnSyaEGmBfM7CwSgd0p/hrow0MhF+Fbg
-         xxTPXdGIb1QnmYetG6Be+ZMDIiQn1hWJISJIJ8loQbX+7IXNmIEQdBbNv6IJjjp2L/7K
-         7IWaxocC8C30RedbypS7zbssyBBg/qGcg2khNy+3alWx7fat69ytCoPU4oYwx82ilJiY
-         Sv3j0ugeacmT6rxQV0ZPAXGcHESvFSZcW4nDYIY7s6y7dd5RCL5NYpV7Cq5W0PzwkhIz
-         G9O6VYL49lT+OHUkebXNq13rW2jMJUnipvgPPATXpTUR2PAZd5mQjHWypIwI+8aC80zs
-         ztIg==
-X-Gm-Message-State: AOAM532J/Z7JmDl58GHyAGQdnIB+99wC1f1VVoviYVGmQ21T55nGhbHR
-        YV6Ikd9htVjyP5w4u4sNRl4Ymm/Kji7uFdGCyVQ=
-X-Google-Smtp-Source: ABdhPJyEEkHIl0Pl1r1dF9sKbqOyh25bCIDBP8OfLluN+FyqINvOJcN5T+lcFRe+LysiU2u6oKcwEeCBtpBf/mObMl8=
-X-Received: by 2002:a6b:be81:: with SMTP id o123mr13649143iof.64.1595913896799;
- Mon, 27 Jul 2020 22:24:56 -0700 (PDT)
+        Tue, 28 Jul 2020 01:29:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726245AbgG1F3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 01:29:53 -0400
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A75120759;
+        Tue, 28 Jul 2020 05:29:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595914193;
+        bh=NxGOqzNDCiGqo7SqhZy3eBT1mOYiIlD0oSMzOtfXMNM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nxlYItFLeTyNsqaWkPzykKvJ7xRkqieMF2gcr6i/bqHf2HWL2lOjeb9XOnfJPrGSm
+         SISOcPdiF4ORXZYQmdP1oWFs+SxraKB91kh5gSkxGs80v4Ly0UL6Xin6/FNXAscYo+
+         lIfjPCQSKJawWM5S15qGV5dvuWI+LoriOkJjJ3Do=
+Received: by mail-lj1-f172.google.com with SMTP id f5so19721490ljj.10;
+        Mon, 27 Jul 2020 22:29:52 -0700 (PDT)
+X-Gm-Message-State: AOAM532K5IQGyTUXZh+6zbC9PJVX9d/NRFYqyMjAxARireK8KYvrPXn6
+        in5+5HLVI6zn2BLj8GHIeuJkJahOLO43ov0NNfE=
+X-Google-Smtp-Source: ABdhPJzJQzNwFaJz5OOPawmi78/m/d0Gxsk+lR/hcOh9JFVfFmwJrzO9J9tHHtGcg3MPyAcn9sVDd21DQwQ/Fvg4TOc=
+X-Received: by 2002:a2e:81c2:: with SMTP id s2mr3261614ljg.10.1595914191378;
+ Mon, 27 Jul 2020 22:29:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200726110524.151957-1-xie.he.0141@gmail.com> <CAJht_EOAGFkVXsrJefWNMDn_D5HhH+ODkqE03BULyzb_Ma8A5A@mail.gmail.com>
-In-Reply-To: <CAJht_EOAGFkVXsrJefWNMDn_D5HhH+ODkqE03BULyzb_Ma8A5A@mail.gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 27 Jul 2020 22:24:45 -0700
-Message-ID: <CAM_iQpV8GDu2U_+4LwSy=uHc6_0FvCx_7ZPCOQ15=hccpaOCig@mail.gmail.com>
-Subject: Re: [PATCH] drivers/net/wan/lapbether: Use needed_headroom instead of hard_header_len
-To:     Xie He <xie.he.0141@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux X25 <linux-x25@vger.kernel.org>
+References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-15-guro@fb.com>
+In-Reply-To: <20200727184506.2279656-15-guro@fb.com>
+From:   Song Liu <song@kernel.org>
+Date:   Mon, 27 Jul 2020 22:29:40 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW45uYHPjcjc_k2C+DL6P9vxN3+ADNeAXK9Z8CdAbgtvDw@mail.gmail.com>
+Message-ID: <CAPhsuW45uYHPjcjc_k2C+DL6P9vxN3+ADNeAXK9Z8CdAbgtvDw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 14/35] bpf: eliminate rlimit-based memory
+ accounting for bpf_struct_ops maps
+To:     Roman Gushchin <guro@fb.com>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Mon, Jul 27, 2020 at 12:41 PM Xie He <xie.he.0141@gmail.com> wrote:
+On Mon, Jul 27, 2020 at 12:26 PM Roman Gushchin <guro@fb.com> wrote:
 >
-> Hi Cong Wang,
+> Do not use rlimit-based memory accounting for bpf_struct_ops maps.
+> It has been replaced with the memcg-based memory accounting.
 >
-> I'm wishing to change a driver from using "hard_header_len" to using
-> "needed_headroom" to declare its needed headroom. I submitted a patch
-> and it is decided it needs to be reviewed. I see you participated in
-> "hard_header_len vs needed_headroom" discussions in the past. Can you
-> help me review this patch? Thanks!
->
-> The patch is at:
-> http://patchwork.ozlabs.org/project/netdev/patch/20200726110524.151957-1-xie.he.0141@gmail.com/
->
-> In my understanding, hard_header_len should be the length of the header
-> created by dev_hard_header. Any additional headroom needed should be
-> declared in needed_headroom instead of hard_header_len. I came to this
-> conclusion by examining the logic of net/packet/af_packet.c:packet_snd.
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-I am not familiar with this WAN driver, but I suggest you to look at
-the following commit, which provides a lot of useful information:
-
-commit 9454f7a895b822dd8fb4588fc55fda7c96728869
-Author: Brian Norris <briannorris@chromium.org>
-Date:   Wed Feb 26 16:05:11 2020 -0800
-
-    mwifiex: set needed_headroom, not hard_header_len
-
-    hard_header_len provides limitations for things like AF_PACKET, such
-    that we don't allow transmitting packets smaller than this.
-
-    needed_headroom provides a suggested minimum headroom for SKBs, so that
-    we can trivally add our headers to the front.
-
-    The latter is the correct field to use in this case, while the former
-    mostly just prevents sending small AF_PACKET frames.
-
-    In any case, mwifiex already does its own bounce buffering [1] if we
-    don't have enough headroom, so hints (not hard limits) are all that are
-    needed.
-
-    This is the essentially the same bug (and fix) that brcmfmac had, fixed
-    in commit cb39288fd6bb ("brcmfmac: use ndev->needed_headroom to reserve
-    additional header space").
-
-    [1] mwifiex_hard_start_xmit():
-            if (skb_headroom(skb) < MWIFIEX_MIN_DATA_HEADER_LEN) {
-            [...]
-                    /* Insufficient skb headroom - allocate a new skb */
-
-Hope this helps.
-
-Thanks.
+Acked-by: Song Liu <songliubraving@fb.com>
