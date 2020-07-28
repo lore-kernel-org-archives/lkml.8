@@ -2,84 +2,119 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E28C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 186FA2065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 400AD2065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:26:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vhJzTBeI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbgG1VYV (ORCPT
+        id S1729453AbgG1V0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 17:24:21 -0400
-Received: from mga12.intel.com ([192.55.52.136]:29354 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729243AbgG1VYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 17:24:20 -0400
-IronPort-SDR: Q0w5bOyuvgW6TaCV7LcTDMGUGzps+asVBwCOhzZbdt3qIJAFxixlGxO4nK6QCml+ke6tcsoAaE
- J83kdkT4Orhg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="130877351"
-X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
-   d="scan'208";a="130877351"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 14:24:20 -0700
-IronPort-SDR: 0wRBq9msnHmGxyTaWt+3wdxaRXlmo5roR3jTrRyBuokoK0IJAe4p9uNhxDVrvv1bF2VhwDgGA/
- RbW3zZEH+CVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
-   d="scan'208";a="490514452"
-Received: from otc-chromeosbuild-1.jf.intel.com ([10.54.30.83])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Jul 2020 14:24:20 -0700
-From:   Azhar Shaikh <azhar.shaikh@intel.com>
-To:     bleung@chromium.org, enric.balletbo@collabora.com,
-        groeck@chromium.org, pmalani@chromium.org,
-        linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@linux.intel.com, azhar.shaikh@intel.com,
-        utkarsh.h.patel@intel.com, casey.g.bowman@intel.com,
-        rajmohan.mani@intel.com
-Subject: [PATCH] platform/chrome: cros_ec_typec: Send enum values to usb_role_switch_set_role()
-Date:   Tue, 28 Jul 2020 14:24:46 -0700
-Message-Id: <20200728212446.2699-1-azhar.shaikh@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 28 Jul 2020 17:26:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728149AbgG1V0r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 17:26:47 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2860CC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 14:26:47 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f18so930073wml.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 14:26:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4COYxTSTRnEzjznO2W6thCBJlNbZdidcvO9PjI7DyOk=;
+        b=vhJzTBeIpGarovZTpfjGx2Wa4L/R56gWYMM4br6jBZCGiL2RRlaYq6F4HADG0Jjh7q
+         7Shwf2OOdpkL8UVhuKmh7ZmlASrWEca4vvwloDyjOrKINAPXNaHEGtDRpr0znTDrmaua
+         483jKJ7GAIXEtLrDBZcp2eBOuVkAkNJne8hkdo8Q5YJSQ0zCAMZNG4bjgm6bLgy53Rdc
+         8nkfTTqq/EjxzgNheidLNbMFafSvM+iXL2mqii/7G62yoWSTo0zW+7CrOFteXyjjABxc
+         I6doe35twysT/7Csc71/R79KFQHEslNiMmAxLzM+m+Z/SZfijuV9ZxBPlryaFjXwSmYr
+         4Ujw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4COYxTSTRnEzjznO2W6thCBJlNbZdidcvO9PjI7DyOk=;
+        b=sP6sL0jluUl7Xa1Ko8ArhiHWEq8ejPjyBTE/za/7pkDDLfDF7Tw4m8x7sIJQJaUtMH
+         MEdKRgo5pq5w9Df8CiCOn4DrH6GRh4BpiRRgIFDrfEqqSjje4JirzYERGxYQnUkNQ7dj
+         O/4NzyauHdeqNwQED4pII5wrFkHnIZkeMDNy+lumYbua20gqDtyBfhWzaDK7euUVAdqc
+         Qo05DvQCu3W92xBowGdTzQLgraC7q9NCCY7nfUfqOZjBMNUrZV9JV2gx5gNWtdoKtDu3
+         wKXbSNPaG7t2237jQCZp8CdseWcyEEf8iyraq3AC9SJO7rPXVrSXlBhON4X8E34/Kvf2
+         aLDg==
+X-Gm-Message-State: AOAM532zbGrNfCPHkiDii/IY7LVXJr7Lz9vrRbRKvdKIFLTTk7QR9bfH
+        +7MOzGQ4BOC7VWKv5GI2yYDkhuMQkoF2laul+Z501A==
+X-Google-Smtp-Source: ABdhPJxRU30KGbLhwtAg0ELxyVwt4UfnHqz95LfEc0Qp6GL8XOPE3pFebCMm7ev+0CUib1mosoa7cggc2QZ9CjzdnSY=
+X-Received: by 2002:a1c:7d12:: with SMTP id y18mr5391985wmc.115.1595971605637;
+ Tue, 28 Jul 2020 14:26:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
+ <20200728151258.1222876-1-campello@chromium.org> <20200728091057.6.I27a5605d9cb3ff643ef040c4ef932a30df9a8fac@changeid>
+ <CAHp75VfLYqPpO5M6GaHfSBBkQoZpnVTHFKVX5k9Pu_RjMO-whw@mail.gmail.com>
+In-Reply-To: <CAHp75VfLYqPpO5M6GaHfSBBkQoZpnVTHFKVX5k9Pu_RjMO-whw@mail.gmail.com>
+From:   Daniel Campello <campello@google.com>
+Date:   Tue, 28 Jul 2020 15:26:09 -0600
+Message-ID: <CAHcu+VbxtAz-2y9FLdraqhYjzHKmi-5O=MioSU1caupT_y6PrQ@mail.gmail.com>
+Subject: Re: [PATCH 06/15] iio: sx9310: Align memory
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-usb_role_switch_set_role() has the second argument as enum for usb_role.
-Currently depending upon the data role i.e. UFP(0) or DFP(1) is sent.
-This eventually translates to USB_ROLE_NONE in case of UFP and
-USB_ROLE_DEVICE in case of DFP. Correct this by sending correct enum
-values as USB_ROLE_DEVICE in case of UFP and USB_ROLE_HOST in case of
-UFP.
-
-Fixes: 7e7def15fa4b ("platform/chrome: cros_ec_typec: Add USB mux control")
-Signed-off-by: Azhar Shaikh <azhar.shaikh@intel.com>
-Cc: Prashant Malani <pmalani@chromium.org>
----
- drivers/platform/chrome/cros_ec_typec.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 3eae01f4c9f7..eb4713b7ae14 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -590,7 +590,8 @@ static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
- 		dev_warn(typec->dev, "Configure muxes failed, err = %d\n", ret);
- 
- 	return usb_role_switch_set_role(typec->ports[port_num]->role_sw,
--					!!(resp.role & PD_CTRL_RESP_ROLE_DATA));
-+				       resp.role & PD_CTRL_RESP_ROLE_DATA
-+				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
- }
- 
- static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
--- 
-2.17.1
-
+On Tue, Jul 28, 2020 at 12:11 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Tue, Jul 28, 2020 at 6:15 PM Daniel Campello <campello@chromium.org> wrote:
+> >
+> > Use __aligned(8) to ensure that the timestamp is correctly aligned
+> > when we call push_to_buffers
+> >
+> > Signed-off-by: Daniel Campello <campello@chromium.org>
+> > ---
+> >
+> >  drivers/iio/proximity/sx9310.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> > index de52afd7c13333..fb5c16f2aa6b1a 100644
+> > --- a/drivers/iio/proximity/sx9310.c
+> > +++ b/drivers/iio/proximity/sx9310.c
+> > @@ -131,8 +131,8 @@ struct sx9310_data {
+> >          */
+> >         bool prox_stat[SX9310_NUM_CHANNELS];
+> >         bool trigger_enabled;
+> > -       __be16 buffer[SX9310_NUM_CHANNELS +
+> > -                     4]; /* 64-bit data + 64-bit timestamp */
+> > +       /* 64-bit data + 64-bit timestamp buffer */
+> > +       __be16 buffer[SX9310_NUM_CHANNELS + 4] __aligned(8);
+>
+> If the data amount (channels) is always the same, please, use struct approach.
+> Otherwise put a comment explaining dynamic data.
+I'm not sure what you mean here. I have a comment above for the size
+of the array.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
