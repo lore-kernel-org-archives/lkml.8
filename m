@@ -2,155 +2,141 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFBBC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 990A82065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09656207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:19:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="j9SFDCsS"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JKJPFnn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732740AbgG1TTo (ORCPT
+        id S1732748AbgG1TTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:19:44 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8824 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728751AbgG1TTn (ORCPT
+        Tue, 28 Jul 2020 15:19:50 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41448 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732750AbgG1TTu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:19:43 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f207a220000>; Tue, 28 Jul 2020 12:18:58 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 28 Jul 2020 12:19:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 28 Jul 2020 12:19:43 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jul
- 2020 19:19:43 +0000
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.109)
- by HQMAIL111.nvidia.com (172.20.187.18) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Tue, 28 Jul 2020 19:19:43 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m7xczPTIrdb2tBmwBFqqp2z17r7NxVe0mYoDSosdh713bkPeT1Y69+QDd/nf5g9MLQG6Jg71BYBf7DHfQhZ6I6cwJe85luj8r9j+BD/AXGIhUgRUd/MT6E/snmNUQyXzSNEtk3L7nTSVC48wm/35Tj01V46QbazpsVqdkhuqzbHYah2payQSni23V/Nj1+DBykL8vQozDBLaanbFU2Ie6AsdoxGk3E2Eq87yrlqQr4t1KqcL6XNZS+4slbYixyusT5/4nCzcS2jMBJpI+ss5IFhYog2NCZ0vARoJEnJYNgj5+etzTspHujK0gSi8N3Sz63LNG+iB4Vj4SvxvY5gMLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aIb88fB47ym3ieV7dn4/8WHqEoVsXlmU+Us+MOFdO04=;
- b=kAOW1m1EfCAi7r/pLc2n7l85Ilbr/HSkNRk2BgpLhY0ccJV7UFCrZ6QdphPQy0ZOMRjY8RV6yXdWHy35mV0eVLU/P4l25RsSiIJbgYpWUzXEYBwmyRn2D8wHJjzdaflNFQ4Y3mXrtllKh2bi9GJ1lRKW1sB/Byl/bAuCn+5G8MiAyxCs4pKe6p5R2yRN8w4YYJwBMRQ/PRqgu//mzaL1ofeDpDbc9xNYSHaS8TbBHLh937WrRjMy0iLBkxFiYJaDo2NVjsBYzMt03LOdEhVeeupoVktxsKWJ/LPSrd7znQKSZTmK/0mHyCffb6MbWbps4DvqEVgtlN/y5F0Rwo9Qxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB3403.namprd12.prod.outlook.com (2603:10b6:5:11d::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Tue, 28 Jul
- 2020 19:19:42 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
- 19:19:42 +0000
-Date:   Tue, 28 Jul 2020 16:19:40 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-CC:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        <nouveau@lists.freedesktop.org>, <kvm-ppc@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, Ben Skeggs <bskeggs@redhat.com>,
-        Bharata B Rao <bharata@linux.ibm.com>
-Subject: Re: [PATCH v4 6/6] mm/migrate: remove range invalidation in
- migrate_vma_pages()
-Message-ID: <20200728191940.GB159104@nvidia.com>
-References: <20200723223004.9586-1-rcampbell@nvidia.com>
- <20200723223004.9586-7-rcampbell@nvidia.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200723223004.9586-7-rcampbell@nvidia.com>
-X-ClientProxiedBy: MN2PR19CA0003.namprd19.prod.outlook.com
- (2603:10b6:208:178::16) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Tue, 28 Jul 2020 15:19:50 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06SJJjiW048344;
+        Tue, 28 Jul 2020 14:19:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595963985;
+        bh=t6blnstb7bXBVCv5Ji+4XyRD3JuIXeeM7NotCIPjKE4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JKJPFnn5mvsFJT1Cq3Ki1eoZa4jVHaKDOVwZSCogT3y5ox1ZJusWgnmiLhNWuXFBe
+         1aQkcKWbjbNSGm0qa3xOqjQoowGmXw8EAmnIPsrCzBYmDxgRU2CkCPv0qjrNNKz5rU
+         t0+gpxLsLoWXHJtQ6rge9JJOIfe90BNphNyxLTb0=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06SJJjCX033200
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jul 2020 14:19:45 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
+ Jul 2020 14:19:44 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 28 Jul 2020 14:19:45 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SJJgp9080041;
+        Tue, 28 Jul 2020 14:19:42 -0500
+Subject: Re: [PATCH 0/4] arm64: Initial support for Texas Instrument's J7200
+ Platform
+To:     Lokesh Vutla <lokeshvutla@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Suman Anna <s-anna@ti.com>
+References: <20200723084628.19241-1-lokeshvutla@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <17a6e608-7ffc-a612-9caf-bad7315f5e60@ti.com>
+Date:   Tue, 28 Jul 2020 22:19:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR19CA0003.namprd19.prod.outlook.com (2603:10b6:208:178::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Tue, 28 Jul 2020 19:19:42 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k0V8W-000fbL-7N; Tue, 28 Jul 2020 16:19:40 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 476d43a1-5962-48c3-6922-08d8332b2df5
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3403:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB34035F2D32B8A5F653FF5D22C2730@DM6PR12MB3403.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: l155qzqTsU8UKV8l7o/b35tcL+JU1fiQPymTS4j/UxYwDGO5VSPEd/nV3GIzOKCz82VQKAtfNGEPL5zFbA3jCgJV5An57PPcQxUBbK+IKSC85PSSMJZmWNymkqPWfdicXl+Dy28Q2UPvQ7ezdWO3qzB27uV6Ob+LNffO4InUS9671umbMnMc5+taiFPyO5NcZbCMh0EG4e1bKO0Q/cEMqnKyQJO035lozJrxT71uHA2iutEBAMB7zJTYSy33w7oUua3DiT4q9H9uzMzw6Zh+kmrm6lceu+1qb0K3PjYgwY3SHS+oN8mCFWufNuTzLOh27wPsmjcAjXd1kAodOJY0Wb00Er38SYtNyOkTE9IBm4ewn9y/XiUHYTjACexDyf09
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(366004)(376002)(396003)(316002)(4326008)(36756003)(66946007)(26005)(8936002)(186003)(9786002)(66476007)(2616005)(66556008)(86362001)(9746002)(426003)(6862004)(8676002)(83380400001)(1076003)(33656002)(2906002)(7416002)(4744005)(6636002)(37006003)(54906003)(5660300002)(478600001)(27376004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: hHvyWOkJToqhcXAHiMouituo8D1cpQKq78AhzHWR8xuKSBPOo2ZaIC+UNC1hawYjkpMbYCxRRVzBrVehOOpBXG5Sv7S53LHUgDsV08ddpcQG8IfwPxfrobMCLCm6ya/BCGhzhpIIUGfUgVsl0zgj5DFuhe2UIhjjew5utskNRZhGPFpDQ1gCkiQ677nPEHg25ocoozUqk//FKCaKo/2WZ4ADx+ecmLtipO/1QRyxPzwkb+ATeHLHlyI2veJRojwkSyk9bh9ZzuEXbLcfukeBthd9dKP2ViPOb2nLDlM9SMH/Kx26GPw2IfoHLTxMoQRc6emqDE6y4vBUSnn75/8t89wUsuXcQhmTcV1dNFNJrPzMHQacppF8nUx2mT4isAH5wDSO0XGYZt+v69BV4mKQzEjJCPBifGUS6OWowfpxTKCWW5YmpL5D8v3UWaPbjIJuJaQ8BdI/g/iU1CM1P0Y1UKsq+JvQOhNAuTzF1GRNSIs=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 476d43a1-5962-48c3-6922-08d8332b2df5
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 19:19:42.2292
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +jSfcwUAeYsNIu07CmlXSmfdZXvBFivttJIhVf5JJ6UR1vJkBql6L/hEUWZXrmoB
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3403
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595963938; bh=aIb88fB47ym3ieV7dn4/8WHqEoVsXlmU+Us+MOFdO04=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-MS-Exchange-Transport-Forked:
-         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
-         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=j9SFDCsSMmfi42b8AcdC18Tc4VNQIi3JT8PZ7mPnoDTT3poW00uK/SRcwEOod44Jy
-         8E5sR6Hl7ZWELgifoEQxGMMNi4NDkSZK1vj10ZH/F0lagG3djQAyAJ5UTBE1COBbm7
-         w9pGxCbQGjgLkEqWVN1oR02IlplgaeYDh/aIKRQbB8vKOgH5sEK3zdOlrbLuzhuhOU
-         CJEr2eUqmlGowzt9mWhNbrCUivY2yV1T1zl8/WLLMKYAHfI+Wgpx6/XRPmte5QrUoe
-         A62uNy3SlKZw2pEYpRDBjitoVgUT6ZND1TtimAuemUzynfmP/9yVi2BqsI9F5pkrmE
-         7OFRVgFeJezVA==
+In-Reply-To: <20200723084628.19241-1-lokeshvutla@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 03:30:04PM -0700, Ralph Campbell wrote:
-> When migrating the special zero page, migrate_vma_pages() calls
-> mmu_notifier_invalidate_range_start() before replacing the zero page
-> PFN in the CPU page tables. This is unnecessary since the range was
-> invalidated in migrate_vma_setup() and the page table entry is checked
-> to be sure it hasn't changed between migrate_vma_setup() and
-> migrate_vma_pages(). Therefore, remove the redundant invalidation.
 
-I don't follow this logic, the purpose of the invalidation is also to
-clear out anything that may be mirroring this VA, and "the page hasn't
-changed" doesn't seem to rule out that case?
 
-I'm also not sure I follow where the zero page came from?
+On 23/07/2020 11:46, Lokesh Vutla wrote:
+> This series adds initial support for latest new SoC, J7200, from Texas Instruments.
+> 
+> The J7200 SoC is a part of the K3 Multicore SoC architecture platform.
+> It is targeted for for automotive gateway, vehicle compute systems,
+> Vehicle-to-Vehicle (V2V) and Vehicle-to-Everything (V2X) applications.
+> The SoC aims to meet the complex processing needs of modern embedded products.
+> 
+> See J7200 Technical Reference Manual (SPRUIU1, June 2020)
+> for further details: https://www.ti.com/lit/pdf/spruiu1
+> 
+> Testing:
+> - Boot log: https://pastebin.ubuntu.com/p/FvpzWjf7tw/
+> - ./scripts/checkpatch --strict
+> 	- Few warningns about Line length exceeding 100 columns.
+> 	  But these are corresponding to comments
+> - v8make dtbs_check
+> - DT_SCHEMA_FLAGS="-u"
+>    DT_SCHEMA_FILES="Documentation/devicetree/bindings/arm/ti/k3.yaml"
+>    v8make dtbs_check
+> - DT_SCHEMA_FLAGS="-u"
+>    DT_SCHEMA_FILES="Documentation/devicetree/bindings/arm/ti/k3.yaml"
+>    v8make dt_binding_check
+> 
+> Lokesh Vutla (4):
+>    dt-bindings: arm: ti: Add bindings for J7200 SoC
+>    dt-bindings: arm: ti: Convert K3 board/soc bindings to DT schema
+>    arm64: dts: ti: Add support for J7200 SoC
+>    arm64: dts: ti: Add support for J7200 Common Processor Board
+> 
+>   .../devicetree/bindings/arm/ti/k3.txt         |  26 ---
+>   .../devicetree/bindings/arm/ti/k3.yaml        |  28 +++
+>   MAINTAINERS                                   |   2 +-
+>   arch/arm64/boot/dts/ti/Makefile               |   3 +-
+>   .../dts/ti/k3-j7200-common-proc-board.dts     |  64 ++++++
+>   arch/arm64/boot/dts/ti/k3-j7200-main.dtsi     | 199 ++++++++++++++++++
+>   .../boot/dts/ti/k3-j7200-mcu-wakeup.dtsi      |  84 ++++++++
+>   arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi   |  29 +++
+>   arch/arm64/boot/dts/ti/k3-j7200.dtsi          | 165 +++++++++++++++
+>   9 files changed, 572 insertions(+), 28 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/arm/ti/k3.txt
+>   create mode 100644 Documentation/devicetree/bindings/arm/ti/k3.yaml
+>   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
+>   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+>   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
+>   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
+>   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200.dtsi
+> 
 
-Jason
+I have networking enabled on top of this series here.
+
+ssh://git@bitbucket.itg.ti.com/~x1045550/ti-priv-linux-kernel.git ti-linux-5.4.y-for-next-pull
+
+But DMA failed for Main domain.
+     0.781005] ti-udma 31150000.dma-controller: NAVSS ti,sci-dev-id read failure -22
+[    0.788684] ti-udma: probe of 31150000.dma-controller failed with error -22
+
+http://lcpdresults.itg.ti.com/launcher/results/8013
+
+Is there anything (except my comment for patch 3) which prevents this from been merged?
+
+-- 
+Best regards,
+grygorii
