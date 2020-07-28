@@ -2,108 +2,194 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B45C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EDAC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94CFB206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58406206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:05:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r2hUeavO"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JoitJ2UP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730598AbgG1PEL (ORCPT
+        id S1730605AbgG1PFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:04:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730521AbgG1PEL (ORCPT
+        Tue, 28 Jul 2020 11:05:08 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:53395 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730558AbgG1PFI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:04:11 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91BB9C0619D2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:04:10 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id r19so21462067ljn.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:04:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y/P1RjJpCb35GTdXwmZama92miIfq20CiqjQcC8AgAQ=;
-        b=r2hUeavOspQPDYUPCBYkcJ2t+SMHCVWUjhVCsn95Ke4mIVcywTVe3IycEi48ReFcwU
-         kcAOO4zPa99rNHCsHrWLtD4PXhyPCUyPjdEP7NYt3nvm6ux90bPxF1FWXFiyakhvkdkO
-         VnOh0VAy/vHFlRk7yxNZKDWh+hlim9Bu5/Ou/OLzZclgir2QQrrtAFl89Rm8azwsMtvy
-         bjqK7LiMwhx43GT7gM6KUsyOcNHjLhKYiMBjFxnZga7trt3rZuSkz4MImI29UhrVr7tV
-         BsLP4fsDZpp6Mz+5Zk0E9362Kt408Wx7KJyjNDFq8OmfFzxE+bdGWKGRvhP7xee39zg1
-         a6Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y/P1RjJpCb35GTdXwmZama92miIfq20CiqjQcC8AgAQ=;
-        b=mLTul3VHNwQrVk7MhKXZIFfDr0uKYNMpYZn+pv/X2DV+Blu8PTolwiqu3NK9qEG4GO
-         3fZ0ihDc4lzRoriSWSg+6V0kuhLX/BAnLL4yF/qRKTEso1lnMaHsZymKAuehyRaBLRt4
-         x12YnfhA82eBZAHEqZKUu5DuMDWxzTZV6DUkrLo6f8s9EaTkiQYIzhwUP+e3KAERVzuE
-         9y2YH8nWis4YhSExrnM2BnVa6GuSvWh94/enYGNYoeWPJPlqtqYyKcqGBIAywiD3I3CN
-         3CRxGIX24Hyh0YnhJPKOT2MRx2PnwlHRrHsTWIALMWGGGoVnQqOfL8X6/i403BMDVLMe
-         Ofww==
-X-Gm-Message-State: AOAM530pNHtSPU2sTSFQXQYAzbGUp6zR71LNkhOYvv9NfntsPGPXliZc
-        MHmqTo/15mbNJXwdkSRgEfuzc5VnixtuF6704KnLyw==
-X-Google-Smtp-Source: ABdhPJyBtXIozdbRd6lEJqYK3D9Y3Dhz5EcMC+1cVuW0HGWZuwxdBZ1H2dci/1QsDlmowJpXZTB1/6V9w3F9GuQ7V0E=
-X-Received: by 2002:a2e:9996:: with SMTP id w22mr13868230lji.446.1595948648596;
- Tue, 28 Jul 2020 08:04:08 -0700 (PDT)
+        Tue, 28 Jul 2020 11:05:08 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200728150506euoutp027fff04737d43944d232e78095bb1ebf4~l8uSht_ro0522505225euoutp025
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 15:05:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200728150506euoutp027fff04737d43944d232e78095bb1ebf4~l8uSht_ro0522505225euoutp025
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1595948706;
+        bh=+jPJ4jLPZRlRRWDMyw7UrrbUfNlzvkLzijZOathISTs=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=JoitJ2UPs2jBibLt7w/WwDp6Tbm0ijMBZ6o3rAS12jgldGHIsCQQepamP7CnSSiVj
+         Lw+Sh9Zl1Cr4BfkJrs75jig0VQLV+nBIVmd0TPJPAWpXuDCLMMGkH80nAf9KehJhaN
+         /QH8QNCJpQeHFsr/eEqQ5d51nxRrh/Nrr2xT0iMk=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200728150506eucas1p214e6b64b60b624fef376c8cf9320d31e~l8uSB1xV62602526025eucas1p2U;
+        Tue, 28 Jul 2020 15:05:06 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id B9.EB.06318.2AE302F5; Tue, 28
+        Jul 2020 16:05:06 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200728150505eucas1p28f7907c32b5cdb2259520197e602d9d4~l8uRteI7a2196021960eucas1p2h;
+        Tue, 28 Jul 2020 15:05:05 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200728150505eusmtrp1a911fed0ff536f13ff87e5a554885c6c~l8uRsya7v2594525945eusmtrp1S;
+        Tue, 28 Jul 2020 15:05:05 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-ec-5f203ea2e55d
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id E8.53.06314.1AE302F5; Tue, 28
+        Jul 2020 16:05:05 +0100 (BST)
+Received: from [106.210.85.205] (unknown [106.210.85.205]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200728150504eusmtip17a30673d18eef82b371bf0f3e7d88d37~l8uQC7qFf3170531705eusmtip1h;
+        Tue, 28 Jul 2020 15:05:03 +0000 (GMT)
+Subject: Re: [PATCH v9 0/4] driver core: add probe error check helper
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-kernel@vger.kernel.org,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        andy.shevchenko@gmail.com, Mark Brown <broonie@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <e55a23bf-59bb-43c6-f7d7-467c282b8648@samsung.com>
+Date:   Tue, 28 Jul 2020 17:05:03 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200728135210.379885-2-hannes@cmpxchg.org>
-In-Reply-To: <20200728135210.379885-2-hannes@cmpxchg.org>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 28 Jul 2020 08:03:56 -0700
-Message-ID: <CALvZod6X1QNvxZB-5oUaY0CeZENz-K04bSnx95M4JpUcvKh0mQ@mail.gmail.com>
-Subject: Re: [PATCH] mm: memcontrol: don't count limit-setting reclaim as
- memory pressure
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200713144324.23654-1-a.hajda@samsung.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+XbOzo7W5HNZezErG/SHRa2cxRFD7EYn6IagUZE686ClM9u0
+        zAqHN9TKrLByqYkpmVnm3Fpaac3IzEy7iUIxYoVZ2govqWnk8Szyv9/3Ps97eeCjCdl3sSd9
+        ID6R08ar4xSUK3n36VjH8rJA7/CVn4dppi+/GTG1l2vETMHHTxTzdthBMenXaijm3a8+gmnt
+        f0cyOefKJYzR3iVm3jQUUYy14CFibj35IGGseXuZ4qECIsiNfdP1imAd3ZkStt7wQcJeyS4U
+        s8aqHIp9lv9axDYVV0tY26kWEVtXnsrmmaoQ++jMBZIdNC7cOXuP69ooLu7AEU6rDIxwjbn9
+        e1KUMOCePN5ipfTILs1FLjRgPxhsyxLlIldahisRpF3MEguPIQTV3bVOZRBB50iX5F/LkHmQ
+        4FmGryOw9LoJJgeCiZIBES/MwZugymImefbAKjjbbpDwJgKbSDhnKRDzAoV9YLKuh+JZigNB
+        3587zSReAhef1CGe5+IwqOmziASPO7QWfpoaStMu2B+u5u3iywReBJaBIkJgOaQN3ZiOALiQ
+        hka7jRCu3ghF/U9FAs+Bry0mZxovaLtwmhQ4FWyVGYTQnI3AfKfe2RwA71+OU/xiYuromgal
+        UF4HIyW9BF8G7AbdA+7CDW5w/u4lZ1kK2Vkywb0YbO1m50A5VHQOU/lIYZgRzDAjjWFGGsP/
+        vaWIrEJyLkmnieZ0qnju6AqdWqNLio9esf+QxoimfmHbn5bhe6hxItKKMI0Us6WX53qHy8Tq
+        I7pjGisCmlB4SNe3t4XJpFHqYymc9lC4NimO01nRfJpUyKWqsr59MhytTuRiOS6B0/5TRbSL
+        px4RnsXBQT0deduWncjw2asaDTXZvX3O7Av1xiURmuaS3ck/M/UvbPN3dCx4/sX3ODps7t5S
+        WNqQru+sPuj32F/5IOekvf5+fcj2EDbFPkZu2BKlQXKTP3daqQzb+i14W7YjQRGwefXNg7GR
+        PY9l80ZDKtZI9T9MsxzhyNjk26vyUpC6GPWqpYRWp/4LOK3SioEDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42I5/e/4Xd2FdgrxBsd7jSxeTjjMaLFxxnpW
+        i6kPn7BZXPn6ns2iefF6Nour318yW5x8c5XFonPiEnaLTY+vsVpc3jWHzeLQ1L2MFmuP3GW3
+        ONQXbTH3y1RmBz6Py9cuMnu8v9HK7rFz1l12j9kdM1k9Nq3qZPM4MeESk8f+uWvYPe53H2fy
+        2Lyk3qNvyypGjwO9k1k8Pm+SC+CJ0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7Uy
+        MlXSt7NJSc3JLEst0rdL0MtY9/svU8FbwYpfxw+xNTA+5u1i5OSQEDCR+LL1M3MXIxeHkMBS
+        RomVb7pYIBLiErvnv2WGsIUl/lzrYoMoessosWD+cXaQhLCAq8Sq7VvBGkQEjCX6z85iByli
+        FtjFIrF60kNWiI4eRokDbw4yglSxCWhK/N18kw3E5hWwk2h40wVmswioSkw7shmsRlQgTmL5
+        lvnsEDWCEidnPgHawMHBKWApMb8vHCTMLGAmMW/zQ2YIW15i+9s5ULa4RNOXlawTGIVmIeme
+        haRlFpKWWUhaFjCyrGIUSS0tzk3PLTbUK07MLS7NS9dLzs/dxAiM/23Hfm7ewXhpY/AhRgEO
+        RiUe3g/iCvFCrIllxZW5hxglOJiVRHidzp6OE+JNSaysSi3Kjy8qzUktPsRoCvTbRGYp0eR8
+        YGrKK4k3NDU0t7A0NDc2NzazUBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAyGHMY6BoUNj+
+        4+xEozXpdfn7ilfn/7mR/7Q++PC1d6EloY9+CyeJ6t6LKHrFfXvvCYdFedVb2m69cxPwDn08
+        4Vzg0vXrFSJNvlpu+1FROkdFSGCyurxiyu/JFzx28HxxUDpy4aLQLO9YFqXcw8rhHgzJvLf+
+        m3QzJnBL+Av3vTjQ9DmZY46cEktxRqKhFnNRcSIA9crzRBUDAAA=
+X-CMS-MailID: 20200728150505eucas1p28f7907c32b5cdb2259520197e602d9d4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200713144331eucas1p25911c4ffa9315f632d8f6dd833588981
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200713144331eucas1p25911c4ffa9315f632d8f6dd833588981
+References: <CGME20200713144331eucas1p25911c4ffa9315f632d8f6dd833588981@eucas1p2.samsung.com>
+        <20200713144324.23654-1-a.hajda@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 6:53 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> When an outside process lowers one of the memory limits of a cgroup
-> (or uses the force_empty knob in cgroup1), direct reclaim is performed
-> in the context of the write(), in order to directly enforce the new
-> limit and have it being met by the time the write() returns.
->
-> Currently, this reclaim activity is accounted as memory pressure in
-> the cgroup that the writer(!) belongs to. This is unexpected.
+Hi Greg,
 
-Indeed this is unexpected.
+Apparently the patchset has no more comments.
 
-> It
-> specifically causes problems for senpai
-> (https://github.com/facebookincubator/senpai), which is an agent that
-> routinely adjusts the memory limits and performs associated reclaim
-> work in tens or even hundreds of cgroups running on the host. The
-> cgroup that senpai is running in itself will report elevated levels of
-> memory pressure, even though it itself is under no memory shortage or
-> any sort of distress.
->
-> Move the psi annotation from the central cgroup reclaim function to
-> callsites in the allocation context, and thereby no longer count any
-> limit-setting reclaim as memory pressure. If the newly set limit
-> causes the workload inside the cgroup into direct reclaim, that of
-> course will continue to count as memory pressure.
->
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Could you take the patches to your tree? At least 1st and 2nd.
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+
+Regards
+
+Andrzej
+
+
+On 13.07.2020 16:43, Andrzej Hajda wrote:
+> Hi All,
+>
+> Thanks for comments.
+>
+> Changes since v8:
+> - fixed typo in function name,
+> - removed cocci script (added by mistake)
+>
+> Changes since v7:
+> - improved commit message
+> - added R-Bs
+>
+> Changes since v6:
+> - removed leftovers from old naming scheme in commit descritions,
+> - added R-Bs.
+>
+> Changes since v5:
+> - removed patch adding macro, dev_err_probe(dev, PTR_ERR(ptr), ...) should be used instead,
+> - added dev_dbg logging in case of -EPROBE_DEFER,
+> - renamed functions and vars according to comments,
+> - extended docs,
+> - cosmetics.
+>
+> Original message (with small adjustments):
+>
+> Recently I took some time to re-check error handling in drivers probe code,
+> and I have noticed that number of incorrect resource acquisition error handling
+> increased and there are no other propositions which can cure the situation.
+>
+> So I have decided to resend my old proposition of probe_err helper which should
+> simplify resource acquisition error handling, it also extend it with adding defer
+> probe reason to devices_deferred debugfs property, which should improve debugging
+> experience for developers/testers.
+>
+> I have also added two patches showing usage and benefits of the helper.
+>
+> My dirty/ad-hoc cocci scripts shows that this helper can be used in at least 2700 places
+> saving about 3500 lines of code.
+>
+> Regards
+> Andrzej
+>
+>
+> Andrzej Hajda (4):
+>    driver core: add device probe log helper
+>    driver core: add deferring probe reason to devices_deferred property
+>    drm/bridge/sii8620: fix resource acquisition error handling
+>    drm/bridge: lvds-codec: simplify error handling
+>
+>   drivers/base/base.h                  |  3 ++
+>   drivers/base/core.c                  | 46 ++++++++++++++++++++++++++++
+>   drivers/base/dd.c                    | 23 +++++++++++++-
+>   drivers/gpu/drm/bridge/lvds-codec.c  | 10 ++----
+>   drivers/gpu/drm/bridge/sil-sii8620.c | 21 ++++++-------
+>   include/linux/device.h               |  3 ++
+>   6 files changed, 86 insertions(+), 20 deletions(-)
+>
