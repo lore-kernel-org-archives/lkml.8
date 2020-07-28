@@ -2,198 +2,88 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5092C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9DBC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6D9206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:47:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="G44ORc4O"
+	by mail.kernel.org (Postfix) with ESMTP id 8CEC020809
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:50:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgG1IrS (ORCPT
+        id S1728246AbgG1IuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:47:18 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:28724 "EHLO m43-7.mailgun.net"
+        Tue, 28 Jul 2020 04:50:25 -0400
+Received: from mailout10.rmx.de ([94.199.88.75]:44469 "EHLO mailout10.rmx.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728156AbgG1IrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:47:18 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595926036; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Ov/MCTEZuyfgMKbGRufVJeV9XrK0K72sSxzij8exncc=;
- b=G44ORc4OZmL4CJNgPkIzh8x8DhxoSNehYmvLgYewnIvraRHOoovEFOmGbsor/NVU8SlzmL/S
- KWfZTXohaIIEjhia1im4D7nAgJr88r56XiKVvUV27cXQfQtXAOd2Zr4d1UiHLdEJSA3QXOw3
- Oc9ytucamtjXL68xtdLKQep0/9g=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5f1fe612ca57a65d47cbd087 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 08:47:14
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CE80BC4339C; Tue, 28 Jul 2020 08:47:14 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id S1728016AbgG1IuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:50:24 -0400
+Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 14F51C433C6;
-        Tue, 28 Jul 2020 08:47:14 +0000 (UTC)
+        by mailout10.rmx.de (Postfix) with ESMTPS id 4BG9Ns6mg5z37rL;
+        Tue, 28 Jul 2020 10:50:21 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin01.retarus.com (Postfix) with ESMTPS id 4BG9NT21J9z2xjv;
+        Tue, 28 Jul 2020 10:50:01 +0200 (CEST)
+Received: from n95hx1g2.localnet (192.168.54.10) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 28 Jul
+ 2020 10:47:31 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+CC:     Fabio Estevam <festevam@gmail.com>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "Matt Mackall" <mpm@selenic.com>, Shawn Guo <shawnguo@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-crypto@vger.kernel.org>
+Subject: Re: [PATCH] hwrng: imx-rngc - setup default RNG quality
+Date:   Tue, 28 Jul 2020 10:47:29 +0200
+Message-ID: <2473540.1Sv8tvBx5K@n95hx1g2>
+Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+In-Reply-To: <20200728074817.hlevn7ex2hckdbvi@pengutronix.de>
+References: <CAOMZO5ASnj7SpjjAEpWjRK-vMpFFKU00=rxKeBtaMSKE9pkX1g@mail.gmail.com> <20200727124552.4336-1-ceggers@arri.de> <20200728074817.hlevn7ex2hckdbvi@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jul 2020 14:17:14 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCHv2] coresight: etm4x: Fix etm4_count race by moving cpuhp
- callbacks to init
-In-Reply-To: <159592494608.1360974.13925720722764973592@swboyd.mtv.corp.google.com>
-References: <20200728075102.30807-1-saiprakash.ranjan@codeaurora.org>
- <159592494608.1360974.13925720722764973592@swboyd.mtv.corp.google.com>
-Message-ID: <e3bb9a0bec27d769b0ff6284e6cd8ef3@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Originating-IP: [192.168.54.10]
+X-RMX-ID: 20200728-105003-4BG9NT21J9z2xjv-0@kdin01
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-28 13:59, Stephen Boyd wrote:
-> Quoting Sai Prakash Ranjan (2020-07-28 00:51:02)
->> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c 
->> b/drivers/hwtracing/coresight/coresight-etm4x.c
->> index 6d7d2169bfb2..adb71987a1e3 100644
->> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
->> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
->> @@ -48,8 +48,6 @@ module_param(pm_save_enable, int, 0444);
->>  MODULE_PARM_DESC(pm_save_enable,
->>         "Save/restore state on power down: 1 = never, 2 = 
->> self-hosted");
->> 
->> -/* The number of ETMv4 currently registered */
->> -static int etm4_count;
->>  static struct etmv4_drvdata *etmdrvdata[NR_CPUS];
->>  static void etm4_set_default_config(struct etmv4_config *config);
->>  static int etm4_set_event_filters(struct etmv4_drvdata *drvdata,
->> @@ -1403,12 +1401,9 @@ static int etm4_pm_setup_cpuslocked(void)
+Hi Marco,
+
+On Tuesday, 28 July 2020, 09:48:17 CEST, Marco Felsch wrote:
+> Hi Christian,
 > 
-> Is this only called from __init now? If so please mark it as __init
-> then.
+> On 20-07-27 14:45, Christian Eggers wrote:
+> > When hw_random device's quality is non-zero, it will automatically fill
+> > the kernel's entropy pool at boot.  For this purpose, one conservative
+> > quality value is being picked up as the default value.
 > 
+> IMHO your value is not conservative enough and the commit message should
+> explain why we should use 900. Unfortunately I had not enough time to
+> send my patch addressing this. However please check my commit message
+> why 900 is not good:
+ok, you caught me. I found the value of 900 in several other drivers and 
+simply took it. Even parts of my commit message were simply copied...
 
-Yes, will change it.
+As I have no real idea about determining the right quality, I will leave this 
+task for you :-)
 
->>  {
->>         int ret;
->> 
->> -       if (etm4_count++)
->> -               return 0;
->> -
->>         ret = cpu_pm_register_notifier(&etm4_cpu_pm_nb);
->>         if (ret)
->> -               goto reduce_count;
->> +               return ret;
->> 
->>         ret = 
->> cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ARM_CORESIGHT_STARTING,
->>                                                    
->> "arm/coresight4:starting",
->> @@ -1432,17 +1427,11 @@ static int etm4_pm_setup_cpuslocked(void)
->> 
->>  unregister_notifier:
->>         cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
->> -
->> -reduce_count:
->> -       --etm4_count;
->>         return ret;
->>  }
->> 
->>  static void etm4_pm_clear(void)
-> 
-> This is __init too?
-> 
+Thanks
+Christian
 
-Will change.
 
->>  {
->> -       if (--etm4_count != 0)
->> -               return;
->> -
->>         cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
->>         cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_STARTING);
->>         if (hp_online) {
->> @@ -1598,4 +1576,29 @@ static struct amba_driver etm4x_driver = {
->>         .probe          = etm4_probe,
->>         .id_table       = etm4_ids,
->>  };
->> -builtin_amba_driver(etm4x_driver);
->> +
->> +static int __init etm4x_init(void)
->> +{
->> +       int ret;
->> +
->> +       cpus_read_lock();
->> +       ret = etm4_pm_setup_cpuslocked();
->> +       cpus_read_unlock();
->> +
->> +       /* etm4_pm_setup_cpuslocked() does its own cleanup - exit on 
->> error */
->> +       if (ret)
->> +               return ret;
->> +
->> +       ret = amba_driver_register(&etm4x_driver);
->> +       if (ret) {
->> +               pr_info("Error registering etm4x driver\n");
-> 
-> Use pr_err() please.
-> 
 
-Yes indeed, will change.
-
->> +               goto err_init;
->> +       }
->> +
->> +       return ret;
->> +
->> +err_init:
-> 
-> Why is this a goto?
-> 
->> +       etm4_pm_clear();
->> +       return ret;
-> 
-> Instead of just putting this in the if (ret) arm?
-> 
-
-Will change.
-
->> +}
->> +module_init(etm4x_init);
-> 
-> It was device_initcall before with builtin_amba_driver(), best to not
-> change that.
-
-Sure.
-
-I will wait to see if there are any more comments on this patch and then 
-post a v3.
-Thanks for the review Stephen.
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
