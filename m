@@ -2,196 +2,85 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2192C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5730AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFBF2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:49:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ktZjHIcS"
+	by mail.kernel.org (Postfix) with ESMTP id 35C6F20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:45:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595940346;
+	bh=SjwVcjwzVcHmdTN1Be+lgU7GPgYwsx0Ln8MZ5TrX84U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=erZkMbbofcyT/BukQn0UOEJsgq8GeniOmw4I9FXXOkjEQ25psclwZZkYtAZ5rFn7A
+	 smKGqNc9m5t9bKFtT97N6hgaQIX8Euq7t/J0PUcHJZC+PLUS0M0ORWf4hDaO7DwfKz
+	 RpQ+IYZySZCAK0v5S3FUbA3fjfEm81gTl2F3nSPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729916AbgG1Mtn (ORCPT
+        id S1729900AbgG1Mpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:49:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729890AbgG1Mtm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:49:42 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27961C0619D2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:49:42 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id q85so4527657vke.4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:49:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZNiMEHuT8+pdMAqptzZeWT7zj1wFIC1aVPAo0nMoMBw=;
-        b=ktZjHIcSKPi6h78SKzXBq/EtIpvMrLjjjqSHlPVylZbx2YJgbjQdUh9vVGIDT2E5MH
-         PJ0WXIaDGYaqe8cuv0Xdp1sABdQwSzrCmhlCj6dnkVflP5kMOXzBRwvwUynSuktljIF5
-         qOwhBHPzf2pEClZygy7VrFZyQYCpjvVjzn60OmSaqPikXjoSloTMe9H9od2/Rjxj5y6J
-         XCovimwj00i5CsKpJONKcvb/4iPAVR45I8fN5IerQWetJs2If1NpqPmCGGJJUZc6Vlmv
-         sGVbMJ52fSNmBfiEf9CrHEQpiaZi/jBeHa8j4Kge+aKBw+p8+mNmJG7HTDtjFl3g49oC
-         foQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZNiMEHuT8+pdMAqptzZeWT7zj1wFIC1aVPAo0nMoMBw=;
-        b=Gp9WemfVIXWoZasTdDs1cUmgtRbIi19eeLQG5PZYjEKZlq3pJ6oTP2vfCJHtesVhcR
-         p7fd9RxHaYTvnh1bxKA2p6ml6qM2jFy2GGQ6sYnWibMsDLci5QTakR2q2iUlTq5GTH9p
-         AgtxZa5O4u4llZpL6GRFfMGg7v7gGIwn/K8RvWbb36333NV7VHwlzRn/930fCi3jL8Lf
-         dxtOVfo5ULU5R5pwIkKBnw5YiHPQgW3ILbfBChS1TtfrPq1oP3FmUhacBGUXd8Eooohr
-         AQLFVskJxD1Nq9oIAQc7tsyCEmvaTlJA9yu6O0ik2KrvzzvxgXWRioWHxIdngyR15FxJ
-         MjEg==
-X-Gm-Message-State: AOAM5312nRdqwQQ91kj8E8+0XP/g1xMGg/xDk4UFFsGnd+9Y4JQXRvgC
-        AHBkkyzRp3Z/XeneIGSbYLLN4svimH3zq4A9Zacadw==
-X-Google-Smtp-Source: ABdhPJzwTW2xZn0tGCPfUw7SANUU1RLHBQG0L0PQcaYpCrQ5D8gDCWNSYISy8i6qPVZ1d532Mpw/maXbJOc/pFNAApo=
-X-Received: by 2002:a1f:a816:: with SMTP id r22mr8678960vke.99.1595940580992;
- Tue, 28 Jul 2020 05:49:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200724091520.880211-1-tweek@google.com> <CAEjxPJ45ij3obT37ywn_edb9xb89z-SdwzejfN6+jrvAtghXfA@mail.gmail.com>
- <CAHC9VhS4aXD8kcXnQ2MsYvjc--xXSUpsM1xtgq3X5DBT59ohhw@mail.gmail.com>
-In-Reply-To: <CAHC9VhS4aXD8kcXnQ2MsYvjc--xXSUpsM1xtgq3X5DBT59ohhw@mail.gmail.com>
-From:   =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
-Date:   Tue, 28 Jul 2020 14:49:24 +0200
-Message-ID: <CA+zpnLfczC=9HQA8s1oBGKGQO+OkuydF85o89dhSxdOyKBHMgg@mail.gmail.com>
-Subject: Re: [PATCH] selinux: add tracepoint on denials
-To:     Paul Moore <paul@paul-moore.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Nick Kralevich <nnk@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Eric Paris <eparis@parisplace.org>,
+        Tue, 28 Jul 2020 08:45:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729618AbgG1Mpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:45:44 -0400
+Received: from quaco.ghostprotocols.net (179.176.1.55.dynamic.adsl.gvt.net.br [179.176.1.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C731D206D7;
+        Tue, 28 Jul 2020 12:45:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595940344;
+        bh=SjwVcjwzVcHmdTN1Be+lgU7GPgYwsx0Ln8MZ5TrX84U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nimerbmlC9+vIEP0knA5mT6s2fVQUBe/yaUBtK4uDYtxD36l+mOm7D50faPD2b60o
+         mrjH8eGPeney/6BYhThX9fA5+X/3hnik4WzC8SoZPGHZN91n6nQvsEUri71WoG1jFx
+         srRNufOVmXMp0DIsK3nihFBZL8wudynKWIwVldnE=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F3F86404B1; Tue, 28 Jul 2020 09:45:39 -0300 (-03)
+Date:   Tue, 28 Jul 2020 09:45:39 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 3/5] perf test: Ensure sample_period is set libpfm4
+ events
+Message-ID: <20200728124539.GB40195@kernel.org>
+References: <20200728085734.609930-1-irogers@google.com>
+ <20200728085734.609930-4-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728085734.609930-4-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the review! I'll send a new revision of the patch with the
-%x formatter and using the TP_CONDITION macro.
+Em Tue, Jul 28, 2020 at 01:57:32AM -0700, Ian Rogers escreveu:
+> Test that a command line option doesn't override the period set on a
+> libpfm4 event.
+> Without libpfm4 test passes as unsupported.
 
-On adding further information to the trace event, I would prefer
-adding the strict minimum to be able to correlate the event with the
-avc message. The reason is that tracevents have a fixed size (see
-https://www.kernel.org/doc/Documentation/trace/events.txt). For
-instance, we would need to decide on a maximum size for the string
-representation of the list of permissions. This would also duplicate
-the reporting done in the avc audit event. I'll simply add the pid as
-part of the printk, which should be sufficient for the correlation.
+Thanks, applied.
 
-
-On Fri, Jul 24, 2020 at 3:55 PM Paul Moore <paul@paul-moore.com> wrote:
->
-> On Fri, Jul 24, 2020 at 9:32 AM Stephen Smalley
-> <stephen.smalley.work@gmail.com> wrote:
-> > On Fri, Jul 24, 2020 at 5:15 AM Thi=C3=A9baud Weksteen <tweek@google.co=
-m> wrote:
-> > > The audit data currently captures which process and which target
-> > > is responsible for a denial. There is no data on where exactly in the
-> > > process that call occurred. Debugging can be made easier by being abl=
-e to
-> > > reconstruct the unified kernel and userland stack traces [1]. Add a
-> > > tracepoint on the SELinux denials which can then be used by userland
-> > > (i.e. perf).
-> > >
-> > > Although this patch could manually be added by each OS developer to
-> > > trouble shoot a denial, adding it to the kernel streamlines the
-> > > developers workflow.
-> > >
-> > > [1] https://source.android.com/devices/tech/debug/native_stack_dump
-> > >
-> > > Signed-off-by: Thi=C3=A9baud Weksteen <tweek@google.com>
-> > > Signed-off-by: Joel Fernandes <joelaf@google.com>
-> > > ---
-> > >  MAINTAINERS                    |  1 +
-> > >  include/trace/events/selinux.h | 35 ++++++++++++++++++++++++++++++++=
-++
-> > >  security/selinux/avc.c         |  6 ++++++
-> > >  3 files changed, 42 insertions(+)
-> > >  create mode 100644 include/trace/events/selinux.h
-> > >
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index e64cdde81851..6b6cd5e13537 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -15358,6 +15358,7 @@ T:      git git://git.kernel.org/pub/scm/linu=
-x/kernel/git/pcmoore/selinux.git
-> > >  F:     Documentation/ABI/obsolete/sysfs-selinux-checkreqprot
-> > >  F:     Documentation/ABI/obsolete/sysfs-selinux-disable
-> > >  F:     Documentation/admin-guide/LSM/SELinux.rst
-> > > +F:     include/trace/events/selinux.h
-> > >  F:     include/uapi/linux/selinux_netlink.h
-> > >  F:     scripts/selinux/
-> > >  F:     security/selinux/
-> > > diff --git a/include/trace/events/selinux.h b/include/trace/events/se=
-linux.h
-> > > new file mode 100644
-> > > index 000000000000..e247187a8135
-> > > --- /dev/null
-> > > +++ b/include/trace/events/selinux.h
-> > > @@ -0,0 +1,35 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > +#undef TRACE_SYSTEM
-> > > +#define TRACE_SYSTEM selinux
-> > > +
-> > > +#if !defined(_TRACE_SELINUX_H) || defined(TRACE_HEADER_MULTI_READ)
-> > > +#define _TRACE_SELINUX_H
-> > > +
-> > > +#include <linux/ktime.h>
-> > > +#include <linux/tracepoint.h>
-> > > +
-> > > +TRACE_EVENT(selinux_denied,
-> > > +
-> > > +       TP_PROTO(int cls, int av),
-> > > +
-> > > +       TP_ARGS(cls, av),
-> > > +
-> > > +       TP_STRUCT__entry(
-> > > +               __field(int, cls)
-> > > +               __field(int, av)
-> > > +       ),
-> > > +
-> > > +       TP_fast_assign(
-> > > +               __entry->cls =3D cls;
-> > > +               __entry->av =3D av;
-> > > +       ),
-> > > +
-> > > +       TP_printk("denied %d %d",
-> > > +               __entry->cls,
-> > > +               __entry->av)
-> > > +);
-> >
-> > I would think you would want to log av as %x for easier interpretation
-> > especially when there are multiple permissions being checked at once
-> > (which can happen). Also both cls and av would properly be unsigned
-> > values.  Only other question I have is whether it would be beneficial
-> > to include other information here to help uniquely identify/correlate
-> > the denial with the avc: message and whether any decoding of the
-> > class, av, or other information could/should be done here versus in
-> > some userland helper.
->
-> It does seem like at the very least it would be nice to see the av as
-> hex values instead of integers, e.g. "%x" in the TP_printk() call.
-> Considering this patch is about making dev's lives easier, I tend to
-> agree with Stephen questioning if you should go a step further and
-> convert both the class and av values into string representations.
->
-> --
-> paul moore
-> www.paul-moore.com
+- Arnaldo
