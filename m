@@ -2,196 +2,156 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC786C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C99D206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5678A206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:05:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="R5hKELuj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730289AbgG1OAw (ORCPT
+        id S1730314AbgG1OFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:00:52 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53658 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730056AbgG1OAw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:00:52 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: dafna)
-        with ESMTPSA id 2BFF629627B
-Subject: Re: [PATCH v2 0/3] media: vimc: Allow multiple capture devices to use
- the same sensor
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Helen Koike <helen.koike@collabora.com>
-Cc:     kieran.bingham@ideasonboard.com,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
- <20200724121521.GA2705690@oden.dyn.berto.se>
- <20200724122104.GA18482@kaaira-HP-Pavilion-Notebook>
- <a6f4eabf-6cd5-950b-f2e3-853370c77629@ideasonboard.com>
- <2a6cb067-283d-ca65-2698-1fae66a17d02@collabora.com>
- <20200728113959.GA6350@kaaira-HP-Pavilion-Notebook>
- <3a9ac970-77b8-1bc5-536a-5b4f2bd60745@collabora.com>
-Message-ID: <b5fd3811-2f0e-7563-13fa-bb1e32189814@collabora.com>
-Date:   Tue, 28 Jul 2020 16:00:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <3a9ac970-77b8-1bc5-536a-5b4f2bd60745@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 28 Jul 2020 10:05:50 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:2343 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730211AbgG1OFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 10:05:49 -0400
+IronPort-SDR: 9rVtzBnD6A5OKhyNl21/X/x5qCc5m8+RXg3wl/dKLgwSuapmG2Fm/gKVgaNfrLMrjMLHR+2wX5
+ dMiDTTW8BuXXcTvCT+cO0cVbtJQ3HrfrjAEE3XdgtwDb4RpzgKe2sQcW7NBw37CY8Mht3mSHVl
+ IfOF/pHHFku+5MIzCokG91VqithBCYagMgdIRDRFfh81u1YnscN3bQPLHl+O1IFDD/fGVsnvFi
+ MfDKte5skXU6zapRsxB59ktCqJPnsuamVDgqEkjzuK7CsIOKDbQi3UbBGwpYnV3oF9CTNZE0eE
+ Tw0=
+X-IronPort-AV: E=Sophos;i="5.75,406,1589234400"; 
+   d="scan'208";a="13265251"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 28 Jul 2020 16:05:47 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Tue, 28 Jul 2020 16:05:47 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Tue, 28 Jul 2020 16:05:47 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1595945147; x=1627481147;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8xSG/F2gvCwdxzDaRbBlDsjYKXzG6JG+0E3m3q1z7jA=;
+  b=R5hKELujCuAAgDrHfnlh8BwD5YVvYvG+qdxPH+TTAKRL/l6jZi+RqnQ+
+   +s+Hn+iHh9vyzsIFQH8eOsSTIcLv8VzeYjF+GclqEmTQlwakAsOYPEIz3
+   0gXpEAWnTeJaT5dCPR72OJekvthRlrz3W/20hol33dfVZld7vkRnctu9A
+   OWWq3G3r5lJ61vLigQVTbPot4XKs1tZZ0FX3jfu8aQlqcm+daNjYX//3E
+   7TfOXn+s6HDscHFMSfJYRUyjjjW8KuQOiwFkGFqGfevXGqILo0viSeocs
+   PT/TFKo49Ssy+L7b/p6RiIOW2+TuHh2jg5xo/Md8IZTvimhrpaUDPina4
+   A==;
+IronPort-SDR: Qo4GZXqj6aPQr1FabmXcmOi6BmJI01chr0R5EOpeCzHVZISWjmdIdMk3zcf4c3Xw/OJwGHPmLG
+ 0kzG3ci5mb/K2if1KTpVaV0peiEKC80UVL5hy7BHqCq1Urta/ZZI7ZJl0GgzWt2NAu/gL0YT3K
+ ewlShmNXUuJ7YaHWNDWMDz0xbE/5Nk+Ys55EybHlRjzi3ptqryWlzkmUhgfHeTCYKbe1RKbNdL
+ Hy4lLcr5VuTzzUXx+7k7XrzUhSThxo3ekvVcxgn1tMKG1O+TmfX6VqZgWmi6LJNO6q7jsH4f1x
+ fMI=
+X-IronPort-AV: E=Sophos;i="5.75,406,1589234400"; 
+   d="scan'208";a="13265250"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 28 Jul 2020 16:05:47 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 42966280065;
+        Tue, 28 Jul 2020 16:05:47 +0200 (CEST)
+Message-ID: <8ea0b3f655b60be02384f22c0aa4dfee9d788d71.camel@ew.tq-group.com>
+Subject: Re: (EXT) Re: [PATCH] arm: dts: imx7: add QSPI
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Date:   Tue, 28 Jul 2020 16:05:47 +0200
+In-Reply-To: <20200728135155.aqz3xkcwpgqmvzro@pengutronix.de>
+References: <20200728112814.14158-1-matthias.schiffer@ew.tq-group.com>
+         <20200728135155.aqz3xkcwpgqmvzro@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2020-07-28 at 15:51 +0200, Marco Felsch wrote:
+> Hi Matthias,
+> 
+> thanks for the patch.
+> 
+> On 20-07-28 13:28, Matthias Schiffer wrote:
+> > In preparation for an update of the TQ-Systems TQMa7x/MBa7x DTS,
+> > add the
+> > QSPI controller to imx7s.dtsi.
+> > 
+> > Based-on-patch-by: Han Xu <han.xu@nxp.com>
+> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
+> > >
+> > ---
+> >  arch/arm/boot/dts/imx7s.dtsi | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/imx7s.dtsi
+> > b/arch/arm/boot/dts/imx7s.dtsi
+> > index 1cfaf410aa43..e45683e61593 100644
+> > --- a/arch/arm/boot/dts/imx7s.dtsi
+> > +++ b/arch/arm/boot/dts/imx7s.dtsi
+> > @@ -1162,6 +1162,19 @@
+> >  				status = "disabled";
+> >  			};
+> >  
+> > +			qspi1: spi@30bb0000 {
+> 
+> Are there more controllers and why not using "qspi@30bb0000" as node
+> name?
 
+The vast majority of QSPI controllers use spi@ node names, qspi@ only
+appears in a single example in Documentation/devicetree/bindings/, and
+in no actual DTS(I) files.
 
-On 28.07.20 14:07, Dafna Hirschfeld wrote:
-> Hi
-> 
-> On 28.07.20 13:39, Kaaira Gupta wrote:
->> On Mon, Jul 27, 2020 at 02:54:30PM -0300, Helen Koike wrote:
->>> Hi,
->>>
->>> On 7/27/20 11:31 AM, Kieran Bingham wrote:
->>>> Hi all,
->>>>
->>>> +Dafna for the thread discussion, as she's missed from the to/cc list.
->>>>
->>>>
->>>> On 24/07/2020 13:21, Kaaira Gupta wrote:
->>>>> On Fri, Jul 24, 2020 at 02:15:21PM +0200, Niklas Söderlund wrote:
->>>>> Hi,
->>>>>
->>>>>> Hi Kaaira,
->>>>>>
->>>>>> Thanks for your work.
->>>>>
->>>>> Thanks for yours :D
->>>>>
->>>>>>
->>>>>> On 2020-07-24 17:32:10 +0530, Kaaira Gupta wrote:
->>>>>>> This is version 2 of the patch series posted by Niklas for allowing
->>>>>>> multiple streams in VIMC.
->>>>>>> The original series can be found here:
->>>>>>> https://patchwork.kernel.org/cover/10948831/
->>>>>>>
->>>>>>> This series adds support for two (or more) capture devices to be
->>>>>>> connected to the same sensors and run simultaneously. Each capture device
->>>>>>> can be started and stopped independent of each other.
->>>>>>>
->>>>>>> Patch 1/3 and 2/3 deals with solving the issues that arises once two
->>>>>>> capture devices can be part of the same pipeline. While 3/3 allows for
->>>>>>> two capture devices to be part of the same pipeline and thus allows for
->>>>>>> simultaneously use.
-> 
-> I wonder if these two patches are enough, since each vimc entity also have
-> a 'process_frame' callback, but only one allocated frame. That means
-> that the 'process_frame' can be called concurrently by two different streams
-> on the same frame and cause corruption.
-> 
+There is only one controller. The label "qspi1" is chosen as this has
+been in use in the linux-imx vendor kernels for years; IMHO, switching
+to "qspi" would just cause unnecessary churn for dependent device
+trees. I have no strong opinions on this though.
 
-I think we should somehow change the vimc-stream.c code so that we have only
-one stream process per pipe. So if one capture is already streaming, then the new
-capture that wants to stream uses the same thread so we don't have two threads
-both calling 'process_frame'.
+> 
+> > +				#address-cells = <1>;
+> > +				#size-cells = <0>;
+> > +				compatible = "fsl,imx7d-qspi";
+> > +				reg = <0x30bb0000 0x10000>, <0x60000000
+> > 0x10000000>;
+> > +				reg-names = "QuadSPI", "QuadSPI-
+> > memory";
+> 
+> The node should begin with compatible, reg, reg-names properties.
+> Pls check the current .dtsi file for examples.
 
-The second capture that wants to stream should iterate the topology downwards until
-reaching an entity that already belong to the stream path of the other streaming capture
-and tell the streamer it wants to read the frames this entity
-produces.
+Thanks, will fix.
 
-Thanks,
-Dafna
+> 
+> > +				interrupts = <GIC_SPI 107
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX7D_QSPI_ROOT_CLK>,
+> > +					<&clks IMX7D_QSPI_ROOT_CLK>;
+> > +				clock-names = "qspi_en", "qspi";
+> > +				status = "disabled";
+> > +			};
+> > +
+> >  			sdma: sdma@30bd0000 {
+> >  				compatible = "fsl,imx7d-sdma",
+> > "fsl,imx35-sdma";
+> >  				reg = <0x30bd0000 0x10000>;
+> 
+> Regards,
+>   Marco
 
-> Thanks,
-> Dafna
-> 
->>>>>>
->>>>>> I'm just curious if you are aware of this series? It would replace the
->>>>>> need for 1/3 and 2/3 of this series right?
->>>>>
->>>>> v3 of this series replaces the need for 1/3, but not the current version
->>>>> (ie v4). v4 of patch 2/5 removes the stream_counter that is needed to
->>>>> keep count of the calls to s_stream. Hence 1/3 becomes relevant again.
->>>>
->>>> So the question really is, how do we best make use of the two current
->>>> series, to achieve our goal of supporting multiple streams.
->>>>
->>>> Having not parsed Dafna's series yet, do we need to combine elements of
->>>> both ? Or should we work towards starting with this series and get
->>>> dafna's patches built on top ?
->>>>
->>>> Or should patch 1/3 and 3/3 of this series be on top of Dafna's v4 ?
->>>>
->>>> (It might be noteworthy to say that Kaaira has reported successful
->>>> multiple stream operation from /this/ series and her development branch
->>>> on libcamera).
->>>
->>> Dafna's patch seems still under discussion, but I don't want to block progress in Vimc either.
->>>
->>> So I was wondering if we can move forward with Vimc support for multistreaming,
->>> without considering Dafna's patchset, and we can do the clean up later once we solve that.
->>>
->>> What do you think?
->>
->> I agree with supporting multiple streams with VIMC with this patchset,
->> and then we can refactor the counters for s_stream in VIMC later (over
->> this series) if dafna includes them in subsequent version of her patchset.
->>
-> 
-> I also think that adding support in the code will take much longer and should not
-> stop us from supporting vimc independently.
-> 
-> Thanks,
-> Dafna
-> 
->>>
->>> Regards,
->>> Helen
->>>
->>>>
->>>>
->>>>>> 1.  https://lore.kernel.org/linux-media/20200522075522.6190-1-dafna.hirschfeld@collabora.com/
->>>>>>
->>>>>>>
->>>>>>> Changes since v1:
->>>>>>>     - All three patches rebased on latest media-tree.
->>>>>>>     Patch 3:
->>>>>>>     - Search for an entity with a non-NULL pipe instead of searching
->>>>>>>       for sensor. This terminates the search at output itself.
->>>>>>>
->>>>>>> Kaaira Gupta (3):
->>>>>>>    media: vimc: Add usage count to subdevices
->>>>>>>    media: vimc: Serialize vimc_streamer_s_stream()
->>>>>>>    media: vimc: Join pipeline if one already exists
->>>>>>>
->>>>>>>   .../media/test-drivers/vimc/vimc-capture.c    | 35 ++++++++++++++++++-
->>>>>>>   .../media/test-drivers/vimc/vimc-debayer.c    |  8 +++++
->>>>>>>   drivers/media/test-drivers/vimc/vimc-scaler.c |  8 +++++
->>>>>>>   drivers/media/test-drivers/vimc/vimc-sensor.c |  9 ++++-
->>>>>>>   .../media/test-drivers/vimc/vimc-streamer.c   | 23 +++++++-----
->>>>>>>   5 files changed, 73 insertions(+), 10 deletions(-)
->>>>>>>
->>>>>>> -- 
->>>>>>> 2.17.1
->>>>>>>
->>>>>>
->>>>>> -- 
->>>>>> Regards,
->>>>>> Niklas Söderlund
->>>>
