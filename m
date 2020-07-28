@@ -2,67 +2,71 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01439C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83909C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5EF92065E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63307206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595938300;
-	bh=2gzLic9p7rqj5m0wTXVWx0ENL0NHNbXAdbmkOu2733Q=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HjzlhBMS9bpLFHeX61wfkAziDck4FnHY2xsxPH87E6y3tXLaUXPRjNMt+PV76ZUs9
-	 RoBLFhjx6Ld2JgV98ahwbtt31EC44EPvti4nVryb7QyQN+iR1D04Fcobdy3/Zup9ht
-	 YxUA1M/hpDeP4l1oBtlMEPahIqmTnDs53b5Fgiu8=
+	s=default; t=1595938298;
+	bh=z7k6UOCnAozQaZ5b9+HbexJNfnxw8lOBXCJ8+UaN1r8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gMikIc6aXE4PAWL4nq11pHi90xPuH1Xh2fhTkXhBtnWeWmK0k4C68bkFd/NcV6JmV
+	 j/51lZMT59EniQQNM1ekg7wOUqPYrWid2jEExg7blzGcl2hXyPNO6wl5ZCMWG6Sd6j
+	 BXZDwzTzRYRMgiW6XwRWA8kCEZlUc5QVl2MHDOCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbgG1MLf (ORCPT
+        id S1729293AbgG1MLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:11:35 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44842 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728793AbgG1MLe (ORCPT
+        Tue, 28 Jul 2020 08:11:37 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43489 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728840AbgG1MLe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jul 2020 08:11:34 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y18so10849679lfh.11;
+Received: by mail-lj1-f196.google.com with SMTP id f5so20838297ljj.10;
         Tue, 28 Jul 2020 05:11:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YbhY91q5+cbKaui6Xn8c9WzRHG7wbBm55onNv1D4kWQ=;
-        b=RjOGwZQwVsrvThiWuwwScSH4Or5XbbNws9bC8n5EMADORVtlqXyJelBwl0UdXKTCYK
-         j1CLwVGIFn5kJM9VoE7Cui46rx6z7YNAunWkEz9NmNSyPV2tZalddT+/ibjF1AUPorFd
-         75EP6kOc2Ehskw9gz3uLTDsXOhkysFLdt32Kk/cVmBTykM1uG6HdqD6gLgJTy4DkD01f
-         pO60NAgsAnq1/4ppA2YcrCVGgjwyP+7AvohOarZOUi1j5DYhE9VJJ+mNlM6y7eRpZnf6
-         XKi79hPbS4K3jw+Rlj+oPaSTskpLj0p3Vnvr6G8vVXz3pmTdD4IK7oXhqkWI7rf1hYmi
-         ewrw==
-X-Gm-Message-State: AOAM532a2nXz9FtHqzGX4H9apNWgfAIjSIslpZiinER95FnSSRcBmCsA
-        2KkIvHwnoiLzzpTs2zBX1cc=
-X-Google-Smtp-Source: ABdhPJx7cyVpzBP2fpc28JYPbYEZEM83QMxPnmgF4I1a1Ztd2Im61fsqnfcZpSBSEv9aJhby0Mqr8g==
-X-Received: by 2002:a19:7d04:: with SMTP id y4mr14552159lfc.51.1595938291522;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hTBfJmBRO5Rb64D0GBJ0IiAqZ76bUdrzaMxwh1TXFb0=;
+        b=SxtkdkwgMSjEAcuV1Dh1I50cvoCjAQVjCl6D++s/CsUzq8Z4qf+3NfcCl/eI1Q2m1G
+         4jGS6LQ9YBUvW2OAaqTPtO/usjPSpS/OjWpDEDlCohJMpIa4tJe0LUZT8caKFoQDWQ2Q
+         YV1R1sFhQOUblymsyM2PMkXKHq+p7v2pmVOztJMqLrXHVv6DsI6W8sdlnAYkBpT0eagR
+         BFRf2ebsn2E0SzKma0GRnsmXNnL6a5B0t9GRu8lTwpfWsjqAJMxy5R3ibXqa2xbvT1zh
+         tWkSrI98H2j8w6c+UM7bb4ThimPM2+UoA8WqBoey6p5A3qfRKLR2Q9C1rYtqoKt/Ip/S
+         nycg==
+X-Gm-Message-State: AOAM533WefW2+4CXk3+Lc3q0ZftEBgQWBk/KSAxMRZ31BSlhHtbmAE3d
+        /71S/8HLtXmNfE+EY48ZP2vdBjQF
+X-Google-Smtp-Source: ABdhPJzC1SMcuOdVj/5aYJlv/u9WFtJAP1KL6sA78L8BZzYm79E/lc2vkanmCzzPMo2ko/B+G5/ZlQ==
+X-Received: by 2002:a05:651c:294:: with SMTP id b20mr5420677ljo.4.1595938291950;
         Tue, 28 Jul 2020 05:11:31 -0700 (PDT)
 Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id j2sm1751468ljb.98.2020.07.28.05.11.30
+        by smtp.gmail.com with ESMTPSA id o16sm1728264ljc.66.2020.07.28.05.11.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 28 Jul 2020 05:11:30 -0700 (PDT)
 Received: from johan by xi.terra with local (Exim 4.93.0.4)
         (envelope-from <johan@xi.terra>)
-        id 1k0OS5-0003Dj-HL; Tue, 28 Jul 2020 14:11:26 +0200
+        id 1k0OS6-0003Dn-A8; Tue, 28 Jul 2020 14:11:26 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Woojung Huh <woojung.huh@microchip.com>
 Cc:     Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH net 0/3] net: lan78xx: fix NULL deref and memory leak
-Date:   Tue, 28 Jul 2020 14:10:28 +0200
-Message-Id: <20200728121031.12323-1-johan@kernel.org>
+        Johan Hovold <johan@kernel.org>,
+        "Woojung . Huh @ microchip . com" <Woojung.Huh@microchip.com>
+Subject: [PATCH net 1/3] net: lan78xx: add missing endpoint sanity check
+Date:   Tue, 28 Jul 2020 14:10:29 +0200
+Message-Id: <20200728121031.12323-2-johan@kernel.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200728121031.12323-1-johan@kernel.org>
+References: <20200728121031.12323-1-johan@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,28 +74,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The first two patches fix a NULL-pointer dereference at probe that can
-be triggered by a malicious device and a small transfer-buffer memory
-leak, respectively.
+Add the missing endpoint sanity check to prevent a NULL-pointer
+dereference should a malicious device lack the expected endpoints.
 
-For another subsystem I would have marked them:
+Note that the driver has a broken endpoint-lookup helper,
+lan78xx_get_endpoints(), which can end up accepting interfaces in an
+altsetting without endpoints as long as *some* altsetting has a bulk-in
+and a bulk-out endpoint.
 
-	Cc: stable@vger.kernel.org	# 4.3
+Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
+Cc: Woojung.Huh@microchip.com <Woojung.Huh@microchip.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/net/usb/lan78xx.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-The third one replaces the driver's current broken endpoint lookup
-helper, which could end up accepting incomplete interfaces and whose
-results weren't even useeren
-Johan
-
-
-Johan Hovold (3):
-  net: lan78xx: add missing endpoint sanity check
-  net: lan78xx: fix transfer-buffer memory leak
-  net: lan78xx: replace bogus endpoint lookup
-
- drivers/net/usb/lan78xx.c | 113 +++++++++++---------------------------
- 1 file changed, 31 insertions(+), 82 deletions(-)
-
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index eccbf4cd7149..d7162690e3f3 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -3759,6 +3759,11 @@ static int lan78xx_probe(struct usb_interface *intf,
+ 	netdev->max_mtu = MAX_SINGLE_PACKET_SIZE;
+ 	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
+ 
++	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
++		ret = -ENODEV;
++		goto out3;
++	}
++
+ 	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
+ 	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
+ 	dev->ep_intr = (intf->cur_altsetting)->endpoint + 2;
 -- 
 2.26.2
 
