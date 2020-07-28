@@ -2,85 +2,99 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5730AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73230C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35C6F20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:45:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595940346;
-	bh=SjwVcjwzVcHmdTN1Be+lgU7GPgYwsx0Ln8MZ5TrX84U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=erZkMbbofcyT/BukQn0UOEJsgq8GeniOmw4I9FXXOkjEQ25psclwZZkYtAZ5rFn7A
-	 smKGqNc9m5t9bKFtT97N6hgaQIX8Euq7t/J0PUcHJZC+PLUS0M0ORWf4hDaO7DwfKz
-	 RpQ+IYZySZCAK0v5S3FUbA3fjfEm81gTl2F3nSPY=
+	by mail.kernel.org (Postfix) with ESMTP id 5408B20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:51:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="jSac2zYr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbgG1Mpo (ORCPT
+        id S1729929AbgG1Mve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:45:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55648 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 08:51:34 -0400
+Received: from crapouillou.net ([89.234.176.41]:43316 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729618AbgG1Mpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:45:44 -0400
-Received: from quaco.ghostprotocols.net (179.176.1.55.dynamic.adsl.gvt.net.br [179.176.1.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C731D206D7;
-        Tue, 28 Jul 2020 12:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595940344;
-        bh=SjwVcjwzVcHmdTN1Be+lgU7GPgYwsx0Ln8MZ5TrX84U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nimerbmlC9+vIEP0knA5mT6s2fVQUBe/yaUBtK4uDYtxD36l+mOm7D50faPD2b60o
-         mrjH8eGPeney/6BYhThX9fA5+X/3hnik4WzC8SoZPGHZN91n6nQvsEUri71WoG1jFx
-         srRNufOVmXMp0DIsK3nihFBZL8wudynKWIwVldnE=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F3F86404B1; Tue, 28 Jul 2020 09:45:39 -0300 (-03)
-Date:   Tue, 28 Jul 2020 09:45:39 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 3/5] perf test: Ensure sample_period is set libpfm4
- events
-Message-ID: <20200728124539.GB40195@kernel.org>
-References: <20200728085734.609930-1-irogers@google.com>
- <20200728085734.609930-4-irogers@google.com>
+        id S1729334AbgG1Mvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:51:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1595940692; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=d6LEaQ5QXtKpB7Ve+o/tB8JqiizNP+42SBXIHX8JWEg=;
+        b=jSac2zYr62B8+eaewzOIX7FUJY6rr3kuCXlOd2qMiqxaPRWa164pnS8bp6AlwajurTWL2b
+        7MSo5mzivOQGsoZW++dN4t9vaVYBUYyO1CKgBLEL1qxbY59HZAvTrWP+Iub5d7ye41cbc+
+        NNJX4eBLSEUlUpKKyVC3KPbNdR6PJls=
+Date:   Tue, 28 Jul 2020 14:51:23 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 2/2] MIPS: ingenic: Enable JZ4780_NEMC manually
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>
+Message-Id: <NPJ6EQ.I4K2FZ2BHH1E@crapouillou.net>
+In-Reply-To: <20200728120035.GA28766@kozik-lap>
+References: <20200728104503.23655-1-krzk@kernel.org>
+        <20200728104503.23655-2-krzk@kernel.org>
+        <B4F6EQ.WB2WZOY40FDR@crapouillou.net> <20200728111935.GA26683@kozik-lap>
+        <20200728113702.GB13443@alpha.franken.de> <20200728120035.GA28766@kozik-lap>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728085734.609930-4-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jul 28, 2020 at 01:57:32AM -0700, Ian Rogers escreveu:
-> Test that a command line option doesn't override the period set on a
-> libpfm4 event.
-> Without libpfm4 test passes as unsupported.
 
-Thanks, applied.
 
-- Arnaldo
+Le mar. 28 juil. 2020 =E0 14:00, Krzysztof Kozlowski <krzk@kernel.org> a=20
+=E9crit :
+> On Tue, Jul 28, 2020 at 01:37:02PM +0200, Thomas Bogendoerfer wrote:
+>>  On Tue, Jul 28, 2020 at 01:19:35PM +0200, Krzysztof Kozlowski wrote:
+>>  > On Tue, Jul 28, 2020 at 01:12:11PM +0200, Paul Cercueil wrote:
+>>  > > Hi Krzysztof,
+>>  > >
+>>  > > Le mar. 28 juil. 2020 =E0 12:45, Krzysztof Kozlowski=20
+>> <krzk@kernel.org> a =E9crit
+>>  > > :
+>>  > > > The CONFIG_JZ4780_NEMC was previously a default on MIPS but=20
+>> now it has
+>>  > > > to be enabled manually.
+>>  > > >
+>>  > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>>  > >
+>>  > > I think you should swap the two so that there are no problems=20
+>> when
+>>  > > bisecting.
+>>  >
+>>  > Good point. I was thinking that it will go via some of MIPS trees=20
+>> and
+>>  > the patch #1 will just wait a cycle.  However with acks, I can=20
+>> take it
+>>  > through drivers/memory tree.
+>>=20
+>>  I've acked the patch.
+>>=20
+>>  Thomas.
+>=20
+> Thanks but now I noticed that one of changed configs
+> (arch/mips/configs/rs90_defconfig) is only in MIPS tree.
+>=20
+> I think it is easier then to take the patch #2 (configs) via MIPS and
+> wait with #1 for the next cycle or also take it via MIPS if it applies
+> cleanly.
+
+Why not take them both in the MIPS tree then? Would that conflict with=20
+changes in your tree?
+
+-Paul
+
+
