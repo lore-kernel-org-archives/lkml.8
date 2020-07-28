@@ -2,245 +2,146 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F1CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF84C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC752070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D650420663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="tLXWax6M"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E2pBQjL4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbgG1O0M (ORCPT
+        id S1730389AbgG1O2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:26:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730093AbgG1O0L (ORCPT
+        Tue, 28 Jul 2020 10:28:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58759 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729410AbgG1O2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:26:11 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49100C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:26:11 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ha11so4422049pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:26:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=yWye7aaOVC0N5NGSUhVAFihgxHbQAy+hcp/icevuJzQ=;
-        b=tLXWax6Mgil3NUz0RBaoHn14Nm7RUOSDRmFITnEhpSuALgkjSriY38YnsTgtaqgQu+
-         OlDZPQre9De/cTMdDdronoKEd+1hFRpZ/1GF1GtLVntnt515h9EwonZ6NAupW6xNWAYt
-         +obvIb4sVqpjI8kolIoukFxTk2Q0n19thONIQjAl40U6sErbvdDX+gyUxyjVG7SPGE3J
-         9x/wsyy3IOSWOxuuQArAfytkszoFtGyKka0+6Ck01ttRCq+AcVw39Mjv8IyJfAiNEwxc
-         X+ABe3CCnujKu+cW5Q8lOreMQ15uta9Ru7BqiuvWl5wQ651s1GCNnwx1eiCB/Y+rUrdd
-         EBQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=yWye7aaOVC0N5NGSUhVAFihgxHbQAy+hcp/icevuJzQ=;
-        b=NNPqVYwH2JyKIRJseQvweSOFwukwJLQCiYthBzGAI85xGRQFcX8oSRFb54JNgJrvf0
-         CQCVI1tn1CROhN8xScVKuZtsvfhnXfBSyHSfZGdyQu3zsoDStARE8fMnpOjA61Mw5pBg
-         ixk2K4BmEVkZfygZfq17i2ivNKNEFkSHIunj4a92jhOK/Kk0MiaihgIMbRyRonsIXu92
-         I97GK2kCfqChMOfNZnUL8fz4E6gkMbySlTwBl0tpRbbW1muUdJDrLTdtxiQYcFEYzhFX
-         Q1AxF415aZfOotMA6srPzRZcA3NEwMvMuGiXSavqv+sOe941xkQC768WZrypM52iKcPY
-         KSgw==
-X-Gm-Message-State: AOAM531Q3nU5xk1+gVzfj4ZvQkUlzkQSdfe6eRYPXnpOSgF1uObEEJ7p
-        5x+5buSXTZqUA3HE6RlNYwVcow==
-X-Google-Smtp-Source: ABdhPJwT9PwF8AasW9nIoZykHYSZIPo88QFB9Sp400i/6hIC5/ISjU8gm5FjqBtYOD5uwBJ9Zg5J/Q==
-X-Received: by 2002:a17:90a:3c8f:: with SMTP id g15mr1503794pjc.215.1595946370672;
-        Tue, 28 Jul 2020 07:26:10 -0700 (PDT)
-Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
-        by smtp.gmail.com with ESMTPSA id p127sm18312194pfb.17.2020.07.28.07.26.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Jul 2020 07:26:10 -0700 (PDT)
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-X-Google-Original-From: Kaaira Gupta <Kaairakgupta@es.iitr.ac.in>
-Date:   Tue, 28 Jul 2020 19:56:01 +0530
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Helen Koike <helen.koike@collabora.com>,
-        kieran.bingham@ideasonboard.com,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: Re: [PATCH v2 0/3] media: vimc: Allow multiple capture devices to
- use the same sensor
-Message-ID: <20200728142601.GA26259@kaaira-HP-Pavilion-Notebook>
-References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
- <20200724121521.GA2705690@oden.dyn.berto.se>
- <20200724122104.GA18482@kaaira-HP-Pavilion-Notebook>
- <a6f4eabf-6cd5-950b-f2e3-853370c77629@ideasonboard.com>
- <2a6cb067-283d-ca65-2698-1fae66a17d02@collabora.com>
- <20200728113959.GA6350@kaaira-HP-Pavilion-Notebook>
- <3a9ac970-77b8-1bc5-536a-5b4f2bd60745@collabora.com>
- <b5fd3811-2f0e-7563-13fa-bb1e32189814@collabora.com>
+        Tue, 28 Jul 2020 10:28:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595946484;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vk76CkPyZ5T42guo8MQRmFanU+aGvXip0+duA6MP1QY=;
+        b=E2pBQjL4iMvgit8efOcYKJjaRS6k7ZKRaHjRpBOQQEj4RWJHNNbCOsLk3yZ05Xnxs8q99Q
+        JuR1pCe94g+9VoYR3v30g3OnXKjSlrGKF51auqM8ENdf+E/GpvSpmj+TPWpHD3eCEmqndd
+        E6N+ZeBC+0Vlxhl8WjuW9JRfSzgO4uc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-337-Jz4k5rM7NTirOgcPGnRijg-1; Tue, 28 Jul 2020 10:28:02 -0400
+X-MC-Unique: Jz4k5rM7NTirOgcPGnRijg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 80CAEE91C;
+        Tue, 28 Jul 2020 14:27:58 +0000 (UTC)
+Received: from fedora-32-enviroment (unknown [10.35.206.247])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EA66F10013C4;
+        Tue, 28 Jul 2020 14:27:42 +0000 (UTC)
+Message-ID: <25011fed186bd8bfd1f25640158fbce60a7ad9ef.camel@redhat.com>
+Subject: Re: [PATCH 02/10] block: virtio-blk: check logical block size
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
+        "open list:SCSI CDROM DRIVER" <linux-scsi@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Ajay Joshi <ajay.joshi@wdc.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        "open list:SONY MEMORYSTICK SUBSYSTEM" <linux-mmc@vger.kernel.org>,
+        Satya Tangirala <satyat@google.com>,
+        "open list:NETWORK BLOCK DEVICE (NBD)" <nbd@other.debian.org>,
+        Hou Tao <houtao1@huawei.com>, Jens Axboe <axboe@fb.com>,
+        "open list:VIRTIO CORE AND NET DRIVERS" 
+        <virtualization@lists.linux-foundation.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Alex Dubov <oakad@yahoo.com>
+Date:   Tue, 28 Jul 2020 17:27:41 +0300
+In-Reply-To: <f16aba1020019530564f0869a67951282104a5d2.camel@redhat.com>
+References: <20200721105239.8270-1-mlevitsk@redhat.com>
+         <20200721105239.8270-3-mlevitsk@redhat.com> <20200721151437.GB10620@lst.de>
+         <yq1zh7sfedj.fsf@ca-mkp.ca.oracle.com>
+         <f16aba1020019530564f0869a67951282104a5d2.camel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b5fd3811-2f0e-7563-13fa-bb1e32189814@collabora.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 04:00:46PM +0200, Dafna Hirschfeld wrote:
-> 
-> 
-> On 28.07.20 14:07, Dafna Hirschfeld wrote:
-> > Hi
+On Wed, 2020-07-22 at 12:11 +0300, Maxim Levitsky wrote:
+> On Tue, 2020-07-21 at 22:55 -0400, Martin K. Petersen wrote:
+> > Christoph,
 > > 
-> > On 28.07.20 13:39, Kaaira Gupta wrote:
-> > > On Mon, Jul 27, 2020 at 02:54:30PM -0300, Helen Koike wrote:
-> > > > Hi,
-> > > > 
-> > > > On 7/27/20 11:31 AM, Kieran Bingham wrote:
-> > > > > Hi all,
-> > > > > 
-> > > > > +Dafna for the thread discussion, as she's missed from the to/cc list.
-> > > > > 
-> > > > > 
-> > > > > On 24/07/2020 13:21, Kaaira Gupta wrote:
-> > > > > > On Fri, Jul 24, 2020 at 02:15:21PM +0200, Niklas Söderlund wrote:
-> > > > > > Hi,
-> > > > > > 
-> > > > > > > Hi Kaaira,
-> > > > > > > 
-> > > > > > > Thanks for your work.
-> > > > > > 
-> > > > > > Thanks for yours :D
-> > > > > > 
-> > > > > > > 
-> > > > > > > On 2020-07-24 17:32:10 +0530, Kaaira Gupta wrote:
-> > > > > > > > This is version 2 of the patch series posted by Niklas for allowing
-> > > > > > > > multiple streams in VIMC.
-> > > > > > > > The original series can be found here:
-> > > > > > > > https://patchwork.kernel.org/cover/10948831/
-> > > > > > > > 
-> > > > > > > > This series adds support for two (or more) capture devices to be
-> > > > > > > > connected to the same sensors and run simultaneously. Each capture device
-> > > > > > > > can be started and stopped independent of each other.
-> > > > > > > > 
-> > > > > > > > Patch 1/3 and 2/3 deals with solving the issues that arises once two
-> > > > > > > > capture devices can be part of the same pipeline. While 3/3 allows for
-> > > > > > > > two capture devices to be part of the same pipeline and thus allows for
-> > > > > > > > simultaneously use.
+> > > Hmm, I wonder if we should simply add the check and warning to
+> > > blk_queue_logical_block_size and add an error in that case.  Then
+> > > drivers only have to check the error return, which might add a lot
+> > > less boiler plate code.
 > > 
-> > I wonder if these two patches are enough, since each vimc entity also have
-> > a 'process_frame' callback, but only one allocated frame. That means
-> > that the 'process_frame' can be called concurrently by two different streams
-> > on the same frame and cause corruption.
+> > Yep, I agree.
 > > 
 > 
-> I think we should somehow change the vimc-stream.c code so that we have only
-> one stream process per pipe. So if one capture is already streaming, then the new
-> capture that wants to stream uses the same thread so we don't have two threads
-> both calling 'process_frame'.
+> I also agree that this would be cleaner (I actually tried to implement
+> this the way you suggest), but let me explain my reasoning for doing
+> it
+> this way.
+> 
+> The problem is that most current users of blk_queue_logical_block_size
+> (43 uses in the tree, out of which only 9 use constant block size)
+> check
+> for the block size relatively early, often store it in some internal
+> struct etc, prior to calling blk_queue_logical_block_size thus making
+> them only to rely on blk_queue_logical_block_size as the check for 
+> block size validity will need non-trivial changes in their code.
+> 
+> Instead of this adding blk_is_valid_logical_block_size allowed me
+> to trivially convert most of the uses.
+> 
+> For RFC I converted only some drivers that I am more familiar with
+> and/or can test but I can remove the driver's own checks in most other
+> drivers with low chance of introducing a bug, even if I can't test the
+> driver.
+> 
+> What do you think?
+> 
+> I can also both make blk_queue_logical_block_size return an error
+> value,
+> and have blk_is_valid_logical_block_size and use either of these
+> checks,
+> depending on the driver with eventual goal of un-exporting
+> blk_is_valid_logical_block_size.
+> 
+> Also note that I did add WARN_ON to blk_queue_logical_block_size.
 
-I didn't understand this well, can you please elaborate? How will it
-lead to the new capture using same thread?
+Any update on this?
+
+Best regards,
+	Maxim Levitsky
 
 > 
-> The second capture that wants to stream should iterate the topology downwards until
-> reaching an entity that already belong to the stream path of the other streaming capture
-> and tell the streamer it wants to read the frames this entity
-> produces.
+> Best regards,
+> 	Maxim Levitsky
 
-The first version of this series was doing this itself I think. But it
-was for connecting the pipe(capture) at the sensor if one already
-exists. 
-
-> 
-> Thanks,
-> Dafna
-> 
-> > Thanks,
-> > Dafna
-> > 
-> > > > > > > 
-> > > > > > > I'm just curious if you are aware of this series? It would replace the
-> > > > > > > need for 1/3 and 2/3 of this series right?
-> > > > > > 
-> > > > > > v3 of this series replaces the need for 1/3, but not the current version
-> > > > > > (ie v4). v4 of patch 2/5 removes the stream_counter that is needed to
-> > > > > > keep count of the calls to s_stream. Hence 1/3 becomes relevant again.
-> > > > > 
-> > > > > So the question really is, how do we best make use of the two current
-> > > > > series, to achieve our goal of supporting multiple streams.
-> > > > > 
-> > > > > Having not parsed Dafna's series yet, do we need to combine elements of
-> > > > > both ? Or should we work towards starting with this series and get
-> > > > > dafna's patches built on top ?
-> > > > > 
-> > > > > Or should patch 1/3 and 3/3 of this series be on top of Dafna's v4 ?
-> > > > > 
-> > > > > (It might be noteworthy to say that Kaaira has reported successful
-> > > > > multiple stream operation from /this/ series and her development branch
-> > > > > on libcamera).
-> > > > 
-> > > > Dafna's patch seems still under discussion, but I don't want to block progress in Vimc either.
-> > > > 
-> > > > So I was wondering if we can move forward with Vimc support for multistreaming,
-> > > > without considering Dafna's patchset, and we can do the clean up later once we solve that.
-> > > > 
-> > > > What do you think?
-> > > 
-> > > I agree with supporting multiple streams with VIMC with this patchset,
-> > > and then we can refactor the counters for s_stream in VIMC later (over
-> > > this series) if dafna includes them in subsequent version of her patchset.
-> > > 
-> > 
-> > I also think that adding support in the code will take much longer and should not
-> > stop us from supporting vimc independently.
-> > 
-> > Thanks,
-> > Dafna
-> > 
-> > > > 
-> > > > Regards,
-> > > > Helen
-> > > > 
-> > > > > 
-> > > > > 
-> > > > > > > 1.  https://lore.kernel.org/linux-media/20200522075522.6190-1-dafna.hirschfeld@collabora.com/
-> > > > > > > 
-> > > > > > > > 
-> > > > > > > > Changes since v1:
-> > > > > > > >     - All three patches rebased on latest media-tree.
-> > > > > > > >     Patch 3:
-> > > > > > > >     - Search for an entity with a non-NULL pipe instead of searching
-> > > > > > > >       for sensor. This terminates the search at output itself.
-> > > > > > > > 
-> > > > > > > > Kaaira Gupta (3):
-> > > > > > > >    media: vimc: Add usage count to subdevices
-> > > > > > > >    media: vimc: Serialize vimc_streamer_s_stream()
-> > > > > > > >    media: vimc: Join pipeline if one already exists
-> > > > > > > > 
-> > > > > > > >   .../media/test-drivers/vimc/vimc-capture.c    | 35 ++++++++++++++++++-
-> > > > > > > >   .../media/test-drivers/vimc/vimc-debayer.c    |  8 +++++
-> > > > > > > >   drivers/media/test-drivers/vimc/vimc-scaler.c |  8 +++++
-> > > > > > > >   drivers/media/test-drivers/vimc/vimc-sensor.c |  9 ++++-
-> > > > > > > >   .../media/test-drivers/vimc/vimc-streamer.c   | 23 +++++++-----
-> > > > > > > >   5 files changed, 73 insertions(+), 10 deletions(-)
-> > > > > > > > 
-> > > > > > > > -- 
-> > > > > > > > 2.17.1
-> > > > > > > > 
-> > > > > > > 
-> > > > > > > -- 
-> > > > > > > Regards,
-> > > > > > > Niklas Söderlund
-> > > > > 
