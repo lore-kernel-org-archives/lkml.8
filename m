@@ -2,98 +2,119 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E062DC43459
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72510C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6E3B20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C14620786
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="sFeRSbxr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="WC1Mgu0X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730832AbgG1Ph5 (ORCPT
+        id S1730789AbgG1Phx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:37:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46210 "EHLO
+        Tue, 28 Jul 2020 11:37:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730797AbgG1Ph4 (ORCPT
+        with ESMTP id S1730678AbgG1Phw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:37:56 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24952C0619D2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:37:56 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id b18so11352240ilo.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:37:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aT/4Vd1KT6gFUEyaURRCi9T5w1JgYeHkaL9/rT+SjdM=;
-        b=sFeRSbxrDGk1FX1/85Qv7FXIlsc76+QGGUWMfOjXNSfVVvdM3ACfzQHLbqezRd6BOd
-         njlEWUrAROEV1+gX5qSdf3MHM7jPnoqMwXb5cEFM2nLDHTljMst2sjQQXNFby+ZwqAhk
-         R5cd4wY1rm3RkLoJTOBDPpBXH7c6O6e7xifxbWYSZm3wPeo3vw+qCfOtEbfezD9F8svX
-         1Yc25TTk0P+oDj7KTqcj48j3GE2pQDex9QiHSCKk1S1XMJStDKHTqzf/m1s7vEB4GtCh
-         zZDwug/yEN0AG/yuDhhY0es8K3VDnFqkIK+L99us7hibyLuSGo/TdKSPjLUigjTH/6OJ
-         YaNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aT/4Vd1KT6gFUEyaURRCi9T5w1JgYeHkaL9/rT+SjdM=;
-        b=It6PD4Hz6CwFUa4yE78KcZZkQCIZXt0s6Nb+yaVaujcwt3Uz7A/r+Sq/r2r3lP+/pW
-         Q3t5tLf5wPDNEQPjKDwRMwkqFvQLqwrbT4kuLTxhrW58utDA24PjWaGO6p4NG9Ir5klx
-         0dyKD4P9CmdfESXOsUJn31kM16sbbPh74E6ToQ7VtrG2DQiDjNlRtgQ9H7HlsZlepmgD
-         SX1XvMER1T0omwIfYm1BAvIChjyeJYHRa9z2xFnnYZ9deTxh8qwd2vQVZzzVhY/uz7WO
-         35k3enbM9em6WyiKAfb4XLr3StbAev53nZ0SZBqt7yJKb3ucbza/fsNmVF9Ga9nKhL3d
-         hhaw==
-X-Gm-Message-State: AOAM533JMbbtyxrxuFQWQMR5JIdo7TNzfj3cxwy+c4lwVPeo0RxkkGhA
-        2AxXyrDsTvysB3WzajOGtWQXcQ==
-X-Google-Smtp-Source: ABdhPJwqrM+TwYM3A0LLl4/nqG8Pt+LJGaycrasyS6nUKhqtbIBby3yzfVH1Ro6mIWoOXWDdYhVouw==
-X-Received: by 2002:a92:5e1d:: with SMTP id s29mr14577822ilb.245.1595950675515;
-        Tue, 28 Jul 2020 08:37:55 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id r3sm4772269iov.22.2020.07.28.08.37.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 08:37:55 -0700 (PDT)
-Subject: Re: [PATCH] block: Use non _rcu version of list functions for
- tag_set_list
-To:     Daniel Wagner <dwagner@suse.de>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ming Lei <ming.lei@redhat.com>
-References: <20200728132951.29459-1-dwagner@suse.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <67e31df0-b86c-6a2e-d9da-3e8a7114e42e@kernel.dk>
-Date:   Tue, 28 Jul 2020 09:37:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 11:37:52 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6677C061794;
+        Tue, 28 Jul 2020 08:37:51 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id BC4661FF08;
+        Tue, 28 Jul 2020 15:37:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1595950671; bh=4P7y2LQNJndHKfA8n1MwNs3vn+NoPJ2RNNraQAFSUuM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WC1Mgu0XcEgnbgDeVgG0U3sAJ1MPf78XQT8tBAyf0yTGwiSDeb2Xpuvq0XtFLTAs2
+         DYwfKbGrmMQ8IHI8T/b+H9d9GcmbqHrbPQmj9g1baoWtK7k4BU8v2OuygFO1n+bABG
+         vRT5bVpteZmvcuP4mtgaOq/fcUPvlU7Et1ivM/oJOVyQU7Vy6O9CmTuaxI9VnYOvQz
+         kzPN9fHDAyOz692n7dwwUsCf/P8NTY6iQo+3edQHJly3NpTG4LMHjERGOG3YZFIbrV
+         +J79P1yp3MoibLawZExtLdGFWYR4uWYyogHw4Bh3fdCaLce6AgNMKsMusCqa8NDBRn
+         NkQnAHu4gVnlA==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 3/5] MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
+Date:   Tue, 28 Jul 2020 23:36:57 +0800
+Message-Id: <20200728153708.1296374-4-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.28.0.rc1
+In-Reply-To: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
+References: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200728132951.29459-1-dwagner@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/20 7:29 AM, Daniel Wagner wrote:
-> tag_set_list is only accessed under the tag_set_lock lock. There is
-> no need for using the _rcu list functions.
-> 
-> The _rcu list function were introduced to allow read access to the
-> tag_set_list protected under RCU, see 705cda97ee3a ("blk-mq: Make it
-> safe to use RCU to iterate over blk_mq_tag_set.tag_list") and
-> 05b79413946d ("Revert "blk-mq: don't handle TAG_SHARED in restart"").
-> Those changes got reverted later but the cleanup commit missed a
-> couple of places to undo the changes.
+It can be very big on LS7A PCH systems.
 
-Applied, thanks.
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+--
+v3: Move IO_SPACE_LIMIT to spaces.h
+---
+ arch/mips/include/asm/io.h                     | 2 --
+ arch/mips/include/asm/mach-generic/spaces.h    | 4 ++++
+ arch/mips/include/asm/mach-loongson64/spaces.h | 3 +--
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
+diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+index 346fffd9e972..8ca53f17c7c2 100644
+--- a/arch/mips/include/asm/io.h
++++ b/arch/mips/include/asm/io.h
+@@ -51,8 +51,6 @@
+ 
+ /* ioswab[bwlq], __mem_ioswab[bwlq] are defined in mangle-port.h */
+ 
+-#define IO_SPACE_LIMIT 0xffff
+-
+ /*
+  * On MIPS I/O ports are memory mapped, so we access them using normal
+  * load/store instructions. mips_io_port_base is the virtual address to
+diff --git a/arch/mips/include/asm/mach-generic/spaces.h b/arch/mips/include/asm/mach-generic/spaces.h
+index ee5ebe98f6cf..c3ac06a6acd2 100644
+--- a/arch/mips/include/asm/mach-generic/spaces.h
++++ b/arch/mips/include/asm/mach-generic/spaces.h
+@@ -14,6 +14,10 @@
+ 
+ #include <asm/mipsregs.h>
+ 
++#ifndef IO_SPACE_LIMIT
++#define IO_SPACE_LIMIT 0xffff
++#endif
++
+ /*
+  * This gives the physical RAM offset.
+  */
+diff --git a/arch/mips/include/asm/mach-loongson64/spaces.h b/arch/mips/include/asm/mach-loongson64/spaces.h
+index 3de0ac9d8829..ce04e998a37b 100644
+--- a/arch/mips/include/asm/mach-loongson64/spaces.h
++++ b/arch/mips/include/asm/mach-loongson64/spaces.h
+@@ -11,8 +11,7 @@
+ #define PCI_IOSIZE	SZ_16M
+ #define MAP_BASE	(PCI_IOBASE + PCI_IOSIZE)
+ 
+-/* Reserved at the start of PCI_IOBASE for legacy drivers */
+-#define MMIO_LOWER_RESERVED	0x10000
++#define IO_SPACE_LIMIT  (PCI_IOSIZE - 1)
+ 
+ #include <asm/mach-generic/spaces.h>
+ #endif
 -- 
-Jens Axboe
+2.28.0.rc1
 
