@@ -2,193 +2,117 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BCAC433FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C72FC433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31393206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:20:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AUZBUOCz"
+	by mail.kernel.org (Postfix) with ESMTP id 326822074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:21:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595928117;
+	bh=NNX64QXYODFJKL2lS3ScmVOI0V1ZbmJSSxEld6Bu0ec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hlZBVFDfhdXPPXC+5XckJG7JMLEsTigGB2MmPq8ClYwl2xZUKiaEQWngGiil+TPTP
+	 BlKKCehO737HVB/pK3U3nxRjwRs0unILfCluYl4sXbmb5PfDvE86QknjPQ2NPpN3p5
+	 SG15ONJvmkib0ubj6kugH+88wMGp20iS9+s8KyJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbgG1JUV (ORCPT
+        id S1728188AbgG1JV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:20:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728260AbgG1JUU (ORCPT
+        Tue, 28 Jul 2020 05:21:56 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:43221 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728072AbgG1JVz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 05:20:20 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B3F4C0619D4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 02:20:20 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b6so17546335wrs.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 02:20:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=beBH51PBvrNiVY21fyB1FDMkBD4/1CfVqZsExUAdGms=;
-        b=AUZBUOCz+C3rUbC09PBQb07wRcuG+Z5atNFGMx6frCJ20iuSZPlI4T6fknCpq3V/8J
-         ojiJjQXoLXIm3nkm0LEBfBv4OXrf6lLG5QUbLRzA1+ixupmRCG4MzcvFiTqizHNPbH0/
-         XzZPxU1YUQ+SgMlRBsA9NL/4k859nPxCoBO9wQkfPvgYBC6dcegsVSQ0fwQnFb4QzrYu
-         42VuVYpxQicy5tc5KWqBaCx7kbfyxq98OarVugo1rGHxL3+GnsB9B7O188y2FlBsK/iu
-         vL/PJFJmQe8WxNKsi7xYRRKw4KqAxMCJXsa9lwAaHXh2uJACBdEFn16gde0U6hWIzf4p
-         1RCQ==
+        Tue, 28 Jul 2020 05:21:55 -0400
+Received: by mail-ej1-f65.google.com with SMTP id a21so19897102ejj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 02:21:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=beBH51PBvrNiVY21fyB1FDMkBD4/1CfVqZsExUAdGms=;
-        b=repsiD8kp4u+jrGoDphgj9QM9l9duApXXTwWEugc1h9GU4q1RBdLkT64BdpJ77CoHJ
-         I95Q9pQ4Q42tKi+fXJoabQ0MGyqrDdahCAKGBkXV25GsKOYZb9/1jt/QByzaBYbuyUCZ
-         cTKmHlvzXztU0dbCFWsL0rxpADTFV5A9wUyNjyLSYPTYcOVUCnAMOToPWYJOfCzbxzcu
-         KQgKJcDK6i7Hf2e/MhueIgmDG750LGglzGWU5mumUNrU0CBxYp8hes3UOW42RSB9dnCB
-         OvUhL/pGGLPNytcrkN3UcHFQT4iVuWh6YOnnyYJwbVZlwpDgZBcdpez0FG1vOZuwiUG+
-         ry/w==
-X-Gm-Message-State: AOAM5332UiZSoQzXeUSCO3Byj0MjqexvUhp/Y7DX7LZ/NcpsIGywzZEM
-        520OmeowO7oBBnC00Jh+6Maa0w==
-X-Google-Smtp-Source: ABdhPJwnXEtbFH1jcD4yCv++hVxdGTxMKRMWQHHEoQcyflVcKHgUz+6JPotbQr2eHetriRLig3jKsA==
-X-Received: by 2002:adf:e94a:: with SMTP id m10mr12079678wrn.249.1595928019115;
-        Tue, 28 Jul 2020 02:20:19 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id t141sm3376553wmt.26.2020.07.28.02.20.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 02:20:18 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 10:20:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
-Message-ID: <20200728092016.GE2419169@dell>
-References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-3-michael@walle.cc>
- <20200728072422.GF1850026@dell>
- <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
- <20200728082707.GB2419169@dell>
- <a47993ca4c77ab1ee92f6693debb3c87@walle.cc>
- <20200728085616.GD2419169@dell>
- <2fd3b880e36aa65e880b801092b51945@walle.cc>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=blEvJmYWDDpXTqOrA29wAv2+DlaWptNCopG8+WOshLc=;
+        b=LF4UOdEK5tQUeM3DIj12vsdeF0pl9UUlom/1VaQ7ZKR+hfIIepSahFQuEVENsJIUic
+         KeyFTgaw0RlB0BGfMCimHsUOk0Um1QNXA4PJJUMczlJRm+MBIATnWXYZwfWGlaXROEVq
+         ul5hrnPs+LR9fZLW0c/Aj1m65+g4V547wV5FQiM1a6rRxYEnmB5SIx2/emI9EpmxQC1u
+         7W14tCQ4oIYtikhLuHRnHl89aBulEjQ59FjvBf/YPvW/8uGqtOB+CjP0RugxTPjwyZHv
+         uqv2CKCcdEDfb42Vi8YAiJzRg/kRHiMEWa5tyTwp2SwJCx4CDcXb5FXb7pgQseLtzo16
+         xd1w==
+X-Gm-Message-State: AOAM533fvjB66LAfy4E51+tGLPmp+OsYSRAidrI7jNg8WQpfjaeQ02I7
+        UdWhqTATGgsrqJ0z6KTs2V8NnacpSzN1+Q==
+X-Google-Smtp-Source: ABdhPJxqssDWolTBu19aP3SY8QQGu/wBriOUXo1BodfY+f/dYyir8UG6F37kIK5CkTpfOFqgJyX9rQ==
+X-Received: by 2002:a17:906:698:: with SMTP id u24mr22664926ejb.57.1595928113714;
+        Tue, 28 Jul 2020 02:21:53 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id n2sm9334398edq.73.2020.07.28.02.21.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jul 2020 02:21:52 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 11:21:50 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     od@zcrc.me, linux-kernel@vger.kernel.org,
+        "H . Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH] memory: jz4780_nemc: Only request IO memory the driver
+ will use
+Message-ID: <20200728092150.GA4437@kozik-lap>
+References: <20200727162034.12334-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2fd3b880e36aa65e880b801092b51945@walle.cc>
+In-Reply-To: <20200727162034.12334-1-paul@crapouillou.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jul 2020, Michael Walle wrote:
-
-> Am 2020-07-28 10:56, schrieb Lee Jones:
-> > > > > > > +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
-> > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > > > +
-> > > > > > > +title: Kontron's sl28cpld board management controller
-> > > > > >
-> > > > > > "S128CPLD" ?
-> > > > >
-> > > > > still not, its sl28cpld, think of a project/code name, not the product
-> > > > > appended with CPLD.
-> > > > >
-> > > > > > "Board Management Controller (BMC)" ?
-> > > > >
-> > > > > sounds like IPMI, which I wanted to avoid.
-> > > >
-> > > > Is there a datasheet?
-> > > 
-> > > No there isn't.
-> > 
-> > Then what are you working from?
+On Mon, Jul 27, 2020 at 06:20:34PM +0200, Paul Cercueil wrote:
+> The driver only uses the registers up to offset 0x54. Since the EFUSE
+> registers are in the middle of the NEMC registers, we only request
+> the registers we will use for now - that way the EFUSE driver can
+> probe too.
 > 
-> Ok, there is no public datasheet. If that wasn't clear before, I'm working
-> for that company that also implemented that CPLD.
-
-No, that wasn't clear.  You said there was no datasheet.
-
-> > > > > > > +maintainers:
-> > > > > > > +  - Michael Walle <michael@walle.cc>
-> > > > > > > +
-> > > > > > > +description: |
-> > > > > > > +  The board management controller may contain different IP blocks
-> > > > > > > like
-> > > > > > > +  watchdog, fan monitoring, PWM controller, interrupt controller
-> > > > > > > and a
-> > > > > > > +  GPIO controller.
-> > > > > > > +
-> > > > > > > +properties:
-> > > > > > > +  compatible:
-> > > > > > > +    const: kontron,sl28cpld-r1
-> > > > > >
-> > > > > > We don't usually code revision numbers in compatible strings.
-> > > > > >
-> > > > > > Is there any way to pull this from the H/W?
-> > > > >
-> > > > > No, unfortunately you can't. And I really want to keep that, in case
-> > > > > in the future there are some backwards incompatible changes.
-> > > >
-> > > > Rob,
-> > > >
-> > > > I know you reviewed this already, but you can give your opinion on
-> > > > this specifically please?  I know that we have pushed back on this in
-> > > > the past.
-> > > 
-> > > Oh, come one. That is an arbitrary string. "sl28cpld-r1" is the first
-> > > implementation of this. A future "sl28cpld-r2" might look completely
-> > > different and might not suite the simple MFD at all. "sl28cpld" is
-> > > a made up name - as "sl28cpld-r1" is, too.
-> > 
-> > Well that sounds bogus for a start.  I guess that's one of the
-> > problems with trying to support programmable H/W in S/W.
+> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  drivers/memory/jz4780-nemc.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
 > 
-> What sounds bogus? That we name the implementation sl28cpld?
-> How is that different to like adt7411? Its just a name made up by
-> the vendor. So if there is a new version of the adt7411 the vendor 
-> might name it adt7412.
+> diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
+> index b232ed279fc3..647267ea8c63 100644
+> --- a/drivers/memory/jz4780-nemc.c
+> +++ b/drivers/memory/jz4780-nemc.c
+> @@ -8,6 +8,7 @@
+>  
+>  #include <linux/clk.h>
+>  #include <linux/init.h>
+> +#include <linux/io.h>
+>  #include <linux/math64.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> @@ -288,7 +289,19 @@ static int jz4780_nemc_probe(struct platform_device *pdev)
+>  	nemc->dev = dev;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	nemc->base = devm_ioremap_resource(dev, res);
+> +
+> +	/*
+> +	 * The driver only uses the registers up to offset 0x54. Since the EFUSE
+> +	 * registers are in the middle of the NEMC registers, we only request
+> +	 * the registers we will use for now - that way the EFUSE driver can
+> +	 * probe too.
+> +	 */
+> +	if (!devm_request_mem_region(dev, res->start, 0x54, dev_name(dev))) {
+> +		dev_err(dev, "unable to request I/O memory region\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	nemc->base = devm_ioremap(dev, res->start, resource_size(res));
 
-Using an arbitrary string as a compatible would be bogus.
+Shouldn't you map only 0x54 size as well?
 
-So here 'sl28cpld' is the device name, so it's not actually
-arbitrary.  That's a good start.
-
-> We name it sl28cpld-r2. So what is the problem here?
-
-Do you though?  So 'sl28cpld-r1' is the name of the device?  The name
-that is quoted from the (private) datasheet?  Because looking at the
-implementation and going by the conversation, it sounds as though
-you-re only adding the '-r1' piece to the compatible string for
-revision identification.  Which if true, is not usually allowed and
-warrants intervention by Rob.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best regards,
+Krzysztof
