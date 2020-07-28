@@ -2,123 +2,106 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DA3C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C599C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CECCE206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A18206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:26:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="tSA+//yq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbgG1P0T (ORCPT
+        id S1730844AbgG1P0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:26:19 -0400
-Received: from mail.prodrive-technologies.com ([212.61.153.67]:59094 "EHLO
-        mail.prodrive-technologies.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730669AbgG1P0T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:26:19 -0400
-X-Greylist: delayed 350 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Jul 2020 11:26:17 EDT
-Received: from mail.prodrive-technologies.com (localhost.localdomain [127.0.0.1])
-        by localhost (Email Security Appliance) with SMTP id 784D732EBC_F20423AB;
-        Tue, 28 Jul 2020 15:20:26 +0000 (GMT)
-Received: from mail.prodrive-technologies.com (mdb-dag.prodrive.nl [10.1.1.212])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "mail.prodrive-technologies.com", Issuer "GlobalSign RSA OV SSL CA 2018" (verified OK))
-        by mail.prodrive-technologies.com (Sophos Email Appliance) with ESMTPS id E7900303C1_F20422AF;
-        Tue, 28 Jul 2020 15:20:10 +0000 (GMT)
-Received: from lnxclnt2222.Prodrive.nl (10.130.5.194) by EXC03.bk.prodrive.nl
- (10.1.1.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Tue, 28
- Jul 2020 17:20:10 +0200
-From:   Roy van Doormaal <roy.van.doormaal@prodrive-technologies.com>
-To:     <linux-hwmon@vger.kernel.org>
-CC:     Roy van Doormaal <roy.van.doormaal@prodrive-technologies.com>,
-        "Jean Delvare" <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] hwmon: (adc128d818) Fix advanced configuration register init
-Date:   Tue, 28 Jul 2020 17:18:45 +0200
-Message-ID: <20200728151846.231785-1-roy.van.doormaal@prodrive-technologies.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 28 Jul 2020 11:26:37 -0400
+Received: from crapouillou.net ([89.234.176.41]:46220 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730637AbgG1P0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:26:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1595949994; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=WZATYdvQioBf66nwEBhd77lthqSIvneIIUEGQ+zn1jg=;
+        b=tSA+//yqbM3nRlSMlqjN+6pw8Hy4iRvX3tN44Z0akzuzR52Zlmr6y0IyF09lpAXsUd/bG1
+        N7I3e34q+REGUQrLy+oFaoGPpOGJVUo8lufGilkY84l923xhrfkZmJLXQoYoQXZml2AJoS
+        IDn7dMM/M7EnQMVvfLdVa2yAUtmkASw=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     od@zcrc.me, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v2] memory: jz4780_nemc: Only request IO memory the driver will use
+Date:   Tue, 28 Jul 2020 17:26:29 +0200
+Message-Id: <20200728152629.28878-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: EXC03.bk.prodrive.nl (10.1.1.212) To EXC03.bk.prodrive.nl
- (10.1.1.212)
-X-SASI-RCODE: 200
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the operation mode is non-zero and an external reference voltage is set,
-first the operation mode is written to the advanced configuration register,
-followed by the externel reference enable bit,
-resetting the configuration mode to 0.
+The driver only uses the registers up to offset 0x54. Since the EFUSE
+registers are in the middle of the NEMC registers, we only request
+the registers we will use for now - that way the EFUSE driver can
+probe too.
 
-To fix this, first compose the value of the advanced configuration register
-based on the configuration mode and the external reference voltage.
-The advanced configuration register is then written to the device,
-if it is different from the default register value (0x0).
-
-Signed-off-by: Roy van Doormaal <roy.van.doormaal@prodrive-technologies.com>
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/hwmon/adc128d818.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/hwmon/adc128d818.c b/drivers/hwmon/adc128d818.c
-index f9edec195c35..571d5454c6b2 100644
---- a/drivers/hwmon/adc128d818.c
-+++ b/drivers/hwmon/adc128d818.c
-@@ -393,6 +393,7 @@ static int adc128_init_client(struct adc128_data *data)
- {
- 	struct i2c_client *client = data->client;
- 	int err;
-+	u8 regval = 0x0;
+Notes:
+    v2: Only ioremap() the registers we will use
+
+ drivers/memory/jz4780-nemc.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
+index b232ed279fc3..3ec5cb0fce1e 100644
+--- a/drivers/memory/jz4780-nemc.c
++++ b/drivers/memory/jz4780-nemc.c
+@@ -8,6 +8,7 @@
  
- 	/*
- 	 * Reset chip to defaults.
-@@ -403,10 +404,17 @@ static int adc128_init_client(struct adc128_data *data)
- 		return err;
+ #include <linux/clk.h>
+ #include <linux/init.h>
++#include <linux/io.h>
+ #include <linux/math64.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+@@ -22,6 +23,8 @@
+ #define NEMC_SMCRn(n)		(0x14 + (((n) - 1) * 4))
+ #define NEMC_NFCSR		0x50
  
- 	/* Set operation mode, if non-default */
--	if (data->mode != 0) {
--		err = i2c_smbus_write_byte_data(client,
--						ADC128_REG_CONFIG_ADV,
--						data->mode << 1);
-+	if (data->mode != 0)
-+		regval |= data->mode << 1;
++#define NEMC_REG_LEN		0x54
 +
-+	/* If external vref is selected, configure the chip to use it */
-+	if (data->regulator)
-+		regval |= 0x01;
+ #define NEMC_SMCR_SMT		BIT(0)
+ #define NEMC_SMCR_BW_SHIFT	6
+ #define NEMC_SMCR_BW_MASK	(0x3 << NEMC_SMCR_BW_SHIFT)
+@@ -288,7 +291,19 @@ static int jz4780_nemc_probe(struct platform_device *pdev)
+ 	nemc->dev = dev;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	nemc->base = devm_ioremap_resource(dev, res);
 +
-+	/* Write advanced configuration register */
-+	if (regval != 0x0) {
-+		err = i2c_smbus_write_byte_data(client, ADC128_REG_CONFIG_ADV,
-+						regval);
- 		if (err)
- 			return err;
- 	}
-@@ -416,14 +424,6 @@ static int adc128_init_client(struct adc128_data *data)
- 	if (err)
- 		return err;
- 
--	/* If external vref is selected, configure the chip to use it */
--	if (data->regulator) {
--		err = i2c_smbus_write_byte_data(client,
--						ADC128_REG_CONFIG_ADV, 0x01);
--		if (err)
--			return err;
--	}
--
- 	return 0;
- }
- 
++	/*
++	 * The driver currently only uses the registers up to offset
++	 * NEMC_REG_LEN. Since the EFUSE registers are in the middle of the
++	 * NEMC registers, we only request the registers we will use for now;
++	 * that way the EFUSE driver can probe too.
++	 */
++	if (!devm_request_mem_region(dev, res->start, NEMC_REG_LEN, dev_name(dev))) {
++		dev_err(dev, "unable to request I/O memory region\n");
++		return -EBUSY;
++	}
++
++	nemc->base = devm_ioremap(dev, res->start, NEMC_REG_LEN);
+ 	if (IS_ERR(nemc->base)) {
+ 		dev_err(dev, "failed to get I/O memory\n");
+ 		return PTR_ERR(nemc->base);
 -- 
-2.20.1
+2.27.0
 
