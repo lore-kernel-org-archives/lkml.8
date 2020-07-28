@@ -2,57 +2,57 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8388AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A8BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65CAC20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5206320786
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:05:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731677AbgG1RFe (ORCPT
+        id S1731756AbgG1RFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 13:05:34 -0400
-Received: from out28-147.mail.aliyun.com ([115.124.28.147]:38300 "EHLO
-        out28-147.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731070AbgG1RFe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 13:05:34 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.250105|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_news_journal|0.077471-0.000474437-0.922055;FP=0|0|0|0|0|-1|-1|-1;HT=e01l10434;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.I8uonft_1595955914;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I8uonft_1595955914)
-          by smtp.aliyun-inc.com(10.147.44.145);
-          Wed, 29 Jul 2020 01:05:28 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     balbi@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        colin.king@canonical.com, dan.carpenter@oracle.com,
-        paul@crapouillou.net, prasannatsmkumar@gmail.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH 0/1] Fix static checker warning.
-Date:   Wed, 29 Jul 2020 01:02:50 +0800
-Message-Id: <20200728170251.112484-1-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
+        Tue, 28 Jul 2020 13:05:36 -0400
+Received: from namei.org ([65.99.196.166]:55950 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731070AbgG1RFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 13:05:36 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 06SH58V8001021;
+        Tue, 28 Jul 2020 17:05:08 GMT
+Date:   Wed, 29 Jul 2020 03:05:08 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+cc:     madvenka@linux.microsoft.com, kernel-hardening@lists.openwall.com,
+        linux-api@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, oleg@redhat.com,
+        x86@kernel.org
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+In-Reply-To: <3fd22f92-7f45-1b0f-e4fe-857f3bceedd0@schaufler-ca.com>
+Message-ID: <alpine.LRH.2.21.2007290300400.31310@namei.org>
+References: <aefc85852ea518982e74b233e11e16d2e707bc32> <20200728131050.24443-1-madvenka@linux.microsoft.com> <3fd22f92-7f45-1b0f-e4fe-857f3bceedd0@schaufler-ca.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the warning that appears during Static analysis.
+On Tue, 28 Jul 2020, Casey Schaufler wrote:
 
-周琰杰 (Zhou Yanjie) (1):
-  USB: PHY: JZ4770: Fix static checker warning.
+> You could make a separate LSM to do these checks instead of limiting
+> it to SELinux. Your use case, your call, of course.
 
- drivers/usb/phy/phy-jz4770.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+It's not limited to SELinux. This is hooked via the LSM API and 
+implementable by any LSM (similar to execmem, execstack etc.)
+
 
 -- 
-2.11.0
+James Morris
+<jmorris@namei.org>
 
