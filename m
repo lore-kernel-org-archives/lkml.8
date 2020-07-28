@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB86C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED64EC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08FCD2065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C31BE2065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:07:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="B3mG/0jb"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="LGRQc5/I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731281AbgG1QGz (ORCPT
+        id S1731312AbgG1QHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:06:55 -0400
-Received: from mail-dm6nam12on2084.outbound.protection.outlook.com ([40.107.243.84]:46816
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        Tue, 28 Jul 2020 12:07:09 -0400
+Received: from mail-mw2nam12on2070.outbound.protection.outlook.com ([40.107.244.70]:24618
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730821AbgG1QGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:06:55 -0400
+        id S1731214AbgG1QHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:07:08 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VbgFZUn2kkJt2hokIxtDfbE/x42G9EbY4GL6H4uILJiWwq2bqhnkkRzBhBVwaCZp08t6VLmkUVtbY1mt9ezeg3Tdk5l5egnrwDmiQlp/vBmViI6aU8hSp6iXwEJnv5AM9uuijn/18Zhhox6A8UZVKxNSbYFW+O90mcHPrU1V6/CP8TyymL6DoUgioYuSBskhIgaIfi1+/s1NbRE4lnYLensYaomUehmdFF6hCzefPa0NQv9SLhxbsJ/fTyIkT9g1Fy6OyzY5oQEkKbYD3kZDj8176V7/1th9RisoBmVumh+rYhIqiGVJ2WWuDiI5nxsvnRVH5gVAsQbEHdlKeA/siA==
+ b=TPvGCRe5P9nBapf6806p1LQvS0U38F4aAZbSoHlHy48FV9uzyT+Jh2YFl4PLlvE98KTg+Wiw1Q0MKONxrbZ8T9ohcS4F0gYSZWQLHpHEgjIHm2drzy2qWMA+an/6VwW8KWd8MDVbxgKxKUlQ5HuxFEJHLlaz9oPu/WQq+hCYJRildgRz6YYXrdBckm3qJXwOafrlszTktTvv5404uVhI1DxbApa+HT9jB1Iy27JPStrFKVBrUmueMDEZqJQ2a7QeVvIlJ2zdjHl+Ov+VE70ttlmjMmhx4TMqIblE0sPhXqbdv16MQH1KFnSxR7ZjX+qA0nZM1qNEh4JcvjpI5HiBxw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tCB1Vrsx+8WOuq91iNN5qiwdDikZp2WxyhLIUAVJ2Bs=;
- b=Y8gRcOo1QrC6wO5oo8mCBbzYzcBQVgCRPoqTtbSdN3eUEwOyHycr5+DTEgPgnISsjyspbri83TmLDlRZ8FWt4gUcjgD/Ph89pSPM14+RZZn7ozowXAz5+Aj6qVjYIVo7dZxa6/s82MAlLEHuaJlRNO7cO5n3y1Ht99KWgbhfiHF3ol0EuyiVK7iki3KthSYSe1K9rYZiEzUyqGd6sCKZdgxtPemb9DIjoD47xWnxGc3aKi+zYfjkYtc3fXueEuZCrLPpYKDeSh88sxb+dTd5z8dDBHWPnRtoTq4bsufV5gAcgDc97x4Yw3Nib/VKRW1ZhfkoAJzK5wG0aACopzzqkw==
+ bh=qY49mVqWzL7K+XU1k+rbMbfs53B5hKFiNB+VvldRQEM=;
+ b=b8HtHHvxVJJOZbJPlBevvIYh6odv66CCzr4RNKp5LPbjFb4wbsdBy93/0j3a/SRqKhEoT/I97WnH1gBTvB4hFRc1wBGkWs0VspObP+AzWeV6J/dxgEUMebdz+xKfvURlf/Mpih1L68GLtCvfbXYD8zUkeyHZD5WnW7dbWzwwGxyGkCMUwwdWMB7OTnhCp07b0F+lZJywQ7Z3AAM47YGec4DnBoGVysVFe0dGnwU8r7XOSrrWEvWB8sVGQ/DERQSVNJOOU9ZcEoVi42GiOveEo9/A1xkyqDlRJE+ydhyYmoV4me0bupKkwK3zmCp4bMc1Dxqgzl/dejKIrKtBsEZpoQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
  165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com;
  dmarc=permerror action=none header.from=amd.com; dkim=none (message not
@@ -37,38 +37,38 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tCB1Vrsx+8WOuq91iNN5qiwdDikZp2WxyhLIUAVJ2Bs=;
- b=B3mG/0jbROq1jfM7S+DRl6CE3DC036mDogAXEm93HkmBBNHporjnPbBrKFUmpF2AQtQhf4eTlcjl8XV94SfFVM1hzLNPoqTn2erMjMLDfFBzqgQL3Y8hqpXNvhBcy/cF8eoTj1EExLpM6Rvy3lGP4njCBf4KM16CaPXpObHLs50=
-Received: from BN6PR04CA0101.namprd04.prod.outlook.com (2603:10b6:404:c9::27)
- by MN2PR12MB3005.namprd12.prod.outlook.com (2603:10b6:208:c5::24) with
+ bh=qY49mVqWzL7K+XU1k+rbMbfs53B5hKFiNB+VvldRQEM=;
+ b=LGRQc5/I4pLTuVr65IjZXpx5Wv5TuiK1dJzpJ014C9Lu71/iBA0487h0Rk5sWKULo5lT1JLJ8iQ9dsSLWvYZ1V4R6MYRRcanmj8DcdU09VgdbE3pE5nsqdeJQempLIS/8pkb9cb7s5CL9+/gkmpBdVZKmWF79/aUIvhAvTatWDM=
+Received: from MWHPR12CA0032.namprd12.prod.outlook.com (2603:10b6:301:2::18)
+ by BL0PR12MB2481.namprd12.prod.outlook.com (2603:10b6:207:40::25) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Tue, 28 Jul
- 2020 16:06:51 +0000
-Received: from BN8NAM11FT055.eop-nam11.prod.protection.outlook.com
- (2603:10b6:404:c9:cafe::7c) by BN6PR04CA0101.outlook.office365.com
- (2603:10b6:404:c9::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend
- Transport; Tue, 28 Jul 2020 16:06:51 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Tue, 28 Jul
+ 2020 16:07:04 +0000
+Received: from CO1NAM11FT007.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:301:2:cafe::93) by MWHPR12CA0032.outlook.office365.com
+ (2603:10b6:301:2::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend
+ Transport; Tue, 28 Jul 2020 16:07:03 +0000
 X-MS-Exchange-Authentication-Results: spf=none (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; gmail.com; dkim=none (message not signed)
  header.d=none;gmail.com; dmarc=permerror action=none header.from=amd.com;
 Received-SPF: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
-Received: from SATLEXMB02.amd.com (165.204.84.17) by
- BN8NAM11FT055.mail.protection.outlook.com (10.13.177.62) with Microsoft SMTP
+Received: from SATLEXMB01.amd.com (165.204.84.17) by
+ CO1NAM11FT007.mail.protection.outlook.com (10.13.174.131) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.3216.10 via Frontend Transport; Tue, 28 Jul 2020 16:06:51 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB02.amd.com
- (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.3216.10 via Frontend Transport; Tue, 28 Jul 2020 16:07:03 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB01.amd.com
+ (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 28 Jul
- 2020 11:06:50 -0500
-Received: from SATLEXMB01.amd.com (10.181.40.142) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 11:06:34 -0500
+Received: from SATLEXMB01.amd.com (10.181.40.142) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 28 Jul
- 2020 11:06:49 -0500
+ 2020 11:06:34 -0500
 Received: from vishnu-All-Series.amd.com (10.180.168.240) by
  SATLEXMB01.amd.com (10.181.40.142) with Microsoft SMTP Server id 15.1.1713.5
- via Frontend Transport; Tue, 28 Jul 2020 11:06:46 -0500
+ via Frontend Transport; Tue, 28 Jul 2020 11:06:31 -0500
 From:   Ravulapati Vishnu vardhan rao 
         <Vishnuvardhanrao.Ravulapati@amd.com>
 CC:     <Alexander.Deucher@amd.com>,
@@ -84,9 +84,9 @@ CC:     <Alexander.Deucher@amd.com>,
         "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
         <alsa-devel@alsa-project.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 4/5] ASoC: amd: Adding DAI LINK for rt1015 codec
-Date:   Tue, 28 Jul 2020 21:32:54 +0530
-Message-ID: <20200728160255.31020-5-Vishnuvardhanrao.Ravulapati@amd.com>
+Subject: [PATCH v2 2/5] ASoC: amd: Passing card structure based on codec
+Date:   Tue, 28 Jul 2020 21:32:52 +0530
+Message-ID: <20200728160255.31020-3-Vishnuvardhanrao.Ravulapati@amd.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200728160255.31020-1-Vishnuvardhanrao.Ravulapati@amd.com>
 References: <20200728160255.31020-1-Vishnuvardhanrao.Ravulapati@amd.com>
@@ -95,125 +95,107 @@ Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f90de723-b87d-477d-ed45-08d833103d8c
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3005:
-X-Microsoft-Antispam-PRVS: <MN2PR12MB3005B8C61381E85F8930580EE7730@MN2PR12MB3005.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-MS-Office365-Filtering-Correlation-Id: 8e29f64a-aafd-47d5-da56-08d8331044ba
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2481:
+X-Microsoft-Antispam-PRVS: <BL0PR12MB2481DBB8AF5880102705F3CFE7730@BL0PR12MB2481.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1013;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nl4p0J/TdIQKwhJioUgSqRBHiDNcsXKutt8BoUc4c+mUrj/qHdYMrgDdlxImaPgULXMZlbL8m7HaZ67NKXX+rrbsSoPtMDxblOvbmJmetuXzrskwWbGgiMNoxwcRpIbjWSSCyKeR/Li7m5yjcg5nUbfbGIsdi5DJBFK9AHCvYBf0jC1uJsOoCnEk4Po4oBtv62xXJ2VxT9Nx+y+VEDxKpvZ83wOYX5do4UY6tHvJevnfngMYzFa1qXprE6+pKmIV4QwNmZ1fGdw9ieq5E7LorVLirqZtWMMCIovgdZQcc6f/88lxfo8JDHi9cqQ4SUg36Dn4wkrAryU7cmygsb9amGaV7otY1Xx0qw0ZQ+nkVg0o7hSJPxw9dJ+w+ZCnrdvtfzVihQplzuIfi/gedj4wo/g+QxXrU2Ebky9C38+9bLA=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB02.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(376002)(136003)(39860400002)(46966005)(82310400002)(86362001)(83380400001)(82740400003)(47076004)(336012)(2616005)(5660300002)(81166007)(426003)(356005)(70206006)(36756003)(70586007)(1076003)(109986005)(54906003)(4326008)(8936002)(478600001)(8676002)(186003)(6666004)(26005)(7696005)(316002)(2906002)(266003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: vd8RA2Rzk5WZsa8NMBpH7qYxRHbvtEk3hamBMslUc0Njbs6eLE/4SHclknjTIlScVTFA2/bnRbKyMi6zaVt9Tayr3nR5OWCjY8XJF+2R0cXFatyq8TsN5vJnYGX6ByVIAZ38k75oeehQYXU2IClfKPQxfKkL5GkX3DDvCyl5QM6dnpyhNGHwOTD7aiVob07wUD2t7vGwNEzZyy2vBw8WAM6tLp9zlW5iz6d7jV4/QI6302JUWygGHmO6H5+Mw62fC4rCDCFI4QrJ9+EP2ze7KEz1uigQ5Fi1qEm8E25n5hHMV0/1TFpYI3BZyotpm78S7Hu8fuX63UWwkOpKg0uIo81q6MhiWEcEMP8u6CA0Ju9kLABzihlxpOpN84D/J8htz3u8e9Ixgljom/svp76Htcy23cpRsLhC5zxJA7Ou3Kg=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB01.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(136003)(396003)(46966005)(82740400003)(47076004)(316002)(1076003)(186003)(8936002)(336012)(356005)(81166007)(70586007)(70206006)(109986005)(7696005)(86362001)(54906003)(426003)(4326008)(8676002)(2616005)(478600001)(6666004)(26005)(83380400001)(5660300002)(82310400002)(2906002)(36756003)(266003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 16:06:51.7614
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 16:07:03.6915
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f90de723-b87d-477d-ed45-08d833103d8c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e29f64a-aafd-47d5-da56-08d8331044ba
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB02.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT055.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT007.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3005
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB2481
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DAI link support for RTK 1015 and providing the codec details
-depending on the snd_soc_card selected by ACPI ID.
+Passing specific snd_soc_card structure depending on the ACPI ID.
+In future we can add other IDs in the ACPI table and pass the structure.
 
 Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
 ---
- sound/soc/amd/acp3x-rt5682-max9836.c | 35 ++++++++++++++++++++++++----
- 1 file changed, 30 insertions(+), 5 deletions(-)
+ sound/soc/amd/acp3x-rt5682-max9836.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
 diff --git a/sound/soc/amd/acp3x-rt5682-max9836.c b/sound/soc/amd/acp3x-rt5682-max9836.c
-index 015b6a3312f5..e0c767716b9a 100644
+index 8b5af064864f..2c672657d139 100644
 --- a/sound/soc/amd/acp3x-rt5682-max9836.c
 +++ b/sound/soc/amd/acp3x-rt5682-max9836.c
-@@ -33,6 +33,12 @@ static struct clk *rt5682_dai_bclk;
+@@ -30,6 +30,7 @@ static struct snd_soc_jack pco_jack;
+ static struct clk *rt5682_dai_wclk;
+ static struct clk *rt5682_dai_bclk;
  static struct gpio_desc *dmic_sel;
- void *soc_is_rltk_max(struct device *dev);
++void *soc_is_rltk_max(struct device *dev);
  
-+enum {
-+	RT5682 = 0,
-+	MAX,
-+	EC,
-+};
-+
  static int acp3x_5682_init(struct snd_soc_pcm_runtime *rtd)
  {
- 	int ret;
-@@ -242,6 +248,9 @@ SND_SOC_DAILINK_DEF(rt5682,
- 	DAILINK_COMP_ARRAY(COMP_CODEC("i2c-10EC5682:00", "rt5682-aif1")));
- SND_SOC_DAILINK_DEF(max,
- 	DAILINK_COMP_ARRAY(COMP_CODEC("MX98357A:00", "HiFi")));
-+SND_SOC_DAILINK_DEF(rt1015,
-+	DAILINK_COMP_ARRAY(COMP_CODEC("i2c-10EC1015:00", "rt1015-aif"),
-+			COMP_CODEC("i2c-10EC1015:01", "rt1015-aif")));
- SND_SOC_DAILINK_DEF(cros_ec,
- 	DAILINK_COMP_ARRAY(COMP_CODEC("GOOG0013:00", "EC Codec I2S RX")));
- 
-@@ -260,7 +269,7 @@ static struct snd_soc_codec_conf rt1015_conf[] = {
+@@ -326,18 +327,32 @@ static struct snd_soc_card acp3x_5682 = {
+ 	.num_controls = ARRAY_SIZE(acp3x_5682_mc_controls),
  };
  
- static struct snd_soc_dai_link acp3x_dai[] = {
--	{
-+	[RT5682] = {
- 		.name = "acp3x-5682-play",
- 		.stream_name = "Playback",
- 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF
-@@ -271,16 +280,19 @@ static struct snd_soc_dai_link acp3x_dai[] = {
- 		.ops = &acp3x_5682_ops,
- 		SND_SOC_DAILINK_REG(acp3x_i2s, rt5682, platform),
- 	},
--	{
-+	[MAX] = {
- 		.name = "acp3x-max98357-play",
- 		.stream_name = "HiFi Playback",
- 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF
--				| SND_SOC_DAIFMT_CBM_CFM,
-+				| SND_SOC_DAIFMT_CBS_CFS,
- 		.dpcm_playback = 1,
- 		.ops = &acp3x_max_play_ops,
--		SND_SOC_DAILINK_REG(acp3x_bt, max, platform),
-+		.cpus = acp3x_bt,
-+		.num_cpus = ARRAY_SIZE(acp3x_bt),
-+		.platforms = platform,
-+		.num_platforms = ARRAY_SIZE(platform),
- 	},
--	{
-+	[EC] = {
- 		.name = "acp3x-ec-dmic0-capture",
- 		.stream_name = "Capture DMIC0",
- 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF
-@@ -390,6 +402,18 @@ void *soc_is_rltk_max(struct device *dev)
- 	return (void *)match->driver_data;
- }
- 
-+static void card_spk_dai_link_present(struct snd_soc_dai_link *links,
-+						const char *card_name)
++void *soc_is_rltk_max(struct device *dev)
 +{
-+	if (!strcmp(card_name, "acp3xalc56821015")) {
-+		links[1].codecs = rt1015;
-+		links[1].num_codecs = ARRAY_SIZE(rt1015);
-+	} else {
-+		links[1].codecs = max;
-+		links[1].num_codecs = ARRAY_SIZE(max);
-+	}
++	const struct acpi_device_id *match;
++
++	match = acpi_match_device(dev->driver->acpi_match_table, dev);
++	if (!match)
++		return NULL;
++	return (void *)match->driver_data;
 +}
 +
  static int acp3x_probe(struct platform_device *pdev)
  {
  	int ret;
-@@ -405,6 +429,7 @@ static int acp3x_probe(struct platform_device *pdev)
+ 	struct snd_soc_card *card;
+ 	struct acp3x_platform_info *machine;
++	struct device *dev = &pdev->dev;
++
++	card = (struct snd_soc_card *)soc_is_rltk_max(dev);
++	if (!card)
++		return -ENODEV;
+ 
+ 	machine = devm_kzalloc(&pdev->dev, sizeof(*machine), GFP_KERNEL);
  	if (!machine)
  		return -ENOMEM;
  
-+	card_spk_dai_link_present(card->dai_link, card->name);
- 	card->dev = &pdev->dev;
+-	card = &acp3x_5682;
+-	acp3x_5682.dev = &pdev->dev;
++	card->dev = &pdev->dev;
  	platform_set_drvdata(pdev, card);
  	snd_soc_card_set_drvdata(card, machine);
+ 
+@@ -348,18 +363,18 @@ static int acp3x_probe(struct platform_device *pdev)
+ 		return PTR_ERR(dmic_sel);
+ 	}
+ 
+-	ret = devm_snd_soc_register_card(&pdev->dev, &acp3x_5682);
++	ret = devm_snd_soc_register_card(&pdev->dev, card);
+ 	if (ret) {
+ 		dev_err(&pdev->dev,
+ 				"devm_snd_soc_register_card(%s) failed: %d\n",
+-				acp3x_5682.name, ret);
++				card->name, ret);
+ 		return ret;
+ 	}
+ 	return 0;
+ }
+ 
+ static const struct acpi_device_id acp3x_audio_acpi_match[] = {
+-	{ "AMDI5682", 0 },
++	{ "AMDI5682", (unsigned long)&acp3x_5682},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(acpi, acp3x_audio_acpi_match);
 -- 
 2.17.1
 
