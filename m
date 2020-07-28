@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97321C43462
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5587FC43464
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79F7120759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C7B020759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:21:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgG1GVE (ORCPT
+        id S1728071AbgG1GVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:21:04 -0400
-Received: from mga06.intel.com ([134.134.136.31]:26362 "EHLO mga06.intel.com"
+        Tue, 28 Jul 2020 02:21:41 -0400
+Received: from mga06.intel.com ([134.134.136.31]:26366 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727858AbgG1GVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:21:01 -0400
-IronPort-SDR: mgrLp2z0grm/SPRkKHccutReDKuBXQf0BS3f6To7okMzTqj2PFkMcpHwSFecrNVF8FZ1U7J9SU
- qPsCkVdA7+wg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="212681244"
+        id S1727874AbgG1GVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 02:21:03 -0400
+IronPort-SDR: BfSHc6zHyoZZGtvyDlpinDiGIwoWQpB9fuv+jt499IFNgsaRN2Nr/0+idl4oJ7/oFe9QgQvn83
+ WNlcfaKfCxyw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="212681248"
 X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
-   d="scan'208";a="212681244"
+   d="scan'208";a="212681248"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 23:20:56 -0700
-IronPort-SDR: bSZ/IpSZ47/59Pp6Z8flCbeJecHWqkqEG6+nJtJfto9eYRq+ASfGoM1yjtN71evo6/RoN+QPI7
- KztwgJlZteWg==
+IronPort-SDR: KAo0Wvc6mAnU96wyGJ2oHZLa9UQLvyG5pxj4iyuGZ8sUGz+nHmRVXdMpMgraWdC22/2VUt78Ns
+ z58RriAn4mkw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
-   d="scan'208";a="320274405"
+   d="scan'208";a="320274424"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga008.jf.intel.com with ESMTP; 27 Jul 2020 23:20:55 -0700
+  by orsmga008.jf.intel.com with ESMTP; 27 Jul 2020 23:20:56 -0700
 From:   Liu Yi L <yi.l.liu@intel.com>
 To:     alex.williamson@redhat.com, eric.auger@redhat.com,
         baolu.lu@linux.intel.com, joro@8bytes.org
@@ -45,9 +45,9 @@ Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
         hao.wu@intel.com, stefanha@gmail.com,
         iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 08/15] iommu: Pass domain to sva_unbind_gpasid()
-Date:   Mon, 27 Jul 2020 23:27:37 -0700
-Message-Id: <1595917664-33276-9-git-send-email-yi.l.liu@intel.com>
+Subject: [PATCH v6 13/15] vfio/pci: Expose PCIe PASID capability to guest
+Date:   Mon, 27 Jul 2020 23:27:42 -0700
+Message-Id: <1595917664-33276-14-git-send-email-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
 References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
@@ -56,21 +56,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi Sun <yi.y.sun@intel.com>
+This patch exposes PCIe PASID capability to guest for assigned devices.
+Existing vfio_pci driver hides it from guest by setting the capability
+length as 0 in pci_ext_cap_length[].
 
-Current interface is good enough for SVA virtualization on an assigned
-physical PCI device, but when it comes to mediated devices, a physical
-device may attached with multiple aux-domains. Also, for guest unbind,
-the PASID to be unbind should be allocated to the VM. This check requires
-to know the ioasid_set which is associated with the domain.
+And this patch only exposes PASID capability for devices which has PCIe
+PASID extended struture in its configuration space. VFs will not expose
+the PASID capability as they do not implement the PASID extended structure
+in their config space. It is a TODO in future. Related discussion can be
+found in below link:
 
-So this interface needs to pass in domain info. Then the iommu driver is
-able to know which domain will be used for the 2nd stage translation of
-the nesting mode and also be able to do PASID ownership check. This patch
-passes @domain per the above reason. Also, the prototype of &pasid is
-changed frnt" to "u32" as the below link.
-
-https://lore.kernel.org/kvm/27ac7880-bdd3-2891-139e-b4a7cd18420b@redhat.com/
+https://lore.kernel.org/kvm/20200407095801.648b1371@w520.home/
 
 Cc: Kevin Tian <kevin.tian@intel.com>
 CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -80,81 +76,30 @@ Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Cc: Joerg Roedel <joro@8bytes.org>
 Cc: Lu Baolu <baolu.lu@linux.intel.com>
 Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Yi Sun <yi.y.sun@intel.com>
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 ---
 v5 -> v6:
-*) use "u32" prototype for @pasid.
 *) add review-by from Eric Auger.
 
-v2 -> v3:
-*) pass in domain info only
-*) use u32 for pasid instead of int type
-
 v1 -> v2:
-*) added in v2.
+*) added in v2, but it was sent in a separate patchseries before
 ---
- drivers/iommu/intel/svm.c   | 3 ++-
- drivers/iommu/iommu.c       | 2 +-
- include/linux/intel-iommu.h | 3 ++-
- include/linux/iommu.h       | 3 ++-
- 4 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/vfio/pci/vfio_pci_config.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index c27d16a..c85b8d5 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -436,7 +436,8 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
- 	return ret;
- }
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index d98843f..07ff2e6 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -95,7 +95,7 @@ static const u16 pci_ext_cap_length[PCI_EXT_CAP_ID_MAX + 1] = {
+ 	[PCI_EXT_CAP_ID_LTR]	=	PCI_EXT_CAP_LTR_SIZEOF,
+ 	[PCI_EXT_CAP_ID_SECPCI]	=	0,	/* not yet */
+ 	[PCI_EXT_CAP_ID_PMUX]	=	0,	/* not yet */
+-	[PCI_EXT_CAP_ID_PASID]	=	0,	/* not yet */
++	[PCI_EXT_CAP_ID_PASID]	=	PCI_EXT_CAP_PASID_SIZEOF,
+ };
  
--int intel_svm_unbind_gpasid(struct device *dev, int pasid)
-+int intel_svm_unbind_gpasid(struct iommu_domain *domain,
-+			    struct device *dev, u32 pasid)
- {
- 	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
- 	struct intel_svm_dev *sdev;
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 1ce2a61..bee79d7 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -2145,7 +2145,7 @@ int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
- 	if (unlikely(!domain->ops->sva_unbind_gpasid))
- 		return -ENODEV;
- 
--	return domain->ops->sva_unbind_gpasid(dev, data->hpasid);
-+	return domain->ops->sva_unbind_gpasid(domain, dev, data->hpasid);
- }
- EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
- 
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 0d0ab32..f98146b 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -738,7 +738,8 @@ extern int intel_svm_enable_prq(struct intel_iommu *iommu);
- extern int intel_svm_finish_prq(struct intel_iommu *iommu);
- int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
- 			  struct iommu_gpasid_bind_data *data);
--int intel_svm_unbind_gpasid(struct device *dev, int pasid);
-+int intel_svm_unbind_gpasid(struct iommu_domain *domain,
-+			    struct device *dev, u32 pasid);
- struct iommu_sva *intel_svm_bind(struct device *dev, struct mm_struct *mm,
- 				 void *drvdata);
- void intel_svm_unbind(struct iommu_sva *handle);
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index b1ff702..80467fc 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -303,7 +303,8 @@ struct iommu_ops {
- 	int (*sva_bind_gpasid)(struct iommu_domain *domain,
- 			struct device *dev, struct iommu_gpasid_bind_data *data);
- 
--	int (*sva_unbind_gpasid)(struct device *dev, int pasid);
-+	int (*sva_unbind_gpasid)(struct iommu_domain *domain,
-+				 struct device *dev, u32 pasid);
- 
- 	int (*def_domain_type)(struct device *dev);
- 
+ /*
 -- 
 2.7.4
 
