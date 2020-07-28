@@ -2,67 +2,106 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D769C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99469C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06A0620829
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:22:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595899329;
-	bh=VjPgbBotx2j2mpmZm5DhzzZAaPi7egObI23Ux2zgilU=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=jYAAUZr2DevgdoLnVDHGisOGAeWnVIZ/Hgrx30LvqEnyFku87P9QhnYq2dWogVfxR
-	 CDcIJnPWK9Sp5qFmur3CvBbsLloxntP0JBPq1WvkzT+Z5VAX5tmUm2/xq13ynopJ5L
-	 geblNsZTQdvCAOFTK4Lt1UlIQtN1wJgNYZkmGltY=
+	by mail.kernel.org (Postfix) with ESMTP id 7535920809
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:23:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q+Z190UC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgG1BWH (ORCPT
+        id S1726899AbgG1BXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 21:22:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgG1BWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 21:22:07 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8514720829;
-        Tue, 28 Jul 2020 01:22:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595899326;
-        bh=VjPgbBotx2j2mpmZm5DhzzZAaPi7egObI23Ux2zgilU=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=NEvUTzyiBNiWr+fWR/YT23YZciibr7s6ygXP081pqi4Jl9H4BN9P/xjJzE9dzy+gD
-         iA7kVxRkvXA63QQP4iwDSCOIYLAkotZP5mza+P4ijXczOV7qTdX2/JYTHv+vqEt1De
-         FyhA9/kNgm62R5JFBBEafghvAExO2UzuYRdYyos0=
-Content-Type: text/plain; charset="utf-8"
+        Mon, 27 Jul 2020 21:23:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgG1BXA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 21:23:00 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D989C061794;
+        Mon, 27 Jul 2020 18:23:00 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id o13so10985425pgf.0;
+        Mon, 27 Jul 2020 18:23:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jGzRITWnnLVmrJ4L8IGgC61oBoAO/ViNb6Y3fK7a/wM=;
+        b=q+Z190UC8aYsC6knnBXL/JC3AXJP1cutHbFkCohUdaIp8bO8lhmzJxhVmJzEbLg8tQ
+         QQFw6Yb2cLaxe/VQE7SZn0yxS5p87IMoFZtjex8JqZBcA+Lc5H5LaAP4dhJ3Gzsy3KlO
+         0yqLsHNYkqPK2V/EY77dqTmkiIvc9cU0JFQvthBxG3JyG+244z88yRuxlrTkX/20+SUx
+         rpuVBoKmlyspm6jQx/YascK6F+fBN/7mUn7npiDnYcwA4d5Or2vOfhU9/pX0+Vc7G273
+         D3aet+cP1ZFSWlsUW4xmmCrfpwvydhdUVSLVHR0qd7u9uFxXvlyIwJnk8uLql1U4Va5n
+         ozbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jGzRITWnnLVmrJ4L8IGgC61oBoAO/ViNb6Y3fK7a/wM=;
+        b=SXJpYFhcNZ2S6A1htpef/uJCKJRl4pbjn1hcH03+Tbc6anRUYjcSKsX6p3KJDOCcvo
+         m6CXBZ0YYYLu+YqE+flBLyXSF+eEdHQF44anCohkFEqXLDaFHLtZCuegZrYz4wOMqnbn
+         JEaUG6CawUXY4qd1OMW/FaF1Dq39FDQtQ/8Wu5g0Ix/ehb/9kKpI+f8k+GCPb2wyPlHq
+         WiCU06DTmpUF7PXS/+ACFOA/Hc1Jy2DpgA0sid0SQ4NulbT4h49mtBXrJM7xCj+vKyXQ
+         Kno38mJT6uhuJ4qHnqdfG7ZWpoCUcwwPNUiHmcbVt8NY+MAd49xsT1HPp2AGMAapE/eX
+         xreA==
+X-Gm-Message-State: AOAM532R5ysun6mUCL5o7zn/oKzk6TT6Y4pY/50z6MbMJFY4WCAqqrdt
+        fKsTWxKia/Kur3T3LCFupDU=
+X-Google-Smtp-Source: ABdhPJwj1JpuN7EtAiiRfk9N4l+GbcXt+wr++YyB8k0pSk2o5JjZDPpGnxPpQgdprVYLL38Lai8z3g==
+X-Received: by 2002:a62:be04:: with SMTP id l4mr22396155pff.323.1595899379541;
+        Mon, 27 Jul 2020 18:22:59 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id q16sm6048922pfg.153.2020.07.27.18.22.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 18:22:58 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 10:22:57 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        Petr Mladek <pmladek@suse.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: linux-next: Fixes tag needs some work in the printk tree
+Message-ID: <20200728012257.GA1282472@jagdpanzerIV.localdomain>
+References: <20200727234612.3037c4a5@canb.auug.org.au>
+ <87tuxt3sjj.fsf@jogness.linutronix.de>
+ <20200728081959.2df754d0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200713032143.21362-1-vulab@iscas.ac.cn>
-References: <20200713032143.21362-1-vulab@iscas.ac.cn>
-Subject: Re: [PATCH] clk: clk-atlas6: fix return value check in atlas6_clk_init()
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
-To:     Xu Wang <vulab@iscas.ac.cn>, baohua@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com
-Date:   Mon, 27 Jul 2020 18:22:05 -0700
-Message-ID: <159589932546.1360974.12932267268128581186@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728081959.2df754d0@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Xu Wang (2020-07-12 20:21:43)
-> In case of error, the function clk_register() returns ERR_PTR()
-> and never returns NULL. The NULL test in the return value check
-> should be replaced with IS_ERR().
->=20
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-> ---
+On (20/07/28 08:19), Stephen Rothwell wrote:
+> On Mon, 27 Jul 2020 17:13:44 +0206 John Ogness <john.ogness@linutronix.de> wrote:
+> >
+> > On 2020-07-27, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+[..]
+> > > Maybe you meant
+> > >
+> > > Fixes: 896fbe20b4e2 ("printk: use the lockless ringbuffer")  
+> >
+> > Yes, sorry. I did not think linux-next SHA1 hashes were used in commit
+> > logs.
 
-Applied to clk-next
+Neither did I. The tag made sense to me, because it fixes a regression
+after all.
+
+> Well, it makes sense to use them if they are stable (i.e. the tree they
+> are in does not rebase) which, by this part of the cycle, I would
+> *hope* would be true (but sometimes isn't :-().
+
+So we probably should not have Fixes tags in linux-next commits
+(printk rework branch) then, for the time being. I'll keep an eye
+on that.
+
+	-ss
