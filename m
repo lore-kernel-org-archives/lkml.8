@@ -2,135 +2,145 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9213C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FDCC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C45E20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:40:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LwgWJaS0"
+	by mail.kernel.org (Postfix) with ESMTP id 812D220759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgG1Ekt (ORCPT
+        id S1726711AbgG1Eld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 00:40:49 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:62653 "EHLO m43-7.mailgun.net"
+        Tue, 28 Jul 2020 00:41:33 -0400
+Received: from mga05.intel.com ([192.55.52.43]:11458 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726299AbgG1Eks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 00:40:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595911248; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=0jt/lIUS0O6MgqaTNYHqWmRMSlQq28krUPIbICxs6KU=;
- b=LwgWJaS0OFBE1fo+2qLvmNFwpGK9K6LA8nhimkAPc/H/6HFvRPcR6uREFr4bVaJQxHpU6se1
- d55j8j4rjFnOJeif5o5hNFdcR5z19lQnAozf8t9S06HtVVc0+RIWFrb6LfWDOX7Ah7N/yMp8
- vOlYrQJsStx9Kp+62qTn/QLpoUA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n17.prod.us-west-2.postgun.com with SMTP id
- 5f1fac2c49176bd382b7879e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 04:40:12
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4052CC43391; Tue, 28 Jul 2020 04:40:12 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 933BEC433C6;
-        Tue, 28 Jul 2020 04:40:11 +0000 (UTC)
+        id S1726299AbgG1Elc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 00:41:32 -0400
+IronPort-SDR: cMAjMP4N03WsfwYZUHcn848+uzhZA90M6Zo8J6njIlxHVKeDxM7H4thKMZwqYb4Z2sYaUrNSgV
+ 76ezdDCumaxw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="236011911"
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="236011911"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 21:41:32 -0700
+IronPort-SDR: PH25oO8DGEUs2cptBJuid8luFpeBSFdSgvpVTKQZyv+xjrjfWW2JzRmpvHYWmYDPiU/6sOPwd3
+ 81JotbjpxOiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="273458071"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Jul 2020 21:41:32 -0700
+Date:   Mon, 27 Jul 2020 21:41:14 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     peterz@infradead.org
+Cc:     hpa@zytor.com, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Cathy Zhang <cathy.zhang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-edac@vger.kernel.org, frederic@kernel.org
+Subject: Re: [PATCH 4/4] x86/cpu: Use SERIALIZE in sync_core() when available
+Message-ID: <20200728044114.GA24129@ranerica-svr.sc.intel.com>
+References: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
+ <20200727043132.15082-5-ricardo.neri-calderon@linux.intel.com>
+ <D51F2DC3-3C56-44E6-A1F2-434E7D27133C@zytor.com>
+ <20200727083619.GF119549@hirez.programming.kicks-ass.net>
+ <49251CFA-8AC3-462D-A60F-0337593BE9CD@zytor.com>
+ <20200727130536.GM119549@hirez.programming.kicks-ass.net>
+ <20200727133020.GN119549@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jul 2020 10:10:11 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        mike.leach@linaro.org, Jonathan Marek <jonathan@marek.ca>
-Subject: Re: [PATCH 2/4] arm64: dts: qcom: sc7180: Add iommus property to ETR
-In-Reply-To: <20200727205834.GA202429@builder.lan>
-References: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
- <2312c9a10e7251d69e31e4f51c0f1d70e6f2f2f5.1591708204.git.saiprakash.ranjan@codeaurora.org>
- <20200621072213.GG128451@builder.lan>
- <f40621b2b01f836a8a97686707599dd0@codeaurora.org>
- <e270acd3f7db076c043f1b982b1efea0@codeaurora.org>
- <20200727205834.GA202429@builder.lan>
-Message-ID: <207e6b6a297d5ce1bdcac204e297389b@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727133020.GN119549@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-28 02:28, Bjorn Andersson wrote:
-> On Tue 23 Jun 23:56 PDT 2020, Sai Prakash Ranjan wrote:
+On Mon, Jul 27, 2020 at 03:30:20PM +0200, peterz@infradead.org wrote:
+> On Mon, Jul 27, 2020 at 03:05:36PM +0200, peterz@infradead.org wrote:
+> > Yeah, I'm not sure.. the 'funny' thing is that typically call
+> > sync_core() from an IPI anyway. And the synchronous broadcast IPI is by
+> > far the most expensive part of that.
+> > 
+> > Something like this...
+> > 
+> > diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> > index 20e07feb4064..528e049ee1d9 100644
+> > --- a/arch/x86/kernel/alternative.c
+> > +++ b/arch/x86/kernel/alternative.c
+> > @@ -989,12 +989,13 @@ void *text_poke_kgdb(void *addr, const void *opcode, size_t len)
+> >  
+> >  static void do_sync_core(void *info)
+> >  {
+> > -	sync_core();
+> > +	/* IRET implies sync_core() */
+> >  }
+> >  
+> >  void text_poke_sync(void)
+> >  {
+> >  	on_each_cpu(do_sync_core, NULL, 1);
+> > +	sync_core();
+> >  }
+> >  
+> >  struct text_poke_loc {
 > 
->> Hi Bjorn,
->> 
->> On 2020-06-21 13:39, Sai Prakash Ranjan wrote:
->> > Hi Bjorn,
->> >
->> > On 2020-06-21 12:52, Bjorn Andersson wrote:
->> > > On Tue 09 Jun 06:30 PDT 2020, Sai Prakash Ranjan wrote:
->> > >
->> > > > Define iommus property for Coresight ETR component in
->> > > > SC7180 SoC with the SID and mask to enable SMMU
->> > > > translation for this master.
->> > > >
->> > >
->> > > We don't have &apps_smmu in linux-next, as we've yet to figure out how
->> > > to disable the boot splash or support the stream mapping handover.
->> > >
->> > > So I'm not able to apply this.
->> > >
->> >
->> > This is for SC7180 which has apps_smmu not SM8150.
->> >
->> 
->> Please let me know if this needs further explanation.
->> 
+> So 'people' have wanted to optimize this for NOHZ_FULL and I suppose
+> virt as well.
 > 
-> I must have commented on the wrong patch, sorry about that. The SM8150
-> patch in this series does not compile due to the lack of &apps_smmu.
+> IFF VMENTER is serializing, I suppose we can simply do something like:
 > 
-> I've picked the other 3 patches.
+> bool text_poke_cond(int cpu, void *info)
+> {
+> 	/*
+> 	 * If we observe the vCPU is preempted, it will do VMENTER
+> 	 * no point in sending an IPI to SERIALIZE.
+> 	 */
+> 	return !vcpu_is_preempted(cpu);
+> }
 > 
+> void text_poke_sync(void)
+> {
+> 	smp_call_function_many_cond(cpu_possible_mask,
+> 				    do_sync_core, NULL, 1, text_poke_cond);
+> 	sync_core();
+> }
+> 
+> The 'same' for NOHZ_FULL, except we need to cmpxchg a value such that
+> if the cmpxchg() succeeds we know the CPU is in userspace and will
+> SERIALIZE on the next entry. Much like kvm_flush_tlb_others().
+> 
+> 
+> Anyway, that's all hand-wavey.. I'll let someone that cares about those
+> things write actual patches :-)
 
-Thanks Bjorn, I can resend SM8150 coresight change when SMMU support 
-lands for it
-since coresight ETR won't work without it on android bootloaders.
+I think I got a little lost here. If I understand correctly, there are
+two alternatives to implement support for serialize better:
 
-As for the other 3 patches, Patch 1 and Patch 2 will apply cleanly to 
-the right coresight
-nodes but due to the missing unique context in Patch 3, it could be 
-applied to some other node.
-We had to upload this change 3 times in chromium tree to get it applied 
-to the right replicator node :)
-and this property in Patch 3 is important to fix a hard lockup. I'm not 
-sure why this patch is missing
-the proper context :/
+  a) alternative(IRET_TO_SELF, SERIALIZE, X86_FEATURE_SERIALIZE); or
+  b) asm volatile("1:.byte 0xf, 0x1, 0xe8;2:" _ASM_EXTABLE(1b:2b)
 
-I couldn't find the changes yet in qcom/for-next or other branches to 
-see if it is
-applied to right replicator node. In case you haven't applied it yet, 
-Patch 3 change
-should be applied to "replicator@6b06000" node.
+a) would be the traditional and simpler solution. b) would rely on
+causing an #UD and getting an IRET on existing hardware b) would need some
+more optimization work when handling the exception and a few reworks on
+the poke patching code.
 
-Thanks,
-Sai
+Which option should I focus on? Which option would be more desirable/better?
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thanks and BR,
+Ricardo
