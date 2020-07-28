@@ -2,129 +2,95 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CF4C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC68C20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:54:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595901264;
-	bh=9fa3MBrKIoK8rjFjfQ9vhP4BGItkjImru5IFZPPY4wM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FvT7w2Id/EZzbVBNUSNMfUKh0n/CXxp6SNibQ2qzkocJuGuZi3B8oMVWVxG1L+KTA
-	 yth7D7SQublYjztrnCqAuQLf8IUHK/RmbBeWGkyzt2xtqUsJoLfO26XYVL7LDC7xCU
-	 i+6f+nCTkvGdZC0PTPl69+tgZvEfuAm+36k1iW1g=
+	by mail.kernel.org (Postfix) with ESMTP id 5067120714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgG1ByX (ORCPT
+        id S1726825AbgG1CCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 21:54:23 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:50595 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgG1ByX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 21:54:23 -0400
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 06S1rvox001453;
-        Tue, 28 Jul 2020 10:53:58 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 06S1rvox001453
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1595901238;
-        bh=fr77uZW5pkExE/2l945ZgcVmpIWMWixWve+W0/foO0I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iZFlIy/58eaeViqw4tzUSb6HqsIPeYtY1uoDAKOV451lh6++upzFdjAL9NAG8ngdm
-         ZnopSaGHNw2r5sijYo5lBsorJY9W7+vl+xhcbNP/ctAD26r9204FPybISlBNk50OKo
-         ayQU6sEVqQeKr7w95ZmgH3IwN/GDtcu+rxstGGpNICYvTQz6YTOvd9NwwECpmDCIzH
-         6t9PoKxmR3jtMMHZLiMtg5xz6h77SPOzOSdS3wMBIMiOogDRCuK3iwHm49jbgfa9nA
-         o+/7yNbNhd+OqNOTHVWKJS2w9wPTLFU4J01rxZ/0qhUdysiV9FNoMFhWlutJZzheHc
-         jTNmAE/CU0avw==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id p8so1904826vsm.12;
-        Mon, 27 Jul 2020 18:53:58 -0700 (PDT)
-X-Gm-Message-State: AOAM532KnrHSchEvk6yZcWJ98rSQ9u85vQlpFAfLY9pWJ8ott1LnocJN
-        ZQvIMP49Xnpw+yKIE7QLR9hP9B5fDV7tfXlhASM=
-X-Google-Smtp-Source: ABdhPJxovGQm4W0p9SeE2Z2xLAA4JiVFPKljNJrhoYtrwsuRJbf/sEJepBRJg+FoHlyQxIlc+CPJ9Pw5gZLX5e0Ili8=
-X-Received: by 2002:a67:d908:: with SMTP id t8mr6595176vsj.215.1595901236916;
- Mon, 27 Jul 2020 18:53:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200727230606.906598-1-nickrterrell@gmail.com> <20200727230606.906598-8-nickrterrell@gmail.com>
-In-Reply-To: <20200727230606.906598-8-nickrterrell@gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 28 Jul 2020 10:53:20 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATHBfYHXoz5=b8hc7c61JeZP6UiJjOX3r+S3WHRwnUm6g@mail.gmail.com>
-Message-ID: <CAK7LNATHBfYHXoz5=b8hc7c61JeZP6UiJjOX3r+S3WHRwnUm6g@mail.gmail.com>
-Subject: Re: [PATCH v9 7/7] .gitignore: add ZSTD-compressed files
-To:     Nick Terrell <nickrterrell@gmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Mason <clm@fb.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
-        Ingo Molnar <mingo@kernel.org>,
-        Patrick Williams <patrick@stwcx.xyz>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Norbert Lange <nolange79@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alex Xu <alex_y_xu@yahoo.ca>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Terrell <terrelln@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Jul 2020 22:02:32 -0400
+Received: from mga02.intel.com ([134.134.136.20]:7279 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbgG1CCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 22:02:31 -0400
+IronPort-SDR: dE+EoLQFYU28T4rtALJiwGhWTPQLkwCjPYZu/IMfb3nzsf95/3Fagq8O59QdEv0kBwn0SncWyv
+ InJrS8YkMI0Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="139172220"
+X-IronPort-AV: E=Sophos;i="5.75,404,1589266800"; 
+   d="scan'208";a="139172220"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 19:02:30 -0700
+IronPort-SDR: z+bb1G64rsSarO3BomzCJm0/wbGN2TZwe4ZC/HjZYvZoNIlm2LQw/2gc4Y5ILiZjUjLwwWkRFT
+ QZA1EcGJwOTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,404,1589266800"; 
+   d="scan'208";a="312432655"
+Received: from ipu5-build.bj.intel.com ([10.238.232.196])
+  by fmsmga004.fm.intel.com with ESMTP; 27 Jul 2020 19:02:18 -0700
+From:   Bingbu Cao <bingbu.cao@intel.com>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        helgaas@kernel.org
+Cc:     sakari.ailus@linux.intel.com, tian.shu.qiu@intel.com,
+        bingbu.cao@intel.com, bingbu.cao@linux.intel.com
+Subject: [PATCH v2] MAINTAINERS: Fix email typo and correct name of Tianshu
+Date:   Tue, 28 Jul 2020 10:01:05 +0800
+Message-Id: <1595901665-17624-1-git-send-email-bingbu.cao@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 8:11 AM Nick Terrell <nickrterrell@gmail.com> wrote:
->
-> From: Adam Borowski <kilobyte@angband.pl>
->
-> For now, that's arch/x86/boot/compressed/vmlinux.bin.zst but probably more
-> will come, thus let's be consistent with all other compressors.
->
-> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Nick Terrell <terrelln@fb.com>
-> Signed-off-by: Adam Borowski <kilobyte@angband.pl>
-> ---
->  .gitignore | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/.gitignore b/.gitignore
-> index d5f4804ed07c..162bd2b67bdf 100644
-> --- a/.gitignore
-> +++ b/.gitignore
-> @@ -44,6 +44,7 @@
->  *.tab.[ch]
->  *.tar
->  *.xz
-> +*.zst
+Fix the typo in email address of Tianshu Qiu and correct the name.
 
+Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+Signed-off-by: Tianshu Qiu <tian.shu.qiu@intel.com>
+Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
+---
+ MAINTAINERS | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-If you have any chance to update this,
-please remember to add '*.zst' to
-Documentation/dontdiff as well.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5392f00cec46..638dfa99751b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8765,7 +8765,7 @@ INTEL IPU3 CSI-2 CIO2 DRIVER
+ M:	Yong Zhi <yong.zhi@intel.com>
+ M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+ M:	Bingbu Cao <bingbu.cao@intel.com>
+-R:	Tian Shu Qiu <tian.shu.qiu@intel.com>
++R:	Tianshu Qiu <tian.shu.qiu@intel.com>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/userspace-api/media/v4l/pixfmt-srggb10-ipu3.rst
+@@ -8774,7 +8774,7 @@ F:	drivers/media/pci/intel/ipu3/
+ INTEL IPU3 CSI-2 IMGU DRIVER
+ M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+ R:	Bingbu Cao <bingbu.cao@intel.com>
+-R:	Tian Shu Qiu <tian.shu.qiu@intel.com>
++R:	Tianshu Qiu <tian.shu.qiu@intel.com>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/admin-guide/media/ipu3.rst
+@@ -12609,7 +12609,7 @@ T:	git git://linuxtv.org/media_tree.git
+ F:	drivers/media/i2c/ov2685.c
+ 
+ OMNIVISION OV2740 SENSOR DRIVER
+-M:	Tianshu Qiu <tian.shu.qiua@intel.com>
++M:	Tianshu Qiu <tian.shu.qiu@intel.com>
+ R:	Shawn Tu <shawnx.tu@intel.com>
+ R:	Bingbu Cao <bingbu.cao@intel.com>
+ L:	linux-media@vger.kernel.org
+-- 
+2.7.4
 
-
-
-
->  Module.symvers
->  modules.builtin
->  modules.order
-> --
-> 2.27.0
->
-
-
---
-Best Regards
-Masahiro Yamada
