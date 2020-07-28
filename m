@@ -2,84 +2,116 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE07C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D341C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 727D82065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595951659;
-	bh=5grVaxx03r95Q3bjMQFvf8kKT48kPRH1h2aQey01AlM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UTX9bbdXxAlDmnVYNs/jagjssJwFxjjeLcLB0y2ezmUV/zwJlN+64RKUBP9luL+Zr
-	 y2DQ6smB1sbbll+rNeIBQC3UBbNLU2XcBKv26NbZm9qNIzPCJYC7/1ZNSZJX+XeNGG
-	 cz68UD5DOayVdlSp2BFxHpVptraW3gr/F9jvRZHk=
+	by mail.kernel.org (Postfix) with ESMTP id 225BA2074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731185AbgG1PyS (ORCPT
+        id S1731124AbgG1Py5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:54:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731164AbgG1PyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:54:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0956C2065C;
-        Tue, 28 Jul 2020 15:54:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595951655;
-        bh=5grVaxx03r95Q3bjMQFvf8kKT48kPRH1h2aQey01AlM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bs1Pt0CJedojEUmMCvgAYJbQlOmSCtInD81H4/gIm/ln97HpzwdTcSP7vX2VsMLMO
-         z1vmrMWQ+kP81aXMJJIrkJFMW30BFLuGfetAA1x5QW6p65uL5lgxpEyDJ+8QNGoeP4
-         oPsF/KB5tvhAVgzN9yJ+IidiBQPrESJYN2IvGUWo=
-Date:   Tue, 28 Jul 2020 17:54:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Tomas Winkler <tomas.winkler@intel.com>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [char-misc-next] mei: add device type
-Message-ID: <20200728155408.GB4178776@kroah.com>
-References: <20200728152546.3041841-1-tomas.winkler@intel.com>
+        Tue, 28 Jul 2020 11:54:57 -0400
+Received: from smtprelay0075.hostedemail.com ([216.40.44.75]:33018 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730679AbgG1Py5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:54:57 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 18151181D396A;
+        Tue, 28 Jul 2020 15:54:56 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: seed58_631747d26f6b
+X-Filterd-Recvd-Size: 3298
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 28 Jul 2020 15:54:51 +0000 (UTC)
+Message-ID: <4299fe666c93018a9a047575e5d68a0bb4dd269f.camel@perches.com>
+Subject: Re: [PATCH net-next] liquidio: Remove unneeded cast from memory
+ allocation
+From:   Joe Perches <joe@perches.com>
+To:     "wanghai (M)" <wanghai38@huawei.com>, dchickles@marvell.com,
+        sburla@marvell.com, fmanlunas@marvell.com, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 28 Jul 2020 08:54:48 -0700
+In-Reply-To: <2996569e-5e1a-db02-2c78-0ee0d572706d@huawei.com>
+References: <20200724130001.71528-1-wanghai38@huawei.com>
+         <2cdef8d442bb5da39aed17bf994a800e768942f7.camel@perches.com>
+         <ac99bed4-dabc-a003-374f-206753f937cb@huawei.com>
+         <bffcc7d513e186734d224bda6afdd55033b451de.camel@perches.com>
+         <2996569e-5e1a-db02-2c78-0ee0d572706d@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728152546.3041841-1-tomas.winkler@intel.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 06:25:46PM +0300, Tomas Winkler wrote:
-> From: Alexander Usyskin <alexander.usyskin@intel.com>
+On Tue, 2020-07-28 at 21:38 +0800, wanghai (M) wrote:
+> Thanks for your explanation. I got it.
 > 
-> Some of the device heads are not generic and have
-> specific purpose, we need to announce it to the user space
-> so it can detect and correct device node via matching
-> attributes.
+> Can it be modified like this?
+[]
+> +++ b/drivers/net/ethernet/cavium/liquidio/octeon_device.c
+> @@ -1152,11 +1152,8 @@ octeon_register_dispatch_fn(struct octeon_device 
+> *oct,
 > 
-> Generic devices are marked as 'mei' while special
-> purpose their own names. Currently we are adding
-> 'itouch' string for Intel IPTS devices.
-> 
-> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-> ---
->  drivers/misc/mei/hw-me.c   | 12 ++++++++++++
->  drivers/misc/mei/hw-me.h   |  5 +++++
->  drivers/misc/mei/hw-txe.c  |  1 +
->  drivers/misc/mei/main.c    | 27 +++++++++++++++++++++++++++
->  drivers/misc/mei/mei_dev.h |  4 ++++
->  drivers/misc/mei/pci-me.c  |  8 ++++----
->  6 files changed, 53 insertions(+), 4 deletions(-)
+>                  dev_dbg(&oct->pci_dev->dev,
+>                          "Adding opcode to dispatch list linked list\n");
+> -               dispatch = (struct octeon_dispatch *)
+> -                          vmalloc(sizeof(struct octeon_dispatch));
+> +               dispatch = kmalloc(sizeof(struct octeon_dispatch), 
+> GFP_KERNEL);
+>                  if (!dispatch) {
+> -                       dev_err(&oct->pci_dev->dev,
+> -                               "No memory to add dispatch function\n");
+>                          return 1;
+>                  }
+>                  dispatch->opcode = combined_opcode;
 
-No Documentation/ABI/ update for this new sysfs file?
+Yes, but the free also needs to be changed.
 
-:(
+I think it's:
+---
+ drivers/net/ethernet/cavium/liquidio/octeon_device.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/ethernet/cavium/liquidio/octeon_device.c b/drivers/net/ethernet/cavium/liquidio/octeon_device.c
+index 934115d18488..4ee4cb946e1d 100644
+--- a/drivers/net/ethernet/cavium/liquidio/octeon_device.c
++++ b/drivers/net/ethernet/cavium/liquidio/octeon_device.c
+@@ -1056,7 +1056,7 @@ void octeon_delete_dispatch_list(struct octeon_device *oct)
+ 
+ 	list_for_each_safe(temp, tmp2, &freelist) {
+ 		list_del(temp);
+-		vfree(temp);
++		kfree(temp);
+ 	}
+ }
+ 
+@@ -1152,13 +1152,10 @@ octeon_register_dispatch_fn(struct octeon_device *oct,
+ 
+ 		dev_dbg(&oct->pci_dev->dev,
+ 			"Adding opcode to dispatch list linked list\n");
+-		dispatch = (struct octeon_dispatch *)
+-			   vmalloc(sizeof(struct octeon_dispatch));
+-		if (!dispatch) {
+-			dev_err(&oct->pci_dev->dev,
+-				"No memory to add dispatch function\n");
++		dispatch = kmalloc(sizeof(struct octeon_dispatch), GFP_KERNEL);
++		if (!dispatch)
+ 			return 1;
+-		}
++
+ 		dispatch->opcode = combined_opcode;
+ 		dispatch->dispatch_fn = fn;
+ 		dispatch->arg = fn_arg;
+
 
