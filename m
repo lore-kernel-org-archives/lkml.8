@@ -2,114 +2,195 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D0DC433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5381AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B04F5207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:40:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595918430;
-	bh=zzH03DpWgyNFdY3mafOfXiycjdgHC99DBNRZc9ELN14=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=IlLkdEGKllMk54HEU528pdf6Z2ocxg6vilkoXucXgs+mc+H9hM6bCjAYb6Emo/AkC
-	 WNgmIIJkh2EVboKbmzUBQPjuaujyG3JCeMB7vjW5okEtlQZiR/iNTWH8jMRnbi1yYM
-	 mqzG6/o6E2CX/6QkztRPUexnC8MuX+Hr9IF2CTkY=
+	by mail.kernel.org (Postfix) with ESMTP id 2A3772065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:41:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NDbeBXKq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgG1Gk3 (ORCPT
+        id S1727849AbgG1GlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:40:29 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:45629 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgG1Gk3 (ORCPT
+        Tue, 28 Jul 2020 02:41:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50070 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726873AbgG1GlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:40:29 -0400
-Received: by mail-ej1-f67.google.com with SMTP id g7so11223151ejw.12
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 23:40:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9LDJcbP5EY7Qv6Dknlse8srXZlwMpETG/crjtwF3dQ0=;
-        b=Rm84MPPkujjuan8nmZsDOSQGdqnNxRaGzj8v/aLpQIcmcFsVVvokCsuJjCmwPHEoFm
-         5qPk2RUAhucciSZO/T2ndNQeGQoBe4q5PRHgUnuLSXklDfHoGLOkHscZb9EBEj+rHYwK
-         uyr137aQRXCWEALZpvfGV2s63HMakrfT44mbkR1uRg8bqHTiqNjf9CPx4MAhqd4STJLo
-         dYpxO7x6rKrCDzXDaQQBHHUahgOOJFXHCutYsWbM6e5CDqDVKjk76h69qJjsYWdJgggE
-         0espYvlXVcPW67N6ViydCckaUuObad5zxoeKUheTSEVcpijGaqI+gEqgPtHt6H+m9i+5
-         UEBQ==
-X-Gm-Message-State: AOAM531cm3f2I1veOW/gjk4EUVsEuCXDnv6Th2G31azl32e0fvPHd/31
-        pT6TZFfyHQFgaIxyWO9wV1hSG3wM
-X-Google-Smtp-Source: ABdhPJwvKK+zNmouhE1GaJQ/7eY23PxXYX+9Lb+Ocbwc44jtTyDnTwWpNHVswyeX8MIswlnZkJrYNg==
-X-Received: by 2002:a17:906:1c84:: with SMTP id g4mr10244448ejh.59.1595918426508;
-        Mon, 27 Jul 2020 23:40:26 -0700 (PDT)
-Received: from [192.168.1.49] (185-219-167-24-static.vivo.cz. [185.219.167.24])
-        by smtp.gmail.com with ESMTPSA id sb3sm5001981ejb.113.2020.07.27.23.40.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 23:40:25 -0700 (PDT)
-Subject: Re: [PATCH] tty/synclink: remove leftover bits of non-PCI card
- support
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-References: <20200727130501.31005-1-hch@lst.de>
- <8a015ca4-e837-8fa5-684c-46fca8104ea5@kernel.org>
- <20200728062045.GA20992@lst.de>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Message-ID: <e64a0045-02b5-777f-a60b-daa08dec04de@kernel.org>
-Date:   Tue, 28 Jul 2020 08:40:25 +0200
+        Tue, 28 Jul 2020 02:41:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595918469;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OBVILI65w6kAlvMCmeO/p3+Mu658pM7kH5zrHcmbav8=;
+        b=NDbeBXKq+ShhY/o6lRXvSECCA55DynQ48HXY3mmn8mgFyZ18tvGu8IfbxuIXiE3KvNvLm0
+        P9jSSQwm/zwczBNm7eAoqayNNyH7a/GJf9WqGO+adYJzm76EWXHqgU0g/7SXo3M7t0Rrbh
+        ZL3Q+SVk5LZDOuCiajubersYEXUz0SQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-132-X3q0ApOzPtO73Lum7ivpYA-1; Tue, 28 Jul 2020 02:41:04 -0400
+X-MC-Unique: X3q0ApOzPtO73Lum7ivpYA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B32C0106B250;
+        Tue, 28 Jul 2020 06:41:01 +0000 (UTC)
+Received: from [10.72.13.242] (ovpn-13-242.pek2.redhat.com [10.72.13.242])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E17B55D9CD;
+        Tue, 28 Jul 2020 06:40:53 +0000 (UTC)
+Subject: Re: [PATCH V3 vhost next 00/10] VDPA support for Mellanox ConnectX
+ devices
+To:     Eli Cohen <eli@mellanox.com>
+Cc:     mst@redhat.com, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, shahafs@mellanox.com,
+        saeedm@mellanox.com, parav@mellanox.com
+References: <20200728060539.4163-1-eli@mellanox.com>
+ <1dbac14a-5909-ff0a-8e90-534847f93d50@redhat.com>
+ <20200728063211.GA229972@mtl-vdi-166.wap.labs.mlnx>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <ef857921-4b9a-8e48-d5cd-5ef585e8f15c@redhat.com>
+Date:   Tue, 28 Jul 2020 14:40:52 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200728062045.GA20992@lst.de>
-Content-Type: text/plain; charset=iso-8859-2
+In-Reply-To: <20200728063211.GA229972@mtl-vdi-166.wap.labs.mlnx>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28. 07. 20, 8:20, Christoph Hellwig wrote:
-> On Tue, Jul 28, 2020 at 08:05:36AM +0200, Jiri Slaby wrote:
->> On 27. 07. 20, 15:05, Christoph Hellwig wrote:
->>> Since commit 1355cba9c3ba ("tty/synclink: remove ISA support"), the
->>> synlink driver only supports PCI card.  Remove any leftover dead code
->>> to support other cards.
+
+On 2020/7/28 下午2:32, Eli Cohen wrote:
+> On Tue, Jul 28, 2020 at 02:18:16PM +0800, Jason Wang wrote:
+>> On 2020/7/28 下午2:05, Eli Cohen wrote:
+>>> Hi Michael,
+>>> please note that this series depends on mlx5 core device driver patches
+>>> in mlx5-next branch in
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git.
+>>>
+>>> git pull git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git mlx5-next
+>>>
+>>> They also depend Jason Wang's patches submitted a couple of weeks ago.
+>>>
+>>> vdpa_sim: use the batching API
+>>> vhost-vdpa: support batch updating
 >>
->> So now you can remove also the defines and bus_type completely:
->> $ git grep -E 'MGSL_BUS_TYPE_(E?ISA|PCI)'
->> drivers/tty/synclink_gt.c:              info->bus_type = MGSL_BUS_TYPE_PCI;
->> drivers/tty/synclinkmp.c:               info->bus_type = MGSL_BUS_TYPE_PCI;
->> include/uapi/linux/synclink.h:#define MGSL_BUS_TYPE_ISA 1
->> include/uapi/linux/synclink.h:#define MGSL_BUS_TYPE_EISA        2
->> include/uapi/linux/synclink.h:#define MGSL_BUS_TYPE_PCI 5
-> 
-> This is in a uapi header, so I didn't dare to touch it.
+>> Just notice that a new version is posted[1] (you were cced). Talked
+>> with Michael, and it's better for you to merge the new version in
+>> this series.
+>>
+> OK, will send again. Just to make sure, I should put your series and my
+> series on Michal's vhost branch, the same tree I have been using so far?
 
-Ah, sure. Then OK.
 
-Just wondering, who would place this into a uapi header?
+Yes. I think so.
 
->> $ git grep -w bus_type drivers/tty/synclink*
->> drivers/tty/synclink_gt.c:      unsigned int bus_type;
->> drivers/tty/synclink_gt.c:              info->bus_type = MGSL_BUS_TYPE_PCI;
->> drivers/tty/synclinkmp.c:       unsigned int bus_type;
->> /* expansion bus type (ISA,EISA,PCI) */
->> drivers/tty/synclinkmp.c:               info->bus_type = MGSL_BUS_TYPE_PCI;
-> 
-> Despite the similar names these are actually two drivers entirely
-> separate form the main synclink one.
+Thanks
 
-I know, but it's set-but-unused field in both of them. So if the defines
-went away, this could go too. But given the defines stay, it doesn't
-matter. All 3 drivers are old unmaintained crap anyway:
-$ git log --oneline  --no-merges  drivers/tty/synclink*|wc -l
-79
 
-thanks,
--- 
-js
+>
+>> Sorry for not spotting this before.
+>>
+>> [1] https://lkml.org/lkml/2020/7/1/301
+>>
+>> Thanks
+>>
+>>
+>>>
+>>> The following series of patches provide VDPA support for Mellanox
+>>> devices. The supported devices are ConnectX6 DX and newer.
+>>>
+>>> Currently, only a network driver is implemented; future patches will
+>>> introduce a block device driver. iperf performance on a single queue is
+>>> around 12 Gbps.  Future patches will introduce multi queue support.
+>>>
+>>> The files are organized in such a way that code that can be used by
+>>> different VDPA implementations will be placed in a common are resides in
+>>> drivers/vdpa/mlx5/core.
+>>>
+>>> Only virtual functions are currently supported. Also, certain firmware
+>>> capabilities must be set to enable the driver. Physical functions (PFs)
+>>> are skipped by the driver.
+>>>
+>>> To make use of the VDPA net driver, one must load mlx5_vdpa. In such
+>>> case, VFs will be operated by the VDPA driver. Although one can see a
+>>> regular instance of a network driver on the VF, the VDPA driver takes
+>>> precedence over the NIC driver, steering-wize.
+>>>
+>>> Currently, the device/interface infrastructure in mlx5_core is used to
+>>> probe drivers. Future patches will introduce virtbus as a means to
+>>> register devices and drivers and VDPA will be adapted to it.
+>>>
+>>> The mlx5 mode of operation required to support VDPA is switchdev mode.
+>>> Once can use Linux or OVS bridge to take care of layer 2 switching.
+>>>
+>>> In order to provide virtio networking to a guest, an updated version of
+>>> qemu is required. This version has been tested by the following quemu
+>>> version:
+>>>
+>>> url: https://github.com/jasowang/qemu.git
+>>> branch: vdpa
+>>> Commit ID: 6f4e59b807db
+>>>
+>>>
+>>> V2->V3
+>>> Fix makefile to use include path relative to the root of the kernel
+>>>
+>>> Eli Cohen (7):
+>>>    net/vdpa: Use struct for set/get vq state
+>>>    vhost: Fix documentation
+>>>    vdpa: Modify get_vq_state() to return error code
+>>>    vdpa/mlx5: Add hardware descriptive header file
+>>>    vdpa/mlx5: Add support library for mlx5 VDPA implementation
+>>>    vdpa/mlx5: Add shared memory registration code
+>>>    vdpa/mlx5: Add VDPA driver for supported mlx5 devices
+>>>
+>>> Jason Wang (2):
+>>>    vhost-vdpa: support batch updating
+>>>    vdpa_sim: use the batching API
+>>>
+>>> Max Gurtovoy (1):
+>>>    vdpa: remove hard coded virtq num
+>>>
+>>>   drivers/vdpa/Kconfig                   |   18 +
+>>>   drivers/vdpa/Makefile                  |    1 +
+>>>   drivers/vdpa/ifcvf/ifcvf_base.c        |    4 +-
+>>>   drivers/vdpa/ifcvf/ifcvf_base.h        |    4 +-
+>>>   drivers/vdpa/ifcvf/ifcvf_main.c        |   13 +-
+>>>   drivers/vdpa/mlx5/Makefile             |    4 +
+>>>   drivers/vdpa/mlx5/core/mlx5_vdpa.h     |   91 ++
+>>>   drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h |  168 ++
+>>>   drivers/vdpa/mlx5/core/mr.c            |  473 ++++++
+>>>   drivers/vdpa/mlx5/core/resources.c     |  284 ++++
+>>>   drivers/vdpa/mlx5/net/main.c           |   76 +
+>>>   drivers/vdpa/mlx5/net/mlx5_vnet.c      | 1950 ++++++++++++++++++++++++
+>>>   drivers/vdpa/mlx5/net/mlx5_vnet.h      |   24 +
+>>>   drivers/vdpa/vdpa.c                    |    3 +
+>>>   drivers/vdpa/vdpa_sim/vdpa_sim.c       |   35 +-
+>>>   drivers/vhost/iotlb.c                  |    4 +-
+>>>   drivers/vhost/vdpa.c                   |   46 +-
+>>>   include/linux/vdpa.h                   |   24 +-
+>>>   include/uapi/linux/vhost_types.h       |    2 +
+>>>   19 files changed, 3165 insertions(+), 59 deletions(-)
+>>>   create mode 100644 drivers/vdpa/mlx5/Makefile
+>>>   create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa.h
+>>>   create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h
+>>>   create mode 100644 drivers/vdpa/mlx5/core/mr.c
+>>>   create mode 100644 drivers/vdpa/mlx5/core/resources.c
+>>>   create mode 100644 drivers/vdpa/mlx5/net/main.c
+>>>   create mode 100644 drivers/vdpa/mlx5/net/mlx5_vnet.c
+>>>   create mode 100644 drivers/vdpa/mlx5/net/mlx5_vnet.h
+>>>
+
