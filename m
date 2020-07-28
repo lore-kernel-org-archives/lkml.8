@@ -2,162 +2,140 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38C9C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96195C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7606A20829
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:16:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595931412;
-	bh=ZfZF4pLvNemxD3En2Fwag4OkbrDfzKVU9SSSrL6fd/A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZLv+XJxU7NX8cVRIuIO3CASTKmNbR/DKr3xEpi7fqVPOhwE6UerpquAt11HQDLwRm
-	 Tv4J8SwJVcYO+G/fWnPMbSN50KD0kWdxfCP/ejIcOAL5wap4g/oOe24KcvkW2Fbzvb
-	 AF/q0W72oDt2eEQm+FPyH3J9v1+7A5F5tMthm4KA=
+	by mail.kernel.org (Postfix) with ESMTP id 6E8D920714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:18:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FiUDYJT+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbgG1KQv (ORCPT
+        id S1728663AbgG1KSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 06:16:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728445AbgG1KQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 06:16:50 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BFB320714;
-        Tue, 28 Jul 2020 10:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595931409;
-        bh=ZfZF4pLvNemxD3En2Fwag4OkbrDfzKVU9SSSrL6fd/A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VBdHKzomeWjgG1TMubp9tgrJfSfvIiWmv/K4FkXE5Rs7AJCr+6dTw7JhR+SJdMQYt
-         fPlyE+EJ3CP6EqlEzoY0Ft3LE0pMPFyKPhAVwGK3Qo4iqhoODr1mWy8T3OvnA7FuDq
-         4MT7WpcnF3emS2LhtbRxOesdw6RmcyTlTn3bQdJM=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k0Mf9-00FcMr-Ug; Tue, 28 Jul 2020 11:16:48 +0100
+        Tue, 28 Jul 2020 06:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728050AbgG1KSP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 06:18:15 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38BF0C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:18:14 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id h8so10686779lfp.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:18:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=y5JvHTfL3KAJW7sNZfdf0acUJLJFvSpi5rTiY+++JWk=;
+        b=FiUDYJT+DkGKwexMj0wMwhkGRgDEcuVc/KAn2msNbjHHLX1/JES+yjuud3qRe9C2PI
+         ExNC87JkNE3M+5OqPO+I1aXaJ8W22p8P9w3/5acFoYZrkV9hO4ajoP0dW/36pXs0A01G
+         96RSfc4KUWzSISwDYq/MjjO9K+vgAI+0aPQigtPnrHLBQzIsmGgg7yMS5E9q0RF99BCF
+         IOiiokEvncvAYdarjebwAby6cGS8ykq2jgD4A75MQXLF9v73XukOMrCwniaOgLzJXLzJ
+         ckH712meXzmUKR4Dl/LnO1JqPurwYOx+PLw4hThG3L+v8THomDZnWa5C5c4n9OgYjv2f
+         vmqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=y5JvHTfL3KAJW7sNZfdf0acUJLJFvSpi5rTiY+++JWk=;
+        b=lu1tkcODRjxbK2BUDpeO4qbRfUqQ3u35Jb/keWqqjn6IggJewVi0gHwShL57EQx75k
+         k1ay1P/cg0i0RMJDuKvHFrrrxmyNNtUMb6frYKE/u+e2DwHBoRdhvmoxjhDUluLXLNnO
+         bSh+PO8nFmedfaHNtX5BgmP0kZ6xHsCtbfGyjfwV/KqeoBd2GGug5fYJ563EYbbCI2L7
+         /IpGuai4kGOnxZbPtafrac0OODTWEPD0DqSEsbZlDwfD4/YCJGp1uimpGth/uxjeOl6K
+         yf+GkVC865jdpV8taul1D5QIHMM6IVHTytJmvP2QMcRf3e8EFqOBK+RGfCaSEKSDmhEn
+         FhXQ==
+X-Gm-Message-State: AOAM530blTf6pFNV49KrRKHbcpSnmJHzXeD6IUv1yQUTsVChvUT64cbo
+        b3j1HDEVIgsR87Nm/+ak9Ggh9Xi+Qj8oP5xzjaw=
+X-Google-Smtp-Source: ABdhPJzArjx6w8VQ21R+BwbyCxSpbtNwUNEm+Wcrn4ZfPf+5dodhqNS4jMNPRiS7XqQEXSQwTmZyaZGvKYkOQ1onUtw=
+X-Received: by 2002:a05:6512:3156:: with SMTP id s22mr14053284lfi.140.1595931492732;
+ Tue, 28 Jul 2020 03:18:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jul 2020 11:16:47 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Keqian Zhu <zhukeqian1@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        wanghaibin.wang@huawei.com
-Subject: Re: [RESEND PATCH] drivers: arm arch timer: Correct fault programming
- of CNTKCTL_EL1.EVNTI
-In-Reply-To: <20200717092104.15428-1-zhukeqian1@huawei.com>
-References: <20200717092104.15428-1-zhukeqian1@huawei.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <3a95ec8ce3e34d86c09f9b1b4f17d0ad@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: zhukeqian1@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, wanghaibin.wang@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <1584105767-11963-1-git-send-email-kevin3.tang@gmail.com>
+ <1584105767-11963-5-git-send-email-kevin3.tang@gmail.com> <CACvgo52_KT6O79PujodCPbkegP6LLwuVSFEoRdbarZ=y50B63A@mail.gmail.com>
+In-Reply-To: <CACvgo52_KT6O79PujodCPbkegP6LLwuVSFEoRdbarZ=y50B63A@mail.gmail.com>
+From:   Kevin Tang <kevin3.tang@gmail.com>
+Date:   Tue, 28 Jul 2020 18:18:01 +0800
+Message-ID: <CAFPSGXaERhtja=hZdKcuBJf-wtiT4RbM50UcT2wNBBAa2bq-Uw@mail.gmail.com>
+Subject: Re: [PATCH RFC v5 4/6] drm/sprd: add Unisoc's drm display controller driver
+To:     Emil Velikov <emil.l.velikov@gmail.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-17 10:21, Keqian Zhu wrote:
-> ARM virtual counter supports event stream. It can only trigger an event
-> when the trigger bit of CNTVCT_EL0 changes from 0 to 1 (or from 1 to 
-> 0),
-> so the actual period of event stream is 2 ^ (cntkctl_evnti + 1). For
-> example, when the trigger bit is 0, then it triggers an event for every
-> two cycles.
-> 
-> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
-> ---
->  drivers/clocksource/arm_arch_timer.c | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/clocksource/arm_arch_timer.c
-> b/drivers/clocksource/arm_arch_timer.c
-> index ecf7b7db2d05..06d99a4b1b9b 100644
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -799,10 +799,20 @@ static void __arch_timer_setup(unsigned type,
->  static void arch_timer_evtstrm_enable(int divider)
->  {
->  	u32 cntkctl = arch_timer_get_cntkctl();
-> +	int cntkctl_evnti;
-> +
-> +	/*
-> +	 * Note that it can only trigger an event when the trigger bit
-> +	 * of CNTVCT_EL0 changes from 1 to 0 (or from 0 to 1), so the
-> +	 * actual period of event stream is 2 ^ (cntkctl_evnti + 1).
-> +	 */
-> +	cntkctl_evnti = divider - 1;
-> +	cntkctl_evnti = min(cntkctl_evnti, 15);
-> +	cntkctl_evnti = max(cntkctl_evnti, 0);
-> 
->  	cntkctl &= ~ARCH_TIMER_EVT_TRIGGER_MASK;
->  	/* Set the divider and enable virtual event stream */
-> -	cntkctl |= (divider << ARCH_TIMER_EVT_TRIGGER_SHIFT)
-> +	cntkctl |= (cntkctl_evnti << ARCH_TIMER_EVT_TRIGGER_SHIFT)
->  			| ARCH_TIMER_VIRT_EVT_EN;
->  	arch_timer_set_cntkctl(cntkctl);
->  	arch_timer_set_evtstrm_feature();
-> @@ -816,10 +826,11 @@ static void arch_timer_configure_evtstream(void)
->  	/* Find the closest power of two to the divisor */
->  	evt_stream_div = arch_timer_rate / ARCH_TIMER_EVT_STREAM_FREQ;
->  	pos = fls(evt_stream_div);
-> -	if (pos > 1 && !(evt_stream_div & (1 << (pos - 2))))
-> +	if ((pos == 1) || (pos > 1 && !(evt_stream_div & (1 << (pos - 2)))))
->  		pos--;
-> +
->  	/* enable event stream */
-> -	arch_timer_evtstrm_enable(min(pos, 15));
-> +	arch_timer_evtstrm_enable(pos);
->  }
-> 
->  static void arch_counter_set_user_access(void)
+Hi Emil,
+Sorry, I left for a long time because of other things. Now i'm back~
 
-This looks like a very convoluted fix. If the problem you are
-trying to fix is that the event frequency is at most half of
-that of the counter, why isn't the patch below the most
-obvious fix?
+V6 fix access registers via readl/writel, check unsupported KMS
+properties (format, rotation, blend mode, etc) by plane_check callback
+ops
+and remove always true checks for dpu core ops
 
-Thanks,
+Add changelog within the corresponding patch from now on, thanks for
+your advice.
 
-         M.
+BR,
+Kevin
 
-diff --git a/drivers/clocksource/arm_arch_timer.c 
-b/drivers/clocksource/arm_arch_timer.c
-index 6c3e84180146..0a65414b781f 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -824,8 +824,12 @@ static void arch_timer_configure_evtstream(void)
-  {
-  	int evt_stream_div, pos;
 
--	/* Find the closest power of two to the divisor */
--	evt_stream_div = arch_timer_rate / ARCH_TIMER_EVT_STREAM_FREQ;
-+	/*
-+	 * Find the closest power of two to the divisor. As the event
-+	 * stream can at most be generated at half the frequency of the
-+	 * counter, use half the frequency when computing the divider.
-+	 */
-+	evt_stream_div = arch_timer_rate / ARCH_TIMER_EVT_STREAM_FREQ / 2;
-  	pos = fls(evt_stream_div);
-  	if (pos > 1 && !(evt_stream_div & (1 << (pos - 2))))
-  		pos--;
-
--- 
-Jazz is not dead. It just smells funny...
+Emil Velikov <emil.l.velikov@gmail.com> =E4=BA=8E2020=E5=B9=B43=E6=9C=8820=
+=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=882:07=E5=86=99=E9=81=93=EF=BC=
+=9A
+>
+> Hey Kevin,
+>
+> On Sun, 15 Mar 2020 at 23:19, Kevin Tang <kevin3.tang@gmail.com> wrote:
+> >
+> > Adds DPU(Display Processor Unit) support for the Unisoc's display subsy=
+stem.
+> > It's support multi planes, scaler, rotation, PQ(Picture Quality) and mo=
+re.
+> >
+> > Cc: Orson Zhai <orsonzhai@gmail.com>
+> > Cc: Baolin Wang <baolin.wang@linaro.org>
+> > Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+> > Signed-off-by: Kevin Tang <kevin.tang@unisoc.com>
+> > ---
+> >  drivers/gpu/drm/sprd/Makefile       |   5 +-
+> >  drivers/gpu/drm/sprd/dpu/Makefile   |   7 +
+> >  drivers/gpu/drm/sprd/dpu/dpu_r2p0.c | 750 ++++++++++++++++++++++++++++=
+++++++++
+> >  drivers/gpu/drm/sprd/sprd_dpu.c     | 501 ++++++++++++++++++++++++
+> >  drivers/gpu/drm/sprd/sprd_dpu.h     | 170 ++++++++
+> >  drivers/gpu/drm/sprd/sprd_drm.c     |   1 +
+> >  drivers/gpu/drm/sprd/sprd_drm.h     |   2 +
+>
+> Seems like v5 (patch at least, I did not look at the rest) does not
+> address a handful of the feedback.
+>  - Access registers via readl/writel, instead of current approach
+>  - With ^^ you can drop the compiler workaround
+>  - Checking for unsupported KMS properties (format, rotation, etc)
+> should happen in the XXX_check callbacks
+>  - Remove always true checks, around the (rather moot) abstraction layer
+>
+> For the future, please keep the revision/changelog within the
+> corresponding patch. This way reviewers can see, from the onset, what
+> is addressed.
+> Look at `git log -- drivers/gpu/drm` for examples.
+>
+>
+> -Emil
