@@ -2,74 +2,74 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC71C433FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74F0C43458
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DAB520775
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 922C820775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:35:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="raIuuV8u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="txe/TGzL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgG1Dfv (ORCPT
+        id S1726951AbgG1Dfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 23:35:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47540 "EHLO
+        Mon, 27 Jul 2020 23:35:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgG1Dft (ORCPT
+        with ESMTP id S1726989AbgG1Dfx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 23:35:49 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64192C061794;
-        Mon, 27 Jul 2020 20:35:49 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k1so10762743pjt.5;
-        Mon, 27 Jul 2020 20:35:49 -0700 (PDT)
+        Mon, 27 Jul 2020 23:35:53 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51567C061794;
+        Mon, 27 Jul 2020 20:35:53 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id l63so11103858pge.12;
+        Mon, 27 Jul 2020 20:35:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fAvZz66+QaBdG22l2e4wGzGeeBoM/iwnQLAAqOO4w3k=;
-        b=raIuuV8uCiFBJ/lHrBNbzsGk6I9fJmFLp7oA7Q4Zq8ne0fPffDvdDzPmwQf8MDa9H5
-         iq6RaDgDS0JPxC41pfFYr066sTtd/e/ecBTBQKanlt4nsYCx3YqeTiUOq7wlnd9t+5BA
-         sISbSV3NUsfPoqd2v2x8llQ4NvPeMI3BHgiuuqyp/2eZg0Vx1vsvgJd+VVvWOyHfCmFP
-         gjCKPkS8RMRmqcXB80sZMpzqlrJxbDN/Sgs1ZeJXVb9HN9iw2AF2NowzhdO1hYYpYA1f
-         nZ09ejKNF/qR/kzz0RUyUv2jBoYLOuGa+5R4TEhDHgYlV10N2aAOgVqcRWMksd3p7pq7
-         rlEQ==
+        bh=g4c//fvG4fjXYLBPyQJ141PEsJK2A9XDWhulJsN1c2g=;
+        b=txe/TGzL2m1an+nZ6gO/mOSaoDI67xtlU7/eV990yjKoxcG0UfjMij72knv2aBpCp2
+         Cmtnr2BvxdLRtTcDUSFaEAb7Z6tcoihpK17xxJYDDSVRrl8Ng35DB0GUKAPDDH/N/Il4
+         OGJQEP3s0QLkEwIycouiFmf0Iggxw7P9Xect2VxLD+duf8ES3viEDp29UWiSlYwxHKau
+         /JVQR3zrFqLOQbAuVpRdfYoIugdCdZH6AmURIiDdvn7JFxX1o92/dnHolj4XC0RqBHi/
+         y73+XgdiLyAmNUH/W4N5EpDTFftABn3UeUI0v4wf6HTZXGQNAk8Fd5MLKDU3siIoSFGe
+         Gb6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fAvZz66+QaBdG22l2e4wGzGeeBoM/iwnQLAAqOO4w3k=;
-        b=jDaEOIst/AWWBliwZuAfHfMN4Dn/ae/4KczTu/ICr2s1OR3MmGm6Fbb+8TdMbDauZz
-         2ru2O1Ws5bisYUVS87dBQeXOW9rtzQ6qt359c22Kd3I8YpXCF3hEHb6QXzG5jdKOiq0A
-         bQel82WDM7rZFXq7sshwJvUxnGxTzwYirtlOyYkItV06a7dtqIq7DN3p5hY6NtkC5cOQ
-         ovmeStHHytlhz5nfbZNkbNU9khvZ9wOtBdoYhaz/jPEZ7hfL4xHmfUGMhKP0aNaDc+so
-         hslySyWUg+Oq0o5D5yvpxPbnIrR77tHOyR0OmQC5zEJIgTRW56mgax2U4NX495LJh5Iv
-         bZfg==
-X-Gm-Message-State: AOAM533srY/GNFn2LqWMGc+mzw8QGp8gntFMUXswkD2TD41JC6tgzW80
-        4shfxJQdgHQfOidq8OWuqTN9VNCL
-X-Google-Smtp-Source: ABdhPJx4KFc9AQIC7ArYHaqefa7TK8k/yMc05XMGZylzBAVOeed4XSg5Bld4PxWgP8XSWWG1WcH1Qw==
-X-Received: by 2002:a17:902:b113:: with SMTP id q19mr21395986plr.170.1595907348803;
-        Mon, 27 Jul 2020 20:35:48 -0700 (PDT)
+        bh=g4c//fvG4fjXYLBPyQJ141PEsJK2A9XDWhulJsN1c2g=;
+        b=N/Felcxs7K9RnR47cbAs7M66SGepUaF9Jn1ayXmUmZuakyFLC1ZDxSy7Ho0vbxnrjo
+         pqYHFh06vuA3zNkYCU/vB5pZZz1X7enuVlNi2SXpzB/NyGB0tYv8JnD+b2C+BD83Js5C
+         fEt1Z6ntqns3Q7paPEdPgbpk1ri6rtAe7qYX2+E9meA6ZHsIE33qV7O6TiciZtDue7WP
+         DDZqqg5TF9UxhO4ttjVJlRQN9ILyO8LkDCjh6Y1xrXZV1/v9S8WZRM+yi3iVl7sKi+Y2
+         FeV0VVtvHIlzt3r9J/WKnHTlCAwX7K9W4oeCvWpIkmvkCPbX+trjaG13nUayoarPKAWV
+         Gn1Q==
+X-Gm-Message-State: AOAM530xamW3JJ+rpMo2XLnS27dkP156DLCEw5mOxSB1JwMLLeeEb+LQ
+        8WyZby4kTkMbeCqkdO72s4u2nPId
+X-Google-Smtp-Source: ABdhPJxLSrOIo2pJZ6JxdbY8sqTL+sLacJBQP0Z57JrGGqLjqaHZnmGavtkNBCHUG79mxlKKrr0QRQ==
+X-Received: by 2002:a63:1406:: with SMTP id u6mr22223509pgl.108.1595907352696;
+        Mon, 27 Jul 2020 20:35:52 -0700 (PDT)
 Received: from bobo.ozlabs.ibm.com (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id r4sm998707pji.37.2020.07.27.20.35.44
+        by smtp.gmail.com with ESMTPSA id r4sm998707pji.37.2020.07.27.20.35.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 20:35:48 -0700 (PDT)
+        Mon, 27 Jul 2020 20:35:52 -0700 (PDT)
 From:   Nicholas Piggin <npiggin@gmail.com>
 To:     linux-arch@vger.kernel.org
 Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 23/24] x86: use asm-generic/mmu_context.h for no-op implementations
-Date:   Tue, 28 Jul 2020 13:34:04 +1000
-Message-Id: <20200728033405.78469-24-npiggin@gmail.com>
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-xtensa@linux-xtensa.org
+Subject: [PATCH 24/24] xtensa: use asm-generic/mmu_context.h for no-op implementations
+Date:   Tue, 28 Jul 2020 13:34:05 +1000
+Message-Id: <20200728033405.78469-25-npiggin@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20200728033405.78469-1-npiggin@gmail.com>
 References: <20200728033405.78469-1-npiggin@gmail.com>
@@ -80,51 +80,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Chris Zankel <chris@zankel.net>
+Cc: Max Filippov <jcmvbkbc@gmail.com>
+Cc: linux-xtensa@linux-xtensa.org
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/x86/include/asm/mmu_context.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/xtensa/include/asm/mmu_context.h   | 11 +++--------
+ arch/xtensa/include/asm/nommu_context.h | 26 +------------------------
+ 2 files changed, 4 insertions(+), 33 deletions(-)
 
-diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
-index 47562147e70b..255750548433 100644
---- a/arch/x86/include/asm/mmu_context.h
-+++ b/arch/x86/include/asm/mmu_context.h
-@@ -92,12 +92,14 @@ static inline void switch_ldt(struct mm_struct *prev, struct mm_struct *next)
- }
- #endif
- 
-+#define enter_lazy_tlb enter_lazy_tlb
- extern void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk);
- 
- /*
-  * Init a new mm.  Used on mm copies, like at fork()
-  * and on mm's that are brand-new, like at execve().
+diff --git a/arch/xtensa/include/asm/mmu_context.h b/arch/xtensa/include/asm/mmu_context.h
+index 74923ef3b228..e337ba9686e9 100644
+--- a/arch/xtensa/include/asm/mmu_context.h
++++ b/arch/xtensa/include/asm/mmu_context.h
+@@ -111,6 +111,7 @@ static inline void activate_context(struct mm_struct *mm, unsigned int cpu)
+  * to -1 says the process has never run on any core.
   */
+ 
 +#define init_new_context init_new_context
  static inline int init_new_context(struct task_struct *tsk,
- 				   struct mm_struct *mm)
+ 		struct mm_struct *mm)
  {
-@@ -117,6 +119,8 @@ static inline int init_new_context(struct task_struct *tsk,
- 	init_new_context_ldt(mm);
- 	return 0;
+@@ -136,24 +137,18 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 		activate_context(next, cpu);
  }
-+
+ 
+-#define activate_mm(prev, next)	switch_mm((prev), (next), NULL)
+-#define deactivate_mm(tsk, mm)	do { } while (0)
+-
+ /*
+  * Destroy context related info for an mm_struct that is about
+  * to be put to rest.
+  */
 +#define destroy_context destroy_context
  static inline void destroy_context(struct mm_struct *mm)
  {
- 	destroy_context_ldt(mm);
-@@ -215,4 +219,6 @@ static inline bool arch_vma_access_permitted(struct vm_area_struct *vma,
+ 	invalidate_page_directory();
+ }
  
- unsigned long __get_current_cr3_fast(void);
  
+-static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+-{
+-	/* Nothing to do. */
+-
+-}
 +#include <asm-generic/mmu_context.h>
-+
- #endif /* _ASM_X86_MMU_CONTEXT_H */
+ 
+ #endif /* CONFIG_MMU */
+ #endif /* _XTENSA_MMU_CONTEXT_H */
+diff --git a/arch/xtensa/include/asm/nommu_context.h b/arch/xtensa/include/asm/nommu_context.h
+index 37251b2ef871..7c9d1918dc41 100644
+--- a/arch/xtensa/include/asm/nommu_context.h
++++ b/arch/xtensa/include/asm/nommu_context.h
+@@ -7,28 +7,4 @@ static inline void init_kio(void)
+ {
+ }
+ 
+-static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+-{
+-}
+-
+-static inline int init_new_context(struct task_struct *tsk,struct mm_struct *mm)
+-{
+-	return 0;
+-}
+-
+-static inline void destroy_context(struct mm_struct *mm)
+-{
+-}
+-
+-static inline void activate_mm(struct mm_struct *prev, struct mm_struct *next)
+-{
+-}
+-
+-static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+-				struct task_struct *tsk)
+-{
+-}
+-
+-static inline void deactivate_mm(struct task_struct *tsk, struct mm_struct *mm)
+-{
+-}
++#include <asm-generic/nommu_context.h>
 -- 
 2.23.0
 
