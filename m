@@ -2,133 +2,166 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C421C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE6DC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 381042070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8961206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:50:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="KDHZem/f";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="SUZQTNu9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tGdMuCgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbgG1Myo (ORCPT
+        id S1729920AbgG1MuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:54:44 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:25515 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728604AbgG1Myn (ORCPT
+        Tue, 28 Jul 2020 08:50:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729562AbgG1MuY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:54:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1595940883; x=1627476883;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=i73cQScyOXtQNhKCgBM0j0yco6YrKjuowVHgFUDbKic=;
-  b=KDHZem/fs0oWN6xNLGu8x57unl7jYSTLsjFyhe8uj+us84zFR8FjPXO8
-   4gvVvRnWtrw2lBBCHedt4IKaH5bbIOESvFpmWEcqwQc1ESjDNhxu4tihW
-   dlODcQxAY0ehMzLeuQzA3xHqxruIMshojvHGXmnJpb80LaPB+WqOwKP3c
-   xc3yhnoettSq5xLdKjLSCoM/BcZozMWWAze4SxYeaTR+VGmbm7yNNrcTO
-   YhWmfvXAxqT85ahFD8SiRuuex+MNOrGgsJ5BtJIkq5r6RPMWUxP4neso/
-   mfsYmg6+5fYS3b5c3mS9JfC8mJB7IZt9rCDcBjHsLTRCKqKefKLftR0o2
-   g==;
-IronPort-SDR: ZFjmBZNE+HTETK1BTJfuK9E5kELLB9K3qIMYsBmSaucJluK0rxKtkojYstYRoSkpXY8WiWG2la
- UvfEp5GNLboONN/wSoycnzeVcxZAR/ltMpaTLLPKCOrVnkIYZnIXWxIfSMas5iuiNNgYFLhDZA
- CwDx/fbvhBYYrzKqoSu/hhLb2BD3Wbo92HO0KFQ8Sbg5vnMFw47qj01umN0suxSQPnmKd0sd0Z
- arNbRsQp5TKIPPsGHsJXu5OdKVFUy3b7ZGoOnNsHDCDQBw12Hm+bi25DMM5xhrgNxfmSCW5oDy
- 800=
-X-IronPort-AV: E=Sophos;i="5.75,406,1589212800"; 
-   d="scan'208";a="252888668"
-Received: from mail-dm6nam11lp2175.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.175])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Jul 2020 20:54:42 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ftw5FfjvDA6RiLM5wmPGnArTun/1FxPjUlh9FghplwcHO+jRMognSMRrNWdr9knODMPvkQVU8p2DqfuI9klJu/n5r3uXDKHW/303DwAoqWh5SA39QER+mtiMwHYcHkUvbLeA9oJ1iTRzxJLsWbrLUhiJOJaraV1r3QYrA/PfKYHss8zJNiWFgKdLC+/9vDKytTUiu89F9aUYNzC1GIblWE/Pl54y1Z0/ciF1y9QItuer/yLyAsrID3NvkM4HbcM6SQz2b7AJl11O5zA0owIhTszd+8SuleY8J6Bl11JOYrLpL0K8J9OMOZeQaQp0qyVzV5m0KEsHwm70O/VzIYyfaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i73cQScyOXtQNhKCgBM0j0yco6YrKjuowVHgFUDbKic=;
- b=WDqmh3qry9I9w5Sd/aI1KG3uEBzlX0uGy3lic/bjV81TZWaU5dy28v1YA5Mgd5kSF1Cw5k3KsmBR9EV4Np6kr6U/QhdGFm+qOJYSEQWNvFiJcMcqsU160UDsPoXl0HUPl8C2nPhUa3C2tZVzERthzGHgpHs76gGufPFSh4Y5X+w8p04eQ6hBl6jfmOJDCz0ASEgIxYG9pBh1Up3CmFsK5w66nwcXMQeAUWya9nx15yrYF5mnQw1vmZa8IHMQfmGzvZlDlXv9e9jTo4ct11M8yKBAMtUmuJW8nrJOichf4IAz8DwdyuAtSPY0DPH2QhfJFLXnVl9iB/bdB3yvO12VhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Tue, 28 Jul 2020 08:50:24 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FCAEC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:50:24 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id e5so659064qth.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:50:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i73cQScyOXtQNhKCgBM0j0yco6YrKjuowVHgFUDbKic=;
- b=SUZQTNu9cUdP+Vnavdl52Et44KxjvwANxWJVvXmxxtSYAdo/8v+KLFKJA60/7IVtPeOv7evuYz5BLO3U6ZPU3NvN731SIjA71VcbqQ67J8QDluqaLAWkcJ+b4tr8kPYzFeP2oj0w5q1ueU5LqDVFdQn2V3jE/SrxRHMBsf/fWOs=
-Received: from DM5PR0401MB3591.namprd04.prod.outlook.com (2603:10b6:4:7e::15)
- by DM6PR04MB5322.namprd04.prod.outlook.com (2603:10b6:5:106::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.26; Tue, 28 Jul
- 2020 12:54:40 +0000
-Received: from DM5PR0401MB3591.namprd04.prod.outlook.com
- ([fe80::c862:9cd5:689a:8573]) by DM5PR0401MB3591.namprd04.prod.outlook.com
- ([fe80::c862:9cd5:689a:8573%5]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
- 12:54:40 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-CC:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>
-Subject: Re: [PATCH 12/14] bdi: replace BDI_CAP_STABLE_WRITES with a queue and
- a sb flag
-Thread-Topic: [PATCH 12/14] bdi: replace BDI_CAP_STABLE_WRITES with a queue
- and a sb flag
-Thread-Index: AQHWYYzciyAO2mhny0WEWIk3W3JOpQ==
-Date:   Tue, 28 Jul 2020 12:54:40 +0000
-Message-ID: <DM5PR0401MB35918B36977C0B2EBB7F262F9B730@DM5PR0401MB3591.namprd04.prod.outlook.com>
-References: <20200724073313.138789-1-hch@lst.de>
- <20200724073313.138789-13-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.240.72]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 31e0b3d0-c47a-48ca-363a-08d832f56489
-x-ms-traffictypediagnostic: DM6PR04MB5322:
-x-microsoft-antispam-prvs: <DM6PR04MB53220BC8FC684C251C6EBF5A9B730@DM6PR04MB5322.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: T/yPeA8qh/rQgzQmjI8BQDmycI+yvDKNgThgiXWHNjjuusLVniiHii7Xs5llqxBhzac32Ut9f0viphdg31/ZsThTIyPqI5410dgXg03CTDavZ56Jb4tZ/soLeUBLtny8yY6GWx3630tBjArX6WgZH+9SOYv8vZZKWgNEMttX9pXEV1XFj1df7m6yFLJBLVAWYBbGjrY5v3iVtenDV0MR7r/L5Bo87zjS5MLbGJLN2jhgQkZKo1VeWXVkQ9UhJkWM9YiAN/iuhoRDeNDNE/shz2Yq3xZHNfYcF0TCV+47fUxZsNU2+XFquWXJoxb2hnWs32mbyGM2TgpG1XyMVZwpzQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0401MB3591.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(136003)(376002)(366004)(39860400002)(5660300002)(8676002)(66556008)(66476007)(66946007)(66446008)(19618925003)(9686003)(7696005)(186003)(26005)(64756008)(86362001)(478600001)(55016002)(6506007)(8936002)(52536014)(7416002)(71200400001)(110136005)(558084003)(4270600006)(33656002)(4326008)(76116006)(91956017)(316002)(2906002)(54906003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 89maTvJPspOuacsDUS3LL+WKq2F7jyIjTk8KzJ2Po3vc17ENqkU1PZWitO7B5q9juIQetGeGZKXbM8bzrWPVhbbgWcjUHUOMknY6kXKP8GAbTbvVnsoY9eEp1N1W1OlIagv1h2hmqg4dghSfyuAlTOE7crGQ/Amikns3b2F3ob4sz2TN9Q/1VhtI/mo5mZv6qed+N0X0woUA9O3jRMoD8m3+EOD5x+6HhhRe2NfxczaPaf4lkVMgQ9n9ynt4h4yXiKVZEwuZtFol8C3hQEuPcYaE4O6DaoDwsUhF9OtW2pC9zUwA5Srerm/9ahGHmCz3xGCnMIj9gV4X5PJppHXN6Cd2w8bblTWF5YfLAwMHQ0nQEtFoOZnVXH4kFmbrYiCYxiGzlRlM8MQif1zxN8vg9wlaeYVVabFiGMIdoW1Lvdsvo+t5eysmJMIBtaSpZgMBtfy8/CqBQpGTFGh5zr2+ZJ/WDZprkP9gqOi3+E2Kr33BTDWPGVwrvXfIsFGqgNUL
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GgtMyjeO4HLpQBw/exS2AHiDSiKY8Aj2c/cuRUlzRaM=;
+        b=tGdMuCgbBf+xUH44MOqwqObI23V3rvUFzUFZI/QjbU42CBRhT+wgaqwZjd+kldED/Q
+         ki01CNPPE0cfaK1npzMluvdLLHCpwL7fueCxjK8z/Q5T/ADUxgNVkIE4jQGGxlZBkSyC
+         rgNVakvPQRiTg3RM3l2UKUnlO+SZ21CLUor6vXSKVYvp21NE2OFHAhjboShkXKLD/aGH
+         WLz9W94j70D1ynUHaVzpHD9eX2ZrJR2Zx/glrW3ICbYTos8ZHd0nJwTWLiZtOOK0vjGH
+         rVAEGR7jE1neaho/frDgI5cLckZWRrb4jgz28e9aRtTGaSKlPRlz/nleXZGC9cgSpenP
+         Q6ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GgtMyjeO4HLpQBw/exS2AHiDSiKY8Aj2c/cuRUlzRaM=;
+        b=VDGgeXV2rMNktnUKSgTT3Y8kmIilUEW3cIzbFcbciX1L0eE4hSBTlNqmf+4n3+xuRh
+         nqC3r78NfTxjCfz+bjCMkQe50E6CCZp5oD8l4JoO2/kCc1uUuJsEKoAZh09zV/XsSGRg
+         Aym+QctmhxKL5VGSUym4Eu+91UyIW3jleTZCeyRdmEF1ZnKEeDR0LBvRfR0CcNIifk+6
+         TWKpbPdPjrMO472EZmCeK9YaI032EuzPx+qnfGlGwJTGpt2ewcfdtJXvRmurmaZinQWq
+         DDTZsIBB6TBbPOTj7r6xqb+tIm+LetvpDK2zXCqD2CSjZo47xXzvGrOj1Yn7CDZ2PHpV
+         dCSA==
+X-Gm-Message-State: AOAM533Q1DKJxquzTA+x9Oq6Q4ZUJk3riBtCoULNzzRy2VuVC5o2Kfgt
+        l2uWTH5UTF++ShVbXUJqVA==
+X-Google-Smtp-Source: ABdhPJxtmQcEAy5Fs04CmF0q3XaPWDqDwnhC4OEWLtN3cKQJP31ESmu5OAHSU7gHukiYE7G/FcVVeQ==
+X-Received: by 2002:ac8:73d9:: with SMTP id v25mr13958369qtp.82.1595940623774;
+        Tue, 28 Jul 2020 05:50:23 -0700 (PDT)
+Received: from PWN (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
+        by smtp.gmail.com with ESMTPSA id c70sm20373613qke.109.2020.07.28.05.50.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 05:50:23 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 08:50:21 -0400
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH v2] drm/bufs: Prevent
+ kernel-infoleak in copy_one_buf()
+Message-ID: <20200728125021.GA409978@PWN>
+References: <20200728014343.341303-1-yepeilin.cs@gmail.com>
+ <20200728115210.408486-1-yepeilin.cs@gmail.com>
+ <3058d741282b463d8aa7c8aff62e4326@AcuMS.aculab.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR0401MB3591.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31e0b3d0-c47a-48ca-363a-08d832f56489
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 12:54:40.7335
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QBI2uUsV/Gk1eL8gdBglcrLdbO2lk0xAj739ocxmoqy8Nk+RjXyhOxkQVQKoyZDOUS5VeCs6KZsHMf6P74GQXM7paCXcP6VgrWIwoAnDBoc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB5322
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3058d741282b463d8aa7c8aff62e4326@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+On Tue, Jul 28, 2020 at 12:35:17PM +0000, David Laight wrote:
+> From: Peilin Ye
+> > Sent: 28 July 2020 12:52
+> > Currently `struct drm_buf_desc` is defined as follows:
+> > 
+> > struct drm_buf_desc {
+> > 	int count;
+> > 	int size;
+> > 	int low_mark;
+> > 	int high_mark;
+> > 	enum {
+> > 		_DRM_PAGE_ALIGN = 0x01,
+> > 		_DRM_AGP_BUFFER = 0x02,
+> > 		_DRM_SG_BUFFER = 0x04,
+> > 		_DRM_FB_BUFFER = 0x08,
+> > 		_DRM_PCI_BUFFER_RO = 0x10
+> > 	} flags;
+> > 	unsigned long agp_start;
+> > };
+> > 
+> > copy_one_buf() is potentially copying uninitialized kernel stack memory
+> > to userspace, since the compiler may leave such "holes" (around `.flags`
+> > and `.agp_start` fields) in this statically allocated structure. Prevent
+> > it by initializing `v` with memset().
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: 5c7640ab6258 ("switch compat_drm_infobufs() to drm_ioctl_kernel()")
+> > Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+> > ---
+> > Change in v2:
+> >     - Improve commit description. (Suggested by Arnd Bergmann
+> >       <arnd@arndb.de>)
+> > 
+> >  drivers/gpu/drm/drm_bufs.c | 12 ++++++++----
+> >  1 file changed, 8 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/drm_bufs.c b/drivers/gpu/drm/drm_bufs.c
+> > index a0735fbc144b..f99cd4a3f951 100644
+> > --- a/drivers/gpu/drm/drm_bufs.c
+> > +++ b/drivers/gpu/drm/drm_bufs.c
+> > @@ -1349,10 +1349,14 @@ static int copy_one_buf(void *data, int count, struct drm_buf_entry *from)
+> >  {
+> >  	struct drm_buf_info *request = data;
+> >  	struct drm_buf_desc __user *to = &request->list[count];
+> > -	struct drm_buf_desc v = {.count = from->buf_count,
+> > -				 .size = from->buf_size,
+> > -				 .low_mark = from->low_mark,
+> > -				 .high_mark = from->high_mark};
+> > +	struct drm_buf_desc v;
+> > +
+> > +	memset(&v, 0, sizeof(v));
+> > +
+> > +	v.count = from->buf_count;
+> > +	v.size = from->buf_size;
+> > +	v.low_mark = from->low_mark;
+> > +	v.high_mark = from->high_mark;
+> > 
+> >  	if (copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags)))
+> >  		return -EFAULT;
+> 
+> The memset() isn't needed.
+> The copy_to_user() stops after the 4 'int' values so no 'random'
+> kernel stack can get copied.
+
+You are right, I overlooked that. Thank you for pointing this out!
+
+Peilin Ye
+
+> Quite why it is 'right' to leave the remaining part of each
+> userspace structure unchanged is another matter.
+> 
+> 	David.
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+> 
