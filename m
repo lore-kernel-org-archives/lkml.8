@@ -2,114 +2,130 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE040C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 825D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAF582074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:58:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="oMNMtjIM"
+	by mail.kernel.org (Postfix) with ESMTP id 6671D20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730266AbgG1N6N (ORCPT
+        id S1730276AbgG1N6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:58:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730245AbgG1N6L (ORCPT
+        Tue, 28 Jul 2020 09:58:41 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:58177 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730245AbgG1N6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:58:11 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C404C0619D2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:58:11 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id f24so247029ejx.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:58:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ymP2tkbCreL/BF43+tTjYnEHkymNa3rchuw1gYfZEfQ=;
-        b=oMNMtjIME3+WubEoBwV0RCzBSd3w/ZacHV0/MIaMQsDsXKVA+ffHU1K+cCfA0pZe5b
-         8cmaUNwUFDPa7F+Oo47Ool4rApNg3xZ/KLqcmxmWlrP0p4y+H0nRUcngVmvfZw9RVRAO
-         RjQhpeAhr763rKw69pCbpurmWe33driw0NlDRsF5667RjxZ/otWwsk8d9+9jzniz1Gn+
-         oWcKZjScOYxJxQDIBjjkoqrBj+z2yY+8xDZNm1AGXQDBWrYMen1kq16oRSXqq2N6pSn3
-         L7In1AgtUHsWRKlzODuHHfqmgaC7C0JL7ioaTxuQCVTzJ16Ehr5qMN0akImSf7QXATJB
-         oiNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ymP2tkbCreL/BF43+tTjYnEHkymNa3rchuw1gYfZEfQ=;
-        b=GexfzwNiKlZC5Si5SLluA64KRxqVCWsamt28UY66D7DjlEW1AcFMxZikHA9GrNOzGA
-         VFfu0he1OIdHQafdhOD5cQhjMpdC5LwcNBSXuArrBi44OIEH8/mol7VmcWll9AsYs1zH
-         uEUQq80J0t46b3VSnf1He3ibfLLm+DYJ9uizELiaiRqAHSz7i81Csn60zAcos5TrfD3p
-         TXiW5OdW0kAJk2K5OPJSGWGYTWkRbbKSTWpXtrc5sVKxkdu2WX2oi6eXgnyBdVGRriA2
-         3k+fPCCEcJY7N7zcdauHSWQntNO5FC5NX6W25/tPzRhVigXV4UA7YRLlMvvV+V2nBTbf
-         Hxog==
-X-Gm-Message-State: AOAM531hmKKxi5rNVO7sSetNVwa5IZsldfLIJt56/3SdJX8r4kDf8SbO
-        VF2HOeK6mlEF6KN4DVsJN0K9hA==
-X-Google-Smtp-Source: ABdhPJwroLo223bNqj6sH/j5TpDMw2I5BPQp3H1jydSIXwW/JzjKbhx2qtE45esrYgcxkGyKrhleWQ==
-X-Received: by 2002:a17:906:7f0e:: with SMTP id d14mr1886365ejr.400.1595944690141;
-        Tue, 28 Jul 2020 06:58:10 -0700 (PDT)
-Received: from localhost (jirka.pirko.cz. [84.16.102.26])
-        by smtp.gmail.com with ESMTPSA id f22sm442617edt.91.2020.07.28.06.58.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 06:58:09 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 15:58:08 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Moshe Shemesh <moshe@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
- devlink reload command
-Message-ID: <20200728135808.GC2207@nanopsycho>
-References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
- <1595847753-2234-2-git-send-email-moshe@mellanox.com>
- <20200727175802.04890dd3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Tue, 28 Jul 2020 09:58:40 -0400
+Received: from mail-qt1-f170.google.com ([209.85.160.170]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MiJEc-1kfogj00lq-00fQ2X; Tue, 28 Jul 2020 15:58:39 +0200
+Received: by mail-qt1-f170.google.com with SMTP id s16so14852782qtn.7;
+        Tue, 28 Jul 2020 06:58:38 -0700 (PDT)
+X-Gm-Message-State: AOAM532ED7pYfMVpHkIdd70P/m+QDTMTWwMcnZw8ZFg+5ipGq36vYPZJ
+        OPq70pLVcA20jVOvMPJ6hSjYFwS63jQHTYxuzIw=
+X-Google-Smtp-Source: ABdhPJwcnjVzdXtH0ZMmkoqshSACaXjuaYnltOnaP33Va8Er6+9hKFR05vX7mZbNRjlSOGS84rqh1JYn+h/D4FTuw+M=
+X-Received: by 2002:ac8:5195:: with SMTP id c21mr12200851qtn.304.1595944717799;
+ Tue, 28 Jul 2020 06:58:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727175802.04890dd3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
+ <20200726222703.102701-1-yepeilin.cs@gmail.com> <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
+ <20200727131608.GD1913@kadam> <CACRpkda7k4L+nqAYE6z2FVZF-WT2Pm3CHH_=fW24xz_u+QCMRQ@mail.gmail.com>
+ <20200728130632.GI1913@kadam>
+In-Reply-To: <20200728130632.GI1913@kadam>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 28 Jul 2020 15:58:21 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3MEUYH3qG-+dxgH1Omx2gtcqSRXzKLLaAw21Xho6HAeQ@mail.gmail.com>
+Message-ID: <CAK8P3a3MEUYH3qG-+dxgH1Omx2gtcqSRXzKLLaAw21Xho6HAeQ@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
+ kernel-infoleak in video_put_user()
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vandana BN <bnvandana@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Z5iHW/C9P5Nl85OcBzVakBrqWM4lrfuNf/SQq8hrr0QV3dyVsUu
+ IVmBk5jybQpiDhpTJEUEfuql9PZLvDPTMXIkZXu9RUhcIoupMGC5ivPlyaN+ZX+WdJ73xoz
+ laBDBwmzOeAtkAg+h8+ZbbAocYSr6uPnlCP2wZNYZ2ufWvtmBrgrdvTo+gJdtou0A/7KSew
+ 136lzHuvUO6dyC9MHhR6w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:abpZXgSh0J8=:7Ulpbons82EHMSBOYjqD5X
+ mAh0ss9eDi6VPTk4uphhfDi7Hl/Me2mKhGuoWnECtgKohzKalxG+/573kRNI5sfMUDWVA6k44
+ OJSnCfLnsbXHlRxs1wALVKcoBADg4PylyIbJiCbZTwzwDxYu5pkEKKT/uT8GQ09tae0kKXiJ1
+ Rn/JqHqVarnQKYXiXVvN7qilchteRaSgkfC7gfKqZWdeEIwT0pzgR7O8yzJBrVEmdjLO/LC/G
+ V3sCJjKM6SjJ8SJQRg7zPKnBHc3vRohe7CJx8B6kYYkG50mH8d3Wr83VT9aqmVGUNQuJldNLq
+ 7CMByJ2MgKaauSMMG7mZ+5ccau9nHGi8OyCACbJGoQOxd8sbBmnH8zUbDaI1LshfFL6Z5TvXL
+ taLWy67OUTTXjGPfj+DErwrF/GZTOoYZbHbKL8MzxDrV/kvGY+dR2fgBOF4Qc0lkqzI57SN68
+ 1LeIfPIzQRZuVw57+nlrPAfwgvTzuHNje+oIubf3Q7I7GrOcrL0Zam8NEQbOGEDYFm+9VJfay
+ SLnFIvdxspRcsN5uoyux3OlUAiwaKrCP7wRuifGmxBdz1rEk7AGz9NE7Ws56US7KfUUcQelaJ
+ RQ8hyHcDKYRmrIocqJCLqt8bGZUqVlkzzF9lJOf4ZYLC8H8QYyCHD+WqoYTRGtcjiDlQicpIX
+ 8NI0LBGCVEJ4/eb1OQFlE/wlxkRDY2LJ0Y+yw4DRVQlQnJmG7Gxp/z94YeLEaZ5k2q5ivYvyU
+ MgPyhs67KLxEsbpoXQPmz35cvAciHCKS9YQjNbXKrThvgPEzxH12n2S/HKowfCACrRuoi5KEB
+ AykIp/7b4HOc7IYX3vC1ATba5bA5o38HSVmaWRHB9DlSSI/qoL1Dkw1yniqkuzOqQ8MLNu/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tue, Jul 28, 2020 at 02:58:02AM CEST, kuba@kernel.org wrote:
->On Mon, 27 Jul 2020 14:02:21 +0300 Moshe Shemesh wrote:
->> Add devlink reload level to allow the user to request a specific reload
->> level. The level parameter is optional, if not specified then driver's
->> default reload level is used (backward compatible).
+On Tue, Jul 28, 2020 at 3:06 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 >
->Please don't leave space for driver-specific behavior. The OS is
->supposed to abstract device differences away.
+> On Tue, Jul 28, 2020 at 02:22:29PM +0200, Linus Walleij wrote:
+> > On Mon, Jul 27, 2020 at 3:17 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> >
+> > > Here are my latest warnings on linux-next from Friday.
+> >
+> > Thanks for sharing this Dan, very interesting findings.
+> >
+> > > drivers/gpio/gpiolib-cdev.c:473 lineevent_read() warn: check that 'ge' doesn't leak information (struct has a hole after 'id')
+> >
+> > We are revamping the ABI for 64bit compatibility so we are now running
+> > pahole on our stuff. I suppose we need to think about mending this old ABI
+> > as well.
+>
+> Yeah...  But this one is a false positive.  It's not super hard for me
+> to silence it actually.  I'll take care of it.  It could be a while
+> before I push this to the public repository though...
 
-But this is needed to maintain the existing behaviour which is different
-for different drivers.
+The lineevent_read() function still needs to be fixed to support
+32-bit compat mode on x86, which is independent of the warning.
 
+Something like
 
->
->Previously the purpose of reload was to activate new devlink params
->(with driverinit cmode), now you want the ability to activate new
->firmware. Let users specify their intent and their constraints.
->
->> Reload levels supported are:
->> driver: driver entities re-instantiation only.
->> fw_reset: firmware reset and driver entities re-instantiation.
->> fw_live_patch: firmware live patching only.
->
->I'm concerned live_patch is not first - it's the lowest impact (since
->it's live). Please make sure you clearly specify the expected behavior
->for the new API.
->
->The notion of multi-host is key for live patching, so it has to be
->mentioned.
->
->> Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+static int lineevent_put_data(void __user *uptr, struct gpioevent_data *ge)
+{
+#ifdef __x86_64__
+        /* i386 has no padding after 'id' */
+        if (in_ia32_syscall()) {
+                struct {
+                        compat_u64      timestamp __packed;
+                        u32             id;
+                } compat_ge = { ge->timestamp, ge->id };
+
+                if (copy_to_user(uptr, &compat_ge, sizeof(compat_ge)))
+                        return -EFAULT;
+
+                return sizeof(compat_ge);
+        }
+#endif
+
+        if (copy_to_user(uptr, ge, sizeof(*ge))
+                return -EFAULT;
+
+        return sizeof(*ge);
+}
+
+       Arnd
