@@ -2,61 +2,99 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89F1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B59C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEEEA2065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89CC2207FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595963888;
+	bh=EU5ct3aw8AQbancyApjQExQvAf+xqB4OEQvinl7PmT0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Mn+6rBMsI/AbP4mphU4aBUbRWKGxeIQ2XbZwZ7QBt0NpUZurcNrw9MRfaJ7KEQw1L
+	 0VfOZZnLvD2MbauWgv9wuCmGP+ffwjcjaCKKL+gZtzh/mVliRoUKp12xtJ9BmwW+n+
+	 dOYl3OOTdakHwRuDxS96vF/upSBpEsKPIl33p+bU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732703AbgG1TSd (ORCPT
+        id S1732695AbgG1TSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:18:33 -0400
-Received: from mga09.intel.com ([134.134.136.24]:53302 "EHLO mga09.intel.com"
+        Tue, 28 Jul 2020 15:18:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728751AbgG1TSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:18:32 -0400
-IronPort-SDR: ZZlEO0E+JxFAqsVlcV+OcvCDJn9KaIxf/RDJkrqca1gNVKzTV3u03BsLcwDUoTr7c7oAq2bRZM
- MeUAY6HRQMdw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="152543409"
-X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
-   d="scan'208";a="152543409"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 12:18:31 -0700
-IronPort-SDR: A/LWYGtLiV2xMqj0KUz5tLFZ4cw8jmEEYYnpArz/u1f3jU63qCmvONl7hgH20Uj7HbCKKG4IEb
- 8OjH9NNg4MOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
-   d="scan'208";a="434434628"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.212.32.199]) ([10.212.32.199])
-  by orsmga004.jf.intel.com with ESMTP; 28 Jul 2020 12:18:30 -0700
-Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
- devlink reload command
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Jiri Pirko <jiri@resnulli.us>, Moshe Shemesh <moshe@mellanox.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
- <1595847753-2234-2-git-send-email-moshe@mellanox.com>
- <20200727175802.04890dd3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200728135808.GC2207@nanopsycho>
- <464add44-3ab1-21b8-3dba-a88202350bb9@intel.com>
- <20200728114458.762b5396@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <d6fbfedd-9022-ff67-23ed-418607beecc2@intel.com>
-Date:   Tue, 28 Jul 2020 12:18:30 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.0.1
+        id S1728751AbgG1TSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 15:18:06 -0400
+Received: from [192.168.1.28] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17E412065C;
+        Tue, 28 Jul 2020 19:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595963885;
+        bh=EU5ct3aw8AQbancyApjQExQvAf+xqB4OEQvinl7PmT0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GsThgcJB0BIaHq80ejFFkhu3aeVoptFldUM1NzpFguUpLKbSb9HJ9m7KEowUpHtgn
+         vGjRRjyGEHfe9hTCNtHsYHBc8IZcjBTzrSLVnDiNnyzGw12dy80tw6xvBILmAudD4o
+         fj/jB2uQ1+VWdor1+kGmSEC6FpKzCzKlBVDBeKvc=
+Subject: Re: [PATCH] ARM: socfpga: PM: add missing put_device() call in
+ socfpga_setup_ocram_self_refresh()
+To:     Yu Kuai <yukuai3@huawei.com>, linux@armlinux.org.uk,
+        atull@opensource.altera.com, khilman@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        yi.zhang@huawei.com
+References: <20200721134551.1276641-1-yukuai3@huawei.com>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <8d06f69f-6560-aa98-ff12-004e77a26f01@kernel.org>
+Date:   Tue, 28 Jul 2020 14:18:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200728114458.762b5396@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200721134551.1276641-1-yukuai3@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -67,91 +105,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 7/28/2020 11:44 AM, Jakub Kicinski wrote:
-> On Tue, 28 Jul 2020 09:47:00 -0700 Jacob Keller wrote:
->> On 7/28/2020 6:58 AM, Jiri Pirko wrote:
->>> But this is needed to maintain the existing behaviour which is different
->>> for different drivers.
->>
->> Which drivers behave differently here?
+On 7/21/20 8:45 AM, Yu Kuai wrote:
+> if of_find_device_by_node() succeed, socfpga_setup_ocram_self_refresh
+> doesn't have a corresponding put_device(). Thus add a jump target to
+> fix the exception handling for this function implementation.
 > 
-> I think Jiri refers to mlxsw vs mlx5.
+> Fixes: 44fd8c7d4005 ("ARM: socfpga: support suspend to ram")
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>  arch/arm/mach-socfpga/pm.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> mlxsw loads firmware on probe, by default at least. So reloading the
-> driver implies a FW reset. NIC drivers OTOH don't generally load FW
-> so they didn't reset FW.
-> 
-
-Ok.
-
-> Now since we're redefining the API from "do a reload so that driverinit
-> params are applied" (or "so that all netdevs get spawned in a new
-> netns") to "do a reset of depth X" we have to change the paradigm.
-> 
-> What I was trying to suggest is that we should not have to re-define
-> the API like this.
-
-Ok.
-
-> 
-> From user perspective what's important is what the reset achieves (and
-> perhaps how destructive it is). We can define the reset levels as:
-> 
-> $ devlink dev reload pci/0000:82:00.0 net-ns-respawn
-> $ devlink dev reload pci/0000:82:00.0 driver-param-init
-> $ devlink dev reload pci/0000:82:00.0 fw-activate
-> 
-> combining should be possible when user wants multiple things to happen:
-> 
-> $ devlink dev reload pci/0000:82:00.0 fw-activate driver-param-init
-> 
-
-Where today "driver-param-init" is the default behavior. But didn't we
-just say that mlxsw also does the equivalent of fw-activate?
-
-> 
-> Then we have the use case of a "live reset" which is slightly
-> under-defined right now IMHO, but we can extend it as:
-> 
-> $ devlink dev reload pci/0000:82:00.0 fw-activate --live
-> 
-
-Yea, I think live fw patching things aren't quite as defined yet.
-
-> 
-> We can also add the "reset level" specifier - for the cases where
-> device is misbehaving:
-> 
-> $ devlink dev reload pci/0000:82:00.0 level [driver|fw|hardware]
+> diff --git a/arch/arm/mach-socfpga/pm.c b/arch/arm/mach-socfpga/pm.c
+> index 6ed887cf8dc9..365c0428b21b 100644
+> --- a/arch/arm/mach-socfpga/pm.c
+> +++ b/arch/arm/mach-socfpga/pm.c
+> @@ -49,14 +49,14 @@ static int socfpga_setup_ocram_self_refresh(void)
+>  	if (!ocram_pool) {
+>  		pr_warn("%s: ocram pool unavailable!\n", __func__);
+>  		ret = -ENODEV;
+> -		goto put_node;
+> +		goto put_device;
+>  	}
+>  
+>  	ocram_base = gen_pool_alloc(ocram_pool, socfpga_sdram_self_refresh_sz);
+>  	if (!ocram_base) {
+>  		pr_warn("%s: unable to alloc ocram!\n", __func__);
+>  		ret = -ENOMEM;
+> -		goto put_node;
+> +		goto put_device;
+>  	}
+>  
+>  	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
+> @@ -67,7 +67,7 @@ static int socfpga_setup_ocram_self_refresh(void)
+>  	if (!suspend_ocram_base) {
+>  		pr_warn("%s: __arm_ioremap_exec failed!\n", __func__);
+>  		ret = -ENOMEM;
+> -		goto put_node;
+> +		goto put_device;
+>  	}
+>  
+>  	/* Copy the code that puts DDR in self refresh to ocram */
+> @@ -81,6 +81,8 @@ static int socfpga_setup_ocram_self_refresh(void)
+>  	if (!socfpga_sdram_self_refresh_in_ocram)
+>  		ret = -EFAULT;
+>  
+> +put_device:
+> +	put_device(&pdev->dev);
+>  put_node:
+>  	of_node_put(np);
+>  
 > 
 
-I guess I don't quite see how level fits in? This is orthogonal to the
-other settings?
+Applied!
 
-> 
-> But I don't think that we can go from the current reload command
-> cleanly to just a level reset. The driver-specific default is a bad
-> smell which indicates we're changing semantics from what user wants 
-> to what the reset depth is. Our semantics with the patch as it stands
-> are in fact:
->  - if you want to load new params or change netns, don't pass the level
->    - the "driver default" workaround dictates the right reset level for
->    param init;
->  - if you want to activate new firmware - select the reset level you'd
->    like from the reset level options.
-> 
-
-I think I agree, having the "what gets reloaded" as a separate vector
-makes sense and avoids confusion. For example for ice hardware,
-"fw-activate" really does mean "Do an EMP reset" rather than just a
-"device reset" which could be interpreted differently. ice can do
-function level reset, or core device reset also. Neither of those two
-resets activates firmware.
-
-Additionally the current function load process in ice doesn't support
-driver-init at all. That's something I'd like to see happen but is quite
-a significant refactor for how the driver loads. We need to refactor
-everything out so that devlink is created early on and factor out
-load/unload into handlers that can be called by the devlink reload. As I
-have primarily been focused on flash update I sort of left that for the
-future because it was a huge task to solve.
+Thanks,
+Dinh
