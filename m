@@ -2,119 +2,132 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47411C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41537C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FABB2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 175512070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:29:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="KFWninAw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pxHNeRZM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1/iTDsNn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729579AbgG1M2u (ORCPT
+        id S1729598AbgG1M3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:28:50 -0400
-Received: from mout.gmx.net ([212.227.15.19]:33613 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbgG1M2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:28:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1595939299;
-        bh=+Xhr2x2VYD1gWTmsb4Uofj+UiBxI7DdvuosyZzVaUM4=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=KFWninAwHludxMxZQsuEzqYoXKBYCcGUd+YU82B6QxqADTgG0ZzR3Izd3f5yyROqS
-         DVFscsUdxRXyCcMEnEZhgBs7sekWgeez0btr08FVEVoy9kh3bWZ8Zfqq5HMWWlhX/I
-         9c5R1xKiSUgUrjjDyRr5JtBcQZcodpHMELOchWJo=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([80.208.215.239]) by mail.gmx.com
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MmlXA-1kScia3yWE-00jsa8; Tue, 28 Jul 2020 14:28:19 +0200
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     linux-mediatek@lists.infradead.org
-Cc:     Landen Chao <landen.chao@mediatek.com>,
-        Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
-        Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v3] net: ethernet: mtk_eth_soc: fix mtu warning
-Date:   Tue, 28 Jul 2020 14:27:43 +0200
-Message-Id: <20200728122743.78489-1-frank-w@public-files.de>
-X-Mailer: git-send-email 2.25.1
+        Tue, 28 Jul 2020 08:29:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45272 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729399AbgG1M3I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:29:08 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9867C061794;
+        Tue, 28 Jul 2020 05:29:08 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 12:29:06 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595939346;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rI4p+p7PY7+lEZb3eDxP0kJaacGlY/NLIZWz8rMV/U0=;
+        b=pxHNeRZMrsEPfLylenuhN1fExrnCQ0qPz3SaOsEsOZegNt41iewnDDt8ho2OHEYlUn413o
+        k1OUpgqsVaIO0hpVh+PArT0lm2WxdLUuLpx2ZBbMAwIOqkQ7DRCCDI8BahhZ4fXEVlJHou
+        CSw4/VZDrmW2aNYgDi5fhM9JeYrmkeqFVx5yu1NkMEGUsfg0/hbwDP1GQpK99sXjNIZtPw
+        +qR71ssImI9rzvvoxCPjkDyBSCuK/YYHRbC5H0KJnJ2KFSQxT2FLQI9ehvwPuB5OsBuXeZ
+        QJzNkn61Cwdc+IMbUwXJ4+PvWEiSRE90HQJewEe1xJENlR+blz+oohLY8dguFQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595939346;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rI4p+p7PY7+lEZb3eDxP0kJaacGlY/NLIZWz8rMV/U0=;
+        b=1/iTDsNn4RKNat2rjRmQFmA+grMMFd6i9da5lBH++p+yMnDeKLH4xGv3LarMjIXRIW0JLk
+        C2vJZpMRT0cSs+DA==
+From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] kprobes: Remove unnecessary module_mutex locking
+ from kprobe_optimizer()
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200728163400.e00b09c594763349f99ce6cb@kernel.org>
+References: <20200728163400.e00b09c594763349f99ce6cb@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:sc5b1pOFKi3FLEOULKn4OozLSQed687rhOjKqf+XCSsSamY2PgS
- 2JzFzyIi+ztuNLr94TkKDcwv0V8CQVVgeRKACmKp1sOgDjY8lWDHTRhJEMdJ/ZdmLtdPzEY
- cpxqGiswcGavM06bTX+Y0XB7iBhQhFTK5u1HoAKmuv4zSkW3djqLkiVs66c7HgTDaGRA8G4
- K7il9Y7OEKrorNMSU9CNw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6AZmNkrR0vY=:/2GNiK7U0djtOSALtwVhUo
- E4o95iSJIypzT+gKBd6jBwrAaoQaz4NPh+ydoyiRA5XRYp73aNToQ4CTIdCOAZFHPZ84jqiLy
- NJ4uY4TYfoXNU0uze2bhR8446EZ7sX3Mm0hn2MJHSFjS8xKNigGXiB63k8nIOFuT4F3jYtqLt
- kCA02I3FIT0j5RFMn+XCTY9PffplsrQT8yCM5xLQRJUxoo2a5rZIvzYenDz9tjUqejaJSYC8K
- 5LMpCpZmYBsUR8Q0GhE/FM8/UFg+RqGQLWzmrtDBXFpddit4gTISIpZFYlddPeWo7EPXUZHK3
- 41h2XWcEo4u8E9YSCkQQF9/6oeWbUZ/IxMygADgBbDbhaTtnXxcHcT8xf0/fqOHfsgRjtR3yl
- VoFYeMk4zt2IPl59t17+KyBf1b657Ejon1XSadfIcL1Xhe2TJGrymbaw1bYCPRAIdhwI2SE11
- Vj9Z4XkVrec242+SZ1NuiW4eGQjO0Ji2d0stOgqNsYQu5w6V01gmrg7hx2D6k9xN2ooj7aZ2M
- 9+SGQ9x+QXp4cMI52AhkWpDMDOj8i2LVVjyQ8GrArJiSFJJv0702CbOI2rPl/DDrPI+zbiLL/
- FH4zO7I/uX2PGnMVUp6qG9nvd1f9xcddW8NhK8ndEpqkfWPWVyAq6IveDxkDe7G6gMF8LwVqx
- JRP22cnT4V3HI63ZM6f1N5UESv+/ALJV1u2qmZhRv1Zk5HNHzC4ZtKG2zbzRvD2uvMN50MKuh
- bDn84ONkh7kzG8lI7XSvXdVKch0w2iz4D1jjydW4SssG4suLpia2NWLWnQ/VZeIXT07Tw4hqM
- B7QCYyn0v/0bBuWLZJJ/qJR0v+n2hqqTqCBtZV82rwxZbTzFcKQr/0YrAbcnFxA2K6ewIf/FF
- O3McjzbzcLu7tdgUmNdj0DQrygPNbWL0jv/5Nur+z9n9njA1VI7pM6hJgTueVCN4hCP20CzY1
- CioTt5baNqnqbsny4bWUZlJrBFnt2Y62wKQqoitw+JlxkohUNNcIzpVftkaDFy3dsXSnVMek1
- dEc/0Gifpkh+MAm14rhp1jrDdzbd2wr4jMnoE2oRaFifjLzJ+RRL9hgpQ6GwLo7vXHLq2QuvV
- 1pLSuqN1ZZ58QNBRuX5bBlKOQ2WNItFRnayXemW0ol4P+MCBF/xDWRGg85YsF+igQ2mkjwmP8
- WbAmRyqx7VfAqYTKkjjZQjqvaxiEIELx9vb7CjBM2xATxNxqfjUUOkGOfQKk5KVGLTUJgZoL8
- RnRK+yzwbJdlI5wj8ej0nI2mwXOi+wlp6q7pK9Q==
+Message-ID: <159593934624.4006.4213436208654596958.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Landen Chao <landen.chao@mediatek.com>
+The following commit has been merged into the perf/core branch of tip:
 
-in recent Kernel-Versions there are warnings about incorrect MTU-Size
-like these:
+Commit-ID:     112a0e4171e111e963aada3fe790c71accf4d705
+Gitweb:        https://git.kernel.org/tip/112a0e4171e111e963aada3fe790c71accf4d705
+Author:        Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate:    Tue, 28 Jul 2020 16:34:00 +09:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 28 Jul 2020 13:19:05 +02:00
 
-eth0: mtu greater than device maximum
-mtk_soc_eth 1b100000.ethernet eth0: error -22 setting MTU to include DSA o=
-verhead
+kprobes: Remove unnecessary module_mutex locking from kprobe_optimizer()
 
-Fixes: bfcb813203e6 ("net: dsa: configure the MTU for switch ports")
-Fixes: 72579e14a1d3 ("net: dsa: don't fail to probe if we couldn't set the=
- MTU")
-Fixes: 7a4c53bee332 ("net: report invalid mtu value via netlink extack")
-Signed-off-by: Ren=C3=A9 van Dorst <opensource@vdorst.com>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-=2D--
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 2 ++
- 1 file changed, 2 insertions(+)
+Since we already lock both kprobe_mutex and text_mutex in the optimizer,
+text will not be changed and the module unloading will be stopped
+inside kprobes_module_callback().
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/eth=
-ernet/mediatek/mtk_eth_soc.c
-index 85735d32ecb0..a1c45b39a230 100644
-=2D-- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -2891,6 +2891,8 @@ static int mtk_add_mac(struct mtk_eth *eth, struct d=
-evice_node *np)
- 	eth->netdev[id]->irq =3D eth->irq[0];
- 	eth->netdev[id]->dev.of_node =3D np;
+The mutex_lock() has originally been introduced to avoid conflict with text modification,
+at that point we didn't hold text_mutex.
 
-+	eth->netdev[id]->max_mtu =3D MTK_MAX_RX_LENGTH - MTK_RX_ETH_HLEN;
-+
- 	return 0;
+But after:
 
- free_netdev:
-=2D-
-2.25.1
+  f1c6ece23729 ("kprobes: Fix potential deadlock in kprobe_optimizer()")
 
+We started holding the text_mutex and don't need the modules mutex anyway.
+
+So remove the module_mutex locking.
+
+[ mingo: Amended the changelog. ]
+
+Suggested-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200728163400.e00b09c594763349f99ce6cb@kernel.org
+---
+ kernel/kprobes.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 146c648..e87679a 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -598,8 +598,6 @@ static void kprobe_optimizer(struct work_struct *work)
+ 	mutex_lock(&kprobe_mutex);
+ 	cpus_read_lock();
+ 	mutex_lock(&text_mutex);
+-	/* Lock modules while optimizing kprobes */
+-	mutex_lock(&module_mutex);
+ 
+ 	/*
+ 	 * Step 1: Unoptimize kprobes and collect cleaned (unused and disarmed)
+@@ -624,7 +622,6 @@ static void kprobe_optimizer(struct work_struct *work)
+ 	/* Step 4: Free cleaned kprobes after quiesence period */
+ 	do_free_cleaned_kprobes();
+ 
+-	mutex_unlock(&module_mutex);
+ 	mutex_unlock(&text_mutex);
+ 	cpus_read_unlock();
+ 
