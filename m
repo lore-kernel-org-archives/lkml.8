@@ -2,150 +2,111 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E3EC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87071C433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEA5B2074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:36:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jp+B769e"
+	by mail.kernel.org (Postfix) with ESMTP id 590AF2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:36:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595954198;
+	bh=R+lWAAOOcTMEDROa6z+bH02XXKHWfd7l285szcMZyhU=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=zyKp7e2wDAByTHIDfV65f65M5PDAyh0tb8W9P7zvdumpUSavCgLv7KOEKbKuvffLW
+	 5j8Kg81DTXkVfcn9QOPfMseTGZaeEFAM60HxlFTar4XlT+V3fC3NOVM6/5SuU85GH3
+	 NsK3zjVNIQ0b8KwTdNxcHnW3P+NY8rybP07TQaJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731895AbgG1QgX (ORCPT
+        id S1731915AbgG1Qgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:36:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731416AbgG1Qe2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:34:28 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53CCFC0619D2;
-        Tue, 28 Jul 2020 09:34:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=EC+FxFIHex2sWZ34S6MwpVZAyyDPurOctu/Z14/eRMg=; b=jp+B769e3a9nErJNCadZHrwYi+
-        o3ZwBvysW28Ep104+GAgBewclKtZE6ilG5Za6kuPvGUyjtIwqlNeN9ijZH8wvwmbSCP1Z3y4Y3J1v
-        biukOJsHnmLrfXy5dDJG2aRYMCXafs4BIjCz+FNoEp/t4c5+xNYtw4MeT0VptvaA83kI67hlRgeKI
-        d/LV6K1lftWFIuSmfBlv8LDUCjAvBBgZFGr9XK5a6fSZ+nKgOK221ysnXOJtMecJ2x6qyAfuZt5nY
-        gGMGjLu63bCWDTlvpVBP4jxoq4G2Fk2JAxPAr0qeG0ghPTEmII2pnpqM3inxTg+SdPxlGpe5wy/Bo
-        14I5Dl3A==;
-Received: from [2001:4bb8:180:6102:fd04:50d8:4827:5508] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0SYa-0006xJ-ML; Tue, 28 Jul 2020 16:34:25 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 04/23] devtmpfs: refactor devtmpfsd()
-Date:   Tue, 28 Jul 2020 18:33:57 +0200
-Message-Id: <20200728163416.556521-5-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200728163416.556521-1-hch@lst.de>
-References: <20200728163416.556521-1-hch@lst.de>
+        Tue, 28 Jul 2020 12:36:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731429AbgG1Qge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:36:34 -0400
+Received: from localhost (p54b330d0.dip0.t-ipconnect.de [84.179.48.208])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E2C12053B;
+        Tue, 28 Jul 2020 16:36:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595954194;
+        bh=R+lWAAOOcTMEDROa6z+bH02XXKHWfd7l285szcMZyhU=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=2HMYvmDafPDfD8NURQaaLGvzGhofBfjY1aQ8Tpq1DFR2ol8IEPSYiJUmgLrhOoea0
+         knzeBEJ7FpR7fHD9MNLMZkPcchEFeAABCpvWi+ijmIAKkgWIhs6iJmf/YZntEzixw+
+         quyAR8rxU560a5lXGwiscGuLh3tHuREB3NdCc4O0=
+Date:   Tue, 28 Jul 2020 18:36:31 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2 1/2] i2c: smbus: add core function handling SMBus
+ host-notify
+Message-ID: <20200728163631.GF3736@ninjato>
+References: <1593776168-17867-1-git-send-email-alain.volmat@st.com>
+ <1593776168-17867-2-git-send-email-alain.volmat@st.com>
+ <20200725202733.GA946@kunai>
+ <20200728121050.GC8715@gnbcxd0016.gnb.st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Il7n/DHsA0sMLmDu"
+Content-Disposition: inline
+In-Reply-To: <20200728121050.GC8715@gnbcxd0016.gnb.st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split the main worker loop into a separate function.  This allows
-devtmpfsd_setup to be marked __init, which will allows us to call
-__init routines for the setup work.  devtmpfѕ itself needs a __ref
-marker for that to work, and a comment explaining why it works.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/base/devtmpfs.c | 52 ++++++++++++++++++++++++-----------------
- 1 file changed, 31 insertions(+), 21 deletions(-)
+--Il7n/DHsA0sMLmDu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
-index c9017e0584c003..d697634bc0d48c 100644
---- a/drivers/base/devtmpfs.c
-+++ b/drivers/base/devtmpfs.c
-@@ -378,7 +378,30 @@ static int handle(const char *name, umode_t mode, kuid_t uid, kgid_t gid,
- 		return handle_remove(name, dev);
- }
- 
--static int devtmpfs_setup(void *p)
-+static void __noreturn devtmpfs_work_loop(void)
-+{
-+	while (1) {
-+		spin_lock(&req_lock);
-+		while (requests) {
-+			struct req *req = requests;
-+			requests = NULL;
-+			spin_unlock(&req_lock);
-+			while (req) {
-+				struct req *next = req->next;
-+				req->err = handle(req->name, req->mode,
-+						  req->uid, req->gid, req->dev);
-+				complete(&req->done);
-+				req = next;
-+			}
-+			spin_lock(&req_lock);
-+		}
-+		__set_current_state(TASK_INTERRUPTIBLE);
-+		spin_unlock(&req_lock);
-+		schedule();
-+	}
-+}
-+
-+static int __init devtmpfs_setup(void *p)
- {
- 	int err;
- 
-@@ -396,31 +419,18 @@ static int devtmpfs_setup(void *p)
- 	return err;
- }
- 
--static int devtmpfsd(void *p)
-+/*
-+ * The __ref is because devtmpfs_setup needs to be __init for the routines it
-+ * calls.  That call is done while devtmpfs_init, which is marked __init,
-+ * synchronously waits for it to complete.
-+ */
-+static int __ref devtmpfsd(void *p)
- {
- 	int err = devtmpfs_setup(p);
- 
- 	if (err)
- 		return err;
--	while (1) {
--		spin_lock(&req_lock);
--		while (requests) {
--			struct req *req = requests;
--			requests = NULL;
--			spin_unlock(&req_lock);
--			while (req) {
--				struct req *next = req->next;
--				req->err = handle(req->name, req->mode,
--						  req->uid, req->gid, req->dev);
--				complete(&req->done);
--				req = next;
--			}
--			spin_lock(&req_lock);
--		}
--		__set_current_state(TASK_INTERRUPTIBLE);
--		spin_unlock(&req_lock);
--		schedule();
--	}
-+	devtmpfs_work_loop();
- 	return 0;
- }
- 
--- 
-2.27.0
+Hi Alain,
 
+> I've taken your comments and prepared a new serie including them.
+> I'll wait for the conclusion regarding the bindings before pushing it.
+
+Thanks! I hope we can finish the discussion this week because Linus
+hasn't made a clear statement if there will be an rc8. But I still think
+we can do HostNotify for v5.9.
+
+> I also have an additional patch ready in order to add again the SMBus Alert
+> support within the stm32f7 driver since it has been removed from the
+> current serie. Hopefully I can push it once binding is acked so that it
+> can get merged also in this cycle.
+
+If it is super straight-forward, then yes.
+
+
+--Il7n/DHsA0sMLmDu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8gVA8ACgkQFA3kzBSg
+KbajSQ//dtaGNmyVGvsfuixW64jisjDGJgBUd+WZi4edEMhsqQuB1WrNXRYMJ96W
+vq11wHJRWoYDXGGaUeGMsRe88yjr6eMamChYLb7OXqQjMaBFr2oq/wgqH0EVPdI4
+M1rg1keqTkTuvnYnKXW6bq5U0DaygeXmi3NOuvX2CCWGcfrDJm69NTDLo1xtKyia
+ZNdlyCdWBETFEC95Wli1PpdLPHD0NctsA0BtEGQLAutI0T0TrSVTj2oH55S2ZNOm
+cEIAjHhb2S8S5R/H9+JPLF9DMRn6QRTg2jYaEDy7vd6XxkHn7SWPSyMT41xEq/0T
+PQ9OkRkpyY2vJ8r/XaaD16okW1bPEmxW/1RxOcVmuFwtsST9Xu5ovMqesQO8+XsG
+DHSfAIO97GKaZ5sYTHd/pW5UZ2GW5okSDXzPBIoDSA8AFWEMSrhZ6Gh9kMwvUY4H
+Szj095Q82lbV4A2uZHlp8Or9x8roiHKTX9opJy/gmh4X1wcZ/iFkLjInwC8bf9SJ
+ldK/4k/7LGPB0Zc60v/mCjkG3QCZXW05JvwkI1dnMyNzZzwhMSnWIsiIaC9I4w+V
+Bjta6GG92S/nx2SmfAEG7SILinq2mVU3iielHg2E+YlqptIWSwz9XGGqLMYHNL4O
+J0Xef9hK4m/VmjA+QyRHyqfFXJ2LxCnL22d/cgLex1WEi/M8hjg=
+=A1LF
+-----END PGP SIGNATURE-----
+
+--Il7n/DHsA0sMLmDu--
