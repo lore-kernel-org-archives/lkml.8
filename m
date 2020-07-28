@@ -2,55 +2,80 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95677C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0962C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 795D62075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB623207FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:05:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HOn3483C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729884AbgG1W5Z (ORCPT
+        id S1729886AbgG1XFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 18:57:25 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38990 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729724AbgG1W5Y (ORCPT
+        Tue, 28 Jul 2020 19:05:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59222 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729223AbgG1XFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 18:57:24 -0400
-Received: by mail-qt1-f196.google.com with SMTP id w9so16228061qts.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 15:57:24 -0700 (PDT)
+        Tue, 28 Jul 2020 19:05:34 -0400
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA012C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 16:05:34 -0700 (PDT)
+Received: by mail-il1-x12f.google.com with SMTP id z17so2625245ill.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 16:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=X2K1uWR/QwXzI+l+S0k7hjE0zeO95oKopjPckuJcKks=;
+        b=HOn3483CcpZx2rWHnawxK0dXc7b7G3G5XyIIEaStLxCW23pUVEwNQSJlsoN5IYnNKY
+         0RzfcqUgEwEbc52FV8EqKZrskl8T7j7KFw4co7FnweEU/6zwiFFfZGKBxxQPDxgrn0zb
+         JqFA1LXPUUMNTBIiCOnr5umVrMuM3+gdkejyI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jurQF93+85jwDZNwqfmqXsgKLM5ROOgolOX/GMRL9vk=;
-        b=uT+Jy7+WX8yXLByXdr7y5gbxN24pSCqW7UoFKQoXiku6WydFVHBM3At+8A28yLQIIK
-         qFAcI1x9NrIC+kyfjJfAA4SyBovUntTawPTIcN/+XgezzwmSX1kzHu+auoa6EzhMZJD9
-         2IUfwWvw1UMX3lkKKChAQGGJKvvWQvOsmKCgoFBUhAGwDS8i3tVbq2LlJ8Q8xw4IdhzB
-         hMHqcPvnmBUGZ/R/wjGwe4+PboCj+0VGRhsbkJ3oyfbG9ssKoHZGEPAUbTix8U6VBGf6
-         2vUuqrHizqGVUarE/P3ILS2q6QVvv2WvB6Ih7qnGDfB6oswggPYLTkhUUZqiQwgoo0uI
-         QMaA==
-X-Gm-Message-State: AOAM532utE5H+2RwBpRDsrQ5S9psDcsMT1PfQ8pWlPRNN3jmoX3mSEv/
-        AqeoMFiFPXgU6p7zklxgmLA=
-X-Google-Smtp-Source: ABdhPJwzAG77024gLGy3/O8wRBtBBMtjtcehAvVp+4oNxomR2s32VbinxBKeHDuwMhOdoXP787dtnA==
-X-Received: by 2002:ac8:4e2f:: with SMTP id d15mr28808653qtw.20.1595977043478;
-        Tue, 28 Jul 2020 15:57:23 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id o187sm88118qkd.112.2020.07.28.15.57.22
+        bh=X2K1uWR/QwXzI+l+S0k7hjE0zeO95oKopjPckuJcKks=;
+        b=QDwAnZJPDvOcFyDML/hGJFJWqHM/yofFiD44lJkCC0YLHHQhmoluD1KZVlPSIeQjr5
+         FxhE4yg9/PRGqPpellwfZJSQqdtK8juC4NdhHBzVeD/VmUYgpDpzqDmRq7OourU5S3lu
+         gjAdOb6Lu9zzHVvyBLvj6RsrwDc/9555D+SWCIFS/DEG0MMc1V10971Wv2QxtdeqCdul
+         S2vjjRgrwiRzAnafXY68wiYskTcQyZK5COsRiC736G2biQaHV1BULoZcxyOSMXsg6CYm
+         BKZGCUEK4mp73HFXzMaAO502TbbYmqImF82DMQN+1YudTkQvqVcJcHtyaX6yBH6uov+I
+         8ESQ==
+X-Gm-Message-State: AOAM533802m1kjDktIxL5ZD/Zt/kCnNi5Jnet9LgvZZAj1I7AQLWvWWw
+        aoSYX+rjC4XZSPwkgg//IyUAhw==
+X-Google-Smtp-Source: ABdhPJxeTMzUL3WLdENfYV1RlntACUW3gDS4unVc7Ykwx0HXqZLKzhm39zzPu64EzsiHP3DPycSDBQ==
+X-Received: by 2002:a92:db06:: with SMTP id b6mr26282237iln.228.1595977533862;
+        Tue, 28 Jul 2020 16:05:33 -0700 (PDT)
+Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
+        by smtp.gmail.com with ESMTPSA id w10sm148945ilo.10.2020.07.28.16.05.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 15:57:23 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Kees Cook <keescook@chromium.org>, x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v3 00/21] x86/kaslr: Cleanup and small bugfixes
-Date:   Tue, 28 Jul 2020 18:57:01 -0400
-Message-Id: <20200728225722.67457-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200727230801.3468620-1-nivedita@alum.mit.edu>
-References: <20200727230801.3468620-1-nivedita@alum.mit.edu>
+        Tue, 28 Jul 2020 16:05:33 -0700 (PDT)
+From:   Daniel Campello <campello@chromium.org>
+To:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org
+Subject: [PATCH v2 00/14] sx9310 iio driver updates
+Date:   Tue, 28 Jul 2020 17:05:06 -0600
+Message-Id: <20200728230520.2011240-1-campello@chromium.org>
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+In-Reply-To: <20200728151258.1222876-1-campello@chromium.org>
+References: <20200728151258.1222876-1-campello@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,53 +83,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v2->v3:
-- Fix the first patch: command line size should be strlen + 1 to account
-  for terminating NUL. Avoid calling add_identity_map if cmdline was
-  NULL, though it should do nothing in that case anyway.
-- Add a patch to drop the check to see if there are arguments we care
-  about before parsing the command line.
-- Split up patches (Ingo/Kees).
-- The gb_huge_pages change now also gets rid of parsing the argument
-  altogether for 32-bit.
-- Slot number is changed to unsigned long instead of unsigned int
-  (Kees).
-- Make everything u64 instead of trying to use 32-bit on x86-32, and add
-  check in find_random_phys_addr to make sure the address is within the
-  required range (Ingo/Kees).
+The first patch resends the DT binding for the driver that was merged in
+v5.8-rc1 with a small change to update for proper regulators. The second
+through the eleventh patch fixes several issues dropped from v8 to v9
+when the initial patch was merged. The twelveth patch fixes a few
+printks that are missing newlines and should be totally non-trivial to
+apply. The thirteenth patch drops channel_users because it's unused. The
+final patch adds support to enable the svdd and vdd supplies so that
+this driver can work on a board where the svdd supply isn't enabled at
+boot and needs to be turned on before this driver starts to communicate
+with the chip.
 
-v1->v2:
-- Fix a bug in the bugfix 5/8: overlap.start can be smaller than
-  region.start, so shouldn't subtract before comparing.
+Changes in v2:
+ - Added #io-channel-cells as a required property
+ - Reordered error handling on sx9310_resume()
+ - Added #include <linux/mod_devicetable.h>
+ - Added '\n' to dev_err()
+ - Fixed commit message from "iio: sx9310: Align memory"
+ - Changed prox_stat to chan_prox_stat bitmap.
+ - Fixed dev_err() message
+ - Added '\n' to dev_err()
 
+Daniel Campello (12):
+  dt-bindings: iio: Add bindings for sx9310 sensor
+  iio: sx9310: Update macros declarations
+  iio: sx9310: Fix irq handling
+  iio: sx9310: Remove acpi and of table macros
+  iio: sx9310: Change from .probe to .probe_new
+  iio: sx9310: Fixes various memory handling
+  iio: sx9310: Use long instead of int for channel bitmaps
+  iio: sx9310: Use regmap_read_poll_timeout() for compensation
+  iio: sx9310: Update copyright
+  iio: sx9310: Simplify error return handling
+  iio: sx9310: Use variable to hold &client->dev
+  iio: sx9310: Miscellaneous format fixes
 
-Arvind Sankar (21):
-  x86/kaslr: Make command line handling safer
-  x86/kaslr: Remove bogus warning and unnecessary goto
-  x86/kaslr: Fix process_efi_entries comment
-  x86/kaslr: Initialize mem_limit to the real maximum address
-  x86/kaslr: Fix off-by-one error in __process_mem_region
-  x86/kaslr: Drop redundant cur_entry from __process_mem_region
-  x86/kaslr: Eliminate start_orig from __process_mem_region
-  x86/kaslr: Drop redundant variable in __process_mem_region
-  x86/kaslr: Drop some redundant checks from __process_mem_region
-  x86/kaslr: Fix off-by-one error in process_gb_huge_pages
-  x86/kaslr: Short-circuit gb_huge_pages on x86-32
-  x86/kaslr: Simplify process_gb_huge_pages
-  x86/kaslr: Drop test for command-line parameters before parsing
-  x86/kaslr: Make the type of number of slots/slot areas consistent
-  x86/kaslr: Drop redundant check in store_slot_info
-  x86/kaslr: Drop unnecessary alignment in find_random_virt_addr
-  x86/kaslr: Small cleanup of find_random_phys_addr
-  x86/kaslr: Make minimum/image_size unsigned long
-  x86/kaslr: Replace unsigned long long with u64
-  x86/kaslr: Make local variables 64-bit
-  x86/kaslr: Add a check that the random address is in range
+Stephen Boyd (2):
+  iio: sx9310: Drop channel_users[]
+  iio: sx9310: Enable vdd and svdd regulators at probe
 
- arch/x86/boot/compressed/kaslr.c | 233 +++++++++++++------------------
- arch/x86/boot/compressed/misc.h  |   4 +-
- 2 files changed, 102 insertions(+), 135 deletions(-)
+ .../iio/proximity/semtech,sx9310.yaml         |  65 +++
+ drivers/iio/proximity/sx9310.c                | 424 +++++++++---------
+ 2 files changed, 277 insertions(+), 212 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
 
--- 
-2.26.2
+--
+2.28.0.163.g6104cc2f0b6-goog
 
