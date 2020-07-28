@@ -2,108 +2,69 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C021C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A39DC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05F6B207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:11:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KI0fDHv1"
+	by mail.kernel.org (Postfix) with ESMTP id 430EB20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:11:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595920317;
+	bh=yJacfktf1QlvWuBwJGBrSDfCg5HGJQKMtce+4d5/fk0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qJNWBJEdIWHxafmZU+TLLXEq8V74grpj4P0ZygJgr4huoDaQTGr24CknPmWl9T/nH
+	 X0Yoe8DWNWBC02ZzDFf06PW0xXtyeRyGqDwzfQI6KzX8rptcI6/E+YdECWzLzZY1ql
+	 9u98de9ghQAeBpMGCSHQpTUkCcmHsMskpnyVo554=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgG1HLL (ORCPT
+        id S1727850AbgG1HL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:11:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726854AbgG1HLK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:11:10 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23ACEC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:11:10 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id q4so20006570lji.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:11:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DRjmm9UeBZr7w+ollM4mmi9tSJezjZAc4TEhn0vLBdU=;
-        b=KI0fDHv19vGSEykHx1Xxf2uYI1XOVLyGfQIU2/9514vqCxwHHTuFLpmtTzjcMIpBqX
-         Q4N6atO6Hv6xE+kmibPoISKeJ0N8BEwd7vDhnnrta5dig7mD+QKpIMhi2LR5In0odMxD
-         v/nw+xjY3Qv9PFJ5+ftNOCgEYwYFO7UBhG2UaoeCiyFYdShW2l65MLefZvXX/TuFKjTd
-         fpKWungKDmOiDVtcfDpM1ne/HrIMnuanUoAnejRD22L1Nh254yuh+FQ8NFKakM4PXwQo
-         WXZL7qsvYv7QZfeTgazav5diHpXeDKzma6PRjlvDlgFL5fVjpDm/UP17EucCmH9R4gtQ
-         i8cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DRjmm9UeBZr7w+ollM4mmi9tSJezjZAc4TEhn0vLBdU=;
-        b=IfxayrQY4Er6s3EhV2WtoEHtGJxeVyDJHqoGZzd+tv8liX/FtIUVMFXerG2FPWqwHb
-         WK3S/hTKL7MnhA9+U2kktMXADlJMIkpXd6+QBk+6uKglrFYuMGqcjNrL+kkODKs8lVkZ
-         dudJXpHo1mSewiA428T80TMVM+aAhlbTSILD4IhZ+aoI64KctQr9w/sgUybstlCkYbCG
-         0VfRSkPz3Mado3OudR//FQ1XX+MHNuw88Hddh/DEZNN6ktbW1HmeQYQuyCkzrRXtdnHU
-         xqj8aeEuLR26qiYfNaLJtZvfPHedhz4nwBdzUcjV/9G03NR/g3L3mOvaGvumoU5WDbDD
-         f5kg==
-X-Gm-Message-State: AOAM5329v0K+XvNvsOI1IgQXoLuYph9aaKm85va3Ya5yHlXDzOF0IaQ2
-        6WRtFKzTJKkKgu0QT7kl4imI0ZEHTqcpZicFUXw=
-X-Google-Smtp-Source: ABdhPJyjhWJvOexjJ9Q7VOnPBUZjH1m1y72aPQWml/W5gmrJ56dELIFOcCms21hPKK+BstFoDGJXHhFoL5JEnD4D+Xc=
-X-Received: by 2002:a2e:920e:: with SMTP id k14mr12349908ljg.430.1595920268329;
- Tue, 28 Jul 2020 00:11:08 -0700 (PDT)
+        Tue, 28 Jul 2020 03:11:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49240 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726854AbgG1HLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 03:11:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0F5E20792;
+        Tue, 28 Jul 2020 07:11:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595920312;
+        bh=yJacfktf1QlvWuBwJGBrSDfCg5HGJQKMtce+4d5/fk0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aqrQ8Mo+HL6du7DoyMbdhlBQcK1gRHxV1aPZhqqTRYe8vACaWkp9Q0ZcQdcP6NVe/
+         P0Eb+zHnVno9eEb1C1KFOLwACzLsW00a62hbmIP+rUjzGfx/623VyjBZ5m480/B7b1
+         N6bq9D2+k+f1dyU1054inelNWy3mDyUqJMqhukgY=
+Date:   Tue, 28 Jul 2020 09:11:45 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Rustam Kovhaev <rkovhaev@gmail.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: hso: check for return value in
+ hso_serial_common_create()
+Message-ID: <20200728071145.GA348828@kroah.com>
+References: <20200728064214.572158-1-rkovhaev@gmail.com>
 MIME-Version: 1.0
-References: <1594525195-28345-1-git-send-email-jrdr.linux@gmail.com>
-In-Reply-To: <1594525195-28345-1-git-send-email-jrdr.linux@gmail.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Tue, 28 Jul 2020 12:40:57 +0530
-Message-ID: <CAFqt6za8U04U2TQhe6DUCv7B4h9L-iqPtyE1DuALXUWOD=1M3A@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Few bug fixes and Convert to pin_user_pages*()
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>, sstabellini@kernel.org
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Paul Durrant <xadimgnik@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728064214.572158-1-rkovhaev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+On Mon, Jul 27, 2020 at 11:42:17PM -0700, Rustam Kovhaev wrote:
+> in case of an error tty_register_device_attr() returns ERR_PTR(),
+> add IS_ERR() check
+> 
+> Reported-and-tested-by: syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com
+> Link: https://syzkaller.appspot.com/bug?extid=67b2bd0e34f952d0321e
+> Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
 
-On Sun, Jul 12, 2020 at 9:01 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
->
-> This series contains few clean up, minor bug fixes and
-> Convert get_user_pages() to pin_user_pages().
->
-> I'm compile tested this, but unable to run-time test,
-> so any testing help is much appriciated.
->
-> v2:
->         Addressed few review comments and compile issue.
->         Patch[1/2] from v1 split into 2 in v2.
-> v3:
->         Address review comment. Add review tag.
->
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Paul Durrant <xadimgnik@gmail.com>
->
-> Souptick Joarder (3):
->   xen/privcmd: Corrected error handling path
->   xen/privcmd: Mark pages as dirty
->   xen/privcmd: Convert get_user_pages*() to pin_user_pages*()
+Looks good, thanks!
 
-Does this series looks good to go for 5.9 ?
-
->
->  drivers/xen/privcmd.c | 32 ++++++++++++++------------------
->  1 file changed, 14 insertions(+), 18 deletions(-)
->
-> --
-> 1.9.1
->
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
