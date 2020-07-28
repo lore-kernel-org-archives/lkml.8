@@ -2,209 +2,94 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0BAC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79581C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AFA2206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D90206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:07:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ywu0KlR6"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="SLaBgESU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730322AbgG1OHK (ORCPT
+        id S1730332AbgG1OHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:07:10 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54912 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730211AbgG1OHJ (ORCPT
+        Tue, 28 Jul 2020 10:07:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730211AbgG1OHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:07:09 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06SE2whW012373;
-        Tue, 28 Jul 2020 14:06:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=GWvmtNw2Buotc0Z9pinQFTYuFu4BUOZm0ph5jo3/R5g=;
- b=Ywu0KlR68UAmPMAMzEijN5sPfsI2RFlNe0ywEuGhVtHAqUHAxSlnPvj+fvBg3CfawQLi
- O8QV3k70bHHGi+TDE7WzgN3AXyKCHd07itHADpsyvH3bno67SP9WHuF3rt/9+WY6nDaa
- oVaHl0qxoVGp4tj7fsHlZ4hFcrh0ThlK2GXSUJsCw7RXQ/aIgHMBEqNFg+BLg5O3rc7E
- cvBKTE+lzbtLOrYV/3yxnTMmzCYchUp+2o6RilnRq3Qy1NrIgaXBPlmUSW/T3VMgtaQo
- f1lvD3tcoOt41X7/ZLiPEvV4mI0Fkg2/hIkPf5WQ+VuptNKUN8lA/OnPzhQkcA+3Sr8Y +w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 32hu1j7p8b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 Jul 2020 14:06:27 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06SDxL7i141077;
-        Tue, 28 Jul 2020 14:06:27 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 32hu5ss78y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jul 2020 14:06:27 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06SE6BVF008475;
-        Tue, 28 Jul 2020 14:06:11 GMT
-Received: from [10.39.227.185] (/10.39.227.185)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Jul 2020 07:06:10 -0700
-Subject: Re: [RFC PATCH 5/5] mm: introduce MADV_DOEXEC
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org
-Cc:     mhocko@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        viro@zeniv.linux.org.uk, akpm@linux-foundation.org, arnd@arndb.de,
-        ebiederm@xmission.com, keescook@chromium.org, gerg@linux-m68k.org,
-        christian.brauner@ubuntu.com, peterz@infradead.org,
-        esyr@redhat.com, jgg@ziepe.ca, christian@kellner.me,
-        areber@redhat.com, cyphar@cyphar.com
-References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
- <1595869887-23307-6-git-send-email-anthony.yznaga@oracle.com>
- <743a51db-dc27-c49c-9c65-ac164f5283ba@virtuozzo.com>
-From:   Steven Sistare <steven.sistare@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <bd50a6f0-670e-6bd3-13f1-c7a96e56a9bb@oracle.com>
-Date:   Tue, 28 Jul 2020 10:06:05 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 10:07:13 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 683A1C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:07:13 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id c16so393854ejx.12
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:07:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QDO5xtNZ22C72a1tBmEqwRX/00TFY7M8B1T43bXeDoo=;
+        b=SLaBgESU+1xIJqSNqhieu03SNXKyKL+9MH8hgBEP20Gv4XC0tv7Aigf51SuYFDsJ0+
+         09GIRi4cOnfUbvnWrtl2Bj6Hz1USuSfKPbNvwk6y0GavN4M4MAnesqzHkieumXy0qARA
+         QDirQJmvwSNdLa088Smv1pEnZ7tVhoCsP9bwM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QDO5xtNZ22C72a1tBmEqwRX/00TFY7M8B1T43bXeDoo=;
+        b=I6hxvbEpi2q0dCDxaJYVQ5OIezGzsEuKjNpbOxbVhTqCFAR3NvY1dkxCrft2dWEphS
+         hNo2VL3Eq1Bxg7KR2Y21tqNUE90CCTw1OkCJxKuW+bZAko6y5W7NAkY7eaJk81m3hV0B
+         MXLuGHxf/TQe4HPJjekeLTaI/26SnCtD7X//DKLNbs38o83A/473YOjpK7YdUwU/ebBr
+         HADcZQxeSbq/jMRVXHMnb9+OxP+Tgmf/D7C0WniyiaOXFfCJfUKdPdWWJutP64GMdUWn
+         K9ka7galF8nQEKF5RhT5b0znnlZ6a9Ud1A83/nFcC4moNh+IovATzlYJnQHIXsB89uZZ
+         /IHg==
+X-Gm-Message-State: AOAM530P/LL0KBqTLRJUG12iqMbLvWXhbk8hSaaYhJtS5XskXY1foqLe
+        glPP9JGTzjZyQU1/pLlXfXgBsA==
+X-Google-Smtp-Source: ABdhPJxZ3wtzuEqLcFixIKCJsMltmAzdJGoi38PMs9K9jHC/4Hd5c2yQLO2nF6gN4LZSUmJ0jmor/w==
+X-Received: by 2002:a17:906:854d:: with SMTP id h13mr13570039ejy.446.1595945231802;
+        Tue, 28 Jul 2020 07:07:11 -0700 (PDT)
+Received: from localhost ([2620:10d:c092:180::1:f8d8])
+        by smtp.gmail.com with ESMTPSA id p21sm6722487eds.11.2020.07.28.07.07.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 07:07:11 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 15:07:11 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH] mm: memcontrol: restore proper dirty throttling when
+ memory.high changes
+Message-ID: <20200728140711.GA196042@chrisdown.name>
+References: <20200728135210.379885-1-hannes@cmpxchg.org>
 MIME-Version: 1.0
-In-Reply-To: <743a51db-dc27-c49c-9c65-ac164f5283ba@virtuozzo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007280107
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
- malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007280107
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200728135210.379885-1-hannes@cmpxchg.org>
+User-Agent: Mutt/1.14.6 (2020-07-11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/2020 9:22 AM, Kirill Tkhai wrote:
-> On 27.07.2020 20:11, Anthony Yznaga wrote:
->> madvise MADV_DOEXEC preserves a memory range across exec.  Initially
->> only supported for non-executable, non-stack, anonymous memory.
->> MADV_DONTEXEC reverts the effect of a previous MADV_DOXEXEC call and
->> undoes the preservation of the range.  After a successful exec call,
->> the behavior of all ranges reverts to MADV_DONTEXEC.
->>
->> Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
->> Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
->> ---
->>  include/uapi/asm-generic/mman-common.h |  3 +++
->>  mm/madvise.c                           | 25 +++++++++++++++++++++++++
->>  2 files changed, 28 insertions(+)
->>
->> diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
->> index f94f65d429be..7c5f616b28f7 100644
->> --- a/include/uapi/asm-generic/mman-common.h
->> +++ b/include/uapi/asm-generic/mman-common.h
->> @@ -72,6 +72,9 @@
->>  #define MADV_COLD	20		/* deactivate these pages */
->>  #define MADV_PAGEOUT	21		/* reclaim these pages */
->>  
->> +#define MADV_DOEXEC	22		/* do inherit across exec */
->> +#define MADV_DONTEXEC	23		/* don't inherit across exec */
->> +
->>  /* compatibility flags */
->>  #define MAP_FILE	0
->>  
->> diff --git a/mm/madvise.c b/mm/madvise.c
->> index dd1d43cf026d..b447fa748649 100644
->> --- a/mm/madvise.c
->> +++ b/mm/madvise.c
->> @@ -103,6 +103,26 @@ static long madvise_behavior(struct vm_area_struct *vma,
->>  	case MADV_KEEPONFORK:
->>  		new_flags &= ~VM_WIPEONFORK;
->>  		break;
->> +	case MADV_DOEXEC:
-> 
-> For me MADV_KEEPONEXEC sounds better as it's symmetric to MADV_KEEPONFORK.
+Johannes Weiner writes:
+>Commit 8c8c383c04f6 ("mm: memcontrol: try harder to set a new
+>memory.high") inadvertently removed a callback to recalculate the
+>writeback cache size in light of a newly configured memory.high limit.
+>
+>Without letting the writeback cache know about a potentially heavily
+>reduced limit, it may permit too many dirty pages, which can cause
+>unnecessary reclaim latencies or even avoidable OOM situations.
+>
+>This was spotted while reading the code, it hasn't knowingly caused
+>any problems in practice so far.
+>
+>Fixes: 8c8c383c04f6 ("mm: memcontrol: try harder to set a new memory.high")
+>Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-We chose MADV_DOEXEC and MADV_DONTEXEC to match the precedent set by:
-
-#define MADV_DONTFORK   10              /* don't inherit across fork */
-
-
-#define MADV_DOFORK     11              /* do inherit across fork */
-
-
-I do like "keep" as a concise description of the operation.  KEEPONFORK is not a perfect 
-analog because its opposite is wipe ...
-
-#define MADV_WIPEONFORK 18              /* Zero memory on fork, child only */
-#define MADV_KEEPONFORK 19              /* Undo MADV_WIPEONFORK */
-
-... but if folks are ok with that then IMO these are all good choices:
-
-MADV_KEEPONEXEC
-MADV_DROPONEXEC
-
-MADV_KEEPEXEC    (shorter)
-MADV_DROPEXEC 
-
-MADV_KEEP_EXEC   (more legible, but no existing MADV names use 2nd underscores)
-MADV_DROP_EXEC
-
-Whatever folks like best.
-
-- Steve
-
->> +		/*
->> +		 * MADV_DOEXEC is only supported on private, non-executable,
->> +		 * non-stack anonymous memory and if the VM_EXEC_KEEP flag
->> +		 * is available.
->> +		 */
->> +		if (!VM_EXEC_KEEP || vma->vm_file || vma->vm_flags & (VM_EXEC|VM_SHARED|VM_STACK)) {
->> +			error = -EINVAL;
->> +			goto out;
->> +		}
->> +		new_flags |= (new_flags & ~VM_MAYEXEC) | VM_EXEC_KEEP;
->> +		break;
->> +	case MADV_DONTEXEC:
->> +		if (!VM_EXEC_KEEP) {
->> +			error = -EINVAL;
->> +			goto out;
->> +		}
->> +		if (new_flags & VM_EXEC_KEEP)
->> +			new_flags |= (new_flags & ~VM_EXEC_KEEP) | VM_MAYEXEC;
->> +		break;
->>  	case MADV_DONTDUMP:
->>  		new_flags |= VM_DONTDUMP;
->>  		break;
->> @@ -983,6 +1003,8 @@ static int madvise_inject_error(int behavior,
->>  	case MADV_SOFT_OFFLINE:
->>  	case MADV_HWPOISON:
->>  #endif
->> +	case MADV_DOEXEC:
->> +	case MADV_DONTEXEC:
->>  		return true;
->>  
->>  	default:
->> @@ -1037,6 +1059,9 @@ static int madvise_inject_error(int behavior,
->>   *  MADV_DONTDUMP - the application wants to prevent pages in the given range
->>   *		from being included in its core dump.
->>   *  MADV_DODUMP - cancel MADV_DONTDUMP: no longer exclude from core dump.
->> + *  MADV_DOEXEC - On exec, preserve and duplicate this area in the new process
->> + *		  if the new process allows it.
->> + *  MADV_DONTEXEC - Undo the effect of MADV_DOEXEC.
->>   *
->>   * return values:
->>   *  zero    - success
->>
-> 
+Acked-by: Chris Down <chris@chrisdown.name>
