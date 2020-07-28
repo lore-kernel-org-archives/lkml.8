@@ -2,96 +2,144 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B35EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B88C433F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4085620786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F82A20829
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:45:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zos4drdq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbgG1Jl0 (ORCPT
+        id S1728587AbgG1Jp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:41:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47548 "EHLO
+        Tue, 28 Jul 2020 05:45:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728197AbgG1Jl0 (ORCPT
+        with ESMTP id S1728564AbgG1JpV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 05:41:26 -0400
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3166AC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 02:41:26 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4BGBWj2tvzzQlKZ;
-        Tue, 28 Jul 2020 11:41:21 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
-        with ESMTP id mL45Y320Mr-I; Tue, 28 Jul 2020 11:41:17 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 19:41:09 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>, Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-fsdevel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        linux-pm@vger.kernel.org
-Subject: Re: [RFC][PATCH] exec: Freeze the other threads during a
- multi-threaded exec
-Message-ID: <20200728092359.jrv7ygt6dwktwsgp@yavin.dot.cyphar.com>
-References: <87h7tsllgw.fsf@x220.int.ebiederm.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ifgp4clg667prhsz"
-Content-Disposition: inline
-In-Reply-To: <87h7tsllgw.fsf@x220.int.ebiederm.org>
-X-MBO-SPAM-Probability: 0
-X-Rspamd-Score: -4.89 / 15.00 / 15.00
-X-Rspamd-Queue-Id: E1EE11837
-X-Rspamd-UID: 106a35
+        Tue, 28 Jul 2020 05:45:21 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71394C061794;
+        Tue, 28 Jul 2020 02:45:21 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k13so1791533plk.13;
+        Tue, 28 Jul 2020 02:45:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=v4hzsRw11Wiw6xr0GvgfYpPF0Q4BnW/4rsf/8GkZyQw=;
+        b=Zos4drdqzuG48wXtTv4pVVnjusmQl20abj+Kz1EqvewUtCnxXvkgMu0kwocJVglioq
+         IGYaSAvrCj7Xt1MwTvrLt/GTXjliBxkNT+YTiZJWKuJI+F0eQxtzPsKj37plB7VyuTSn
+         7xN+UTf26Hu/SartpedeJofd3RnImxX3lAT0j1Nfq5AjCYKn8uWbFigOEevIfBzcay0l
+         Chljv6Gk/6ZrD3mlVeQHl367jg/cxrG0PLHltEBZnT1E8sat9X3g9KRPskDUUch0z9Cp
+         f+L5WVGo7e8klo7kB0PhQ51xQNZaf6u0hk5/VNPMhXxpUZizcUoJbpsXMSTJHN7duWKc
+         AmWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=v4hzsRw11Wiw6xr0GvgfYpPF0Q4BnW/4rsf/8GkZyQw=;
+        b=luCF/VdCih1z/QADt95HH5yiJhJmj/yisYGTE3ssq0eO0aNm65iSzYkYPkZHH/ePGa
+         Xv6QvC/0AyUMXBt/NJYh+8jUMRMWghgvXahQjv6U9frPUsMpPjEpoPbqUENXODLsu7XU
+         ZVODNg33Cx8mvTf3gGu3/IR69d+RuxcFUP5jTDERrM08CcoDYxSoXVpld6kcerCyFSKk
+         ZfzRbj9SDnyQ4tTew40ZHCJ7776t1P6NciqSE22xMfRIK+mI6Yv9mgnXQvhOVuOFRzs8
+         1oFiSON4MO2zABdqNU1q+5Em9C64uk/3wn72O0eqfOOOkptQOkefH5fr6eVKqOGuRahS
+         PfQw==
+X-Gm-Message-State: AOAM5326Ox1o8QitFORgMJc8/NgHmbwFI/BxAYiAM9/G22nxG8dnJiGh
+        2PCM7tet8B3wjDI1bB0VXHmfpekJ
+X-Google-Smtp-Source: ABdhPJxsZ5mYTWHDw/CZGoeaB7OeyI6mv6+zZ2Fpowq9ZFMFVYcxatXVTbH9YxF75bc0dzckLtbQUQ==
+X-Received: by 2002:a17:902:59d2:: with SMTP id d18mr11673509plj.243.1595929520819;
+        Tue, 28 Jul 2020 02:45:20 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.6])
+        by smtp.googlemail.com with ESMTPSA id r17sm17969173pfg.62.2020.07.28.02.45.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Jul 2020 02:45:20 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH v2 3/3] KVM: SVM: Fix disable pause loop exit/pause filtering capability on SVM
+Date:   Tue, 28 Jul 2020 17:45:06 +0800
+Message-Id: <1595929506-9203-3-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595929506-9203-1-git-send-email-wanpengli@tencent.com>
+References: <1595929506-9203-1-git-send-email-wanpengli@tencent.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Wanpeng Li <wanpengli@tencent.com>
 
---ifgp4clg667prhsz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit 8566ac8b (KVM: SVM: Implement pause loop exit logic in SVM) drops
+disable pause loop exit/pause filtering capability completely, I guess it
+is a merge fault by Radim since disable vmexits capabilities and pause
+loop exit for SVM patchsets are merged at the same time. This patch
+reintroduces the disable pause loop exit/pause filtering capability
+support.
 
-On 2020-07-27, Eric W. Biederman <ebiederm@xmission.com> wrote:
-> To the best of my knowledge processes with more than one thread
-> calling exec are not common, and as all of the threads will be killed
-> by exec there does not appear to be any useful work a thread can
-> reliably do during exec.
+We can observe 2.9% hackbench improvement for a 92 vCPUs guest on AMD 
+Rome Server.
 
-Every Go program which calls exec (this includes runc, Docker, LXD,
-Kubernetes, et al) fills the niche of "multi-threaded program that calls
-exec" -- all Go programs are multi-threaded and there's no way of
-disabling this. This will most likely cause pretty bad performance
-regression for basically all container workloads.
+Reported-by: Haiwei Li <lihaiwei@tencent.com>
+Tested-by: Haiwei Li <lihaiwei@tencent.com>
+Fixes: 8566ac8b (KVM: SVM: Implement pause loop exit logic in SVM)
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/svm/svm.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index c0da4dd..c20f127 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1090,7 +1090,7 @@ static void init_vmcb(struct vcpu_svm *svm)
+ 	svm->nested.vmcb = 0;
+ 	svm->vcpu.arch.hflags = 0;
+ 
+-	if (pause_filter_count) {
++	if (pause_filter_count && !kvm_pause_in_guest(svm->vcpu.kvm)) {
+ 		control->pause_filter_count = pause_filter_count;
+ 		if (pause_filter_thresh)
+ 			control->pause_filter_thresh = pause_filter_thresh;
+@@ -2693,7 +2693,7 @@ static int pause_interception(struct vcpu_svm *svm)
+ 	struct kvm_vcpu *vcpu = &svm->vcpu;
+ 	bool in_kernel = (svm_get_cpl(vcpu) == 0);
+ 
+-	if (pause_filter_thresh)
++	if (!kvm_pause_in_guest(vcpu->kvm))
+ 		grow_ple_window(vcpu);
+ 
+ 	kvm_vcpu_on_spin(vcpu, in_kernel);
+@@ -3780,7 +3780,7 @@ static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+ 
+ static void svm_sched_in(struct kvm_vcpu *vcpu, int cpu)
+ {
+-	if (pause_filter_thresh)
++	if (!kvm_pause_in_guest(vcpu->kvm))
+ 		shrink_ple_window(vcpu);
+ }
+ 
+@@ -3958,6 +3958,9 @@ static void svm_vm_destroy(struct kvm *kvm)
+ 
+ static int svm_vm_init(struct kvm *kvm)
+ {
++	if (!pause_filter_thresh)
++		kvm->arch.pause_in_guest = true;
++
+ 	if (avic) {
+ 		int ret = avic_vm_init(kvm);
+ 		if (ret)
+-- 
+2.7.4
 
---ifgp4clg667prhsz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXx/ysgAKCRCdlLljIbnQ
-EkKKAQDoy8ZD4VcTpwNYsy7hTgaSyJYCrr3BEVWWGgivWDOsTAD/YSG2mqdY6Xxb
-/MSwhLo3kjae0B+Zbr6HVENFaTzZjgc=
-=1hzK
------END PGP SIGNATURE-----
-
---ifgp4clg667prhsz--
