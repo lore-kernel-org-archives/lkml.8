@@ -2,181 +2,163 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04989C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2116C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D655B206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C682074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:43:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qSE8zMPz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HjmRgKoV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgG1Lm7 (ORCPT
+        id S1729218AbgG1LnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 07:42:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729036AbgG1Lm6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 07:42:58 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86944C061794;
-        Tue, 28 Jul 2020 04:42:58 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k13so1949243plk.13;
-        Tue, 28 Jul 2020 04:42:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=f5JgTl1mn5uTL5N69LqaGIrNSHZWhpmutap+rp0hNP0=;
-        b=qSE8zMPz4HChumx8PDMwOaYF2rRJWxIIMo8kuHhth2sYL9IYEIb3bChYfV3oa/kSKv
-         sZ4OGF199JWu+Hc1qr/mGhMFHaRXzlepCvLSAD9lUJvs4uupqAIcwLgUY1I25tLGKZj/
-         p4gfzXLs41fKxuUPjegTGU1x2WI2i7651GdHCCbLrmmuWrnkrVn+cH5JtI+c9dlREyde
-         qyTVbXjUFVv/onHHSuhncCINST4ERMc1qBndiKDfS+lLzZ3hkItgqgJ1/lOpcyV1c5W3
-         s+TEY/H1QxuhZisKKsCwnGskAYUYlW3CS1tVU9oK2b67eCA8OeJt3E8mSD+ZCDKdT6Qx
-         4ZQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=f5JgTl1mn5uTL5N69LqaGIrNSHZWhpmutap+rp0hNP0=;
-        b=X5NnrJ+KwvxNjc4mgdJe1LjO0InV61BuZRNH7CV1HgPMePzRQMbBLZ/aXPzCRRMIq4
-         DlS1+BnZy9uS/YXtvp0VH/XLpLMxuaDoq6Z1kdqCCBawFEhC+cOXDToCRqeh4qAWJbIl
-         ymcO/QyVqyHEdzt5agzIB9UAllixYLykz+Z4luEyBPbfYDh6h9FAnIhdR0AFSzp283cv
-         baB8i/BIGUQm5nFVb679PEEaaAvd5eCXHkpkpj7qFiAv591kYdYV6luVtwT7RtNNDX3C
-         /eGBpQbH1z5KjopffsiNACrIB6bjbMnSpuU07LB3mx3HfuK9Hc6vYI9He3UHhJt3baD1
-         sVrA==
-X-Gm-Message-State: AOAM533wnkSPTCqKoYbTQ9NVCMnhWy+HbP35lg99UsVb6VvvlWPLuGXj
-        FpgbQdEhCebfM3zelqbmGxs=
-X-Google-Smtp-Source: ABdhPJyp4u8cmwBfLx7giHjgA2KCYor0/RYxbOjGsQ/FZqFeau9qvpJOeeLDow5oAtz4aszE55hIVg==
-X-Received: by 2002:a17:902:b18b:: with SMTP id s11mr23283675plr.152.1595936577971;
-        Tue, 28 Jul 2020 04:42:57 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id 66sm19157012pfg.63.2020.07.28.04.42.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 04:42:57 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v1] wireless: airo: use generic power management
-Date:   Tue, 28 Jul 2020 17:11:28 +0530
-Message-Id: <20200728114128.1218310-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 28 Jul 2020 07:43:19 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:51442 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729036AbgG1LnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 07:43:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595936596; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: To: From:
+ Subject: Sender; bh=C2g3qCsM1rQjNC6Re9u3OWUPrxkKyricosFKiC3IGhw=; b=HjmRgKoVrPlW+CJAcnT3ZGXJq/h99U0JpbtyAZroojGZICK3QK2mHUEpjmpEzmzLx16UsvQM
+ CGWd/yqm1Z+/1efKTfxgB6Vnqi05YVkIy6VUqb4IH9KlSMLGxTAsuhy6/vOjZEzZiGW/9QdN
+ Zekn+NhrgTm49rOjwDRJ4kijrVA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5f200f54a61bb9e3f5cf3e94 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 11:43:16
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 175F4C433AD; Tue, 28 Jul 2020 11:43:15 +0000 (UTC)
+Received: from [192.168.0.129] (unknown [183.83.142.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rohitkr)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0A0FBC433C6;
+        Tue, 28 Jul 2020 11:43:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0A0FBC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
+Subject: Re: [PATCH v4 00/12] ASoC: qcom: Add support for SC7180 lpass variant
+From:   Rohit Kumar <rohitkr@codeaurora.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1595413915-17867-1-git-send-email-rohitkr@codeaurora.org>
+ <d1e6d60b-9f00-266d-74ad-8c18bbf8d142@linaro.org>
+ <cb02a3d7-a947-852d-739f-a5f4b823f06a@codeaurora.org>
+Message-ID: <b5cb020c-4fc8-376f-3308-71bf3a244d26@codeaurora.org>
+Date:   Tue, 28 Jul 2020 17:13:07 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <cb02a3d7-a947-852d-739f-a5f4b823f06a@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers using legacy power management .suspen()/.resume() callbacks
-have to manage PCI states and device's PM states themselves. They also
-need to take care of standard configuration registers.
 
-Switch to generic power management framework using a single
-"struct dev_pm_ops" variable to take the unnecessary load from the driver.
-This also avoids the need for the driver to directly call most of the PCI
-helper functions and device power state control functions, as through
-the generic framework PCI Core takes care of the necessary operations,
-and drivers are required to do only device-specific jobs.
+On 7/27/2020 3:20 PM, Rohit Kumar wrote:
+>
+> On 7/24/2020 4:52 PM, Srinivas Kandagatla wrote:
+>>
+>>
+>> On 22/07/2020 11:31, Rohit kumar wrote:
+>>> This patch chain add audio support for SC7180 soc by doing the required
+>>> modification in existing common lpass-cpu/lpass-platform driver.
+>>> This also fixes some concurrency issue.
+>>>
+>>> Changes since v3:
+>>>     - Fixed yaml documentation comments and make dt_binding_check 
+>>> issues.
+>>>     - Moved general fixes out of sc7180 specific patches as 
+>>> suggested by Srinivas.
+>>>     - Update clock-names to make it same as existing platforms.
+>>>
+>>> Ajit Pandey (4):
+>>>    ASoC: qcom: Add common array to initialize soc based core clocks
+>>>    ASoC: qcom: lpass-platform: Replace card->dev with component->dev
+>>>    include: dt-bindings: sound: Add sc7180-lpass bindings header
+>>>    ASoC: qcom: lpass-sc7180: Add platform driver for lpass audio
+>>>
+>>> Rohit kumar (8):
+>>>    ASoC: qcom: lpass-cpu: Move ahbix clk to platform specific function
+>>>    ASoC: qcom: lpass-platform: fix memory leak
+>>>    ASoC: qcom: lpass: Use regmap_field for i2sctl and dmactl registers
+>>>    ASoC: qcom: lpass-cpu: fix concurrency issue
+>>>    dt-bindings: sound: lpass-cpu: Add sc7180 lpass cpu node
+>>>    ASoC: qcom: lpass-cpu: Use platform_get_resource
+>>>    ASoC: qcom: lpass-platform: Use platform_get_irq
+>>>    dt-bindings: sound: lpass-cpu: Move to yaml format
+>>
+>>
+> Thanks Srini for review and testing.
+>
+> Mark, I am planning to repost patch07 onwards to address comments by 
+> Rob as
+>
+> there are no comments till patch06 and they are just fixes.
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/net/wireless/cisco/airo.c | 39 +++++++++++++++----------------
- 1 file changed, 19 insertions(+), 20 deletions(-)
+Hello Mark,
 
-diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
-index 827bb6d74815..f9627fa360a2 100644
---- a/drivers/net/wireless/cisco/airo.c
-+++ b/drivers/net/wireless/cisco/airo.c
-@@ -74,16 +74,19 @@ MODULE_DEVICE_TABLE(pci, card_ids);
- 
- static int airo_pci_probe(struct pci_dev *, const struct pci_device_id *);
- static void airo_pci_remove(struct pci_dev *);
--static int airo_pci_suspend(struct pci_dev *pdev, pm_message_t state);
--static int airo_pci_resume(struct pci_dev *pdev);
-+static int __maybe_unused airo_pci_suspend(struct device *dev);
-+static int __maybe_unused airo_pci_resume(struct device *dev);
-+
-+static SIMPLE_DEV_PM_OPS(airo_pci_pm_ops,
-+			 airo_pci_suspend,
-+			 airo_pci_resume);
- 
- static struct pci_driver airo_driver = {
--	.name     = DRV_NAME,
--	.id_table = card_ids,
--	.probe    = airo_pci_probe,
--	.remove   = airo_pci_remove,
--	.suspend  = airo_pci_suspend,
--	.resume   = airo_pci_resume,
-+	.name      = DRV_NAME,
-+	.id_table  = card_ids,
-+	.probe     = airo_pci_probe,
-+	.remove    = airo_pci_remove,
-+	.driver.pm = &airo_pci_pm_ops,
- };
- #endif /* CONFIG_PCI */
- 
-@@ -5573,9 +5576,9 @@ static void airo_pci_remove(struct pci_dev *pdev)
- 	pci_disable_device(pdev);
- }
- 
--static int airo_pci_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused airo_pci_suspend(struct device *dev_d)
- {
--	struct net_device *dev = pci_get_drvdata(pdev);
-+	struct net_device *dev = dev_get_drvdata(dev_d);
- 	struct airo_info *ai = dev->ml_priv;
- 	Cmd cmd;
- 	Resp rsp;
-@@ -5591,25 +5594,21 @@ static int airo_pci_suspend(struct pci_dev *pdev, pm_message_t state)
- 		return -EAGAIN;
- 	disable_MAC(ai, 0);
- 	netif_device_detach(dev);
--	ai->power = state;
-+	ai->power = PMSG_SUSPEND;
- 	cmd.cmd = HOSTSLEEP;
- 	issuecommand(ai, &cmd, &rsp);
- 
--	pci_enable_wake(pdev, pci_choose_state(pdev, state), 1);
--	pci_save_state(pdev);
--	pci_set_power_state(pdev, pci_choose_state(pdev, state));
-+	device_wakeup_enable(dev_d);
- 	return 0;
- }
- 
--static int airo_pci_resume(struct pci_dev *pdev)
-+static int __maybe_unused airo_pci_resume(struct device *dev_d)
- {
--	struct net_device *dev = pci_get_drvdata(pdev);
-+	struct net_device *dev = dev_get_drvdata(dev_d);
- 	struct airo_info *ai = dev->ml_priv;
--	pci_power_t prev_state = pdev->current_state;
-+	pci_power_t prev_state = to_pci_dev(dev_d)->current_state;
- 
--	pci_set_power_state(pdev, PCI_D0);
--	pci_restore_state(pdev);
--	pci_enable_wake(pdev, PCI_D0, 0);
-+	device_wakeup_disable(dev_d);
- 
- 	if (prev_state != PCI_D1) {
- 		reset_card(dev, 0);
+Are you planning to review/merge the changes till patch06. If not, I 
+will resend those
+
+patches along with comments addressed on patch07 onwards.
+
+Thanks,
+
+Rohit
+
+
+>
+>> Tested this on Dragon Board 410c!
+>>
+>> Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>
+>> --srini
+>>>
+>>>   .../devicetree/bindings/sound/qcom,lpass-cpu.txt   |  79 --------
+>>>   .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 185 
+>>> ++++++++++++++++++
+>>>   include/dt-bindings/sound/sc7180-lpass.h           |  10 +
+>>>   sound/soc/qcom/Kconfig                             |   5 +
+>>>   sound/soc/qcom/Makefile                            |   2 +
+>>>   sound/soc/qcom/lpass-apq8016.c                     |  86 ++++++--
+>>>   sound/soc/qcom/lpass-cpu.c                         | 204 
+>>> ++++++++++---------
+>>>   sound/soc/qcom/lpass-ipq806x.c                     |  67 +++++++
+>>>   sound/soc/qcom/lpass-lpaif-reg.h                   | 157 
+>>> ++++++++-------
+>>>   sound/soc/qcom/lpass-platform.c                    | 155 
+>>> +++++++++++----
+>>>   sound/soc/qcom/lpass-sc7180.c                      | 216 
+>>> +++++++++++++++++++++
+>>>   sound/soc/qcom/lpass.h                             |  63 +++++-
+>>>   12 files changed, 930 insertions(+), 299 deletions(-)
+>>>   delete mode 100644 
+>>> Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>>>   create mode 100644 
+>>> Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+>>>   create mode 100644 include/dt-bindings/sound/sc7180-lpass.h
+>>>   create mode 100644 sound/soc/qcom/lpass-sc7180.c
+>>>
 -- 
-2.27.0
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the Linux Foundation.
 
