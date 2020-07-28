@@ -2,191 +2,124 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E355C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 233D220759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B898207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:12:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="f7W+MZS+";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="lReO2LoM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MUg3NliK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgG1GL6 (ORCPT
+        id S1727078AbgG1GMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:11:58 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:27844 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726407AbgG1GL5 (ORCPT
+        Tue, 28 Jul 2020 02:12:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43310 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbgG1GMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:11:57 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 06S6A760010007;
-        Mon, 27 Jul 2020 23:11:43 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=JAEBT4DeFTJJp4SAa7DKz5Y7Sd3AyBOZqjEh739OSVA=;
- b=f7W+MZS+zCFRTXaP9wlTq5cI4UXfC1RyShrzBl2lCL0xadr1pbFU09+ExhIM8RyzKpZy
- rfV1C2G+bYfuczHOW3YMBVrFnvb4C6gInxD2rEvT5qEkjS53v/V92nbBM8faE5HHj0c2
- E1ptUgXedlf5PNSPXdiOst1WVGvIWOQt4hY= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0089730.ppops.net with ESMTP id 32gg7xts4e-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 27 Jul 2020 23:11:42 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 27 Jul 2020 23:11:32 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NxBpU3XaFfkCxl38/4+e6Mg/zz5kc5TKXnr2WuAuDh0tG8RN2CkGeV4z5Ov89QgI3pYBbmMEFeKSg8J9oy+YKw4Iut71LOQNN7LXUE9lcAbFIQ9w51NCu4cE1vPJrUSNx0clW4toW7WJ3UKa5H+SyBNZt/xOD32DgS4fl3XJn/QwsIj0iyCpE5wSWd7NclgR5pPsKxFKlCncHOBpa7/kY+eH4HiYue8Z0MZGMZHinY1aBAlACazECxGfFTCtcZdxD2VMs4Qcg99pV3yetd7u7SKPra8Y9nDXkFvfNZuOARrHwjsyna1kgORdvfOpcNK5dyKALTk0rVN4GZ+37K2PiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JAEBT4DeFTJJp4SAa7DKz5Y7Sd3AyBOZqjEh739OSVA=;
- b=CymVNgleEYXAyTmrAD7ovkFKJVW8xDfPR7aGttIwUAJkXk4Qdb7j8im1YaiBU1doRqw68LyZmN0++QdFp1KnPmtReaqJqQq+CzE6sEoxsWw/fx9I1P/+lQ8WHkGens/f5X1t7bWIedrXVsfzI8A+l9nUMGfYs8GHUXA1/GFuRxvQh2yNfljqRDBBb+DYF7PIpicxeOxaRWoqOTV/ygc1SBtHoUcvqhh7f05DWSRv03PiLw3ixUg5r9oLXYWyzNgBQyo4X6L1H4ZvxHHJci27ybMuPWLmNM+khycE+fe/RGnHwuCl1K8wMobJd9svJ7OcPd5mJYdSah2LjBQHWlSlkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JAEBT4DeFTJJp4SAa7DKz5Y7Sd3AyBOZqjEh739OSVA=;
- b=lReO2LoMuRK0/DjBsWXdFGlF5twwen9bTxxjSTtIk9ca799uYKDEF0eLV26udMBEK7uVb5/P5lWVA+ZyfecBvwQn+tTfdzPhSyYWIkK4aRXcvYVUEwmYvex7wKkJFGSdnb0W/tXIZSpU5onLLumoU8BMsyKswiyyGrlBdz9rceY=
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
- by BYAPR15MB3046.namprd15.prod.outlook.com (2603:10b6:a03:fa::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Tue, 28 Jul
- 2020 06:11:17 +0000
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8]) by BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8%5]) with mapi id 15.20.3216.034; Tue, 28 Jul 2020
- 06:11:16 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC:     Roman Gushchin <guro@fb.com>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next v2 32/35] bpf: selftests: delete bpf_rlimit.h
-Thread-Topic: [PATCH bpf-next v2 32/35] bpf: selftests: delete bpf_rlimit.h
-Thread-Index: AQHWZEZCJ8RCuONiBk2bTp6gKFH2SqkcggeAgAABOgA=
-Date:   Tue, 28 Jul 2020 06:11:16 +0000
-Message-ID: <C739D492-23E2-4823-8A9A-81BF00FD450E@fb.com>
-References: <20200727184506.2279656-1-guro@fb.com>
- <20200727184506.2279656-33-guro@fb.com>
- <CAEf4BzbCzEOKx2GMOcp6CTxBBN+BRAY-Z_mCJ26hoSto956KBQ@mail.gmail.com>
-In-Reply-To: <CAEf4BzbCzEOKx2GMOcp6CTxBBN+BRAY-Z_mCJ26hoSto956KBQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.80.23.2.2)
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
-x-originating-ip: [2620:10d:c090:400::5:395d]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d19bde36-3b03-45c5-acb9-08d832bd09db
-x-ms-traffictypediagnostic: BYAPR15MB3046:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB30466E7A8FDB4CBC87A92ACDB3730@BYAPR15MB3046.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zhAWJa8qgCn7lZ7ZzlmJ5KBpFVmuofceW6dzYlEO8y2KSYo7FT/pLDAJsYXc6CcrHEAJtBV6Cf5WRfjn4WHSOa6NKVKrFaA10H+vUg9hsy6j1P7/I4J9XsR6NrGJf1ycMco40WBChwkdwNQL905ordrvFgdDAS99M7FK/OvzcUlqcbNCWj0wMdBy+Jmm9wb2OqPIz30B8lmCcw9w22p5pxaYtHzoV3S+bV5bTOM9SSpK3v9ImpoYFuSJBqi6OqElRLcrcio2X19KLz6lc8xOkml15SoEUcRgkzbZT0R0U3aKPuo/9mPuTVvWhSj+IY1HdLPFEub8efnsLHsO2ReVYQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(136003)(346002)(396003)(39860400002)(83380400001)(66946007)(64756008)(8936002)(66446008)(66476007)(66556008)(2906002)(76116006)(6512007)(8676002)(186003)(478600001)(53546011)(2616005)(316002)(6486002)(6506007)(36756003)(86362001)(71200400001)(5660300002)(6916009)(4326008)(33656002)(54906003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 5i6joeKpVqaAoAB91rq8NdzsknukQdy6OYDV/NJBmg07oYIbOaQBulQf3jXqyhTn0w/9GXv9opHYYBqR63c78bhb9P9sNzD+qJPhpyy8Qb2kEBp8x8QEj7Uosp9b2/lPi8PVkctXfNXU93FgUV5BNqaG2hqTfEwXcS3s0ftUqO8FgFTQhanI2liHB3izs5GjPIyVylNGMkcm8ATXZTWa0GAVSin8kLS2CfPDybfdyjOwPkcxvOtj/egu2zIJH+8flzNnxD4kNEfdOzYNy4lrF6NlrfNTud/RnFvlbbgLR5a43dFlB+GWbKhc4KJ9hf9DySekTmGxC7v9+QYowJhXEFCIovwdhto7DsZrQMVtgvm8UxZifIjfDOUzbJ5xJV4EKgRubQG4H9JqWGFeuhC/i3MLZ10tK5F0u85/RV/p7zLAEDg2OowTpiI8kbIyZ3apQ444g0rwGloCt3O9AjvAyUtQpwyZQIRA1mZEWkvJhiMMTt+D8eBiae1lgzYcZnfXa9p88d/Ck+D6LhHJOa/JJQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E8760BD57A70A14CB1C63BE14E681951@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 Jul 2020 02:12:30 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BECC4C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 23:12:30 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id lw1so2256052pjb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 23:12:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FTEn6vC4TzDFRYgBbBTvo3anpjXgbfxoEfVzcA7SkSk=;
+        b=MUg3NliKoM4l5YHCqj5bM6/ricxHDSN+fUGuIqDe/VZsMi11o6T2ZWNrRmiGKK5bXn
+         dLZvVFi/IzR3WXetg3BP7uU3fBwXJssdNdgivnfmBA7cBYg+K5O4ADsLf8uOtjMgwCmW
+         BHVtqNd36wdDmGMHvhmLxiLOiWxKlF+4EXujG3fIufA2TNNIHe5Nz+L91MFOKPFXIVKl
+         SQJdZRQBhdKoCi1prMQzl3mdc4RBqCnSLm8j77reyUikupG/akrM9Siwn4HHjKS03a5W
+         7YnQPphP5IXd+BRNyHBQC9v7DGBNN9AcgsvqcnvlqDDqrmOCT3LpU7oErJhyYlMdKGUO
+         gTgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FTEn6vC4TzDFRYgBbBTvo3anpjXgbfxoEfVzcA7SkSk=;
+        b=JB19ACFx6HF+b6O8EB1gF+SLIhTmxDyI2YyOP6w1ZQkF7lNk4E8zPGFQIsQdF6jJdM
+         FtcYdU/EUpc5OcgUs6KyfxTRcNz5sOizoIK0fjtlsvmzUtRmkyfsrlPrwUEx5P7m5nmK
+         UObL3+z1maSastsi7Z9j3oXrVu6Xbix2TcY/90CPExHxYXfz9Ujmr/8Z7sbo45fkLcT9
+         1raX6sVYwscTySOmZk/9Gnpt4oFaMBZB3wQYNvBDLDKY8RaTeIVMsY53MJ7/3ilrVcvS
+         12Ru4EqTgOuv8GUxRaK16Dyexc+oue+K6NugXbOMTbB8Dqvr7wwnP7Rh7m39+SKosqVe
+         3zRA==
+X-Gm-Message-State: AOAM532xTlTpFSVi8b7DeGoThooJl/4sLBnBpdwjaPjsyaBababLatej
+        I180Xj/CsFdZqeBz5sQcxC6THA==
+X-Google-Smtp-Source: ABdhPJy3fY7LAadwN1KhzxnyyGUckPuRZaBmAV2u3CSU6/2WJqNnkEDPuCSPRvntmZyPct9tGqDxrQ==
+X-Received: by 2002:a17:902:7484:: with SMTP id h4mr7663521pll.139.1595916750072;
+        Mon, 27 Jul 2020 23:12:30 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id b22sm1545548pju.26.2020.07.27.23.12.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 23:12:29 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 23:08:57 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     rishabhb@codeaurora.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tsoni@codeaurora.org, sidgup@codeaurora.org, stable@vger.kernel.org
+Subject: Re: [RESEND v1] soc: qcom: pdr: Reorder the PD state indication ack
+Message-ID: <20200728060857.GB202429@builder.lan>
+References: <20200701195954.9007-1-sibis@codeaurora.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d19bde36-3b03-45c5-acb9-08d832bd09db
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 06:11:16.6395
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 15DhWErW0ndH86a1M7/SfQet7xB7dDa7Ssl6D6OUsleSxskZ9yqfg64jZe019yLtp7RHyClkaEGGjr1urz+5gA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3046
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-28_01:2020-07-27,2020-07-28 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
- malwarescore=0 impostorscore=0 lowpriorityscore=0 clxscore=1015
- spamscore=0 adultscore=0 phishscore=0 mlxscore=0 bulkscore=0
- mlxlogscore=999 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007280048
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701195954.9007-1-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 01 Jul 12:59 PDT 2020, Sibi Sankar wrote:
 
+> The Protection Domains (PD) have a mechanism to keep its resources
+> enabled until the PD down indication is acked. Reorder the PD state
+> indication ack so that clients get to release the relevant resources
+> before the PD goes down.
+> 
+> Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart helpers")
+> Reported-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
-> On Jul 27, 2020, at 11:06 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com>=
- wrote:
->=20
-> On Mon, Jul 27, 2020 at 12:25 PM Roman Gushchin <guro@fb.com> wrote:
->>=20
->> As rlimit-based memory accounting is not used by bpf anymore,
->> there are no more reasons to play with memlock rlimit.
->>=20
->> Delete bpf_rlimit.h which contained a code to bump the limit.
->>=20
->> Signed-off-by: Roman Gushchin <guro@fb.com>
->> ---
->=20
-> We run test_progs on old kernels as part of libbpf Github CI. We'll
-> need to either leave setrlimit() or do it conditionally, depending on
-> detected kernel feature support.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Hmm... I am surprised that running test_progs on old kernels is not=20
-too noisy. Have we got any issue with that?
-
-Thanks,
-Song
-
->=20
->> samples/bpf/hbm.c                             |  1 -
->> tools/testing/selftests/bpf/bpf_rlimit.h      | 28 -------------------
->> .../selftests/bpf/flow_dissector_load.c       |  1 -
->> .../selftests/bpf/get_cgroup_id_user.c        |  1 -
->> .../bpf/prog_tests/select_reuseport.c         |  1 -
->> .../selftests/bpf/prog_tests/sk_lookup.c      |  1 -
->> tools/testing/selftests/bpf/test_btf.c        |  1 -
->> .../selftests/bpf/test_cgroup_storage.c       |  1 -
->> tools/testing/selftests/bpf/test_dev_cgroup.c |  1 -
->> tools/testing/selftests/bpf/test_lpm_map.c    |  1 -
->> tools/testing/selftests/bpf/test_lru_map.c    |  1 -
->> tools/testing/selftests/bpf/test_maps.c       |  1 -
->> tools/testing/selftests/bpf/test_netcnt.c     |  1 -
->> tools/testing/selftests/bpf/test_progs.c      |  1 -
->> .../selftests/bpf/test_skb_cgroup_id_user.c   |  1 -
->> tools/testing/selftests/bpf/test_sock.c       |  1 -
->> tools/testing/selftests/bpf/test_sock_addr.c  |  1 -
->> .../testing/selftests/bpf/test_sock_fields.c  |  1 -
->> .../selftests/bpf/test_socket_cookie.c        |  1 -
->> tools/testing/selftests/bpf/test_sockmap.c    |  1 -
->> tools/testing/selftests/bpf/test_sysctl.c     |  1 -
->> tools/testing/selftests/bpf/test_tag.c        |  1 -
->> .../bpf/test_tcp_check_syncookie_user.c       |  1 -
->> .../testing/selftests/bpf/test_tcpbpf_user.c  |  1 -
->> .../selftests/bpf/test_tcpnotify_user.c       |  1 -
->> tools/testing/selftests/bpf/test_verifier.c   |  1 -
->> .../testing/selftests/bpf/test_verifier_log.c |  2 --
->> 27 files changed, 55 deletions(-)
->> delete mode 100644 tools/testing/selftests/bpf/bpf_rlimit.h
->>=20
->=20
-> [...]
-
+> ---
+> 
+> I couldn't find the previous patch on patchworks. Resending the patch
+> since it would need to land on stable trees as well
+> 
+>  drivers/soc/qcom/pdr_interface.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
+> index a90d707da6894..088dc99f77f3f 100644
+> --- a/drivers/soc/qcom/pdr_interface.c
+> +++ b/drivers/soc/qcom/pdr_interface.c
+> @@ -279,13 +279,15 @@ static void pdr_indack_work(struct work_struct *work)
+>  
+>  	list_for_each_entry_safe(ind, tmp, &pdr->indack_list, node) {
+>  		pds = ind->pds;
+> -		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
+>  
+>  		mutex_lock(&pdr->status_lock);
+>  		pds->state = ind->curr_state;
+>  		pdr->status(pds->state, pds->service_path, pdr->priv);
+>  		mutex_unlock(&pdr->status_lock);
+>  
+> +		/* Ack the indication after clients release the PD resources */
+> +		pdr_send_indack_msg(pdr, pds, ind->transaction_id);
+> +
+>  		mutex_lock(&pdr->list_lock);
+>  		list_del(&ind->node);
+>  		mutex_unlock(&pdr->list_lock);
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
