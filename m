@@ -2,222 +2,189 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53415C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32C0020786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:17:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WQneBtFf"
+	by mail.kernel.org (Postfix) with ESMTP id 31576208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:18:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595895493;
+	bh=wWr2t+myCz/OZLXxwsQOJSX9Lblh8zNQcneKG8XmBR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V/WMgIcZ4J+k6np1LGh6WEbJReGQMmiFTjOuOILNlOjNLUASYB/juUlpuMzdOcBfD
+	 1PPgWwlqblNFtJKb0EQa+ctXLsa9XCqtV1bd2MSSmjhexIXzh3gd0SqiqZmOlicGpj
+	 eKCkrC9F/HrJTFifHwRs00BeeNyGM85MroazUhNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgG1ARc (ORCPT
+        id S1726890AbgG1ASL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 20:17:32 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:33058 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbgG1ARc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 20:17:32 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5F05C556;
-        Tue, 28 Jul 2020 02:17:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1595895449;
-        bh=qDENp+ksFdx3Ek7ZnyN0CbjkZwu8wZVUvGQGBhlAVNo=;
+        Mon, 27 Jul 2020 20:18:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726278AbgG1ASK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 20:18:10 -0400
+Received: from earth.universe (unknown [185.213.155.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4189020786;
+        Tue, 28 Jul 2020 00:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595895489;
+        bh=wWr2t+myCz/OZLXxwsQOJSX9Lblh8zNQcneKG8XmBR8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WQneBtFfC8YsCrZ0w68NkAap9rZ+f8NNEvPoukq0ZfIKz4GzG418ysEjyAGV4dkKX
-         6EofAS/a4wEmdu3hqPg8563CRe5ffeKT9Cmd2xFKVNcaGZc5pRmUAJrVOAs6M0TjPA
-         r7FkYmaplRF5wA2bW4PdvqXegDsktzS8gbC1xBL4=
-Date:   Tue, 28 Jul 2020 03:17:21 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Dmitry Buzdyk <dima.buzdyk@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     john.agosta@canonical.com, kevin.lu@canonical.com,
-        ethan.hsieh@canonical.com, 'Jesse Sung' <jesse.sung@canonical.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] uvcvideo: Add mapping for HEVC payloads
-Message-ID: <20200728001721.GG15448@pendragon.ideasonboard.com>
-References: <20200529010547.GA630131@dmitry-T520>
- <20200607010719.GU7339@pendragon.ideasonboard.com>
- <20200609045732.GA781356@dmitry-T520>
- <20200715080010.GA551680@dmitry-T520>
- <20200727232546.GB26169@dmitry-T520>
+        b=rtGWh2cbv6sHXFH7lMi8Ke5ENZAG2MDClKJhz029nioffMK3RxaZj6CpDcNJOkUMe
+         wBF0FR54wPfAnBYx34anG0/CNSO7x4VNbf74TG44Kr8AiNsprdNc6IL4WJAHa3dazh
+         We6B8GwdI7WEuCRJLTpCJyueb61QSAKXknhBPw0A=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 7CBFD3C0B87; Tue, 28 Jul 2020 02:18:07 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 02:18:07 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v1] power: supply: max17040: Add
+ POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN
+Message-ID: <20200728001807.zjyfgz2sphcysgx5@earth.universe>
+References: <20200706001003.663763-1-matheus@castello.eng.br>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vnx7d7i7pnisscty"
 Content-Disposition: inline
-In-Reply-To: <20200727232546.GB26169@dmitry-T520>
+In-Reply-To: <20200706001003.663763-1-matheus@castello.eng.br>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
 
-Sorry for the late reply.
+--vnx7d7i7pnisscty
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Mauro, there's a question for your below.
+Hi,
 
-On Tue, Jul 28, 2020 at 09:25:46AM +1000, Dmitry Buzdyk wrote:
-> Hi Laurent,
-> 
-> Had you a chance to review USB descriptors from the device provided
-> below? Is any additional information needed?
-> 
-> On Wed, Jul 15, 2020 at 06:00:10PM +1000, Dmitry Buzdyk wrote:
-> > On Tue, Jun 09, 2020 at 02:57:36PM +1000, Dmitry Buzdyk wrote:
-> > Hi Laurent,
-> > 
-> > Please see updated information below
-> > 
-> >> On Sun, Jun 07, 2020 at 04:07:19AM +0300, Laurent Pinchart wrote:
-> >>> Hi Dmitry,
-> >>> 
-> >>> Thank you for the patch.
-> >>> 
-> >>> On Fri, May 29, 2020 at 11:05:47AM +1000, Dmitry Buzdyk wrote:
-> >>>> Add HEVC GUID and assotiate with HEVC pixel format so that frame
-> >>>> based format descriptors recognized by the UVC video driver.
-> >>> 
-> >>> The patch itself looks OK to me, but could you share a bit more
-> >>> information about which device(s) implement this ? Are they UVC 1.1
-> >>> devices ? Could you share their full USB descriptors (retrieved with
-> >>> 'lsusb -v', running as root if possible) ?
-> >>
-> >> This is a UVC1.1 camera device based on Ambarella H22 SOC.
+On Sun, Jul 05, 2020 at 09:10:03PM -0300, Matheus Castello wrote:
+> Adds the property POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN to export the
+> chip->low_soc_alert and add the property as writeable, implementing
+> max17040_prop_writeable and max17040_set_property, so with that the
+> user space can readjust the alerts.
+>=20
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
 
-That's interesting. It would be nice to have upstream support for the
-Ambarella SoCs in the kernel :-)
+Thanks, queued.
 
-> >> Please note that device is still in development and yet to get actual
-> >> VID and PID.
-> >
-> > Device got its VID:PID from USB-IF:
-> > 
-> > Bus 001 Device 009: ID 3301:1000  
-> > Device Descriptor:
-> >   bLength                18
-> >   bDescriptorType         1
-> >   bcdUSB               2.00
-> >   bDeviceClass          239 Miscellaneous Device
-> >   bDeviceSubClass         2 
-> >   bDeviceProtocol         1 Interface Association
-> >   bMaxPacketSize0        64
-> >   idVendor           0x3301 
-> >   idProduct          0x1000 
-> >   bcdDevice            0.10
-> >   iManufacturer           1 Rhonda
-> >   iProduct                2 Rhonda Cam
-> >   iSerial                 3 FMABCLE15000007
-> >   bNumConfigurations      1
+-- Sebastian
 
-Thank you for the descriptors.
+>  drivers/power/supply/max17040_battery.c | 51 ++++++++++++++++++++++---
+>  1 file changed, 46 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supp=
+ly/max17040_battery.c
+> index 48aa44665e2f..6cb31b9a958d 100644
+> --- a/drivers/power/supply/max17040_battery.c
+> +++ b/drivers/power/supply/max17040_battery.c
+> @@ -69,6 +69,9 @@ static int max17040_get_property(struct power_supply *p=
+sy,
+>  	case POWER_SUPPLY_PROP_CAPACITY:
+>  		val->intval =3D chip->soc;
+>  		break;
+> +	case POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN:
+> +		val->intval =3D chip->low_soc_alert;
+> +		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -256,19 +259,57 @@ static int max17040_enable_alert_irq(struct max1704=
+0_chip *chip)
+>  	return ret;
+>  }
+>=20
+> +static int max17040_prop_writeable(struct power_supply *psy,
+> +				   enum power_supply_property psp)
+> +{
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN:
+> +		return 1;
+> +	default:
+> +		return 0;
+> +	}
+> +}
+> +
+> +static int max17040_set_property(struct power_supply *psy,
+> +			    enum power_supply_property psp,
+> +			    const union power_supply_propval *val)
+> +{
+> +	struct max17040_chip *chip =3D power_supply_get_drvdata(psy);
+> +	int ret;
+> +
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN:
+> +		/* alert threshold can be programmed from 1% up to 32% */
+> +		if ((val->intval < 1) || (val->intval > 32)) {
+> +			ret =3D -EINVAL;
+> +			break;
+> +		}
+> +		ret =3D max17040_set_low_soc_alert(chip->client, val->intval);
+> +		chip->low_soc_alert =3D val->intval;
+> +		break;
+> +	default:
+> +		ret =3D -EINVAL;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static enum power_supply_property max17040_battery_props[] =3D {
+>  	POWER_SUPPLY_PROP_STATUS,
+>  	POWER_SUPPLY_PROP_ONLINE,
+>  	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+>  	POWER_SUPPLY_PROP_CAPACITY,
+> +	POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN,
+>  };
+>=20
+>  static const struct power_supply_desc max17040_battery_desc =3D {
+> -	.name		=3D "battery",
+> -	.type		=3D POWER_SUPPLY_TYPE_BATTERY,
+> -	.get_property	=3D max17040_get_property,
+> -	.properties	=3D max17040_battery_props,
+> -	.num_properties	=3D ARRAY_SIZE(max17040_battery_props),
+> +	.name			=3D "battery",
+> +	.type			=3D POWER_SUPPLY_TYPE_BATTERY,
+> +	.get_property		=3D max17040_get_property,
+> +	.set_property		=3D max17040_set_property,
+> +	.property_is_writeable  =3D max17040_prop_writeable,
+> +	.properties		=3D max17040_battery_props,
+> +	.num_properties		=3D ARRAY_SIZE(max17040_battery_props),
+>  };
+>=20
+>  static int max17040_probe(struct i2c_client *client,
+> --
+> 2.27.0
+>=20
 
-[snip]
+--vnx7d7i7pnisscty
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> >       VideoControl Interface Descriptor:
-> >         bLength                 9
-> >         bDescriptorType        36
-> >         bDescriptorSubtype      3 (OUTPUT_TERMINAL)
-> >         bTerminalID            16
-> >         wTerminalType      0x0101 USB Streaming
-> >         bAssocTerminal          0
-> >         bSourceID              10
-> >         iTerminal               0 
-> >       VideoControl Interface Descriptor:
-> >         bLength                 9
-> >         bDescriptorType        36
-> >         bDescriptorSubtype      3 (OUTPUT_TERMINAL)
-> >         bTerminalID            17
-> >         wTerminalType      0x0101 USB Streaming
-> >         bAssocTerminal          0
-> >         bSourceID              10
-> >         iTerminal               0 
+-----BEGIN PGP SIGNATURE-----
 
-Two output terminals ? Does that mean the device can provide two streams
-from the same source ?
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8fbr8ACgkQ2O7X88g7
++prB2w//XmjG/PbpXEnkEr9h9fHUQ3Str1QbxDFn+3JPh9W9G4RT+4caMAVS240t
+NdIOpfZP7ZvpyPksHP5FHavBxTTgtz+jhly38PZajKSMH20kdIqSeRH2wOscn+dI
+9LlXMX3Q417sC6+CvFprwrjZ4yWjMn8XBsnzvQtjzESuYhfHJrM8N0HpiaHrnWIl
+lmQYfSWTQ0Z94ikPP5COG074Ahhc+Mw8az/kE+QnGT/ToXVlv4VG3mLYJggaNeSN
+/BdywhelGennvrgwPWU6nzZ21HU+OBhYnKDxq6opXgbNhaCHA8dqSERIbl/AP4+R
++4g3ODrD4swvNY+/VzvcJjQ+Q8yRX/EbSeAqwK1sta1gAj4g+lLFXdtNaBopBJo3
+DaRttGLxERvrIbJs2smIjrorTeO5ndn8W8a8iA39uAPqrJxr4zRqYGwdlCBh/hco
+3O3Q8kDGvSQcqawrVtB3FZtJLyd916ltitoNVUaXuQxGBbKvoLIfaguTYU86rvZ6
+hmTXfEiScuFbyB7WZ99ssGEtMOY4gD6v2gEEBskwZUC6ppVI7kz7SH/XN4RdQ9+E
+CABVPBTX4jHNUeG/0gDc1yuwOZY/fWqF7HS7QK6vh5o4jPB9MVWD3flb6ppW+PVS
+aT6c6JrSNEjWNQsV2ETm044Xcjl9OvpEk6goP3AfqoDKTjRLJKs=
+=fqVI
+-----END PGP SIGNATURE-----
 
-[snip]
-
-
-> >       Endpoint Descriptor:
-> >         bLength                 7
-> >         bDescriptorType         5
-> >         bEndpointAddress     0x83  EP 3 IN
-> >         bmAttributes            2
-> >           Transfer Type            Bulk
-> >           Synch Type               None
-> >           Usage Type               Data
-> >         wMaxPacketSize     0x0200  1x 512 bytes
-> >         bInterval               0
-
-This is interesting too, does it provide enough bandwidth for 3000x4000
-@10fps MJPEG ?
-
-[snip]
-
-> >>> Is there anything else needed to get HEVC capture working, such as
-> >>> extension unit controls, or is this patch enough ? What userspace
-> >>> software do you use to capture and decode HEVC (or capture it to disk) ?
-> >>
-> >> No other changes to Linux nor extra actions needed to start HEVC capture.
-> >> We use patched version of FFmpeg to capture, decode and display HEVC
-> >> stream from camera device. That simple patch also going to be sent to
-> >> FFmpeg upstream.
-> >
-> > Patch for FFmpeg sent to https://patchwork.ffmpeg.org/project/ffmpeg/list/?series=1760
-> >
-> >>>> Signed-off-by: Dmitry Buzdyk <dima.buzdyk@gmail.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-and taken in my tree. I'm afraid we're a bit too close to the v5.9 merge
-window for me to send a pull request now, unless Mauro would be fine
-with that. Otherwise I'll include it in the pull request for the next
-release.
-
-> >>>> ---
-> >>>>  drivers/media/usb/uvc/uvc_driver.c | 5 +++++
-> >>>>  drivers/media/usb/uvc/uvcvideo.h   | 4 ++++
-> >>>>  2 files changed, 9 insertions(+)
-> >>>> 
-> >>>> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> >>>> index 431d86e1c94b..825ee3601661 100644
-> >>>> --- a/drivers/media/usb/uvc/uvc_driver.c
-> >>>> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> >>>> @@ -214,6 +214,11 @@ static struct uvc_format_desc uvc_fmts[] = {
-> >>>>  		.guid		= UVC_GUID_FORMAT_CNF4,
-> >>>>  		.fcc		= V4L2_PIX_FMT_CNF4,
-> >>>>  	},
-> >>>> +	{
-> >>>> +		.name		= "HEVC",
-> >>>> +		.guid		= UVC_GUID_FORMAT_HEVC,
-> >>>> +		.fcc		= V4L2_PIX_FMT_HEVC,
-> >>>> +	},
-> >>>>  };
-> >>>>  
-> >>>>  /* ------------------------------------------------------------------------
-> >>>> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> >>>> index 6ab972c643e3..c7f043121b41 100644
-> >>>> --- a/drivers/media/usb/uvc/uvcvideo.h
-> >>>> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> >>>> @@ -165,6 +165,10 @@
-> >>>>  	{0x32, 0x00, 0x00, 0x00, 0x02, 0x00, 0x10, 0x00, \
-> >>>>  	 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71}
-> >>>>  
-> >>>> +#define UVC_GUID_FORMAT_HEVC \
-> >>>> +	{ 'H',  'E',  'V',  'C', 0x00, 0x00, 0x10, 0x00, \
-> >>>> +	 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71}
-> >>>> +
-> >>>>  
-> >>>>  /* ------------------------------------------------------------------------
-> >>>>   * Driver specific constants.
-
--- 
-Regards,
-
-Laurent Pinchart
+--vnx7d7i7pnisscty--
