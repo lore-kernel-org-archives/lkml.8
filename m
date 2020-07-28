@@ -2,111 +2,199 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 832A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E445FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61EB622B3F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF76E21D95
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:42:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="I6rNi06z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgG1Hjy (ORCPT
+        id S1727864AbgG1Hmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:39:54 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50334 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727045AbgG1Hjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:39:54 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7A34D52C142BC77B2F15;
-        Tue, 28 Jul 2020 15:39:51 +0800 (CST)
-Received: from [10.174.187.22] (10.174.187.22) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 28 Jul 2020 15:39:40 +0800
-Subject: Re: [RESEND PATCH] drivers: arm arch timer: Correct fault programming
- of CNTKCTL_EL1.EVNTI
-To:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>
-References: <20200717092104.15428-1-zhukeqian1@huawei.com>
-CC:     Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        "Suzuki K Poulose" <suzuki.poulose@arm.com>,
-        <wanghaibin.wang@huawei.com>
-From:   zhukeqian <zhukeqian1@huawei.com>
-Message-ID: <b3d2fe2f-a64b-af37-dea0-fa76a14ac2bc@huawei.com>
-Date:   Tue, 28 Jul 2020 15:39:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Tue, 28 Jul 2020 03:42:31 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:33621 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726850AbgG1Hmb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 03:42:31 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 69A5C22F00;
+        Tue, 28 Jul 2020 09:42:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1595922147;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DC6gum5wOvUP2X+C5yQP2AHFRnsyKf6fYNW2wyHxMVM=;
+        b=I6rNi06zPnazYFalcbs0vLthy4gWBQJg8/qm5BUVtwruTFD/KLG2Dt4JaIQJiucRvBMC+E
+        pXWjrsc7NzX6sKxMPMsXnBWPzdU/gvRm0JPSE0ewoTBJdzD0PzPeEymnqHDi8Y/CTfpyvK
+        0iBV1hk6gqZvMxj+xCiKPeFG+hPp2oM=
 MIME-Version: 1.0
-In-Reply-To: <20200717092104.15428-1-zhukeqian1@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.187.22]
-X-CFilter-Loop: Reflected
+Date:   Tue, 28 Jul 2020 09:42:26 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 01/13] mfd: add simple regmap based I2C driver
+In-Reply-To: <20200728071949.GE1850026@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-2-michael@walle.cc> <20200728071949.GE1850026@dell>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <23a9ecf5fe4f15b9b20a91cc292aca80@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Friendly ping.
-Is this an effective bugfix?
+Am 2020-07-28 09:19, schrieb Lee Jones:
+> On Sun, 26 Jul 2020, Michael Walle wrote:
+> 
+>> There are I2C devices which contain several different functions but
+>> doesn't require any special access functions. For these kind of 
+>> drivers
+>> an I2C regmap should be enough.
+>> 
+>> Create an I2C driver which creates an I2C regmap and enumerates its
+>> children. If a device wants to use this as its MFD core driver, it has
+>> to add an individual compatible string. It may provide its own regmap
+>> configuration.
+>> 
+>> Subdevices can use dev_get_regmap() on the parent to get their regmap
+>> instance.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> ---
+>> Changes since v5:
+>>  - removed "select MFD_CORE" in Kconfig
+>>  - removed help text in Kconfig, we assume that the users of this
+> 
+> That's the opposite of what I asked for.
 
-On 2020/7/17 17:21, Keqian Zhu wrote:
-> ARM virtual counter supports event stream. It can only trigger an event
-> when the trigger bit of CNTVCT_EL0 changes from 0 to 1 (or from 1 to 0),
-> so the actual period of event stream is 2 ^ (cntkctl_evnti + 1). For
-> example, when the trigger bit is 0, then it triggers an event for every
-> two cycles.
+What is the use to describe the symbol, if it is not user selectable?
+I'm not aware this is done anywhere in the kernel, am I missing
+something?
+
+>>    driver will have a "select MFD_SIMPLE_MFD_I2C". Instead added
+>>    a small description to the driver itself.
+>>  - removed "struct simple_mfd_i2c_config" and use regmap_config
+>>    directly
+>>  - changed builtin_i2c_driver() to module_i2c_driver(), added
+>>    MODULE_ boilerplate
+>>  - cleaned up the included files
+>> 
+>> Changes since v4:
+>>  - new patch. Lee, please bear with me. I didn't want to delay the
+>>    new version (where a lot of remarks on the other patches were
+>>    addressed) even more, just because we haven't figured out how
+>>    to deal with the MFD part. So for now, I've included this one.
+>> 
+>>  drivers/mfd/Kconfig          |  5 ++++
+>>  drivers/mfd/Makefile         |  1 +
+>>  drivers/mfd/simple-mfd-i2c.c | 55 
+>> ++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 61 insertions(+)
+>>  create mode 100644 drivers/mfd/simple-mfd-i2c.c
+>> 
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index 33df0837ab41..c08539c7a166 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -1162,6 +1162,11 @@ config MFD_SI476X_CORE
+>>  	  To compile this driver as a module, choose M here: the
+>>  	  module will be called si476x-core.
+>> 
+>> +config MFD_SIMPLE_MFD_I2C
+>> +	tristate
+>> +	depends on I2C
+>> +	select REGMAP_I2C
 > 
-> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
-> ---
->  drivers/clocksource/arm_arch_timer.c | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
+> Please provide a full help.
+
+See above.
+
 > 
-> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-> index ecf7b7db2d05..06d99a4b1b9b 100644
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -799,10 +799,20 @@ static void __arch_timer_setup(unsigned type,
->  static void arch_timer_evtstrm_enable(int divider)
->  {
->  	u32 cntkctl = arch_timer_get_cntkctl();
-> +	int cntkctl_evnti;
-> +
-> +	/*
-> +	 * Note that it can only trigger an event when the trigger bit
-> +	 * of CNTVCT_EL0 changes from 1 to 0 (or from 0 to 1), so the
-> +	 * actual period of event stream is 2 ^ (cntkctl_evnti + 1).
-> +	 */
-> +	cntkctl_evnti = divider - 1;
-> +	cntkctl_evnti = min(cntkctl_evnti, 15);
-> +	cntkctl_evnti = max(cntkctl_evnti, 0);
->  
->  	cntkctl &= ~ARCH_TIMER_EVT_TRIGGER_MASK;
->  	/* Set the divider and enable virtual event stream */
-> -	cntkctl |= (divider << ARCH_TIMER_EVT_TRIGGER_SHIFT)
-> +	cntkctl |= (cntkctl_evnti << ARCH_TIMER_EVT_TRIGGER_SHIFT)
->  			| ARCH_TIMER_VIRT_EVT_EN;
->  	arch_timer_set_cntkctl(cntkctl);
->  	arch_timer_set_evtstrm_feature();
-> @@ -816,10 +826,11 @@ static void arch_timer_configure_evtstream(void)
->  	/* Find the closest power of two to the divisor */
->  	evt_stream_div = arch_timer_rate / ARCH_TIMER_EVT_STREAM_FREQ;
->  	pos = fls(evt_stream_div);
-> -	if (pos > 1 && !(evt_stream_div & (1 << (pos - 2))))
-> +	if ((pos == 1) || (pos > 1 && !(evt_stream_div & (1 << (pos - 2)))))
->  		pos--;
-> +
->  	/* enable event stream */
-> -	arch_timer_evtstrm_enable(min(pos, 15));
-> +	arch_timer_evtstrm_enable(pos);
->  }
->  
->  static void arch_counter_set_user_access(void)
+>>  config MFD_SM501
+>>  	tristate "Silicon Motion SM501"
+>>  	depends on HAS_DMA
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index a60e5f835283..78d24a3e7c9e 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -264,3 +264,4 @@ obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+>>  obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
+>> 
+>>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+>> +obj-$(CONFIG_MFD_SIMPLE_MFD_I2C)	+= simple-mfd-i2c.o
+>> diff --git a/drivers/mfd/simple-mfd-i2c.c 
+>> b/drivers/mfd/simple-mfd-i2c.c
+>> new file mode 100644
+>> index 000000000000..45090ddad104
+>> --- /dev/null
+>> +++ b/drivers/mfd/simple-mfd-i2c.c
+>> @@ -0,0 +1,55 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * A very simple I2C MFD driver
 > 
+> Simple MFD - I2C
+
+ok.
+
+>> + * The driver enumerates its children and registers a common regmap. 
+>> Use
+>> + * dev_get_regmap(pdev->dev.parent, NULL) in the child nodes to fetch 
+>> that
+>> + * regmap instance.
+> 
+> This driver creates a single register map with the intention for it to
+> be shared by all sub-devices.  Children can use their parent's device
+> structure (dev.parent) in order reference it.
+
+Should this be appended or should it replace my paragraph? If its the 
+latter,
+the "enumeration of the children" is missing.
+
+>> + * In the future this driver might be extended to support also other 
+>> interfaces
+>> + * like SPI etc.
+> 
+> Remove this please.
+
+Why would you remove information about the intention of this driver? If 
+someone
+looks for a place to implement its SPI/I3C/Slimbus MFD driver this might 
+come
+in handy.
+
+-michael
