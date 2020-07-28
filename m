@@ -2,140 +2,122 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDCEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB72720792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E018F20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:03:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZllVecSY"
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="RxxRFot4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbgG1KDL (ORCPT
+        id S1728563AbgG1KDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 06:03:11 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:38096 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728417AbgG1KDK (ORCPT
+        Tue, 28 Jul 2020 06:03:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728413AbgG1KDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 06:03:10 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06S9vbJ9024190;
-        Tue, 28 Jul 2020 10:02:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=rY2vB0P0/tyjyjLirqTSdg6vE+kWv7ysFIAp+6VnZjk=;
- b=ZllVecSYmeFo12UYNjUyMiX3cwsufWaPC1rydm5AJtCgWr6p5D/nL6U/1kvQdqYz1tK9
- BgfO4qc9t4zuRjR4xnW2uBx+mTPriBegnjnF0IK7yQPceai+3UN33QfSmHWInkbRFuYe
- G+UI1dvfPC8otgbnKalrbEFIlIXm9Hib8tuHwegHAGq3y8bMCn/iaEQYjgKPcbf701Ol
- cb4Z+8hDcz8QdK9xTAzrVSkTeTnF+42QG6WFxnl84NyAV9YkNR0YejqytxkBiRw/MpBs
- Y0+apsWepOc23H6zsTVv1TaY7gEwQEP1FCRNet4IVD9XrpGFN9ESzO5k3WEhi0++5ct1 ow== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 32hu1j6j8e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 Jul 2020 10:02:52 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06SA2ZpS082878;
-        Tue, 28 Jul 2020 10:02:51 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 32hu5skcft-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jul 2020 10:02:51 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06SA2kKG021605;
-        Tue, 28 Jul 2020 10:02:46 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Jul 2020 03:02:46 -0700
-Date:   Tue, 28 Jul 2020 13:02:37 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vandana BN <bnvandana@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
- kernel-infoleak in video_put_user()
-Message-ID: <20200728100237.GG2571@kadam>
-References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
- <20200726222703.102701-1-yepeilin.cs@gmail.com>
- <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
- <20200727131608.GD1913@kadam>
- <20200727220456.GA328887@PWN>
+        Tue, 28 Jul 2020 06:03:32 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21131C0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:03:32 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id m16so9624062pls.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:03:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lamJR30/OZj5TtLicXm1XN+ym7SAmHsDsmqcmVGRyfU=;
+        b=RxxRFot40FR/bzu3ktrKn9CPPG/GmEqiNfU8dBveK4OoBLrgle5gaqfDmWxfcHm/oB
+         BO43bj8T4IQ1t2RVyeRoVKPLxUK+pVQ6GeVG4uXKMJRQ5A+pRvzIKCPnHM9DsNCOB7ZP
+         5w+P4bKfL44ir9Qb6QdhQ7DIkez9zfRf8yNyw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lamJR30/OZj5TtLicXm1XN+ym7SAmHsDsmqcmVGRyfU=;
+        b=eZZpoPabDWj3vt6q/bFZTQayPzTa6YOYB6UBNB/RVn4NWoEfKJt5xOok3/fmuxomuQ
+         ZI/DrTfkyrF+YvxsPtlhCvyzFDdEo3GTDMWdo68tUy1W1kzGwELRy2zau3H8BIcwGuPc
+         GvMRr5apMfZolQ6lKSZ95MT06lEYwc607WmNOK3LJK1DBI1OKSG92653pNK+NBFNF/e3
+         FVGXOLzxp/hzbnU2VD2mO9J84i8CgHJ7lN9EVYGiiqHz9IjNyV8POGQm7YmTsBo0VvJ+
+         pnY3H6cwbISXN5pfhAGRQXrJdoK8r0MvJr6l6tuY2KQo+go/Xjp8lyK7sRDCsO6VkaCf
+         DybQ==
+X-Gm-Message-State: AOAM532Sy1pS73nuMj3Uxgp4nN8ZPWnnGG4NfwCTBib2UaknWGGOgQ57
+        2qC1Uc+FUkYOgl1nGDMlr9PJo4GC11A=
+X-Google-Smtp-Source: ABdhPJyspgAUCtVEFnqzqoStyWQgTfKDx8JEuEfdIxxoRbTIIAGvK6A92pC9SOAS3MaqsWeq8F2C7g==
+X-Received: by 2002:a17:90a:ca17:: with SMTP id x23mr3720648pjt.194.1595930611548;
+        Tue, 28 Jul 2020 03:03:31 -0700 (PDT)
+Received: from shiro.work (p532183-ipngn200506sizuokaden.shizuoka.ocn.ne.jp. [153.199.2.183])
+        by smtp.googlemail.com with ESMTPSA id u66sm17779018pfb.191.2020.07.28.03.03.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 03:03:30 -0700 (PDT)
+From:   Daniel Palmer <daniel@0x0f.com>
+List-Id: <soc.lore.kernel.org>
+To:     soc@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, arnd@arndb.de, robh@kernel.org,
+        Daniel Palmer <daniel@0x0f.com>
+Subject: [PATCH v2 0/9] ARM: mstar: DT filling out
+Date:   Tue, 28 Jul 2020 19:03:12 +0900
+Message-Id: <20200728100321.1691745-1-daniel@0x0f.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727220456.GA328887@PWN>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 bulkscore=0
- malwarescore=0 suspectscore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007280076
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxscore=0 impostorscore=0
- phishscore=0 adultscore=0 suspectscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007280075
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 06:04:56PM -0400, Peilin Ye wrote:
-> On Mon, Jul 27, 2020 at 04:16:08PM +0300, Dan Carpenter wrote:
-> > drivers/char/hpet.c:675 hpet_ioctl() warn: check that 'info' doesn't leak information (struct has a hole after 'hi_timer')
-> 
-> This one seems like a false positive.
+This series adds a few low hanging fruit that are purely DT changes to
+keep the ball rolling while I work on series for more complicated things
+like the interrupt controllers.
 
-Yep.
+Summary of changes:
 
-> 
-> drivers/char/hpet.c:670:
-> 
-> 	mutex_lock(&hpet_mutex);
-> 	err = hpet_ioctl_common(file->private_data, cmd, arg, &info);
-> 	mutex_unlock(&hpet_mutex);
-> 
-> 	if ((cmd == HPET_INFO) && !err &&
-> 	    (copy_to_user((void __user *)arg, &info, sizeof(info))))
-> 		err = -EFAULT;
+- Adds the IMI SRAM region and sets the right size for each family
+- Adds the ARM PMU
+- Adds a syscon for a lump of registers called "pmsleep"
+- Uses the pmsleep syscon to enable reboot
 
-When Smatch parses hpet_ioctl_common() it says there are two success
-paths:
+Changes since v1:
 
-drivers/char/hpet.c | hpet_ioctl_common | 170 |             0 |   PARAM_LIMIT |   1 |                    $ |                26625 |
+- pmsleep node has been given it's own compatible string alongside
+  the generic syscon based on Arnd's feedback.
 
-The first success path is for when cmd is HPET_IE_ON.  We don't care
-about that.
+- dt binding description has been added for the above.
 
-drivers/char/hpet.c | hpet_ioctl_common | 185 |             0 |   PARAM_LIMIT |   1 |                    $ | 26626,26628-26629,1074292742,2149083139 |
+- To avoid having to update MAINTAINERS repeatly I've moved the existing
+  two binding descriptions in with the pmsleep one in arm/mstar.
 
-The second success path is for when cmd is HPET_IE_OFF, HPET_INFO,
-HPET_EPI, HPET_DPI, or HPET_IRQFREQ.  If Smatch tracked the HPET_INFO
-by itself then this wouldn't print a warning, but since Smatch groups
-all those cmds together then it does print a warning.
+Daniel Palmer (9):
+  dt-bindings: arm: mstar: Add binding details for mstar,pmsleep
+  dt-bindings: arm: mstar: Move existing MStar binding descriptions
+  ARM: mstar: Add IMI SRAM region
+  ARM: mstar: Adjust IMI size of infinity
+  ARM: mstar: Adjust IMI size for mercury5
+  ARM: mstar: Adjust IMI size for infinity3
+  ARM: mstar: Add PMU
+  ARM: mstar: Add "pmsleep" node to base dtsi
+  ARM: mstar: Add reboot support
 
-It's not impossible to make Smatch split apart the success paths some
-more but it's complicated because it means storing more data and slows
-down the parsing.  The cross function database is already 27GB on my
-system.
+ .../{misc => arm/mstar}/mstar,l3bridge.yaml   |  2 +-
+ .../bindings/arm/mstar/mstar,pmsleep.yaml     | 43 +++++++++++++++++++
+ .../bindings/arm/{ => mstar}/mstar.yaml       |  2 +-
+ MAINTAINERS                                   |  2 +-
+ arch/arm/boot/dts/infinity.dtsi               |  4 ++
+ arch/arm/boot/dts/infinity3.dtsi              |  4 ++
+ arch/arm/boot/dts/mercury5.dtsi               |  4 ++
+ arch/arm/boot/dts/mstar-v7.dtsi               | 26 ++++++++++-
+ 8 files changed, 83 insertions(+), 4 deletions(-)
+ rename Documentation/devicetree/bindings/{misc => arm/mstar}/mstar,l3bridge.yaml (93%)
+ create mode 100644 Documentation/devicetree/bindings/arm/mstar/mstar,pmsleep.yaml
+ rename Documentation/devicetree/bindings/arm/{ => mstar}/mstar.yaml (93%)
 
-regards,
-dan carpenter
+-- 
+2.27.0
+
