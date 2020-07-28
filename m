@@ -2,85 +2,87 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D952EC433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE70DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2CB020714
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5D720759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:54:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8kMpQVX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgG1Bvd (ORCPT
+        id S1726753AbgG1ByK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 21:51:33 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:53540 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgG1Bvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 21:51:32 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1k0Elz-0000lp-Tb; Tue, 28 Jul 2020 11:51:21 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 28 Jul 2020 11:51:19 +1000
-Date:   Tue, 28 Jul 2020 11:51:19 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
+        Mon, 27 Jul 2020 21:54:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60108 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgG1ByK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 21:54:10 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15FECC061794;
+        Mon, 27 Jul 2020 18:54:10 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k13so1280183plk.13;
+        Mon, 27 Jul 2020 18:54:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=m2ea3+R1S5kPZb5AV5bSF6B2MxbIDLdQ7d/mAIo8LIY=;
+        b=R8kMpQVXOXmB8kMBJMdrq87r3DHILHZEjX2LldIxtaj7QoDScBF3+4paR8zB5ZnDmr
+         bVDdMYgwzvcHi/vyHYcdEj/wDuYkXB/12N9anHYB3C+D1YHUGdV0Nv7KG/qA3PrwkRvn
+         dJkDoikO2Ac3ggmswmvhjqMlidPLiHjohRMcmQOueu5qeJDV9JNI2kCdkHNeqUXEtc5x
+         yWAaUwzXS2yrt4CpkGfD1noXruvVtxf+CHDzB+OfWskiXVu8+5ZjJ1JNCYRNP++CFDGF
+         C8/F9lw0yiZEqJWMpe+DDP9+jqTkzQrlFTEBsjS2/itB/RYuM5tubfNbNuRXlUl45csr
+         LybA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=m2ea3+R1S5kPZb5AV5bSF6B2MxbIDLdQ7d/mAIo8LIY=;
+        b=X5MJ8sL5/H8l1rnCw/d9qRQNMXlp+0EJWKAnUbLXtuF5BlG98N87VvMVImofGRIBuR
+         dz8vAYKv0egcEe0qqDc2ajjg6q1mUzu+dZFTWTqkrGdwwlU+LIq39RcdEls4YwslDwJN
+         T3a5jaajVcRWUowINM9qBFRDciNBszhPO3ejYK5UteqRgb3e3tqBqA9mW6T3GNlFIj00
+         wgeEN220ksW75oCZtHVdo3iw67vj/km7Pfv/TtGZMvr7cgUsTXZcmpmv1S0U+kWsYp4+
+         5jrjqmXZvPm0vMTcmMCtCPruuTm9h665iuiMEfxZ3UYmrJndkw1A+n8J4a7voUYxp4D3
+         dbsw==
+X-Gm-Message-State: AOAM532TN5M+g82m7NqBnoE358YOMhR72DrplNV3In0aLoGNPyn5I0sb
+        waK7to/R9f6+16kSlL2v8z4=
+X-Google-Smtp-Source: ABdhPJz1wVdKmFeSV2Sh85lHePfMFtCaS+15EYZRzY0DNLsjwy+SPTseKklHrqG5eZK904qWoRhH5A==
+X-Received: by 2002:a17:90a:d314:: with SMTP id p20mr1762455pju.99.1595901249420;
+        Mon, 27 Jul 2020 18:54:09 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id q16sm6102376pfg.153.2020.07.27.18.54.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 18:54:08 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 10:54:08 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 To:     Stephen Rothwell <sfr@canb.auug.org.au>
 Cc:     Petr Mladek <pmladek@suse.com>,
         Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 Subject: Re: linux-next: build failure after merge of the printk tree
-Message-ID: <20200728015119.GA11428@gondor.apana.org.au>
+Message-ID: <20200728015408.GA1296462@jagdpanzerIV.localdomain>
 References: <20200728114927.4590731f@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20200728114927.4590731f@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 11:49:27AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the printk tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
-> 
-> In file included from include/linux/printk.h:10,
->                  from include/linux/kernel.h:15,
->                  from include/linux/list.h:9,
->                  from include/linux/lockdep.h:43,
->                  from include/linux/spinlock_types.h:18,
->                  from include/linux/genalloc.h:32,
->                  from drivers/soc/fsl/qe/qe_common.c:16:
-> include/linux/ratelimit_types.h:16:2: error: unknown type name 'raw_spinlock_t'
->    16 |  raw_spinlock_t lock;  /* protect the state */
->       |  ^~~~~~~~~~~~~~
-> In file included from include/linux/wait.h:9,
->                  from include/linux/pid.h:6,
->                  from include/linux/sched.h:14,
->                  from include/linux/ratelimit.h:6,
->                  from include/linux/dev_printk.h:16,
->                  from include/linux/device.h:15,
->                  from include/linux/node.h:18,
->                  from include/linux/cpu.h:17,
->                  from include/linux/of_device.h:5,
->                  from drivers/soc/fsl/qe/qe_common.c:19:
-> include/linux/ratelimit.h: In function 'ratelimit_state_init':
-> include/linux/ratelimit.h:14:21: error: passing argument 1 of '__raw_spin_lock_init' from incompatible pointer type [-Werror=incompatible-pointer-types]
->    14 |  raw_spin_lock_init(&rs->lock);
-> include/linux/spinlock.h:102:24: note: in definition of macro 'raw_spin_lock_init'
->   102 |  __raw_spin_lock_init((lock), #lock, &__key, LD_WAIT_SPIN); \
->       |                        ^~~~
-> include/linux/spinlock.h:95:52: note: expected 'raw_spinlock_t *' {aka 'struct raw_spinlock *'} but argument is of type 'int *'
->    95 |   extern void __raw_spin_lock_init(raw_spinlock_t *lock, const char *name,
->       |                                    ~~~~~~~~~~~~~~~~^~~~
-> 
+On (20/07/28 11:49), Stephen Rothwell wrote:
+[..]
 > Caused by commit
 > 
 >   b4a461e72bcb ("printk: Make linux/printk.h self-contained")
@@ -89,11 +91,13 @@ On Tue, Jul 28, 2020 at 11:49:27AM +1000, Stephen Rothwell wrote:
 > 
 > I have reverted that commit for today.
 
-This patch depends on two patches in the tips tree.  I presume
-this build test was done without the tips tree, right?
+Hi Stephen,
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Sorry about that. This will be fixed for tomorrow's build. The problems
+is that we have commit dependency between printk and locking tree. So I
+pulled the
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=locking/core&id=c935cd62d3fe985d7f0ebea185d2759e8992e96f
+
+into printk/for-next.
+
+	-ss
