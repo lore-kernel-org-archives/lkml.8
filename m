@@ -4,79 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6AFC433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C88CC433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59A9C206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370442083E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:39:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgG1IjK (ORCPT
+        id S1728268AbgG1IjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:39:10 -0400
-Received: from elvis.franken.de ([193.175.24.41]:51663 "EHLO elvis.franken.de"
+        Tue, 28 Jul 2020 04:39:00 -0400
+Received: from elvis.franken.de ([193.175.24.41]:51655 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728104AbgG1IjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:39:08 -0400
+        id S1727996AbgG1Ii7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:38:59 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1k0L8B-0000DV-03; Tue, 28 Jul 2020 10:38:39 +0200
+        id 1k0L8B-0000DV-00; Tue, 28 Jul 2020 10:38:39 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 9994EC0A94; Tue, 28 Jul 2020 10:33:08 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 10:33:08 +0200
+        id 2D519C0A4B; Tue, 28 Jul 2020 10:30:00 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 10:30:00 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/5] of_address: Add bus type match for pci ranges
- parser
-Message-ID: <20200728083308.GD9062@alpha.franken.de>
-References: <20200725014529.1143208-1-jiaxun.yang@flygoat.com>
- <20200725014529.1143208-2-jiaxun.yang@flygoat.com>
- <CAL_JsqKePrUW3-HoSnQawqhgg23XJ7MxzawD7TKt-__q3jM55g@mail.gmail.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, od@zcrc.me,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] MIPS: ath79: Remove unused include
+ <asm/mips_machine.h>
+Message-ID: <20200728083000.GA9062@alpha.franken.de>
+References: <20200726165828.55175-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKePrUW3-HoSnQawqhgg23XJ7MxzawD7TKt-__q3jM55g@mail.gmail.com>
+In-Reply-To: <20200726165828.55175-1-paul@crapouillou.net>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:50:14AM -0600, Rob Herring wrote:
-> On Fri, Jul 24, 2020 at 7:45 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
-> >
-> > So the parser can be used to parse range property of ISA bus.
-> >
-> > As they're all using PCI-like method of range property, there is no need
-> > start a new parser.
-> >
-> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> >
-> > --
-> > v2: Drop useless check, fix some na for bus_addr
-> >         add define of of_range_parser_init according to
-> >         Rob's suggestion.
-> > v3: Abstract out has_flags. simplify define.
-> > ---
-> >  drivers/of/address.c       | 29 +++++++++++++++++------------
-> >  include/linux/of_address.h |  4 ++++
-> >  2 files changed, 21 insertions(+), 12 deletions(-)
+On Sun, Jul 26, 2020 at 06:58:27PM +0200, Paul Cercueil wrote:
+> Since commit 3a77e0d75eed ("MIPS: ath79: drop machfiles"), this header
+> is not used anymore.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  arch/mips/ath79/setup.c | 1 -
+>  1 file changed, 1 deletion(-)
 
-Rob, are you ok with merging this via the mips-next tree ?
+applied to mips-next.
 
 Thomas.
 
