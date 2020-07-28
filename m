@@ -2,124 +2,119 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F05DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B980C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32426206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9F2206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:21:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLIYwDRy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730729AbgG1PUJ (ORCPT
+        id S1730765AbgG1PU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:20:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43458 "EHLO
+        Tue, 28 Jul 2020 11:20:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730637AbgG1PUI (ORCPT
+        with ESMTP id S1730586AbgG1PU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:20:08 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CE05C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:20:08 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k0ROd-0002aa-DL; Tue, 28 Jul 2020 17:20:03 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k0ROc-0006NV-Bb; Tue, 28 Jul 2020 17:20:02 +0200
-Date:   Tue, 28 Jul 2020 17:20:02 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Richard Neumann <mail@richard-neumann.de>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sandeep Singh <Sandeep.Singh@amd.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
-        Shyam-sundar.S-k@amd.com
-Subject: Re: [PATCH v5 0/4] SFH: Add Support for AMD Sensor Fusion Hub
-Message-ID: <20200728152002.pscc6a34cfelzvsu@pengutronix.de>
-References: <1590759730-32494-1-git-send-email-Sandeep.Singh@amd.com>
- <CAHp75VeDAc9pP16wf10xvJn6t34cTXkPAXHus1aSL_07HN3EAA@mail.gmail.com>
- <20200728145833.xc53dpvwu7deqzjw@pengutronix.de>
- <c8046227481b367a3a1bbd123234279fcde76f87.camel@richard-neumann.de>
+        Tue, 28 Jul 2020 11:20:58 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 971A2C061794;
+        Tue, 28 Jul 2020 08:20:58 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id t7so1340108otp.0;
+        Tue, 28 Jul 2020 08:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3fjZl1RVLXY1uNlmaJnq6KmBuBn/W8J4Zm8rshj+CNI=;
+        b=bLIYwDRybKvdUVVFY0A2TMSDlrdzdOh4ifKZU8iH7ZVliMRiYmXjE6Jk/usGdy7OmT
+         bO0zJxYEKeM2tUU+RVATmSB+V0dDVnPVBEM6oBOJxEK1+arXzxrzXR4NQCQpNJadRQtW
+         0N8Fg26WMNHdpbuEtPPq3tOLAMtdrKrtEdUxCT89DZonWPUz0Bd9u7ljSOHPWqhJDb67
+         KeQsWgqYIst+LH+lBm2KyfxBXiXAhdJVFTrqQGgvAonrWQA+RPjdKMckG19SZYD3cZw7
+         jETzWvVQtqQ6hDXFyb7i/Xk/y83o6OMcJCLWMB2BS9zvGMBGvDiK6zmSZDEbPNcv/nOY
+         HAhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3fjZl1RVLXY1uNlmaJnq6KmBuBn/W8J4Zm8rshj+CNI=;
+        b=JfpqXEl9sZhAY2r4LLyo8usFRuEvv+pJQ1xqndDKTZcn4zMrlJaEepMqe5GPpfrFR7
+         Ov0QhVoGdrsdwbxC5qvNz9ZiUrf6U50TiAQyFHKcVJZScpTzHC3zOee0DrcFrmMr54iJ
+         OqrEv+YLI6LJoJ2PHboG9ZoCSUSi3mSWd/PIQayIZz/rFBYvqpId2EKJQuE2eMj/pqP8
+         QRfiUcsP8OAwy9tYyhWzohvHR5IVYluSp27u3NbMHUjX7GZ9IEGLr3WPR3Asrc03lKbO
+         p9PJIkd9xektAAEAG2cQNoM8v1n6H5jWtMfNVI8/ltpxQTvzVqpFMCkzy34HoHb6E8uZ
+         FRlQ==
+X-Gm-Message-State: AOAM5316wU2V/Zq1fC2sgKi/zDV5fuLJe3lYggosTRpqh3OnkdVMvB/C
+        d3RcGSNtefQwRDwfLYAOGnTruCWad1ZlhY3aKA==
+X-Google-Smtp-Source: ABdhPJwcsJOsVl5dMiUaOLvJG8LILElWBPVEbSidGRSlql9+NAi6oaWnpg4f+EUBdBJfPzUypO3iLg8u26RBbEbPv64=
+X-Received: by 2002:a9d:46c:: with SMTP id 99mr25007624otc.192.1595949657943;
+ Tue, 28 Jul 2020 08:20:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c8046227481b367a3a1bbd123234279fcde76f87.camel@richard-neumann.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 17:15:30 up 256 days,  6:34, 241 users,  load average: 0.09, 0.06,
- 0.06
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200728154903.51a60b8e@canb.auug.org.au> <c7c752bc-2a06-fc56-6f87-dfdddd8a436e@codeaurora.org>
+In-Reply-To: <c7c752bc-2a06-fc56-6f87-dfdddd8a436e@codeaurora.org>
+From:   Rob Herring <robherring2@gmail.com>
+Date:   Tue, 28 Jul 2020 09:20:45 -0600
+Message-ID: <CAL_JsqJ6zZcK=Yv2Bbnz-gBVZ0DV0Lp+9hbW3U2qvvAo7rHLbw@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the devicetree tree with the pci tree
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ansuel Smith <ansuelsmth@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
+On Tue, Jul 28, 2020 at 2:28 AM Sivaprakash Murugesan
+<sivaprak@codeaurora.org> wrote:
+>
+> On 7/28/2020 11:19 AM, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > Today's linux-next merge of the devicetree tree got a conflict in:
+> >
+> >    Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> >
+> > between commits:
+> >
+> >    736ae5c91712 ("dt-bindings: PCI: qcom: Add missing clks")
+> >    b11b8cc161de ("dt-bindings: PCI: qcom: Add ext reset")
+> >    d511580ea9c2 ("dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant")
+> >
+> > from the pci tree and commit:
+> >
+> >    70172d196947 ("dt-bindings: pci: convert QCOM pci bindings to YAML")
+> >
+> > from the devicetree tree.
+> >
+> > I don;t know how to fixed it up so I just left the latter one . This
+> > is now fixed as far as linux-next is concerned, but any non trivial
+> > conflicts should be mentioned to your upstream maintainer when your tree
+> > is submitted for merging.  You may also want to consider cooperating
+> > with the maintainer of the conflicting tree to minimise any particularly
+> > complex conflicts.
+>
+> Rob/Bjorn,
+>
+> Please let me know if I can provide a patch rebased to linux-next.
 
-On 20-07-28 17:05, Richard Neumann wrote:
-> Hi,
-> 
-> Am Dienstag, den 28.07.2020, 16:58 +0200 schrieb Marco Felsch:
-> > Hi,
-> > 
-> > On 20-05-29 17:21, Andy Shevchenko wrote:
-> > > On Fri, May 29, 2020 at 4:42 PM Sandeep Singh <
-> > > Sandeep.Singh@amd.com> wrote:
-> > > > From: Sandeep Singh <sandeep.singh@amd.com>
-> > > > 
+A patch based on linux-next is useless unless you want it applied
+after the next merge window because no one can apply it.
 
-...
+> Bjorn can pick up the patch after review and Rob can drop the old pci
+> yaml conversion patch.
 
-> > > I can't believe this is fifth version.
-> > > Guys, you have to do much more work on these drivers.
-> > 
-> > Is there any active development addressing Andy's comments? Else can
-> > we
-> > support you to bring these patches mainline?
-> > 
-> > Regards,
-> >   Marco
-> 
-> I did some major refactoring¹ on the v4 patch series and am currently
-> providing it for Arch Linux as a DKMS package in the AUR².
-> A teensy bit of my changes seems to have influenced the v5 version but
-> I actually did some major changes, like strictly separating the HID,
-> platform and PCI driver parts.
-> I did not submit my changes for upstream so far, since I do not want to
-> undermine AMD's work on this nor cause competing driver
-> implementations.
-> 
-> Sincerely,
-> 
-> Richard
-> 
-> [1] https://github.com/conqp/linux/tree/amd-sfh-hid/drivers/hid/amd-sfh-hid
-> [2] https://aur.archlinux.org/packages/amd-sfh-hid-dkms/
+I'll drop it and it can go via the PCI tree. I have some minor fixups
+I'll comment on.
 
-Thanks for the links :) We should get this work done to improve user
-experience. Let's wait for the AMD developers comments and then we can
-discuss the further steps :)
-
-Regards,
-  Marco
+Rob
