@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74562C433F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 938FAC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FCF32075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB802075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:30:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="E87h/vPS"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="s1HEL93e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgG1Iaa (ORCPT
+        id S1728245AbgG1Iao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:30:30 -0400
-Received: from mail-bn8nam11on2072.outbound.protection.outlook.com ([40.107.236.72]:5217
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        Tue, 28 Jul 2020 04:30:44 -0400
+Received: from mail-dm6nam11on2070.outbound.protection.outlook.com ([40.107.223.70]:1953
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727808AbgG1Ia3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:30:29 -0400
+        id S1727808AbgG1Ian (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:30:43 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D1A3bT0Qxe4SMl7+erRfAhPKJWNRTxgsjOZMZ1g4jHBLPGhxOdsCt716ano8y62olBrtkq5IPExo3x7ypF/78WgSeq2nCm62Bz2vpcSb5Z6jImW68g97i/4cCTn7i0HTrnaYtC0w2lN4DyAyjz9ZUVhxganVZzWEtQcQ6xaMnSX4u0TGRIWyIcoPO8fnaVkvXpQK1F2gVbR18adZouvo+Kktpaq0Iu/knES0/gSCER1Zfyqhum4FVbdi6ytv/f5+7SXIaB1McTYR+g841aabsTGNCKCNPE2409NZpjISkOIrQfXr3PKCSvroVG1QhjnHOvPqd5G7M306++uHmuRsIA==
+ b=ReKViLx6KfOzj4THm3APcQNSeq+TTxW/rlVwwEZIOjCW8A4+akttKwwM0G5ifLbJthgBe6NlInQQ42aUDS/fNA9zx4M3C+QGnQf7iLdDNgf828E1bTn2d9hCIVUAcVuUzJEsbOoyz0cT1t4zREm5MPMWW+hwjSF7/4kNTsUdYGZUePLKXMXc31eroWncJSRCrov2eC0QLpXldkphldxWOTICN1NtAHIpGcy88ri8ZEUuJpsXzNbwSJe5IoQlOXrxxmDhtXPGjJovp83PyNG0PsftnXB3ToDKiGlgoqgVSJMvcHFC4jE2D+Vy0xErdBO/lkYDNX/EmSDKMgZcLwkjVA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wfCk201FvWlIusiJ20M931+ZD+2bvTDB4nRyCEUoB8M=;
- b=c1F0OK9VoFlmyh4DIUPx+/7r9yzd0jLw3WB+rCUfllK++QEwwgowh3LXh8CkL9q9LBJKrarUeUOORBnPMAGi55vo/q2MJBrgUOZ0umELoKYPckFQl4pWfPGjtH78DmxYAAMEpM4yk2Xeg7lLQCbqja+YCr4ZfmQ4MM59Sagzba3NuviI7w7u6jL+iLA3QU1iiFONdyVFptCMKYxxaojyCIEOgIKsY8NMN2ESjcQ9/5hceA7EJsy0yfp+Lfkl1zpXKMnA90CBk+NkOoDYlGKZtueK1EmrQ9FBEYvwD3/miRh/QJRMPkh3C8Bf6Zx+slC+KHx2BDAjpcT0oAXwhn/ghA==
+ bh=tJF4nmMrCimFmSbEujZe47VpOQtYz+QKdoxLdXMbvgE=;
+ b=A0Oqn+c5UAY68Kz+5XOwHRqPIWZglkGHRj+fYmmGSCzABL9cBhOd5mkljuBpbeV9QvtduAyqg03ngZgTiU5d+Y2j5hCOZ2MzX8hChXmMrB9OP/MIG2cx2D1So8Joe0Gk4BRxsEwLG8YlFOForW6YmvapdL2Z2zuhHtL8Rzb+ODLsl11FvXuL9pho5IHc7klM02N2gpHw3nfRy/3Cm1qaOK6jQGmaYu1pOSNn8/+qQ0iNnKj1a+AXsal2xBOSh0eqKCSPWELwXBAPhzN68U1b7DB23FRuX7FqK2q+iiH8G/Q47cnSmW95wuOMwncsspqlCCXziIPwSOaUVIIcxFycJw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wfCk201FvWlIusiJ20M931+ZD+2bvTDB4nRyCEUoB8M=;
- b=E87h/vPS43/U5ExNyob5029cIvwhCk5x8H4G6DrwlhNL+7empSLLx0RVKoAU6r6MGr2LEOy27/XwurjI2cKtpSSZGbIzNjrpKLGSviYsyBr1deWwOOdD5TNdUO5ky9Zi190bAWNEU0MVaSnZnvJV77RMrSP6GZYx8hX0dRLZVeo=
+ bh=tJF4nmMrCimFmSbEujZe47VpOQtYz+QKdoxLdXMbvgE=;
+ b=s1HEL93eCs0w84u51Nfo2SgjHfMLCcSREpDqPuVBnjFuYibkxNWQaE8U4Ar8vzSs6DKHZYifJ+P8BbEmy4vFCtDdz98MWXlwF52xNNOto/DYrdQ6djfdQWD6XIuNVoKg8013+T/CNcEfbFnv5NLk3REwZGsCE+tDM9xGqqZJLz4=
 Authentication-Results: amd.com; dkim=none (message not signed)
  header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
 Received: from DM5PR1201MB0188.namprd12.prod.outlook.com (2603:10b6:4:56::12)
  by DM5PR12MB1468.namprd12.prod.outlook.com (2603:10b6:4:10::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.25; Tue, 28 Jul
- 2020 08:30:26 +0000
+ 2020 08:30:40 +0000
 Received: from DM5PR1201MB0188.namprd12.prod.outlook.com
  ([fe80::41b7:b11a:c6d8:1e0e]) by DM5PR1201MB0188.namprd12.prod.outlook.com
  ([fe80::41b7:b11a:c6d8:1e0e%10]) with mapi id 15.20.3216.033; Tue, 28 Jul
- 2020 08:30:26 +0000
+ 2020 08:30:40 +0000
 From:   Akshu Agrawal <akshu.agrawal@amd.com>
 To:     akshu.agrawal@amd.com
 Cc:     sboyd@kernel.org, rafael@kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org (open list:ACPI),
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
         linux-kernel@vger.kernel.org (open list)
-Subject: [3/4] ACPI: APD: Add a fmw property is_raven
-Date:   Tue, 28 Jul 2020 13:58:55 +0530
-Message-Id: <20200728082857.10829-4-akshu.agrawal@amd.com>
+Subject: [v3 4/4] clk: x86: Support RV architecture
+Date:   Tue, 28 Jul 2020 13:58:56 +0530
+Message-Id: <20200728082857.10829-5-akshu.agrawal@amd.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200728082857.10829-1-akshu.agrawal@amd.com>
 References: <20200728082857.10829-1-akshu.agrawal@amd.com>
@@ -69,81 +68,132 @@ X-ClientProxiedBy: MA1PR01CA0160.INDPRD01.PROD.OUTLOOK.COM
  (2603:10b6:4:56::12)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from local.mshome.net (122.171.179.172) by MA1PR01CA0160.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:71::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22 via Frontend Transport; Tue, 28 Jul 2020 08:30:24 +0000
+Received: from local.mshome.net (122.171.179.172) by MA1PR01CA0160.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:71::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22 via Frontend Transport; Tue, 28 Jul 2020 08:30:38 +0000
 X-Mailer: git-send-email 2.20.1
 X-Originating-IP: [122.171.179.172]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: de8e3716-347e-4a80-44e0-08d832d07a83
+X-MS-Office365-Filtering-Correlation-Id: 92d94503-5747-4c53-0d24-08d832d082c3
 X-MS-TrafficTypeDiagnostic: DM5PR12MB1468:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1468BC785A5998566C4029B7F8730@DM5PR12MB1468.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-Microsoft-Antispam-PRVS: <DM5PR12MB146849EE0457DBAF65C5E97BF8730@DM5PR12MB1468.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hpLY7LElQgrriFwY6iC2CzuMrULDTiw1fFanoM7R8PtAosIM8ORV4t9+Ra1TOZXqeoEU1F3zBV7oKJ/CvGNLtWrdDSWXTcP7i2TaYkLA0GM3VBk6e99hanKf/oY9orhLNiICy9eQw9QTVdJnzDlqS0Iq6GoluAj8WdPs+K9g7E8wSqIR6ogXAKvsCuKCN4GS5Q2PIWBpXE/MTK2GEOODo/rMfE97dL6u22o++ChJBZkT/yq7Gjz3Tor30Dr5Wchs52fQumkvUKNj5vLJDYxocH1a3pv9/walJ3EnVC4vBQ69ohdPJ5r6vFPDYNRN+k6PQ2s61YpyWienNWgNuyPWkA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0188.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(366004)(396003)(136003)(956004)(2616005)(8936002)(44832011)(5660300002)(36756003)(316002)(6512007)(54906003)(66476007)(6666004)(478600001)(34206002)(37006003)(6486002)(66946007)(86362001)(66556008)(26005)(186003)(2906002)(8676002)(16526019)(52116002)(4326008)(1076003)(6506007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: J4OtI7QqcGf53nQKA0pqEXtQyHg2ib6r3RqchA7YvpBHimF6WuTpkhDzJxou8v11tMyopQrxriki31xZSlxki6tEEh35FiO1jNbn5ZbgfcN9qse4qYMSYihjxz5JxruHhAAX5paSScgLSYjWayhJzEXvA9IqpkUGoK7wNKG/VLBByEvbsQKTDDsGrfmCwuTk8FXZE6vef4iiUVliKBM+F3ytwe+fuhevKq0EeT7VOwxxQZB3UDdtPt5kHPbaT3aXAZN2EN1iTrcZxCIcs3I5J4tQ6Uc/cLpQVYnC17Rxi1N/4bzzJZGKBSfOAh5sSLFvorwUB4pynA3lHVSg/Pd4C+CR6g2XldKqpXnXkgzwlOwNuraPNBKdT6ANGEF/Xf6iimDNxkUf2eIpTO72S7a0qwUfYRtSZPZHVXyCS9GejU1ittCt79l00OLBGWOC3RKkaxMgTD0r2QlpP2j10aGSGT/IU9zIwWME+kjEeUELKKI=
+X-Microsoft-Antispam-Message-Info: pPqhn2Sw5TCjiK94ZZAsAR4aC+FmIJbchk5PU7pT/MAINVkY0nL8SdqZdsvpsLtDwtK/IglU108Hb1T8WpfNqvKqym+A4iovY936GddfxaBfvYCj1pV2i5/1Wg73bBUd1HVEKTatl1G3I6qp7c3ZmpJodSLbC1KByUKH6c8gjgD06JOem3H4t0PbzP78W5OX7N2OWhGRi6frkjx8QXr/I5eis/IMlCpiN86rWrqK++Xyshv2Z6YewuWinxT+hfadif5tcXQmzNE/8/P35h6sTX+1nNgMJzoBPKgzY58+metOwdhQksG93EYyTfTuL93FRXvTBDo4nhCb5suguqaAcw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0188.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(366004)(396003)(136003)(956004)(2616005)(8936002)(44832011)(5660300002)(36756003)(316002)(6512007)(66476007)(6666004)(478600001)(34206002)(37006003)(6486002)(66946007)(86362001)(66556008)(26005)(186003)(2906002)(8676002)(16526019)(52116002)(4326008)(83380400001)(1076003)(6506007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: SlSXSO/UbQowtsdJcv5NjsMW7DqaZ1snSQAXzPSTNk+3jTqVu4D14RGPBHqwB6MGrp6J2yRev7F96vjt+kVjl3tBmtBtuL0w5s7jakwj32ZRbsU5W/3DsO7W6ilMCERGoTMBi1SmSshsuJhXX01tLQcD2dRLj8ZIP+7ypBm6XgqzIlBp5rXEwK5XrKr7VBlqjrsGpLSLH/zrHRtYjVLY99JeVuy+Dx7tzTv3deyQc3gKy21cktfert7zubcp4qqbGl+e3u1lnVF/HQkqZJ5FlvBeFdYGHtFAvIfjGLS57coXALEYlORDzHs0Lyq3k4wBr/9ckMuPJwDrdonQiN2OLUtRwLIP3hov0RzFyG3gGrmosZQqbPc7nRs8Q61M0L7ThcKek1zKcIqL6ahN+Dr36fiIJU1CGdCPJOcfcHQOvv0jMfgkt+4OHfDyVRjrCVNJLKya05N7MyKcGyPbztq1zl1aio6qPw1lDc66lFLb5dg=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de8e3716-347e-4a80-44e0-08d832d07a83
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92d94503-5747-4c53-0d24-08d832d082c3
 X-MS-Exchange-CrossTenant-AuthSource: DM5PR1201MB0188.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 08:30:26.4913
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 08:30:40.5480
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4NzjlOfQUM6Lpw134inkRkTmCp0HXW+j0EWnHDGayC+YHyRUXBKDQbuKyXKc6Kp5LXTOQaN0oklQl/nMAf4Pfw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 73KVX+A8h/+XMT7IHBtX/iKMj/cI+2RPaevSQcpQHfkSPHHQfS7wmdndeU4tIt6ysfQouWXlLTBnTuNtgscKfg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1468
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since there is slight difference in AMD RV based soc in misc
-clk architecture. The fmw property will help in differentiating
-the SoCs.
+There is minor difference between previous family of SoC and
+the current one. Which is the there is only 48Mh fixed clk.
+There is no mux and no option to select another freq as there in previous.
 
 Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
 ---
- drivers/acpi/acpi_apd.c               | 4 ++++
- include/linux/platform_data/clk-fch.h | 1 +
- 2 files changed, 5 insertions(+)
+v2: Consolidated the loops in remove.
+v3: Removed negation in condition to make it simple
 
-diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
-index 2d99e46add1a..d879ba28826c 100644
---- a/drivers/acpi/acpi_apd.c
-+++ b/drivers/acpi/acpi_apd.c
-@@ -82,6 +82,7 @@ static int misc_check_res(struct acpi_resource *ares, void *data)
- static int fch_misc_setup(struct apd_private_data *pdata)
- {
- 	struct acpi_device *adev = pdata->adev;
-+	const union acpi_object *obj;
- 	struct platform_device *clkdev;
- 	struct fch_clk_data *clk_data;
- 	struct resource_entry *rentry;
-@@ -98,6 +99,9 @@ static int fch_misc_setup(struct apd_private_data *pdata)
- 	if (ret < 0)
- 		return -ENOENT;
+ drivers/clk/x86/clk-fch.c | 53 ++++++++++++++++++++++++++++-----------
+ 1 file changed, 38 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/clk/x86/clk-fch.c b/drivers/clk/x86/clk-fch.c
+index b252f0cf0628..8f7c5142b0f0 100644
+--- a/drivers/clk/x86/clk-fch.c
++++ b/drivers/clk/x86/clk-fch.c
+@@ -26,6 +26,10 @@
+ #define ST_CLK_GATE	3
+ #define ST_MAX_CLKS	4
  
-+	acpi_dev_get_property(adev, "is-rv", ACPI_TYPE_INTEGER, &obj);
-+	clk_data->is_rv = obj->integer.value;
++#define RV_CLK_48M	0
++#define RV_CLK_GATE	1
++#define RV_MAX_CLKS	2
 +
- 	list_for_each_entry(rentry, &resource_list, node) {
- 		clk_data->base = devm_ioremap(&adev->dev, rentry->res->start,
- 					      resource_size(rentry->res));
-diff --git a/include/linux/platform_data/clk-fch.h b/include/linux/platform_data/clk-fch.h
-index 850ca776156d..b9f682459f08 100644
---- a/include/linux/platform_data/clk-fch.h
-+++ b/include/linux/platform_data/clk-fch.h
-@@ -12,6 +12,7 @@
+ static const char * const clk_oscout1_parents[] = { "clk48MHz", "clk25MHz" };
+ static struct clk_hw *hws[ST_MAX_CLKS];
  
- struct fch_clk_data {
- 	void __iomem *base;
-+	u32 is_rv;
- };
+@@ -37,33 +41,52 @@ static int fch_clk_probe(struct platform_device *pdev)
+ 	if (!fch_data || !fch_data->base)
+ 		return -EINVAL;
  
- #endif /* __CLK_FCH_H */
+-	hws[ST_CLK_48M] = clk_hw_register_fixed_rate(NULL, "clk48MHz", NULL, 0,
+-						     48000000);
+-	hws[ST_CLK_25M] = clk_hw_register_fixed_rate(NULL, "clk25MHz", NULL, 0,
+-						     25000000);
++	if (!fch_data->is_rv) {
++		hws[ST_CLK_48M] = clk_hw_register_fixed_rate(NULL, "clk48MHz",
++			NULL, 0, 48000000);
++		hws[ST_CLK_25M] = clk_hw_register_fixed_rate(NULL, "clk25MHz",
++			NULL, 0, 25000000);
++
++		hws[ST_CLK_MUX] = clk_hw_register_mux(NULL, "oscout1_mux",
++			clk_oscout1_parents, ARRAY_SIZE(clk_oscout1_parents),
++			0, fch_data->base + CLKDRVSTR2, OSCOUT1CLK25MHZ, 3, 0,
++			NULL);
+ 
+-	hws[ST_CLK_MUX] = clk_hw_register_mux(NULL, "oscout1_mux",
+-		clk_oscout1_parents, ARRAY_SIZE(clk_oscout1_parents),
+-		0, fch_data->base + CLKDRVSTR2, OSCOUT1CLK25MHZ, 3, 0, NULL);
++		clk_set_parent(hws[ST_CLK_MUX]->clk, hws[ST_CLK_48M]->clk);
+ 
+-	clk_set_parent(hws[ST_CLK_MUX]->clk, hws[ST_CLK_48M]->clk);
++		hws[ST_CLK_GATE] = clk_hw_register_gate(NULL, "oscout1",
++			"oscout1_mux", 0, fch_data->base + MISCCLKCNTL1,
++			OSCCLKENB, CLK_GATE_SET_TO_DISABLE, NULL);
+ 
+-	hws[ST_CLK_GATE] = clk_hw_register_gate(NULL, "oscout1", "oscout1_mux",
+-		0, fch_data->base + MISCCLKCNTL1, OSCCLKENB,
+-		CLK_GATE_SET_TO_DISABLE, NULL);
++		devm_clk_hw_register_clkdev(&pdev->dev, hws[ST_CLK_GATE],
++			"oscout1", NULL);
++	} else {
++		hws[RV_CLK_48M] = clk_hw_register_fixed_rate(NULL, "clk48MHz",
++			NULL, 0, 48000000);
+ 
+-	devm_clk_hw_register_clkdev(&pdev->dev, hws[ST_CLK_GATE], "oscout1",
+-				    NULL);
++		hws[RV_CLK_GATE] = clk_hw_register_gate(NULL, "oscout1",
++			"clk48MHz", 0, fch_data->base + MISCCLKCNTL1,
++			OSCCLKENB, CLK_GATE_SET_TO_DISABLE, NULL);
++
++		devm_clk_hw_register_clkdev(&pdev->dev, hws[RV_CLK_GATE],
++			"oscout1", NULL);
++	}
+ 
+ 	return 0;
+ }
+ 
+ static int fch_clk_remove(struct platform_device *pdev)
+ {
+-	int i;
++	int i, clks;
++	struct fch_clk_data *fch_data;
+ 
+-	for (i = 0; i < ST_MAX_CLKS; i++)
++	fch_data = dev_get_platdata(&pdev->dev);
++
++	clks = fch_data->is_rv ? RV_MAX_CLKS : ST_MAX_CLKS;
++
++	for (i = 0; i < clks; i++)
+ 		clk_hw_unregister(hws[i]);
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
