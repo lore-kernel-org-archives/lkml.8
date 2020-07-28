@@ -2,150 +2,143 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF21C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326F0C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D13E32070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:00:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595948455;
-	bh=frxB2QXihnX0bS03Xc1I0P6xwq48DECVyTC63uP/ctM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bUymjYOVvrEFnJ+fMQgwwq0L1fFiYPIgDdaof4xokcyIz1ME3APGwIn9u92whwq/r
-	 QcP72maO/LaFbxzfHd76wuw6N9k/+EjI95UMoXTZW5yfEROztn/m/01tJHqfvqZzj9
-	 l9n8fYUjSN9GvP031pPV1pibJj+3B66fOlZDVB4A=
+	by mail.kernel.org (Postfix) with ESMTP id 09E62207FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:01:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="jqMplwp4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730547AbgG1PAz (ORCPT
+        id S1730563AbgG1PBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:00:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730508AbgG1PAy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:00:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47BF3206D8;
-        Tue, 28 Jul 2020 15:00:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595948453;
-        bh=frxB2QXihnX0bS03Xc1I0P6xwq48DECVyTC63uP/ctM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kjc1NjTB8mTa19UGapHTh6qmux0UixS44sD8UjmAXe+/c2jxnunFjlZWvrL9fK4h9
-         Gt3SlRxefMTqGCYw4JIh6RTMQ0MGLKLGxPKyYBTjVj1Gd4ovftrw+hlJQz9bCP/WnW
-         y/4tr2Mpq6ISoqGqYaRDApHAC/R/yERivGbwlOC8=
-Date:   Tue, 28 Jul 2020 17:00:47 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [External] [PATCH 4.19 76/86] mm: memcg/slab: fix memory leak at
- non-root kmem_cache destroy
-Message-ID: <20200728150047.GC3537020@kroah.com>
-References: <20200727134914.312934924@linuxfoundation.org>
- <20200727134918.205538211@linuxfoundation.org>
- <CAMZfGtWVtGeMfu=04LiNVcLrBpmexUryHjy-dujo77CpJhcwGg@mail.gmail.com>
+        Tue, 28 Jul 2020 11:01:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730508AbgG1PBH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:01:07 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5329C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:01:06 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f18so202730wmc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:01:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k7U1Q9zeroE/yPznt2D4XGJyQI13I8758w9wiJAiJy0=;
+        b=jqMplwp4VEt7NK46p9DKah2lRF0mHZAS3/mKudshZMy8FcXvLybfAOfggbp9fNABQB
+         qdQQrywnrwpr5DVhoAhfpSeN+ncqAgJtbISGMwiO6YiTK8PCRZHkJzwpW2kB8dXRo3F6
+         IBtN14ZY0oRy51onC4wkHrXX2Y1HiC/3g3u0qWtxUma2C/vqF0vc9RHpTheV1xzp2TwQ
+         tGxBRYBqe4wlQ+B9ML2ck5jheJgA0cFOd86MZN4vaAJkGxaj1/EZAyKBj0Vyvq1n5HqP
+         dVtkcScjBUvdltbqg66XgcZowjJlsIO05W8ARbU60uZK/a5nFMjopidVmfwmeDt4r6EX
+         kRYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k7U1Q9zeroE/yPznt2D4XGJyQI13I8758w9wiJAiJy0=;
+        b=szvCBk85SEnh0Wxh0oxv/FVOFu//Y8vjuEcI6ueL4zt7SzBkC7KqcjNX1i8FGSqPTL
+         LTIfFvgzpygTwliQbmRTDkcgMS+VTZZf+dvG6+J7ha5McJE4lFAzlRzI5pcXIhuRrP8N
+         niLW0NL4f4u8OhxmXDqaIoWe9r6ez7A4CZ8aV0iAf4dI6jWA+k+JCU1Pdvy1VtGnUad2
+         VnjOOcF5b1OVamjUayfojKAug0+iYoOtF5RTjoc89dmnyf5TyodiaUqVl7qntXg3u+YU
+         iPIJuVPQBfEpUnDYKJdqvKLo+rWpe8lPcMJOiZGFMQwNMDJsB98ZTxW4upf/WUvOc2UY
+         i/hw==
+X-Gm-Message-State: AOAM530yHqqSYAaKi7jHD4awn9As5+13MQiRlx473rUr0BoWOHkTqgPJ
+        xZV6vFIVsqshOhxG5jT3M4awqo5D3M7FGgIVyXhKgg==
+X-Google-Smtp-Source: ABdhPJwtZsESR7WdQs9vZjByKfImYo4n+KjVPXTXmg/4Xny0qvN0mdHnW9DUz8VR/jWrvijgch9md6yvGN2RFYNjzxM=
+X-Received: by 2002:a1c:e382:: with SMTP id a124mr4091054wmh.96.1595948465354;
+ Tue, 28 Jul 2020 08:01:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMZfGtWVtGeMfu=04LiNVcLrBpmexUryHjy-dujo77CpJhcwGg@mail.gmail.com>
+References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+ <7d4c17db4a1214b7665375aa83fe1f8b4f0fbdfb.1594230107.git-series.maxime@cerno.tech>
+In-Reply-To: <7d4c17db4a1214b7665375aa83fe1f8b4f0fbdfb.1594230107.git-series.maxime@cerno.tech>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Tue, 28 Jul 2020 16:00:50 +0100
+Message-ID: <CAPY8ntBJriBEa4ORW5Ns0zc0ma=7HoooCPKTQb9cfiVQe02uCw@mail.gmail.com>
+Subject: Re: [PATCH v4 68/78] drm/vc4: hdmi: Deal with multiple ALSA cards
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 08:56:41PM +0800, Muchun Song wrote:
-> On Mon, Jul 27, 2020 at 10:12 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > From: Muchun Song <songmuchun@bytedance.com>
-> >
-> > commit d38a2b7a9c939e6d7329ab92b96559ccebf7b135 upstream.
-> >
-> > If the kmem_cache refcount is greater than one, we should not mark the
-> > root kmem_cache as dying.  If we mark the root kmem_cache dying
-> > incorrectly, the non-root kmem_cache can never be destroyed.  It
-> > resulted in memory leak when memcg was destroyed.  We can use the
-> > following steps to reproduce.
-> >
-> >   1) Use kmem_cache_create() to create a new kmem_cache named A.
-> >   2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
-> >      so the refcount of B is just increased.
-> >   3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
-> >      decrease the B's refcount but mark the B as dying.
-> >   4) Create a new memory cgroup and alloc memory from the kmem_cache
-> >      B. It leads to create a non-root kmem_cache for allocating memory.
-> >   5) When destroy the memory cgroup created in the step 4), the
-> >      non-root kmem_cache can never be destroyed.
-> >
-> > If we repeat steps 4) and 5), this will cause a lot of memory leak.  So
-> > only when refcount reach zero, we mark the root kmem_cache as dying.
-> >
-> > Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
-> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> > Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> > Reviewed-by: Shakeel Butt <shakeelb@google.com>
-> > Acked-by: Roman Gushchin <guro@fb.com>
-> > Cc: Vlastimil Babka <vbabka@suse.cz>
-> > Cc: Christoph Lameter <cl@linux.com>
-> > Cc: Pekka Enberg <penberg@kernel.org>
-> > Cc: David Rientjes <rientjes@google.com>
-> > Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > Cc: Shakeel Butt <shakeelb@google.com>
-> > Cc: <stable@vger.kernel.org>
-> > Link: http://lkml.kernel.org/r/20200716165103.83462-1-songmuchun@bytedance.com
-> > Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> > ---
-> >  mm/slab_common.c |   35 ++++++++++++++++++++++++++++-------
-> >  1 file changed, 28 insertions(+), 7 deletions(-)
-> >
-> > --- a/mm/slab_common.c
-> > +++ b/mm/slab_common.c
-> > @@ -310,6 +310,14 @@ int slab_unmergeable(struct kmem_cache *
-> >         if (s->refcount < 0)
-> >                 return 1;
-> >
-> > +#ifdef CONFIG_MEMCG_KMEM
-> > +       /*
-> > +        * Skip the dying kmem_cache.
-> > +        */
-> > +       if (s->memcg_params.dying)
-> > +               return 1;
-> > +#endif
-> > +
-> >         return 0;
-> >  }
-> >
-> > @@ -832,12 +840,15 @@ static int shutdown_memcg_caches(struct
-> >         return 0;
-> >  }
-> >
-> > -static void flush_memcg_workqueue(struct kmem_cache *s)
-> > +static void memcg_set_kmem_cache_dying(struct kmem_cache *s)
-> >  {
-> >         mutex_lock(&slab_mutex);
-> >         s->memcg_params.dying = true;
-> >         mutex_unlock(&slab_mutex);
-> 
-> We should remove mutex_lock/unlock(&slab_mutex) here, because
-> we already hold the slab_mutex from kmem_cache_destroy().
+Hi Maxime
 
-Good catch.  I'll go make this change and push out a -rc2.
+On Wed, 8 Jul 2020 at 18:44, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> The HDMI driver was registering a single ALSA card so far with the name
+> vc4-hdmi.
+>
+> Obviously, this is not going to work anymore when will have multiple HDMI
 
-thanks,
+s/will/we
 
-greg k-h
+> controllers since we will end up trying to register two files with the same
+> name.
+>
+> Let's use the variant to avoid that name conflict.
+>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+
+With that change
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+
+> ---
+>  drivers/gpu/drm/vc4/vc4_hdmi.c | 3 ++-
+>  drivers/gpu/drm/vc4/vc4_hdmi.h | 3 +++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> index 1b6f51849d6c..0a9a323e03d8 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> @@ -1044,7 +1044,7 @@ static int vc4_hdmi_audio_init(struct vc4_hdmi *vc4_hdmi)
+>
+>         card->dai_link = dai_link;
+>         card->num_links = 1;
+> -       card->name = "vc4-hdmi";
+> +       card->name = vc4_hdmi->variant->card_name;
+>         card->dev = dev;
+>
+>         /*
+> @@ -1503,6 +1503,7 @@ static int vc4_hdmi_dev_remove(struct platform_device *pdev)
+>  static const struct vc4_hdmi_variant bcm2835_variant = {
+>         .encoder_type           = VC4_ENCODER_TYPE_HDMI0,
+>         .debugfs_name           = "hdmi_regs",
+> +       .card_name              = "vc4-hdmi",
+>         .max_pixel_clock        = 162000000,
+>         .cec_available          = true,
+>         .registers              = vc4_hdmi_fields,
+> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
+> index 4aea5ee8a91d..34138e0dd4a6 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
+> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
+> @@ -30,6 +30,9 @@ struct vc4_hdmi_variant {
+>         /* Encoder Type for that controller */
+>         enum vc4_encoder_type encoder_type;
+>
+> +       /* ALSA card name */
+> +       const char *card_name;
+> +
+>         /* Filename to expose the registers in debugfs */
+>         const char *debugfs_name;
+>
+> --
+> git-series 0.9.1
