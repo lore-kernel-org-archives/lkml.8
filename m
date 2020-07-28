@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D620C433F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E3EC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C681207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA5B2074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:36:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FaaKEZht"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jp+B769e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731882AbgG1QgH (ORCPT
+        id S1731895AbgG1QgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:36:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55012 "EHLO
+        Tue, 28 Jul 2020 12:36:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731651AbgG1Qei (ORCPT
+        with ESMTP id S1731416AbgG1Qe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:34:38 -0400
+        Tue, 28 Jul 2020 12:34:28 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AD86C061794;
-        Tue, 28 Jul 2020 09:34:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53CCFC0619D2;
+        Tue, 28 Jul 2020 09:34:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=DRMHqN692VZul25DPeXb71n72Fd2PLEekGX4ziRpt5Q=; b=FaaKEZht5hHMYYzpy26ebrj6Q9
-        KnnZQ4UmqIrsRJAPIg1Uany1t1HfLE3oZ3FOfisEdSrp14GOkVJvm8HSXweYVGQb1WWmskVqZKsOg
-        mz27CSWTZ9CG7DkXz6S6J95P742c+yRxOOJfxmxbGhe4EaIWRz6JR4SAjOgO+Tj59mgFGPLTE/2V5
-        IZfgK/IPg5zXK0ftronyI/+FZeKZT8cX3yohYqYbL8YUsS+6ptaPdKlCkswCeJXPjESgqHBiEuxCs
-        DBYwZ/WiIoAHgeTzPAVvdxAqcH1/N/Hp3f8HoO5vvltdEywgjo+Zu8ndDnN72q9UNN8NBG2HGzw+X
-        uk74aTmA==;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=EC+FxFIHex2sWZ34S6MwpVZAyyDPurOctu/Z14/eRMg=; b=jp+B769e3a9nErJNCadZHrwYi+
+        o3ZwBvysW28Ep104+GAgBewclKtZE6ilG5Za6kuPvGUyjtIwqlNeN9ijZH8wvwmbSCP1Z3y4Y3J1v
+        biukOJsHnmLrfXy5dDJG2aRYMCXafs4BIjCz+FNoEp/t4c5+xNYtw4MeT0VptvaA83kI67hlRgeKI
+        d/LV6K1lftWFIuSmfBlv8LDUCjAvBBgZFGr9XK5a6fSZ+nKgOK221ysnXOJtMecJ2x6qyAfuZt5nY
+        gGMGjLu63bCWDTlvpVBP4jxoq4G2Fk2JAxPAr0qeG0ghPTEmII2pnpqM3inxTg+SdPxlGpe5wy/Bo
+        14I5Dl3A==;
 Received: from [2001:4bb8:180:6102:fd04:50d8:4827:5508] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0SYi-0006yV-Mx; Tue, 28 Jul 2020 16:34:33 +0000
+        id 1k0SYa-0006xJ-ML; Tue, 28 Jul 2020 16:34:25 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>
@@ -46,13 +46,14 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 09/23] init: add an init_umount helper
-Date:   Tue, 28 Jul 2020 18:34:02 +0200
-Message-Id: <20200728163416.556521-10-hch@lst.de>
+Subject: [PATCH 04/23] devtmpfs: refactor devtmpfsd()
+Date:   Tue, 28 Jul 2020 18:33:57 +0200
+Message-Id: <20200728163416.556521-5-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200728163416.556521-1-hch@lst.de>
 References: <20200728163416.556521-1-hch@lst.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,108 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like ksys_umount, but takes a kernel pointer for the destination path.
-Switch over the umount in the init code, which just happen to work due to
-the implicit set_fs(KERNEL_DS) during early init right now.
+Split the main worker loop into a separate function.  This allows
+devtmpfsd_setup to be marked __init, which will allows us to call
+__init routines for the setup work.  devtmpfѕ itself needs a __ref
+marker for that to work, and a comment explaining why it works.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/init.c                     | 14 ++++++++++++++
- fs/internal.h                 |  1 +
- fs/namespace.c                |  4 ++--
- include/linux/init_syscalls.h |  1 +
- include/linux/syscalls.h      |  1 -
- init/do_mounts_initrd.c       |  2 +-
- 6 files changed, 19 insertions(+), 4 deletions(-)
+ drivers/base/devtmpfs.c | 52 ++++++++++++++++++++++++-----------------
+ 1 file changed, 31 insertions(+), 21 deletions(-)
 
-diff --git a/fs/init.c b/fs/init.c
-index c6eb724e1c7b22..9c8e31fdb048c8 100644
---- a/fs/init.c
-+++ b/fs/init.c
-@@ -23,3 +23,17 @@ int __init init_mount(const char *dev_name, const char *dir_name,
- 	path_put(&path);
- 	return ret;
+diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
+index c9017e0584c003..d697634bc0d48c 100644
+--- a/drivers/base/devtmpfs.c
++++ b/drivers/base/devtmpfs.c
+@@ -378,7 +378,30 @@ static int handle(const char *name, umode_t mode, kuid_t uid, kgid_t gid,
+ 		return handle_remove(name, dev);
  }
-+
-+int __init init_umount(const char *name, int flags)
+ 
+-static int devtmpfs_setup(void *p)
++static void __noreturn devtmpfs_work_loop(void)
 +{
-+	int lookup_flags = LOOKUP_MOUNTPOINT;
-+	struct path path;
-+	int ret;
-+
-+	if (!(flags & UMOUNT_NOFOLLOW))
-+		lookup_flags |= LOOKUP_FOLLOW;
-+	ret = kern_path(name, lookup_flags, &path);
-+	if (ret)
-+		return ret;
-+	return path_umount(&path, flags);
++	while (1) {
++		spin_lock(&req_lock);
++		while (requests) {
++			struct req *req = requests;
++			requests = NULL;
++			spin_unlock(&req_lock);
++			while (req) {
++				struct req *next = req->next;
++				req->err = handle(req->name, req->mode,
++						  req->uid, req->gid, req->dev);
++				complete(&req->done);
++				req = next;
++			}
++			spin_lock(&req_lock);
++		}
++		__set_current_state(TASK_INTERRUPTIBLE);
++		spin_unlock(&req_lock);
++		schedule();
++	}
 +}
-diff --git a/fs/internal.h b/fs/internal.h
-index 72ea0b6f7435a4..491d1e63809b37 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -92,6 +92,7 @@ extern void dissolve_on_fput(struct vfsmount *);
- 
- int path_mount(const char *dev_name, struct path *path,
- 		const char *type_page, unsigned long flags, void *data_page);
-+int path_umount(struct path *path, int flags);
- 
- /*
-  * fs_struct.c
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 2c4d7592097485..a7301790abb211 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -1706,7 +1706,7 @@ static inline bool may_mandlock(void)
- }
- #endif
- 
--static int path_umount(struct path *path, int flags)
-+int path_umount(struct path *path, int flags)
++
++static int __init devtmpfs_setup(void *p)
  {
- 	struct mount *mnt;
- 	int retval;
-@@ -1736,7 +1736,7 @@ static int path_umount(struct path *path, int flags)
- 	return retval;
+ 	int err;
+ 
+@@ -396,31 +419,18 @@ static int devtmpfs_setup(void *p)
+ 	return err;
  }
  
--int ksys_umount(char __user *name, int flags)
-+static int ksys_umount(char __user *name, int flags)
+-static int devtmpfsd(void *p)
++/*
++ * The __ref is because devtmpfs_setup needs to be __init for the routines it
++ * calls.  That call is done while devtmpfs_init, which is marked __init,
++ * synchronously waits for it to complete.
++ */
++static int __ref devtmpfsd(void *p)
  {
- 	int lookup_flags = LOOKUP_MOUNTPOINT;
- 	struct path path;
-diff --git a/include/linux/init_syscalls.h b/include/linux/init_syscalls.h
-index af9ea88a60e0bd..a5a2e7f1991691 100644
---- a/include/linux/init_syscalls.h
-+++ b/include/linux/init_syscalls.h
-@@ -2,3 +2,4 @@
+ 	int err = devtmpfs_setup(p);
  
- int __init init_mount(const char *dev_name, const char *dir_name,
- 		const char *type_page, unsigned long flags, void *data_page);
-+int __init init_umount(const char *name, int flags);
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index e43816198e6001..1a4f5d8ee7044b 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1236,7 +1236,6 @@ asmlinkage long sys_ni_syscall(void);
-  * the ksys_xyzyyz() functions prototyped below.
-  */
- 
--int ksys_umount(char __user *name, int flags);
- int ksys_chroot(const char __user *filename);
- ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
- int ksys_chdir(const char __user *filename);
-diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
-index 1f9336209ad9cc..6b020a06990251 100644
---- a/init/do_mounts_initrd.c
-+++ b/init/do_mounts_initrd.c
-@@ -122,7 +122,7 @@ static void __init handle_initrd(void)
- 		else
- 			printk("failed\n");
- 		printk(KERN_NOTICE "Unmounting old root\n");
--		ksys_umount("/old", MNT_DETACH);
-+		init_umount("/old", MNT_DETACH);
- 	}
+ 	if (err)
+ 		return err;
+-	while (1) {
+-		spin_lock(&req_lock);
+-		while (requests) {
+-			struct req *req = requests;
+-			requests = NULL;
+-			spin_unlock(&req_lock);
+-			while (req) {
+-				struct req *next = req->next;
+-				req->err = handle(req->name, req->mode,
+-						  req->uid, req->gid, req->dev);
+-				complete(&req->done);
+-				req = next;
+-			}
+-			spin_lock(&req_lock);
+-		}
+-		__set_current_state(TASK_INTERRUPTIBLE);
+-		spin_unlock(&req_lock);
+-		schedule();
+-	}
++	devtmpfs_work_loop();
+ 	return 0;
  }
  
 -- 
