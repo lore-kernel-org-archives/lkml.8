@@ -2,106 +2,89 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B2AC433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE54C433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75C1F20809
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:33:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595954029;
-	bh=DtCFJacsr6CdI0tGB53RDI4b485bWpqMFwYlC6VK2wg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F6HvthhQmo4d620I619gL17h2SrK5pc/ZeuRCGEIiHZfKQXMlSlDM2PsZfGmHXS7W
-	 hiXRIyhz5I2MCFLGUFCiM0ubCzD9m4hrOZ8tDI0q/kZZXqtPdKf32NRo4sSMx7Y4bg
-	 mStkFk386YbdYpjoRETWKkOAaR8RykQyKjy3+F88=
+	by mail.kernel.org (Postfix) with ESMTP id 30DCD2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731524AbgG1Qds (ORCPT
+        id S1731749AbgG1QjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:33:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48734 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 12:39:13 -0400
+Received: from elvis.franken.de ([193.175.24.41]:52168 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731191AbgG1Qds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:33:48 -0400
-Received: from localhost (p54b330d0.dip0.t-ipconnect.de [84.179.48.208])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6EEE20792;
-        Tue, 28 Jul 2020 16:33:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595954027;
-        bh=DtCFJacsr6CdI0tGB53RDI4b485bWpqMFwYlC6VK2wg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kk/27EblgUcXZbFkpySgRDHWvU9q4nbOdBY7CGgzEM09surZC9Cm1dn6Q3drgVp04
-         I14RirqQkUDrlzwne0ThSDDeKp/VMskCM/8AdAoHq+HrYTOtT9crK930N4HG1rdfuC
-         Qa3EqEH4Tc3Xy7+5+7ClSgKcQuLHsfPABN1eSvOM=
-Date:   Tue, 28 Jul 2020 18:33:44 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [RFC PATCH v5 02/14] i2c: tegra: Remove NULL pointer check
- before clk_enable/disable/prepare/unprepare
-Message-ID: <20200728163344.GB3736@ninjato>
-References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
- <1595883452-17343-3-git-send-email-skomatineni@nvidia.com>
+        id S1731423AbgG1QjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:39:12 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1k0SdC-00058I-00; Tue, 28 Jul 2020 18:39:10 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id D13B8C0A99; Tue, 28 Jul 2020 14:33:23 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 14:33:23 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 2/2] MIPS: ingenic: Enable JZ4780_NEMC manually
+Message-ID: <20200728123323.GA14660@alpha.franken.de>
+References: <20200728104503.23655-1-krzk@kernel.org>
+ <20200728104503.23655-2-krzk@kernel.org>
+ <B4F6EQ.WB2WZOY40FDR@crapouillou.net>
+ <20200728111935.GA26683@kozik-lap>
+ <20200728113702.GB13443@alpha.franken.de>
+ <20200728120035.GA28766@kozik-lap>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+g7M9IMkV8truYOl"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1595883452-17343-3-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200728120035.GA28766@kozik-lap>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 28, 2020 at 02:00:35PM +0200, Krzysztof Kozlowski wrote:
+> On Tue, Jul 28, 2020 at 01:37:02PM +0200, Thomas Bogendoerfer wrote:
+> > On Tue, Jul 28, 2020 at 01:19:35PM +0200, Krzysztof Kozlowski wrote:
+> > > On Tue, Jul 28, 2020 at 01:12:11PM +0200, Paul Cercueil wrote:
+> > > > Hi Krzysztof,
+> > > > 
+> > > > Le mar. 28 juil. 2020 à 12:45, Krzysztof Kozlowski <krzk@kernel.org> a écrit
+> > > > :
+> > > > > The CONFIG_JZ4780_NEMC was previously a default on MIPS but now it has
+> > > > > to be enabled manually.
+> > > > > 
+> > > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > 
+> > > > I think you should swap the two so that there are no problems when
+> > > > bisecting.
+> > > 
+> > > Good point. I was thinking that it will go via some of MIPS trees and
+> > > the patch #1 will just wait a cycle.  However with acks, I can take it
+> > > through drivers/memory tree.
+> > 
+> > I've acked the patch.
+> > 
+> > Thomas.
+> 
+> Thanks but now I noticed that one of changed configs
+> (arch/mips/configs/rs90_defconfig) is only in MIPS tree.
+> 
+> I think it is easier then to take the patch #2 (configs) via MIPS and
+> wait with #1 for the next cycle or also take it via MIPS if it applies
+> cleanly.
 
---+g7M9IMkV8truYOl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ok, I'll take it.
 
-On Mon, Jul 27, 2020 at 01:57:20PM -0700, Sowjanya Komatineni wrote:
-> clk_enable, clk_disable, clk_prepare, and clk_unprepare APIs have
-> implementation for checking clk pointer not NULL and clock consumers
-> can safely call these APIs without NULL pointer check.
->=20
-> So, this patch cleans up Tegra i2c driver to remove explicit checks
-> before these APIs.
->=20
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Thomas.
 
-Applied to for-next, thanks!
-
-
---+g7M9IMkV8truYOl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8gU2gACgkQFA3kzBSg
-KbZ4Bg//f73NpFO093mNmSj5dYQr2/bFr8E9IEDPd6Ll/V0fG8mALZzBDssn7igW
-ob+FOzpAm/Chj3WNZOEig1XLfV+Z+z0XyofEN1FN497KXi2TH7JoEsCOutFeJ5YI
-6WaPcUdrvZ0mSMqolzVVuy4SJtuUU2myE9FfQomz5OPICON0ojHQPXgFGTxOVObp
-+FbUWu9ROysYJiRyflMIeXN2lZQti81qHxnndifrPiPKX2ksxOHRHHXLfWaDMRmY
-A5gcTtOpKhfZuQbOKVEq89PX9Wfeg8heNlOgZRjWhTHJv6BN6i806UNwwLHwFp9l
-YJ2d/cUAi823jTxcMg7dlLRM2cqcuKGLpZSeh/EHxKkmT6tH+AECTWGNcKLCHHY8
-nVqf2+rpr9cQzukl9FurtTZgbPJeM8qbwl+wRhz5AmAVh7gPRjdkk5TJpAlcPfyk
-8a/NaIQcet1sMv3UxHy9ivya8DcdsVb61zy58uCQGUSvZjD2fq3qxz9seN1haMI3
-rgNYBCWJfYq6lrZlbaZPbVH3R9ipWVT9UMjlS8ZvDqUXt74s1k691HtHsDLRLb6/
-5LTre9Pu8plX/IxQJLNXQUx0syBVQkSQGalvKyqvPQ62JU7qwcT2aY7gzvuviTsH
-Jnwk+rUKR+CFhBlwS4RAYR8zLFF0TxIGypLNMCbPTM4A92tvq/Y=
-=gsR6
------END PGP SIGNATURE-----
-
---+g7M9IMkV8truYOl--
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
