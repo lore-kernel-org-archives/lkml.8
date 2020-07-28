@@ -2,221 +2,315 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813A5C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BD2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFA220656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A232075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:35:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PTVl4se9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UGuXdQ9F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732850AbgG1Tes (ORCPT
+        id S1732856AbgG1TfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:34:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732843AbgG1Ter (ORCPT
+        Tue, 28 Jul 2020 15:35:06 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54311 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729692AbgG1TfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:34:47 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C12B3C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:34:47 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id gc9so453139pjb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:34:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CVNKrpnm5xCb7negocsdXpYBZglk+rfoTR4NPg9c5rg=;
-        b=PTVl4se9rTOYPS9sCnyw/QuOgKajGaiXJib9l2Td6BKaLS3SUc2z+sDA2MJRyIeo8j
-         nP1OuAO25HRDQywu5MuXynLvacrasbs1PbUHftm2KXDri9/s4Lg1xLW0SuqIF9rr9b7J
-         N8fGXF9ds8ow+UNAodv8t7ZjrpKDgIlnaA+O0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CVNKrpnm5xCb7negocsdXpYBZglk+rfoTR4NPg9c5rg=;
-        b=OlaqqxcU7apBvjz/95hPm7GytzNIin5lNAGypNt5pDqlHWeF47OXkWruv0Keq7GBKM
-         3eLBzygVClWXSNov46yTHQlobKgm2s4q2hAn9WL6tsh3SJrwE2R6oFezowucr0duvhLm
-         x4mpebj1sZPNpqH+WXbHl8CMq/c7WuXAzmKCrAbvBPU11XV1nDpB6srcFzs+DwmD87Ch
-         a/p4JNdvzDGqo5K/c6xH9qjbAFgNPk0EPa3eaWTeAxaUf4z+ZMTEYbqs3jmsgtQGU+lm
-         aUncmVdN+nCkM/w2aMlZs6jI7p7ysM6ZVvJvE5q/MmS1yOcnGKBGfjVHuySmXjaXTi3i
-         BJVw==
-X-Gm-Message-State: AOAM533/Zd19AiQfdBI9XnLC5Z8lnj1YM5Ut45Fj9ixfzMYuzadEUzM9
-        MUwkskJakDsmoK48oOwut8Y70w==
-X-Google-Smtp-Source: ABdhPJzIaEwjba+7nmF4wdaFJpa6GK4wj2auDFPTOQA/PPxCGTeVX5HyDNPaA2VG6gKtqa+2Hfingg==
-X-Received: by 2002:a17:902:a9c1:: with SMTP id b1mr25027259plr.234.1595964887213;
-        Tue, 28 Jul 2020 12:34:47 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j13sm3826058pjf.28.2020.07.28.12.34.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 12:34:46 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 12:34:45 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/8] x86/kaslr: Clean up slot handling
-Message-ID: <202007281228.B5011DC7@keescook>
-References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
- <20200727230801.3468620-8-nivedita@alum.mit.edu>
+        Tue, 28 Jul 2020 15:35:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595964903;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Br7/A7r7O/BBqV20yEIjHXgSIEykQhhlwX7UDRO05bM=;
+        b=UGuXdQ9F+d284IQtYYT7AhkWe98TZfs7GtyghiqOX7Ph8reHPohLvwp6m/+FnWKjy4zFls
+        BB7e7Umhe0AqWIemitXCtUSMQl+MIVFvoxrkDBD6GBUQEtj4esaIIYTYmaYFgOw3RACDLl
+        HRYSIc3BnbXTTu5XfIj2JUb62hrHMaU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-390-5hPR5CeFOPOr7fpLY-xehw-1; Tue, 28 Jul 2020 15:34:55 -0400
+X-MC-Unique: 5hPR5CeFOPOr7fpLY-xehw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24222800460;
+        Tue, 28 Jul 2020 19:34:53 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-119-38.rdu2.redhat.com [10.10.119.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2836171900;
+        Tue, 28 Jul 2020 19:34:51 +0000 (UTC)
+Subject: Re: [PATCH v10 5/5] locking/qspinlock: Avoid moving certain threads
+ between waiting queues in CNA
+To:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
+        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com
+Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com
+References: <20200403205930.1707-1-alex.kogan@oracle.com>
+ <20200403205930.1707-6-alex.kogan@oracle.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <8e5f70e7-1f93-7135-2b65-8355f5c93237@redhat.com>
+Date:   Tue, 28 Jul 2020 15:34:50 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727230801.3468620-8-nivedita@alum.mit.edu>
+In-Reply-To: <20200403205930.1707-6-alex.kogan@oracle.com>
+Content-Type: multipart/mixed;
+ boundary="------------E1866B38CD0464E8AECD0ADC"
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 07:08:00PM -0400, Arvind Sankar wrote:
-> The number of slots and slot areas can be unsigned int, since on 64-bit,
-> the maximum amount of memory is 2^52, the minimum alignment is 2^21, so
-> the slot number cannot be greater than 2^31. The slot areas are limited
-> by MAX_SLOT_AREA, currently 100. Replace the type used for slot number,
-> which is currently a mix of int and unsigned long, with unsigned int
-> consistently.
+This is a multi-part message in MIME format.
+--------------E1866B38CD0464E8AECD0ADC
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-I think it's good to standardize the type, but let's go to unsigned long
-then we don't have to think about this again in the future.
-
-> Drop unnecessary check that number of slots is not zero in
-> store_slot_info, it's guaranteed to be at least 1 by the calculation.
-> 
-> Drop unnecessary alignment of image_size to CONFIG_PHYSICAL_ALIGN in
-> find_random_virt_addr, it cannot change the result: the largest valid
-> slot is the largest n that satisfies
-
-I view all of these things as robustness checks. It doesn't hurt to do
-these checks and it'll avoid crashing into problems if future
-refactoring breaks assumptions.
-
-But again, let's split this patch up. type changes, refactoring, etc.
-
-Notes below...
-
-> 
->   minimum + n * CONFIG_PHYSICAL_ALIGN + image_size <= KERNEL_IMAGE_SIZE
-> 
-> (since minimum is already aligned) and so n is equal to
-> 
->   (KERNEL_IMAGE_SIZE - minimum - image_size) / CONFIG_PHYSICAL_ALIGN
-> 
-> even if image_size is not aligned to CONFIG_PHYSICAL_ALIGN.
-> 
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+On 4/3/20 4:59 PM, Alex Kogan wrote:
+> Prohibit moving certain threads (e.g., in irq and nmi contexts)
+> to the secondary queue. Those prioritized threads will always stay
+> in the primary queue, and so will have a shorter wait time for the lock.
+>
+> Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
+> Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
+> Reviewed-by: Waiman Long <longman@redhat.com>
 > ---
->  arch/x86/boot/compressed/kaslr.c | 36 ++++++++++++--------------------
->  1 file changed, 13 insertions(+), 23 deletions(-)
-> 
-> diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-> index 91c5f9771f42..eca2acc65e2a 100644
-> --- a/arch/x86/boot/compressed/kaslr.c
-> +++ b/arch/x86/boot/compressed/kaslr.c
-> @@ -511,16 +511,14 @@ static bool mem_avoid_overlap(struct mem_vector *img,
->  
->  struct slot_area {
->  	unsigned long addr;
-> -	int num;
-> +	unsigned int num;
->  };
->  
->  #define MAX_SLOT_AREA 100
->  
->  static struct slot_area slot_areas[MAX_SLOT_AREA];
-> -
-> -static unsigned long slot_max;
-> -
-> -static unsigned long slot_area_index;
-> +static unsigned int slot_area_index;
-> +static unsigned int slot_max;
->  
->  static void store_slot_info(struct mem_vector *region, unsigned long image_size)
->  {
-> @@ -530,13 +528,10 @@ static void store_slot_info(struct mem_vector *region, unsigned long image_size)
->  		return;
->  
->  	slot_area.addr = region->start;
-> -	slot_area.num = (region->size - image_size) /
-> -			CONFIG_PHYSICAL_ALIGN + 1;
-> +	slot_area.num = 1 + (region->size - image_size) / CONFIG_PHYSICAL_ALIGN;
->  
-> -	if (slot_area.num > 0) {
-> -		slot_areas[slot_area_index++] = slot_area;
-> -		slot_max += slot_area.num;
-> -	}
-> +	slot_areas[slot_area_index++] = slot_area;
-> +	slot_max += slot_area.num;
->  }
->  
->  /*
-> @@ -589,8 +584,7 @@ process_gb_huge_pages(struct mem_vector *region, unsigned long image_size)
->  
->  static unsigned long slots_fetch_random(void)
->  {
-> -	unsigned long slot;
-> -	int i;
-> +	unsigned int slot, i;
->  
->  	/* Handle case of no slots stored. */
->  	if (slot_max == 0)
-> @@ -603,7 +597,7 @@ static unsigned long slots_fetch_random(void)
->  			slot -= slot_areas[i].num;
->  			continue;
->  		}
-> -		return slot_areas[i].addr + slot * CONFIG_PHYSICAL_ALIGN;
-> +		return slot_areas[i].addr + (unsigned long)slot * CONFIG_PHYSICAL_ALIGN;
->  	}
->  
->  	if (i == slot_area_index)
-> @@ -819,28 +813,24 @@ static unsigned long find_random_phys_addr(unsigned long minimum,
->  		return 0;
->  	}
->  
-> -	if (process_efi_entries(minimum, image_size))
-> -		return slots_fetch_random();
-> +	if (!process_efi_entries(minimum, image_size))
-> +		process_e820_entries(minimum, image_size);
+>   kernel/locking/qspinlock_cna.h | 30 ++++++++++++++++++++++++++----
+>   1 file changed, 26 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/locking/qspinlock_cna.h b/kernel/locking/qspinlock_cna.h
+> index e3180f6f5cdc..b004ce6882b6 100644
+> --- a/kernel/locking/qspinlock_cna.h
+> +++ b/kernel/locking/qspinlock_cna.h
+> @@ -4,6 +4,7 @@
+>   #endif
+>   
+>   #include <linux/topology.h>
+> +#include <linux/sched/rt.h>
+>   
+>   /*
+>    * Implement a NUMA-aware version of MCS (aka CNA, or compact NUMA-aware lock).
+> @@ -41,6 +42,9 @@
+>    * lock is passed to the next thread in the primary queue. To avoid starvation
+>    * of threads in the secondary queue, those threads are moved back to the head
+>    * of the primary queue after a certain number of intra-node lock hand-offs.
+> + * Lastly, certain threads (e.g., in irq and nmi contexts) are given
+> + * preferential treatment -- the scan stops when such a thread is found,
+> + * effectively never moving those threads into the secondary queue.
+>    *
+>    * For more details, see https://arxiv.org/abs/1810.05600.
+>    *
+> @@ -50,7 +54,7 @@
+>   
+>   struct cna_node {
+>   	struct mcs_spinlock	mcs;
+> -	int			numa_node;
+> +	int			numa_node;	/* use LSB for priority */
+>   	u32			encoded_tail;	/* self */
+>   	u32			partial_order;	/* encoded tail or enum val */
+>   	u32			intra_count;
+> @@ -79,7 +83,7 @@ static void __init cna_init_nodes_per_cpu(unsigned int cpu)
+>   	for (i = 0; i < MAX_NODES; i++) {
+>   		struct cna_node *cn = (struct cna_node *)grab_mcs_node(base, i);
+>   
+> -		cn->numa_node = numa_node;
+> +		cn->numa_node = numa_node << 1;
+>   		cn->encoded_tail = encode_tail(cpu, i);
+>   		/*
+>   		 * make sure @encoded_tail is not confused with other valid
+> @@ -110,6 +114,14 @@ static int __init cna_init_nodes(void)
+>   
+>   static __always_inline void cna_init_node(struct mcs_spinlock *node)
+>   {
+> +	/*
+> +	 * Set the priority bit in @numa_node for threads that should not
+> +	 * be moved to the secondary queue.
+> +	 */
+> +	bool priority = !in_task() || irqs_disabled() || rt_task(current);
+> +	((struct cna_node *)node)->numa_node =
+> +		(((struct cna_node *)node)->numa_node & ~1) | priority;
+> +
+>   	((struct cna_node *)node)->intra_count = 0;
+>   }
+>   
+> @@ -243,12 +255,16 @@ static u32 cna_order_queue(struct mcs_spinlock *node,
+>   {
+>   	struct cna_node *cni = (struct cna_node *)READ_ONCE(iter->next);
+>   	struct cna_node *cn = (struct cna_node *)node;
+> -	int nid = cn->numa_node;
+> +	int nid = cn->numa_node >> 1;
+>   	struct cna_node *last;
+>   
+>   	/* find any next waiter on 'our' NUMA node */
+>   	for (last = cn;
+> -	     cni && cni->numa_node != nid;
+> +		 /*
+> +		  * iterate as long as the current node is not priorizied and
+> +		  * does not run on 'our' NUMA node
+> +		  */
+> +	     cni && !(cni->numa_node & 0x1) && (cni->numa_node >> 1) != nid;
+>   	     last = cni, cni = (struct cna_node *)READ_ONCE(cni->mcs.next))
+>   		;
+>   
+> @@ -258,6 +274,12 @@ static u32 cna_order_queue(struct mcs_spinlock *node,
+>   	if (last != cn)	/* did we skip any waiters? */
+>   		cna_splice_tail(node, node->next, (struct mcs_spinlock *)last);
+>   
+> +	/*
+> +	 * We return LOCAL_WAITER_FOUND here even if we stopped the scan because
+> +	 * of a prioritized waiter. That waiter will get the lock next even if
+> +	 * it runs on a different NUMA node, but this is what we wanted when we
+> +	 * prioritized it.
+> +	 */
+>   	return LOCAL_WAITER_FOUND;
+>   }
+>   
 
-I like this change; the double-call to slots_fetch_random() bugged me.
-:)
+Sorry for the late review as I was swamped with other tasks earlier.
 
->  
-> -	process_e820_entries(minimum, image_size);
->  	return slots_fetch_random();
->  }
->  
->  static unsigned long find_random_virt_addr(unsigned long minimum,
->  					   unsigned long image_size)
->  {
-> -	unsigned long slots, random_addr;
-> -
-> -	/* Align image_size for easy slot calculations. */
-> -	image_size = ALIGN(image_size, CONFIG_PHYSICAL_ALIGN);
-> +	unsigned int slots;
-> +	unsigned long random_addr;
->  
->  	/*
->  	 * There are how many CONFIG_PHYSICAL_ALIGN-sized slots
->  	 * that can hold image_size within the range of minimum to
->  	 * KERNEL_IMAGE_SIZE?
->  	 */
-> -	slots = (KERNEL_IMAGE_SIZE - minimum - image_size) /
-> -		 CONFIG_PHYSICAL_ALIGN + 1;
-> +	slots = 1 + (KERNEL_IMAGE_SIZE - minimum - image_size) / CONFIG_PHYSICAL_ALIGN;
+It is good to have a patch to handle lock waiters that shouldn't be 
+delayed, the current way of using bit 0 of numa_node to indicate that is 
+kind of hackery. Also it may not be a good idea to change the current 
+node id like that. I have a patch (attached) that can handle these 
+issues. What do you think about it?
 
-These are the same -- why change the code?
+Cheers,
+Longman
 
->  
->  	random_addr = kaslr_get_random_long("Virtual") % slots;
->  
-> -- 
-> 2.26.2
-> 
 
+
+--------------E1866B38CD0464E8AECD0ADC
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0006-locking-qspinlock-Make-CNA-priority-node-inherit-pri.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0006-locking-qspinlock-Make-CNA-priority-node-inherit-pri.pa";
+ filename*1="tch"
+
+From d21eae6d7b125253dd57c034b0a648bb11acc472 Mon Sep 17 00:00:00 2001
+From: Waiman Long <longman@redhat.com>
+Date: Tue, 28 Jul 2020 12:07:54 -0400
+Subject: [PATCH 6/9] locking/qspinlock: Make CNA priority node inherit primary
+ queue node ID
+
+When a lock waiter is not in a task context, has irq disabled or is a
+RT task. It is considered at a higher priority and so will not be thrown
+into the secondary queue to suffer additional lock acquisition latency.
+However, if its node id is different from the primary queue node id,
+we will have the situation that the primary queue node id is changed
+mid-stream and the secondary queue may have nodes with the new node id
+causing them to suffer undue delay.
+
+One way to avoid this situation is to make the priority node inherit
+the node id of the primary queue. That will require two numa node
+fields in the CNA node - one for real numa node id and the other for
+current numa node id. Since 16 bits are more than enough for node id,
+we can split the current 32-bit field into two 16-bit ones without
+affecting the structure size.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ kernel/locking/qspinlock_cna.h | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/locking/qspinlock_cna.h b/kernel/locking/qspinlock_cna.h
+index b004ce6882b6..911c96279494 100644
+--- a/kernel/locking/qspinlock_cna.h
++++ b/kernel/locking/qspinlock_cna.h
+@@ -52,9 +52,12 @@
+  *          Dave Dice <dave.dice@oracle.com>
+  */
+ 
++#define CNA_PRIORITY_NODE	0xffff
++
+ struct cna_node {
+ 	struct mcs_spinlock	mcs;
+-	int			numa_node;	/* use LSB for priority */
++	u16			numa_node;
++	u16			real_numa_node;
+ 	u32			encoded_tail;	/* self */
+ 	u32			partial_order;	/* encoded tail or enum val */
+ 	u32			intra_count;
+@@ -83,7 +86,7 @@ static void __init cna_init_nodes_per_cpu(unsigned int cpu)
+ 	for (i = 0; i < MAX_NODES; i++) {
+ 		struct cna_node *cn = (struct cna_node *)grab_mcs_node(base, i);
+ 
+-		cn->numa_node = numa_node << 1;
++		cn->real_numa_node = numa_node;
+ 		cn->encoded_tail = encode_tail(cpu, i);
+ 		/*
+ 		 * make sure @encoded_tail is not confused with other valid
+@@ -119,10 +122,10 @@ static __always_inline void cna_init_node(struct mcs_spinlock *node)
+ 	 * be moved to the secondary queue.
+ 	 */
+ 	bool priority = !in_task() || irqs_disabled() || rt_task(current);
+-	((struct cna_node *)node)->numa_node =
+-		(((struct cna_node *)node)->numa_node & ~1) | priority;
++	struct cna_node *cn = (struct cna_node *)node;
+ 
+-	((struct cna_node *)node)->intra_count = 0;
++	cn->numa_node = priority ? CNA_PRIORITY_NODE : cn->real_numa_node;
++	cn->intra_count = 0;
+ }
+ 
+ /*
+@@ -255,7 +258,7 @@ static u32 cna_order_queue(struct mcs_spinlock *node,
+ {
+ 	struct cna_node *cni = (struct cna_node *)READ_ONCE(iter->next);
+ 	struct cna_node *cn = (struct cna_node *)node;
+-	int nid = cn->numa_node >> 1;
++	int nid = cn->numa_node;
+ 	struct cna_node *last;
+ 
+ 	/* find any next waiter on 'our' NUMA node */
+@@ -264,13 +267,16 @@ static u32 cna_order_queue(struct mcs_spinlock *node,
+ 		  * iterate as long as the current node is not priorizied and
+ 		  * does not run on 'our' NUMA node
+ 		  */
+-	     cni && !(cni->numa_node & 0x1) && (cni->numa_node >> 1) != nid;
++	     cni && cni->numa_node != CNA_PRIORITY_NODE && cni->numa_node != nid;
+ 	     last = cni, cni = (struct cna_node *)READ_ONCE(cni->mcs.next))
+ 		;
+ 
+ 	if (!cni)
+ 		return last->encoded_tail; /* continue from here */
+ 
++	if (cni->numa_node == CNA_PRIORITY_NODE)
++		cni->numa_node = nid;	/* Inherit node id of primary queue */
++
+ 	if (last != cn)	/* did we skip any waiters? */
+ 		cna_splice_tail(node, node->next, (struct mcs_spinlock *)last);
+ 
+@@ -290,6 +296,13 @@ static __always_inline u32 cna_wait_head_or_lock(struct qspinlock *lock,
+ 	struct cna_node *cn = (struct cna_node *)node;
+ 
+ 	if (cn->intra_count < intra_node_handoff_threshold) {
++		/*
++		 * We are at the head of the wait queue, no need to use
++		 * the fake NUMA node ID.
++		 */
++		if (cn->numa_node == CNA_PRIORITY_NODE)
++			cn->numa_node = cn->real_numa_node;
++
+ 		/*
+ 		 * Try and put the time otherwise spent spin waiting on
+ 		 * _Q_LOCKED_PENDING_MASK to use by sorting our lists.
 -- 
-Kees Cook
+2.18.1
+
+
+--------------E1866B38CD0464E8AECD0ADC--
+
