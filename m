@@ -2,158 +2,205 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97607C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C83CC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 761D42070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBADC206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595950030;
-	bh=Gtafif/hLm53aJUqTj0yE5b7PKRrMxEHfIDxZmza8w8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f4LmiFYbf/R8uUNy2DZdh6a3bJAK9VoxcZ1lGHd2D7uuIlBQ9k54gdJg7qNG1yTxL
-	 Z55l+dLJO5bBdJsMEXd50r2pdPy7RNVf9kzbro8wqQ9JdJHsZRInPlgmE3jBR7LGrV
-	 yZ7xnMw3FF87q2ir2v8tsV+4UWTDYKCBUFbU9ryo=
+	s=default; t=1595950036;
+	bh=FSygYseQrDpyWFyRVEBREvmwpWPpOqKjBJL2fZMrrZk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=X1KGJ0tYQP8PGgYDZ4YEtXxYvjQnVchMLrYkDcP5u1ZodaJMfQzYqq6MVWchCv28L
+	 sH2/8G8pBFTs9p+urJa36QDSHZfTvQ/a0n+Yb5OIa8W03LYsNVTOU+OYahnzNjpFk5
+	 p1bAOPAgwEPOvOHUcJCds8zC2bmQfe+3OlR4yEE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730852AbgG1P1J (ORCPT
+        id S1730876AbgG1P1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:27:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42944 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 11:27:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730637AbgG1P1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:27:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730637AbgG1P1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:27:15 -0400
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DC68206D8;
-        Tue, 28 Jul 2020 15:27:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75C80206D8;
+        Tue, 28 Jul 2020 15:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595950028;
-        bh=Gtafif/hLm53aJUqTj0yE5b7PKRrMxEHfIDxZmza8w8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ql+tY6ow28UR1M+zmZJ4bmAtbCepESkBoLUwiQU32StzHgsqsgUt61zHlKpmdFufy
-         iM22Dx35q4HhTcSgQgGcZEZClWRFk35PKQMQSRp8d70uDBG12cDX54oW/0jqbbbHkE
-         NqN+nuho1U0DinupeR31OdPpemU2hvADqw4pv6lo=
-Date:   Tue, 28 Jul 2020 17:27:01 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Muchun Song <songmuchun@bytedance.com>,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [External] [PATCH 4.19 76/86] mm: memcg/slab: fix memory leak at
- non-root kmem_cache destroy
-Message-ID: <20200728152701.GA3554518@kroah.com>
-References: <20200727134914.312934924@linuxfoundation.org>
- <20200727134918.205538211@linuxfoundation.org>
- <CAMZfGtWVtGeMfu=04LiNVcLrBpmexUryHjy-dujo77CpJhcwGg@mail.gmail.com>
- <20200728151703.GM406581@sasha-vm>
+        s=default; t=1595950034;
+        bh=FSygYseQrDpyWFyRVEBREvmwpWPpOqKjBJL2fZMrrZk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=B/lYja2Btw1plI2Vz8W7r9HzBv+a8iKi/jMRUREQmZ1NCPExTXPa4fofF9dR/2vO2
+         TVaDTYf+sMg9fvP7MDBHA+ZKecef+axRwkrq96xn02V5oIxToxGIz0vP1pbFT8agiX
+         s/qBnOMNa8VE7uCuSS3A6yNe9SOE7elYw1hjNLQc=
+Received: by mail-ot1-f53.google.com with SMTP id w17so15171269otl.4;
+        Tue, 28 Jul 2020 08:27:14 -0700 (PDT)
+X-Gm-Message-State: AOAM531g5xfL5dzHLgI7bQYUa1SJHw9IdjScqVeOyiJaKYNeXhSjTLHe
+        bl1FGkze6DKxUyqdLTomDxd4ZY1rxIEpeGbnWw==
+X-Google-Smtp-Source: ABdhPJzW+pLIVBpgooW1y4TcjlX6GiauKPjLYWljjA7Cu23WQa6nxbEndsfVE94qkcjq2RVC1WkXCFwftebxQS183J4=
+X-Received: by 2002:a9d:46c:: with SMTP id 99mr25034284otc.192.1595950033837;
+ Tue, 28 Jul 2020 08:27:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728151703.GM406581@sasha-vm>
+References: <1595776013-12877-1-git-send-email-sivaprak@qti.qualcomm.com>
+In-Reply-To: <1595776013-12877-1-git-send-email-sivaprak@qti.qualcomm.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 28 Jul 2020 09:27:01 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+-rwG73mEkYmMQcnxHoBpbFMWHKDvzUK=6-fMAo77-9w@mail.gmail.com>
+Message-ID: <CAL_Jsq+-rwG73mEkYmMQcnxHoBpbFMWHKDvzUK=6-fMAo77-9w@mail.gmail.com>
+Subject: Re: [PATCH V2] dt-bindings: pci: convert QCOM pci bindings to YAML
+To:     Sivaprakash Murugesan <sivaprak@qti.qualcomm.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 11:17:03AM -0400, Sasha Levin wrote:
-> On Tue, Jul 28, 2020 at 08:56:41PM +0800, Muchun Song wrote:
-> > On Mon, Jul 27, 2020 at 10:12 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > > 
-> > > From: Muchun Song <songmuchun@bytedance.com>
-> > > 
-> > > commit d38a2b7a9c939e6d7329ab92b96559ccebf7b135 upstream.
-> > > 
-> > > If the kmem_cache refcount is greater than one, we should not mark the
-> > > root kmem_cache as dying.  If we mark the root kmem_cache dying
-> > > incorrectly, the non-root kmem_cache can never be destroyed.  It
-> > > resulted in memory leak when memcg was destroyed.  We can use the
-> > > following steps to reproduce.
-> > > 
-> > >   1) Use kmem_cache_create() to create a new kmem_cache named A.
-> > >   2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
-> > >      so the refcount of B is just increased.
-> > >   3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
-> > >      decrease the B's refcount but mark the B as dying.
-> > >   4) Create a new memory cgroup and alloc memory from the kmem_cache
-> > >      B. It leads to create a non-root kmem_cache for allocating memory.
-> > >   5) When destroy the memory cgroup created in the step 4), the
-> > >      non-root kmem_cache can never be destroyed.
-> > > 
-> > > If we repeat steps 4) and 5), this will cause a lot of memory leak.  So
-> > > only when refcount reach zero, we mark the root kmem_cache as dying.
-> > > 
-> > > Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
-> > > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> > > Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> > > Reviewed-by: Shakeel Butt <shakeelb@google.com>
-> > > Acked-by: Roman Gushchin <guro@fb.com>
-> > > Cc: Vlastimil Babka <vbabka@suse.cz>
-> > > Cc: Christoph Lameter <cl@linux.com>
-> > > Cc: Pekka Enberg <penberg@kernel.org>
-> > > Cc: David Rientjes <rientjes@google.com>
-> > > Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > > Cc: Shakeel Butt <shakeelb@google.com>
-> > > Cc: <stable@vger.kernel.org>
-> > > Link: http://lkml.kernel.org/r/20200716165103.83462-1-songmuchun@bytedance.com
-> > > Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > 
-> > > ---
-> > >  mm/slab_common.c |   35 ++++++++++++++++++++++++++++-------
-> > >  1 file changed, 28 insertions(+), 7 deletions(-)
-> > > 
-> > > --- a/mm/slab_common.c
-> > > +++ b/mm/slab_common.c
-> > > @@ -310,6 +310,14 @@ int slab_unmergeable(struct kmem_cache *
-> > >         if (s->refcount < 0)
-> > >                 return 1;
-> > > 
-> > > +#ifdef CONFIG_MEMCG_KMEM
-> > > +       /*
-> > > +        * Skip the dying kmem_cache.
-> > > +        */
-> > > +       if (s->memcg_params.dying)
-> > > +               return 1;
-> > > +#endif
-> > > +
-> > >         return 0;
-> > >  }
-> > > 
-> > > @@ -832,12 +840,15 @@ static int shutdown_memcg_caches(struct
-> > >         return 0;
-> > >  }
-> > > 
-> > > -static void flush_memcg_workqueue(struct kmem_cache *s)
-> > > +static void memcg_set_kmem_cache_dying(struct kmem_cache *s)
-> > >  {
-> > >         mutex_lock(&slab_mutex);
-> > >         s->memcg_params.dying = true;
-> > >         mutex_unlock(&slab_mutex);
-> > 
-> > We should remove mutex_lock/unlock(&slab_mutex) here, because
-> > we already hold the slab_mutex from kmem_cache_destroy().
-> 
-> Good catch! I backported 63b02ef7dc4e ("mm: memcg/slab: synchronize
-> access to kmem_cache dying flag using a spinlock") instead of changing
-> this patch.
+On Sun, Jul 26, 2020 at 9:07 AM Sivaprakash Murugesan
+<sivaprak@qti.qualcomm.com> wrote:
+>
+> From: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>
+> Convert QCOM pci bindings to YAML schema
+>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+> [v2]
+>   - Referenced pci-bus.yaml
+>   - removed duplicate properties already referenced by pci-bus.yaml
+>   - Addressed comments from Rob
+>  .../devicetree/bindings/pci/qcom,pcie.txt          | 330 ---------------
+>  .../devicetree/bindings/pci/qcom,pcie.yaml         | 447 +++++++++++++++++++++
+>  2 files changed, 447 insertions(+), 330 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 
-Ah, much better, let me roll my change back and then push out -rc3 with
-this all fixed up like this.
 
-thanks,
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> new file mode 100644
+> index 000000000000..ddb84f49ac1c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> @@ -0,0 +1,447 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/pci/qcom,pcie.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm PCI express root complex
+> +
+> +maintainers:
+> +  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> +
+> +description:
+> +  QCOM PCIe controller uses Designware IP with Qualcomm specific hardware
+> +  wrappers.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,pcie-apq8064
+> +      - qcom,pcie-apq8084
+> +      - qcom,pcie-ipq4019
+> +      - qcom,pcie-ipq8064
+> +      - qcom,pcie-ipq8074
+> +      - qcom,pcie-msm8996
+> +      - qcom,pcie-qcs404
+> +      - qcom,pcie-sdm845
+> +
+> +  reg:
+> +    description: Register ranges as listed in the reg-names property
 
-greg k-h
+Can drop this.
+
+> +    maxItems: 4
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: elbi
+> +      - const: parf
+> +      - const: config
+> +
+> +  ranges:
+> +    maxItems: 2
+> +
+> +  interrupts:
+> +    items:
+> +      - description: MSI interrupts
+> +
+> +  interrupt-names:
+> +    const: msi
+> +
+> +  "#interrupt-cells":
+
+In pci-bus.yaml, so you can drop.
+
+> +    const: 1
+> +
+> +  interrupt-map-mask:
+
+In pci-bus.yaml, so you can drop.
+
+> +    items:
+> +      - description: standard PCI properties to define mapping of PCIe
+> +                     interface to interrupt numbers.
+> +
+> +  interrupt-map:
+> +    maxItems: 4
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 7
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 7
+> +
+> +  resets:
+> +    minItems: 1
+> +    maxItems: 12
+> +
+> +  reset-names:
+> +    minItems: 1
+> +    maxItems: 12
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  vdda-supply:
+> +    description: phandle to power supply
+> +
+> +  vdda_phy-supply:
+> +    description: phandle to the power supply to PHY
+> +
+> +  vdda_refclk-supply:
+> +    description: phandle to power supply for ref clock generator
+> +
+> +  vddpe-3v3-supply:
+> +    description: PCIe endpoint power supply
+> +
+> +  phys:
+> +    maxItems: 1
+> +    items:
+> +      - description: phandle to the PHY block
+
+Can drop 'items'.
+
+With those fixed,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
