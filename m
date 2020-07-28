@@ -2,144 +2,150 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A3CC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B22C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA2B32070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E280020774
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ACf688s9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N6wAtpNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbgG1WEJ (ORCPT
+        id S1729650AbgG1WGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 18:04:09 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16032 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729437AbgG1WEJ (ORCPT
+        Tue, 28 Jul 2020 18:06:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729540AbgG1WGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 18:04:09 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f20a07c0001>; Tue, 28 Jul 2020 15:02:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 28 Jul 2020 15:04:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 28 Jul 2020 15:04:08 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jul
- 2020 22:04:07 +0000
-Subject: Re: [PATCH v4 6/6] mm/migrate: remove range invalidation in
- migrate_vma_pages()
-To:     Jason Gunthorpe <jgg@nvidia.com>
-CC:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        <nouveau@lists.freedesktop.org>, <kvm-ppc@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Jerome Glisse" <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Christoph Hellwig" <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, Ben Skeggs <bskeggs@redhat.com>,
-        Bharata B Rao <bharata@linux.ibm.com>
-References: <20200723223004.9586-1-rcampbell@nvidia.com>
- <20200723223004.9586-7-rcampbell@nvidia.com>
- <20200728191940.GB159104@nvidia.com>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <7f947311-0034-9148-1dca-fb9b9a10abc4@nvidia.com>
-Date:   Tue, 28 Jul 2020 15:04:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 28 Jul 2020 18:06:44 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81813C0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 15:06:44 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id j19so13019278pgm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 15:06:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=tjuX+pFwhvhhgmdt7C5E6lKYvSKSrNHXExZ9GWsVSnI=;
+        b=N6wAtpNOFmizd34oOwQzDBKa5iHjGcYvbPkHG549PxO5PlcZ6n/Yxp+E93o24GQcA8
+         CaMeuDWeJkA9kLdYhpa5Mfg7Lb8i21veUpCeUB6z8wxaZ3yaj6oWeu8Z6l9aRw4dYXH0
+         dNqz9b6XcDJaC96nzBpPsCNlSiwIIZTWWTbJE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=tjuX+pFwhvhhgmdt7C5E6lKYvSKSrNHXExZ9GWsVSnI=;
+        b=cQojxgumnvaJBzmTiTGc9VvApiqumJbODLtAKvODc2DTG0AV+PMyxYF5ENJ80EmT1U
+         2TrYSRvmP/pyT6fjhiUaI9yQb73WPWxNIVw4WLM1CZ86fPhPAgE/hFjEuIFkmGuRgBWp
+         yrgij/Kjspit9Mtpsbrt7dJqdbZlqs7hM9g8FNOGCDSHUAQXRJWLjJKyqaxeL7KDRcy4
+         9CqMlN392OlERGrXcarrSWq824cfQozT8bTsUxw9BbM5W0Ix8kr3W1YgIfzD5Uf/p6KJ
+         NGIldPL91R1KZOJDYgqQU0baceDtEKxATUpgEyvtHFltuSp0K4A0XdeFMu0SnadIDD4U
+         j8gA==
+X-Gm-Message-State: AOAM532WuvFZsG9xbZ4/fA9H+JbbdvNYIvSUMUlBk+gysT3E2HxyJHdY
+        cvGgDvMDu+n5+TmDdNdwx0giJA==
+X-Google-Smtp-Source: ABdhPJxm2jSMp9UWBjwpogfSuRsV8etm/nCasMNF7xayH25Gtdpeobo52Xb6XBNuSHD9IB7TeitWdg==
+X-Received: by 2002:a62:be02:: with SMTP id l2mr25990420pff.163.1595974003708;
+        Tue, 28 Jul 2020 15:06:43 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id m6sm111594pjb.34.2020.07.28.15.06.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 15:06:43 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200728191940.GB159104@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595973757; bh=/SJLjz3sSojWpQDSgpd98PBZSzygYVyi0IyMMu3098s=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ACf688s9+SjBxSf7fmZ59OUOxsFr0aodwetE6vjiN3BSvfUh26jfqaij77JSfuUxk
-         C+2kAu0JK8VdhOO2EMdO0B2hwaF+RTB8IePsEeV9XqoFWgM/k2zxr9uUgi19VygFGC
-         NOCCpCMievqTSnfBvUbGgmTXECwgTIc7Y6xkY6QxDV6hqSSCla9FI9J+d0NF7ZjAOZ
-         LXVcHTXQ224Ne6ban7+xPuMW9EizeFpXd48iSElVr/BNh0YC1w7YUQkUhGJwu6mvwM
-         1TsK9+NZHWGS3VKoYqhn8Q90dsDliikSJWhetqxMhIHNA+09UosK4kHx9fdSWGbpLX
-         JJn0TR+sTY22w==
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200728091057.1.I3bf8ece8c303bd9ecfc1573464cdacc47d73784b@changeid>
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid> <20200728151258.1222876-1-campello@chromium.org> <20200728091057.1.I3bf8ece8c303bd9ecfc1573464cdacc47d73784b@changeid>
+Subject: Re: [PATCH 01/15] dt-bindings: iio: Add bindings for sx9310 sensor
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-iio@vger.kernel.org
+To:     Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Tue, 28 Jul 2020 15:06:41 -0700
+Message-ID: <159597400172.1360974.7831683364002070743@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Daniel Campello (2020-07-28 08:12:44)
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx93=
+10.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.ya=
+ml
+> new file mode 100644
+> index 00000000000000..ba734ee868c77f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/proximity/semtech,sx9310.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Semtech's SX9310 capacitive proximity sensor
+> +
+> +maintainers:
+> +  - Daniel Campello <campello@chromium.org>
+> +
+> +description: |
+> +  Semtech's SX9310/SX9311 capacitive proximity/button solution.
+> +
+> +  Specifications about the devices can be found at:
+> +  https://www.semtech.com/products/smart-sensing/sar-sensors/sx9310
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - semtech,sx9310
+> +      - semtech,sx9311
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description:
+> +      The sole interrupt generated by the device used to announce the
+> +      preceding reading request has finished and that data is
+> +      available or that a close/far proximity event has happened.
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: Main power supply
+> +
+> +  svdd-supply:
+> +    description: Host interface power supply
 
-On 7/28/20 12:19 PM, Jason Gunthorpe wrote:
-> On Thu, Jul 23, 2020 at 03:30:04PM -0700, Ralph Campbell wrote:
->> When migrating the special zero page, migrate_vma_pages() calls
->> mmu_notifier_invalidate_range_start() before replacing the zero page
->> PFN in the CPU page tables. This is unnecessary since the range was
->> invalidated in migrate_vma_setup() and the page table entry is checked
->> to be sure it hasn't changed between migrate_vma_setup() and
->> migrate_vma_pages(). Therefore, remove the redundant invalidation.
-> 
-> I don't follow this logic, the purpose of the invalidation is also to
-> clear out anything that may be mirroring this VA, and "the page hasn't
-> changed" doesn't seem to rule out that case?
-> 
-> I'm also not sure I follow where the zero page came from?
+I think we need to add #io-channel-cells =3D <1> here as a required
+property.
 
-The zero page comes from an anonymous private VMA that is read-only
-and the user level CPU process tries to read the page data (or any
-other read page fault).
+   "#io-channel-cells":
+       const: 1
 
-> Jason
-> 
+> +
+> +required:
+> +  - compatible
+> +  - reg
 
-The overall migration process is:
+And=20
 
-mmap_read_lock()
+  - "#io-channel-cells"
 
-migrate_vma_setup()
-       // invalidates range, locks/isolates pages, puts migration entry in page table
-
-<driver allocates destination pages and copies source to dest>
-
-migrate_vma_pages()
-       // moves source struct page info to destination struct page info.
-       // clears migration flag for pages that can't be migrated.
-
-<driver updates device page tables for pages still migrating, rollback pages not migrating>
-
-migrate_vma_finalize()
-       // replaces migration page table entry with destination page PFN.
-
-mmap_read_unlock()
-
-Since the address range is invalidated in the migrate_vma_setup() stage,
-and the page is isolated from the LRU cache, locked, unmapped, and the page table
-holds a migration entry (so the page can't be faulted and the CPU page table set
-valid again), and there are no extra page references (pins), the page
-"should not be modified".
-
-For pte_none()/is_zero_pfn() entries, migrate_vma_setup() leaves the
-pte_none()/is_zero_pfn() entry in place but does still call
-mmu_notifier_invalidate_range_start() for the whole range being migrated.
-
-In the migrate_vma_pages() step, the pte page table is locked and the
-pte entry checked to be sure it is still pte_none/is_zero_pfn(). If not,
-the new page isn't inserted. If it is still none/zero, the new device private
-struct page is inserted into the page table, replacing the pte_none()/is_zero_pfn()
-page table entry. The secondary MMUs were already invalidated in the migrate_vma_setup()
-step and a pte_none() or zero page can't be modified so the only invalidation needed
-is the CPU TLB(s) for clearing the special zero page PTE entry.
-
-Two devices could both try to do the migrate_vma_*() sequence and proceed in parallel up
-to the migrate_vma_pages() step and try to install a new page for the hole/zero PTE but
-only one will win and the other fail.
+> +
+> +additionalProperties: false
+> +
