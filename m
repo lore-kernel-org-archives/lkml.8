@@ -2,115 +2,108 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A98C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78163C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C973206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560952075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:53:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="n1QWWvhg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbgG1NwA (ORCPT
+        id S1730227AbgG1NxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:52:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58098 "EHLO
+        Tue, 28 Jul 2020 09:53:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730012AbgG1Nv7 (ORCPT
+        with ESMTP id S1730141AbgG1NxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:51:59 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD32C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:51:59 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k0Q1M-0001Bd-9I; Tue, 28 Jul 2020 15:51:56 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k0Q1L-000321-BG; Tue, 28 Jul 2020 15:51:55 +0200
-Date:   Tue, 28 Jul 2020 15:51:55 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm: dts: imx7: add QSPI
-Message-ID: <20200728135155.aqz3xkcwpgqmvzro@pengutronix.de>
-References: <20200728112814.14158-1-matthias.schiffer@ew.tq-group.com>
+        Tue, 28 Jul 2020 09:53:12 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 122F9C0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:53:12 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id l23so18700871qkk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:53:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EtW0ADoRwQtOsaGG7oJlooe3S87y53RN1USDHS3OX1k=;
+        b=n1QWWvhgXYfYFQhyOqcZpff1NCZlRpZRU+M57YX8VkjXTtd3GqfnDkYU0Ml146ZUTZ
+         EMUF3jGXqq0ZC+jlxfvAVMjoHJNWyaygZPYp4hXRevNGlGHVvpyCD8PlVbquWCb5nH4w
+         UzI+8KI2BOpWhsINM70UMwN4agULCxVCtHtZj8ZAUgZk2Mz6MbJ3wids2nV60eUD5OT2
+         G5sgsBxiIAMoMM42EOEJipYA/duIJUeWlfrsrEeW+/D40GXy1ycVavy2AIRGeLsLtIh6
+         AUs2Y7iVWX1FTqBsZUxSi2UE2j1cv4OU9emJT+b4CA49q6ooCVZ3b/20TcvF6D0xPnw0
+         Q+mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EtW0ADoRwQtOsaGG7oJlooe3S87y53RN1USDHS3OX1k=;
+        b=n+wdYD+Q5X8jnKTA4ZL/rlFDg99GThSWkF1Dq+oUagrnG9gFbEPQT5tzWiKnMh1lH1
+         A+s+9JVhqYYJKdC9sg8mlUmPMBwJ9IsrZLcVEgAshxUHFZCMOAK/Yyy2FVepgRnKF6fD
+         IVkh7muAx/eJY97M3XUFW8JLe52FsUfi8TJRSqDezF09knSutA0YMPbukNDcNa0YlEk6
+         4AO/KWU+wnPOkokj/ktcOF+y+sDJzuHGwSAAFIpGxVVp8h3nO9UGFRPAEOHZbMwjHe+M
+         Cb51qjeNI0tmI/J9+ZUQRQGYdczboz4rbyWTWUnFuA4nB0vvM584CRStPUM5aZlrWbNs
+         XsZw==
+X-Gm-Message-State: AOAM530BcK1IRZCqukHamNRk5cD8mqlq8OY5V3OKcPoj2JclJCVk9pGU
+        7eX3Q/tD9Hddh2FqDoyjGpC5VQ==
+X-Google-Smtp-Source: ABdhPJxZsi0XICMqQarFdnuS1OZe7mHQHY0H8FNy5g+HSZY1D4xOeR6LwKFX9mCFezvWZybWBLoj9w==
+X-Received: by 2002:a05:620a:132d:: with SMTP id p13mr8925316qkj.161.1595944391174;
+        Tue, 28 Jul 2020 06:53:11 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:53c1])
+        by smtp.gmail.com with ESMTPSA id g24sm19970608qta.27.2020.07.28.06.53.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 06:53:10 -0700 (PDT)
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCH] mm: memcontrol: restore proper dirty throttling when memory.high changes
+Date:   Tue, 28 Jul 2020 09:52:09 -0400
+Message-Id: <20200728135210.379885-1-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728112814.14158-1-matthias.schiffer@ew.tq-group.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 15:40:55 up 256 days,  4:59, 253 users,  load average: 0.05, 0.16,
- 0.12
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+Commit 8c8c383c04f6 ("mm: memcontrol: try harder to set a new
+memory.high") inadvertently removed a callback to recalculate the
+writeback cache size in light of a newly configured memory.high limit.
 
-thanks for the patch.
+Without letting the writeback cache know about a potentially heavily
+reduced limit, it may permit too many dirty pages, which can cause
+unnecessary reclaim latencies or even avoidable OOM situations.
 
-On 20-07-28 13:28, Matthias Schiffer wrote:
-> In preparation for an update of the TQ-Systems TQMa7x/MBa7x DTS, add the
-> QSPI controller to imx7s.dtsi.
-> 
-> Based-on-patch-by: Han Xu <han.xu@nxp.com>
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> ---
->  arch/arm/boot/dts/imx7s.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-> index 1cfaf410aa43..e45683e61593 100644
-> --- a/arch/arm/boot/dts/imx7s.dtsi
-> +++ b/arch/arm/boot/dts/imx7s.dtsi
-> @@ -1162,6 +1162,19 @@
->  				status = "disabled";
->  			};
->  
-> +			qspi1: spi@30bb0000 {
+This was spotted while reading the code, it hasn't knowingly caused
+any problems in practice so far.
 
-Are there more controllers and why not using "qspi@30bb0000" as node
-name?
+Fixes: 8c8c383c04f6 ("mm: memcontrol: try harder to set a new memory.high")
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/memcontrol.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				compatible = "fsl,imx7d-qspi";
-> +				reg = <0x30bb0000 0x10000>, <0x60000000 0x10000000>;
-> +				reg-names = "QuadSPI", "QuadSPI-memory";
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 13f559af1ab6..805a44bf948c 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -6071,6 +6071,7 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
+ 			break;
+ 	}
+ 
++	memcg_wb_domain_size_changed(memcg);
+ 	return nbytes;
+ }
+ 
+-- 
+2.27.0
 
-The node should begin with compatible, reg, reg-names properties.
-Pls check the current .dtsi file for examples.
-
-> +				interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clks IMX7D_QSPI_ROOT_CLK>,
-> +					<&clks IMX7D_QSPI_ROOT_CLK>;
-> +				clock-names = "qspi_en", "qspi";
-> +				status = "disabled";
-> +			};
-> +
->  			sdma: sdma@30bd0000 {
->  				compatible = "fsl,imx7d-sdma", "fsl,imx35-sdma";
->  				reg = <0x30bd0000 0x10000>;
-
-Regards,
-  Marco
