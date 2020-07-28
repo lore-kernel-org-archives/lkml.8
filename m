@@ -2,133 +2,199 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E99BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D2BC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E5BA207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7693020656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:22:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Y9eOezwV"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LOlvx0c1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732788AbgG1TUU (ORCPT
+        id S1729943AbgG1TWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:20:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732751AbgG1TUT (ORCPT
+        Tue, 28 Jul 2020 15:22:41 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9023 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728435AbgG1TWk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:20:19 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74C1AC0619D5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:20:19 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id y206so1226272pfb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:20:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6vfxP0xAICcExvQMz/4lQvBsGt+MbkdQCG7TPtmY2IU=;
-        b=Y9eOezwVV/XNy3ss0E8zEQZN46Jwp7Vwk2F4dYKq4GF+o38CPH9bXtrUXOyKXIv0qi
-         IxCEGapawUVePV3q40k2ellTesiBEzVplHJE1NvfhyL5RCl83HKGBpQJX0QM6eO0a6fq
-         K4eY6mGRbq51nbLdHdV0aIyuHM8uJTGXUryQRTt7Lj0uw/Rn/vzZ7q/sGIcO2+P5vKXM
-         D+ek+rXJ/oXKvUiOA/SsGJJtECe80pX2lqhwV2Mek5vNpO9+e9YTmFR2Dc+dekaVJzW8
-         tm1bitx5pVI4Q4Wm0OEfzMIXB/vw2Lt3V5PNJbWz7GH/REb/D7Ra0sQgFciGhg/c8Ve4
-         LbsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6vfxP0xAICcExvQMz/4lQvBsGt+MbkdQCG7TPtmY2IU=;
-        b=qk9f5FN8HSdl4+aVEuFxxwFLsjUeZd35xd+r0pUe2qp2N4jBu10II1p0yht9W2l/1r
-         a/jMb4H+KBTzNiOM+EXaBrIPPzdu8anZkOoawV1aQia75I/NI4vqAXOUravaVWCRlEuu
-         nIuRNxcfORWa4iU2GalHloc4LPAMeXAqJk6Bp3klSWZ5EI3uWV+WwteUd5gTgzMpuR7N
-         fzAD8r0CgKauDb9wRWo08DQalqpKejvthKQneehGJMu5nIasrT2nCIzgziPZxeohu+0I
-         5Oib5R+80duVqh9Zt0nQhvWoJccaPTkEf8V63vqe/99s2Znxsmh+kfZ1M0ZBd9DlD5LU
-         uXMA==
-X-Gm-Message-State: AOAM531nt1ZVaKYiliZXhwHIoktcOK1O0vGJwNlvI9kJ2+UKXLVOhIGY
-        ISSBJIm3RDMhRYcVvO8e0G32+A==
-X-Google-Smtp-Source: ABdhPJxBQ70KSlhfE4UBk48wOVO+oTR3dAvGMGkYXZNgophmfDok6SYnNj9+4QpInUFKqraP2ypplA==
-X-Received: by 2002:a63:3c16:: with SMTP id j22mr26658462pga.335.1595964018789;
-        Tue, 28 Jul 2020 12:20:18 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id e8sm8642552pfd.34.2020.07.28.12.20.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 12:20:18 -0700 (PDT)
-Subject: Re: bdi cleanups v3
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>,
-        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        cgroups@vger.kernel.org
-References: <20200724073313.138789-1-hch@lst.de>
- <0b2b59d4-da4c-33df-82b4-0d4935b91e6e@kernel.dk>
-Message-ID: <08ded32a-cf3a-55b0-6a88-19d201edac93@kernel.dk>
-Date:   Tue, 28 Jul 2020 13:20:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 15:22:40 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f207ad30000>; Tue, 28 Jul 2020 12:21:55 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 28 Jul 2020 12:22:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 28 Jul 2020 12:22:39 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jul
+ 2020 19:22:39 +0000
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.107)
+ by HQMAIL111.nvidia.com (172.20.187.18) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Tue, 28 Jul 2020 19:22:39 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YoO1d3DIh7z501b14K819h+Tp++qMgQ4Q+BA5A8AoHLDDl1NS2Uqj1GMFTITGizXuz4Gar7hTuAlUz6igLzcDJWTcbRpgGWrTAzePLOl1mw2cvUDM4OTD9heIQU1WHdidNnACfmw67vhig2pqXueT9iBWIUOE8vqRQaDmUPCI5Mu9BUX7HsXkgFPct+4DAM5sIKYIPaFLCD7AqebMiozbQtm591I6DmEYb7LLT2Dg+NF8WziXt6bEG+k5+nqccYPG1W4Nl/XOyvUyhchSrgd4fkVe1Hdbyx1fklahKlNKSV7Vz/x3QZYwKm/tmLNiKfYmDliNGC3o5MToh7Xca1Ucg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JCsQK30MC+KPFhuIX2bn2gQg6QTFzEoklBLmT8M8pJQ=;
+ b=I0jrEZ15dSbcnywr71mNmMY/CqoICsQgrK4M0UzmdV6a4klE40hPIFD3T9aX1kckLfpez5ZaS6RSN7NaZJ7xFiq/gQG7alUYHvtIIJHjYf+HSS89aLvDig96ykwIVowGBzh5LDPuzSBFL0UFJEd/nL5hsW74s2brh4wE0ldgHL2gqL5a4xC7IjlWk6T/W+LL+1eYIKx6ouK0OBsDJgTwxzM0LkjivL4ZYxgl/ly6JJ1sM2f1szm9VEj3RtVL6e+4OCqNJ/O6m4pp+aWY2Y7Jb/816gqF1CCT08Ut/iGpie5Vvhq7C0NepZ/2oCvUTsnlzgw6puT/ND3F4JfvNrty4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: nvidia.com; dkim=none (message not signed)
+ header.d=none;nvidia.com; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB3403.namprd12.prod.outlook.com (2603:10b6:5:11d::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Tue, 28 Jul
+ 2020 19:22:38 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
+ 19:22:38 +0000
+Date:   Tue, 28 Jul 2020 16:22:36 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        <nouveau@lists.freedesktop.org>, <kvm-ppc@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, Ben Skeggs <bskeggs@redhat.com>,
+        Bharata B Rao <bharata@linux.ibm.com>
+Subject: Re: [PATCH v4 0/6] mm/migrate: avoid device private invalidations
+Message-ID: <20200728192236.GA160260@nvidia.com>
+References: <20200723223004.9586-1-rcampbell@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200723223004.9586-1-rcampbell@nvidia.com>
+X-ClientProxiedBy: MN2PR19CA0025.namprd19.prod.outlook.com
+ (2603:10b6:208:178::38) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-In-Reply-To: <0b2b59d4-da4c-33df-82b4-0d4935b91e6e@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR19CA0025.namprd19.prod.outlook.com (2603:10b6:208:178::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Tue, 28 Jul 2020 19:22:38 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k0VBM-000fiC-W4; Tue, 28 Jul 2020 16:22:37 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8fbdfff5-948b-405c-d249-08d8332b96ee
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3403:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB340351CEA0362F9595A1049AC2730@DM6PR12MB3403.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: WJ7fn2YLcPN3sDYR4801kDZmXn40UmJP4E6MBNgS+GJJDXH23FmAw2oaeB/NH4RneKtxxeHSCLo/7aVl07/AFay3WoKYYLOkgDYN5jCav7pRsN18Bs5FWWzdGlUblzBYVEPKzU0pamajRM6n5HNfsaYKAk1B6WxVGeVggN+M64JZHDevz6w+VVM29i+fIwqM7bXPaV3eHws0A3AetGvRxdMoNc7gwhYN/UPKzX2sQNuMLix9rqZqa2jJkPuc9+sHiK4/5KJv6OBqyGMEFo7mdXoA9JlLkS1ocjNXOqkZ4JvrRln7zrIXLmPRi/RYaZ40/mh4KEUPTb26RM3UpTU98vozJoaySz0dgFGoxLTfPQTMpU6Sk1QQPBefkL4GFo3ul9Y/NbuMNQP4j4B/jBjbnn96YB6BMS5VGWWNRo8FzioXp4E5K0FWPhxx3pwRgTd9vtKjK22PKu95vLhhUJVxMg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(366004)(346002)(136003)(39860400002)(7416002)(2906002)(33656002)(1076003)(83380400001)(5660300002)(478600001)(6636002)(37006003)(54906003)(966005)(8936002)(66946007)(26005)(66476007)(186003)(9786002)(316002)(4326008)(36756003)(426003)(8676002)(6862004)(2616005)(66556008)(86362001)(9746002)(27376004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: osZagDZOsJ3nqUF0uhm5FxoYab2bMulBn2Iye0wgJSbxfcEJ8+GKeaEUSIqbINCxj9UvhCocIYf8kGdMrc3T9vV+wKwDd2S5qh/V90fQkLwR23sawKgHJwsnWdsCeNXKGgxAoDTD3dl5CnxwekVoXArFh4XatIiQK7LDI6axt5HVE8DZ0O2ZGR42CInnhbjFKF5vhBVAcxrbnhu9Ce+N+52JLMfHC9AH4zLPDZP0RTJ5VB6fJG19dBZsymS/gS7OnZ/ELQRsCIm2f7THtDMUtOJJigFS72RBZzNcScZ2G5UQmDZWqJPi+SIdfnoFENlChgf0EISrGIQ8Qp+Sna/5OKadHQGVtOIiBiffVmE+sHHMU7NCdR1mJ5NGz5edXJ+fiYLMNwcYR2ukMTuorLst/4eF6oDyiRrjWaZTG5VR9ZY52boRF1Z81htDnjMaj/OuV2cWXdAHv9PM6MLS/NNCt5BFR2aDE11LnWenfGPmnvY=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8fbdfff5-948b-405c-d249-08d8332b96ee
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 19:22:38.3618
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0TWuf7+1Jt6enjHI7IKW12ex+FwRsGVxXM91iS+lvwjUq/UIonQXM82FGO+r+5b6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3403
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595964115; bh=JCsQK30MC+KPFhuIX2bn2gQg6QTFzEoklBLmT8M8pJQ=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-MS-Exchange-Transport-Forked:
+         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
+         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
+         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+         X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=LOlvx0c15P4DaY67cjAr8xv+XU5CUTwOIUA5VzLsAqgZUMrtXUqLcuM4mjC8SRn/3
+         THVUZGrXBPogYkXvvVSkl+he2grPHFp3q5z/3eWNidyirpi1Rl6P6fE6kVaC0zoSom
+         2bZ77FuaMhPU2T61bUuh5QTdZj3wp6bv9ErsA3L737y1oZ8EU/Qc93Cn/iZDpEi2rE
+         lhlVATKtASPIGkfZG++1TsdyJNgZotGP9EugT9X3mMqOm/1wB/s7nohzlVG71Gk7aK
+         9nIWr35TPD4pipIvo3vX72yhoDuRPyy03KGCZRZaBSpjndRirjwvELA/Cy5r5MGV3g
+         LoYBG0Pm71SMg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/20 9:41 AM, Jens Axboe wrote:
-> On 7/24/20 1:32 AM, Christoph Hellwig wrote:
->> Hi Jens,
->>
->> this series contains a bunch of different BDI cleanups.  The biggest item
->> is to isolate block drivers from the BDI in preparation of changing the
->> lifetime of the block device BDI in a follow up series.
+On Thu, Jul 23, 2020 at 03:29:58PM -0700, Ralph Campbell wrote:
+> The goal for this series is to avoid device private memory TLB
+> invalidations when migrating a range of addresses from system
+> memory to device private memory and some of those pages have already
+> been migrated. The approach taken is to introduce a new mmu notifier
+> invalidation event type and use that in the device driver to skip
+> invalidation callbacks from migrate_vma_setup(). The device driver is
+> also then expected to handle device MMU invalidations as part of the
+> migrate_vma_setup(), migrate_vma_pages(), migrate_vma_finalize() process.
+> Note that this is opt-in. A device driver can simply invalidate its MMU
+> in the mmu notifier callback and not handle MMU invalidations in the
+> migration sequence.
 > 
-> Applied, thanks.
+> This series is based on Jason Gunthorpe's HMM tree (linux-5.8.0-rc4).
+> 
+> Also, this replaces the need for the following two patches I sent:
+> ("mm: fix migrate_vma_setup() src_owner and normal pages")
+> https://lore.kernel.org/linux-mm/20200622222008.9971-1-rcampbell@nvidia.com
+> ("nouveau: fix mixed normal and device private page migration")
+> https://lore.kernel.org/lkml/20200622233854.10889-3-rcampbell@nvidia.com
+> 
+> Changes in v4:
+> Added reviewed-by from Bharata B Rao.
+> Removed dead code checking for source device private page in lib/test_hmm.c
+>   dmirror_migrate_alloc_and_copy() since the source filter flag guarantees
+>   that.
+> Added patch 6 to remove a redundant invalidation in migrate_vma_pages().
+> 
+> Changes in v3:
+> Changed the direction field "dir" to a "flags" field and renamed
+>   src_owner to pgmap_owner.
+> Fixed a locking issue in nouveau for the migration invalidation.
+> Added a HMM selftest test case to exercise the HMM test driver
+>   invalidation changes.
+> Removed reviewed-by Bharata B Rao since this version is moderately
+>   changed.
+> 
+> Changes in v2:
+> Rebase to Jason Gunthorpe's HMM tree.
+> Added reviewed-by from Bharata B Rao.
+> Rename the mmu_notifier_range::data field to migrate_pgmap_owner as
+>   suggested by Jason Gunthorpe.
+> 
+> Ralph Campbell (6):
+>   nouveau: fix storing invalid ptes
+>   mm/migrate: add a flags parameter to migrate_vma
+>   mm/notifier: add migration invalidation type
+>   nouveau/svm: use the new migration invalidation
+>   mm/hmm/test: use the new migration invalidation
 
-Dropped:
+Applied to the hmm tree with the modification I noted, I think all the
+comments in the past versions were addressed. I will accumulate more
+Reviews if any come.
 
-  CC      block/blk-sysfs.o
-block/blk-sysfs.c:608:16: error: ‘blk_throtl_sample_show’ undeclared here (not in a function); did you mean ‘blk_throtl_sample_entry’?
-  608 | QUEUE_RW_ENTRY(blk_throtl_sample, "throttle_sample_time");
-      |                ^~~~~~~~~~~~~~~~~
-block/blk-sysfs.c:563:10: note: in definition of macro ‘QUEUE_RW_ENTRY’
-  563 |  .show = _prefix##_show,   \
-      |          ^~~~~~~
-block/blk-sysfs.c:608:16: error: ‘blk_throtl_sample_store’ undeclared here (not in a function); did you mean ‘blk_throtl_sample_entry’?
-  608 | QUEUE_RW_ENTRY(blk_throtl_sample, "throttle_sample_time");
-      |                ^~~~~~~~~~~~~~~~~
-block/blk-sysfs.c:564:11: note: in definition of macro ‘QUEUE_RW_ENTRY’
-  564 |  .store = _prefix##_store,   \
-      |           ^~~~~~~
-block/blk-sysfs.c:657:3: error: ‘blk_throtl_sample_time_entry’ undeclared here (not in a function); did you mean ‘blk_throtl_sample_time_store’?
-  657 |  &blk_throtl_sample_time_entry.attr,
-      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |   blk_throtl_sample_time_store
-block/blk-sysfs.c:608:16: warning: ‘blk_throtl_sample_entry’ defined but not used [-Wunused-variable]
-  608 | QUEUE_RW_ENTRY(blk_throtl_sample, "throttle_sample_time");
-      |                ^~~~~~~~~~~~~~~~~
-block/blk-sysfs.c:561:33: note: in definition of macro ‘QUEUE_RW_ENTRY’
-  561 | static struct queue_sysfs_entry _prefix##_entry = { \
-      |                                 ^~~~~~~
-make[1]: *** [scripts/Makefile.build:281: block/blk-sysfs.o] Error 1
-make: *** [Makefile:1756: block] Error 2
+>   mm/migrate: remove range invalidation in migrate_vma_pages()
 
-from "block: add helper macros for queue sysfs entries"
+Let's have some discussion on this new patch please, at least I don't
+follow it yet.
 
-This has not seen a full compile test even...
-
--- 
-Jens Axboe
-
+Thanks,
+Jason
