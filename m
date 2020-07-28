@@ -2,48 +2,49 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D48C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0BFC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09BBC2075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A28C20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Lx+JMXkc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HkKrg1kp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgG1CCr (ORCPT
+        id S1727034AbgG1CCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:02:47 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:50051 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726967AbgG1CCn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Jul 2020 22:02:43 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:33492 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726842AbgG1CCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 22:02:37 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595901762; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=o71f0Tbkh59kye12un+v6NKiOPfQP8PUVUL1Dc2TK4c=; b=Lx+JMXkcu7/VUkgnUnIo3qQvjZzaRw24kSAGJvCJVgTnfrTYkLEtW4HhdR1911iAfi0ob+IU
- dkq+BGR0cbujSsW+bMN8YkwoD5JL8hbLkhj2O36e4FXI9PEcrtx98cesbg0/vxKemx7Wcl8E
- +jIBtfoXKTrlAh5PHgqEvyB7JLU=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ s=smtp; t=1595901757; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=sTL9YNE6cVNaCBg4JVfnZqFPMtAuwW4Qs6driPMI2k8=; b=HkKrg1kp3uj3ymNPFZyf/GwSx7nqH5YSyO19SfF7TDATYDX1dvhCfZFxPLYHN1/NVkpvw9tK
+ LLp2gq4eCtZJIMb8pVjE6VTDGWmtbT0g+kT2LqNIW/0EU5VUtFecRikbfhXd/xFWBL4L+Jap
+ RQ4uyWulUI1G3bTIky/iuwQv5pE=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5f1f87387186ea1ee1763526 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 02:02:32
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f1f873dbd0c3f0296bcd82c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 02:02:37
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3228BC43391; Tue, 28 Jul 2020 02:02:31 +0000 (UTC)
+        id 6F582C433C6; Tue, 28 Jul 2020 02:02:36 +0000 (UTC)
 Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5B9FFC433C6;
-        Tue, 28 Jul 2020 02:02:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5B9FFC433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51A56C4339C;
+        Tue, 28 Jul 2020 02:02:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51A56C4339C
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
 From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
@@ -51,87 +52,94 @@ To:     manivannan.sadhasivam@linaro.org
 Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
         jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
         Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v6 00/11] Introduce features and debugfs/sysfs entries for MHI
-Date:   Mon, 27 Jul 2020 19:02:09 -0700
-Message-Id: <1595901740-27379-1-git-send-email-bbhatt@codeaurora.org>
+Subject: [PATCH v6 09/11] bus: mhi: core: Read and save device hardware information from BHI
+Date:   Mon, 27 Jul 2020 19:02:18 -0700
+Message-Id: <1595901740-27379-10-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595901740-27379-1-git-send-email-bbhatt@codeaurora.org>
+References: <1595901740-27379-1-git-send-email-bbhatt@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Save hardware information from BHI.
-Allow reading and modifying some MHI variables for debug, test, and
-informational purposes using debugfs.
-Read values for device specific hardware information to be used by OEMs in
-factory testing such as serial number and PK hash using sysfs.
+Device hardware specific information such as serial number and the OEM
+PK hash can be read using BHI and saved on host to identify the
+endpoint.
 
-This set of patches was tested on arm64 and x86.
+Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/bus/mhi/core/boot.c | 17 ++++++++++++++++-
+ include/linux/mhi.h         |  6 ++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
-v6:
--Introduced APIs for allocating and freeing the MHI controller so as to ensure
-that it is always zero-initialized.
--Moved gerrits around for counter introduction.
--Fixed documentation for sysfs.
-
-v5:
--Removed the debug entry to trigger reset and will be addressed in a seperate
-patch
--Added patch bus: mhi: core: Use counters to track MHI device state transitions
--Updated helper API to trigger a non-blocking host resume
--Minor nitpicks also fixed
-
-v4:
--Removed bus: mhi: core: Introduce independent voting mechanism patch
--Removed bus vote function from debugfs due to independent voting removal
--Added helper resume APIs to aid consolidation of spread out code
--Added a clean-up patch and a missing host resume in voting API
-
-v3:
--Add patch to check for pending packets in suspend as a dependency for the
-independent voting mechanism introduction
--Include register dump entry for debugfs to dump MHI, BHI, and BHIe registers
--Update commit message for the debugfs patch
--Updated Documentation/ABI with the required info for sysfs
--Updated debugfs patch to include a new KConfig entry and dependencies
--Updated reviewed-by for some patches
-
-v2:
--Added a new debugfs.c file for specific debugfs entries and code
--Updated commit text and addressed some comments for voting change
--Made sure sysfs is only used for serial number and OEM PK hash usage
-
-Bhaumik Bhatt (11):
-  bus: mhi: core: Remove double occurrence for mhi_ctrl_ev_task()
-    declaration
-  bus: mhi: core: Abort suspends due to outgoing pending packets
-  bus: mhi: core: Use helper API to trigger a non-blocking host resume
-  bus: mhi: core: Trigger host resume if suspended during
-    mhi_device_get()
-  bus: mhi: core: Use generic name field for an MHI device
-  bus: mhi: core: Introduce helper function to check device state
-  bus: mhi: core: Introduce counters to track MHI device state
-    transitions
-  bus: mhi: core: Introduce debugfs entries for MHI
-  bus: mhi: core: Read and save device hardware information from BHI
-  bus: mhi: core: Introduce APIs to allocate and free the MHI controller
-  bus: mhi: core: Introduce sysfs entries for MHI
-
- Documentation/ABI/stable/sysfs-bus-mhi |  21 ++
- MAINTAINERS                            |   1 +
- drivers/bus/mhi/Kconfig                |   8 +
- drivers/bus/mhi/core/Makefile          |   5 +-
- drivers/bus/mhi/core/boot.c            |  17 +-
- drivers/bus/mhi/core/debugfs.c         | 409 +++++++++++++++++++++++++++++++++
- drivers/bus/mhi/core/init.c            |  81 ++++++-
- drivers/bus/mhi/core/internal.h        |  37 ++-
- drivers/bus/mhi/core/main.c            |  27 +--
- drivers/bus/mhi/core/pm.c              |  26 ++-
- include/linux/mhi.h                    |  30 ++-
- 11 files changed, 623 insertions(+), 39 deletions(-)
- create mode 100644 Documentation/ABI/stable/sysfs-bus-mhi
- create mode 100644 drivers/bus/mhi/core/debugfs.c
-
+diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
+index 0b38014..24422f5 100644
+--- a/drivers/bus/mhi/core/boot.c
++++ b/drivers/bus/mhi/core/boot.c
+@@ -392,13 +392,28 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+ 	void *buf;
+ 	dma_addr_t dma_addr;
+ 	size_t size;
+-	int ret;
++	int i, ret;
+ 
+ 	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
+ 		dev_err(dev, "Device MHI is not in valid state\n");
+ 		return;
+ 	}
+ 
++	/* save hardware info from BHI */
++	ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_SERIALNU,
++			   &mhi_cntrl->serial_number);
++	if (ret)
++		dev_err(dev, "Could not capture serial number via BHI\n");
++
++	for (i = 0; i < ARRAY_SIZE(mhi_cntrl->oem_pk_hash); i++) {
++		ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_OEMPKHASH(i),
++				   &mhi_cntrl->oem_pk_hash[i]);
++		if (ret) {
++			dev_err(dev, "Could not capture OEM PK HASH via BHI\n");
++			break;
++		}
++	}
++
+ 	/* If device is in pass through, do reset to ready state transition */
+ 	if (mhi_cntrl->ee == MHI_EE_PTHRU)
+ 		goto fw_load_ee_pthru;
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index a6e6634..d15e9ce 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -16,6 +16,8 @@
+ #include <linux/wait.h>
+ #include <linux/workqueue.h>
+ 
++#define MHI_MAX_OEM_PK_HASH_SEGMENTS 16
++
+ struct mhi_chan;
+ struct mhi_event;
+ struct mhi_ctxt;
+@@ -317,6 +319,8 @@ struct mhi_controller_config {
+  * @device_number: MHI controller device number
+  * @major_version: MHI controller major revision number
+  * @minor_version: MHI controller minor revision number
++ * @serial_number: MHI controller serial number obtained from BHI
++ * @oem_pk_hash: MHI controller OEM PK Hash obtained from BHI
+  * @mhi_event: MHI event ring configurations table
+  * @mhi_cmd: MHI command ring configurations table
+  * @mhi_ctxt: MHI device context, shared memory between host and device
+@@ -396,6 +400,8 @@ struct mhi_controller {
+ 	u32 device_number;
+ 	u32 major_version;
+ 	u32 minor_version;
++	u32 serial_number;
++	u32 oem_pk_hash[MHI_MAX_OEM_PK_HASH_SEGMENTS];
+ 
+ 	struct mhi_event *mhi_event;
+ 	struct mhi_cmd *mhi_cmd;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
