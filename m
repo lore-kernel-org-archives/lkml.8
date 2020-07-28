@@ -2,97 +2,126 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 677E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 337C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7E020656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E25E206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:12:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="dC0xTiuZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbgG1LIP (ORCPT
+        id S1728965AbgG1LMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 07:08:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37366 "EHLO mx2.suse.de"
+        Tue, 28 Jul 2020 07:12:32 -0400
+Received: from crapouillou.net ([89.234.176.41]:54234 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728752AbgG1LIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 07:08:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 12E7CAC82;
-        Tue, 28 Jul 2020 11:08:24 +0000 (UTC)
-From:   Daniel Wagner <dwagner@suse.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Wagner <dwagner@suse.de>
-Subject: [RFC] block: Allocate only 1 tag set for a kdump kernel
-Date:   Tue, 28 Jul 2020 13:08:09 +0200
-Message-Id: <20200728110809.19228-1-dwagner@suse.de>
-X-Mailer: git-send-email 2.27.0
+        id S1728699AbgG1LMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 07:12:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1595934749; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MmQj6eRea6iyuNFg5IchAc+jj4JkKEYDW/JJw4bGNXw=;
+        b=dC0xTiuZq1kuj8lPhJ/Y1NFDScrIHbi/xsOFaHQpEDJQux10XaHiWbhHW9JEpEjOmYTZka
+        0Y+wPCTK8UDmX+tpqwQQx72uuE+CojJsxcg0CS3Rb5l/N3GTIpwEgvk2AVCWthpaJEs8Dr
+        Xu25r3KIw3061V6qehZmN03C4M9TRo4=
+Date:   Tue, 28 Jul 2020 13:12:11 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 2/2] MIPS: ingenic: Enable JZ4780_NEMC manually
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>
+Message-Id: <B4F6EQ.WB2WZOY40FDR@crapouillou.net>
+In-Reply-To: <20200728104503.23655-2-krzk@kernel.org>
+References: <20200728104503.23655-1-krzk@kernel.org>
+        <20200728104503.23655-2-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not update nr_hw_queues again after setting it to 1 for a kdump
-kernel. This avoids allocating a tag set of size nr_cpu_ids and but
-then just using one tag set.
+Hi Krzysztof,
 
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
-Hi,
+Le mar. 28 juil. 2020 =E0 12:45, Krzysztof Kozlowski <krzk@kernel.org> a=20
+=E9crit :
+> The CONFIG_JZ4780_NEMC was previously a default on MIPS but now it has
+> to be enabled manually.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-I stumbled across this and didn't make sense to me that we might
-allocated more tag sets than we potently use. But maybe I am
-not seeing the obvious thing.
+I think you should swap the two so that there are no problems when=20
+bisecting.
 
-Only compiled tested.
+With that:
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
 
-Thanks,
-Daniel
+Cheers,
+-Paul
 
- block/blk-mq.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+>=20
+> ---
+>=20
+> Changes since v3:
+> 1. New patch
+> ---
+>  arch/mips/configs/ci20_defconfig    | 1 +
+>  arch/mips/configs/qi_lb60_defconfig | 1 +
+>  arch/mips/configs/rs90_defconfig    | 1 +
+>  3 files changed, 3 insertions(+)
+>=20
+> diff --git a/arch/mips/configs/ci20_defconfig=20
+> b/arch/mips/configs/ci20_defconfig
+> index e511fe0243a5..0a46199fdc3f 100644
+> --- a/arch/mips/configs/ci20_defconfig
+> +++ b/arch/mips/configs/ci20_defconfig
+> @@ -128,6 +128,7 @@ CONFIG_DMA_JZ4780=3Dy
+>  CONFIG_INGENIC_OST=3Dy
+>  # CONFIG_IOMMU_SUPPORT is not set
+>  CONFIG_MEMORY=3Dy
+> +CONFIG_JZ4780_NEMC=3Dy
+>  CONFIG_PWM=3Dy
+>  CONFIG_PWM_JZ4740=3Dm
+>  CONFIG_EXT4_FS=3Dy
+> diff --git a/arch/mips/configs/qi_lb60_defconfig=20
+> b/arch/mips/configs/qi_lb60_defconfig
+> index 97c9a69d1528..81bfbee72b0c 100644
+> --- a/arch/mips/configs/qi_lb60_defconfig
+> +++ b/arch/mips/configs/qi_lb60_defconfig
+> @@ -108,6 +108,7 @@ CONFIG_RTC_DRV_JZ4740=3Dy
+>  CONFIG_DMADEVICES=3Dy
+>  CONFIG_DMA_JZ4780=3Dy
+>  CONFIG_MEMORY=3Dy
+> +CONFIG_JZ4780_NEMC=3Dy
+>  CONFIG_IIO=3Dy
+>  CONFIG_INGENIC_ADC=3Dy
+>  CONFIG_PWM=3Dy
+> diff --git a/arch/mips/configs/rs90_defconfig=20
+> b/arch/mips/configs/rs90_defconfig
+> index 433ac5c0266a..de6752051ecc 100644
+> --- a/arch/mips/configs/rs90_defconfig
+> +++ b/arch/mips/configs/rs90_defconfig
+> @@ -145,6 +145,7 @@ CONFIG_DMA_JZ4780=3Dy
+>  CONFIG_INGENIC_OST=3Dy
+>  # CONFIG_IOMMU_SUPPORT is not set
+>  CONFIG_MEMORY=3Dy
+> +CONFIG_JZ4780_NEMC=3Dy
+>  CONFIG_IIO=3Dy
+>  CONFIG_INGENIC_ADC=3Dy
+>  CONFIG_IIO_RESCALE=3Dy
+> --
+> 2.17.1
+>=20
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 4f57d27bfa73..e32cb0217135 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3291,13 +3291,14 @@ int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
- 		set->nr_hw_queues = 1;
- 		set->nr_maps = 1;
- 		set->queue_depth = min(64U, set->queue_depth);
-+	} else {
-+		/*
-+		 * There is no use for more h/w queues than cpus
-+		 * if we just have a single map
-+		 */
-+		if (set->nr_maps == 1 && set->nr_hw_queues > nr_cpu_ids)
-+			set->nr_hw_queues = nr_cpu_ids;
- 	}
--	/*
--	 * There is no use for more h/w queues than cpus if we just have
--	 * a single map
--	 */
--	if (set->nr_maps == 1 && set->nr_hw_queues > nr_cpu_ids)
--		set->nr_hw_queues = nr_cpu_ids;
- 
- 	if (blk_mq_realloc_tag_set_tags(set, 0, set->nr_hw_queues) < 0)
- 		return -ENOMEM;
-@@ -3309,7 +3310,7 @@ int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
- 						  GFP_KERNEL, set->numa_node);
- 		if (!set->map[i].mq_map)
- 			goto out_free_mq_map;
--		set->map[i].nr_queues = is_kdump_kernel() ? 1 : set->nr_hw_queues;
-+		set->map[i].nr_queues = set->nr_hw_queues;
- 	}
- 
- 	ret = blk_mq_update_queue_map(set);
--- 
-2.16.4
 
