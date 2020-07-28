@@ -2,119 +2,109 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D329C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84879C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8203D20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC1F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:39:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v2pj/FVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730122AbgG1NiX (ORCPT
+        id S1730133AbgG1NjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:38:23 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43706 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729950AbgG1NiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:38:22 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4F7F7B9C77102E9AEC57;
-        Tue, 28 Jul 2020 21:38:19 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.81) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Jul 2020
- 21:38:15 +0800
-Subject: Re: [PATCH net-next] liquidio: Remove unneeded cast from memory
- allocation
-To:     Joe Perches <joe@perches.com>, <dchickles@marvell.com>,
-        <sburla@marvell.com>, <fmanlunas@marvell.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200724130001.71528-1-wanghai38@huawei.com>
- <2cdef8d442bb5da39aed17bf994a800e768942f7.camel@perches.com>
- <ac99bed4-dabc-a003-374f-206753f937cb@huawei.com>
- <bffcc7d513e186734d224bda6afdd55033b451de.camel@perches.com>
-From:   "wanghai (M)" <wanghai38@huawei.com>
-Message-ID: <2996569e-5e1a-db02-2c78-0ee0d572706d@huawei.com>
-Date:   Tue, 28 Jul 2020 21:38:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 28 Jul 2020 09:39:03 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52478 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729044AbgG1NjD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 09:39:03 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06SDceok086218;
+        Tue, 28 Jul 2020 08:38:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595943520;
+        bh=LF1KW3b5hNQ93VNK2QHQ2c1Hqq2jNqESiln7vaNb5mw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=v2pj/FVZBSdeoK7UrRluB53SZAjqMFqWQi/FBqkcSIMOrHjO/6OrC6fMf/fnV8v2g
+         N6qcOvCuXROYGhZAgCHi3c5yDICDzViFIKKyjMXRSmDyEO9889wJ53RbKalU4AwG/P
+         XWA1W7a6R/HWGH+FHYCDlnrPhtKkYda1GWcFhgRQ=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06SDcebH042073
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jul 2020 08:38:40 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
+ Jul 2020 08:38:40 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 28 Jul 2020 08:38:40 -0500
+Received: from [10.250.35.192] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SDcdWq054358;
+        Tue, 28 Jul 2020 08:38:39 -0500
+Subject: Re: [PATCH v32 3/6] ARM: defconfig: u8500: Add LP55XX_COMMON config
+ flag
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200722153146.8767-1-dmurphy@ti.com>
+ <20200722153146.8767-4-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <372891d8-816e-f640-7356-90513f998702@ti.com>
+Date:   Tue, 28 Jul 2020 08:38:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <bffcc7d513e186734d224bda6afdd55033b451de.camel@perches.com>
+In-Reply-To: <20200722153146.8767-4-dmurphy@ti.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.81]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Russel and Linus
 
-在 2020/7/28 17:11, Joe Perches 写道:
-> On Tue, 2020-07-28 at 16:42 +0800, wanghai (M) wrote:
->> 在 2020/7/25 5:29, Joe Perches 写道:
->>> On Fri, 2020-07-24 at 21:00 +0800, Wang Hai wrote:
->>>> Remove casting the values returned by memory allocation function.
->>>>
->>>> Coccinelle emits WARNING:
->>>>
->>>> ./drivers/net/ethernet/cavium/liquidio/octeon_device.c:1155:14-36: WARNING:
->>>>    casting value returned by memory allocation function to (struct octeon_dispatch *) is useless.
->>> []
->>>> diff --git a/drivers/net/ethernet/cavium/liquidio/octeon_device.c b/drivers/net/ethernet/cavium/liquidio/octeon_device.c
->>> []
->>>> @@ -1152,8 +1152,7 @@ octeon_register_dispatch_fn(struct octeon_device *oct,
->>>>    
->>>>    		dev_dbg(&oct->pci_dev->dev,
->>>>    			"Adding opcode to dispatch list linked list\n");
->>>> -		dispatch = (struct octeon_dispatch *)
->>>> -			   vmalloc(sizeof(struct octeon_dispatch));
->>>> +		dispatch = vmalloc(sizeof(struct octeon_dispatch));
->>> More the question is why this is vmalloc at all
->>> as the structure size is very small.
->>>
->>> Likely this should just be kmalloc.
->>>
->>>
->> Thanks for your advice.  It is indeed best to use kmalloc here.
->>>>    		if (!dispatch) {
->>>>    			dev_err(&oct->pci_dev->dev,
->>>>    				"No memory to add dispatch function\n");
->>> And this dev_err is unnecessary.
->>>
->>>
->> I don't understand why dev_err is not needed here. We can easily know
->> that an error has occurred here through dev_err
-> Memory allocation failures without __GFP_NOWARN. already
-> do a dump_stack to show the location of the code that
-> could not successfully allocate memory.
+On 7/22/20 10:31 AM, Dan Murphy wrote:
+> The dependencies for the LP55XX LED drivers have been updated so that
+> the child devices (i.e. LP5521) now depends on the LP55XX_COMMON config
+> flag as opposed to the device selecting the LP55XX_COMMON flag.  The
+> LP55XX_COMMON needs to be set in the defconfig.
 >
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>   arch/arm/configs/u8500_defconfig | 1 +
+>   1 file changed, 1 insertion(+)
 >
-Thanks for your explanation. I got it.
+> diff --git a/arch/arm/configs/u8500_defconfig b/arch/arm/configs/u8500_defconfig
+> index 28dd7cf56048..dea599e1c17e 100644
+> --- a/arch/arm/configs/u8500_defconfig
+> +++ b/arch/arm/configs/u8500_defconfig
+> @@ -113,6 +113,7 @@ CONFIG_NEW_LEDS=y
+>   CONFIG_LEDS_CLASS=y
+>   CONFIG_LEDS_LM3530=y
+>   CONFIG_LEDS_GPIO=y
+> +CONFIG_LEDS_LP55XX_COMMON=y
+>   CONFIG_LEDS_LP5521=y
+>   CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+>   CONFIG_RTC_CLASS=y
 
-Can it be modified like this?
 
---- a/drivers/net/ethernet/cavium/liquidio/octeon_device.c
-+++ b/drivers/net/ethernet/cavium/liquidio/octeon_device.c
-@@ -1152,11 +1152,8 @@ octeon_register_dispatch_fn(struct octeon_device 
-*oct,
+I missed adding you to the patch.
 
-                 dev_dbg(&oct->pci_dev->dev,
-                         "Adding opcode to dispatch list linked list\n");
--               dispatch = (struct octeon_dispatch *)
--                          vmalloc(sizeof(struct octeon_dispatch));
-+               dispatch = kmalloc(sizeof(struct octeon_dispatch), 
-GFP_KERNEL);
-                 if (!dispatch) {
--                       dev_err(&oct->pci_dev->dev,
--                               "No memory to add dispatch function\n");
-                         return 1;
-                 }
-                 dispatch->opcode = combined_opcode;
+Can you kindly review this change?
 
-> .
->
+Dan
 
