@@ -2,104 +2,223 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7D3C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82011206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC6F3208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:38:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ET/wyIoS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgG1IgY (ORCPT
+        id S1728260AbgG1IiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:36:24 -0400
-Received: from muru.com ([72.249.23.125]:38292 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728009AbgG1IgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:36:24 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 61D5B8105;
-        Tue, 28 Jul 2020 08:36:20 +0000 (UTC)
-Date:   Tue, 28 Jul 2020 01:36:31 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv8 0/6] n_gsm serdev support and GNSS driver for droid4
-Message-ID: <20200728083631.GE2811@atomide.com>
-References: <20200512214713.40501-1-tony@atomide.com>
- <20200528083918.GB10358@localhost>
- <20200726082520.GA16953@amd>
+        Tue, 28 Jul 2020 04:38:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727996AbgG1IiM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:38:12 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8125AC061794;
+        Tue, 28 Jul 2020 01:38:11 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 57FFD22F00;
+        Tue, 28 Jul 2020 10:38:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1595925488;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CeGX2CeZPQ2jTjYJwriGXoWv4Xxv+ZHe+OXyj9uS1EI=;
+        b=ET/wyIoSCwH1qDZuc5g3ByJZKYXpVMpHKMv+CaktCC7I2C6ReAEtjmtWeETGrhH15FDi+T
+        9wunTehr0h4i5sDuG0VbUwxiFKKhTglu10R8mWkPIvyEjifQs62zYuCnuPnpRU+I6xB+/6
+        PV90+P6U7owpDj4+m/4sg8MwCbpTm34=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726082520.GA16953@amd>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Jul 2020 10:38:08 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
+In-Reply-To: <20200728082707.GB2419169@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-3-michael@walle.cc> <20200728072422.GF1850026@dell>
+ <1065b0107ce6fd88b2bdd704bf45346b@walle.cc> <20200728082707.GB2419169@dell>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <a47993ca4c77ab1ee92f6693debb3c87@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Pavel Machek <pavel@denx.de> [200726 08:25]:
-> Hi!
+Am 2020-07-28 10:27, schrieb Lee Jones:
+> On Tue, 28 Jul 2020, Michael Walle wrote:
 > 
-> > > Here's the updated set of these patches fixed up for Johan's and
-> > > Pavel's earlier comments.
-> > > 
-> > > This series does the following:
-> > > 
-> > > 1. Adds functions to n_gsm.c for serdev-ngsm.c driver to use
-> > > 
-> > > 2. Adds a generic serdev-ngsm.c driver that brings up the TS 27.010
-> > >    TTY ports configured in devicetree with help of n_gsm.c
-> > > 
-> > > 3. Allows the use of standard Linux device drivers for dedicated
-> > >    TS 27.010 channels for devices like GNSS and ALSA found on some
-> > >    modems for example
-> > 
-> > Unfortunately that does not seem to be the case just yet. Your gnss
-> > driver is still aware that it's using n_gsm for the transport and calls
-> > into the "parent" serdev-ngsm driver instead of using the serdev
-> > interface (e.g. as if this was still and MFD driver).
-> > 
-> > If you model this right, the GNSS driver should work equally well
-> > regardless of whether you use the serial interface (with n_gsm) or USB
-> > (e.g. cdc-acm or usb-serial).
+>> Am 2020-07-28 09:24, schrieb Lee Jones:
+>> > On Sun, 26 Jul 2020, Michael Walle wrote:
+>> >
+>> > > Add a device tree bindings for the board management controller found
+>> > > on
+>> > > the Kontron SMARC-sAL28 board.
+>> > >
+>> > > Signed-off-by: Michael Walle <michael@walle.cc>
+>> > > Reviewed-by: Rob Herring <robh@kernel.org>
+>> > > ---
+>> > > Changes since v5:
+>> > >  - none
+>> > >
+>> > > Changes since v4:
+>> > >  - fix the regex of the unit-address
+>> > >
+>> > > Changes since v3:
+>> > >  - see cover letter
+>> > >
+>> > >  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 +++++++
+>> > >  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++++
+>> > >  .../kontron,sl28cpld-intc.yaml                |  54 +++++++
+>> > >  .../bindings/mfd/kontron,sl28cpld.yaml        | 153
+>> > > ++++++++++++++++++
+>> > >  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
+>> > >  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
+>> > >  6 files changed, 358 insertions(+)
+>> > >  create mode 100644
+>> > > Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+>> > >  create mode 100644
+>> > > Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+>> > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
+>> > >  create mode 100644
+>> > > Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+>> > >  create mode 100644
+>> > > Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
+>> > >  create mode 100644
+>> > > Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
+>> > >
+>> > > diff --git
+>> > > a/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+>> > > b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+>> > > new file mode 100644
+>> > > index 000000000000..9a63a158a796
+>> > > --- /dev/null
+>> > > +++
+>> > > b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+>> > > @@ -0,0 +1,54 @@
+>> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> > > +%YAML 1.2
+>> > > +---
+>> > > +$id: http://devicetree.org/schemas/gpio/kontron,sl28cpld-gpio.yaml#
+>> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> > > +
+>> > > +title: GPIO driver for the sl28cpld board management controller
+>> > > +
+>> > > +maintainers:
+>> > > +  - Michael Walle <michael@walle.cc>
+>> > > +
+>> > > +description: |
+>> > > +  This module is part of the sl28cpld multi-function device. For more
+>> > > +  details see
+>> > > Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
+>> >
+>> > Paths are normally relative.
+>> 
+>> grep Documentation/ Documentation
+>> 
+>> I know there are a lot false positives (esp in the first one)..
+>> 
+>> $ grep -r "\.\./" Documentation | wc -l
+>> 1826
+>> $ grep -r "Documentation/" Documentation|wc -l
+>> 2862
 > 
-> We are not going to see that protocol anywhere else, so why is that
-> a good goal?
+> I actually meant just for Device Tree bindings, but it does appear
+> that 'Documentation' is used a bunch there too.
+> 
+> My reasons for not liking full paths is that the intention was always
+> to move 'Documentation/devicetree' to a new location outside of the
+> kernel source tree.
 
-Yes it seems this GNSS implementation is different from the one
-provided by gobi.
+I see. I'll change that.
 
-> Anyway, Tony, is there newer version of this patchset? It would be
-> good to get something in...
+>> > > +%YAML 1.2
+>> > > +---
+>> > > +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
+>> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> > > +
+>> > > +title: Kontron's sl28cpld board management controller
+>> >
+>> > "S128CPLD" ?
+>> 
+>> still not, its sl28cpld, think of a project/code name, not the product
+>> appended with CPLD.
+>> 
+>> > "Board Management Controller (BMC)" ?
+>> 
+>> sounds like IPMI, which I wanted to avoid.
+> 
+> Is there a datasheet?
 
-Sorry it will likely be few more weeks before I can look at this
-stuff again.
+No there isn't.
 
-> Can I help somehow?
+>> > > +maintainers:
+>> > > +  - Michael Walle <michael@walle.cc>
+>> > > +
+>> > > +description: |
+>> > > +  The board management controller may contain different IP blocks
+>> > > like
+>> > > +  watchdog, fan monitoring, PWM controller, interrupt controller
+>> > > and a
+>> > > +  GPIO controller.
+>> > > +
+>> > > +properties:
+>> > > +  compatible:
+>> > > +    const: kontron,sl28cpld-r1
+>> >
+>> > We don't usually code revision numbers in compatible strings.
+>> >
+>> > Is there any way to pull this from the H/W?
+>> 
+>> No, unfortunately you can't. And I really want to keep that, in case
+>> in the future there are some backwards incompatible changes.
+> 
+> Rob,
+> 
+> I know you reviewed this already, but you can give your opinion on
+> this specifically please?  I know that we have pushed back on this in
+> the past.
 
-I think I'm pretty clear on what needs to be done regarding this
-patchset. Probably taking a look at if we could implement a
-minimal raw /dev/gsmtty* read/write access in ofono using ell
-instead of gatchat would help most :)
+Oh, come one. That is an arbitrary string. "sl28cpld-r1" is the first
+implementation of this. A future "sl28cpld-r2" might look completely
+different and might not suite the simple MFD at all. "sl28cpld" is
+a made up name - as "sl28cpld-r1" is, too.
 
-So something that mbim modem is already doing I think, sorry have
-not had a chance to look at that either.
-
-The /dev/gsmtty* devices should not change even with the further
-changes to this patchset.
-
-Regards,
-
-Tony
+-michael
