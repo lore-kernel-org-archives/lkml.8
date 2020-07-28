@@ -2,100 +2,97 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10957C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B620EC433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D92662065E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595938313;
-	bh=5FXUPD3uMaggwhRl/CQq0zBP266WPWdILicuQw/Htqk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P6ARtDXG5YmcS7KUSy3f3xT23lH7PVIBprRqqc+A3evXDRgXIhbFGz9U8hMPwHqVu
-	 4XgDAJoYgpk7agtZ43JuldK0ghGU5pwysZiu8fjQyUWVwkgaPBHc+VGd7SWf+e9OAO
-	 IkBpUIMJbel6S46BSGoU+4MzgW6MT+lYjx+yns08=
+	by mail.kernel.org (Postfix) with ESMTP id 9DF65206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729488AbgG1MLw (ORCPT
+        id S1729502AbgG1MNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:11:52 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45998 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728896AbgG1MLf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:11:35 -0400
-Received: by mail-lj1-f193.google.com with SMTP id r19so20819382ljn.12;
-        Tue, 28 Jul 2020 05:11:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HZihSth8sxHseb5CAqThMzv8CFkUGVPv5HlzdDNm7OM=;
-        b=GDqVYmqogkSDDTnW7Z/rcVxLVf3JdisDrRurzlb9Mz5g99op6ls+PFvEqGYF4t7GcG
-         j+dYZJNyn4FN3+trOW8w1BVjL4bMAvmSWA/gEg2dgKzv17gA8x5ttSIuXl1hmeaEjUM4
-         pBhYNxMZHvj0OKu22Tl2tXRIN03GloifSaAtHebyQsmfMeWT+YKNzNMp7akA9UhvSdhv
-         UT0zS0j4yGFu3VlUIjMLrUndeFE27fK9aUtBWZdEsGLosVqNaZJ87FEJse03I3EbtHb2
-         caGR5FAkusyyEUrxh1qbrDk8HJgT/lCRkyJlYQkORZpAN/FYjHQCPxiyGMg+vYRV/Pqs
-         nQ7w==
-X-Gm-Message-State: AOAM533ffAb/ee3XL+UXPxcVDY5b083UrAshNGwDQJAvHa8gjbLYSeEt
-        0zgqKDAlGQMTH1ky9sU0+C8=
-X-Google-Smtp-Source: ABdhPJyrQt/ZrM783lj6kRb0W8svGfeXFa1wCBVVs2p98sADauOkMGa8ifznUUChWFLcrJmuV79hgA==
-X-Received: by 2002:a2e:9555:: with SMTP id t21mr12800427ljh.194.1595938292488;
-        Tue, 28 Jul 2020 05:11:32 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id g19sm3749699lfd.28.2020.07.28.05.11.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 05:11:30 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@xi.terra>)
-        id 1k0OS6-0003Ds-CH; Tue, 28 Jul 2020 14:11:26 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Woojung Huh <woojung.huh@microchip.com>
-Cc:     Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>,
-        "Woojung . Huh @ microchip . com" <Woojung.Huh@microchip.com>
-Subject: [PATCH net 2/3] net: lan78xx: fix transfer-buffer memory leak
-Date:   Tue, 28 Jul 2020 14:10:30 +0200
-Message-Id: <20200728121031.12323-3-johan@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200728121031.12323-1-johan@kernel.org>
-References: <20200728121031.12323-1-johan@kernel.org>
+        Tue, 28 Jul 2020 08:13:16 -0400
+Received: from mailout08.rmx.de ([94.199.90.85]:43547 "EHLO mailout08.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728896AbgG1MNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:13:16 -0400
+Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout08.rmx.de (Postfix) with ESMTPS id 4BGFtw4DS3zMvj4;
+        Tue, 28 Jul 2020 14:13:12 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin01.retarus.com (Postfix) with ESMTPS id 4BGFtM6DLyz2xbN;
+        Tue, 28 Jul 2020 14:12:43 +0200 (CEST)
+Received: from n95hx1g2.localnet (192.168.54.29) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 28 Jul
+ 2020 14:03:31 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     David Laight <David.Laight@aculab.com>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] eeprom: at25: set minimum read/write access stride to 1
+Date:   Tue, 28 Jul 2020 14:03:30 +0200
+Message-ID: <2379124.UCELOXW4Ax@n95hx1g2>
+Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+In-Reply-To: <02cb3be60abf4a54affe239009c6e157@AcuMS.aculab.com>
+References: <20200728092959.24600-1-ceggers@arri.de> <2225645.EMaFvj1lSc@n95hx1g2> <02cb3be60abf4a54affe239009c6e157@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Originating-IP: [192.168.54.29]
+X-RMX-ID: 20200728-141253-4BGFtM6DLyz2xbN-0@kdin01
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The interrupt URB transfer-buffer was never freed on disconnect or after
-probe errors.
+On Tuesday, 28 July 2020, 13:20:15 CEST, David Laight wrote:
+> From: Christian Eggers
+> 
+> > &spi {
+> >     ....
+> >     fram: fram@0 {
+> >     ...
+> >         mac_address_fec2: mac-address@126 {
+> >             reg = <0x126 6>;
+> >         };
+> >     ...
+> >     };
+> > };
+> 
+> 
+> Hmmmm.... the 'stride' only constrains the alignment of 'cells'.
+> (ie address ranges from the device tree.)
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-Cc: Woojung.Huh@microchip.com <Woojung.Huh@microchip.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/net/usb/lan78xx.c | 1 +
- 1 file changed, 1 insertion(+)
+My mac-address is not aligned to 4 bytes...
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index d7162690e3f3..ee062b27cfa7 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -3788,6 +3788,7 @@ static int lan78xx_probe(struct usb_interface *intf,
- 			usb_fill_int_urb(dev->urb_intr, dev->udev,
- 					 dev->pipe_intr, buf, maxp,
- 					 intr_complete, dev, period);
-+			dev->urb_intr->transfer_flags |= URB_FREE_BUFFER;
- 		}
- 	}
- 
--- 
-2.26.2
+> It looks as though you can open the entire NVMEM device and
+> then do reads from byte offsets.
+> The 'stride' and 'word_size' are then not checked!
+
+When I set back the stride to 4, I get the following errors:
+[    6.998788] 000: nvmem spi0.00: cell mac-address unaligned to nvmem stride 4
+[    6.998902] 000: at25: probe of spi0.0 failed with error -22
+...
+[    7.146454] 000: fec 20b4000.ethernet: Invalid MAC address: 00:00:00:00:00:00
+[    7.146480] 000: fec 20b4000.ethernet: Using random MAC address: 6e:9d:37:49:6d:15
+
+> Actually it might be that before 01973a01f9ec3 byte aligned
+> 'cells' were allowed.
+
+I use linux-5.4.x (latest), the mentioned patch has been included long time ago.
+
+regards
+Christian
+
+
 
