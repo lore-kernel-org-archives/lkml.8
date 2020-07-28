@@ -2,90 +2,191 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A8CC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA66020792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D4B2065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:14:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="zRqLODBQ"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="lYECkTWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731282AbgG1QNJ (ORCPT
+        id S1731323AbgG1QOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:13:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51706 "EHLO
+        Tue, 28 Jul 2020 12:14:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730586AbgG1QNI (ORCPT
+        with ESMTP id S1730586AbgG1QOO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:13:08 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2FA1C0619D2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:13:08 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id z3so6432879ilh.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:13:08 -0700 (PDT)
+        Tue, 28 Jul 2020 12:14:14 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8938C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:14:13 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x9so10119612plr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:14:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bNCg05tz8T72EfbSHUoOieVHqqb0riUeyvEBdt6ssUM=;
-        b=zRqLODBQdmGL+KkPjeEEQSogroxZboQc6kVDb/r8scjUQ6sGp2YTamenSoheM1wlLf
-         nA76+rvaUPd7MDUuJ1LHgS+mtm00OI7G3gOCgKPBm1eF3MVGMnl+BbIG0x+OlItmlQu7
-         VAilduQlrQNaA6sFrnqTgaw7q0Dgl2sx/uPSKIhTXag0Z68ccFn7crG9fWf1m+JHlIJW
-         yWVonxz6q8KBdNxKRLPxp7+315BKGfTxF+dBHu0sHutbBdqivmUxoKbxYU07jReMfkFn
-         MOpK1aOnBU7aAzMkod2ic1D0bxeWFBv+l+ul7e0zuIXUOmcoNdpE74V5JhKnUS0rsK1P
-         QHbA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version;
+        bh=LM61k2ikWu/4PDtBuk+atYWJDPZ8cm2dVOG+FrQjnU8=;
+        b=lYECkTWvN7PAfxXPtZpbi9AGD7s1qBtivJ7EOU4OOgX3CR1cEuQzCJL2e9toYv3CyX
+         4IrNsOF8h/4WieT7/WwURBJdMn4FoajGiZx/IK/AgbTE+PiZWmgGU9tNaY46PUBBgcDD
+         tdD48+tGYs832NSmG7hjyQPrBFVkRVR+JWEbs5IsBWGHwA42BhoIOucrqp9zA+13IhYk
+         /rW4WxE5GXD7F2FqRd1U1axtIjcM06dQqy/qMTz6xASB69eGEFg8MYwCbliWn53Pjh5s
+         Bp/MJ/86XovzaDiQowxTdhZMS2CsvMxO++X/j49jFrf/c0BghrMmmTQ175oU1TN2hB4x
+         IQdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bNCg05tz8T72EfbSHUoOieVHqqb0riUeyvEBdt6ssUM=;
-        b=YgPYtn6t9qjBNeSDvnVy+6H061qYd2g/VF3V6genDGj8EzlnuiwbCRz+VoYc6uY0qL
-         LzSL8Jlklj8FzvlvoDfsRVgi5o76lGpdPClvefjRanFesSpGvAW+4pd80byDdXUwkVh7
-         ilBeDqA4rm0PlCxtJaMwJDPBaaHeiYK9l1errPe9eco/rUOJqaq2ZNIahqEe+ZCxBq8r
-         wi7BVqXvO12H0Tyg2TmnIWSOWFVAGLnv70hx24WgfXfJSgxmYmI7D4x2iBlM7cAuBVTz
-         yWhofDXnWCp/rzMB9OumA/QA+qULM40jlKwmR3VHFYdWsQcG6erVfuWBAQLd/p3MO8Vk
-         +w/Q==
-X-Gm-Message-State: AOAM531qv3WpWjBbePef7ozmaFLJjZTotiAIEj8weeviQKwNa74gAVx/
-        HF93n5z4oh48LaS7qUc01LioYUH7BQc=
-X-Google-Smtp-Source: ABdhPJygWd3DZFbqrmNj+NlTJncfFZ4Jk6PoWI5sJWANGD2rMWY5YmMV6WXHLsnjoXhITX9avqgECg==
-X-Received: by 2002:a92:b112:: with SMTP id t18mr20855664ilh.172.1595952787893;
-        Tue, 28 Jul 2020 09:13:07 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id 4sm10149248ilt.6.2020.07.28.09.13.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 09:13:07 -0700 (PDT)
-Subject: Re: [PATCH] block: Remove callback typedefs for blk_mq_ops
-To:     Daniel Wagner <dwagner@suse.de>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200728160506.92926-1-dwagner@suse.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <7a26c550-934b-a188-b910-3d21d006df41@kernel.dk>
-Date:   Tue, 28 Jul 2020 10:13:06 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version;
+        bh=LM61k2ikWu/4PDtBuk+atYWJDPZ8cm2dVOG+FrQjnU8=;
+        b=PU/VX9+RNPep/UKLAyy5NJwhagx9O9GYPWGc0yjAP19+oUc0pnllOy6oYGdaKEE6uw
+         s6H36LfF+Bs5zEhmRhaddaGxfGHUtLJTV40/4MobKJ5XabYPzOcQu0YMgRrOPKmkB55S
+         YyTyIiB1oNkaUOPZez4tniS6x95pBeuPgIGzi5R0obht7vp5Tq9IcE8OdwzDXyOiDezX
+         6Lng61COInQfUiXtsvn0LUGKTRouwRXO0k6+KYoYZH5K5K74Aaw4mu205VctyavS+wQv
+         8j5AyQY+GYvkX2tUt5GDQ4ESMoIOc8LWYCF5BUEVs0/+AVJjv6+gYs8BgO8J9PsOWIP5
+         56yw==
+X-Gm-Message-State: AOAM530b1+rFmGQ59UchsV30p2J7pS437D+HKFz7vIzTmhw3uZLRCpIk
+        znlspB1xpyhmbzFnyQijPO3Guw==
+X-Google-Smtp-Source: ABdhPJwSq4YsQKEHvtgYys3+NoNnQ/+4rf67PIAOw8VRQUniGfxOtIEPNBfv0NBV4oSR+f44/TJnlQ==
+X-Received: by 2002:a17:902:e903:: with SMTP id k3mr24224107pld.155.1595952853080;
+        Tue, 28 Jul 2020 09:14:13 -0700 (PDT)
+Received: from [192.168.1.102] (c-24-20-148-49.hsd1.or.comcast.net. [24.20.148.49])
+        by smtp.gmail.com with ESMTPSA id 4sm18301216pgk.68.2020.07.28.09.14.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Jul 2020 09:14:12 -0700 (PDT)
+From:   "Sean V Kelley" <sean.v.kelley@intel.com>
+To:     "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>
+Cc:     bhelgaas@google.com, rjw@rjwysocki.net,
+        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Raj, Ashok" <ashok.raj@intel.com>
+Subject: Re: [RFC PATCH 5/9] PCI/AER: Apply function level reset to RCiEP on
+ fatal error
+Date:   Tue, 28 Jul 2020 09:14:11 -0700
+X-Mailer: MailMate (1.13.1r5671)
+Message-ID: <90E63E9B-DCD3-4325-B1FC-FE5C72BA191B@intel.com>
+In-Reply-To: <a79c227f0913438cb5a94dc80a075a7c@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+ <20200724172223.145608-6-sean.v.kelley@intel.com>
+ <20200727121726.000072a8@Huawei.com>
+ <a79c227f0913438cb5a94dc80a075a7c@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200728160506.92926-1-dwagner@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/20 10:05 AM, Daniel Wagner wrote:
-> No need to define typedefs for the callbacks, because there is not a
-> single user except blk_mq_ops.
+On 28 Jul 2020, at 6:27, Zhuo, Qiuxu wrote:
 
-Concept looks fine to me, but you're mixing indentations a bit. Just
-remove the indentation bits, we don't need them here.
+>> From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+>> Sent: Monday, July 27, 2020 7:17 PM
+>> To: Kelley, Sean V <sean.v.kelley@intel.com>
+>> Cc: bhelgaas@google.com; rjw@rjwysocki.net; ashok.raj@kernel.org; 
+>> Luck,
+>> Tony <tony.luck@intel.com>;
+>> sathyanarayanan.kuppuswamy@linux.intel.com; 
+>> linux-pci@vger.kernel.org;
+>> linux-kernel@vger.kernel.org; Zhuo, Qiuxu <qiuxu.zhuo@intel.com>
+>> Subject: Re: [RFC PATCH 5/9] PCI/AER: Apply function level reset to 
+>> RCiEP
+>> on fatal error
+>>
+>> On Fri, 24 Jul 2020 10:22:19 -0700
+>> Sean V Kelley <sean.v.kelley@intel.com> wrote:
+>>
+>>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>>>
+>>> Attempt to do function level reset for an RCiEP associated with an
+>>> RCEC device on fatal error.
+>>
+>> I'd like to understand more on your reasoning for flr here.
+>> Is it simply that it is all we can do, or is there some basis in a 
+>> spec
+>> somewhere?
+>>
+>
+> Yes. Though there isn't the link reset for the RCiEP here, I think we 
+> should still be able to reset the RCiEP via FLR on fatal error, if the 
+> RCiEP supports FLR.
+>
+> -Qiuxu
+>
 
--- 
-Jens Axboe
+Also see PCIe 5.0-1, Sec. 6.6.2 Function Level Reset (FLR)
 
+Implementation of FLR is optional (not required), but is strongly 
+recommended. For an example use case consider CXL. Function 0 DVSEC 
+instances control for the CXL functionality of the entire CXL device. 
+FLR may succeed in recovering from CXL.io domain errors.
+
+Thanks,
+
+Sean
+
+>>>
+>>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>>> ---
+>>>  drivers/pci/pcie/err.c | 31 ++++++++++++++++++++++---------
+>>>  1 file changed, 22 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c index
+>>> 044df004f20b..9b3ec94bdf1d 100644
+>>> --- a/drivers/pci/pcie/err.c
+>>> +++ b/drivers/pci/pcie/err.c
+>>> @@ -170,6 +170,17 @@ static void pci_walk_dev_affected(struct
+>> pci_dev *dev, int (*cb)(struct pci_dev
+>>>  }
+>>>  }
+>>>
+>>> +static enum pci_channel_state flr_on_rciep(struct pci_dev *dev) {
+>>> +if (!pcie_has_flr(dev))
+>>> +return PCI_ERS_RESULT_NONE;
+>>> +
+>>> +if (pcie_flr(dev))
+>>> +return PCI_ERS_RESULT_DISCONNECT;
+>>> +
+>>> +return PCI_ERS_RESULT_RECOVERED;
+>>> +}
+>>> +
+>>>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>>  enum pci_channel_state state,
+>>>  pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
+>> @@ -191,15
+>>> +202,17 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>>  if (state == pci_channel_io_frozen) {
+>>>  pci_walk_dev_affected(dev, report_frozen_detected,
+>> &status);
+>>>  if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
+>>> -pci_warn(dev, "link reset not possible for RCiEP\n");
+>>> -status = PCI_ERS_RESULT_NONE;
+>>> -goto failed;
+>>> -}
+>>> -
+>>> -status = reset_link(dev);
+>>> -if (status != PCI_ERS_RESULT_RECOVERED) {
+>>> -pci_warn(dev, "link reset failed\n");
+>>> -goto failed;
+>>> +status = flr_on_rciep(dev);
+>>> +if (status != PCI_ERS_RESULT_RECOVERED) {
+>>> +pci_warn(dev, "function level reset failed\n");
+>>> +goto failed;
+>>> +}
+>>> +} else {
+>>> +status = reset_link(dev);
+>>> +if (status != PCI_ERS_RESULT_RECOVERED) {
+>>> +pci_warn(dev, "link reset failed\n");
+>>> +goto failed;
+>>> +}
+>>>  }
+>>>  } else {
+>>>  pci_walk_dev_affected(dev, report_normal_detected,
+>> &status);
+>>
