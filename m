@@ -2,86 +2,106 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00B8C433F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D99BC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8862083E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:09:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595956153;
-	bh=UqJi1Cd1ki/EcIWIXcChXTjP/XpNmsjxdc58Fdu+XQ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xy4brA3L92720Dp+VwAeYF9SB4W+4q8WptGn3VSuzLlX/Mzv2EdS3W7d6NgDS7/A3
-	 d58TTDkwBuQl0c6+xSZmJZBV089mwYF0zPxDNGPfcyfrOU8FLxtn9Et+FAkk4LrJDS
-	 JvQEPODBu9erl9jtlas8ZXrLvYo1jsP0gzN5ubmU=
+	by mail.kernel.org (Postfix) with ESMTP id 2825920786
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731889AbgG1RJM (ORCPT
+        id S1731909AbgG1RJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 13:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731510AbgG1RJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 13:09:10 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDD73207F5;
-        Tue, 28 Jul 2020 17:09:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595956149;
-        bh=UqJi1Cd1ki/EcIWIXcChXTjP/XpNmsjxdc58Fdu+XQ0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fs/MEgnTSxxCi5jA3YzqQTDPVc1zsYyTyPewoVynXtXG436QcvHVNBES/dt+LX63h
-         nRyXeUxTKE1IKYMh0KuPqyHnRkagxVZsSKrMRdVTm4q4wZJSXhaxpldwOKBOERXu1c
-         1Qmu0h6gsj3CVgNTM/6t8h91s00U9MemBEDjf1Nk=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/3] iommu: intel: Drop kerneldoc marker from regular comment
-Date:   Tue, 28 Jul 2020 19:08:58 +0200
-Message-Id: <20200728170859.28143-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200728170859.28143-1-krzk@kernel.org>
-References: <20200728170859.28143-1-krzk@kernel.org>
+        Tue, 28 Jul 2020 13:09:35 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:51838 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731070AbgG1RJf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 13:09:35 -0400
+Received: from 89-64-88-69.dynamic.chello.pl (89.64.88.69) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 834f0adb485bc348; Tue, 28 Jul 2020 19:09:33 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Francisco Jerez <currojerez@riseup.net>
+Subject: [PATCH] cpufreq: intel_pstate: Fix EPP setting via sysfs in active mode
+Date:   Tue, 28 Jul 2020 19:09:32 +0200
+Message-ID: <11585512.O9o76ZdvQC@kreacher>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix W=1 compile warnings (invalid kerneldoc):
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-    drivers/iommu/intel/dmar.c:389: warning: Function parameter or member 'header' not described in 'dmar_parse_one_drhd'
+Because intel_pstate_set_energy_pref_index() reads and writes the
+MSR_HWP_REQUEST register without using the cached value of it used by
+intel_pstate_hwp_boost_up() and intel_pstate_hwp_boost_down(), those
+functions may overwrite the value written by it and so the EPP value
+set via sysfs may be lost.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+To avoid that, make intel_pstate_set_energy_pref_index() take the
+cached value of MSR_HWP_REQUEST just like the other two routines
+mentioned above and update it with the new EPP value coming from
+user space in addition to updating the MSR.
+
+Note that the MSR itself still needs to be updated too in case
+hwp_boost is unset or the boosting mechanism is not active at the
+EPP change time.
+
+Fixes: e0efd5be63e8 ("cpufreq: intel_pstate: Add HWP boost utility and sched util hooks")
+Reported-by: Francisco Jerez <currojerez@riseup.net>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/iommu/intel/dmar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-index 93e6345f3414..ba47edf03941 100644
---- a/drivers/iommu/intel/dmar.c
-+++ b/drivers/iommu/intel/dmar.c
-@@ -380,7 +380,7 @@ dmar_find_dmaru(struct acpi_dmar_hardware_unit *drhd)
- 	return NULL;
- }
+This patch is on top of https://patchwork.kernel.org/patch/11689347/
+
+---
+ drivers/cpufreq/intel_pstate.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+Index: linux-pm/drivers/cpufreq/intel_pstate.c
+===================================================================
+--- linux-pm.orig/drivers/cpufreq/intel_pstate.c
++++ linux-pm/drivers/cpufreq/intel_pstate.c
+@@ -653,11 +653,12 @@ static int intel_pstate_set_energy_pref_
+ 		epp = cpu_data->epp_default;
  
--/**
-+/*
-  * dmar_parse_one_drhd - parses exactly one DMA remapping hardware definition
-  * structure which uniquely represent one DMA remapping hardware unit
-  * present in the platform
--- 
-2.17.1
+ 	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+-		u64 value;
+-
+-		ret = rdmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, &value);
+-		if (ret)
+-			return ret;
++		/*
++		 * Use the cached HWP Request MSR value, because the register
++		 * itself may be updated by intel_pstate_hwp_boost_up() or
++		 * intel_pstate_hwp_boost_down() at any time.
++		 */
++		u64 value = READ_ONCE(cpu_data->hwp_req_cached);
+ 
+ 		value &= ~GENMASK_ULL(31, 24);
+ 
+@@ -667,6 +668,12 @@ static int intel_pstate_set_energy_pref_
+ 			epp = epp_values[pref_index - 1];
+ 
+ 		value |= (u64)epp << 24;
++		/*
++		 * The only other updater of hwp_req_cached in the active mode,
++		 * intel_pstate_hwp_set(), is called under the same lock as this
++		 * function, so it cannot run in parallel with the update below.
++		 */
++		WRITE_ONCE(cpu_data->hwp_req_cached, value);
+ 		ret = wrmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, value);
+ 	} else {
+ 		if (epp == -EINVAL)
+
+
 
