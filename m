@@ -2,155 +2,96 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E22C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6995C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E861207CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16DC207CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:13:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GYq4C1ay"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgG1DIA convert rfc822-to-8bit (ORCPT
+        id S1726897AbgG1DNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 23:08:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40352 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726443AbgG1DIA (ORCPT
+        Mon, 27 Jul 2020 23:13:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbgG1DNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 23:08:00 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06S32QDY141305;
-        Mon, 27 Jul 2020 23:07:25 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32j2pawpaq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 23:07:25 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06S32nJZ142839;
-        Mon, 27 Jul 2020 23:07:24 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32j2pawp9a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 23:07:24 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06S355bO026407;
-        Tue, 28 Jul 2020 03:07:22 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 32gcy4jx40-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 03:07:22 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06S37J8N31130100
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jul 2020 03:07:19 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B9FE9A405E;
-        Tue, 28 Jul 2020 03:07:19 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A314FA404D;
-        Tue, 28 Jul 2020 03:07:13 +0000 (GMT)
-Received: from [9.79.218.184] (unknown [9.79.218.184])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 28 Jul 2020 03:07:13 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH] perf record: Set PERF_RECORD_SAMPLE if attr->freq is set.
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20200727065948.12201-1-irogers@google.com>
-Date:   Tue, 28 Jul 2020 08:37:11 +0530
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        David Sharp <dhsharp@google.com>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <FC944B00-A77C-48CE-8DD4-188E32DD6DBE@linux.vnet.ibm.com>
-References: <20200727065948.12201-1-irogers@google.com>
-To:     Ian Rogers <irogers@google.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_16:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- spamscore=0 impostorscore=0 mlxlogscore=999 clxscore=1011
- priorityscore=1501 mlxscore=0 suspectscore=0 lowpriorityscore=0
- phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007280017
+        Mon, 27 Jul 2020 23:13:05 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE6EC061794;
+        Mon, 27 Jul 2020 20:13:05 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id e64so19244056iof.12;
+        Mon, 27 Jul 2020 20:13:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hz8xM5EG8YqCl30H84RX4Zce87vdHqx8q6aTfAYbNMs=;
+        b=GYq4C1ayueu3YaNY7Q29/QMADd+OnfFRbkYgQdzY2xYHw24Q5vxPc7cTlnABNycv7A
+         3ghH4tyQe288lCG/sdL/4wqq9iRX/btMuXB4kvpjJziC4yNlWMI76o/Fu7odOOXBb0BJ
+         2IvO8Dp69DXU2lyoZ/wUp2kq4nDgQV86cjWVg5K3YBu3SyXFc9CUYgD69v5XSE2zWpAy
+         C4qOe91qKjTI3MDp+yZxEAWJQLCS5ZHw7I/9P4VK7sdhEHcwpi35UwS/sd1uB1gtjwcM
+         j6soCuJtM2T3yamDa4n7+1dYMgoo/DJdlGpWKNecJVG/0pEm06zWWG/YdllKhp4zabPC
+         hJ3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hz8xM5EG8YqCl30H84RX4Zce87vdHqx8q6aTfAYbNMs=;
+        b=sa3FA/37/QTibXS91eH2tQgmwOV48ckP/U88nusQ+Vn2FAUQgA9nQYJajuqvesk6hn
+         qRHke/vpSs0V1+QcEoKVcsVF824DFBpsrnYVDiNeUNgRcPTH83KOJJiOsHv8dYjIoJ0N
+         V/WcJB7UsFxh1kKkMG9PVRkbxAzo3zSjAQ8Va70C5jHTgszpLAkrX18haJIlrKll3w/P
+         9f7ZmBXtPDkTjvndsHoyNj0IQngzb0abRGxlTn45CFYjQn/OTrnsINhZ8GVwehlSDKb2
+         FAAjaZ6ql5ImiaucsSlD3FgVyx8shLBsReXXmuRth8oUGvLmtyjzdXxGKl5kU0/itEfb
+         1VzQ==
+X-Gm-Message-State: AOAM5305LYeUlLT+k5BEeWCZhm2J+ZnCwk7XkRztuu3RhjfDpzwSSNH8
+        9BGEldUckysORtzaAZIWkP4f8Mj8acfMUmSta+yuqgXr
+X-Google-Smtp-Source: ABdhPJxgByQf1Qeq05PZtZfnw/SNvK3nfbcBGTp9JuGmp7+rwgTypLX3I9z+0qlPrytghjzXash3tCfTaQZ9S0YOybI=
+X-Received: by 2002:a02:1d04:: with SMTP id 4mr30893707jaj.16.1595905985110;
+ Mon, 27 Jul 2020 20:13:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200727033810.28883-1-gaurav1086@gmail.com> <20200728021348.4116-1-gaurav1086@gmail.com>
+In-Reply-To: <20200728021348.4116-1-gaurav1086@gmail.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 27 Jul 2020 20:12:53 -0700
+Message-ID: <CAM_iQpWbT18cRfDc2f1wVUrS6QpOmPrZwBqaitD7545-itijfg@mail.gmail.com>
+Subject: Re: [PATCH] [net/ipv6] ip6_output: Add ipv6_pinfo null check
+To:     Gaurav Singh <gaurav1086@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "open list:NETWORKING [IPv4/IPv6]" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 27, 2020 at 7:14 PM Gaurav Singh <gaurav1086@gmail.com> wrote:
+>
+> Add return to fix build issue. Haven't reproduced this issue at
+> my end.
+>
+> My hypothesis is this: In function: ip6_xmit(), we have
+> const struct ipv6_pinfo *np = inet6_sk(sk); which returns NULL.
+>
+> Further down the function, there's a check:
+> if (np) hlimit = hp->htop_limit
 
+This check exists before git history, at that time 'sk' could be NULL,
+hence 'np', so it does not mean it is still necessary now.
 
-> On 27-Jul-2020, at 12:29 PM, Ian Rogers <irogers@google.com> wrote:
-> 
-> From: David Sharp <dhsharp@google.com>
-> 
-> evsel__config() would only set PERF_RECORD_SAMPLE if it set attr->freq
+I looked at all callers of ip6_xmit(), I don't see how it is called with
+a non-full socket, neither 'sk' could be NULL after
+commit b30bd282cbf5c46247a279a2e8d2aae027d9f1bf
+("[IPV6]: ip6_xmit: remove unnecessary NULL ptr check").
 
-Hi Ian,
-
-Commit message says PERF_RECORD_SAMPLE. But since we are setting period here, it has to say “PERF_SAMPLE_PERIOD” ?
-
-
-Thanks
-Athira 
-
-> from perf record options. When it is set by libpfm events, it would not
-> get set. This changes evsel__config to see if attr->freq is set outside of
-> whether or not it changes attr->freq itself.
-> 
-> Signed-off-by: David Sharp <dhsharp@google.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> tools/perf/util/evsel.c | 7 ++++++-
-> 1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index ef802f6d40c1..811f538f7d77 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -979,13 +979,18 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
-> 	if (!attr->sample_period || (opts->user_freq != UINT_MAX ||
-> 				     opts->user_interval != ULLONG_MAX)) {
-> 		if (opts->freq) {
-> -			evsel__set_sample_bit(evsel, PERIOD);
-> 			attr->freq		= 1;
-> 			attr->sample_freq	= opts->freq;
-> 		} else {
-> 			attr->sample_period = opts->default_interval;
-> 		}
-> 	}
-> +	/*
-> +	 * If attr->freq was set (here or earlier), ask for period
-> +	 * to be sampled.
-> +	 */
-> +	if (attr->freq)
-> +		evsel__set_sample_bit(evsel, PERIOD);
-> 
-> 	if (opts->no_samples)
-> 		attr->sample_freq = 0;
-> -- 
-> 2.28.0.rc0.142.g3c755180ce-goog
-> 
-> 
-> 
-
+Thanks.
