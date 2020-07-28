@@ -2,130 +2,103 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CD4C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4152C20672
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C412075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:21:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IMUXWR0r"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XuOd101Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgG1CVn (ORCPT
+        id S1726863AbgG1CV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:21:43 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:27044 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbgG1CVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 22:21:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595902901; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Nd3Ki8cCx7FejuxD0mDfmmNE6PX98h/D7XuxA2n5jFE=;
- b=IMUXWR0rUY4F6oaOCrbH87DUs/P892xXoVgf6dl4k9cmL/Kf3+PV+ySPXzKH+DkIwJY9lGHe
- /MBZCNuGrYedEPONLKq2+kCBxiUap5J05mwt52k+rmyudrjKmvPnfOZmYHBfEPg+rb1m5k5l
- yuYatwZysT/UbDMHpFGOgtcmzCg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5f1f8bb536e6de324e42f611 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 02:21:41
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D132FC433CB; Tue, 28 Jul 2020 02:21:40 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Mon, 27 Jul 2020 22:21:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgG1CV4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 22:21:56 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0A99C061794;
+        Mon, 27 Jul 2020 19:21:55 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B9333C433C6;
-        Tue, 28 Jul 2020 02:21:38 +0000 (UTC)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BG0md2Jm1z9sRW;
+        Tue, 28 Jul 2020 12:21:53 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595902914;
+        bh=nfrzytzibpbBRKo0fiL93fU+1sogFMuht34aTf1uoTA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XuOd101QIaTsN7AHtL8ziBfKkk/hShVxOPCQdP5h4ngI91q6io0AdTiC2xaLafKj6
+         5hwbrBVvGs9J6nTAGNm+IkMdfhFoIC7t37m3h2UBokHSlGplOkYtIzBzxLbH5r2jVc
+         jT/+AQD5zM/SxEA1YS4q90w/N/C7mgfHpvJdEdOcUyqvc/E4BrUX8fdoAgwGBrQJ2C
+         eFNGIr2I5SiBvrDGE37UBw/XnRjn/qBWiNwnxzURPRxVhFoFqy8CoTDcCp9YHurv3y
+         uRjHM2aUtP6BsyiICofJeyjqEUc4fXLVD/uHASUBEzd2GtJBPcNIgjhj84Nu2er7at
+         7AzpCk9a0AItg==
+Date:   Tue, 28 Jul 2020 12:21:52 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: Re: linux-next: build failure after merge of the printk tree
+Message-ID: <20200728122152.384a57d0@canb.auug.org.au>
+In-Reply-To: <20200728015119.GA11428@gondor.apana.org.au>
+References: <20200728114927.4590731f@canb.auug.org.au>
+        <20200728015119.GA11428@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jul 2020 10:21:38 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        sh425.lee@samsung.com, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 3/8] scsi: ufs-qcom: Fix schedule while atomic error in
- ufs_qcom_dump_dbg_regs
-In-Reply-To: <SN6PR04MB4640F4CEAB7F5FFA51648B6CFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <1595504787-19429-1-git-send-email-cang@codeaurora.org>
- <1595504787-19429-4-git-send-email-cang@codeaurora.org>
- <SN6PR04MB4640F4CEAB7F5FFA51648B6CFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
-Message-ID: <e828fd80f3fe9d0f64a5629eebd5a345@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: multipart/signed; boundary="Sig_/A2kUx_+7frIlU2WQN2.BnaQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Avri,
+--Sig_/A2kUx_+7frIlU2WQN2.BnaQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 2020-07-27 21:05, Avri Altman wrote:
->> Dumping testbus registers needs to sleep a bit intermittently as there 
->> are
->> too many of them. Skip them for those contexts where sleep is not 
->> allowed.
->> 
->> Signed-off-by: Can Guo <cang@codeaurora.org>
->> ---
->>  drivers/scsi/ufs/ufs-qcom.c | 15 +++++++++------
->>  1 file changed, 9 insertions(+), 6 deletions(-)
->> 
->> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
->> index 7da27ee..7831b2b 100644
->> --- a/drivers/scsi/ufs/ufs-qcom.c
->> +++ b/drivers/scsi/ufs/ufs-qcom.c
->> @@ -1651,13 +1651,16 @@ static void ufs_qcom_dump_dbg_regs(struct
->> ufs_hba *hba)
->>         ufshcd_dump_regs(hba, REG_UFS_SYS1CLK_1US, 16 * 4,
->>                          "HCI Vendor Specific Registers ");
->> 
->> -       /* sleep a bit intermittently as we are dumping too much data 
->> */
->>         ufs_qcom_print_hw_debug_reg_all(hba, NULL,
->> ufs_qcom_dump_regs_wrapper);
->> -       udelay(1000);
->> -       ufs_qcom_testbus_read(hba);
->> -       udelay(1000);
->> -       ufs_qcom_print_unipro_testbus(hba);
->> -       udelay(1000);
->> +
->> +       if (in_task()) {
->> +               /* sleep a bit intermittently as we are dumping too 
->> much data */
->> +               usleep_range(1000, 1100);
->> +               ufs_qcom_testbus_read(hba);
->> +               usleep_range(1000, 1100);
->> +               ufs_qcom_print_unipro_testbus(hba);
->> +               usleep_range(1000, 1100);
->> +       }
->>  }
-> How about moving the intermittent sleep out of the check if preemption
-> is disabled?
-> And maybe then you need to switch back to uedlay?
+Hi Herbert,
 
-I will just remove all the testbus prints in next version to save us 
-time here.
+On Tue, 28 Jul 2020 11:51:19 +1000 Herbert Xu <herbert@gondor.apana.org.au>=
+ wrote:
+>
+> This patch depends on two patches in the tips tree.  I presume
+> this build test was done without the tips tree, right?
 
-Thanks,
+Of course it was ...
 
-Can Guo.
+Each tree merged into linux-next should really be standalone (in case
+e.g. Linus does not take the other tree).  So to do what you want, you
+need those other 2 commits to be in a separate branch that both the tip
+tree and the printk tree can merge.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/A2kUx_+7frIlU2WQN2.BnaQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8fi8AACgkQAVBC80lX
+0Gx3Bwf/Rlr96rZSVFUEHoJuMrRV0GaMYS+tpWTx6clXrg5GZ5aq4JLYKDWO/t48
+5AWaxhhTEtRrZQROf3APsjKWVAZ2Y9ov/PB41nRzRiNg0hmCcYt9frqmnGeV1Lf7
+4ojeC20kXfKIZm3MpqJYyBeSRr4T86LAyhONn5Rt56zBVB99td/WjhzD+EDy+BQp
+hrDolR2a5t1ixzfwfTTzndWNdleKAMfPMbOfFIAdj2XQeOHDec+ivvSsoSq+l1lC
+bexGyW1eWHYH2nJqE9qDYtbT7UhbqSnNcOtzybhyru/mV0LL/FjOF2rL7hoCgFIa
+7ANwgsz/xrs80bie5hN7PbTy1hsMjg==
+=hTIn
+-----END PGP SIGNATURE-----
+
+--Sig_/A2kUx_+7frIlU2WQN2.BnaQ--
