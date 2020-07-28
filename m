@@ -2,335 +2,268 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12E2C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57777C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71BCA206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D90206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:40:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IuuT3eRB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="flBeWf4G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbgG1OiH (ORCPT
+        id S1730509AbgG1OkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:38:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37154 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730478AbgG1OiF (ORCPT
+        Tue, 28 Jul 2020 10:40:07 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31848 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730449AbgG1OkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:38:05 -0400
+        Tue, 28 Jul 2020 10:40:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595947083;
+        s=mimecast20190719; t=1595947204;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/9HJ/UB6ue7b4U1ejYNwm1Yc7m1JS9d+wZ3rPN6ArFo=;
-        b=IuuT3eRBCn9HRsvzTVwHsPPQjmkub+l5WRJIKGcnPmbGb4Yj+J8y7zhFvOE0TGmeLYOu/t
-        GapbircYrALfllEzH5u7gkIaXNA/irI6RwGe8JlUkI8F7qs1AkLfYJH18U8t0ZtYWoqFEu
-        h648OQa2drgMz936G6aynGlyzSnmmvM=
+         to:to:cc:mime-version:mime-version:content-type:content-type;
+        bh=n9RcmArQYWuTpAAdErmPZFmnkNv3sBLv+UXOnyAaRMc=;
+        b=flBeWf4GmJBqiKXv5waMi9rrPB8RaVDvZQyc5fwmTwRGC87hiq76yAvGt38h1dFDu7yzfH
+        QWdYmOmwLM1vcULB+nAnlXew1Jm39vy67aSVoIn8/60uYIvEmKSL14c3FNJm4Fm8Oipgnq
+        16y1zYUBE2YkEp0F2/IKC8epl+19T50=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-459--7RPfeetNfq7kpcFj2p2ng-1; Tue, 28 Jul 2020 10:38:00 -0400
-X-MC-Unique: -7RPfeetNfq7kpcFj2p2ng-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-160-WoCX-GzcPXGCAUZw2cnI1g-1; Tue, 28 Jul 2020 10:39:57 -0400
+X-MC-Unique: WoCX-GzcPXGCAUZw2cnI1g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C38A4800688;
-        Tue, 28 Jul 2020 14:37:58 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.195.70])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1CFA17BD60;
-        Tue, 28 Jul 2020 14:37:55 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Xu <peterx@redhat.com>, Michael Tsirkin <mst@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] KVM: x86: introduce KVM_MEM_PCI_HOLE memory
-Date:   Tue, 28 Jul 2020 16:37:40 +0200
-Message-Id: <20200728143741.2718593-3-vkuznets@redhat.com>
-In-Reply-To: <20200728143741.2718593-1-vkuznets@redhat.com>
-References: <20200728143741.2718593-1-vkuznets@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A724107BEF7;
+        Tue, 28 Jul 2020 14:39:56 +0000 (UTC)
+Received: from [10.10.115.102] (ovpn-115-102.rdu2.redhat.com [10.10.115.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4A2C819D7C;
+        Tue, 28 Jul 2020 14:39:51 +0000 (UTC)
+To:     linux-kernel@vger.kernel.org, KVM list <kvm@vger.kernel.org>,
+        wanpengli@tencent.com, Paolo Bonzini <pbonzini@redhat.com>,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        liran.alon@oracle.com, "frederic@kernel.org" <frederic@kernel.org>,
+        tglx@linutronix.de, Juri Lelli <juri.lelli@redhat.com>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Subject: WARNING: suspicious RCU usage - while installing a VM on a CPU listed
+ under nohz_full
+Organization: Red Hat Inc,
+Message-ID: <ece36eb1-253a-8ec6-c183-309c10bb35d5@redhat.com>
+Date:   Tue, 28 Jul 2020 10:39:49 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="cKA76uN3vpOZ7s5J449z384XSweVwhWxY"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PCIe config space can (depending on the configuration) be quite big but
-usually is sparsely populated. Guest may scan it by accessing individual
-device's page which, when device is missing, is supposed to have 'pci
-hole' semantics: reads return '0xff' and writes get discarded. Compared
-to the already existing KVM_MEM_READONLY, VMM doesn't need to allocate
-real memory and stuff it with '0xff'.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--cKA76uN3vpOZ7s5J449z384XSweVwhWxY
+Content-Type: multipart/mixed; boundary="aTJONYBsVsQ5tMycSC03DBOrrMr8uJuQs"
 
-Suggested-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- Documentation/virt/kvm/api.rst  | 19 +++++++++++-----
- arch/x86/include/uapi/asm/kvm.h |  1 +
- arch/x86/kvm/mmu/mmu.c          |  5 ++++-
- arch/x86/kvm/mmu/paging_tmpl.h  |  3 +++
- arch/x86/kvm/x86.c              | 10 ++++++---
- include/linux/kvm_host.h        |  7 +++++-
- include/uapi/linux/kvm.h        |  3 ++-
- virt/kvm/kvm_main.c             | 39 +++++++++++++++++++++++++++------
- 8 files changed, 68 insertions(+), 19 deletions(-)
+--aTJONYBsVsQ5tMycSC03DBOrrMr8uJuQs
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 644e5326aa50..fbbf533a331b 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -1241,6 +1241,7 @@ yet and must be cleared on entry.
-   /* for kvm_memory_region::flags */
-   #define KVM_MEM_LOG_DIRTY_PAGES	(1UL << 0)
-   #define KVM_MEM_READONLY	(1UL << 1)
-+  #define KVM_MEM_PCI_HOLE		(1UL << 2)
- 
- This ioctl allows the user to create, modify or delete a guest physical
- memory slot.  Bits 0-15 of "slot" specify the slot id and this value
-@@ -1268,12 +1269,18 @@ It is recommended that the lower 21 bits of guest_phys_addr and userspace_addr
- be identical.  This allows large pages in the guest to be backed by large
- pages in the host.
- 
--The flags field supports two flags: KVM_MEM_LOG_DIRTY_PAGES and
--KVM_MEM_READONLY.  The former can be set to instruct KVM to keep track of
--writes to memory within the slot.  See KVM_GET_DIRTY_LOG ioctl to know how to
--use it.  The latter can be set, if KVM_CAP_READONLY_MEM capability allows it,
--to make a new slot read-only.  In this case, writes to this memory will be
--posted to userspace as KVM_EXIT_MMIO exits.
-+The flags field supports the following flags: KVM_MEM_LOG_DIRTY_PAGES,
-+KVM_MEM_READONLY, KVM_MEM_READONLY:
-+- KVM_MEM_LOG_DIRTY_PAGES can be set to instruct KVM to keep track of writes to
-+  memory within the slot.  See KVM_GET_DIRTY_LOG ioctl to know how to use it.
-+- KVM_MEM_READONLY can be set, if KVM_CAP_READONLY_MEM capability allows it,
-+  to make a new slot read-only.  In this case, writes to this memory will be
-+  posted to userspace as KVM_EXIT_MMIO exits.
-+- KVM_MEM_PCI_HOLE can be set, if KVM_CAP_PCI_HOLE_MEM capability allows it,
-+  to create a new virtual read-only slot which will always return '0xff' when
-+  guest reads from it. 'userspace_addr' has to be set to NULL. This flag is
-+  mutually exclusive with KVM_MEM_LOG_DIRTY_PAGES/KVM_MEM_READONLY. All writes
-+  to this memory will be posted to userspace as KVM_EXIT_MMIO exits.
- 
- When the KVM_CAP_SYNC_MMU capability is available, changes in the backing of
- the memory region are automatically reflected into the guest.  For example, an
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index 17c5a038f42d..cf80a26d74f5 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -48,6 +48,7 @@
- #define __KVM_HAVE_XSAVE
- #define __KVM_HAVE_XCRS
- #define __KVM_HAVE_READONLY_MEM
-+#define __KVM_HAVE_PCI_HOLE_MEM
- 
- /* Architectural interrupt line count. */
- #define KVM_NR_INTERRUPTS 256
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 8597e8102636..c2e3a1deafdd 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3253,7 +3253,7 @@ static int kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, gfn_t gfn,
- 		return PG_LEVEL_4K;
- 
- 	slot = gfn_to_memslot_dirty_bitmap(vcpu, gfn, true);
--	if (!slot)
-+	if (!slot || (slot->flags & KVM_MEM_PCI_HOLE))
- 		return PG_LEVEL_4K;
- 
- 	max_level = min(max_level, max_page_level);
-@@ -4104,6 +4104,9 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
- 
- 	slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
- 
-+	if (!write && slot && (slot->flags & KVM_MEM_PCI_HOLE))
-+		return RET_PF_EMULATE;
-+
- 	if (try_async_pf(vcpu, slot, prefault, gfn, gpa, &pfn, write,
- 			 &map_writable))
- 		return RET_PF_RETRY;
-diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-index 5c6a895f67c3..27abd69e69f6 100644
---- a/arch/x86/kvm/mmu/paging_tmpl.h
-+++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -836,6 +836,9 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
- 
- 	slot = kvm_vcpu_gfn_to_memslot(vcpu, walker.gfn);
- 
-+	if (!write_fault && slot && (slot->flags & KVM_MEM_PCI_HOLE))
-+		return RET_PF_EMULATE;
-+
- 	if (try_async_pf(vcpu, slot, prefault, walker.gfn, addr, &pfn,
- 			 write_fault, &map_writable))
- 		return RET_PF_RETRY;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 95ef62922869..dc312b8bfa05 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3515,6 +3515,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_EXCEPTION_PAYLOAD:
- 	case KVM_CAP_SET_GUEST_DEBUG:
- 	case KVM_CAP_LAST_CPU:
-+	case KVM_CAP_PCI_HOLE_MEM:
- 		r = 1;
- 		break;
- 	case KVM_CAP_SYNC_REGS:
-@@ -10115,9 +10116,11 @@ static int kvm_alloc_memslot_metadata(struct kvm_memory_slot *slot,
- 		ugfn = slot->userspace_addr >> PAGE_SHIFT;
- 		/*
- 		 * If the gfn and userspace address are not aligned wrt each
--		 * other, disable large page support for this slot.
-+		 * other, disable large page support for this slot. Also,
-+		 * disable large page support for KVM_MEM_PCI_HOLE slots.
- 		 */
--		if ((slot->base_gfn ^ ugfn) & (KVM_PAGES_PER_HPAGE(level) - 1)) {
-+		if (slot->flags & KVM_MEM_PCI_HOLE || ((slot->base_gfn ^ ugfn) &
-+				      (KVM_PAGES_PER_HPAGE(level) - 1))) {
- 			unsigned long j;
- 
- 			for (j = 0; j < lpages; ++j)
-@@ -10179,7 +10182,8 @@ static void kvm_mmu_slot_apply_flags(struct kvm *kvm,
- 	 * Nothing to do for RO slots or CREATE/MOVE/DELETE of a slot.
- 	 * See comments below.
- 	 */
--	if ((change != KVM_MR_FLAGS_ONLY) || (new->flags & KVM_MEM_READONLY))
-+	if ((change != KVM_MR_FLAGS_ONLY) || (new->flags & KVM_MEM_READONLY) ||
-+	    (new->flags & KVM_MEM_PCI_HOLE))
- 		return;
- 
- 	/*
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 989afcbe642f..63c2d93ef172 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1081,7 +1081,12 @@ __gfn_to_memslot(struct kvm_memslots *slots, gfn_t gfn)
- static inline unsigned long
- __gfn_to_hva_memslot(struct kvm_memory_slot *slot, gfn_t gfn)
- {
--	return slot->userspace_addr + (gfn - slot->base_gfn) * PAGE_SIZE;
-+	if (likely(!(slot->flags & KVM_MEM_PCI_HOLE))) {
-+		return slot->userspace_addr +
-+			(gfn - slot->base_gfn) * PAGE_SIZE;
-+	} else {
-+		BUG();
-+	}
- }
- 
- static inline int memslot_id(struct kvm *kvm, gfn_t gfn)
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 2c73dcfb3dbb..59d631cbb71d 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -109,6 +109,7 @@ struct kvm_userspace_memory_region {
-  */
- #define KVM_MEM_LOG_DIRTY_PAGES	(1UL << 0)
- #define KVM_MEM_READONLY	(1UL << 1)
-+#define KVM_MEM_PCI_HOLE		(1UL << 2)
- 
- /* for KVM_IRQ_LINE */
- struct kvm_irq_level {
-@@ -1034,7 +1035,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_ASYNC_PF_INT 183
- #define KVM_CAP_LAST_CPU 184
- #define KVM_CAP_SMALLER_MAXPHYADDR 185
--
-+#define KVM_CAP_PCI_HOLE_MEM 186
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 2c2c0254c2d8..3f69ae711021 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1107,6 +1107,10 @@ static int check_memory_region_flags(const struct kvm_userspace_memory_region *m
- 	valid_flags |= KVM_MEM_READONLY;
- #endif
- 
-+#ifdef __KVM_HAVE_PCI_HOLE_MEM
-+	valid_flags |= KVM_MEM_PCI_HOLE;
-+#endif
-+
- 	if (mem->flags & ~valid_flags)
- 		return -EINVAL;
- 
-@@ -1284,11 +1288,26 @@ int __kvm_set_memory_region(struct kvm *kvm,
- 		return -EINVAL;
- 	if (mem->guest_phys_addr & (PAGE_SIZE - 1))
- 		return -EINVAL;
--	/* We can read the guest memory with __xxx_user() later on. */
--	if ((mem->userspace_addr & (PAGE_SIZE - 1)) ||
--	     !access_ok((void __user *)(unsigned long)mem->userspace_addr,
--			mem->memory_size))
-+
-+	/*
-+	 * KVM_MEM_PCI_HOLE is mutually exclusive with KVM_MEM_READONLY/
-+	 * KVM_MEM_LOG_DIRTY_PAGES.
-+	 */
-+	if ((mem->flags & KVM_MEM_PCI_HOLE) &&
-+	    (mem->flags & (KVM_MEM_READONLY | KVM_MEM_LOG_DIRTY_PAGES)))
- 		return -EINVAL;
-+
-+	if (!(mem->flags & KVM_MEM_PCI_HOLE)) {
-+		/* We can read the guest memory with __xxx_user() later on. */
-+		if ((mem->userspace_addr & (PAGE_SIZE - 1)) ||
-+		    !access_ok((void __user *)(unsigned long)mem->userspace_addr,
-+			       mem->memory_size))
-+			return -EINVAL;
-+	} else {
-+		if (mem->userspace_addr)
-+			return -EINVAL;
-+	}
-+
- 	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_MEM_SLOTS_NUM)
- 		return -EINVAL;
- 	if (mem->guest_phys_addr + mem->memory_size < mem->guest_phys_addr)
-@@ -1328,7 +1347,8 @@ int __kvm_set_memory_region(struct kvm *kvm,
- 	} else { /* Modify an existing slot. */
- 		if ((new.userspace_addr != old.userspace_addr) ||
- 		    (new.npages != old.npages) ||
--		    ((new.flags ^ old.flags) & KVM_MEM_READONLY))
-+		    ((new.flags ^ old.flags) & KVM_MEM_READONLY) ||
-+		    ((new.flags ^ old.flags) & KVM_MEM_PCI_HOLE))
- 			return -EINVAL;
- 
- 		if (new.base_gfn != old.base_gfn)
-@@ -1715,13 +1735,13 @@ unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
- 
- static bool memslot_is_readonly(struct kvm_memory_slot *slot)
- {
--	return slot->flags & KVM_MEM_READONLY;
-+	return slot->flags & (KVM_MEM_READONLY | KVM_MEM_PCI_HOLE);
- }
- 
- static unsigned long __gfn_to_hva_many(struct kvm_memory_slot *slot, gfn_t gfn,
- 				       gfn_t *nr_pages, bool write)
- {
--	if (!slot || slot->flags & KVM_MEMSLOT_INVALID)
-+	if (!slot || (slot->flags & (KVM_MEMSLOT_INVALID | KVM_MEM_PCI_HOLE)))
- 		return KVM_HVA_ERR_BAD;
- 
- 	if (memslot_is_readonly(slot) && write)
-@@ -2318,6 +2338,11 @@ static int __kvm_read_guest_page(struct kvm_memory_slot *slot, gfn_t gfn,
- 	int r;
- 	unsigned long addr;
- 
-+	if (unlikely(slot && (slot->flags & KVM_MEM_PCI_HOLE))) {
-+		memset(data, 0xff, len);
-+		return 0;
-+	}
-+
- 	addr = gfn_to_hva_memslot_prot(slot, gfn, NULL);
- 	if (kvm_is_error_hva(addr))
- 		return -EFAULT;
--- 
-2.25.4
+Hi,
+
+I have recently come across an RCU trace with the 5.8-rc7 kernel that has t=
+he
+debug configs enabled while installing a VM on a CPU that is listed under
+nohz_full.
+
+Based on some of the initial debugging, my impression is that the issue is
+triggered because of the fastpath that is meant to optimize the writes to x=
+2APIC
+ICR that eventually leads to a virtual IPI in fixed delivery mode, is getti=
+ng
+invoked from the quiescent state.
+
+Following is the RCU trace dump that I was getting:
+
+[=C2=A0 178.109535] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[=C2=A0 178.114027] WARNING: suspicious RCU usage
+[=C2=A0 178.118518] 5.8.0-rc7-upstream-+ #10 Not tainted
+[=C2=A0 178.123685] -----------------------------
+[=C2=A0 178.128176] arch/x86/kvm/lapic.c:269 suspicious rcu_dereference_che=
+ck() usage!
+[=C2=A0 178.136254]
+[=C2=A0 178.136254] other info that might help us debug this:
+[=C2=A0 178.136254]
+[=C2=A0 178.145205]
+[=C2=A0 178.145205] rcu_scheduler_active =3D 2, debug_locks =3D 1
+[=C2=A0 178.152506] 1 lock held by CPU 0/KVM/2959:
+[=C2=A0 178.157091]=C2=A0 #0: ffffc9000717b6f8 (&kvm->arch.apic_map_lock){+=
+.+.}-{3:3}, at:
+kvm_recalculate_apic_map+0x8b/0xdd0 [kvm]
+[=C2=A0 178.169207]
+[=C2=A0 178.169207] stack backtrace:
+[=C2=A0 178.174086] CPU: 18 PID: 2959 Comm: CPU 0/KVM Not tainted
+5.8.0-rc7-upstream-+ #10
+[=C2=A0 178.182539] Hardware name: Dell Inc. PowerEdge R430/0CN7X8, BIOS 2.=
+6.0 10/31/2017
+[=C2=A0 178.190895] Call Trace:
+[=C2=A0 178.193637]=C2=A0 dump_stack+0x9d/0xe0
+[=C2=A0 178.197379]=C2=A0 kvm_recalculate_apic_map+0x8ce/0xdd0 [kvm]
+[=C2=A0 178.203259]=C2=A0 ? kvm_lapic_reset+0x832/0xe50 [kvm]
+[=C2=A0 178.208459]=C2=A0 kvm_vcpu_reset+0x28/0x7b0 [kvm]
+[=C2=A0 178.213270]=C2=A0 kvm_arch_vcpu_create+0x830/0xb70 [kvm]
+[=C2=A0 178.218759]=C2=A0 kvm_vm_ioctl+0x11b1/0x1fe0 [kvm]
+[=C2=A0 178.223635]=C2=A0 ? mark_lock+0x144/0x19e0
+[=C2=A0 178.227757]=C2=A0 ? kvm_unregister_device_ops+0xe0/0xe0 [kvm]
+[=C2=A0 178.233698]=C2=A0 ? sched_clock+0x5/0x10
+[=C2=A0 178.237597]=C2=A0 ? sched_clock_cpu+0x18/0x1d0
+[=C2=A0 178.242087]=C2=A0 ? __lock_acquire+0xcf6/0x5010
+[=C2=A0 178.246686]=C2=A0 ? lockdep_hardirqs_on_prepare+0x550/0x550
+[=C2=A0 178.252429]=C2=A0 ? lockdep_hardirqs_on_prepare+0x550/0x550
+[=C2=A0 178.258177]=C2=A0 ? sched_clock+0x5/0x10
+[=C2=A0 178.262074]=C2=A0 ? sched_clock_cpu+0x18/0x1d0
+[=C2=A0 178.266556]=C2=A0 ? find_held_lock+0x3a/0x1c0
+[=C2=A0 178.270953]=C2=A0 ? ioctl_file_clone+0x120/0x120
+[=C2=A0 178.275630]=C2=A0 ? selinux_file_ioctl+0x98/0x570
+[=C2=A0 178.280405]=C2=A0 ? selinux_file_mprotect+0x5b0/0x5b0
+[=C2=A0 178.285569]=C2=A0 ? rcu_tasks_wait_gp+0x6d1/0xa50
+[=C2=A0 178.290342]=C2=A0 ? rcu_read_lock_sched_held+0xe0/0xe0
+[=C2=A0 178.295608]=C2=A0 ? __fget_files+0x1f0/0x300
+[=C2=A0 178.299912]=C2=A0 ksys_ioctl+0xc0/0x110
+[=C2=A0 178.303719]=C2=A0 __x64_sys_ioctl+0x6f/0xb0
+[=C2=A0 178.307913]=C2=A0 do_syscall_64+0x51/0xb0
+[=C2=A0 178.311913]=C2=A0 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[=C2=A0 178.317557] RIP: 0033:0x7f6b9700d88b
+[=C2=A0 178.321551] Code: 0f 1e fa 48 8b 05 fd 95 2c 00 64 c7 00 26 00 00 0=
+0 48 c7 c0
+ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 0=
+1 f0
+ff ff 73 018
+[=C2=A0 178.342513] RSP: 002b:00007f6b8cbe9668 EFLAGS: 00000246 ORIG_RAX:
+0000000000000010
+[=C2=A0 178.350967] RAX: ffffffffffffffda RBX: 000055e8162d9000 RCX: 00007f=
+6b9700d88b
+[=C2=A0 178.358935] RDX: 0000000000000000 RSI: 000000000000ae41 RDI: 000000=
+000000000e
+[=C2=A0 178.366903] RBP: 000055e8162d9000 R08: 000055e8155ec4d0 R09: 000055=
+e8162d9000
+[=C2=A0 178.374871] R10: 000055e815d94ee0 R11: 0000000000000246 R12: 000055=
+e8162ad420
+[=C2=A0 178.382838] R13: 000055e8162d9000 R14: 00007ffedf043660 R15: 00007f=
+6b8cbe9800
+[=C2=A0 182.771858]
+[=C2=A0 182.773606] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[=C2=A0 182.778084] WARNING: suspicious RCU usage
+[=C2=A0 182.782564] 5.8.0-rc7-upstream-+ #10 Not tainted
+[=C2=A0 182.787719] -----------------------------
+[=C2=A0 182.792197] arch/x86/include/asm/trace/fpu.h:60 suspicious
+rcu_dereference_check() usage!
+[=C2=A0 182.801329]
+[=C2=A0 182.801329] other info that might help us debug this:
+[=C2=A0 182.801329]
+[=C2=A0 182.810268]
+[=C2=A0 182.810268] RCU used illegally from idle CPU!
+[=C2=A0 182.810268] rcu_scheduler_active =3D 2, debug_locks =3D 1
+[=C2=A0 182.822407] RCU used illegally from extended quiescent state!
+[=C2=A0 182.828824] 1 lock held by CPU 0/KVM/2959:
+[=C2=A0 182.833397]=C2=A0 #0: ffff88903f8500d0 (&vcpu->mutex){+.+.}-{3:3}, =
+at:
+kvm_vcpu_ioctl+0x172/0xb00 [kvm]
+[=C2=A0 182.838308]
+[=C2=A0 182.838308] stack backtrace:
+[=C2=A0 182.838313] CPU: 18 PID: 2959 Comm: CPU 0/KVM Tainted: G=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0
+5.8.0-rc7-upstream-+ #10
+[=C2=A0 182.838316] Hardware name: Dell Inc. PowerEdge R430/0CN7X8, BIOS 2.=
+6.0 10/31/2017
+[=C2=A0 182.838318] Call Trace:
+[=C2=A0 182.874318]=C2=A0 dump_stack+0x9d/0xe0
+[=C2=A0 182.878024]=C2=A0 switch_fpu_return+0x37c/0x410
+[=C2=A0 182.882602]=C2=A0 ? fpu__clear+0x1a0/0x1a0
+[=C2=A0 182.886700]=C2=A0 ? rcu_dynticks_eqs_enter+0x15/0x30
+[=C2=A0 182.891807]=C2=A0 vcpu_enter_guest+0x1854/0x3df0 [kvm]
+[=C2=A0 182.897121]=C2=A0 ? kvm_vcpu_reload_apic_access_page+0x60/0x60 [kvm=
+]
+[=C2=A0 182.903738]=C2=A0 ? lock_acquire+0x1ac/0xac0
+[=C2=A0 182.908062]=C2=A0 ? kvm_arch_vcpu_ioctl_run+0x1dc/0x13c0 [kvm]
+[=C2=A0 182.914107]=C2=A0 ? rcu_read_unlock+0x50/0x50
+[=C2=A0 182.918489]=C2=A0 ? rcu_read_lock_sched_held+0xaf/0xe0
+[=C2=A0 182.923788]=C2=A0 ? kvm_load_guest_fpu+0x94/0x350 [kvm]
+[=C2=A0 182.929177]=C2=A0 ? kvm_load_guest_fpu+0x94/0x350 [kvm]
+[=C2=A0 182.934528]=C2=A0 ? __local_bh_enable_ip+0x123/0x1a0
+[=C2=A0 182.939635]=C2=A0 kvm_arch_vcpu_ioctl_run+0x310/0x13c0 [kvm]
+[=C2=A0 182.945529]=C2=A0 kvm_vcpu_ioctl+0x3ee/0xb00 [kvm]
+[=C2=A0 182.950406]=C2=A0 ? sched_clock+0x5/0x10
+[=C2=A0 182.954336]=C2=A0 ? kvm_set_memory_region+0x40/0x40 [kvm]
+[=C2=A0 182.959897]=C2=A0 ? ioctl_file_clone+0x120/0x120
+[=C2=A0 182.964572]=C2=A0 ? selinux_file_ioctl+0x98/0x570
+[=C2=A0 182.969347]=C2=A0 ? selinux_file_mprotect+0x5b0/0x5b0
+[=C2=A0 182.974507]=C2=A0 ? rcu_tasks_wait_gp+0x710/0xa50
+[=C2=A0 182.979280]=C2=A0 ? rcu_read_lock_sched_held+0xe0/0xe0
+[=C2=A0 182.984547]=C2=A0 ? __fget_files+0x1f0/0x300
+[=C2=A0 182.988852]=C2=A0 ksys_ioctl+0xc0/0x110
+[=C2=A0 182.992660]=C2=A0 __x64_sys_ioctl+0x6f/0xb0
+[=C2=A0 182.996853]=C2=A0 do_syscall_64+0x51/0xb0
+[=C2=A0 183.000849]=C2=A0 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[=C2=A0 183.006491] RIP: 0033:0x7f6b9700d88b
+[=C2=A0 183.010486] Code: 0f 1e fa 48 8b 05 fd 95 2c 00 64 c7 00 26 00 00 0=
+0 48 c7 c0
+ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 0=
+1 f0
+ff ff 73 018
+[=C2=A0 183.031446] RSP: 002b:00007f6b8cbe9618 EFLAGS: 00000246 ORIG_RAX:
+0000000000000010
+[=C2=A0 183.039901] RAX: ffffffffffffffda RBX: 000055e8162d9000 RCX: 00007f=
+6b9700d88b
+[=C2=A0 183.047868] RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 000000=
+0000000018
+[=C2=A0 183.055826] RBP: 000055e8162d909b R08: 000055e8155ec1d0 R09: 000055=
+e815db1620
+[=C2=A0 183.063784] R10: 0000000000000000 R11: 0000000000000246 R12: 000055=
+e8151f6290
+[=C2=A0 183.071752] R13: 000055e8155c81c0 R14: 00007ffedf043660 R15: 00007f=
+6b9c163000
+
+Please let me know if any other information is required.
+
+--=20
+Nitesh
+
+
+--aTJONYBsVsQ5tMycSC03DBOrrMr8uJuQs--
+
+--cKA76uN3vpOZ7s5J449z384XSweVwhWxY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl8gOLUACgkQo4ZA3AYy
+oznjIw//cdB8faGNVptH+3XAklgpKq65lAgc/pXBqHp2NqeWtOv/J8RiFXpDtZcS
+vl2XbQHggOvcSXIGv9ygqwfWSkdx8d7rt1BCg7ErXqHEVbY0B9PvevCQr10QnQxB
+aXn5mEqc55sk8iX/NgBZQF9oIiQEB8AzlB7IJVWslQ+2yp940QSCP1s3UAJat0Sp
+dpqfeABd3waQZYHGY9IgJ+8TeA2Sch6nlCg9TTZHEyL2xKfZOT+eZpX6KDM+7xHA
+qQnMpw5PqM9F+3hHgFYNw0Fgc3Mj1342F1NqSrtdlEzDrS4I17vLJQXpTiQSK78+
+C2Qtd3e8TqLHXdZWhKiWTfdVtI4Xwoq4SQtzombs4jrzM591Qgjykp568JBQ/r0R
+AAh9QZHtvrAeOZ90cvoSR/lumFDc8ImTnCILL5psKMzopTMq5GzR0zIPWGbGp2JY
+6zq5OAE9H0IPZjP9CLGGGoJdWwNM9UQXFN39tXiYRG6rUzdZwdTua27Vh884iDBB
+YgOEwcONMZQY/RJBidn7fAnba//v1bKQPpejhAxc+3ky8th21WUH64lwr/06P3Ag
+Y/vOJROzQYUWjyIK5rzNtYwoRbBxa17WmT9O9JmSQ5pcz5XAHNG2mNke6EhX42B5
+Efb7gx8I4M52+ZM58KlZzDefkc4Mn9ZyJqd41Otlhed+frow5ps=
+=/N2c
+-----END PGP SIGNATURE-----
+
+--cKA76uN3vpOZ7s5J449z384XSweVwhWxY--
 
