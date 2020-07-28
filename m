@@ -2,1531 +2,414 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 686A6C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7D2C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3267220768
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80EB420768
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:15:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QDMxgktV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729234AbgG1VOQ (ORCPT
+        id S1729392AbgG1VPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 17:14:16 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:33504 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728728AbgG1VOP (ORCPT
+        Tue, 28 Jul 2020 17:15:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42310 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728149AbgG1VP3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 17:14:15 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 1717A8046E;
-        Tue, 28 Jul 2020 23:13:58 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 23:13:56 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Kevin Tang <kevin3.tang@gmail.com>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        zhang.lyra@gmail.com
-Subject: Re: [PATCH RFC v6 4/6] drm/sprd: add Unisoc's drm display controller
- driver
-Message-ID: <20200728211356.GE1277651@ravnborg.org>
-References: <1595930879-2478-1-git-send-email-kevin3.tang@gmail.com>
- <1595930879-2478-5-git-send-email-kevin3.tang@gmail.com>
+        Tue, 28 Jul 2020 17:15:29 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61049C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 14:15:29 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t10so5352204plz.10
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 14:15:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lwUGsarabHI4X09wgNfzqdINlTrxyybInAeXBkRDQe8=;
+        b=QDMxgktV3Y3TbvlMkusPNnuEQrjQ1VXX/BEQTk8yY0uSF6TEUngmeJGGv2FjeTKQ9Y
+         DqoZK3VZ+Y6IaJqn/Ri0mOR6HJbFZ+iEkW9sbpNnwG18iFve8YRIeGFzjLbDw8L3o8iq
+         GBXomurEkOymDaH2RKnzSjtvi8RkiHHQjzVToQq0LvfO8BUHY6sMv2J3fiA1w3UqQn4A
+         xN71Vd4uFOQX3kgN1YbO0ZTahWEPbfah+6jLIf3xXjomduGJU6CEmU6XTT28cUOWB2lC
+         gz+LuBy8RfMgSIV9Je1dfD7zN3m/zjzt7ojKFUMxwjtpbtVOdT+qNHviGinkAo2xqYDz
+         /VSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lwUGsarabHI4X09wgNfzqdINlTrxyybInAeXBkRDQe8=;
+        b=CWT2kQJj6EhzLwNG0IZbhA/4CmS2ND4O9Pn52egoYQvmP4PuCPjFFsYvMZFXIvcF7D
+         QDJ4pT97+P43kwlxM9jv896xEwpqO7LUkepiK7NxnH1YeS8bpljf1RvWvYSWMdkJoCPt
+         Y5+63JYvxB2wppP470RZB8tflSWdZ+CCPZU2VWVa5AK+xNeRxrKOa3l5TYMGPHJBgbCL
+         UN+K7X5cAg/T+DnPcKsAzvjTBWmJ6L/hc09DLbkd7dScW6fs7UqIKGO69zfh3L3qmMGH
+         I4z1WmOVX/aPIQOpfQX8ABr9g6k6vCDn5isuum3AexRj5I0W8UxoV3SnorfoMjJl0tyU
+         2zsg==
+X-Gm-Message-State: AOAM532qWQT0HpqiD14jGABZkhLI4JwN1BVXcP+jZ60gVNhvq3ZuCR0l
+        2MjZNTDqsMizAWYm537o/B2+qWMDiN0n6zhRJoGgtw==
+X-Google-Smtp-Source: ABdhPJwj0FKEIfCqImHzTKIbr0pyH+MK2RuyKP2UkEH5Q43p+/DwcPBt+E0uP/aftOG94Ydosu+GdoKe6FnAJhvCmio=
+X-Received: by 2002:a17:902:b706:: with SMTP id d6mr24717061pls.244.1595970928381;
+ Tue, 28 Jul 2020 14:15:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595930879-2478-5-git-send-email-kevin3.tang@gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=icsG72s9AAAA:8 a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8
-        a=08WXIBi0p2Ujx_YrjzoA:9 a=nkGUx5g6tGz-f_Zj:21 a=OM6beyPNsi5tAagA:21
-        a=GeTPowgupFyvMdBi:21 a=CjuIK1q_8ugA:10 a=T89tl0cgrjxRNoSN2Dv0:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+References: <20200716042053.1927676-4-saravanak@google.com>
+ <20200720142753.GF4601@sirena.org.uk> <CAGETcx96AuV=1rcyMAv5QGpGp0BqfWa40Fq-DShrBeY5Q61zkQ@mail.gmail.com>
+ <20200721201808.GD4845@sirena.org.uk>
+In-Reply-To: <20200721201808.GD4845@sirena.org.uk>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 28 Jul 2020 14:14:52 -0700
+Message-ID: <CAGETcx9+DUXyLnu0Rjom6oMpJvsdewbzvz=uW6xYOUjPD_Z=9A@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] regulator: core: Add basic enable/disable support
+ for sync_state() callbacks
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        John Stultz <john.stultz@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin.
+On Tue, Jul 21, 2020 at 1:18 PM Mark Brown <broonie@kernel.org> wrote:
+>
+Hi Mark,
 
-Some feedback in the following.
-I lost track of thing for the atomic modesettting stuff and I hope other
-will review that.
+It *might* be easier if you jump to the bottom and read the reasoning
+for the current design. The stuff in between is just me trying to
+clarify some misunderstandings.
 
-	Sam
+> On Mon, Jul 20, 2020 at 08:22:15PM -0700, Saravana Kannan wrote:
+> > On Mon, Jul 20, 2020 at 7:28 AM Mark Brown <broonie@kernel.org> wrote:
+> > > On Wed, Jul 15, 2020 at 09:20:52PM -0700, Saravana Kannan wrote:
+>
+> > > > There are Android devices that exhibit the issue in the example where
+> > > > regulator-X is an LDO, device-A is a camera device and device-B and
+> > > > device-C are UFS and USB. To avoid this, they have their own downstream
+> > > > changes to the regulator framework.
+>
+> > > Can you provide any references to these bodges?
+>
+> > This is the best I could dig up. The site is slow as molasses. I don't
+> > want to focus or critique any specific vendor's downstream code
+> > though. Providing these links just to prove that this is a real issue.
+>
+> The issue is not that I can't see that there might be a problem.  The
+> issue I have is that you seem to be starting from the point of a
+> specific solution that happens to work for your systems and then working
+> back from that rather than reasoning forwards from the problem to come
+> to a solution with the result that I can't explain the design you're
+> proposing.
 
-On Tue, Jul 28, 2020 at 06:07:57PM +0800, Kevin Tang wrote:
-> From: Kevin Tang <kevin.tang@unisoc.com>
-> 
-> Adds DPU(Display Processor Unit) support for the Unisoc's display subsystem.
-> It's support multi planes, scaler, rotation, PQ(Picture Quality) and more.
-> 
-> RFC v6:
->   - Access registers via readl/writel
->   - Checking for unsupported KMS properties (format, rotation, blend_mode, etc) on plane_check ops
->   - Remove always true checks for dpu core ops
-> 
-> Cc: Orson Zhai <orsonzhai@gmail.com>
-> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
-> Signed-off-by: Kevin Tang <kevin.tang@unisoc.com>
-> ---
->  drivers/gpu/drm/sprd/Makefile       |   5 +-
->  drivers/gpu/drm/sprd/dpu/Makefile   |   3 +
->  drivers/gpu/drm/sprd/dpu/dpu_r2p0.c | 503 ++++++++++++++++++++++++++++
->  drivers/gpu/drm/sprd/sprd_dpu.c     | 646 ++++++++++++++++++++++++++++++++++++
->  drivers/gpu/drm/sprd/sprd_dpu.h     | 187 +++++++++++
->  drivers/gpu/drm/sprd/sprd_drm.c     |   1 +
->  drivers/gpu/drm/sprd/sprd_drm.h     |   2 +
->  7 files changed, 1346 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpu/drm/sprd/dpu/Makefile
->  create mode 100644 drivers/gpu/drm/sprd/dpu/dpu_r2p0.c
->  create mode 100644 drivers/gpu/drm/sprd/sprd_dpu.c
->  create mode 100644 drivers/gpu/drm/sprd/sprd_dpu.h
-> 
-> diff --git a/drivers/gpu/drm/sprd/Makefile b/drivers/gpu/drm/sprd/Makefile
-> index 86d95d9..88ab32a 100644
-> --- a/drivers/gpu/drm/sprd/Makefile
-> +++ b/drivers/gpu/drm/sprd/Makefile
-> @@ -2,4 +2,7 @@
->  
->  subdir-ccflags-y += -I$(srctree)/$(src)
-Not needed - drop.
+I'm sorry it comes across that way. That's certainly not my intention.
+Hopefully, we can walk through this together and I'll make more sense.
 
->  
-> -obj-y := sprd_drm.o
-> +obj-y := sprd_drm.o \
-> +	sprd_dpu.o
-> +
-> +obj-y += dpu/
+> Even with this version I have difficulty telling from the
+> changelog that the change doesn't restrict things based on the consumers
+> of a given regulator but rather based on the PMIC and I don't see why
+> this is being done.
 
-Until there are several DPU's there is no need for a separate directory.
-Make it simpler by keeping it all in drm/sprd/*
+Happy to copy-paste any commit text suggestions that make this clearer.
 
-> diff --git a/drivers/gpu/drm/sprd/dpu/Makefile b/drivers/gpu/drm/sprd/dpu/Makefile
-> new file mode 100644
-> index 0000000..40278b6
-> --- /dev/null
-> +++ b/drivers/gpu/drm/sprd/dpu/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +obj-y += dpu_r2p0.o
-> diff --git a/drivers/gpu/drm/sprd/dpu/dpu_r2p0.c b/drivers/gpu/drm/sprd/dpu/dpu_r2p0.c
-> new file mode 100644
-> index 0000000..4b9521d
-> --- /dev/null
-> +++ b/drivers/gpu/drm/sprd/dpu/dpu_r2p0.c
-> @@ -0,0 +1,503 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020 Unisoc Inc.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/wait.h>
-> +#include <linux/workqueue.h>
-> +
-> +#include "sprd_dpu.h"
-> +
-> +/* DPU registers size, 4 Bytes(32 Bits) */
-> +#define DPU_REG_SIZE	0x04
-> +
-> +/* Layer registers offset */
-> +#define DPU_LAY_REG_OFFSET	0x0C
-> +
-> +#define DPU_LAY_REG(reg, index) \
-> +	(reg + index * DPU_LAY_REG_OFFSET * DPU_REG_SIZE)
-Use a static inline to get better typecheck.
+> > Search for "proxy" here. You'll notice how that will also need changes
+> > to regulator header files, etc. The 4.9 kernel is the latest publicly
+> > available version AFAIK.
+> > https://source.codeaurora.org/quic/la/kernel/msm-4.9/plain/drivers/regulator/core.c?h=msm-4.9
+>
+> Oh, the Qualcomm stuff - which looks a lot like what you've got here.
 
-> +#define DPU_REG_RD(reg) readl_relaxed(reg)
-> +
-> +#define DPU_REG_WR(reg, mask) writel_relaxed(mask, reg)
-> +
-> +#define DPU_REG_SET(reg, mask) \
-> +	writel_relaxed(readl_relaxed(reg) | mask, reg)
-> +
-> +#define DPU_REG_CLR(reg, mask) \
-> +	writel_relaxed(readl_relaxed(reg) & ~mask, reg)
-I am no fan of macros used like this.
+Eh... I would disagree. The similarity stops at "both solutions use a
+regulator consumer to set the limits". The implementation you see
+there is based on QC specific DT entries, is based on late_initcall to
+"ensure" all consumers have probed, doesn't work for modules, etc.
 
-Maybe use static inlines and add struct dpu_context * as first argument.
-Then adding base can be hidden away.
+> > > As I indicated on my previous review this doesn't seem OK, given that a
+> > > huge proportion of the regulators on most systems are part of a single
+> > > PMIC this means that devices won't be able to fully control regulators
+> > > for the majority of the boot process, possibly quite a long time after
+> > > userspace has started in systems where not all devices have drivers.
+>
+> ...
+>
+> > I think the default behavior should be for functional correctness
+> > (example in the commit text) and then go for optimization (being able
+> > to power off regulators before 30s into boot). Even with the timeout
+> > set, this series makes it much easier for driver developers to ensure
+> > functional correctness instead of playing initcall chicken between the
+> > supplier and the N consumers.
+>
+> I don't see how any of this stuff about initcall chicken or whatever is
+> relevant here.  You're replying to my concern that your change isn't
+> just waiting for all the consumers of a given regulator, it's waiting
+> for every other consumer of any other regulator or random other feature
+> that happens to be supplied by the same PMIC but only that PMIC.  That
+> is not init ordering, it just seems like an arbitrary delay even once
+> all the consumers are ready and I can't see any particular logic behind
+> it.  It's not just waiting for all the users of the individual resource
+> to be active but it's also not waiting for the system as a whole,
+> instead it's waiting for some effectively random grouping of devices
+> spread over the whole system to appear.  I can't articulate a reason why
+> we'd do that, it seems to be combining the worst aspects of the two
+> approaches.
+>
+> Please engage with this issue, it is crucial but you keep on sending the
+> same thing without explaining why so I'm left guessing and I really
+> can't come up with anything.
 
+Ok, at the end of the email, I'll start from a high level and then dig
+into more details at each step. Hopefully that'll clarify the reasoning.
 
-I had a hard time convincing myself that _relaxed was the right
-variants. If I get it correct we may see writes re-ordered with the
-_relaxed variants wich would be no good when dealign with interrupts.
-But I may miss somethign here.
+[...]
 
-> +
-> +/* Global control registers */
-> +#define REG_DPU_CTRL	0x04
-> +#define REG_DPU_CFG0	0x08
-> +#define REG_DPU_CFG1	0x0C
-> +#define REG_DPU_CFG2	0x10
-> +#define REG_PANEL_SIZE	0x20
-> +#define REG_BLEND_SIZE	0x24
-> +#define REG_BG_COLOR	0x2C
-> +
-> +/* Layer0 control registers */
-> +#define REG_LAY_BASE_ADDR0	0x30
-> +#define REG_LAY_BASE_ADDR1	0x34
-> +#define REG_LAY_BASE_ADDR2	0x38
-> +#define REG_LAY_CTRL		0x40
-> +#define REG_LAY_SIZE		0x44
-> +#define REG_LAY_PITCH		0x48
-> +#define REG_LAY_POS		0x4C
-> +#define REG_LAY_ALPHA		0x50
-> +#define REG_LAY_PALLETE		0x58
-> +#define REG_LAY_CROP_START	0x5C
-> +
-> +/* Interrupt control registers */
-> +#define REG_DPU_INT_EN		0x1E0
-> +#define REG_DPU_INT_CLR		0x1E4
-> +#define REG_DPU_INT_STS		0x1E8
-> +
-> +/* DPI control registers */
-> +#define REG_DPI_CTRL		0x1F0
-> +#define REG_DPI_H_TIMING	0x1F4
-> +#define REG_DPI_V_TIMING	0x1F8
-> +
-> +/* MMU control registers */
-> +#define REG_MMU_EN			0x800
-> +#define REG_MMU_VPN_RANGE		0x80C
-> +#define REG_MMU_VAOR_ADDR_RD		0x818
-> +#define REG_MMU_VAOR_ADDR_WR		0x81C
-> +#define REG_MMU_INV_ADDR_RD		0x820
-> +#define REG_MMU_INV_ADDR_WR		0x824
-> +#define REG_MMU_PPN1			0x83C
-> +#define REG_MMU_RANGE1			0x840
-> +#define REG_MMU_PPN2			0x844
-> +#define REG_MMU_RANGE2			0x848
-> +
-> +/* Global control bits */
-> +#define BIT_DPU_RUN			BIT(0)
-> +#define BIT_DPU_STOP			BIT(1)
-> +#define BIT_DPU_REG_UPDATE		BIT(2)
-> +#define BIT_DPU_IF_EDPI			BIT(0)
-> +#define BIT_DPU_COEF_NARROW_RANGE		BIT(4)
-> +#define BIT_DPU_Y2R_COEF_ITU709_STANDARD	BIT(5)
-> +
-> +/* Layer control bits */
-> +#define BIT_DPU_LAY_EN				BIT(0)
-> +
-> +/* Interrupt control & status bits */
-> +#define BIT_DPU_INT_DONE		BIT(0)
-> +#define BIT_DPU_INT_TE			BIT(1)
-> +#define BIT_DPU_INT_ERR			BIT(2)
-> +#define BIT_DPU_INT_UPDATE_DONE		BIT(4)
-> +#define BIT_DPU_INT_VSYNC		BIT(5)
-> +#define BIT_DPU_INT_FBC_PLD_ERR		BIT(8)
-> +#define BIT_DPU_INT_FBC_HDR_ERR		BIT(9)
-> +#define BIT_DPU_INT_MMU_VAOR_RD		BIT(16)
-> +#define BIT_DPU_INT_MMU_VAOR_WR		BIT(17)
-> +#define BIT_DPU_INT_MMU_INV_RD		BIT(18)
-> +#define BIT_DPU_INT_MMU_INV_WR		BIT(19)
-> +
-> +/* DPI control bits */
-> +#define BIT_DPU_EDPI_TE_EN		BIT(8)
-> +#define BIT_DPU_EDPI_FROM_EXTERNAL_PAD	BIT(10)
-> +#define BIT_DPU_DPI_HALT_EN		BIT(16)
-> +
-> +
-> +static u32 check_mmu_isr(struct dpu_context *ctx, u32 reg_val)
-> +{
-> +	u32 mmu_mask = BIT_DPU_INT_MMU_VAOR_RD |
-> +			BIT_DPU_INT_MMU_VAOR_WR |
-> +			BIT_DPU_INT_MMU_INV_RD |
-> +			BIT_DPU_INT_MMU_INV_WR;
-> +	u32 val = reg_val & mmu_mask;
-> +	int i;
-> +
-> +	if (val) {
-> +		DRM_ERROR("--- iommu interrupt err: 0x%04x ---\n", val);
+> > > I don't understand the motivation for doing things this way.  Like I
+> > > said last time it really feels like this turns the whole mechanism into
+> > > a very complicated way of implementing a new initcall.
+>
+> > Treating this as a "LATER_initcall()" has several issues.
+> > 1. initcall levels set a max limit on the depth of device dependency.
+> > Since DT devices are added at arch initcall level, that gives us about
+> > 5 levels if you ignore the _sync ones. Adding more isn't going to
+> > scale or solve the problem because in reality, the dependencies are
+> > much deeper.
+>
+> I don't follow what you're saying here at all, sorry.  What does the
+> depth of the dependency graph have to do with how late we action
+> anything?
 
-General comment, applies for the whole patch.
+You keep raising the point "why not just add another initcall level"
+to solve the problem of "sync the suppliers after all the consumers
+are ready". Or you say that my patch series is just a roundabout way
+of adding another initcall level. I'm explaining why adding just
+another initcall level won't work.
 
-Use drm_err(drm, ...), drm_info(drm, ...) etc.
+> A lot of what you're saying here seems to be based on jumping
+> to abandoning deferred probe which is a bit of a leap here.
 
-Use upclassing to get sprd_dpu - and then you have a drm_device *
-(After drm_device is embedded in sprd_dpu as suggested in the other
-mail)
+Again, definitely misunderstanding my point. I'm saying exactly the
+opposite. We need to take deferred probe into account and deferred
+probe completely invalidates any attempts to guarantee ordering based
+on initcall levels. I even mentioned this in point 5 in my earlier
+email.
 
-> +
-> +		if (val & BIT_DPU_INT_MMU_INV_RD)
-> +			DRM_ERROR("iommu invalid read error, addr: 0x%08x\n",
-> +				DPU_REG_RD(ctx->base + REG_MMU_INV_ADDR_RD));
-> +		if (val & BIT_DPU_INT_MMU_INV_WR)
-> +			DRM_ERROR("iommu invalid write error, addr: 0x%08x\n",
-> +				DPU_REG_RD(ctx->base + REG_MMU_INV_ADDR_WR));
-> +		if (val & BIT_DPU_INT_MMU_VAOR_RD)
-> +			DRM_ERROR("iommu va out of range read error, addr: 0x%08x\n",
-> +				DPU_REG_RD(ctx->base + REG_MMU_VAOR_ADDR_RD));
-> +		if (val & BIT_DPU_INT_MMU_VAOR_WR)
-> +			DRM_ERROR("iommu va out of range write error, addr: 0x%08x\n",
-> +				DPU_REG_RD(ctx->base + REG_MMU_VAOR_ADDR_WR));
-> +
-> +		for (i = 0; i < 8; i++) {
-> +			reg_val = DPU_REG_RD(ctx->base + DPU_LAY_REG(REG_LAY_CTRL, i));
-> +			if (reg_val & 0x1)
-> +				DRM_INFO("layer%d: 0x%08x 0x%08x 0x%08x ctrl: 0x%08x\n", i,
-> +					DPU_REG_RD(ctx->base + DPU_LAY_REG(REG_LAY_BASE_ADDR0, i)),
-> +					DPU_REG_RD(ctx->base + DPU_LAY_REG(REG_LAY_BASE_ADDR1, i)),
-> +					DPU_REG_RD(ctx->base + DPU_LAY_REG(REG_LAY_BASE_ADDR2, i)),
-> +					DPU_REG_RD(ctx->base + DPU_LAY_REG(REG_LAY_CTRL, i)));
-> +		}
-> +	}
-> +
-> +	return val;
-> +}
-> +
-> +static void dpu_clean_all(struct dpu_context *ctx)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < 8; i++)
-> +		DPU_REG_WR(ctx->base + DPU_LAY_REG(REG_LAY_CTRL, i), 0x00);
-> +}
-> +
-> +static u32 dpu_isr(struct dpu_context *ctx)
-> +{
-> +	u32 reg_val, int_mask = 0;
-> +
-> +	reg_val = DPU_REG_RD(ctx->base + REG_DPU_INT_STS);
-> +
-> +	/* disable err interrupt */
-> +	if (reg_val & BIT_DPU_INT_ERR)
-> +		int_mask |= BIT_DPU_INT_ERR;
-> +
-> +	/* dpu update done isr */
-> +	if (reg_val & BIT_DPU_INT_UPDATE_DONE) {
-> +		ctx->evt_update = true;
-> +		wake_up_interruptible_all(&ctx->wait_queue);
-> +	}
-> +
-> +	/* dpu stop done isr */
-> +	if (reg_val & BIT_DPU_INT_DONE) {
-> +		ctx->evt_stop = true;
-> +		wake_up_interruptible_all(&ctx->wait_queue);
-> +	}
-> +
-> +	/* dpu ifbc payload error isr */
-> +	if (reg_val & BIT_DPU_INT_FBC_PLD_ERR) {
-> +		int_mask |= BIT_DPU_INT_FBC_PLD_ERR;
-> +		DRM_ERROR("dpu ifbc payload error\n");
-> +	}
-> +
-> +	/* dpu ifbc header error isr */
-> +	if (reg_val & BIT_DPU_INT_FBC_HDR_ERR) {
-> +		int_mask |= BIT_DPU_INT_FBC_HDR_ERR;
-> +		DRM_ERROR("dpu ifbc header error\n");
-> +	}
-> +
-> +	int_mask |= check_mmu_isr(ctx, reg_val);
-> +
-> +	DPU_REG_WR(ctx->base + REG_DPU_INT_CLR, reg_val);
-> +	DPU_REG_CLR(ctx->base + REG_DPU_INT_EN, int_mask);
-> +
-> +	return reg_val;
-> +}
-> +
-> +static int dpu_wait_stop_done(struct dpu_context *ctx)
-> +{
-> +	int rc;
-> +
-> +	if (ctx->stopped)
-> +		return 0;
-> +
-> +	rc = wait_event_interruptible_timeout(ctx->wait_queue, ctx->evt_stop,
-> +					       msecs_to_jiffies(500));
-> +	ctx->evt_stop = false;
-> +
-> +	ctx->stopped = true;
-> +
-> +	if (!rc) {
-> +		DRM_ERROR("dpu wait for stop done time out!\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int dpu_wait_update_done(struct dpu_context *ctx)
-> +{
-> +	int rc;
-> +
-> +	ctx->evt_update = false;
-> +
-> +	rc = wait_event_interruptible_timeout(ctx->wait_queue, ctx->evt_update,
-> +					       msecs_to_jiffies(500));
-> +
-> +	if (!rc) {
-> +		DRM_ERROR("dpu wait for reg update done time out!\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void dpu_stop(struct dpu_context *ctx)
-> +{
-> +	if (ctx->if_type == SPRD_DPU_IF_DPI)
-> +		DPU_REG_SET(ctx->base + REG_DPU_CTRL, BIT_DPU_STOP);
-> +
-> +	dpu_wait_stop_done(ctx);
-> +}
-> +
-> +static void dpu_run(struct dpu_context *ctx)
-> +{
-> +	DPU_REG_SET(ctx->base + REG_DPU_CTRL, BIT_DPU_RUN);
-> +
-> +	ctx->stopped = false;
-> +}
-> +
-> +static void dpu_init(struct dpu_context *ctx)
-> +{
-> +	u32 reg_val, size;
-> +
-> +	DPU_REG_WR(ctx->base + REG_BG_COLOR, 0x00);
-> +
-> +	size = (ctx->vm.vactive << 16) | ctx->vm.hactive;
-> +
-> +	DPU_REG_WR(ctx->base + REG_PANEL_SIZE, size);
-> +	DPU_REG_WR(ctx->base + REG_BLEND_SIZE, size);
-> +
-> +	reg_val = BIT_DPU_COEF_NARROW_RANGE | BIT_DPU_Y2R_COEF_ITU709_STANDARD;
-> +	DPU_REG_WR(ctx->base + REG_DPU_CFG0, reg_val);
-> +	DPU_REG_WR(ctx->base + REG_DPU_CFG1, 0x004466da);
-> +	DPU_REG_WR(ctx->base + REG_DPU_CFG2, 0x00);
-> +
-> +	if (ctx->stopped)
-> +		dpu_clean_all(ctx);
-> +
-> +	DPU_REG_WR(ctx->base + REG_MMU_EN, 0x00);
-> +	DPU_REG_WR(ctx->base + REG_MMU_PPN1, 0x00);
-> +	DPU_REG_WR(ctx->base + REG_MMU_RANGE1, 0xffff);
-> +	DPU_REG_WR(ctx->base + REG_MMU_PPN2, 0x00);
-> +	DPU_REG_WR(ctx->base + REG_MMU_RANGE2, 0xffff);
-> +	DPU_REG_WR(ctx->base + REG_MMU_VPN_RANGE, 0x1ffff);
-> +
-> +	DPU_REG_WR(ctx->base + REG_DPU_INT_CLR, 0xffff);
-> +}
-> +
-> +static void dpu_fini(struct dpu_context *ctx)
-> +{
-> +	DPU_REG_WR(ctx->base + REG_DPU_INT_EN, 0x00);
-> +	DPU_REG_WR(ctx->base + REG_DPU_INT_CLR, 0xff);
-> +}
-> +
-> +static void dpu_layer(struct dpu_context *ctx,
-> +		    struct dpu_layer *hwlayer)
-No linebreak needed here.
+> > 6. If the answer is, "have userspace tell us when all modules are
+> > loaded" -- then we are depending on userspace for functional
+> > correctness AND for turning off regulators. Which IMHO is worse than
+> > this patch series.
+>
+> > 7. If we somehow manage to add a "LATER_initcall" that doesn't have
+> > the issues above, it has to work for all frameworks. So, it has to
+> > come after ALL the devices in the system have probed. Not just "all
+> > devices of a supplier". So, again, it's worse than this patch series,
+> > at least for systems where all the drivers are present.
+>
+> Run the initcall when all devices in the system have a driver bound
 
-> +{
-> +	const struct drm_format_info *info;
-> +	u32 size, offset, ctrl, pitch;
-> +	int i;
-> +
-> +	offset = (hwlayer->dst_x & 0xffff) | ((hwlayer->dst_y) << 16);
-> +
-> +	if (hwlayer->src_w && hwlayer->src_h)
-> +		size = (hwlayer->src_w & 0xffff) | ((hwlayer->src_h) << 16);
-> +	else
-> +		size = (hwlayer->dst_w & 0xffff) | ((hwlayer->dst_h) << 16);
-> +
-> +	for (i = 0; i < hwlayer->planes; i++)
-> +		DPU_REG_WR(ctx->base + DPU_LAY_REG(REG_LAY_BASE_ADDR0,
-> +				hwlayer->index), hwlayer->addr[i]);
-> +
-> +	DPU_REG_WR(ctx->base + DPU_LAY_REG(REG_LAY_POS,
-> +			hwlayer->index), offset);
-> +	DPU_REG_WR(ctx->base + DPU_LAY_REG(REG_LAY_SIZE,
-> +			hwlayer->index), size);
-> +	DPU_REG_WR(ctx->base + DPU_LAY_REG(REG_LAY_CROP_START,
-> +			hwlayer->index), hwlayer->src_y << 16 | hwlayer->src_x);
-> +	DPU_REG_WR(ctx->base + DPU_LAY_REG(REG_LAY_ALPHA,
-> +			hwlayer->index), hwlayer->alpha);
-> +
-> +	info = drm_format_info(hwlayer->format);
-> +	if (hwlayer->planes == 3) {
-> +		/* UV pitch is 1/2 of Y pitch*/
-> +		pitch = (hwlayer->pitch[0] / info->cpp[0]) |
-> +				(hwlayer->pitch[0] / info->cpp[0] << 15);
-> +		DPU_REG_WR(ctx->base + DPU_LAY_REG(REG_LAY_PITCH,
-> +				hwlayer->index), pitch);
-> +	} else {
-> +		pitch = hwlayer->pitch[0] / info->cpp[0];
-> +		DPU_REG_WR(ctx->base + DPU_LAY_REG(REG_LAY_PITCH,
-> +				hwlayer->index), pitch);
-> +	}
-> +
-> +	ctrl = hwlayer->format |
-> +		hwlayer->blending |
-> +		(hwlayer->rotation & 0x7) << 20;
-> +
-> +	DPU_REG_WR(ctx->base + DPU_LAY_REG(REG_LAY_CTRL,
-> +			hwlayer->index), ctrl);
-> +	DPU_REG_WR(ctx->base + DPU_LAY_REG(REG_LAY_CTRL,
-> +			hwlayer->index), BIT_DPU_LAY_EN);
-> +
-> +	DRM_DEBUG("dst_x = %d, dst_y = %d, dst_w = %d, dst_h = %d\n",
-> +				hwlayer->dst_x, hwlayer->dst_y,
-> +				hwlayer->dst_w, hwlayer->dst_h);
-> +	DRM_DEBUG("start_x = %d, start_y = %d, start_w = %d, start_h = %d\n",
-> +				hwlayer->src_x, hwlayer->src_y,
-> +				hwlayer->src_w, hwlayer->src_h);
-> +}
-> +
-> +static void dpu_flip(struct dpu_context *ctx,
-> +		     struct dpu_layer layers[], u8 count)
-> +{
-> +	int i;
-> +	u32 reg_val;
-> +
-> +	/*
-> +	 * Make sure the dpu is in stop status. DPU_R2P0 has no shadow
-> +	 * registers in EDPI mode. So the config registers can only be
-> +	 * updated in the rising edge of DPU_RUN bit.
-> +	 */
-> +	if (ctx->if_type == SPRD_DPU_IF_EDPI)
-> +		dpu_wait_stop_done(ctx);
-> +
-> +	/* reset the bgcolor to black */
-> +	DPU_REG_WR(ctx->base + REG_BG_COLOR, 0x00);
-> +
-> +	/* disable all the layers */
-> +	dpu_clean_all(ctx);
-> +
-> +	/* start configure dpu layers */
-> +	for (i = 0; i < count; i++)
-> +		dpu_layer(ctx, &layers[i]);
-> +
-> +	/* update trigger and wait */
-> +	if (ctx->if_type == SPRD_DPU_IF_DPI) {
-> +		if (!ctx->stopped) {
-> +			DPU_REG_SET(ctx->base + REG_DPU_CTRL, BIT_DPU_REG_UPDATE);
-> +			dpu_wait_update_done(ctx);
-> +		}
-> +
-> +		DPU_REG_SET(ctx->base + REG_DPU_INT_EN, BIT_DPU_INT_ERR);
-> +	} else if (ctx->if_type == SPRD_DPU_IF_EDPI) {
-> +		DPU_REG_SET(ctx->base + REG_DPU_CTRL, BIT_DPU_RUN);
-> +
-> +		ctx->stopped = false;
-> +	}
-> +
-> +	/*
-> +	 * If the following interrupt was disabled in isr,
-> +	 * re-enable it.
-> +	 */
-> +	reg_val = BIT_DPU_INT_FBC_PLD_ERR |
-> +		  BIT_DPU_INT_FBC_HDR_ERR |
-> +		  BIT_DPU_INT_MMU_VAOR_RD |
-> +		  BIT_DPU_INT_MMU_VAOR_WR |
-> +		  BIT_DPU_INT_MMU_INV_RD |
-> +		  BIT_DPU_INT_MMU_INV_WR;
-> +	DPU_REG_SET(ctx->base + REG_DPU_INT_EN, reg_val);
-> +
-> +}
-> +
-> +static void dpu_dpi_init(struct dpu_context *ctx)
-> +{
-> +	u32 int_mask = 0;
-> +	u32 reg_val;
-> +
-> +	if (ctx->if_type == SPRD_DPU_IF_DPI) {
-> +		/* use dpi as interface */
-> +		DPU_REG_CLR(ctx->base + REG_DPU_CFG0, BIT_DPU_IF_EDPI);
-> +
-> +		/* disable Halt function for SPRD DSI */
-> +		DPU_REG_CLR(ctx->base + REG_DPI_CTRL, BIT_DPU_DPI_HALT_EN);
-> +
-> +		/* select te from external pad */
-> +		DPU_REG_SET(ctx->base + REG_DPI_CTRL, BIT_DPU_EDPI_FROM_EXTERNAL_PAD);
-> +
-> +		/* set dpi timing */
-> +		reg_val = ctx->vm.hsync_len << 0 |
-> +			  ctx->vm.hback_porch << 8 |
-> +			  ctx->vm.hfront_porch << 20;
-> +		DPU_REG_WR(ctx->base + REG_DPI_H_TIMING, reg_val);
-> +
-> +		reg_val = ctx->vm.vsync_len << 0 |
-> +			  ctx->vm.vback_porch << 8 |
-> +			  ctx->vm.vfront_porch << 20;
-> +		DPU_REG_WR(ctx->base + REG_DPI_V_TIMING, reg_val);
-> +
-> +		if (ctx->vm.vsync_len + ctx->vm.vback_porch < 32)
-> +			DRM_WARN("Warning: (vsync + vbp) < 32, "
-> +				"underflow risk!\n");
-> +
-> +		/* enable dpu update done INT */
-> +		int_mask |= BIT_DPU_INT_UPDATE_DONE;
-> +		/* enable dpu DONE  INT */
-> +		int_mask |= BIT_DPU_INT_DONE;
-> +		/* enable dpu dpi vsync */
-> +		int_mask |= BIT_DPU_INT_VSYNC;
-> +		/* enable dpu TE INT */
-> +		int_mask |= BIT_DPU_INT_TE;
-> +		/* enable underflow err INT */
-> +		int_mask |= BIT_DPU_INT_ERR;
-> +	} else if (ctx->if_type == SPRD_DPU_IF_EDPI) {
-> +		/* use edpi as interface */
-> +		DPU_REG_SET(ctx->base + REG_DPU_CFG0, BIT_DPU_IF_EDPI);
-> +
-> +		/* use external te */
-> +		DPU_REG_SET(ctx->base + REG_DPI_CTRL, BIT_DPU_EDPI_FROM_EXTERNAL_PAD);
-> +
-> +		/* enable te */
-> +		DPU_REG_SET(ctx->base + REG_DPI_CTRL, BIT_DPU_EDPI_TE_EN);
-> +
-> +		/* enable stop DONE INT */
-> +		int_mask |= BIT_DPU_INT_DONE;
-> +		/* enable TE INT */
-> +		int_mask |= BIT_DPU_INT_TE;
-> +	}
-> +
-> +	/* enable ifbc payload error INT */
-> +	int_mask |= BIT_DPU_INT_FBC_PLD_ERR;
-> +	/* enable ifbc header error INT */
-> +	int_mask |= BIT_DPU_INT_FBC_HDR_ERR;
-> +	/* enable iommu va out of range read error INT */
-> +	int_mask |= BIT_DPU_INT_MMU_VAOR_RD;
-> +	/* enable iommu va out of range write error INT */
-> +	int_mask |= BIT_DPU_INT_MMU_VAOR_WR;
-> +	/* enable iommu invalid read error INT */
-> +	int_mask |= BIT_DPU_INT_MMU_INV_RD;
-> +	/* enable iommu invalid write error INT */
-> +	int_mask |= BIT_DPU_INT_MMU_INV_WR;
-> +
-> +	DPU_REG_WR(ctx->base + REG_DPU_INT_EN, int_mask);
-> +}
-> +
-> +static void enable_vsync(struct dpu_context *ctx)
-> +{
-> +	DPU_REG_SET(ctx->base + REG_DPU_INT_EN, BIT_DPU_INT_VSYNC);
-> +}
-> +
-> +static void disable_vsync(struct dpu_context *ctx)
-> +{
-> +	DPU_REG_CLR(ctx->base + REG_DPU_INT_EN, BIT_DPU_INT_VSYNC);
-> +}
-> +
-> +static const u32 primary_fmts[] = {
-> +	DRM_FORMAT_XRGB8888, DRM_FORMAT_XBGR8888,
-> +	DRM_FORMAT_ARGB8888, DRM_FORMAT_ABGR8888,
-> +	DRM_FORMAT_RGBA8888, DRM_FORMAT_BGRA8888,
-> +	DRM_FORMAT_RGBX8888, DRM_FORMAT_RGB565,
-> +	DRM_FORMAT_BGR565, DRM_FORMAT_NV12,
-> +	DRM_FORMAT_NV21, DRM_FORMAT_NV16,
-> +	DRM_FORMAT_NV61, DRM_FORMAT_YUV420,
-> +	DRM_FORMAT_YVU420,
-> +};
-One format per line improves readability a lot.
-Maybe sort alphbetically too.
+And how is this going to work in systems where some devices don't have
+drivers? Even with one missing driver, none of the devices/drivers are
+going to get this initcall that you suggest. So it makes the
+granularity issue worse.
 
-> +
-> +static void dpu_capability(struct dpu_context *ctx,
-> +			struct dpu_capability *cap)
-Drop linebreak
+> which as far as I can tell seems to be what the end result of this
+> series is intended to be anyway, just implemented with much more
+> complexity.
 
-> +{
-> +	cap->max_layers = 6;
-> +	cap->fmts_ptr = primary_fmts;
-> +	cap->fmts_cnt = ARRAY_SIZE(primary_fmts);
-> +}
-> +
-> +const struct dpu_core_ops dpu_r2p0_core_ops = {
-> +	.init = dpu_init,
-> +	.fini = dpu_fini,
-> +	.run = dpu_run,
-> +	.stop = dpu_stop,
-> +	.isr = dpu_isr,
-> +	.ifconfig = dpu_dpi_init,
-> +	.capability = dpu_capability,
-> +	.flip = dpu_flip,
-> +	.enable_vsync = enable_vsync,
-> +	.disable_vsync = disable_vsync,
-> +};
-> diff --git a/drivers/gpu/drm/sprd/sprd_dpu.c b/drivers/gpu/drm/sprd/sprd_dpu.c
-> new file mode 100644
-> index 0000000..5ec8e7c
-> --- /dev/null
-> +++ b/drivers/gpu/drm/sprd/sprd_dpu.c
-> @@ -0,0 +1,646 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020 Unisoc Inc.
-> + */
-> +
-> +#include <linux/component.h>
-> +#include <linux/dma-buf.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_crtc_helper.h>
-> +#include <drm/drm_fb_cma_helper.h>
-> +#include <drm/drm_gem_cma_helper.h>
-> +#include <drm/drm_gem_framebuffer_helper.h>
-> +#include <drm/drm_plane_helper.h>
-> +
-> +#include "sprd_drm.h"
-> +#include "sprd_dpu.h"
-> +
-> +struct sprd_plane {
-> +	struct drm_plane plane;
-> +	u32 index;
-> +	u32 addr[4];
-> +	u32 pitch[4];
-> +	u32 format;
-> +	u32 rotation;
-> +	u32 blend_mode;
-> +};
-> +
-> +static void sprd_dpu_init(struct sprd_dpu *dpu);
-> +static void sprd_dpu_fini(struct sprd_dpu *dpu);
-> +
-> +static inline struct sprd_plane *to_sprd_plane(struct drm_plane *plane)
-> +{
-> +	return container_of(plane, struct sprd_plane, plane);
-> +}
-> +
-> +static int sprd_plane_format_convert(u32 fourcc, u32 *format)
-> +{
-> +	switch (fourcc) {
-> +	case DRM_FORMAT_BGRA8888:
-> +		/* BGRA8888 -> ARGB8888 */
-> +		*format |= BIT_DPU_LAY_DATA_ENDIAN_B3B2B1B0;
-> +		*format |= BIT_DPU_LAY_FORMAT_ARGB8888;
-> +		break;
-> +	case DRM_FORMAT_RGBX8888:
-> +	case DRM_FORMAT_RGBA8888:
-> +		/* RGBA8888 -> ABGR8888 */
-> +		*format |= BIT_DPU_LAY_DATA_ENDIAN_B3B2B1B0;
-> +		/* FALLTHRU */
-> +	case DRM_FORMAT_ABGR8888:
-> +		/* RB switch */
-> +		*format |= BIT_DPU_LAY_RB_OR_UV_SWITCH;
-> +		/* FALLTHRU */
-> +	case DRM_FORMAT_ARGB8888:
-> +		*format |= BIT_DPU_LAY_FORMAT_ARGB8888;
-> +		break;
-> +	case DRM_FORMAT_XBGR8888:
-> +		/* RB switch */
-> +		*format |= BIT_DPU_LAY_RB_OR_UV_SWITCH;
-> +		/* FALLTHRU */
-> +	case DRM_FORMAT_XRGB8888:
-> +		*format |= BIT_DPU_LAY_FORMAT_ARGB8888;
-> +		break;
-> +	case DRM_FORMAT_BGR565:
-> +		/* RB switch */
-> +		*format |= BIT_DPU_LAY_RB_OR_UV_SWITCH;
-> +		/* FALLTHRU */
-> +	case DRM_FORMAT_RGB565:
-> +		*format |= BIT_DPU_LAY_FORMAT_RGB565;
-> +		break;
-> +	case DRM_FORMAT_NV12:
-> +		/* 2-Lane: Yuv420 */
-> +		*format |= BIT_DPU_LAY_FORMAT_YUV420_2PLANE;
-> +		/* Y endian */
-> +		*format |= BIT_DPU_LAY_DATA_ENDIAN_B0B1B2B3;
-> +		/* UV endian */
-> +		*format |= BIT_DPU_LAY_NO_SWITCH;
-> +		break;
-> +	case DRM_FORMAT_NV21:
-> +		/* 2-Lane: Yuv420 */
-> +		*format |= BIT_DPU_LAY_FORMAT_YUV420_2PLANE;
-> +		/* Y endian */
-> +		*format |= BIT_DPU_LAY_DATA_ENDIAN_B0B1B2B3;
-> +		/* UV endian */
-> +		*format |= BIT_DPU_LAY_RB_OR_UV_SWITCH;
-> +		break;
-> +	case DRM_FORMAT_NV16:
-> +		/* 2-Lane: Yuv422 */
-> +		*format |= BIT_DPU_LAY_FORMAT_YUV422_2PLANE;
-> +		/* Y endian */
-> +		*format |= BIT_DPU_LAY_DATA_ENDIAN_B3B2B1B0;
-> +		/* UV endian */
-> +		*format |= BIT_DPU_LAY_RB_OR_UV_SWITCH;
-> +		break;
-> +	case DRM_FORMAT_NV61:
-> +		/* 2-Lane: Yuv422 */
-> +		*format |= BIT_DPU_LAY_FORMAT_YUV422_2PLANE;
-> +		/* Y endian */
-> +		*format |= BIT_DPU_LAY_DATA_ENDIAN_B0B1B2B3;
-> +		/* UV endian */
-> +		*format |= BIT_DPU_LAY_NO_SWITCH;
-> +		break;
-> +	case DRM_FORMAT_YUV420:
-> +		*format |= BIT_DPU_LAY_FORMAT_YUV420_3PLANE;
-> +		/* Y endian */
-> +		*format |= BIT_DPU_LAY_DATA_ENDIAN_B0B1B2B3;
-> +		/* UV endian */
-> +		*format |= BIT_DPU_LAY_NO_SWITCH;
-> +		break;
-> +	case DRM_FORMAT_YVU420:
-> +		*format |= BIT_DPU_LAY_FORMAT_YUV420_3PLANE;
-> +		/* Y endian */
-> +		*format |= BIT_DPU_LAY_DATA_ENDIAN_B0B1B2B3;
-> +		/* UV endian */
-> +		*format |= BIT_DPU_LAY_RB_OR_UV_SWITCH;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int sprd_plane_rotation_convert(u32 angle, u32 *rotation)
-> +{
-> +	switch (angle) {
-> +	case DRM_MODE_ROTATE_0:
-> +		*rotation = DPU_LAYER_ROTATION_0;
-> +		break;
-> +	case DRM_MODE_ROTATE_90:
-> +		*rotation = DPU_LAYER_ROTATION_90;
-> +		break;
-> +	case DRM_MODE_ROTATE_180:
-> +		*rotation = DPU_LAYER_ROTATION_180;
-> +		break;
-> +	case DRM_MODE_ROTATE_270:
-> +		*rotation = DPU_LAYER_ROTATION_270;
-> +		break;
-> +	case DRM_MODE_REFLECT_Y:
-> +		*rotation = DPU_LAYER_ROTATION_180_M;
-> +		break;
-> +	case (DRM_MODE_REFLECT_Y | DRM_MODE_ROTATE_90):
-> +		*rotation = DPU_LAYER_ROTATION_90_M;
-> +		break;
-> +	case DRM_MODE_REFLECT_X:
-> +		*rotation = DPU_LAYER_ROTATION_0_M;
-> +		break;
-> +	case (DRM_MODE_REFLECT_X | DRM_MODE_ROTATE_90):
-> +		*rotation = DPU_LAYER_ROTATION_270_M;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int sprd_plane_atomic_check(struct drm_plane *plane,
-> +				  struct drm_plane_state *state)
-> +{
-> +	struct sprd_plane *p = to_sprd_plane(plane);
-> +	struct drm_framebuffer *fb = state->fb;
-> +	struct drm_gem_cma_object *cma_obj;
-> +	int i, ret;
-> +	u32 addr;
-> +
-> +	if (!state->fb || !state->crtc)
-> +		return 0;
-> +
-> +	ret = sprd_plane_format_convert(fb->format->format,
-> +					&p->format);
-> +	if (ret < 0) {
-> +		DRM_ERROR("Invalid plane format\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = sprd_plane_rotation_convert(state->rotation,
-> +					&p->rotation);
-> +	if (ret < 0) {
-> +		DRM_ERROR("Invalid plane rotation\n");
-> +		return ret;
-> +	}
-> +
-> +	switch (state->pixel_blend_mode) {
-> +	case DRM_MODE_BLEND_COVERAGE:
-> +		/* alpha mode select - combo alpha */
-> +		p->blend_mode |= BIT_DPU_LAY_COMBO_ALPHA;
-> +		/* Normal mode */
-> +		p->blend_mode |= BIT_DPU_LAY_MODE_BLEND_NORMAL;
-> +		break;
-> +	case DRM_MODE_BLEND_PREMULTI:
-> +		/* alpha mode select - combo alpha */
-> +		p->blend_mode |= BIT_DPU_LAY_COMBO_ALPHA;
-> +		/* Pre-mult mode */
-> +		p->blend_mode |= BIT_DPU_LAY_MODE_BLEND_PREMULT;
-> +		break;
-> +	case DRM_MODE_BLEND_PIXEL_NONE:
-> +	default:
-> +		/* don't do blending, maybe RGBX */
-> +		/* alpha mode select - layer alpha */
-> +		p->blend_mode |= BIT_DPU_LAY_LAYER_ALPHA;
-> +		break;
-> +	}
-> +
-> +	for (i = 0; i < fb->format->num_planes; i++) {
-> +		cma_obj = drm_fb_cma_get_gem_obj(fb, i);
-> +		addr = cma_obj->paddr + fb->offsets[i];
-> +		if (addr % 16) {
-> +			DRM_ERROR("layer addr[%d] is not 16 bytes align, it's 0x%08x\n",
-> +				i, addr);
-> +			return -EFAULT;
-> +		}
-> +
-> +		p->addr[i] = addr;
-> +		p->pitch[i] = fb->pitches[i];
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void sprd_plane_atomic_update(struct drm_plane *plane,
-> +				    struct drm_plane_state *old_state)
-> +{
-> +	struct drm_plane_state *state = plane->state;
-> +	struct drm_framebuffer *fb = plane->state->fb;
-> +	struct sprd_plane *p = to_sprd_plane(plane);
-> +	struct sprd_dpu *dpu = crtc_to_dpu(plane->state->crtc);
-> +	struct dpu_layer *layer = &dpu->layers[p->index];
-> +	int i;
-> +
-> +	if (!state->crtc || !state->fb)
-> +		return;
-> +
-> +	layer->index = p->index;
-> +	layer->src_x = state->src_x >> 16;
-> +	layer->src_y = state->src_y >> 16;
-> +	layer->src_w = state->src_w >> 16;
-> +	layer->src_h = state->src_h >> 16;
-> +	layer->dst_x = state->crtc_x;
-> +	layer->dst_y = state->crtc_y;
-> +	layer->dst_w = state->crtc_w;
-> +	layer->dst_h = state->crtc_h;
-> +	layer->alpha = state->alpha;
-> +	layer->format = p->format;
-> +	layer->blending = p->blend_mode;
-> +	layer->rotation = p->rotation;
-> +	layer->planes = fb->format->num_planes;
-> +
-> +	for (i = 0; i < layer->planes; i++) {
-> +		layer->addr[i] = p->addr[i];
-> +		layer->pitch[i] = p->pitch[i];
-> +	}
-> +
-> +	dpu->pending_planes++;
-> +}
-> +
-> +static void sprd_plane_create_properties(struct sprd_plane *p, int index)
-> +{
-> +	unsigned int supported_modes = BIT(DRM_MODE_BLEND_PIXEL_NONE) |
-> +				       BIT(DRM_MODE_BLEND_PREMULTI) |
-> +				       BIT(DRM_MODE_BLEND_COVERAGE);
-> +
-> +	/* create rotation property */
-> +	drm_plane_create_rotation_property(&p->plane,
-> +					   DRM_MODE_ROTATE_0,
-> +					   DRM_MODE_ROTATE_MASK |
-> +					   DRM_MODE_REFLECT_MASK);
-> +
-> +	/* create alpha property */
-> +	drm_plane_create_alpha_property(&p->plane);
-> +
-> +	/* create blend mode property */
-> +	drm_plane_create_blend_mode_property(&p->plane, supported_modes);
-> +
-> +	/* create zpos property */
-> +	drm_plane_create_zpos_immutable_property(&p->plane, index);
-> +}
-> +
-> +static const struct drm_plane_helper_funcs sprd_plane_helper_funcs = {
-> +	.atomic_check = sprd_plane_atomic_check,
-> +	.atomic_update = sprd_plane_atomic_update,
-> +};
-> +
-> +static const struct drm_plane_funcs sprd_plane_funcs = {
-> +	.update_plane = drm_atomic_helper_update_plane,
-> +	.disable_plane	= drm_atomic_helper_disable_plane,
-> +	.destroy = drm_plane_cleanup,
-> +	.reset = drm_atomic_helper_plane_reset,
-> +	.atomic_duplicate_state = drm_atomic_helper_plane_duplicate_state,
-> +	.atomic_destroy_state = drm_atomic_helper_plane_destroy_state,
-> +};
-> +
-> +static struct drm_plane *sprd_plane_init(struct drm_device *drm,
-> +					struct sprd_dpu *dpu)
-> +{
-> +	struct drm_plane *primary = NULL;
-> +	struct sprd_plane *p = NULL;
-> +	struct dpu_capability cap = {};
-> +	int ret, i;
-> +
-> +	dpu->core->capability(&dpu->ctx, &cap);
-> +
-> +	dpu->layers = devm_kcalloc(drm->dev, cap.max_layers,
-> +				  sizeof(struct dpu_layer), GFP_KERNEL);
-> +	if (!dpu->layers)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	for (i = 0; i < cap.max_layers; i++) {
-> +
-> +		p = devm_kzalloc(drm->dev, sizeof(*p), GFP_KERNEL);
-> +		if (!p)
-> +			return ERR_PTR(-ENOMEM);
-> +
-> +		ret = drm_universal_plane_init(drm, &p->plane, 1,
-> +					       &sprd_plane_funcs, cap.fmts_ptr,
-> +					       cap.fmts_cnt, NULL,
-> +					       DRM_PLANE_TYPE_PRIMARY, NULL);
-> +		if (ret) {
-> +			DRM_ERROR("fail to init primary plane\n");
-> +			return ERR_PTR(ret);
-> +		}
-> +
-> +		drm_plane_helper_add(&p->plane, &sprd_plane_helper_funcs);
-> +
-> +		sprd_plane_create_properties(p, i);
-> +
-> +		p->index = i;
-> +		if (i == 0)
-> +			primary = &p->plane;
-> +	}
-> +
-> +	return primary;
-> +}
-> +
-> +static enum drm_mode_status sprd_crtc_mode_valid(struct drm_crtc *crtc,
-> +					const struct drm_display_mode *mode)
-> +{
-> +	struct sprd_dpu *dpu = crtc_to_dpu(crtc);
-> +
-> +	DRM_DEBUG("%s() mode: "DRM_MODE_FMT"\n", __func__, DRM_MODE_ARG(mode));
-> +
-> +	if (mode->type & DRM_MODE_TYPE_PREFERRED) {
-> +		drm_display_mode_to_videomode(mode, &dpu->ctx.vm);
-> +
-> +		if ((mode->hdisplay == mode->htotal) ||
-> +		    (mode->vdisplay == mode->vtotal))
-> +			dpu->ctx.if_type = SPRD_DPU_IF_EDPI;
-> +		else
-> +			dpu->ctx.if_type = SPRD_DPU_IF_DPI;
-> +	}
-> +
-> +	return MODE_OK;
-> +}
-> +
-> +static void sprd_crtc_atomic_enable(struct drm_crtc *crtc,
-> +				   struct drm_crtc_state *old_state)
-> +{
-> +	struct sprd_dpu *dpu = crtc_to_dpu(crtc);
-> +
-> +	sprd_dpu_init(dpu);
-> +
-> +	enable_irq(dpu->ctx.irq);
-> +}
-> +
-> +static void sprd_crtc_atomic_disable(struct drm_crtc *crtc,
-> +				    struct drm_crtc_state *old_state)
-> +{
-> +	struct sprd_dpu *dpu = crtc_to_dpu(crtc);
-> +	struct drm_device *drm = dpu->crtc.dev;
-> +
-> +	disable_irq(dpu->ctx.irq);
-> +
-> +	sprd_dpu_fini(dpu);
-> +
-> +	spin_lock_irq(&drm->event_lock);
-> +	if (crtc->state->event) {
-> +		drm_crtc_send_vblank_event(crtc, crtc->state->event);
-> +		crtc->state->event = NULL;
-> +	}
-> +	spin_unlock_irq(&drm->event_lock);
-> +}
-> +
-> +static int sprd_crtc_atomic_check(struct drm_crtc *crtc,
-> +				 struct drm_crtc_state *state)
-> +{
-> +	DRM_DEBUG("%s()\n", __func__);
-> +
-> +	return 0;
-> +}
-> +
-> +static void sprd_crtc_atomic_begin(struct drm_crtc *crtc,
-> +				  struct drm_crtc_state *old_state)
-> +{
-> +	struct sprd_dpu *dpu = crtc_to_dpu(crtc);
-> +
-> +	memset(dpu->layers, 0, sizeof(*dpu->layers) * dpu->pending_planes);
-> +
-> +	dpu->pending_planes = 0;
-> +}
-> +
-> +static void sprd_crtc_atomic_flush(struct drm_crtc *crtc,
-> +				  struct drm_crtc_state *old_state)
-> +
-> +{
-> +	struct sprd_dpu *dpu = crtc_to_dpu(crtc);
-> +	struct drm_device *drm = dpu->crtc.dev;
-> +
-> +	if (dpu->pending_planes)
-> +		dpu->core->flip(&dpu->ctx, dpu->layers, dpu->pending_planes);
-> +
-> +	spin_lock_irq(&drm->event_lock);
-> +	if (crtc->state->event) {
-> +		drm_crtc_send_vblank_event(crtc, crtc->state->event);
-> +		crtc->state->event = NULL;
-> +	}
-> +	spin_unlock_irq(&drm->event_lock);
-> +}
-> +
-> +static int sprd_crtc_enable_vblank(struct drm_crtc *crtc)
-> +{
-> +	struct sprd_dpu *dpu = crtc_to_dpu(crtc);
-> +
-> +	dpu->core->enable_vsync(&dpu->ctx);
-> +
-> +	return 0;
-> +}
-> +
-> +static void sprd_crtc_disable_vblank(struct drm_crtc *crtc)
-> +{
-> +	struct sprd_dpu *dpu = crtc_to_dpu(crtc);
-> +
-> +	dpu->core->disable_vsync(&dpu->ctx);
-> +}
-> +
-> +static const struct drm_crtc_helper_funcs sprd_crtc_helper_funcs = {
-> +	.mode_valid	= sprd_crtc_mode_valid,
-> +	.atomic_check	= sprd_crtc_atomic_check,
-> +	.atomic_begin	= sprd_crtc_atomic_begin,
-> +	.atomic_flush	= sprd_crtc_atomic_flush,
-> +	.atomic_enable	= sprd_crtc_atomic_enable,
-> +	.atomic_disable	= sprd_crtc_atomic_disable,
-> +};
-> +
-> +static const struct drm_crtc_funcs sprd_crtc_funcs = {
-> +	.destroy	= drm_crtc_cleanup,
-> +	.set_config	= drm_atomic_helper_set_config,
-> +	.page_flip	= drm_atomic_helper_page_flip,
-> +	.reset		= drm_atomic_helper_crtc_reset,
-> +	.atomic_duplicate_state	= drm_atomic_helper_crtc_duplicate_state,
-> +	.atomic_destroy_state	= drm_atomic_helper_crtc_destroy_state,
-> +	.enable_vblank	= sprd_crtc_enable_vblank,
-> +	.disable_vblank	= sprd_crtc_disable_vblank,
-> +};
-> +
-> +static int sprd_crtc_init(struct drm_device *drm, struct drm_crtc *crtc,
-> +			 struct drm_plane *primary)
-> +{
-> +	struct device_node *port;
-> +	int ret;
-> +
-> +	/*
-> +	 * set crtc port so that drm_of_find_possible_crtcs call works
-> +	 */
-> +	port = of_parse_phandle(drm->dev->of_node, "ports", 0);
-> +	if (!port) {
-> +		DRM_ERROR("find 'ports' phandle of %s failed\n",
-> +			  drm->dev->of_node->full_name);
-> +		return -EINVAL;
-> +	}
-> +	of_node_put(port);
-> +	crtc->port = port;
-> +
-> +	ret = drm_crtc_init_with_planes(drm, crtc, primary, NULL,
-> +					&sprd_crtc_funcs, NULL);
-> +	if (ret) {
-> +		DRM_ERROR("failed to init crtc.\n");
-> +		return ret;
-> +	}
-> +
-> +	drm_mode_crtc_set_gamma_size(crtc, 256);
-> +
-> +	drm_crtc_helper_add(crtc, &sprd_crtc_helper_funcs);
-> +
-> +	return 0;
-> +}
-> +
-> +static void sprd_dpu_init(struct sprd_dpu *dpu)
-> +{
-> +	struct dpu_context *ctx = &dpu->ctx;
-> +
-> +	dpu->core->init(ctx);
-> +	dpu->core->ifconfig(ctx);
-> +}
-> +
-> +static void sprd_dpu_fini(struct sprd_dpu *dpu)
-> +{
-> +	struct dpu_context *ctx = &dpu->ctx;
-> +
-> +	dpu->core->fini(ctx);
-> +}
-> +
-> +static irqreturn_t sprd_dpu_isr(int irq, void *data)
-> +{
-> +	struct sprd_dpu *dpu = data;
-> +	struct dpu_context *ctx = &dpu->ctx;
-> +	u32 int_mask = 0;
-> +
-> +	int_mask = dpu->core->isr(ctx);
-> +
-> +	if (int_mask & BIT_DPU_INT_ERR)
-> +		DRM_WARN("Warning: dpu underflow!\n");
-> +
-> +	if (int_mask & BIT_DPU_INT_VSYNC)
-> +		drm_crtc_handle_vblank(&dpu->crtc);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int sprd_dpu_bind(struct device *dev, struct device *master, void *data)
-> +{
-> +	struct drm_device *drm = data;
-> +	struct sprd_dpu *dpu = dev_get_drvdata(dev);
-> +	struct drm_plane *plane;
-> +	int ret;
-> +
-> +	plane = sprd_plane_init(drm, dpu);
-> +	if (IS_ERR_OR_NULL(plane)) {
-> +		ret = PTR_ERR(plane);
-> +		return ret;
-> +	}
-> +
-> +	ret = sprd_crtc_init(drm, &dpu->crtc, plane);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static void sprd_dpu_unbind(struct device *dev, struct device *master,
-> +	void *data)
-> +{
-> +	struct sprd_dpu *dpu = dev_get_drvdata(dev);
-> +
-> +	drm_crtc_cleanup(&dpu->crtc);
-> +}
-> +
-> +static const struct component_ops dpu_component_ops = {
-> +	.bind = sprd_dpu_bind,
-> +	.unbind = sprd_dpu_unbind,
-> +};
-> +
-> +static int sprd_dpu_context_init(struct sprd_dpu *dpu,
-> +				struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct dpu_context *ctx = &dpu->ctx;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	ctx->base = devm_ioremap(dev, res->start, resource_size(res));
-> +	if (!ctx->base) {
-> +		DRM_ERROR("failed to map dpu registers\n");
-> +		return -EFAULT;
-> +	}
-> +
-> +	ctx->irq = platform_get_irq(pdev, 0);
-> +	if (ctx->irq < 0) {
-> +		DRM_ERROR("failed to get dpu irq\n");
-> +		return ctx->irq;
-> +	}
-> +
-> +	irq_set_status_flags(ctx->irq, IRQ_NOAUTOEN);
-> +	ret = devm_request_irq(dev, ctx->irq, sprd_dpu_isr,
-> +					0, "DPU", dpu);
-> +	if (ret) {
-> +		DRM_ERROR("failed to register dpu irq handler\n");
-> +		return ret;
-> +	}
-> +
-> +	init_waitqueue_head(&ctx->wait_queue);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct sprd_dpu_ops sharkl3_dpu = {
-> +	.core = &dpu_r2p0_core_ops,
-> +};
-> +
-> +static const struct of_device_id dpu_match_table[] = {
-> +	{ .compatible = "sprd,sharkl3-dpu",
-> +	  .data = &sharkl3_dpu },
-> +	{ /* sentinel */ },
-> +};
-> +
-> +static int sprd_dpu_probe(struct platform_device *pdev)
-> +{
-> +	const struct sprd_dpu_ops *pdata;
-> +	struct sprd_dpu *dpu;
-> +	int ret;
-> +
-> +	dpu = devm_kzalloc(&pdev->dev, sizeof(*dpu), GFP_KERNEL);
-> +	if (!dpu)
-> +		return -ENOMEM;
-> +
-> +	pdata = of_device_get_match_data(&pdev->dev);
-> +	if (pdata) {
-> +		dpu->core = pdata->core;
-> +	} else {
-> +		DRM_ERROR("No matching driver data found\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = sprd_dpu_context_init(dpu, &pdev->dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	platform_set_drvdata(pdev, dpu);
-> +
-> +	return component_add(&pdev->dev, &dpu_component_ops);
-> +}
-> +
-> +static int sprd_dpu_remove(struct platform_device *pdev)
-> +{
-> +	component_del(&pdev->dev, &dpu_component_ops);
-> +	return 0;
-> +}
-> +
-> +struct platform_driver sprd_dpu_driver = {
-> +	.probe = sprd_dpu_probe,
-> +	.remove = sprd_dpu_remove,
-> +	.driver = {
-> +		.name = "sprd-dpu-drv",
-> +		.of_match_table = dpu_match_table,
-> +	},
-> +};
-> +
-> +MODULE_AUTHOR("Leon He <leon.he@unisoc.com>");
-> +MODULE_AUTHOR("Kevin Tang <kevin.tang@unisoc.com>");
-> +MODULE_DESCRIPTION("Unisoc Display Controller Driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/gpu/drm/sprd/sprd_dpu.h b/drivers/gpu/drm/sprd/sprd_dpu.h
-> new file mode 100644
-> index 0000000..7d3c5e4
-> --- /dev/null
-> +++ b/drivers/gpu/drm/sprd/sprd_dpu.h
-> @@ -0,0 +1,187 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2020 Unisoc Inc.
-> + */
-> +
-> +#ifndef __SPRD_DPU_H__
-> +#define __SPRD_DPU_H__
-> +
-> +#include <linux/bug.h>
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/string.h>
-> +#include <video/videomode.h>
-> +
-> +#include <drm/drm_crtc.h>
-> +#include <drm/drm_fourcc.h>
-> +#include <drm/drm_print.h>
-> +#include <drm/drm_vblank.h>
-> +#include <uapi/drm/drm_mode.h>
-> +
-> +#define BIT_DPU_INT_DONE_		BIT(0)
-> +#define BIT_DPU_INT_TE			BIT(1)
-> +#define BIT_DPU_INT_ERR			BIT(2)
-> +#define BIT_DPU_INT_EDPI_TE		BIT(3)
-> +#define BIT_DPU_INT_UPDATE_DONE		BIT(4)
-> +#define BIT_DPU_INT_VSYNC		BIT(5)
-> +#define BIT_DPU_INT_WB_DONE		BIT(6)
-> +#define BIT_DPU_INT_WB_ERR		BIT(7)
-> +
-> +#define BIT_DPU_LAY_LAYER_ALPHA			(0x01 << 2)
-> +#define BIT_DPU_LAY_COMBO_ALPHA			(0x02 << 2)
-> +#define BIT_DPU_LAY_FORMAT_YUV422_2PLANE		(0x00 << 4)
-> +#define BIT_DPU_LAY_FORMAT_YUV420_2PLANE		(0x01 << 4)
-> +#define BIT_DPU_LAY_FORMAT_YUV420_3PLANE		(0x02 << 4)
-> +#define BIT_DPU_LAY_FORMAT_ARGB8888			(0x03 << 4)
-> +#define BIT_DPU_LAY_FORMAT_RGB565			(0x04 << 4)
-> +#define BIT_DPU_LAY_DATA_ENDIAN_B0B1B2B3		(0x00 << 8)
-> +#define BIT_DPU_LAY_DATA_ENDIAN_B3B2B1B0		(0x01 << 8)
-> +#define BIT_DPU_LAY_NO_SWITCH			(0x00 << 10)
-> +#define BIT_DPU_LAY_RB_OR_UV_SWITCH		(0x01 << 10)
-> +#define BIT_DPU_LAY_MODE_BLEND_NORMAL		(0x00 << 16)
-> +#define BIT_DPU_LAY_MODE_BLEND_PREMULT		(0x01 << 16)
-> +
-> +enum {
-> +	SPRD_DPU_IF_DBI = 0,
-> +	SPRD_DPU_IF_DPI,
-> +	SPRD_DPU_IF_EDPI,
-> +	SPRD_DPU_IF_LIMIT
-> +};
-> +
-> +enum {
-> +	DPU_LAYER_ROTATION_0,
-> +	DPU_LAYER_ROTATION_90,
-> +	DPU_LAYER_ROTATION_180,
-> +	DPU_LAYER_ROTATION_270,
-> +	DPU_LAYER_ROTATION_0_M,
-> +	DPU_LAYER_ROTATION_90_M,
-> +	DPU_LAYER_ROTATION_180_M,
-> +	DPU_LAYER_ROTATION_270_M,
-> +};
-> +
-> +struct dpu_layer {
-> +	u8 index;
-> +	u8 planes;
-> +	u32 addr[4];
-> +	u32 pitch[4];
-> +	s16 src_x;
-> +	s16 src_y;
-> +	s16 src_w;
-> +	s16 src_h;
-> +	s16 dst_x;
-> +	s16 dst_y;
-> +	u16 dst_w;
-> +	u16 dst_h;
-> +	u32 format;
-> +	u32 alpha;
-> +	u32 blending;
-> +	u32 rotation;
-> +};
-> +
-> +/**
-> + * Sprd DPU capability structure
-> + *
-> + * @max_layers: maximum number of layers available
-> + * @fmts_ptr: A pointer to array of supported pixel formats
-> + * @fmts_cnt: the number of format on @fmts_ptr
-> + */
-> +struct dpu_capability {
-> +	u32 max_layers;
-> +	const u32 *fmts_ptr;
-> +	u32 fmts_cnt;
-> +};
-> +
-> +/**
-> + * Sprd DPU core callback ops
-> + *
-> + * This structure decribes the display controller common
-> + * callback ops
-> + *
-> + * @init: initial DPU core
-> + * @fini: cleanup DPU core
-> + * @run: enable DPU output
-> + * @stop: disable DPU output
-> + * @enable_vsync: enable vblank interrupt
-> + * @disable_vsync: disable vblank interrupt
-> + * @isr: function pointer to the isr
-> + * @ifconfig: initial DPI interface
-> + * @flip: commit CRTC planes to DPU
-> + * @capability: callback for DPU capabilities
-> + */
-> +struct dpu_context;
-> +struct dpu_core_ops {
-> +	void (*init)(struct dpu_context *ctx);
-> +	void (*fini)(struct dpu_context *ctx);
-> +	void (*run)(struct dpu_context *ctx);
-> +	void (*stop)(struct dpu_context *ctx);
-> +	void (*enable_vsync)(struct dpu_context *ctx);
-> +	void (*disable_vsync)(struct dpu_context *ctx);
-> +	u32 (*isr)(struct dpu_context *ctx);
-> +	void (*ifconfig)(struct dpu_context *ctx);
-> +	void (*flip)(struct dpu_context *ctx,
-> +		     struct dpu_layer layers[], u8 count);
-> +	void (*capability)(struct dpu_context *ctx,
-> +			struct dpu_capability *cap);
-> +};
-> +
-> +/**
-> + * Sprd DPU context structure
-> + *
-> + * @base: DPU controller base address
-> + * @irq: IRQ number to install the handler for
-> + * @if_type: The type of DPI interface, default is DPI mode.
-> + * @vm: videomode structure to use for DPU and DPI initialization
-> + * @stopped: indicates whether DPU are stopped
-> + * @wait_queue: wait queue, used to wait for DPU shadow register update done and
-> + * DPU stop register done interrupt signal.
-> + * @evt_update: wait queue condition for DPU shadow register
-> + * @evt_stop: wait queue condition for DPU stop register
-> + */
-> +struct dpu_context {
-> +	void __iomem *base;
-> +	int irq;
-> +	u8 if_type;
-> +	struct videomode vm;
-> +	bool stopped;
-> +	wait_queue_head_t wait_queue;
-> +	bool evt_update;
-> +	bool evt_stop;
-> +};
-> +
-> +/**
-> + * Sprd DPU device structure
-> + *
-> + * @crtc: DRM crtc
-> + * @ctx: A pointer to the DPU's implementation specific context
-> + * @core: pointer to callbacks for DPU core functionality
-> + * @layers: active DPU layers ready to commit
-> + * @pending_planes: the number of layers on @layers
-> + */
-> +struct sprd_dpu {
-> +	struct drm_crtc crtc;
-> +	struct dpu_context ctx;
-> +	const struct dpu_core_ops *core;
-> +	struct dpu_layer *layers;
-> +	u8 pending_planes;
-> +};
-> +
-> +/**
-> + * Sprd DPU H/W callback ops match table structure
-> + * The structure used for matching a specific device callback ops
-> + *
-> + * @core: pointer to callbacks for DPU core functionality
-> + */
-> +struct sprd_dpu_ops {
-> +	const struct dpu_core_ops *core;
-> +};
-> +
-> +static inline struct sprd_dpu *crtc_to_dpu(struct drm_crtc *crtc)
-> +{
-> +	return crtc ? container_of(crtc, struct sprd_dpu, crtc) : NULL;
-> +}
-> +
-> +extern const struct dpu_core_ops dpu_r2p0_core_ops;
-> +
-> +#endif
-> diff --git a/drivers/gpu/drm/sprd/sprd_drm.c b/drivers/gpu/drm/sprd/sprd_drm.c
-> index 4706185..200020f 100644
-> --- a/drivers/gpu/drm/sprd/sprd_drm.c
-> +++ b/drivers/gpu/drm/sprd/sprd_drm.c
-> @@ -200,6 +200,7 @@ static struct platform_driver sprd_drm_driver = {
->  
->  static struct platform_driver *sprd_drm_drivers[]  = {
->  	&sprd_drm_driver,
-> +	&sprd_dpu_driver,
->  };
->  
->  static int __init sprd_drm_init(void)
-> diff --git a/drivers/gpu/drm/sprd/sprd_drm.h b/drivers/gpu/drm/sprd/sprd_drm.h
-> index edf0881..3c32f3a 100644
-> --- a/drivers/gpu/drm/sprd/sprd_drm.h
-> +++ b/drivers/gpu/drm/sprd/sprd_drm.h
-> @@ -13,4 +13,6 @@ struct sprd_drm {
->  	struct drm_device *drm;
->  };
->  
-> +extern struct platform_driver sprd_dpu_driver;
-> +
->  #endif /* _SPRD_DRM_H_ */
-> -- 
-> 2.7.4
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+No, with sync_state(), only suppliers to devices without drivers
+wouldn't get the callback. Rest of the suppliers will get the callback
+and can sync their state.
+
+>  That doesn't need any involvement from userspace, though I
+> can't see why we'd want to do that rather than just work per regulator.
+>
+> > > >    b. If the regulator is ON at boot, a BOOT-LIMITS consumer is created
+> > > >       for the regulator and an enable vote is made.
+>
+> > > If something was left partially set up by the bootloader this means that
+> > > drivers are no longer able to remove power from the device as part of
+> > > getting it into a known good state even if they are the only consumer.
+>
+> > If they really NEED to turn power off to get to a known good state,
+> > then they really need to be exclusive consumers.
+>
+> There's *need* to and there's can do on systems that can support the
+> thing, the same driver will often be able to handle both situations.
+> This also goes to a risk of regressions, it's a fairly major
+> transformation to be doing.  These issues would be massively mitigated
+> if this were per regulator as I have repeatedly suggested.
+
+Even if you do per-regulator tracking, you can have one regulator
+shared by many consumers and you'll still hit this issue. So, going to
+a regulator level tracking doesn't solve this.
+
+[ ... ]
+
+> > To be clear, I understand the cases you are mentioning and I'm not
+> > discounting them. But compared to the 30 seconds of additional "on
+> > time", the functional correctness issues are more important. I'm not
+> > saying this series is the perfect solution, but it's certainly better
+> > than what we have now and we have the default behavior to be as least
+> > disruptive as possible to systems that work fine without this series.
+> > And if I find incremental improvements in the future, I'll send
+> > patches for that. But I'd hate to see perfect be the enemy of the
+> > good.
+>
+> Having the requests from drivers be acted on promptly is also a
+> potential correctness and robustness issue.  You seem very focused on
+> the disabling of unused regulators for power reasons case
+
+The correctness issue I care about is not power consumption. It's
+about not pulling the plug on or under volting an active device before
+the driver can take control of it.
+
+> but that's
+> really not the only thing going on here, there's also just the need to
+> control things as part of what the device is supposed to be doing.
+> Systems aren't always built to let us do all the things we're really
+> supposed to do with hardware so it's often advantageous to have drivers
+> that will do these things but cope gracefully, this means that it
+> doesn't always make sense to use exclusive gets even where you really
+> actually want things to happen as requested if they can.  Often the
+> devices are in practice robust enough most of the time things are fine
+> if the requests get ignored which is why systems can be built that way
+> but strictly we're not supposed to do that so where we can we should
+> avoid it.  Forcing consumers to be exclusive means that we need to add a
+> call that lets these consumers figure out which kind of get to use and
+> then have the consumer have multiple code paths for that (or more
+> realistically factor that out into the core, but then we could even more
+> easily just not have the system wide restrictions).
+
+This paragraph seems to be self contradictory to me. I don't
+understand how you can claim the drivers handle it gracefully without
+exclusive_get(), but then still say they can't handle a regulator
+being on when they request for it to be off. They just need to handle
+it gracefully for the first 30s of boot with my patch series. Only
+when regulator_cleanup_timeout=-1 is set is there a potential for the
+regulator to be kept on forever.
+
+> There's also issues around being able to reason about what the system is
+> supposed to do and why, hence my concerns about waiting for all devices
+> on the PMIC to appear.  Like I said above this is absolutely crucial.
+
+Ok, I'll try to explain the reasoning from the top.
+
+Firstly, the problem being solved is not specific to regulators. It's
+a general issue that needs to be solved for many frameworks/suppliers.
+We want a mechanism for a supplier driver to know when all the
+consumers are up and managing their resources so that the supplier
+driver can do a clean handoff from bootloader to the kernel.
+
+However, we don't want each framework doing very similar but slightly
+different things. That creates inconsistencies across frameworks, code
+repetition, maintenance headache, etc. In addition to that, it's also
+very inefficient for every framework to be trying to figure out the
+dependencies from firmware and tracking them separately.
+
+Even if you just try to answer "are all the consumers ready?" at a
+resource level (eg: at a regulator level), can't depend on get()/put()
+APIs provided by frameworks. Some of the reasons:
+1. A consumer might do "get()" and then end up deferring further down
+the probe function. If that get() was the last get() you needed to
+decide "all consumers are ready", and you remove the boot limits, then
+the system could crash because the last consumer isn't actually ready.
+2. Not all consumers do the "get()" in their probe functions. They
+might do it later for multiple reasons.
+3. Not all properties in the firmware are actually used/supported by
+the driver. So, you can't assume all consumers referring to the
+resource will actually call get() on it.
+
+So, even if you track at a resource level, you need to check for the
+consumer readiness by looking at the device bound state. fw_devlink
+adds all the supplier-consumer dependencies by creating device links
+(currently only DT is supported). So, tracking consumer device
+readiness is easier.
+
+So, say you have a callback that you get for every single consumer
+binding successfully. What can you do there? For every consumer, you
+have to parse their firmware (Eg: DT node) to see what all resources
+they use (Eg: all the -supply properties) and increment the "consumer
+ref count" for those resources (Eg: regulators). And this needs to be
+done by every framework that manages suppliers.
+
+Ok, now you have a "number of consumers ready" refcount per resource.
+But to know if all the consumers of a resource are ready, you'll also
+need the total number of consumers per resource. How do you find that
+out?
+
+Whatever scheme you use to count the total number of consumers, you
+need to make sure you also take into account consumer devices that
+have not been added yet. As in device_add() hasn't been done. For
+example, child devices in DT that haven't been added yet because their
+parent hasn't probed.
+
+fw_devlink again helps avoid parsing the entire DT. It creates "proxy"
+device links between a supplier device and the parent device of a
+consumer if the consumer hasn't been added yet.
+
+So, when the "a consumer has probed" callback comes, apart from what
+you have to do already (tracking "number of consumers ready" at a
+resource level), you also need to parse all the descendant nodes (not
+just direct children) of that consumer's firmware node to check and
+potentially increment the "total consumers" at a per resource (Eg:
+regulator) level. Again, this will need to be done for every
+framework.
+
+And we still haven't dealt with the case where a consumer binds and
+unbinds. Say a resource (Eg: regulator) has N consumers. Say, only M
+(< N) consumers are ready/bound so far. Then one of the M consumers
+unbinds and then binds again. So, your "consumers ready" refcount per
+resource becomes M + 1 when only M consumers are ready. So, at a per
+resource level you have to now also track "already seen" devices or
+track device unbinding. And those "devices" themselves might vanish
+and come back again (Eg: DT overlays, the dwc driver that adds/removes
+child devices during probe, etc). I'm not even going to try and expand
+on how each framework would handle this  -- it becomes very messy.
+
+Also, even if we do resource level tracking, it doesn't solve the
+problem of a consumer that expects regulator_disable() to turn off the
+regulator even when it's not using get_exclusive(). For example, the
+same regulator can have more than one consumer but the consumer that
+needs exclusive behavior just happens to probe first and has full
+control of the regulator. With boot limits applied at a regulator
+level, it'll still prevent the regulator from being turned off.
+
+So, long story short, tracking at a resource level:
+1. Will be way more complicated than tracking at a consumer device level.
+2. Will use a lot more memory.
+3. Will use be a lot less efficient due to all the repeated parsing
+and tracking you'll have to do.
+4. Doesn't really solve the "need exclusive but doesn't use
+get_exclusive()" consumer problem.
+
+But then why not just do a "boot done" initcall/callback instead of
+doing it based on supplier-consumers device level dependencies?
+
+"boot done" can be done in a couple of ways:
+1. Have userspace tell that it's done loading all the modules. This is
+pretty much a no go as the kernel now depends on userspace for proper
+functionality.
+2. Timer, but this is a configuration nightmare and doesn't work reliably.
+3. Wait till every single device has been bound to a driver. The
+problem with this is that even if a single device is not bound to a
+driver, the entire system would be stuck in a "boot not done yet"
+mode. So any device left on by the boot loader would be permanently
+stuck on and can't go to states that are incompatible with their state
+at boot.
+
+So this is basically a cost (complexity) vs benefit (system vs device
+vs resource level removing of boot limits) problem.
+
+Device level granularity provides the best bang for the buck.
+Hopefully that clarifies the reasoning.
+
+Would you consider this series if the boot limit is only set when
+regulator_cleanup_timeout=-1 (as opposed to always)? Then the default
+behavior will stay identical to before this series and only when
+regulator_cleanup_timeout=-1 will any of this code kick in.
+
+-Saravana
