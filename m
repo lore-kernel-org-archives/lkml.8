@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117D1C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF04C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E18B720792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C96D207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595956236;
-	bh=mARbbccibp0w+1VVZDf+WZpyqmdv+vpiA7azcsNO8a8=;
+	s=default; t=1595956252;
+	bh=W09MG88rY5IUoeTZVSJ0vF7v6B+fC0V56WD0WHJGdbI=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=MiV2JceJWC94p25yqPX9aezYXs6/hfXzRPXB2OU35Ww8vuYYoLTfwtYLeftvfnQc+
-	 Vi5KkXSR6/DRe+qRTO+1D1YGZbmx037bjntZdApNiM9qJseYPgNMf3RP3UctWbka/b
-	 n6NrUeEPrNpp2SyUh4S+1tDitdGvK9RfjGxSXMR4=
+	b=hIaaa401ZXYJjFKcNXm0n91yH6eVIgMhaBEIhHBuIGNPBTTNTfDayqpQSk2j2Na3z
+	 djwcqJ+QtrXL1beTc08JuBUoyPVz6em9ClZg1+hjHF67hfGTDkgmwYUojdtDKR4SY8
+	 xEgm4lZKO/ykDWqVEe2eHeQ9gY2R0dqbkIpxUwpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731932AbgG1RKf (ORCPT
+        id S1731945AbgG1RKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 13:10:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35624 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 13:10:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731070AbgG1RKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 13:10:35 -0400
+        id S1731070AbgG1RKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 13:10:50 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAE9720786;
-        Tue, 28 Jul 2020 17:10:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F0E720792;
+        Tue, 28 Jul 2020 17:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595956234;
-        bh=mARbbccibp0w+1VVZDf+WZpyqmdv+vpiA7azcsNO8a8=;
+        s=default; t=1595956250;
+        bh=W09MG88rY5IUoeTZVSJ0vF7v6B+fC0V56WD0WHJGdbI=;
         h=From:To:Cc:Subject:Date:From;
-        b=fI3JZFQU/DE0fiQGD5XtPP7NbgOcOz4Pbe0pd7kESFcTknNCtEKsN4v7TSW7fI4Al
-         EhJHUGBwWYr4Yyp6Vh9Ts7oT7mVdGxNUBlgJkQpacyzv+lCQ/GNWlWAmLyoHij5znj
-         iak0V6ZhN+/6TAWVfMJ0/EaM0XOQUKsG1iMEMvwI=
+        b=imIPN0qq76Onx7g+Wn0hJP1ninuDU2lMHUWQyXyT/TZIeiFpxpiufn9pPyQ/8LKhP
+         WujNmGDTwaKbyz+92SR0+cuAohRAJ1jZ6qIz03N0Wc+e1uinTEfmUB9zol+twxPYF9
+         uhsH+qssz4yuhBYzdXxPvBr93vNh5KuHIVLrwgHc=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] KEYS: asymmetric: Fix kerneldoc
-Date:   Tue, 28 Jul 2020 19:10:29 +0200
-Message-Id: <20200728171029.28525-1-krzk@kernel.org>
+Subject: [PATCH] pci: vc: Fix kerneldoc
+Date:   Tue, 28 Jul 2020 19:10:45 +0200
+Message-Id: <20200728171045.28606-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -56,40 +54,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fix W=1 compile warnings (invalid kerneldoc):
 
-    crypto/asymmetric_keys/asymmetric_type.c:160: warning: Function parameter or member 'kid1' not described in 'asymmetric_key_id_same'
-    crypto/asymmetric_keys/asymmetric_type.c:160: warning: Function parameter or member 'kid2' not described in 'asymmetric_key_id_same'
-    crypto/asymmetric_keys/asymmetric_type.c:160: warning: Excess function parameter 'kid_1' description in 'asymmetric_key_id_same'
-    crypto/asymmetric_keys/asymmetric_type.c:160: warning: Excess function parameter 'kid_2' description in 'asymmetric_key_id_same'
+    drivers/pci/vc.c:188: warning: Excess function parameter 'name' description in 'pci_vc_do_save_buffer'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- crypto/asymmetric_keys/asymmetric_type.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/pci/vc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/crypto/asymmetric_keys/asymmetric_type.c b/crypto/asymmetric_keys/asymmetric_type.c
-index 33e77d846caa..ad8af3d70ac0 100644
---- a/crypto/asymmetric_keys/asymmetric_type.c
-+++ b/crypto/asymmetric_keys/asymmetric_type.c
-@@ -152,7 +152,8 @@ EXPORT_SYMBOL_GPL(asymmetric_key_generate_id);
- 
- /**
-  * asymmetric_key_id_same - Return true if two asymmetric keys IDs are the same.
-- * @kid_1, @kid_2: The key IDs to compare
-+ * @kid1: The key ID to compare
-+ * @kid2: The key ID to compare
-  */
- bool asymmetric_key_id_same(const struct asymmetric_key_id *kid1,
- 			    const struct asymmetric_key_id *kid2)
-@@ -168,7 +169,8 @@ EXPORT_SYMBOL_GPL(asymmetric_key_id_same);
- /**
-  * asymmetric_key_id_partial - Return true if two asymmetric keys IDs
-  * partially match
-- * @kid_1, @kid_2: The key IDs to compare
-+ * @kid1: The key ID to compare
-+ * @kid2: The key ID to compare
-  */
- bool asymmetric_key_id_partial(const struct asymmetric_key_id *kid1,
- 			       const struct asymmetric_key_id *kid2)
+diff --git a/drivers/pci/vc.c b/drivers/pci/vc.c
+index 5486f8768c86..5fc59ac31145 100644
+--- a/drivers/pci/vc.c
++++ b/drivers/pci/vc.c
+@@ -172,7 +172,6 @@ static void pci_vc_enable(struct pci_dev *dev, int pos, int res)
+  * @dev: device
+  * @pos: starting position of VC capability (VC/VC9/MFVC)
+  * @save_state: buffer for save/restore
+- * @name: for error message
+  * @save: if provided a buffer, this indicates what to do with it
+  *
+  * Walking Virtual Channel config space to size, save, or restore it
 -- 
 2.17.1
 
