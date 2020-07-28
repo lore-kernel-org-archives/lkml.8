@@ -7,35 +7,34 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF017C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7440FC433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 995DF2075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5527620672
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:24:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbgG1CYn (ORCPT
+        id S1727078AbgG1CYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:24:43 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37652 "EHLO huawei.com"
+        Mon, 27 Jul 2020 22:24:53 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48990 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726839AbgG1CYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 22:24:43 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9C45A9A8B866B49EC421;
-        Tue, 28 Jul 2020 10:24:39 +0800 (CST)
+        id S1726315AbgG1CYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 22:24:52 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8EFFA78F7F35ED3AEBB2;
+        Tue, 28 Jul 2020 10:24:50 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 28 Jul 2020 10:24:38 +0800
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 28 Jul 2020 10:24:49 +0800
 From:   Qinglang Miao <miaoqinglang@huawei.com>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-CC:     Russell King <linux@armlinux.org.uk>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] ARM: s3c: fix return value check in s3c_usb_otgphy_init()
-Date:   Tue, 28 Jul 2020 10:27:56 +0800
-Message-ID: <20200728022756.87687-1-miaoqinglang@huawei.com>
+CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] powerpc: use for_each_child_of_node() macro
+Date:   Tue, 28 Jul 2020 10:28:07 +0800
+Message-ID: <20200728022807.87815-1-miaoqinglang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -47,28 +46,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-the function clk_get() returns ERR_PTR() in case of error and
-never returns NULL. So there's no need to test whether xusbxti
-is NULL, just remove the redundant part in the return value check.
+Use for_each_child_of_node() macro instead of open coding it.
 
 Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 ---
- arch/arm/mach-s3c64xx/setup-usb-phy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/pasemi/misc.c         | 3 +--
+ arch/powerpc/platforms/powermac/low_i2c.c    | 6 ++----
+ arch/powerpc/platforms/powermac/pfunc_base.c | 4 ++--
+ arch/powerpc/platforms/powermac/udbg_scc.c   | 2 +-
+ 4 files changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/mach-s3c64xx/setup-usb-phy.c b/arch/arm/mach-s3c64xx/setup-usb-phy.c
-index d6b0e3b26..99d743884 100644
---- a/arch/arm/mach-s3c64xx/setup-usb-phy.c
-+++ b/arch/arm/mach-s3c64xx/setup-usb-phy.c
-@@ -31,7 +31,7 @@ static int s3c_usb_otgphy_init(struct platform_device *pdev)
- 	phyclk = readl(S3C_PHYCLK) & ~S3C_PHYCLK_CLKSEL_MASK;
+diff --git a/arch/powerpc/platforms/pasemi/misc.c b/arch/powerpc/platforms/pasemi/misc.c
+index 1cd4ca14b..1bf65d02d 100644
+--- a/arch/powerpc/platforms/pasemi/misc.c
++++ b/arch/powerpc/platforms/pasemi/misc.c
+@@ -56,8 +56,7 @@ static int __init pasemi_register_i2c_devices(void)
+ 		if (!adap_node)
+ 			continue;
  
- 	xusbxti = clk_get(&pdev->dev, "xusbxti");
--	if (xusbxti && !IS_ERR(xusbxti)) {
-+	if (!IS_ERR(xusbxti)) {
- 		switch (clk_get_rate(xusbxti)) {
- 		case 12 * MHZ:
- 			phyclk |= S3C_PHYCLK_CLKSEL_12M;
+-		node = NULL;
+-		while ((node = of_get_next_child(adap_node, node))) {
++		for_each_child_of_node(adap_node, node) {
+ 			struct i2c_board_info info = {};
+ 			const u32 *addr;
+ 			int len;
+diff --git a/arch/powerpc/platforms/powermac/low_i2c.c b/arch/powerpc/platforms/powermac/low_i2c.c
+index bf4be4b53..f77a59b5c 100644
+--- a/arch/powerpc/platforms/powermac/low_i2c.c
++++ b/arch/powerpc/platforms/powermac/low_i2c.c
+@@ -629,8 +629,7 @@ static void __init kw_i2c_probe(void)
+ 			for (i = 0; i < chans; i++)
+ 				kw_i2c_add(host, np, np, i);
+ 		} else {
+-			for (child = NULL;
+-			     (child = of_get_next_child(np, child)) != NULL;) {
++			for_each_child_of_node(np, child) {
+ 				const u32 *reg = of_get_property(child,
+ 						"reg", NULL);
+ 				if (reg == NULL)
+@@ -1193,8 +1192,7 @@ static void pmac_i2c_devscan(void (*callback)(struct device_node *dev,
+ 	 * platform function instance
+ 	 */
+ 	list_for_each_entry(bus, &pmac_i2c_busses, link) {
+-		for (np = NULL;
+-		     (np = of_get_next_child(bus->busnode, np)) != NULL;) {
++		for_each_child_of_node(bus->busnode, np) {
+ 			struct whitelist_ent *p;
+ 			/* If multibus, check if device is on that bus */
+ 			if (bus->flags & pmac_i2c_multibus)
+diff --git a/arch/powerpc/platforms/powermac/pfunc_base.c b/arch/powerpc/platforms/powermac/pfunc_base.c
+index 62311e84a..f5422506d 100644
+--- a/arch/powerpc/platforms/powermac/pfunc_base.c
++++ b/arch/powerpc/platforms/powermac/pfunc_base.c
+@@ -114,7 +114,7 @@ static void macio_gpio_init_one(struct macio_chip *macio)
+ 	 * Ok, got one, we dont need anything special to track them down, so
+ 	 * we just create them all
+ 	 */
+-	for (gp = NULL; (gp = of_get_next_child(gparent, gp)) != NULL;) {
++	for_each_child_of_node(gparent, gp) {
+ 		const u32 *reg = of_get_property(gp, "reg", NULL);
+ 		unsigned long offset;
+ 		if (reg == NULL)
+@@ -133,7 +133,7 @@ static void macio_gpio_init_one(struct macio_chip *macio)
+ 	    macio->of_node);
+ 
+ 	/* And now we run all the init ones */
+-	for (gp = NULL; (gp = of_get_next_child(gparent, gp)) != NULL;)
++	for_each_child_of_node(gparent, gp)
+ 		pmf_do_functions(gp, NULL, 0, PMF_FLAGS_ON_INIT, NULL);
+ 
+ 	/* Note: We do not at this point implement the "at sleep" or "at wake"
+diff --git a/arch/powerpc/platforms/powermac/udbg_scc.c b/arch/powerpc/platforms/powermac/udbg_scc.c
+index 6b61a18e8..f286bdfe8 100644
+--- a/arch/powerpc/platforms/powermac/udbg_scc.c
++++ b/arch/powerpc/platforms/powermac/udbg_scc.c
+@@ -80,7 +80,7 @@ void udbg_scc_init(int force_scc)
+ 	path = of_get_property(of_chosen, "linux,stdout-path", NULL);
+ 	if (path != NULL)
+ 		stdout = of_find_node_by_path(path);
+-	for (ch = NULL; (ch = of_get_next_child(escc, ch)) != NULL;) {
++	for_each_child_of_node(escc, ch) {
+ 		if (ch == stdout)
+ 			ch_def = of_node_get(ch);
+ 		if (of_node_name_eq(ch, "ch-a"))
 -- 
 2.25.1
 
