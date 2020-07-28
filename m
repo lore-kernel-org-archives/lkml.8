@@ -2,85 +2,86 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B92C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 027B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF932074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD07220792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:30:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595953850;
+	bh=QH/fNpriLdWfgqzqml0LW6l6Cmgll/uf1nxBcMvnPWc=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=ujgPMadKb4eBFrm/H+gLZBpSAvq0fsY30YUEcuopSH/F5+VtaOVhHGzpVb7muevmK
+	 31uK1Qk4YHNsMLZnY+2yXsH6VrrqsLdDSvCM+Bxh7hVySQlp+ODi2pTsfFCBy+KS4D
+	 ECn10HNd/oXyAMSQixuMbCCQLfNS9j9yg7bYvKEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731393AbgG1Q2X (ORCPT
+        id S1731318AbgG1Qat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:28:23 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60222 "EHLO vps0.lunn.ch"
+        Tue, 28 Jul 2020 12:30:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731118AbgG1Q2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:28:23 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1k0SSe-007J8b-6l; Tue, 28 Jul 2020 18:28:16 +0200
-Date:   Tue, 28 Jul 2020 18:28:16 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, jacek.anaszewski@gmail.com,
-        Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
+        id S1731070AbgG1Qat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:30:49 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62FCD2074F;
+        Tue, 28 Jul 2020 16:30:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595953848;
+        bh=QH/fNpriLdWfgqzqml0LW6l6Cmgll/uf1nxBcMvnPWc=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=Sypy9P7CThuG/PVUmHOtNiWyyBtkreQbISYFIhWCpycCFVMaVPwsc0h6ZsNglEMiQ
+         59R+yIvDg3i3ReGH2Vr8W4TYXvMRyCfwzRCMSOfBlybDtl+e7B3/zVQe9oVhQ52foV
+         7FwVZCT3nNCAvN2bNSn9uQoHxnYW8ckN1Bna32ps=
+Date:   Tue, 28 Jul 2020 17:30:31 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     robh@kernel.org, perex@perex.cz, Dan Murphy <dmurphy@ti.com>,
+        lgirdwood@gmail.com, tiwai@suse.com
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v4 1/2] net: phy: add API for LEDs
- controlled by PHY HW
-Message-ID: <20200728162816.GK1705504@lunn.ch>
-References: <20200728150530.28827-1-marek.behun@nic.cz>
- <20200728150530.28827-2-marek.behun@nic.cz>
- <20200728171128.61c7193b@dellmb.labs.office.nic.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728171128.61c7193b@dellmb.labs.office.nic.cz>
+In-Reply-To: <20200612171412.25423-1-dmurphy@ti.com>
+References: <20200612171412.25423-1-dmurphy@ti.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: tas2562: Convert the tas2562 binding to yaml
+Message-Id: <159595383112.15027.8364475369374911747.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > @@ -736,6 +777,16 @@ struct phy_driver {
-> >  	int (*set_loopback)(struct phy_device *dev, bool enable);
-> >  	int (*get_sqi)(struct phy_device *dev);
-> >  	int (*get_sqi_max)(struct phy_device *dev);
-> > +
-> > +	/* PHY LED support */
-> > +	int (*led_init)(struct phy_device *dev, struct
-> > phy_device_led *led);
-> > +	int (*led_brightness_set)(struct phy_device *dev, struct
-> > phy_device_led *led,
-> > +				  enum led_brightness brightness);
-> > +	const char *(*led_iter_hw_mode)(struct phy_device *dev,
-> > struct phy_device_led *led,
-> > +					void **	iter);
-> > +	int (*led_set_hw_mode)(struct phy_device *dev, struct
-> > phy_device_led *led,
-> > +			       const char *mode);
-> > +	const char *(*led_get_hw_mode)(struct phy_device *dev,
-> > struct phy_device_led *led); };
-> >  #define to_phy_driver(d)
-> > container_of(to_mdio_common_driver(d),		\ struct
-> > phy_driver, mdiodrv)
-> 
-> The problem here is that the same code will have to be added to DSA
-> switch ops structure, which is not OK.
+On Fri, 12 Jun 2020 12:14:11 -0500, Dan Murphy wrote:
+> Convert the TAS2562 text file to yaml format.
 
-Not necessarily. DSA drivers do have access to the phydev structure.
+Applied to
 
-I think putting these members into a structure is a good idea. That
-structure can be part of phy_driver and initialised just like other
-members. But on probing the phy, it can be copied over to the
-phy_device structure. And we can provide an API which DSA drivers can
-use to register there own structure of ops to be placed into
-phy_device, which would call into the DSA driver.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-      Andrew
+Thanks!
+
+[1/2] dt-bindings: tas2562: Convert the tas2562 binding to yaml
+      (no commit info)
+[2/2] ASoC: tas2562: Update shutdown GPIO property
+      commit: f78a97003b8babb1c49e2e4a6b46f15ac31ecf49
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
