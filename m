@@ -2,142 +2,319 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8816DC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474C2C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 628D3207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9D32083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:08:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fn8zRKIE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730345AbgG1XIt convert rfc822-to-8bit (ORCPT
+        id S1730267AbgG1XIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 19:08:49 -0400
-Received: from mga09.intel.com ([134.134.136.24]:10208 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729819AbgG1XIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jul 2020 19:08:46 -0400
-IronPort-SDR: YryL9kZQr6GOZIXivaA1dZndb7w2kQmqqzPIjc3bi743dSYNXvC8O20+R9pVIr9c9RTM7NILqQ
- 80gqnZmCt5aQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="152569856"
-X-IronPort-AV: E=Sophos;i="5.75,408,1589266800"; 
-   d="scan'208";a="152569856"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 16:08:44 -0700
-IronPort-SDR: YuITTUP33/44UGDYPUZ6p5FKgySuh6vNoAVz3Bhwrd4daAC6ofWlpUqO5V37J4jgNCGeMmrYhG
- 6F15n4wp+kbQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,408,1589266800"; 
-   d="scan'208";a="273706883"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by fmsmga008.fm.intel.com with ESMTP; 28 Jul 2020 16:08:44 -0700
-Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 28 Jul 2020 16:08:44 -0700
-Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
- HASMSX602.ger.corp.intel.com (10.184.107.142) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 29 Jul 2020 02:08:41 +0300
-Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
- HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
- Wed, 29 Jul 2020 02:08:41 +0300
-From:   "Winkler, Tomas" <tomas.winkler@intel.com>
-To:     Joe Perches <joe@perches.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "Usyskin, Alexander" <alexander.usyskin@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Subject: RE: [char-misc-next] Revert "mei: hdcp: Replace one-element array
- with flexible-array member"
-Thread-Topic: [char-misc-next] Revert "mei: hdcp: Replace one-element array
- with flexible-array member"
-Thread-Index: AQHWZSfolBoy0+Wd50OY4DSCzkXDIakdV1+AgAAxzgD//9MtAIAAMULw///dJACAADLgQA==
-Date:   Tue, 28 Jul 2020 23:08:41 +0000
-Message-ID: <cbaded6deed64ad1a69ea99d2a235a54@intel.com>
-References: <20200728214139.3129532-1-tomas.winkler@intel.com>
-         <e80a9e75-4497-1587-deab-b5c6a0fcc48f@embeddedor.com>
-         <8ec7601780b542c2bc0168e03749ec0e@intel.com>
-         <d6ef8ca4-6e11-b758-0e24-75301e1a5303@embeddedor.com>
-         <398e20e8c3f7436bb50d671b9aa9f809@intel.com>
- <90f4d174d8a2d50104ad52aa0bd4e0ece86f2e90.camel@perches.com>
-In-Reply-To: <90f4d174d8a2d50104ad52aa0bd4e0ece86f2e90.camel@perches.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-x-originating-ip: [10.184.70.1]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+Received: from mail29.static.mailgun.info ([104.130.122.29]:56557 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730115AbgG1XIm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 19:08:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595977721; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=TO8JX6qnJDlsSqQ9mywPrX6pIPHbZlNOf2xgMjimCJY=; b=fn8zRKIEm59fcdhpPImj2xiHRuREoJGUW+WzJ3ali3Vf/Fz28tDPIcHJUVKXgG71ECuH1Cqe
+ vBQp0Wlnd/J/382PRLw+TySHQ/mQ2R/mrDHfaiSRfF+ps3jozo+C1vki2pr4SI8qUpITjiiQ
+ MgT+TVSlj0KCuZkGZoaGdcHf93M=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5f20afe998acebb4e93f3563 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 23:08:25
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8E36DC433CA; Tue, 28 Jul 2020 23:08:25 +0000 (UTC)
+Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rishabhb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 33051C433C6;
+        Tue, 28 Jul 2020 23:08:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33051C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
+From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
+To:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
+        tsoni@codeaurora.org, psodagud@codeaurora.org,
+        sidgup@codeaurora.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: [PATCH 1/2] remoteproc: Move coredump entry from debugfs to sysfs.
+Date:   Tue, 28 Jul 2020 16:08:16 -0700
+Message-Id: <1595977697-15389-2-git-send-email-rishabhb@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595977697-15389-1-git-send-email-rishabhb@codeaurora.org>
+References: <1595977697-15389-1-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Tue, 2020-07-28 at 22:14 +0000, Winkler, Tomas wrote:
-> > > -----Original Message-----
-> > > From: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> []
-> > > I'm using this command:
-> > >
-> > > $ scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback
-> > >
-> > > and this is the output for both files:
-> > >
-> > > $ scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback
-> > > drivers/misc/mei/hdcp/mei_hdcp.c Arnd Bergmann <arnd@arndb.de>
-> > > (supporter:CHAR and MISC DRIVERS) Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> (supporter:CHAR and MISC DRIVERS)
-> > > linux- kernel@vger.kernel.org (open list) $
-> > > scripts/get_maintainer.pl --nokeywords -- nogit --nogit-fallback
-> > > drivers/misc/mei/hdcp/mei_hdcp.h Arnd Bergmann <arnd@arndb.de>
-> > > (supporter:CHAR and MISC DRIVERS) Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> (supporter:CHAR and MISC DRIVERS)
-> > > linux- kernel@vger.kernel.org (open list) For some reason you don't
-> > > appear on the list above. Do you see anything wrong with the command
-> I'm running to get the maintainers and lists?
-> >
-> > Not sure, it should be caught by drivers/misc/mei/* ?
-> 
-> No, this pattern matches _only_ files in that particular directory and not any
-> files in any subdirectory.
-> 
-> > Maybe it is not recursive?
-> 
-> It depends on the pattern.
-> Patterns with trailing slashes match subdirectories too.
-> 
-> from MAINTAINERS:
-> 
-> 	F: *Files* and directories wildcard patterns.
-> 	   A trailing slash includes all files and subdirectory files.
-> 	   F:	drivers/net/	all files in and below drivers/net
-> 	   F:	drivers/net/*	all files in drivers/net, but not below
-> 	   F:	*/net/*		all files in "any top level directory"/net
-> 	   One pattern per line.  Multiple F: lines acceptable.
-> 
-> 
-> > Need to check the script,
-> > frankly I usually check this manually.  prob
-> >
-> > INTEL MANAGEMENT ENGINE (mei)
-> > M:      Tomas Winkler <tomas.winkler@intel.com>
-> > L:      linux-kernel@vger.kernel.org
-> > S:      Supported
-> > F:      Documentation/driver-api/mei/*
-> > F:      drivers/misc/mei/*
-> 
-> You probably want:
-> 
-> F:	drivers/misc/mei/
-Yes, thanks.
-Tomas
+Expose coredump configuration from sysfs instead of debugfs.
+In some operating systems access to debugfs might be limited.
+This restricts user from selecting the coredump configuration
+at all, hence move this interface to sysfs.
+
+Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+---
+ Documentation/ABI/testing/sysfs-class-remoteproc | 40 +++++++++++
+ drivers/remoteproc/remoteproc_debugfs.c          | 90 ------------------------
+ drivers/remoteproc/remoteproc_sysfs.c            | 64 +++++++++++++++++
+ 3 files changed, 104 insertions(+), 90 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-class-remoteproc b/Documentation/ABI/testing/sysfs-class-remoteproc
+index 36094fb..812582a 100644
+--- a/Documentation/ABI/testing/sysfs-class-remoteproc
++++ b/Documentation/ABI/testing/sysfs-class-remoteproc
+@@ -58,3 +58,43 @@ Description:	Remote processor name
+ 		Reports the name of the remote processor. This can be used by
+ 		userspace in exactly identifying a remote processor and ease
+ 		up the usage in modifying the 'firmware' or 'state' files.
++
++What:		/sys/class/remoteproc/.../coredump
++Date:		July 2020
++Contact:	Rishabh Bhatnagar <rishabhb@codeaurora.org>
++Description:	Remote processor coredump configuration
++
++		Reports the coredump configuration of the remote processor,
++		which will be one of:
++
++		"default"
++		"inline"
++		"disabled"
++
++		"default" means when the remote processor's coredump is
++		collected it will be copied to a separate buffer and that
++		buffer is exposed to userspace.
++
++		"inline" means when the remote processor's coredump is
++		collected userspace will directly read from the remote
++		processor's device memory. Extra buffer will not be used to
++		copy the dump. Also recovery process will not proceed until
++		all data is read by usersapce.
++
++		"disabled" means no dump will be collected.
++
++		Writing this file controls the coredump configuration of the
++		remote processor. The following configurations can be written:
++
++		"default"
++		"inline"
++		"disable"
++
++		Writing "default" will change the coredump configuration to
++		default option.
++
++		Writing "inline" will change the coredump configuration to
++		inline.
++
++		Writing "disable" will disable the coredump collection for
++		that remoteproc.
+diff --git a/drivers/remoteproc/remoteproc_debugfs.c b/drivers/remoteproc/remoteproc_debugfs.c
+index 2e3b3e2..732770e 100644
+--- a/drivers/remoteproc/remoteproc_debugfs.c
++++ b/drivers/remoteproc/remoteproc_debugfs.c
+@@ -28,94 +28,6 @@
+ static struct dentry *rproc_dbg;
+ 
+ /*
+- * A coredump-configuration-to-string lookup table, for exposing a
+- * human readable configuration via debugfs. Always keep in sync with
+- * enum rproc_coredump_mechanism
+- */
+-static const char * const rproc_coredump_str[] = {
+-	[RPROC_COREDUMP_DEFAULT]	= "default",
+-	[RPROC_COREDUMP_INLINE]		= "inline",
+-	[RPROC_COREDUMP_DISABLED]	= "disabled",
+-};
+-
+-/* Expose the current coredump configuration via debugfs */
+-static ssize_t rproc_coredump_read(struct file *filp, char __user *userbuf,
+-				   size_t count, loff_t *ppos)
+-{
+-	struct rproc *rproc = filp->private_data;
+-	char buf[20];
+-	int len;
+-
+-	len = scnprintf(buf, sizeof(buf), "%s\n",
+-			rproc_coredump_str[rproc->dump_conf]);
+-
+-	return simple_read_from_buffer(userbuf, count, ppos, buf, len);
+-}
+-
+-/*
+- * By writing to the 'coredump' debugfs entry, we control the behavior of the
+- * coredump mechanism dynamically. The default value of this entry is "default".
+- *
+- * The 'coredump' debugfs entry supports these commands:
+- *
+- * default:	This is the default coredump mechanism. When the remoteproc
+- *		crashes the entire coredump will be copied to a separate buffer
+- *		and exposed to userspace.
+- *
+- * inline:	The coredump will not be copied to a separate buffer and the
+- *		recovery process will have to wait until data is read by
+- *		userspace. But this avoid usage of extra memory.
+- *
+- * disabled:	This will disable coredump. Recovery will proceed without
+- *		collecting any dump.
+- */
+-static ssize_t rproc_coredump_write(struct file *filp,
+-				    const char __user *user_buf, size_t count,
+-				    loff_t *ppos)
+-{
+-	struct rproc *rproc = filp->private_data;
+-	int ret, err = 0;
+-	char buf[20];
+-
+-	if (count > sizeof(buf))
+-		return -EINVAL;
+-
+-	ret = copy_from_user(buf, user_buf, count);
+-	if (ret)
+-		return -EFAULT;
+-
+-	/* remove end of line */
+-	if (buf[count - 1] == '\n')
+-		buf[count - 1] = '\0';
+-
+-	if (rproc->state == RPROC_CRASHED) {
+-		dev_err(&rproc->dev, "can't change coredump configuration\n");
+-		err = -EBUSY;
+-		goto out;
+-	}
+-
+-	if (!strncmp(buf, "disable", count)) {
+-		rproc->dump_conf = RPROC_COREDUMP_DISABLED;
+-	} else if (!strncmp(buf, "inline", count)) {
+-		rproc->dump_conf = RPROC_COREDUMP_INLINE;
+-	} else if (!strncmp(buf, "default", count)) {
+-		rproc->dump_conf = RPROC_COREDUMP_DEFAULT;
+-	} else {
+-		dev_err(&rproc->dev, "Invalid coredump configuration\n");
+-		err = -EINVAL;
+-	}
+-out:
+-	return err ? err : count;
+-}
+-
+-static const struct file_operations rproc_coredump_fops = {
+-	.read = rproc_coredump_read,
+-	.write = rproc_coredump_write,
+-	.open = simple_open,
+-	.llseek = generic_file_llseek,
+-};
+-
+-/*
+  * Some remote processors may support dumping trace logs into a shared
+  * memory buffer. We expose this trace buffer using debugfs, so users
+  * can easily tell what's going on remotely.
+@@ -425,8 +337,6 @@ void rproc_create_debug_dir(struct rproc *rproc)
+ 			    rproc, &rproc_rsc_table_fops);
+ 	debugfs_create_file("carveout_memories", 0400, rproc->dbg_dir,
+ 			    rproc, &rproc_carveouts_fops);
+-	debugfs_create_file("coredump", 0600, rproc->dbg_dir,
+-			    rproc, &rproc_coredump_fops);
+ }
+ 
+ void __init rproc_init_debugfs(void)
+diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
+index eea514c..40949a0 100644
+--- a/drivers/remoteproc/remoteproc_sysfs.c
++++ b/drivers/remoteproc/remoteproc_sysfs.c
+@@ -10,6 +10,69 @@
+ 
+ #define to_rproc(d) container_of(d, struct rproc, dev)
+ 
++/*
++ * A coredump-configuration-to-string lookup table, for exposing a
++ * human readable configuration via sysfs. Always keep in sync with
++ * enum rproc_coredump_mechanism
++ */
++static const char * const rproc_coredump_str[] = {
++	[RPROC_COREDUMP_DEFAULT]	= "default",
++	[RPROC_COREDUMP_INLINE]		= "inline",
++	[RPROC_COREDUMP_DISABLED]	= "disabled",
++};
++
++/* Expose the current coredump configuration via debugfs */
++static ssize_t coredump_show(struct device *dev,
++			     struct device_attribute *attr, char *buf)
++{
++	struct rproc *rproc = to_rproc(dev);
++
++	return sprintf(buf, "%s\n", rproc_coredump_str[rproc->dump_conf]);
++}
++
++/*
++ * By writing to the 'coredump' sysfs entry, we control the behavior of the
++ * coredump mechanism dynamically. The default value of this entry is "default".
++ *
++ * The 'coredump' sysfs entry supports these commands:
++ *
++ * default:	This is the default coredump mechanism. When the remoteproc
++ *		crashes the entire coredump will be copied to a separate buffer
++ *		and exposed to userspace.
++ *
++ * inline:	The coredump will not be copied to a separate buffer and the
++ *		recovery process will have to wait until data is read by
++ *		userspace. But this avoid usage of extra memory.
++ *
++ * disabled:	This will disable coredump. Recovery will proceed without
++ *		collecting any dump.
++ */
++static ssize_t coredump_store(struct device *dev,
++			      struct device_attribute *attr,
++			      const char *buf, size_t count)
++{
++	struct rproc *rproc = to_rproc(dev);
++
++	if (rproc->state == RPROC_CRASHED) {
++		dev_err(&rproc->dev, "can't change coredump configuration\n");
++		return -EBUSY;
++	}
++
++	if (sysfs_streq(buf, "disable")) {
++		rproc->dump_conf = RPROC_COREDUMP_DISABLED;
++	} else if (sysfs_streq(buf, "inline")) {
++		rproc->dump_conf = RPROC_COREDUMP_INLINE;
++	} else if (sysfs_streq(buf, "default")) {
++		rproc->dump_conf = RPROC_COREDUMP_DEFAULT;
++	} else {
++		dev_err(&rproc->dev, "Invalid coredump configuration\n");
++		return -EINVAL;
++	}
++
++	return count;
++}
++static DEVICE_ATTR_RW(coredump);
++
+ /* Expose the loaded / running firmware name via sysfs */
+ static ssize_t firmware_show(struct device *dev, struct device_attribute *attr,
+ 			  char *buf)
+@@ -138,6 +201,7 @@ static ssize_t name_show(struct device *dev, struct device_attribute *attr,
+ static DEVICE_ATTR_RO(name);
+ 
+ static struct attribute *rproc_attrs[] = {
++	&dev_attr_coredump.attr,
+ 	&dev_attr_firmware.attr,
+ 	&dev_attr_state.attr,
+ 	&dev_attr_name.attr,
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
