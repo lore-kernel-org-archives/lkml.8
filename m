@@ -2,165 +2,139 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3294AC433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BABC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12DCE207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F109207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:46:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KIalYCFn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g0MbWG+Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733010AbgG1TpF (ORCPT
+        id S1732969AbgG1TqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:45:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56344 "EHLO
+        Tue, 28 Jul 2020 15:46:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732976AbgG1Tox (ORCPT
+        with ESMTP id S1732958AbgG1TqJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:44:53 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE8E8C0619D6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:44:52 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k13so2692977plk.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:44:52 -0700 (PDT)
+        Tue, 28 Jul 2020 15:46:09 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 466D2C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:46:09 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id t15so535674pjq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:46:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=NjjWAW6FgXIfls/hqkrF/yquAYJxvalgxXMqC5yfkB8=;
-        b=KIalYCFnh0ooJeOFJkJKg6Aj3ezi1dT2pKr43ERudEvFuNaAJ3+4031cCKI/mpqsHN
-         jPODHusawyatNlhEIpveO4bRm2Qv8DouYUrTDu4x7sAqumvD4p0DaIwI9w47ua+Y+Lm8
-         r5WIEN2ftI2xGaXzPY44IJT2WhYYdppfLz2ds=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=CcfvoFL7aJEulqwwTYjAtmM4mTbUznShrvhOhRcbiJ4=;
+        b=g0MbWG+Z2VyMhmBmNaSfj94wMWmzF14QrIOiZbbusdMfkMpd2OYfLufJvgWBm6laan
+         AWvEJUjSK/+ZaYwgkGS69i2l4BsvcmJe6fkS8OzN9v+Csv34WY6lba6pDhFSwOjjqAQm
+         jpAE6od3r/7yj6oPlqsnVvjzqn96hPkJgnLXha614YEX+93fh8uaAHIwuGuQUhkNsZjo
+         yeyAbwSxrvg1nVfQPs6jrTiNVINtSdGVna6TARs2fRt/UoBEGDIUqmz4odIKXVK0FrLq
+         nyriSswCPQumzxAFtokW6BVp8Eu5HH4wzurRuFAyau4bwZBVEbltwHPG/SqNvRMV3yKW
+         en9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=NjjWAW6FgXIfls/hqkrF/yquAYJxvalgxXMqC5yfkB8=;
-        b=o6RMfk4htq/SzxChCkLZPWy8vWB/7EikacOZyqyXgeNF3QjroyzKpC54VoIULM7NcF
-         ClyBHm9S+RcZ/beXcF6hI7YtFVejNG9CYOhsnIc7xq/3KyYz8sQ78e2jeQyyp/a6kTP3
-         dVkdjiBpoDvBcpxsk5SngVXXpoq0fjFmRewFaZr7m1hbvrdgxXB1gpUvuyMvvK7PfeeZ
-         fffUlP0YyayVaUrIlObYdzTJqWed84bTy1jEkXTpXy0o9JSVuhcJ5yK71GFYSH2GfdzH
-         nMSafgEQ2fhGlzG7s4vwURLJ1Rxymns87TUu6FHsNubch63r4UgvtWfmLwTb1vzfLQr1
-         6ISw==
-X-Gm-Message-State: AOAM532cyatWaoftPrq2qce8qqpAdFDPWs4V9mfJKgUHoG0qudh778Rp
-        4a6ptCfuu7YW+xySfIKRADUpjw==
-X-Google-Smtp-Source: ABdhPJzQr9cHayJZPGpWZHni51wQdtSr2aAnxIAMHwScc+g9u8gX4TqJT/xfpoMOHtZMCRUO5O3P+A==
-X-Received: by 2002:a17:902:7446:: with SMTP id e6mr7253416plt.267.1595965492443;
-        Tue, 28 Jul 2020 12:44:52 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m31sm4012561pjb.52.2020.07.28.12.44.51
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=CcfvoFL7aJEulqwwTYjAtmM4mTbUznShrvhOhRcbiJ4=;
+        b=UvY906XSOkLqjRbxK6VaUd5TfcXZHWXjs2eK440gGewKFPsc4y6EvnZ6oVClqtxfW4
+         g7GnwMRmP94FlLPyPWCqdrYVUr1jPRfY5R+RJuajxjI4sTKEaW9j5X4cFUQ6BdCtEgpl
+         2lync/DUOemFBN59PooVe6Je7rO5pSdLZkOgaRkmXo2R1i2IwLcbwjr73p71ip09IMeJ
+         Hy3vTH6NTe7zxJyZ7bcO12gAMN2NFUD2F4em78kvl0CUkGiuDeN+dxODJeTjP42CxS0w
+         o860LgRP+Pj6Zpg1iCiHgt3B11p44q3gxT5MI0PF2xVOsqYpTRVHnOlHeFOafCmA3Wp8
+         fSWw==
+X-Gm-Message-State: AOAM531L5l1/UIV7oeVIaQdGWVBG70NsVa+yGkDM4QrcqY8/hz359ZsH
+        SGVySGhhi/r3LkqjPUrG9sVXVA==
+X-Google-Smtp-Source: ABdhPJxpt5JQVmgBPnYf4Y4KhQFY8WRyAIyKEPvlPItSlrgq906zB6TAsovA0eaDTxxBPgXCQO5elA==
+X-Received: by 2002:a17:90a:3e02:: with SMTP id j2mr6283098pjc.47.1595965568586;
+        Tue, 28 Jul 2020 12:46:08 -0700 (PDT)
+Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
+        by smtp.gmail.com with ESMTPSA id z9sm9533146pfn.59.2020.07.28.12.46.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 12:44:51 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 12:44:50 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Mimi Zohar <zohar@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 15/19] IMA: Add support for file reads without contents
-Message-ID: <202007281244.2F2681AE9@keescook>
-References: <20200724213640.389191-1-keescook@chromium.org>
- <20200724213640.389191-16-keescook@chromium.org>
- <1595856214.4841.86.camel@kernel.org>
+        Tue, 28 Jul 2020 12:46:08 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 12:46:07 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     qiang.zhang@windriver.com
+cc:     cl@linux.com, penberg@kernel.org, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/slab.c: add node spinlock protect in
+ __cache_free_alien
+In-Reply-To: <20200728095551.30634-1-qiang.zhang@windriver.com>
+Message-ID: <alpine.DEB.2.23.453.2007281238580.2664959@chino.kir.corp.google.com>
+References: <20200728095551.30634-1-qiang.zhang@windriver.com>
+User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1595856214.4841.86.camel@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 09:23:34AM -0400, Mimi Zohar wrote:
-> On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
-> > From: Scott Branden <scott.branden@broadcom.com>
-> > 
-> > When the kernel_read_file LSM hook is called with contents=false, IMA
-> > can appraise the file directly, without requiring a filled buffer. When
-> > such a buffer is available, though, IMA can continue to use it instead
-> > of forcing a double read here.
-> > 
-> > Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> > Link: https://lore.kernel.org/lkml/20200706232309.12010-10-scott.branden@broadcom.com/
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> After adjusting the comment below.
-> 
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+On Tue, 28 Jul 2020, qiang.zhang@windriver.com wrote:
 
-Sure!
-
-Greg, shall I send a v4 with added Reviews and the comment change or is
-that minor enough that you're able to do it?
-
-Thanks for the reviews Mimi!
-
--Kees
-
+> From: Zhang Qiang <qiang.zhang@windriver.com>
 > 
-> > ---
-> >  security/integrity/ima/ima_main.c | 22 ++++++++++++++++------
-> >  1 file changed, 16 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> > index dc4f90660aa6..459e50526a12 100644
-> > --- a/security/integrity/ima/ima_main.c
-> > +++ b/security/integrity/ima/ima_main.c
-> > @@ -613,11 +613,8 @@ void ima_post_path_mknod(struct dentry *dentry)
-> >  int ima_read_file(struct file *file, enum kernel_read_file_id read_id,
-> >  		  bool contents)
-> >  {
-> > -	/* Reject all partial reads during appraisal. */
-> > -	if (!contents) {
-> > -		if (ima_appraise & IMA_APPRAISE_ENFORCE)
-> > -			return -EACCES;
-> > -	}
-> > +	enum ima_hooks func;
-> > +	u32 secid;
-> >  
-> >  	/*
-> >  	 * Do devices using pre-allocated memory run the risk of the
-> > @@ -626,7 +623,20 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id,
-> >  	 * buffers? It may be desirable to include the buffer address
-> >  	 * in this API and walk all the dma_map_single() mappings to check.
-> >  	 */
-> > -	return 0;
-> > +
-> > +	/*
-> > +	 * There will be a call made to ima_post_read_file() with
-> > +	 * a filled buffer, so we don't need to perform an extra
-> > +	 * read early here.
-> > +	 */
-> > +	if (contents)
-> > +		return 0;
-> > +
-> > +	/* Read entire file for all partial reads during appraisal. */
-> 
-> In addition to verifying the file signature, the file might be
-> included in the IMA measurement list or the file hash may be used to
-> augment the audit record.  Please remove "during appraisal" from the
-> comment.
-> 
-> > +	func = read_idmap[read_id] ?: FILE_CHECK;
-> > +	security_task_getsecid(current, &secid);
-> > +	return process_measurement(file, current_cred(), secid, NULL,
-> > +				   0, MAY_READ, func);
-> >  }
-> >  
-> >  const int read_idmap[READING_MAX_ID] = {
+> We should add node spinlock protect "n->alien" which may be
+> assigned to NULL in cpuup_canceled func. cause address access
+> exception.
 > 
 
--- 
-Kees Cook
+Hi, do you have an example NULL pointer dereference where you have hit 
+this?
+
+This rather looks like something to fix up in cpuup_canceled() since it's 
+currently manipulating the alien cache for the canceled cpu's node.
+
+> Fixes: 18bf854117c6 ("slab: use get_node() and kmem_cache_node() functions")
+> Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
+> ---
+>  mm/slab.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/slab.c b/mm/slab.c
+> index a89633603b2d..290523c90b4e 100644
+> --- a/mm/slab.c
+> +++ b/mm/slab.c
+> @@ -759,8 +759,10 @@ static int __cache_free_alien(struct kmem_cache *cachep, void *objp,
+>  
+>  	n = get_node(cachep, node);
+>  	STATS_INC_NODEFREES(cachep);
+> +	spin_lock(&n->list_lock);
+>  	if (n->alien && n->alien[page_node]) {
+>  		alien = n->alien[page_node];
+> +		spin_unlock(&n->list_lock);
+>  		ac = &alien->ac;
+>  		spin_lock(&alien->lock);
+>  		if (unlikely(ac->avail == ac->limit)) {
+> @@ -769,14 +771,15 @@ static int __cache_free_alien(struct kmem_cache *cachep, void *objp,
+>  		}
+>  		ac->entry[ac->avail++] = objp;
+>  		spin_unlock(&alien->lock);
+> -		slabs_destroy(cachep, &list);
+>  	} else {
+> +		spin_unlock(&n->list_lock);
+>  		n = get_node(cachep, page_node);
+>  		spin_lock(&n->list_lock);
+>  		free_block(cachep, &objp, 1, page_node, &list);
+>  		spin_unlock(&n->list_lock);
+> -		slabs_destroy(cachep, &list);
+>  	}
+> +
+> +	slabs_destroy(cachep, &list);
+>  	return 1;
+>  }
+>  
+> -- 
+> 2.26.2
+> 
+> 
