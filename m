@@ -2,96 +2,171 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 466EFC433F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A543C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5D42074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D2A20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbgG1Mmi (ORCPT
+        id S1729881AbgG1Mm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:42:38 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:36081 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729379AbgG1Mmh (ORCPT
+        Tue, 28 Jul 2020 08:42:58 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:53462 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729618AbgG1Mm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:42:37 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N9MlI-1ko7Me0HB6-015Jcv; Tue, 28 Jul 2020 14:42:36 +0200
-Received: by mail-qk1-f180.google.com with SMTP id d14so18383589qke.13;
-        Tue, 28 Jul 2020 05:42:35 -0700 (PDT)
-X-Gm-Message-State: AOAM532xR0yaFjd4bosS3E+dYU04hNP8IkCcgmVok0kYRbiwIHINxnnf
-        xmdE6V7iPPKM9YjSwocgy3tiYQMTxBIC+r5YH+M=
-X-Google-Smtp-Source: ABdhPJw3K3lvAgYAGemxdtvcTTa313hHGShCGNtpEv9UT2n69gfyTUSK1mtIz0h/zUJQYI9RNcSKyp+FbIUCGKG3RCM=
-X-Received: by 2002:a37:b484:: with SMTP id d126mr27679043qkf.394.1595940154887;
- Tue, 28 Jul 2020 05:42:34 -0700 (PDT)
-MIME-Version: 1.0
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 28 Jul 2020 14:42:19 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2Qy0OOcXOO4twf3OKZ66ESTNT60nOR9i-ixcPubeUuVA@mail.gmail.com>
-Message-ID: <CAK8P3a2Qy0OOcXOO4twf3OKZ66ESTNT60nOR9i-ixcPubeUuVA@mail.gmail.com>
-Subject: [GIT PULL] asm-generic: bugfix for v5.8
+        Tue, 28 Jul 2020 08:42:57 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k0OwZ-0005JD-K7; Tue, 28 Jul 2020 06:42:55 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k0OwY-0007iG-Ng; Tue, 28 Jul 2020 06:42:55 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stafford Horne <shorne@gmail.com>,
-        John Garry <john.garry@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:x3nttk669UjzwEn2hDNj3i4LS8B8RF+s+pHwbjCJLlNvssgNla+
- oSVCg+hPM33wPIM/ff53c+YmNcMp7v21JnHRNoiPiujLS0/NrY7eJ8NJ9zTDlw/uKbc4zlH
- jBnFsgBJ4/Mab5HZYiDBzgFxDqOJhQfMIWRz7RyQDAkgLN32nIghrtsax1NaxrqTt34Lucm
- I+sWzcDczCtbcB3k4Xr/w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:o2PRq9Nw7vY=:dZI4iNpszFeu1srXpxZJiW
- PUEM+SFWHJovNF+lu5oFfQ7FtljQACstGq4+9wAxbGE18MupWtS83lFOPZg0WQm5MgKsaGzQb
- yuX37eM0FaL37cuvX70bTqmtASp1EwqYsWBu8CubKn/+IW3jVPzTMPs2n7UBqnpJSR/TfX0eM
- V3HEyyHW//zSvtItuemGwc6aGQLBgIAcmN2ir0QHcePREm0v4ta8a2L7fsjL+YXDsg6FEb8lb
- sq9vU7uqAcAYIzy8SSVGL5W8MiXFRcH0VwM7o9qQ3f5dqCMVA+ZVuewmyG6u0fTPjGikATAYl
- ojc+f3LZiQWwxf3KbHS1djdfrhWBRNr+AdDBhj2Mh4w6JCq81GX4XBoR2lTmqyPmvl6r/WYSW
- 0WLHIyfWdUiWClBNIBDQ7s6pPStd/tY5tOXYzgRrnEhx2trvZQdfFvO5v1gpKxvG62gzndPVz
- QxcLXvQamL36Sw40bHtzQGgdIliDjn6Kg+JY43TOi0dZqOxJ1r05XmD3w4+iGEb2tLBpar4SM
- znaVqOGpk4t8KRGsiCZu+7t8ZGbxF9eQd0iu7Br0Nircdm2Tj5DGr3kbpqT1J4vnGHjtDr5wO
- yeOMRtKQ1qnq2G8sCtidXqWwHDmdU3yglpK7C5Prr5DjidUQiRvOK7UlReh0FXZJ/z9MqNS4s
- BEMGob92yrI3i2SylLWclvQhktPmvcgftnVjFRrBleZpeXRA/RIgOvijsRG3aLdhCGvaBnadX
- hByHUvjzPqZq+iNkHKAxKMTvOutAtJx7QApHXkYmFvQhq5EFBFGGYtgE1WS5XugZsljIP48iv
- LJB4ROIsXQCp8zuKvDemXqis8col09drndUl/nSg5LKQgGj6Atq7FS3RRv1u1gi0YpxLrAS5+
- 5NVvQi0oHnN+qFFwRbJBcDqIFTQHgCAEzrjmAegX7KoyEg2H31eGwB5rP0kTh53gSA0FKGvZk
- OX/Dt4kh7DyGOOhXTt4d2g0pWiCjD+6GgnhKOc1J9N2wo99Z4DuQY
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>, Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>
+References: <87h7tsllgw.fsf@x220.int.ebiederm.org>
+        <CAHk-=wj34Pq1oqFVg1iWYAq_YdhCyvhyCYxiy-CG-o76+UXydQ@mail.gmail.com>
+Date:   Tue, 28 Jul 2020 07:39:48 -0500
+In-Reply-To: <CAHk-=wj34Pq1oqFVg1iWYAq_YdhCyvhyCYxiy-CG-o76+UXydQ@mail.gmail.com>
+        (Linus Torvalds's message of "Mon, 27 Jul 2020 17:20:03 -0700")
+Message-ID: <87d04fhkyz.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1k0OwY-0007iG-Ng;;;mid=<87d04fhkyz.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+orpJOfA4E1RYpBdWcznCcQQLAlVJoQF8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [RFC][PATCH] exec: Freeze the other threads during a multi-threaded exec
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+> On Mon, Jul 27, 2020 at 2:06 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>>
+>> Therefore make it simpler to get exec correct by freezing the other
+>> threads at the beginning of exec.  This removes an entire class of
+>> races, and makes it tractable to fix some of the long standing
+>> issues with exec.
+>
+> I hate the global state part of the freezer.
+>
+> It's also pointless. We don't want to trigger all the tests that
+> various random driver kernel threads do.
+>
+> I also really don't like how now execve() by any random person will
+> suddenly impact everything that might be doing freezing.
 
-are available in the Git repository at:
+Yes.  system_freezing_cnt as an enable/disable that affects all
+tasks in the system does seem like a misfeature for use in the context
+of exec where only a few tasks need to be dealt with.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git
-tags/asm-generic-fixes-5.8
+> It also makes for a possible _huge_ latency regression for execve(),
+> since freezing really has never been a very low-latency operation.
+>
+> Other threads doing IO can now basically block execve() for a long
+> long long time.
 
-for you to fetch changes up to 214ba3584b2e2c57536fa8aed52521ac59c5b448:
+Hmm.  Potentially.  The synchronization with the other threads must
+happen in a multi-threaded exec in de_thread.
 
-  io: Fix return type of _inb and _inl (2020-07-27 10:32:29 +0200)
+So I need to look at the differences between where de_thread thread
+can kill a thread and the freezer can not freeze a thread.  I am hoping
+that the freezer has already instrumented most of those sleeps but I
+admit I have not looked yet.
 
-----------------------------------------------------------------
-asm-generic: bugfix for v5.8
+> Finally, I think your patch is fundamentally broken for another
+> reason: it depends on CONFIG_FREEZER, and that isn't even required to
+> be set!
 
-This is a single bugfix for a regression introduced through a
-typo in the v5.8 merge window, leading to incorrect data
-returned from inl() on some architectures.
+Very true.  I absolutely missed that detail.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> So no, this is not at all acceptable in that form.
+>
+> Now, maybe we could _make_ it acceptable, by
+>
+>  (a) add a per-process freezer count to avoid the global state for this case
 
-----------------------------------------------------------------
-Stafford Horne (1):
-      io: Fix return type of _inb and _inl
+Perhaps even a single bit.
 
- include/asm-generic/io.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+
+>  (b)  make a small subset of the freezing code available for the
+> !CONFIG_FREEZER thing
+
+The code that is controlled by CONFIG_FREEZER is just kernel/freezer.c,
+and include/linux/freezer.h.  Which is 177 + 303 lines respectively
+so not much.
+
+Or are you thinking about all of the locations that already include
+freezable sleeps?
+
+>  (c) fix this "simple freezer" to not actually force wakeups etc, but
+> catch things in the
+
+To catch things in the scheduler I presume?
+
+The thing is the freezer code does not wake up anything if it is in a
+sleep that it has wrapped.  Which I thought was just about all
+significant ones but I need to verify that.
+
+> but honestly, at that point nothing of the "CONFIG_FREEZER" code even
+> really exists any more. It would be more of a "execve_synchronize()"
+> thing, where we'd catch things in the scheduler and/or system call
+> entry/exit or whatever.
+
+Yes.  Where we catch things seems to be key.  I believe if all sleeps
+that are killable plus system call exit should be enough, to be a noop.
+As those are the places where the code can be killed now.
+
+The tricky part is to mark processes that are sleeping in such a way
+that then they wake up they go into a slow path and they get trapped
+by the freezing code.
+
+> Also, that makes these kinds of nasty hacks that just make the
+> existign freezer code even harder to figure out:
+
+
+>> A new function exec_freeze_threads based upon
+>> kernel/power/process.c:try_to_freeze_tasks is added.  To play well
+>> with other uses of the kernel freezer it uses a killable sleep wrapped
+>> with freezer_do_not_count/freezer_count.
+>
+> Ugh. Just _ugly_.
+>
+> And honestly, completely and utterly broken. See above.
+>
+> I understand the wish to re-use existing infrastructure. But the fact
+> is, the FREEZER code is just about the _last_ thing you should want to
+> use. That, and stop_machine(), is just too much of a big hammer.
+
+Part of my challenge is that it the more layers that get put around a
+sleep the trickier it is to subsequently wrap.
+
+I can see the point of building something very simple and more
+fundamental that doesn't need as much support as the current freezer.
+Perhaps something the freezer can the be rebuilt upon.
+
+
+If the basic idea of stopping other threads early before we kill them in
+exec sounds plausible then I will see what I can do.
+
+Eric
