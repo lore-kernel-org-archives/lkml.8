@@ -2,122 +2,193 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B216C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C34C433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46AC82053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E902053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:59:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Z+RemIi/"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="mGckqmPq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731761AbgG1Q7d (ORCPT
+        id S1731777AbgG1Q7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:59:33 -0400
-Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:49540 "EHLO
-        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731578AbgG1Q71 (ORCPT
+        Tue, 28 Jul 2020 12:59:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731523AbgG1Q7i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:59:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1595955568;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tRrG2kIPRmHZl5KYjBZDnpKOe+a1KAifCS6TcraQCvw=;
-  b=Z+RemIi/6pAEEYTQzK56hTBK9EUNPk1nEZ75Jlzp2fDrA1Uh9N6rix76
-   9q4w1goHGh99cAAC3+5P4ZSwb+XcIq6IiUaiG0//qC5CnDpxXIqQ2Va66
-   Ii6yg6GtaZFEkI8bjVfKyb9oKi/r0vDjEAXo2XuS5VJJ+KmKI5t4lUoYW
-   Q=;
-Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: ek+XUNwRJ4Q5p4iyKzYjQH2lwOuZGVQ6Lx+zstg9NwpzzjRk2zB+v1/h9r6kuVVwRRNSCQGoXa
- D8++MW18YDeKCEmXhrvpH1ZyV0JbQvvIgpmIJERE5rrUKGp9cmDKMmPTr4piKhlvofOfDIfJYe
- 2rK+680bc67sJoyZee3FTviqXiwfbr0qq0/CqTZ5Z0mVPLSMrngigHlxQVYUtTkhCySNVkupEs
- zSdbmNe7SgW5IpviGcOeDar3EuhU7jdXOS/8qypW3eFImgTAyx5Vym8iTQCHVMYS3dHYj3I2H8
- GeI=
-X-SBRS: 2.7
-X-MesageID: 23705708
-X-Ironport-Server: esa1.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.75,406,1589256000"; 
-   d="scan'208";a="23705708"
-Date:   Tue, 28 Jul 2020 18:59:19 +0200
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     Julien Grall <julien@xen.org>
-CC:     <linux-kernel@vger.kernel.org>, Juergen Gross <jgross@suse.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>,
-        Wei Liu <wl@xen.org>,
-        "Oleksandr Andrushchenko" <oleksandr_andrushchenko@epam.com>,
-        David Airlie <airlied@linux.ie>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        <dri-devel@lists.freedesktop.org>,
-        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        <xen-devel@lists.xenproject.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v3 4/4] xen: add helpers to allocate unpopulated memory
-Message-ID: <20200728165919.GA7191@Air-de-Roger>
-References: <20200727091342.52325-1-roger.pau@citrix.com>
- <20200727091342.52325-5-roger.pau@citrix.com>
- <b5460659-88a5-c2aa-c339-815d5618bcb5@xen.org>
+        Tue, 28 Jul 2020 12:59:38 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77645C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:59:38 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id l12so1153486pgt.13
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=KQYlcxozd9Duw66kIKYSE/eVpF+aVfn6tBYwJQECVPA=;
+        b=mGckqmPq+IwwMfU2VheWzyGeHzihI/ri9tN13FNCnb0nhcfKLQgZjzptIBGl1qoZmM
+         oFSkn3j/K4HRePJPElGwzYF2cMQhKZ8ATb30Eqzo2W3dZmrsnJDUi8MzgrWn6B9CKU20
+         hkHsdPDz2StUvJrfTbvKRDhPEiPp9GModb1UHVo56GZUZNcBCgXlMq171rBzgS991pOC
+         aMFUwb9YiW4xeMNd/YuR8MBC8dRaptT7Bs6xMOv8DgUcch/DQfrw1k/VfUu1UcHitUVs
+         k4jfAbHS6b77SoZlQyVGQiSuZayE99M25amdkXS/qANpJQQzXJVuh/H3rV2fmf5qvLKl
+         1fXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=KQYlcxozd9Duw66kIKYSE/eVpF+aVfn6tBYwJQECVPA=;
+        b=LgXq/i6IqQ75L2dqVwa9uMSsVKSYapc/xW910KL0AD/BQb8tMGBgMPl6QQZ6tCLyEs
+         w6+ja7YGYdoy8c93m+uATOaHsqN07shXowtTTvg2ZCpZUa0akZcJdukUjF3Uly77Qgb+
+         4UIiSF/RszDjAUD4h5G/rtUGuVg2sdMgbzHOBFFuYTgBBnCDCjXa9I9ChpDZCMtmod76
+         ZnDfgfuujZo5/WiRBLZ0FGTH5PfH0+hZWNZC8F53beIXfEfi2mQkda6pOE0xjoWvORGm
+         jj3rpwVTN5LXlrzCi7oS3zDCaXgppqHp7E1bdjPlGoJJ4ASgA576A49EljfndmGIIyvw
+         09zQ==
+X-Gm-Message-State: AOAM53183w89PDOb+H9xSbOYBWpYSBUWQdzu2LZRX2dHqS/+cfetA4yA
+        1Oj/tBF+1uTT16c1aF93idBQNQ==
+X-Google-Smtp-Source: ABdhPJxP8vSt8aHJiXR/kiImLXFg9jqf2AgDWwPDn8RM1kT+YjuOUuZgm4428rbcOHrwE7ra3NqqHQ==
+X-Received: by 2002:a63:4c48:: with SMTP id m8mr25701415pgl.290.1595955578011;
+        Tue, 28 Jul 2020 09:59:38 -0700 (PDT)
+Received: from [10.255.143.11] ([103.136.221.69])
+        by smtp.gmail.com with ESMTPSA id k7sm18914041pgh.46.2020.07.28.09.59.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 09:59:37 -0700 (PDT)
+Subject: Re: [External] Re: [PATCH 1/2] ftrace: clear module from hash of all
+ ftrace ops
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        songmuchun@bytedance.com
+References: <20200728102720.46837-1-zhouchengming@bytedance.com>
+ <20200728085320.6b04e03f@oasis.local.home>
+From:   Chengming Zhou <zhouchengming@bytedance.com>
+Message-ID: <557fa115-1247-e058-4a18-e73f6fb7d636@bytedance.com>
+Date:   Wed, 29 Jul 2020 00:59:33 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <b5460659-88a5-c2aa-c339-815d5618bcb5@xen.org>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+In-Reply-To: <20200728085320.6b04e03f@oasis.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 05:48:23PM +0100, Julien Grall wrote:
-> Hi,
-> 
-> On 27/07/2020 10:13, Roger Pau Monne wrote:
-> > To be used in order to create foreign mappings. This is based on the
-> > ZONE_DEVICE facility which is used by persistent memory devices in
-> > order to create struct pages and kernel virtual mappings for the IOMEM
-> > areas of such devices. Note that on kernels without support for
-> > ZONE_DEVICE Xen will fallback to use ballooned pages in order to
-> > create foreign mappings.
-> > 
-> > The newly added helpers use the same parameters as the existing
-> > {alloc/free}_xenballooned_pages functions, which allows for in-place
-> > replacement of the callers. Once a memory region has been added to be
-> > used as scratch mapping space it will no longer be released, and pages
-> > returned are kept in a linked list. This allows to have a buffer of
-> > pages and prevents resorting to frequent additions and removals of
-> > regions.
-> > 
-> > If enabled (because ZONE_DEVICE is supported) the usage of the new
-> > functionality untangles Xen balloon and RAM hotplug from the usage of
-> > unpopulated physical memory ranges to map foreign pages, which is the
-> > correct thing to do in order to avoid mappings of foreign pages depend
-> > on memory hotplug.
-> I think this is going to break Dom0 on Arm if the kernel has been built with
-> hotplug. This is because you may end up to re-use region that will be used
-> for the 1:1 mapping of a foreign map.
-> 
-> Note that I don't know whether hotplug has been tested on Xen on Arm yet. So
-> it might be possible to be already broken.
-> 
-> Meanwhile, my suggestion would be to make the use of hotplug in the balloon
-> code conditional (maybe using CONFIG_ARM64 and CONFIG_ARM)?
 
-Right, this feature (allocation of unpopulated memory separated from
-the balloon driver) is currently gated on CONFIG_ZONE_DEVICE, which I
-think could be used on Arm.
+在 2020/7/28 下午8:53, Steven Rostedt 写道:
+> On Tue, 28 Jul 2020 18:27:19 +0800
+> Chengming Zhou <zhouchengming@bytedance.com> wrote:
+>
+>> We should clear module from hash of all ops on ftrace_ops_list when
+>> module going, or the ops including these modules will be matched
+>> wrongly by new module loaded later.
+> This is really up to the owner of the hash and not the registered
+> system.
 
-IMO the right solution seems to be to subtract the physical memory
-regions that can be used for the identity mappings of foreign pages
-(all RAM on the system AFAICT) from iomem_resource, as that would make
-this and the memory hotplug done in the balloon driver safe?
+Agreed!
 
-Thanks, Roger.
+But ftrace is a very core and independent mechanism of kernel, it's hard to
+
+make sure any user of ftrace, like kprobe, livepatch will handle module 
+going correctly.
+
+At least for now, kprobe does not handle that correctly...
+
+So I think it's safer to fix it too in ftrace : )
+
+>
+> If we want, we could register some kind of callback table for all
+> ftrace_ops to have this updated, but the current code is incorrect.
+>
+> Like:
+>
+>   register_ftrace_ops_hash()
+>
+> Where the hash will get updated on module removal.
+
+Thanks for the suggestion, so in this new function, all ftrace_ops 
+func_hash on
+
+ftrace_ops_list will get updated on module removal.
+
+>> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+>> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+>> ---
+>>   kernel/trace/ftrace.c | 22 ++++++++++++----------
+>>   1 file changed, 12 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+>> index 1903b80db6eb..fca01a168ae5 100644
+>> --- a/kernel/trace/ftrace.c
+>> +++ b/kernel/trace/ftrace.c
+>> @@ -6223,18 +6223,20 @@ clear_mod_from_hash(struct ftrace_page *pg, struct ftrace_hash *hash)
+>>   /* Clear any records from hashs */
+>>   static void clear_mod_from_hashes(struct ftrace_page *pg)
+>>   {
+>> -	struct trace_array *tr;
+>> +	struct ftrace_ops *op;
+>>   
+>> -	mutex_lock(&trace_types_lock);
+>> -	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+>> -		if (!tr->ops || !tr->ops->func_hash)
+> The tr->ops hashes are persistent without being registered. They match
+> what's in set_ftrace_filter and similar files.
+>
+> Your patch just introduced a bug, because those hashes now would not
+> get updated if the ops were not registered.
+>
+> i.e.
+>
+>   # echo some_module_function > set_ftrace_filter
+>   # rmmod module_with_that_function
+>   # insmod module_with_same_address_of_function
+>   # echo function > current_tracer
+>
+> Now the tr->ops->hash would still have the function of the original
+> module.
+
+I thought all ftrace_ops has non empty func_hash are on the ftrace 
+global list...
+
+Well, so I just leave this function unmodified.
+
+Just call that new function register_ftrace_ops_hash() from 
+ftrace_release_mod.
+
+Thanks!
+
+>
+> Either have all owners of ftrace_ops handle this case, or add a helper
+> function to handle it for them. But using ftarce_ops_list is the wrong
+> place to do it.
+>
+> -- Steve
+>
+>
+>> +	mutex_lock(&ftrace_lock);
+>> +
+>> +	do_for_each_ftrace_op(op, ftrace_ops_list) {
+>> +		if (!op->func_hash)
+>>   			continue;
+>> -		mutex_lock(&tr->ops->func_hash->regex_lock);
+>> -		clear_mod_from_hash(pg, tr->ops->func_hash->filter_hash);
+>> -		clear_mod_from_hash(pg, tr->ops->func_hash->notrace_hash);
+>> -		mutex_unlock(&tr->ops->func_hash->regex_lock);
+>> -	}
+>> -	mutex_unlock(&trace_types_lock);
+>> +		mutex_lock(&op->func_hash->regex_lock);
+>> +		clear_mod_from_hash(pg, op->func_hash->filter_hash);
+>> +		clear_mod_from_hash(pg, op->func_hash->notrace_hash);
+>> +		mutex_unlock(&op->func_hash->regex_lock);
+>> +	} while_for_each_ftrace_op(op);
+>> +
+>> +	mutex_unlock(&ftrace_lock);
+>>   }
+>>   
+>>   static void ftrace_free_mod_map(struct rcu_head *rcu)
