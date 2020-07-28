@@ -2,194 +2,111 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 854C6C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B51C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63BBD20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:08:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="ASOVaySf"
+	by mail.kernel.org (Postfix) with ESMTP id 5025220714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595909413;
+	bh=6WjCx9p86yw48QkeqBlnsPDOEVF7czvj6LeXQBs/i+4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=S6kxIvV9yn6oVF5hiNUEQCblAEZTGa7FdC6vZskxzWhQMfu0rIh3+R20Got0yoylT
+	 jyjE/DHtgKzhLCfX76IKTI0iqlyYmwdbZLwW6YVhWAO4KuC2gU8p7WSPkSci4fNXlk
+	 yeoQLSwE9p31gXfMzHISr0NS4NqDJLIh28uvW9GQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgG1EIW (ORCPT
+        id S1726509AbgG1EKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 00:08:22 -0400
-Received: from [115.28.160.31] ([115.28.160.31]:54742 "EHLO
-        mailbox.box.xen0n.name" rhost-flags-FAIL-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1726004AbgG1EIV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 00:08:21 -0400
-Received: from hanazono.local (unknown [116.236.177.53])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        Tue, 28 Jul 2020 00:10:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726004AbgG1EKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 00:10:11 -0400
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 5BEBF6006D;
-        Tue, 28 Jul 2020 12:08:12 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=xen0n.name; s=mail;
-        t=1595909292; bh=7sU+b2S5OQeF51fBW5K0xFQWC95f2Va54OtBp2iiUT0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ASOVaySfrnbNQNSf6P2yQu7oteymYDCChKRnXURc05Td9jut3RI28PEHnB6lGLGEB
-         SdYAN4AeDs1LPBYioJT9e8seGa9b+jyrazqi/Nq4/Kcyqcvrw1HiCKHbpLqlTzC9wu
-         P2EYUkAeg0n09nVgq/K7iSYvyIGoTKiMJ1/GmY1I=
-Subject: Re: [PATCH v3 2/5] MIPS: Loongson64: Process ISA Node in DeviceTree
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200725014529.1143208-1-jiaxun.yang@flygoat.com>
- <20200725014529.1143208-3-jiaxun.yang@flygoat.com>
-From:   WANG Xuerui <kernel@xen0n.name>
-Message-ID: <b239011a-d946-17b8-3d29-995f1158d0bf@xen0n.name>
-Date:   Tue, 28 Jul 2020 12:08:11 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:80.0)
- Gecko/20100101 Thunderbird/80.0a1
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BF9D20714;
+        Tue, 28 Jul 2020 04:10:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595909411;
+        bh=6WjCx9p86yw48QkeqBlnsPDOEVF7czvj6LeXQBs/i+4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xdUP/Vg/zGrm1cg9jqUxyH72NvvRzlftvFlJfmNbv4mklkIAJmUitpCxsAk35ZgC8
+         quwg3inaTrSn38oA1BMjNGsqbdbXBKyKZ3AcsHnuNKZj0s9CSiMlZQXz5y7yCgR2Yx
+         bQmAMgXy0McGx4/rxZKHketQj5iK+dW5ou2o6928=
+Received: by mail-lj1-f179.google.com with SMTP id q4so19635766lji.2;
+        Mon, 27 Jul 2020 21:10:10 -0700 (PDT)
+X-Gm-Message-State: AOAM5327EK3rylxO99kEO6lHqjP4iL9ACzporbhOVxKLblu+99DCMiXU
+        Y+bJQNqF5NxelofRRQsmjo5wCh5SEkZJbZbX42g=
+X-Google-Smtp-Source: ABdhPJyDSAgz26K8vU68dxkOR3PlbcBCmPLXWLF7PPY78bP4JM0P67j4Q1wJ/tCsyd4trl+NBGId06Kk3kxxgaUqc2I=
+X-Received: by 2002:a2e:b0ed:: with SMTP id h13mr10728794ljl.250.1595909409351;
+ Mon, 27 Jul 2020 21:10:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200725014529.1143208-3-jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200728033405.78469-1-npiggin@gmail.com> <20200728033405.78469-7-npiggin@gmail.com>
+In-Reply-To: <20200728033405.78469-7-npiggin@gmail.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Tue, 28 Jul 2020 12:09:58 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTT-SmgFjyU5H75=xYihwKK5tSggGXP=D_4am06-wdLM4w@mail.gmail.com>
+Message-ID: <CAJF2gTT-SmgFjyU5H75=xYihwKK5tSggGXP=D_4am06-wdLM4w@mail.gmail.com>
+Subject: Re: [PATCH 06/24] csky: use asm-generic/mmu_context.h for no-op implementations
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        linux-csky@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiaxun,
+Acked-by: Guo Ren <guoren@kernel.org>
 
-
-On 2020/7/25 09:45, Jiaxun Yang wrote:
-> Previously, we're hardcoding resserved ISA I/O Space in code, now
-"reserved"; also "in code" seems redundant (we're "hard-coding", aren't we?)
-> we're processing reverved I/O via DeviceTree directly. Using the ranges
-another "reserved" typo, but better restructure the whole clause.
-> property to determine the size and address of reserved I/O space.
-This sentence has no verb. Maybe you mean "Use"?
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> --
-> v2: Use range_parser instead of pci_range_parser
-> ---
->  arch/mips/loongson64/init.c | 87 ++++++++++++++++++++++++++-----------
->  1 file changed, 62 insertions(+), 25 deletions(-)
+On Tue, Jul 28, 2020 at 11:34 AM Nicholas Piggin <npiggin@gmail.com> wrote:
 >
-> diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
-> index 59ddadace83f..8ba22c30f312 100644
-> --- a/arch/mips/loongson64/init.c
-> +++ b/arch/mips/loongson64/init.c
-> @@ -7,6 +7,8 @@
->  #include <linux/irqchip.h>
->  #include <linux/logic_pio.h>
->  #include <linux/memblock.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <asm/bootinfo.h>
->  #include <asm/traps.h>
->  #include <asm/smp-ops.h>
-> @@ -63,41 +65,76 @@ void __init prom_free_prom_memory(void)
->  {
->  }
->  
-> -static __init void reserve_pio_range(void)
-> +static int __init add_legacy_isa_io(struct fwnode_handle *fwnode, resource_size_t hw_start,
-> +				    resource_size_t size)
->  {
-> +	int ret = 0;
->  	struct logic_pio_hwaddr *range;
-> +	unsigned long vaddr;
->  
->  	range = kzalloc(sizeof(*range), GFP_ATOMIC);
->  	if (!range)
-> -		return;
-> +		return -ENOMEM;
->  
-> -	range->fwnode = &of_root->fwnode;
-> -	range->size = MMIO_LOWER_RESERVED;
-> -	range->hw_start = LOONGSON_PCIIO_BASE;
-> +	range->fwnode = fwnode;
-> +	range->size = size;
-> +	range->hw_start = hw_start;
->  	range->flags = LOGIC_PIO_CPU_MMIO;
->  
-> -	if (logic_pio_register_range(range)) {
-> -		pr_err("Failed to reserve PIO range for legacy ISA\n");
-> -		goto free_range;
-> +	ret = logic_pio_register_range(range);
-> +	if (ret) {
-> +		kfree(range);
-> +		return ret;
-> +	}
-> +
-> +	/* Legacy ISA must placed at the start of PCI_IOBASE */
-> +	if (range->io_start != 0) {
-> +		logic_pio_unregister_range(range);
-> +		kfree(range);
-> +		return -EINVAL;
->  	}
->  
-> -	if (WARN(range->io_start != 0,
-> -			"Reserved PIO range does not start from 0\n"))
-> -		goto unregister;
+> Cc: Guo Ren <guoren@kernel.org>
+> Cc: linux-csky@vger.kernel.org
+> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+> ---
+>  arch/csky/include/asm/mmu_context.h | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/csky/include/asm/mmu_context.h b/arch/csky/include/asm/mmu_context.h
+> index abdf1f1cb6ec..b227d29393a8 100644
+> --- a/arch/csky/include/asm/mmu_context.h
+> +++ b/arch/csky/include/asm/mmu_context.h
+> @@ -24,11 +24,6 @@
+>  #define cpu_asid(mm)           (atomic64_read(&mm->context.asid) & ASID_MASK)
+>
+>  #define init_new_context(tsk,mm)       ({ atomic64_set(&(mm)->context.asid, 0); 0; })
+> -#define activate_mm(prev,next)         switch_mm(prev, next, current)
 > -
-> -	/*
-> -	 * i8259 would access I/O space, so mapping must be done here.
-> -	 * Please remove it when all drivers can be managed by logic_pio.
-> -	 */
-> -	ioremap_page_range(PCI_IOBASE, PCI_IOBASE + MMIO_LOWER_RESERVED,
-> -				LOONGSON_PCIIO_BASE,
-> -				pgprot_device(PAGE_KERNEL));
-> -
-> -	return;
-> -unregister:
-> -	logic_pio_unregister_range(range);
-> -free_range:
-> -	kfree(range);
-> +	vaddr = PCI_IOBASE + range->io_start;
-> +
-> +	ioremap_page_range(vaddr, vaddr + size, hw_start, pgprot_device(PAGE_KERNEL));
-> +
-> +	return 0;
-> +}
-> +
-> +static __init void reserve_pio_range(void)
-> +{
-> +	struct device_node *np;
-> +
-> +	for_each_node_by_name(np, "isa") {
-> +		struct of_range range;
-> +		struct of_range_parser parser;
-> +
-> +		pr_info("ISA Bridge: %pOF\n", np);
-> +
-> +		if (of_range_parser_init(&parser, np)) {
-> +			pr_info("Failed to parse resources.\n");
-> +			break;
-> +		}
-> +
-> +		for_each_of_range(&parser, &range) {
-> +			switch (range.flags & IORESOURCE_TYPE_BITS) {
-> +			case IORESOURCE_IO:
-> +				pr_info(" IO 0x%016llx..0x%016llx  ->  0x%016llx\n",
-> +					range.cpu_addr,
-> +					range.cpu_addr + range.size - 1,
-> +					range.bus_addr);
-> +				if (add_legacy_isa_io(&np->fwnode, range.cpu_addr, range.size))
-> +					pr_warn("Failed to reserve legacy IO in Logic PIO\n");
-> +				break;
-> +			case IORESOURCE_MEM:
-> +				pr_info(" MEM 0x%016llx..0x%016llx  ->  0x%016llx\n",
-> +					range.cpu_addr,
-> +					range.cpu_addr + range.size - 1,
-> +					range.bus_addr);
-> +				break;
-> +			}
-> +		}
-> +	}
+> -#define destroy_context(mm)            do {} while (0)
+> -#define enter_lazy_tlb(mm, tsk)                do {} while (0)
+> -#define deactivate_mm(tsk, mm)         do {} while (0)
+>
+>  void check_and_switch_context(struct mm_struct *mm, unsigned int cpu);
+>
+> @@ -46,4 +41,7 @@ switch_mm(struct mm_struct *prev, struct mm_struct *next,
+>
+>         flush_icache_deferred(next);
 >  }
->  
->  void __init arch_init_irq(void)
+> +
+> +#include <asm-generic/mmu_context.h>
+> +
+>  #endif /* __ASM_CSKY_MMU_CONTEXT_H */
+> --
+> 2.23.0
+>
+
+
+-- 
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
