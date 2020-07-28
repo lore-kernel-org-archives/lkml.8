@@ -2,106 +2,215 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B3CC433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29265C433ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 742A72070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0707920714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:57:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="SNQADGVn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbgG1M5I (ORCPT
+        id S1729812AbgG1M5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:57:08 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8844 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729622AbgG1M5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:57:07 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 84C4B6635318109F9F2B;
-        Tue, 28 Jul 2020 20:57:04 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 28 Jul 2020 20:56:59 +0800
-From:   Tian Tao <tiantao6@hisilicon.com>
-To:     <airlied@linux.ie>, <daniel@ffwll.ch>, <tzimmermann@suse.de>,
-        <kraxel@redhat.com>, <alexander.deucher@amd.com>,
-        <tglx@linutronix.de>, <dri-devel@lists.freedesktop.org>,
-        <xinliang.liu@linaro.org>, <linux-kernel@vger.kernel.org>
-CC:     <linuxarm@huawei.com>
-Subject: [PATCH v3] drm/hisilicon: Fixed the warning: Assignment of 0/1 to bool variable
-Date:   Tue, 28 Jul 2020 20:55:07 +0800
-Message-ID: <1595940907-17874-1-git-send-email-tiantao6@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 28 Jul 2020 08:57:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729780AbgG1M5S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:57:18 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44EC0C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:57:18 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id a9so11533490pjd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:57:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jGv59OL3eBSwcPKc8/h9cDYwkm0Ga9KFVIVK1NEWRJE=;
+        b=SNQADGVnE0GT2O1e70IvNnIdtBVC4WTc8bSWAD5HxNOIq9P1xHSKpegGI6WKHj2wz6
+         1gz19deudrkxNb9cNbrDAXXSOkqEdWfAquJnQu1/sPK7we2vCeOB9tYCa88Czg/oqkd2
+         a2+OCvZ/gy2eUX8qxOx0YGJ9RROfHCz+duDtMWGV3xV9/Wk/rs8iyqBe8irr2jETNMl3
+         K5fNojIW+bkRFjYqCrEUTDq1SHAnJ0ONf972MRoy9gaFBxUcy5pv2sEAp2h6Q82ek7AE
+         Q0B+C2WLgtVFYWLO4+DDDDEqCNpw8XCzvbpDXb5h8d8OVGiB2zQ1yZ0rjpZ1aqeG2+qX
+         Oorw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jGv59OL3eBSwcPKc8/h9cDYwkm0Ga9KFVIVK1NEWRJE=;
+        b=Karz/nIazN31XTQlZ+m0wich4dt82tw8nEo/8o3nH7mQBLiSbrFWX2zSrYFsYrElOv
+         EjANBaqP9JNXLWxF1tbKbeXAV29TBGK326+t884eiTnT2GTqyXH6GUqyMG2Mv5fIdVMJ
+         +PAw5ja1DXqhw3ZROeeX3CVkEXCa0wnI0ICWchtYfatzlZ5LMK/C9WzIOXIx7/FdEmqK
+         xqH6jDFwAEGAJ/MFZUfmJEokRYwjb8zVHadAak9TKW1LD/IZHqv17vxN4j9fE2ANuNJU
+         4bGS+0TahK0QCV6QqAVFNbr5jo9GDk+nig9zHlPaU05Jd+RzvM8SgJ18zFNJqVJIO8IF
+         7QPA==
+X-Gm-Message-State: AOAM530VoNmhpjoRSoZZtv6bt+ph80Ka/gIbOtKt0F6jCuwOcD5YYM+v
+        xmdU5VEjdiTbMPaNPT7xcV1+kReaeR83o1tOflT88w==
+X-Google-Smtp-Source: ABdhPJzkoNBZsvO7dZrfGpe7loV05LDnvZRT8DVZMLBwOq1H+rzaEz8juFb93qjBu8kbRj7UBAau9HT+us4b4tJg66A=
+X-Received: by 2002:a17:902:9b97:: with SMTP id y23mr23964341plp.189.1595941037785;
+ Tue, 28 Jul 2020 05:57:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+References: <20200727134914.312934924@linuxfoundation.org> <20200727134918.205538211@linuxfoundation.org>
+In-Reply-To: <20200727134918.205538211@linuxfoundation.org>
+From:   Muchun Song <songmuchun@bytedance.com>
+Date:   Tue, 28 Jul 2020 20:56:41 +0800
+Message-ID: <CAMZfGtWVtGeMfu=04LiNVcLrBpmexUryHjy-dujo77CpJhcwGg@mail.gmail.com>
+Subject: Re: [External] [PATCH 4.19 76/86] mm: memcg/slab: fix memory leak at
+ non-root kmem_cache destroy
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fixed the following warning:
-hibmc_drm_drv.c:296:1-18:WARNING: Assignment of 0/1 to bool variable.
-hibmc_drm_drv.c:301:2-19: WARNING: Assignment of 0/1 to bool variable.
+On Mon, Jul 27, 2020 at 10:12 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> From: Muchun Song <songmuchun@bytedance.com>
+>
+> commit d38a2b7a9c939e6d7329ab92b96559ccebf7b135 upstream.
+>
+> If the kmem_cache refcount is greater than one, we should not mark the
+> root kmem_cache as dying.  If we mark the root kmem_cache dying
+> incorrectly, the non-root kmem_cache can never be destroyed.  It
+> resulted in memory leak when memcg was destroyed.  We can use the
+> following steps to reproduce.
+>
+>   1) Use kmem_cache_create() to create a new kmem_cache named A.
+>   2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
+>      so the refcount of B is just increased.
+>   3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
+>      decrease the B's refcount but mark the B as dying.
+>   4) Create a new memory cgroup and alloc memory from the kmem_cache
+>      B. It leads to create a non-root kmem_cache for allocating memory.
+>   5) When destroy the memory cgroup created in the step 4), the
+>      non-root kmem_cache can never be destroyed.
+>
+> If we repeat steps 4) and 5), this will cause a lot of memory leak.  So
+> only when refcount reach zero, we mark the root kmem_cache as dying.
+>
+> Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> Acked-by: Roman Gushchin <guro@fb.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: Shakeel Butt <shakeelb@google.com>
+> Cc: <stable@vger.kernel.org>
+> Link: http://lkml.kernel.org/r/20200716165103.83462-1-songmuchun@bytedance.com
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
+> ---
+>  mm/slab_common.c |   35 ++++++++++++++++++++++++++++-------
+>  1 file changed, 28 insertions(+), 7 deletions(-)
+>
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -310,6 +310,14 @@ int slab_unmergeable(struct kmem_cache *
+>         if (s->refcount < 0)
+>                 return 1;
+>
+> +#ifdef CONFIG_MEMCG_KMEM
+> +       /*
+> +        * Skip the dying kmem_cache.
+> +        */
+> +       if (s->memcg_params.dying)
+> +               return 1;
+> +#endif
+> +
+>         return 0;
+>  }
+>
+> @@ -832,12 +840,15 @@ static int shutdown_memcg_caches(struct
+>         return 0;
+>  }
+>
+> -static void flush_memcg_workqueue(struct kmem_cache *s)
+> +static void memcg_set_kmem_cache_dying(struct kmem_cache *s)
+>  {
+>         mutex_lock(&slab_mutex);
+>         s->memcg_params.dying = true;
+>         mutex_unlock(&slab_mutex);
 
-v2:
-using the pci_dev.msi_enabled instead of priv->msi_enabled.
+We should remove mutex_lock/unlock(&slab_mutex) here, because
+we already hold the slab_mutex from kmem_cache_destroy().
 
-v3:
-just call pci_enable_msi() and pci_disable_msi(), it's no need to
-set dev->pdev->msi_enabled again.
 
-Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
----
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 5 +----
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h | 1 -
- 2 files changed, 1 insertion(+), 5 deletions(-)
+> +}
+>
+> +static void flush_memcg_workqueue(struct kmem_cache *s)
+> +{
+>         /*
+>          * SLUB deactivates the kmem_caches through call_rcu_sched. Make
+>          * sure all registered rcu callbacks have been invoked.
+> @@ -858,10 +869,6 @@ static inline int shutdown_memcg_caches(
+>  {
+>         return 0;
+>  }
+> -
+> -static inline void flush_memcg_workqueue(struct kmem_cache *s)
+> -{
+> -}
+>  #endif /* CONFIG_MEMCG_KMEM */
+>
+>  void slab_kmem_cache_release(struct kmem_cache *s)
+> @@ -879,8 +886,6 @@ void kmem_cache_destroy(struct kmem_cach
+>         if (unlikely(!s))
+>                 return;
+>
+> -       flush_memcg_workqueue(s);
+> -
+>         get_online_cpus();
+>         get_online_mems();
+>
+> @@ -890,6 +895,22 @@ void kmem_cache_destroy(struct kmem_cach
+>         if (s->refcount)
+>                 goto out_unlock;
+>
+> +#ifdef CONFIG_MEMCG_KMEM
+> +       memcg_set_kmem_cache_dying(s);
+> +
+> +       mutex_unlock(&slab_mutex);
+> +
+> +       put_online_mems();
+> +       put_online_cpus();
+> +
+> +       flush_memcg_workqueue(s);
+> +
+> +       get_online_cpus();
+> +       get_online_mems();
+> +
+> +       mutex_lock(&slab_mutex);
+> +#endif
+> +
+>         err = shutdown_memcg_caches(s);
+>         if (!err)
+>                 err = shutdown_cache(s);
+>
+>
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-index 249c298..b8d839a 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-@@ -254,9 +254,8 @@ static int hibmc_unload(struct drm_device *dev)
- 
- 	if (dev->irq_enabled)
- 		drm_irq_uninstall(dev);
--	if (priv->msi_enabled)
--		pci_disable_msi(dev->pdev);
- 
-+	pci_disable_msi(dev->pdev);
- 	hibmc_kms_fini(priv);
- 	hibmc_mm_fini(priv);
- 	dev->dev_private = NULL;
-@@ -294,12 +293,10 @@ static int hibmc_load(struct drm_device *dev)
- 		goto err;
- 	}
- 
--	priv->msi_enabled = 0;
- 	ret = pci_enable_msi(dev->pdev);
- 	if (ret) {
- 		DRM_WARN("enabling MSI failed: %d\n", ret);
- 	} else {
--		priv->msi_enabled = 1;
- 		ret = drm_irq_install(dev, dev->pdev->irq);
- 		if (ret)
- 			DRM_WARN("install irq failed: %d\n", ret);
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-index 6097687..a683763 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-@@ -25,7 +25,6 @@ struct hibmc_drm_private {
- 	void __iomem   *fb_map;
- 	unsigned long  fb_base;
- 	unsigned long  fb_size;
--	bool msi_enabled;
- 
- 	/* drm */
- 	struct drm_device  *dev;
--- 
-2.7.4
 
+--
+Yours,
+Muchun
