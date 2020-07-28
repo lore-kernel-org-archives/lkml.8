@@ -2,268 +2,122 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57777C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474ECC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30D90206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ED64206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="flBeWf4G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoQ7Bq3K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730509AbgG1OkH (ORCPT
+        id S1730471AbgG1Olj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:40:07 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31848 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730449AbgG1OkG (ORCPT
+        Tue, 28 Jul 2020 10:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730391AbgG1Olj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:40:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595947204;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type;
-        bh=n9RcmArQYWuTpAAdErmPZFmnkNv3sBLv+UXOnyAaRMc=;
-        b=flBeWf4GmJBqiKXv5waMi9rrPB8RaVDvZQyc5fwmTwRGC87hiq76yAvGt38h1dFDu7yzfH
-        QWdYmOmwLM1vcULB+nAnlXew1Jm39vy67aSVoIn8/60uYIvEmKSL14c3FNJm4Fm8Oipgnq
-        16y1zYUBE2YkEp0F2/IKC8epl+19T50=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-160-WoCX-GzcPXGCAUZw2cnI1g-1; Tue, 28 Jul 2020 10:39:57 -0400
-X-MC-Unique: WoCX-GzcPXGCAUZw2cnI1g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A724107BEF7;
-        Tue, 28 Jul 2020 14:39:56 +0000 (UTC)
-Received: from [10.10.115.102] (ovpn-115-102.rdu2.redhat.com [10.10.115.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4A2C819D7C;
-        Tue, 28 Jul 2020 14:39:51 +0000 (UTC)
-To:     linux-kernel@vger.kernel.org, KVM list <kvm@vger.kernel.org>,
-        wanpengli@tencent.com, Paolo Bonzini <pbonzini@redhat.com>,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        liran.alon@oracle.com, "frederic@kernel.org" <frederic@kernel.org>,
-        tglx@linutronix.de, Juri Lelli <juri.lelli@redhat.com>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Subject: WARNING: suspicious RCU usage - while installing a VM on a CPU listed
- under nohz_full
-Organization: Red Hat Inc,
-Message-ID: <ece36eb1-253a-8ec6-c183-309c10bb35d5@redhat.com>
-Date:   Tue, 28 Jul 2020 10:39:49 -0400
+        Tue, 28 Jul 2020 10:41:39 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D14C061794;
+        Tue, 28 Jul 2020 07:41:39 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id o1so10005376plk.1;
+        Tue, 28 Jul 2020 07:41:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GF8ZjMhiyVomxf9/l0IfId/LIV7LteGzaaDxWYsxaIU=;
+        b=VoQ7Bq3KPeISrwjwSkLoprGtG+k2Fb7MUT7AlyPhSWF0Rj9fuUds8Wcwl/5SeiiSWn
+         j1GKLVuH4umjRwNSVPjCrQ7gcSyeFxRwwhxCIEBtjp90Na3KaTC0rUHYYy8TrOAgcd1V
+         fMwls5Y4GUZdWaYHlgp1mJmXd/61BUCwxu25UjIWqJos1T7HDB83AfVFh861m8KzEEl7
+         99xmGXtYlrHL71aglulvPMt1wMCUNjdDiImW/ioWlxbyh1yUVs5zk9FUWt9ZW0RFvDD1
+         X/XzvbepYJqrCNjASn7nZE+NOG2b2ahTvCe1w41tXu6EQegWQfKnYtSWGfRhLaN2u1K1
+         XBsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GF8ZjMhiyVomxf9/l0IfId/LIV7LteGzaaDxWYsxaIU=;
+        b=Ah3+4XtS2Cm+VVA7edhAGsKPDUfjNOUNDEVTBogGk3GXEPNfaatpLO7hLBt/hK6X5Y
+         QC9jku+XezpLCSTJeaXelJaX0fWmqebJmpTCB85o06of2Arov2RP06OLyfdEPREV8bKS
+         H4mkeci9evuYkRHlamqnqzEiU9zCZlp5CYAOBHzyLCUwpPlmsJaAuyhSXTBCufH644SA
+         BKO4NBo2x00QPvbHGd9gIcmdXdG8FCwsgyELaJtjhg9Rh6EYgeXzouayXKfjifvcceug
+         4AjbwaN+Q2kAVYX5dxdQpzshyAp6/cu/XTuGxS451udfecf3YAzrZHxiAaAHYjG5/T0R
+         +E2A==
+X-Gm-Message-State: AOAM531it19HgdP7zOrQA/acF16MiF7l179LZqDnDF5Y7VtM8sdtOKvU
+        nH0YJVu9rmM7xQeb5Mq/6AUUrLBB
+X-Google-Smtp-Source: ABdhPJxPnbqNFx2R/aZMT//M0oZGvl560sm+VxS32xxVHehpQkXBH7TQA2aiTJIBbOPhRQfIh4eMdw==
+X-Received: by 2002:a17:902:a3c2:: with SMTP id q2mr10268577plb.212.1595947298539;
+        Tue, 28 Jul 2020 07:41:38 -0700 (PDT)
+Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id d65sm18735992pfc.97.2020.07.28.07.41.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 07:41:37 -0700 (PDT)
+Subject: Re: [PATCH] [net/ipv6] ip6_output: Add ipv6_pinfo null check
+To:     Cong Wang <xiyou.wangcong@gmail.com>,
+        Gaurav Singh <gaurav1086@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "open list:NETWORKING [IPv4/IPv6]" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200727033810.28883-1-gaurav1086@gmail.com>
+ <20200728021348.4116-1-gaurav1086@gmail.com>
+ <CAM_iQpWbT18cRfDc2f1wVUrS6QpOmPrZwBqaitD7545-itijfg@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <4c4d94e2-e2b4-ee77-6942-f5d747a288e4@gmail.com>
+Date:   Tue, 28 Jul 2020 07:41:36 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="cKA76uN3vpOZ7s5J449z384XSweVwhWxY"
+In-Reply-To: <CAM_iQpWbT18cRfDc2f1wVUrS6QpOmPrZwBqaitD7545-itijfg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---cKA76uN3vpOZ7s5J449z384XSweVwhWxY
-Content-Type: multipart/mixed; boundary="aTJONYBsVsQ5tMycSC03DBOrrMr8uJuQs"
-
---aTJONYBsVsQ5tMycSC03DBOrrMr8uJuQs
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-
-Hi,
-
-I have recently come across an RCU trace with the 5.8-rc7 kernel that has t=
-he
-debug configs enabled while installing a VM on a CPU that is listed under
-nohz_full.
-
-Based on some of the initial debugging, my impression is that the issue is
-triggered because of the fastpath that is meant to optimize the writes to x=
-2APIC
-ICR that eventually leads to a virtual IPI in fixed delivery mode, is getti=
-ng
-invoked from the quiescent state.
-
-Following is the RCU trace dump that I was getting:
-
-[=C2=A0 178.109535] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[=C2=A0 178.114027] WARNING: suspicious RCU usage
-[=C2=A0 178.118518] 5.8.0-rc7-upstream-+ #10 Not tainted
-[=C2=A0 178.123685] -----------------------------
-[=C2=A0 178.128176] arch/x86/kvm/lapic.c:269 suspicious rcu_dereference_che=
-ck() usage!
-[=C2=A0 178.136254]
-[=C2=A0 178.136254] other info that might help us debug this:
-[=C2=A0 178.136254]
-[=C2=A0 178.145205]
-[=C2=A0 178.145205] rcu_scheduler_active =3D 2, debug_locks =3D 1
-[=C2=A0 178.152506] 1 lock held by CPU 0/KVM/2959:
-[=C2=A0 178.157091]=C2=A0 #0: ffffc9000717b6f8 (&kvm->arch.apic_map_lock){+=
-.+.}-{3:3}, at:
-kvm_recalculate_apic_map+0x8b/0xdd0 [kvm]
-[=C2=A0 178.169207]
-[=C2=A0 178.169207] stack backtrace:
-[=C2=A0 178.174086] CPU: 18 PID: 2959 Comm: CPU 0/KVM Not tainted
-5.8.0-rc7-upstream-+ #10
-[=C2=A0 178.182539] Hardware name: Dell Inc. PowerEdge R430/0CN7X8, BIOS 2.=
-6.0 10/31/2017
-[=C2=A0 178.190895] Call Trace:
-[=C2=A0 178.193637]=C2=A0 dump_stack+0x9d/0xe0
-[=C2=A0 178.197379]=C2=A0 kvm_recalculate_apic_map+0x8ce/0xdd0 [kvm]
-[=C2=A0 178.203259]=C2=A0 ? kvm_lapic_reset+0x832/0xe50 [kvm]
-[=C2=A0 178.208459]=C2=A0 kvm_vcpu_reset+0x28/0x7b0 [kvm]
-[=C2=A0 178.213270]=C2=A0 kvm_arch_vcpu_create+0x830/0xb70 [kvm]
-[=C2=A0 178.218759]=C2=A0 kvm_vm_ioctl+0x11b1/0x1fe0 [kvm]
-[=C2=A0 178.223635]=C2=A0 ? mark_lock+0x144/0x19e0
-[=C2=A0 178.227757]=C2=A0 ? kvm_unregister_device_ops+0xe0/0xe0 [kvm]
-[=C2=A0 178.233698]=C2=A0 ? sched_clock+0x5/0x10
-[=C2=A0 178.237597]=C2=A0 ? sched_clock_cpu+0x18/0x1d0
-[=C2=A0 178.242087]=C2=A0 ? __lock_acquire+0xcf6/0x5010
-[=C2=A0 178.246686]=C2=A0 ? lockdep_hardirqs_on_prepare+0x550/0x550
-[=C2=A0 178.252429]=C2=A0 ? lockdep_hardirqs_on_prepare+0x550/0x550
-[=C2=A0 178.258177]=C2=A0 ? sched_clock+0x5/0x10
-[=C2=A0 178.262074]=C2=A0 ? sched_clock_cpu+0x18/0x1d0
-[=C2=A0 178.266556]=C2=A0 ? find_held_lock+0x3a/0x1c0
-[=C2=A0 178.270953]=C2=A0 ? ioctl_file_clone+0x120/0x120
-[=C2=A0 178.275630]=C2=A0 ? selinux_file_ioctl+0x98/0x570
-[=C2=A0 178.280405]=C2=A0 ? selinux_file_mprotect+0x5b0/0x5b0
-[=C2=A0 178.285569]=C2=A0 ? rcu_tasks_wait_gp+0x6d1/0xa50
-[=C2=A0 178.290342]=C2=A0 ? rcu_read_lock_sched_held+0xe0/0xe0
-[=C2=A0 178.295608]=C2=A0 ? __fget_files+0x1f0/0x300
-[=C2=A0 178.299912]=C2=A0 ksys_ioctl+0xc0/0x110
-[=C2=A0 178.303719]=C2=A0 __x64_sys_ioctl+0x6f/0xb0
-[=C2=A0 178.307913]=C2=A0 do_syscall_64+0x51/0xb0
-[=C2=A0 178.311913]=C2=A0 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[=C2=A0 178.317557] RIP: 0033:0x7f6b9700d88b
-[=C2=A0 178.321551] Code: 0f 1e fa 48 8b 05 fd 95 2c 00 64 c7 00 26 00 00 0=
-0 48 c7 c0
-ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 0=
-1 f0
-ff ff 73 018
-[=C2=A0 178.342513] RSP: 002b:00007f6b8cbe9668 EFLAGS: 00000246 ORIG_RAX:
-0000000000000010
-[=C2=A0 178.350967] RAX: ffffffffffffffda RBX: 000055e8162d9000 RCX: 00007f=
-6b9700d88b
-[=C2=A0 178.358935] RDX: 0000000000000000 RSI: 000000000000ae41 RDI: 000000=
-000000000e
-[=C2=A0 178.366903] RBP: 000055e8162d9000 R08: 000055e8155ec4d0 R09: 000055=
-e8162d9000
-[=C2=A0 178.374871] R10: 000055e815d94ee0 R11: 0000000000000246 R12: 000055=
-e8162ad420
-[=C2=A0 178.382838] R13: 000055e8162d9000 R14: 00007ffedf043660 R15: 00007f=
-6b8cbe9800
-[=C2=A0 182.771858]
-[=C2=A0 182.773606] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[=C2=A0 182.778084] WARNING: suspicious RCU usage
-[=C2=A0 182.782564] 5.8.0-rc7-upstream-+ #10 Not tainted
-[=C2=A0 182.787719] -----------------------------
-[=C2=A0 182.792197] arch/x86/include/asm/trace/fpu.h:60 suspicious
-rcu_dereference_check() usage!
-[=C2=A0 182.801329]
-[=C2=A0 182.801329] other info that might help us debug this:
-[=C2=A0 182.801329]
-[=C2=A0 182.810268]
-[=C2=A0 182.810268] RCU used illegally from idle CPU!
-[=C2=A0 182.810268] rcu_scheduler_active =3D 2, debug_locks =3D 1
-[=C2=A0 182.822407] RCU used illegally from extended quiescent state!
-[=C2=A0 182.828824] 1 lock held by CPU 0/KVM/2959:
-[=C2=A0 182.833397]=C2=A0 #0: ffff88903f8500d0 (&vcpu->mutex){+.+.}-{3:3}, =
-at:
-kvm_vcpu_ioctl+0x172/0xb00 [kvm]
-[=C2=A0 182.838308]
-[=C2=A0 182.838308] stack backtrace:
-[=C2=A0 182.838313] CPU: 18 PID: 2959 Comm: CPU 0/KVM Tainted: G=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 W=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0
-5.8.0-rc7-upstream-+ #10
-[=C2=A0 182.838316] Hardware name: Dell Inc. PowerEdge R430/0CN7X8, BIOS 2.=
-6.0 10/31/2017
-[=C2=A0 182.838318] Call Trace:
-[=C2=A0 182.874318]=C2=A0 dump_stack+0x9d/0xe0
-[=C2=A0 182.878024]=C2=A0 switch_fpu_return+0x37c/0x410
-[=C2=A0 182.882602]=C2=A0 ? fpu__clear+0x1a0/0x1a0
-[=C2=A0 182.886700]=C2=A0 ? rcu_dynticks_eqs_enter+0x15/0x30
-[=C2=A0 182.891807]=C2=A0 vcpu_enter_guest+0x1854/0x3df0 [kvm]
-[=C2=A0 182.897121]=C2=A0 ? kvm_vcpu_reload_apic_access_page+0x60/0x60 [kvm=
-]
-[=C2=A0 182.903738]=C2=A0 ? lock_acquire+0x1ac/0xac0
-[=C2=A0 182.908062]=C2=A0 ? kvm_arch_vcpu_ioctl_run+0x1dc/0x13c0 [kvm]
-[=C2=A0 182.914107]=C2=A0 ? rcu_read_unlock+0x50/0x50
-[=C2=A0 182.918489]=C2=A0 ? rcu_read_lock_sched_held+0xaf/0xe0
-[=C2=A0 182.923788]=C2=A0 ? kvm_load_guest_fpu+0x94/0x350 [kvm]
-[=C2=A0 182.929177]=C2=A0 ? kvm_load_guest_fpu+0x94/0x350 [kvm]
-[=C2=A0 182.934528]=C2=A0 ? __local_bh_enable_ip+0x123/0x1a0
-[=C2=A0 182.939635]=C2=A0 kvm_arch_vcpu_ioctl_run+0x310/0x13c0 [kvm]
-[=C2=A0 182.945529]=C2=A0 kvm_vcpu_ioctl+0x3ee/0xb00 [kvm]
-[=C2=A0 182.950406]=C2=A0 ? sched_clock+0x5/0x10
-[=C2=A0 182.954336]=C2=A0 ? kvm_set_memory_region+0x40/0x40 [kvm]
-[=C2=A0 182.959897]=C2=A0 ? ioctl_file_clone+0x120/0x120
-[=C2=A0 182.964572]=C2=A0 ? selinux_file_ioctl+0x98/0x570
-[=C2=A0 182.969347]=C2=A0 ? selinux_file_mprotect+0x5b0/0x5b0
-[=C2=A0 182.974507]=C2=A0 ? rcu_tasks_wait_gp+0x710/0xa50
-[=C2=A0 182.979280]=C2=A0 ? rcu_read_lock_sched_held+0xe0/0xe0
-[=C2=A0 182.984547]=C2=A0 ? __fget_files+0x1f0/0x300
-[=C2=A0 182.988852]=C2=A0 ksys_ioctl+0xc0/0x110
-[=C2=A0 182.992660]=C2=A0 __x64_sys_ioctl+0x6f/0xb0
-[=C2=A0 182.996853]=C2=A0 do_syscall_64+0x51/0xb0
-[=C2=A0 183.000849]=C2=A0 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[=C2=A0 183.006491] RIP: 0033:0x7f6b9700d88b
-[=C2=A0 183.010486] Code: 0f 1e fa 48 8b 05 fd 95 2c 00 64 c7 00 26 00 00 0=
-0 48 c7 c0
-ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 0=
-1 f0
-ff ff 73 018
-[=C2=A0 183.031446] RSP: 002b:00007f6b8cbe9618 EFLAGS: 00000246 ORIG_RAX:
-0000000000000010
-[=C2=A0 183.039901] RAX: ffffffffffffffda RBX: 000055e8162d9000 RCX: 00007f=
-6b9700d88b
-[=C2=A0 183.047868] RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 000000=
-0000000018
-[=C2=A0 183.055826] RBP: 000055e8162d909b R08: 000055e8155ec1d0 R09: 000055=
-e815db1620
-[=C2=A0 183.063784] R10: 0000000000000000 R11: 0000000000000246 R12: 000055=
-e8151f6290
-[=C2=A0 183.071752] R13: 000055e8155c81c0 R14: 00007ffedf043660 R15: 00007f=
-6b9c163000
-
-Please let me know if any other information is required.
-
---=20
-Nitesh
 
 
---aTJONYBsVsQ5tMycSC03DBOrrMr8uJuQs--
+On 7/27/20 8:12 PM, Cong Wang wrote:
+> On Mon, Jul 27, 2020 at 7:14 PM Gaurav Singh <gaurav1086@gmail.com> wrote:
+>>
+>> Add return to fix build issue. Haven't reproduced this issue at
+>> my end.
+>>
+>> My hypothesis is this: In function: ip6_xmit(), we have
+>> const struct ipv6_pinfo *np = inet6_sk(sk); which returns NULL.
+>>
+>> Further down the function, there's a check:
+>> if (np) hlimit = hp->htop_limit
+> 
+> This check exists before git history, at that time 'sk' could be NULL,
+> hence 'np', so it does not mean it is still necessary now.
+> 
+> I looked at all callers of ip6_xmit(), I don't see how it is called with
+> a non-full socket, neither 'sk' could be NULL after
+> commit b30bd282cbf5c46247a279a2e8d2aae027d9f1bf
+> ("[IPV6]: ip6_xmit: remove unnecessary NULL ptr check").
+> 
+> Thanks.
+> 
 
---cKA76uN3vpOZ7s5J449z384XSweVwhWxY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Agreed.
 
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl8gOLUACgkQo4ZA3AYy
-oznjIw//cdB8faGNVptH+3XAklgpKq65lAgc/pXBqHp2NqeWtOv/J8RiFXpDtZcS
-vl2XbQHggOvcSXIGv9ygqwfWSkdx8d7rt1BCg7ErXqHEVbY0B9PvevCQr10QnQxB
-aXn5mEqc55sk8iX/NgBZQF9oIiQEB8AzlB7IJVWslQ+2yp940QSCP1s3UAJat0Sp
-dpqfeABd3waQZYHGY9IgJ+8TeA2Sch6nlCg9TTZHEyL2xKfZOT+eZpX6KDM+7xHA
-qQnMpw5PqM9F+3hHgFYNw0Fgc3Mj1342F1NqSrtdlEzDrS4I17vLJQXpTiQSK78+
-C2Qtd3e8TqLHXdZWhKiWTfdVtI4Xwoq4SQtzombs4jrzM591Qgjykp568JBQ/r0R
-AAh9QZHtvrAeOZ90cvoSR/lumFDc8ImTnCILL5psKMzopTMq5GzR0zIPWGbGp2JY
-6zq5OAE9H0IPZjP9CLGGGoJdWwNM9UQXFN39tXiYRG6rUzdZwdTua27Vh884iDBB
-YgOEwcONMZQY/RJBidn7fAnba//v1bKQPpejhAxc+3ky8th21WUH64lwr/06P3Ag
-Y/vOJROzQYUWjyIK5rzNtYwoRbBxa17WmT9O9JmSQ5pcz5XAHNG2mNke6EhX42B5
-Efb7gx8I4M52+ZM58KlZzDefkc4Mn9ZyJqd41Otlhed+frow5ps=
-=/N2c
------END PGP SIGNATURE-----
+And again, fact that this patch lacks a Fixes:  tag speaks for itself.
 
---cKA76uN3vpOZ7s5J449z384XSweVwhWxY--
+This means the author expects all reviewers to make a deep analysis.
 
+Please bear with us, and add a Fixes: tag so that we can fully understand what was
+the bug origin and why a fix is valid.
