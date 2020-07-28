@@ -2,141 +2,103 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A98C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 060CD206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13D5B206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:22:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="GsITKGrg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vV/8Y6Wp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730066AbgG1NVK (ORCPT
+        id S1730004AbgG1NW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:21:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53348 "EHLO
+        Tue, 28 Jul 2020 09:22:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729673AbgG1NVK (ORCPT
+        with ESMTP id S1729433AbgG1NWz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:21:10 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC91C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:21:10 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r4so15313175wrx.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:21:10 -0700 (PDT)
+        Tue, 28 Jul 2020 09:22:55 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8916EC061794;
+        Tue, 28 Jul 2020 06:22:55 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id gc9so11579392pjb.2;
+        Tue, 28 Jul 2020 06:22:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6n7DC2RwRJQwcE3VDCvW7mDTNfAGJnE5gpDIWkLHcHw=;
-        b=GsITKGrgFlyLR97hy7qSX3O8Co7FNy9dMUDvmOGSRjPorVty+c45ZRw/XZ0eEDe8C0
-         vWU6JQ7z1Tiym2j3xkg2UynLMNgXv79lJgFwCTrnS6Xy7cA4kXAc3VyBxKOtHioes8m2
-         guw5IbXE5e1Wk/+Wor+TvQQpX6RMldYQ02Xv2Z3emyBRMvhwl1n+id0xBKBk2cW4QLlr
-         BXXI5OsUgnByTZVxDqxmsZ4+qyZ1OTwX2pzEGBrNiFsZBYEe0AQZJGIp08xws/xeKqON
-         pM9sUrXZPm1LmOqaNMEdfyeTz7ghhFpO3Ylzow4BQPRwD8vE9QGYgsGUrca5dBYrpPVT
-         LByg==
+        bh=nf1O99k+zsvJqjI/za3C3+LNhANhWMX3dBWewicGWoQ=;
+        b=vV/8Y6WpSwU9HTxSD/WJ/EvnS9XpQW0xb0WmXdXvTjR59DT26u+VWyuBNuaIaAeLjr
+         AaNLCzhBn8d81jnuBLGyc+snvUOJghb/k7EcDcrfQfA2sboAIKDqIrXsFNCuG8OdVfkw
+         WkrOXWDMF4bD6LrTz+zbhPB5ZsyN8kYxqvm4Ar7m5yuTLFczPk27/mlyUAVJiI3HRtSe
+         DolevwAoBLh6X4rFwk0Re7o30X3vbGJICz1stm8S11krtGYvLuoaGIm4VSvoRGKcwtk4
+         hTX0tS2XykR3BGO445hOjNkLz1KymFyQMpurS4RSMqPAhujHSIiYUk69nyMRNpSqVRVT
+         CuTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6n7DC2RwRJQwcE3VDCvW7mDTNfAGJnE5gpDIWkLHcHw=;
-        b=SXSIwl937jJJpuvbzJMra6o5khN64QlrVGsdiVN0fI5naXjmC8gQxuXQfWHqHDP5Vl
-         d7uuMIYQQ0FW6K1H+3cJ553iAtSplpyQsyAYKdgDQycucvwe9whe+jvs2L8ewDHek8Yv
-         uUUROckIdc8WWDoeDnxedmMsMwSz8vCVaYo0sRlBZPj4MmjbuWFNHPZSVAaY171v47Go
-         9pGsDasU1LA00SznT48BYFlywFlj0qzbFRJkt9x6ZpAvKjAY7W5ugambTtsNxVgrj4Rg
-         MIXvyj2iYqRHBM6eMk6zjdpEVBPtNF5KlaQR+tDB/5dHsP1PXyNJFow8nS6YsDEZ5wiq
-         UUTg==
-X-Gm-Message-State: AOAM5317rG/AjdT4sqW2rv6FYj8pONfjG0tUkCSfDBplUZGaWEss0cmf
-        RmqoOgD2C2rerjVmKDA+tCxPEe1PMi81TOSd6KAaYw==
-X-Google-Smtp-Source: ABdhPJyyFkEDXEXxLhznZOoaqtO4ee8p0QDWx6NpzQMmslsbVMu07smR/TO0PQQl4GG+0CnCPXsjcsJapJLgfuC53/g=
-X-Received: by 2002:adf:fdce:: with SMTP id i14mr19660461wrs.273.1595942468291;
- Tue, 28 Jul 2020 06:21:08 -0700 (PDT)
+        bh=nf1O99k+zsvJqjI/za3C3+LNhANhWMX3dBWewicGWoQ=;
+        b=gEEGbPFeZz2zlwfx0HKW/oGmY+TCU8IETXpsydHKwfbwz17nhuwxSLPorOikSMNVEu
+         x4pkgpDm45R63w3rXrKM8AkS0LgUaj3iBwyVVJB17ezXJz1T2RGTCyoic1iWTNFFvxtg
+         c3DlERueBhFl3qlS/h90xFST6Bb1SF8XSoeGSSv6HuWYQUc6icNHngM4zqpB26UgMjfW
+         nJjMyRLDkXrMqL+jID9/eszfxH9fx7TQqc/NkFCVICr5bTlju3DfNbaNY1kSURJeURsF
+         PkH+1XVuGInOtgY/3n8Ztcob8b42uJBDWrFj7JJwlAXGp4wURUUUayMYXQeSKDOuLFzW
+         rtyQ==
+X-Gm-Message-State: AOAM533JgRT0U8cjiVyH825bq4YNqdZlgCW5UZU+OTirXZgfmlRG4x0b
+        ztNwSTmff3Ht++tVb523pA+NDRXsQJUxUbbkHQU=
+X-Google-Smtp-Source: ABdhPJz9Jk45e1SqiyDKZYa6RYOm/76TyaeUDRNkM5h0Lo0ybef78akWq7E7BAoASP7zeSOXUIr+/b2GIFPWGnB8Bpo=
+X-Received: by 2002:a17:902:4b:: with SMTP id 69mr7486754pla.18.1595942574825;
+ Tue, 28 Jul 2020 06:22:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <9085677c3adf4a84c5ba5f8cdf4f3aff34e3e5a3.1594230107.git-series.maxime@cerno.tech>
-In-Reply-To: <9085677c3adf4a84c5ba5f8cdf4f3aff34e3e5a3.1594230107.git-series.maxime@cerno.tech>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Tue, 28 Jul 2020 14:20:50 +0100
-Message-ID: <CAPY8ntAmDtbofNQ-V-UjWjGupN=MG03tOzVG9F1=hG5T4HTsJg@mail.gmail.com>
-Subject: Re: [PATCH v4 57/78] drm/vc4: hdmi: Deal with multiple debugfs files
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+ <20200723100317.GJ3703480@smile.fi.intel.com> <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+ <CAHp75Vdeg6v_yLYjxZPJM7SgDP-fou6SEuaE8+TFCNW4c2r_rA@mail.gmail.com>
+ <20200727215010.qzhvavmskfoaapi5@mobilestation> <CACRpkda5Ki+itbvLsxSLj4o1NRKdf9P48kbYXEgArDqcEcWA7w@mail.gmail.com>
+In-Reply-To: <CACRpkda5Ki+itbvLsxSLj4o1NRKdf9P48kbYXEgArDqcEcWA7w@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 28 Jul 2020 16:22:39 +0300
+Message-ID: <CAHp75VeY0HMKXJCP2Ds=BWdWduevXDqUK1pkF1G1fUTQn7uC3Q@mail.gmail.com>
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime
+On Tue, Jul 28, 2020 at 11:18 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Mon, Jul 27, 2020 at 11:50 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> > It turns out my "mostly" was wrong in this matter. It's 4 out of 17 patches,
+> > which make the initialization in the same order as mine:
+>
+> I'll think about fixing them up to all look the same at some point
+> if noone beats me to it. Sorry for the mess, I was just hacking
+> along to get this work item finalized.
 
-On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> The HDMI driver was registering a single debugfs file so far with the name
-> hdmi_regs.
->
-> Obviously, this is not going to work anymore when will have multiple HDMI
-> controllers since we will end up trying to register two files with the same
-> name.
->
-> Let's use the variant to avoid that name conflict.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+I have sent three patches (two updates according to above matter and
+one is a fix on top of your template clean up I missed myself).
 
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-
-> ---
->  drivers/gpu/drm/vc4/vc4_hdmi.c | 5 ++++-
->  drivers/gpu/drm/vc4/vc4_hdmi.h | 3 +++
->  2 files changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> index c50241170d7e..ef51eedaf75a 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> @@ -1370,7 +1370,9 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
->         if (ret)
->                 goto err_destroy_encoder;
->
-> -       vc4_debugfs_add_file(drm, "hdmi_regs", vc4_hdmi_debugfs_regs, vc4_hdmi);
-> +       vc4_debugfs_add_file(drm, variant->debugfs_name,
-> +                            vc4_hdmi_debugfs_regs,
-> +                            vc4_hdmi);
->
->         return 0;
->
-> @@ -1448,6 +1450,7 @@ static int vc4_hdmi_dev_remove(struct platform_device *pdev)
->
->  static const struct vc4_hdmi_variant bcm2835_variant = {
->         .encoder_type           = VC4_ENCODER_TYPE_HDMI0,
-> +       .debugfs_name           = "hdmi_regs",
->         .registers              = vc4_hdmi_fields,
->         .num_registers          = ARRAY_SIZE(vc4_hdmi_fields),
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-> index 0d529db4b3ab..794216f3228d 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-> @@ -30,6 +30,9 @@ struct vc4_hdmi_variant {
->         /* Encoder Type for that controller */
->         enum vc4_encoder_type encoder_type;
->
-> +       /* Filename to expose the registers in debugfs */
-> +       const char *debugfs_name;
-> +
->         /* List of the registers available on that variant */
->         const struct vc4_hdmi_register *registers;
->
-> --
-> git-series 0.9.1
+-- 
+With Best Regards,
+Andy Shevchenko
