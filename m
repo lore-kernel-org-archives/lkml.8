@@ -7,124 +7,131 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6861C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C410EC433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94FFE207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BF67207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:37:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="s9Xn5Ztu"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="sOX8sFPU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgG1GgA (ORCPT
+        id S1728133AbgG1GhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:36:00 -0400
-Received: from mail-co1nam11on2063.outbound.protection.outlook.com ([40.107.220.63]:27617
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        Tue, 28 Jul 2020 02:37:11 -0400
+Received: from mail-bn7nam10on2050.outbound.protection.outlook.com ([40.107.92.50]:30302
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726846AbgG1GgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:36:00 -0400
+        id S1728076AbgG1GhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 02:37:10 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RotAQcr9a9o347f8/E4dQjdfsxwzbOoRxkZMOV5bm8TmLOzTpMDZ+KRxOIl/8P/p8MfkvTgA5onLUypktDJ6rkHfyPpGyu7r5Sx5qwivjpHx4CxFaVWZMVZGOIhIYcdDMWeBKpdK4hW5GdWzVu7vWVzyTHtWqWBoZEBVfKx/uk3FmOoaNz84SPgsIwZnAMO8O5VBzITSUfUi104Gf++Lf7mNGYco/siSYwulPC/2dgsqiXyxPpGLA9fRWuEgT4XIo2bPYwMZcfLD7NL6NrpZn6Z2VO8o72NGGoXb3Wz2vRAQ7il1HJjVxUDDq0KoQdVR31zVfx/6+Ud6RRcQP0Rb6w==
+ b=le14bF07sQTpc+bNjv9YHMpLDJm8LxnId07/9LTssv10oUyJJSD8uYc/ExNx/ilrzq9wQIHCunzH/7jvwIBunABnaq5uzBkyPZ138TwqJJD8AsiX47jrvjHC8ENfw/nzTU2cQFiI0ImnhiVI1Ltc9sWZAs8/snc5QrVJPSeQ3WS8FNgGdd1yATwG/DRqbq3htEpLzm1GQETjR1z6X8Osq0COTt9Th/tM5kuPC6Zolv0OIiAEV50Gwo/h8G3YZvDuueJVLBphBpTlzc+rrxhyXCznOmnS47Gf8aMnUmnbwu2YWoq90BDefGfBua1MqsiG/eQ0X41qLGClw7CDJ1BQOg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tXzm7ERdmfu74MiKrHQ2foV63YBSbfY5lAbSki7QTco=;
- b=noa/r+6O62YuOWTR1Qhl/ocpXMA4jicm/ur5UpcmQv8jqRK6QaI2L/l+1hXDKhgmeat+nzAOdGUSSmFiMJcc9jhXrGAnfFQ3/okRKXIbOkOfsgq3d81OVEROBmimTu/ER4u7PtFWdltMn5glMvKBqxRG8aUTLM03PIbwrLIau+C12uyqyfgH5axR8L4Rh2MY7KqnULFvlJzhrkzDlM27X4yrQ/1wwUOg1hGVQ7O2eDZf3YL2rJOO8jV2y02h2oMH0+d+zrp1YlhSzGjGVgbqmwwQMW2PlTqeNJmd8Wrci2fE15nPbVBlS2ESX1JFTyq1FtOgPtdYKqraooB0V7nxMA==
+ bh=Ip34MjHFNJLdMQWa3jpqzBFI3gGiF5JlfSKYWQAb9ec=;
+ b=h9T4eoA1bpENSg6mkp2h01Jo6b7bPMzzfy5AAkTAB5CeRAk2IMDnhVxKvgL3PCIbGJ9RcuHEbhC8IWOSVY3BFy31cJs6iT3RWFpvmR3rYj3q6er8UQJRVI5hqhvumVrFlu2efsF/A6+pqsmH/fwQsfI8UAHC7o5MHlnIU1eMXBa8G1isnj4zURR7o5+NnaGsY0qMLBjRGoIJXGGQbejEAD5nICdqZETLMefDM2wJG1TW+xIn288gpUJhsMh6pDyp244vLYZSeNxhEB/H+NGyeqmfaWUxlyWD0xBfj4IG999DkSgJEWLBH68gO9ApnqReEWwSbIQwwRm/VwH5WkVTpg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tXzm7ERdmfu74MiKrHQ2foV63YBSbfY5lAbSki7QTco=;
- b=s9Xn5ZtunXsIwtsa00ZMZWteZWbYQuf0r7BzvweOEhxwJdocY5FEScq+JpvivrDUDeetXuMQjfdZELMA9xzvzgF7oA1PJ2KGQ1pmtPgB22x4F4Dyp/PYn0togYSSuw0m2bhjt+Upi2TBnoS3vpUX9+vknPvHKMtCb2UvKgGZieM=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR1201MB0188.namprd12.prod.outlook.com (2603:10b6:4:56::12)
- by DM5PR12MB1722.namprd12.prod.outlook.com (2603:10b6:3:107::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Tue, 28 Jul
- 2020 06:35:57 +0000
+ bh=Ip34MjHFNJLdMQWa3jpqzBFI3gGiF5JlfSKYWQAb9ec=;
+ b=sOX8sFPUWDFvnFgp71yUimRAFJxBw4UsNKgwcSruCz7b0eDN1Qb/93f3n4Mqj0MopGY6NDLaaf2Q+CNhhcC7NnpNcWG5seiWPK62p7QK5nZHZOVGjkS4hUJujcEtC5cAmyTVT+O5Io5zeVqHW7Wet9zIxCOj4CQm7bb8969AxSU=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR1201MB0188.namprd12.prod.outlook.com (10.174.107.12) by
+ DM5PR12MB1899.namprd12.prod.outlook.com (10.175.91.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3216.24; Tue, 28 Jul 2020 06:37:06 +0000
 Received: from DM5PR1201MB0188.namprd12.prod.outlook.com
  ([fe80::41b7:b11a:c6d8:1e0e]) by DM5PR1201MB0188.namprd12.prod.outlook.com
  ([fe80::41b7:b11a:c6d8:1e0e%10]) with mapi id 15.20.3216.033; Tue, 28 Jul
- 2020 06:35:57 +0000
-Subject: Re: [PATCH 2/4] clk: x86: Change name from ST to FCH
+ 2020 06:37:06 +0000
+Subject: Re: [v2 4/4] clk: x86: Support RV architecture
 To:     Stephen Boyd <sboyd@kernel.org>, akshu.agrawal@amd.com
 Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20200720050500.23357-1-akshu.agrawal@amd.com>
- <20200720050500.23357-3-akshu.agrawal@amd.com>
- <159531878155.3847286.4182941234530539520@swboyd.mtv.corp.google.com>
+ <20200720050500.23357-5-akshu.agrawal@amd.com>
+ <159531874995.3847286.4010361856630371541@swboyd.mtv.corp.google.com>
 From:   "Agrawal, Akshu" <aagrawal2@amd.com>
-Message-ID: <fe1842c6-47f0-1eb2-9973-628f34d02e54@amd.com>
-Date:   Tue, 28 Jul 2020 12:05:45 +0530
+Message-ID: <807b3eec-cc11-dbbf-7d35-0086df12f52b@amd.com>
+Date:   Tue, 28 Jul 2020 12:06:54 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
-In-Reply-To: <159531878155.3847286.4182941234530539520@swboyd.mtv.corp.google.com>
+In-Reply-To: <159531874995.3847286.4010361856630371541@swboyd.mtv.corp.google.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-ClientProxiedBy: MA1PR01CA0093.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::33)
+X-ClientProxiedBy: MA1PR01CA0071.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::11)
  To DM5PR1201MB0188.namprd12.prod.outlook.com (2603:10b6:4:56::12)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.105] (122.171.179.172) by MA1PR01CA0093.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend Transport; Tue, 28 Jul 2020 06:35:54 +0000
+Received: from [192.168.0.105] (122.171.179.172) by MA1PR01CA0071.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend Transport; Tue, 28 Jul 2020 06:37:04 +0000
 X-Originating-IP: [122.171.179.172]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8b7c762e-9484-4f31-08f0-08d832c07bd2
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1722:
+X-MS-Office365-Filtering-Correlation-Id: 588a44cf-e899-486a-6cc6-08d832c0a543
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1899:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB17226506CB23146F9DC62C09F8730@DM5PR12MB1722.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Microsoft-Antispam-PRVS: <DM5PR12MB18995FEF2F798F1F4D284808F8730@DM5PR12MB1899.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EjKc1wLoisrTtCgiCy1jSLOwwAPr3DQxUYJjM7bnxMhfibiW6OOpF6Hm/xyTVXceePQTmTPc7DEvdbYoSLbQ59XIP/4AHly6wyGIep04Yva8mjqD5haf+CUA698pX7swJeGLRMx3trG5Z56aCcQHgszS94KfISiTIPtROUbZXq7SUQyAWwMMcJ3sqKeBp2QUpKC3aAkfQZRmOAyxfEtk3Qv5xpESZ2U4kdc+359ioo8VLght3ntHvpYwKD4r0U/uRCJ3Fsp/Yxn26vUtrviaW4wZKSZezoUZItPMBEmwuyVA2L0Aye6vENWW7Gj/gkVIVNTJRDsRVVfImhBcKLS9fX3hfjURVTn7IlPZxB2SMz50y5ffyy4jyro+B1l5w9Bu
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0188.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(376002)(346002)(396003)(136003)(478600001)(31696002)(36756003)(26005)(5660300002)(4326008)(31686004)(4744005)(8676002)(52116002)(53546011)(54906003)(6636002)(8936002)(6486002)(2906002)(186003)(316002)(66476007)(66556008)(6666004)(66946007)(16526019)(2616005)(16576012)(956004)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: aiXQNVRlTmKk0FnBC96ELEhxoN99LwOABo0x0Qe/6rGrpjxoPtYaA/t6cByoKtncao9EEEbgLpnIeQl1UbSgqFgMwu5ei6uxGakv6gQ/oISe7R1alxxIs97gpS7qyXlCHNnLNhcoHriL/0369Tifh6o49z02oVcvq2xUjyTfEGenRT3DcwlmU6yTQ8f7fbLzUllyV1G4rYQTAUdp+Elgs+8igD+qIoEgUayIDtS4f7ME/573iY6v7wVFUVyrV4o8a7vAiSpjRcaMMFk8PCTTNoOUMMhcJTzvA4BU+5nybIljIrSsEjkLtHv415Zj+BXGo+TZXlsBEAcyFgfOIl7hT2dsL2R9RykjmT5MoSIXWdH7nGCjd0qs6HtU0W9rIPoOy+5pl2RIHC+7mMcasOaYHILv5KGFQcDt1LLX68l0WJeejVLtVwdb4zlm5RAoVFu7nEEEq0Z9m3An6/zhXQv/haW4mkPuSI7cdjS24f0+GEI5Fh/j/+9UuQGytInmzCS+
+X-Microsoft-Antispam-Message-Info: fVWvivYuCrnvkgm/FmSsG1/nhfz9/GcZoqXkFLcPIsmMlGG1BXjzC+IoG712ucL/HW2D0W1CG3GMsh4s5+k3aC/VbEj0e10fO2xsCFn0dz2IBC/DvqT3uQPSsbVRkJSRnF2Zphl0AAUkC0P3kvZX1vvzH/OpNUcH2qVPJzruRcd9aSUBN6Fdnx5pN3hk5wPMPoeUPubP6hRa+wMfaf9xEw/WgSxZt6PrZwnaEZmmYSEXkFSpKwzO5KShZrCUuAal2u1rqwZ/9KjjoG7bocUXhp505a4WkgNwKOICD3K/s4D0ZVnV9D6FRHmww8gt+HIgOekV8IXGHMpThaLP2Aa1LOFFMJTmrmoUHB6BuK3o26jhD/4x2y9iZf/aWIiYuEdY
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0188.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(376002)(366004)(136003)(39860400002)(5660300002)(31696002)(31686004)(66556008)(66476007)(66946007)(4744005)(53546011)(52116002)(26005)(2616005)(478600001)(2906002)(6666004)(8936002)(4326008)(8676002)(6636002)(16526019)(16576012)(316002)(956004)(186003)(36756003)(6486002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: HMdjg96KHevKKnbk8d0kwFFx1g8gblN5yZHnSC94xdEArzjhXgRAYgkVz03czsfUsvv9q88rkkgRECWVyIZO8KYJH+0fztyZohu11GvblKYqdd996bXvkQ5lwwysGMPPOz374tPYWRmC1q1D8POOh4CnJzpVngviCdPy/0R4cEIO5EUIJoU2X/pBuusgivhA7aWGXQAc/ooAgNjTMNAihsbV2gj+yyB+9/KszoSpuLFIOJ/Ckgy5Ot3S5oBlVOfIrnt4wq0MJMX1w7/fDglj9/gdIAK1BrZbbqpIJ4nrkBLnESGXlAgJoofa/tQDUKIG7xFeL7VodxTiSgur9fg3WOPIo7OOuaZbKb6qjGn8kaTXElH6dDqBAMRR/IRdS8glWUVL9mmBm9LTE1EAoACn0qq6SPlHm5vfw3vFWC1GHTNi5+5qVhfvwGtlRYEQ+4Vdm5vqyVNYHAGrStHAejoM6NxlbyRSy0U/PAnBZBUGQBk39qUqo873zCGFRc/Paq4j
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b7c762e-9484-4f31-08f0-08d832c07bd2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 588a44cf-e899-486a-6cc6-08d832c0a543
 X-MS-Exchange-CrossTenant-AuthSource: DM5PR1201MB0188.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 06:35:56.9845
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 06:37:06.2503
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cHqkrur8QvaCEZzlcY9uVVHrOtWYwKPvKJVj1ElGn6kYJalkfcalEAu1ulBnNz/KHp7gnQI765Nlw2zTOs2OeQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1722
+X-MS-Exchange-CrossTenant-UserPrincipalName: 42r5Up0LiFnGF+m8hqKyeeZmh4Pa/6vAiOtvfN9RocbRNnFCTnN4chNlSGi5WBIJevaDLYyNSAM/DtrGQrxf7w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1899
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 7/21/2020 1:36 PM, Stephen Boyd wrote:
-> Quoting Akshu Agrawal (2020-07-19 22:04:57)
->> diff --git a/drivers/clk/x86/clk-st.c b/drivers/clk/x86/clk-fch.c
->> similarity index 73%
->> rename from drivers/clk/x86/clk-st.c
->> rename to drivers/clk/x86/clk-fch.c
->> index 25d4b97aff9b..b252f0cf0628 100644
->> --- a/drivers/clk/x86/clk-st.c
+On 7/21/2020 1:35 PM, Stephen Boyd wrote:
+> Quoting Akshu Agrawal (2020-07-19 22:04:59)
+>> diff --git a/drivers/clk/x86/clk-fch.c b/drivers/clk/x86/clk-fch.c
+>> index b252f0cf0628..d68bca7b213f 100644
+>> --- a/drivers/clk/x86/clk-fch.c
 >> +++ b/drivers/clk/x86/clk-fch.c
->> @@ -8,7 +8,7 @@
->>   #include <linux/clk.h>
->>   #include <linux/clkdev.h>
->>   #include <linux/clk-provider.h>
->> -#include <linux/platform_data/clk-st.h>
->> +#include <linux/platform_data/clk-fch.h>
-> As stated before, this should go with the patch that moves the file.
+> [...]
+>>   
+>>   static int fch_clk_remove(struct platform_device *pdev)
+>>   {
+>> -       int i;
+>> +       int i, clks;
+>> +       struct fch_clk_data *fch_data;
+>>   
+>> -       for (i = 0; i < ST_MAX_CLKS; i++)
+>> +       fch_data = dev_get_platdata(&pdev->dev);
+>> +
+>> +       clks = (!fch_data->is_rv) ? ST_MAX_CLKS : RV_MAX_CLKS;
+> Useless parenthesis and negation, just write:
+>
+> 	num = fch_data->is_rv ? RV_MAX_CLKS : ST_MAX_CLKS;
 
-+Rafael
-
-Sorry for late reply, somehow I missed these mails. Will move it to 
-acpi: apd change
+Sure, including in the next patch set.
 
 Thanks,
 
 Akshu
 
+>
+>> +
+>> +       for (i = 0; i < clks; i++)
+>>                  clk_hw_unregister(hws[i]);
+>> +
+>>          return 0;
+>>   }
+>>
