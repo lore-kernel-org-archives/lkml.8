@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A64C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511A2C433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E367920792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2377E20825
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595956117;
-	bh=J+IjkUW3t6+Z48T6sJ6E00JRYLjetsG85a5bs6k5OlU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DXi1FH1q6EWj/V43NZJRscajsAETYDURo/8bO+CPg3dKiqs+9/ZjuU8myuWkHP/AE
-	 X1lH1LtDQPRaI3qF5wSidf8oAe6lSYaVmv/3XD6OtK3MA9mDeSK7UNw+jZVK46Grkp
-	 VBciq6NOFBNYEhe7cG0ku9CVlcUIBi8lJBWLo8js=
+	s=default; t=1595956150;
+	bh=VAI8WP8+wW4qJ9tQCB41NOf7v1n5wUijWbIgNFmDwXo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RLslQluTCnNKA/0KRxkW4Ah0QFZ236ictXudWiX6+f9IjolF5lAnK4hFRUhFqq+Ml
+	 tjPw/4wGyTihJ4k7TZN77q2fpTGhThAv4mJXjbe4X/ek+oTXAgeyq/bBHruNFMIc8S
+	 9rZIkKJz1yWa1gVyc35f57aT3xtZid8jzue/GsEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731842AbgG1RIg (ORCPT
+        id S1731876AbgG1RJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 13:08:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34640 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 13:09:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731623AbgG1RIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 13:08:34 -0400
+        id S1731510AbgG1RJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 13:09:07 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 318A9207F5;
-        Tue, 28 Jul 2020 17:08:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D79B220792;
+        Tue, 28 Jul 2020 17:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595956113;
-        bh=J+IjkUW3t6+Z48T6sJ6E00JRYLjetsG85a5bs6k5OlU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DngtZ7nV6HZqTP9AT77+BrH88xt3gXMhEMbTVjYz2uX7V5ZQ3baGe1Ylz5TJAKCeC
-         gShx0nGR8GIMlVDo+WELY8i6c+JnXwy2WHrOtIvZagoTXIRCvYlZwY0G/xSA0gowDt
-         J+iNuCb6OFYBza8ssyyNQeKSvrSTan84MyfUY9uc=
+        s=default; t=1595956147;
+        bh=VAI8WP8+wW4qJ9tQCB41NOf7v1n5wUijWbIgNFmDwXo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BVVHKM1hkuYqzDbdJY7kVXUv0ivAY/LK1Dv96e+cQ+PqTB7JE8fjQP0QgWeTqV8Ye
+         yfUgaaDqu/cJ5WTGUXX9j4p3Ux++RApP4b3XtVy93aOP5Sr6phKNzmJwr1lIhyz1Xw
+         LflB5f5oj03w3YvssSPJ5y1jV1y4FETmM78HYmPA=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Gustavo Padovan <gustavo@padovan.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+To:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/2] dma-buf: fence-chain: Document missing dma_fence_chain_init() parameter in kerneldoc
-Date:   Tue, 28 Jul 2020 19:08:21 +0200
-Message-Id: <20200728170821.28050-2-krzk@kernel.org>
+Subject: [PATCH 1/3] iommu: amd: Fix kerneldoc
+Date:   Tue, 28 Jul 2020 19:08:57 +0200
+Message-Id: <20200728170859.28143-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200728170821.28050-1-krzk@kernel.org>
-References: <20200728170821.28050-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,25 +60,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fix W=1 compile warnings (invalid kerneldoc):
 
-    drivers/dma-buf/dma-fence-chain.c:233: warning: Function parameter or member 'seqno' not described in 'dma_fence_chain_init'
+    drivers/iommu/amd/init.c:1586: warning: Function parameter or member 'ivrs' not described in 'get_highest_supported_ivhd_type'
+    drivers/iommu/amd/init.c:1938: warning: Function parameter or member 'iommu' not described in 'iommu_update_intcapxt'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/dma-buf/dma-fence-chain.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/amd/init.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma-buf/dma-fence-chain.c b/drivers/dma-buf/dma-fence-chain.c
-index 3d123502ff12..7d129e68ac70 100644
---- a/drivers/dma-buf/dma-fence-chain.c
-+++ b/drivers/dma-buf/dma-fence-chain.c
-@@ -222,6 +222,7 @@ EXPORT_SYMBOL(dma_fence_chain_ops);
-  * @chain: the chain node to initialize
-  * @prev: the previous fence
-  * @fence: the current fence
-+ * @seqno: the sequence number to use for the fence chain
+diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+index 958050c213f9..4a37169b1b1b 100644
+--- a/drivers/iommu/amd/init.c
++++ b/drivers/iommu/amd/init.c
+@@ -1578,7 +1578,7 @@ static int __init init_iommu_one(struct amd_iommu *iommu, struct ivhd_header *h)
+ 
+ /**
+  * get_highest_supported_ivhd_type - Look up the appropriate IVHD type
+- * @ivrs          Pointer to the IVRS header
++ * @ivrs: Pointer to the IVRS header
   *
-  * Initialize a new chain node and either start a new chain or add the node to
-  * the existing chain of the previous fence.
+  * This function search through all IVDB of the maximum supported IVHD
+  */
+@@ -1929,7 +1929,7 @@ static int iommu_setup_msi(struct amd_iommu *iommu)
+ #define XT_INT_VEC(x)		(((x) & 0xFFULL) << 32)
+ #define XT_INT_DEST_HI(x)	((((x) >> 24) & 0xFFULL) << 56)
+ 
+-/**
++/*
+  * Setup the IntCapXT registers with interrupt routing information
+  * based on the PCI MSI capability block registers, accessed via
+  * MMIO MSI address low/hi and MSI data registers.
 -- 
 2.17.1
 
