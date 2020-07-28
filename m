@@ -2,93 +2,172 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E8BC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B459B204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D022204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VcuHUzhC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FpyBFgEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbgG1LCC (ORCPT
+        id S1728919AbgG1LDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 07:02:02 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52298 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728688AbgG1LCC (ORCPT
+        Tue, 28 Jul 2020 07:03:15 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22782 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728788AbgG1LDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 07:02:02 -0400
+        Tue, 28 Jul 2020 07:03:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595934120;
+        s=mimecast20190719; t=1595934192;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XNR5WY2cWDahy2gyeJK0kb6s2X+lgnpqYhuDhcd8ew8=;
-        b=VcuHUzhCv0/HWuzPt8up0AR2UeTOBbBjktdG4yO7Ov4wl/oVBsN2+k+me6VID71/RJc/k7
-        59KOjHfmxEyn1xWkbMCrzKxaOnq1gCnMWnAIZWdqe8mi5XNriFjTKEh61WBeH3cpQXs88V
-        KuEYubyKip3w8zYulatcdJdQzcqKXEc=
+        bh=KbH/+n2HvZybv5SHoykd6djdgy/t/5KkFVDCxrMDM1E=;
+        b=FpyBFgEYAdPH3frIXeqvXGy6kgOJxM/9AHjX72Rb2v9RbeEO8q1MyhszM7mOxtuaK9j/8S
+        CaJP9U1fZblnyeXmyod7yzielFYMq5N/PDpHezk1wH3itx2ca7I5CQwc0VlsYMHgLDhVQa
+        X7DVmRn5CE98eNOsxgPjGZnZZ4Tiq3Y=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-13-kajcVqc3M8WsewvTSNVy_w-1; Tue, 28 Jul 2020 07:01:56 -0400
-X-MC-Unique: kajcVqc3M8WsewvTSNVy_w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-230-YtpimbUANf-rLILSqHuJcA-1; Tue, 28 Jul 2020 07:03:08 -0400
+X-MC-Unique: YtpimbUANf-rLILSqHuJcA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4551010059AC;
-        Tue, 28 Jul 2020 11:01:54 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C1518712F6;
-        Tue, 28 Jul 2020 11:01:51 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <202007211144.A68C31D@keescook>
-References: <202007211144.A68C31D@keescook> <202006142054.C00B3E9C9@keescook> <20200612183450.4189588-1-keescook@chromium.org> <7be4d56b-0406-099b-e505-02e074c5173e@huawei.com> <544539.1595328664@warthog.procyon.org.uk>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     dhowells@redhat.com, Xiaoming Ni <nixiaoming@huawei.com>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DA57C800597;
+        Tue, 28 Jul 2020 11:03:00 +0000 (UTC)
+Received: from localhost (ovpn-13-103.pek2.redhat.com [10.72.13.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8BD995DA33;
+        Tue, 28 Jul 2020 11:02:56 +0000 (UTC)
+Date:   Tue, 28 Jul 2020 19:02:54 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        David Windsor <dwindsor@gmail.com>,
-        Hans Liljestrand <ishkamiel@gmail.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Paul Moore <paul@paul-moore.com>, edumazet@google.com,
-        paulmck@kernel.org, shakeelb@google.com,
-        James Morris <jamorris@linux.microsoft.com>,
-        alex.huangjianhui@huawei.com, dylix.dailei@huawei.com,
-        chenzefeng2@huawei.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] Convert nsproxy, groups, and creds to refcount_t
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        clang-built-linux@googlegroups.com,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
+Subject: Re: [PATCH 14/15] x86/numa: remove redundant iteration over
+ memblock.reserved
+Message-ID: <20200728110254.GA14854@MiWiFi-R3L-srv>
+References: <20200728051153.1590-1-rppt@kernel.org>
+ <20200728051153.1590-15-rppt@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3212524.1595934111.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 28 Jul 2020 12:01:51 +0100
-Message-ID: <3212525.1595934111@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728051153.1590-15-rppt@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> wrote:
+On 07/28/20 at 08:11am, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> numa_clear_kernel_node_hotplug() function first traverses numa_meminfo
+> regions to set node ID in memblock.reserved and than traverses
+> memblock.reserved to update reserved_nodemask to include node IDs that were
+> set in the first loop.
+> 
+> Remove redundant traversal over memblock.reserved and update
+> reserved_nodemask while iterating over numa_meminfo.
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  arch/x86/mm/numa.c | 26 ++++++++++----------------
+>  1 file changed, 10 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> index 8ee952038c80..4078abd33938 100644
+> --- a/arch/x86/mm/numa.c
+> +++ b/arch/x86/mm/numa.c
+> @@ -498,31 +498,25 @@ static void __init numa_clear_kernel_node_hotplug(void)
+>  	 * and use those ranges to set the nid in memblock.reserved.
+>  	 * This will split up the memblock regions along node
+>  	 * boundaries and will set the node IDs as well.
+> +	 *
+> +	 * The nid will also be set in reserved_nodemask which is later
+> +	 * used to clear MEMBLOCK_HOTPLUG flag.
+> +	 *
+> +	 * [ Note, when booting with mem=nn[kMG] or in a kdump kernel,
+> +	 *   numa_meminfo might not include all memblock.reserved
+> +	 *   memory ranges, because quirks such as trim_snb_memory()
+> +	 *   reserve specific pages for Sandy Bridge graphics.
+> +	 *   These ranges will remain with nid == MAX_NUMNODES. ]
+>  	 */
+>  	for (i = 0; i < numa_meminfo.nr_blks; i++) {
+>  		struct numa_memblk *mb = numa_meminfo.blk + i;
+>  		int ret;
+>  
+>  		ret = memblock_set_node(mb->start, mb->end - mb->start, &memblock.reserved, mb->nid);
+> +		node_set(mb->nid, reserved_nodemask);
 
-> > I've been gradually undoing some of the conversions as there's no equi=
-valent
-> > of atomic_add_return() and atomic_dec_return() that allow me to log th=
-e
-> > altered refcount through a tracepoint.
-> =
+Really? This will set all node id into reserved_nodemask. But in the
+current code, it's setting nid into memblock reserved region which
+interleaves with numa_memoinfo, then get those nid and set it in
+reserved_nodemask. This is so different, with my understanding. Please
+correct me if I am wrong.
 
-> Please do not _undo_ the changes; just add the API you need.
+Thanks
+Baoquan
 
-And _please_ do not convert atomic_inc/dec_return() into refcount_read() +
-refcount_xxx().  They are _not_ equivalent.
-
-David
+>  		WARN_ON_ONCE(ret);
+>  	}
+>  
+> -	/*
+> -	 * Now go over all reserved memblock regions, to construct a
+> -	 * node mask of all kernel reserved memory areas.
+> -	 *
+> -	 * [ Note, when booting with mem=nn[kMG] or in a kdump kernel,
+> -	 *   numa_meminfo might not include all memblock.reserved
+> -	 *   memory ranges, because quirks such as trim_snb_memory()
+> -	 *   reserve specific pages for Sandy Bridge graphics. ]
+> -	 */
+> -	for_each_memblock(reserved, mb_region) {
+> -		int nid = memblock_get_region_node(mb_region);
+> -
+> -		if (nid != MAX_NUMNODES)
+> -			node_set(nid, reserved_nodemask);
+> -	}
+> -
+>  	/*
+>  	 * Finally, clear the MEMBLOCK_HOTPLUG flag for all memory
+>  	 * belonging to the reserved node mask.
+> -- 
+> 2.26.2
+> 
+> 
 
