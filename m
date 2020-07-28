@@ -2,150 +2,222 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0456DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6A2820838
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:14:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595895278;
-	bh=ZjobJSwZTEqZyVrwiktFvrw1vDV/J3FUevuLNucXXFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I1djyLNwWyH5krJpzJuGS3IYz6q8M2ZzgU11yWE0pfLNIDC2oe1lxAkjgJArjcEZs
-	 uoeWUtPSMomuKKYOvUAjwKPhJrK4bgYb97YX0jFAsfjT9jfFGECBYEhELCDvr2ZkPA
-	 a2kiYYjSUQz0XHheobjE1sitjoD0pnZ9orlAgeQQ=
+	by mail.kernel.org (Postfix) with ESMTP id 32C0020786
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:17:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WQneBtFf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgG1AOh (ORCPT
+        id S1726852AbgG1ARc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 20:14:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726278AbgG1AOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 20:14:37 -0400
-Received: from earth.universe (unknown [185.213.155.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C20720786;
-        Tue, 28 Jul 2020 00:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595895276;
-        bh=ZjobJSwZTEqZyVrwiktFvrw1vDV/J3FUevuLNucXXFc=;
+        Mon, 27 Jul 2020 20:17:32 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:33058 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbgG1ARc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 20:17:32 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5F05C556;
+        Tue, 28 Jul 2020 02:17:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1595895449;
+        bh=qDENp+ksFdx3Ek7ZnyN0CbjkZwu8wZVUvGQGBhlAVNo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e8KCm+Y3BCUyd4X4m0k/p+tKC3n2uKI2tdY20iYqirpt96wqVDUEQW0cCTjYGucmW
-         Y1x80Hd6FfPETETaD++tHBrDREMnmz47v3lJN8f7FZL7A+MiSQlUpawlspAX0zJ1xj
-         rQ3VMuYwEW5p4nGJESg2Dd9CRDHeswYqIgSRtBKM=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 946063C0B87; Tue, 28 Jul 2020 02:14:34 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 02:14:34 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     trix@redhat.com
-Cc:     anton.vorontsov@linaro.org, jtzhou@marvell.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] power: supply: check if calc_soc succeeded in
- pm860x_init_battery
-Message-ID: <20200728001434.3thznd6a35ycb3f2@earth.universe>
-References: <20200712192351.15428-1-trix@redhat.com>
+        b=WQneBtFfC8YsCrZ0w68NkAap9rZ+f8NNEvPoukq0ZfIKz4GzG418ysEjyAGV4dkKX
+         6EofAS/a4wEmdu3hqPg8563CRe5ffeKT9Cmd2xFKVNcaGZc5pRmUAJrVOAs6M0TjPA
+         r7FkYmaplRF5wA2bW4PdvqXegDsktzS8gbC1xBL4=
+Date:   Tue, 28 Jul 2020 03:17:21 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Dmitry Buzdyk <dima.buzdyk@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     john.agosta@canonical.com, kevin.lu@canonical.com,
+        ethan.hsieh@canonical.com, 'Jesse Sung' <jesse.sung@canonical.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] uvcvideo: Add mapping for HEVC payloads
+Message-ID: <20200728001721.GG15448@pendragon.ideasonboard.com>
+References: <20200529010547.GA630131@dmitry-T520>
+ <20200607010719.GU7339@pendragon.ideasonboard.com>
+ <20200609045732.GA781356@dmitry-T520>
+ <20200715080010.GA551680@dmitry-T520>
+ <20200727232546.GB26169@dmitry-T520>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pfzhq2sgckiqqd5s"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200712192351.15428-1-trix@redhat.com>
+In-Reply-To: <20200727232546.GB26169@dmitry-T520>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dmitry,
 
---pfzhq2sgckiqqd5s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry for the late reply.
 
-Hi,
+Mauro, there's a question for your below.
 
-On Sun, Jul 12, 2020 at 12:23:51PM -0700, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
->=20
-> clang static analysis flags this error
->=20
-> 88pm860x_battery.c:522:19: warning: Assigned value is
->   garbage or undefined [core.uninitialized.Assign]
->                 info->start_soc =3D soc;
->                                 ^ ~~~
-> soc is set by calling calc_soc.
-> But calc_soc can return without setting soc.
->=20
-> So check the return status and bail similarly to other
-> checks in pm860x_init_battery and initialize soc to
-> silence the warning.
->=20
-> Fixes: a830d28b48bf ("power_supply: Enable battery-charger for 88pm860x")
->=20
-> Signed-off-by: Tom Rix <trix@redhat.com>
-> ---
+On Tue, Jul 28, 2020 at 09:25:46AM +1000, Dmitry Buzdyk wrote:
+> Hi Laurent,
+> 
+> Had you a chance to review USB descriptors from the device provided
+> below? Is any additional information needed?
+> 
+> On Wed, Jul 15, 2020 at 06:00:10PM +1000, Dmitry Buzdyk wrote:
+> > On Tue, Jun 09, 2020 at 02:57:36PM +1000, Dmitry Buzdyk wrote:
+> > Hi Laurent,
+> > 
+> > Please see updated information below
+> > 
+> >> On Sun, Jun 07, 2020 at 04:07:19AM +0300, Laurent Pinchart wrote:
+> >>> Hi Dmitry,
+> >>> 
+> >>> Thank you for the patch.
+> >>> 
+> >>> On Fri, May 29, 2020 at 11:05:47AM +1000, Dmitry Buzdyk wrote:
+> >>>> Add HEVC GUID and assotiate with HEVC pixel format so that frame
+> >>>> based format descriptors recognized by the UVC video driver.
+> >>> 
+> >>> The patch itself looks OK to me, but could you share a bit more
+> >>> information about which device(s) implement this ? Are they UVC 1.1
+> >>> devices ? Could you share their full USB descriptors (retrieved with
+> >>> 'lsusb -v', running as root if possible) ?
+> >>
+> >> This is a UVC1.1 camera device based on Ambarella H22 SOC.
 
-Thanks, queued.
+That's interesting. It would be nice to have upstream support for the
+Ambarella SoCs in the kernel :-)
 
--- Sebastian
+> >> Please note that device is still in development and yet to get actual
+> >> VID and PID.
+> >
+> > Device got its VID:PID from USB-IF:
+> > 
+> > Bus 001 Device 009: ID 3301:1000  
+> > Device Descriptor:
+> >   bLength                18
+> >   bDescriptorType         1
+> >   bcdUSB               2.00
+> >   bDeviceClass          239 Miscellaneous Device
+> >   bDeviceSubClass         2 
+> >   bDeviceProtocol         1 Interface Association
+> >   bMaxPacketSize0        64
+> >   idVendor           0x3301 
+> >   idProduct          0x1000 
+> >   bcdDevice            0.10
+> >   iManufacturer           1 Rhonda
+> >   iProduct                2 Rhonda Cam
+> >   iSerial                 3 FMABCLE15000007
+> >   bNumConfigurations      1
 
->  drivers/power/supply/88pm860x_battery.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/power/supply/88pm860x_battery.c b/drivers/power/supp=
-ly/88pm860x_battery.c
-> index 1308f3a185f3..590da88a17a2 100644
-> --- a/drivers/power/supply/88pm860x_battery.c
-> +++ b/drivers/power/supply/88pm860x_battery.c
-> @@ -433,7 +433,7 @@ static void pm860x_init_battery(struct pm860x_battery=
-_info *info)
->  	int ret;
->  	int data;
->  	int bat_remove;
-> -	int soc;
-> +	int soc =3D 0;
-> =20
->  	/* measure enable on GPADC1 */
->  	data =3D MEAS1_GP1;
-> @@ -496,7 +496,9 @@ static void pm860x_init_battery(struct pm860x_battery=
-_info *info)
->  	}
->  	mutex_unlock(&info->lock);
-> =20
-> -	calc_soc(info, OCV_MODE_ACTIVE, &soc);
-> +	ret =3D calc_soc(info, OCV_MODE_ACTIVE, &soc);
-> +	if (ret < 0)
-> +		goto out;
-> =20
->  	data =3D pm860x_reg_read(info->i2c, PM8607_POWER_UP_LOG);
->  	bat_remove =3D data & BAT_WU_LOG;
-> --=20
-> 2.18.1
->=20
+Thank you for the descriptors.
 
---pfzhq2sgckiqqd5s
-Content-Type: application/pgp-signature; name="signature.asc"
+[snip]
 
------BEGIN PGP SIGNATURE-----
+> >       VideoControl Interface Descriptor:
+> >         bLength                 9
+> >         bDescriptorType        36
+> >         bDescriptorSubtype      3 (OUTPUT_TERMINAL)
+> >         bTerminalID            16
+> >         wTerminalType      0x0101 USB Streaming
+> >         bAssocTerminal          0
+> >         bSourceID              10
+> >         iTerminal               0 
+> >       VideoControl Interface Descriptor:
+> >         bLength                 9
+> >         bDescriptorType        36
+> >         bDescriptorSubtype      3 (OUTPUT_TERMINAL)
+> >         bTerminalID            17
+> >         wTerminalType      0x0101 USB Streaming
+> >         bAssocTerminal          0
+> >         bSourceID              10
+> >         iTerminal               0 
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8fbeoACgkQ2O7X88g7
-+pqbiBAAi9zcDp6J8QZGB6XRbzvLzMzWfszhICGReM5sXZStY/KBHXOGZ1letSUH
-zfDOA3Wi1nZrM7LgLYLCAoksCWKM3ai0oEAvTfcKUq9Jj25/5DIEFNvXhCjYRiXK
-RNpW8pXVJD7HKcAGv4+pwv3Fx2WKVm6pck3mvYhM+o0HFMWaaOyEegvYMV5NmmSJ
-7VScVl3foQIiX8ctIfeLiToYIhEug/40Ynw4Eu3tj7cxF1iqhp6vlB+A/V6FHWD3
-VpovUY2FAs9gpbDVTRTp8oMWYYvSsx5dMSn2/fZIP/TfpCATvATt4UdIfSClgZtg
-pVRWxbml629NXxFivox83t+7gDZVUJ7nPjlnN6OjlJIpuyZ3jcTOhQvVVYa8PevS
-72Zu0n+U2bqnHLHNxg/hBigayVvDH4rrZn2MqNFXjenheCC2yz53Jl9Oa7ZqT5yP
-S5fp17BWD4IsTCvzVQNV6nAfTwg4d8O4y1RAzYxwgLs9655DeNIqbmHRXq7iSLe7
-Xnz0PFdeISNjZ5rebCKDFDQBr5uUr0Dl8j99NHna/LQywpOIelLW+VgAj1C3XSMd
-AnW5YsUZFF7aljBxKHmWvm0tniUjLneGXbkfMXT1BlQNQZ/JBrMdEWipD6mdGkav
-preS4jDKBhMK8uGu7lauMtPNq1xhJ0X1iuRAJaJQ3LERJx/VA5E=
-=Lr1T
------END PGP SIGNATURE-----
+Two output terminals ? Does that mean the device can provide two streams
+from the same source ?
 
---pfzhq2sgckiqqd5s--
+[snip]
+
+
+> >       Endpoint Descriptor:
+> >         bLength                 7
+> >         bDescriptorType         5
+> >         bEndpointAddress     0x83  EP 3 IN
+> >         bmAttributes            2
+> >           Transfer Type            Bulk
+> >           Synch Type               None
+> >           Usage Type               Data
+> >         wMaxPacketSize     0x0200  1x 512 bytes
+> >         bInterval               0
+
+This is interesting too, does it provide enough bandwidth for 3000x4000
+@10fps MJPEG ?
+
+[snip]
+
+> >>> Is there anything else needed to get HEVC capture working, such as
+> >>> extension unit controls, or is this patch enough ? What userspace
+> >>> software do you use to capture and decode HEVC (or capture it to disk) ?
+> >>
+> >> No other changes to Linux nor extra actions needed to start HEVC capture.
+> >> We use patched version of FFmpeg to capture, decode and display HEVC
+> >> stream from camera device. That simple patch also going to be sent to
+> >> FFmpeg upstream.
+> >
+> > Patch for FFmpeg sent to https://patchwork.ffmpeg.org/project/ffmpeg/list/?series=1760
+> >
+> >>>> Signed-off-by: Dmitry Buzdyk <dima.buzdyk@gmail.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+and taken in my tree. I'm afraid we're a bit too close to the v5.9 merge
+window for me to send a pull request now, unless Mauro would be fine
+with that. Otherwise I'll include it in the pull request for the next
+release.
+
+> >>>> ---
+> >>>>  drivers/media/usb/uvc/uvc_driver.c | 5 +++++
+> >>>>  drivers/media/usb/uvc/uvcvideo.h   | 4 ++++
+> >>>>  2 files changed, 9 insertions(+)
+> >>>> 
+> >>>> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> >>>> index 431d86e1c94b..825ee3601661 100644
+> >>>> --- a/drivers/media/usb/uvc/uvc_driver.c
+> >>>> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> >>>> @@ -214,6 +214,11 @@ static struct uvc_format_desc uvc_fmts[] = {
+> >>>>  		.guid		= UVC_GUID_FORMAT_CNF4,
+> >>>>  		.fcc		= V4L2_PIX_FMT_CNF4,
+> >>>>  	},
+> >>>> +	{
+> >>>> +		.name		= "HEVC",
+> >>>> +		.guid		= UVC_GUID_FORMAT_HEVC,
+> >>>> +		.fcc		= V4L2_PIX_FMT_HEVC,
+> >>>> +	},
+> >>>>  };
+> >>>>  
+> >>>>  /* ------------------------------------------------------------------------
+> >>>> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> >>>> index 6ab972c643e3..c7f043121b41 100644
+> >>>> --- a/drivers/media/usb/uvc/uvcvideo.h
+> >>>> +++ b/drivers/media/usb/uvc/uvcvideo.h
+> >>>> @@ -165,6 +165,10 @@
+> >>>>  	{0x32, 0x00, 0x00, 0x00, 0x02, 0x00, 0x10, 0x00, \
+> >>>>  	 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71}
+> >>>>  
+> >>>> +#define UVC_GUID_FORMAT_HEVC \
+> >>>> +	{ 'H',  'E',  'V',  'C', 0x00, 0x00, 0x10, 0x00, \
+> >>>> +	 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71}
+> >>>> +
+> >>>>  
+> >>>>  /* ------------------------------------------------------------------------
+> >>>>   * Driver specific constants.
+
+-- 
+Regards,
+
+Laurent Pinchart
