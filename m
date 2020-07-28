@@ -4,212 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 480B6C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 243CFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 209952074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E655C2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:35:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Os56/cAj"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VomaKcFO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729826AbgG1Wc6 (ORCPT
+        id S1729851AbgG1Wfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 18:32:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54236 "EHLO
+        Tue, 28 Jul 2020 18:35:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729223AbgG1Wc5 (ORCPT
+        with ESMTP id S1729223AbgG1Wfy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 18:32:57 -0400
+        Tue, 28 Jul 2020 18:35:54 -0400
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A254C061794;
-        Tue, 28 Jul 2020 15:32:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FEF9C061794;
+        Tue, 28 Jul 2020 15:35:54 -0700 (PDT)
 Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id F250F563;
-        Wed, 29 Jul 2020 00:32:51 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id ACCD7563;
+        Wed, 29 Jul 2020 00:35:52 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1595975572;
-        bh=ojEaUsRlw06fC9V857h2BH5pmwh75Uu3B3fBIl2y5iA=;
+        s=mail; t=1595975752;
+        bh=vliL54QKa1F6SxBCTfJKHAv2UhgWOg86DJA+2YvF06g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Os56/cAjjUJ2WDFftvaP0mX+3eaM0PObvwm45KDGasGp0ipzxB+TlgespeGdDG/Je
-         i7F+L3os1A9tUjCYoqHW45h53NiolVoE/tIJAsvT7L9LxjII8wUYmCfB9xBX/A/rCZ
-         MdvHvSZlhIMTXuJ/T2Di/jVOY2PZa3SdShZUiiWo=
-Date:   Wed, 29 Jul 2020 01:32:43 +0300
+        b=VomaKcFOR7zTGlu9YGdE96U6xDVq22P9SipsjOJ6FR3ZL5qtlPJWIPtnZ/Ad2Py46
+         ixyoKDvr+4GHfrxKcW4o7qBC+0iH++lD62nV3QMu77ekXPhUBtyVv8q71j8JduFam+
+         6pJ1q0I9Ire+wL4RJRtzqnIuVuUwlTg4I7QQVvqA=
+Date:   Wed, 29 Jul 2020 01:35:43 +0300
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: Re: linux-next: Tree for Jul 27 (drivers/gpu/drm/xlnx/zynqmp-dpsub)
-Message-ID: <20200728223243.GS13753@pendragon.ideasonboard.com>
-References: <20200727232346.0106c375@canb.auug.org.au>
- <9122c7ca-86a6-1def-0ddc-536ba97b49b8@infradead.org>
+To:     daniel@ffwll.ch
+Cc:     Hyun Kwon <hyun.kwon@xilinx.com>, David Airlie <airlied@linux.ie>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH -next] drm: xlnx: Fix typo in parameter description
+Message-ID: <20200728223543.GU13753@pendragon.ideasonboard.com>
+References: <20200725063429.172139-1-weiyongjun1@huawei.com>
+ <20200728220205.GJ6419@phenom.ffwll.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9122c7ca-86a6-1def-0ddc-536ba97b49b8@infradead.org>
+In-Reply-To: <20200728220205.GJ6419@phenom.ffwll.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+On Wed, Jul 29, 2020 at 12:02:05AM +0200, daniel@ffwll.ch wrote:
+> Hi Hyun Kwon,
+> 
+> Are you all sorted with drm-misc commit rights so you can push the 3
+> (maybe there's more) xlnx fixup patches to drm-misc-next-fixes?
 
-(adding a few people to the CC list to discuss the proposed solution
-below)
+Thanks Daniel for bringing this up.
 
-Thanks for the report.
+Hyun, would that work for you ?
 
-On Mon, Jul 27, 2020 at 05:49:41PM -0700, Randy Dunlap wrote:
-> On 7/27/20 6:23 AM, Stephen Rothwell wrote:
-> > Hi all,
+> On Sat, Jul 25, 2020 at 06:34:29AM +0000, Wei Yongjun wrote:
+> > Fix typo in parameter description.
 > > 
-> > Changes since 20200724:
-> 
-> on x86_64:
-> 
-> WARNING: unmet direct dependencies detected for DMA_ENGINE
->   Depends on [n]: DMADEVICES [=n]
->   Selected by [m]:
->   - DRM_ZYNQMP_DPSUB [=m] && HAS_IOMEM [=y] && (ARCH_ZYNQMP || COMPILE_TEST [=y]) && COMMON_CLK [=y] && DRM [=m] && OF [=y]
-> 
-> and about 45 "undefined reference" build errors (here's a sample):
-> 
-> ld: drivers/misc/mic/scif/scif_dma.o: in function `scif_sync_dma.constprop.11':
-> scif_dma.c:(.text+0x672): undefined reference to `dma_sync_wait'
-> ld: drivers/spi/spi-bcm2835.o: in function `bcm2835_dma_release.isra.9':
-> spi-bcm2835.c:(.text+0xb34): undefined reference to `dma_release_channel'
-> ld: spi-bcm2835.c:(.text+0xc17): undefined reference to `dma_release_channel'
-> ld: drivers/spi/spi-bcm2835.o: in function `bcm2835_dma_init':
-> spi-bcm2835.c:(.text+0xd3c): undefined reference to `dma_request_chan'
-> ld: spi-bcm2835.c:(.text+0xd8b): undefined reference to `dma_request_chan'
-> ld: spi-bcm2835.c:(.text+0xf8a): undefined reference to `dma_get_slave_caps'
-> ld: spi-bcm2835.c:(.text+0x11d0): undefined reference to `dma_get_slave_caps'
-> ld: drivers/spi/spi-ep93xx.o: in function `ep93xx_spi_release_dma':
-> spi-ep93xx.c:(.text+0x1fc): undefined reference to `dma_release_channel'
-> ld: spi-ep93xx.c:(.text+0x220): undefined reference to `dma_release_channel'
-> ERROR: modpost: "dma_release_channel" [drivers/gpu/drm/xlnx/zynqmp-dpsub.ko] undefined!
-> 
-> 
-> 
-> I tried adding
-> 	depends on DMADEVICES
-> to DRM_ZYNQMP_DPSUB
-> 
-> but that just gets into messy/ugly Kconfig
-> 	error: recursive dependency detected!
-
-drivers/i2c/Kconfig:8:error: recursive dependency detected!
-drivers/i2c/Kconfig:8:  symbol I2C is selected by FB_DDC
-drivers/video/fbdev/Kconfig:63: symbol FB_DDC depends on FB
-drivers/video/fbdev/Kconfig:12: symbol FB is selected by DRM_KMS_FB_HELPER
-drivers/gpu/drm/Kconfig:80:     symbol DRM_KMS_FB_HELPER depends on DRM_KMS_HELPER
-drivers/gpu/drm/Kconfig:74:     symbol DRM_KMS_HELPER is selected by DRM_ZYNQMP_DPSUB
-drivers/gpu/drm/xlnx/Kconfig:1: symbol DRM_ZYNQMP_DPSUB depends on DMA_ENGINE
-drivers/dma/Kconfig:44: symbol DMA_ENGINE depends on DMADEVICES
-drivers/dma/Kconfig:6:  symbol DMADEVICES is selected by SND_SOC_SH4_SIU
-sound/soc/sh/Kconfig:30:        symbol SND_SOC_SH4_SIU is selected by SND_SIU_MIGOR
-sound/soc/sh/Kconfig:60:        symbol SND_SIU_MIGOR depends on I2C
-For a resolution refer to Documentation/kbuild/kconfig-language.rst
-subsection "Kconfig recursive dependency limitations"
-
-> BTW, adding
-> 	select DMADEVICES
-> is not a good solution.  We try very hard not to enable entire
-> subsystems with one driver "select".  (No doubt you can find a
-> few examples that do just that, but it is strongly discouraged.)
-
-If this isn't allowed, then we need to fix this where used, as that's
-what seems to cause the recursive dependency. Would the following
-patches be acceptable in your opinion ? If so I'll submit them proper.
-
-commit 410e29afd54fd23ee94cd1842b51b7a9e2f96cd8
-Author: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Date:   Wed Jul 29 01:19:40 2020 +0300
-
-    treewide: kconfig: Replace 'select' DMAENGINES 'with depends on'
-    
-    Enabling a whole subsystem from a single driver 'select' is frowned
-    upon and won't be accepted in new drivers, that need to use 'depends on'
-    instead. Existing selection of DMAENGINES will then cause circular
-    dependencies. Replace them with a dependency.
-    
-    Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-diff --git a/drivers/rapidio/Kconfig b/drivers/rapidio/Kconfig
-index e4c422d806be..b9f8514909bf 100644
---- a/drivers/rapidio/Kconfig
-+++ b/drivers/rapidio/Kconfig
-@@ -37,7 +37,7 @@ config RAPIDIO_ENABLE_RX_TX_PORTS
- config RAPIDIO_DMA_ENGINE
- 	bool "DMA Engine support for RapidIO"
- 	depends on RAPIDIO
--	select DMADEVICES
-+	depends on DMADEVICES
- 	select DMA_ENGINE
- 	help
- 	  Say Y here if you want to use DMA Engine frameork for RapidIO data
-diff --git a/sound/soc/sh/Kconfig b/sound/soc/sh/Kconfig
-index dc20f0f7080a..ef8a29b9f641 100644
---- a/sound/soc/sh/Kconfig
-+++ b/sound/soc/sh/Kconfig
-@@ -30,8 +30,8 @@ config SND_SOC_SH4_FSI
- config SND_SOC_SH4_SIU
- 	tristate
- 	depends on ARCH_SHMOBILE && HAVE_CLK
-+	depends on DMADEVICES
- 	select DMA_ENGINE
--	select DMADEVICES
- 	select SH_DMAE
- 	select FW_LOADER
- 
-commit 3e68c8fc7a2f3f7992c7fa8b30108d3831c7fb3b
-Author: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Date:   Wed Jul 29 01:23:32 2020 +0300
-
-    drm: xlnx: dpsub: Fix DMADEVICES Kconfig dependency
-
-    The dpsub driver uses the DMA engine API, and thus selects DMA_ENGINE to
-    provide that API. DMA_ENGINE depends on DMADEVICES, which can be
-    deselected by the user, creating a possibly unmet indirect dependency:
-
-    WARNING: unmet direct dependencies detected for DMA_ENGINE
-      Depends on [n]: DMADEVICES [=n]
-      Selected by [m]:
-      - DRM_ZYNQMP_DPSUB [=m] && HAS_IOMEM [=y] && (ARCH_ZYNQMP || COMPILE_TEST [=y]) && COMMON_CLK [=y] && DRM [=m] && OF [=y]
-
-    Add a dependency on DMADEVICES to fix this.
-
-    Reported-by: Randy Dunlap <rdunlap@infradead.org>
-    Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-diff --git a/drivers/gpu/drm/xlnx/Kconfig b/drivers/gpu/drm/xlnx/Kconfig
-index aa6cd889bd11..b52c6cdfc0b8 100644
---- a/drivers/gpu/drm/xlnx/Kconfig
-+++ b/drivers/gpu/drm/xlnx/Kconfig
-@@ -2,6 +2,7 @@ config DRM_ZYNQMP_DPSUB
- 	tristate "ZynqMP DisplayPort Controller Driver"
- 	depends on ARCH_ZYNQMP || COMPILE_TEST
- 	depends on COMMON_CLK && DRM && OF
-+	depends on DMADEVICES
- 	select DMA_ENGINE
- 	select DRM_GEM_CMA_HELPER
- 	select DRM_KMS_CMA_HELPER
-
-> Full randconfig file is attached.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-
-[snip]
+> > Fixes: d76271d22694 ("drm: xlnx: DRM/KMS driver for Xilinx ZynqMP DisplayPort Subsystem")
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> > ---
+> >  drivers/gpu/drm/xlnx/zynqmp_dp.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> > index 821f7a71e182..3d53638ab15e 100644
+> > --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> > +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> > @@ -44,7 +44,7 @@ MODULE_PARM_DESC(aux_timeout_ms, "DP aux timeout value in msec (default: 50)");
+> >   */
+> >  static uint zynqmp_dp_power_on_delay_ms = 4;
+> >  module_param_named(power_on_delay_ms, zynqmp_dp_power_on_delay_ms, uint, 0444);
+> > -MODULE_PARM_DESC(aux_timeout_ms, "DP power on delay in msec (default: 4)");
+> > +MODULE_PARM_DESC(power_on_delay_ms, "DP power on delay in msec (default: 4)");
+> >  
+> >  /* Link configuration registers */
+> >  #define ZYNQMP_DP_LINK_BW_SET				0x0
 
 -- 
 Regards,
