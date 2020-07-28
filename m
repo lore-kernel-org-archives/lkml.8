@@ -2,107 +2,80 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2735C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04006C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5062074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:36:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mspBTjUW"
+	by mail.kernel.org (Postfix) with ESMTP id CDE1C2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731906AbgG1Qgc (ORCPT
+        id S1731544AbgG1Qhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:36:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731429AbgG1QeZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:34:25 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D09AC061794;
-        Tue, 28 Jul 2020 09:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=kVQtb0EC5zPxTA2ayYfBJx4HY/CNxKUjYbbIch9w8To=; b=mspBTjUWtgpPb4qLvI5PjYWwOM
-        4xZNHTabFfBvssqH7c/39Sc1ekp+M5+SqBDUYBkt2ucniLwNBWaq94zkkYOoIAPj/UaRMf4mtx3YK
-        W0L5iZg+7xHA9TiFXC8u5fc6fYHDe6CT6b15J8Oesifa05gXH7hnFa0iYkc8g+AcyI/0rNI4O8Ox0
-        obSdlxKChKraUYqMq1yyafpl/in4CI0Hav66IYrJPtqDtGUSPZR2/x9DBfWbuLTlo8NYaOgCPZqJD
-        OvUuAnCvA43Twt/6GA+RD8XxJ33FRrI6T32fxA0LxAHyvgCch5i6HSuh9FxyNeJUH2sjVKeCH7mvP
-        Ev8vTchw==;
-Received: from [2001:4bb8:180:6102:fd04:50d8:4827:5508] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0SYV-0006wk-6T; Tue, 28 Jul 2020 16:34:19 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: add file system helpers that take kernel pointers for the init code v4
-Date:   Tue, 28 Jul 2020 18:33:53 +0200
-Message-Id: <20200728163416.556521-1-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
+        Tue, 28 Jul 2020 12:37:38 -0400
+Received: from mga14.intel.com ([192.55.52.115]:13313 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731443AbgG1Qhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:37:38 -0400
+IronPort-SDR: HLFXi22vSCuNG1ChQN99setDP08TzXmbgC9RWpEtC6cxa7ImK8QIRnQQGvBUB+BDpHneAQpiEr
+ SmjcJ6Loo0nA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="150427062"
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="150427062"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 09:37:27 -0700
+IronPort-SDR: qgNctiPNbBK1fZbDeaC/j6G6gp0dpgqsDtkxPQR4rAFgk+k8WziK7SEVKRnZxcE39PF6Vsy0oe
+ g4R+/s/U1zBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="434379202"
+Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.212.32.199]) ([10.212.32.199])
+  by orsmga004.jf.intel.com with ESMTP; 28 Jul 2020 09:37:26 -0700
+Subject: Re: [PATCH net-next RFC 00/13] Add devlink reload level option
+To:     Moshe Shemesh <moshe@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
+From:   Jacob Keller <jacob.e.keller@intel.com>
+Organization: Intel Corporation
+Message-ID: <326163fb-ed79-62ea-ed2d-cb3b7700db54@intel.com>
+Date:   Tue, 28 Jul 2020 09:37:25 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Al and Linus,
-
-currently a lot of the file system calls in the early in code (and the
-devtmpfs kthread) rely on the implicit set_fs(KERNEL_DS) during boot.
-This is one of the few last remaining places we need to deal with to kill
-off set_fs entirely, so this series adds new helpers that take kernel
-pointers.  These helpers are in init/ and marked __init and thus will
-be discarded after bootup.  A few also need to be duplicated in devtmpfs,
-though unfortunately.
-
-The series sits on top of my previous
-
-  "decruft the early init / initrd / initramfs code v2"
-
-series.
 
 
-Git tree:
+On 7/27/2020 4:02 AM, Moshe Shemesh wrote:
+> Introduce new option on devlink reload API to enable the user to select the
+> reload level required. Complete support for all levels in mlx5.
+> The following reload levels are supported:
+>   driver: Driver entities re-instantiation only. 
 
-    git://git.infradead.org/users/hch/misc.git init_path
+So, this is the current support. Ok.
 
-Gitweb:
-
-    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/init_path
-
-
-Changes since v3:
- - rename fs/for_init.c to fs/init.c
- - document the purpose of the routines in fs/init.c with a comment
- - don't mark devtmpfs __init as that will cause it to get overwritten
-   by initmem poisoning
- - add an init_dup helper to make Al more happy than with the version
-   commit to the "decruft the early init / initrd / initramfs code v2"
-   series
-
-Changes since v2:
- - move to fs/for_init.c
- - reuse the init routines in devtmpfs after refactoring devtmpfsd
-   (and thus the broken error handling in the previous version)
- - actually use kern_path in a place where user_path_at sneaked back in
-
-Changes since v1:
- - avoid most core VFS changes
- - renamed the functions and move them to init/ and devtmpfs
- - drop a bunch of cleanups that can be submitted independently now
+>   fw_reset: Firmware reset and driver entities re-instantiation. 
 
 
-Diffstat:
+This would include firmware update? What about differing levels of
+device/firmware reset? I.e. I think some of our HW has function level
+reset, device wide reset, as well as EMP reset. For us, only EMP reset
+would trigger firmware update.
+
+>   fw_live_patch: Firmware live patching only.
+
+This is for update without reset, right?
