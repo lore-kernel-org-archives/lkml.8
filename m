@@ -2,183 +2,117 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A483C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B02C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5CAF206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 657DA206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:35:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="evCfYUge"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LhfgIFjP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbgG1OfV (ORCPT
+        id S1730458AbgG1Ofa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:35:21 -0400
-Received: from m15114.mail.126.com ([220.181.15.114]:36171 "EHLO
-        m15114.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730392AbgG1OfV (ORCPT
+        Tue, 28 Jul 2020 10:35:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730451AbgG1Of3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:35:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=UqT1ceSRxaZJpNsBkd
-        +RC5H0ROXAaLpgilicqUTfRaM=; b=evCfYUgeWgC3RVeFPzhHpZDhXANReEV1za
-        hI2iklNb7FLu98w0F4tSWIpnOLivzwhweDtblIbY5LvBGrhuKyIMmTLrfErsI9fi
-        g5toOOdwpVetx/QJ718cegsb9PENR9mvJ6z7fQuaP/UO/RlxL/bh5foC0013TRaZ
-        cM/RMPzyU=
-Received: from 192.168.137.249 (unknown [112.10.84.202])
-        by smtp7 (Coremail) with SMTP id DsmowAAHhXZQNyBfrooqHw--.29196S3;
-        Tue, 28 Jul 2020 22:33:53 +0800 (CST)
-From:   Xianting Tian <xianting_tian@126.com>
-To:     tytso@mit.edu, adilger.kernel@dilger.ca
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ext4: check superblock mapped prior to get write access
-Date:   Tue, 28 Jul 2020 10:33:53 -0400
-Message-Id: <1595946833-13011-1-git-send-email-xianting_tian@126.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: DsmowAAHhXZQNyBfrooqHw--.29196S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Gw1kCFyrCw17uw4kKFW7Arb_yoW7Gw4xpF
-        y5CryjkFW09F4YvF4UAF4UJrW7GrsrAFW7GryfCryYqa15Gwn5ta4xta1Uuay5JrZ5Xa47
-        JF1UGw10934UtaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jC7KsUUUUU=
-X-Originating-IP: [112.10.84.202]
-X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbiwRFvpFpD+4nFaQAAsc
+        Tue, 28 Jul 2020 10:35:29 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1143DC0619D4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:35:29 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id g19so8880175ioh.8
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:35:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wE63hykpdOWCKf+hJ+uo4tJ4NmzeI9PTAqJH7wvSMlc=;
+        b=LhfgIFjPN1Zt6pM27TDwc0D9sQ3LgHFulpPO2SX5S88mG/mDfs8otJIYAkvnkswxld
+         9pGQRB5MX9+c/pNc/D2jvjcUfkcaX+O+bWMi/ZdZWSGCZgEcirUgpaGCBHTTFwLDeXxm
+         blFwenzn7yqD2djWtvbrpRZs6R2NA61KUwTMx0D/r9/j+IuKq9D9CivCPsM5HlRumsun
+         8SeaeatA922UsvA+t5ljvF60Q6rxHuH9aAmjAJ5nqq0yc8rdtO4PxA+a9Y5/pkBdStPf
+         L/JGt34i7DNkTsg+8boIo3khF5Q26aC+wBgUC+PHLlS8m0uSQi46IDgH+/15eUls3L+F
+         tp9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wE63hykpdOWCKf+hJ+uo4tJ4NmzeI9PTAqJH7wvSMlc=;
+        b=jOZZCOjYAvAGudtQCeqhcerhWg+kBe4b/eNN4qbXFTQcSk6o1nUBfoVUGxtVu1WEmA
+         jxSyY70EvqPnZzLTp9Nss2+y/NBir17laJyLfKwJUwxwi+z59FxAbzeo68+Jmyu4SJ6Z
+         ULIyb9I3u6m2XlBrqiAaUL+hpg7by3siY9aNxcDL8vrEt+jkPCri6GZCqNOSJNCkXzIw
+         xZe2Yu6nolxGRz8bcmWJzlJI9MOEttq9F8k/hvud9r/c7EhzZIpoGMKL0//k0/MdbOf3
+         xv/fXD9+xAenQn5/sS+8RTCAkEKlOGxIijXUk9jM2lV252sUAzhQBnccvBM1efZp+jMI
+         YNMg==
+X-Gm-Message-State: AOAM530yg9UPGTKBiONOnBdlp4eybTRP88Dftw2FEz2sMxxg0qUPqQZY
+        0gddm30S2pT2uj8wvvjvvyUuFwZ9TosLedDdt9fPug==
+X-Google-Smtp-Source: ABdhPJy2WEagQVK01W1PoJL3TtsswctQA4jC85OF1eYxNmME8rZTNY5/2CM7uNz/FDIzfpS1C5VvpAW+f52j5jGXddQ=
+X-Received: by 2002:a05:6638:134a:: with SMTP id u10mr6463616jad.35.1595946928305;
+ Tue, 28 Jul 2020 07:35:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200727134914.312934924@linuxfoundation.org> <CA+G9fYvBRONMYwX36Hcju4JA5TwstkT2Afyuy2DB1zQcBcc1CA@mail.gmail.com>
+ <CAMZfGtVV-u7K+Z0vFLkoKv1UOTfk=a9+r_6G4PYfGLywwnkm3Q@mail.gmail.com>
+In-Reply-To: <CAMZfGtVV-u7K+Z0vFLkoKv1UOTfk=a9+r_6G4PYfGLywwnkm3Q@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 28 Jul 2020 20:05:16 +0530
+Message-ID: <CA+G9fYs__nNa-090Cm8j_EPYGRfh+y+VTX3ZqR_W1Jcu2suNEQ@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH 4.19 00/86] 4.19.135-rc1 review
+To:     Muchun Song <songmuchun@bytedance.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Christoph Lameter <cl@linux.com>, Roman Gushchin <guro@fb.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        linux-mm <linux-mm@kvack.org>, mm-commits@vger.kernel.org,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One crash issue happened when directly down the network interface,
-which nbd device is connected to. The kernel version is kernel
-4.14.0-115.
-According to the debug log and call trace, the buffer of ext4
-superblock already unmapped after the network of nbd device down.
-But the code continue to run until crash.
-I checked latest kernel code of 5.8-rc7 based on the call trace,
-no function checked if buffer of ext4 superblock unmapped.
-The patch is similar to commit 742b06b, aim to check superblock
-mapped prior to get write access.
+On Tue, 28 Jul 2020 at 18:33, Muchun Song <songmuchun@bytedance.com> wrote:
+>
+> Thanks for your test. I have reviewed the patch:
+>
+> [PATCH 4.19 76/86] mm: memcg/slab: fix memory leak at non-root
+> kmem_cache destroy
+>
+> There is a backport problem and I have pointed out the problem in that email.
 
-The crash reason described as below:
-struct journal_head *jbd2_journal_add_journal_head(struct buffer_head *bh)
-{
-        ... ...
-	jbd_lock_bh_journal_head(bh);
-	if (buffer_jbd(bh)) {
-		jh = bh2jh(bh); <<== jh is null!!!
-	} else {
-                ... ...
-	}
-	jh->b_jcount++; <<==crash here!!!!
-	jbd_unlock_bh_journal_head(bh);
-        ... ...
-}
+Thanks for your suggestions on the other email thread.
+I have made changes as you said and boot test pass on x86 now.
 
-Debug code added to __ext4_journal_get_write_access:
-int __ext4_journal_get_write_access(const char *where, unsigned int line,
-                                handle_t *handle, struct buffer_head *bh)
-{
-        int err = 0;
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 9c5eb4b08fc3..65bc49f19504 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -842,9 +842,7 @@ static int shutdown_memcg_caches(struct kmem_cache *s)
 
-        might_sleep();
+ static void memcg_set_kmem_cache_dying(struct kmem_cache *s)
+ {
+-       mutex_lock(&slab_mutex);
+        s->memcg_params.dying = true;
+-       mutex_unlock(&slab_mutex);
+ }
 
-        if (ext4_handle_valid(handle)) {
-                struct super_block *sb;
-                struct buffer_head *sbh;
+ static void flush_memcg_workqueue(struct kmem_cache *s)
 
-                sb = handle->h_transaction->t_journal->j_private;
-                if (unlikely(ext4_forced_shutdown(EXT4_SB(sb)))) {
-                        jbd2_journal_abort_handle(handle);
-                        return -EIO;
-                }
-
-                sbh = EXT4_SB(sb)->s_sbh;
-                if (!buffer_mapped(sbh)) {
-                        ext4 sb bh not mapped\n");  <<==debug code
-                }
-
-                err = jbd2_journal_get_write_access(handle, bh);
-                if (err)
-                        ext4_journal_abort_handle(where, line, __func__, bh,
-                                                  handle, err);
-        }
-        return err;
-}
-
-Call trace of crash:
-[ 1715.669527] print_req_error: I/O error, dev nbd3, sector 42211904
-
-[ 1715.674940] ext4 sb bh not mapped   <<== debug log, which is added and printed by the
-                                            function "__ext4_journal_get_write_access"
-
-[ 1715.674946] BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-[ 1715.674955] IP: jbd2_journal_add_journal_head+0x9d/0x110 [jbd2]
-[ 1715.674956] PGD 2010004067 P4D 2010004067 PUD 201000b067 PMD 0
-[ 1715.674961] Oops: 0002 [#1] SMP
-[ 1715.675020] task: ffff8808a4d3dac0 task.stack: ffffc9002e78c000
-[ 1715.675024] RIP: 0010:jbd2_journal_add_journal_head+0x9d/0x110 [jbd2] <== the crash is caused
-[ 1715.675025] RSP: 0018:ffffc9002e78fb50 EFLAGS: 00010206
-[ 1715.675026] RAX: 0000000000000000 RBX: ffff8816b71cad00 RCX: 0000000000000000
-[ 1715.675026] RDX: 0000000000000000 RSI: ffff8816b71cad00 RDI: ffff8816b71cad00
-[ 1715.675027] RBP: ffffc9002e78fb58 R08: 000000000000001b R09: ffff88207f82fe07
-[ 1715.675028] R10: 000000000000113d R11: 0000000000000000 R12: ffff8820223a5ab0
-[ 1715.675028] R13: 0000000000000000 R14: ffff8816b71cad00 R15: ffff88196053d930
-[ 1715.675029] FS:  00007fc2ce9e9700(0000) GS:ffff88203d740000(0000) knlGS:0000000000000000
-[ 1715.675030] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1715.675031] CR2: 0000000000000008 CR3: 0000002016d2c004 CR4: 00000000007606e0
-[ 1715.675033] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 1715.675034] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 1715.675034] PKRU: 55555554
-[ 1715.675035] Call Trace:
-[ 1715.675041]  jbd2_journal_get_write_access+0x6c/0xc0 [jbd2]
-[ 1715.675057]  __ext4_journal_get_write_access+0x8f/0x120 [ext4]
-[ 1715.675069]  ext4_reserve_inode_write+0x7b/0xb0 [ext4]
-[ 1715.675079]  ? ext4_dirty_inode+0x48/0x70 [ext4]
-[ 1715.675088]  ext4_mark_inode_dirty+0x53/0x1e0 [ext4]
-[ 1715.675096]  ? __ext4_journal_start_sb+0x6d/0xf0 [ext4]
-[ 1715.675104]  ext4_dirty_inode+0x48/0x70 [ext4]
-[ 1715.675111]  __mark_inode_dirty+0x17f/0x350
-[ 1715.675116]  generic_update_time+0x87/0xd0
-[ 1715.675119]  file_update_time+0xbc/0x110
-[ 1715.675122]  ? try_to_wake_up+0x59/0x470
-[ 1715.675125]  __generic_file_write_iter+0x9d/0x1e0
-[ 1715.675134]  ext4_file_write_iter+0xca/0x420 [ext4]
-[ 1715.675136]  __vfs_write+0xf3/0x170
-[ 1715.675138]  vfs_write+0xb2/0x1b0
-[ 1715.675141]  ? syscall_trace_enter+0x1d0/0x2b0
-[ 1715.675142]  SyS_write+0x55/0xc0
-[ 1715.675144]  do_syscall_64+0x67/0x1b0
-[ 1715.675147]  entry_SYSCALL64_slow_path+0x25/0x25
-
-Signed-off-by: Xianting Tian <xianting_tian@126.com>
----
- fs/ext4/ext4_jbd2.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/fs/ext4/ext4_jbd2.c b/fs/ext4/ext4_jbd2.c
-index 0c76cdd..9a60ca7 100644
---- a/fs/ext4/ext4_jbd2.c
-+++ b/fs/ext4/ext4_jbd2.c
-@@ -203,6 +203,15 @@ int __ext4_journal_get_write_access(const char *where, unsigned int line,
- 	might_sleep();
- 
- 	if (ext4_handle_valid(handle)) {
-+		struct super_block *sb;
-+		struct buffer_head *sbh;
-+
-+		sb = handle->h_transaction->t_journal->j_private;
-+		sbh = EXT4_SB(sb)->s_sbh;
-+		if (unlikely(!buffer_mapped(sbh))) {
-+			return -EIO;
-+		}
-+
- 		err = jbd2_journal_get_write_access(handle, bh);
- 		if (err)
- 			ext4_journal_abort_handle(where, line, __func__, bh,
--- 
-1.8.3.1
-
+- Naresh
