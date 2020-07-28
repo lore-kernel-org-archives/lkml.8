@@ -2,136 +2,114 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE37C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED24C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B376D20672
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:35:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aW+wI3Od"
+	by mail.kernel.org (Postfix) with ESMTP id 432C820838
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:37:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595900268;
+	bh=BUOf7pi1bXEWmK6QkGThywn/WQu6K2DqHm25ADBtUUU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=OKEZc79WXMZmAD+Fr+qkjWdjpnsosxIiUwc99VpJOuJsXhEBUPBPMASxES4EX9tYx
+	 bACUUvozV6z1ch4B7peK9xPJ8586hp5X9Lt2aGdSqIC0nnpqDSzMAi0kj+v0FUZOkS
+	 v9RMv8N8S90huSu7Z7mcG4aUVUZtXXoj2PlWwheE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgG1BfZ (ORCPT
+        id S1726443AbgG1Bhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 21:35:25 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:26549 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726357AbgG1BfZ (ORCPT
+        Mon, 27 Jul 2020 21:37:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgG1Bhq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 21:35:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595900124; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=J+GkYlJeue+xhm0JgHaodonblQjXsPYjEk8/Vc2LCdw=; b=aW+wI3OddV0iwgwxHBJt0F+dtI8jWXJHm8lZyz0Yb9mV1vrWhpmBG9v+S3LE9E9NXbsWPiai
- uUSRdy5r2TXNvmXhUeCOoI6tQ/Fq4mGkYgivLU/IKIkTg7XyOoCY1Aw1872MRPZOoohZTsfK
- /rbjO5Gd8ysebzAswa6xSIhcbVo=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5f1f80a91db0b33fd8e926b2 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 01:34:33
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6025AC433C6; Tue, 28 Jul 2020 01:34:32 +0000 (UTC)
-Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tingwei)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 66C71C433C9;
-        Tue, 28 Jul 2020 01:34:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 66C71C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
-From:   Tingwei Zhang <tingwei@codeaurora.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Tingwei Zhang <tingwei@codeaurora.org>, tsoni@codeaurora.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Mao Jinlong <jinlmao@codeaurora.org>,
+        Mon, 27 Jul 2020 21:37:46 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A7B5C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 18:37:46 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id x1so1334939oox.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 18:37:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7BD7VlCj+9fpGvYrpIdg86knouvhbQ4T8igQFat8A60=;
+        b=SIA5rWqg9HgoCgllvk4zWkQEuUIGT34XDUKEcV14EfjJkyaQpfWOhZ4CmkEGmD8OoM
+         qMnLkvRZHKOSedqhZ98xm6O9p+QtxY5/zJkjuGOM4VmbkokrMKSklWaDFX4Tz+rg7AnF
+         8Y4qEM5EoBuvHOYh2vYp+Wchg3UV+BuLNIerY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7BD7VlCj+9fpGvYrpIdg86knouvhbQ4T8igQFat8A60=;
+        b=VsXU61vu6hkjxDMCYBpuk9q1F9aF5c+c2Bzm4czc++wCLyUI+UdiXK/GHJ3DtYiuYE
+         6ndcsH/ehYJfOyeyRSmPXc5NB1CcBNmFfRYK45jUylE/JJIvPKQqak8PMaqN7+hFccVs
+         +CNG8fhpjqd12uzGzabkMt4j/9OU756w7V3MBxclRnp/kySZtrTmXOukeHNlv4FmEwo2
+         JC0aKXT+RPmG/sw7vzifgWvDPKnKrKaoqcIOyou+j3soKE7Aq9IAAU6WYr4ML1+rYegs
+         oY0q6n695Xp6vdDj1gpZODpFpNa6J6XaX6/azXw24/dj0NbLhNisyXN1q0TzeXTc2UJ6
+         4miA==
+X-Gm-Message-State: AOAM5334U/gLH2BXfy+XgP/WKltn0LyOe/ZasgWipQM3fGN+i02YdWrz
+        cVTD8YmyV4KHJ7Xiu3V67O+ZKA==
+X-Google-Smtp-Source: ABdhPJzl2D7vsp5ORNIRK95ufH+sTmHhiwE91vS4ngMTFMtLPuU9P/jNCxdupnrtOiwBm6zufOWXPw==
+X-Received: by 2002:a4a:4150:: with SMTP id x77mr10571713ooa.21.1595900265818;
+        Mon, 27 Jul 2020 18:37:45 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id r22sm2699990ooq.37.2020.07.27.18.37.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2020 18:37:45 -0700 (PDT)
+Subject: Re: [PATCH 4.19 00/86] 4.19.135-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/6] tracing: add trace_export support for trace_marker
-Date:   Tue, 28 Jul 2020 09:33:57 +0800
-Message-Id: <20200728013359.2326-5-tingwei@codeaurora.org>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20200728013359.2326-1-tingwei@codeaurora.org>
-References: <20200728013359.2326-1-tingwei@codeaurora.org>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, skhan@linuxfoundation.org
+References: <20200727134914.312934924@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <139a2921-ed1a-cda6-8449-3b10f6d75940@linuxfoundation.org>
+Date:   Mon, 27 Jul 2020 19:37:44 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support to route trace_marker buffer to other destination
-via trace_export.
+On 7/27/20 8:03 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.135 release.
+> There are 86 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 29 Jul 2020 13:48:51 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.135-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- include/linux/trace.h | 1 +
- kernel/trace/trace.c  | 9 +++++++++
- 2 files changed, 10 insertions(+)
+Compiled and booted on my test system. No dmesg regressions.
 
-diff --git a/include/linux/trace.h b/include/linux/trace.h
-index 5a01eeffb254..80b7df68bc0f 100644
---- a/include/linux/trace.h
-+++ b/include/linux/trace.h
-@@ -6,6 +6,7 @@
- 
- #define TRACE_EXPORT_FUNCTION	BIT(0)
- #define TRACE_EXPORT_EVENT	BIT(1)
-+#define TRACE_EXPORT_MARKER	BIT(2)
- 
- /*
-  * The trace export - an export of Ftrace output. The trace_export
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 2f9302a8b322..67993abda394 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -271,6 +271,7 @@ static struct trace_export __rcu *ftrace_exports_list __read_mostly;
- 
- static DEFINE_STATIC_KEY_FALSE(trace_function_exports_enabled);
- static DEFINE_STATIC_KEY_FALSE(trace_event_exports_enabled);
-+static DEFINE_STATIC_KEY_FALSE(trace_marker_exports_enabled);
- 
- static inline void ftrace_exports_enable(struct trace_export *export)
- {
-@@ -279,6 +280,9 @@ static inline void ftrace_exports_enable(struct trace_export *export)
- 
- 	if (export->flags & TRACE_EXPORT_EVENT)
- 		static_branch_inc(&trace_event_exports_enabled);
-+
-+	if (export->flags & TRACE_EXPORT_MARKER)
-+		static_branch_inc(&trace_marker_exports_enabled);
- }
- 
- static inline void ftrace_exports_disable(struct trace_export *export)
-@@ -288,6 +292,9 @@ static inline void ftrace_exports_disable(struct trace_export *export)
- 
- 	if (export->flags & TRACE_EXPORT_EVENT)
- 		static_branch_dec(&trace_event_exports_enabled);
-+
-+	if (export->flags & TRACE_EXPORT_MARKER)
-+		static_branch_dec(&trace_marker_exports_enabled);
- }
- 
- static void ftrace_exports(struct ring_buffer_event *event, int flag)
-@@ -6648,6 +6655,8 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- 	} else
- 		entry->buf[cnt] = '\0';
- 
-+	if (static_branch_unlikely(&trace_marker_exports_enabled))
-+		ftrace_exports(event, TRACE_EXPORT_MARKER);
- 	__buffer_unlock_commit(buffer, event);
- 
- 	if (tt)
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
 
