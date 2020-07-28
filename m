@@ -2,172 +2,211 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E8BC433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E52EC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D022204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68138204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:03:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FpyBFgEY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d13uPu0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbgG1LDP (ORCPT
+        id S1728945AbgG1LD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 07:03:15 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22782 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728788AbgG1LDO (ORCPT
+        Tue, 28 Jul 2020 07:03:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728788AbgG1LD6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 07:03:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595934192;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KbH/+n2HvZybv5SHoykd6djdgy/t/5KkFVDCxrMDM1E=;
-        b=FpyBFgEYAdPH3frIXeqvXGy6kgOJxM/9AHjX72Rb2v9RbeEO8q1MyhszM7mOxtuaK9j/8S
-        CaJP9U1fZblnyeXmyod7yzielFYMq5N/PDpHezk1wH3itx2ca7I5CQwc0VlsYMHgLDhVQa
-        X7DVmRn5CE98eNOsxgPjGZnZZ4Tiq3Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-230-YtpimbUANf-rLILSqHuJcA-1; Tue, 28 Jul 2020 07:03:08 -0400
-X-MC-Unique: YtpimbUANf-rLILSqHuJcA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DA57C800597;
-        Tue, 28 Jul 2020 11:03:00 +0000 (UTC)
-Received: from localhost (ovpn-13-103.pek2.redhat.com [10.72.13.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8BD995DA33;
-        Tue, 28 Jul 2020 11:02:56 +0000 (UTC)
-Date:   Tue, 28 Jul 2020 19:02:54 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
-Subject: Re: [PATCH 14/15] x86/numa: remove redundant iteration over
- memblock.reserved
-Message-ID: <20200728110254.GA14854@MiWiFi-R3L-srv>
-References: <20200728051153.1590-1-rppt@kernel.org>
- <20200728051153.1590-15-rppt@kernel.org>
+        Tue, 28 Jul 2020 07:03:58 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81825C061794;
+        Tue, 28 Jul 2020 04:03:57 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f5so20634392ljj.10;
+        Tue, 28 Jul 2020 04:03:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jX6sjTJPEr15dOzF7TYKeW7hD2/3KOKGSVAXq2cMBEc=;
+        b=d13uPu0+A8NFdVShzGvgGo4igAAaBdTaVAmAtFt4WF3hQWPCzgOZa3msY075ut5XaJ
+         k8eWcH8d33j3q9R5BTwumU5UEfPfG5MTo6ELaMCYTqMjNlWtwJloALgvmhwktj4sniV8
+         e++cuzk30jO7afhKJycMTVt00m3AUpWl4YGo4Av4UjOXJyE+zRFn2qXnSJ0GsbX/2uQd
+         MKsWo4z2zGaowAA5XbZi69CFjkNvsCB2sbxIbEzvdoHPKd16q+8t7TjVPRZBHICf4yz2
+         296srKHU3RreyC48COtmJUgeAjyVGp1ojNLE/2Y4AIH5NH6CsIEwAXQXpqYgFpmMi3a4
+         MlDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jX6sjTJPEr15dOzF7TYKeW7hD2/3KOKGSVAXq2cMBEc=;
+        b=KXQfqZX/5M6K2GnUEIog1q4URisQFVSNogKqQv3w06XIJm6eSSAT5PFAE392l5SK8b
+         2VVNFmLPid/5yyMXNg/Fa/LIan5+ySrW0Fhz1CXh2R21ZWsxMnPgCAvrKIg/QLbCknDr
+         7olXKFAAhbJfvVEVnncweW6KxSYD21N/Dfpm/gnPtJE6e8sDhMbyqTHc0JblaWd07ZYJ
+         Ny3fqwDyTYWT/5Go+DA0SoN+0P3Pjp01lTa/hNH6/hKuh01kO+eR0ncWd5arVosY+DNO
+         MtB5yEG8bLal/uzUUB7QRZMXgF03FSj5OG/ngoRsBQBeAZLIrc0s+tOyin5BDlsXvDaB
+         PIuQ==
+X-Gm-Message-State: AOAM533mVQ7sgNXN2zS8T7NULMRtBBGY4SVdas3qYaVzefYQ2ajEfPYx
+        C8llCZulo4OhVc7dzA5tob99udjS
+X-Google-Smtp-Source: ABdhPJy21QLY/yVjHkncbE+RD0wsgXFjz+XHQdbpbJEUed+zywipzYvk8mjCf8LoQO76elRFDDdGzg==
+X-Received: by 2002:a2e:7308:: with SMTP id o8mr5524141ljc.414.1595934235729;
+        Tue, 28 Jul 2020 04:03:55 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
+        by smtp.googlemail.com with ESMTPSA id k25sm2905238ljk.87.2020.07.28.04.03.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 04:03:55 -0700 (PDT)
+Subject: Re: [RFC PATCH v5 12/14] gpu: host1x: mipi: Keep MIPI clock enabled
+ till calibration is done
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
+ <1595883452-17343-13-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b21e3227-d0d8-5b4a-ae69-aa29551a22c3@gmail.com>
+Date:   Tue, 28 Jul 2020 14:03:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728051153.1590-15-rppt@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <1595883452-17343-13-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/28/20 at 08:11am, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
+27.07.2020 23:57, Sowjanya Komatineni пишет:
+> With the split of MIPI calibration into tegra_mipi_calibrate() and
+> tegra_mipi_wait(), MIPI clock is not kept enabled till the calibration
+> is done.
 > 
-> numa_clear_kernel_node_hotplug() function first traverses numa_meminfo
-> regions to set node ID in memblock.reserved and than traverses
-> memblock.reserved to update reserved_nodemask to include node IDs that were
-> set in the first loop.
+> So, this patch skips disabling MIPI clock after triggering start of
+> calibration and disables it only after waiting for done status from
+> the calibration logic.
 > 
-> Remove redundant traversal over memblock.reserved and update
-> reserved_nodemask while iterating over numa_meminfo.
+> This patch renames tegra_mipi_calibrate() as tegra_mipi_start_calibration()
+> and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inline
+> with their usage.
 > 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> As MIPI clock is left enabled and in case of any failures with CSI input
+> streaming tegra_mipi_finish_calibration() will not get invoked.
+> So added new API tegra_mipi_cancel_calibration() which disables MIPI clock
+> and consumer drivers can call this in such cases.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  arch/x86/mm/numa.c | 26 ++++++++++----------------
->  1 file changed, 10 insertions(+), 16 deletions(-)
+>  drivers/gpu/drm/tegra/dsi.c |  4 ++--
+>  drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
+>  include/linux/host1x.h      |  5 +++--
+>  3 files changed, 15 insertions(+), 13 deletions(-)
 > 
-> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> index 8ee952038c80..4078abd33938 100644
-> --- a/arch/x86/mm/numa.c
-> +++ b/arch/x86/mm/numa.c
-> @@ -498,31 +498,25 @@ static void __init numa_clear_kernel_node_hotplug(void)
->  	 * and use those ranges to set the nid in memblock.reserved.
->  	 * This will split up the memblock regions along node
->  	 * boundaries and will set the node IDs as well.
-> +	 *
-> +	 * The nid will also be set in reserved_nodemask which is later
-> +	 * used to clear MEMBLOCK_HOTPLUG flag.
-> +	 *
-> +	 * [ Note, when booting with mem=nn[kMG] or in a kdump kernel,
-> +	 *   numa_meminfo might not include all memblock.reserved
-> +	 *   memory ranges, because quirks such as trim_snb_memory()
-> +	 *   reserve specific pages for Sandy Bridge graphics.
-> +	 *   These ranges will remain with nid == MAX_NUMNODES. ]
->  	 */
->  	for (i = 0; i < numa_meminfo.nr_blks; i++) {
->  		struct numa_memblk *mb = numa_meminfo.blk + i;
->  		int ret;
+> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+> index 3820e8d..a7864e9 100644
+> --- a/drivers/gpu/drm/tegra/dsi.c
+> +++ b/drivers/gpu/drm/tegra/dsi.c
+> @@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct tegra_dsi *dsi)
+>  		DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
+>  	tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
 >  
->  		ret = memblock_set_node(mb->start, mb->end - mb->start, &memblock.reserved, mb->nid);
-> +		node_set(mb->nid, reserved_nodemask);
-
-Really? This will set all node id into reserved_nodemask. But in the
-current code, it's setting nid into memblock reserved region which
-interleaves with numa_memoinfo, then get those nid and set it in
-reserved_nodemask. This is so different, with my understanding. Please
-correct me if I am wrong.
-
-Thanks
-Baoquan
-
->  		WARN_ON_ONCE(ret);
->  	}
+> -	err = tegra_mipi_calibrate(dsi->mipi);
+> +	err = tegra_mipi_start_calibration(dsi->mipi);
+>  	if (err < 0)
+>  		return err;
 >  
-> -	/*
-> -	 * Now go over all reserved memblock regions, to construct a
-> -	 * node mask of all kernel reserved memory areas.
-> -	 *
-> -	 * [ Note, when booting with mem=nn[kMG] or in a kdump kernel,
-> -	 *   numa_meminfo might not include all memblock.reserved
-> -	 *   memory ranges, because quirks such as trim_snb_memory()
-> -	 *   reserve specific pages for Sandy Bridge graphics. ]
-> -	 */
-> -	for_each_memblock(reserved, mb_region) {
-> -		int nid = memblock_get_region_node(mb_region);
+> -	return tegra_mipi_wait(dsi->mipi);
+> +	return tegra_mipi_finish_calibration(dsi->mipi);
+>  }
+>  
+>  static void tegra_dsi_set_timeout(struct tegra_dsi *dsi, unsigned long bclk,
+> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+> index e606464..b15ab6e 100644
+> --- a/drivers/gpu/host1x/mipi.c
+> +++ b/drivers/gpu/host1x/mipi.c
+> @@ -293,17 +293,19 @@ int tegra_mipi_disable(struct tegra_mipi_device *dev)
+>  }
+>  EXPORT_SYMBOL(tegra_mipi_disable);
+>  
+> -int tegra_mipi_wait(struct tegra_mipi_device *device)
+> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
+> +{
+
+Doesn't MIPI_CAL need to be reset here?
+
+> +	clk_disable(device->mipi->clk);
+> +}
+> +EXPORT_SYMBOL(tegra_mipi_cancel_calibration);
+> +
+> +int tegra_mipi_finish_calibration(struct tegra_mipi_device *device)
+>  {
+>  	struct tegra_mipi *mipi = device->mipi;
+>  	void __iomem *status_reg = mipi->regs + (MIPI_CAL_STATUS << 2);
+>  	u32 value;
+>  	int err;
+>  
+> -	err = clk_enable(device->mipi->clk);
+> -	if (err < 0)
+> -		return err;
 > -
-> -		if (nid != MAX_NUMNODES)
-> -			node_set(nid, reserved_nodemask);
-> -	}
-> -
->  	/*
->  	 * Finally, clear the MEMBLOCK_HOTPLUG flag for all memory
->  	 * belonging to the reserved node mask.
-> -- 
-> 2.26.2
-> 
+>  	mutex_lock(&device->mipi->lock);
+>  
+>  	err = readl_relaxed_poll_timeout(status_reg, value,
+> @@ -315,9 +317,9 @@ int tegra_mipi_wait(struct tegra_mipi_device *device)
+>  
+>  	return err;
+>  }
+> -EXPORT_SYMBOL(tegra_mipi_wait);
+> +EXPORT_SYMBOL(tegra_mipi_finish_calibration);
+>  
+> -int tegra_mipi_calibrate(struct tegra_mipi_device *device)
+> +int tegra_mipi_start_calibration(struct tegra_mipi_device *device)
+>  {
+>  	const struct tegra_mipi_soc *soc = device->mipi->soc;
+>  	unsigned int i;
+> @@ -382,11 +384,10 @@ int tegra_mipi_calibrate(struct tegra_mipi_device *device)
+>  	tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
+
+This function sets MIPI_CAL_CLKEN_OVR bit, does it mean that MIPI clock
+becomes always-ON?
+
+I don't see where MIPI_CAL_CLKEN_OVR is unset.
+
+>  	mutex_unlock(&device->mipi->lock);
+> -	clk_disable(device->mipi->clk);
+>  
+>  	return 0;
+>  }
+> -EXPORT_SYMBOL(tegra_mipi_calibrate);
+> +EXPORT_SYMBOL(tegra_mipi_start_calibration);
+>  
+>  static const struct tegra_mipi_pad tegra114_mipi_pads[] = {
+>  	{ .data = MIPI_CAL_CONFIG_CSIA },
+> diff --git a/include/linux/host1x.h b/include/linux/host1x.h
+> index 20c885d..b490dda 100644
+> --- a/include/linux/host1x.h
+> +++ b/include/linux/host1x.h
+> @@ -333,7 +333,8 @@ struct tegra_mipi_device *tegra_mipi_request(struct device *device,
+>  void tegra_mipi_free(struct tegra_mipi_device *device);
+>  int tegra_mipi_enable(struct tegra_mipi_device *device);
+>  int tegra_mipi_disable(struct tegra_mipi_device *device);
+> -int tegra_mipi_calibrate(struct tegra_mipi_device *device);
+> -int tegra_mipi_wait(struct tegra_mipi_device *device);
+> +int tegra_mipi_start_calibration(struct tegra_mipi_device *device);
+> +int tegra_mipi_finish_calibration(struct tegra_mipi_device *device);
+> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device);
+>  
+>  #endif
 > 
 
