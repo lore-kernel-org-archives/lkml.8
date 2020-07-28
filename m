@@ -2,178 +2,104 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4DDC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A2DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA0C2083E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:35:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wzdHmSNu"
+	by mail.kernel.org (Postfix) with ESMTP id 82011206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbgG1IfY (ORCPT
+        id S1728255AbgG1IgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:35:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728044AbgG1IfX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:35:23 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDC3EC0619D6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:35:22 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l2so6855379wrc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:35:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=wIEap5nu6/u8U1i+WE2J6fe1oYcakn7JFpIXO/o4yqY=;
-        b=wzdHmSNupB/gvHxvaTzGoKr1l0PUZe1L5IJjQHR+y+Mftcr7BWvLUXOOxcbrqw/NeC
-         txj7PBsaU7zWETRFk7Y3jqiE7gbWfXw6QTy5c8RiQnko2Uvtw0n9+h/2MW1oYQ6J3BHm
-         orUCUrnlxxKnUDvUVWzC+ws2mP9aRwuKOLuTxTSGfFE0TLlGcso1EL/1VvUkP/zhmaRf
-         QuXPY1hgq16BhisRZ5VkUg9FH351qj7iV+17Bvy8LvnpWlPHTy61IlLLqRgZqsdqA2F2
-         EgDK32RgjKUxJ3MVsyl1NPNqLT/bU95m5q6dSnXvN1LR4O9aV1Nru/mFvVMbcjy87O1L
-         wbhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=wIEap5nu6/u8U1i+WE2J6fe1oYcakn7JFpIXO/o4yqY=;
-        b=YLRwbOdxB75xjITyrTzE9M02A9TygPhkcCNgbYxmJ/OV3n99xSiufr6L2O2kOJSI3R
-         Xgxocja55YGeJ11JILtBXGobJL+I1BH13Mon+6xH4gtFwa+WIkhFgRFwN58p6qgptPpm
-         EjkT+xOjd1oXlKHglOeJ6miYFikQj6bYg8V8nGki9X2FO1Nx5PKLfYxYLrDlYl7UZVf6
-         f17PLH2v1ZrkJjCfm/3TREswZBu14dBMDqeYjmlqVSXSXOpSBnKOE6Cpl7l6ijvC2OU4
-         7Uz+gnKvSZTDJxnEzzv0UQmn3vPCGWFm/MuziAF3/oYdJYfjUqH4nCzAky7qdozsRsIQ
-         525w==
-X-Gm-Message-State: AOAM533uogbhwBkfpuBdT4WBUzRmeicZrKXAhDxaruS6e8uEfABhn2zW
-        s/ihvRHWm8wRcexOD0CGkxxfpQ==
-X-Google-Smtp-Source: ABdhPJwG1bTGEwviQBx4fQX6vXqs1qp0AAL5ZGxkde5J0PYhdXIPql4dbkmS6q4z2xbEkiCvqUsGMQ==
-X-Received: by 2002:adf:ec8b:: with SMTP id z11mr23369607wrn.51.1595925321324;
-        Tue, 28 Jul 2020 01:35:21 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id 62sm16885342wrq.31.2020.07.28.01.35.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 01:35:20 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 09:35:18 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Tue, 28 Jul 2020 04:36:24 -0400
+Received: from muru.com ([72.249.23.125]:38292 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728009AbgG1IgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:36:24 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 61D5B8105;
+        Tue, 28 Jul 2020 08:36:20 +0000 (UTC)
+Date:   Tue, 28 Jul 2020 01:36:31 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Johan Hovold <johan@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 01/13] mfd: add simple regmap based I2C driver
-Message-ID: <20200728083518.GC2419169@dell>
-References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-2-michael@walle.cc>
- <20200728071949.GE1850026@dell>
- <23a9ecf5fe4f15b9b20a91cc292aca80@walle.cc>
- <20200728081506.GA2419169@dell>
- <5de219e973e9d3c1455f1a09b4ce4177@walle.cc>
+        Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv8 0/6] n_gsm serdev support and GNSS driver for droid4
+Message-ID: <20200728083631.GE2811@atomide.com>
+References: <20200512214713.40501-1-tony@atomide.com>
+ <20200528083918.GB10358@localhost>
+ <20200726082520.GA16953@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5de219e973e9d3c1455f1a09b4ce4177@walle.cc>
+In-Reply-To: <20200726082520.GA16953@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jul 2020, Michael Walle wrote:
-
-> Am 2020-07-28 10:15, schrieb Lee Jones:
-> > On Tue, 28 Jul 2020, Michael Walle wrote:
-> > 
-> > > Am 2020-07-28 09:19, schrieb Lee Jones:
-> > > > On Sun, 26 Jul 2020, Michael Walle wrote:
-> > > >
-> > > > > There are I2C devices which contain several different functions but
-> > > > > doesn't require any special access functions. For these kind of
-> > > > > drivers
-> > > > > an I2C regmap should be enough.
-> > > > >
-> > > > > Create an I2C driver which creates an I2C regmap and enumerates its
-> > > > > children. If a device wants to use this as its MFD core driver, it has
-> > > > > to add an individual compatible string. It may provide its own regmap
-> > > > > configuration.
-> > > > >
-> > > > > Subdevices can use dev_get_regmap() on the parent to get their regmap
-> > > > > instance.
-> > > > >
-> > > > > Signed-off-by: Michael Walle <michael@walle.cc>
-> > > > > ---
-> > > > > Changes since v5:
-> > > > >  - removed "select MFD_CORE" in Kconfig
-> > > > >  - removed help text in Kconfig, we assume that the users of this
-> > > >
-> > > > That's the opposite of what I asked for.
+* Pavel Machek <pavel@denx.de> [200726 08:25]:
+> Hi!
+> 
+> > > Here's the updated set of these patches fixed up for Johan's and
+> > > Pavel's earlier comments.
 > > > 
-> > > What is the use to describe the symbol, if it is not user selectable?
-> > > I'm not aware this is done anywhere in the kernel, am I missing
-> > > something?
+> > > This series does the following:
+> > > 
+> > > 1. Adds functions to n_gsm.c for serdev-ngsm.c driver to use
+> > > 
+> > > 2. Adds a generic serdev-ngsm.c driver that brings up the TS 27.010
+> > >    TTY ports configured in devicetree with help of n_gsm.c
+> > > 
+> > > 3. Allows the use of standard Linux device drivers for dedicated
+> > >    TS 27.010 channels for devices like GNSS and ALSA found on some
+> > >    modems for example
 > > 
-> > You mean in menuconfig?
+> > Unfortunately that does not seem to be the case just yet. Your gnss
+> > driver is still aware that it's using n_gsm for the transport and calls
+> > into the "parent" serdev-ngsm driver instead of using the serdev
+> > interface (e.g. as if this was still and MFD driver).
 > > 
-> > I find 'help's helpful even outside of menuconfig.
-> > 
-> > Surely I'm not the only one who reads them 'raw'?
+> > If you model this right, the GNSS driver should work equally well
+> > regardless of whether you use the serial interface (with n_gsm) or USB
+> > (e.g. cdc-acm or usb-serial).
 > 
-> Its already available in the header of the file. But sure, I can
-> copy it.
+> We are not going to see that protocol anywhere else, so why is that
+> a good goal?
 
-Thanks.
+Yes it seems this GNSS implementation is different from the one
+provided by gobi.
 
-[...]
+> Anyway, Tony, is there newer version of this patchset? It would be
+> good to get something in...
 
-> > > Why would you remove information about the intention of this driver?
-> > > If
-> > > someone
-> > > looks for a place to implement its SPI/I3C/Slimbus MFD driver this
-> > > might
-> > > come
-> > > in handy.
-> > 
-> > By all means put something similar in the commit log, but it has no
-> > place in the driver itself.  Besides, if we were to add support for
-> > SPI, it is likely to be a completely separate/unrelated driver.
-> 
-> Why would that be another driver? It would be 90% copy paste with
-> regmap_init_i2c() replaced by regmap_init_spi() and i2c_driver replaced
-> by spi_driver.
+Sorry it will likely be few more weeks before I can look at this
+stuff again.
 
-We'll investigate options if/when the time comes.  If 'spi_driver' and
-'i2c_driver' can *sensibly* co-exist, then that is certainly an option
-we can explore.
+> Can I help somehow?
 
-> But I don't care. I'll remove it.
+I think I'm pretty clear on what needs to be done regarding this
+patchset. Probably taking a look at if we could implement a
+minimal raw /dev/gsmtty* read/write access in ofono using ell
+instead of gatchat would help most :)
 
-Please.
+So something that mbim modem is already doing I think, sorry have
+not had a chance to look at that either.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+The /dev/gsmtty* devices should not change even with the further
+changes to this patchset.
+
+Regards,
+
+Tony
