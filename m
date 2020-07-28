@@ -2,177 +2,166 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC8CC433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67F0C2065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D8F2065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:17:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QaYU4+is"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g7TgRceJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732684AbgG1TRJ (ORCPT
+        id S1732686AbgG1TR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:17:09 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34716 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729133AbgG1TRH (ORCPT
+        Tue, 28 Jul 2020 15:17:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728751AbgG1TRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:17:07 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06SJH0Qn050624;
-        Tue, 28 Jul 2020 14:17:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595963820;
-        bh=0X5/B4tnSjQPL58pYcSzCXVyRs6k1QQQ3t+m1IW2tFY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QaYU4+isr6MKl4fOzk+0EPc6uGHk2BBnivLHX9bg6Iv61ccXbo2dAhej/wnTrPZtt
-         nohBqCyerQDSPkLvXYSBndU4Lfe5SR1dt+LCd+PkoSADyKd4gZRuvLUYrniqTX3F70
-         T+T3bQBwG2GtlZsjah42ktZGVnHHr2z5s+seXIXk=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SJH01s075942;
-        Tue, 28 Jul 2020 14:17:00 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
- Jul 2020 14:16:59 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 28 Jul 2020 14:16:59 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SJGvCO018644;
-        Tue, 28 Jul 2020 14:16:57 -0500
-Subject: Re: [PATCH 3/4] arm64: dts: ti: Add support for J7200 SoC
-To:     Lokesh Vutla <lokeshvutla@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Suman Anna <s-anna@ti.com>
-References: <20200723084628.19241-1-lokeshvutla@ti.com>
- <20200723084628.19241-4-lokeshvutla@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <36788bae-ddcd-a880-ea34-a4919945009c@ti.com>
-Date:   Tue, 28 Jul 2020 22:16:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 28 Jul 2020 15:17:55 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F89C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:17:55 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id k4so18526696oik.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:17:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tsQ2Xj7AJ9j1QK6CR85sgGm7aJ0udfYN+K/GnPLpLbM=;
+        b=g7TgRceJkWHA8Gdrz/5KD+CzesTetjdFidS4FAzi4lpvcxWtsQYny19T8XXlUrrkem
+         ayzc0GZiIfc70wq8DMNsUX8SusGZt12P7ACPGfEGKD0C0WJhCyYcnX8h3TOI1oSbQDsa
+         fF/d3X1Toxt+pY8/Y80l0rRaAjQXO5u+SozqWqlP83Z7gi2VRNJUm4uVE5A0cRWAzzrz
+         8nD+ugQN8H2GE+Vyo6tsnep4ZOi9FBb09O4ja0k/y4jwrZdRKH/fdRmPVbNfvgD06wUd
+         uI83nG8Fjyqu7mv8GkWniQm7t2kuG+KKR4ytgHHM7ZCi62BRw3V4O4jVv2q8XGOIZ0xK
+         EYlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tsQ2Xj7AJ9j1QK6CR85sgGm7aJ0udfYN+K/GnPLpLbM=;
+        b=Td+YDXknG93jPLxKfgc14elSz6cCDwixZSfJCDr+tOrXGtGjGd9W3K3NdusKIn2Qc7
+         FJkXtKTBaJOIOS58OO1MIoWvHAlXNg7e0IrxwhnmjE8CPZvzn8i90JmhcKPw3Mby18do
+         r0uxGxstmUXIC9kSvh7KvjLlUuFAu3Arztq4bD7meKXSxHYJMSW6By+MBuv4VUly/F7v
+         7ECO0pE39SzJSxnE9st95jYVUsBFl953Ft5K20hWb5IfPzgpBu78sote7iYz0yVGdytx
+         oOlfB4zrjd/nf3TQL/RT6lPQoH/I0N/OdAL3fPvUSb0j04Ljq4I9iIK/5E55vp+2vWNm
+         r25w==
+X-Gm-Message-State: AOAM533i7beH7i4n2mXNl3sUZg6gdA5PKy9+Vek5hS6LAg3HMecf0vRt
+        Hna+NZytdUJwPriCtNfRNxjEy6rKAdymU8koCBHhnQ==
+X-Google-Smtp-Source: ABdhPJzG+EYMW8ZqVkQmWbz8HGmD3b012cHdzgtF5YTIcW8bgYYQxe6jtAovZ/LwvvmBrtV7DgJbflOpFiiLYO7ljsQ=
+X-Received: by 2002:aca:b5c3:: with SMTP id e186mr5015644oif.10.1595963875197;
+ Tue, 28 Jul 2020 12:17:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200723084628.19241-4-lokeshvutla@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1594948208-4739-1-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1594948208-4739-1-git-send-email-hayashi.kunihiko@socionext.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 28 Jul 2020 12:17:44 -0700
+Message-ID: <CALAqxLXuJQOCXcpyWwyBFZGFK_dEgG0edEEf2=vOpAw6Ng8mBQ@mail.gmail.com>
+Subject: Re: [PATCH] dma-buf: heaps: Introduce dma_heap_add_cma() for
+ non-default CMA heap
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        linux-media@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 23/07/2020 11:46, Lokesh Vutla wrote:
-> The J7200 SoC is a part of the K3 Multicore SoC architecture platform.
-> It is targeted for automotive gateway, vehicle compute systems,
-> Vehicle-to-Vehicle (V2V) and Vehicle-to-Everything (V2X) applications.
-> The SoC aims to meet the complex processing needs of modern embedded
-> products.
-> 
-> Some highlights of this SoC are:
-> * Dual Cortex-A72s in a single cluster, two clusters of lockstep
->    capable dual Cortex-R5F MCUs and a Centralized Device Management and
->    Security Controller (DMSC).
-> * Configurable L3 Cache and IO-coherent architecture with high data
->    throughput capable distributed DMA architecture under NAVSS.
-> * Integrated Ethernet switch supporting up to a total of 4 external ports
->    in addition to legacy Ethernet switch of up to 2 ports.
-> * Upto 1 PCIe-GEN3 controller, 1 USB3.0 Dual-role device subsystems,
->    20 MCANs, 3 McASP, eMMC and SD, OSPI/HyperBus memory controller, I3C
->    and I2C, eCAP/eQEP, eHRPWM among other peripherals.
-> * One hardware accelerator block containing AES/DES/SHA/MD5 called SA2UL
->    management.
-> 
-> See J7200 Technical Reference Manual (SPRUIU1, June 2020)
-> for further details: https://www.ti.com/lit/pdf/spruiu1
-> 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+On Thu, Jul 16, 2020 at 6:10 PM Kunihiko Hayashi
+<hayashi.kunihiko@socionext.com> wrote:
+>
+> Current dma-buf heaps can handle only default CMA. This introduces
+> dma_heap_add_cma() function to attach CMA heaps that belongs to a device.
+>
+> At first, the driver calls of_reserved_mem_device_init() to set
+> memory-region property associated with reserved-memory defined as CMA
+> to the device. And when the driver calls this dma_heap_add_cma(),
+> the CMA will be added to dma-buf heaps.
+>
+> For example, prepare CMA node named "linux,cma@10000000" and
+> specify the node for memory-region property. After the above calls
+> in the driver, a device file "/dev/dma_heap/linux,cma@10000000"
+> associated with the CMA become available as dma-buf heaps.
+>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->   arch/arm64/boot/dts/ti/k3-j7200-main.dtsi     | 199 ++++++++++++++++++
->   .../boot/dts/ti/k3-j7200-mcu-wakeup.dtsi      |  84 ++++++++
->   arch/arm64/boot/dts/ti/k3-j7200.dtsi          | 165 +++++++++++++++
->   3 files changed, 448 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
->   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
->   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-> new file mode 100644
-> index 000000000000..70c8f7e941fb
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-> @@ -0,0 +1,199 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for J7200 SoC Family Main Domain peripherals
-> + *
-> + * Copyright (C) 2020 Texas Instruments Incorporated - https://www.ti.com/
+>  drivers/dma-buf/heaps/cma_heap.c | 12 ++++++++++++
+>  include/linux/dma-heap.h         |  9 +++++++++
+>  2 files changed, 21 insertions(+)
+
+Hey! Sorry for the slow response on this! I just realized I never replied!
+
+> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
+> index 626cf7f..5d2442e 100644
+> --- a/drivers/dma-buf/heaps/cma_heap.c
+> +++ b/drivers/dma-buf/heaps/cma_heap.c
+> @@ -162,6 +162,18 @@ static int __add_cma_heap(struct cma *cma, void *data)
+>         return 0;
+>  }
+>
+> +/* add device CMA heap to dmabuf heaps */
+> +int dma_heap_add_cma(struct device *dev)
+> +{
+> +       struct cma *cma = dev_get_cma_area(dev);
+> +
+> +       if (!cma)
+> +               return -ENOMEM;
+> +
+> +       return __add_cma_heap(cma, NULL);
+> +}
+> +EXPORT_SYMBOL_GPL(dma_heap_add_cma);
+> +
+>  static int add_default_cma_heap(void)
+>  {
+>         struct cma *default_cma = dev_get_cma_area(NULL);
+> diff --git a/include/linux/dma-heap.h b/include/linux/dma-heap.h
+> index 454e354..16bec7d 100644
+> --- a/include/linux/dma-heap.h
+> +++ b/include/linux/dma-heap.h
+> @@ -56,4 +56,13 @@ void *dma_heap_get_drvdata(struct dma_heap *heap);
+>   */
+>  struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info);
+>
+> +#ifdef CONFIG_DMABUF_HEAPS_CMA
+> +/**
+> + * dma_heap_add_cma - adds a device CMA heap to dmabuf heaps
+> + * @dev:       device with a CMA heap to register
 > + */
+> +int dma_heap_add_cma(struct device *dev);
 > +
-> +&cbass_main {
-> +	msmc_ram: sram@70000000 {
-> +		compatible = "mmio-sram";
-> +		reg = <0x0 0x70000000 0x0 0x100000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x0 0x70000000 0x100000>;
+> +#endif /* CONFIG_DMABUF_HEAPS_CMA */
 > +
-> +		atf-sram@0 {
-> +			reg = <0x0 0x20000>;
-> +		};
-> +	};
-> +
-> +	gic500: interrupt-controller@1800000 {
-> +		compatible = "arm,gic-v3";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +		#interrupt-cells = <3>;
-> +		interrupt-controller;
-> +		reg = <0x00 0x01800000 0x00 0x10000>,	/* GICD */
-> +		      <0x00 0x01900000 0x00 0x100000>;	/* GICR */
-> +
-> +		/* vcpumntirq: virtual CPU interface maintenance interrupt */
-> +		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +		gic_its: msi-controller@1820000 {
-> +			compatible = "arm,gic-v3-its";
-> +			reg = <0x00 0x01820000 0x00 0x10000>;
-> +			socionext,synquacer-pre-its = <0x1000000 0x400000>;
-> +			msi-controller;
-> +			#msi-cells = <1>;
-> +		};
-> +	};
-> +
-> +	main_navss: navss@30000000 {
-> +		compatible = "simple-mfd";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges = <0x00 0x30000000 0x00 0x30000000 0x00 0x0c400000>;
+>  #endif /* _DMA_HEAPS_H */
+> --
+> 2.7.4
 
-Can we return back
-ti,sci-dev-id = <199>;
+Looks sane to me.  Being able to expose different multiple CMA heaps
+is needed, and I agree this way (as opposed to my earlier dts
+appraoch) is probably the best approach. The only bit I'm so-so on is
+adding the CMA heap specific call in the dma-heap.h, but at the same
+time I can't justify adding a whole new header for a single function.
 
-here? it's needed for DMA PSI-L pairing.
+Do you have a upstream driver that you plan to make use this new call?
+We want to have in-tree users of code added.
 
-Option: add it as part of dma/net submission.
+But if so, feel free to add my:
+  Acked-by: John Stultz <john.stultz@linaro.org>
+To this patch when you submit the driver changes.
 
-[...]
-
--- 
-Best regards,
-grygorii
+thanks
+-john
