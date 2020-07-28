@@ -2,81 +2,178 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5252DC433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4DDC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23BA32075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA0C2083E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:35:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RPS8DTJi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wzdHmSNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgG1Iei (ORCPT
+        id S1728233AbgG1IfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:34:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37194 "EHLO
+        Tue, 28 Jul 2020 04:35:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727808AbgG1Iei (ORCPT
+        with ESMTP id S1728044AbgG1IfX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:34:38 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BC92C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:34:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YLFGmCNLBQaHl2LIIeR8RilOiEeM2D0eo7p9uobvY5k=; b=RPS8DTJiqcvjAwWrwkZVHhw+S8
-        01UQExPZp2QoIBo4JC1kVZBJKynbsqpx1TyMdw7CZNpZdhOs5hzV7lLEaL0sLpvaeKw3VPtlT4qDo
-        iHqbGOgC29uyh5vdarV9Z8QIXFizC7JHfEyxH07kQtiYho0z6oGe3ywvd8d8LlDO1cnCVwBfJRtSy
-        49Utmzak4prIX03jxHSuqEzECRn5MYKt3u9liYp860Nnp+jnpu632TrG9cQkAKHvz4P2o1481mDrb
-        mSvTzdV3be8ePnWXo3zYtuifSyV2hScb+WGrk+OFl9OyFgU7uX167CvmF+zqHDupO5TqEkreHdnCx
-        dDyEjFxw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0L4E-00085j-2L; Tue, 28 Jul 2020 08:34:34 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7806B304D28;
-        Tue, 28 Jul 2020 10:34:29 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 64E592BB9F904; Tue, 28 Jul 2020 10:34:29 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 10:34:29 +0200
-From:   peterz@infradead.org
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mbenes@suse.cz
-Subject: Re: [PATCH] objtool,x86: Verify poke_int3_handler() is self contained
-Message-ID: <20200728083429.GP119549@hirez.programming.kicks-ass.net>
-References: <20200727104050.GH119549@hirez.programming.kicks-ass.net>
- <87eeowbrto.fsf@nanos.tec.linutronix.de>
+        Tue, 28 Jul 2020 04:35:23 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDC3EC0619D6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:35:22 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l2so6855379wrc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:35:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=wIEap5nu6/u8U1i+WE2J6fe1oYcakn7JFpIXO/o4yqY=;
+        b=wzdHmSNupB/gvHxvaTzGoKr1l0PUZe1L5IJjQHR+y+Mftcr7BWvLUXOOxcbrqw/NeC
+         txj7PBsaU7zWETRFk7Y3jqiE7gbWfXw6QTy5c8RiQnko2Uvtw0n9+h/2MW1oYQ6J3BHm
+         orUCUrnlxxKnUDvUVWzC+ws2mP9aRwuKOLuTxTSGfFE0TLlGcso1EL/1VvUkP/zhmaRf
+         QuXPY1hgq16BhisRZ5VkUg9FH351qj7iV+17Bvy8LvnpWlPHTy61IlLLqRgZqsdqA2F2
+         EgDK32RgjKUxJ3MVsyl1NPNqLT/bU95m5q6dSnXvN1LR4O9aV1Nru/mFvVMbcjy87O1L
+         wbhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wIEap5nu6/u8U1i+WE2J6fe1oYcakn7JFpIXO/o4yqY=;
+        b=YLRwbOdxB75xjITyrTzE9M02A9TygPhkcCNgbYxmJ/OV3n99xSiufr6L2O2kOJSI3R
+         Xgxocja55YGeJ11JILtBXGobJL+I1BH13Mon+6xH4gtFwa+WIkhFgRFwN58p6qgptPpm
+         EjkT+xOjd1oXlKHglOeJ6miYFikQj6bYg8V8nGki9X2FO1Nx5PKLfYxYLrDlYl7UZVf6
+         f17PLH2v1ZrkJjCfm/3TREswZBu14dBMDqeYjmlqVSXSXOpSBnKOE6Cpl7l6ijvC2OU4
+         7Uz+gnKvSZTDJxnEzzv0UQmn3vPCGWFm/MuziAF3/oYdJYfjUqH4nCzAky7qdozsRsIQ
+         525w==
+X-Gm-Message-State: AOAM533uogbhwBkfpuBdT4WBUzRmeicZrKXAhDxaruS6e8uEfABhn2zW
+        s/ihvRHWm8wRcexOD0CGkxxfpQ==
+X-Google-Smtp-Source: ABdhPJwG1bTGEwviQBx4fQX6vXqs1qp0AAL5ZGxkde5J0PYhdXIPql4dbkmS6q4z2xbEkiCvqUsGMQ==
+X-Received: by 2002:adf:ec8b:: with SMTP id z11mr23369607wrn.51.1595925321324;
+        Tue, 28 Jul 2020 01:35:21 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id 62sm16885342wrq.31.2020.07.28.01.35.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 01:35:20 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 09:35:18 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 01/13] mfd: add simple regmap based I2C driver
+Message-ID: <20200728083518.GC2419169@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-2-michael@walle.cc>
+ <20200728071949.GE1850026@dell>
+ <23a9ecf5fe4f15b9b20a91cc292aca80@walle.cc>
+ <20200728081506.GA2419169@dell>
+ <5de219e973e9d3c1455f1a09b4ce4177@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87eeowbrto.fsf@nanos.tec.linutronix.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5de219e973e9d3c1455f1a09b4ce4177@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 10:56:03PM +0200, Thomas Gleixner wrote:
-> peterz@infradead.org writes:
-> > Abuse the SMAP rules to ensure poke_int3_handler() doesn't call out to
-> > anything.
+On Tue, 28 Jul 2020, Michael Walle wrote:
+
+> Am 2020-07-28 10:15, schrieb Lee Jones:
+> > On Tue, 28 Jul 2020, Michael Walle wrote:
+> > 
+> > > Am 2020-07-28 09:19, schrieb Lee Jones:
+> > > > On Sun, 26 Jul 2020, Michael Walle wrote:
+> > > >
+> > > > > There are I2C devices which contain several different functions but
+> > > > > doesn't require any special access functions. For these kind of
+> > > > > drivers
+> > > > > an I2C regmap should be enough.
+> > > > >
+> > > > > Create an I2C driver which creates an I2C regmap and enumerates its
+> > > > > children. If a device wants to use this as its MFD core driver, it has
+> > > > > to add an individual compatible string. It may provide its own regmap
+> > > > > configuration.
+> > > > >
+> > > > > Subdevices can use dev_get_regmap() on the parent to get their regmap
+> > > > > instance.
+> > > > >
+> > > > > Signed-off-by: Michael Walle <michael@walle.cc>
+> > > > > ---
+> > > > > Changes since v5:
+> > > > >  - removed "select MFD_CORE" in Kconfig
+> > > > >  - removed help text in Kconfig, we assume that the users of this
+> > > >
+> > > > That's the opposite of what I asked for.
+> > > 
+> > > What is the use to describe the symbol, if it is not user selectable?
+> > > I'm not aware this is done anywhere in the kernel, am I missing
+> > > something?
+> > 
+> > You mean in menuconfig?
+> > 
+> > I find 'help's helpful even outside of menuconfig.
+> > 
+> > Surely I'm not the only one who reads them 'raw'?
 > 
-> Yuck. Isn't that what noinstr is for or am I missing something?
+> Its already available in the header of the file. But sure, I can
+> copy it.
 
-Well, we don't want poke_int3_handler() to call out to noinstr either.
+Thanks.
 
-So noinstr only allows calling noinstr, The above hack only allows it
-calling uaccess-safe functions, and the group of functions that is both
-noinstr and uaccess-safe is 'small'.
+[...]
 
-But like I said yesterday, perhaps this wants it own annotation. Then we
-can also verify the lack of any dynamic code.
+> > > Why would you remove information about the intention of this driver?
+> > > If
+> > > someone
+> > > looks for a place to implement its SPI/I3C/Slimbus MFD driver this
+> > > might
+> > > come
+> > > in handy.
+> > 
+> > By all means put something similar in the commit log, but it has no
+> > place in the driver itself.  Besides, if we were to add support for
+> > SPI, it is likely to be a completely separate/unrelated driver.
+> 
+> Why would that be another driver? It would be 90% copy paste with
+> regmap_init_i2c() replaced by regmap_init_spi() and i2c_driver replaced
+> by spi_driver.
 
-So yes, yuck and a bad idea, ignore this ;-)
+We'll investigate options if/when the time comes.  If 'spi_driver' and
+'i2c_driver' can *sensibly* co-exist, then that is certainly an option
+we can explore.
+
+> But I don't care. I'll remove it.
+
+Please.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
