@@ -2,150 +2,99 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C53CC433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B29EC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF06206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A07B20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:41:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="MPkqTD1M"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="eOS9kCUG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730978AbgG1PkQ (ORCPT
+        id S1731016AbgG1Plc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:40:16 -0400
-Received: from crapouillou.net ([89.234.176.41]:56250 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730679AbgG1PkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:40:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1595950813; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mMC+SGhfOG6kBdqyqJA8JPLuqdZi+nfSRRDFEcVdBHM=;
-        b=MPkqTD1MumU3JJYRCzS76k8lzdZZzWDIyhMFJavPeu9BtYsaMcbLCwoL5CjmbuVSMS7bZq
-        OgQeSTzty/l25SbJyf0j2HdOeBT8elU15tq6kgqifAHX2XLNTpv3McLH09dH1Gu659mUCg
-        wxV2zCd9uyulrFo9yUcDWsmHwhfbuTM=
-Date:   Tue, 28 Jul 2020 17:40:01 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] MIPS: CI20: Update defconfig for EFUSE.
-To:     Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Cc:     tsbogend@alpha.franken.de, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, keescook@chromium.org,
-        hns@goldelico.com, ebiederm@xmission.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Message-Id: <PIR6EQ.G22CDHRT7D5O@crapouillou.net>
-In-Reply-To: <b1de1e95-9ce3-1324-346d-07196aa30637@wanyeetech.com>
-References: <20200723071950.130007-1-zhouyanjie@wanyeetech.com>
-        <20200723071950.130007-2-zhouyanjie@wanyeetech.com>
-        <V2ZWDQ.DNM4EVLAB6YN3@crapouillou.net>
-        <b1de1e95-9ce3-1324-346d-07196aa30637@wanyeetech.com>
+        Tue, 28 Jul 2020 11:41:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730821AbgG1Plb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:41:31 -0400
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 336E8C0619D4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:41:31 -0700 (PDT)
+Received: by mail-il1-x12a.google.com with SMTP id z17so1457838ill.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 08:41:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vSWx1/Sr/gJvV92Fd2QuTQjvx6hegEt2EdSzZRTJZXM=;
+        b=eOS9kCUGWozMEgHSZJcSVDFO0AHLhz5u13Hzr4euy1SfrsO3wctZ6YAEcFh81LUEFe
+         qKEx883RdFNlnU/ciLWMOG+Vj2O3UtdPLRGu3wVgO4m2BQ37DnVzwEQRW6UlEXPC6X4+
+         6qy3MKLhkiUeg2Gj1Hl5rFfX2WIKMSYf+TvHUXJLRYjJhA2RqWzGfAYi3i7oAIMDIOGN
+         kWmCj7CoLh5z5B/OHRT7/QrMunwFyL57wmiHBTZtYJy1FwxdlHKoWKtw+zsNgVUo2ZHx
+         EpjXSF+5KBb5kwwDmys2D0JqmY/qrmWuFn2WVlWcfsS5xNRgrwNQRXJP5bi8Bs1TigZW
+         btwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vSWx1/Sr/gJvV92Fd2QuTQjvx6hegEt2EdSzZRTJZXM=;
+        b=PcnX2B/1B0m+FPbMQ5x/4W8ndAsdU8WRoD28y4KDxjVcPtAeN0L0AkDWwNTteV467z
+         VanVXnv4iQMh3VXHFYJypgt69FAYlxH9dkVkFwJzbNxMDGlJjPAQ+SfTyfQP8QgqkGr5
+         DRPMoD33ZKHikTw5dL8X7czMgoQDNvUMb4NshNj22Hfi9avlwUDgmOuWOvToo6beoJG9
+         T1CGPyfrNRTg4itJFMT1ipo90AaHuRdtikjEMG3JCR8fgUUz7ycb8Iz0j1hi+ryyhzIa
+         EwKp5oyW8Sw7PBFjjkyWvLDmajVlwFUcuhwNgBXIM61xEptXTdG3eao8D4RUhA8Fjvo/
+         SNRg==
+X-Gm-Message-State: AOAM533nqOuiGiDxa3WqdXhAM0DXPG6dwsU8FwypgZDhXUPD5lO7+z/C
+        p+5keLqagKCfe9uJk7OPxG6I9A==
+X-Google-Smtp-Source: ABdhPJyDr3/VSL/Sd0AZTRTnDaDXbKtAPJuxtlG2XtO6yQjepAU3x+9xL+YVZgu/NKlxbtyZpuHMhw==
+X-Received: by 2002:a05:6e02:c6b:: with SMTP id f11mr411495ilj.272.1595950890232;
+        Tue, 28 Jul 2020 08:41:30 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id u6sm2827959ilk.13.2020.07.28.08.41.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 08:41:29 -0700 (PDT)
+Subject: Re: bdi cleanups v3
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Minchan Kim <minchan@kernel.org>,
+        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org
+References: <20200724073313.138789-1-hch@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <0b2b59d4-da4c-33df-82b4-0d4935b91e6e@kernel.dk>
+Date:   Tue, 28 Jul 2020 09:41:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200724073313.138789-1-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
+On 7/24/20 1:32 AM, Christoph Hellwig wrote:
+> Hi Jens,
+> 
+> this series contains a bunch of different BDI cleanups.  The biggest item
+> is to isolate block drivers from the BDI in preparation of changing the
+> lifetime of the block device BDI in a follow up series.
 
-Le sam. 25 juil. 2020 =C3=A0 16:02, Zhou Yanjie <zhouyanjie@wanyeetech.com>=
-=20
-a =C3=A9crit :
-> Hi Paul,
->=20
-> =E5=9C=A8 2020/7/23 =E4=B8=8B=E5=8D=884:47, Paul Cercueil =E5=86=99=E9=81=
-=93:
->> Hi Zhou,
->>=20
->> Le jeu. 23 juil. 2020 =C3=A0 15:19, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Ya=
-njie)=20
->> =7F<zhouyanjie@wanyeetech.com> a =C3=A9crit :
->>> The commit 19c968222934 ("MIPS: DTS: CI20: make DM9000 Ethernet
->>> controller use NVMEM to find the default MAC address") add EFUSE
->>> node for DM9000 in CI20, however, the EFUSE driver is not selected,
->>> which will cause the DM9000 to fail to read the MAC address from
->>> EFUSE, causing the following issue:
->>>=20
->>> [FAILED] Failed to start Raise network interfaces.
->>>=20
->>> Fix this problem by select CONFIG_JZ4780_EFUSE by default in the
->>> ci20_defconfig.
->>=20
->> Does it actually fix it on a clean 5.8-rc kernel?
->>=20
->> From what I know, the efuse driver cannot probe, because the nemc=20
->> =7Fdriver requests the complete memory resource, so the efuse driver's=20
->> =7Fdevm_platform_ioremap_resource() fails.
->>=20
->> I did send a patch to fix this=20
->> =7F(https://lore.kernel.org/lkml/551a8560261543c1decb1d4d1671ec4b7fa52fd=
-b.1582905653.git.hns@goldelico.com/),
->> but it's hard to have somebody merge it, because nobody maintains=20
->> =7Fdrivers/memory/.
->>=20
-> You are right, I cleaned up the changes made to support X1000's EFUSE=20
-> and rebase to clean 5.8-RC6, it still does not work properly, I think=20
-> we should drop this fix patch.
+Applied, thanks.
 
-The patch I mentioned was merged, so starting from 5.9-rc1 the efuse=20
-driver should work. Please resend this patch after 5.9-rc1 then.
-
-Thanks,
--Paul
-
->=20
->>> Fixes: 19c968222934 ("MIPS: DTS: CI20: make DM9000 Ethernet
->>> controller use NVMEM to find the default MAC address").
->>=20
->> That shouldn't be a fix IMHO - the devicetree was updated in one=20
->> =7Fcommit, the config should be updated in another. The "bug" here is=20
->> =7Fthat it wasn't done right away.
->>=20
-> Okay.
->>> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wa=
-nyeetech.com>
->>=20
->> Btw - when you add a Fixes: tag to fix a commit that is not for the=20
->> =7Fkernel currently in RC phase, you need to Cc linux-stable as well.
->>=20
-> Sure, I will pay attention next time.
->=20
-> Thanks and best regards!
->=20
->=20
->> Cheers,
->> -Paul
->>=20
->>> ---
->>>  arch/mips/configs/ci20_defconfig | 1 +
->>>  1 file changed, 1 insertion(+)
->>>=20
->>> diff --git a/arch/mips/configs/ci20_defconfig=20
->>> =7F=7Fb/arch/mips/configs/ci20_defconfig
->>> index f433fad16073..ba26ba4de09a 100644
->>> --- a/arch/mips/configs/ci20_defconfig
->>> +++ b/arch/mips/configs/ci20_defconfig
->>> @@ -140,6 +140,7 @@ CONFIG_INGENIC_OST=3Dy
->>>  CONFIG_MEMORY=3Dy
->>>  CONFIG_PWM=3Dy
->>>  CONFIG_PWM_JZ4740=3Dm
->>> +CONFIG_JZ4780_EFUSE=3Dy
->>>  CONFIG_EXT4_FS=3Dy
->>>  # CONFIG_DNOTIFY is not set
->>>  CONFIG_AUTOFS_FS=3Dy
->>> --
->>> 2.11.0
->>>=20
->>=20
-
+-- 
+Jens Axboe
 
