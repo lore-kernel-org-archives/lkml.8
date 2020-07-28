@@ -2,109 +2,167 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53ADC4345E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC21C43461
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F74620759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:21:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xlfvC9N/"
+	by mail.kernel.org (Postfix) with ESMTP id 22CEC20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:21:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgG1GVV (ORCPT
+        id S1727948AbgG1GVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:21:21 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41496 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727973AbgG1GVI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:21:08 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06S6KrVH058816;
-        Tue, 28 Jul 2020 01:20:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595917253;
-        bh=SAlHte2Rj/qJKt/tq4DOOPSVK0jp9XRydVDD3K/+T7k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=xlfvC9N/I/x8umGOG8XFL7hPQAv4d/b5GgL8D6F6s+TpDwli4Il/vaEi79H3Rg89m
-         41yhrUDX1QnpI7+oRFXWuk4h3ZSWlwlvubbEqXS0Rqk5j+JxvhI8CUEyEa945ZNeeF
-         /2cOAa2gNpu2JbJeY5Qe/W4cxRqglyNXaRCqCq/E=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06S6KruA041513
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 Jul 2020 01:20:53 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
- Jul 2020 01:20:53 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 28 Jul 2020 01:20:53 -0500
-Received: from [10.250.232.88] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06S6KnLQ066730;
-        Tue, 28 Jul 2020 01:20:50 -0500
-Subject: Re: [PATCH] can: m_can: Set device to software init mode before
- closing
-To:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-can@vger.kernel.org>
-CC:     <kuba@kernel.org>, <davem@davemloft.net>, <mkl@pengutronix.de>,
-        <wg@grandegger.com>, <sriram.dash@samsung.com>, <dmurphy@ti.com>
-References: <20200716042312.26989-1-faiz_abbas@ti.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <1491e746-6694-1c36-4bba-ac9f61d9ae6f@ti.com>
-Date:   Tue, 28 Jul 2020 11:50:48 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200716042312.26989-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 28 Jul 2020 02:21:06 -0400
+Received: from mga06.intel.com ([134.134.136.31]:26366 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727860AbgG1GVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 02:21:01 -0400
+IronPort-SDR: icqlQwHEHGbNddpNc6CN4XRLQtgWILYn7qw8UOJOJ/iE762x9CV1Fknosq9EjjhX7GhXJMqF33
+ 2IurGesQOlEQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="212681245"
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="212681245"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 23:20:56 -0700
+IronPort-SDR: VlRe0kE4IZ+SAp93BNM4mHHkG26qEW/bt1adkGZP7Nv8ca8WydhAw0wdEthVR85g4/0dvk00qi
+ 850q/82Zvx4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="320274417"
+Received: from jacob-builder.jf.intel.com ([10.7.199.155])
+  by orsmga008.jf.intel.com with ESMTP; 27 Jul 2020 23:20:56 -0700
+From:   Liu Yi L <yi.l.liu@intel.com>
+To:     alex.williamson@redhat.com, eric.auger@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, jun.j.tian@intel.com,
+        yi.y.sun@intel.com, jean-philippe@linaro.org, peterx@redhat.com,
+        hao.wu@intel.com, stefanha@gmail.com,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 11/15] vfio/type1: Allow invalidating first-level/stage IOMMU cache
+Date:   Mon, 27 Jul 2020 23:27:40 -0700
+Message-Id: <1595917664-33276-12-git-send-email-yi.l.liu@intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
+References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch provides an interface allowing the userspace to invalidate
+IOMMU cache for first-level page table. It is required when the first
+level IOMMU page table is not managed by the host kernel in the nested
+translation setup.
 
-On 16/07/20 9:53 am, Faiz Abbas wrote:
-> There might be some requests pending in the buffer when the
-> interface close sequence occurs. In some devices, these
-> pending requests might lead to the module not shutting down
-> properly when m_can_clk_stop() is called.
-> 
-> Therefore, move the device to init state before potentially
-> powering it down.
-> 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> ---
->  drivers/net/can/m_can/m_can.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
-> index 02c5795b7393..d0c458f7f6e1 100644
-> --- a/drivers/net/can/m_can/m_can.c
-> +++ b/drivers/net/can/m_can/m_can.c
-> @@ -1414,6 +1414,9 @@ static void m_can_stop(struct net_device *dev)
->  	/* disable all interrupts */
->  	m_can_disable_all_interrupts(cdev);
->  
-> +	/* Set init mode to disengage from the network */
-> +	m_can_config_endisable(cdev, true);
-> +
->  	/* set the state as STOPPED */
->  	cdev->can.state = CAN_STATE_STOPPED;
->  }
-> 
+Cc: Kevin Tian <kevin.tian@intel.com>
+CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Eric Auger <eric.auger@redhat.com>
+Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+---
+v1 -> v2:
+*) rename from "vfio/type1: Flush stage-1 IOMMU cache for nesting type"
+*) rename vfio_cache_inv_fn() to vfio_dev_cache_invalidate_fn()
+*) vfio_dev_cache_inv_fn() always successful
+*) remove VFIO_IOMMU_CACHE_INVALIDATE, and reuse VFIO_IOMMU_NESTING_OP
+---
+ drivers/vfio/vfio_iommu_type1.c | 42 +++++++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/vfio.h       |  3 +++
+ 2 files changed, 45 insertions(+)
 
-Gentle ping.
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 245436e..bf95a0f 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -3056,6 +3056,45 @@ static long vfio_iommu_handle_pgtbl_op(struct vfio_iommu *iommu,
+ 	return ret;
+ }
+ 
++static int vfio_dev_cache_invalidate_fn(struct device *dev, void *data)
++{
++	struct domain_capsule *dc = (struct domain_capsule *)data;
++	unsigned long arg = *(unsigned long *)dc->data;
++
++	iommu_uapi_cache_invalidate(dc->domain, dev, (void __user *)arg);
++	return 0;
++}
++
++static long vfio_iommu_invalidate_cache(struct vfio_iommu *iommu,
++					unsigned long arg)
++{
++	struct domain_capsule dc = { .data = &arg };
++	struct iommu_nesting_info *info;
++	int ret;
++
++	mutex_lock(&iommu->lock);
++	/*
++	 * Cache invalidation is required for any nesting IOMMU,
++	 * so no need to check system-wide PASID support.
++	 */
++	info = iommu->nesting_info;
++	if (!info || !(info->features & IOMMU_NESTING_FEAT_CACHE_INVLD)) {
++		ret = -EOPNOTSUPP;
++		goto out_unlock;
++	}
++
++	ret = vfio_get_nesting_domain_capsule(iommu, &dc);
++	if (ret)
++		goto out_unlock;
++
++	iommu_group_for_each_dev(dc.group->iommu_group, &dc,
++				 vfio_dev_cache_invalidate_fn);
++
++out_unlock:
++	mutex_unlock(&iommu->lock);
++	return ret;
++}
++
+ static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
+ 					unsigned long arg)
+ {
+@@ -3078,6 +3117,9 @@ static long vfio_iommu_type1_nesting_op(struct vfio_iommu *iommu,
+ 	case VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL:
+ 		ret = vfio_iommu_handle_pgtbl_op(iommu, false, arg + minsz);
+ 		break;
++	case VFIO_IOMMU_NESTING_OP_CACHE_INVLD:
++		ret = vfio_iommu_invalidate_cache(iommu, arg + minsz);
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 	}
+diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+index 9501cfb..48e2fb5 100644
+--- a/include/uapi/linux/vfio.h
++++ b/include/uapi/linux/vfio.h
+@@ -1225,6 +1225,8 @@ struct vfio_iommu_type1_pasid_request {
+  * +-----------------+-----------------------------------------------+
+  * | UNBIND_PGTBL    |      struct iommu_gpasid_bind_data            |
+  * +-----------------+-----------------------------------------------+
++ * | CACHE_INVLD     |      struct iommu_cache_invalidate_info       |
++ * +-----------------+-----------------------------------------------+
+  *
+  * returns: 0 on success, -errno on failure.
+  */
+@@ -1237,6 +1239,7 @@ struct vfio_iommu_type1_nesting_op {
+ 
+ #define VFIO_IOMMU_NESTING_OP_BIND_PGTBL	(0)
+ #define VFIO_IOMMU_NESTING_OP_UNBIND_PGTBL	(1)
++#define VFIO_IOMMU_NESTING_OP_CACHE_INVLD	(2)
+ 
+ #define VFIO_IOMMU_NESTING_OP		_IO(VFIO_TYPE, VFIO_BASE + 19)
+ 
+-- 
+2.7.4
 
-Thanks,
-Faiz
