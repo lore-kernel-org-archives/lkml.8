@@ -2,119 +2,174 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C72C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA13C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5BEE207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05EF2177B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:01:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MeAMExUN"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eyOucZIc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732548AbgG1S4s (ORCPT
+        id S1729356AbgG1TBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:56:48 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38682 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728782AbgG1S4s (ORCPT
+        Tue, 28 Jul 2020 15:01:15 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:55922 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728334AbgG1TBO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 14:56:48 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06SIukBo042254;
-        Tue, 28 Jul 2020 13:56:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595962606;
-        bh=TsBj4IyXyiAC4vsRIW7YyeVgfCcS4eXV9QnjvdxD88E=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=MeAMExUNGridwucgq9A9A8v3aBYvEJlze23Bzj7tKfJtGmoR136GXiDn/V4spyTCZ
-         t/Cw46I3hVP+uun5EGolqwOe3tGigNwhDhUkQSkRp6Yf5wihgZqzIf0YP6Tphz2Xfp
-         bl3lCeC6mi6rkOYxD0Tc4/IZNz/x/sjuyEFNxu4s=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06SIukBP000847
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 Jul 2020 13:56:46 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
- Jul 2020 13:56:46 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 28 Jul 2020 13:56:45 -0500
-Received: from [10.250.35.195] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SIujXk051016;
-        Tue, 28 Jul 2020 13:56:45 -0500
-Subject: Re: [PATCH v4 2/4] power: supply: bq27xxx_battery: Add the BQ27561
- Battery monitor
-To:     Sebastian Reichel <sre@kernel.org>
-CC:     <afd@ti.com>, <pali@kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh@kernel.org>
-References: <20200728141113.31518-1-dmurphy@ti.com>
- <20200728141113.31518-2-dmurphy@ti.com>
- <20200728181755.6bkhp7j3cqtpooof@earth.universe>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <7035eebd-0324-6cf0-1de7-75eb4524cb94@ti.com>
-Date:   Tue, 28 Jul 2020 13:56:45 -0500
+        Tue, 28 Jul 2020 15:01:14 -0400
+Received: from [192.168.254.32] (unknown [47.187.206.220])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4BC4420B4908;
+        Tue, 28 Jul 2020 12:01:13 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4BC4420B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595962873;
+        bh=zjLEFTK4Orgld2wOZdcW94az96+FP6KvaYi2k5aZSPI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=eyOucZIcQn3R6OEntESHtyelkaFVjV2UK/nFkDNLCPLGXdph7ZdzSj8TIdGEPaGtU
+         HNfLQEbH03jQTrCFJfGmYdF0TdR5xD3V/YFVr3NEjScCz38PMbJbBy0OdJ42NGgnrr
+         Ehzo1Gfr/DDSOvCbbINwW1aQjqHKXsQAPhe9ttIA=
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Message-ID: <8b28f4a5-2d9e-0686-40e5-2ea9e37c5933@linux.microsoft.com>
+Date:   Tue, 28 Jul 2020 14:01:12 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200728181755.6bkhp7j3cqtpooof@earth.universe>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sebastian
+I am working on a response to this. I will send it soon.
 
-On 7/28/20 1:17 PM, Sebastian Reichel wrote:
-> Hi,
->
-> On Tue, Jul 28, 2020 at 09:11:11AM -0500, Dan Murphy wrote:
->> Add the Texas Instruments BQ27561 battery monitor.  The register address
->> map is laid out the same as compared to other devices within the file.
->> The battery status register has differing bits to determine if the
->> battery is full, discharging or dead.
+Thanks.
+
+Madhavan
+
+On 7/28/20 12:31 PM, Andy Lutomirski wrote:
+>> On Jul 28, 2020, at 6:11 AM, madvenka@linux.microsoft.com wrote:
 >>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   drivers/power/supply/bq27xxx_battery.c     | 68 +++++++++++++++++++++-
->>   drivers/power/supply/bq27xxx_battery_i2c.c |  2 +
->>   include/linux/power/bq27xxx_battery.h      |  1 +
->>   3 files changed, 70 insertions(+), 1 deletion(-)
+>> ﻿From: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
 >>
->> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
->> index 942c92127b6d..654d38bcd7e0 100644
->> --- a/drivers/power/supply/bq27xxx_battery.c
->> +++ b/drivers/power/supply/bq27xxx_battery.c
->> @@ -43,6 +43,7 @@
->>    * http://www.ti.com/product/bq27411-g1
->>    * http://www.ti.com/product/bq27441-g1
->>    * http://www.ti.com/product/bq27621-g1
->> + * https://www.ti.com/lit/gpn/bq27z561
-> Applying this failed, because I applied a patch converting the
-> http urls to https. I would have fixed this silently, but it made
-> me notice the chip name is bq27z561 instead of simply bq27561.
+>> The kernel creates the trampoline mapping without any permissions. When
+>> the trampoline is executed by user code, a page fault happens and the
+>> kernel gets control. The kernel recognizes that this is a trampoline
+>> invocation. It sets up the user registers based on the specified
+>> register context, and/or pushes values on the user stack based on the
+>> specified stack context, and sets the user PC to the requested target
+>> PC. When the kernel returns, execution continues at the target PC.
+>> So, the kernel does the work of the trampoline on behalf of the
+>> application.
+> This is quite clever, but now I’m wondering just how much kernel help
+> is really needed. In your series, the trampoline is an non-executable
+> page.  I can think of at least two alternative approaches, and I'd
+> like to know the pros and cons.
 >
-> You named it without the 'z' everywhere, is there a reason?
-> Searching for bq27561 basically only finds your patches and
-> you decided not to drop the z for the bq28z610.
-
-At the time I was working on the BQ27750 as well and that has no letters 
-in it so I was following that part number.
-
-I will add the z in and rebase so the patch applies cleanly
-
-Dan
-
+> 1. Entirely userspace: a return trampoline would be something like:
 >
-> -- Sebastian
+> 1:
+> pushq %rax
+> pushq %rbc
+> pushq %rcx
+> ...
+> pushq %r15
+> movq %rsp, %rdi # pointer to saved regs
+> leaq 1b(%rip), %rsi # pointer to the trampoline itself
+> callq trampoline_handler # see below
+>
+> You would fill a page with a bunch of these, possibly compacted to get
+> more per page, and then you would remap as many copies as needed.  The
+> 'callq trampoline_handler' part would need to be a bit clever to make
+> it continue to work despite this remapping.  This will be *much*
+> faster than trampfd. How much of your use case would it cover?  For
+> the inverse, it's not too hard to write a bit of asm to set all
+> registers and jump somewhere.
+>
+> 2. Use existing kernel functionality.  Raise a signal, modify the
+> state, and return from the signal.  This is very flexible and may not
+> be all that much slower than trampfd.
+>
+> 3. Use a syscall.  Instead of having the kernel handle page faults,
+> have the trampoline code push the syscall nr register, load a special
+> new syscall nr into the syscall nr register, and do a syscall. On
+> x86_64, this would be:
+>
+> pushq %rax
+> movq __NR_magic_trampoline, %rax
+> syscall
+>
+> with some adjustment if the stack slot you're clobbering is important.
+>
+>
+> Also, will using trampfd cause issues with various unwinders?  I can
+> easily imagine unwinders expecting code to be readable, although this
+> is slowly going away for other reasons.
+>
+> All this being said, I think that the kernel should absolutely add a
+> sensible interface for JITs to use to materialize their code.  This
+> would integrate sanely with LSMs and wouldn't require hacks like using
+> files, etc.  A cleverly designed JIT interface could function without
+> seriailization IPIs, and even lame architectures like x86 could
+> potentially avoid shootdown IPIs if the interface copied code instead
+> of playing virtual memory games.  At its very simplest, this could be:
+>
+> void *jit_create_code(const void *source, size_t len);
+>
+> and the result would be a new anonymous mapping that contains exactly
+> the code requested.  There could also be:
+>
+> int jittfd_create(...);
+>
+> that does something similar but creates a memfd.  A nicer
+> implementation for short JIT sequences would allow appending more code
+> to an existing JIT region.  On x86, an appendable JIT region would
+> start filled with 0xCC, and I bet there's a way to materialize new
+> code into a previously 0xcc-filled virtual page wthout any
+> synchronization.  One approach would be to start with:
+>
+> <some code>
+> 0xcc
+> 0xcc
+> ...
+> 0xcc
+>
+> and to create a whole new page like:
+>
+> <some code>
+> <some more code>
+> 0xcc
+> ...
+> 0xcc
+>
+> so that the only difference is that some code changed to some more
+> code.  Then replace the PTE to swap from the old page to the new page,
+> and arrange to avoid freeing the old page until we're sure it's gone
+> from all TLBs.  This may not work if <some more code> spans a page
+> boundary.  The #BP fixup would zap the TLB and retry.  Even just
+> directly copying code over some 0xcc bytes almost works, but there's a
+> nasty corner case involving instructions that fetch I$ fetch
+> boundaries.  I'm not sure to what extent I$ snooping helps.
+>
+> --Andy
+
