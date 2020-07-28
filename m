@@ -2,185 +2,217 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56605C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86718C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 300112065E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:06:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cIZteSBn"
+	by mail.kernel.org (Postfix) with ESMTP id 6A81A207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgG1HGX (ORCPT
+        id S1727804AbgG1HIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:06:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51748 "EHLO
+        Tue, 28 Jul 2020 03:08:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbgG1HGW (ORCPT
+        with ESMTP id S1727020AbgG1HIO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:06:22 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 412C5C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:06:22 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id 88so17151172wrh.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:06:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=18JVd05NDt1O4RkEqrurrFak6JROUneo1UMNNJyfark=;
-        b=cIZteSBnz5RY94m6zmiu7Ou8N7ExRsgg1A+L0HkR721f3i0LjBRE4Qna4hIMLUC69e
-         GdvnDP9MaNS4YgkOQjlTO4Wgjc4xPTObruZAO9ZwUeXUzweZhyjhIIbqNvlyBSdS0L2S
-         IpiOzT3KVF92dktX0LWJj9j/19L8g/heNKCH1VGAjy0MgMiyBrzRVOAuCLqglmwG+b8+
-         bArdLk8NeI3d2wvSLJ1S3221Roscn5fZQlF0ov2TPZNGC2GHd5sLcx20I8xbS6+jOOOp
-         kWawpU8ow2KjMvy77YqmfkEd+MEjcXzdqCyEgHsE7w+5x3Czgg78qy0LhG8ZmbOyNO7g
-         6few==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=18JVd05NDt1O4RkEqrurrFak6JROUneo1UMNNJyfark=;
-        b=gy8aslrOGkWhwljIHqGeJfFtcXBItpa36SifSLxBm86uM5zI8hUdf6qNZbaj7C6rj1
-         r6zo6vw0TZYbqk3Fqn9Y3EbFAnKjrJlOSTvXZhtIUSOdSyi8ziBIKejZM6ZyVoGgDeIa
-         KUHsnWNI0qDuTYGicDietksS3N4Xk7Hp521LR1pBcMq5n2pVF2RvSIlGwfhZlWGHeBse
-         Wt+Lvn51YEMehUqyCdegWWaywzL/RYIQmWg0V9DviywuOK9hUxFyX6Sh23v1EeWSWCwK
-         S2OLnokD8pYqQfvnzh59/uzkmj6jASsy5t8yAINmTBNTYGnRZExXedWV90NVlkiYPOrS
-         oEfA==
-X-Gm-Message-State: AOAM530e0oqVfmOs5DJ2zF8vAFk7OswPVHp0u47Sy6rrV9UCzEWsDTxZ
-        FkO8DMLI+xwinbk0O7aEooz+Pw==
-X-Google-Smtp-Source: ABdhPJwdH8Oj6YmPd+gs0q/N5LnhN2gDBm1kpbDMFOrtwFsinnwiR+ovQdJhe0KtDapmlkJ3s/T2OA==
-X-Received: by 2002:a5d:4907:: with SMTP id x7mr25415225wrq.166.1595919980947;
-        Tue, 28 Jul 2020 00:06:20 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id k1sm7339312wrw.91.2020.07.28.00.06.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 00:06:20 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 08:06:18 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] mfd: dm355evm_msp: Convert LEDs to GPIO descriptor table
-Message-ID: <20200728070618.GD1850026@dell>
-References: <20200727072844.195723-1-linus.walleij@linaro.org>
+        Tue, 28 Jul 2020 03:08:14 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9E34C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:08:14 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k0JiV-0003di-9B; Tue, 28 Jul 2020 09:08:03 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k0JiT-0004YI-RR; Tue, 28 Jul 2020 09:08:01 +0200
+Date:   Tue, 28 Jul 2020 09:08:01 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Martin Botka <martin.botka1@gmail.com>
+Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH RFC 3/6] pwm: pwm-qti-lpg: Add PWM driver for QTI LPG
+ module
+Message-ID: <20200728070801.evcfnq25a2f5d55r@pengutronix.de>
+References: <20200724213659.273599-1-martin.botka1@gmail.com>
+ <20200724213659.273599-4-martin.botka1@gmail.com>
+ <20200727200954.pzw6swdboa65474i@pengutronix.de>
+ <CADQ2G_EMUdf2BEwjDOCyz_ccMTsjMBM3GmpRe+n6V9-DJGr-Kg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="65wsexfumroshxqm"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200727072844.195723-1-linus.walleij@linaro.org>
+In-Reply-To: <CADQ2G_EMUdf2BEwjDOCyz_ccMTsjMBM3GmpRe+n6V9-DJGr-Kg@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020, Linus Walleij wrote:
 
-> This converts the DaVinci DM355EVM LEDs to use GPIO
-> descriptor look-ups.
-> 
-> Cc: Sekhar Nori <nsekhar@ti.com>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/mfd/dm355evm_msp.c | 49 ++++++++++++++++++++++++++++----------
->  1 file changed, 37 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/mfd/dm355evm_msp.c b/drivers/mfd/dm355evm_msp.c
-> index 151c36ce7343..af24712d605e 100644
-> --- a/drivers/mfd/dm355evm_msp.c
-> +++ b/drivers/mfd/dm355evm_msp.c
-> @@ -12,6 +12,7 @@
->  #include <linux/module.h>
->  #include <linux/err.h>
->  #include <linux/gpio.h>
-> +#include <linux/gpio/machine.h>
->  #include <linux/leds.h>
->  #include <linux/i2c.h>
->  #include <linux/mfd/dm355evm_msp.h>
-> @@ -260,31 +261,55 @@ static int add_children(struct i2c_client *client)
->  
->  	/* LED output */
->  	if (msp_has_leds()) {
-> -#define GPIO_LED(l)	.name = l, .active_low = true
->  		static struct gpio_led evm_leds[] = {
-> -			{ GPIO_LED("dm355evm::ds14"),
-> +			{ .name = "dm355evm::ds14",
->  				.default_trigger = "heartbeat", },
-> -			{ GPIO_LED("dm355evm::ds15"),
-> +			{ .name = "dm355evm::ds15",
->  				.default_trigger = "mmc0", },
-> -			{ GPIO_LED("dm355evm::ds16"),
-> +			{ .name = "dm355evm::ds16",
->  				/* could also be a CE-ATA drive */
->  				.default_trigger = "mmc1", },
-> -			{ GPIO_LED("dm355evm::ds17"),
-> +			{ .name = "dm355evm::ds17",
->  				.default_trigger = "nand-disk", },
-> -			{ GPIO_LED("dm355evm::ds18"), },
-> -			{ GPIO_LED("dm355evm::ds19"), },
-> -			{ GPIO_LED("dm355evm::ds20"), },
-> -			{ GPIO_LED("dm355evm::ds21"), },
-> +			{ .name = "dm355evm::ds18", },
-> +			{ .name = "dm355evm::ds19", },
-> +			{ .name = "dm355evm::ds20", },
-> +			{ .name = "dm355evm::ds21", },
->  		};
-> -#undef GPIO_LED
->  
->  		struct gpio_led_platform_data evm_led_data = {
->  			.num_leds	= ARRAY_SIZE(evm_leds),
->  			.leds		= evm_leds,
->  		};
->  
-> -		for (i = 0; i < ARRAY_SIZE(evm_leds); i++)
-> -			evm_leds[i].gpio = i + dm355evm_msp_gpio.base;
-> +		static struct gpiod_lookup_table evm_leds_gpio_table = {
-> +			.dev_id = "leds-gpio",
-> +			.table = {
-> +				/*
-> +				 * These GPIOs are on the dm355evm_msp
-> +				 * GPIO chip at index 0..7
-> +				 */
-> +				GPIO_LOOKUP_IDX("dm355evm_msp", 0, NULL,
-> +						0, GPIO_ACTIVE_LOW),
-> +				GPIO_LOOKUP_IDX("dm355evm_msp", 1, NULL,
-> +						1, GPIO_ACTIVE_LOW),
-> +				GPIO_LOOKUP_IDX("dm355evm_msp", 2, NULL,
-> +						2, GPIO_ACTIVE_LOW),
-> +				GPIO_LOOKUP_IDX("dm355evm_msp", 3, NULL,
-> +						3, GPIO_ACTIVE_LOW),
-> +				GPIO_LOOKUP_IDX("dm355evm_msp", 4, NULL,
-> +						4, GPIO_ACTIVE_LOW),
-> +				GPIO_LOOKUP_IDX("dm355evm_msp", 5, NULL,
-> +						5, GPIO_ACTIVE_LOW),
-> +				GPIO_LOOKUP_IDX("dm355evm_msp", 6, NULL,
-> +						6, GPIO_ACTIVE_LOW),
-> +				GPIO_LOOKUP_IDX("dm355evm_msp", 7, NULL,
-> +						7, GPIO_ACTIVE_LOW),
-> +				{ },
-> +			},
-> +		};
+--65wsexfumroshxqm
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Horrible.
+Hello Martin,
 
-Can this (and the table above) be placed somewhere else and simply
-referenced from here?  Tables are usually placed globally at the top
-of the file to prevent this kind of formatting craziness from
-appearing inside functions.
+On Mon, Jul 27, 2020 at 11:16:57PM +0200, Martin Botka wrote:
+> Mo 27. 7. 2020 at 22:10 Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.d=
+e> wrote:
+> >
+> > On Fri, Jul 24, 2020 at 11:36:53PM +0200, Martin Botka wrote:
+> > > From: Fenglin Wu <fenglinw@codeaurora.org>
+> > >
+> > > Add pwm_chip to support QTI LPG module and export LPG channels as
+> > > PWM devices for consumer drivers' usage.
+> > >
+> > > Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
+> > > [martin.botka1@gmail.com: Fast-forward the driver from kernel 4.14 to=
+ 5.8]
+> > > Signed-off-by: Martin Botka <martin.botka1@gmail.com>
+> > > ---
+> > >  drivers/pwm/Kconfig       |   10 +
+> > >  drivers/pwm/Makefile      |    1 +
+> > >  drivers/pwm/pwm-qti-lpg.c | 1284 +++++++++++++++++++++++++++++++++++=
+++
+> > >  3 files changed, 1295 insertions(+)
+> > >  create mode 100644 drivers/pwm/pwm-qti-lpg.c
+> > >
+> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > > index cb8d739067d2..8a52d6884a9a 100644
+> > > --- a/drivers/pwm/Kconfig
+> > > +++ b/drivers/pwm/Kconfig
+> > > @@ -399,6 +399,16 @@ config PWM_RCAR
+> > >         To compile this driver as a module, choose M here: the module
+> > >         will be called pwm-rcar.
+> > >
+> > > +config PWM_QTI_LPG
+> > > +     tristate "Qualcomm Technologies, Inc. LPG driver"
+> > > +     depends on  MFD_SPMI_PMIC && OF
+> > > +     help
+> > > +       This driver supports the LPG (Light Pulse Generator) module f=
+ound in
+> > > +       Qualcomm Technologies, Inc. PMIC chips. Each LPG channel can =
+be
+> > > +       configured to operate in PWM mode to output a fixed amplitude=
+ with
+> > > +       variable duty cycle or in LUT (Look up table) mode to output =
+PWM
+> > > +       signal with a modulated amplitude.
+> > > +
+> > >  config PWM_RENESAS_TPU
+> > >       tristate "Renesas TPU PWM support"
+> > >       depends on ARCH_RENESAS || COMPILE_TEST
+> > > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> > > index a59c710e98c7..3555a6aa3f33 100644
+> > > --- a/drivers/pwm/Makefile
+> > > +++ b/drivers/pwm/Makefile
+> > > @@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_PCA9685)   +=3D pwm-pca9685.o
+> > >  obj-$(CONFIG_PWM_PUV3)               +=3D pwm-puv3.o
+> > >  obj-$(CONFIG_PWM_PXA)                +=3D pwm-pxa.o
+> > >  obj-$(CONFIG_PWM_RCAR)               +=3D pwm-rcar.o
+> > > +obj-$(CONFIG_PWM_QTI_LPG)    +=3D pwm-qti-lpg.o
+> >
+> > Please keep this list alphabetically sorted.
+>=20
+> OK
+>=20
+> >
+> > >  obj-$(CONFIG_PWM_RENESAS_TPU)        +=3D pwm-renesas-tpu.o
+> > >  obj-$(CONFIG_PWM_ROCKCHIP)   +=3D pwm-rockchip.o
+> > >  obj-$(CONFIG_PWM_SAMSUNG)    +=3D pwm-samsung.o
+> > > diff --git a/drivers/pwm/pwm-qti-lpg.c b/drivers/pwm/pwm-qti-lpg.c
+> > > new file mode 100644
+> > > index 000000000000..d24c3b3a3d8c
+> > > --- /dev/null
+> > > +++ b/drivers/pwm/pwm-qti-lpg.c
+> > > @@ -0,0 +1,1284 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> > > + */
+> > > +
+> > > +#define pr_fmt(fmt) "%s: " fmt, __func__
+> >
+> > This smells like debug stuff. Please drop this.
+>=20
+> What do you mean ?
+> The #define pr_fmt(fmt) or the tons of REG definitions ?
 
-> +		gpiod_add_lookup_table(&evm_leds_gpio_table);
->  
->  		/* NOTE:  these are the only fully programmable LEDs
->  		 * on the board, since GPIO-61/ds22 (and many signals
+Either drop pr_fmt or at least don't have __func__ in it. This doesn't
+belong into the kernel log (in the non-debug case at least).
+(For debugging I like:
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+	#define pr_fmt(fmt) "%s:%d: " fmt, __func__, __LINE__
+
+which helps finding the right printk line in the code from a given
+output in functions with many printks.)
+
+I don't mind the REG definitions, though aligning the values vertically
+is common.
+
+> > > +static const struct pwm_ops qpnp_lpg_pwm_ops =3D {
+> > > +     .config =3D qpnp_lpg_pwm_config,
+> > > +     .config_extend =3D qpnp_lpg_pwm_config_extend,
+> > > +     .get_output_type_supported =3D qpnp_lpg_pwm_output_types_suppor=
+ted,
+> > > +     .set_output_type =3D qpnp_lpg_pwm_set_output_type,
+> > > +     .set_output_pattern =3D qpnp_lpg_pwm_set_output_pattern,
+> > > +     .enable =3D qpnp_lpg_pwm_enable,
+> > > +     .disable =3D qpnp_lpg_pwm_disable,
+> >
+> > As already noted in the former patch: Please implement .apply() and
+> > .get_state().
+>=20
+> So drop:
+>     .get_output_type_supported =3D qpnp_lpg_pwm_output_types_supported,
+>     .set_output_type =3D qpnp_lpg_pwm_set_output_type,
+>     .set_output_pattern =3D qpnp_lpg_pwm_set_output_pattern,
+>=20
+> Ad implement implement .apply and .get_state if i understood you correctl=
+y.
+> Right ?
+
+ack
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--65wsexfumroshxqm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8fzs4ACgkQwfwUeK3K
+7Ak/YAf9FSlak+4n7XI61g7I4xuJ3J9+gwsKT9NvQ5nPGRpTWMcpgRBLUtTN7hQe
+bsJTuOqQwYX7F2tIZOUXHfED/EB5maLbAlMEVvsukBc9Igmt1SZktjnL/XZWiVKK
+auVqqp1q30K1Sq+rbZPkrhRjzY0PZkE9/UqE0TDEuwAg8FjZfbsg4MummLiQfWuk
+FH7Z94j5Q/CcoGq/pDaK8/fur2Z0s1ea2UDh+GIGjoLHnMz5i5CcqYg5MrdfzTKn
+3u/42Jy60r2SWDGkF7F1ghfoxsTlKPc2Auv40DFo+D448mNm//j0nQ6/ilF+wGFf
+jcUQdplt8Pdx+VfXcAMAd6IJ95p3QQ==
+=WSc0
+-----END PGP SIGNATURE-----
+
+--65wsexfumroshxqm--
