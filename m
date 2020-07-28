@@ -2,182 +2,249 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5F6C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026A5C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA1EE2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEBAD205CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:25:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="BFhBYAbl"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="krXzsB2y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgG1LZ0 (ORCPT
+        id S1729086AbgG1LZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 07:25:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728973AbgG1LZY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 07:25:24 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01073C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 04:25:24 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f7so17942142wrw.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 04:25:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=01W6bDMMr/9SeqGNAca6mqzfZvjZHQBkuzzpt+5sERc=;
-        b=BFhBYAblS2kS48Qsdd8d02m5F9TXV37ymz7H00YDmaAEGVoVo8qIPLYY0UjfGymCAb
-         IGC4u6E+FaDCX2UG1DFEWdezGB4HLfkskioBHmDLE0eNEL9crb2QqmOSuOAkCnQQRqqj
-         rJbPYAe/5RDLRTNq/EyxF8NR5rhQv3f3X1T8We2ulAi3EDXCV6DjRkwdtY/DxscKFgWh
-         QVkAvZa76E2nMsHqw5QtylHxdrFpK8dI2qJn5KpJfiFMpPcnPsHEHPXkqmJplEPLRIGg
-         dU2cZrm6iJW+EATyj4dd9/yfNa+j3YQvJEBtF9dpcbVvSKQiooJqMkk8brUC5PaB7iCK
-         rx1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=01W6bDMMr/9SeqGNAca6mqzfZvjZHQBkuzzpt+5sERc=;
-        b=UEXa95IkbS8sMnQ/xtPfvE6gI2BA7PBzSeYifkkZ5glLXzX6cdgloplk2lu+8a9w3E
-         GlYRJTuZmRdgQ8FBcMX7iS/KQP7Fd96ZEbfN8er68QulbPJ5JHX9vzQO7jDg9oiT9DTG
-         yth5Lhp5643S2CwzHQs+KcUhpZI6/IdpChSIjvFET7FaSTsyXgy721QgfIGVBZtagCYS
-         WyObapognCLuuR3nzh39w4y4mwC0qyvs72YpjIg1O2j5zI6yqjR4n0QxIGu6z8EFiN7q
-         u0yLgPweEApyPo3901YBKPAf7Ymhl9Ly6y8yL9Zv+dhlIV8+xOOmF6oZUeAYhDJ0tUBI
-         nbUg==
-X-Gm-Message-State: AOAM531CXoygLUJBGUKgP/u8aCVrNZ1BjMG+zwK7osBg5MzAkJThMHCE
-        QTBf/HxY6A258LrHQASi2ESx13dZn3JW7CaJlEEi2w==
-X-Google-Smtp-Source: ABdhPJyW96+nJG/qGUJ5CLd6oUoQmnituQIg/MeTxa60UlVUr5zPOJnzE9jCKFnkSxX5KeQi//ytGNtBOAOj/9zBu2U=
-X-Received: by 2002:a5d:5383:: with SMTP id d3mr17563956wrv.42.1595935522766;
- Tue, 28 Jul 2020 04:25:22 -0700 (PDT)
+        Tue, 28 Jul 2020 07:25:48 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:47180 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729071AbgG1LZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 07:25:45 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595935544; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=8upMbsqwYExTRhsaJQnXRaraZZZZtTNHPhUFTDZNV7g=;
+ b=krXzsB2yAl2vGDOEDA1MnxUF/OzSFZzeuszXdZ/Klwhl7JP88fGbIbGSJwTd3unoRMgLXTxA
+ kmx4ri1XZGPJcIzCWNi6z3KT9ms0/ZKVF8NWnLteo/NQUmJuk2Z76JtuI0d50pT83++JMqhX
+ RtBao7XRKYkGmgfl7mOKZ4kbQ70=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5f200b27298a38b616fb7034 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 11:25:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CD6DEC433CB; Tue, 28 Jul 2020 11:25:26 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CE63FC433CA;
+        Tue, 28 Jul 2020 11:25:25 +0000 (UTC)
 MIME-Version: 1.0
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <5fadf9256d130d447e3c66a0c86ceeba05c47fa4.1594230107.git-series.maxime@cerno.tech>
-In-Reply-To: <5fadf9256d130d447e3c66a0c86ceeba05c47fa4.1594230107.git-series.maxime@cerno.tech>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Tue, 28 Jul 2020 12:25:07 +0100
-Message-ID: <CAPY8ntA-Ywzk6usF0cgTLZ_YtAP3FD1RM9duJTu1A7+sP=DUjw@mail.gmail.com>
-Subject: Re: [PATCH v4 28/78] drm/vc4: encoder: Add finer-grained encoder callbacks
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Jul 2020 16:55:25 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Odelu Kukatla <okukatla@codeaurora.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v3 1/7] dt-bindings: interconnect: single yaml file for
+ RPMh interconnect drivers
+In-Reply-To: <20200728023811.5607-2-jonathan@marek.ca>
+References: <20200728023811.5607-1-jonathan@marek.ca>
+ <20200728023811.5607-2-jonathan@marek.ca>
+Message-ID: <bcf1b1b105dbb33b0377597b215925ef@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime
+On 2020-07-28 08:08, Jonathan Marek wrote:
+> These two bindings are almost identical, so combine them into one. This
+> will make it easier to add the sm8150 and sm8250 interconnect bindings.
+> 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 
-On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> In the BCM2711, the setup of the HVS, pixelvalve and HDMI controller
-> requires very precise ordering and timing that the regular atomic callbacks
-> don't provide. Let's add new callbacks on top of the regular ones to be
-> able to split the configuration as needed.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
 > ---
->  drivers/gpu/drm/vc4/vc4_crtc.c | 19 +++++++++++++++++++
->  drivers/gpu/drm/vc4/vc4_drv.h  |  7 +++++++
->  2 files changed, 26 insertions(+)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-> index b7b0e19e2fe1..d0b326e1df0a 100644
-> --- a/drivers/gpu/drm/vc4/vc4_crtc.c
-> +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-> @@ -389,6 +389,8 @@ static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
->  {
->         struct drm_device *dev = crtc->dev;
->         struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
-> +       struct drm_encoder *encoder = vc4_get_crtc_encoder(crtc);
-> +       struct vc4_encoder *vc4_encoder = to_vc4_encoder(encoder);
->         int ret;
->
->         require_hvs_enabled(dev);
-> @@ -401,10 +403,16 @@ static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
->         ret = wait_for(!(CRTC_READ(PV_V_CONTROL) & PV_VCONTROL_VIDEN), 1);
->         WARN_ONCE(ret, "Timeout waiting for !PV_VCONTROL_VIDEN\n");
->
-> +       if (vc4_encoder->post_crtc_disable)
-> +               vc4_encoder->post_crtc_disable(encoder);
-> +
->         CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) & ~PV_CONTROL_EN);
->
->         vc4_hvs_atomic_disable(crtc, old_state);
->
-> +       if (vc4_encoder->post_crtc_powerdown)
-> +               vc4_encoder->post_crtc_powerdown(encoder);
-> +
->         /*
->          * Make sure we issue a vblank event after disabling the CRTC if
->          * someone was waiting it.
-> @@ -424,6 +432,8 @@ static void vc4_crtc_atomic_enable(struct drm_crtc *crtc,
->  {
->         struct drm_device *dev = crtc->dev;
->         struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
-> +       struct drm_encoder *encoder = vc4_get_crtc_encoder(crtc);
-> +       struct vc4_encoder *vc4_encoder = to_vc4_encoder(encoder);
->
->         require_hvs_enabled(dev);
->
-> @@ -434,15 +444,24 @@ static void vc4_crtc_atomic_enable(struct drm_crtc *crtc,
->
->         vc4_hvs_atomic_enable(crtc, old_state);
->
-> +       if (vc4_encoder->pre_crtc_configure)
-> +               vc4_encoder->pre_crtc_configure(encoder);
-> +
->         vc4_crtc_config_pv(crtc);
->
->         CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) | PV_CONTROL_EN);
->
-> +       if (vc4_encoder->pre_crtc_enable)
-> +               vc4_encoder->pre_crtc_enable(encoder);
-> +
->         /* When feeding the transposer block the pixelvalve is unneeded and
->          * should not be enabled.
->          */
->         CRTC_WRITE(PV_V_CONTROL,
->                    CRTC_READ(PV_V_CONTROL) | PV_VCONTROL_VIDEN);
-> +
-> +       if (vc4_encoder->post_crtc_enable)
-> +               vc4_encoder->post_crtc_enable(encoder);
->  }
->
->  static enum drm_mode_status vc4_crtc_mode_valid(struct drm_crtc *crtc,
-> diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-> index dfcc684f5d28..251fcc35530c 100644
-> --- a/drivers/gpu/drm/vc4/vc4_drv.h
-> +++ b/drivers/gpu/drm/vc4/vc4_drv.h
-> @@ -439,6 +439,13 @@ struct vc4_encoder {
->         struct drm_encoder base;
->         enum vc4_encoder_type type;
->         u32 clock_select;
-> +
-> +       void (*pre_crtc_configure)(struct drm_encoder *encoder);
-> +       void (*pre_crtc_enable)(struct drm_encoder *encoder);
-> +       void (*post_crtc_enable)(struct drm_encoder *encoder);
-> +
-> +       void (*post_crtc_disable)(struct drm_encoder *encoder);
-> +       void (*post_crtc_powerdown)(struct drm_encoder *encoder);
->  };
->
->  static inline struct vc4_encoder *
-> --
-> git-series 0.9.1
+>  .../{qcom,sdm845.yaml => qcom,rpmh.yaml}      | 20 ++++-
+>  .../bindings/interconnect/qcom,sc7180.yaml    | 85 -------------------
+>  2 files changed, 17 insertions(+), 88 deletions(-)
+>  rename
+> Documentation/devicetree/bindings/interconnect/{qcom,sdm845.yaml =>
+> qcom,rpmh.yaml} (76%)
+>  delete mode 100644
+> Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+> b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
+> similarity index 76%
+> rename from 
+> Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+> rename to Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
+> index 74536747b51d..6a457f914bb5 100644
+> --- a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
+> @@ -1,16 +1,17 @@
+>  # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas/interconnect/qcom,sdm845.yaml#
+> +$id: http://devicetree.org/schemas/interconnect/qcom,rpmh.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+> 
+> -title:  Qualcomm SDM845 Network-On-Chip Interconnect
+> +title:  Qualcomm RPMh Network-On-Chip Interconnect
+> 
+>  maintainers:
+>    - Georgi Djakov <georgi.djakov@linaro.org>
+> +  - Odelu Kukatla <okukatla@codeaurora.org>
+> 
+>  description: |
+> -   SDM845 interconnect providers support system bandwidth requirements 
+> through
+> +   RPMh interconnect providers support system bandwidth requirements 
+> through
+>     RPMh hardware accelerators known as Bus Clock Manager (BCM). The 
+> provider is
+>     able to communicate with the BCM through the Resource State
+> Coordinator (RSC)
+>     associated with each execution environment. Provider nodes must 
+> point to at
+> @@ -23,6 +24,19 @@ properties:
+> 
+>    compatible:
+>      enum:
+> +      - qcom,sc7180-aggre1-noc
+> +      - qcom,sc7180-aggre2-noc
+> +      - qcom,sc7180-camnoc-virt
+> +      - qcom,sc7180-compute-noc
+> +      - qcom,sc7180-config-noc
+> +      - qcom,sc7180-dc-noc
+> +      - qcom,sc7180-gem-noc
+> +      - qcom,sc7180-ipa-virt
+> +      - qcom,sc7180-mc-virt
+> +      - qcom,sc7180-mmss-noc
+> +      - qcom,sc7180-npu-noc
+> +      - qcom,sc7180-qup-virt
+> +      - qcom,sc7180-system-noc
+>        - qcom,sdm845-aggre1-noc
+>        - qcom,sdm845-aggre2-noc
+>        - qcom,sdm845-config-noc
+> diff --git
+> a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+> b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+> deleted file mode 100644
+> index d01bac80d416..000000000000
+> --- a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+> +++ /dev/null
+> @@ -1,85 +0,0 @@
+> -# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> -%YAML 1.2
+> ----
+> -$id: http://devicetree.org/schemas/interconnect/qcom,sc7180.yaml#
+> -$schema: http://devicetree.org/meta-schemas/core.yaml#
+> -
+> -title:  Qualcomm SC7180 Network-On-Chip Interconnect
+> -
+> -maintainers:
+> -  - Odelu Kukatla <okukatla@codeaurora.org>
+> -
+> -description: |
+> -   SC7180 interconnect providers support system bandwidth requirements 
+> through
+> -   RPMh hardware accelerators known as Bus Clock Manager (BCM). The 
+> provider is
+> -   able to communicate with the BCM through the Resource State
+> Coordinator (RSC)
+> -   associated with each execution environment. Provider nodes must 
+> point to at
+> -   least one RPMh device child node pertaining to their RSC and each 
+> provider
+> -   can map to multiple RPMh resources.
+> -
+> -properties:
+> -  reg:
+> -    maxItems: 1
+> -
+> -  compatible:
+> -    enum:
+> -      - qcom,sc7180-aggre1-noc
+> -      - qcom,sc7180-aggre2-noc
+> -      - qcom,sc7180-camnoc-virt
+> -      - qcom,sc7180-compute-noc
+> -      - qcom,sc7180-config-noc
+> -      - qcom,sc7180-dc-noc
+> -      - qcom,sc7180-gem-noc
+> -      - qcom,sc7180-ipa-virt
+> -      - qcom,sc7180-mc-virt
+> -      - qcom,sc7180-mmss-noc
+> -      - qcom,sc7180-npu-noc
+> -      - qcom,sc7180-qup-virt
+> -      - qcom,sc7180-system-noc
+> -
+> -  '#interconnect-cells':
+> -    const: 1
+> -
+> -  qcom,bcm-voters:
+> -    $ref: /schemas/types.yaml#/definitions/phandle-array
+> -    description: |
+> -      List of phandles to qcom,bcm-voter nodes that are required by
+> -      this interconnect to send RPMh commands.
+> -
+> -  qcom,bcm-voter-names:
+> -    $ref: /schemas/types.yaml#/definitions/string-array
+> -    description: |
+> -      Names for each of the qcom,bcm-voters specified.
+> -
+> -required:
+> -  - compatible
+> -  - reg
+> -  - '#interconnect-cells'
+> -  - qcom,bcm-voters
+> -
+> -additionalProperties: false
+> -
+> -examples:
+> -  - |
+> -      #include <dt-bindings/interconnect/qcom,sc7180.h>
+> -
+> -      config_noc: interconnect@1500000 {
+> -            compatible = "qcom,sc7180-config-noc";
+> -            reg = <0x01500000 0x28000>;
+> -            #interconnect-cells = <1>;
+> -            qcom,bcm-voters = <&apps_bcm_voter>;
+> -      };
+> -
+> -      system_noc: interconnect@1620000 {
+> -            compatible = "qcom,sc7180-system-noc";
+> -            reg = <0x01620000 0x17080>;
+> -            #interconnect-cells = <1>;
+> -            qcom,bcm-voters = <&apps_bcm_voter>;
+> -      };
+> -
+> -      mmss_noc: interconnect@1740000 {
+> -            compatible = "qcom,sc7180-mmss-noc";
+> -            reg = <0x01740000 0x1c100>;
+> -            #interconnect-cells = <1>;
+> -            qcom,bcm-voters = <&apps_bcm_voter>;
+> -      };
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
