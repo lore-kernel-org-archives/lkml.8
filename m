@@ -2,164 +2,94 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF2CC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B81E92053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:53:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OlTI5XA+"
+	by mail.kernel.org (Postfix) with ESMTP id C6B912053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:55:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731642AbgG1Qxv (ORCPT
+        id S1731658AbgG1Qz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:53:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731597AbgG1Qxv (ORCPT
+        Tue, 28 Jul 2020 12:55:29 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40496 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731504AbgG1Qz2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:53:51 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D47BEC0619D4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:53:50 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id g4so6714074uaq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:53:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yvpeg2Hti/Lz6KJkvcbKXpV9L6rmb3s/f9V+aV3VkrA=;
-        b=OlTI5XA+ZU7Eo568gSfdlWA6MNxaxKrClrzkgduxaM/FEXkDPxXZvNQnLBmu+3IxLU
-         acAo2NhLc2fnCjvigk781R0yc19BV8juQIEXZ0HFT+sQbOqIfYMHzhnLZ/ng8ZWap5+1
-         X14YoTNoMOybWBoUNlj+U9K+rSVqb4ofqZWRI=
+        Tue, 28 Jul 2020 12:55:28 -0400
+Received: by mail-pl1-f193.google.com with SMTP id u10so680129plr.7;
+        Tue, 28 Jul 2020 09:55:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yvpeg2Hti/Lz6KJkvcbKXpV9L6rmb3s/f9V+aV3VkrA=;
-        b=pwgro+kQ6ICPe+ia84HElemI4b+bGM8tlurCEwigfOrWehi5UAxze5D65BnLvXWPXC
-         yYQnhaRkP4oxNribwAS+ycwNliHkYaa9BFatileug1GpnH69zXrlErr3D1gyQHG6Rnm8
-         hiHRknPSlwo4gbM6nisFcWLLTxEboJTW85hALSHfUxgHc1mL7Q18+69dN82l0co6Q7AM
-         kVRAYxVGyXixn4E/N5Nd5PeZ9urxGpPK71oUn1PswVHmWelNurUBp+4z0CO9c3VjGTho
-         l7S8M8WC7/7ysxxWS4i1X3rE3QTZx4UN3qgkrbr+NBF1BCJIWMm27+y0tj1sp433PYMj
-         ATsw==
-X-Gm-Message-State: AOAM5311N46ULzHheuXKYEPIt+jCM5rfltMgVOOmmoD4Yr6h9g7wDUmW
-        Jrg0LLehGVO9POZl/+kOsBOInlXWBo5AspcWYFapmA==
-X-Google-Smtp-Source: ABdhPJz8G6Fxjs1PqttEWpFqjr3j1q3Jg+4zJ9wdpz3qudY9juV0OmietcvOJPOBkBwrKuQbpn9Oj2Y49/sEf5+FtdM=
-X-Received: by 2002:a9f:2197:: with SMTP id 23mr10603446uac.60.1595955229872;
- Tue, 28 Jul 2020 09:53:49 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=u6+EWe+OefPWlNaewDc8Nty4sIHeAezZ0qkcJ+zPgXY=;
+        b=PoKQs1wvTl7oceqvP68X/d4U9Cf+/KtPjtX9yWhLM477iZZfWwzOUh1lBlsF5GNTAD
+         jWskz3H+CCduW49FGs9/fd+ZPvhTSU4bccLUZo4t6JN6rxn0PmL/XwOs5b5r6lVZRgLq
+         nO/4lL0WHAVI0/5EiBdwFKd0yrHqp4qQbw6OrK5k4tE6yS1gNjFH1xDnmPUi/sshZ+A8
+         3H6/RhpI+sAn+Geec/DGkP7oSKvz/ZQj/sYBE8S4oPT6lBxuAGs4ZOz/yuGtOv5ZvdVk
+         lhDemg9ix9DjjsxklczF5m/4n0n+WOZIb4kYCuyLdgnwJ/9jpf5rADL3GjQfhrlNwa0Q
+         MEJg==
+X-Gm-Message-State: AOAM533vXxU6/XuSUcEw5kVpwGgejrglcolHAI3RjnM0HY08PNvUrxK0
+        0l5xfaVxHt8gZTpFiHVpDZXsl1q2
+X-Google-Smtp-Source: ABdhPJwAUx97vkeQNmMP3hCbadsOeNsDpzlCvcBDYjWdZV/9kElAlEiQcQVF2YqDlAI0NJxBS1nNqA==
+X-Received: by 2002:a17:902:7484:: with SMTP id h4mr9677382pll.139.1595955327430;
+        Tue, 28 Jul 2020 09:55:27 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id fh14sm3489892pjb.38.2020.07.28.09.55.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 09:55:26 -0700 (PDT)
+Subject: Re: [PATCH v1] block: Remove callback typedefs for blk_mq_ops
+To:     Daniel Wagner <dwagner@suse.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200728162036.118211-1-dwagner@suse.de>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <ec76f741-2e4b-69bf-dacd-8d917e10533c@acm.org>
+Date:   Tue, 28 Jul 2020 09:55:25 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200728095253.v2.1.I7ebe9eaf684ddb07ae28634cb4d28cf7754641f1@changeid>
-In-Reply-To: <20200728095253.v2.1.I7ebe9eaf684ddb07ae28634cb4d28cf7754641f1@changeid>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Tue, 28 Jul 2020 09:53:37 -0700
-Message-ID: <CANFp7mUYSJi5WWZ5nEkxyJd-LXgOzJ_gfgWJC2tPkrswtXu-0w@mail.gmail.com>
-Subject: Re: [PATCH v2] Bluetooth: Fix suspend notifier race
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        Miao-chen Chou <mcchou@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200728162036.118211-1-dwagner@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I sent this a bit too quick without a Fixes tag. Please disregard. v3 coming up.
+On 2020-07-28 09:20, Daniel Wagner wrote:
+> No need to define typedefs for the callbacks, because there is not a
+> single user except blk_mq_ops.
 
-On Tue, Jul 28, 2020 at 9:53 AM Abhishek Pandit-Subedi
-<abhishekpandit@chromium.org> wrote:
->
-> Unregister from suspend notifications and cancel suspend preparations
-> before running hci_dev_do_close. Otherwise, the suspend notifier may
-> race with unregister and cause cmd_timeout even after hdev has been
-> freed.
->
-> Below is the trace from when this panic was seen:
->
-> [  832.578518] Bluetooth: hci_core.c:hci_cmd_timeout() hci0: command 0x0c05 tx timeout
-> [  832.586200] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> [  832.586203] #PF: supervisor read access in kernel mode
-> [  832.586205] #PF: error_code(0x0000) - not-present page
-> [  832.586206] PGD 0 P4D 0
-> [  832.586210] PM: suspend exit
-> [  832.608870] Oops: 0000 [#1] PREEMPT SMP NOPTI
-> [  832.613232] CPU: 3 PID: 10755 Comm: kworker/3:7 Not tainted 5.4.44-04894-g1e9dbb96a161 #1
-> [  832.630036] Workqueue: events hci_cmd_timeout [bluetooth]
-> [  832.630046] RIP: 0010:__queue_work+0xf0/0x374
-> [  832.630051] RSP: 0018:ffff9b5285f1fdf8 EFLAGS: 00010046
-> [  832.674033] RAX: ffff8a97681bac00 RBX: 0000000000000000 RCX: ffff8a976a000600
-> [  832.681162] RDX: 0000000000000000 RSI: 0000000000000009 RDI: ffff8a976a000748
-> [  832.688289] RBP: ffff9b5285f1fe38 R08: 0000000000000000 R09: ffff8a97681bac00
-> [  832.695418] R10: 0000000000000002 R11: ffff8a976a0006d8 R12: ffff8a9745107600
-> [  832.698045] usb 1-6: new full-speed USB device number 119 using xhci_hcd
-> [  832.702547] R13: ffff8a9673658850 R14: 0000000000000040 R15: 000000000000001e
-> [  832.702549] FS:  0000000000000000(0000) GS:ffff8a976af80000(0000) knlGS:0000000000000000
-> [  832.702550] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  832.702550] CR2: 0000000000000000 CR3: 000000010415a000 CR4: 00000000003406e0
-> [  832.702551] Call Trace:
-> [  832.702558]  queue_work_on+0x3f/0x68
-> [  832.702562]  process_one_work+0x1db/0x396
-> [  832.747397]  worker_thread+0x216/0x375
-> [  832.751147]  kthread+0x138/0x140
-> [  832.754377]  ? pr_cont_work+0x58/0x58
-> [  832.758037]  ? kthread_blkcg+0x2e/0x2e
-> [  832.761787]  ret_from_fork+0x22/0x40
-> [  832.846191] ---[ end trace fa93f466da517212 ]---
->
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> Reviewed-by: Miao-chen Chou <mcchou@chromium.org>
-> ---
-> Hi Marcel,
->
-> This fixes a race between hci_unregister_dev and the suspend notifier.
->
-> The suspend notifier handler seemed to be scheduling commands even after
-> it was cleaned up and this was resulting in a panic in cmd_timeout (when
-> it tries to requeue the cmd_timer).
->
-> This was tested on 5.4 kernel with a suspend+resume stress test for 500+
-> iterations. I also confirmed that after a usb disconnect, the suspend
-> notifier times out before the USB device is probed again (fixing the
-> original race between the usb_disconnect + probe and the notifier).
->
-> Thanks
-> Abhishek
->
->
-> Changes in v2:
-> * Moved oops into commit message
->
->  net/bluetooth/hci_core.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> index 5394ab56c915a9..4ba23b821cbf4a 100644
-> --- a/net/bluetooth/hci_core.c
-> +++ b/net/bluetooth/hci_core.c
-> @@ -3767,9 +3767,10 @@ void hci_unregister_dev(struct hci_dev *hdev)
->
->         cancel_work_sync(&hdev->power_on);
->
-> -       hci_dev_do_close(hdev);
-> -
->         unregister_pm_notifier(&hdev->suspend_notifier);
-> +       cancel_work_sync(&hdev->suspend_prepare);
-> +
-> +       hci_dev_do_close(hdev);
->
->         if (!test_bit(HCI_INIT, &hdev->flags) &&
->             !hci_dev_test_flag(hdev, HCI_SETUP) &&
-> --
-> 2.28.0.rc0.142.g3c755180ce-goog
->
+Thanks for having done this work.
+
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
