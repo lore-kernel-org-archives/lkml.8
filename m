@@ -2,141 +2,112 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2A5C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 178AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C44A820775
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:42:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595936559;
-	bh=hWJ40JidbmXhL97JcpfTJY7CxeEWoXzgt7+q2CZAG/g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FTI7s+UBJGD2w/HheEKJTbh6qNQsoNETN1utZ5KRLSW2kt1znxH4MXOHdZpRIsr8H
-	 yprRDmO2mhM1MULZUOV1AhzSNAEXha2VPsITAqMLb2YkbcSOwHeyBKsB2Nn68bQWUK
-	 m/Oo6RiibuFOA6cXlVaRS4DNqugmTNUIyPzSrkKU=
+	by mail.kernel.org (Postfix) with ESMTP id E2932206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:42:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="df7cZt6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbgG1Lmi (ORCPT
+        id S1729143AbgG1LmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 07:42:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729036AbgG1Lmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 07:42:37 -0400
-Received: from quaco.ghostprotocols.net (179.176.1.55.dynamic.adsl.gvt.net.br [179.176.1.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11693206D4;
-        Tue, 28 Jul 2020 11:42:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595936557;
-        bh=hWJ40JidbmXhL97JcpfTJY7CxeEWoXzgt7+q2CZAG/g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zX8tO8sdlGhRmV6aDnpqWVPi+6lz2rG8p3iC3A//htu2cYRdvKWJ8GtU2cnQIw4Ui
-         km8TqpYwIbEnSY0fqJiH+ESQgFLDkv2RpzsIgCOSRzUFJZoGqnyEtNpFQEZKF93DOU
-         Olb/73IPiegu8iawNLx293YjnZPA4EZdzu7uqaSk=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AE929404B1; Tue, 28 Jul 2020 08:42:34 -0300 (-03)
-Date:   Tue, 28 Jul 2020 08:42:34 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Wei Li <liwei391@huawei.com>, leo.yan@linaro.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kim Phillips <kim.phillips@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, guohanjun@huawei.com
-Subject: Re: [PATCH v2 2/2] perf tools: ARM SPE code cleanup
-Message-ID: <20200728114234.GA3328@kernel.org>
-References: <20200724071111.35593-1-liwei391@huawei.com>
- <20200724071111.35593-3-liwei391@huawei.com>
- <20200727203436.GC2381376@xps15>
+        Tue, 28 Jul 2020 07:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729060AbgG1LmS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 07:42:18 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCCFEC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 04:42:16 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f18so17875914wml.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 04:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TT24vZnC4xOCdUpOmIAerDESvJeTmO8+8fod85enhmw=;
+        b=df7cZt6I8hQuIl1XU7ttHu4TN5PR1P69UXn6jcfq0mJeliTervs8ge8M8D2wbyi4+u
+         f3u21AIP4rNKufXo9ROZqH8Lj8kVdEnlNLO8ve9kHB6JBq1uwujo0fUL4um3GqE/sYUQ
+         8NvDtgJwDEbbFZcceKLKEQA2bGi3QvT2WZYzU0t+Tzj4hFnYG5NFCt+w4hi8zqMccP5D
+         CQln4XVfU+gkL44eP7GRwnvZmGGhz/E2HJTucxx4+1Y7sE0U9C8HJ/9KJV7DeRNQz10m
+         XBb0/rgDKA+nA7fNo4M7DnBaWbBEooj+JLGxEuLc6cEyTFwvp89apJctgBuPRR85vBdP
+         VcZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TT24vZnC4xOCdUpOmIAerDESvJeTmO8+8fod85enhmw=;
+        b=Kf7V3rNN+dxFZs6vLmtAvKYZQFA59hUofYiWDerHAlgGVxvbtJRtZM7FJhv5AOBlCl
+         YDwGIoz0puWvo4xJo53lN9J3VFDXBKjMJ9XpKFk60MdicoZTloyq5nJXSS9UQeQXE5oM
+         tGkUIhXuhrCG4w5cxBlAxNv6tPTb8WfPxE5MiuVhGuQFgY4SFRZPwjXBMkiaLGPqVxyr
+         D9Qkb/vuK/95WMpxJH++qmhnlXezo/a4inORbt3QLNd1vi5a/BYRuESzkkomfP/yYqk/
+         1U5fHJGTOEKl3dHTTCBI5vKLJI3VDnkp921a/cP7B+fh25Nebi4Z0QLYKnCvkUD/oNAj
+         IO5A==
+X-Gm-Message-State: AOAM533icX136z7gQl+/xhYF5O3Jk7Y5w1mRnWILQXQp/OVpvGoa2wMi
+        tUE/oyOfzZtLQO09LhDz6ad0qAdoJqZnvbN7aySc3g==
+X-Google-Smtp-Source: ABdhPJz8AUHazoZwcaZZ9jNUzaMz3ho5hqMfyeOSaPMimnzYiaStb9+h5tEC/aggQScQWwU+fwuhtNmhcjK0dfIEvn0=
+X-Received: by 2002:a1c:1d52:: with SMTP id d79mr1167435wmd.82.1595936535673;
+ Tue, 28 Jul 2020 04:42:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727203436.GC2381376@xps15>
-X-Url:  http://acmel.wordpress.com
+References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+ <596dac201108233446694a1014726c51843172c5.1594230107.git-series.maxime@cerno.tech>
+In-Reply-To: <596dac201108233446694a1014726c51843172c5.1594230107.git-series.maxime@cerno.tech>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Tue, 28 Jul 2020 12:41:56 +0100
+Message-ID: <CAPY8ntDK76+3PR8kbi8gzb8n4zryDhZvhwKyGsdPb_J3Uf-ASQ@mail.gmail.com>
+Subject: Re: [PATCH v4 31/78] drm/vc4: crtc: Clear the PixelValve FIFO during configuration
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Jul 27, 2020 at 02:34:36PM -0600, Mathieu Poirier escreveu:
-> On Fri, Jul 24, 2020 at 03:11:11PM +0800, Wei Li wrote:
-> > - Firstly, the function auxtrace_record__init() will be invoked only
-> >   once, the variable "arm_spe_pmus" will not be used afterwards, thus
-> >   we don't need to check "arm_spe_pmus" is NULL or not;
-> > - Another reason is, even though SPE is micro-architecture dependent,
-> >   but so far it only supports "statistical-profiling-extension-v1" and
-> >   we have no chance to use multiple SPE's PMU events in Perf command.
-> 
-> I find the above changelog somewhat out of touch with the patch itself.  The
-> only thing that is happening here is the removal of a useless check and a fix
-> for a memory leak.
-> 
-> Once again whether Arnaldo wants to make the changes by hand or not you may have
-> to resubmit.
+Hi Maxime
 
-I'll fix it now, thanks for reviewing.
+On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Even though it's not really clear why we need to flush the PV FIFO during
+> the configuration even though we started by flushing it, experience shows
+> that without it we get a stale pixel stuck in the FIFO between the HVS and
+> the PV.
+>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
-- Arnaldo
- 
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> 
-> > 
-> > So remove the useless check code to make it clear.
-> > 
-> > Signed-off-by: Wei Li <liwei391@huawei.com>
-> > ---
-> >  tools/perf/arch/arm/util/auxtrace.c | 9 ++++-----
-> >  1 file changed, 4 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-> > index 28a5d0c18b1d..b187bddbd01a 100644
-> > --- a/tools/perf/arch/arm/util/auxtrace.c
-> > +++ b/tools/perf/arch/arm/util/auxtrace.c
-> > @@ -57,17 +57,15 @@ struct auxtrace_record
-> >  	struct evsel *evsel;
-> >  	bool found_etm = false;
-> >  	struct perf_pmu *found_spe = NULL;
-> > -	static struct perf_pmu **arm_spe_pmus = NULL;
-> > -	static int nr_spes = 0;
-> > +	struct perf_pmu **arm_spe_pmus = NULL;
-> > +	int nr_spes = 0;
-> >  	int i = 0;
-> >  
-> >  	if (!evlist)
-> >  		return NULL;
-> >  
-> >  	cs_etm_pmu = perf_pmu__find(CORESIGHT_ETM_PMU_NAME);
-> > -
-> > -	if (!arm_spe_pmus)
-> > -		arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
-> > +	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
-> >  
-> >  	evlist__for_each_entry(evlist, evsel) {
-> >  		if (cs_etm_pmu &&
-> > @@ -84,6 +82,7 @@ struct auxtrace_record
-> >  			}
-> >  		}
-> >  	}
-> > +	free(arm_spe_pmus);
-> >  
-> >  	if (found_etm && found_spe) {
-> >  		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
-> > -- 
-> > 2.17.1
-> > 
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
--- 
-
-- Arnaldo
+> ---
+>  drivers/gpu/drm/vc4/vc4_crtc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
+> index 13fe0e370fb3..25a77cd46b28 100644
+> --- a/drivers/gpu/drm/vc4/vc4_crtc.c
+> +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+> @@ -358,7 +358,7 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
+>         if (is_dsi)
+>                 CRTC_WRITE(PV_HACT_ACT, mode->hdisplay * pixel_rep);
+>
+> -       CRTC_WRITE(PV_CONTROL,
+> +       CRTC_WRITE(PV_CONTROL, PV_CONTROL_FIFO_CLR |
+>                    vc4_crtc_get_fifo_full_level_bits(vc4_crtc, format) |
+>                    VC4_SET_FIELD(format, PV_CONTROL_FORMAT) |
+>                    VC4_SET_FIELD(pixel_rep - 1, PV_CONTROL_PIXEL_REP) |
+> --
+> git-series 0.9.1
