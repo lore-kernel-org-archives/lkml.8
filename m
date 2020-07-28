@@ -6,70 +6,76 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D2AC433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD7DC433F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E66802074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA3A207FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595953892;
-	bh=U2ae0+qxf5T7aHnxqe5Yy151vsXACiOFQ0qZgH3TxhQ=;
+	s=default; t=1595953900;
+	bh=Y0EPEDkatR+hm/L7ATXN1AYrEx5ot0z2XTn8p1lfn9k=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=Cc/DgJ8nTmweSWf28d2LTTg8UABagNy4JIMoxbb2sxfx6wSgee5wfwbULXuQ8UxDk
-	 MTu14bW8ZCUv4XP1s/HTU709/wPQxAaU4id326dqTeIadiEDuBMjOt8VnNcjYq1S45
-	 Qy/1/eBRHPu2p4sI/hYJYYvjG9P5+K7nqUPT2qMs=
+	b=Q86zcDc0g9WTh0Tnztb3IA/KJ7B+Lu5NKeNZhdtqK8DsB25H/lurfgkifffxACSMQ
+	 //m/L2D270ooISwUR1Yiyc5SK+M2IeGSYWzrrtkVwJbQQpr99QePj9iDR1XxtU3c+w
+	 tK1rUDeLJX/SIdMYnwG4NNUkl0NTsCiBKcEPHN1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731426AbgG1Qba (ORCPT
+        id S1731435AbgG1Qbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:31:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47126 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 12:31:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731070AbgG1Qba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:31:30 -0400
+        id S1731070AbgG1Qbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:31:38 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94F0C2074F;
-        Tue, 28 Jul 2020 16:31:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D35132074F;
+        Tue, 28 Jul 2020 16:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595953890;
-        bh=U2ae0+qxf5T7aHnxqe5Yy151vsXACiOFQ0qZgH3TxhQ=;
+        s=default; t=1595953898;
+        bh=Y0EPEDkatR+hm/L7ATXN1AYrEx5ot0z2XTn8p1lfn9k=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=ow/wIniTZDzPUVFdpzhFD61DWmtDPjzS+GSVZk0YknUaqHxM89uMWdsnt18pv+4bj
-         fXUUftnu4Vp2f22G8RpxVx14rCeq4ai5kvLUhnvEWGCNuULgWgcr6x1Fbj1VBFFPRx
-         YiV47e9i99mh+vAQVrSaPzGRV4OzbXJEOYwFuoz0=
-Date:   Tue, 28 Jul 2020 17:31:12 +0100
+        b=XsRz5Yx7Izihr2u416eX8IBjcMS96IE8jzSRuNznwvv0+/j95cjao21EeiSrmjeZ3
+         65A97uQibhrgzNSHlpxwWWbCufCCH30RGGIlVKkElq2eLBIvQnWU3Imy2fYJJZVZt6
+         hArbZ6K4Vaqk3RsJ82a0O9wfFKLSIN2lacNA8/0k=
+Date:   Tue, 28 Jul 2020 17:31:20 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Guenter Roeck <groeck@chromium.org>,
-        "open list:VOLTAGE AND CURRENT REGULATOR FRAMEWORK" 
-        <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>
-In-Reply-To: <20200728091909.2009771-1-pihsun@chromium.org>
-References: <20200728091909.2009771-1-pihsun@chromium.org>
-Subject: Re: [PATCH] regulator: cros-ec-regulator: Fix double free of desc->name.
-Message-Id: <159595387216.15267.9465724386859282869.b4-ty@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+In-Reply-To: <20200727131742.82289-1-vaibhavgupta40@gmail.com>
+References: <CAHp75Vdo22ofbCktupFYbfYy6PQ609fsk5B6u2b3FpfKxs8OQg@mail.gmail.com> <20200727131742.82289-1-vaibhavgupta40@gmail.com>
+Subject: Re: [PATCH v2] spi: spi-topcliff-pch: drop call to wakeup-disable
+Message-Id: <159595388005.15302.1247752401935651695.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jul 2020 17:19:09 +0800, Pi-Hsun Shih wrote:
-> The desc->name field is allocated with devm_kstrdup, but is also kfreed
-> on the error path, causing it to be double freed. Remove the kfree on
-> the error path.
+On Mon, 27 Jul 2020 18:47:43 +0530, Vaibhav Gupta wrote:
+> Before generic upgrade, both .suspend() and .resume() were invoking
+> pci_enable_wake(pci_dev, PCI_D3hot, 0). Hence, disabling wakeup in both
+> states. (Normal trend is .suspend() enables and .resume() disables the
+> wakeup.)
+> 
+> This was ambiguous and may be buggy. Instead of replicating the legacy
+> behavior, drop the wakeup-disable call.
+> 
+> [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] regulator: cros-ec-regulator: Fix double free of desc->name.
-      commit: 176cf704425f3d22603d379ffa4a1033a24a779d
+[1/1] spi: spi-topcliff-pch: drop call to wakeup-disable
+      commit: 15b413d93ccd0d26c29f005df82c299c8f14cbd6
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
