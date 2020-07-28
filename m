@@ -2,233 +2,88 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2EFC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E356CC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B54A82074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7692074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:37:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="iO9VZXjU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qHe7dAnw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgG1Mhk (ORCPT
+        id S1729753AbgG1Mht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:37:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46580 "EHLO
+        Tue, 28 Jul 2020 08:37:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729334AbgG1Mhi (ORCPT
+        with ESMTP id S1729334AbgG1Mht (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:37:38 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D2EEC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:37:37 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b6so18128514wrs.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:37:37 -0700 (PDT)
+        Tue, 28 Jul 2020 08:37:49 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 175CDC061794;
+        Tue, 28 Jul 2020 05:37:49 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id t6so9839619plo.3;
+        Tue, 28 Jul 2020 05:37:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/0hxasPjkT/YyjIyd6ev9IMJ4snCTb42IQ0PCBN6d94=;
-        b=iO9VZXjU6hvp1uQ1auh+fWeL1JrNYy54Zd0p/aR+tl4Zw+1vkVUCMGJ2EEt34v4/GK
-         sIkwuGq/jSrCK83Sbv43vRDsgjQ9gEwwgmDRWmipeTCJGP4a3I1qxoG07O2Ocg/arG4e
-         kvHyW09rpYG266Cs/RQCI+4WsO9xRxbtU3iIca1CNvglmjtdxC+rYaDWPjlqty6R/6LC
-         2z6oZ2FcwVozKFXn8wMeekl3xQ6dX71pTKDDoj/DWzvCcEv+7dOkqCcPcpqYLs4ftpAp
-         iFF3P3BvnXcU48OmPgZaIVrjtebfsFh7J8KS1gL9mMLGzaUL0rzfCsfn8yJmnmA9Pyin
-         Qhag==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Fie8IAXWZ8a1f4IBdyXwUsTRAo2+ebUYgUxfo3SFpeA=;
+        b=qHe7dAnwegbl8DFADwHo8PEhSZ+7zbY4GEkjbh4YRgoBOr7ttuUIZd3W/lLbgvLXtH
+         Nmw48d7CCQlwK/k1SgCBId7AiMOZT4EXk0h2LojeErsKRtc6QPNKwLxAhFQd6hR5NDyh
+         9oHwM248bQKXcys1dFKO9l1neCAYAMuaCiwJCWlW/ZkIe96vqwtjeAMSYa2tbq9x3o88
+         BGtALXe6t+2pHo3RJtR9tsUzxejGbCniBGGmlSIs46uPSGgc49ttoIf+wh2we7OmML0/
+         E/BVTKjEZGGX3/hQPfkvDwAN/xv8xFQbuW6LGOAazLbs95E03Y8rFQJ+pEPZpx4h4qn+
+         vIVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/0hxasPjkT/YyjIyd6ev9IMJ4snCTb42IQ0PCBN6d94=;
-        b=YATltJ8IBcfts5lxlGKIui5YLxJiL987d/IJj9GCqjF31FnjIsam41i3PfRQH0bMxP
-         yWCEuDPXpKMw9eLLX1n5v4czwlagNpv1tK2CBazDRtMGPsX+D/0orGyruk5UgcsuNa6Z
-         iubSZRxOmx9eHZlUDPnJRXr4reR4APzjKn6K5gzICHedYQAeDg9LSq14DtjTt9/Pr+KZ
-         C+XIAmP+Hv+9YuYw+odL3opL/VKjaawtF5mHLfkcY9mBccX1Y36oFt8yRntxmC3yF7EY
-         kN4vnU8Fxj0slHkeFR/hIYq/9wsTEMEyjNU6whfn/evJONLgOe5hOmGyKK9DziRntlX8
-         n+GA==
-X-Gm-Message-State: AOAM530g4g8U2I49AdHW3PHkK+9Ye7LQGdsilClf2RGaMny3Pmnue/uu
-        Hv1pN0xhHGOSIKujjTqsDAcLkigmcXoEb0LcgE72Ow==
-X-Google-Smtp-Source: ABdhPJz5r1LeMnmIuvcgOziDFvfrRYb+Jc5FtZPjzhagrB6X5cXvMh2ad7Kr51ppE5WkzKsKl4nb7vypV+jB19aV45Y=
-X-Received: by 2002:adf:fe50:: with SMTP id m16mr7426770wrs.27.1595939856030;
- Tue, 28 Jul 2020 05:37:36 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Fie8IAXWZ8a1f4IBdyXwUsTRAo2+ebUYgUxfo3SFpeA=;
+        b=Srm8REEYxDbNUbtn2GW2+NCxmm0I6HMIkk653gBd7B0CkAI5d1ZjgLcQxRTJT6FS6b
+         6UhXcB7vxRYiny1Tb8oqLldRuCCwq2Bd3C8780zkhS2EXt7ppTOFuFr4rPZsy/nRv1Vr
+         ditYw01lLGQ3E1Eyl3AGpFZpzAWS6g50CEDt0WNt3BkvHMr/mFJ2SRrIjf5YgRgv3wwr
+         rkfdT1mi1nHBmxYmZv7K5zyfTVfxscYt9o+jxosWSjBvSZYPE++F+sf8Sb/TpBQxl/qM
+         VS7uGn4JV2MF16KODq9uWFkCMxxzV9S+/OcRoUVddKN3kkXDGBV6yIi1uhxKN1wJCAVt
+         52Ng==
+X-Gm-Message-State: AOAM533rwH4/r90hOa8wVpPp8BWIPpY1UjLV1w3JgL56h8BMfN12slhM
+        6mSZ8wNEJ8Z0Gg0UE5ECvFM=
+X-Google-Smtp-Source: ABdhPJxMwzS10JHnifAZmdNYC8YAZkIcOFzizwBro4Xw8cdcIQLhzKEz7J7HdS2SEjQ2Po+YluXXBg==
+X-Received: by 2002:a17:902:7b90:: with SMTP id w16mr21425536pll.253.1595939868491;
+        Tue, 28 Jul 2020 05:37:48 -0700 (PDT)
+Received: from gmail.com ([2401:4900:2eef:ca92:3545:4a68:f406:d612])
+        by smtp.gmail.com with ESMTPSA id l134sm18030158pga.50.2020.07.28.05.37.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 05:37:47 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 18:06:19 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kevin Curtis <kevin.curtis@farsite.co.uk>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v1] farsync: use generic power management
+Message-ID: <20200728123619.GA1331847@gmail.com>
+References: <20200728042809.91436-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <ece0d45f529cce9fb64100ddee726b81f7aa247a.1594230107.git-series.maxime@cerno.tech>
-In-Reply-To: <ece0d45f529cce9fb64100ddee726b81f7aa247a.1594230107.git-series.maxime@cerno.tech>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Tue, 28 Jul 2020 13:37:20 +0100
-Message-ID: <CAPY8ntDsKQBzqA3HUvn3qva4+zggLaLsmr=DL2FyRrRHAL=T_Q@mail.gmail.com>
-Subject: Re: [PATCH v4 50/78] drm/vc4: hdmi: Introduce resource init and variant
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200728042809.91436-1-vaibhavgupta40@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime
+This patch is compile-tested only.
 
-On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> The HDMI controllers found in the BCM2711 has a pretty different clock and
-> registers areas than found in the older BCM283x SoCs.
->
-> Let's create a variant structure to store the various adjustments we'll
-> need later on, and a function to get the resources needed for one
-> particular version.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-
-> ---
->  drivers/gpu/drm/vc4/vc4_hdmi.c | 61 +++++++++++++++++++++++------------
->  drivers/gpu/drm/vc4/vc4_hdmi.h | 10 ++++++-
->  2 files changed, 51 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> index ec7710dfd04e..ac021e07a8cb 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> @@ -1179,28 +1179,12 @@ static const struct cec_adap_ops vc4_hdmi_cec_adap_ops = {
->  };
->  #endif
->
-> -static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
-> +static int vc4_hdmi_init_resources(struct vc4_hdmi *vc4_hdmi)
->  {
-> -#ifdef CONFIG_DRM_VC4_HDMI_CEC
-> -       struct cec_connector_info conn_info;
-> -#endif
-> -       struct platform_device *pdev = to_platform_device(dev);
-> -       struct drm_device *drm = dev_get_drvdata(master);
-> -       struct vc4_hdmi *vc4_hdmi;
-> -       struct drm_encoder *encoder;
-> -       struct device_node *ddc_node;
-> -       u32 value;
-> +       struct platform_device *pdev = vc4_hdmi->pdev;
-> +       struct device *dev = &pdev->dev;
->         int ret;
->
-> -       vc4_hdmi = devm_kzalloc(dev, sizeof(*vc4_hdmi), GFP_KERNEL);
-> -       if (!vc4_hdmi)
-> -               return -ENOMEM;
-> -
-> -       dev_set_drvdata(dev, vc4_hdmi);
-> -       encoder = &vc4_hdmi->encoder.base.base;
-> -       vc4_hdmi->encoder.base.type = VC4_ENCODER_TYPE_HDMI0;
-> -       vc4_hdmi->pdev = pdev;
-> -
->         vc4_hdmi->hdmicore_regs = vc4_ioremap_regs(pdev, 0);
->         if (IS_ERR(vc4_hdmi->hdmicore_regs))
->                 return PTR_ERR(vc4_hdmi->hdmicore_regs);
-> @@ -1212,6 +1196,7 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
->         vc4_hdmi->hdmi_regset.base = vc4_hdmi->hdmicore_regs;
->         vc4_hdmi->hdmi_regset.regs = hdmi_regs;
->         vc4_hdmi->hdmi_regset.nregs = ARRAY_SIZE(hdmi_regs);
-> +
->         vc4_hdmi->hd_regset.base = vc4_hdmi->hd_regs;
->         vc4_hdmi->hd_regset.regs = hd_regs;
->         vc4_hdmi->hd_regset.nregs = ARRAY_SIZE(hd_regs);
-> @@ -1223,12 +1208,44 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
->                         DRM_ERROR("Failed to get pixel clock\n");
->                 return ret;
->         }
-> +
->         vc4_hdmi->hsm_clock = devm_clk_get(dev, "hdmi");
->         if (IS_ERR(vc4_hdmi->hsm_clock)) {
->                 DRM_ERROR("Failed to get HDMI state machine clock\n");
->                 return PTR_ERR(vc4_hdmi->hsm_clock);
->         }
->
-> +       return 0;
-> +}
-> +
-> +static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
-> +{
-> +#ifdef CONFIG_DRM_VC4_HDMI_CEC
-> +       struct cec_connector_info conn_info;
-> +#endif
-> +       const struct vc4_hdmi_variant *variant = of_device_get_match_data(dev);
-> +       struct platform_device *pdev = to_platform_device(dev);
-> +       struct drm_device *drm = dev_get_drvdata(master);
-> +       struct vc4_hdmi *vc4_hdmi;
-> +       struct drm_encoder *encoder;
-> +       struct device_node *ddc_node;
-> +       u32 value;
-> +       int ret;
-> +
-> +       vc4_hdmi = devm_kzalloc(dev, sizeof(*vc4_hdmi), GFP_KERNEL);
-> +       if (!vc4_hdmi)
-> +               return -ENOMEM;
-> +
-> +       dev_set_drvdata(dev, vc4_hdmi);
-> +       encoder = &vc4_hdmi->encoder.base.base;
-> +       vc4_hdmi->encoder.base.type = VC4_ENCODER_TYPE_HDMI0;
-> +       vc4_hdmi->pdev = pdev;
-> +       vc4_hdmi->variant = variant;
-> +
-> +       ret = variant->init_resources(vc4_hdmi);
-> +       if (ret)
-> +               return ret;
-> +
->         ddc_node = of_parse_phandle(dev->of_node, "ddc", 0);
->         if (!ddc_node) {
->                 DRM_ERROR("Failed to find ddc node in device tree\n");
-> @@ -1404,8 +1421,12 @@ static int vc4_hdmi_dev_remove(struct platform_device *pdev)
->         return 0;
->  }
->
-> +static const struct vc4_hdmi_variant bcm2835_variant = {
-> +       .init_resources         = vc4_hdmi_init_resources,
-> +};
-> +
->  static const struct of_device_id vc4_hdmi_dt_match[] = {
-> -       { .compatible = "brcm,bcm2835-hdmi" },
-> +       { .compatible = "brcm,bcm2835-hdmi", .data = &bcm2835_variant },
->         {}
->  };
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-> index 674541493909..0eaf979fe811 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-> @@ -21,6 +21,15 @@ to_vc4_hdmi_encoder(struct drm_encoder *encoder)
->         return container_of(encoder, struct vc4_hdmi_encoder, base.base);
->  }
->
-> +struct vc4_hdmi;
-> +
-> +struct vc4_hdmi_variant {
-> +       /* Callback to get the resources (memory region, interrupts,
-> +        * clocks, etc) for that variant.
-> +        */
-> +       int (*init_resources)(struct vc4_hdmi *vc4_hdmi);
-> +};
-> +
->  /* HDMI audio information */
->  struct vc4_hdmi_audio {
->         struct snd_soc_card card;
-> @@ -39,6 +48,7 @@ struct vc4_hdmi {
->         struct vc4_hdmi_audio audio;
->
->         struct platform_device *pdev;
-> +       const struct vc4_hdmi_variant *variant;
->
->         struct vc4_hdmi_encoder encoder;
->         struct drm_connector connector;
-> --
-> git-series 0.9.1
+Thanks
+Vaibhav Gupta
