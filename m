@@ -2,126 +2,312 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6D8C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF35C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFCCB2250E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D40B20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732428AbgG1S2p convert rfc822-to-8bit (ORCPT
+        id S1732411AbgG1S2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:28:45 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:57641 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728179AbgG1S2o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 14:28:44 -0400
-Received: from marcel-macbook.fritz.box (p4ff9f430.dip0.t-ipconnect.de [79.249.244.48])
-        by mail.holtmann.org (Postfix) with ESMTPSA id BD006CECD6;
-        Tue, 28 Jul 2020 20:38:43 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v3] Bluetooth: Fix suspend notifier race
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200728095711.v3.1.I7ebe9eaf684ddb07ae28634cb4d28cf7754641f1@changeid>
-Date:   Tue, 28 Jul 2020 20:28:41 +0200
-Cc:     chromeos-bluetooth-upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Bluetooth Kernel Mailing List 
-        <linux-bluetooth@vger.kernel.org>,
-        Miao-chen Chou <mcchou@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <D320E0AF-EFF1-47BD-85F6-59168B170F65@holtmann.org>
-References: <20200728095711.v3.1.I7ebe9eaf684ddb07ae28634cb4d28cf7754641f1@changeid>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Tue, 28 Jul 2020 14:28:42 -0400
+Received: from mga14.intel.com ([192.55.52.115]:27787 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728179AbgG1S2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 14:28:41 -0400
+IronPort-SDR: wO0AG7HgmpOTdZBKnkSb58Mb45TSdRfXFnuz7gb1rPEkpLyxrL5m7UmS0O5gvwvnfbRqGFv1VL
+ hF3+PZMzvmBQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="150454095"
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="150454095"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 11:28:40 -0700
+IronPort-SDR: vFWg421+e6I6v69KoL5FPUb6j/UyEtTjmCltRwzqpg509efuSUD5oWSI6ti6FiIw3RPlGqx+x+
+ 40dtL3arX6SQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="490461913"
+Received: from twinkler-lnx.jer.intel.com ([10.12.91.138])
+  by fmsmga005.fm.intel.com with ESMTP; 28 Jul 2020 11:28:39 -0700
+From:   Tomas Winkler <tomas.winkler@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [char-misc-next V2] mei: add device kind to sysfs
+Date:   Tue, 28 Jul 2020 21:28:36 +0300
+Message-Id: <20200728182836.3112138-1-tomas.winkler@intel.com>
+X-Mailer: git-send-email 2.25.4
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-> Unregister from suspend notifications and cancel suspend preparations
-> before running hci_dev_do_close. Otherwise, the suspend notifier may
-> race with unregister and cause cmd_timeout even after hdev has been
-> freed.
-> 
-> Below is the trace from when this panic was seen:
-> 
-> [  832.578518] Bluetooth: hci_core.c:hci_cmd_timeout() hci0: command 0x0c05 tx timeout
-> [  832.586200] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> [  832.586203] #PF: supervisor read access in kernel mode
-> [  832.586205] #PF: error_code(0x0000) - not-present page
-> [  832.586206] PGD 0 P4D 0
-> [  832.586210] PM: suspend exit
-> [  832.608870] Oops: 0000 [#1] PREEMPT SMP NOPTI
-> [  832.613232] CPU: 3 PID: 10755 Comm: kworker/3:7 Not tainted 5.4.44-04894-g1e9dbb96a161 #1
-> [  832.630036] Workqueue: events hci_cmd_timeout [bluetooth]
-> [  832.630046] RIP: 0010:__queue_work+0xf0/0x374
-> [  832.630051] RSP: 0018:ffff9b5285f1fdf8 EFLAGS: 00010046
-> [  832.674033] RAX: ffff8a97681bac00 RBX: 0000000000000000 RCX: ffff8a976a000600
-> [  832.681162] RDX: 0000000000000000 RSI: 0000000000000009 RDI: ffff8a976a000748
-> [  832.688289] RBP: ffff9b5285f1fe38 R08: 0000000000000000 R09: ffff8a97681bac00
-> [  832.695418] R10: 0000000000000002 R11: ffff8a976a0006d8 R12: ffff8a9745107600
-> [  832.698045] usb 1-6: new full-speed USB device number 119 using xhci_hcd
-> [  832.702547] R13: ffff8a9673658850 R14: 0000000000000040 R15: 000000000000001e
-> [  832.702549] FS:  0000000000000000(0000) GS:ffff8a976af80000(0000) knlGS:0000000000000000
-> [  832.702550] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  832.702550] CR2: 0000000000000000 CR3: 000000010415a000 CR4: 00000000003406e0
-> [  832.702551] Call Trace:
-> [  832.702558]  queue_work_on+0x3f/0x68
-> [  832.702562]  process_one_work+0x1db/0x396
-> [  832.747397]  worker_thread+0x216/0x375
-> [  832.751147]  kthread+0x138/0x140
-> [  832.754377]  ? pr_cont_work+0x58/0x58
-> [  832.758037]  ? kthread_blkcg+0x2e/0x2e
-> [  832.761787]  ret_from_fork+0x22/0x40
-> [  832.846191] ---[ end trace fa93f466da517212 ]---
-> 
-> Fixes: 9952d90ea2885 ("Bluetooth: Handle PM_SUSPEND_PREPARE and PM_POST_SUSPEND")
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> Reviewed-by: Miao-chen Chou <mcchou@chromium.org>
-> ---
-> Hi Marcel,
-> 
-> This fixes a race between hci_unregister_dev and the suspend notifier.
-> 
-> The suspend notifier handler seemed to be scheduling commands even after
-> it was cleaned up and this was resulting in a panic in cmd_timeout (when
-> it tries to requeue the cmd_timer).
-> 
-> This was tested on 5.4 kernel with a suspend+resume stress test for 500+
-> iterations. I also confirmed that after a usb disconnect, the suspend
-> notifier times out before the USB device is probed again (fixing the
-> original race between the usb_disconnect + probe and the notifier).
-> 
-> Thanks
-> Abhishek
-> 
-> 
-> Changes in v3:
-> * Added fixes tag
-> 
-> Changes in v2:
-> * Moved oops into commit message
-> 
-> net/bluetooth/hci_core.c | 5 +++--
-> 1 file changed, 3 insertions(+), 2 deletions(-)
+Some of the mei device heads are not generic and have
+a specific purpose, we need to announce it to the user space
+so it is possible to detect the correct device node via
+matching attributes.
 
-patch has been applied to bluetooth-next tree.
+Generic heads are marked as 'mei' while special purpose heads
+have their own names. Currently we are adding 'itouch' string
+for Intel IPTS 1.0, 2.0 devices.
 
-Regards
+This is done via new sysfs attribute 'kind'.
 
-Marcel
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+---
+V2: Correct version of the patch.
+
+ Documentation/ABI/testing/sysfs-class-mei | 13 +++++++++++
+ drivers/misc/mei/hw-me.c                  | 22 ++++++++++++++----
+ drivers/misc/mei/hw-me.h                  |  7 +++++-
+ drivers/misc/mei/main.c                   | 27 +++++++++++++++++++++++
+ drivers/misc/mei/mei_dev.h                |  4 ++++
+ drivers/misc/mei/pci-me.c                 | 10 ++++-----
+ 6 files changed, 73 insertions(+), 10 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-class-mei b/Documentation/ABI/testing/sysfs-class-mei
+index e9dc110650ae..5c52372b43cb 100644
+--- a/Documentation/ABI/testing/sysfs-class-mei
++++ b/Documentation/ABI/testing/sysfs-class-mei
+@@ -90,3 +90,16 @@ Description:	Display trc status register content
+ 		The ME FW writes Glitch Detection HW (TRC)
+ 		status information into trc status register
+ 		for BIOS and OS to monitor fw health.
++
++What:		/sys/class/mei/meiN/kind
++Date:		Jul 2020
++KernelVersion:	5.8
++Contact:	Tomas Winkler <tomas.winkler@intel.com>
++Description:	Display kind of the device
++
++		Generic devices are marked as "mei"
++		while special purpose have their own
++		names.
++		Available options:
++		- mei:  generic mei device.
++		- itouch:  itouch (ipts) mei device.
+diff --git a/drivers/misc/mei/hw-me.c b/drivers/misc/mei/hw-me.c
+index 7692b69abcb5..cda0829ac589 100644
+--- a/drivers/misc/mei/hw-me.c
++++ b/drivers/misc/mei/hw-me.c
+@@ -1430,6 +1430,9 @@ static bool mei_me_fw_type_sps(const struct pci_dev *pdev)
+ 	return fw_type == PCI_CFG_HFS_3_FW_SKU_SPS;
+ }
+ 
++#define MEI_CFG_KIND_ITOUCH                     \
++	.kind = "itouch"
++
+ #define MEI_CFG_FW_SPS                          \
+ 	.quirk_probe = mei_me_fw_type_sps
+ 
+@@ -1499,6 +1502,13 @@ static const struct mei_cfg mei_me_pch8_cfg = {
+ 	MEI_CFG_FW_VER_SUPP,
+ };
+ 
++/* PCH8 Lynx Point and newer devices - iTouch */
++static const struct mei_cfg mei_me_pch8_itouch_cfg = {
++	MEI_CFG_KIND_ITOUCH,
++	MEI_CFG_PCH8_HFS,
++	MEI_CFG_FW_VER_SUPP,
++};
++
+ /* PCH8 Lynx Point with quirk for SPS Firmware exclusion */
+ static const struct mei_cfg mei_me_pch8_sps_4_cfg = {
+ 	MEI_CFG_PCH8_HFS,
+@@ -1528,10 +1538,11 @@ static const struct mei_cfg mei_me_pch12_sps_cfg = {
+ 	MEI_CFG_FW_SPS,
+ };
+ 
+-/* Cannon Lake with quirk for SPS 5.0 and newer Firmware exclusion
+- * w/o DMA support
++/* Cannon Lake itouch with quirk for SPS 5.0 and newer Firmware exclusion
++ * w/o DMA support.
+  */
+-static const struct mei_cfg mei_me_pch12_nodma_sps_cfg = {
++static const struct mei_cfg mei_me_pch12_itouch_sps_cfg = {
++	MEI_CFG_KIND_ITOUCH,
+ 	MEI_CFG_PCH8_HFS,
+ 	MEI_CFG_FW_VER_SUPP,
+ 	MEI_CFG_FW_SPS,
+@@ -1566,11 +1577,12 @@ static const struct mei_cfg *const mei_cfg_list[] = {
+ 	[MEI_ME_PCH7_CFG] = &mei_me_pch7_cfg,
+ 	[MEI_ME_PCH_CPT_PBG_CFG] = &mei_me_pch_cpt_pbg_cfg,
+ 	[MEI_ME_PCH8_CFG] = &mei_me_pch8_cfg,
++	[MEI_ME_PCH8_ITOUCH_CFG] = &mei_me_pch8_itouch_cfg,
+ 	[MEI_ME_PCH8_SPS_4_CFG] = &mei_me_pch8_sps_4_cfg,
+ 	[MEI_ME_PCH12_CFG] = &mei_me_pch12_cfg,
+ 	[MEI_ME_PCH12_SPS_4_CFG] = &mei_me_pch12_sps_4_cfg,
+ 	[MEI_ME_PCH12_SPS_CFG] = &mei_me_pch12_sps_cfg,
+-	[MEI_ME_PCH12_SPS_NODMA_CFG] = &mei_me_pch12_nodma_sps_cfg,
++	[MEI_ME_PCH12_SPS_ITOUCH_CFG] = &mei_me_pch12_itouch_sps_cfg,
+ 	[MEI_ME_PCH15_CFG] = &mei_me_pch15_cfg,
+ 	[MEI_ME_PCH15_SPS_CFG] = &mei_me_pch15_sps_cfg,
+ };
+@@ -1614,6 +1626,8 @@ struct mei_device *mei_me_dev_init(struct device *parent,
+ 
+ 	dev->fw_f_fw_ver_supported = cfg->fw_ver_supported;
+ 
++	dev->kind = cfg->kind;
++
+ 	return dev;
+ }
+ 
+diff --git a/drivers/misc/mei/hw-me.h b/drivers/misc/mei/hw-me.h
+index 560c8ebb17be..00a7132ac7a2 100644
+--- a/drivers/misc/mei/hw-me.h
++++ b/drivers/misc/mei/hw-me.h
+@@ -19,6 +19,7 @@
+  *
+  * @fw_status: FW status
+  * @quirk_probe: device exclusion quirk
++ * @kind: MEI head kind
+  * @dma_size: device DMA buffers size
+  * @fw_ver_supported: is fw version retrievable from FW
+  * @hw_trc_supported: does the hw support trc register
+@@ -26,6 +27,7 @@
+ struct mei_cfg {
+ 	const struct mei_fw_status fw_status;
+ 	bool (*quirk_probe)(const struct pci_dev *pdev);
++	const char *kind;
+ 	size_t dma_size[DMA_DSCR_NUM];
+ 	u32 fw_ver_supported:1;
+ 	u32 hw_trc_supported:1;
+@@ -76,6 +78,8 @@ struct mei_me_hw {
+  *                         with quirk for Node Manager exclusion.
+  * @MEI_ME_PCH8_CFG:       Platform Controller Hub Gen8 and newer
+  *                         client platforms.
++ * @MEI_ME_PCH8_ITOUCH_CFG:Platform Controller Hub Gen8 and newer
++ *                         client platforms (iTouch).
+  * @MEI_ME_PCH8_SPS_4_CFG: Platform Controller Hub Gen8 and newer
+  *                         servers platforms with quirk for
+  *                         SPS firmware exclusion.
+@@ -100,11 +104,12 @@ enum mei_cfg_idx {
+ 	MEI_ME_PCH7_CFG,
+ 	MEI_ME_PCH_CPT_PBG_CFG,
+ 	MEI_ME_PCH8_CFG,
++	MEI_ME_PCH8_ITOUCH_CFG,
+ 	MEI_ME_PCH8_SPS_4_CFG,
+ 	MEI_ME_PCH12_CFG,
+ 	MEI_ME_PCH12_SPS_4_CFG,
+ 	MEI_ME_PCH12_SPS_CFG,
+-	MEI_ME_PCH12_SPS_NODMA_CFG,
++	MEI_ME_PCH12_SPS_ITOUCH_CFG,
+ 	MEI_ME_PCH15_CFG,
+ 	MEI_ME_PCH15_SPS_CFG,
+ 	MEI_ME_NUM_CFG,
+diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
+index 05e6ad6d4d54..3fd0d42e89c0 100644
+--- a/drivers/misc/mei/main.c
++++ b/drivers/misc/mei/main.c
+@@ -885,6 +885,32 @@ void mei_set_devstate(struct mei_device *dev, enum mei_dev_state state)
+ 	}
+ }
+ 
++/**
++ * kind_show - display device kind
++ *
++ * @device: device pointer
++ * @attr: attribute pointer
++ * @buf: char out buffer
++ *
++ * Return: number of the bytes printed into buf or error
++ */
++static ssize_t kind_show(struct device *device,
++			 struct device_attribute *attr, char *buf)
++{
++	struct mei_device *dev = dev_get_drvdata(device);
++	ssize_t ret = 0;
++
++	mutex_lock(&dev->device_lock);
++	if (dev->kind)
++		ret = sprintf(buf, "%s\n", dev->kind);
++	else
++		ret = sprintf(buf, "%s\n", "mei");
++	mutex_unlock(&dev->device_lock);
++
++	return ret;
++}
++static DEVICE_ATTR_RO(kind);
++
+ static struct attribute *mei_attrs[] = {
+ 	&dev_attr_fw_status.attr,
+ 	&dev_attr_hbm_ver.attr,
+@@ -893,6 +919,7 @@ static struct attribute *mei_attrs[] = {
+ 	&dev_attr_fw_ver.attr,
+ 	&dev_attr_dev_state.attr,
+ 	&dev_attr_trc.attr,
++	&dev_attr_kind.attr,
+ 	NULL
+ };
+ ATTRIBUTE_GROUPS(mei);
+diff --git a/drivers/misc/mei/mei_dev.h b/drivers/misc/mei/mei_dev.h
+index 3a29db07211d..d3a4f54c0ae7 100644
+--- a/drivers/misc/mei/mei_dev.h
++++ b/drivers/misc/mei/mei_dev.h
+@@ -445,6 +445,8 @@ struct mei_fw_version {
+  * @device_list : mei client bus list
+  * @cl_bus_lock : client bus list lock
+  *
++ * @kind        : kind of mei device
++ *
+  * @dbgfs_dir   : debugfs mei root directory
+  *
+  * @ops:        : hw specific operations
+@@ -528,6 +530,8 @@ struct mei_device {
+ 	struct list_head device_list;
+ 	struct mutex cl_bus_lock;
+ 
++	const char *kind;
++
+ #if IS_ENABLED(CONFIG_DEBUG_FS)
+ 	struct dentry *dbgfs_dir;
+ #endif /* CONFIG_DEBUG_FS */
+diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
+index 159e40a2505d..1de9ef7a272b 100644
+--- a/drivers/misc/mei/pci-me.c
++++ b/drivers/misc/mei/pci-me.c
+@@ -68,7 +68,7 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT, MEI_ME_PCH8_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_2, MEI_ME_PCH8_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_3, MEI_ME_PCH8_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_3, MEI_ME_PCH8_ITOUCH_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H, MEI_ME_PCH8_SPS_4_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H_2, MEI_ME_PCH8_SPS_4_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_LBG, MEI_ME_PCH12_SPS_4_CFG)},
+@@ -85,15 +85,15 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_KBP_3, MEI_ME_PCH8_CFG)},
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_LP, MEI_ME_PCH12_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_LP_3, MEI_ME_PCH8_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_LP_3, MEI_ME_PCH8_ITOUCH_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_H, MEI_ME_PCH12_SPS_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_H_3, MEI_ME_PCH12_SPS_NODMA_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_H_3, MEI_ME_PCH12_SPS_ITOUCH_CFG)},
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP, MEI_ME_PCH12_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP_3, MEI_ME_PCH8_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP_3, MEI_ME_PCH8_ITOUCH_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_V, MEI_ME_PCH12_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H, MEI_ME_PCH12_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H_3, MEI_ME_PCH8_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H_3, MEI_ME_PCH8_ITOUCH_CFG)},
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
+ 
+-- 
+2.25.4
 
