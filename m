@@ -2,142 +2,171 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AD8C43463
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD504C43464
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00368207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:06:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KPZo9svr"
+	by mail.kernel.org (Postfix) with ESMTP id 9DEF5207FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:06:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbgG1XGR (ORCPT
+        id S1730374AbgG1XGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 19:06:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730090AbgG1XFm (ORCPT
+        Tue, 28 Jul 2020 19:06:15 -0400
+Received: from smtprelay0009.hostedemail.com ([216.40.44.9]:42968 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730323AbgG1XGN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 19:05:42 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02B9C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 16:05:42 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id s189so15323994iod.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 16:05:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FEp/fFZW3elYu/pkDqjjA8tnLGEpyOC07ATo4jnbF9E=;
-        b=KPZo9svrCrF01OxSNs6N5NzjDuZ7FBBnO9f4haOpB217QwgRevg0gt2MOZkS0vRfj6
-         iLt4hp6oLWtWdsWvW6kl7sA/4ipmjWov6aUAdtsq71ImxFeVFpZ6ekI26zgTxOoxLguq
-         tjDJZlLLElS6D+a8F7xmt6UA7m3DMZtGeKgrU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FEp/fFZW3elYu/pkDqjjA8tnLGEpyOC07ATo4jnbF9E=;
-        b=qcUDX/euYHTpGIUA8xHOOn3x5GutRtiqbYi7oEeXEDq+BpYZvGdaWMld1Xj6KSP+NU
-         KFr7Vz/z8yK+eYs+EixRQys8i8swwld+yAqlgQL0JzX+ImUPHQW3G61Fo1L9DJp5qLYx
-         Xd64cl+q2GESMHCrT3QFOwamy+CujjVbB9/SibHi7ENLVIIQ3w3/JR1wcZ6DZ48oRxp2
-         ON70UlrzxIlsmxLhVOgdEGiqRRXpC0ga64CIzNLuOmHAxNoJgmmUyF3u80gMC0+ez5o/
-         TDr+K2RYv0+dCttAoasbkC/sc3WLkvSlLWMJ68I6BnY5iUCNgmmt0XapqEcMtnzEFVtX
-         bRlw==
-X-Gm-Message-State: AOAM5308H0RPcgguradeLWyoRjBT6KOZUb2RRyXerqCE742gOyNMHKsS
-        fQ2sBF9vIbco8G7Ofth0l1veNw==
-X-Google-Smtp-Source: ABdhPJzy6X8ljGgWHEzVs0tHQaZilHQa742vHtg+q7KpkQiDkfzP8YGqJgfrfk2qFkCRtq2aSNLGnA==
-X-Received: by 2002:a6b:b748:: with SMTP id h69mr21738721iof.47.1595977542085;
-        Tue, 28 Jul 2020 16:05:42 -0700 (PDT)
-Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
-        by smtp.gmail.com with ESMTPSA id w10sm148945ilo.10.2020.07.28.16.05.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 16:05:41 -0700 (PDT)
-From:   Daniel Campello <campello@chromium.org>
-To:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Daniel Campello <campello@chromium.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org
-Subject: [PATCH v2 08/14] iio: sx9310: Use regmap_read_poll_timeout() for compensation
-Date:   Tue, 28 Jul 2020 17:05:14 -0600
-Message-Id: <20200728170317.v2.8.Ia205f0b0363bf663db7704026b5b7036b9748c56@changeid>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-In-Reply-To: <20200728230520.2011240-1-campello@chromium.org>
-References: <20200728151258.1222876-1-campello@chromium.org>
- <20200728230520.2011240-1-campello@chromium.org>
+        Tue, 28 Jul 2020 19:06:13 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id DF3A3182CED5B;
+        Tue, 28 Jul 2020 23:06:11 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: swing96_0a091fa26f6d
+X-Filterd-Recvd-Size: 5557
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 28 Jul 2020 23:06:10 +0000 (UTC)
+Message-ID: <90f4d174d8a2d50104ad52aa0bd4e0ece86f2e90.camel@perches.com>
+Subject: Re: [char-misc-next] Revert "mei: hdcp: Replace one-element array
+ with flexible-array member"
+From:   Joe Perches <joe@perches.com>
+To:     "Winkler, Tomas" <tomas.winkler@intel.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Usyskin, Alexander" <alexander.usyskin@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>
+Date:   Tue, 28 Jul 2020 16:06:08 -0700
+In-Reply-To: <398e20e8c3f7436bb50d671b9aa9f809@intel.com>
+References: <20200728214139.3129532-1-tomas.winkler@intel.com>
+         <e80a9e75-4497-1587-deab-b5c6a0fcc48f@embeddedor.com>
+         <8ec7601780b542c2bc0168e03749ec0e@intel.com>
+         <d6ef8ca4-6e11-b758-0e24-75301e1a5303@embeddedor.com>
+         <398e20e8c3f7436bb50d671b9aa9f809@intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify compensation stage by using regmap_read_poll_timeout().
+On Tue, 2020-07-28 at 22:14 +0000, Winkler, Tomas wrote:
+> > -----Original Message-----
+> > From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+[]
+> > I'm using this command:
+> > 
+> > $ scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback
+> > 
+> > and this is the output for both files:
+> > 
+> > $ scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback
+> > drivers/misc/mei/hdcp/mei_hdcp.c Arnd Bergmann <arnd@arndb.de>
+> > (supporter:CHAR and MISC DRIVERS) Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> (supporter:CHAR and MISC DRIVERS) linux-
+> > kernel@vger.kernel.org (open list) $ scripts/get_maintainer.pl --nokeywords --
+> > nogit --nogit-fallback drivers/misc/mei/hdcp/mei_hdcp.h Arnd Bergmann
+> > <arnd@arndb.de> (supporter:CHAR and MISC DRIVERS) Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> (supporter:CHAR and MISC DRIVERS) linux-
+> > kernel@vger.kernel.org (open list)
+> > For some reason you don't appear on the list above. Do you see anything
+> > wrong with the command I'm running to get the maintainers and lists?
+> 
+> Not sure, it should be caught by drivers/misc/mei/* ?  
 
-Signed-off-by: Daniel Campello <campello@chromium.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
+No, this pattern matches _only_ files in that
+particular directory and not any files in any
+subdirectory.
 
-Changes in v2:
- - Fixed dev_err() message
+> Maybe it is not recursive?
 
- drivers/iio/proximity/sx9310.c | 25 ++++++++++---------------
- 1 file changed, 10 insertions(+), 15 deletions(-)
+It depends on the pattern.
+Patterns with trailing slashes match subdirectories too.
 
-diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-index 1f04ab8507ec62..f7f44fd9198499 100644
---- a/drivers/iio/proximity/sx9310.c
-+++ b/drivers/iio/proximity/sx9310.c
-@@ -797,7 +797,7 @@ static const struct sx9310_reg_default sx9310_default_regs[] = {
- static int sx9310_init_compensation(struct iio_dev *indio_dev)
- {
- 	struct sx9310_data *data = iio_priv(indio_dev);
--	int i, ret;
-+	int ret;
- 	unsigned int val;
- 	unsigned int ctrl0;
- 
-@@ -811,22 +811,17 @@ static int sx9310_init_compensation(struct iio_dev *indio_dev)
- 	if (ret < 0)
- 		return ret;
- 
--	for (i = 100; i >= 0; i--) {
--		msleep(20);
--		ret = regmap_read(data->regmap, SX9310_REG_STAT1, &val);
--		if (ret < 0)
--			goto out;
--		if (!(val & SX9310_COMPSTAT_MASK))
--			break;
--	}
--
--	if (i < 0) {
--		dev_err(&data->client->dev,
--			"initial compensation timed out: 0x%02x", val);
--		ret = -ETIMEDOUT;
-+	ret = regmap_read_poll_timeout(data->regmap, SX9310_REG_STAT1, val,
-+				       !(val & SX9310_REG_STAT1_COMPSTAT_MASK),
-+				       20000, 2000000);
-+	if (ret) {
-+		if (ret == -ETIMEDOUT)
-+			dev_err(&data->client->dev,
-+				"initial compensation timed out: 0x%02x\n",
-+				val);
-+		return ret;
- 	}
- 
--out:
- 	regmap_write(data->regmap, SX9310_REG_PROX_CTRL0, ctrl0);
- 	return ret;
- }
--- 
-2.28.0.163.g6104cc2f0b6-goog
+from MAINTAINERS:
+
+	F: *Files* and directories wildcard patterns.
+	   A trailing slash includes all files and subdirectory files.
+	   F:	drivers/net/	all files in and below drivers/net
+	   F:	drivers/net/*	all files in drivers/net, but not below
+	   F:	*/net/*		all files in "any top level directory"/net
+	   One pattern per line.  Multiple F: lines acceptable.
+
+
+> Need to check the script, 
+> frankly I usually check this manually.  prob
+> 
+> INTEL MANAGEMENT ENGINE (mei)
+> M:      Tomas Winkler <tomas.winkler@intel.com>
+> L:      linux-kernel@vger.kernel.org
+> S:      Supported
+> F:      Documentation/driver-api/mei/*
+> F:      drivers/misc/mei/*
+
+You probably want:
+
+F:	drivers/misc/mei/
+
+> F:      drivers/watchdog/mei_wdt.c
+> F:      include/linux/mei_cl_bus.h
+> F:      include/uapi/linux/mei.h
+> F:      samples/mei/*
+> 
+> 
+> > Thanks
+> > --
+> > Gustavo
+> > 
+> > > > > I really do not appreciate that the code is bypassing driver
+> > > > > maintaner review, I think this is a minimum we can ask for, this is
+> > > > > not for a first time.
+> > > > > 
+> > > > > This reverts commit c56967d674e361ebe716e66992e3c5332b25ac1f.
+> > > > > 
+> > > > > Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > > > > Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+> > > > > ---
+> > > > >  drivers/misc/mei/hdcp/mei_hdcp.c | 2 +-
+> > > > > drivers/misc/mei/hdcp/mei_hdcp.h | 2 +-
+> > > > >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c
+> > > > > b/drivers/misc/mei/hdcp/mei_hdcp.c
+> > > > > index d1d3e025ca0e..e6c3dc595617 100644
+> > > > > --- a/drivers/misc/mei/hdcp/mei_hdcp.c
+> > > > > +++ b/drivers/misc/mei/hdcp/mei_hdcp.c
+> > > > > @@ -572,7 +572,7 @@ static int mei_hdcp_verify_mprime(struct device
+> > > > *dev,
+> > > > >  	       HDCP_2_2_MPRIME_LEN);
+> > > > >  	drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data-
+> > seq_num_m);
+> > > > >  	memcpy(verify_mprime_in.streams, data->streams,
+> > > > > -	       array_size(data->k, sizeof(*data->streams)));
+> > > > > +	       (data->k * sizeof(struct hdcp2_streamid_type)));
+> > > > > 
+> > > > >  	verify_mprime_in.k = cpu_to_be16(data->k);
+> > > > > 
+> > > > > diff --git a/drivers/misc/mei/hdcp/mei_hdcp.h
+> > > > > b/drivers/misc/mei/hdcp/mei_hdcp.h
+> > > > > index 834757f5e072..18ffc773fa18 100644
+> > > > > --- a/drivers/misc/mei/hdcp/mei_hdcp.h
+> > > > > +++ b/drivers/misc/mei/hdcp/mei_hdcp.h
+> > > > > @@ -358,7 +358,7 @@ struct wired_cmd_repeater_auth_stream_req_in
+> > {
+> > > > >  	u8
+> > > > 	seq_num_m[HDCP_2_2_SEQ_NUM_LEN];
+> > > > >  	u8				m_prime[HDCP_2_2_MPRIME_LEN];
+> > > > >  	__be16				k;
+> > > > > -	struct hdcp2_streamid_type	streams[];
+> > > > > +	struct hdcp2_streamid_type	streams[1];
+> > > > >  } __packed;
+> > > > > 
+> > > > >  struct wired_cmd_repeater_auth_stream_req_out {
+> > > > > 
 
