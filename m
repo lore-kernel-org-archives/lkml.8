@@ -2,137 +2,106 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7614C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47C5620672
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E702074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 09:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgG1JZw (ORCPT
+        id S1728235AbgG1J2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:25:52 -0400
-Received: from smtprelay0154.hostedemail.com ([216.40.44.154]:43324 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728101AbgG1JZv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 05:25:51 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 36325180A815F;
-        Tue, 28 Jul 2020 09:25:50 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bath95_350867a26f68
-X-Filterd-Recvd-Size: 3880
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 28 Jul 2020 09:25:48 +0000 (UTC)
-Message-ID: <2480b12b85f9560060cd155de222d42d40150ae7.camel@perches.com>
-Subject: Re: [PATCH 2/2] media: bt8xx: avoid a useless memset
-From:   Joe Perches <joe@perches.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        mchehab@kernel.org, akpm@linux-foundation.org, rppt@kernel.org,
-        hverkuil-cisco@xs4all.nl
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Date:   Tue, 28 Jul 2020 02:25:47 -0700
-In-Reply-To: <d5759bd3-5e8a-a557-cd3e-0a2ae4d124e9@wanadoo.fr>
-References: <20200727135151.54757-1-christophe.jaillet@wanadoo.fr>
-         <0897d9bec8865859694c917f3f72ab8fd12321ff.camel@perches.com>
-         <30618c986727e5f8a9806f663b4e6f4aa80065ae.camel@perches.com>
-         <d5759bd3-5e8a-a557-cd3e-0a2ae4d124e9@wanadoo.fr>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Tue, 28 Jul 2020 05:28:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:59398 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728093AbgG1J2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 05:28:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AD0830E;
+        Tue, 28 Jul 2020 02:28:10 -0700 (PDT)
+Received: from [192.168.178.2] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D6EE3F66E;
+        Tue, 28 Jul 2020 02:28:08 -0700 (PDT)
+Subject: Re: [PATCH] sched: loadavg: delete useless param ticks for
+ calc_global_load
+To:     Wang Wenhu <wenhu.wang@vivo.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
+References: <20200728085809.60132-1-wenhu.wang@vivo.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <940ac672-8fed-66f0-c37a-87f9ed2c5dd4@arm.com>
+Date:   Tue, 28 Jul 2020 11:28:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200728085809.60132-1-wenhu.wang@vivo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-28 at 10:05 +0200, Christophe JAILLET wrote:
-> Le 27/07/2020 à 18:16, Joe Perches a écrit :
-> > On Mon, 2020-07-27 at 09:09 -0700, Joe Perches wrote:
-> > > On Mon, 2020-07-27 at 15:51 +0200, Christophe JAILLET wrote:
-> > > > Avoid a memset after a call to 'dma_alloc_coherent()'.
-> > > > This is useless since
-> > > > commit 518a2f1925c3 ("dma-mapping: zero memory returned from dma_alloc_*")
-> > > []
-> > > > diff --git a/drivers/media/pci/bt8xx/btcx-risc.c b/drivers/media/pci/bt8xx/btcx-risc.c
-> > > []
-> > > > @@ -73,7 +73,6 @@ int btcx_riscmem_alloc(struct pci_dev *pci,
-> > > >   		dprintk("btcx: riscmem alloc [%d] dma=%lx cpu=%p size=%d\n",
-> > > >   			memcnt, (unsigned long)dma, cpu, size);
-> > > >   	}
-> > > > -	memset(risc->cpu,0,risc->size);
-> > > >   	return 0;
-> > > >   }
-> > > 
-> > > Likely NAK.
-> > > 
-> > > This is not useless as risc->cpu may be reused
-> > > and the alloc may not have been done.
-> > 
-> > Perhaps a little rewrite for clarity:
-> > ---
-> >   drivers/media/pci/bt8xx/btcx-risc.c | 24 +++++++++++++-----------
-> >   1 file changed, 13 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/drivers/media/pci/bt8xx/btcx-risc.c b/drivers/media/pci/bt8xx/btcx-risc.c
-> > index 51257980f539..311f4ca2a108 100644
-> > --- a/drivers/media/pci/bt8xx/btcx-risc.c
-> > +++ b/drivers/media/pci/bt8xx/btcx-risc.c
-> > @@ -56,24 +56,26 @@ int btcx_riscmem_alloc(struct pci_dev *pci,
-> >   		       struct btcx_riscmem *risc,
-> >   		       unsigned int size)
-> >   {
-> > -	__le32 *cpu;
-> > -	dma_addr_t dma = 0;
-> > -
-> > -	if (NULL != risc->cpu && risc->size < size)
-> > -		btcx_riscmem_free(pci,risc);
-> > -	if (NULL == risc->cpu) {
-> > -		cpu = pci_alloc_consistent(pci, size, &dma);
-> > -		if (NULL == cpu)
-> > +	if (risc->cpu && risc->size < size)
-> > +		btcx_riscmem_free(pci, risc);
-> > +
-> > +	if (risc->cpu) {
-> > +		memset(risc->cpu, 0, risc->size);
-> > +	} else {
-> > +		dma_addr_t dma = 0;
-> > +
-> > +		risc->cpu = pci_alloc_consistent(pci, size, &dma);
-> > +		if (!risc->cpu)
-> >   			return -ENOMEM;
-> > -		risc->cpu  = cpu;
-> > +
-> >   		risc->dma  = dma;
-> >   		risc->size = size;
-> >   
-> >   		memcnt++;
-> >   		dprintk("btcx: riscmem alloc [%d] dma=%lx cpu=%p size=%d\n",
-> > -			memcnt, (unsigned long)dma, cpu, size);
-> > +			memcnt, (unsigned long)dma, risc->cpu, size);
-> >   	}
-> > -	memset(risc->cpu,0,risc->size);
-> > +
-> >   	return 0;
-> >   }
-> >   
-> > 
-> > 
-> Looks good to me.
+On 28/07/2020 10:58, Wang Wenhu wrote:
+> The only parameter "unsigned long ticks" for calc_global_load is
+> never used inside the function definition. Delete it now.
 > 
-> Just note, that this will not apply after patch 1/2 is applied, because 
-> it turns pci_alloc_consistent() into dma_alloc_coherent().
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+> ---
+>  include/linux/sched/loadavg.h | 2 +-
+>  kernel/sched/loadavg.c        | 2 +-
+>  kernel/time/timekeeping.c     | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/sched/loadavg.h b/include/linux/sched/loadavg.h
+> index 4859bea47a7b..83ec54b65e79 100644
+> --- a/include/linux/sched/loadavg.h
+> +++ b/include/linux/sched/loadavg.h
+> @@ -43,6 +43,6 @@ extern unsigned long calc_load_n(unsigned long load, unsigned long exp,
+>  #define LOAD_INT(x) ((x) >> FSHIFT)
+>  #define LOAD_FRAC(x) LOAD_INT(((x) & (FIXED_1-1)) * 100)
+>  
+> -extern void calc_global_load(unsigned long ticks);
+> +extern void calc_global_load(void);
+>  
+>  #endif /* _LINUX_SCHED_LOADAVG_H */
+> diff --git a/kernel/sched/loadavg.c b/kernel/sched/loadavg.c
+> index de22da666ac7..d2a655643a02 100644
+> --- a/kernel/sched/loadavg.c
+> +++ b/kernel/sched/loadavg.c
+> @@ -347,7 +347,7 @@ static inline void calc_global_nohz(void) { }
+>   *
+>   * Called from the global timer code.
+>   */
+> -void calc_global_load(unsigned long ticks)
+> +void calc_global_load(void)
+>  {
+>  	unsigned long sample_window;
+>  	long active, delta;
+> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+> index d20d489841c8..63a632f9896c 100644
+> --- a/kernel/time/timekeeping.c
+> +++ b/kernel/time/timekeeping.c
+> @@ -2193,7 +2193,7 @@ EXPORT_SYMBOL(ktime_get_coarse_ts64);
+>  void do_timer(unsigned long ticks)
+>  {
+>  	jiffies_64 += ticks;
+> -	calc_global_load(ticks);
+> +	calc_global_load();
+>  }
+>  
+>  /**
 
-Just a suggestion.
-
-As it's dependent on your first patch, perhaps
-you could make the appropriate change.
-
-
+There is already commit 46132e3ac58c ("sched: nohz: stop passing around
+unused "ticks" parameter.") in linux-next master.
