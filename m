@@ -2,194 +2,112 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F198C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C96D220663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F94020663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:04:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="Wk8DgYFC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ETQxn7wQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729959AbgG1NEh (ORCPT
+        id S1729973AbgG1NEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:04:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50794 "EHLO
+        Tue, 28 Jul 2020 09:04:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729607AbgG1NEh (ORCPT
+        with ESMTP id S1729529AbgG1NEp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:04:37 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8C8AC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:04:36 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r2so13137324wrs.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:04:36 -0700 (PDT)
+        Tue, 28 Jul 2020 09:04:45 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D14BBC061794;
+        Tue, 28 Jul 2020 06:04:44 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id c12so5690973qtn.9;
+        Tue, 28 Jul 2020 06:04:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gcofQuTne2V4gIOdfNwCH+OZQw5KXbzKYJj8xweScI4=;
-        b=Wk8DgYFCnFIRsz2cW/r3mBspcHpJv3myWr993HibCeQqllBImb1GEcO+fyimpiIr5w
-         7PTKyEnW8WoREJvkcnCvBLhEe/b2AYgmGBg+hDG7uRv3RiPKed/1m+fZvGMrg1gayGWK
-         AFyVkhHrIr6plLwk6Ra9T2C/i6e+GwgslmPo6LkAuUUaSjQQxUlzNFGD4K5Fs8XLyBm/
-         WYKHxqOG+IimIaQW/a8+cdOdxV5cwEiSLqh64frjVKJSZNdsQJBvNAjdKtN2KPJEyT1u
-         LzTqFcQ8B58tNeZOZwtP2g6/Gu1R/CWcoBt/XKUu4dmLtkrQaKc4RegQ3+jHyVhi/dcO
-         S+AQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=bAL6Aq3KWDEofuTw4uy1CRZnHFagUpXW9EymxiLs0/8=;
+        b=ETQxn7wQmg1tdBR0z9Pwm9LU2FhCwB9T4YCOvvMN3UI3aWhWnABcAyQbJ1NUeVu2Q6
+         axeeADibCYX5tgoTXojet+AhY27S5J3mjB2g56owZZ/nSdQu9/5ymXc1bBVMXQb4MKvy
+         BXuA3Uon5PmB98ay0mYrcJuMvTlBqL3C4pakzxuFsBJ4iOG3yvxdzG3IHYdmoZ7a3nex
+         BIlUmXmphnwne4m5ANDiBo8PAk/k3jB/zfs7kBQKa1EfqKOmVO8xgUUPDsK7P3YVJyCL
+         nQEDZMGLsRr58677WDPgYw59gpAFlruqFIrRcOn8X+v6UQ3kEjtFgD47Si6g47ocMjYU
+         gXpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gcofQuTne2V4gIOdfNwCH+OZQw5KXbzKYJj8xweScI4=;
-        b=gHz1fBUL92T0Y5j/vsHPGN+zBWV9XQVnIwNZVHbDjJNcEXsr5y2+3Wnprdz6dotAR5
-         sjC6ekqT4/3YJvjTQLIhwBVa/H9k3Tn+GTeumBEEkwGOFkHV1unphM8dwBEYgxSISKPc
-         cYuLhI+QFa13pblPCvabDT/oNXAf76u+mA3zAjvjl1xEqYixJFyeJmr9rnHXxum8VuQv
-         GN7LjwsYWMAWy1EKh/RDPgp6hKGQyCGySWs1TLRv/k52Uz040IzXZLb91Fmvvv3OgMcI
-         vUxiEAzmF7oMH75A8GLlquXWGV/7HJ5Yj1bZP0vQgmF2Ldz0RGPTlIcxQgGnS9LGzmtj
-         92rw==
-X-Gm-Message-State: AOAM530alQ4lO0Z61LodQEXjAHeRTHMGhz3I3xoGPnsoaGFiLuzo2vA7
-        kb2HivCmvsDcUk5ZsKUxcz2x6abfw+/5SqtW8qUuTQ==
-X-Google-Smtp-Source: ABdhPJxelRtYnChCl0Sl6JYGoztCBTIhgUBVvvtriFYE5kfH2FMO/T+MYgEogjjrP1PYAHMHTnlP2yZzYC42aSEnflo=
-X-Received: by 2002:adf:fdce:: with SMTP id i14mr19598316wrs.273.1595941475627;
- Tue, 28 Jul 2020 06:04:35 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=bAL6Aq3KWDEofuTw4uy1CRZnHFagUpXW9EymxiLs0/8=;
+        b=OFI7STEb+DyqHjWzYbZbvoIfK/5ixO0Rwenh92KtbVIDvDtn9MBNlo3kJjd6iMySls
+         W0+ykiSPnRvc7GBbbhYTelz49YOtYZ22bTpge/Akepblbru1q7YjSgaog+oBPecczeRf
+         G5Q/F2/KF3r1k8wK9X9iARYrZhZh7ScuNPmb7AQKotO/RnzBrdnudZy2TkpMOZbQuzHO
+         JmcyS9CZAlmu/hWYTcVqcZarlLEXAMUESaVEnmOxLb3Kc9YdFZH7s7z2s+oQPdmraMOV
+         BoyspEOW9i6qvTDOu+aLjahMet/ZnCV1WqrC+I60W23VvAYmnF5F62DXHxS9NIzBwPxV
+         6KJQ==
+X-Gm-Message-State: AOAM530sNakW2MvI0iY3TVDRbIanFv8VwI0P02K+1toENV3vkkJJ3oND
+        RCzJwytmBMTm45lTWsZk8rdwOIrv1Ls=
+X-Google-Smtp-Source: ABdhPJytHLlhTJZPZ7zJmSnZHX02tzLEHhHXTQKUlRv1A9/z/cbtuX5D75npOSV17l/W8ptZF7O4MA==
+X-Received: by 2002:ac8:65cd:: with SMTP id t13mr1497637qto.368.1595941483928;
+        Tue, 28 Jul 2020 06:04:43 -0700 (PDT)
+Received: from [192.168.1.190] (pool-96-244-118-111.bltmmd.fios.verizon.net. [96.244.118.111])
+        by smtp.gmail.com with ESMTPSA id l11sm18030737qti.59.2020.07.28.06.04.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 06:04:42 -0700 (PDT)
+Subject: Re: [PATCH] selinux: add tracepoint on denials
+To:     =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Nick Kralevich <nnk@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+References: <20200724091520.880211-1-tweek@google.com>
+ <CAEjxPJ45ij3obT37ywn_edb9xb89z-SdwzejfN6+jrvAtghXfA@mail.gmail.com>
+ <CAHC9VhS4aXD8kcXnQ2MsYvjc--xXSUpsM1xtgq3X5DBT59ohhw@mail.gmail.com>
+ <CA+zpnLfczC=9HQA8s1oBGKGQO+OkuydF85o89dhSxdOyKBHMgg@mail.gmail.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Message-ID: <1859cc5b-2fb0-432b-2635-35ce79dbc244@gmail.com>
+Date:   Tue, 28 Jul 2020 09:04:41 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <6289e210ab50767f32951c1e9b80d420dc879447.1594230107.git-series.maxime@cerno.tech>
-In-Reply-To: <6289e210ab50767f32951c1e9b80d420dc879447.1594230107.git-series.maxime@cerno.tech>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Tue, 28 Jul 2020 14:04:18 +0100
-Message-ID: <CAPY8ntAB41UNyNCAACRzS_mo4R5EbSiV_z_vMfJmoEw1Mbj7xw@mail.gmail.com>
-Subject: Re: [PATCH v4 54/78] drm/vc4: hdmi: Add PHY RNG enable / disable function
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CA+zpnLfczC=9HQA8s1oBGKGQO+OkuydF85o89dhSxdOyKBHMgg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime
+On 7/28/20 8:49 AM, Thiébaud Weksteen wrote:
 
-On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
+> Thanks for the review! I'll send a new revision of the patch with the
+> %x formatter and using the TP_CONDITION macro.
 >
-> Let's continue the implementation of hooks for the parts that change in the
-> BCM2711 SoC with the PHY RNG setup.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> On adding further information to the trace event, I would prefer
+> adding the strict minimum to be able to correlate the event with the
+> avc message. The reason is that tracevents have a fixed size (see
+> https://www.kernel.org/doc/Documentation/trace/events.txt). For
+> instance, we would need to decide on a maximum size for the string
+> representation of the list of permissions. This would also duplicate
+> the reporting done in the avc audit event. I'll simply add the pid as
+> part of the printk, which should be sufficient for the correlation.
 
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Ok, also please use unsigned int for the fields and %u for the cls value.
 
-> ---
->  drivers/gpu/drm/vc4/vc4_hdmi.c     | 15 +++++++++------
->  drivers/gpu/drm/vc4/vc4_hdmi.h     |  8 ++++++++
->  drivers/gpu/drm/vc4/vc4_hdmi_phy.c | 15 +++++++++++++++
->  3 files changed, 32 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> index 068041145d1c..19897d6525ac 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> @@ -762,9 +762,9 @@ static int vc4_hdmi_audio_trigger(struct snd_pcm_substream *substream, int cmd,
->         switch (cmd) {
->         case SNDRV_PCM_TRIGGER_START:
->                 vc4_hdmi_set_audio_infoframe(encoder);
-> -               HDMI_WRITE(HDMI_TX_PHY_CTL_0,
-> -                          HDMI_READ(HDMI_TX_PHY_CTL_0) &
-> -                          ~VC4_HDMI_TX_PHY_RNG_PWRDN);
-> +
-> +               if (vc4_hdmi->variant->phy_rng_enable)
-> +                       vc4_hdmi->variant->phy_rng_enable(vc4_hdmi);
->
->                 HDMI_WRITE(HDMI_MAI_CTL,
->                            VC4_SET_FIELD(vc4_hdmi->audio.channels,
-> @@ -776,9 +776,10 @@ static int vc4_hdmi_audio_trigger(struct snd_pcm_substream *substream, int cmd,
->                            VC4_HD_MAI_CTL_DLATE |
->                            VC4_HD_MAI_CTL_ERRORE |
->                            VC4_HD_MAI_CTL_ERRORF);
-> -               HDMI_WRITE(HDMI_TX_PHY_CTL_0,
-> -                          HDMI_READ(HDMI_TX_PHY_CTL_0) |
-> -                          VC4_HDMI_TX_PHY_RNG_PWRDN);
-> +
-> +               if (vc4_hdmi->variant->phy_rng_disable)
-> +                       vc4_hdmi->variant->phy_rng_disable(vc4_hdmi);
-> +
->                 break;
->         default:
->                 break;
-> @@ -1433,6 +1434,8 @@ static const struct vc4_hdmi_variant bcm2835_variant = {
->         .reset                  = vc4_hdmi_reset,
->         .phy_init               = vc4_hdmi_phy_init,
->         .phy_disable            = vc4_hdmi_phy_disable,
-> +       .phy_rng_enable         = vc4_hdmi_phy_rng_enable,
-> +       .phy_rng_disable        = vc4_hdmi_phy_rng_disable,
->  };
->
->  static const struct of_device_id vc4_hdmi_dt_match[] = {
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-> index 32c80161c786..950accbc44e4 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-> @@ -47,6 +47,12 @@ struct vc4_hdmi_variant {
->
->         /* Callback to disable the PHY */
->         void (*phy_disable)(struct vc4_hdmi *vc4_hdmi);
-> +
-> +       /* Callback to enable the RNG in the PHY */
-> +       void (*phy_rng_enable)(struct vc4_hdmi *vc4_hdmi);
-> +
-> +       /* Callback to disable the RNG in the PHY */
-> +       void (*phy_rng_disable)(struct vc4_hdmi *vc4_hdmi);
->  };
->
->  /* HDMI audio information */
-> @@ -107,5 +113,7 @@ encoder_to_vc4_hdmi(struct drm_encoder *encoder)
->  void vc4_hdmi_phy_init(struct vc4_hdmi *vc4_hdmi,
->                        struct drm_display_mode *mode);
->  void vc4_hdmi_phy_disable(struct vc4_hdmi *vc4_hdmi);
-> +void vc4_hdmi_phy_rng_enable(struct vc4_hdmi *vc4_hdmi);
-> +void vc4_hdmi_phy_rng_disable(struct vc4_hdmi *vc4_hdmi);
->
->  #endif /* _VC4_HDMI_H_ */
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi_phy.c b/drivers/gpu/drm/vc4/vc4_hdmi_phy.c
-> index 5a1746877bb5..93287e24d7d1 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi_phy.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi_phy.c
-> @@ -7,6 +7,7 @@
->   */
->
->  #include "vc4_hdmi.h"
-> +#include "vc4_regs.h"
->  #include "vc4_hdmi_regs.h"
->
->  void vc4_hdmi_phy_init(struct vc4_hdmi *vc4_hdmi, struct drm_display_mode *mode)
-> @@ -23,3 +24,17 @@ void vc4_hdmi_phy_disable(struct vc4_hdmi *vc4_hdmi)
->  {
->         HDMI_WRITE(HDMI_TX_PHY_RESET_CTL, 0xf << 16);
->  }
-> +
-> +void vc4_hdmi_phy_rng_enable(struct vc4_hdmi *vc4_hdmi)
-> +{
-> +       HDMI_WRITE(HDMI_TX_PHY_CTL_0,
-> +                  HDMI_READ(HDMI_TX_PHY_CTL_0) &
-> +                  ~VC4_HDMI_TX_PHY_RNG_PWRDN);
-> +}
-> +
-> +void vc4_hdmi_phy_rng_disable(struct vc4_hdmi *vc4_hdmi)
-> +{
-> +       HDMI_WRITE(HDMI_TX_PHY_CTL_0,
-> +                  HDMI_READ(HDMI_TX_PHY_CTL_0) |
-> +                  VC4_HDMI_TX_PHY_RNG_PWRDN);
-> +}
-> --
-> git-series 0.9.1
+(btw top-posting is discouraged for mailing list discussions, see 
+http://vger.kernel.org/lkml/#s3-9)
+
