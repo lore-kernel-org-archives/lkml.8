@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8ABC433F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97560C433FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 531562078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705F82078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WtpHVEq5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DKdYGkAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgG1CCw (ORCPT
+        id S1727113AbgG1CC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:02:52 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:37232 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726967AbgG1CCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 22:02:50 -0400
+        Mon, 27 Jul 2020 22:02:57 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:44580 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726858AbgG1CCf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 22:02:35 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595901770; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1595901755; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=ulqSqhn/obul9arLchAHSl2arhfspLx7mI73k/9Bims=; b=WtpHVEq5RIiGdDLTiUXMh+hNdNeGOf2KQwqHqbpi0KOrpqsQE/h0OqzNiTMCjuYsxNMjoTkj
- 3FtTsVG3zFyr0ZsrKfSc+gzjBVMKhEsYATCCUg2xKY54ii1AlCWX6+jQyghc1kaWl4xx6qRW
- sSFv+3YRORU6lSdLcgUkgik2TKE=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ bh=1GwQrNQCSG7I+ITNe/q8t3Qe1WXR3VW3IkHkTvo6IBg=; b=DKdYGkAJf5zK6/8XOJu6U+M/P7kXmR6be/cK5e63sWrQIpHRFxIKeZFRSjWztutz+6td7QfO
+ J4uSxd0qXRQWL1ptFqcSHSN1nJL+re0jrE17L+SpNC2agput696Sk2XffSFEkmRW0qIY/pqM
+ zmm5PiGR9KeD+wBG8aQ/HMd+/IU=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n19.prod.us-east-1.postgun.com with SMTP id
- 5f1f873d8db7256a9550c13d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 02:02:37
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5f1f87397186ea1ee1763745 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 02:02:33
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 80AD3C4339C; Tue, 28 Jul 2020 02:02:36 +0000 (UTC)
+        id B987DC433B6; Tue, 28 Jul 2020 02:02:32 +0000 (UTC)
 Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BC219C4344E;
-        Tue, 28 Jul 2020 02:02:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BC219C4344E
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1D03DC433AF;
+        Tue, 28 Jul 2020 02:02:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1D03DC433AF
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
 From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
@@ -52,9 +53,9 @@ To:     manivannan.sadhasivam@linaro.org
 Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
         jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
         Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v6 10/11] bus: mhi: core: Introduce APIs to allocate and free the MHI controller
-Date:   Mon, 27 Jul 2020 19:02:19 -0700
-Message-Id: <1595901740-27379-11-git-send-email-bbhatt@codeaurora.org>
+Subject: [PATCH v6 04/11] bus: mhi: core: Trigger host resume if suspended during mhi_device_get()
+Date:   Mon, 27 Jul 2020 19:02:13 -0700
+Message-Id: <1595901740-27379-5-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595901740-27379-1-git-send-email-bbhatt@codeaurora.org>
 References: <1595901740-27379-1-git-send-email-bbhatt@codeaurora.org>
@@ -63,68 +64,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Client devices should use the APIs provided to allocate and free
-the MHI controller structure. This will help ensure that the
-structure is zero-initialized and there are no false positives
-with respect to reading any values such as the serial number or
-the OEM PK hash.
+It is possible that the host may be suspending or suspended and may
+not allow an outgoing device wake assert immediately if a client has
+requested for it. Ensure that the host wakes up and allows for it so
+the client does not have to wait for an external trigger or an
+outgoing packet to be queued for the host resume to occur.
 
 Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/bus/mhi/core/init.c | 16 ++++++++++++++++
- include/linux/mhi.h         | 12 ++++++++++++
- 2 files changed, 28 insertions(+)
+ drivers/bus/mhi/core/pm.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
-index d2c0f6e..972dbf0 100644
---- a/drivers/bus/mhi/core/init.c
-+++ b/drivers/bus/mhi/core/init.c
-@@ -959,6 +959,22 @@ void mhi_unregister_controller(struct mhi_controller *mhi_cntrl)
+diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+index b227d41..27bb471 100644
+--- a/drivers/bus/mhi/core/pm.c
++++ b/drivers/bus/mhi/core/pm.c
+@@ -1112,6 +1112,9 @@ void mhi_device_get(struct mhi_device *mhi_dev)
+ 
+ 	mhi_dev->dev_wake++;
+ 	read_lock_bh(&mhi_cntrl->pm_lock);
++	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
++		mhi_trigger_resume(mhi_cntrl);
++
+ 	mhi_cntrl->wake_get(mhi_cntrl, true);
+ 	read_unlock_bh(&mhi_cntrl->pm_lock);
  }
- EXPORT_SYMBOL_GPL(mhi_unregister_controller);
- 
-+struct mhi_controller *mhi_alloc_controller(void)
-+{
-+	struct mhi_controller *mhi_cntrl;
-+
-+	mhi_cntrl = kzalloc(sizeof(*mhi_cntrl), GFP_KERNEL);
-+
-+	return mhi_cntrl;
-+}
-+EXPORT_SYMBOL_GPL(mhi_alloc_controller);
-+
-+void mhi_free_controller(struct mhi_controller *mhi_cntrl)
-+{
-+	kfree(mhi_cntrl);
-+}
-+EXPORT_SYMBOL_GPL(mhi_free_controller);
-+
- int mhi_prepare_for_power_up(struct mhi_controller *mhi_cntrl)
- {
- 	struct device *dev = &mhi_cntrl->mhi_dev->dev;
-diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-index d15e9ce..a35d876 100644
---- a/include/linux/mhi.h
-+++ b/include/linux/mhi.h
-@@ -530,6 +530,18 @@ struct mhi_driver {
- #define to_mhi_device(dev) container_of(dev, struct mhi_device, dev)
- 
- /**
-+ * mhi_alloc_controller - Allocate the MHI Controller structure
-+ * Allocate the mhi_controller structure using zero initialized memory
-+ */
-+struct mhi_controller *mhi_alloc_controller(void);
-+
-+/**
-+ * mhi_free_controller - Free the MHI Controller structure
-+ * Free the mhi_controller structure which was previously allocated
-+ */
-+void mhi_free_controller(struct mhi_controller *mhi_cntrl);
-+
-+/**
-  * mhi_register_controller - Register MHI controller
-  * @mhi_cntrl: MHI controller to register
-  * @config: Configuration to use for the controller
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
