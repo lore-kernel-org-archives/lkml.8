@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42CEC433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB5DC433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEDEF20792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB9120792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:03:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="a/z/OvqT"
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="SKCdPVmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgG1KDj (ORCPT
+        id S1728604AbgG1KDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 06:03:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51028 "EHLO
+        Tue, 28 Jul 2020 06:03:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728576AbgG1KDh (ORCPT
+        with ESMTP id S1728596AbgG1KDk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 06:03:37 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99D5FC0619D2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:03:37 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id c6so4647680pje.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:03:37 -0700 (PDT)
+        Tue, 28 Jul 2020 06:03:40 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 688C8C0619D4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:03:40 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id q17so9612655pls.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:03:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=0x0f.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lxbXhZvTnyvcOPmVLVmmOZeoQ/h8EuzKcRQrHu6Ys/8=;
-        b=a/z/OvqTBcQPu3nsrUseLki7Ob/OUuPfRJ7QCujlcXADHXmo1EkR2oTjhqWS6ApHq3
-         L57qbpwjxe/+Q6iHajslHk4NA7XfqOZ1wg6+Vrmw4+dCd28eAkAJ3ZzKysg/UPBRtey4
-         cGRaaT0STOn2umBO5k9rujrghxj5yQTrtrLPU=
+        bh=MLsnjIcx6O7hBUqO+ly4gJ/BT4WlJTFqju/5sXIimIg=;
+        b=SKCdPVmLWJF2bLrtZU3g+eZO6Jvjk2z4+jmQXQol4BWOQK4BYolKrUCLan1cceEyYJ
+         XlJqjlKhsQsOGcSuJzmzVXGgYVOY7CIXKyo+2t8BH0Pw8yXqgL4huJaNbNEl34vjn/Zs
+         3o67Tt6q5uqH889AcUvizaQWxtfULuH9wC+SA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lxbXhZvTnyvcOPmVLVmmOZeoQ/h8EuzKcRQrHu6Ys/8=;
-        b=hhhu1LrkXSRKpcipCvlCZFxrSgXhOEbHO5TfxPm/cpq5Gg9GDkl8yN3+Td9Hy4u6wb
-         NsBqNoO7z4vi/q/A+NLcNK1VJxQsAsGXVtuLztuS0WREHR2JdvVzNjd0r7GHXXcBeI1j
-         XuswOlnQ0IiVhYwPnihoAA0FFN3730HS+i1aTMRhx06rBncdAD8WM7z1zf7tv7oxJNXe
-         XUFGUuqG930ijiYmUNpFARTo86E+VisDNQ56Rn0VYG2E6rJgcl29DQ7Ri4C67HoyaV29
-         vEwK93CTR2o1sTSaRouWC6sA4VNydPdFLHLjdcKVlAlCOiUTxkZ4I17by7zA2JbVxT/G
-         DQfQ==
-X-Gm-Message-State: AOAM530/qhA9MdjyjBd7T86v5y1G2TjnVPI0pD738rYShrLKj37glltp
-        gc3f30LRdwr81lIELsNoNHINbg==
-X-Google-Smtp-Source: ABdhPJzgrVdwKcVK8UnYyivtHVMUZH50zK4g0UmUp6oEGbQd3CQ+f2flbMX0GtsnGr+g1mFPLcTnIQ==
-X-Received: by 2002:a17:902:768b:: with SMTP id m11mr9252580pll.97.1595930617124;
-        Tue, 28 Jul 2020 03:03:37 -0700 (PDT)
+        bh=MLsnjIcx6O7hBUqO+ly4gJ/BT4WlJTFqju/5sXIimIg=;
+        b=mx5WfYyA4as+zxWqqJQt0ohHlUlqA088htW9MbxxRrMw9YH8hRbnLI4pWzGed6DZme
+         ofh4u1vmbM0G/47EsLqPKUjo6vyKZSqdoNiN5kZQVARg02KqU3z8WtJG67HD6LuGABk9
+         qh94i0yBbqIs3OaQhRTAUe1cq5OdCG5eCqJeNwa9zeQxEscnIvxp007y7gXngX1ZCfim
+         6SfNXIcRT2Vvic+EHaNopk8KWBm+jPk33Li92SwdbiW6eieT9DghWhcIxsTWc82e80gZ
+         djvraMqMwQ+dEG1crvmqzgZSbUPig4/HZjrhm51Rk/a+bewG8UDQg4V+6nyAFgaix1s9
+         fRPg==
+X-Gm-Message-State: AOAM533gkVupIDoLJ0Bm4BFTZ4rm2u3boLfItCA5x+psbd1ftBWXWdhJ
+        /dEOxAifRMQBrPwSA5BSccm9cA==
+X-Google-Smtp-Source: ABdhPJxSjatle00lO8xbMWFh3tR143iGH9zfFmSLzFijKNfxg6ikjSpg1obUHnDL0D8z4jadb44Zfg==
+X-Received: by 2002:a17:90a:ce0c:: with SMTP id f12mr3828042pju.19.1595930619871;
+        Tue, 28 Jul 2020 03:03:39 -0700 (PDT)
 Received: from shiro.work (p532183-ipngn200506sizuokaden.shizuoka.ocn.ne.jp. [153.199.2.183])
-        by smtp.googlemail.com with ESMTPSA id u66sm17779018pfb.191.2020.07.28.03.03.34
+        by smtp.googlemail.com with ESMTPSA id u66sm17779018pfb.191.2020.07.28.03.03.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 03:03:36 -0700 (PDT)
+        Tue, 28 Jul 2020 03:03:39 -0700 (PDT)
 From:   Daniel Palmer <daniel@0x0f.com>
 List-Id: <soc.lore.kernel.org>
 To:     soc@kernel.org
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, arnd@arndb.de, robh@kernel.org,
         Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH v2 2/9] dt-bindings: arm: mstar: Move existing MStar binding descriptions
-Date:   Tue, 28 Jul 2020 19:03:14 +0900
-Message-Id: <20200728100321.1691745-3-daniel@0x0f.com>
+Subject: [PATCH v2 3/9] ARM: mstar: Add IMI SRAM region
+Date:   Tue, 28 Jul 2020 19:03:15 +0900
+Message-Id: <20200728100321.1691745-4-daniel@0x0f.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200728100321.1691745-1-daniel@0x0f.com>
 References: <20200728100321.1691745-1-daniel@0x0f.com>
@@ -75,62 +75,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now there is an mstar directory move the existing MStar specific
-descriptions into that directory.
+All MStar v7 SoCs have an internal SRAM region that is between 64KB
+(infinity2m) and 128KB(infinity3, mercury5).
+
+The region is always at the same base address and is used for the
+second stage loader (MStar IPL or u-boot SPL) and will be used for
+the DDR self-refresh entry code within the kernel eventually.
+
+This patch adds a 128KB region to the SoC and the minimum 64KB SRAM
+region to the base dtsi. Families with more SRAM will override the
+size in their family level dtsi.
 
 Signed-off-by: Daniel Palmer <daniel@0x0f.com>
 ---
- .../devicetree/bindings/{misc => arm/mstar}/mstar,l3bridge.yaml | 2 +-
- Documentation/devicetree/bindings/arm/{ => mstar}/mstar.yaml    | 2 +-
- MAINTAINERS                                                     | 1 -
- 3 files changed, 2 insertions(+), 3 deletions(-)
- rename Documentation/devicetree/bindings/{misc => arm/mstar}/mstar,l3bridge.yaml (93%)
- rename Documentation/devicetree/bindings/arm/{ => mstar}/mstar.yaml (93%)
+ arch/arm/boot/dts/mstar-v7.dtsi | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/misc/mstar,l3bridge.yaml b/Documentation/devicetree/bindings/arm/mstar/mstar,l3bridge.yaml
-similarity index 93%
-rename from Documentation/devicetree/bindings/misc/mstar,l3bridge.yaml
-rename to Documentation/devicetree/bindings/arm/mstar/mstar,l3bridge.yaml
-index cb7fd1cdfb1a..6816bd68f9cf 100644
---- a/Documentation/devicetree/bindings/misc/mstar,l3bridge.yaml
-+++ b/Documentation/devicetree/bindings/arm/mstar/mstar,l3bridge.yaml
-@@ -2,7 +2,7 @@
- # Copyright 2020 thingy.jp.
- %YAML 1.2
- ---
--$id: "http://devicetree.org/schemas/misc/mstar,l3bridge.yaml#"
-+$id: "http://devicetree.org/schemas/arm/mstar/mstar,l3bridge.yaml#"
- $schema: "http://devicetree.org/meta-schemas/core.yaml#"
+diff --git a/arch/arm/boot/dts/mstar-v7.dtsi b/arch/arm/boot/dts/mstar-v7.dtsi
+index 3b99bb435bb5..1941f88a69a5 100644
+--- a/arch/arm/boot/dts/mstar-v7.dtsi
++++ b/arch/arm/boot/dts/mstar-v7.dtsi
+@@ -45,7 +45,8 @@ soc: soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0x16001000 0x16001000 0x00007000>,
+-			 <0x1f000000 0x1f000000 0x00400000>;
++			 <0x1f000000 0x1f000000 0x00400000>,
++			 <0xa0000000 0xa0000000 0x20000>;
  
- title: MStar/SigmaStar Armv7 SoC l3bridge
-diff --git a/Documentation/devicetree/bindings/arm/mstar.yaml b/Documentation/devicetree/bindings/arm/mstar/mstar.yaml
-similarity index 93%
-rename from Documentation/devicetree/bindings/arm/mstar.yaml
-rename to Documentation/devicetree/bindings/arm/mstar/mstar.yaml
-index bdce34b3336e..c2f980b00b06 100644
---- a/Documentation/devicetree/bindings/arm/mstar.yaml
-+++ b/Documentation/devicetree/bindings/arm/mstar/mstar.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/arm/mstar.yaml#
-+$id: http://devicetree.org/schemas/arm/mstar/mstar.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: MStar platforms device tree bindings
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 432fcc867ed6..9b35edac7ef7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2139,7 +2139,6 @@ M:	Daniel Palmer <daniel@thingy.jp>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- W:	http://linux-chenxing.org/
--F:	Documentation/devicetree/bindings/arm/mstar.yaml
- F:	Documentation/devicetree/bindings/arm/mstar/*
- F:	arch/arm/boot/dts/infinity*.dtsi
- F:	arch/arm/boot/dts/mercury*.dtsi
+ 		gic: interrupt-controller@16001000 {
+ 			compatible = "arm,cortex-a7-gic";
+@@ -79,5 +80,10 @@ pm_uart: uart@221000 {
+ 				status = "disabled";
+ 			};
+ 		};
++
++		imi: sram@a0000000 {
++			compatible = "mmio-sram";
++			reg = <0xa0000000 0x10000>;
++		};
+ 	};
+ };
 -- 
 2.27.0
 
