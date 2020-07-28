@@ -2,152 +2,95 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E88BC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8D4C433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A33B207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 237C3207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:24:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1A3ts3+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732352AbgG1SYV (ORCPT
+        id S1732342AbgG1SYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:24:21 -0400
-Received: from smtprelay0162.hostedemail.com ([216.40.44.162]:35734 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728401AbgG1SYU (ORCPT
+        Tue, 28 Jul 2020 14:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43796 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732328AbgG1SYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 14:24:20 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 3DBF1182CF689;
-        Tue, 28 Jul 2020 18:24:19 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: copy85_0111d2226f6c
-X-Filterd-Recvd-Size: 4570
-Received: from XPS-9350 (unknown [172.58.27.230])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 28 Jul 2020 18:24:15 +0000 (UTC)
-Message-ID: <855ea08a4c41bc107f88699230309675bd9075b0.camel@perches.com>
-Subject: Re: [PATCH 13/15] iio: sx9310: Add newlines to printks
-From:   Joe Perches <joe@perches.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Daniel Campello <campello@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>
+        Tue, 28 Jul 2020 14:24:09 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08DB8C061794;
+        Tue, 28 Jul 2020 11:24:09 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id d1so10346793plr.8;
+        Tue, 28 Jul 2020 11:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ACcl0I0FKCHzoJlruhy1bok/ASRUZLSp8wFM6Lmuq68=;
+        b=E1A3ts3+nMgEKHtIp8mDRHd7xZB76rnpuBiq6FLMbI8cRd7KunW7PhP+mmQM21//Ur
+         UlIt2cu/YvXe0YN/ymnYfPL6k3urFQ8Bx+wHrleM0yX663ixAeSZZED8CVyAHTgl+ov5
+         FNCB2+3yzMPfTynrVH9E8dz7JQYwQkLph6TDqKwS/mBoGkAHFMYwUcuNHyxcWSAs3dpe
+         mwLb6oZ0ig+28grXipGzieY/21Fc3GDad/oEEciaMfAkQc23mYmYSFnHq3NbrKRVcb9L
+         r41GbkOrywjkdZLAtfrJmp0bwlNrQfkG3QTCqBuONhw9nW3EuHr0WKew2MFbDMaeEe9S
+         aYZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ACcl0I0FKCHzoJlruhy1bok/ASRUZLSp8wFM6Lmuq68=;
+        b=UrfjD60/HQ7euHU97h0KlvcLwtwpK6dP1yDdQKAT4d4h9/lTUj1lZ254N4mbUiPh9A
+         +lF6T9LpkxSimvOf8zFDKBB9MrhOajXJkYb/9WagsNDY4KnBFn4YCM4ONO9lDGF4V3WD
+         mMV6FSfaEo+GZQJMuLTFIYNeTuOdGZPUoWSA9f7H5rusWeZTE7dj9fqg05pTeWoOwVH3
+         VCkZ4LqJPEExNz/8fjY0RUkPM158Qz0/a/SUZlsR60co3DKVTLMT85vIvknBHfi8Ol3g
+         3TwPjJmN8Ib2g2Shq9oJdn0F8tsKrX2v9xKmO2WdIud7EcCTjs7ilaOyVoIwx82qXXQn
+         Wpkg==
+X-Gm-Message-State: AOAM531Da3AovZ9unjowEq00HryG3Wi1gOKheaf2YXqNjBKUDijLzr/Y
+        2Us6izzVDHnqvRJHkb8jYZ0=
+X-Google-Smtp-Source: ABdhPJwGZPWDNJbeTIO2g+HL081gj60enjvDpuHMFDg2FBAci9zt8L08ovxSnOrOpj605PzxKt3iDA==
+X-Received: by 2002:a17:902:9307:: with SMTP id bc7mr25507635plb.213.1595960648647;
+        Tue, 28 Jul 2020 11:24:08 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k23sm18577881pgb.92.2020.07.28.11.24.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jul 2020 11:24:08 -0700 (PDT)
 Date:   Tue, 28 Jul 2020 11:24:07 -0700
-In-Reply-To: <CAHp75VdSxkgd-+CBTNUJD+WUdOX3e1x3Ysap=D9+33Yo1Kk+yA@mail.gmail.com>
-References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
-         <20200728151258.1222876-1-campello@chromium.org>
-         <20200728091057.13.I14600506d0f725bf800c8da4ef89fdb3c3fb45cd@changeid>
-         <CAHp75VdSxkgd-+CBTNUJD+WUdOX3e1x3Ysap=D9+33Yo1Kk+yA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.7 000/179] 5.7.11-rc1 review
+Message-ID: <20200728182407.GD183563@roeck-us.net>
+References: <20200727134932.659499757@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-28 at 21:19 +0300, Andy Shevchenko wrote:
-> On Tue, Jul 28, 2020 at 6:14 PM Daniel Campello <campello@chromium.org> wrote:
-> > From: Stephen Boyd <swboyd@chromium.org>
-> > 
-> > Printks in the kernel have newlines at the end. Add them to the few
+On Mon, Jul 27, 2020 at 04:02:55PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.7.11 release.
+> There are 179 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Printk()s
-> 
-> > printks in this driver.
-> 
-> printk()s
-
-Random kernel pedantry.
-This patch should not need to be respun for any of these.
-
-> > Reviewed-by: Daniel Campello <campello@chromium.org>
-> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> > Fixes: 72ad02b15d63 ("iio: Add SEMTECH SX9310/9311 sensor driver")
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > Signed-off-by: Daniel Campello <campello@chromium.org>
-> 
-> It has ordering issues
-> Should be
-> 
-> Fixes:
-> SoB: Stephen
-> Rb: Douglas
-> Rb: Daniel
-> SoB: Daniel
-> 
-> 
-> > ---
-> > 
-> >  drivers/iio/proximity/sx9310.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> > index 3f981d28ee4056..4553ee83a016a3 100644
-> > --- a/drivers/iio/proximity/sx9310.c
-> > +++ b/drivers/iio/proximity/sx9310.c
-> > @@ -809,7 +809,7 @@ static int sx9310_init_compensation(struct iio_dev *indio_dev)
-> >         if (ret) {
-> >                 if (ret == -ETIMEDOUT)
-> >                         dev_err(&data->client->dev,
-> > -                               "0x02 << 3l compensation timed out: 0x%02x",
-> > +                               "0x02 << 3l compensation timed out: 0x%02x\n",
-> 
-> Looks like ping-pong style in the series, i.e. you may fix this when
-> you introduced this line.
-> 
-> Check the rest (and not only printk()s) for the similar style and
-> avoid the latter.
-> 
-> >                                 val);
-> >                 return ret;
-> >         }
-> > @@ -855,7 +855,7 @@ static int sx9310_set_indio_dev_name(struct device *dev,
-> > 
-> >         ddata = (uintptr_t)device_get_match_data(dev);
-> >         if (ddata != whoami) {
-> > -               dev_err(dev, "WHOAMI does not match device data: %u", whoami);
-> > +               dev_err(dev, "WHOAMI does not match device data: %u\n", whoami);
-> >                 return -ENODEV;
-> >         }
-> > 
-> > @@ -867,7 +867,7 @@ static int sx9310_set_indio_dev_name(struct device *dev,
-> >                 indio_dev->name = "sx9311";
-> >                 break;
-> >         default:
-> > -               dev_err(dev, "unexpected WHOAMI response: %u", whoami);
-> > +               dev_err(dev, "unexpected WHOAMI response: %u\n", whoami);
-> >                 return -ENODEV;
-> >         }
-> > 
-> > @@ -896,7 +896,7 @@ static int sx9310_probe(struct i2c_client *client)
-> > 
-> >         ret = regmap_read(data->regmap, SX9310_REG_WHOAMI, &data->whoami);
-> >         if (ret) {
-> > -               dev_err(dev, "error in reading WHOAMI register: %d", ret);
-> > +               dev_err(dev, "error in reading WHOAMI register: %d\n", ret);
-> >                 return ret;
-> >         }
-> > 
-> > --
-> > 2.28.0.rc0.142.g3c755180ce-goog
-> > 
-> 
+> Responses should be made by Wed, 29 Jul 2020 13:48:51 +0000.
+> Anything received after that time might be too late.
 > 
 
+Build results:
+	total: 155 pass: 155 fail: 0
+Qemu test results:
+	total: 431 pass: 431 fail: 0
+
+Guenter
