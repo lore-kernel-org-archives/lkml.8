@@ -2,199 +2,136 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DC6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF577C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BBE12074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595939830;
-	bh=5TPhzH5vO99n2PNcTutP3rvbIJuX0RRXUhLLe7DOHI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yc2FSriEiW1x835fFUntlRDMDR5wDT2YSzRzJP8xNfUUEeKgbLUenq5Q8DuUDPOdL
-	 Tcwwlfdp+uIt2Dmr2n+jR7SbSBw64N06JNB/n8BMLF8nYLBd8r5pkyZ/LIl5f//OWO
-	 MEGbEhqOrgFq0ax51jzj3nYzgduSGviMLL7f2HvI=
+	by mail.kernel.org (Postfix) with ESMTP id D03752074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbgG1MhJ (ORCPT
+        id S1729678AbgG1Mhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:37:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52484 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 08:37:36 -0400
+Received: from mga17.intel.com ([192.55.52.151]:27698 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729334AbgG1MhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:37:07 -0400
-Received: from quaco.ghostprotocols.net (179.176.1.55.dynamic.adsl.gvt.net.br [179.176.1.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B197A20759;
-        Tue, 28 Jul 2020 12:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595939827;
-        bh=5TPhzH5vO99n2PNcTutP3rvbIJuX0RRXUhLLe7DOHI0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Notg73rBoii6IUqtxUD5qZwUqggHruDOBYmKXcC/on+ISeZOl7YtjJLOvfNtgqBmb
-         QFq/wiK0T42FzhBP2CIfukU9KkVJCpKBfK87RiqpUpfdU4YQxVfb9bw7Tde/w8ZTN1
-         D6ElooFvYrnZOkusacU+tLoj9/q+8cFECYSb0Vd4=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5B279404B1; Tue, 28 Jul 2020 09:37:04 -0300 (-03)
-Date:   Tue, 28 Jul 2020 09:37:04 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 17/19] perf metric: Add metric group test
-Message-ID: <20200728123704.GX40195@kernel.org>
-References: <20200719181320.785305-1-jolsa@kernel.org>
- <20200719181320.785305-18-jolsa@kernel.org>
- <CAP-5=fWmm5pvH-hwkaAKV=__7Ocbc-4Qj8OCJWz_xi4pc65A=Q@mail.gmail.com>
+        id S1729334AbgG1Mhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:37:35 -0400
+IronPort-SDR: IkhBy/gmiQRJWvoWyoqo+dA7Xye8nX/6yh4No9BaztbzoW0ktzWwwSE+1nw6Ry0ckAjDNSaNlS
+ gIDy+xoZ7WYQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="131262399"
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="131262399"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 05:37:35 -0700
+IronPort-SDR: VzA/1Z/0TcA5B5tFKh0cmf69dVI+dxlCAdo2enQhD6UVtWM/DfqFmbSoFJTcNHEuIChXoOFjW5
+ cfwx5Y6/KzcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="328329470"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by FMSMGA003.fm.intel.com with ESMTP; 28 Jul 2020 05:37:33 -0700
+Subject: Re: [PATCH v2 0/2] Small fixes for ASMedia host controllers
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Forest Crossman <cyrozap@gmail.com>
+Cc:     linux-usb@vger.kernel.org, mathias.nyman@intel.com,
+        linux-kernel@vger.kernel.org
+References: <20200727090629.169701-1-cyrozap@gmail.com>
+ <20200728042408.180529-1-cyrozap@gmail.com>
+ <20200728111600.GA2950299@kroah.com>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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 fiD/
+Message-ID: <0c367427-6eb9-7cc3-55b7-2ca362a35be1@linux.intel.com>
+Date:   Tue, 28 Jul 2020 15:40:48 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fWmm5pvH-hwkaAKV=__7Ocbc-4Qj8OCJWz_xi4pc65A=Q@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200728111600.GA2950299@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sun, Jul 19, 2020 at 03:41:14PM -0700, Ian Rogers escreveu:
-> On Sun, Jul 19, 2020 at 11:14 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > Adding test for metric group plus compute_metric_group
-> > function to get metrics values within the group.
-> >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+On 28.7.2020 14.16, Greg KH wrote:
+> On Mon, Jul 27, 2020 at 11:24:06PM -0500, Forest Crossman wrote:
+>> The first patch just defines some host controller device IDs to make the
+>> code a bit easier to read (since the controller part number is not
+>> always the same as the DID) and to prepare for the next patch.
+>>
+>> The second patch defines a new device ID for the ASM1142 and enables the
+>> XHCI_NO_64BIT_SUPPORT quirk for that device, since it has the same
+>> problem with truncating the higher bits as the ASM2142/ASM3142.
+>>
+>>
+>> Changes since v1:
+>>  - Added changelog text to the first patch.
+>>
+>>
+>> Forest Crossman (2):
+>>   usb: xhci: define IDs for various ASMedia host controllers
+>>   usb: xhci: Fix ASMedia ASM1142 DMA addressing
+>>
+>>  drivers/usb/host/xhci-pci.c | 10 +++++++---
+>>  1 file changed, 7 insertions(+), 3 deletions(-)
 > 
-> Acked-by: Ian Rogers <irogers@google.com>
-
-Thanks, applied.
-
-- Arnaldo
- 
-> Thanks,
-> Ian
+> Mathias, any objection for me just taking these now?
 > 
-> > ---
-> >  tools/perf/tests/parse-metric.c | 48 +++++++++++++++++++++++++++++++--
-> >  1 file changed, 46 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-> > index 5ac32f80f8ea..f2ba5b2c5557 100644
-> > --- a/tools/perf/tests/parse-metric.c
-> > +++ b/tools/perf/tests/parse-metric.c
-> > @@ -18,6 +18,7 @@ static struct pmu_event pme_test[] = {
-> >  {
-> >         .metric_expr    = "inst_retired.any / cpu_clk_unhalted.thread",
-> >         .metric_name    = "IPC",
-> > +       .metric_group   = "group1",
-> >  },
-> >  {
-> >         .metric_expr    = "idq_uops_not_delivered.core / (4 * (( ( cpu_clk_unhalted.thread / 2 ) * "
-> > @@ -35,6 +36,7 @@ static struct pmu_event pme_test[] = {
-> >  {
-> >         .metric_expr    = "(dcache_miss_cpi + icache_miss_cycles)",
-> >         .metric_name    = "cache_miss_cycles",
-> > +       .metric_group   = "group1",
-> >  },
-> >  {
-> >         .metric_expr    = "l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit",
-> > @@ -127,7 +129,9 @@ static double compute_single(struct rblist *metric_events, struct evlist *evlist
-> >         return 0.;
-> >  }
-> >
-> > -static int compute_metric(const char *name, struct value *vals, double *ratio)
-> > +static int __compute_metric(const char *name, struct value *vals,
-> > +                           const char *name1, double *ratio1,
-> > +                           const char *name2, double *ratio2)
-> >  {
-> >         struct rblist metric_events = {
-> >                 .nr_entries = 0,
-> > @@ -166,7 +170,10 @@ static int compute_metric(const char *name, struct value *vals, double *ratio)
-> >         load_runtime_stat(&st, evlist, vals);
-> >
-> >         /* And execute the metric */
-> > -       *ratio = compute_single(&metric_events, evlist, &st, name);
-> > +       if (name1 && ratio1)
-> > +               *ratio1 = compute_single(&metric_events, evlist, &st, name1);
-> > +       if (name2 && ratio2)
-> > +               *ratio2 = compute_single(&metric_events, evlist, &st, name2);
-> >
-> >         /* ... clenup. */
-> >         metricgroup__rblist_exit(&metric_events);
-> > @@ -177,6 +184,18 @@ static int compute_metric(const char *name, struct value *vals, double *ratio)
-> >         return 0;
-> >  }
-> >
-> > +static int compute_metric(const char *name, struct value *vals, double *ratio)
-> > +{
-> > +       return __compute_metric(name, vals, name, ratio, NULL, NULL);
-> > +}
-> > +
-> > +static int compute_metric_group(const char *name, struct value *vals,
-> > +                               const char *name1, double *ratio1,
-> > +                               const char *name2, double *ratio2)
-> > +{
-> > +       return __compute_metric(name, vals, name1, ratio1, name2, ratio2);
-> > +}
-> > +
-> >  static int test_ipc(void)
-> >  {
-> >         double ratio;
-> > @@ -297,6 +316,30 @@ static int test_recursion_fail(void)
-> >         return 0;
-> >  }
-> >
-> > +static int test_metric_group(void)
-> > +{
-> > +       double ratio1, ratio2;
-> > +       struct value vals[] = {
-> > +               { .event = "cpu_clk_unhalted.thread", .val = 200 },
-> > +               { .event = "l1d-loads-misses",        .val = 300 },
-> > +               { .event = "l1i-loads-misses",        .val = 200 },
-> > +               { .event = "inst_retired.any",        .val = 400 },
-> > +               { 0 },
-> > +       };
-> > +
-> > +       TEST_ASSERT_VAL("failed to find recursion",
-> > +                       compute_metric_group("group1", vals,
-> > +                                            "IPC", &ratio1,
-> > +                                            "cache_miss_cycles", &ratio2) == 0);
-> > +
-> > +       TEST_ASSERT_VAL("group IPC failed, wrong ratio",
-> > +                       ratio1 == 2.0);
-> > +
-> > +       TEST_ASSERT_VAL("group cache_miss_cycles failed, wrong ratio",
-> > +                       ratio2 == 1.25);
-> > +       return 0;
-> > +}
-> > +
-> >  int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unused)
-> >  {
-> >         TEST_ASSERT_VAL("IPC failed", test_ipc() == 0);
-> > @@ -304,5 +347,6 @@ int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unu
-> >         TEST_ASSERT_VAL("cache_miss_cycles failed", test_cache_miss_cycles() == 0);
-> >         TEST_ASSERT_VAL("DCache_L2 failed", test_dcache_l2() == 0);
-> >         TEST_ASSERT_VAL("recursion fail failed", test_recursion_fail() == 0);
-> > +       TEST_ASSERT_VAL("test metric group", test_metric_group() == 0);
-> >         return 0;
-> >  }
-> > --
-> > 2.25.4
-> >
 
--- 
+No objection
 
-- Arnaldo
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+
+Note that I'll be away most of this and the the next week so response will be slow. 
+
+Thanks
+-Mathias
