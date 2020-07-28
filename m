@@ -2,189 +2,120 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42016C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E017C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25FB12070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:16:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KmiQynWK"
+	by mail.kernel.org (Postfix) with ESMTP id 5D5C92070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:17:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595960244;
+	bh=G+jtaekjXWngzxev+plbs+4Zb4++K32wPfT729Zo3VQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IGqteyCTbEG83w8oqC9Kw51LVD5h8+9AFKxGA+HMVaBjphvF/chAUeuS8eBj7kTUF
+	 yJ7so1xbEC+lq4KOj5zLx5qS0J0yCdn7p1FRSvxwNYLxl3boAJxX11d5Sxv+h1exF1
+	 +XWGdgvcO0/lnfzgwx8egM9C+qnAFkNyh9A/x2Rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732273AbgG1SQW (ORCPT
+        id S1732285AbgG1SRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:16:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42590 "EHLO
+        Tue, 28 Jul 2020 14:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732261AbgG1SQV (ORCPT
+        with ESMTP id S1728755AbgG1SRW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 14:16:21 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1B59C061794;
-        Tue, 28 Jul 2020 11:16:21 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id gc9so280623pjb.2;
-        Tue, 28 Jul 2020 11:16:21 -0700 (PDT)
+        Tue, 28 Jul 2020 14:17:22 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3856FC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 11:17:22 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q6so22185969ljp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 11:17:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jISM+zt2nd29Ii1resuCb6bg2XEO61i6A+AqlD1hti0=;
-        b=KmiQynWKNiiaInfPptkC/nVzxfXieCAeD0W3vIrg8JGnbk31sRWMGhAwOgommGIlpA
-         mMmUQItHM4g7TesT3WIOvC47xxZbxvpPnT9B86HoH3Q6F1AteU4NhzDmW21jyQ/Rkkj+
-         EqltDfVfCk7w2d+uZozuuZidA0gaKF/z146430sZuQBunCwGOR/QuYYY8BTidipz1Wlk
-         wz6DP685WYRhWW0he1wA//mkktpEkwR+Ssq6DcwrRcwlrpx952wHdBQdgJmVX5gp8hsy
-         pT2sHnAUymvit2t2HXa0fpg1dVOeoOkvXX33y35REJ6S6QN4lddozIt5dGthjXk2ojLo
-         GKOA==
+        bh=aLQ0XH/RmZSu/en4EAiBtQRKchA1E8VMT6fgzWGOKMw=;
+        b=hdBHy5JovDcVsPtQmmE+kOG+0bUdmbxHWwkGKho10lmXbEo1G9ahGg7SX5mCD+aqlW
+         7usecoUhK45RaSad6rpfDN2jFykepxltPY0kSQC9Ax1Dvd9VtqnLvGoZA2JD/scAiTF+
+         RuZ2jZslihKTU8Zs6p6GmQJvi4+8tJXvgSOCE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jISM+zt2nd29Ii1resuCb6bg2XEO61i6A+AqlD1hti0=;
-        b=e2dC8hmnleRi5yZd1MIggpm4FsM5Fi9w8ACG7kQ8+aFXX8RvKXds9jumHOAJ1xHbRe
-         /zHkByZ0lfJHHAlxAVhgxd10T+y0QRx/dJOJnqn59berI+NX5XGpg80qhA8Drcjv78um
-         JexWvjOJmTC2cD7nBaJBake0YJ9EYIMTsn46J0qINobGXABZiZEps9THUanEdFwTcD6K
-         OwNeWpsuG55E9bqeiF0jPtaXpsN4fXr3VrU9l/Pu4L5wDWLzfZH3g0znxix8SQ3PJNvQ
-         B2Md45y7BX8wHsZN2IFzyiUK3/GX2jNn7j0lFpmDMSbX+nF92zZ/u/Gy+PXGmVg5gaTV
-         AIOw==
-X-Gm-Message-State: AOAM530vXNlartY92FUjee1kKwmRr8RhpWDFh7G7rgbvfoYwNzlLpCB9
-        7Tek9T3UR5aiL7LWg+OSXNu5xhYbsjo4Ko+VuuvO2NzbIXnjYA==
-X-Google-Smtp-Source: ABdhPJzQ8hg05xRxXSgYdD4EaFMItMNc0I43CoPplgkCk2kbSZN1B2sbUle5Hkl/AAQq//VxGm3VDC3H5Uz4sBUOKyM=
-X-Received: by 2002:a17:90a:8985:: with SMTP id v5mr5608154pjn.181.1595960181192;
- Tue, 28 Jul 2020 11:16:21 -0700 (PDT)
+        bh=aLQ0XH/RmZSu/en4EAiBtQRKchA1E8VMT6fgzWGOKMw=;
+        b=R4kSZsH4vEbf72GEbpfO9eRMbzuYcyKJrFd462aoEcOnUAFCrc08+72bdlrDaE9wA4
+         d9QUtG7UuEOqtvq30Lx9MDRkE4MwDwpX3X2Z3D6VfVE+iiraqHWU2xxzN1rLzG2Qk8xp
+         PUH+amppMfqpP5/RPLF+6VhJT/jk+vq5S1lFqKPAVN3vHu5j3S4PZB1rFD/qKy5lWU0R
+         IHUb+Ja/aDhtajhnwxUaaLiAOQ3loAJxaZX/N6tGM0QFWnpmuUrvDSl93cmWj3X9jmpl
+         7MgAtArKEpuLygaCr1dpBtEkr4gPLleC6LV5Fu64t56TiFHLaazAMlOK3FmAbBCIynVp
+         rgdw==
+X-Gm-Message-State: AOAM531emGjAoa8SP0uySJGmZR3wEbLT6kih1puLYokqXt/bsJd6QtKO
+        6t65mlZsYo/sVM52uSdUeYgAIj5+RzQ=
+X-Google-Smtp-Source: ABdhPJzVG0ic5aB+LyM4WbgTEvf8QZi1q+opOU2x/TBosWPcFZ8S903pXA/0j8Qn2QQ0LawZGbVU2g==
+X-Received: by 2002:a2e:b70b:: with SMTP id j11mr7652970ljo.259.1595960240370;
+        Tue, 28 Jul 2020 11:17:20 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id 132sm3952435lfo.16.2020.07.28.11.17.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 11:17:19 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id 185so11982410ljj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 11:17:19 -0700 (PDT)
+X-Received: by 2002:a2e:991:: with SMTP id 139mr12506329ljj.314.1595960238862;
+ Tue, 28 Jul 2020 11:17:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
- <20200728151258.1222876-1-campello@chromium.org> <20200728091057.11.I126c3f697e0b7ee951ea24ac60ce79d368790de9@changeid>
-In-Reply-To: <20200728091057.11.I126c3f697e0b7ee951ea24ac60ce79d368790de9@changeid>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Jul 2020 21:16:04 +0300
-Message-ID: <CAHp75Vdm0EaR24FV3Tdd-8we9ooaZr81KaPexLKgFatYj1yTrg@mail.gmail.com>
-Subject: Re: [PATCH 11/15] iio: sx9310: Use variable to hold &client->dev
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-iio <linux-iio@vger.kernel.org>
+References: <87h7tsllgw.fsf@x220.int.ebiederm.org> <CAHk-=wj34Pq1oqFVg1iWYAq_YdhCyvhyCYxiy-CG-o76+UXydQ@mail.gmail.com>
+ <87d04fhkyz.fsf@x220.int.ebiederm.org> <87h7trg4ie.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87h7trg4ie.fsf@x220.int.ebiederm.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 28 Jul 2020 11:17:02 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj+ynePRJC3U5Tjn+ZBRAE3y7=anc=zFhL=ycxyKP8BxA@mail.gmail.com>
+Message-ID: <CAHk-=wj+ynePRJC3U5Tjn+ZBRAE3y7=anc=zFhL=ycxyKP8BxA@mail.gmail.com>
+Subject: Re: [RFC][PATCH] exec: Freeze the other threads during a
+ multi-threaded exec
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>, Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 6:14 PM Daniel Campello <campello@chromium.org> wrote:
+On Tue, Jul 28, 2020 at 6:23 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
 >
-> Improves readability by storing &client->dev in a local variable.
+> For exec all I care about are user space threads.  So it appears the
+> freezer infrastructure adds very little.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Yeah. 99% of the freezer stuff is for just adding the magic notations
+for kernel threads, and for any user space threads it seems the wrong
+interface.
 
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> ---
->
->  drivers/iio/proximity/sx9310.c | 30 +++++++++++++++---------------
->  1 file changed, 15 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> index 051c6515e62c18..ba383710ef0dcf 100644
-> --- a/drivers/iio/proximity/sx9310.c
-> +++ b/drivers/iio/proximity/sx9310.c
-> @@ -884,11 +884,12 @@ static int sx9310_set_indio_dev_name(struct device *dev,
->  static int sx9310_probe(struct i2c_client *client)
->  {
->         int ret;
-> +       struct device *dev = &client->dev;
->         struct iio_dev *indio_dev;
->         struct sx9310_data *data;
->
-> -       indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-> -       if (indio_dev == NULL)
-> +       indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-> +       if (!indio_dev)
->                 return -ENOMEM;
->
->         data = iio_priv(indio_dev);
-> @@ -902,17 +903,16 @@ static int sx9310_probe(struct i2c_client *client)
->
->         ret = regmap_read(data->regmap, SX9310_REG_WHOAMI, &data->whoami);
->         if (ret) {
-> -               dev_err(&client->dev, "error in reading WHOAMI register: %d",
-> -                       ret);
-> +               dev_err(dev, "error in reading WHOAMI register: %d", ret);
->                 return ret;
->         }
->
-> -       ret = sx9310_set_indio_dev_name(&client->dev, indio_dev, data->whoami);
-> +       ret = sx9310_set_indio_dev_name(dev, indio_dev, data->whoami);
->         if (ret)
->                 return ret;
->
-> -       ACPI_COMPANION_SET(&indio_dev->dev, ACPI_COMPANION(&client->dev));
-> -       indio_dev->dev.parent = &client->dev;
-> +       ACPI_COMPANION_SET(&indio_dev->dev, ACPI_COMPANION(dev));
-> +       indio_dev->dev.parent = dev;
->         indio_dev->channels = sx9310_channels;
->         indio_dev->num_channels = ARRAY_SIZE(sx9310_channels);
->         indio_dev->info = &sx9310_info;
-> @@ -924,7 +924,7 @@ static int sx9310_probe(struct i2c_client *client)
->                 return ret;
->
->         if (client->irq) {
-> -               ret = devm_request_threaded_irq(&client->dev, client->irq,
-> +               ret = devm_request_threaded_irq(dev, client->irq,
->                                                 sx9310_irq_handler,
->                                                 sx9310_irq_thread_handler,
->                                                 IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-> @@ -932,29 +932,29 @@ static int sx9310_probe(struct i2c_client *client)
->                 if (ret)
->                         return ret;
->
-> -               data->trig =
-> -                       devm_iio_trigger_alloc(&client->dev, "%s-dev%d",
-> -                                              indio_dev->name, indio_dev->id);
-> +               data->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
-> +                                                   indio_dev->name,
-> +                                                   indio_dev->id);
->                 if (!data->trig)
->                         return -ENOMEM;
->
-> -               data->trig->dev.parent = &client->dev;
-> +               data->trig->dev.parent = dev;
->                 data->trig->ops = &sx9310_trigger_ops;
->                 iio_trigger_set_drvdata(data->trig, indio_dev);
->
-> -               ret = devm_iio_trigger_register(&client->dev, data->trig);
-> +               ret = devm_iio_trigger_register(dev, data->trig);
->                 if (ret)
->                         return ret;
->         }
->
-> -       ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev,
-> +       ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
->                                               iio_pollfunc_store_time,
->                                               sx9310_trigger_handler,
->                                               &sx9310_buffer_setup_ops);
->         if (ret)
->                 return ret;
->
-> -       return devm_iio_device_register(&client->dev, indio_dev);
-> +       return devm_iio_device_register(dev, indio_dev);
->  }
->
->  static int __maybe_unused sx9310_suspend(struct device *dev)
-> --
-> 2.28.0.rc0.142.g3c755180ce-goog
->
+> Now to see if I can find another way to divert a task into a slow path
+> as it wakes up, so I don't need to manually wrap all of the sleeping
+> calls.  Something that plays nice with the scheduler.
 
+The thing is, how many places really care?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Because I think there are like five of them. And they are all marked
+by taking cred_guard_mutex, or the file table lock.
+
+So it seems really excessive to then create some whole new "let's
+serialize every thread", when you actually don't care about any of it,
+except for a couple of very very special cases.
+
+If you care about "thread count stable", you care about exit() and
+clone().  You don't care about threads that are happily running - or
+sleeping - doing their own thing.
+
+So trying to catch those threads and freezing them really feels like
+entirely the wrong interface.
+
+             Linus
