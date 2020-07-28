@@ -2,97 +2,96 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D5CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC2BC20729
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2B220809
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:03:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Cd4cAP3h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgG1ADU (ORCPT
+        id S1726825AbgG1ADK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 20:03:20 -0400
-Received: from smtprelay0237.hostedemail.com ([216.40.44.237]:35802 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726171AbgG1ADU (ORCPT
+        Mon, 27 Jul 2020 20:03:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgG1ADK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 20:03:20 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 0EE3F18225DF5;
-        Tue, 28 Jul 2020 00:03:19 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: owner27_5f0264426f65
-X-Filterd-Recvd-Size: 2596
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 28 Jul 2020 00:03:17 +0000 (UTC)
-Message-ID: <940c318b59c3c3e945c80216699299d051f8b4c5.camel@perches.com>
-Subject: Re: [PATCH][next] ath11k: Use fallthrough pseudo-keyword
-From:   Joe Perches <joe@perches.com>
-To:     Julian Calaby <julian.calaby@gmail.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, ath11k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Mon, 27 Jul 2020 17:03:16 -0700
-In-Reply-To: <CAGRGNgW4VB1F9TdHf1Kg6WQtgHyH-ZKAnZ0kU5eKQaqUWHwbqg@mail.gmail.com>
-References: <20200727194415.GA1275@embeddedor>
-         <70ed74d65b5909615c7a9430f3479695465d3b1d.camel@perches.com>
-         <CAGRGNgW4VB1F9TdHf1Kg6WQtgHyH-ZKAnZ0kU5eKQaqUWHwbqg@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Mon, 27 Jul 2020 20:03:10 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2247EC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 17:03:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=bqzMdiPLEFKP5bfRsIjeQSwN8431aYJ/2kMLDMmcsxc=; b=Cd4cAP3hjP4gld3KlmBfDKmXF/
+        VkrRKTHigqOfyB5N+pvfppZjJRK4WsrA/7v84rp75l2/FunfHoRfg5mofkb170WaehH/mL557ErzC
+        wIHojNJRbjaUgxhTk/0rOJf/D1dePhyHt4Jbj5fLvN6/cREPGtaav1h46qGf5/TE79bopJfKOboX/
+        Lj462KKuw6cUwkqh6gy9Zsv+fdFIU9fPAAOX+WmN+7pqN+C5g9d4uFYUtMIC6PgNlRUBPdCjRJNoW
+        gHY7ApWu5SGctQwjsSU8yDu8FlgdYgHP5BYrsEAc7vJkL4LfWgdqKLnp5eUeltfYkClQABveUch90
+        77Yy/y1w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0D5H-0002Ef-C3; Tue, 28 Jul 2020 00:03:08 +0000
+Subject: Re: [PATCH] checkpatch: Add test for repeated words
+To:     Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Whitcroft <apw@canonical.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+References: <20200726162902.Horde.TCqHYaODbkzEpM-rFzDd8A2@messagerie.si.c-s.fr>
+ <b796e912-e945-3cb1-03f8-0f38009634a4@infradead.org>
+ <add7c13b1ca24c8cb6f243b99d61c19287020efd.camel@perches.com>
+ <4e505c35-8428-89bb-7f9b-bc819382c3cd@infradead.org>
+ <16aa5f86f2f899a9156305ead4b7042449278eea.camel@perches.com>
+ <cda9b566ad67976e1acd62b053de50ee44a57250.camel@perches.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e8cae8c6-84b8-0f1c-d94f-3ef5804a31e0@infradead.org>
+Date:   Mon, 27 Jul 2020 17:03:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <cda9b566ad67976e1acd62b053de50ee44a57250.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-28 at 09:44 +1000, Julian Calaby wrote:
-> Hi Joe,
+On 7/27/20 12:33 AM, Joe Perches wrote:
+> Try to avoid adding repeated words either on the
+> same line or consecutive comment lines in a block
 > 
-> On Tue, Jul 28, 2020 at 5:48 AM Joe Perches <joe@perches.com> wrote:
-> > On Mon, 2020-07-27 at 14:44 -0500, Gustavo A. R. Silva wrote:
-> > > Replace the existing /* fall through */ comments and its variants with
-> > > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-> > > fall-through markings when it is the case.
-> > []
-> > > diff --git a/drivers/net/wireless/ath/ath11k/dp.c b/drivers/net/wireless/ath/ath11k/dp.c
-> > []
-> > > @@ -159,7 +159,7 @@ int ath11k_dp_srng_setup(struct ath11k_base *ab, struct dp_srng *ring,
-> > >                       break;
-> > >               }
-> > >               /* follow through when ring_num >= 3 */
-> > > -             /* fall through */
-> > > +             fallthrough;
-> > 
-> > Likely the /* follow through ... */ comment can be deleted too
+> e.g.:
 > 
-> If the "when ring_num >= 3" comment is needed, how should this get
-> formatted? Maybe something like:
+> duplicated word in comment block
 > 
-> fallthrough; /* when ring_num >= 3 */
+> 	/*
+> 	 * this is a comment block where the last word of the previous
+> 	 * previous line is also the first word of the next line
+> 	 */
+> 
+> and simple duplication
+> 
+> 	/* test this this again */
+> 
+> Inspired-by: Randy Dunlap (rdunlap@infradead.org>
+> Signed-off-by: Joe Perches <joe@perches.com>
 
-Likely, or just removed as the test above is fairly clear
+Thanks for adding this check, Joe.
 
-Existing code:
+> ---
+>  scripts/checkpatch.pl | 38 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
 
-	case HAL_WBM2SW_RELEASE:
-		if (ring_num < 3) {
-			params.intr_batch_cntr_thres_entries =
-					HAL_SRNG_INT_BATCH_THRESHOLD_TX;
-			params.intr_timer_thres_us =
-					HAL_SRNG_INT_TIMER_THRESHOLD_TX;
-			break;
-		}
-		/* follow through when ring_num >= 3 */
-		/* fall through */
-	case HAL_REO_EXCEPTION:
 
+-- 
+~Randy
 
