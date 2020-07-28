@@ -2,193 +2,111 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C81C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D8BC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8432070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A102E2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:40:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="SLJCGPxl"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="BIlUz2QY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgG1LkK (ORCPT
+        id S1729201AbgG1Lkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 07:40:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37720 "EHLO
+        Tue, 28 Jul 2020 07:40:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729110AbgG1LkJ (ORCPT
+        with ESMTP id S1729144AbgG1Lkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 07:40:09 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D92ADC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 04:40:08 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j19so11730553pgm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 04:40:08 -0700 (PDT)
+        Tue, 28 Jul 2020 07:40:42 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6247FC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 04:40:42 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z18so14404553wrm.12
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 04:40:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=0XQ2Vxa93O1m7Vubhiuc2zEi8QabfXueBoQQ7/KZrOc=;
-        b=SLJCGPxleMdS0DhIrEqzCKvRJUFdmxzb68cXKmQuQ5NQaRRIUQSsQaxoSDf1DlqarV
-         0J8DIcPBOhEPVnS4EgFK4fZz+2pzJ5ofy9LmzbavzwQcIFGmoq8RGKkmedXIbuQfQDDG
-         Ep6dtFfhbSq9E1XEGRPmRMPe44Ll1b+01RtZpvwjebKz8CQyiXv3ZkoFx9czpLc0ExZs
-         TrjS/0Ffl5q2od7CGB/k8Tf0TOhkfvBiDEWlrfwszMDFD62SEYNDU7fxYxMrAVtME+Hy
-         pbO3lgcL5k/8wsue3Ku069GJk7WQfOW0G8CH1m/4l9/jm3gBSV3rgvmKiaAKWfaAHExL
-         A4kw==
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TarT8FJy4xxh1Gu95tM1MOrQBSTLu+L0cNKerMl6tuM=;
+        b=BIlUz2QYxFWzzF/PGXouifAVShEdvViFuBcAvy11rSq1/UB3TPjN7cDoyPiYLXMGbE
+         wMbfEszWmq6MQz43NGegaGCTgKkNGFFlEd8U7O868CP4tprwvtl5q9N3//jweqWAoxxc
+         ViHZhLSVULlg1K/JYXV3GQJnuOpvZ5ihctOpovBbCRV+fC2WP5VRqheKMrgizTs8AaEm
+         TKpDzIjehfn+zwRq/MR79ctzf0Bpb6beoozBqRgNhS1l1GCds1QqS4WVVolNx+gvcyUk
+         p5KoK5+g+A4xIfsgxbPDcFl5QtWVgix3eV/Y5LTJ9A/Od5o+TRrdAyC2L/e9YgXNazw7
+         XlMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=0XQ2Vxa93O1m7Vubhiuc2zEi8QabfXueBoQQ7/KZrOc=;
-        b=Iw6WBmDu2BgGLkAziDOLAgeGRNjn16X1b+jZpiU1Pvle8cJLiZ+JJvlwvapyn0anCU
-         q7ku8PA87t7N+bT7EUl1RU2Q1l3hzNvBj8T0VGCDvHtWFYPiRRkOaNK+ncnm5xm9z+Uc
-         qvAanB13sD6Q7lbLcNf0xfYpkMA6J/fzrw4+QAgA7JvMl6TEvTJV+uuyYRDhyE84mrXy
-         eY3MOSD46LNeCXiulNaLM5mfJs9dKuOCcfxIg/xsmSG0fc/komUIohyvuLvAO4vzZ1cI
-         bMoJaAOAWkxB193iAcgqfFLO/EsgWsu4ibl/+GaqRxNtP1jzIGzATAiJJ5QBCfaTgeoX
-         AdrA==
-X-Gm-Message-State: AOAM53365lOTs4vc5LVOxyrxcuJe3q+uTEATyc/uiEGb6IfaIhZ5ZVbT
-        8JIF78PRkyoKglPStPsTXXVLiw==
-X-Google-Smtp-Source: ABdhPJxTbbtSSmVLfmcz/PL9kmrh+OiIOVC5xZqs2ykHzeJ60xYTpbOMQQAObkxqZAwDDtdbfMeFRg==
-X-Received: by 2002:a63:144c:: with SMTP id 12mr23839912pgu.189.1595936408282;
-        Tue, 28 Jul 2020 04:40:08 -0700 (PDT)
-Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
-        by smtp.gmail.com with ESMTPSA id p19sm17230243pgj.74.2020.07.28.04.40.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Jul 2020 04:40:07 -0700 (PDT)
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-X-Google-Original-From: Kaaira Gupta <Kaairakgupta@es.iitr.ac.in>
-Date:   Tue, 28 Jul 2020 17:09:59 +0530
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     kieran.bingham@ideasonboard.com,
-        Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Subject: Re: [PATCH v2 0/3] media: vimc: Allow multiple capture devices to
- use the same sensor
-Message-ID: <20200728113959.GA6350@kaaira-HP-Pavilion-Notebook>
-References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
- <20200724121521.GA2705690@oden.dyn.berto.se>
- <20200724122104.GA18482@kaaira-HP-Pavilion-Notebook>
- <a6f4eabf-6cd5-950b-f2e3-853370c77629@ideasonboard.com>
- <2a6cb067-283d-ca65-2698-1fae66a17d02@collabora.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TarT8FJy4xxh1Gu95tM1MOrQBSTLu+L0cNKerMl6tuM=;
+        b=KB3mJ25yVOQjBkLr1pH01KlwiWrKA2U+vwixMWefjgUuJkjr6ssaXgs6g2BW7T5H6D
+         57wHwjdMcbJ03timEvGt0yvQ+rdSrcaAxnOZRCvjgRSlMReYSFzu7HN/Mltu/xMfKqdS
+         KcgVDcVMpqXn3cMgyG57+obd4Mo71z0uqjbKJ9Xqt0GJ8MTIE84Ozs7S1KAb6XWg1bpj
+         y9GepMl/1aE4jAMNlLnq5xf2nbuscvEUMhujjEhzZOCAcHdUk58rIN4kVMeL7MY/BKPM
+         MMVG5uvgYwhQhfTg+TllifPrYFq5OFE54SLij6/auzv5RnZl/ZuyytozgfbDv+I4Ufps
+         9P1g==
+X-Gm-Message-State: AOAM531PcDN3InuiyIFncYF45XarmSS3g2EjcIfYho7O7c6Ks5Z6OURv
+        TvEtBDF679oOz1JMalNIoSfJqgNmD3s5NU1W7bjeyA==
+X-Google-Smtp-Source: ABdhPJyAsLE0Fke7ELR7oeZm8VYO8/GGUEGfQKuUxFj/9hE+upxSUPAEcs2CfEI7Hs0Jh3gu2ANZ6pBVtbr+FcTlaC4=
+X-Received: by 2002:a5d:6681:: with SMTP id l1mr23497356wru.47.1595936441188;
+ Tue, 28 Jul 2020 04:40:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2a6cb067-283d-ca65-2698-1fae66a17d02@collabora.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+ <dd3c4cdda7252e9d40bdbef236d9aaa93af512c5.1594230107.git-series.maxime@cerno.tech>
+In-Reply-To: <dd3c4cdda7252e9d40bdbef236d9aaa93af512c5.1594230107.git-series.maxime@cerno.tech>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Tue, 28 Jul 2020 12:40:23 +0100
+Message-ID: <CAPY8ntARSJHkUvkTs19jk2JFf9qpxuGMaSRCtmO-dcphvDeu=A@mail.gmail.com>
+Subject: Re: [PATCH v4 30/78] drm/vc4: crtc: Clear the PixelValve FIFO on disable
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 02:54:30PM -0300, Helen Koike wrote:
-> Hi,
-> 
-> On 7/27/20 11:31 AM, Kieran Bingham wrote:
-> > Hi all,
-> > 
-> > +Dafna for the thread discussion, as she's missed from the to/cc list.
-> > 
-> > 
-> > On 24/07/2020 13:21, Kaaira Gupta wrote:
-> >> On Fri, Jul 24, 2020 at 02:15:21PM +0200, Niklas Söderlund wrote:
-> >> Hi,
-> >>
-> >>> Hi Kaaira,
-> >>>
-> >>> Thanks for your work.
-> >>
-> >> Thanks for yours :D
-> >>
-> >>>
-> >>> On 2020-07-24 17:32:10 +0530, Kaaira Gupta wrote:
-> >>>> This is version 2 of the patch series posted by Niklas for allowing
-> >>>> multiple streams in VIMC.
-> >>>> The original series can be found here:
-> >>>> https://patchwork.kernel.org/cover/10948831/
-> >>>>
-> >>>> This series adds support for two (or more) capture devices to be 
-> >>>> connected to the same sensors and run simultaneously. Each capture device 
-> >>>> can be started and stopped independent of each other.
-> >>>>
-> >>>> Patch 1/3 and 2/3 deals with solving the issues that arises once two 
-> >>>> capture devices can be part of the same pipeline. While 3/3 allows for 
-> >>>> two capture devices to be part of the same pipeline and thus allows for 
-> >>>> simultaneously use.
-> >>>
-> >>> I'm just curious if you are aware of this series? It would replace the 
-> >>> need for 1/3 and 2/3 of this series right?
-> >>
-> >> v3 of this series replaces the need for 1/3, but not the current version
-> >> (ie v4). v4 of patch 2/5 removes the stream_counter that is needed to
-> >> keep count of the calls to s_stream. Hence 1/3 becomes relevant again.
-> > 
-> > So the question really is, how do we best make use of the two current
-> > series, to achieve our goal of supporting multiple streams.
-> > 
-> > Having not parsed Dafna's series yet, do we need to combine elements of
-> > both ? Or should we work towards starting with this series and get
-> > dafna's patches built on top ?
-> > 
-> > Or should patch 1/3 and 3/3 of this series be on top of Dafna's v4 ?
-> > 
-> > (It might be noteworthy to say that Kaaira has reported successful
-> > multiple stream operation from /this/ series and her development branch
-> > on libcamera).
-> 
-> Dafna's patch seems still under discussion, but I don't want to block progress in Vimc either.
-> 
-> So I was wondering if we can move forward with Vimc support for multistreaming,
-> without considering Dafna's patchset, and we can do the clean up later once we solve that.
-> 
-> What do you think?
+Hi Maxime
 
-I agree with supporting multiple streams with VIMC with this patchset,
-and then we can refactor the counters for s_stream in VIMC later (over
-this series) if dafna includes them in subsequent version of her patchset.
+On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> In order to avoid a stale pixel getting stuck on mode change or a disable
+> / enable cycle, we need to make sure to flush the PV FIFO on disable.
+>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
-> 
-> Regards,
-> Helen
-> 
-> > 
-> > 
-> >>> 1.  https://lore.kernel.org/linux-media/20200522075522.6190-1-dafna.hirschfeld@collabora.com/
-> >>>
-> >>>>
-> >>>> Changes since v1:
-> >>>> 	- All three patches rebased on latest media-tree.
-> >>>> 	Patch 3:
-> >>>> 	- Search for an entity with a non-NULL pipe instead of searching
-> >>>> 	  for sensor. This terminates the search at output itself.
-> >>>>
-> >>>> Kaaira Gupta (3):
-> >>>>   media: vimc: Add usage count to subdevices
-> >>>>   media: vimc: Serialize vimc_streamer_s_stream()
-> >>>>   media: vimc: Join pipeline if one already exists
-> >>>>
-> >>>>  .../media/test-drivers/vimc/vimc-capture.c    | 35 ++++++++++++++++++-
-> >>>>  .../media/test-drivers/vimc/vimc-debayer.c    |  8 +++++
-> >>>>  drivers/media/test-drivers/vimc/vimc-scaler.c |  8 +++++
-> >>>>  drivers/media/test-drivers/vimc/vimc-sensor.c |  9 ++++-
-> >>>>  .../media/test-drivers/vimc/vimc-streamer.c   | 23 +++++++-----
-> >>>>  5 files changed, 73 insertions(+), 10 deletions(-)
-> >>>>
-> >>>> -- 
-> >>>> 2.17.1
-> >>>>
-> >>>
-> >>> -- 
-> >>> Regards,
-> >>> Niklas Söderlund
-> > 
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+
+> ---
+>  drivers/gpu/drm/vc4/vc4_crtc.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
+> index 7b178d67187f..13fe0e370fb3 100644
+> --- a/drivers/gpu/drm/vc4/vc4_crtc.c
+> +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+> @@ -408,8 +408,7 @@ static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
+>         if (vc4_encoder->post_crtc_disable)
+>                 vc4_encoder->post_crtc_disable(encoder);
+>
+> -       CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) & ~PV_CONTROL_EN);
+> -
+> +       vc4_crtc_pixelvalve_reset(crtc);
+>         vc4_hvs_atomic_disable(crtc, old_state);
+>
+>         if (vc4_encoder->post_crtc_powerdown)
+> --
+> git-series 0.9.1
