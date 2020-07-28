@@ -2,140 +2,78 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A321BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C61FC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87568206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7166420714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 21:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbgG1VGQ (ORCPT
+        id S1729337AbgG1VMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 17:06:16 -0400
-Received: from mga05.intel.com ([192.55.52.43]:55953 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728928AbgG1VGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 17:06:16 -0400
-IronPort-SDR: 0P9Dxag4mcDmpOWfPvQF0ojxfRGHCtn5+9+aiFkWxumyxOuOGXF7V3SBbUY8oWxYEtPWwdarYx
- R2+vyanEAU2g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="236184063"
-X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
-   d="scan'208";a="236184063"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 14:06:15 -0700
-IronPort-SDR: khnPUb2aUXVM/fSIkXy6VvUiLzF0hN9EsDdvtyW6eYPQazWgilIehwXmcSFltwm1q0wzWrosX/
- qrB2w7eJwtTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
-   d="scan'208";a="394455147"
-Received: from lkp-server01.sh.intel.com (HELO d27eb53fc52b) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Jul 2020 14:06:14 -0700
-Received: from kbuild by d27eb53fc52b with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k0Wnd-000141-LL; Tue, 28 Jul 2020 21:06:13 +0000
-Date:   Wed, 29 Jul 2020 05:05:56 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:locking/header] BUILD SUCCESS
- e885d5d94793ef342e49d55672baabbc16e32bb1
-Message-ID: <5f209334.h63dSdwxtDaG0RAS%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Tue, 28 Jul 2020 17:12:40 -0400
+Received: from hera.aquilenet.fr ([185.233.100.1]:44948 "EHLO
+        hera.aquilenet.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728728AbgG1VMj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 17:12:39 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by hera.aquilenet.fr (Postfix) with ESMTP id 4C691A209;
+        Tue, 28 Jul 2020 23:12:37 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at aquilenet.fr
+Received: from hera.aquilenet.fr ([127.0.0.1])
+        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 70bZpSPXe8IG; Tue, 28 Jul 2020 23:12:36 +0200 (CEST)
+Received: from function.home (unknown [IPv6:2a01:cb19:956:1b00:9eb6:d0ff:fe88:c3c7])
+        by hera.aquilenet.fr (Postfix) with ESMTPSA id B764AA1EC;
+        Tue, 28 Jul 2020 23:12:36 +0200 (CEST)
+Received: from samy by function.home with local (Exim 4.94)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1k0Wto-002tqN-42; Tue, 28 Jul 2020 23:12:36 +0200
+Date:   Tue, 28 Jul 2020 23:12:36 +0200
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     speakup@linux-speakup.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging/speakup: Update TODO list
+Message-ID: <20200728211236.nf3jrp7m2nq7diwi@function>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Greg KH <gregkh@linuxfoundation.org>, speakup@linux-speakup.org,
+        linux-kernel@vger.kernel.org
+References: <20200726165452.qhos3wrjcm6jmcmx@function>
+ <20200728081842.GA1648133@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200728081842.GA1648133@kroah.com>
+Organization: I am not organized
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/header
-branch HEAD: e885d5d94793ef342e49d55672baabbc16e32bb1  lockdep: Move list.h inclusion into lockdep.h
+Greg KH, le mar. 28 juil. 2020 10:18:42 +0200, a ecrit:
+> On Sun, Jul 26, 2020 at 06:54:52PM +0200, Samuel Thibault wrote:
+> > Thanks to Okash's latest work, the TODO list is essentially empty, so
+> > the way out from staging now seems open.
+> > 
+> > The status of the remaining issue mentioned in TODO is not clear, we
+> > asked the speakup user mailing list for reproducer cases, but didn't get
+> > a really specific scenario. One serious bug was fixed by 9d32c0cde4e2
+> > ("staging/speakup: fix get_word non-space look-ahead"), which does not
+> > seem to really be related to the bug mentioned in TODO. Possibly the bug
+> > mentioned in TODO has been fixed long ago and people have been thinking
+> > that it was not because they can not distinguish the symptoms mentioned
+> > in TODO from the symptoms of the bug fixed by 9d32c0cde4e2.
+> 
+> I think it's time we move speakup out of staging.  Care to submit a
+> patch series that does this?
 
-elapsed time: 725m
+Yes!
 
-configs tested: 69
-configs skipped: 2
+Done so.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                          prima2_defconfig
-arm                      footbridge_defconfig
-mips                        nlm_xlr_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-arc                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a003-20200728
-i386                 randconfig-a004-20200728
-i386                 randconfig-a005-20200728
-i386                 randconfig-a002-20200728
-i386                 randconfig-a006-20200728
-i386                 randconfig-a001-20200728
-x86_64               randconfig-a014-20200728
-x86_64               randconfig-a012-20200728
-x86_64               randconfig-a015-20200728
-x86_64               randconfig-a016-20200728
-x86_64               randconfig-a013-20200728
-x86_64               randconfig-a011-20200728
-i386                 randconfig-a016-20200728
-i386                 randconfig-a012-20200728
-i386                 randconfig-a013-20200728
-i386                 randconfig-a014-20200728
-i386                 randconfig-a011-20200728
-i386                 randconfig-a015-20200728
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allyesconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Samuel
