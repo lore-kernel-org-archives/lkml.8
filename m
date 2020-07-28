@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34872C433F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F3CC433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD6C20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1FF420775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:57:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ILPx1sD1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OyTvjnvL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728411AbgG1I5y (ORCPT
+        id S1728395AbgG1I5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:57:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40814 "EHLO
+        Tue, 28 Jul 2020 04:57:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728387AbgG1I5q (ORCPT
+        with ESMTP id S1728375AbgG1I5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:57:46 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 977E8C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:57:46 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id h185so13461653qke.21
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:57:46 -0700 (PDT)
+        Tue, 28 Jul 2020 04:57:45 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF5DC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:57:44 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id w15so13269360qti.21
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:57:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=IVtLohkvByKB7JQB020jNAQ7r9C7DnrPnxkFeMwHiBg=;
-        b=ILPx1sD1aeCN5pgPHt6ku/fuzS99/H+/XGMBQBA2hzytqWTNktD8E/6HCP0/yX9i1T
-         2TooIupqnMv5VhTLeb96j+zNbNV5AYkDQ75e2iFi2Wxc7e9y61IOzVd+fjq35qqA8flZ
-         FynkrlFSxEhFhB6tGUZoAk2ARc6Nb0dBs8F0kKJ8dXqKaDXh6d7Wc/Cuu21gWoDAtZP4
-         U/I161H80tGB6kZdUf6csdFJydudxvYVcpYOs+611R+/20uMhTmkFCPPUZ4N/bjsy0BA
-         5denHP9eh6G39bv0dA0RcgHQxuoSfvnN/mb3JHb45F2yruZ+GwTBbBXoRbzdgP6snUP9
-         FRzA==
+        bh=DFYUrKFpIGsqAKet90FwgX2FsGowqyT0mwEJnnjHWNY=;
+        b=OyTvjnvLbpIimHPXiclMTfFIfKUPFUFkw1lcxkc4I39+aoZzlFU+f488poA0Q5MRSa
+         TAPI+lFSlfFBVQmN0l+9WDFhhBdvQZ6fbCTxVJKvH2pKE3XMY6+HHA+ZvRLzV5S+8r/A
+         R67IJ2srMRHoRlSZ9VOeq52aNVauxaN+aCl/SOYMLYn5qQul0PzhLWikc2gh4x2R4ZEP
+         yJp864D6qwfJaSZxyQY0tDer1lNrui+5uCtCv6Klx2eevn0B/5k+sGBJPMxqDLVMt6LV
+         88a/+Q7IX4D4fpMYlgRTb3EkVj93sKEcekI4VoyXnagVk7brPEB7GqlEap5xg6D1+TZb
+         SO0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=IVtLohkvByKB7JQB020jNAQ7r9C7DnrPnxkFeMwHiBg=;
-        b=eEPjs5iTZgDB0VcsVRskxSs8qLM/u6HSdbtjWdU+d5SPjuAToM/YaGpSvl5LAZ4jVs
-         oSIP/WGqrE8+BOaKDDXBJtQ0o0BaiYtQpMYbPA/qsHKWRi/7HtBm7SAlaixzKbm8c/RP
-         fcsXWbLPPcxO6LsROcWSixWIIPPFe15rMTW+l86dlQIQ46wXpvlwKXMoV3RyAID7ks8e
-         V16faYJek0w9yCXQcEpzJrprcrAK2evgEzVT5g9Aa+3gCahoF3voL3153d1FmkpQyWCu
-         r2bIxCykgowztcmrZyb3rXG1kLDPQMAjt2+xnT0MaiS4+JyBA2MJRkuyWM4GOKuMOeuM
-         U6nQ==
-X-Gm-Message-State: AOAM531tD+701OvN0NpGnH+tNWW1nycOXFYk0CbDOTL+SROifMxZSFnE
-        eD0jrrUIhcbMHYEs+gWE2s/Od09Fc1Mr
-X-Google-Smtp-Source: ABdhPJyIgZfHKin1LciLIxcez8jCJhgJc1/oP9abqQ9PyLso35BvRfcms5FT1PFpPfJJHdGFfVZVBuLsMYOD
-X-Received: by 2002:ad4:5912:: with SMTP id ez18mr25041443qvb.24.1595926665680;
- Tue, 28 Jul 2020 01:57:45 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 01:57:34 -0700
+        bh=DFYUrKFpIGsqAKet90FwgX2FsGowqyT0mwEJnnjHWNY=;
+        b=K+r9NOCPwqf2ihDnF0NBWxOV+/3UN8KGq65ZLuUYznNX5FZw71jg1PVlQ2pmJDcMBx
+         NNFZBZs7ElU3/ucYr0mbVyMjF/b9CEVaIYlxTjSz0DaeMpRKJ59TbEjaHB7RQJBgAjjG
+         YD6Da5t6ftvG8KfcOaoReLmUivi4iN5Zwc7hus3fCIsf2GOVcgWFUq03PxGbR0HensnE
+         AHy9RiMhbkStqPfwfXthmRojr56XNk7ET4YTNmrtbZ7Q+PcxXCtRhmDrzdEznnbc0DtX
+         sCT6jQEk9CB4nnw4R2jYuaH9RUnWBd2AQPlDuC976LhuWzVcsJeMMV9eNURSZfBD0XpG
+         nxfQ==
+X-Gm-Message-State: AOAM5339lVdvsmY8/PxS7zFny2vdpPV2pMeGWWNXyAyC0YQ7fIqQZOiP
+        zB7gfdYygUUSwQq8/cFS9FN/ae1F0E3p
+X-Google-Smtp-Source: ABdhPJy6J46x+7pmazKvVxw4jKBznzkMcXfFEf5PRKVEaCFThsy2ZdiL/jc1H/MUh7dl1rvcOZyzk0oHvBkG
+X-Received: by 2002:a0c:fd4b:: with SMTP id j11mr9206917qvs.227.1595926663954;
+ Tue, 28 Jul 2020 01:57:43 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 01:57:33 -0700
 In-Reply-To: <20200728085734.609930-1-irogers@google.com>
-Message-Id: <20200728085734.609930-6-irogers@google.com>
+Message-Id: <20200728085734.609930-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20200728085734.609930-1-irogers@google.com>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH v2 5/5] perf test: Leader sampling shouldn't clear sample period
+Subject: [PATCH v2 4/5] perf record: Don't clear event's period if set by a term
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -91,63 +91,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add test that a sibling with leader sampling doesn't have its period
-cleared.
+If events in a group explicitly set a frequency or period with leader
+sampling, don't disable the samples on those events.
 
+Prior to 5.8:
+perf record -e '{cycles/period=12345000/,instructions/period=6789000/}:S'
+would clear the attributes then apply the config terms. In commit
+5f34278867b7 leader sampling configuration was moved to after applying the
+config terms, in the example, making the instructions' event have its period
+cleared.
+This change makes it so that sampling is only disabled if configuration
+terms aren't present.
+
+Fixes: 5f34278867b7 ("perf evlist: Move leader-sampling configuration")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/attr/README             |  1 +
- tools/perf/tests/attr/test-record-group2 | 29 ++++++++++++++++++++++++
- 2 files changed, 30 insertions(+)
- create mode 100644 tools/perf/tests/attr/test-record-group2
+ tools/perf/util/record.c | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/tests/attr/README b/tools/perf/tests/attr/README
-index 6cd408108595..a36f49fb4dbe 100644
---- a/tools/perf/tests/attr/README
-+++ b/tools/perf/tests/attr/README
-@@ -49,6 +49,7 @@ Following tests are defined (with perf commands):
-   perf record --call-graph fp kill              (test-record-graph-fp)
-   perf record --group -e cycles,instructions kill (test-record-group)
-   perf record -e '{cycles,instructions}' kill   (test-record-group1)
-+  perf record -e '{cycles/period=1/,instructions/period=2/}:S' kill (test-record-group2)
-   perf record -D kill                           (test-record-no-delay)
-   perf record -i kill                           (test-record-no-inherit)
-   perf record -n kill                           (test-record-no-samples)
-diff --git a/tools/perf/tests/attr/test-record-group2 b/tools/perf/tests/attr/test-record-group2
-new file mode 100644
-index 000000000000..6b9f8d182ce1
---- /dev/null
-+++ b/tools/perf/tests/attr/test-record-group2
-@@ -0,0 +1,29 @@
-+[config]
-+command = record
-+args    = --no-bpf-event -e '{cycles/period=1234000/,instructions/period=6789000/}:S' kill >/dev/null 2>&1
-+ret     = 1
-+
-+[event-1:base-record]
-+fd=1
-+group_fd=-1
-+config=0|1
-+sample_period=1234000
-+sample_type=87
-+read_format=12
-+inherit=0
-+freq=0
-+
-+[event-2:base-record]
-+fd=2
-+group_fd=1
-+config=0|1
-+sample_period=6789000
-+sample_type=87
-+read_format=12
-+disabled=0
-+inherit=0
-+mmap=0
-+comm=0
-+freq=0
-+enable_on_exec=0
-+task=0
+diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+index a4cc11592f6b..01d1c6c613f7 100644
+--- a/tools/perf/util/record.c
++++ b/tools/perf/util/record.c
+@@ -2,6 +2,7 @@
+ #include "debug.h"
+ #include "evlist.h"
+ #include "evsel.h"
++#include "evsel_config.h"
+ #include "parse-events.h"
+ #include <errno.h>
+ #include <limits.h>
+@@ -38,6 +39,9 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+ 	struct evsel *leader = evsel->leader;
+ 	struct evsel *read_sampler;
++	struct evsel_config_term *term;
++	struct list_head *config_terms = &evsel->config_terms;
++	int term_types, freq_mask;
+ 
+ 	if (!leader->sample_read)
+ 		return;
+@@ -47,16 +51,24 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
+ 	if (evsel == read_sampler)
+ 		return;
+ 
++	/* Determine the evsel's config term types. */
++	term_types = 0;
++	list_for_each_entry(term, config_terms, list) {
++		term_types |= 1 << term->type;
++	}
+ 	/*
+-	 * Disable sampling for all group members other than the leader in
+-	 * case the leader 'leads' the sampling, except when the leader is an
+-	 * AUX area event, in which case the 2nd event in the group is the one
+-	 * that 'leads' the sampling.
++	 * Disable sampling for all group members except those with explicit
++	 * config terms or the leader. In the case of an AUX area event, the 2nd
++	 * event in the group is the one that 'leads' the sampling.
+ 	 */
+-	attr->freq           = 0;
+-	attr->sample_freq    = 0;
+-	attr->sample_period  = 0;
+-	attr->write_backward = 0;
++	freq_mask = (1 << EVSEL__CONFIG_TERM_FREQ) | (1 << EVSEL__CONFIG_TERM_PERIOD);
++	if ((term_types & freq_mask) == 0) {
++		attr->freq           = 0;
++		attr->sample_freq    = 0;
++		attr->sample_period  = 0;
++	}
++	if ((term_types & (1 << EVSEL__CONFIG_TERM_OVERWRITE)) == 0)
++		attr->write_backward = 0;
+ 
+ 	/*
+ 	 * We don't get a sample for slave events, we make them when delivering
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
