@@ -2,142 +2,131 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FROM_LOCAL_NOVOWEL,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4005BC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2266C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7A320656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C78422B49
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:09:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WfCuIF+N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNG6JL/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbgG1IJr (ORCPT
+        id S1728016AbgG1IJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:09:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33358 "EHLO
+        Tue, 28 Jul 2020 04:09:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbgG1IJr (ORCPT
+        with ESMTP id S1727957AbgG1IJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:09:47 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E49FEC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:09:45 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id b25so20148946ljp.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:09:45 -0700 (PDT)
+        Tue, 28 Jul 2020 04:09:57 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B5DBC061794;
+        Tue, 28 Jul 2020 01:09:57 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id c6so4500536pje.1;
+        Tue, 28 Jul 2020 01:09:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=refqiK2IWlQ3mOTyFeqnVmB/kSEzmm9CW2c4TQojIKs=;
-        b=WfCuIF+N2NmU60NsCa/JwDfZ/2Nv3VdLtl+PsjLet0Nzca6wYbZhf3KLfYAcH+yG6N
-         LaR9+097mHxfUn8gn7Be8CFNnGBmtnA/zxEpDJV/ocsagkHix4jVu3EVG6FrI64jWHYI
-         M+PzasI6lq60ee4UopcVSOqHZ2rmhBcou1LSLGPdsYSqBNegBgB1DWqpolUEmgNk0ju4
-         CBCGJrhfdr5TCA4JVBROBndTQtCW+wqbRJegLmMyk5uVj7QvYvbvRVhkOWcs5kLLW5ui
-         HOqodhXVOpi6VXsxgX/17k48jouG1wJLBMVXy14roEsN2uWmc+DdP+Mq7Tr986xY3Y5I
-         qdWA==
+        bh=mO4UW6jhce2IwLYWJIjyNoNVa+Gr5PBQ2rV1LkhhIeA=;
+        b=bNG6JL/O5TVQki3sHfHEOfTczEIMUXR0OLqZGWSVnVXN0YvSLXQj4R1CZin1hIrLmj
+         rDRSSHKktD8YAK18dQ3Ix7Lo07yJ8erIxBxxxxqVLyUXKDeyjbkBvyU6KTuEXDNL+VQr
+         1QQzuFpqB0CYmf+5pX3A4eJDz9R/FeezQPycBuGnXY4EFLSYZVijwWE1t6E2M5B99qAH
+         FniHRX5RxN1gZw65OKCdqnG/UzIrS3ICQ278hYR6IoGyzyd6ykow+PajTtCN7ldzFD83
+         Hcz6o03i9dPHjv0yz+B7ucVCSupfsp/DKM7XkQQq14g4beE60uqTFBLLU79wWmkWweg4
+         xE4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=refqiK2IWlQ3mOTyFeqnVmB/kSEzmm9CW2c4TQojIKs=;
-        b=LN8EXaWqK6jr6SQinxgekbD29VJBL1gQSebQRKksYvTy/nwNNVeZLRmEVvrojsmmAb
-         qkuiKlv0K3lrS2V0eUu2zq3LyEkoXG86p0rnawCPHuqGVudv+d5OJSnf1Nccjiu73/cB
-         rcI9eBFUCkAHuABopdLImQuy3sXnp+FZg4P5mrk5fuo8tzdOzaSIMO4dMdWYCYPG0906
-         oX1621jZbEqLBtjruDmTiRvc7Y2nYI8yHpjR7IvNZyJWRa809q7UakZlyL/hhcsg0MpV
-         uEstfmlKUzZrSmIbVbKPY32Hxjn6S+jDghshsqg/YbNiERXKlhanZee3EYcYNv7JFctN
-         s8jw==
-X-Gm-Message-State: AOAM531WUD8N3x6Wcov/QY3cVSOKlHrWoDj09szA/vAIZxcRNgaZyQzo
-        ttCnkqa9fQvRmUpSVDlzuA4jV2XW5jP9uElGjpqjWA==
-X-Google-Smtp-Source: ABdhPJztqYIekifUAkogxvmP6cFAfSb8mD1OJ06MuDN7GJEQY/Tvu7YCiuhZGtOCnc4NehwkSNKZYCHWWEIIOHWVZ8w=
-X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr12792312ljc.286.1595923784397;
- Tue, 28 Jul 2020 01:09:44 -0700 (PDT)
+        bh=mO4UW6jhce2IwLYWJIjyNoNVa+Gr5PBQ2rV1LkhhIeA=;
+        b=iKbMqv6YWFfTuQyp7LJGhYnHsT7VISK/ULa68hwOyFUZI/8BDvhjrTMntvHOyAhDX4
+         UynKhAIJxwNiSXzNkFYp9E/GcRGLfyKXv2A7lVy8936IjWzzNF44XcisMb6IcKP2rL1M
+         ba3qj5ONlWNertiHBRm8KTIjMBjBocdNSSuOpsWKSGLPBHbo50DY3YUd6BX7+bKEqTrC
+         Ht51HhDDxhNQDotRTCLm9rjvL3zBmGOuVlXUdmTCU65DPAcCGEGdbs88oLpFR64hEZgM
+         DCJ1+I+bAMi8ySkhYONeVzPUaisUoBFYTXkHv5YycxyaqxfS56oAoZFmFYsqR0oFhMzy
+         7QiA==
+X-Gm-Message-State: AOAM533neudT2JA6Nl4ernTNisviKdbOXElKFmdL60zeWfA5qp27R35M
+        hcLkeZiVaZitgDHBJ6PcWz6FUQVmul333YbMd9I=
+X-Google-Smtp-Source: ABdhPJwl2tr9ClL3asn7D0daWCLxpbWcicGBHl3RglmUadciWpYNtKvtb4F0xzOXS215QqSA9z2se3QNEhc8iGYlMEA=
+X-Received: by 2002:a17:90a:8918:: with SMTP id u24mr3082134pjn.7.1595923796912;
+ Tue, 28 Jul 2020 01:09:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
- <CAK8P3a13gcF_+dkfxZW0u_YuJ92hY1JukWfzM+e30iM=YUhraQ@mail.gmail.com>
- <DB3PR0402MB3916F080E4912B27B18BEADEF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a2CBYV2xEkedQYmzL4XgHPeu02=vmLffq+RWwvEvuUGKQ@mail.gmail.com>
- <DB3PR0402MB391674F67A1B9F2732883C0BF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a0XpKnbz79dH4i7HofGgpAodtmgdBmVBVQOKfCiJMkpPw@mail.gmail.com>
-In-Reply-To: <CAK8P3a0XpKnbz79dH4i7HofGgpAodtmgdBmVBVQOKfCiJMkpPw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Jul 2020 10:09:33 +0200
-Message-ID: <CACRpkdb4CCNYtMpPOAB6hF8gSCHa4NtpO8TzH0pVEuh-Spe44w@mail.gmail.com>
-Subject: Re: [PATCH V2 1/4] gpio: mxc: Support module build
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
+References: <20200728051153.1590-1-rppt@kernel.org> <20200728051153.1590-4-rppt@kernel.org>
+In-Reply-To: <20200728051153.1590-4-rppt@kernel.org>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Tue, 28 Jul 2020 01:09:45 -0700
+Message-ID: <CAMo8Bf+VKHmAm1GV=0D9Um2mpsxjnwp9WrAJq_eKW1MK+_8r6g@mail.gmail.com>
+Subject: Re: [PATCH 03/15] arm, xtensa: simplify initialization of high memory pages
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Peng Fan <peng.fan@nxp.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Olof Johansson <olof@lixom.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
-        Joel Stanley <joel@jms.id.au>, Lubomir Rintel <lkundrak@v3.sk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "michael@walle.cc" <michael@walle.cc>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        clang-built-linux@googlegroups.com,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-riscv@lists.infradead.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        "open list:SUPERH" <linux-sh@vger.kernel.org>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org,
+        "open list:SPARC + UltraSPAR..." <sparclinux@vger.kernel.org>,
+        "moderated list:H8/300 ARCHITECTURE" 
+        <uclinux-h8-devel@lists.sourceforge.jp>,
+        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 1:57 PM Arnd Bergmann <arnd@arndb.de> wrote:
-
-> Overall, my feeling is that making sure all drivers that depend on the pinctrl
-> driver can deal with deferred probing is a prerequisite before this can be
-> made a loadable module itself (same for clk, irqchip, etc drivers that others
-> may rely on).
+On Mon, Jul 27, 2020 at 10:12 PM Mike Rapoport <rppt@kernel.org> wrote:
 >
-> I understand that your primary motivation is to fit into Google's GKI framework,
-> but I think that doing the conversion only partially would neither serve to
-> improve the kernel nor actually meet the GKI requirements.
+> From: Mike Rapoport <rppt@linux.ibm.com>
+>
+> The function free_highpages() in both arm and xtensa essentially open-code
+> for_each_free_mem_range() loop to detect high memory pages that were not
+> reserved and that should be initialized and passed to the buddy allocator.
+>
+> Replace open-coded implementation of for_each_free_mem_range() with usage
+> of memblock API to simplify the code.
+>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  arch/arm/mm/init.c    | 48 +++++++------------------------------
+>  arch/xtensa/mm/init.c | 55 ++++++++-----------------------------------
+>  2 files changed, 18 insertions(+), 85 deletions(-)
 
-This has been my worry as well when it comes to these GKI-initiated
-patches that are flying right now.
+For the xtensa part:
+Reviewed-by: Max Filippov <jcmvbkbc@gmail.com>
+Tested-by: Max Filippov <jcmvbkbc@gmail.com>
 
-> Most pinctrl drivers are currently always built-in to work around the
-> load order dependencies. This of course is a bit of a hack and we'd be
-> better off if all drivers managed to avoid the dependencies, but this
-> can also require a lot of work.
-
-Several people have argued that it is reasonable to cut corners to
-achieve the "greater good" of GKI.
-
-I try to handle it on a "does the kernel look better after than
-before" basis, while pushing gently for at least trying to
-properly modularize the whole thing. It can become pretty hard
-to test I think. If it is things like GPIO expanders on I2C
-that can be used by several SoCs I would be more hard on
-this, on a single SoC not as much.
-
-One discussion thread got inflamed because of ARM vs x86
-discussions "x86 is better modularized" which is something I want
-to avoid, it is easy to be modularized when your irqs, clocks,
-regulators and pins are handled by the BIOS. This is a SoC
-problem and x86 SoCs with no BIOS, RISCV, ARM and whatever
-doesn't have a fix-it-all-BIOS have this problem. :/
-
-Yours,
-Linus Walleij
+-- 
+Thanks.
+-- Max
