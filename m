@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB2CC433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34872C433F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1402D20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD6C20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:57:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qXtWjiaX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ILPx1sD1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgG1I5q (ORCPT
+        id S1728411AbgG1I5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:57:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40792 "EHLO
+        Tue, 28 Jul 2020 04:57:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbgG1I5n (ORCPT
+        with ESMTP id S1728387AbgG1I5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:57:43 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C2DDC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:57:43 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id q7so13358596qtq.14
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:57:43 -0700 (PDT)
+        Tue, 28 Jul 2020 04:57:46 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 977E8C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:57:46 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id h185so13461653qke.21
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 01:57:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=q3XkGvkSp73lf1KyQuDb99nbGEDl/ReSCh9uyduGkdU=;
-        b=qXtWjiaX/X6jEvENfZzMiQ6bR2rwgKrF5oawDZFJvh7JYW6DBI6Q5Leoj87XZUrx1Z
-         6+tP83e7P1y1/U/iBST/jiMqIfqw94WXHOB/tDJL9XsjwP1M7e9L+rPIBNm4/5DFh4H7
-         Q96VMUzyaKqGnMQT+urC/PqUrZg0qEs9KXJ3ZHKQfk375qNKjDrVJNSgQ9F+P+i79MWQ
-         REGmPxyqHZ+W1PgAVmEsDjrwoi/V8XFNH2ZEh9Bh8li641FJxE3mr7VM6sNv4caeqH+D
-         kmIj/EtUe0XInSOR+HaRxRHQj6vvDZvKXIcirg4Qhr/NU9RYMumF5lG20sdyQEgmsYjt
-         Vw4Q==
+        bh=IVtLohkvByKB7JQB020jNAQ7r9C7DnrPnxkFeMwHiBg=;
+        b=ILPx1sD1aeCN5pgPHt6ku/fuzS99/H+/XGMBQBA2hzytqWTNktD8E/6HCP0/yX9i1T
+         2TooIupqnMv5VhTLeb96j+zNbNV5AYkDQ75e2iFi2Wxc7e9y61IOzVd+fjq35qqA8flZ
+         FynkrlFSxEhFhB6tGUZoAk2ARc6Nb0dBs8F0kKJ8dXqKaDXh6d7Wc/Cuu21gWoDAtZP4
+         U/I161H80tGB6kZdUf6csdFJydudxvYVcpYOs+611R+/20uMhTmkFCPPUZ4N/bjsy0BA
+         5denHP9eh6G39bv0dA0RcgHQxuoSfvnN/mb3JHb45F2yruZ+GwTBbBXoRbzdgP6snUP9
+         FRzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=q3XkGvkSp73lf1KyQuDb99nbGEDl/ReSCh9uyduGkdU=;
-        b=l94RkrnmZKL3VK6l0pHIkfV9TPomKL5dT+TtQAQSWMZnGpd24eWef7KdbGbRV+0us4
-         avaQBYb1OXUP/bSkAVbLgMyBWzw8pteqxNdX8HfmyoolyHwq55Rtx2LziOxqxg+IlbbQ
-         WleHxbXkWyz0i9bGWgxFEhzx2DJFrRNDUfq9RnkyvFRKHezMQGWogOoB4MJvsWdqGpI1
-         uDOaOHEcLNLg3WfJMaKv8cn4fTQNnkrwAIJfgn8KgJ0oELo9i1hwdASVeuqlBxn1yW8a
-         dvmSqQyXnQL39EBxPyy+YRokjnLApdBla2fV9saxacfAs4zGVWNOdmL9DV9XDaiBqN6n
-         f1+w==
-X-Gm-Message-State: AOAM5332/rNs56cAXUko/jrTCLhZl4icvtzZQbpZTPyaJKF608eatEQs
-        3H8ZiGXRCUV+QB34MIV00gA70gaOwpdJ
-X-Google-Smtp-Source: ABdhPJx+iEtRDw+ObO5QJWeLCfNTNad7nt4l5nFw31VuVCSw5kTb0RhobnC7LyOnVY3dXLgBgQ+3uho2FoTI
-X-Received: by 2002:a0c:c60b:: with SMTP id v11mr1006575qvi.122.1595926662092;
- Tue, 28 Jul 2020 01:57:42 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 01:57:32 -0700
+        bh=IVtLohkvByKB7JQB020jNAQ7r9C7DnrPnxkFeMwHiBg=;
+        b=eEPjs5iTZgDB0VcsVRskxSs8qLM/u6HSdbtjWdU+d5SPjuAToM/YaGpSvl5LAZ4jVs
+         oSIP/WGqrE8+BOaKDDXBJtQ0o0BaiYtQpMYbPA/qsHKWRi/7HtBm7SAlaixzKbm8c/RP
+         fcsXWbLPPcxO6LsROcWSixWIIPPFe15rMTW+l86dlQIQ46wXpvlwKXMoV3RyAID7ks8e
+         V16faYJek0w9yCXQcEpzJrprcrAK2evgEzVT5g9Aa+3gCahoF3voL3153d1FmkpQyWCu
+         r2bIxCykgowztcmrZyb3rXG1kLDPQMAjt2+xnT0MaiS4+JyBA2MJRkuyWM4GOKuMOeuM
+         U6nQ==
+X-Gm-Message-State: AOAM531tD+701OvN0NpGnH+tNWW1nycOXFYk0CbDOTL+SROifMxZSFnE
+        eD0jrrUIhcbMHYEs+gWE2s/Od09Fc1Mr
+X-Google-Smtp-Source: ABdhPJyIgZfHKin1LciLIxcez8jCJhgJc1/oP9abqQ9PyLso35BvRfcms5FT1PFpPfJJHdGFfVZVBuLsMYOD
+X-Received: by 2002:ad4:5912:: with SMTP id ez18mr25041443qvb.24.1595926665680;
+ Tue, 28 Jul 2020 01:57:45 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 01:57:34 -0700
 In-Reply-To: <20200728085734.609930-1-irogers@google.com>
-Message-Id: <20200728085734.609930-4-irogers@google.com>
+Message-Id: <20200728085734.609930-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20200728085734.609930-1-irogers@google.com>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH v2 3/5] perf test: Ensure sample_period is set libpfm4 events
+Subject: [PATCH v2 5/5] perf test: Leader sampling shouldn't clear sample period
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -91,44 +91,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test that a command line option doesn't override the period set on a
-libpfm4 event.
-Without libpfm4 test passes as unsupported.
+Add test that a sibling with leader sampling doesn't have its period
+cleared.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/attr/README                 | 1 +
- tools/perf/tests/attr/test-record-pfm-period | 9 +++++++++
- 2 files changed, 10 insertions(+)
- create mode 100644 tools/perf/tests/attr/test-record-pfm-period
+ tools/perf/tests/attr/README             |  1 +
+ tools/perf/tests/attr/test-record-group2 | 29 ++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+ create mode 100644 tools/perf/tests/attr/test-record-group2
 
 diff --git a/tools/perf/tests/attr/README b/tools/perf/tests/attr/README
-index 430024f618f1..6cd408108595 100644
+index 6cd408108595..a36f49fb4dbe 100644
 --- a/tools/perf/tests/attr/README
 +++ b/tools/perf/tests/attr/README
-@@ -53,6 +53,7 @@ Following tests are defined (with perf commands):
+@@ -49,6 +49,7 @@ Following tests are defined (with perf commands):
+   perf record --call-graph fp kill              (test-record-graph-fp)
+   perf record --group -e cycles,instructions kill (test-record-group)
+   perf record -e '{cycles,instructions}' kill   (test-record-group1)
++  perf record -e '{cycles/period=1/,instructions/period=2/}:S' kill (test-record-group2)
+   perf record -D kill                           (test-record-no-delay)
    perf record -i kill                           (test-record-no-inherit)
    perf record -n kill                           (test-record-no-samples)
-   perf record -c 100 -P kill                    (test-record-period)
-+  perf record -c 1 --pfm-events=cycles:period=2 (test-record-pfm-period)
-   perf record -R kill                           (test-record-raw)
-   perf stat -e cycles kill                      (test-stat-basic)
-   perf stat kill                                (test-stat-default)
-diff --git a/tools/perf/tests/attr/test-record-pfm-period b/tools/perf/tests/attr/test-record-pfm-period
+diff --git a/tools/perf/tests/attr/test-record-group2 b/tools/perf/tests/attr/test-record-group2
 new file mode 100644
-index 000000000000..368f5b814094
+index 000000000000..6b9f8d182ce1
 --- /dev/null
-+++ b/tools/perf/tests/attr/test-record-pfm-period
-@@ -0,0 +1,9 @@
++++ b/tools/perf/tests/attr/test-record-group2
+@@ -0,0 +1,29 @@
 +[config]
 +command = record
-+args    = --no-bpf-event -c 10000 --pfm-events=cycles:period=77777 kill >/dev/null 2>&1
++args    = --no-bpf-event -e '{cycles/period=1234000/,instructions/period=6789000/}:S' kill >/dev/null 2>&1
 +ret     = 1
 +
-+[event:base-record]
-+sample_period=77777
-+sample_type=7
++[event-1:base-record]
++fd=1
++group_fd=-1
++config=0|1
++sample_period=1234000
++sample_type=87
++read_format=12
++inherit=0
 +freq=0
++
++[event-2:base-record]
++fd=2
++group_fd=1
++config=0|1
++sample_period=6789000
++sample_type=87
++read_format=12
++disabled=0
++inherit=0
++mmap=0
++comm=0
++freq=0
++enable_on_exec=0
++task=0
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
