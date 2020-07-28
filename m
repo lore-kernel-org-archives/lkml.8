@@ -2,93 +2,123 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D79C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 811BC2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375C5207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:44:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GsxHbf/V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731506AbgG1QoA (ORCPT
+        id S1731528AbgG1Qoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:44:00 -0400
-Received: from mga03.intel.com ([134.134.136.65]:40860 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgG1QoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:44:00 -0400
-IronPort-SDR: aYIfmOwNLnspu+cwPFWw4tSAtHI3OjITTfLE/XxPGKEY/WFyBljtMH4KUsJNK1u6URbRhbyVaD
- fz1mv46IDxsg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="151241941"
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="151241941"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 09:43:58 -0700
-IronPort-SDR: K+XeOAXfUmRMKHtJD04fv2VCeyuciQ/yKEwKCkzRr1Ch2lCU04wwHp8AZumnz9kNs9FQkpwoH0
- aBsVPY8VLLbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="434381608"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.212.32.199]) ([10.212.32.199])
-  by orsmga004.jf.intel.com with ESMTP; 28 Jul 2020 09:43:58 -0700
-Subject: Re: [PATCH net-next RFC 00/13] Add devlink reload level option
-To:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Moshe Shemesh <moshe@mellanox.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Netdev <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
- <CAACQVJqNXh0B=oe5W7psiMGc6LzNPujNe2sypWi_SvH5sY=F3Q@mail.gmail.com>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <a3e20b44-9399-93c1-210f-e3c1172bf60d@intel.com>
-Date:   Tue, 28 Jul 2020 09:43:57 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.0.1
+        Tue, 28 Jul 2020 12:44:34 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44998 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgG1Qod (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:44:33 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06SGhjX5011284;
+        Tue, 28 Jul 2020 11:43:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595954625;
+        bh=jdKE6zp5yHn3EXrC6YzjiSN2SMWcYzGzcRo94VExG04=;
+        h=From:To:CC:Subject:Date;
+        b=GsxHbf/Vhiz/kQkg7HJD+yIGBIyujCrnwfv30wckn2JXpWcLvTrhjHlapqqPm0RPV
+         XbtIicT1OO1lDKqVMGwH84aowDsIrfjfSpTsNsVba7iLiJ8HzsB6TyVWDBLJMPPrCl
+         wUfB/8qTLcaDtGKSPnyl/4daiW384d7IMJ1qRaOM=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06SGhjmV065653
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jul 2020 11:43:45 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
+ Jul 2020 11:43:45 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 28 Jul 2020 11:43:45 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SGhjQi011670;
+        Tue, 28 Jul 2020 11:43:45 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH] ASoC: tlv320adcx140: Fix various style errors and warnings
+Date:   Tue, 28 Jul 2020 11:43:39 -0500
+Message-ID: <20200728164339.16841-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <CAACQVJqNXh0B=oe5W7psiMGc6LzNPujNe2sypWi_SvH5sY=F3Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix white space issues and remove else case where it was not needed.
+Convert "static const char *" to "static const char * const"
 
+Fixes: 689c7655b50 ("ASoC: tlv320adcx140: Add the tlv320adcx140 codec driver family")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ sound/soc/codecs/tlv320adcx140.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-On 7/27/2020 10:25 PM, Vasundhara Volam wrote:
-> On Mon, Jul 27, 2020 at 4:36 PM Moshe Shemesh <moshe@mellanox.com> wrote:
->>
->> Introduce new option on devlink reload API to enable the user to select the
->> reload level required. Complete support for all levels in mlx5.
->> The following reload levels are supported:
->>   driver: Driver entities re-instantiation only.
->>   fw_reset: Firmware reset and driver entities re-instantiation.
-> The Name is a little confusing. I think it should be renamed to
-> fw_live_reset (in which both firmware and driver entities are
-> re-instantiated).  For only fw_reset, the driver should not undergo
-> reset (it requires a driver reload for firmware to undergo reset).
-> 
+diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
+index 49dcdd72e5c6..938c5ef17e61 100644
+--- a/sound/soc/codecs/tlv320adcx140.c
++++ b/sound/soc/codecs/tlv320adcx140.c
+@@ -218,8 +218,8 @@ static const struct snd_kcontrol_new in4_resistor_controls[] = {
+ };
+ 
+ /* Analog/Digital Selection */
+-static const char *adcx140_mic_sel_text[] = {"Analog", "Line In", "Digital"};
+-static const char *adcx140_analog_sel_text[] = {"Analog", "Line In"};
++static const char * const adcx140_mic_sel_text[] = {"Analog", "Line In", "Digital"};
++static const char * const adcx140_analog_sel_text[] = {"Analog", "Line In"};
+ 
+ static SOC_ENUM_SINGLE_DECL(adcx140_mic1p_enum,
+ 			    ADCX140_CH1_CFG0, 5,
+@@ -598,7 +598,7 @@ static int adcx140_reset(struct adcx140_priv *adcx140)
+ 		gpiod_direction_output(adcx140->gpio_reset, 1);
+ 	} else {
+ 		ret = regmap_write(adcx140->regmap, ADCX140_SW_RESET,
+-		          ADCX140_RESET);
++				   ADCX140_RESET);
+ 	}
+ 
+ 	/* 8.4.2: wait >= 10 ms after entering sleep mode. */
+@@ -841,7 +841,7 @@ static int adcx140_codec_probe(struct snd_soc_component *component)
+ 	if (ret)
+ 		goto out;
+ 
+-	if(adcx140->supply_areg == NULL)
++	if (adcx140->supply_areg == NULL)
+ 		sleep_cfg_val |= ADCX140_AREG_INTERNAL;
+ 
+ 	ret = regmap_write(adcx140->regmap, ADCX140_SLEEP_CFG, sleep_cfg_val);
+@@ -942,8 +942,8 @@ static int adcx140_i2c_probe(struct i2c_client *i2c,
+ 	if (IS_ERR(adcx140->supply_areg)) {
+ 		if (PTR_ERR(adcx140->supply_areg) == -EPROBE_DEFER)
+ 			return -EPROBE_DEFER;
+-		else
+-			adcx140->supply_areg = NULL;
++
++		adcx140->supply_areg = NULL;
+ 	} else {
+ 		ret = regulator_enable(adcx140->supply_areg);
+ 		if (ret) {
+-- 
+2.28.0
 
-So, I think the differentiation here is that "live_patch" doesn't reset
-anything.
-
->>   fw_live_patch: Firmware live patching only.
-> This level is not clear. Is this similar to flashing??
-> 
-> Also I have a basic query. The reload command is split into
-> reload_up/reload_down handlers (Please correct me if this behaviour is
-> changed with this patchset). What if the vendor specific driver does
-> not support up/down and needs only a single handler to fire a firmware
-> reset or firmware live reset command?
-
-In the "reload_down" handler, they would trigger the appropriate reset,
-and quiesce anything that needs to be done. Then on reload up, it would
-restore and bring up anything quiesced in the first stage.
