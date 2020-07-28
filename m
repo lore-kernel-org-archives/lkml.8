@@ -2,146 +2,110 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A96B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50007C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89064206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 211B1206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="DW4cQ9ak"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kMgubnmU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgG1Iki (ORCPT
+        id S1728224AbgG1ImA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:40:38 -0400
-Received: from mail-mw2nam12on2051.outbound.protection.outlook.com ([40.107.244.51]:24417
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728016AbgG1Iki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:40:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LM5w21v2xul73whf/j3FMEN0bd3AYISelGVMDrYs1I1k+ZOLFo+ILzLf2P/4kf0wkz0AHx/6dDi4NMXz0M43XYL3tAPVNXUed2NOmGsf/v7e0E6uuiA2P0a6iWky1k8sdA2jffbSIUKNb4XkHkqZ0HKVFhvELYtUuVPZHZRQdxykSPC+f6udRqgNOB5wgKucSZpvuwD8VmfxtWKV3p9/hKE7DFoBcoaWjD1lYRdOIsx4oktJVUFTzmmOazeNkBRmAJKFnbDsp0VZdnk79Nq9/OfgnEap6juhNRdi+LgKetT29C72lPrC+McfyZQiXWQvS1u+6UP6iSlNTv9eNnbgTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wfCk201FvWlIusiJ20M931+ZD+2bvTDB4nRyCEUoB8M=;
- b=gvqcjr5NS9Ut451jDu9noUnyP+ZQPestnEyyhqcTmSp6oiDtf9thotOJ4IVGRsJlx5EelAYJoGA7SPrLNjGxBy8f/xJWM9ijYX7yjeMhOZla0FEb5jvFQf6d9zbI/124uGdm+WP0zItnkM6lh4omfgQQcS8N3DJBV/NwLotnuGIJ9nREdAipK7Ktga+KGQ723GZJ7CQ3/JSepz3x2adPNQ24mLdiVbuvkT6UOtmEVw66bjb5tluGNy3DgRUjllVXqneNvYeWyt8k41vdRwz+8HKw7g+Pmu+LdKyV4fV1n2W4cFA4PJ4IrQpOtBAWOg+DH47o69TBC7NZSgYJp7P3xQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wfCk201FvWlIusiJ20M931+ZD+2bvTDB4nRyCEUoB8M=;
- b=DW4cQ9aktgKqJwZVsECL8UVq7XTxYSheYiXuzMYoAriSYo4Zppo/CQF4UiN8hWxD8/lb+3LP3pAaJsSEvXg1wiBJhkZe0f0AxwS3NzACBAudOBziSwc/k4cZkh8mC4d9K6deEB7gNzUK6RBw7t7lb01JW/KR3ar/2dEvPUU4XWY=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR1201MB0188.namprd12.prod.outlook.com (2603:10b6:4:56::12)
- by DM5PR12MB1468.namprd12.prod.outlook.com (2603:10b6:4:10::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.25; Tue, 28 Jul
- 2020 08:40:35 +0000
-Received: from DM5PR1201MB0188.namprd12.prod.outlook.com
- ([fe80::41b7:b11a:c6d8:1e0e]) by DM5PR1201MB0188.namprd12.prod.outlook.com
- ([fe80::41b7:b11a:c6d8:1e0e%10]) with mapi id 15.20.3216.033; Tue, 28 Jul
- 2020 08:40:35 +0000
-From:   Akshu Agrawal <akshu.agrawal@amd.com>
-To:     akshu.agrawal@amd.com
-Cc:     sboyd@kernel.org, rafael@kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org (open list:ACPI),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [3/4] ACPI: APD: Add a fmw property is_raven
-Date:   Tue, 28 Jul 2020 14:10:06 +0530
-Message-Id: <20200728084011.11002-1-akshu.agrawal@amd.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR01CA0115.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:1::31) To DM5PR1201MB0188.namprd12.prod.outlook.com
- (2603:10b6:4:56::12)
+        Tue, 28 Jul 2020 04:42:00 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42762 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728009AbgG1ImA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:42:00 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06S8bbMY129456;
+        Tue, 28 Jul 2020 08:41:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=z486fM3ZhuFnXdp1xbJVRVkSwBqhKdWlnxMDY3kdnag=;
+ b=kMgubnmUmgo7kM82YyziHNH1ujv8Uv2jAZi1T2EEy+yUE2YMEDMtvYIjtc4j1ltM3TT+
+ wWgKvMpq3twx7nzMB/+MpXMkL6MHMNj2zV8/vBNn7U6YcijuRC744xqVuU8KeYLobt1C
+ u2YhhHLxwHZ8gbKk+wmgXUDEBaI1ozcXnA8OSLfZVdYTE33IDCIqIQcQ4LDoSvI+dF2w
+ N0JR5G/hxcbZePeWAx+hE1VoMpHx10q44S18xyVX0KsIxNwtekcaGkq/o/60AYs4WyUH
+ D07j6qKhL/q4mABUrYalC2ZsOK3dJzlg9gcyhXg/RnTTLRI/qYo2gICx16+L4Me2Ab5r Zg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 32hu1je402-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jul 2020 08:41:51 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06S8cirs084276;
+        Tue, 28 Jul 2020 08:41:50 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 32hu5tu5a5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jul 2020 08:41:50 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06S8fkYw030454;
+        Tue, 28 Jul 2020 08:41:46 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Jul 2020 01:41:45 -0700
+Date:   Tue, 28 Jul 2020 11:41:37 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Peilin Ye <yepeilin.cs@gmail.com>
+Cc:     Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] scsi/megaraid: Prevent
+ kernel-infoleak in kioc_to_mimd()
+Message-ID: <20200728084137.GC2571@kadam>
+References: <20200727210235.327835-1-yepeilin.cs@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from local.mshome.net (122.171.179.172) by MA1PR01CA0115.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:1::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend Transport; Tue, 28 Jul 2020 08:40:32 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [122.171.179.172]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5ee8d40c-0483-45ac-99e5-08d832d1e538
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1468:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB14683227412EE7E5456F2404F8730@DM5PR12MB1468.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0derhuzWPAGtrSKAkuxHU/ytnIcv5ffsZdh3088cE9VrkhaY5tnpxE6QzPYe15JuMzgZEeXe/UtRC6cALHkyokvpoTlbh5uF26kAc1yBhvoYgp2J5o8j07+XlVrNM/tZOWfT36IKASomkerJc0wWFNDLj/HM6w5FYwyrXNwtyxe666QhvAkAg1unpun8p4EfY+A7Th3BayuoXFLGuR05BCQaxWvFvQ+vR/rwelXVlx9ZFfgsADEq4pPsjfcbtKauQOpM07Ff1SQb2mkxdqOAM1hFFqGVqMFkwABUsAMud7frICEoPt8r8gHn+Ob47U/RMSfnzp9z5E5BcM+agxNCDQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0188.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(366004)(396003)(136003)(956004)(2616005)(8936002)(44832011)(5660300002)(36756003)(316002)(6512007)(54906003)(66476007)(6666004)(478600001)(34206002)(37006003)(6486002)(66946007)(86362001)(66556008)(26005)(186003)(2906002)(8676002)(16526019)(52116002)(4326008)(1076003)(6506007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 0yfjVKol763U7b9sJkosCmeaV09H0f0677aImHbxXk+GeW4TV2lOnCyMH11JAo4W/4hCuGybs2vhk1HGd8ttsYjVA7oNPwz5H9didRk7D/dlDEmrOqjJeSG6e+rm4djCPBQoqEoHtumWbpjwGNLxOBwfczBgG7RDeYS97LFJ7knSuczg+r3pzTOzSPLVM9pAVndMTONIgeqIVVtU65h8uwwNn+gvTX+pe/WH8lIKJq3OKMq1jxVuRd81UYlrQSgM8N5M3KnfQx71y8wUEamgzOTGRuFz7I3GS+KRmDB7PrUYgfORCBcgUvvbGHHrmz/LP5NRHWqV8CXyoBJEfX67k2iQ9Zm+3zKUMhRyjqqgf0bFuYS9+9oROzq07RXVQUgSkmut6BhLJcGbpmx+i63YTMr+jWSsDqD72heI51cNfKvSkHX4a9WANox2yknYG5xWe1VknfOFkMS3/2BH6oWS/9g4L3uVS8gb6vF2M2Tzy5oaLVABiGLViDmQ4ZGKR5Sl
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ee8d40c-0483-45ac-99e5-08d832d1e538
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR1201MB0188.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 08:40:35.3598
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bndJV7qF1VGkd8+PSeA70RGh8o3DofXMEg5Ii+LkDkiRxF9DV6yqJGntHgF37eSaM6vxE7x1JAuXRiZ0dOUZug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1468
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727210235.327835-1-yepeilin.cs@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007280065
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 mlxlogscore=999
+ malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007280065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since there is slight difference in AMD RV based soc in misc
-clk architecture. The fmw property will help in differentiating
-the SoCs.
+On Mon, Jul 27, 2020 at 05:02:35PM -0400, Peilin Ye wrote:
+> hinfo_to_cinfo() does no operation on `cinfo` when `hinfo` is NULL,
+> causing kioc_to_mimd() to copy uninitialized stack memory to userspace.
+> Fix it by initializing `cinfo` with memset().
 
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
----
- drivers/acpi/acpi_apd.c               | 4 ++++
- include/linux/platform_data/clk-fch.h | 1 +
- 2 files changed, 5 insertions(+)
+But "hinfo" can't be NULL so this patch isn't required.  It's a bit
+hard for Smatch to follow the code.
 
-diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
-index 2d99e46add1a..d879ba28826c 100644
---- a/drivers/acpi/acpi_apd.c
-+++ b/drivers/acpi/acpi_apd.c
-@@ -82,6 +82,7 @@ static int misc_check_res(struct acpi_resource *ares, void *data)
- static int fch_misc_setup(struct apd_private_data *pdata)
- {
- 	struct acpi_device *adev = pdata->adev;
-+	const union acpi_object *obj;
- 	struct platform_device *clkdev;
- 	struct fch_clk_data *clk_data;
- 	struct resource_entry *rentry;
-@@ -98,6 +99,9 @@ static int fch_misc_setup(struct apd_private_data *pdata)
- 	if (ret < 0)
- 		return -ENOENT;
- 
-+	acpi_dev_get_property(adev, "is-rv", ACPI_TYPE_INTEGER, &obj);
-+	clk_data->is_rv = obj->integer.value;
-+
- 	list_for_each_entry(rentry, &resource_list, node) {
- 		clk_data->base = devm_ioremap(&adev->dev, rentry->res->start,
- 					      resource_size(rentry->res));
-diff --git a/include/linux/platform_data/clk-fch.h b/include/linux/platform_data/clk-fch.h
-index 850ca776156d..b9f682459f08 100644
---- a/include/linux/platform_data/clk-fch.h
-+++ b/include/linux/platform_data/clk-fch.h
-@@ -12,6 +12,7 @@
- 
- struct fch_clk_data {
- 	void __iomem *base;
-+	u32 is_rv;
- };
- 
- #endif /* __CLK_FCH_H */
--- 
-2.20.1
+We know that "opcode" is 82 so the buffer is allocated by mimd_to_kioc()
+-> mraid_mm_attach_buf().
+
+Generally, don't silence static checker warnings unless it makes the
+code more readable.  It's the checker writer's job to fix their own code.
+In this case, that's me, but parsing the code is quite complicated and I
+don't have a plan for how to fix it.
+
+regards,
+dan carpenter
 
