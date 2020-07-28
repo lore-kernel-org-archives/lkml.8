@@ -2,81 +2,81 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F67EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D723C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECC4207F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12E3A2074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:43:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kasojJKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731560AbgG1QrC (ORCPT
+        id S1731448AbgG1Qng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:47:02 -0400
-Received: from mga03.intel.com ([134.134.136.65]:41219 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731367AbgG1QrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:47:02 -0400
-IronPort-SDR: qOp/igNART18hMf8hCQd8AvB8ZXB6rIXt0hehtZz8vJxCOHX+1K2LofWm+FHfG62Hfy8k9cmLg
- hqnLfXzy9gXw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="151243340"
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="151243340"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 09:47:01 -0700
-IronPort-SDR: HOCJ58r9NCmaV92jA5eIdEDKgSCdVuCAJp78Tf1sEEJklyJzOog/+gsyX56U3XbRkor77eKVqv
- ZAvDPYcCIJqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="434382778"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.212.32.199]) ([10.212.32.199])
-  by orsmga004.jf.intel.com with ESMTP; 28 Jul 2020 09:47:01 -0700
-Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
- devlink reload command
-To:     Jiri Pirko <jiri@resnulli.us>, Jakub Kicinski <kuba@kernel.org>
-Cc:     Moshe Shemesh <moshe@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
- <1595847753-2234-2-git-send-email-moshe@mellanox.com>
- <20200727175802.04890dd3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200728135808.GC2207@nanopsycho>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <464add44-3ab1-21b8-3dba-a88202350bb9@intel.com>
-Date:   Tue, 28 Jul 2020 09:47:00 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.0.1
+        Tue, 28 Jul 2020 12:43:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgG1Qng (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:43:36 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED521C061794;
+        Tue, 28 Jul 2020 09:43:35 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id j7so1660685oij.9;
+        Tue, 28 Jul 2020 09:43:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o9m50VK1lLtc7nqDyGrRl3rlBYyarY0M7UxRlCvTi7I=;
+        b=kasojJKthl+GEvqSoBsCRID44wuGMn+EsMrib6445AcUxFCXTdk+LV+UutBeNLeKMy
+         wQHv2tfVgg5xO85/Sz0BF+RFh6ScEtqDtW5vfEGtUHwCRw7Lt7X+EuZ6tJbeYOObJxNQ
+         aVqyb0tE9vVtp2WJCkZwM05lwmmYciFa20/jjPrao7IfnG/03b/CQUYbJJFnnUuviZmL
+         Zt3OJDLvvKx4yvdDctSfYv8c6BJ4Ms8WrKLtw0SBuBrwPR+MAped04fEvFFqx+Mk9ccQ
+         My2cDrwkdpvLRhZGOAX51mwn2KMe2azsvTahatIf9qxmUVqCg3pRSGkBIr+XjnZVpQzA
+         yTMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o9m50VK1lLtc7nqDyGrRl3rlBYyarY0M7UxRlCvTi7I=;
+        b=P8/8yDmj73oqqcQKiuymZ9Oc0IYmWEQI7CGnPu7LGbNrDrTa812FbxBpaQpHns+enW
+         yLIXIxZcvyYxUXJBj9KrYwV6iditk9WGSfshzVnKGIlJfR5sfriEF8URrJFtRHKtun6v
+         Qp9BgQySG7ypWuDQmliyP9lLHD1vUMmfz2ZyTLpKmv4y77skmqbRwitoORxqPrLnaHUZ
+         XqK22zf092ompzqAhVe10rcg6fuKEbgmqa/x7SKmg2cF6ugP8XFST80JJ92qgaySIW/w
+         yxY5WF6ExB3VoOaJYh0D/uhd8bjqgUMaAdm2i8lHGaQ31iZez+9J52pS8iE9lFxI2W+Z
+         rKrQ==
+X-Gm-Message-State: AOAM531F96Kr5dBz7VqpFPBKXPvIy+gtcaGr01bdKdSrZSDU61Xq3RsL
+        MisuCNpWcOz7nlHva6nGOzfJX3o0LbE+RhpzqLHxuLBIaTg=
+X-Google-Smtp-Source: ABdhPJwU8sW/xnW2NBa1NBhKNrTCmmvZt+59DdL3+fpJrB75Cl9bvxj94xoZl+PaI/NK6YOpUnLYafHbsXqa6ov1Jtc=
+X-Received: by 2002:aca:c5d6:: with SMTP id v205mr4466193oif.143.1595954615271;
+ Tue, 28 Jul 2020 09:43:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200728135808.GC2207@nanopsycho>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200728143004.3228-1-dhiraj.sharma0024@gmail.com>
+ <20200728145419.GA3537020@kroah.com> <CAPRy4h1Xs1JpQinnWm04dOi07Ch0RLL0U4Z5DDCKHmombXE0sA@mail.gmail.com>
+ <20200728155311.GA4178776@kroah.com>
+In-Reply-To: <20200728155311.GA4178776@kroah.com>
+From:   Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
+Date:   Tue, 28 Jul 2020 22:13:22 +0530
+Message-ID: <CAPRy4h2Zbw=QwJ7=0+FzGnK_o1esn2GTRSuv5ZE30Vu=Oj=x=Q@mail.gmail.com>
+Subject: Re: [PATCH] media: usbvision: fixed coding style
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        stern@rowland.harvard.edu, jrdr.linux@gmail.com,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> As the bot said, only do one type of thing per patch, and "fix all
+> checkpatch errors/warnings" is not one type of thing.
 
-
-On 7/28/2020 6:58 AM, Jiri Pirko wrote:
-> Tue, Jul 28, 2020 at 02:58:02AM CEST, kuba@kernel.org wrote:
->> On Mon, 27 Jul 2020 14:02:21 +0300 Moshe Shemesh wrote:
->>> Add devlink reload level to allow the user to request a specific reload
->>> level. The level parameter is optional, if not specified then driver's
->>> default reload level is used (backward compatible).
->>
->> Please don't leave space for driver-specific behavior. The OS is
->> supposed to abstract device differences away.
-> 
-> But this is needed to maintain the existing behaviour which is different
-> for different drivers.
-> 
-
-Which drivers behave differently here?
+So should I send a fresh patch with minimal fixes? instead of replying
+to this mail with [PATCH 01]
