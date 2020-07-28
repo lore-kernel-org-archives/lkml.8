@@ -2,105 +2,147 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6386BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 317FAC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BECA207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1172D20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="chRwB+NR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vDkkyU+5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbgG1Kuo (ORCPT
+        id S1728916AbgG1Kv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 06:50:44 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:10482 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728509AbgG1Kuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 06:50:44 -0400
-IronPort-SDR: Z/oTkCVLaoIz2Y2pmYxYobCctdersksapKHKNB4iE9lxLmz8lwD/aeEU3+0P/BWjlg96JbZPph
- G9oQ/pTTV1n6EvY5wbrZ+oLr6Su7wH2gBvonsDbNyFPgG+Wcl0o3T1U8Av7wksiRYhA1Rlv77v
- 7WC8MWNT9jnKk8Su6oZrFXvM8Stt/FPta9MdUhUniqFSH07HivqHY9SB9mjvApdnPMaNapwrNP
- ZZlsAJd3MjC063rpVqDVvykZpwn1+MxgK8O3SurBoKQ0qI8di9uYngvKBxY0+7YYn5jXJXzoFc
- G3s=
-X-IronPort-AV: E=Sophos;i="5.75,406,1589234400"; 
-   d="scan'208";a="13261595"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 28 Jul 2020 12:50:41 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Tue, 28 Jul 2020 12:50:42 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Tue, 28 Jul 2020 12:50:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1595933442; x=1627469442;
-  h=from:to:cc:subject:date:message-id;
-  bh=KV4iUdx+AdKeIi9RN6z2Ez4NYT+otJS82M/3jFBITAs=;
-  b=chRwB+NRgjkxYOfCaSy1JPZ8tCuAUe0CjTOrLZ4p39YpI19RyCzVLaa9
-   leWmiD27XgSjiSXCupwG3QXDitBraytJFp8rj17iYOB5MEQd6V0OoH799
-   Qj9a5UKLi0hL3t+j8gfKjc/YCpvEfbvD9bjXIXYE/A2HS5iJ8Hy+3ARk3
-   wDT8txQegzTlFCqxk6HRtFET5m8L4dxTKol2Z9ni5wUVrAyMMiU2Ew29k
-   /4guuBnzUWZg0M912DffKmT9x9PVtJtOqXvoY/Mg0Iz3SwasIk5xAS2b/
-   qdRXWTzj5M2DBLv/zTDMmFtqT0iAEphRbHW7yZvuDrwUboNy1kGqpsBgE
-   w==;
-IronPort-SDR: fuD4Pgi7nzd9mPXQj6NDAAXzDzeiVh66FsM7/EdrbC9OMVjR6Ir9BmG88j7aoffE+O+8E7UB9c
- mBuJVL2zPsK1jPFj+t1BqY5YCyEQ+GnALRxkb9w1S7CNnl1FFg3RQ55UX5ye2asRc3z+k7g9QW
- nX12LBjhjsPYgF8vmESUz63M/TsPoXRYYvMzO1HHDv+BcsMw6cY0nCBnvV8y6++aghE3LXigmC
- Lise3R8/wsWJrwf1dGAMasNiNExL2Zk0wvJwuDzJD+XOeetGlPhoB0DzDHqBWyQ85BvqQrR5za
- OkU=
-X-IronPort-AV: E=Sophos;i="5.75,406,1589234400"; 
-   d="scan'208";a="13261594"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 28 Jul 2020 12:50:41 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id BBAA7280075;
-        Tue, 28 Jul 2020 12:50:41 +0200 (CEST)
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH] arm: dts: ls1021a: fix QuadSPI-memory reg range
-Date:   Tue, 28 Jul 2020 12:50:06 +0200
-Message-Id: <20200728105006.7952-1-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 28 Jul 2020 06:51:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728509AbgG1KvZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 06:51:25 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E54C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:51:25 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z18so14262544wrm.12
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:51:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=LzOc135fINoaOyyxwY4N4SP5+/4WZUgI3XQn3ZBQrDA=;
+        b=vDkkyU+5XaTOEmRQYW0CYyR4mlMX1mtnZDopRBrR16WWZAymHLppooL3WbRsemUOlF
+         7JAG9CCFFBkNo1ck8oAFsHnGGCFpddbJZI4FvPPe/5vgXZIxS7pdXreW0pAmXl4fefVk
+         uemgsa2HPMS2pgMJSiY5gsoUuJ22Uc9FFMkDS50upr4Y5t/bruJsOn96uJd/Xej/4+wJ
+         r3z4kV7L9g728y5x+aNOBIj6JRK/2vA+lFuGJCCKMNnmmCY7vsMSYcIdJpOO1Lj/2Nk6
+         unQbNqxObw8nTIlx8MnFNeMtUIVxddRTqJvHuyaU1npKp/UQnousCC6p6CUsu9YCp0JA
+         N8gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=LzOc135fINoaOyyxwY4N4SP5+/4WZUgI3XQn3ZBQrDA=;
+        b=DIP3Ql413TC7tKrCwTyyfneqWlggJBkRe02VHuyQvjCc8E5t9N1CXQkG8tXX58kjdL
+         5gA0hMzK8knasAOmCh6uP0Tau4NHgnROp4qwb3hOtgo4MYSN85JUg3BQdwybn1RN6Wph
+         7zJJdBMRSHzx4RYaCkiNfYmt6H9ZCymavUePYIob9g71+061scRiRJeWrYg30EON89BD
+         v+vvsOyMChKXmciCbCcd9wFOm4Bscim5/1IFiymy1wiPkCPYPGDtoDJfj2RqdeKZsVQR
+         gX/nIi5iovAVBkq5WyaxQCua9/6k3E6ajpqWfrGwesnQAwA6hr9YiHwDjzf36KM2OXhV
+         PIKw==
+X-Gm-Message-State: AOAM5336JHLoZjPzGcEtDIuMax8ydU9bjK6vhi0U8mV0A8CD6oVVyBGi
+        LvcAepFMmbjim4xG1ceczjUwtg==
+X-Google-Smtp-Source: ABdhPJyXBEeI4zvLVf/tRWpqopuL2jSNCu4L9LZnKQaZP1mCTaWKou6fjAB0L+zVU5NonfUp5NxoSw==
+X-Received: by 2002:a5d:4a90:: with SMTP id o16mr23540803wrq.87.1595933483925;
+        Tue, 28 Jul 2020 03:51:23 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id y189sm4194196wmd.27.2020.07.28.03.51.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 03:51:23 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 11:51:21 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 06/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200728105121.GG2419169@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-7-michael@walle.cc>
+ <20200728074352.ckyfso5zwsfgupjx@pengutronix.de>
+ <58b53cacc5289f17f669159beeeada03@walle.cc>
+ <20200728094720.x6pucwxsfwvz6nvv@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200728094720.x6pucwxsfwvz6nvv@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the Reference Manual, the correct size is 512 MiB.
+On Tue, 28 Jul 2020, Uwe Kleine-König wrote:
+> On Tue, Jul 28, 2020 at 10:21:22AM +0200, Michael Walle wrote:
+> > Am 2020-07-28 09:43, schrieb Uwe Kleine-König:
+> > > On Sun, Jul 26, 2020 at 01:18:27AM +0200, Michael Walle wrote:
+> > > > +static int sl28cpld_pwm_probe(struct platform_device *pdev)
+> > > > +{
+> > > > +	struct sl28cpld_pwm *priv;
+> > > > +	struct pwm_chip *chip;
+> > > > +	int ret;
+> > > > +
+> > > > +	if (!pdev->dev.parent)
+> > > > +		return -ENODEV;
+> > > > +
+> > > > +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> > > > +	if (!priv)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	priv->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> > > > +	if (!priv->regmap)
+> > > 
+> > > Error message here?
+> > 
+> > This shouldn't really happen and I put it into the same category
+> > as the two above and report no error. But I can add it.
+> 
+> For kzalloc it is right to not emit an error because a failing kzalloc
+> is already loud on its own. I missed the first error path, that should
+> get a message, too.
+> 
+> > Generally, it looked to me that more and more drivers don't
+> > really report errors anymore, but just return with an -EWHATEVER.
+> > So if someone can shed some light here, I'm all ears.
+> 
+> IMHO it's wrong not to add error messages. At one point in time it will
+> fail and then you're happy if you don't have to add printks all over the
+> place first to debug that.
 
-Without this fix, probing the QSPI fails:
+Error messages should only be omitted for -ENOMEM and if something is
+already being printed out, ideally by the sub-system API.
 
-    fsl-quadspi 1550000.spi: ioremap failed for resource
-        [mem 0x40000000-0x7fffffff]
-    fsl-quadspi 1550000.spi: Freescale QuadSPI probe failed
-    fsl-quadspi: probe of 1550000.spi failed with error -12
-
-Fixes: 85f8ee78ab72 ("ARM: dts: ls1021a: Add support for QSPI with ls1021a SoC")
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
- arch/arm/boot/dts/ls1021a.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index b2ff27af090e..9435ce527e85 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -181,7 +181,7 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0x0 0x1550000 0x0 0x10000>,
--			      <0x0 0x40000000 0x0 0x40000000>;
-+			      <0x0 0x40000000 0x0 0x20000000>;
- 			reg-names = "QuadSPI", "QuadSPI-memory";
- 			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "qspi_en", "qspi";
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
