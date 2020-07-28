@@ -2,166 +2,156 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A7CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3D8F2065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:17:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g7TgRceJ"
+	by mail.kernel.org (Postfix) with ESMTP id AEEEA2065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732686AbgG1TR4 (ORCPT
+        id S1732703AbgG1TSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:17:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728751AbgG1TRz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:17:55 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F89C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:17:55 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id k4so18526696oik.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:17:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tsQ2Xj7AJ9j1QK6CR85sgGm7aJ0udfYN+K/GnPLpLbM=;
-        b=g7TgRceJkWHA8Gdrz/5KD+CzesTetjdFidS4FAzi4lpvcxWtsQYny19T8XXlUrrkem
-         ayzc0GZiIfc70wq8DMNsUX8SusGZt12P7ACPGfEGKD0C0WJhCyYcnX8h3TOI1oSbQDsa
-         fF/d3X1Toxt+pY8/Y80l0rRaAjQXO5u+SozqWqlP83Z7gi2VRNJUm4uVE5A0cRWAzzrz
-         8nD+ugQN8H2GE+Vyo6tsnep4ZOi9FBb09O4ja0k/y4jwrZdRKH/fdRmPVbNfvgD06wUd
-         uI83nG8Fjyqu7mv8GkWniQm7t2kuG+KKR4ytgHHM7ZCi62BRw3V4O4jVv2q8XGOIZ0xK
-         EYlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tsQ2Xj7AJ9j1QK6CR85sgGm7aJ0udfYN+K/GnPLpLbM=;
-        b=Td+YDXknG93jPLxKfgc14elSz6cCDwixZSfJCDr+tOrXGtGjGd9W3K3NdusKIn2Qc7
-         FJkXtKTBaJOIOS58OO1MIoWvHAlXNg7e0IrxwhnmjE8CPZvzn8i90JmhcKPw3Mby18do
-         r0uxGxstmUXIC9kSvh7KvjLlUuFAu3Arztq4bD7meKXSxHYJMSW6By+MBuv4VUly/F7v
-         7ECO0pE39SzJSxnE9st95jYVUsBFl953Ft5K20hWb5IfPzgpBu78sote7iYz0yVGdytx
-         oOlfB4zrjd/nf3TQL/RT6lPQoH/I0N/OdAL3fPvUSb0j04Ljq4I9iIK/5E55vp+2vWNm
-         r25w==
-X-Gm-Message-State: AOAM533i7beH7i4n2mXNl3sUZg6gdA5PKy9+Vek5hS6LAg3HMecf0vRt
-        Hna+NZytdUJwPriCtNfRNxjEy6rKAdymU8koCBHhnQ==
-X-Google-Smtp-Source: ABdhPJzG+EYMW8ZqVkQmWbz8HGmD3b012cHdzgtF5YTIcW8bgYYQxe6jtAovZ/LwvvmBrtV7DgJbflOpFiiLYO7ljsQ=
-X-Received: by 2002:aca:b5c3:: with SMTP id e186mr5015644oif.10.1595963875197;
- Tue, 28 Jul 2020 12:17:55 -0700 (PDT)
+        Tue, 28 Jul 2020 15:18:33 -0400
+Received: from mga09.intel.com ([134.134.136.24]:53302 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728751AbgG1TSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 15:18:32 -0400
+IronPort-SDR: ZZlEO0E+JxFAqsVlcV+OcvCDJn9KaIxf/RDJkrqca1gNVKzTV3u03BsLcwDUoTr7c7oAq2bRZM
+ MeUAY6HRQMdw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="152543409"
+X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
+   d="scan'208";a="152543409"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 12:18:31 -0700
+IronPort-SDR: A/LWYGtLiV2xMqj0KUz5tLFZ4cw8jmEEYYnpArz/u1f3jU63qCmvONl7hgH20Uj7HbCKKG4IEb
+ 8OjH9NNg4MOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
+   d="scan'208";a="434434628"
+Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.212.32.199]) ([10.212.32.199])
+  by orsmga004.jf.intel.com with ESMTP; 28 Jul 2020 12:18:30 -0700
+Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
+ devlink reload command
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Jiri Pirko <jiri@resnulli.us>, Moshe Shemesh <moshe@mellanox.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
+ <1595847753-2234-2-git-send-email-moshe@mellanox.com>
+ <20200727175802.04890dd3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200728135808.GC2207@nanopsycho>
+ <464add44-3ab1-21b8-3dba-a88202350bb9@intel.com>
+ <20200728114458.762b5396@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Jacob Keller <jacob.e.keller@intel.com>
+Organization: Intel Corporation
+Message-ID: <d6fbfedd-9022-ff67-23ed-418607beecc2@intel.com>
+Date:   Tue, 28 Jul 2020 12:18:30 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0.1
 MIME-Version: 1.0
-References: <1594948208-4739-1-git-send-email-hayashi.kunihiko@socionext.com>
-In-Reply-To: <1594948208-4739-1-git-send-email-hayashi.kunihiko@socionext.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 28 Jul 2020 12:17:44 -0700
-Message-ID: <CALAqxLXuJQOCXcpyWwyBFZGFK_dEgG0edEEf2=vOpAw6Ng8mBQ@mail.gmail.com>
-Subject: Re: [PATCH] dma-buf: heaps: Introduce dma_heap_add_cma() for
- non-default CMA heap
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        linux-media@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200728114458.762b5396@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 6:10 PM Kunihiko Hayashi
-<hayashi.kunihiko@socionext.com> wrote:
->
-> Current dma-buf heaps can handle only default CMA. This introduces
-> dma_heap_add_cma() function to attach CMA heaps that belongs to a device.
->
-> At first, the driver calls of_reserved_mem_device_init() to set
-> memory-region property associated with reserved-memory defined as CMA
-> to the device. And when the driver calls this dma_heap_add_cma(),
-> the CMA will be added to dma-buf heaps.
->
-> For example, prepare CMA node named "linux,cma@10000000" and
-> specify the node for memory-region property. After the above calls
-> in the driver, a device file "/dev/dma_heap/linux,cma@10000000"
-> associated with the CMA become available as dma-buf heaps.
->
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  drivers/dma-buf/heaps/cma_heap.c | 12 ++++++++++++
->  include/linux/dma-heap.h         |  9 +++++++++
->  2 files changed, 21 insertions(+)
 
-Hey! Sorry for the slow response on this! I just realized I never replied!
 
-> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
-> index 626cf7f..5d2442e 100644
-> --- a/drivers/dma-buf/heaps/cma_heap.c
-> +++ b/drivers/dma-buf/heaps/cma_heap.c
-> @@ -162,6 +162,18 @@ static int __add_cma_heap(struct cma *cma, void *data)
->         return 0;
->  }
->
-> +/* add device CMA heap to dmabuf heaps */
-> +int dma_heap_add_cma(struct device *dev)
-> +{
-> +       struct cma *cma = dev_get_cma_area(dev);
-> +
-> +       if (!cma)
-> +               return -ENOMEM;
-> +
-> +       return __add_cma_heap(cma, NULL);
-> +}
-> +EXPORT_SYMBOL_GPL(dma_heap_add_cma);
-> +
->  static int add_default_cma_heap(void)
->  {
->         struct cma *default_cma = dev_get_cma_area(NULL);
-> diff --git a/include/linux/dma-heap.h b/include/linux/dma-heap.h
-> index 454e354..16bec7d 100644
-> --- a/include/linux/dma-heap.h
-> +++ b/include/linux/dma-heap.h
-> @@ -56,4 +56,13 @@ void *dma_heap_get_drvdata(struct dma_heap *heap);
->   */
->  struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info);
->
-> +#ifdef CONFIG_DMABUF_HEAPS_CMA
-> +/**
-> + * dma_heap_add_cma - adds a device CMA heap to dmabuf heaps
-> + * @dev:       device with a CMA heap to register
-> + */
-> +int dma_heap_add_cma(struct device *dev);
-> +
-> +#endif /* CONFIG_DMABUF_HEAPS_CMA */
-> +
->  #endif /* _DMA_HEAPS_H */
-> --
-> 2.7.4
+On 7/28/2020 11:44 AM, Jakub Kicinski wrote:
+> On Tue, 28 Jul 2020 09:47:00 -0700 Jacob Keller wrote:
+>> On 7/28/2020 6:58 AM, Jiri Pirko wrote:
+>>> But this is needed to maintain the existing behaviour which is different
+>>> for different drivers.
+>>
+>> Which drivers behave differently here?
+> 
+> I think Jiri refers to mlxsw vs mlx5.
+> 
+> mlxsw loads firmware on probe, by default at least. So reloading the
+> driver implies a FW reset. NIC drivers OTOH don't generally load FW
+> so they didn't reset FW.
+> 
 
-Looks sane to me.  Being able to expose different multiple CMA heaps
-is needed, and I agree this way (as opposed to my earlier dts
-appraoch) is probably the best approach. The only bit I'm so-so on is
-adding the CMA heap specific call in the dma-heap.h, but at the same
-time I can't justify adding a whole new header for a single function.
+Ok.
 
-Do you have a upstream driver that you plan to make use this new call?
-We want to have in-tree users of code added.
+> Now since we're redefining the API from "do a reload so that driverinit
+> params are applied" (or "so that all netdevs get spawned in a new
+> netns") to "do a reset of depth X" we have to change the paradigm.
+> 
+> What I was trying to suggest is that we should not have to re-define
+> the API like this.
 
-But if so, feel free to add my:
-  Acked-by: John Stultz <john.stultz@linaro.org>
-To this patch when you submit the driver changes.
+Ok.
 
-thanks
--john
+> 
+> From user perspective what's important is what the reset achieves (and
+> perhaps how destructive it is). We can define the reset levels as:
+> 
+> $ devlink dev reload pci/0000:82:00.0 net-ns-respawn
+> $ devlink dev reload pci/0000:82:00.0 driver-param-init
+> $ devlink dev reload pci/0000:82:00.0 fw-activate
+> 
+> combining should be possible when user wants multiple things to happen:
+> 
+> $ devlink dev reload pci/0000:82:00.0 fw-activate driver-param-init
+> 
+
+Where today "driver-param-init" is the default behavior. But didn't we
+just say that mlxsw also does the equivalent of fw-activate?
+
+> 
+> Then we have the use case of a "live reset" which is slightly
+> under-defined right now IMHO, but we can extend it as:
+> 
+> $ devlink dev reload pci/0000:82:00.0 fw-activate --live
+> 
+
+Yea, I think live fw patching things aren't quite as defined yet.
+
+> 
+> We can also add the "reset level" specifier - for the cases where
+> device is misbehaving:
+> 
+> $ devlink dev reload pci/0000:82:00.0 level [driver|fw|hardware]
+> 
+
+I guess I don't quite see how level fits in? This is orthogonal to the
+other settings?
+
+> 
+> But I don't think that we can go from the current reload command
+> cleanly to just a level reset. The driver-specific default is a bad
+> smell which indicates we're changing semantics from what user wants 
+> to what the reset depth is. Our semantics with the patch as it stands
+> are in fact:
+>  - if you want to load new params or change netns, don't pass the level
+>    - the "driver default" workaround dictates the right reset level for
+>    param init;
+>  - if you want to activate new firmware - select the reset level you'd
+>    like from the reset level options.
+> 
+
+I think I agree, having the "what gets reloaded" as a separate vector
+makes sense and avoids confusion. For example for ice hardware,
+"fw-activate" really does mean "Do an EMP reset" rather than just a
+"device reset" which could be interpreted differently. ice can do
+function level reset, or core device reset also. Neither of those two
+resets activates firmware.
+
+Additionally the current function load process in ice doesn't support
+driver-init at all. That's something I'd like to see happen but is quite
+a significant refactor for how the driver loads. We need to refactor
+everything out so that devlink is created early on and factor out
+load/unload into handlers that can be called by the devlink reload. As I
+have primarily been focused on flash update I sort of left that for the
+future because it was a huge task to solve.
