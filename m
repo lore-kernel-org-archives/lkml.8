@@ -2,114 +2,80 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB323C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67112C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB819206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD3C206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:53:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Oa69vmEy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KSqMSEQh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbgG1MwR (ORCPT
+        id S1729917AbgG1MxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:52:17 -0400
-Received: from crapouillou.net ([89.234.176.41]:43760 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729843AbgG1MwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:52:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1595940734; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NUBlVQzxg2rxddx4x1YBc0M4mlh02cv2yVV0AJhXcdo=;
-        b=Oa69vmEyqdbx5c3A77jbOVpPgT7Uk5MtRVP9QmdxpYITmCqOIo6mSfeovt/u370jZ7pefu
-        el+7Pay8F5us5SIN/IQ2glPekYNP4S/nZ43uPnSCGKEXwhmiETZ8b9f92QeE15uAVFFKPp
-        OR/cuEYi2svqd9wguZmA1P6cbtSA/tA=
-Date:   Tue, 28 Jul 2020 14:52:03 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] memory: jz4780_nemc: Only request IO memory the driver
- will use
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     od@zcrc.me, linux-kernel@vger.kernel.org,
-        "H . Nikolaus Schaller" <hns@goldelico.com>
-Message-Id: <RQJ6EQ.X0RPEZHBGXEN1@crapouillou.net>
-In-Reply-To: <20200728092150.GA4437@kozik-lap>
-References: <20200727162034.12334-1-paul@crapouillou.net>
-        <20200728092150.GA4437@kozik-lap>
+        Tue, 28 Jul 2020 08:53:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729334AbgG1MxA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:53:00 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68798C061794;
+        Tue, 28 Jul 2020 05:53:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UgVQRvZJixUv6JYF5NwVa4T32Vg00H3gT3hmhAxa1kQ=; b=KSqMSEQhA17NtjqHKn38xSqgt6
+        zHXQfifZ84Dd/efwyw+dirBDJqvLC1ttSvegpdnN33kR1bp/fCib/TlHEXuKnVQT1HmvSbSk3njbb
+        9LtNUsK8XHesz0Mt23dTG9VhCrlAwlobY/ULokJMsD5xzuLP4dzjDnOOumMqQfeV1/tk5L6wOkiiP
+        Dv/dioQHpy1SnvQZB/A7dRpyQzvcKuDQfQKPZZAHrejYtJQd5OazIYgTL7tSaBOklThF3COFZKdql
+        ZPjlim/3ReNbMJTVnVpjgP/YnRA9k5k4N7vkKUe3zGyDgUCDZR3eOvzFknYZZJG2Y9F/Zvr7Z8nHm
+        URVU2h3A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0P6E-0003Fs-2g; Tue, 28 Jul 2020 12:52:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5751A304B6D;
+        Tue, 28 Jul 2020 14:52:53 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E5B7B29DE295A; Tue, 28 Jul 2020 14:52:52 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 14:52:52 +0200
+From:   peterz@infradead.org
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, Neil Brown <neilb@suse.de>
+Subject: Re: Minor RST rant
+Message-ID: <20200728125252.GW119549@hirez.programming.kicks-ass.net>
+References: <20200724132200.51fd2065@oasis.local.home>
+ <20200724113325.44923f75@lwn.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724113325.44923f75@lwn.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 24, 2020 at 11:33:25AM -0600, Jonathan Corbet wrote:
 
+> I'm not sure what to do other than to continue to push for minimal use of
+> intrusive markup.
 
-Le mar. 28 juil. 2020 =E0 11:21, Krzysztof Kozlowski <krzk@kernel.org> a=20
-=E9crit :
-> On Mon, Jul 27, 2020 at 06:20:34PM +0200, Paul Cercueil wrote:
->>  The driver only uses the registers up to offset 0x54. Since the=20
->> EFUSE
->>  registers are in the middle of the NEMC registers, we only request
->>  the registers we will use for now - that way the EFUSE driver can
->>  probe too.
->>=20
->>  Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->>   drivers/memory/jz4780-nemc.c | 15 ++++++++++++++-
->>   1 file changed, 14 insertions(+), 1 deletion(-)
->>=20
->>  diff --git a/drivers/memory/jz4780-nemc.c=20
->> b/drivers/memory/jz4780-nemc.c
->>  index b232ed279fc3..647267ea8c63 100644
->>  --- a/drivers/memory/jz4780-nemc.c
->>  +++ b/drivers/memory/jz4780-nemc.c
->>  @@ -8,6 +8,7 @@
->>=20
->>   #include <linux/clk.h>
->>   #include <linux/init.h>
->>  +#include <linux/io.h>
->>   #include <linux/math64.h>
->>   #include <linux/of.h>
->>   #include <linux/of_address.h>
->>  @@ -288,7 +289,19 @@ static int jz4780_nemc_probe(struct=20
->> platform_device *pdev)
->>   	nemc->dev =3D dev;
->>=20
->>   	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>  -	nemc->base =3D devm_ioremap_resource(dev, res);
->>  +
->>  +	/*
->>  +	 * The driver only uses the registers up to offset 0x54. Since=20
->> the EFUSE
->>  +	 * registers are in the middle of the NEMC registers, we only=20
->> request
->>  +	 * the registers we will use for now - that way the EFUSE driver=20
->> can
->>  +	 * probe too.
->>  +	 */
->>  +	if (!devm_request_mem_region(dev, res->start, 0x54,=20
->> dev_name(dev))) {
->>  +		dev_err(dev, "unable to request I/O memory region\n");
->>  +		return -EBUSY;
->>  +	}
->>  +
->>  +	nemc->base =3D devm_ioremap(dev, res->start, resource_size(res));
->=20
-> Shouldn't you map only 0x54 size as well?
+Perhaps make it clearer in:
 
-I can do that.
+  Documentation/doc-guide/
 
-Cheers,
--Paul
+because people claim they follow that, but the result is that I get
+completely unreadable garbage from them.
 
-
+Like I've written many times before, I'm starting to loathe RST, it's an
+absolute failure. I'm near the point where I'm looking to write a script
+that will silently convert any RST crap to plain text in my commit
+script.
