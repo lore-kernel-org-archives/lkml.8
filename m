@@ -2,127 +2,131 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF43C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB79C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD8BB206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:53:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595940795;
-	bh=MUYeD3GgXET3a0ZBeONuYlRGXszH+aPH/3QIHvyXtSI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uW6L2KQByztfvmWwJrm8ukJNiNgAY/ARPEndtgWkZmvyWyN3gspGr4aTlg6Rx73z9
-	 +7c0hWWl88lip04tkgf0MyKW98KQs6b/eavlSqV9zh9ioFVfHKbchRkmRESAxFAiqa
-	 EPg3ZPf9n3VCPyeDVWrtCyiU0+0apfWab87pHSDQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7672920714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729938AbgG1MxN convert rfc822-to-8bit (ORCPT
+        id S1729947AbgG1MxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:53:13 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44250 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729334AbgG1MxN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:53:13 -0400
-Received: by mail-ed1-f65.google.com with SMTP id l23so1025273edv.11;
-        Tue, 28 Jul 2020 05:53:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=aoCohgM246EUm7c+IU2iz8TlLWtEE6nHvR4AuaMzzq0=;
-        b=A+RWy9RG/DaVQmClxni0+PQRH0Aq7wf4TN3x02G/8HQ8wXr9ZXUJdBtQMtfhVdNjPp
-         UN7CCgPdFf8gDkvGnz51TavYCuJ+FtX3T0Xhv5NEldOeDJV1d158AK+UfgntsV7T5EPF
-         PeZCD8vCjN2fHHpJ2SbbUXjG4BAVVOK8BTMsEgJStxu0dS2yPwkg+Z+4+x51/gNIlR/d
-         4/dtdJ7Ma8fU0825tsQ1gJe0NWwP0YCvK0nDjqPFhGX2PqtQoaV5R/HdTEw3WKP8k/Rs
-         x0aW2fOgZE8CakI7IJfaSlRYxJ/Z23Kw9z3zKC7pxxKaN4FxTXAAc14zmAu+v2VAU2ZA
-         dIYQ==
-X-Gm-Message-State: AOAM530SED0xhSSVB6in9U2c/LqrUyLKHx04ctQOSEvm5oRPowNXK6fX
-        h4H2QMqDufrevcp9u10RgmcPDPf/ETyB2g==
-X-Google-Smtp-Source: ABdhPJxH8Aapziu8x9pLUdnaSQlT6hli/1SMb8+n9iq8PlALrH7ZCRzaMDSKEa4FQvyxrSaFbhW38w==
-X-Received: by 2002:aa7:d607:: with SMTP id c7mr531808edr.184.1595940791369;
-        Tue, 28 Jul 2020 05:53:11 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id dc12sm7681660ejb.124.2020.07.28.05.53.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 Jul 2020 05:53:10 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 14:53:08 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 2/2] MIPS: ingenic: Enable JZ4780_NEMC manually
-Message-ID: <20200728125308.GA344@kozik-lap>
-References: <20200728104503.23655-1-krzk@kernel.org>
- <20200728104503.23655-2-krzk@kernel.org>
- <B4F6EQ.WB2WZOY40FDR@crapouillou.net>
- <20200728111935.GA26683@kozik-lap>
- <20200728113702.GB13443@alpha.franken.de>
- <20200728120035.GA28766@kozik-lap>
- <NPJ6EQ.I4K2FZ2BHH1E@crapouillou.net>
+        Tue, 28 Jul 2020 08:53:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729334AbgG1MxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:53:22 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B93F206D8;
+        Tue, 28 Jul 2020 12:53:21 +0000 (UTC)
+Date:   Tue, 28 Jul 2020 08:53:20 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Chengming Zhou <zhouchengming@bytedance.com>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        songmuchun@bytedance.com
+Subject: Re: [PATCH 1/2] ftrace: clear module from hash of all ftrace ops
+Message-ID: <20200728085320.6b04e03f@oasis.local.home>
+In-Reply-To: <20200728102720.46837-1-zhouchengming@bytedance.com>
+References: <20200728102720.46837-1-zhouchengming@bytedance.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <NPJ6EQ.I4K2FZ2BHH1E@crapouillou.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 02:51:23PM +0200, Paul Cercueil wrote:
-> 
-> 
-> Le mar. 28 juil. 2020 à 14:00, Krzysztof Kozlowski <krzk@kernel.org> a écrit
-> :
-> > On Tue, Jul 28, 2020 at 01:37:02PM +0200, Thomas Bogendoerfer wrote:
-> > >  On Tue, Jul 28, 2020 at 01:19:35PM +0200, Krzysztof Kozlowski wrote:
-> > >  > On Tue, Jul 28, 2020 at 01:12:11PM +0200, Paul Cercueil wrote:
-> > >  > > Hi Krzysztof,
-> > >  > >
-> > >  > > Le mar. 28 juil. 2020 à 12:45, Krzysztof Kozlowski
-> > > <krzk@kernel.org> a écrit
-> > >  > > :
-> > >  > > > The CONFIG_JZ4780_NEMC was previously a default on MIPS but
-> > > now it has
-> > >  > > > to be enabled manually.
-> > >  > > >
-> > >  > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > >  > >
-> > >  > > I think you should swap the two so that there are no problems
-> > > when
-> > >  > > bisecting.
-> > >  >
-> > >  > Good point. I was thinking that it will go via some of MIPS trees
-> > > and
-> > >  > the patch #1 will just wait a cycle.  However with acks, I can
-> > > take it
-> > >  > through drivers/memory tree.
-> > > 
-> > >  I've acked the patch.
-> > > 
-> > >  Thomas.
-> > 
-> > Thanks but now I noticed that one of changed configs
-> > (arch/mips/configs/rs90_defconfig) is only in MIPS tree.
-> > 
-> > I think it is easier then to take the patch #2 (configs) via MIPS and
-> > wait with #1 for the next cycle or also take it via MIPS if it applies
-> > cleanly.
-> 
-> Why not take them both in the MIPS tree then? Would that conflict with
-> changes in your tree?
+On Tue, 28 Jul 2020 18:27:19 +0800
+Chengming Zhou <zhouchengming@bytedance.com> wrote:
 
-Exactly (last part of my sentence). There should be no conflicts.
+> We should clear module from hash of all ops on ftrace_ops_list when
+> module going, or the ops including these modules will be matched
+> wrongly by new module loaded later.
 
-Best regards,
-Krzysztof
+This is really up to the owner of the hash and not the registered
+system.
+
+If we want, we could register some kind of callback table for all
+ftrace_ops to have this updated, but the current code is incorrect.
+
+Like:
+
+ register_ftrace_ops_hash()
+
+Where the hash will get updated on module removal.
+
+> 
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> ---
+>  kernel/trace/ftrace.c | 22 ++++++++++++----------
+>  1 file changed, 12 insertions(+), 10 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 1903b80db6eb..fca01a168ae5 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -6223,18 +6223,20 @@ clear_mod_from_hash(struct ftrace_page *pg, struct ftrace_hash *hash)
+>  /* Clear any records from hashs */
+>  static void clear_mod_from_hashes(struct ftrace_page *pg)
+>  {
+> -	struct trace_array *tr;
+> +	struct ftrace_ops *op;
+>  
+> -	mutex_lock(&trace_types_lock);
+> -	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+> -		if (!tr->ops || !tr->ops->func_hash)
+
+The tr->ops hashes are persistent without being registered. They match
+what's in set_ftrace_filter and similar files.
+
+Your patch just introduced a bug, because those hashes now would not
+get updated if the ops were not registered.
+
+i.e.
+
+ # echo some_module_function > set_ftrace_filter
+ # rmmod module_with_that_function
+ # insmod module_with_same_address_of_function
+ # echo function > current_tracer
+
+Now the tr->ops->hash would still have the function of the original
+module.
+
+
+Either have all owners of ftrace_ops handle this case, or add a helper
+function to handle it for them. But using ftarce_ops_list is the wrong
+place to do it.
+
+-- Steve
+
+
+> +	mutex_lock(&ftrace_lock);
+> +
+> +	do_for_each_ftrace_op(op, ftrace_ops_list) {
+> +		if (!op->func_hash)
+>  			continue;
+> -		mutex_lock(&tr->ops->func_hash->regex_lock);
+> -		clear_mod_from_hash(pg, tr->ops->func_hash->filter_hash);
+> -		clear_mod_from_hash(pg, tr->ops->func_hash->notrace_hash);
+> -		mutex_unlock(&tr->ops->func_hash->regex_lock);
+> -	}
+> -	mutex_unlock(&trace_types_lock);
+> +		mutex_lock(&op->func_hash->regex_lock);
+> +		clear_mod_from_hash(pg, op->func_hash->filter_hash);
+> +		clear_mod_from_hash(pg, op->func_hash->notrace_hash);
+> +		mutex_unlock(&op->func_hash->regex_lock);
+> +	} while_for_each_ftrace_op(op);
+> +
+> +	mutex_unlock(&ftrace_lock);
+>  }
+>  
+>  static void ftrace_free_mod_map(struct rcu_head *rcu)
 
