@@ -2,126 +2,91 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9781CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F09C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75FD3206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:41:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hdFI5ass"
+	by mail.kernel.org (Postfix) with ESMTP id 0EEB8206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:44:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbgG1Dla (ORCPT
+        id S1726947AbgG1DoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 23:41:30 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52585 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726782AbgG1Dl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 23:41:29 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BG2XP2svDz9sTj;
-        Tue, 28 Jul 2020 13:41:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595907687;
-        bh=sKjpOkEIibJEqcox3rSxH9CKwWRN+tFx/60devM8aoY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=hdFI5assRmcIl/MPxCxaoGHtaH0S0MZmUDkm4E/XGjYCz1FujwhuVAdoEW5KAAxSL
-         W5/AKynvwm3TNZdEhloxaPaWHt3T6BokBSKdef6w9yqzV3efmCqBAnh9JDpHE3A0Xs
-         qosMSAMJIRPs9So/WmNciE1e+sqt8nIt4fgydxcrsVNqW2BWM3TAzhmJnwvn9a+3fP
-         fSMI//ArfTxShbZsaEWlrjrXggPoqrO91JyEC3lBa5VjqEAFAI20n2PWGXw8noBinN
-         VtZpQF8HWPUNwSgTicqHDiL2V1HTHgNDIIvtTQPzxI0xQHSc0tlgHvcVT8OS0nSGaB
-         pSVaxEmfyuHYA==
-Date:   Tue, 28 Jul 2020 13:41:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steve Cohen <cohens@codeaurora.org>,
-        Emil Velikov <emil.velikov@collabora.com>
-Subject: linux-next: manual merge of the drm tree with the drm-misc-fixes
- tree
-Message-ID: <20200728134119.57a54f2a@canb.auug.org.au>
+        Mon, 27 Jul 2020 23:44:01 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8834 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726782AbgG1DoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 23:44:01 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 34EDD7B55506FB966D52;
+        Tue, 28 Jul 2020 11:43:58 +0800 (CST)
+Received: from [10.174.179.105] (10.174.179.105) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 28 Jul
+ 2020 11:43:57 +0800
+Subject: Re: [PATCH] clk: ti: clkctrl: add the missed kfree() for
+ _ti_omap4_clkctrl_setup()
+To:     Stephen Boyd <sboyd@kernel.org>, <mturquette@baylibre.com>,
+        <robh@kernel.org>, <t-kristo@ti.com>, <tony@atomide.com>
+References: <20200720122343.178203-1-jingxiangfeng@huawei.com>
+ <159589945839.1360974.1977401781355555451@swboyd.mtv.corp.google.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
+Message-ID: <5F1F9EF8.6090304@huawei.com>
+Date:   Tue, 28 Jul 2020 11:43:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.1.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/BVxTvCBDRzX0/QPHxAMG5IG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <159589945839.1360974.1977401781355555451@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.105]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/BVxTvCBDRzX0/QPHxAMG5IG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the drm tree got a conflict in:
+On 2020/7/28 9:24, Stephen Boyd wrote:
+> Quoting Jing Xiangfeng (2020-07-20 05:23:43)
+>> _ti_omap4_clkctrl_setup() misses to call kfree() in an error path. Add
+>> the missed function call to fix it.
+>>
+>> Fixes: 6c3090520554 ("clk: ti: clkctrl: Fix hidden dependency to node name")
+>> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+>> ---
+>>   drivers/clk/ti/clkctrl.c | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
+>> index 864c484bde1b..868e50132c21 100644
+>> --- a/drivers/clk/ti/clkctrl.c
+>> +++ b/drivers/clk/ti/clkctrl.c
+>> @@ -655,8 +655,10 @@ static void __init _ti_omap4_clkctrl_setup(struct device_node *node)
+>>                  }
+>>
+>>                  hw = kzalloc(sizeof(*hw), GFP_KERNEL);
+>> -               if (!hw)
+>> +               if (!hw) {
+>> +                       kfree(clkctrl_name);
+>>                          return;
+>> +               }
+>
+> Why not goto cleanup?
 
-  drivers/gpu/drm/drm_gem.c
+Thanks, I will change it as you suggested.
 
-between commit:
-
-  8490d6a7e0a0 ("drm: hold gem reference until object is no longer accessed=
-")
-
-from the drm-misc-fixes tree and commit:
-
-  be6ee102341b ("drm: remove _unlocked suffix in drm_gem_object_put_unlocke=
-d")
-
-from the drm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/drm_gem.c
-index ee2058ad482c,a57f5379fc08..000000000000
---- a/drivers/gpu/drm/drm_gem.c
-+++ b/drivers/gpu/drm/drm_gem.c
-@@@ -901,9 -913,7 +909,9 @@@ drm_gem_open_ioctl(struct drm_device *d
-  	args->handle =3D handle;
-  	args->size =3D obj->size;
- =20
- -	return 0;
- +err:
-- 	drm_gem_object_put_unlocked(obj);
-++	drm_gem_object_put(obj);
- +	return ret;
-  }
- =20
-  /**
-
---Sig_/BVxTvCBDRzX0/QPHxAMG5IG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8fnl8ACgkQAVBC80lX
-0GzCcwf/RSfKiNgMs/9X0/IjhLfqM3Dn9J67OsBVs10ohNmxiT7aRrHWSEs+Kbu+
-bTSYGsCa0gpoVlAHQHROFhS+cqEnlQcmGJ1qEMRG6XX+OBw7D1HIzJPJMmtL4m82
-9AOA6SORd5nJG39MOaLwEufhvaZlTc4vURg6A1SLj7PGtwZCsNMyMlGOQvHNkhoz
-I0uny55OGAME98c+w0RHwSsFf9XetbKhEyW7uUnhsSro120HiQVqhZ95y+9Ol02i
-1gpLcliCn8y3T6cHqTGw2zb7L5kQWpDL784p17US5cSudn2zbZD4ccioQAWlMQg2
-gWT7eHLtelkBPiJVSjntQy/dJmAfpw==
-=8U80
------END PGP SIGNATURE-----
-
---Sig_/BVxTvCBDRzX0/QPHxAMG5IG--
+>
+>>
+>>                  hw->enable_reg.ptr = provider->base + reg_data->offset;
+>>
+>> --
+>> 2.17.1
+>>
+> .
+>
