@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C41FC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17B2C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BACE20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A291E20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:21:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgG1GVw (ORCPT
+        id S1728096AbgG1GVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:21:52 -0400
-Received: from mga06.intel.com ([134.134.136.31]:26366 "EHLO mga06.intel.com"
+        Tue, 28 Jul 2020 02:21:51 -0400
+Received: from mga06.intel.com ([134.134.136.31]:26362 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727843AbgG1GVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726797AbgG1GVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jul 2020 02:21:00 -0400
-IronPort-SDR: RsOp3H5EilCTJU/fzQlfQwGybB2yFTbpiV+kDSC6oBfjDW6aF0EFNjrt6KFlS1a6fRfjHZ/Zek
- MoNz4fBufX1g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="212681243"
+IronPort-SDR: 10Qixp0AZO3+60nKY5G7/cPm1n+sgOYabyB8MFUY3tt0PSWcpxrjTeReqvaEK/WnopmeSsq063
+ SgrpBK+VnNzQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="212681236"
 X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
-   d="scan'208";a="212681243"
+   d="scan'208";a="212681236"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 23:20:56 -0700
-IronPort-SDR: VyiBPr0vNrmCxDGcQ4QUdenaeG+1yPbpJCBMsRehXlNnm35WfPyqKxQLtiAyFNi/MAWs+5uP1I
- 7ICjs52dC6Iw==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 23:20:55 -0700
+IronPort-SDR: S7zGkWPQoBjR9LpGT59YqNR1s4Dj8G8UfhwFVzd5Z+6NxBwoDYclT4tLH2iDsEitT9o4vRnx1g
+ otuo3MyMg2jg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
-   d="scan'208";a="320274409"
+   d="scan'208";a="320274382"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga008.jf.intel.com with ESMTP; 27 Jul 2020 23:20:55 -0700
 From:   Liu Yi L <yi.l.liu@intel.com>
@@ -45,9 +45,9 @@ Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
         hao.wu@intel.com, stefanha@gmail.com,
         iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 09/15] iommu/vt-d: Check ownership for PASIDs from user-space
-Date:   Mon, 27 Jul 2020 23:27:38 -0700
-Message-Id: <1595917664-33276-10-git-send-email-yi.l.liu@intel.com>
+Subject: [PATCH v6 02/15] iommu: Report domain nesting info
+Date:   Mon, 27 Jul 2020 23:27:31 -0700
+Message-Id: <1595917664-33276-3-git-send-email-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
 References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
@@ -56,10 +56,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an IOMMU domain with nesting attribute is used for guest SVA, a
-system-wide PASID is allocated for binding with the device and the domain.
-For security reason, we need to check the PASID passed from user-space.
-e.g. page table bind/unbind and PASID related cache invalidation.
+IOMMUs that support nesting translation needs report the capability info
+to userspace. It gives information about requirements the userspace needs
+to implement plus other features characterizing the physical implementation.
+
+This patch reports nesting info by DOMAIN_ATTR_NESTING. Caller can get
+nesting info after setting DOMAIN_ATTR_NESTING. For VFIO, it is after
+selecting VFIO_TYPE1_NESTING_IOMMU.
 
 Cc: Kevin Tian <kevin.tian@intel.com>
 CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -71,71 +74,113 @@ Cc: Lu Baolu <baolu.lu@linux.intel.com>
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- drivers/iommu/intel/iommu.c | 10 ++++++++++
- drivers/iommu/intel/svm.c   |  7 +++++--
- 2 files changed, 15 insertions(+), 2 deletions(-)
+v5 -> v6:
+*) rephrase the feature notes per comments from Eric Auger.
+*) rename @size of struct iommu_nesting_info to @argsz.
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index b2fe54e..88f4647 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -5436,6 +5436,7 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
- 		int granu = 0;
- 		u64 pasid = 0;
- 		u64 addr = 0;
-+		void *pdata;
+v4 -> v5:
+*) address comments from Eric Auger.
+
+v3 -> v4:
+*) split the SMMU driver changes to be a separate patch
+*) move the @addr_width and @pasid_bits from vendor specific
+   part to generic part.
+*) tweak the description for the @features field of struct
+   iommu_nesting_info.
+*) add description on the @data[] field of struct iommu_nesting_info
+
+v2 -> v3:
+*) remvoe cap/ecap_mask in iommu_nesting_info.
+*) reuse DOMAIN_ATTR_NESTING to get nesting info.
+*) return an empty iommu_nesting_info for SMMU drivers per Jean'
+   suggestion.
+---
+ include/uapi/linux/iommu.h | 74 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+
+diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+index 7c8e075..5e4745a 100644
+--- a/include/uapi/linux/iommu.h
++++ b/include/uapi/linux/iommu.h
+@@ -332,4 +332,78 @@ struct iommu_gpasid_bind_data {
+ 	} vendor;
+ };
  
- 		granu = to_vtd_granularity(cache_type, inv_info->granularity);
- 		if (granu == -EINVAL) {
-@@ -5456,6 +5457,15 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
- 			 (inv_info->granu.addr_info.flags & IOMMU_INV_ADDR_FLAGS_PASID))
- 			pasid = inv_info->granu.addr_info.pasid;
- 
-+		pdata = ioasid_find(dmar_domain->ioasid_sid, pasid, NULL);
-+		if (!pdata) {
-+			ret = -EINVAL;
-+			goto out_unlock;
-+		} else if (IS_ERR(pdata)) {
-+			ret = PTR_ERR(pdata);
-+			goto out_unlock;
-+		}
++/*
++ * struct iommu_nesting_info - Information for nesting-capable IOMMU.
++ *			       userspace should check it before using
++ *			       nesting capability.
++ *
++ * @argsz:	size of the whole structure.
++ * @flags:	currently reserved for future extension. must set to 0.
++ * @format:	PASID table entry format, the same definition as struct
++ *		iommu_gpasid_bind_data @format.
++ * @features:	supported nesting features.
++ * @addr_width:	The output addr width of first level/stage translation
++ * @pasid_bits:	Maximum supported PASID bits, 0 represents no PASID
++ *		support.
++ * @data:	vendor specific cap info. data[] structure type can be deduced
++ *		from @format field.
++ *
++ * +===============+======================================================+
++ * | feature       |  Notes                                               |
++ * +===============+======================================================+
++ * | SYSWIDE_PASID |  IOMMU vendor driver sets it to mandate userspace    |
++ * |               |  to allocate PASID from kernel. All PASID allocation |
++ * |               |  free must be mediated through the TBD API.          |
++ * +---------------+------------------------------------------------------+
++ * | BIND_PGTBL    |  IOMMU vendor driver sets it to mandate userspace    |
++ * |               |  bind the first level/stage page table to associated |
++ * |               |  PASID (either the one specified in bind request or  |
++ * |               |  the default PASID of iommu domain), through IOMMU   |
++ * |               |  UAPI.                                               |
++ * +---------------+------------------------------------------------------+
++ * | CACHE_INVLD   |  IOMMU vendor driver sets it to mandate userspace    |
++ * |               |  explicitly invalidate the IOMMU cache through IOMMU |
++ * |               |  UAPI according to vendor-specific requirement when  |
++ * |               |  changing the 1st level/stage page table.            |
++ * +---------------+------------------------------------------------------+
++ *
++ * @data[] types defined for @format:
++ * +================================+=====================================+
++ * | @format                        | @data[]                             |
++ * +================================+=====================================+
++ * | IOMMU_PASID_FORMAT_INTEL_VTD   | struct iommu_nesting_info_vtd       |
++ * +--------------------------------+-------------------------------------+
++ *
++ */
++struct iommu_nesting_info {
++	__u32	argsz;
++	__u32	flags;
++	__u32	format;
++#define IOMMU_NESTING_FEAT_SYSWIDE_PASID	(1 << 0)
++#define IOMMU_NESTING_FEAT_BIND_PGTBL		(1 << 1)
++#define IOMMU_NESTING_FEAT_CACHE_INVLD		(1 << 2)
++	__u32	features;
++	__u16	addr_width;
++	__u16	pasid_bits;
++	__u32	padding;
++	__u8	data[];
++};
 +
- 		switch (BIT(cache_type)) {
- 		case IOMMU_CACHE_INV_TYPE_IOTLB:
- 			/* HW will ignore LSB bits based on address mask */
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index c85b8d5..b9b29ad 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -323,7 +323,7 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
- 	dmar_domain = to_dmar_domain(domain);
- 
- 	mutex_lock(&pasid_mutex);
--	svm = ioasid_find(INVALID_IOASID_SET, data->hpasid, NULL);
-+	svm = ioasid_find(dmar_domain->ioasid_sid, data->hpasid, NULL);
- 	if (IS_ERR(svm)) {
- 		ret = PTR_ERR(svm);
- 		goto out;
-@@ -440,6 +440,7 @@ int intel_svm_unbind_gpasid(struct iommu_domain *domain,
- 			    struct device *dev, u32 pasid)
- {
- 	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
-+	struct dmar_domain *dmar_domain;
- 	struct intel_svm_dev *sdev;
- 	struct intel_svm *svm;
- 	int ret = -EINVAL;
-@@ -447,8 +448,10 @@ int intel_svm_unbind_gpasid(struct iommu_domain *domain,
- 	if (WARN_ON(!iommu))
- 		return -EINVAL;
- 
-+	dmar_domain = to_dmar_domain(domain);
++/*
++ * struct iommu_nesting_info_vtd - Intel VT-d specific nesting info.
++ *
++ * @flags:	VT-d specific flags. Currently reserved for future
++ *		extension. must be set to 0.
++ * @cap_reg:	Describe basic capabilities as defined in VT-d capability
++ *		register.
++ * @ecap_reg:	Describe the extended capabilities as defined in VT-d
++ *		extended capability register.
++ */
++struct iommu_nesting_info_vtd {
++	__u32	flags;
++	__u32	padding;
++	__u64	cap_reg;
++	__u64	ecap_reg;
++};
 +
- 	mutex_lock(&pasid_mutex);
--	svm = ioasid_find(INVALID_IOASID_SET, pasid, NULL);
-+	svm = ioasid_find(dmar_domain->ioasid_sid, pasid, NULL);
- 	if (!svm) {
- 		ret = -EINVAL;
- 		goto out;
+ #endif /* _UAPI_IOMMU_H */
 -- 
 2.7.4
 
