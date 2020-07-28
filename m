@@ -2,165 +2,187 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74370C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D74DC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59AF3206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358772070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:48:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="mJv4cRJa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbgG1Msn (ORCPT
+        id S1729873AbgG1Msi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:48:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60562 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729379AbgG1Msm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:48:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A932DAD18;
-        Tue, 28 Jul 2020 12:48:51 +0000 (UTC)
-Subject: Re: [PATCH v2][next] bcache: Use fallthrough pseudo-keyword
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200727230418.GA14028@embeddedor>
-From:   Coly Li <colyli@suse.de>
-Autocrypt: addr=colyli@suse.de; keydata=
- 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
-Message-ID: <9c8fa79f-a34a-1e3d-10ed-819bb05e8b30@suse.de>
-Date:   Tue, 28 Jul 2020 20:48:36 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Tue, 28 Jul 2020 08:48:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729379AbgG1Msh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:48:37 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21271C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:48:37 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id b186so616485pfb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 05:48:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=5oyTQCyX/ciYl48/sUrXDUPmcBZA+8gagBY19IdeyQw=;
+        b=mJv4cRJaHTSRd26v0XPCC6OuEb27899p3vFDZAeLGdTP7DB4aEi6p5eF4+a8cnzKCw
+         5MwzSIznTSTpJJEC8dSCLzxBxhoW/EEzSkUCb/25q+Kc2Wf+Wj9wbZlM4F9ZaOTtEvk4
+         JL4/iNFN4axOYYA7a4Q+eKkAsBX/zEWROJ1tKgCi1uGgxmSanormQNDOFwJupIAw66YV
+         e6GHp2BKmHKRPLOmx0Eii+TgpPoWFFV81GQjyAAr5WuNE9sFvLEspzkfC1PGo/MgKQmL
+         +Wcb43qgmCJAYtoO7vfJu3RtxoxWmHB/IVQAWVnuyxbHjudvAgEUR3OWIAyOI09otZxe
+         GajA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=5oyTQCyX/ciYl48/sUrXDUPmcBZA+8gagBY19IdeyQw=;
+        b=sWFsj1Msc14HPBVOBwmMwjZicp8+MWF/GuUSgK2GIsgyF+bwvrWXzosLn6qxb1Bq+X
+         tOEWsGhTp9xXGqopH82kXpCmUXrxos/8vxfQFGeIi92lOmbK0qZXJlUF72hSFYYh/bHt
+         EGaPAAGHlUUi8nzd7vXXBcKQTvn3vgP4ddl3UHAmnU9sh6u6sMRB9pHIRllzWgDqtKq6
+         BtV+GdsAuXhWU8Y71nqXQZxkBT/8twqR912iPlA5CklLUWrYid++0o9L2SbtbKrwQBK0
+         Dzj099CGUgdwYTA9MoobUB6MxohCfA84QEwtIoW3HetPSvnehYuq6Bdm8viCbCvmYMc/
+         cORA==
+X-Gm-Message-State: AOAM532brpV8P1HqQhuWyOGKXPigBjGCEw+U+WhrfRENHSX4i3TT/UqN
+        TAuzIhjc/cWUnkKr+j0bSakdAQ==
+X-Google-Smtp-Source: ABdhPJwrNO3hVD9ncE6nw0POJPiH56DghiizCxZUSEDMPelQ3RnDZcitu5WJ+CzfU0hAcmqtp/xbpw==
+X-Received: by 2002:a63:aa42:: with SMTP id x2mr23554140pgo.361.1595940516634;
+        Tue, 28 Jul 2020 05:48:36 -0700 (PDT)
+Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
+        by smtp.gmail.com with ESMTPSA id w4sm17943294pfd.39.2020.07.28.05.48.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jul 2020 05:48:35 -0700 (PDT)
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+X-Google-Original-From: Kaaira Gupta <Kaairakgupta@es.iitr.ac.in>
+Date:   Tue, 28 Jul 2020 18:18:28 +0530
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH v2 3/3] media: vimc: Join pipeline if one already exists
+Message-ID: <20200728124828.GA8928@kaaira-HP-Pavilion-Notebook>
+References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
+ <20200724120213.17119-4-kgupta@es.iitr.ac.in>
+ <e70ecfa2-695f-70ca-eccc-841477700445@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20200727230418.GA14028@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e70ecfa2-695f-70ca-eccc-841477700445@collabora.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/28 07:04, Gustavo A. R. Silva wrote:
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1].
+On Tue, Jul 28, 2020 at 02:24:37PM +0200, Dafna Hirschfeld wrote:
 > 
-> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 > 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-I am OK with it, add it to my second for-next series.
-
-Thanks.
-
-Coly Li
-
-
-> ---
-> Changes in v2:
->  - Add missing semicolon.
+> On 24.07.20 14:02, Kaaira Gupta wrote:
+> > An output which is running is already part of a pipeline and trying to
+> > start a new pipeline is not possible. This prevents two capture devices
+> > from streaming at the same time.
+> > 
+> > Instead of failing to start the second capture device allow it to join
+> > the already running pipeline. This allows two (or more) capture devices
+> > to independently be started and stopped.
+> > 
+> > [Kaaira: Changed the search for an existing connected sensor, to search
+> > for a non-NULL pipe instead, this helps to terminate the search at
+> > output itself instead of going till the sensor, changed variable names,
+> > commit message and conditions accordingly]
+> > 
+> > Signed-off-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
+> > Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> > ---
+> >   .../media/test-drivers/vimc/vimc-capture.c    | 35 ++++++++++++++++++-
+> >   1 file changed, 34 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/media/test-drivers/vimc/vimc-capture.c b/drivers/media/test-drivers/vimc/vimc-capture.c
+> > index c63496b17b9a..423d5e5a508d 100644
+> > --- a/drivers/media/test-drivers/vimc/vimc-capture.c
+> > +++ b/drivers/media/test-drivers/vimc/vimc-capture.c
+> > @@ -237,16 +237,49 @@ static void vimc_cap_return_all_buffers(struct vimc_cap_device *vcap,
+> >   	spin_unlock(&vcap->qlock);
+> >   }
+> > +static struct media_entity *vimc_cap_get_output(struct vimc_cap_device *vcap)
+> > +{
+> > +	struct media_entity *entity = &vcap->vdev.entity;
+> > +	struct media_device *mdev = entity->graph_obj.mdev;
+> > +	struct media_graph graph;
+> > +
+> > +	mutex_lock(&mdev->graph_mutex);
+> > +	if (media_graph_walk_init(&graph, mdev)) {
+> > +		mutex_unlock(&mdev->graph_mutex);
+> > +		return NULL;
+> > +	}
+> > +
+> > +	media_graph_walk_start(&graph, entity);
+> > +
+> > +	while ((entity = media_graph_walk_next(&graph)))
+> > +		if (entity->pipe)
+> > +			break;
+> > +
+> > +	mutex_unlock(&mdev->graph_mutex);
+> > +
+> > +	media_graph_walk_cleanup(&graph);
+> > +
+> > +	return entity;
+> > +}
+> > +
+> >   static int vimc_cap_start_streaming(struct vb2_queue *vq, unsigned int count)
+> >   {
+> >   	struct vimc_cap_device *vcap = vb2_get_drv_priv(vq);
+> >   	struct media_entity *entity = &vcap->vdev.entity;
+> > +	struct media_pipeline *pipe = NULL;
+> > +	struct media_entity *oent;
+> >   	int ret;
+> >   	vcap->sequence = 0;
+> >   	/* Start the media pipeline */
+> > -	ret = media_pipeline_start(entity, &vcap->stream.pipe);
+> > +	oent = vimc_cap_get_output(vcap);
+> > +	if (oent)
+> > +		pipe = oent->pipe;
+> > +	else
+> > +		pipe = &vcap->stream.pipe;
+> > +
+> > +	ret = media_pipeline_start(entity, pipe);
+> >   	if (ret) {
+> >   		vimc_cap_return_all_buffers(vcap, VB2_BUF_STATE_QUEUED);
+> >   		return ret;
+> > 
 > 
->  drivers/md/bcache/journal.c |  2 +-
->  drivers/md/bcache/util.c    | 14 +++++++-------
->  2 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-> index 77fbfd52edcf..c1227bdb57e7 100644
-> --- a/drivers/md/bcache/journal.c
-> +++ b/drivers/md/bcache/journal.c
-> @@ -608,7 +608,7 @@ static void do_journal_discard(struct cache *ca)
->  			ca->sb.njournal_buckets;
->  
->  		atomic_set(&ja->discard_in_flight, DISCARD_READY);
-> -		/* fallthrough */
-> +		fallthrough;
->  
->  	case DISCARD_READY:
->  		if (ja->discard_idx == ja->last_idx)
-> diff --git a/drivers/md/bcache/util.c b/drivers/md/bcache/util.c
-> index 62fb917f7a4f..ae380bc3992e 100644
-> --- a/drivers/md/bcache/util.c
-> +++ b/drivers/md/bcache/util.c
-> @@ -33,27 +33,27 @@ int bch_ ## name ## _h(const char *cp, type *res)		\
->  	case 'y':						\
->  	case 'z':						\
->  		u++;						\
-> -		/* fall through */				\
-> +		fallthrough;					\
->  	case 'e':						\
->  		u++;						\
-> -		/* fall through */				\
-> +		fallthrough;					\
->  	case 'p':						\
->  		u++;						\
-> -		/* fall through */				\
-> +		fallthrough;					\
->  	case 't':						\
->  		u++;						\
-> -		/* fall through */				\
-> +		fallthrough;					\
->  	case 'g':						\
->  		u++;						\
-> -		/* fall through */				\
-> +		fallthrough;					\
->  	case 'm':						\
->  		u++;						\
-> -		/* fall through */				\
-> +		fallthrough;					\
->  	case 'k':						\
->  		u++;						\
->  		if (e++ == cp)					\
->  			return -EINVAL;				\
-> -		/* fall through */				\
-> +		fallthrough;					\
->  	case '\n':						\
->  	case '\0':						\
->  		if (*e == '\n')					\
-> 
+> I think there is actually no need to iterate the graph. If the capture is already connected to another capture
+> that streams, it means that they both have the same pipe in the media core.
+> So actually the code can just be:
 
+Hi,
+iterating the graph takes care of the case when output already exists.
+So in case where an output is needed from both Capture1 and RGB capture,
+don't they represent two different pipes?
+
+> 
+> if (vcap->ved.ent->pipe)
+> 	pipe = vcap->ved.ent->pipe;
+> else
+> 	pipe = &vcap->stream.pipe;
+> 
+> 
+> (and no need the function vimc_cap_get_output)
+> 
+> Thanks,
+> Dafna
