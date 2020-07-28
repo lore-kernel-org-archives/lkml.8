@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE718C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B12C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF120206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16045206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:26:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="IkEQ1WD+"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="AMNAOQuH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbgG1NZU (ORCPT
+        id S1730082AbgG1N0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:25:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53990 "EHLO
+        Tue, 28 Jul 2020 09:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729991AbgG1NZU (ORCPT
+        with ESMTP id S1729896AbgG1N0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:25:20 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86F6C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:25:19 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b6so18281703wrs.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:25:19 -0700 (PDT)
+        Tue, 28 Jul 2020 09:26:24 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CDA8C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:26:23 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f18so18304173wrs.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:26:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=raspberrypi.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BnkqZuh++8Nyz7qDB61TIgg/e9h5HC3HmU88l0fPREc=;
-        b=IkEQ1WD+oaOYJMt5V3vCBqnKqZKVOHp8IcfCmTzu+QgfrApn64nxDuQpGAigx7KDcM
-         LLcdPwmr1jSXVhKAatNz03GzLs/6Vlh39NC/O6LMa3vzgjAobOFGkZUu6uHjRP7JWYCo
-         MCkZ0nbEhKkbR82cTawPX+gM0Pk10AhqCeaKm/m/KXCgWpZh2h2Kej6t/7FaDi+Cm8q/
-         lPZwDiS7RXO/UymIExdM6ThIecB8y8005n0nmGVDr9uXishRVOb3iTtgJ2AD/nyJL9hy
-         XhKOeGQ71pP32Y5y8Q5rEIQdYxSfzCReD1hBJj+xRGf+EPGkpsaDW52Pnq0Lbfr1sNzl
-         lOdw==
+        bh=v/s3jq9NJ73fEE3PqAt09ZsxAzz0EYmQoxyJ22ptWsE=;
+        b=AMNAOQuHuu9Kq4fDu9l86Z+9ICzEZfJEibVLB529V+O1SpWFHMlJ2zLBtF+rO+y7TG
+         Q+wZFwzJLVUo8NsOAhuvJbfWElzNvmspMdU+oCiHJKEmskHEEe2yRp80MyOy3BJGX7/P
+         5G7J2GCI1EiCkBgjlsbKARbl8zb+EbhhKFO1lUaznDnlpxOe05I5ejiSQ08hPLfhy8Cc
+         djkj9X3+p1ECObpBykTuNlRS0OjjvH4VrX6Mo3X4oLB0NSHwm334lJN/fHNRczPkHqRY
+         WQ9K4Pql1wqS8SnhzjwOrh9KUf9xlJyx9GlC7iyIuXrgQG3G22OshAjviDbHhl7ZAi1l
+         phyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BnkqZuh++8Nyz7qDB61TIgg/e9h5HC3HmU88l0fPREc=;
-        b=kkWxNOjrwtaoV5q0S9yR/HBvbcOe0/UZt5f6HH2pnTtnlOQ/HN9GuxL+Hxcp3c3MT8
-         1CTNhfVbQ+Wl16HzebK5HX0O9LhxZ6M5fKN2ZFehEvaHRlMPVWcAgz/OtrD2uAnP5WYF
-         AfLnP6y3Uzbd3n3RGt8mtA0kwFKr/jeemECQ5Luh2QCkVNuVVVs21vbVbbPNG0bX9NqH
-         smccxcbJm061SmFGfSBdSK0+k8Je9AHl2I5NfpjaAkJH7oX3w52vnxpE2ufaF9ykL3ss
-         fO/O1dR1yLzUvlTK3RCjWMKhjP+28vi1j/8LwfDYabyf4L0EOEWAQF1KYcjdbOrV0RmO
-         QZcw==
-X-Gm-Message-State: AOAM533Z1ILv9jd63qlEtRgBCdXtRgi/drGjxNqjmnb8Zp2FUs67fadE
-        NtGQPeDIHKCh7W23qnS5LSjqqIxD4Gc0GB7qAc+rUQ==
-X-Google-Smtp-Source: ABdhPJzKZMW4yeHYoMhjbyXIdKK5EP7J/ukIUn/pmswXVcXcrqcKNtmYRDkd8iXjV/fJdX3O+1cYpgFt/HQXuTMKnNc=
-X-Received: by 2002:a5d:6681:: with SMTP id l1mr23866783wru.47.1595942718473;
- Tue, 28 Jul 2020 06:25:18 -0700 (PDT)
+        bh=v/s3jq9NJ73fEE3PqAt09ZsxAzz0EYmQoxyJ22ptWsE=;
+        b=NMGhBJhs5bbNgwjwW/BaBDmy5qApSKWjQCOVjTjkN/ryU25PvqKIXqneMTlYnhcvmJ
+         K9IzU+WgHoUpP3O++gA9C4aZijAHAUrTWyKmp96J+QpiGY+bZB7CWrw08FMre4vX3xgS
+         N/gwYRjWWAFvY5pgxjfJkY37lHaacIlCHrE09w8/Zlm3ghFFP1W00B09cgoXy5djZC+M
+         LU1SYP2FPsY21vtOsaY2WZgVklLByOMbpm99GgzlEVjnDwMipyvXqrimvF/fcrQTX9HB
+         LMa+wkLp46KyEFNFcW9FFlzoddk0V9/Ok2tLj/bqeADt32jCT6oiFFB6hVij/F6YRTQX
+         sDrw==
+X-Gm-Message-State: AOAM533B1Z3ddwffJTXgzADtHFGSeuuiJCZBAlWhx0pBm11zmqMWtE0/
+        qXsWPjHdGKCoktZKXUa4IQilSDZuIKjudz7rzaNIcQ==
+X-Google-Smtp-Source: ABdhPJySDbUjGGpOV5SM3Kmte7QuRaaRGIKl/L3Uz8KmoBnA6/EJ6CU8RhtGbCStzLkpgHgzCXMHVaU7WDEXY/mHy54=
+X-Received: by 2002:a5d:6681:: with SMTP id l1mr23870585wru.47.1595942782329;
+ Tue, 28 Jul 2020 06:26:22 -0700 (PDT)
 MIME-Version: 1.0
 References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <73684b1e4872a1113f6c3bb5404bc6b4a20f130d.1594230107.git-series.maxime@cerno.tech>
-In-Reply-To: <73684b1e4872a1113f6c3bb5404bc6b4a20f130d.1594230107.git-series.maxime@cerno.tech>
+ <cdbba354ffc234d6c03978671f99e129748ff48f.1594230107.git-series.maxime@cerno.tech>
+In-Reply-To: <cdbba354ffc234d6c03978671f99e129748ff48f.1594230107.git-series.maxime@cerno.tech>
 From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Tue, 28 Jul 2020 14:25:02 +0100
-Message-ID: <CAPY8ntAtRJYRi6mG19zQEWLjbnVKaQKvTZcP8EB+-csOeSz6rg@mail.gmail.com>
-Subject: Re: [PATCH v4 59/78] drm/vc4: hdmi: Add CEC support flag
+Date:   Tue, 28 Jul 2020 14:26:06 +0100
+Message-ID: <CAPY8ntC1tR+Y+FsHX85B3KT1VHu_eLQS=72CUwYgg9yYbjUgVg@mail.gmail.com>
+Subject: Re: [PATCH v4 60/78] drm/vc4: hdmi: Remove unused CEC_CLOCK_DIV define
 To:     Maxime Ripard <maxime@cerno.tech>
 Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>,
@@ -81,59 +81,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Maxime
 
-On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
+On Wed, 8 Jul 2020 at 18:44, Maxime Ripard <maxime@cerno.tech> wrote:
 >
-> Similarly to the audio support, CEC support is not there yet for the
-> BCM2711, so let's skip entirely the CEC initialization through a variant
-> flag.
-
-CEC is sorted now, but it's easier & cleaner to keep this patch and
-add a new patchset that enables CEC at a later date.
-
+> The CEC_CLOCK_DIV define is not used anywhere in the driver, let's remove
+> it.
+>
 > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
 Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
 > ---
->  drivers/gpu/drm/vc4/vc4_hdmi.c | 4 ++++
->  drivers/gpu/drm/vc4/vc4_hdmi.h | 3 +++
->  2 files changed, 7 insertions(+)
+>  drivers/gpu/drm/vc4/vc4_hdmi.c | 1 -
+>  1 file changed, 1 deletion(-)
 >
 > diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> index 8cd08b541c14..86e21de6c578 100644
+> index 86e21de6c578..a01562a49bf0 100644
 > --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
 > +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> @@ -1179,6 +1179,9 @@ static int vc4_hdmi_cec_init(struct vc4_hdmi *vc4_hdmi)
->         u32 value;
->         int ret;
+> @@ -55,7 +55,6 @@
 >
-> +       if (!vc4_hdmi->variant->cec_available)
-> +               return 0;
-> +
->         vc4_hdmi->cec_adap = cec_allocate_adapter(&vc4_hdmi_cec_adap_ops,
->                                                   vc4_hdmi, "vc4",
->                                                   CEC_CAP_DEFAULTS |
-> @@ -1477,6 +1480,7 @@ static int vc4_hdmi_dev_remove(struct platform_device *pdev)
->  static const struct vc4_hdmi_variant bcm2835_variant = {
->         .encoder_type           = VC4_ENCODER_TYPE_HDMI0,
->         .debugfs_name           = "hdmi_regs",
-> +       .cec_available          = true,
->         .registers              = vc4_hdmi_fields,
->         .num_registers          = ARRAY_SIZE(vc4_hdmi_fields),
+>  #define HSM_CLOCK_FREQ 163682864
+>  #define CEC_CLOCK_FREQ 40000
+> -#define CEC_CLOCK_DIV  (HSM_CLOCK_FREQ / CEC_CLOCK_FREQ)
 >
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-> index 794216f3228d..3f07aebe89f1 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-> @@ -33,6 +33,9 @@ struct vc4_hdmi_variant {
->         /* Filename to expose the registers in debugfs */
->         const char *debugfs_name;
->
-> +       /* Set to true when the CEC support is available */
-> +       bool cec_available;
-> +
->         /* List of the registers available on that variant */
->         const struct vc4_hdmi_register *registers;
->
+>  static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
+>  {
 > --
 > git-series 0.9.1
