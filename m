@@ -2,137 +2,197 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA572C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A23C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A264D2074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CECFD20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:01:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NQ39DlQs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nPqbrV7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbgG1NBT (ORCPT
+        id S1729925AbgG1NBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:01:19 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31268 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729857AbgG1NBS (ORCPT
+        Tue, 28 Jul 2020 09:01:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729857AbgG1NBl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:01:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595941276;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OzlkAS0bO5S90+90wEcvlabwKoFN9fq+zqihTuQRLKA=;
-        b=NQ39DlQs5ut61amxy8dolGLVzEITtnQb96NhCw512QLtENv64/1jTrn493EUwBoputjRjd
-        wWMIlD98IifmQOv/dT21Cu1u/pH5gC3BQCmj+xY1cXiBk7OOS/Ngcki5s3ZmSoc2jCqECD
-        k86Kk4M5c6JhcAJUCOWoqi+8ro+vU2w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-QoHwrssWMUiomliSs26C-Q-1; Tue, 28 Jul 2020 09:01:08 -0400
-X-MC-Unique: QoHwrssWMUiomliSs26C-Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70D79100A8C0;
-        Tue, 28 Jul 2020 13:01:04 +0000 (UTC)
-Received: from krava (unknown [10.40.192.211])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 9423660CD0;
-        Tue, 28 Jul 2020 13:01:01 +0000 (UTC)
-Date:   Tue, 28 Jul 2020 15:01:00 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     kajoljain <kjain@linux.ibm.com>, Jiri Olsa <jolsa@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCHv3 00/19] perf metric: Add support to reuse metric
-Message-ID: <20200728130100.GE1243191@krava>
-References: <20200719181320.785305-1-jolsa@kernel.org>
- <dbe59791-937d-de95-4ba0-c34e7a1cd273@linux.ibm.com>
- <20200720072237.GC760733@krava>
- <6cb72b48-5244-9faf-a9e5-67858c732b83@linux.ibm.com>
- <20200720081943.GE760733@krava>
- <dd465647-da63-c473-9944-bdfec2abe484@linux.ibm.com>
- <20200720191625.GL760733@krava>
- <20200728123955.GZ40195@kernel.org>
- <20200728125456.GD1243191@krava>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728125456.GD1243191@krava>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Tue, 28 Jul 2020 09:01:41 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7943C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:01:40 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id p138so1472819yba.12
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:01:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=Ya+X644CIpKsu+82u267rP7HaSbeBJBhbsTwGl4hFHQ=;
+        b=nPqbrV7DC1dyJE0ydgyu3pBUTlTM1knV1rD2zKoyI4ZFEgp/qomKbc4jkGR/xU0D2k
+         AGUi8yp+/M17ScdyzCfZixdlXUJhE3sCyoRmBOch35bQsSMeSQOfZGUQQ8Ucu6Kj5bvp
+         +GdYhMAefN2C61kWnH9HF6PfesS0k63dlm/VQ2ua+Nikh2KkGjpv7Rqp29SX3QRnHpEE
+         zbhNjMaffKv6/RJ/McYzQr9ZjylEnE2SzBjYyidi9UmF7DOLJCYMaTwJDSXffoLCN/qp
+         j4db66drGJlDAw/P5AvAt0PsKz20Uj6s/zNlXPJ0212XbVlaLSgBxT5RjIO4evss2+qB
+         j7jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=Ya+X644CIpKsu+82u267rP7HaSbeBJBhbsTwGl4hFHQ=;
+        b=PbzHSdQXNxBcOeIflqeZMws5WuV7ENxg3EgeB5SXgAjkyf16snRNJZcI7ZprA0Qc7c
+         Q68cgKwJth6r+ANUgrFKrUyDfqbN8SK4HU4WRZ/ICoktMvXTsO+SYupry5ufAvjuW3cG
+         wpVszFY28b2rTv0dF4AcX8PPg/uJ8VMcX4PbGZWIr8Ts+q84cDfrXXdjQODkg6yPfzbU
+         1M0VEzeT2baM+2pf6tr0ABQ9QrKhH6PiVgxm+cDTogWzK0SRNkTtMBjdvo4UxnoaxO0q
+         IpJF5mbKMEVG9/F3jA/6NhUrCFmpCNbBRkpLIPuNB2o9vSICUnWJgg1899+LooH2em+n
+         KTCw==
+X-Gm-Message-State: AOAM531b6M1ywaRRfR83apkxBfArDmjFtUst5LnPXLllXPiXLi+kDn0c
+        HMawGdMqUh38GnI2KY8EXmeJyZ910g==
+X-Google-Smtp-Source: ABdhPJy4hzucmW0xAq9k3SvB7xnSJEQ4n7JtK2bmteR8LMMvdZaP74tgxJV1oY1S3YTTAhoeu/jMAo8mlQ==
+X-Received: by 2002:a05:6902:512:: with SMTP id x18mr13070478ybs.496.1595941300068;
+ Tue, 28 Jul 2020 06:01:40 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 15:01:04 +0200
+Message-Id: <20200728130120.3633360-1-tweek@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+Subject: [PATCH v2] selinux: add tracepoint on denials
+From:   "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Nick Kralevich <nnk@google.com>,
+        "=?UTF-8?q?Thi=C3=A9baud=20Weksteen?=" <tweek@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 02:54:56PM +0200, Jiri Olsa wrote:
-> On Tue, Jul 28, 2020 at 09:39:55AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Mon, Jul 20, 2020 at 09:16:25PM +0200, Jiri Olsa escreveu:
-> > > On Mon, Jul 20, 2020 at 02:32:40PM +0530, kajoljain wrote:
-> > > > 
-> > > > 
-> > > > On 7/20/20 1:49 PM, Jiri Olsa wrote:
-> > > > > On Mon, Jul 20, 2020 at 01:39:24PM +0530, kajoljain wrote:
-> > > > > 
-> > > > > SNIP
-> > > > > 
-> > > > >> This is with your perf/metric branch:
-> > > > >> command# ./perf stat -M PowerBUS_Frequency -C 0 -I 1000
-> > > > >> assertion failed at util/metricgroup.c:709
-> > > > >> #           time             counts unit events
-> > > > >>      1.000054545          7,807,505      hv_24x7/pm_pb_cyc,chip=0/ #      2.0 GHz  PowerBUS_Frequency_0
-> > > > >>      1.000054545          7,807,485      hv_24x7/pm_pb_cyc,chip=1/                                   
-> > > > >>      2.000232761          7,807,500      hv_24x7/pm_pb_cyc,chip=0/ #      2.0 GHz  PowerBUS_Frequency_0
-> > > > >>      2.000232761          7,807,478      hv_24x7/pm_pb_cyc,chip=1/                                   
-> > > > >>      3.000363762          7,799,665      hv_24x7/pm_pb_cyc,chip=0/ #      1.9 GHz  PowerBUS_Frequency_0
-> > > > >>      3.000363762          7,807,502      hv_24x7/pm_pb_cyc,chip=1/                                   
-> > > > >> ^C     3.259418599          2,022,150      hv_24x7/pm_pb_cyc,chip=0/ #      0.5 GHz  PowerBUS_Frequency_0
-> > > > >>      3.259418599          2,022,164      hv_24x7/pm_pb_cyc,chip=1/                                   
-> > > > >>
-> > > > >>  Performance counter stats for 'CPU(s) 0':
-> > > > >>
-> > > > >>         25,436,820      hv_24x7/pm_pb_cyc,chip=0/ #      6.4 GHz  PowerBUS_Frequency_0
-> > > > >>         25,444,629      hv_24x7/pm_pb_cyc,chip=1/                                   
-> > > > >>
-> > > > >>        3.259505529 seconds time elapsed
-> > > > > 
-> > > > > I found the bug, we are not adding runtime metrics as standalone ones,
-> > > > > but as referenced metrics.. will fix and try to add test for that
-> > > > > 
-> > > > > as for testing.. do I need some special ppc server to have support for this? 
-> > > > 
-> > > > Hi jiri,
-> > > >     We need power9 lpar machine and need to make sure `CONFIG_HV_PERF_CTRS` is
-> > > > enabled.
-> > > 
-> > > could you please try with following patch on top?
-> > 
-> > So, can you point me to the cset that this should be merged into? Or can
-> > it come as a separate patch? I'll put what I have in the tmp.perf/core
-> > branch, and will do testing, please let me know if you want to fold it
-> > or as a followup patch.
-> 
-> sorry for delay.. I planned to squash the change in, but if you already
-> pushed something out, I'll rebase on top, I will post new version tomorrow
-> 
-> 1st 7 patches are good to go in any case
+The audit data currently captures which process and which target
+is responsible for a denial. There is no data on where exactly in the
+process that call occurred. Debugging can be made easier by being able to
+reconstruct the unified kernel and userland stack traces [1]. Add a
+tracepoint on the SELinux denials which can then be used by userland
+(i.e. perf).
 
-ok, I just saw it's pushed out, I'll post a patch on top of it
+Although this patch could manually be added by each OS developer to
+trouble shoot a denial, adding it to the kernel streamlines the
+developers workflow.
 
-jirka
+[1] https://source.android.com/devices/tech/debug/native_stack_dump
+
+Signed-off-by: Thi=C3=A9baud Weksteen <tweek@google.com>
+Signed-off-by: Joel Fernandes <joelaf@google.com>
+---
+Changes in v2:
+- Replace %d formatter with %x
+- Replace TRACE_EVENT with TRACE_EVENT_CONDITION
+- Add pid to structure and printk
+- Rename structure fields for clarity
+
+
+ MAINTAINERS                    |  1 +
+ include/trace/events/selinux.h | 39 ++++++++++++++++++++++++++++++++++
+ security/selinux/avc.c         |  5 +++++
+ 3 files changed, 45 insertions(+)
+ create mode 100644 include/trace/events/selinux.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f0569cf304ca..0f74c8f073ab 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15369,6 +15369,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/gi=
+t/pcmoore/selinux.git
+ F:	Documentation/ABI/obsolete/sysfs-selinux-checkreqprot
+ F:	Documentation/ABI/obsolete/sysfs-selinux-disable
+ F:	Documentation/admin-guide/LSM/SELinux.rst
++F:	include/trace/events/selinux.h
+ F:	include/uapi/linux/selinux_netlink.h
+ F:	scripts/selinux/
+ F:	security/selinux/
+diff --git a/include/trace/events/selinux.h b/include/trace/events/selinux.=
+h
+new file mode 100644
+index 000000000000..287e1ecb4451
+--- /dev/null
++++ b/include/trace/events/selinux.h
+@@ -0,0 +1,39 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM selinux
++
++#if !defined(_TRACE_SELINUX_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_SELINUX_H
++
++#include <linux/tracepoint.h>
++
++TRACE_EVENT_CONDITION(selinux_denied,
++
++	TP_PROTO(struct selinux_audit_data *sad, pid_t pid),
++
++	TP_ARGS(sad, pid),
++
++	TP_CONDITION(sad->denied),
++
++	TP_STRUCT__entry(
++		__field(pid_t, pid)
++		__field(int, tclass)
++		__field(int, audited)
++	),
++
++	TP_fast_assign(
++		__entry->pid =3D pid;
++		__entry->tclass =3D sad->tclass;
++		__entry->audited =3D sad->audited;
++	),
++
++	TP_printk("denied pid=3D%d tclass=3D%x audited=3D%x",
++		__entry->pid,
++		__entry->tclass,
++		__entry->audited)
++);
++
++#endif
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/security/selinux/avc.c b/security/selinux/avc.c
+index d18cb32a242a..ca8206f38d8a 100644
+--- a/security/selinux/avc.c
++++ b/security/selinux/avc.c
+@@ -31,6 +31,9 @@
+ #include "avc_ss.h"
+ #include "classmap.h"
+=20
++#define CREATE_TRACE_POINTS
++#include <trace/events/selinux.h>
++
+ #define AVC_CACHE_SLOTS			512
+ #define AVC_DEF_CACHE_THRESHOLD		512
+ #define AVC_CACHE_RECLAIM		16
+@@ -665,6 +668,8 @@ static void avc_audit_pre_callback(struct audit_buffer =
+*ab, void *a)
+ 	const char **perms;
+ 	int i, perm;
+=20
++	trace_selinux_denied(sad, task_tgid_nr(current));
++
+ 	audit_log_format(ab, "avc:  %s ", sad->denied ? "denied" : "granted");
+=20
+ 	if (av =3D=3D 0) {
+--=20
+2.28.0.rc0.142.g3c755180ce-goog
 
