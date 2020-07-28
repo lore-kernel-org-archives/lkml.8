@@ -2,130 +2,121 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802C6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C565C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53CD422B47
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7564D20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgG1IFL (ORCPT
+        id S1727996AbgG1IHS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:05:11 -0400
-Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:52539 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727798AbgG1IFK (ORCPT
+        Tue, 28 Jul 2020 04:07:18 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:32802 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727808AbgG1IHR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:05:10 -0400
-Received: from [192.168.43.110] ([93.23.107.187])
-        by mwinf5d84 with ME
-        id 8Y582300g42dCi503Y5916; Tue, 28 Jul 2020 10:05:09 +0200
-X-ME-Helo: [192.168.43.110]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 28 Jul 2020 10:05:09 +0200
-X-ME-IP: 93.23.107.187
-Subject: Re: [PATCH 2/2] media: bt8xx: avoid a useless memset
-To:     Joe Perches <joe@perches.com>, mchehab@kernel.org,
-        akpm@linux-foundation.org, rppt@kernel.org,
-        hverkuil-cisco@xs4all.nl
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20200727135151.54757-1-christophe.jaillet@wanadoo.fr>
- <0897d9bec8865859694c917f3f72ab8fd12321ff.camel@perches.com>
- <30618c986727e5f8a9806f663b4e6f4aa80065ae.camel@perches.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <d5759bd3-5e8a-a557-cd3e-0a2ae4d124e9@wanadoo.fr>
-Date:   Tue, 28 Jul 2020 10:05:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <30618c986727e5f8a9806f663b4e6f4aa80065ae.camel@perches.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 28 Jul 2020 04:07:17 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-122-o5x9Q9SyNzqkeSG6S-qBgw-1; Tue, 28 Jul 2020 09:07:12 +0100
+X-MC-Unique: o5x9Q9SyNzqkeSG6S-qBgw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 28 Jul 2020 09:07:11 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 28 Jul 2020 09:07:11 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "Linux Crypto Mailing List" <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
+        "linux-decnet-user@lists.sourceforge.net" 
+        <linux-decnet-user@lists.sourceforge.net>,
+        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "mptcp@lists.01.org" <mptcp@lists.01.org>,
+        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: RE: [PATCH 12/26] netfilter: switch nf_setsockopt to sockptr_t
+Thread-Topic: [PATCH 12/26] netfilter: switch nf_setsockopt to sockptr_t
+Thread-Index: AQHWZDJbUYsuJ1QOc0ujZBN9RDfEqKkcofVA
+Date:   Tue, 28 Jul 2020 08:07:11 +0000
+Message-ID: <908ed73081cc42d58a5b01e0c97dbe47@AcuMS.aculab.com>
+References: <20200723060908.50081-1-hch@lst.de>
+ <20200723060908.50081-13-hch@lst.de> <20200727150310.GA1632472@zx2c4.com>
+ <20200727150601.GA3447@lst.de>
+ <CAHmME9ric=chLJayn7Erve7WBa+qCKn-+Gjri=zqydoY6623aA@mail.gmail.com>
+ <20200727162357.GA8022@lst.de>
+In-Reply-To: <20200727162357.GA8022@lst.de>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 27/07/2020 à 18:16, Joe Perches a écrit :
-> On Mon, 2020-07-27 at 09:09 -0700, Joe Perches wrote:
->> On Mon, 2020-07-27 at 15:51 +0200, Christophe JAILLET wrote:
->>> Avoid a memset after a call to 'dma_alloc_coherent()'.
->>> This is useless since
->>> commit 518a2f1925c3 ("dma-mapping: zero memory returned from dma_alloc_*")
->> []
->>> diff --git a/drivers/media/pci/bt8xx/btcx-risc.c b/drivers/media/pci/bt8xx/btcx-risc.c
->> []
->>> @@ -73,7 +73,6 @@ int btcx_riscmem_alloc(struct pci_dev *pci,
->>>   		dprintk("btcx: riscmem alloc [%d] dma=%lx cpu=%p size=%d\n",
->>>   			memcnt, (unsigned long)dma, cpu, size);
->>>   	}
->>> -	memset(risc->cpu,0,risc->size);
->>>   	return 0;
->>>   }
->>
->> Likely NAK.
->>
->> This is not useless as risc->cpu may be reused
->> and the alloc may not have been done.
+From: Christoph Hellwig
+> Sent: 27 July 2020 17:24
 > 
-> Perhaps a little rewrite for clarity:
-> ---
->   drivers/media/pci/bt8xx/btcx-risc.c | 24 +++++++++++++-----------
->   1 file changed, 13 insertions(+), 11 deletions(-)
+> On Mon, Jul 27, 2020 at 06:16:32PM +0200, Jason A. Donenfeld wrote:
+> > Maybe sockptr_advance should have some safety checks and sometimes
+> > return -EFAULT? Or you should always use the implementation where
+> > being a kernel address is an explicit bit of sockptr_t, rather than
+> > being implicit?
 > 
-> diff --git a/drivers/media/pci/bt8xx/btcx-risc.c b/drivers/media/pci/bt8xx/btcx-risc.c
-> index 51257980f539..311f4ca2a108 100644
-> --- a/drivers/media/pci/bt8xx/btcx-risc.c
-> +++ b/drivers/media/pci/bt8xx/btcx-risc.c
-> @@ -56,24 +56,26 @@ int btcx_riscmem_alloc(struct pci_dev *pci,
->   		       struct btcx_riscmem *risc,
->   		       unsigned int size)
->   {
-> -	__le32 *cpu;
-> -	dma_addr_t dma = 0;
-> -
-> -	if (NULL != risc->cpu && risc->size < size)
-> -		btcx_riscmem_free(pci,risc);
-> -	if (NULL == risc->cpu) {
-> -		cpu = pci_alloc_consistent(pci, size, &dma);
-> -		if (NULL == cpu)
-> +	if (risc->cpu && risc->size < size)
-> +		btcx_riscmem_free(pci, risc);
-> +
-> +	if (risc->cpu) {
-> +		memset(risc->cpu, 0, risc->size);
-> +	} else {
-> +		dma_addr_t dma = 0;
-> +
-> +		risc->cpu = pci_alloc_consistent(pci, size, &dma);
-> +		if (!risc->cpu)
->   			return -ENOMEM;
-> -		risc->cpu  = cpu;
-> +
->   		risc->dma  = dma;
->   		risc->size = size;
->   
->   		memcnt++;
->   		dprintk("btcx: riscmem alloc [%d] dma=%lx cpu=%p size=%d\n",
-> -			memcnt, (unsigned long)dma, cpu, size);
-> +			memcnt, (unsigned long)dma, risc->cpu, size);
->   	}
-> -	memset(risc->cpu,0,risc->size);
-> +
->   	return 0;
->   }
->   
-> 
-> 
-Looks good to me.
+> I already have a patch to use access_ok to check the whole range in
+> init_user_sockptr.
 
-Just note, that this will not apply after patch 1/2 is applied, because 
-it turns pci_alloc_consistent() into dma_alloc_coherent().
+That doesn't make (much) difference to the code paths that ignore
+the user-supplied length.
+OTOH doing the user/kernel check on the base address (not an
+incremented one) means that the correct copy function is always
+selected.
 
-CJ
+Perhaps the functions should all be passed a 'const sockptr_t'.
+The typedef could be made 'const' - requiring non-const items
+explicitly use the union/struct itself.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
