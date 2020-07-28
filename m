@@ -2,383 +2,151 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA19C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D02C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E30B220809
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C421620809
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 08:51:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="rXPKI3ET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgG1Iwc (ORCPT
+        id S1728310AbgG1Ivx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:52:32 -0400
-Received: from mga04.intel.com ([192.55.52.120]:12582 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728346AbgG1Iwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:52:30 -0400
-IronPort-SDR: 1Zh1rel2ToMJoQRfQFUEI5y9+nuUU8eXMg7FirkyGxvcY0rP8pKY2CTUcflcmBrRFblDXhHCjo
- gSCfuE69HFSg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="148637993"
-X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
-   d="scan'208";a="148637993"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 01:52:29 -0700
-IronPort-SDR: v64oe1KUI3nkqUBI1QVa6+ULmP+iuxdpg4d15HqCEaKZnS0kqs56M3FjqWpMF7KzAeQKvN1IzQ
- hV+YLszBDAIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
-   d="scan'208";a="272252850"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Jul 2020 01:52:26 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        lee.jones@linaro.org
-Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v6 2/2] Add PWM fan controller driver for LGM SoC
-Date:   Tue, 28 Jul 2020 16:52:13 +0800
-Message-Id: <63e44ece4c0da860963d0ff09dd52912d557c7e0.1595926036.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
-References: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
-References: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
+        Tue, 28 Jul 2020 04:51:53 -0400
+Received: from mail-eopbgr70072.outbound.protection.outlook.com ([40.107.7.72]:64228
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726032AbgG1Ivx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:51:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=crAeQbama/jr7bHRzULtDWjW2q7B26S+i435zRaFkVr2K4QzPzTM+aShXoC0CjmgBFZZ3PZodK5pPv7hoZKoeqX3qT8dzznIoK6U0wDvMN4FSq52fM5ZL1zQlYX2RZjdVw7DRcUq8w96uZLBij+9iExR73GLjT6HY6ajCVP9EZrlKFh+aTyKSSDQMbEmqqMMG1CymUF+uX+7Rvvr1su7k5QeiNbynJrZaIwlqR+NC4ylDS5KbIsybbLyFEldOkGbg5BTmRyX6QI7RKqZaSsiA6NdVrNgCSFEEO0vT8BfkdIAejMdy+GIKbMLPDa7oYH2grXU/afRGu6frW2YDfBKUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mrqbOsupbQq6kxmsi9SPcA/PjpAmvTyvgyjhGHsX6vE=;
+ b=AADOR5GyNYwIfEi0fhdMBSqU16uRJO+18RB/q3kvUp6QthoowKmxpG0I6JNclXgQJ9N8134cMeQobPrMC7M64rGuCwXmagZBheNHj7i+B+vw776aO8Jeaw+zJ9XvHsER2JS/QnlbzYtobRqxMj+kSoSd3/UPx7BXJUknxeee9E7hR7N7/9sOiR4rmtCiLav3+nRFzGk1TgANkdsbZC4/PQChxBEFI8udUgZXlWnoAnqt2UQDYMg84uPKj73GTqg3PNt/TNkMwR7n57l+w5O3RewH8PsX23UJNJ4uWu3mBvdpkV7ySSrojImQdHRAar6MscZfDuDZ7yEtVKB8ZWvffw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mrqbOsupbQq6kxmsi9SPcA/PjpAmvTyvgyjhGHsX6vE=;
+ b=rXPKI3ETBmCI4j1neg/Kwv99gtMrTF9AbsnXXIzmK7te8h3/0lpieeRIfh1/xS9RaYeB9s/NBZnPVsoITLDwuXVo5ipcP9D50zMuQXINVFPlq1Z3xliUngXXwwoBWDrd4Q7SJJMovNsS2lukznoo8KOKeQu+UiblLSJQCSBWjgk=
+Authentication-Results: canb.auug.org.au; dkim=none (message not signed)
+ header.d=none;canb.auug.org.au; dmarc=none action=none
+ header.from=mellanox.com;
+Received: from AM6PR05MB6408.eurprd05.prod.outlook.com (2603:10a6:20b:b8::23)
+ by AM5PR0501MB2562.eurprd05.prod.outlook.com (2603:10a6:203:c::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.28; Tue, 28 Jul
+ 2020 08:51:49 +0000
+Received: from AM6PR05MB6408.eurprd05.prod.outlook.com
+ ([fe80::15f4:b130:d907:ce72]) by AM6PR05MB6408.eurprd05.prod.outlook.com
+ ([fe80::15f4:b130:d907:ce72%6]) with mapi id 15.20.3216.034; Tue, 28 Jul 2020
+ 08:51:49 +0000
+Date:   Tue, 28 Jul 2020 11:51:46 +0300
+From:   Leon Romanovsky <leonro@mellanox.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the kspp tree with the rdma tree
+Message-ID: <20200728085146.GE75549@unreal>
+References: <20200728184520.5634a0a0@canb.auug.org.au>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+Content-Disposition: inline
+In-Reply-To: <20200728184520.5634a0a0@canb.auug.org.au>
+X-ClientProxiedBy: AM0P190CA0002.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:208:190::12) To AM6PR05MB6408.eurprd05.prod.outlook.com
+ (2603:10a6:20b:b8::23)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (213.57.247.131) by AM0P190CA0002.EURP190.PROD.OUTLOOK.COM (2603:10a6:208:190::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20 via Frontend Transport; Tue, 28 Jul 2020 08:51:48 +0000
+X-Originating-IP: [213.57.247.131]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: bc6fc861-41ec-44f9-8b94-08d832d376dd
+X-MS-TrafficTypeDiagnostic: AM5PR0501MB2562:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM5PR0501MB2562502DBC8F64B6B0BC0109B0730@AM5PR0501MB2562.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rgcnp/6PTujgIFFZvu0sUBSM7LoX3fhZAQSbiV3eudc4/u+vHWuVQr9vL2PbljK4yC6IrXtD1yGGkWniedbFDS71mv9O//PZggK9o0OXddakP7qzDq916KLRUurw/j9D4iT31UCbdet3LYYwkXVwxMpPGL0OZZ44+JQ1g5m6/V/2Qogr4tB+70INnNLE2QyoupyiOZ2eB4bCFV1Pp39VklomenzCQ2DY1SqCVoQWFSod5kFPeGH1VXdjzWAJqI/8NAgfHvDnJN6I30ZUeyx7DrUXkr5qMUiOaurrcJ0bxMPp2GCgNbemqBBkYRv5i3YbrF6MUoS2+MITSI1NQo2E4lPSOH57peNo0uS1wNMWiV9MT/bPcpUYb+ISc/ljBaV7
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6408.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(7916004)(396003)(39860400002)(346002)(376002)(366004)(136003)(5660300002)(66556008)(1076003)(66476007)(66946007)(6486002)(16526019)(186003)(6916009)(4326008)(26005)(33716001)(956004)(44144004)(8676002)(478600001)(6496006)(8936002)(9686003)(52116002)(2906002)(54906003)(86362001)(316002)(21480400003)(33656002)(2700100001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: UcuWNGe0N6d/n04ppZ6KftU54YLvZtYZJ2+wAE1w4i1+rVkl5rHfPHROCpKL+Mwsidvt13t++9HwvWxINt4H2c8dQnFqM5g34FS1946Xw3iJFCExYQDtmcPXrlkKI93gpnMfdvTrxxBBbP7ZjB7mTsi8QIWquHtPqjNatY1Dksanq7MGPoaD9wyTAq0suG1ejFwWfGyzcVtM3yT7yj+VG2uVLv7sZsqI3of1LCFH5wqYqekQ+82KWqfYyYZgyltJ9hIAZ6Wz07QndOwEX9a4tmxNaT/itzJ05LciGh129KegG/3tY7yjfAwZhUMMSQKZIm3ZtZUVOnb7XvzJP7W9NKhQq82QPAa1ACo7AkDWPIsV9Orxxg+cI870aHHKdjuX+5C5lGwMJm++dZNu8PITHI0w1H5PfxYrWT+ucn5/Q4rz7AVgRS15CcwH3To+7rMx7NQeQ1hERq7KNaTulRU/oU45DUHomdByeC1w4+WuZyCWPrD0r0yZqugxdRLeaZfa
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc6fc861-41ec-44f9-8b94-08d832d376dd
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR05MB6408.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 08:51:48.9062
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rsE+hiwMdaTKrd69rUqKKtmtZrF71e+soz4c4l53Soenq+Z9cmO9nH/sc6sBoxDeySU2Nh2pBme1f3iR7A9QEg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0501MB2562
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
-This PWM controller does not have any other consumer, it is a
-dedicated PWM controller for fan attached to the system. Add
-driver for this PWM fan controller.
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- drivers/pwm/Kconfig         |  11 ++
- drivers/pwm/Makefile        |   1 +
- drivers/pwm/pwm-intel-lgm.c | 268 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 280 insertions(+)
- create mode 100644 drivers/pwm/pwm-intel-lgm.c
+On Tue, Jul 28, 2020 at 06:45:20PM +1000, Stephen Rothwell wrote:
+> Hi all,
+>
+> Today's linux-next merge of the kspp tree got a conflict in:
+>
+>   drivers/infiniband/core/uverbs_cmd.c
+>
+> between commit:
+>
+>   29f3fe1d6854 ("RDMA/uverbs: Remove redundant assignments")
+>
+> from the rdma tree and commit:
+>
+>   3f649ab728cd ("treewide: Remove uninitialized_var() usage")
+>
+> from the kspp tree.
+>
+> I fixed it up (the former basically did what the latter did, so I used
+> the former version) and can carry the fix as necessary. This is now fixed
+> as far as linux-next is concerned, but any non trivial conflicts should
+> be mentioned to your upstream maintainer when your tree is submitted for
+> merging.  You may also want to consider cooperating with the maintainer
+> of the conflicting tree to minimise any particularly complex conflicts.
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index cb8d739067d2..3486edab09c4 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -232,6 +232,17 @@ config PWM_IMX_TPM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-imx-tpm.
- 
-+config PWM_INTEL_LGM
-+	tristate "Intel LGM PWM support"
-+	depends on OF && HAS_IOMEM
-+	depends on X86 || COMPILE_TEST
-+	select REGMAP_MMIO
-+	help
-+	  Generic PWM fan controller driver for LGM SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-intel-lgm.
-+
- config PWM_IQS620A
- 	tristate "Azoteq IQS620A PWM support"
- 	depends on MFD_IQS62X || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index a59c710e98c7..db154a6b4f51 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
- obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
- obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
- obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-+obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
- obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
- obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
- obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
-diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
-new file mode 100644
-index 000000000000..61a722647f28
---- /dev/null
-+++ b/drivers/pwm/pwm-intel-lgm.c
-@@ -0,0 +1,268 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Intel Corporation.
-+ *
-+ * Limitations:
-+ * - The hardware supports fixed period which is dependent on 2/3 or 4
-+ *   wire fan mode.
-+ * - Supports normal polarity. Does not support changing polarity.
-+ * - When PWM is disabled, output of PWM will become 0(inactive). It doesn't
-+ *   keep track of running period.
-+ * - When duty cycle is changed, PWM output may be a mix of previous setting
-+ *   and new setting for the first period. From second period, the output is
-+ *   based on new setting.
-+ * - It is a dedicated PWM fan controller. There are no other consumers for
-+ *   this PWM controller.
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+#define LGM_PWM_FAN_CON0		0x0
-+#define LGM_PWM_FAN_EN_EN		BIT(0)
-+#define LGM_PWM_FAN_EN_DIS		0x0
-+#define LGM_PWM_FAN_EN_MSK		BIT(0)
-+#define LGM_PWM_FAN_MODE_2WIRE		0x0
-+#define LGM_PWM_FAN_MODE_4WIRE		0x1
-+#define LGM_PWM_FAN_MODE_MSK		BIT(1)
-+#define LGM_PWM_FAN_DC_MSK		GENMASK(23, 16)
-+
-+#define LGM_PWM_FAN_CON1		0x4
-+#define LGM_PWM_FAN_MAX_RPM_MSK		GENMASK(15, 0)
-+
-+#define LGM_PWM_MAX_RPM			(BIT(16) - 1)
-+#define LGM_PWM_DEFAULT_RPM		4000
-+#define LGM_PWM_MAX_DUTY_CYCLE		(BIT(8) - 1)
-+
-+#define LGM_PWM_DC_BITS			8
-+
-+#define LGM_PWM_PERIOD_2WIRE_NSECS	40000000
-+#define LGM_PWM_PERIOD_4WIRE_NSECS	40000
-+
-+struct lgm_pwm_chip {
-+	struct pwm_chip chip;
-+	struct regmap *regmap;
-+	struct clk *clk;
-+	struct reset_control *rst;
-+	u32 period;
-+};
-+
-+static inline struct lgm_pwm_chip *to_lgm_pwm_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct lgm_pwm_chip, chip);
-+}
-+
-+static int lgm_pwm_enable(struct pwm_chip *chip, bool enable)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	struct regmap *regmap = pc->regmap;
-+
-+	return regmap_update_bits(regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_EN_MSK,
-+				  enable ? LGM_PWM_FAN_EN_EN : LGM_PWM_FAN_EN_DIS);
-+}
-+
-+static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			 const struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty_cycle, val;
-+	int ret;
-+
-+	/*
-+	 * HW only supports only NORMAL polarity
-+	 * HW supports fixed period
-+	 */
-+	if (state->polarity != PWM_POLARITY_NORMAL ||
-+	    state->period < pc->period)
-+		return -EINVAL;
-+
-+	if (!state->enabled) {
-+		ret = lgm_pwm_enable(chip, 0);
-+		return ret;
-+	}
-+
-+	duty_cycle = min_t(u64, state->duty_cycle, pc->period);
-+	val = duty_cycle * LGM_PWM_MAX_DUTY_CYCLE / pc->period;
-+
-+	ret = regmap_update_bits(pc->regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_DC_MSK,
-+				 FIELD_PREP(LGM_PWM_FAN_DC_MSK, val));
-+	if (ret)
-+		return ret;
-+
-+	if (state->enabled)
-+		ret = lgm_pwm_enable(chip, 1);
-+
-+	return ret;
-+}
-+
-+static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty, val;
-+
-+	state->enabled = regmap_test_bits(pc->regmap, LGM_PWM_FAN_CON0,
-+					  LGM_PWM_FAN_EN_EN);
-+	state->polarity = PWM_POLARITY_NORMAL;
-+	state->period = pc->period; /* fixed period */
-+
-+	regmap_read(pc->regmap, LGM_PWM_FAN_CON0, &val);
-+	duty = FIELD_GET(LGM_PWM_FAN_DC_MSK, val);
-+	state->duty_cycle = DIV_ROUND_UP(duty * pc->period,
-+					 LGM_PWM_MAX_DUTY_CYCLE);
-+}
-+
-+static const struct pwm_ops lgm_pwm_ops = {
-+	.get_state = lgm_pwm_get_state,
-+	.apply = lgm_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static void lgm_pwm_init(struct lgm_pwm_chip *pc)
-+{
-+	struct device *dev = pc->chip.dev;
-+	struct regmap *regmap = pc->regmap;
-+	u32 max_rpm, fan_wire, con0_val, con0_mask;
-+
-+	if (device_property_read_u32(dev, "intel,fan-wire", &fan_wire))
-+		fan_wire = 2; /* default is 2 wire mode */
-+
-+	con0_mask = LGM_PWM_FAN_MODE_MSK;
-+
-+	switch (fan_wire) {
-+	case 4:
-+		con0_val = FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_4WIRE);
-+		pc->period = LGM_PWM_PERIOD_4WIRE_NSECS;
-+		break;
-+	default:
-+		/* default is 2wire mode */
-+		con0_val = FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_2WIRE);
-+		pc->period = LGM_PWM_PERIOD_2WIRE_NSECS;
-+		break;
-+	}
-+
-+	if (device_property_read_u32(dev, "intel,max-rpm", &max_rpm))
-+		max_rpm = LGM_PWM_DEFAULT_RPM;
-+
-+	max_rpm = min_t(u32, max_rpm, LGM_PWM_MAX_RPM);
-+	if (max_rpm == 0)
-+		max_rpm = LGM_PWM_DEFAULT_RPM;
-+
-+	regmap_update_bits(regmap, LGM_PWM_FAN_CON1, LGM_PWM_FAN_MAX_RPM_MSK, max_rpm);
-+	regmap_update_bits(regmap, LGM_PWM_FAN_CON0, con0_mask, con0_val);
-+}
-+
-+static const struct regmap_config lgm_pwm_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+};
-+
-+static int lgm_pwm_probe(struct platform_device *pdev)
-+{
-+	struct lgm_pwm_chip *pc;
-+	struct device *dev = &pdev->dev;
-+	void __iomem *io_base;
-+	int ret;
-+
-+	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-+	if (!pc)
-+		return -ENOMEM;
-+
-+	io_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(io_base))
-+		return PTR_ERR(io_base);
-+
-+	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
-+	if (IS_ERR(pc->regmap)) {
-+		ret = PTR_ERR(pc->regmap);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to init register map: %pe\n",
-+				pc->regmap);
-+		return ret;
-+	}
-+
-+	pc->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pc->clk)) {
-+		ret = PTR_ERR(pc->clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get clock: %pe\n", pc->clk);
-+		return ret;
-+	}
-+
-+	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(pc->rst)) {
-+		ret = PTR_ERR(pc->rst);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get reset control: %pe\n",
-+				pc->rst);
-+		return ret;
-+	}
-+
-+	ret = reset_control_deassert(pc->rst);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "cannot deassert reset control: %pe\n",
-+				ERR_PTR(ret));
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(pc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clock\n");
-+		reset_control_assert(pc->rst);
-+		return ret;
-+	}
-+
-+	pc->chip.dev = dev;
-+	pc->chip.ops = &lgm_pwm_ops;
-+	pc->chip.npwm = 1;
-+
-+	lgm_pwm_init(pc);
-+
-+	ret = pwmchip_add(&pc->chip);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
-+		clk_disable_unprepare(pc->clk);
-+		reset_control_assert(pc->rst);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, pc);
-+	return 0;
-+}
-+
-+static int lgm_pwm_remove(struct platform_device *pdev)
-+{
-+	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&pc->chip);
-+	if (ret < 0)
-+		return ret;
-+
-+	clk_disable_unprepare(pc->clk);
-+	reset_control_assert(pc->rst);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id lgm_pwm_of_match[] = {
-+	{ .compatible = "intel,lgm-pwm" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lgm_pwm_of_match);
-+
-+static struct platform_driver lgm_pwm_driver = {
-+	.driver = {
-+		.name = "intel-pwm",
-+		.of_match_table = lgm_pwm_of_match,
-+	},
-+	.probe = lgm_pwm_probe,
-+	.remove = lgm_pwm_remove,
-+};
-+module_platform_driver(lgm_pwm_driver);
--- 
-2.11.0
+Thanks Stephen,
+The 29f3fe1d6854 > 3f649ab728cd for drivers/infiniband/core.
 
+>
+> --
+> Cheers,
+> Stephen Rothwell
+
+
+
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYIAB0WIQT1m3YD37UfMCUQBNwp8NhrnBAZsQUCXx/nIAAKCRAp8NhrnBAZ
+sTqzAP9zz1l7DuNxhgHs80hPuIC1IXHBQUSr9w/fCn6lQ2RMhAD7BCGkq5rLAtuq
+bADyraF7iWYreEpJ+RE2OhiZS3m+xgM=
+=WeLP
+-----END PGP SIGNATURE-----
+
+--5mCyUwZo2JvN/JJP--
