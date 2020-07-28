@@ -2,459 +2,170 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4110DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1E92065E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ABC92070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:36:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="iRf8hh9m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbgG1Ufj (ORCPT
+        id S1729063AbgG1UgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:35:39 -0400
-Received: from mga17.intel.com ([192.55.52.151]:21229 "EHLO mga17.intel.com"
+        Tue, 28 Jul 2020 16:36:06 -0400
+Received: from mga12.intel.com ([192.55.52.136]:24425 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728430AbgG1Ufi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 16:35:38 -0400
-IronPort-SDR: 8OwUKoXmt1Az9GvIENcadEt70NiGi+pMKsR41BkgdarmkaUWozEd3MWF1z/x4SaZKDTAizXXfa
- bn6MMeFKz0Wg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="131378240"
+        id S1728430AbgG1UgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 16:36:04 -0400
+IronPort-SDR: 12i0FLLbsKJXDPq6vbkAS7xTbuBjU+hWHXoXdX+Ml9zy2suBTL6MOcdWIfCoF0LENPhyS1dhWc
+ hVAXG1p8PRKg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="130868896"
 X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
-   d="scan'208";a="131378240"
+   d="scan'208";a="130868896"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 13:35:34 -0700
-IronPort-SDR: kggrwLZf0Xsjfcb2LXfF6UC6vK9z316h3sgb7ufy35tSlZ7ybFPM+Re0xD0eR17UGGVu7GXdyc
- d+MYmE+3iUuQ==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 13:35:56 -0700
+IronPort-SDR: miVU2I0McXErxbxijod2t2SN2xn3F3lgq+8cASjW/oF5LcnlQ0DQUBwiwTOI+FgVowb1QRWzQD
+ /vCancc/U8XA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,407,1589266800"; 
-   d="scan'208";a="328448989"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 Jul 2020 13:35:34 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 07D80580295;
-        Tue, 28 Jul 2020 13:35:34 -0700 (PDT)
-Message-ID: <5757b1989f2acff2f3e9b9a9e595e5cc54da1958.camel@linux.intel.com>
-Subject: Re: [PATCH V4 2/3] mfd: Intel Platform Monitoring Technology support
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
-        alexander.h.duyck@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Jul 2020 13:35:33 -0700
-In-Reply-To: <20200728075859.GH1850026@dell>
-References: <20200714062323.19990-1-david.e.box@linux.intel.com>
-         <20200717190620.29821-3-david.e.box@linux.intel.com>
-         <20200728075859.GH1850026@dell>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+   d="scan'208";a="303987489"
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by orsmga002.jf.intel.com with ESMTP; 28 Jul 2020 13:35:56 -0700
+Received: from orsmsx112.amr.corp.intel.com (10.22.240.13) by
+ ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 28 Jul 2020 13:35:56 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ ORSMSX112.amr.corp.intel.com (10.22.240.13) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 28 Jul 2020 13:35:55 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.52) by
+ edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Tue, 28 Jul 2020 13:35:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SzKUPqFwJ8a8AueIpsUAJzwA9I548Mh/TnbpbhkHuOY9nHE0WJ92i0QVLkUbWgj9toq+lM3ST28r6YqYH/zUbbdU80sqjnnIbz1Gg9ixHKlTa8sd4EscKrlxm/1r43XQKYEAq2CePnT4sMbSSLeat1Mci4PzlDWXmTIjj/EFwur1XKKsBdSix73ROxdhmGYDLf4PObuvBItWYSSCW33q0NQWY2K50KIX9VpnQyhoFjrLlnj/UBD4Yfd+eXXnG/Ierv5bW8FBGg1mdy31W+MlRgzmfWgQZrjTLX7s4/uWl0zooufjk3Fwouy0TFx1mb8OgRtEXHQOuP7YSKcDBlPqNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E/PEPHlRkJL8f9+OL6/7qfINXyFq5hrww+zQ8CmF2J0=;
+ b=nESm6AE/76uoYCCXJQrt1xifBKZ9Aq4B8odHKKWA8lY6XPZNm1Lfi1dk85W7K5nPgb+3Qx7ibGU6KKWn0Zlr2Y46KsA0MVdDvFLXkPzDtOJo1FnM3lQpOZ16J9sPLV4ZCVL+bhxDoGCuRNhQg6Lz2GsC3+ZhFZ0itVV0wenx8WIfWDGzH7iNBpnTW04nlcZj26CdzOOI5HZPn44djkB4SzuX9v/0qIgR9GaSKwveR5Oiz+k2NmtP6DLT9+cgWh0YQMO1hch/z7J2erSC1fIa/4tukWWsZHDkYnTjLeoBW3VOtL+31S5+hQ8x6eOtq1HzkhNMYRAKVwf/hCOjUoHj0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E/PEPHlRkJL8f9+OL6/7qfINXyFq5hrww+zQ8CmF2J0=;
+ b=iRf8hh9mHstb2r+b52dNec8mR1YL1ZzlvE4ZydWJQCukfBZqtm5YTp2koqMbS6mvlytG1kzO9rhZ/ZyxwKT3EJ9mW929aetB6lFN+rwhaqvP1AJ0O10Z9qAnemSkm8dURnP+jmc4jlXaMwSEknArnuMVUoMANbNSCfoAAAgBQQU=
+Received: from DM6PR11MB2890.namprd11.prod.outlook.com (2603:10b6:5:63::20) by
+ DM6PR11MB4377.namprd11.prod.outlook.com (2603:10b6:5:1dc::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3216.23; Tue, 28 Jul 2020 20:34:41 +0000
+Received: from DM6PR11MB2890.namprd11.prod.outlook.com
+ ([fe80::65c2:9ac9:2c52:82bd]) by DM6PR11MB2890.namprd11.prod.outlook.com
+ ([fe80::65c2:9ac9:2c52:82bd%6]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
+ 20:34:41 +0000
+From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
+To:     Aaron Ma <aaron.ma@canonical.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
+        "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
+        "Neftin, Sasha" <sasha.neftin@intel.com>
+Subject: RE: [Intel-wired-lan] [v4][PATCH] e1000e: continue to init phy even
+ when failed to disable ULP
+Thread-Topic: [Intel-wired-lan] [v4][PATCH] e1000e: continue to init phy even
+ when failed to disable ULP
+Thread-Index: AQHWQ8XCGt1Zf2BsuE6OIRiqVZ8UlKjd8zCAgD/B2cA=
+Date:   Tue, 28 Jul 2020 20:34:41 +0000
+Message-ID: <DM6PR11MB2890F94DA893CE56A5D8A3EABC730@DM6PR11MB2890.namprd11.prod.outlook.com>
+References: <20200616100512.22512-1-aaron.ma@canonical.com>
+ <20200618065453.12140-1-aaron.ma@canonical.com>
+In-Reply-To: <20200618065453.12140-1-aaron.ma@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: canonical.com; dkim=none (message not signed)
+ header.d=none;canonical.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [97.120.173.209]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 02e08b5c-3ae4-49cd-4571-08d83335a816
+x-ms-traffictypediagnostic: DM6PR11MB4377:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB4377A25AA28F2F88E56BCC26BC730@DM6PR11MB4377.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1060;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 78Vjw68GzTOx40YipGL5QoSHDmDc4WuxKaWMsMBc987tuW55AOPowIjVgXQRZGUw+rUrpQ+O9r/9+0o1xZpAk3+b0UnLhKf8BpxTdu9OZo/JTdoLfabPVx6LXmWheHc71w43hfHT6shVUkJlixL9hZJb325t+etSnGmkpt0vdhdlx9tzWIT+LFuxXG+HRJfAfR3zHcNLESO08DuMWd6DV84qn9WclGzjcZMVY5TkVL0IMqsHO9qYWUPEept0N+eQQS0Y7YBTFfSSbmX/X+zrgly2vgpKODMFOVgFwEF1TGp3DpOq4V7rPyOsH/VMDHgOcSYXmhbrHU3JlE0NhD9xkyxrDrUW3B1a8yZCEowEvlsKPNfLj07VrOJBuvv9se64
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2890.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(366004)(396003)(136003)(66556008)(66476007)(66946007)(71200400001)(83380400001)(478600001)(66446008)(26005)(64756008)(186003)(53546011)(5660300002)(33656002)(55016002)(7696005)(76116006)(8936002)(86362001)(6636002)(8676002)(9686003)(316002)(110136005)(6506007)(2906002)(52536014)(921003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: e+ZDUsnjC5LzwXp69n+FBPzEWCreMobQ3OtAVRJoC3GpSzgy1weP36AY+PdzhjvDpiROzWV12ReWGxDwTdCv0qttvCoXuhA91rAqQMLIKSrjMpJN4aFBlWqrjmwwd+evh3y4WDSs/fFbNMfO07c6wjk0zkZEAzUVumLYy9hpTUgjFrJggIyitFncdutTjombrflns50uW9/vxZX6tzHf7AtdYREbUDXWru6QTf+vfyO7CKeehecvHpCDZl5jy98TlxEuV0fRBD4/DAPUVe3As+Lah+y/iAqB1O8yX9v/UwFlVwjjkfLapMrFkWou5t7S8huaOUIzyO7iRoswvmesfB2v23plGn+7nXSGX/CVbEgaPfqAo8C3sOoX5Jy295xLzYoReqDJKe4ea+ld8vafwNt9QLgFNtN9wN8hZAR9Qtscqj3GuF3ggoPhll32bnaIHqWHpgFWtSa7Gk79qdrwG1+mLPLnEhGXF6pLtBUfpmcOX8wi7GnK/yHPJxmFtZOf
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB2890.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02e08b5c-3ae4-49cd-4571-08d83335a816
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 20:34:41.8440
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: J9RVJEfLV/xiYohTy1pBzxzx+n/6XZw4u7PjwJgsaU0iJIfqbvf784Dy0ionNWL/hW5SWT0uWgKPxu3K2kZYEA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4377
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+> From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf Of
+> Aaron Ma
+> Sent: Wednesday, June 17, 2020 11:55 PM
+> To: kuba@kernel.org; Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>;
+> davem@davemloft.net; intel-wired-lan@lists.osuosl.org;
+> netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Lifshits, Vitaly
+> <vitaly.lifshits@intel.com>; kai.heng.feng@canonical.com; Neftin, Sasha
+> <sasha.neftin@intel.com>
+> Subject: [Intel-wired-lan] [v4][PATCH] e1000e: continue to init phy even =
+when
+> failed to disable ULP
+>=20
+> After 'commit e086ba2fccda4 ("e1000e: disable s0ix entry and exit flows
+>  for ME systems")',
+> ThinkPad P14s always failed to disable ULP by ME.
+> 'commit 0c80cdbf3320 ("e1000e: Warn if disabling ULP failed")'
+> break out of init phy:
+>=20
+> error log:
+> [   42.364753] e1000e 0000:00:1f.6 enp0s31f6: Failed to disable ULP
+> [   42.524626] e1000e 0000:00:1f.6 enp0s31f6: PHY Wakeup cause - Unicast
+> Packet
+> [   42.822476] e1000e 0000:00:1f.6 enp0s31f6: Hardware Error
+>=20
+> When disable s0ix, E1000_FWSM_ULP_CFG_DONE will never be 1.
+> If continue to init phy like before, it can work as before.
+> iperf test result good too.
+>=20
+> Fixes: 0c80cdbf3320 ("e1000e: Warn if disabling ULP failed")
+> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+> ---
+>  drivers/net/ethernet/intel/e1000e/ich8lan.c | 1 -
+>  1 file changed, 1 deletion(-)
 
-Thanks for this thorough review. Ack on all the comments with
-particular thanks for spoting the missing continue.
-
-David
-
-On Tue, 2020-07-28 at 08:58 +0100, Lee Jones wrote:
-> On Fri, 17 Jul 2020, David E. Box wrote:
-> 
-> > Intel Platform Monitoring Technology (PMT) is an architecture for
-> > enumerating and accessing hardware monitoring facilities. PMT
-> > supports
-> > multiple types of monitoring capabilities. This driver creates
-> > platform
-> > devices for each type so that they may be managed by capability
-> > specific
-> > drivers (to be introduced). Capabilities are discovered using PCIe
-> > DVSEC
-> > ids. Support is included for the 3 current capability types,
-> > Telemetry,
-> > Watcher, and Crashlog. The features are available on new Intel
-> > platforms
-> > starting from Tiger Lake for which support is added.
-> > 
-> > Also add a quirk mechanism for several early hardware differences
-> > and bugs.
-> > For Tiger Lake, do not support Watcher and Crashlog capabilities
-> > since they
-> > will not be compatible with future product. Also, fix use a quirk
-> > to fix
-> > the discovery table offset.
-> > 
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com
-> > >
-> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> 
-> This should be in chronological order.
-> 
-> > ---
-> >  MAINTAINERS             |   5 +
-> >  drivers/mfd/Kconfig     |  10 ++
-> >  drivers/mfd/Makefile    |   1 +
-> >  drivers/mfd/intel_pmt.c | 215
-> > ++++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 231 insertions(+)
-> >  create mode 100644 drivers/mfd/intel_pmt.c
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index b4a43a9e7fbc..2e42bf0c41ab 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -8845,6 +8845,11 @@ F:	drivers/mfd/intel_soc_pmic*
-> >  F:	include/linux/mfd/intel_msic.h
-> >  F:	include/linux/mfd/intel_soc_pmic*
-> >  
-> > +INTEL PMT DRIVER
-> > +M:	"David E. Box" <david.e.box@linux.intel.com>
-> > +S:	Maintained
-> > +F:	drivers/mfd/intel_pmt.c
-> > +
-> >  INTEL PRO/WIRELESS 2100, 2200BG, 2915ABG NETWORK CONNECTION
-> > SUPPORT
-> >  M:	Stanislav Yakovlev <stas.yakovlev@gmail.com>
-> >  L:	linux-wireless@vger.kernel.org
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index a37d7d171382..1a62ce2c68d9 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -670,6 +670,16 @@ config MFD_INTEL_PMC_BXT
-> >  	  Register and P-unit access. In addition this creates devices
-> >  	  for iTCO watchdog and telemetry that are part of the PMC.
-> >  
-> > +config MFD_INTEL_PMT
-> > +	tristate "Intel Platform Monitoring Technology support"
-> 
-> Nit: "Intel Platform Monitoring Technology (PMT) support"
-> 
-> > +	depends on PCI
-> > +	select MFD_CORE
-> > +	help
-> > +	  The Intel Platform Monitoring Technology (PMT) is an
-> > interface that
-> > +	  provides access to hardware monitor registers. This driver
-> > supports
-> > +	  Telemetry, Watcher, and Crashlog PMT capabilities/devices for
-> > +	  platforms starting from Tiger Lake.
-> > +
-> >  config MFD_IPAQ_MICRO
-> >  	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
-> >  	depends on SA1100_H3100 || SA1100_H3600
-> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > index 9367a92f795a..1961b4737985 100644
-> > --- a/drivers/mfd/Makefile
-> > +++ b/drivers/mfd/Makefile
-> > @@ -216,6 +216,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+=
-> > intel-lpss-pci.o
-> >  obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
-> >  obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
-> >  obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+= intel_pmc_bxt.o
-> > +obj-$(CONFIG_MFD_INTEL_PMT)	+= intel_pmt.o
-> >  obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
-> >  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
-> >  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
-> > diff --git a/drivers/mfd/intel_pmt.c b/drivers/mfd/intel_pmt.c
-> > new file mode 100644
-> > index 000000000000..6857eaf4ff86
-> > --- /dev/null
-> > +++ b/drivers/mfd/intel_pmt.c
-> > @@ -0,0 +1,215 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Intel Platform Monitoring Technology MFD driver
-> 
-> s/MFD/(PMT)/
-> 
-> > + * Copyright (c) 2020, Intel Corporation.
-> > + * All Rights Reserved.
-> > + *
-> > + * Authors: David E. Box <david.e.box@linux.intel.com>
-> 
-> Looks odd to use a plural for a single author.
-> 
-> > + */
-> > +
-> > +#include <linux/bits.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/mfd/core.h>
-> > +#include <linux/types.h>
-> 
-> Alphabetical please.
-> 
-> > +/* Intel DVSEC capability vendor space offsets */
-> > +#define INTEL_DVSEC_ENTRIES		0xA
-> > +#define INTEL_DVSEC_SIZE		0xB
-> > +#define INTEL_DVSEC_TABLE		0xC
-> > +#define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
-> > +#define INTEL_DVSEC_TABLE_OFFSET(x)	((x) & GENMASK(31, 3))
-> > +#define INTEL_DVSEC_ENTRY_SIZE		4
-> > +
-> > +/* PMT capabilities */
-> > +#define DVSEC_INTEL_ID_TELEMETRY	2
-> > +#define DVSEC_INTEL_ID_WATCHER		3
-> > +#define DVSEC_INTEL_ID_CRASHLOG		4
-> > +
-> > +#define TELEMETRY_DEV_NAME		"pmt_telemetry"
-> > +#define WATCHER_DEV_NAME		"pmt_watcher"
-> > +#define CRASHLOG_DEV_NAME		"pmt_crashlog"
-> 
-> Please don't define names of things.  It makes grepping a pain, at
-> the
-> very least.  Just use the 'raw' string in-place.
-> 
-> > +struct intel_dvsec_header {
-> > +	u16	length;
-> > +	u16	id;
-> > +	u8	num_entries;
-> > +	u8	entry_size;
-> > +	u8	tbir;
-> > +	u32	offset;
-> > +};
-> > +
-> > +enum pmt_quirks {
-> > +	/* Watcher capability not supported */
-> > +	PMT_QUIRK_NO_WATCHER	= BIT(0),
-> > +
-> > +	/* Crashlog capability not supported */
-> > +	PMT_QUIRK_NO_CRASHLOG	= BIT(1),
-> > +
-> > +	/* Use shift instead of mask to read discovery table offset */
-> > +	PMT_QUIRK_TABLE_SHIFT	= BIT(2),
-> > +};
-> > +
-> > +struct pmt_platform_info {
-> > +	unsigned long quirks;
-> > +};
-> > +
-> > +static const struct pmt_platform_info tgl_info = {
-> > +	.quirks = PMT_QUIRK_NO_WATCHER | PMT_QUIRK_NO_CRASHLOG |
-> > +		  PMT_QUIRK_TABLE_SHIFT,
-> > +};
-> > +
-> > +static int
-> > +pmt_add_dev(struct pci_dev *pdev, struct intel_dvsec_header
-> > *header,
-> > +	    struct pmt_platform_info *info)
-> 
-> My personal preference is to a) only break when you have to and b) to
-> align with the '('.  Perhaps point b) is satisfied and it's just the
-> patch format that's shifting the tab though?
-> 
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct resource *res, *tmp;
-> > +	struct mfd_cell *cell;
-> > +	const char *name;
-> > +	int count = header->num_entries;
-> > +	int size = header->entry_size;
-> > +	int i;
-> > +
-> > +	switch (header->id) {
-> > +	case DVSEC_INTEL_ID_TELEMETRY:
-> > +		name = TELEMETRY_DEV_NAME;
-> > +		break;
-> > +	case DVSEC_INTEL_ID_WATCHER:
-> > +		if (info->quirks & PMT_QUIRK_NO_WATCHER) {
-> > +			dev_info(dev, "Watcher not supported\n");
-> > +			return 0;
-> > +		}
-> > +		name = WATCHER_DEV_NAME;
-> > +		break;
-> > +	case DVSEC_INTEL_ID_CRASHLOG:
-> > +		if (info->quirks & PMT_QUIRK_NO_CRASHLOG) {
-> > +			dev_info(dev, "Crashlog not supported\n");
-> > +			return 0;
-> > +		}
-> > +		name = CRASHLOG_DEV_NAME;
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> 
-> Doesn't deserve an error message?
-> 
-> > +	}
-> > +
-> > +	if (!header->num_entries || !header->entry_size) {
-> > +		dev_warn(dev, "Invalid count or size for %s header\n",
-> > name);
-> > +		return -EINVAL;
-> 
-> If you're returning an error, this should be dev_err().
-> 
-> Even if you only handle it as a warning at the call site.
-> 
-> > +	}
-> > +
-> > +	cell = devm_kzalloc(dev, sizeof(*cell), GFP_KERNEL);
-> > +	if (!cell)
-> > +		return -ENOMEM;
-> > +
-> > +	res = devm_kcalloc(dev, count, sizeof(*res), GFP_KERNEL);
-> > +	if (!res)
-> > +		return -ENOMEM;
-> > +
-> > +	if (info->quirks & PMT_QUIRK_TABLE_SHIFT)
-> > +		header->offset >>= 3;
-> > +
-> > +	for (i = 0, tmp = res; i < count; i++, tmp++) {
-> > +		tmp->start = pdev->resource[header->tbir].start +
-> > +			     header->offset + i * (size << 2);
-> 
-> Deserves a comment I think.
-> 
-> > +		tmp->end = tmp->start + (size << 2) - 1;
-> > +		tmp->flags = IORESOURCE_MEM;
-> > +	}
-> > +
-> > +	cell->resources = res;
-> > +	cell->num_resources = count;
-> > +	cell->name = name;
-> > +
-> > +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, cell, 1,
-> > NULL, 0,
-> > +				    NULL);
-> > +}
-> > +
-> > +static int
-> > +pmt_pci_probe(struct pci_dev *pdev, const struct pci_device_id
-> > *id)
-> > +{
-> > +	struct intel_dvsec_header header;
-> > +	struct pmt_platform_info *info;
-> > +	bool found_devices = false;
-> > +	int ret, pos = 0;
-> > +	u32 table;
-> > +	u16 vid;
-> > +
-> > +	ret = pcim_enable_device(pdev);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	info = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
-> > sizeof(*info),
-> > +			    GFP_KERNEL);
-> > +	if (!info)
-> > +		return -ENOMEM;
-> > +
-> > +	pos = pci_find_next_ext_capability(pdev, pos,
-> > PCI_EXT_CAP_ID_DVSEC);
-> > +	while (pos) {
-> 
-> If you do:
-> 
-> 	do {
-> 		int pos;
-> 
-> 		pos = pci_find_next_ext_capability(pdev, pos,
-> PCI_EXT_CAP_ID_DVSEC);
-> 		if (!pos)
-> 			break;
-> 
-> Then you can invoke pci_find_next_ext_capability() once, no?
-> 
-> > +		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1,
-> > &vid);
-> > +		if (vid != PCI_VENDOR_ID_INTEL)
-> > +			continue;
-> > +
-> > +		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2,
-> > +				     &header.id);
-> > +		pci_read_config_byte(pdev, pos + INTEL_DVSEC_ENTRIES,
-> > +				     &header.num_entries);
-> > +		pci_read_config_byte(pdev, pos + INTEL_DVSEC_SIZE,
-> > +				     &header.entry_size);
-> > +		pci_read_config_dword(pdev, pos + INTEL_DVSEC_TABLE,
-> > +				      &table);
-> > +
-> > +		header.tbir = INTEL_DVSEC_TABLE_BAR(table);
-> > +		header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
-> > +
-> > +		ret = pmt_add_dev(pdev, &header, info);
-> > +		if (ret)
-> > +			dev_warn(&pdev->dev,
-> > +				 "Failed to add devices for DVSEC id
-> > %d\n",
-> 
-> "device", so not all devices, right?
-> 
-> > +				 header.id);
-> 
-> Don't you want to continue here?
-> 
-> Else you're going to set found_devices for a failed device.
-> 
-> > +		found_devices = true;
-> > +
-> > +		pos = pci_find_next_ext_capability(pdev, pos,
-> > +						   PCI_EXT_CAP_ID_DVSEC
-> > );
-> > +	}
-> > +
-> > +	if (!found_devices) {
-> > +		dev_err(&pdev->dev, "No supported PMT capabilities
-> > found.\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	pm_runtime_put(&pdev->dev);
-> > +	pm_runtime_allow(&pdev->dev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void pmt_pci_remove(struct pci_dev *pdev)
-> > +{
-> > +	pm_runtime_forbid(&pdev->dev);
-> > +	pm_runtime_get_sync(&pdev->dev);
-> > +}
-> > +
-> > +#define PCI_DEVICE_ID_INTEL_PMT_TGL	0x9a0d
-> 
-> What's this for?
-> 
-> If this is PCI_DEVICE_DATA magic, it would be worth tying it to the
-> struct i.e. remove the empty line between it and the table below.
-> 
-> > +static const struct pci_device_id pmt_pci_ids[] = {
-> > +	{ PCI_DEVICE_DATA(INTEL, PMT_TGL, &tgl_info) },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(pci, pmt_pci_ids);
-> > +
-> > +static struct pci_driver pmt_pci_driver = {
-> > +	.name = "intel-pmt",
-> > +	.id_table = pmt_pci_ids,
-> > +	.probe = pmt_pci_probe,
-> > +	.remove = pmt_pci_remove,
-> > +};
-> > +module_pci_driver(pmt_pci_driver);
-> > +
-> > +MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
-> > +MODULE_DESCRIPTION("Intel Platform Monitoring Technology MFD
-> > driver");
-> 
-> s/MFD/(PMT)/
-> 
-> > +MODULE_LICENSE("GPL v2");
-
+I never did find a system that triggered the initial problem, but from a co=
+mpatibility with the set of systems I do have working...
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
