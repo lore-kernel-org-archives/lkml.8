@@ -2,94 +2,97 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29541C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9B1C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 013B22075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DAB2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 22:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VmktEMve"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GnWABv9V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729848AbgG1WeA (ORCPT
+        id S1729876AbgG1Wjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 18:34:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54398 "EHLO
+        Tue, 28 Jul 2020 18:39:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729223AbgG1WeA (ORCPT
+        with ESMTP id S1729223AbgG1Wjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 18:34:00 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52CF9C061794;
-        Tue, 28 Jul 2020 15:34:00 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DF879563;
-        Wed, 29 Jul 2020 00:33:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1595975639;
-        bh=EpxA9pvxLOGaUuww38LTx5fEDKuye+ZbkE8mxs2jw5Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VmktEMvejHNl9eVNAkAAW8NWjRvGid8iVR5HjYVTUjZRHrRE2aKWIhbCrveknp52R
-         qpol8xjcyCWqEkCd2Sn/GTmuLRw+P/6JEOT/vLL/dtvBSNatHC3FoK2medB9+PzV6R
-         1z97QRitYZ+e8oynpX4usQklcg5sOkhjE8fqdZTI=
-Date:   Wed, 29 Jul 2020 01:33:49 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     Hyun Kwon <hyun.kwon@xilinx.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH -next] drm: xlnx: Fix typo in parameter description
-Message-ID: <20200728223349.GT13753@pendragon.ideasonboard.com>
-References: <20200725063429.172139-1-weiyongjun1@huawei.com>
+        Tue, 28 Jul 2020 18:39:31 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB18CC061794;
+        Tue, 28 Jul 2020 15:39:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=mgrOVNsJExTMhqYMtbX6J4NO2gZpZZrUvirpcTa6IUQ=; b=GnWABv9Ve99mPJ0ZOctgpp9DYG
+        GDkXrxCqFXfJ52gWp1pgJ0CrubNg01A8tpszwokUc8qaCygHpozaywsQ779TCs1pEWedw3Rmmr5QJ
+        MFJG6sl6iF8JLfSH7e+VEo+gF607okXXGb/MZ+vefvPBcld7UOa/3fK4nrQzxOW4/jU12GSMaYjNN
+        N8iEAzeZoPjZ49eh//DvboX8KXUg3Dnf4DFr2GQ+Km+GT1EhOvmeBQzCVhFjLbNPZG8/wEVuNxzkV
+        mIAyLWPxqQUWpyGawODST/ahQtwdcKsRDnUCZ4/bKEK3NrYTNNEMJA9ExxeA45QpxNJbmdR3CH6Co
+        wlSOKeYQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0YFo-0008VE-Dw; Tue, 28 Jul 2020 22:39:28 +0000
+Subject: Re: mmotm 2020-07-27-18-18 uploaded (mm/page_alloc.c)
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+References: <20200728011914.S-8vAYUK0%akpm@linux-foundation.org>
+ <ae87385b-f830-dbdf-ebc7-1afb82a7fed0@infradead.org>
+ <20200728145553.2a69fa2080de01922b3a74e0@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <048cef07-ad4b-8788-94a4-e144de731ab6@infradead.org>
+Date:   Tue, 28 Jul 2020 15:39:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200728145553.2a69fa2080de01922b3a74e0@linux-foundation.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200725063429.172139-1-weiyongjun1@huawei.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wei,
-
-Thank you for the patch.
-
-On Sat, Jul 25, 2020 at 06:34:29AM +0000, Wei Yongjun wrote:
-> Fix typo in parameter description.
+On 7/28/20 2:55 PM, Andrew Morton wrote:
+> On Tue, 28 Jul 2020 05:33:58 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
 > 
-> Fixes: d76271d22694 ("drm: xlnx: DRM/KMS driver for Xilinx ZynqMP DisplayPort Subsystem")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+>> On 7/27/20 6:19 PM, Andrew Morton wrote:
+>>> The mm-of-the-moment snapshot 2020-07-27-18-18 has been uploaded to
+>>>
+>>>    http://www.ozlabs.org/~akpm/mmotm/
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-> ---
->  drivers/gpu/drm/xlnx/zynqmp_dp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>> on x86_64:
+>>
+>> ../mm/page_alloc.c:8355:48: warning: ‘struct compact_control’ declared inside parameter list will not be visible outside of this definition or declaration
+>>  static int __alloc_contig_migrate_range(struct compact_control *cc,
+>>                                                 ^~~~~~~~~~~~~~~
 > 
-> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> index 821f7a71e182..3d53638ab15e 100644
-> --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> @@ -44,7 +44,7 @@ MODULE_PARM_DESC(aux_timeout_ms, "DP aux timeout value in msec (default: 50)");
->   */
->  static uint zynqmp_dp_power_on_delay_ms = 4;
->  module_param_named(power_on_delay_ms, zynqmp_dp_power_on_delay_ms, uint, 0444);
-> -MODULE_PARM_DESC(aux_timeout_ms, "DP power on delay in msec (default: 4)");
-> +MODULE_PARM_DESC(power_on_delay_ms, "DP power on delay in msec (default: 4)");
->  
->  /* Link configuration registers */
->  #define ZYNQMP_DP_LINK_BW_SET				0x0
+> As is usually the case with your reports, I can't figure out how to
+> reproduce it.  I copy then .config, run `make oldconfig' (need to hit
+> enter a zillion times because the .config is whacky) then the build
+> succeeds.  What's the secret?
+
+I was not aware that there was a problem. cp .config and make oldconfig
+should be sufficient -- and I don't understand why you would need to hit
+enter many times.
+
+I repeated this on my system without having to answer any oldconfig prompts
+and still got build errors.
+
+There is no secret that I know of, but it would be good to get to the
+bottom of this problem.
 
 -- 
-Regards,
+~Randy
 
-Laurent Pinchart
