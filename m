@@ -2,88 +2,213 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9737C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E94C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8016120759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:39:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWFrXSF2"
+	by mail.kernel.org (Postfix) with ESMTP id 18D6320759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595940002;
+	bh=UvPVHNXFlII1dBoZmadxV6dYDy6mRqwIr4qKgH+fqws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TXlhdVe2PC9l6gIUTpMO7OkHaRukoJnzv7Skxc9UbVh0IPxnJe0uQRNtRD9S/ujlq
+	 ItZW5j4pIe9th1RWp97Aq9Xss1MGEDqxXj6OcvHrZSogBPLY1OS3Nd/hUx66nLZD5i
+	 3RgSwTxN5koThPypj7SktsfMlzuXMKi76Vp2qqx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbgG1Mjl (ORCPT
+        id S1729813AbgG1MkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:39:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728751AbgG1Mjk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:39:40 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D176AC061794;
-        Tue, 28 Jul 2020 05:39:40 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k71so11526849pje.0;
-        Tue, 28 Jul 2020 05:39:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Fie8IAXWZ8a1f4IBdyXwUsTRAo2+ebUYgUxfo3SFpeA=;
-        b=ZWFrXSF2M1/Ti68YVAyL5qat6asJcr2dbzM4Tvn2CA+WYRnO/6E7QnaX5uwWeDMjIV
-         DwkHCuKOxWj4MFRCKmR0y5BeGZ3cN6es32gUrgKqG+solcw/pQZaUUmun1w5G5hjMWfK
-         rP7Y3nCCVvj9MYLmTXCoqG7H49/aaLDn03FaVgEhybIBJqV/OdlYHL/xXc4UqDHGDgJ6
-         YtKmEYsCGkHq6Mb8TlNgEDnWyCuK6xtEdtKmtrYQLK+0rS85ExySzP8QzZGBX8QuUz7V
-         2UriFwuu3JjVCPWje1fIpNIDpwnd690NMMpBZpjhlYIiwaHRSVc+iNo+xngS4NxFF/Ky
-         dWfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Fie8IAXWZ8a1f4IBdyXwUsTRAo2+ebUYgUxfo3SFpeA=;
-        b=fUGAUqhoyl6PT8ZEB3qbJUoZVe+rTO1XJzysOZEMTxVm3q24zHpeSFijsBSMjkh9lK
-         hQeV0Drys23f/KW1tt3kRLiFB55Sq2ldbhwSh92NY8GBNBU+JDcEt2qB1vIddp2TS6Qy
-         tnXqTh+mqUimrWUV8xvjpYvOljxKWAmQ9TESTkcOZGX1VVKRO913BBr/KqCqSO9eeL4h
-         mgPIC5YvPGKY0563fEm5iMz5wPwN5zkMepZB6ITLVJZYNjC7nci6jjvIuKxfptV3d4q7
-         Ld9UXgy196mTD7ijmz0NbezwvaJ3xLJVCECKUszyEARqjlg2tJAmch0IJJgYfDRslVwE
-         +osg==
-X-Gm-Message-State: AOAM533X8zYNBdJDC7S2BicUI02ruCxBGRTm4f3NheX20rm23A44NZxR
-        XkujDjBnCZRAB1KAQFwmnOI=
-X-Google-Smtp-Source: ABdhPJz97qasknYQoT+fY7yWXUWMcSSg+xxuQQMwXn/CTLKMheIuNy7RyQvTXCQd8r41XxEASfXvUg==
-X-Received: by 2002:a17:90a:eb17:: with SMTP id j23mr4116840pjz.151.1595939980318;
-        Tue, 28 Jul 2020 05:39:40 -0700 (PDT)
-Received: from gmail.com ([2401:4900:2eef:ca92:3545:4a68:f406:d612])
-        by smtp.gmail.com with ESMTPSA id j13sm2234164pfa.149.2020.07.28.05.39.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 05:39:39 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 18:08:10 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sergey Kozlov <serjk@netup.ru>, Abylay Ospan <aospan@netup.ru>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v1] [media] netup_unidvb: use generic power management
-Message-ID: <20200728123810.GC1331847@gmail.com>
-References: <20200728092717.937023-1-vaibhavgupta40@gmail.com>
+        Tue, 28 Jul 2020 08:40:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728751AbgG1MkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:40:00 -0400
+Received: from quaco.ghostprotocols.net (179.176.1.55.dynamic.adsl.gvt.net.br [179.176.1.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFEA22074F;
+        Tue, 28 Jul 2020 12:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595939999;
+        bh=UvPVHNXFlII1dBoZmadxV6dYDy6mRqwIr4qKgH+fqws=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pxhQvv3Iz6dJBHYFxqdoYkaLmr3Ti+YHqNSon8x5BhZSwNO89TLylL1/LH/xDC2Si
+         022fbpPAlSepPsVeTYkS3YD2Ukdf5FwNXqeaFCavP8xyMX/ii2g6jaxHW1Sy58422Z
+         z+qDloUj7Bc0T6DMPlu9kFllp0AMdxZHKawYLdmU=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A02A1404B1; Tue, 28 Jul 2020 09:39:55 -0300 (-03)
+Date:   Tue, 28 Jul 2020 09:39:55 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     kajoljain <kjain@linux.ibm.com>, Jiri Olsa <jolsa@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Subject: Re: [PATCHv3 00/19] perf metric: Add support to reuse metric
+Message-ID: <20200728123955.GZ40195@kernel.org>
+References: <20200719181320.785305-1-jolsa@kernel.org>
+ <dbe59791-937d-de95-4ba0-c34e7a1cd273@linux.ibm.com>
+ <20200720072237.GC760733@krava>
+ <6cb72b48-5244-9faf-a9e5-67858c732b83@linux.ibm.com>
+ <20200720081943.GE760733@krava>
+ <dd465647-da63-c473-9944-bdfec2abe484@linux.ibm.com>
+ <20200720191625.GL760733@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200728092717.937023-1-vaibhavgupta40@gmail.com>
+In-Reply-To: <20200720191625.GL760733@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is compile-tested only.
+Em Mon, Jul 20, 2020 at 09:16:25PM +0200, Jiri Olsa escreveu:
+> On Mon, Jul 20, 2020 at 02:32:40PM +0530, kajoljain wrote:
+> > 
+> > 
+> > On 7/20/20 1:49 PM, Jiri Olsa wrote:
+> > > On Mon, Jul 20, 2020 at 01:39:24PM +0530, kajoljain wrote:
+> > > 
+> > > SNIP
+> > > 
+> > >> This is with your perf/metric branch:
+> > >> command# ./perf stat -M PowerBUS_Frequency -C 0 -I 1000
+> > >> assertion failed at util/metricgroup.c:709
+> > >> #           time             counts unit events
+> > >>      1.000054545          7,807,505      hv_24x7/pm_pb_cyc,chip=0/ #      2.0 GHz  PowerBUS_Frequency_0
+> > >>      1.000054545          7,807,485      hv_24x7/pm_pb_cyc,chip=1/                                   
+> > >>      2.000232761          7,807,500      hv_24x7/pm_pb_cyc,chip=0/ #      2.0 GHz  PowerBUS_Frequency_0
+> > >>      2.000232761          7,807,478      hv_24x7/pm_pb_cyc,chip=1/                                   
+> > >>      3.000363762          7,799,665      hv_24x7/pm_pb_cyc,chip=0/ #      1.9 GHz  PowerBUS_Frequency_0
+> > >>      3.000363762          7,807,502      hv_24x7/pm_pb_cyc,chip=1/                                   
+> > >> ^C     3.259418599          2,022,150      hv_24x7/pm_pb_cyc,chip=0/ #      0.5 GHz  PowerBUS_Frequency_0
+> > >>      3.259418599          2,022,164      hv_24x7/pm_pb_cyc,chip=1/                                   
+> > >>
+> > >>  Performance counter stats for 'CPU(s) 0':
+> > >>
+> > >>         25,436,820      hv_24x7/pm_pb_cyc,chip=0/ #      6.4 GHz  PowerBUS_Frequency_0
+> > >>         25,444,629      hv_24x7/pm_pb_cyc,chip=1/                                   
+> > >>
+> > >>        3.259505529 seconds time elapsed
+> > > 
+> > > I found the bug, we are not adding runtime metrics as standalone ones,
+> > > but as referenced metrics.. will fix and try to add test for that
+> > > 
+> > > as for testing.. do I need some special ppc server to have support for this? 
+> > 
+> > Hi jiri,
+> >     We need power9 lpar machine and need to make sure `CONFIG_HV_PERF_CTRS` is
+> > enabled.
+> 
+> could you please try with following patch on top?
 
-Thanks
-Vaibhav Gupta
+So, can you point me to the cset that this should be merged into? Or can
+it come as a separate patch? I'll put what I have in the tmp.perf/core
+branch, and will do testing, please let me know if you want to fold it
+or as a followup patch.
+
+- Arnaldo
+ 
+> thanks,
+> jirka
+> 
+> 
+> ---
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index 6f179b9903a0..03aa4bd4a38b 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -820,11 +820,11 @@ static int add_metric(struct list_head *metric_list,
+>  		      struct expr_id *parent,
+>  		      struct expr_ids *ids);
+>  
+> -static int resolve_metric(struct metric *m,
+> -			  bool metric_no_group,
+> -			  struct list_head *metric_list,
+> -			  struct pmu_events_map *map,
+> -			  struct expr_ids *ids)
+> +static int __resolve_metric(struct metric *m,
+> +			    bool metric_no_group,
+> +			    struct list_head *metric_list,
+> +			    struct pmu_events_map *map,
+> +			    struct expr_ids *ids)
+>  {
+>  	struct hashmap_entry *cur;
+>  	size_t bkt;
+> @@ -869,6 +869,23 @@ static int resolve_metric(struct metric *m,
+>  	return 0;
+>  }
+>  
+> +static int resolve_metric(bool metric_no_group,
+> +			  struct list_head *metric_list,
+> +			  struct pmu_events_map *map,
+> +			  struct expr_ids *ids)
+> +{
+> +	struct metric *m;
+> +	int err;
+> +
+> +	list_for_each_entry(m, metric_list, nd) {
+> +		err = __resolve_metric(m, metric_no_group, metric_list, map, ids);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int add_metric(struct list_head *metric_list,
+>  		      struct pmu_event *pe,
+>  		      bool metric_no_group,
+> @@ -876,6 +893,7 @@ static int add_metric(struct list_head *metric_list,
+>  		      struct expr_id *parent,
+>  		      struct expr_ids *ids)
+>  {
+> +	struct metric *orig = *m;
+>  	int ret = 0;
+>  
+>  	pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+> @@ -892,7 +910,7 @@ static int add_metric(struct list_head *metric_list,
+>  		 * those events to metric_list.
+>  		 */
+>  
+> -		for (j = 0; j < count && !ret; j++) {
+> +		for (j = 0; j < count && !ret; j++, *m = orig) {
+>  			ret = __add_metric(metric_list, pe, metric_no_group, j, m, parent, ids);
+>  		}
+>  	}
+> @@ -907,8 +925,8 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+>  
+>  {
+>  	struct expr_ids ids = { 0 };
+> +	struct metric *m = NULL;
+>  	struct pmu_event *pe;
+> -	struct metric *m;
+>  	LIST_HEAD(list);
+>  	int i, ret;
+>  	bool has_match = false;
+> @@ -925,7 +943,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+>  		 * Process any possible referenced metrics
+>  		 * included in the expression.
+>  		 */
+> -		ret = resolve_metric(m, metric_no_group,
+> +		ret = resolve_metric(metric_no_group,
+>  				     &list, map, &ids);
+>  		if (ret)
+>  			return ret;
+> 
+
+-- 
+
+- Arnaldo
