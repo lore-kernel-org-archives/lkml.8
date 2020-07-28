@@ -2,93 +2,150 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86443C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF21C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6428C206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:58:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Gy0qVxQM"
+	by mail.kernel.org (Postfix) with ESMTP id D13E32070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595948455;
+	bh=frxB2QXihnX0bS03Xc1I0P6xwq48DECVyTC63uP/ctM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bUymjYOVvrEFnJ+fMQgwwq0L1fFiYPIgDdaof4xokcyIz1ME3APGwIn9u92whwq/r
+	 QcP72maO/LaFbxzfHd76wuw6N9k/+EjI95UMoXTZW5yfEROztn/m/01tJHqfvqZzj9
+	 l9n8fYUjSN9GvP031pPV1pibJj+3B66fOlZDVB4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730575AbgG1O6z (ORCPT
+        id S1730547AbgG1PAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:58:55 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:52920 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730483AbgG1O6y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:58:54 -0400
-Received: from [192.168.254.32] (unknown [47.187.206.220])
-        by linux.microsoft.com (Postfix) with ESMTPSA id ADCF720B4908;
-        Tue, 28 Jul 2020 07:58:53 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com ADCF720B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1595948334;
-        bh=flkKl1tOpheQSP4WOnmrqgHroHnRne5MuepSoCZsgK0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Gy0qVxQM4lbk87aNiGP/UQJRoHbBkHY8gEBUc9LVHq/JBTxqOXbHBPRz/CbPhTddU
-         WUFnsrL5KmEIrg/s5uke5Hfo8z21XAplUP+QdHA3P0SR/cp8ACNVes2cfOeGq1ux6M
-         Pg8UVJmBdVVeaMAdNOiCJj8wDe04E7A1iipg0+LM=
-Subject: Re: [PATCH v1 1/4] [RFC] fs/trampfd: Implement the trampoline file
- descriptor API
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, x86@kernel.org
-References: <aefc85852ea518982e74b233e11e16d2e707bc32>
- <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <20200728131050.24443-2-madvenka@linux.microsoft.com>
- <20200728145013.GA9972@redhat.com>
-From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Message-ID: <dc41589a-647a-ba59-5376-abbf5d07c6e7@linux.microsoft.com>
-Date:   Tue, 28 Jul 2020 09:58:52 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 11:00:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730508AbgG1PAy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:00:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47BF3206D8;
+        Tue, 28 Jul 2020 15:00:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595948453;
+        bh=frxB2QXihnX0bS03Xc1I0P6xwq48DECVyTC63uP/ctM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kjc1NjTB8mTa19UGapHTh6qmux0UixS44sD8UjmAXe+/c2jxnunFjlZWvrL9fK4h9
+         Gt3SlRxefMTqGCYw4JIh6RTMQ0MGLKLGxPKyYBTjVj1Gd4ovftrw+hlJQz9bCP/WnW
+         y/4tr2Mpq6ISoqGqYaRDApHAC/R/yERivGbwlOC8=
+Date:   Tue, 28 Jul 2020 17:00:47 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Muchun Song <songmuchun@bytedance.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [External] [PATCH 4.19 76/86] mm: memcg/slab: fix memory leak at
+ non-root kmem_cache destroy
+Message-ID: <20200728150047.GC3537020@kroah.com>
+References: <20200727134914.312934924@linuxfoundation.org>
+ <20200727134918.205538211@linuxfoundation.org>
+ <CAMZfGtWVtGeMfu=04LiNVcLrBpmexUryHjy-dujo77CpJhcwGg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200728145013.GA9972@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMZfGtWVtGeMfu=04LiNVcLrBpmexUryHjy-dujo77CpJhcwGg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks. See inline..
+On Tue, Jul 28, 2020 at 08:56:41PM +0800, Muchun Song wrote:
+> On Mon, Jul 27, 2020 at 10:12 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > From: Muchun Song <songmuchun@bytedance.com>
+> >
+> > commit d38a2b7a9c939e6d7329ab92b96559ccebf7b135 upstream.
+> >
+> > If the kmem_cache refcount is greater than one, we should not mark the
+> > root kmem_cache as dying.  If we mark the root kmem_cache dying
+> > incorrectly, the non-root kmem_cache can never be destroyed.  It
+> > resulted in memory leak when memcg was destroyed.  We can use the
+> > following steps to reproduce.
+> >
+> >   1) Use kmem_cache_create() to create a new kmem_cache named A.
+> >   2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
+> >      so the refcount of B is just increased.
+> >   3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
+> >      decrease the B's refcount but mark the B as dying.
+> >   4) Create a new memory cgroup and alloc memory from the kmem_cache
+> >      B. It leads to create a non-root kmem_cache for allocating memory.
+> >   5) When destroy the memory cgroup created in the step 4), the
+> >      non-root kmem_cache can never be destroyed.
+> >
+> > If we repeat steps 4) and 5), this will cause a lot of memory leak.  So
+> > only when refcount reach zero, we mark the root kmem_cache as dying.
+> >
+> > Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
+> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> > Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> > Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> > Acked-by: Roman Gushchin <guro@fb.com>
+> > Cc: Vlastimil Babka <vbabka@suse.cz>
+> > Cc: Christoph Lameter <cl@linux.com>
+> > Cc: Pekka Enberg <penberg@kernel.org>
+> > Cc: David Rientjes <rientjes@google.com>
+> > Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > Cc: Shakeel Butt <shakeelb@google.com>
+> > Cc: <stable@vger.kernel.org>
+> > Link: http://lkml.kernel.org/r/20200716165103.83462-1-songmuchun@bytedance.com
+> > Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >
+> > ---
+> >  mm/slab_common.c |   35 ++++++++++++++++++++++++++++-------
+> >  1 file changed, 28 insertions(+), 7 deletions(-)
+> >
+> > --- a/mm/slab_common.c
+> > +++ b/mm/slab_common.c
+> > @@ -310,6 +310,14 @@ int slab_unmergeable(struct kmem_cache *
+> >         if (s->refcount < 0)
+> >                 return 1;
+> >
+> > +#ifdef CONFIG_MEMCG_KMEM
+> > +       /*
+> > +        * Skip the dying kmem_cache.
+> > +        */
+> > +       if (s->memcg_params.dying)
+> > +               return 1;
+> > +#endif
+> > +
+> >         return 0;
+> >  }
+> >
+> > @@ -832,12 +840,15 @@ static int shutdown_memcg_caches(struct
+> >         return 0;
+> >  }
+> >
+> > -static void flush_memcg_workqueue(struct kmem_cache *s)
+> > +static void memcg_set_kmem_cache_dying(struct kmem_cache *s)
+> >  {
+> >         mutex_lock(&slab_mutex);
+> >         s->memcg_params.dying = true;
+> >         mutex_unlock(&slab_mutex);
+> 
+> We should remove mutex_lock/unlock(&slab_mutex) here, because
+> we already hold the slab_mutex from kmem_cache_destroy().
 
-On 7/28/20 9:50 AM, Oleg Nesterov wrote:
-> On 07/28, madvenka@linux.microsoft.com wrote:
->> +bool is_trampfd_vma(struct vm_area_struct *vma)
->> +{
->> +	struct file	*file = vma->vm_file;
->> +
->> +	if (!file)
->> +		return false;
->> +	return !strcmp(file->f_path.dentry->d_name.name, trampfd_name);
-> Hmm, this looks obviously wrong or I am totally confused. A user can
-> create a file named "[trampfd]", mmap it, and fool trampfd_fault() ?
->
-> Why not
->
-> 	return file->f_op == trampfd_fops;
+Good catch.  I'll go make this change and push out a -rc2.
 
-This is definitely the correct check. I will fix it.
->
-> ?
->
->> +EXPORT_SYMBOL_GPL(is_trampfd_vma);
-> why is it exported?
+thanks,
 
-This is in common code and is called by arch code. Should I not export it?
-I guess since the symbol is not used by any modules, I don't need to
-export it. Please confirm and I will fix this.
-
-Madhavan
-
+greg k-h
