@@ -2,85 +2,109 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC39C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1F1920786
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4212075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:42:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nFtG8ZZZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LZRJKx1e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbgG1Nmi (ORCPT
+        id S1730221AbgG1Nmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:42:38 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:50127 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730209AbgG1Nmh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jul 2020 09:42:37 -0400
-X-UUID: 75c3b7081e6245a0a087248a09201a9f-20200728
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=tWvLiz/fAUH2FTeWAPBixcOQZuwwGaB5etKJl3FKCQ0=;
-        b=nFtG8ZZZ7liUGSijVXOT/ghhwKLXcdpIkEn1YbHsRnC8L3LOiPHTYd0u0K52mmXQGerbfUJoKIzFkozaLASsq2V3yhPKVM+epBXVsMydW+mJ0BuNERQgbKMOFEjuChs/mukgHi1RtvGx88vxVoN59wBddU3DlIm99rLtnhSV3A0=;
-X-UUID: 75c3b7081e6245a0a087248a09201a9f-20200728
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <seiya.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 73644101; Tue, 28 Jul 2020 21:42:33 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 28 Jul 2020 21:42:32 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 28 Jul 2020 21:42:29 +0800
-From:   Seiya Wang <seiya.wang@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>
-Subject: [PATCH v2 3/3] dt-bindings: timer: Add compatible for Mediatek MT8192
-Date:   Tue, 28 Jul 2020 21:41:49 +0800
-Message-ID: <20200728134149.19758-4-seiya.wang@mediatek.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20200728134149.19758-1-seiya.wang@mediatek.com>
-References: <20200728134149.19758-1-seiya.wang@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35811 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730069AbgG1Nmg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 09:42:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595943754;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=d1H2TqJa+xnwL6Sscbi4oBQam2i37LFg06gHTI5VeII=;
+        b=LZRJKx1eTwds5BGuhlfghgGnjeYk66gmVGdvIJCss7oB3+lcNqJdsp8bnv0sXT9LXc20rA
+        Qlr0WcAXeIuew+e5EyqNLny6vZzFm3jat8zLYOQDqWgAjuUkXYHR+TPxYDzBOXUYDAvbwL
+        ck2aPtnI2G21wIzqcEuoFm1Q8vQ/UfE=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-501-l7T28TDxMqiUkQWTGMV1GQ-1; Tue, 28 Jul 2020 09:42:33 -0400
+X-MC-Unique: l7T28TDxMqiUkQWTGMV1GQ-1
+Received: by mail-qk1-f200.google.com with SMTP id t82so12689649qka.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 06:42:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=d1H2TqJa+xnwL6Sscbi4oBQam2i37LFg06gHTI5VeII=;
+        b=TRaNyDANlD28KjN9Um551ZOuDprXV50feipbJqWszqBvw0e4oqUEsDRoh/1xTNYa3W
+         DnmOkHo/hWr2Aktvcf7Uew4pbiTvEkRxOy6YXff/J5hooN8ta1En7ev6tFuCOyHNM1j2
+         hze9pZ0bzTbXYaUY03iOZXJ+mNhgyu8yjpsfxJp1df2Wi1eqzgkTGtO3ZLOb9iW/msnN
+         822XoSEOEAlHJtwmTlVXdI4TmTZL0c2LY0uX3XQ/LU++BJ6SN4quOeQJ6JslDjSHOK2a
+         QUpnMBSwvP8t91JF5AwrqxbsCZy7M6XbP6NNRQxbM4upUhs65gkAiaG1l1I3Y8fkeCuU
+         VuJw==
+X-Gm-Message-State: AOAM530c/hbbVE1Wsb7H9oQ3ntS3xKx9u/CSGARUQfptsUdwP2LM1/Y4
+        Na6GYbMAjQ5y5E0s6yEbxKpWLqLqugQMeD2WSfswn3dyxg2oJMTPDQKi7iY9SQFOOnPQjJ/T+YK
+        0Rq2rqwOUGz6116vtaPsNbG/1
+X-Received: by 2002:ac8:4cc2:: with SMTP id l2mr19233693qtv.130.1595943752830;
+        Tue, 28 Jul 2020 06:42:32 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzjoBZqluR8LTz0WpQlDuqfrVZK7AmZoX8oS/5fepe6D+QCGMesvqo/QSjTRIUOkRc+AysTQg==
+X-Received: by 2002:ac8:4cc2:: with SMTP id l2mr19233674qtv.130.1595943752568;
+        Tue, 28 Jul 2020 06:42:32 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id 71sm13879623qkk.125.2020.07.28.06.42.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 06:42:32 -0700 (PDT)
+From:   trix@redhat.com
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        frank.rowand@sony.com, geert+renesas@glider.be
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] gpiolib: of: reset name variable in of_gpiochip_add_hog
+Date:   Tue, 28 Jul 2020 06:42:26 -0700
+Message-Id: <20200728134226.27592-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBjb21taXQgYWRkcyBkdC1iaW5kaW5nIGRvY3VtZW50YXRpb24gb2YgdGltZXIgZm9yIE1l
-ZGlhdGVrIE1UODE5MiBTb0MNClBsYXRmb3JtLg0KDQpDaGFuZ2UtSWQ6IElmOTMyZTQ0ZjExNmE0
-YThhYmQ2YzI0MDA5ODc2ODUxNzdlYjFkMWY4DQpTaWduZWQtb2ZmLWJ5OiBTZWl5YSBXYW5nIDxz
-ZWl5YS53YW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy90aW1lci9tZWRpYXRlayxtdGstdGltZXIudHh0IHwgMSArDQogMSBmaWxlIGNoYW5n
-ZWQsIDEgaW5zZXJ0aW9uKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvdGltZXIvbWVkaWF0ZWssbXRrLXRpbWVyLnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxtdGstdGltZXIudHh0DQppbmRleCAw
-ZDI1NjQ4NmY4ODYuLjlkZjg5ODA2ZWM2ZCAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxtdGstdGltZXIudHh0DQorKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbWVkaWF0ZWssbXRrLXRpbWVyLnR4
-dA0KQEAgLTIyLDYgKzIyLDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCiANCiAJRm9yIHRob3Nl
-IFNvQ3MgdGhhdCB1c2UgU1lTVA0KIAkqICJtZWRpYXRlayxtdDgxODMtdGltZXIiIGZvciBNVDgx
-ODMgY29tcGF0aWJsZSB0aW1lcnMgKFNZU1QpDQorCSogIm1lZGlhdGVrLG10ODE5Mi10aW1lciIg
-Zm9yIE1UODE4MyBjb21wYXRpYmxlIHRpbWVycyAoU1lTVCkNCiAJKiAibWVkaWF0ZWssbXQ3NjI5
-LXRpbWVyIiBmb3IgTVQ3NjI5IGNvbXBhdGlibGUgdGltZXJzIChTWVNUKQ0KIAkqICJtZWRpYXRl
-ayxtdDY3NjUtdGltZXIiIGZvciBNVDY3NjUgYW5kIGFsbCBhYm92ZSBjb21wYXRpYmxlIHRpbWVy
-cyAoU1lTVCkNCiANCi0tIA0KMi4xNC4xDQo=
+From: Tom Rix <trix@redhat.com>
+
+Clang static analysis reports this error
+
+gpiolib-of.c:664:9: warning: 2nd function call argument
+  is an uninitialized value [core.CallAndMessage]
+        ret = gpiod_hog(desc, name, lflags, dflags);
+
+name is sometimes set by of_parse_own_gpio
+name is always used by gpiod_hog
+
+So it is necessary to reset name so an old value is
+not mistakenly used by gpiod_hog.
+
+Fixes: bc21077e084b ("gpio: of: Extract of_gpiochip_add_hog()")
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/gpio/gpiolib-of.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index bd31dd3b6a75..277ada41d04a 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -657,6 +657,7 @@ static int of_gpiochip_add_hog(struct gpio_chip *chip, struct device_node *hog)
+ 	int ret;
+ 
+ 	for (i = 0;; i++) {
++		name = NULL;
+ 		desc = of_parse_own_gpio(hog, chip, i, &name, &lflags, &dflags);
+ 		if (IS_ERR(desc))
+ 			break;
+-- 
+2.18.1
 
