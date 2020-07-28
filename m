@@ -2,255 +2,224 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4545DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9118D2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:39:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="LcCoJfja"
+	by mail.kernel.org (Postfix) with ESMTP id 26F7B2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730860AbgG1XjG (ORCPT
+        id S1730204AbgG1XsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 19:39:06 -0400
-Received: from mail-bn8nam11on2053.outbound.protection.outlook.com ([40.107.236.53]:31872
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730759AbgG1XjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 19:39:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Qu2dEgh4UJP3HDb7ibhkEQsVt9Zl5Sy8LL5x+nL1d5jez/zfxhR9o6GWHvRO7ezN+F7aCuwx0rP8aBmzmMaGb06BW2MLrLSRIH8IZx02ydxyDhb5sTlJN4KK25m0WPjU0gOn/EqKF1SMIJpWNLWoW5emaTxyYGdlG/2cqIviJWou76zb85X9iYlo9DI9TTJdcIVkRGvVT+nRUF/0m1UkU7KNxbJE2sseuwau7yx2ykRrYKKahqJY9n4pOEFNbjvJTR7kWiapaADwnCpP1x55RIKn5bmtw8jbIzNG3DoPEstRjDlmxoM0ilinh7O8bNERs53ZFfmYaXzruV0iO1R4GQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GmBBolenuje70gOPSEiYzIm70gc4Qr2U95hL8K1E4wc=;
- b=Ua+7cyQvuvdLFamzCkfuclDM00W8K+KTQeCPCoznMlLFU61Pqtm/nGLzXJqzAflLgEohjPB28V9xCE9BonS/yRyQE6En1PqnKfictpl0ZYmANGgpZbChXeUuLMLYW+7jsntte16wViavYqLUX+LIv9KLVFTa4VOFan9X6Jefr2B7Ov25jC9mkMACZHqETndSBWo6HAcmwVqfwIDNycalLNi0zm31kPIRgsJNNFkbg3GkvIxfeD6Q8U5yCFkEpV1/47iSzCQ31DSqbrNVNFP3aumcsxNvkN5yCW+s0GPjMqubC4gT+oVmgVweMCCTa2V+octoXuP7FxhUjlrlwGwKwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GmBBolenuje70gOPSEiYzIm70gc4Qr2U95hL8K1E4wc=;
- b=LcCoJfjaoa6lmgeL7rmbW2vmQoCrOMn0FqFwBO4BBIN0HxffJ/txaM3ZMzuTqNtw9oBZ/SvkB6dKo14hknIc44n6SMu5UUuyf4a7J5LOnm6xCk4AQvmWzG58oMwm3fTtWp6QUmwpdRNquDbEilYMzc3m2uRKAdxOI0KQs+l2cAg=
-Authentication-Results: tencent.com; dkim=none (message not signed)
- header.d=none;tencent.com; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SN1PR12MB2559.namprd12.prod.outlook.com (2603:10b6:802:29::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Tue, 28 Jul
- 2020 23:39:00 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::691c:c75:7cc2:7f2c]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::691c:c75:7cc2:7f2c%6]) with mapi id 15.20.3216.033; Tue, 28 Jul 2020
- 23:39:00 +0000
-Subject: [PATCH v3 11/11] KVM:SVM: Enable INVPCID feature on AMD
-From:   Babu Moger <babu.moger@amd.com>
-To:     pbonzini@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
-        sean.j.christopherson@intel.com, jmattson@google.com
-Cc:     kvm@vger.kernel.org, joro@8bytes.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, tglx@linutronix.de
-Date:   Tue, 28 Jul 2020 18:38:59 -0500
-Message-ID: <159597953941.12744.13644431147694358715.stgit@bmoger-ubuntu>
-In-Reply-To: <159597929496.12744.14654593948763926416.stgit@bmoger-ubuntu>
-References: <159597929496.12744.14654593948763926416.stgit@bmoger-ubuntu>
-User-Agent: StGit/0.17.1-dirty
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA9PR11CA0029.namprd11.prod.outlook.com
- (2603:10b6:806:6e::34) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
+        Tue, 28 Jul 2020 19:48:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729380AbgG1XsR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 19:48:17 -0400
+X-Greylist: delayed 2069 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 28 Jul 2020 16:48:16 PDT
+Received: from relay.felk.cvut.cz (relay.felk.cvut.cz [IPv6:2001:718:2:1611:0:1:0:70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 772A8C061794;
+        Tue, 28 Jul 2020 16:48:16 -0700 (PDT)
+Received: from cmp.felk.cvut.cz (haar.felk.cvut.cz [147.32.84.19])
+        by relay.felk.cvut.cz (8.15.2/8.15.2) with ESMTP id 06SNCXiI022851;
+        Wed, 29 Jul 2020 01:12:33 +0200 (CEST)
+        (envelope-from pisa@cmp.felk.cvut.cz)
+Received: from haar.felk.cvut.cz (localhost [127.0.0.1])
+        by cmp.felk.cvut.cz (8.14.0/8.12.3/SuSE Linux 0.6) with ESMTP id 06SNCX2E015946;
+        Wed, 29 Jul 2020 01:12:33 +0200
+Received: (from pisa@localhost)
+        by haar.felk.cvut.cz (8.14.0/8.13.7/Submit) id 06SNCWBm015943;
+        Wed, 29 Jul 2020 01:12:32 +0200
+X-Authentication-Warning: haar.felk.cvut.cz: pisa set sender to pisa@cmp.felk.cvut.cz using -f
+From:   Pavel Pisa <pisa@cmp.felk.cvut.cz>
+To:     Rob Herring <robh@kernel.org>, c.emde@osadl.org
+Subject: Re: [PATCH v3 2/6] dt-bindings: net: can: binding for CTU CAN FD open-source IP core.
+Date:   Wed, 29 Jul 2020 01:12:31 +0200
+User-Agent: KMail/1.9.10
+Cc:     devicetree@vger.kernel.org, mkl@pengutronix.de,
+        linux-can@vger.kernel.org, socketcan@hartkopp.net,
+        wg@grandegger.com, davem@davemloft.net, mark.rutland@arm.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        martin.jerabek01@gmail.com, ondrej.ille@gmail.com,
+        jnovak@fel.cvut.cz, jara.beran@gmail.com, porazil@pikron.com
+References: <cover.1576922226.git.pisa@cmp.felk.cvut.cz> <61533d59378822f8c808abf193b40070810d3d35.1576922226.git.pisa@cmp.felk.cvut.cz> <20200103235359.GA23875@bogus>
+In-Reply-To: <20200103235359.GA23875@bogus>
+X-KMail-QuotePrefix: > 
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [127.0.1.1] (165.204.77.1) by SA9PR11CA0029.namprd11.prod.outlook.com (2603:10b6:806:6e::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Tue, 28 Jul 2020 23:38:59 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 6f19c04f-f863-4ffb-995a-08d8334f6763
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2559:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN1PR12MB25592FBC8E50D5BA9187786795730@SN1PR12MB2559.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Oy6J/77Ijw9lMfkWHfjkP/RLHxyvlajUL/81IL7YdJq5rahkkHXtBKeQL+Z7CW25VxNg6j0yLxSD1dAon3Kfifk7xd9PCokxjBxv7RlSul4VhBj4P931K16Zkf+Kxi+l/dLMVS856Y6RK5WVJEIV0nM6WHprGKnMIPJl9PU7wJphaAKAnkCsKHUXLNQXdrQHkZQCkSeybNcivBEa7P+i3I/RF1TmpqMyAyMGC+qhmFGZrj3OwvyPBrfPsf3042nZ2TQusEQ7vaRkCfcWPhiaVzOzSYTSo24N7IkFvKIDxkbMOd20Zto/UUxbBDb0ZNGG8gwIVmOClSshamlpdpBeJxJCN5C5ZPn3IT9E4GEmleFfkLggyMh340mmP4Om0tcB6Yh40SxJv2QPG5SL/6QjlA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(7916004)(4636009)(136003)(346002)(376002)(396003)(366004)(39860400002)(66946007)(66476007)(5660300002)(7416002)(316002)(478600001)(6486002)(16576012)(66556008)(2906002)(966005)(103116003)(83380400001)(86362001)(9686003)(8936002)(16526019)(8676002)(26005)(186003)(956004)(52116002)(44832011)(33716001)(4326008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: OJ0GuR6bzZ5o6FP42qp8++iFrNaMVt3RnGkf6EW7/daRy4dQ8fCc7DbSwAW7LPhXqOQ61/EaYX28Ibn99oRKv2TdlsUsVuMg+xwBEGELKiSzayKNEeReyYodNwhyAtl2DteJK8FlQgahDCsgNBGG9xQFWRglnFJX8BUZiXQPm0O/MD5vmtCYn5HcHQuCdABGfjY08BG36+6YqGuj0soMcLRiBZc6xPtN9bUH3G+439Clu3FjfZ4IKiKVmOq6aa0fGZFikblNhyRT0yVxvWjuYrxxApsNo2ONZ4Zrx+NrfVAqViIZasLUHmSY0K531/2g/ByDvReY3ukqUHVLokYHBErxsuyFOyf0FszVKJh/ExmtE/xBH2LBlVSwoopWukcinfXc3T/MAyav9o0mak9A3obuTHWjwM442dXPrbK+mE5jv2g2JZu4JnQmozsSPt+mw75B9u90b5IcJrmQgerG9Ejd14LsEGdpZOBXpAkWcoOC9i0OeEsNEmZ2KE3vn9vEzMfenz5Abao1/WpYs5rjJBIFG5ty1KihQLEmvPV1ROOdhOk1OGlA3LQZC0pmwaWMhfrflhAHv9KTM1H8/sgJzG0hGpCrn92EruD7BPV1Cl8kjl7mRYKouav+h0Tpovm1927W/S7lx3mfdvrmDEByjw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f19c04f-f863-4ffb-995a-08d8334f6763
-X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2560.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2020 23:39:00.5457
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IAVesXP+/gulItCb3E4GawjwXC4O9FUMVqlmmhMdCwIlURF7TO8U4cP/1zL9c84h
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2559
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <202007290112.32007.pisa@cmp.felk.cvut.cz>
+X-FELK-MailScanner-Information: 
+X-MailScanner-ID: 06SNCXiI022851
+X-FELK-MailScanner: Found to be clean
+X-FELK-MailScanner-SpamCheck: not spam, SpamAssassin (not cached,
+        score=-1.328, required 6, autolearn=not spam, BAYES_00 -0.50,
+        KHOP_HELO_FCRDNS 0.12, NICE_REPLY_A -0.95, SPF_HELO_NONE 0.00,
+        SPF_NONE 0.00)
+X-FELK-MailScanner-From: pisa@cmp.felk.cvut.cz
+X-FELK-MailScanner-Watermark: 1596582754.89795@XM9drRIrFDItwaXL8PMKQQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following intercept bit has been added to support VMEXIT
-for INVPCID instruction:
-Code    Name            Cause
-A2h     VMEXIT_INVPCID  INVPCID instruction
+Hello Rob,
 
-The following bit has been added to the VMCB layout control area
-to control intercept of INVPCID:
-Byte Offset     Bit(s)    Function
-14h             2         intercept INVPCID
+On Saturday 04 of January 2020 00:53:59 Rob Herring wrote:
+> On Sat, Dec 21, 2019 at 03:07:31PM +0100, pisa@cmp.felk.cvut.cz wrote:
+> > From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+> >
+> > Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+> > ---
+> >  .../devicetree/bindings/net/can/ctu,ctucanfd.txt   | 61
+> > ++++++++++++++++++++++ 1 file changed, 61 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt
+>
+> Bindings are moving DT schema format now. Not something I'd require on a
+> respin I've already reviewed, but OTOH it's been 10 months to respin
+> from v2. So:
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> If you have a v4, then please convert to a schema.
 
-Enable the interceptions when the the guest is running with shadow
-page table enabled and handle the tlbflush based on the invpcid
-instruction type.
+The first, thanks much for Device-tree part review, it is only
+one received from relevant person for last six months.
+So I have wait update for v4 patches and focused on teaching
+forced to be distance one
+  https://cw.fel.cvut.cz/wiki/courses/b35apo/lectures/start
+another part of the CTU CAN FD project.
 
-For the guests with nested page table (NPT) support, the INVPCID
-feature works as running it natively. KVM does not need to do any
-special handling in this case.
+QEMU emulation for the CTU CAN FD IP core
+is result of Jan Charvat's bachelor thesis led by me.
+The patches are waiting for QEMU developers review
 
-AMD documentation for INVPCID feature is available at "AMD64
-Architecture Programmer’s Manual Volume 2: System Programming,
-Pub. 24593 Rev. 3.34(or later)"
+  https://lists.nongnu.org/archive/html/qemu-devel/2020-07/msg04653.html
 
-The documentation can be obtained at the links below:
-Link: https://www.amd.com/system/files/TechDocs/24593.pdf
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+The other people have significant interrest in our project,
+Oliver Hartkopp, CAN in Automation representatives etc.
 
-Signed-off-by: Babu Moger <babu.moger@amd.com>
+https://can-newsletter.org/hardware/semiconductors/200609_open-source-ip-core-compliant-with-iso-can-fd_ctu/
+
+https://can-newsletter.org/hardware/semiconductors/181121_can-fd-core-as-an-open-project_university
+
+Project is integrated into complex CAN LIN etc.. tester build for Skoda Auto based on Intel SoC as well.
+
+I am trying to resolve that only one review feedback which I have received before v4
+patches sending. I have spent half day to update and integrate self build packages
+to my stable Debian to can run
+
+   make -k dt_binding_check
+
+but unfortunately, I have not achieved promissing result even when tested on Linux kernel
+unpatched sources. I used actual git dt-schema/dt-doc-validate with 5.4 kernel
+build but I get only long series of
+
+pi@baree:/usr/src/linux-5.4-rt/_build/arm/px6$ make dt_binding_check -k
+GNUmakefile:40: *** mixed implicit and normal rules: deprecated syntax
+make -C /usr/src/linux-5.4-rt O=/usr/src/linux-5.4-rt/_build/arm/px6/ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- QTDIR=/usr/share/qt4 dt_binding_check
+  CHKDT   Documentation/devicetree/bindings/arm/actions.yaml
+/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/arm/actions.yaml:  found incompatible YAML document
+  in "<unicode string>", line 2, column 1
+make[3]: *** [/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/Makefile:12: Documentation/devicetree/bindings/arm/actions.example.dts] Error 1
+  CHKDT   Documentation/devicetree/bindings/arm/al,alpine.yaml
+/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/arm/al,alpine.yaml:  found incompatible YAML document
+  in "<unicode string>", line 2, column 1
+make[3]: *** [/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/Makefile:12: Documentation/devicetree/bindings/arm/al,alpine.example.dts] Error 1
+  CHKDT   Documentation/devicetree/bindings/arm/altera.yaml
+/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/arm/altera.yaml:  found incompatible YAML document
+  in "<unicode string>", line 2, column 1
+make[3]: *** [/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/Makefile:12: Documentation/devicetree/bindings/arm/altera.example.dts] Error 1
+  CHKDT   Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
+/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml:  found incompatible YAML document
+  in "<unicode string>", line 2, column 1
+make[3]: *** [/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/Makefile:12: Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.example.dts] Error 1
+  CHKDT   Documentation/devicetree/bindings/arm/amlogic.yaml
+
+The same for ctu,ctucanfd.yam .
+Please, if you have working setup, test if the followup content of
+Documentation/devicetree/bindings/net/can/ctu,ctucanfd.yaml
+is acceptable
+
+Thanks in advance,
+
+Pavel
+
+# SPDX-License-Identifier: GPL-2.0
+%YAML 1.2
 ---
- arch/x86/include/uapi/asm/svm.h |    2 +
- arch/x86/kvm/svm/svm.c          |   64 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 66 insertions(+)
+$id: http://devicetree.org/schemas/net/can/ctu,ctucanfd.yaml#
+$schema: http://devicetree.org/meta-schemas/core.yaml#
 
-diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
-index 2e8a30f06c74..522d42dfc28c 100644
---- a/arch/x86/include/uapi/asm/svm.h
-+++ b/arch/x86/include/uapi/asm/svm.h
-@@ -76,6 +76,7 @@
- #define SVM_EXIT_MWAIT_COND    0x08c
- #define SVM_EXIT_XSETBV        0x08d
- #define SVM_EXIT_RDPRU         0x08e
-+#define SVM_EXIT_INVPCID       0x0a2
- #define SVM_EXIT_NPF           0x400
- #define SVM_EXIT_AVIC_INCOMPLETE_IPI		0x401
- #define SVM_EXIT_AVIC_UNACCELERATED_ACCESS	0x402
-@@ -171,6 +172,7 @@
- 	{ SVM_EXIT_MONITOR,     "monitor" }, \
- 	{ SVM_EXIT_MWAIT,       "mwait" }, \
- 	{ SVM_EXIT_XSETBV,      "xsetbv" }, \
-+	{ SVM_EXIT_INVPCID,     "invpcid" }, \
- 	{ SVM_EXIT_NPF,         "npf" }, \
- 	{ SVM_EXIT_AVIC_INCOMPLETE_IPI,		"avic_incomplete_ipi" }, \
- 	{ SVM_EXIT_AVIC_UNACCELERATED_ACCESS,   "avic_unaccelerated_access" }, \
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 99cc9c285fe6..6b099e0b28c0 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -813,6 +813,11 @@ static __init void svm_set_cpu_caps(void)
- 	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
- 	    boot_cpu_has(X86_FEATURE_AMD_SSBD))
- 		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
-+
-+	/* Enable INVPCID if both PCID and INVPCID enabled */
-+	if (boot_cpu_has(X86_FEATURE_PCID) &&
-+	    boot_cpu_has(X86_FEATURE_INVPCID))
-+		kvm_cpu_cap_set(X86_FEATURE_INVPCID);
- }
- 
- static __init int svm_hardware_setup(void)
-@@ -1099,6 +1104,18 @@ static void init_vmcb(struct vcpu_svm *svm)
- 		clr_intercept(svm, INTERCEPT_PAUSE);
- 	}
- 
-+	/*
-+	 * Intercept INVPCID instruction only if shadow page table is
-+	 * enabled. Interception is not required with nested page table
-+	 * enabled.
-+	 */
-+	if (boot_cpu_has(X86_FEATURE_INVPCID)) {
-+		if (!npt_enabled)
-+			set_intercept(svm, INTERCEPT_INVPCID);
-+		else
-+			clr_intercept(svm, INTERCEPT_INVPCID);
-+	}
-+
- 	if (kvm_vcpu_apicv_active(&svm->vcpu))
- 		avic_init_vmcb(svm);
- 
-@@ -2715,6 +2732,43 @@ static int mwait_interception(struct vcpu_svm *svm)
- 	return nop_interception(svm);
- }
- 
-+static int invpcid_interception(struct vcpu_svm *svm)
-+{
-+	struct kvm_vcpu *vcpu = &svm->vcpu;
-+	struct x86_exception e;
-+	unsigned long type;
-+	gva_t gva;
-+	struct {
-+		u64 pcid;
-+		u64 gla;
-+	} operand;
-+
-+	if (!guest_cpuid_has(vcpu, X86_FEATURE_INVPCID)) {
-+		kvm_queue_exception(vcpu, UD_VECTOR);
-+		return 1;
-+	}
-+
-+	/*
-+	 * For an INVPCID intercept:
-+	 * EXITINFO1 provides the linear address of the memory operand.
-+	 * EXITINFO2 provides the contents of the register operand.
-+	 */
-+	type = svm->vmcb->control.exit_info_2;
-+	gva = svm->vmcb->control.exit_info_1;
-+
-+	if (type > 3) {
-+		kvm_inject_gp(vcpu, 0);
-+		return 1;
-+	}
-+
-+	if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
-+		kvm_inject_emulated_page_fault(vcpu, &e);
-+		return 1;
-+	}
-+
-+	return kvm_handle_invpcid(vcpu, type, operand.pcid, operand.gla);
-+}
-+
- static int (*const svm_exit_handlers[])(struct vcpu_svm *svm) = {
- 	[SVM_EXIT_READ_CR0]			= cr_interception,
- 	[SVM_EXIT_READ_CR3]			= cr_interception,
-@@ -2777,6 +2831,7 @@ static int (*const svm_exit_handlers[])(struct vcpu_svm *svm) = {
- 	[SVM_EXIT_MWAIT]			= mwait_interception,
- 	[SVM_EXIT_XSETBV]			= xsetbv_interception,
- 	[SVM_EXIT_RDPRU]			= rdpru_interception,
-+	[SVM_EXIT_INVPCID]                      = invpcid_interception,
- 	[SVM_EXIT_NPF]				= npf_interception,
- 	[SVM_EXIT_RSM]                          = rsm_interception,
- 	[SVM_EXIT_AVIC_INCOMPLETE_IPI]		= avic_incomplete_ipi_interception,
-@@ -3562,6 +3617,15 @@ static void svm_cpuid_update(struct kvm_vcpu *vcpu)
- 	svm->nrips_enabled = kvm_cpu_cap_has(X86_FEATURE_NRIPS) &&
- 			     guest_cpuid_has(&svm->vcpu, X86_FEATURE_NRIPS);
- 
-+	/* Check again if INVPCID interception if required */
-+	if (boot_cpu_has(X86_FEATURE_INVPCID) &&
-+	    guest_cpuid_has(vcpu, X86_FEATURE_INVPCID)) {
-+		if (!npt_enabled)
-+			set_intercept(svm, INTERCEPT_INVPCID);
-+		else
-+			clr_intercept(svm, INTERCEPT_INVPCID);
-+	}
-+
- 	if (!kvm_vcpu_apicv_active(vcpu))
- 		return;
- 
+title: CTU CAN FD Open-source IP Core Device Tree Bindings
 
+description: |
+  Open-source CAN FD IP core developed at the Czech Technical University in Prague
+
+  The core sources and documentation on project page
+    [1] sources : https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core
+    [2] datasheet : https://canbus.pages.fel.cvut.cz/ctucanfd_ip_core/Progdokum.pdf
+
+  Integration in Xilinx Zynq SoC based system together with
+  OpenCores SJA1000 compatible controllers
+    [3] project : https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top
+  Martin Jerabek dimploma thesis with integration and testing
+  framework description
+    [4] PDF : https://dspace.cvut.cz/bitstream/handle/10467/80366/F3-DP-2019-Jerabek-Martin-Jerabek-thesis-2019-canfd.pdf
+
+maintainers:
+  - Pavel Pisa <pisa@cmp.felk.cvut.cz>
+  - Ondrej Ille <ondrej.ille@gmail.com>
+  - Martin Jerabek <martin.jerabek01@gmail.com>
+
+properties:
+  compatible:
+    oneOf:
+      - items:
+          - const: ctu,ctucanfd
+          - const: ctu,canfd-2
+      - const: ctu,ctucanfd
+
+  reg:
+    description:
+      mapping into bus address space, offset and size
+    maxItems: 1
+
+  interrupts:
+    description: |
+      interrupt source. For Zynq SoC system, format is <(is_spi) (number) (type)>
+      where is_spi defines if it is SPI (shared peripheral) interrupt,
+      the second number is translated to the vector by addition of 32
+      on Zynq-7000 systems and type is IRQ_TYPE_LEVEL_HIGH (4) for Zynq.
+    maxItems: 1
+
+  clocks:
+    description: |
+      phandle of reference clock (100 MHz is appropriate
+      for FPGA implementation on Zynq-7000 system).
+    maxItems: 1
+
+required:
+  - compatible
+  - reg
+  - interrupts
+  - clocks
+
+additionalProperties: false
+
+examples:
+  - |
+    ctu_can_fd_0: can@43c30000 {
+      compatible = "ctu,ctucanfd";
+      interrupts = <0 30 4>;
+      clocks = <&clkc 15>;
+      reg = <0x43c30000 0x10000>;
+    };
