@@ -2,153 +2,194 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB145C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854C6C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A028220759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BBD20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="WVUelUyz";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Y3fhRrKc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="ASOVaySf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726288AbgG1EBb (ORCPT
+        id S1726407AbgG1EIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 00:01:31 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:48386 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725919AbgG1EBa (ORCPT
+        Tue, 28 Jul 2020 00:08:22 -0400
+Received: from [115.28.160.31] ([115.28.160.31]:54742 "EHLO
+        mailbox.box.xen0n.name" rhost-flags-FAIL-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1726004AbgG1EIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 00:01:30 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Tue, 28 Jul 2020 00:08:21 -0400
+Received: from hanazono.local (unknown [116.236.177.53])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id DF6E3C00AD;
-        Tue, 28 Jul 2020 04:01:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1595908889; bh=zQi761jxVlYMdQqahia57ddps2ro+pWMcrzduDqKrpc=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=WVUelUyzA5FdT2EatuXhrUrPuXqG04mAzF0TeMfceHfiEbAS7RzgqZ3CAHE81s2Uo
-         2E1hQFylvKHBEm7RxZqWNlVanKF/7Jvmg5GG7tCR2oH0DnobptKqTCUlMlUQsa30KC
-         jQBiA4hZLrJ93evUSe2IRYIY8QjVIFFVn4DOezmRtWSud9twGhO1ZDn3uxZv3nO2DG
-         wDNiftGQb2ANfmjcWUirxxcRy4jnJ9QBKC9H7yWSe2BQ6/VmCFtW8qBJl+l4GZw61r
-         wjNnA86wFVNbTu8yotiWF13yAXCxcuvJMbwUPoRy3mwQQ44o/g4DZsa51jBl+qiT5R
-         C2lLv4WDIJGYQ==
-Received: from o365relay-in.synopsys.com (us03-o365relay1.synopsys.com [10.4.161.137])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 0E0E5A0071;
-        Tue, 28 Jul 2020 04:01:28 +0000 (UTC)
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2168.outbound.protection.outlook.com [104.47.59.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
-        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 822BB800D0;
-        Tue, 28 Jul 2020 04:01:26 +0000 (UTC)
-Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=vgupta@synopsys.com
-Authentication-Results: o365relay-in.synopsys.com;
-        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="Y3fhRrKc";
-        dkim-atps=neutral
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nLoe3bpyI92E6zNBFhflYg46bKYg7MOaBqnfDhnY6xq5nDG0YAqqs+vZzfpuVXn4uHjFRxN1PCLJiHKCLxmi/IZlQmGWe2j3GGgg1V5C4HV6LjK7mxsC4Cc7jjd92/ZXVhTF0w4st7ENQ68FhQiLdXLLhsE+xV0VLV72UjaPYXuzJ59NuauiqPeVFm3fYvUlnCa1LvkbxAfidgVjUNzot1Tdsp1VKgkE9dfkG+87nbHV91OZutduMGH1b+oIfiy44XBrkJ8tPVuIFJX/T6i8mZSF2u8Tkp73qYC0Lr+XsQgoUZVoczGlm9MNLwFIcKitET/zWDLHPmr+LGat6VjQyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zQi761jxVlYMdQqahia57ddps2ro+pWMcrzduDqKrpc=;
- b=MNuuS47K0l0pl9lCJsyA7J9Rcio2HH5ZowlPv/lfr+U+SMUdvzgRkUScXzd92MilARH5U7D9hPTjFLxzsHxUMBsKGbe+Wsv9LGyfZc323lndQfn/VXwlheSqMcqGHhBRJPynMZEwzJZYBLZVd5UtqlTO+BjaA/iC7ZsskQ8BWMudPbLEKNACLirMhe6LY3zNGcoq9dDRBcHg+PuIGksvB2E6AQetmk3EhRELhYtVke/cGnRqlcwQk7S6uh1fhp8t4vZIhRGsQbjH2CTOL5bmJzEDRT7nQE6FqKi8VvVW8nsttKEDuIvwW7GvvKbtUE2QR0HXg+7fkXfLXClOOIL+rg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zQi761jxVlYMdQqahia57ddps2ro+pWMcrzduDqKrpc=;
- b=Y3fhRrKcVrZBeoEwxsugE/kcsHjh7h2mc9Y+uLmwsgLDIxd+3FcIt/EU0CQY54kAdZUzulV+m7mJwO4iuWDLQrCemj5ei84r6uniELdeWfbuhjGFLSYJTPkebcUGcwGAXA0E78ipEKLveTYf81QW4HkJANMcNXza8K0ZFodkRtQ=
-Received: from BYAPR12MB3479.namprd12.prod.outlook.com (2603:10b6:a03:dc::26)
- by BYAPR12MB3206.namprd12.prod.outlook.com (2603:10b6:a03:130::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.28; Tue, 28 Jul
- 2020 04:01:24 +0000
-Received: from BYAPR12MB3479.namprd12.prod.outlook.com
- ([fe80::3d4f:7ae8:8767:75a4]) by BYAPR12MB3479.namprd12.prod.outlook.com
- ([fe80::3d4f:7ae8:8767:75a4%7]) with mapi id 15.20.3216.034; Tue, 28 Jul 2020
- 04:01:24 +0000
-X-SNPS-Relay: synopsys.com
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Nicholas Piggin <npiggin@gmail.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 01/24] asm-generic: add generic versions of mmu context
- functions
-Thread-Topic: [PATCH 01/24] asm-generic: add generic versions of mmu context
- functions
-Thread-Index: AQHWZJPCLUlaSDgrc0ehlB1MGFmAIg==
-Date:   Tue, 28 Jul 2020 04:01:24 +0000
-Message-ID: <12ac3789-71a5-2756-6a9e-769302c7b3c6@synopsys.com>
-References: <20200728033405.78469-1-npiggin@gmail.com>
- <20200728033405.78469-2-npiggin@gmail.com>
-In-Reply-To: <20200728033405.78469-2-npiggin@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=synopsys.com;
-x-originating-ip: [73.222.250.45]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e2f48786-622e-4899-25a9-08d832aae54b
-x-ms-traffictypediagnostic: BYAPR12MB3206:
-x-microsoft-antispam-prvs: <BYAPR12MB320665CBFC16D00FA3F30CB3B6730@BYAPR12MB3206.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KXLPyvgUgZw0BJPKNBXWjPWGHsCXnfCdfLrxsKDkPSCZQwydQJXGfoSaNjsP2Jw/ZErR90vDV/Zj/Blzd4W3WCyw8z51/9bUL68/s/pDCcY5UAP4lAu1xiF9kzbFB5v3lKO8v6R3MSlfX+Rvofz/PvC0DNNdwlpy7KWmiuBpzVlwEVXKElTUhxX0/YJaK1G6yI/PYr9vH1S+KAoxCvCfn+1j4g7jrBQ+m8vpfza70MFCfIE3PTGfGPoVKHEc5oh1/M1klDPNc4+jSF+D/OevMrvphmBjjNCcrXI/lIrvS4jCZUabN9UodmE1r1qgPQnFI81rfQt8TBdDQE7hTFc3aDZ1ISMl2F+jzuY9CtEPvhXHxo4iV9wErtIDWqdFXLU3XOjQ+laM+Kzogwnfq1rWsw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3479.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(346002)(396003)(136003)(39860400002)(4744005)(110136005)(66446008)(2616005)(54906003)(6512007)(76116006)(83380400001)(64756008)(66946007)(66556008)(316002)(66476007)(186003)(478600001)(8676002)(26005)(4326008)(71200400001)(53546011)(6506007)(5660300002)(8936002)(36756003)(31696002)(31686004)(6486002)(86362001)(2906002)(41533002)(43740500002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: kJbd+8NxtGsQpGyqbrcW42o2imqHi4hS9Js5dR8pWAC9dG8C9N6J+amVyIiU0Dy5gnPTQ7tw/e5UzbpskcBpWoM/yGvkrGvoM+WDxd0Gv0qVgq1KFNZTK4oZkH2EYclk01tlGfCApN61a9+QxZOYbti1Sy3riTzGoFvyqcUNWCD9T22bDsD/wjgc1zK6zSbjjKKoXJAXmCtHrGB8P0sRJShzn4FRxYuugpbCEhONJKEn6eAlH63HN7DRVGqQHVsVErVLDutQdt4q/OQTtjDANVDwc4O4uYAAQ8IFtfnaJTIGAe81GMArICLmCwQfymBlsbAVAoDH7oLXc7m8qN/3ZPJzsgpWHEJkI+xizJVvdD7D1iPJXvZsRy4mDGlbzxpGW6cNfKYqa234Xk4dN3HutMTOLNL7WeAeGP0abMvnWqxarcW6UNYBmmm2TDKZF7E5Sf7iGFBzp2LJ3emhiMgBVgz3SJb5+O/GWtfDX7ff9u4=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6B282E90BF3D1C4B9CB1389407D1C8EE@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 5BEBF6006D;
+        Tue, 28 Jul 2020 12:08:12 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=xen0n.name; s=mail;
+        t=1595909292; bh=7sU+b2S5OQeF51fBW5K0xFQWC95f2Va54OtBp2iiUT0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ASOVaySfrnbNQNSf6P2yQu7oteymYDCChKRnXURc05Td9jut3RI28PEHnB6lGLGEB
+         SdYAN4AeDs1LPBYioJT9e8seGa9b+jyrazqi/Nq4/Kcyqcvrw1HiCKHbpLqlTzC9wu
+         P2EYUkAeg0n09nVgq/K7iSYvyIGoTKiMJ1/GmY1I=
+Subject: Re: [PATCH v3 2/5] MIPS: Loongson64: Process ISA Node in DeviceTree
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200725014529.1143208-1-jiaxun.yang@flygoat.com>
+ <20200725014529.1143208-3-jiaxun.yang@flygoat.com>
+From:   WANG Xuerui <kernel@xen0n.name>
+Message-ID: <b239011a-d946-17b8-3d29-995f1158d0bf@xen0n.name>
+Date:   Tue, 28 Jul 2020 12:08:11 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:80.0)
+ Gecko/20100101 Thunderbird/80.0a1
 MIME-Version: 1.0
-X-OriginatorOrg: synopsys.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3479.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2f48786-622e-4899-25a9-08d832aae54b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2020 04:01:24.4902
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FqI1Uv44Tc7iUWnt7rJycds5Cj+OZGYoc4V5tf3vmoMxcbrhPgZQWQUMMbjQmIf5fZTbNZKESpMMpf5saTHcZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3206
+In-Reply-To: <20200725014529.1143208-3-jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNy8yNy8yMCA4OjMzIFBNLCBOaWNob2xhcyBQaWdnaW4gd3JvdGU6DQo+IE1hbnkgb2YgdGhl
-c2UgYXJlIG5vLW9wcyBvbiBtYW55IGFyY2hpdGVjdHVyZXMsIHNvIGV4dGVuZCBtbXVfY29udGV4
-dC5oDQo+IHRvIGNvdmVyIE1NVSBhbmQgTk9NTVUsIGFuZCBzcGxpdCB0aGUgTk9NTVUgYml0cyBv
-dXQgdG8gbm9tbXVfY29udGV4dC5oDQo+IA0KDQo+IC1zdGF0aWMgaW5saW5lIHZvaWQgc3dpdGNo
-X21tKHN0cnVjdCBtbV9zdHJ1Y3QgKnByZXYsDQo+IC0JCQlzdHJ1Y3QgbW1fc3RydWN0ICpuZXh0
-LA0KPiAtCQkJc3RydWN0IHRhc2tfc3RydWN0ICp0c2spDQo+ICsvKioNCj4gKyAqIGFjdGl2YXRl
-X21tIC0gY2FsbGVkIGFmdGVyIGV4ZWMgc3dpdGNoZXMgdGhlIGN1cnJlbnQgdGFzayB0byBhIG5l
-dyBtbSwgdG8gc3dpdGNoIHRvIGl0DQo+ICsgKiBAcHJldl9tbTogcHJldmlvdXMgbW0gb2YgdGhp
-cyB0YXNrDQo+ICsgKiBAbmV4dF9tbTogbmV3IG1tDQo+ICsgKi8NCj4gKyNpZm5kZWYgYWN0aXZh
-dGVfbW0NCj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBhY3RpdmF0ZV9tbShzdHJ1Y3QgbW1fc3RydWN0
-ICpwcmV2X21tLA0KPiArCQkJICAgICAgIHN0cnVjdCBtbV9zdHJ1Y3QgKm5leHRfbW0pDQo+ICB7
-DQo+ICsJc3dpdGNoX21tKHByZXZfbW0sIG5leHRfbW0sIGN1cnJlbnQpOw0KPiAgfQ0KPiArI2Vu
-ZGlmDQoNCklzIGFjdGl2YXRlX21tKCkgcmVhbGx5IG5lZWRlZCBub3cuIEl0IHNlZW1zIG1vc3Qg
-YXJjaGVzIGhhdmUNCiAgIGFjdGl2YXRlX21tKHAsIG4pIC0+IHN3aXRjaF9tbShwLCBuLCBOVUxM
-KQ0KDQpBbmQgaWYgd2UgYXJlIHBhc3NpbmcgY3VycmVudCwgdGhhdCBjYW4gYmUgcHVzaGVkIGlu
-c2lkZSBzd2l0Y2hfbW0oKQ0KDQo+ICANCj4gLXN0YXRpYyBpbmxpbmUgdm9pZCBhY3RpdmF0ZV9t
-bShzdHJ1Y3QgbW1fc3RydWN0ICpwcmV2X21tLA0KPiAtCQkJICAgICAgIHN0cnVjdCBtbV9zdHJ1
-Y3QgKm5leHRfbW0pDQo=
+Hi Jiaxun,
+
+
+On 2020/7/25 09:45, Jiaxun Yang wrote:
+> Previously, we're hardcoding resserved ISA I/O Space in code, now
+"reserved"; also "in code" seems redundant (we're "hard-coding", aren't we?)
+> we're processing reverved I/O via DeviceTree directly. Using the ranges
+another "reserved" typo, but better restructure the whole clause.
+> property to determine the size and address of reserved I/O space.
+This sentence has no verb. Maybe you mean "Use"?
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> --
+> v2: Use range_parser instead of pci_range_parser
+> ---
+>  arch/mips/loongson64/init.c | 87 ++++++++++++++++++++++++++-----------
+>  1 file changed, 62 insertions(+), 25 deletions(-)
+>
+> diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
+> index 59ddadace83f..8ba22c30f312 100644
+> --- a/arch/mips/loongson64/init.c
+> +++ b/arch/mips/loongson64/init.c
+> @@ -7,6 +7,8 @@
+>  #include <linux/irqchip.h>
+>  #include <linux/logic_pio.h>
+>  #include <linux/memblock.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+>  #include <asm/bootinfo.h>
+>  #include <asm/traps.h>
+>  #include <asm/smp-ops.h>
+> @@ -63,41 +65,76 @@ void __init prom_free_prom_memory(void)
+>  {
+>  }
+>  
+> -static __init void reserve_pio_range(void)
+> +static int __init add_legacy_isa_io(struct fwnode_handle *fwnode, resource_size_t hw_start,
+> +				    resource_size_t size)
+>  {
+> +	int ret = 0;
+>  	struct logic_pio_hwaddr *range;
+> +	unsigned long vaddr;
+>  
+>  	range = kzalloc(sizeof(*range), GFP_ATOMIC);
+>  	if (!range)
+> -		return;
+> +		return -ENOMEM;
+>  
+> -	range->fwnode = &of_root->fwnode;
+> -	range->size = MMIO_LOWER_RESERVED;
+> -	range->hw_start = LOONGSON_PCIIO_BASE;
+> +	range->fwnode = fwnode;
+> +	range->size = size;
+> +	range->hw_start = hw_start;
+>  	range->flags = LOGIC_PIO_CPU_MMIO;
+>  
+> -	if (logic_pio_register_range(range)) {
+> -		pr_err("Failed to reserve PIO range for legacy ISA\n");
+> -		goto free_range;
+> +	ret = logic_pio_register_range(range);
+> +	if (ret) {
+> +		kfree(range);
+> +		return ret;
+> +	}
+> +
+> +	/* Legacy ISA must placed at the start of PCI_IOBASE */
+> +	if (range->io_start != 0) {
+> +		logic_pio_unregister_range(range);
+> +		kfree(range);
+> +		return -EINVAL;
+>  	}
+>  
+> -	if (WARN(range->io_start != 0,
+> -			"Reserved PIO range does not start from 0\n"))
+> -		goto unregister;
+> -
+> -	/*
+> -	 * i8259 would access I/O space, so mapping must be done here.
+> -	 * Please remove it when all drivers can be managed by logic_pio.
+> -	 */
+> -	ioremap_page_range(PCI_IOBASE, PCI_IOBASE + MMIO_LOWER_RESERVED,
+> -				LOONGSON_PCIIO_BASE,
+> -				pgprot_device(PAGE_KERNEL));
+> -
+> -	return;
+> -unregister:
+> -	logic_pio_unregister_range(range);
+> -free_range:
+> -	kfree(range);
+> +	vaddr = PCI_IOBASE + range->io_start;
+> +
+> +	ioremap_page_range(vaddr, vaddr + size, hw_start, pgprot_device(PAGE_KERNEL));
+> +
+> +	return 0;
+> +}
+> +
+> +static __init void reserve_pio_range(void)
+> +{
+> +	struct device_node *np;
+> +
+> +	for_each_node_by_name(np, "isa") {
+> +		struct of_range range;
+> +		struct of_range_parser parser;
+> +
+> +		pr_info("ISA Bridge: %pOF\n", np);
+> +
+> +		if (of_range_parser_init(&parser, np)) {
+> +			pr_info("Failed to parse resources.\n");
+> +			break;
+> +		}
+> +
+> +		for_each_of_range(&parser, &range) {
+> +			switch (range.flags & IORESOURCE_TYPE_BITS) {
+> +			case IORESOURCE_IO:
+> +				pr_info(" IO 0x%016llx..0x%016llx  ->  0x%016llx\n",
+> +					range.cpu_addr,
+> +					range.cpu_addr + range.size - 1,
+> +					range.bus_addr);
+> +				if (add_legacy_isa_io(&np->fwnode, range.cpu_addr, range.size))
+> +					pr_warn("Failed to reserve legacy IO in Logic PIO\n");
+> +				break;
+> +			case IORESOURCE_MEM:
+> +				pr_info(" MEM 0x%016llx..0x%016llx  ->  0x%016llx\n",
+> +					range.cpu_addr,
+> +					range.cpu_addr + range.size - 1,
+> +					range.bus_addr);
+> +				break;
+> +			}
+> +		}
+> +	}
+>  }
+>  
+>  void __init arch_init_irq(void)
