@@ -2,214 +2,210 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA230C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED02C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 964432053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:58:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dE7J+3Xf"
+	by mail.kernel.org (Postfix) with ESMTP id 8F1322074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:54:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595951655;
+	bh=geGOpmuJBayngowsjLPNX2sbYfZomv1ccf9LWNqVwKM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TIbsh7QMDKEOOz5rm+E6oPnFmhUszE8M+TDoz6TSU6urYt3EA984EQ+GMQoo8EgD3
+	 bgm5PdFFYsbOEtH+/V+TA4LRoStQIV0hXIHn4cUzmBWEbCvE0xGH3kp916qea7abow
+	 ud8KdqwOvnDcqxIBcI/bEowInmse6mFSNzsuggwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731140AbgG1P6Q (ORCPT
+        id S1731174AbgG1PyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:58:16 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7919 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730679AbgG1P6Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:58:16 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f204abc0000>; Tue, 28 Jul 2020 08:56:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 28 Jul 2020 08:58:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 28 Jul 2020 08:58:15 -0700
-Received: from [10.2.168.236] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jul
- 2020 15:58:14 +0000
-Subject: Re: [RFC PATCH v5 12/14] gpu: host1x: mipi: Keep MIPI clock enabled
- till calibration is done
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>
-References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
- <1595883452-17343-13-git-send-email-skomatineni@nvidia.com>
- <b21e3227-d0d8-5b4a-ae69-aa29551a22c3@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <69903c67-8e5f-11c2-45ec-c76b97634aba@nvidia.com>
-Date:   Tue, 28 Jul 2020 09:04:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 11:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731164AbgG1PyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:54:14 -0400
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62C6D20809;
+        Tue, 28 Jul 2020 15:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595951653;
+        bh=geGOpmuJBayngowsjLPNX2sbYfZomv1ccf9LWNqVwKM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=En2lNNu0u7wbRApCKOaffuq6dP9kx4/IPMKFXpxUTW+HRDP84Fv0Pu2Rw8DCVsS6/
+         O4dZZP49UyoGnI0XeoWRDYWIr8ksIoMdMMFBa0A6CiJQTUVBiy54CRPFJ1GBdRsZkz
+         +oARxSml34pPR4hJaCztC+/w4pZJ3u3ptx2tn3lk=
+Received: by mail-ot1-f43.google.com with SMTP id h1so15201141otq.12;
+        Tue, 28 Jul 2020 08:54:13 -0700 (PDT)
+X-Gm-Message-State: AOAM5306GGPyMXRYKis696z7sWDMtgO2gHkpg0hzg12IdlBAWtpQ+byI
+        zg6BwUaKyKafGRttnRJ9tDWQ8lnfOUSv9pnSiA==
+X-Google-Smtp-Source: ABdhPJx82k8TTvlFZONBnoZqE1yfGmt/Rj673jv6bffnQQRS5e4kUUr99MautRkzOYsWD25L09MzQ/hMWZDy0tuxnvw=
+X-Received: by 2002:a9d:46c:: with SMTP id 99mr25143787otc.192.1595951652672;
+ Tue, 28 Jul 2020 08:54:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b21e3227-d0d8-5b4a-ae69-aa29551a22c3@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595951804; bh=E9qcfOyB0qnDCOefOIeVTiKpwMclMLjRTPcAat91+Sc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=dE7J+3XfJ4cU+YTt6Cn8RnnadhwlC+HXdoGiaiDQbr6vbHSk7yyen9Slpi3VpIBWw
-         4DG/o/HGEmkDEbCikU7kWE9As3Sge+6aCV6tx0mtEFc5hcjPX3m5FdtqXjqq9QzunQ
-         /PZwjV3ZBqVnIYvZy8rfvXbNCAA0dyiUtzwQo6enoA6wJMBvXMzc0c7hQEWD5JR56M
-         oaqxc4TEvWW8lHritYGCk/NZ35HE8twWuTgg1tz6aSwrXU+6FqXkWcgDBlv2i/9N4d
-         zVW0doE8JwFSATCjG9xaA04SGjaTv/R/veXHj/S+/2cPkUsT13/W80JYg4squz/DTJ
-         F8IaQ/nnYzb0Q==
+References: <1595776013-12877-1-git-send-email-sivaprak@qti.qualcomm.com> <CAL_Jsq+-rwG73mEkYmMQcnxHoBpbFMWHKDvzUK=6-fMAo77-9w@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+-rwG73mEkYmMQcnxHoBpbFMWHKDvzUK=6-fMAo77-9w@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 28 Jul 2020 09:54:00 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJU81U5CNSia3Lrzwb2VpPy3YMK=tJfXgU49TuGn1eRyQ@mail.gmail.com>
+Message-ID: <CAL_JsqJU81U5CNSia3Lrzwb2VpPy3YMK=tJfXgU49TuGn1eRyQ@mail.gmail.com>
+Subject: Re: [PATCH V2] dt-bindings: pci: convert QCOM pci bindings to YAML
+To:     Sivaprakash Murugesan <sivaprak@qti.qualcomm.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 7/28/20 4:03 AM, Dmitry Osipenko wrote:
-> 27.07.2020 23:57, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> With the split of MIPI calibration into tegra_mipi_calibrate() and
->> tegra_mipi_wait(), MIPI clock is not kept enabled till the calibration
->> is done.
->>
->> So, this patch skips disabling MIPI clock after triggering start of
->> calibration and disables it only after waiting for done status from
->> the calibration logic.
->>
->> This patch renames tegra_mipi_calibrate() as tegra_mipi_start_calibratio=
-n()
->> and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inline
->> with their usage.
->>
->> As MIPI clock is left enabled and in case of any failures with CSI input
->> streaming tegra_mipi_finish_calibration() will not get invoked.
->> So added new API tegra_mipi_cancel_calibration() which disables MIPI clo=
-ck
->> and consumer drivers can call this in such cases.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/gpu/drm/tegra/dsi.c |  4 ++--
->>   drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
->>   include/linux/host1x.h      |  5 +++--
->>   3 files changed, 15 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
->> index 3820e8d..a7864e9 100644
->> --- a/drivers/gpu/drm/tegra/dsi.c
->> +++ b/drivers/gpu/drm/tegra/dsi.c
->> @@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct tegra_ds=
-i *dsi)
->>   		DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
->>   	tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
->>  =20
->> -	err =3D tegra_mipi_calibrate(dsi->mipi);
->> +	err =3D tegra_mipi_start_calibration(dsi->mipi);
->>   	if (err < 0)
->>   		return err;
->>  =20
->> -	return tegra_mipi_wait(dsi->mipi);
->> +	return tegra_mipi_finish_calibration(dsi->mipi);
->>   }
->>  =20
->>   static void tegra_dsi_set_timeout(struct tegra_dsi *dsi, unsigned long=
- bclk,
->> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
->> index e606464..b15ab6e 100644
->> --- a/drivers/gpu/host1x/mipi.c
->> +++ b/drivers/gpu/host1x/mipi.c
->> @@ -293,17 +293,19 @@ int tegra_mipi_disable(struct tegra_mipi_device *d=
-ev)
->>   }
->>   EXPORT_SYMBOL(tegra_mipi_disable);
->>  =20
->> -int tegra_mipi_wait(struct tegra_mipi_device *device)
->> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
->> +{
-> Doesn't MIPI_CAL need to be reset here?
-No need to reset MIPI CAL
+On Tue, Jul 28, 2020 at 9:27 AM Rob Herring <robh+dt@kernel.org> wrote:
 >
->> +	clk_disable(device->mipi->clk);
->> +}
->> +EXPORT_SYMBOL(tegra_mipi_cancel_calibration);
->> +
->> +int tegra_mipi_finish_calibration(struct tegra_mipi_device *device)
->>   {
->>   	struct tegra_mipi *mipi =3D device->mipi;
->>   	void __iomem *status_reg =3D mipi->regs + (MIPI_CAL_STATUS << 2);
->>   	u32 value;
->>   	int err;
->>  =20
->> -	err =3D clk_enable(device->mipi->clk);
->> -	if (err < 0)
->> -		return err;
->> -
->>   	mutex_lock(&device->mipi->lock);
->>  =20
->>   	err =3D readl_relaxed_poll_timeout(status_reg, value,
->> @@ -315,9 +317,9 @@ int tegra_mipi_wait(struct tegra_mipi_device *device=
-)
->>  =20
->>   	return err;
->>   }
->> -EXPORT_SYMBOL(tegra_mipi_wait);
->> +EXPORT_SYMBOL(tegra_mipi_finish_calibration);
->>  =20
->> -int tegra_mipi_calibrate(struct tegra_mipi_device *device)
->> +int tegra_mipi_start_calibration(struct tegra_mipi_device *device)
->>   {
->>   	const struct tegra_mipi_soc *soc =3D device->mipi->soc;
->>   	unsigned int i;
->> @@ -382,11 +384,10 @@ int tegra_mipi_calibrate(struct tegra_mipi_device =
-*device)
->>   	tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
-> This function sets MIPI_CAL_CLKEN_OVR bit, does it mean that MIPI clock
-> becomes always-ON?
+> On Sun, Jul 26, 2020 at 9:07 AM Sivaprakash Murugesan
+> <sivaprak@qti.qualcomm.com> wrote:
+> >
+> > From: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> >
+> > Convert QCOM pci bindings to YAML schema
+> >
+> > Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> > ---
+> > [v2]
+> >   - Referenced pci-bus.yaml
+> >   - removed duplicate properties already referenced by pci-bus.yaml
+> >   - Addressed comments from Rob
+> >  .../devicetree/bindings/pci/qcom,pcie.txt          | 330 ---------------
+> >  .../devicetree/bindings/pci/qcom,pcie.yaml         | 447 +++++++++++++++++++++
+> >  2 files changed, 447 insertions(+), 330 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> >  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 >
-> I don't see where MIPI_CAL_CLKEN_OVR is unset.
+>
+> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > new file mode 100644
+> > index 000000000000..ddb84f49ac1c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > @@ -0,0 +1,447 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/pci/qcom,pcie.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: Qualcomm PCI express root complex
+> > +
+> > +maintainers:
+> > +  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> > +
+> > +description:
+> > +  QCOM PCIe controller uses Designware IP with Qualcomm specific hardware
+> > +  wrappers.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - qcom,pcie-apq8064
+> > +      - qcom,pcie-apq8084
+> > +      - qcom,pcie-ipq4019
+> > +      - qcom,pcie-ipq8064
+> > +      - qcom,pcie-ipq8074
+> > +      - qcom,pcie-msm8996
+> > +      - qcom,pcie-qcs404
+> > +      - qcom,pcie-sdm845
+> > +
+> > +  reg:
+> > +    description: Register ranges as listed in the reg-names property
+>
+> Can drop this.
+>
+> > +    maxItems: 4
+> > +
+> > +  reg-names:
+> > +    items:
+> > +      - const: dbi
+> > +      - const: elbi
+> > +      - const: parf
+> > +      - const: config
+> > +
+> > +  ranges:
+> > +    maxItems: 2
+> > +
+> > +  interrupts:
+> > +    items:
+> > +      - description: MSI interrupts
+> > +
+> > +  interrupt-names:
+> > +    const: msi
+> > +
+> > +  "#interrupt-cells":
+>
+> In pci-bus.yaml, so you can drop.
+>
+> > +    const: 1
+> > +
+> > +  interrupt-map-mask:
+>
+> In pci-bus.yaml, so you can drop.
 
-CLKEN_OVR was always kept enabled in the driver prior to my patch and I=20
-was not touching that.
-
-But as we are turning ON/OFF MIPI clock itself no need to unset CLKEN_OVR
+Actually, you'll need to do 'interrupt-map-mask: true' on these.
 
 >
->>   	mutex_unlock(&device->mipi->lock);
->> -	clk_disable(device->mipi->clk);
->>  =20
->>   	return 0;
->>   }
->> -EXPORT_SYMBOL(tegra_mipi_calibrate);
->> +EXPORT_SYMBOL(tegra_mipi_start_calibration);
->>  =20
->>   static const struct tegra_mipi_pad tegra114_mipi_pads[] =3D {
->>   	{ .data =3D MIPI_CAL_CONFIG_CSIA },
->> diff --git a/include/linux/host1x.h b/include/linux/host1x.h
->> index 20c885d..b490dda 100644
->> --- a/include/linux/host1x.h
->> +++ b/include/linux/host1x.h
->> @@ -333,7 +333,8 @@ struct tegra_mipi_device *tegra_mipi_request(struct =
-device *device,
->>   void tegra_mipi_free(struct tegra_mipi_device *device);
->>   int tegra_mipi_enable(struct tegra_mipi_device *device);
->>   int tegra_mipi_disable(struct tegra_mipi_device *device);
->> -int tegra_mipi_calibrate(struct tegra_mipi_device *device);
->> -int tegra_mipi_wait(struct tegra_mipi_device *device);
->> +int tegra_mipi_start_calibration(struct tegra_mipi_device *device);
->> +int tegra_mipi_finish_calibration(struct tegra_mipi_device *device);
->> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device);
->>  =20
->>   #endif
->>
+> > +    items:
+> > +      - description: standard PCI properties to define mapping of PCIe
+> > +                     interface to interrupt numbers.
+> > +
+> > +  interrupt-map:
+> > +    maxItems: 4
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 7
+> > +
+> > +  clock-names:
+> > +    minItems: 1
+> > +    maxItems: 7
+> > +
+> > +  resets:
+> > +    minItems: 1
+> > +    maxItems: 12
+> > +
+> > +  reset-names:
+> > +    minItems: 1
+> > +    maxItems: 12
+> > +
+> > +  power-domains:
+> > +    maxItems: 1
+> > +
+> > +  vdda-supply:
+> > +    description: phandle to power supply
+> > +
+> > +  vdda_phy-supply:
+> > +    description: phandle to the power supply to PHY
+> > +
+> > +  vdda_refclk-supply:
+> > +    description: phandle to power supply for ref clock generator
+> > +
+> > +  vddpe-3v3-supply:
+> > +    description: PCIe endpoint power supply
+> > +
+> > +  phys:
+> > +    maxItems: 1
+> > +    items:
+> > +      - description: phandle to the PHY block
+>
+> Can drop 'items'.
+>
+> With those fixed,
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
