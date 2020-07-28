@@ -2,253 +2,159 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E6CC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E86C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F17320672
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DEA920672
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 17:45:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="eKyTwAuR"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k8sAiZsj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732051AbgG1Rmi (ORCPT
+        id S1732084AbgG1RpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 13:42:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731918AbgG1Rmh (ORCPT
+        Tue, 28 Jul 2020 13:45:01 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48854 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731948AbgG1RpB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 13:42:37 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 478F7C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 10:42:37 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id b9so10263741plx.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 10:42:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gfpHKsoVo25CjaecIXU5Q9jpRlvEAlBczb4lYguq0/M=;
-        b=eKyTwAuR/od7gtFEV11Si761xTpPRtou9fdgPSQuHfKUidqdJCuQOUosd0tNgPpLCp
-         yqn8F7aIAPPITxSU/Co2ZByb22sZ0opGhD2bLDgwivSFEkW9LP+pYuGCKYGbNuR0vEHB
-         BQsxuywlPk3x9xfv5ARtpkN1ko0S0IlwhCNH0aByEWVrI8p7f6BGk9p2JXMqD560kp9U
-         dyh4U9KcJpIMygD2a5H8BwGoLmqX2rm8/AMgKVawUz9DXC7PpALeZzBsz5ZlRK5FSGjR
-         LSSoqJqyyEd2auvPm79KuuD/eC52PZ1sTV62TfqD/OVJfAYrOa/l1AynQZmGv9H/yPn7
-         5+TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gfpHKsoVo25CjaecIXU5Q9jpRlvEAlBczb4lYguq0/M=;
-        b=lejWIPN/9PTm0+qplBjJesoawpF4ksQpqJwxbC220f26MOFVRzrosgQT+zeKhb+CsS
-         Bna16UacDSDIOj1eZDRQYuOmEAGvoHimoVjKY1NwWFY0hK7mtU1Q8XV5IRPJrSC1/vH0
-         V59Wp4xBdMNs8qwTnJnjXwKoKRDfU0LwzTMpt90difvjfgWiQ9ashxs9xaWtavln9Vrz
-         4wCpW1mBmU3G/cSYLwkWSMbk7I7Wwz2DoZX0Mu/tHNgUUlwCEZLgCahNKg8Jb8VYcZVv
-         okVJgFkhjXLReayBH7BJYm+j0PGWw0hj2wedrkwFetDaprkmrGsL4UbjZOogNtyN1aZs
-         YCZw==
-X-Gm-Message-State: AOAM532fZWaIGxNbVIopVPSCVqvRkLNB2fumm6PB8H/xJz9OED8zQ1/D
-        fEAA8nnJ9N+WQv+MDQTYPm+HjQMW+ME=
-X-Google-Smtp-Source: ABdhPJz0fOKmi6m0zqNM7S1MSY74xMc8axn+VGTAxxj7LapUUiOi3Wl3hAupFBIeXziPaNn+PKCZQg==
-X-Received: by 2002:a17:90a:ba92:: with SMTP id t18mr5499798pjr.121.1595958156761;
-        Tue, 28 Jul 2020 10:42:36 -0700 (PDT)
-Received: from [10.212.119.73] ([192.55.54.42])
-        by smtp.gmail.com with ESMTPSA id v3sm20200410pfb.207.2020.07.28.10.42.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Jul 2020 10:42:36 -0700 (PDT)
-From:   "Sean V Kelley" <sean.v.kelley@intel.com>
-To:     "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>
-Cc:     bhelgaas@google.com, "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
-        rjw@rjwysocki.net, "Luck, Tony" <tony.luck@intel.com>,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Raj, Ashok" <ashok.raj@intel.com>
-Subject: Re: [RFC PATCH 5/9] PCI/AER: Apply function level reset to RCiEP on
- fatal error
-Date:   Tue, 28 Jul 2020 10:42:33 -0700
-X-Mailer: MailMate (1.13.1r5671)
-Message-ID: <C21C050B-48B1-4429-B019-C81F3AB8E843@intel.com>
-In-Reply-To: <20200728180235.00006ffe@Huawei.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
- <20200724172223.145608-6-sean.v.kelley@intel.com>
- <20200727121726.000072a8@Huawei.com>
- <a79c227f0913438cb5a94dc80a075a7c@intel.com>
- <90E63E9B-DCD3-4325-B1FC-FE5C72BA191B@intel.com>
- <20200728180235.00006ffe@Huawei.com>
+        Tue, 28 Jul 2020 13:45:01 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06SHbdhO119251;
+        Tue, 28 Jul 2020 17:44:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=bAxoxVqkxvfHt6SEE10MiPl/V0wf4gBcQL+oBZHzmbs=;
+ b=k8sAiZsjkapHCiwl7lQCXXq7V2xxPlwd/o/Vi0qSxmuLhMd4JONU5FHb26rdfvNQs2cl
+ gClofoapoK+hGLjV9p85pBAk2ttgdD1jqmeX72M98WQbGx7BT6TtvpO5H2Zi50hBWISx
+ P/QhLgs5v+mAIMdT1RQL0nhx7z1AXTcwxF6MR/k3PKLVGq5zJkmwfGvktQvblRwJHG2d
+ UeHbz7qHtE9BL/LanTq9wTR7k9+SEWeH7UugAHkSsFFOjARjUfUJapTkgiyhxSbAFtAV
+ sbaDy+mEjMb7nRo7EFT/BFsOYcnznLegrOibQBScrEQ0TENTotzx5WXy8zf/MZSojQKy iw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 32hu1jgya4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jul 2020 17:44:23 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06SHWi3i162287;
+        Tue, 28 Jul 2020 17:44:22 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 32hu5ug1g1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jul 2020 17:44:22 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06SHiFYe032078;
+        Tue, 28 Jul 2020 17:44:16 GMT
+Received: from [10.154.121.35] (/10.154.121.35)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Jul 2020 10:44:15 -0700
+Subject: Re: [RFC PATCH 3/5] mm: introduce VM_EXEC_KEEP
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
+        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
+        peterz@infradead.org, esyr@redhat.com, jgg@ziepe.ca,
+        christian@kellner.me, areber@redhat.com, cyphar@cyphar.com,
+        steven.sistare@oracle.com
+References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+ <1595869887-23307-4-git-send-email-anthony.yznaga@oracle.com>
+ <87365bg3nx.fsf@x220.int.ebiederm.org>
+From:   Anthony Yznaga <anthony.yznaga@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <7694af9d-dfb9-8c44-dc41-79f58bb14413@oracle.com>
+Date:   Tue, 28 Jul 2020 10:44:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <87365bg3nx.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9696 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007280128
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9696 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 mlxlogscore=999
+ malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007280128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28 Jul 2020, at 10:02, Jonathan Cameron wrote:
 
-> On Tue, 28 Jul 2020 09:14:11 -0700
-> Sean V Kelley <sean.v.kelley@intel.com> wrote:
+
+On 7/28/20 6:38 AM, ebiederm@xmission.com wrote:
+> Anthony Yznaga <anthony.yznaga@oracle.com> writes:
 >
->> On 28 Jul 2020, at 6:27, Zhuo, Qiuxu wrote:
+>> A vma with the VM_EXEC_KEEP flag is preserved across exec.  For anonymous
+>> vmas only.  For safety, overlap with fixed address VMAs created in the new
+>> mm during exec (e.g. the stack and elf load segments) is not permitted and
+>> will cause the exec to fail.
+>> (We are studying how to guarantee there are no conflicts. Comments welcome.)
 >>
->>>> From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
->>>> Sent: Monday, July 27, 2020 7:17 PM
->>>> To: Kelley, Sean V <sean.v.kelley@intel.com>
->>>> Cc: bhelgaas@google.com; rjw@rjwysocki.net; ashok.raj@kernel.org;
->>>> Luck,
->>>> Tony <tony.luck@intel.com>;
->>>> sathyanarayanan.kuppuswamy@linux.intel.com;
->>>> linux-pci@vger.kernel.org;
->>>> linux-kernel@vger.kernel.org; Zhuo, Qiuxu <qiuxu.zhuo@intel.com>
->>>> Subject: Re: [RFC PATCH 5/9] PCI/AER: Apply function level reset to
->>>> RCiEP
->>>> on fatal error
->>>>
->>>> On Fri, 24 Jul 2020 10:22:19 -0700
->>>> Sean V Kelley <sean.v.kelley@intel.com> wrote:
->>>>
->>>>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->>>>>
->>>>> Attempt to do function level reset for an RCiEP associated with an
->>>>> RCEC device on fatal error.
->>>>
->>>> I'd like to understand more on your reasoning for flr here.
->>>> Is it simply that it is all we can do, or is there some basis in a
->>>> spec
->>>> somewhere?
->>>>
->>>
->>> Yes. Though there isn't the link reset for the RCiEP here, I think 
->>> we
->>> should still be able to reset the RCiEP via FLR on fatal error, if 
->>> the
->>> RCiEP supports FLR.
->>>
->>> -Qiuxu
->>>
->>
->> Also see PCIe 5.0-1, Sec. 6.6.2 Function Level Reset (FLR)
->>
->> Implementation of FLR is optional (not required), but is strongly
->> recommended. For an example use case consider CXL. Function 0 DVSEC
->> instances control for the CXL functionality of the entire CXL device.
->> FLR may succeed in recovering from CXL.io domain errors.
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index 262112e5f9f8..1de09c4eef00 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1069,6 +1069,20 @@ ssize_t read_code(struct file *file, unsigned long addr, loff_t pos, size_t len)
+>>  EXPORT_SYMBOL(read_code);
+>>  #endif
+>>  
+>> +static int vma_dup_some(struct mm_struct *old_mm, struct mm_struct *new_mm)
+>> +{
+>> +	struct vm_area_struct *vma;
+>> +	int ret;
+>> +
+>> +	for (vma = old_mm->mmap; vma; vma = vma->vm_next)
+>> +		if (vma->vm_flags & VM_EXEC_KEEP) {
+>> +			ret = vma_dup(vma, new_mm);
+>> +			if (ret)
+>> +				return ret;
+>> +		}
+>> +	return 0;
+>> +}
+>> +
+>>  /*
+>>   * Maps the mm_struct mm into the current task struct.
+>>   * On success, this function returns with the mutex
+>> @@ -1104,6 +1118,12 @@ static int exec_mmap(struct mm_struct *mm)
+>>  			mutex_unlock(&tsk->signal->exec_update_mutex);
+>>  			return -EINTR;
+>>  		}
+>> +		ret = vma_dup_some(old_mm, mm);
+>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 >
-> That feels a little bit of a weak argument in favour.  PCI spec lists 
-> examples
-> of use only for FLR and I can't see this matching any of them, but 
-> then they
-> are only examples, so we could argue it doesn't exclude this use. It's 
-> not
-> allowed to affect the link state, but I guess it 'might' recover from 
-> some
-> other type of error?
+> Ouch! An unconditional loop through all of the vmas of the execing
+> process, just in case there is a VM_EXEC_KEEP vma.
 >
-> I'd have read the statement in the CXL spec you are referring to as 
-> matching
-> with the first example in the PCIe spec which is about recovering from
-> software errors.  For example, unexpected VM tear down.
+> I know we already walk the list in exit_mmap, but I get the feeling this
+> will slow exec down when this feature is not enabled, especially when
+> a process with a lot of vmas is calling exec.
+Patch 4 changes this to only call vma_dup_some() if the new
+binary has opted in to accepting preserved memory.
 
- From my perspective, it can add value as the point is to address device 
-functions and their associated software states. As the section in the 
-spec goes on to state:
-
-“The FLR mechanism enables software to quiesce and reset Endpoint 
-hardware with Function-level granularity. Three example usage models 
-illustrate the benefits of this feature:…”
-
-Later changes in CXL 2.0 Section 9.8 (as of 0.9 draft) further look to 
-extend FLR with an eFLR or now referred to as CXL Reset.
-
-“All Functions in a CXL 2.0 (Single Logical Device) SLD that 
-participate in CXL.cache or CXL.mem are required to support either FLR 
-or CXL Reset. MLDs (Multiple Logical Devices), on the other hand, are 
-required to support CXL Reset.”
-
-In my mind the question is whether this change is too limited in scope 
-with this patch series (RCiEP) and whether FLR should be considered in a 
-broader, i.e., EP, as a ‘hammer’ so to speak.
-
-Thanks,
-
-Sean
-
+Anthony
 >
-> @Bjorn / All.  What's your view on using FLR as a reset to do when you 
-> don't
-> have any other hammers to use?
->
-> Personally I don't have a particular problem with this, it just 
-> doesn't fit
-> with my mental model of what FLR is for (which may well need adjusting 
-> :)
->
-> Jonathan
->
->
->>
->> Thanks,
->>
->> Sean
->>
->>>>>
->>>>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->>>>> ---
->>>>>  drivers/pci/pcie/err.c | 31 ++++++++++++++++++++++---------
->>>>>  1 file changed, 22 insertions(+), 9 deletions(-)
->>>>>
->>>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c index
->>>>> 044df004f20b..9b3ec94bdf1d 100644
->>>>> --- a/drivers/pci/pcie/err.c
->>>>> +++ b/drivers/pci/pcie/err.c
->>>>> @@ -170,6 +170,17 @@ static void pci_walk_dev_affected(struct
->>>> pci_dev *dev, int (*cb)(struct pci_dev
->>>>>  }
->>>>>  }
->>>>>
->>>>> +static enum pci_channel_state flr_on_rciep(struct pci_dev *dev) {
->>>>> +if (!pcie_has_flr(dev))
->>>>> +return PCI_ERS_RESULT_NONE;
->>>>> +
->>>>> +if (pcie_flr(dev))
->>>>> +return PCI_ERS_RESULT_DISCONNECT;
->>>>> +
->>>>> +return PCI_ERS_RESULT_RECOVERED;
->>>>> +}
->>>>> +
->>>>>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>>>>  enum pci_channel_state state,
->>>>>  pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
->>>> @@ -191,15
->>>>> +202,17 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>>>>  if (state == pci_channel_io_frozen) {
->>>>>  pci_walk_dev_affected(dev, report_frozen_detected,
->>>> &status);
->>>>>  if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
->>>>> -pci_warn(dev, "link reset not possible for RCiEP\n");
->>>>> -status = PCI_ERS_RESULT_NONE;
->>>>> -goto failed;
->>>>> -}
->>>>> -
->>>>> -status = reset_link(dev);
->>>>> -if (status != PCI_ERS_RESULT_RECOVERED) {
->>>>> -pci_warn(dev, "link reset failed\n");
->>>>> -goto failed;
->>>>> +status = flr_on_rciep(dev);
->>>>> +if (status != PCI_ERS_RESULT_RECOVERED) {
->>>>> +pci_warn(dev, "function level reset failed\n");
->>>>> +goto failed;
->>>>> +}
->>>>> +} else {
->>>>> +status = reset_link(dev);
->>>>> +if (status != PCI_ERS_RESULT_RECOVERED) {
->>>>> +pci_warn(dev, "link reset failed\n");
->>>>> +goto failed;
->>>>> +}
->>>>>  }
->>>>>  } else {
->>>>>  pci_walk_dev_affected(dev, report_normal_detected,
->>>> &status);
->>>>
+>                 
+>> +		if (ret) {
+>> +			mmap_read_unlock(old_mm);
+>> +			mutex_unlock(&tsk->signal->exec_update_mutex);
+>> +			return ret;
+>> +		}
+>>  	}
+>>  
+>>  	task_lock(tsk);
+
