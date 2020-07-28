@@ -2,129 +2,133 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC16C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F376AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 082D7207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C002920759
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:05:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKGzFc0u"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Jc2W9zzM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgG1GDl (ORCPT
+        id S1726979AbgG1GFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:03:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgG1GDl (ORCPT
+        Tue, 28 Jul 2020 02:05:25 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:24158 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726299AbgG1GFZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:03:41 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 032A0C061794;
-        Mon, 27 Jul 2020 23:03:40 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id j10so1965070qvo.13;
-        Mon, 27 Jul 2020 23:03:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VyTixMuApQUrPqM0mv6yOj0mSjNApbkD53XtwGXYy6Y=;
-        b=AKGzFc0uYTO8QbYO3W5w7hwDzHrVNlkDlzyTRfVH0VLZ2QLZCPIiG51u5qaVmw5qhD
-         j8I8MIIz33Jeg0YAVhE38RGbu6qGpdUX66O1h5/ZOzx0sjQxIm3jKN49gUcC8pX3JKmA
-         inZhpTtQk+86ejo+PzouvOaMGcRLaqWzK9dX9JUohtjt51zItfpyVkE+KIIVtevhmEjm
-         ZJ+GYEixaUdUoSX1MGHKUKG3TOxqMXhejAbmF9ZkIh2LRpVeyM0ZAafCC1ujAo3NOcWP
-         m134Tx2J+zmO8mQyAVuOqcjU9p/O7YXqOMX03/Dn/+rsJn3S8QbGvl0dNvDA1Ef9r/li
-         bQkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VyTixMuApQUrPqM0mv6yOj0mSjNApbkD53XtwGXYy6Y=;
-        b=KfkcyUwy5LoeNvqon4WUzn0pfCXf+JhxMO8/6amnAZRKDBFi8fCFhZVLcJluiMxt3e
-         3UI87qcgUgCOMRnzPkqe7IdblHOAw/IieEv77FwD11Jd8YaMaP2nu9++wd2JvfcOgOyO
-         MUhsmYShzVx1NQwXe5ra0VqmiKSoJBF6cNExaAEbOtr1wkJxib5sT95W8dcFbyIa+uBD
-         L5cTw9WoSd+pj+H7kvGVFG+u7J26xi8CQuV8J++A+cpriGnEtd5j62OTeVIrLrY15AC9
-         dEp54fHYxQFTQZ+XTSwr7d/NVQWIDP40bwCSdE+gwjatJLPXVDH1GCLjydBKj4ymioVI
-         tkhA==
-X-Gm-Message-State: AOAM5324ZGwqMBe8OkvPz0T6mHX4/hBXK9nqn4ws9OBe+iGyfNpMxOOa
-        tDKO4/MKq6/KcBQ65xZzpJzvJIoTtIb1ovabcNukJA==
-X-Google-Smtp-Source: ABdhPJzpuvI/PnQt0muw26eujYdfWz25QglG9zSeJl+ePzDEoquT/Euuyx3vu62IDInhlpVP8a5odclUBsHzYJtLVU8=
-X-Received: by 2002:a0c:bf4f:: with SMTP id b15mr24284471qvj.224.1595916220194;
- Mon, 27 Jul 2020 23:03:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-32-guro@fb.com>
-In-Reply-To: <20200727184506.2279656-32-guro@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 27 Jul 2020 23:03:29 -0700
-Message-ID: <CAEf4BzYhTeehgbFKwOkrjEzXH5NkKF6BTvZyiS-PRTdXetKEUQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 31/35] bpf: runqslower: don't touch RLIMIT_MEMLOCK
-To:     Roman Gushchin <guro@fb.com>
-Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
+        Tue, 28 Jul 2020 02:05:25 -0400
+X-UUID: aa1603cb9da14371ba43930da6e229b0-20200728
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=AADhamlj39RN1HLMjk0Vd+a3ULVjb3Y/W/BXe2Dhrbo=;
+        b=Jc2W9zzMWeaQDwqgekP8xAWsHw346+dMPO5EUuAicpIAK5m2OclwoooIVzMNy//6JVG/WHbXOxM+8GOOB6dwkqIGoR8+L4YcYjlN9P5cohmsi28maKzqGST1pFiYIjcTnJvU3E0lQ2MIvNMNI6A4y3ZIEdv2EWC6uO+6a4vuHFo=;
+X-UUID: aa1603cb9da14371ba43930da6e229b0-20200728
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 796666277; Tue, 28 Jul 2020 14:05:12 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 28 Jul
+ 2020 14:05:04 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 28 Jul 2020 14:05:06 +0800
+Message-ID: <1595916283.21478.3.camel@mhfsdcap03>
+Subject: Re: [RESEND PATCH] usb: common: usb-conn-gpio: Register optional
+ charger
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, <od@zcrc.me>,
+        USB <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 28 Jul 2020 14:04:43 +0800
+In-Reply-To: <Z4V4EQ.I8UQ5TF3SBJ61@crapouillou.net>
+References: <20200621224807.882184-1-paul@crapouillou.net>
+         <CAHp75VcfhDncqP_hSVvRNc_vY0fOYaoxm-tiCm2G92Xrisb9hA@mail.gmail.com>
+         <FPN2EQ.RC89XKRQDKRN3@crapouillou.net>
+         <1595828558.23885.90.camel@mhfsdcap03>
+         <Z4V4EQ.I8UQ5TF3SBJ61@crapouillou.net>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 6ABC9B290E16A3EF990DFC966CA70D04FD107373D83DCB7A2955348E43ECF2402000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:24 PM Roman Gushchin <guro@fb.com> wrote:
->
-> Since bpf is not using memlock rlimit for memory accounting,
-> there are no more reasons to bump the limit.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> ---
->  tools/bpf/runqslower/runqslower.c | 16 ----------------
->  1 file changed, 16 deletions(-)
->
+T24gTW9uLCAyMDIwLTA3LTI3IGF0IDE3OjAyICswMjAwLCBQYXVsIENlcmN1ZWlsIHdyb3RlOg0K
+PiANCj4gTGUgbHVuLiAyNyBqdWlsLiAyMDIwIMOgIDEzOjQyLCBDaHVuZmVuZyBZdW4gDQo+IDxj
+aHVuZmVuZy55dW5AbWVkaWF0ZWsuY29tPiBhIMOpY3JpdCA6DQo+ID4gT24gU3VuLCAyMDIwLTA3
+LTI2IGF0IDEyOjI3ICswMjAwLCBQYXVsIENlcmN1ZWlsIHdyb3RlOg0KPiA+PiANCj4gPj4gIExl
+IGRpbS4gMjYganVpbC4gMjAyMCDDoCAxMzoxNCwgQW5keSBTaGV2Y2hlbmtvDQo+ID4+ICA8YW5k
+eS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4gYSDDqWNyaXQgOg0KPiA+PiAgPiBPbiBNb24sIEp1biAy
+MiwgMjAyMCBhdCAxOjUxIEFNIFBhdWwgQ2VyY3VlaWwgDQo+ID4+IDxwYXVsQGNyYXBvdWlsbG91
+Lm5ldD4NCj4gPj4gID4gd3JvdGU6DQo+ID4+ICA+Pg0KPiA+PiAgPj4gIFJlZ2lzdGVyIGEgcG93
+ZXIgc3VwcGx5IGNoYXJnZXIsIGlmIHRoZSBLY29uZmlnIG9wdGlvbg0KPiA+PiAgPj4gIFVTQl9D
+T05OX0dQSU9fQ0hBUkdFUiBpcyBzZXQsIHdob3NlIG9ubGluZSBzdGF0ZSBkZXBlbmRzIG9uIA0K
+PiA+PiB3aGV0aGVyDQo+ID4+ICA+PiAgdGhlIFVTQiByb2xlIGlzIHNldCB0byBkZXZpY2Ugb3Ig
+bm90Lg0KPiA+PiAgPj4NCj4gPj4gID4+ICBUaGlzIGlzIHVzZWZ1bCB3aGVuIHRoZSBVU0Igcm9s
+ZSBpcyB0aGUgb25seSB3YXkgdG8ga25vdyBpZiB0aGUNCj4gPj4gID4+IGRldmljZQ0KPiA+PiAg
+Pj4gIGlzIGNoYXJnaW5nIGZyb20gVVNCLiBUaGUgQVBJIGlzIHRoZSBzdGFuZGFyZCBwb3dlciBz
+dXBwbHkgDQo+ID4+IGNoYXJnZXINCj4gPj4gID4+IEFQSSwNCj4gPj4gID4+ICB5b3UgZ2V0IGEg
+L3N5cy9jbGFzcy9wb3dlcl9zdXBwbHkveHh4L29ubGluZSBub2RlIHdoaWNoIHRlbGxzIA0KPiA+
+PiB5b3UNCj4gPj4gID4+IHRoZQ0KPiA+PiAgPj4gIHN0YXRlIG9mIHRoZSBjaGFyZ2VyLg0KPiA+
+PiAgPj4NCj4gPj4gID4+ICBUaGUgc29sZSBwdXJwb3NlIG9mIHRoaXMgaXMgdG8gZ2l2ZSB1c2Vy
+c3BhY2UgYXBwbGljYXRpb25zIGEgDQo+ID4+IHdheSB0bw0KPiA+PiAgPj4gIGtub3cgd2hldGhl
+ciBvciBub3QgdGhlIGNoYXJnZXIgaXMgcGx1Z2dlZC4NClsuLi5dDQo+ID4+ICA+PiAgKyAgICAg
+ICBzd2l0Y2ggKHBzcCkgew0KPiA+PiAgPj4gICsgICAgICAgY2FzZSBQT1dFUl9TVVBQTFlfUFJP
+UF9PTkxJTkU6DQo+ID4+ICA+PiAgKyAgICAgICAgICAgICAgIHZhbC0+aW50dmFsID0gaW5mby0+
+bGFzdF9yb2xlID09IA0KPiA+PiBVU0JfUk9MRV9ERVZJQ0U7DQo+ID4gV2hhdCB3aWxsIGhhcHBl
+biBpZiB5b3Ugbm90IGNoYW5nZSBpbmZvLT5sYXN0X3JvbGUgaGVyZT8NCj4gPiBJIHByZWZlciBp
+dCdzIG9ubHkgY2hhbmdlZCBieSB1c2JfY29ubl9pc3IoKSwgaWYgaXQncyBjaGFuZ2VkIGJ5IG90
+aGVyDQo+ID4gZHJpdmVycywgZm9yIGV4YW1wbGUsIHRocm91Z2ggcG93ZXJfc3VwcGx5X2dldF9w
+cm9wZXJ0eSgpLCBtYXkgc2tpcCANCj4gPiByb2xlDQo+ID4gc3dpdGNoLg0KPiANCj4gSWYgeW91
+IHJlYWQgY2FyZWZ1bGx5LCBpbmZvLT5sYXN0X3JvbGUgaXMgbm90IG1vZGlmaWVkIGhlcmUgOikN
+ClNvcnJ5LCBteSBiYWQNCg0KPiANCj4gLVBhdWwNCj4gDQo+ID4gDQo+ID4+ICA+PiAgKyAgICAg
+ICAgICAgICAgIGJyZWFrOw0KPiA+PiAgPj4gICsgICAgICAgZGVmYXVsdDoNCj4gPj4gID4+ICAr
+ICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4+ICA+PiAgKyAgICAgICB9DQo+ID4+
+ICA+PiAgKw0KPiA+PiAgPj4gICsgICAgICAgcmV0dXJuIDA7DQo+ID4+ICA+PiAgK30NCj4gPj4g
+ID4+ICArDQo+ID4+ICA+PiAgIHN0YXRpYyBpbnQgdXNiX2Nvbm5fcHJvYmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldikNCj4gPj4gID4+ICAgew0KPiA+PiAgPj4gICAgICAgICAgc3RydWN0
+IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4gPj4gID4+ICArICAgICAgIHN0cnVjdCBwb3dl
+cl9zdXBwbHlfZGVzYyAqZGVzYzsNCj4gPj4gID4+ICAgICAgICAgIHN0cnVjdCB1c2JfY29ubl9p
+bmZvICppbmZvOw0KPiA+PiAgPj4gICsgICAgICAgc3RydWN0IHBvd2VyX3N1cHBseV9jb25maWcg
+Y2ZnID0gew0KPiA+PiAgPj4gICsgICAgICAgICAgICAgICAub2Zfbm9kZSA9IGRldi0+b2Zfbm9k
+ZSwNCj4gPj4gID4+ICArICAgICAgIH07DQo+ID4+ICA+PiAgICAgICAgICBpbnQgcmV0ID0gMDsN
+Cj4gPj4gID4+DQo+ID4+ICA+PiAgICAgICAgICBpbmZvID0gZGV2bV9remFsbG9jKGRldiwgc2l6
+ZW9mKCppbmZvKSwgR0ZQX0tFUk5FTCk7DQo+ID4+ICA+PiAgQEAgLTIwMyw2ICsyMzQsMjIgQEAg
+c3RhdGljIGludCB1c2JfY29ubl9wcm9iZShzdHJ1Y3QNCj4gPj4gID4+IHBsYXRmb3JtX2Rldmlj
+ZSAqcGRldikNCj4gPj4gID4+ICAgICAgICAgICAgICAgICAgfQ0KPiA+PiAgPj4gICAgICAgICAg
+fQ0KPiA+PiAgPj4NCj4gPj4gID4+ICArICAgICAgIGlmIChJU19FTkFCTEVEKENPTkZJR19VU0Jf
+Q09OTl9HUElPX0NIQVJHRVIpKSB7DQo+ID4+ICA+PiAgKyAgICAgICAgICAgICAgIGRlc2MgPSAm
+aW5mby0+ZGVzYzsNCj4gPj4gID4+ICArICAgICAgICAgICAgICAgZGVzYy0+bmFtZSA9ICJ1c2It
+Y2hhcmdlciI7DQo+ID4+ICA+PiAgKyAgICAgICAgICAgICAgIGRlc2MtPnByb3BlcnRpZXMgPSB1
+c2JfY2hhcmdlcl9wcm9wZXJ0aWVzOw0KPiA+PiAgPj4gICsgICAgICAgICAgICAgICBkZXNjLT5u
+dW1fcHJvcGVydGllcyA9DQo+ID4+ICA+PiBBUlJBWV9TSVpFKHVzYl9jaGFyZ2VyX3Byb3BlcnRp
+ZXMpOw0KPiA+PiAgPj4gICsgICAgICAgICAgICAgICBkZXNjLT5nZXRfcHJvcGVydHkgPSB1c2Jf
+Y2hhcmdlcl9nZXRfcHJvcGVydHk7DQo+ID4+ICA+PiAgKyAgICAgICAgICAgICAgIGRlc2MtPnR5
+cGUgPSBQT1dFUl9TVVBQTFlfVFlQRV9VU0I7DQo+ID4+ICA+PiAgKyAgICAgICAgICAgICAgIGNm
+Zy5kcnZfZGF0YSA9IGluZm87DQo+ID4+ICA+PiAgKw0KPiA+PiAgPj4gICsgICAgICAgICAgICAg
+ICBpbmZvLT5jaGFyZ2VyID0gZGV2bV9wb3dlcl9zdXBwbHlfcmVnaXN0ZXIoZGV2LA0KPiA+PiAg
+Pj4gZGVzYywgJmNmZyk7DQo+ID4+ICA+PiAgKyAgICAgICAgICAgICAgIGlmIChJU19FUlIoaW5m
+by0+Y2hhcmdlcikpIHsNCj4gPj4gID4+ICArICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJy
+KGRldiwgIlVuYWJsZSB0byByZWdpc3Rlcg0KPiA+PiAgPj4gY2hhcmdlclxuIik7DQo+ID4+ICA+
+PiAgKyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIFBUUl9FUlIoaW5mby0+Y2hhcmdlcik7
+DQo+ID4+ICA+PiAgKyAgICAgICAgICAgICAgIH0NCj4gPj4gID4+ICArICAgICAgIH0NCj4gPj4g
+ID4+ICArDQo+ID4+ICA+PiAgICAgICAgICBwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBpbmZv
+KTsNCj4gPj4gID4+DQo+ID4+ICA+PiAgICAgICAgICAvKiBQZXJmb3JtIGluaXRpYWwgZGV0ZWN0
+aW9uICovDQo+ID4+ICA+PiAgLS0NCj4gPj4gID4+ICAyLjI3LjANCj4gPj4gID4+DQo+ID4+ICA+
+DQo+ID4+ICA+DQo+ID4+ICA+IC0tDQo+ID4+ICA+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiA+PiAg
+PiBBbmR5IFNoZXZjaGVua28NCj4gPj4gDQo+ID4+IA0KPiA+IA0KPiANCj4gDQoNCg==
 
-This can go, I suppose, we still have a runqslower variant in BCC with
-this logic, to show an example on what/how to do this for kernels
-without this patch set applied.
-
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-
-> diff --git a/tools/bpf/runqslower/runqslower.c b/tools/bpf/runqslower/runqslower.c
-> index d89715844952..a3380b53ce0c 100644
-> --- a/tools/bpf/runqslower/runqslower.c
-> +++ b/tools/bpf/runqslower/runqslower.c
-> @@ -88,16 +88,6 @@ int libbpf_print_fn(enum libbpf_print_level level,
->         return vfprintf(stderr, format, args);
->  }
->
-> -static int bump_memlock_rlimit(void)
-> -{
-> -       struct rlimit rlim_new = {
-> -               .rlim_cur       = RLIM_INFINITY,
-> -               .rlim_max       = RLIM_INFINITY,
-> -       };
-> -
-> -       return setrlimit(RLIMIT_MEMLOCK, &rlim_new);
-> -}
-> -
->  void handle_event(void *ctx, int cpu, void *data, __u32 data_sz)
->  {
->         const struct event *e = data;
-> @@ -134,12 +124,6 @@ int main(int argc, char **argv)
->
->         libbpf_set_print(libbpf_print_fn);
->
-> -       err = bump_memlock_rlimit();
-> -       if (err) {
-> -               fprintf(stderr, "failed to increase rlimit: %d", err);
-> -               return 1;
-> -       }
-> -
->         obj = runqslower_bpf__open();
->         if (!obj) {
->                 fprintf(stderr, "failed to open and/or load BPF object\n");
-> --
-> 2.26.2
->
