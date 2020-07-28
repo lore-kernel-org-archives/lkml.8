@@ -2,160 +2,113 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152E3C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75E7C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0012920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A84822070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:31:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vkMbbZV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730417AbgG1ObK (ORCPT
+        id S1730425AbgG1Obl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:31:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729410AbgG1ObK (ORCPT
+        Tue, 28 Jul 2020 10:31:41 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59162 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729410AbgG1Obl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:31:10 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59547C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:31:10 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k0QdH-0005d1-7u; Tue, 28 Jul 2020 16:31:07 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k0QdG-0004du-1g; Tue, 28 Jul 2020 16:31:06 +0200
-Date:   Tue, 28 Jul 2020 16:31:06 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: (EXT) Re: [PATCH] arm: dts: imx7: add QSPI
-Message-ID: <20200728143105.ckc55z6j64e5hiun@pengutronix.de>
-References: <20200728112814.14158-1-matthias.schiffer@ew.tq-group.com>
- <20200728135155.aqz3xkcwpgqmvzro@pengutronix.de>
- <8ea0b3f655b60be02384f22c0aa4dfee9d788d71.camel@ew.tq-group.com>
+        Tue, 28 Jul 2020 10:31:41 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06SERiHc170671;
+        Tue, 28 Jul 2020 14:30:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=y8nRRhLN76Gwdv6TWjBbydsC8jIHLobFpUQt86BWPsY=;
+ b=vkMbbZV/fcuVoPAdAm2bnVKwhjUpJrQeuFup74jUcdeMFSVB6NMvDDvMHSKYXPSlQuGZ
+ q+vnDlQQJonIJRLOWE5PZnxfEEw+fM6A0EQ19EYLT30r5asL+xwE/rzdNesWu91snpuh
+ akKWpVib71YeaHKh35MBFpSpdWbJj3ZAopIy+4wGvcxopkcl5uE4lpMgdA8KrOCwHXD2
+ j9NbZ3FCXMY0jAlu8w5KVQTJxwUR+PHUm99l0NsvT/xbqPXPHTy4ufinvEW5t1IEdm5H
+ BstCBqpoE9y27OkfC6IbL0I9zMs9oRopKmCtuxJjqoPC9HARM4JkdEh6Uw3Ky9KWgjpK Bw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 32hu1jfucq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jul 2020 14:30:55 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06SETMwu090377;
+        Tue, 28 Jul 2020 14:30:55 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 32hu5st7n0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jul 2020 14:30:54 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06SEUkvZ012418;
+        Tue, 28 Jul 2020 14:30:46 GMT
+Received: from [10.39.227.185] (/10.39.227.185)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Jul 2020 07:30:46 -0700
+Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
+To:     Andy Lutomirski <luto@amacapital.net>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
+        gerg@linux-m68k.org, ktkhai@virtuozzo.com,
+        christian.brauner@ubuntu.com, peterz@infradead.org,
+        esyr@redhat.com, jgg@ziepe.ca, christian@kellner.me,
+        areber@redhat.com, cyphar@cyphar.com
+References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+ <1764B08C-CC1E-4636-944A-DB95B81C7A8E@amacapital.net>
+From:   Steven Sistare <steven.sistare@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <54599ed9-99f1-378e-bccf-ba41ef1f8217@oracle.com>
+Date:   Tue, 28 Jul 2020 10:30:41 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ea0b3f655b60be02384f22c0aa4dfee9d788d71.camel@ew.tq-group.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 16:22:55 up 256 days,  5:41, 241 users,  load average: 0.08, 0.05,
- 0.07
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <1764B08C-CC1E-4636-944A-DB95B81C7A8E@amacapital.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007280111
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 mlxlogscore=999
+ malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007280111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-07-28 16:05, Matthias Schiffer wrote:
-> On Tue, 2020-07-28 at 15:51 +0200, Marco Felsch wrote:
-> > Hi Matthias,
-> > 
-> > thanks for the patch.
-> > 
-> > On 20-07-28 13:28, Matthias Schiffer wrote:
-> > > In preparation for an update of the TQ-Systems TQMa7x/MBa7x DTS,
-> > > add the
-> > > QSPI controller to imx7s.dtsi.
-> > > 
-> > > Based-on-patch-by: Han Xu <han.xu@nxp.com>
-> > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
-> > > >
-> > > ---
-> > >  arch/arm/boot/dts/imx7s.dtsi | 13 +++++++++++++
-> > >  1 file changed, 13 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/imx7s.dtsi
-> > > b/arch/arm/boot/dts/imx7s.dtsi
-> > > index 1cfaf410aa43..e45683e61593 100644
-> > > --- a/arch/arm/boot/dts/imx7s.dtsi
-> > > +++ b/arch/arm/boot/dts/imx7s.dtsi
-> > > @@ -1162,6 +1162,19 @@
-> > >  				status = "disabled";
-> > >  			};
-> > >  
-> > > +			qspi1: spi@30bb0000 {
-> > 
-> > Are there more controllers and why not using "qspi@30bb0000" as node
-> > name?
+On 7/28/2020 10:23 AM, Andy Lutomirski wrote:
+>> On Jul 27, 2020, at 10:02 AM, Anthony Yznaga <anthony.yznaga@oracle.com> wrote:
+>>
+>> ﻿This patchset adds support for preserving an anonymous memory range across
+>> exec(3) using a new madvise MADV_DOEXEC argument.  The primary benefit for
+>> sharing memory in this manner, as opposed to re-attaching to a named shared
+>> memory segment, is to ensure it is mapped at the same virtual address in
+>> the new process as it was in the old one.  An intended use for this is to
+>> preserve guest memory for guests using vfio while qemu exec's an updated
+>> version of itself.  By ensuring the memory is preserved at a fixed address,
+>> vfio mappings and their associated kernel data structures can remain valid.
+>> In addition, for the qemu use case, qemu instances that back guest RAM with
+>> anonymous memory can be updated.
 > 
-> The vast majority of QSPI controllers use spi@ node names, qspi@ only
-> appears in a single example in Documentation/devicetree/bindings/, and
-> in no actual DTS(I) files.
+> This will be an amazing attack surface. Perhaps use of this flag should require no_new_privs?  Arguably it should also require a special flag to execve() to honor it.  Otherwise library helpers that do vfork()+exec() or posix_spawn() could be quite surprised.
 
-IMHO using spi as node name is incorrect because this inherits the
-assumption to connect 'normal' spi devices to these controllers. But
-this is absolutly not the case since in most cases the qspi controllers
-are state-machines optimized for qspi memory devices. So all dts(i)
-files using spi as node name are incorrect IMHO. But we can't change
-that due to the backward compability.
+Preservation is disabled across fork, so fork/exec combo's are not affected.  We forgot to document that.
 
-> There is only one controller. The label "qspi1" is chosen as this has
-> been in use in the linux-imx vendor kernels for years; IMHO, switching
-> to "qspi" would just cause unnecessary churn for dependent device
-> trees. I have no strong opinions on this though.
-
-Why? There is no _mainline_ imx7s devicetree using this node currently.
-I would drop the number since we have only one instance.
-
-Regards,
-  Marco
-
-
-> > > +				#address-cells = <1>;
-> > > +				#size-cells = <0>;
-> > > +				compatible = "fsl,imx7d-qspi";
-> > > +				reg = <0x30bb0000 0x10000>, <0x60000000
-> > > 0x10000000>;
-> > > +				reg-names = "QuadSPI", "QuadSPI-
-> > > memory";
-> > 
-> > The node should begin with compatible, reg, reg-names properties.
-> > Pls check the current .dtsi file for examples.
-> 
-> Thanks, will fix.
-> 
-> > 
-> > > +				interrupts = <GIC_SPI 107
-> > > IRQ_TYPE_LEVEL_HIGH>;
-> > > +				clocks = <&clks IMX7D_QSPI_ROOT_CLK>,
-> > > +					<&clks IMX7D_QSPI_ROOT_CLK>;
-> > > +				clock-names = "qspi_en", "qspi";
-> > > +				status = "disabled";
-> > > +			};
-> > > +
-> > >  			sdma: sdma@30bd0000 {
-> > >  				compatible = "fsl,imx7d-sdma",
-> > > "fsl,imx35-sdma";
-> > >  				reg = <0x30bd0000 0x10000>;
-> > 
-> > Regards,
-> >   Marco
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+- Steve
