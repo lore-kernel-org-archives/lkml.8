@@ -7,182 +7,144 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 953A2C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA272074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A230207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:24:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731228AbgG1QUk (ORCPT
+        id S1731371AbgG1QYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:20:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48730 "EHLO mx2.suse.de"
+        Tue, 28 Jul 2020 12:24:05 -0400
+Received: from mga03.intel.com ([134.134.136.65]:38462 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730679AbgG1QUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:20:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 78388B5CC;
-        Tue, 28 Jul 2020 16:20:48 +0000 (UTC)
-From:   Daniel Wagner <dwagner@suse.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH v1] block: Remove callback typedefs for blk_mq_ops
-Date:   Tue, 28 Jul 2020 18:20:36 +0200
-Message-Id: <20200728162036.118211-1-dwagner@suse.de>
-X-Mailer: git-send-email 2.16.4
+        id S1731358AbgG1QYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:24:04 -0400
+IronPort-SDR: pjAdoghT3dIQ4BdsXPIP6jxl3EVsRAH83EAfnImj5SzIrX243WWIRjcLvz8L4k2IG8qjHtZrI/
+ 570qg0f2kOqg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="151236180"
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="151236180"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 09:20:56 -0700
+IronPort-SDR: M1iOCrXIwQVbYblO1JTLgs5Wv/lcEYHyN+gMzYqV9suGvZ5PKuBTGNpWTsx4dkNM0sLKO2jUnH
+ Ixd+FRBS+pTw==
+X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
+   d="scan'208";a="328383867"
+Received: from kmolinar-mobl4.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.212.162.155])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 09:20:54 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     linux-doc@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v2] scripts/kernel-doc: optionally treat warnings as errors
+Date:   Tue, 28 Jul 2020 11:20:40 -0500
+Message-Id: <20200728162040.92467-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No need to define typedefs for the callbacks, because there is not a
-single user except blk_mq_ops.
+The kbuild bot recently added the W=1 option, which triggered
+documentation cleanups to squelch hundreds of kernel-doc warnings.
 
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
+To make sure new kernel contributions don't add regressions to
+kernel-doc descriptors, this patch suggests an option to treat
+warnings as errors in CI/automated tests.
+
+A -Werror command-line option is added to the kernel-doc script. When
+this option is set, the script will return the number of warnings
+found. The caller can then treat this positive return value as an
+error and stop the build.
+
+Using this command line option is however not straightforward when the
+kernel-doc script is called from other scripts. To align with typical
+kernel compilation or documentation generation, the Werror option is
+also set by checking the KCFLAGS environment variable, or if
+KDOC_WERROR is defined, as in the following examples:
+
+KCFLAGS="-Wall -Werror" make W=1 sound/
+KCFLAGS="-Wall -Werror" make W=1 drivers/soundwire/
+KDOC_WERROR=1 make htmldocs
+
+Note that in the last example the documentation build does not stop,
+only an additional log is provided.
+
+Credits to Randy Dunlap for suggesting the use of environment variables.
+
+Suggested-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
+v2: reworded ChangeLog as suggested by Jonathan Corbet.
 
-v1: updated indentation
+ scripts/kernel-doc | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
- include/linux/blk-mq.h | 50 ++++++++++++++++++--------------------------------
- 1 file changed, 18 insertions(+), 32 deletions(-)
-
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 23230c1d031e..9d2d5ad367a4 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -267,27 +267,9 @@ struct blk_mq_queue_data {
- 	bool last;
- };
+diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+index e991d7f961e9..d1b445665ad6 100755
+--- a/scripts/kernel-doc
++++ b/scripts/kernel-doc
+@@ -81,6 +81,7 @@ Output selection modifiers:
+ Other parameters:
+   -v			Verbose output, more warnings and other information.
+   -h			Print this help.
++  -Werror		Treat warnings as errors.
  
--typedef blk_status_t (queue_rq_fn)(struct blk_mq_hw_ctx *,
--		const struct blk_mq_queue_data *);
--typedef void (commit_rqs_fn)(struct blk_mq_hw_ctx *);
--typedef bool (get_budget_fn)(struct request_queue *);
--typedef void (put_budget_fn)(struct request_queue *);
--typedef enum blk_eh_timer_return (timeout_fn)(struct request *, bool);
--typedef int (init_hctx_fn)(struct blk_mq_hw_ctx *, void *, unsigned int);
--typedef void (exit_hctx_fn)(struct blk_mq_hw_ctx *, unsigned int);
--typedef int (init_request_fn)(struct blk_mq_tag_set *set, struct request *,
--		unsigned int, unsigned int);
--typedef void (exit_request_fn)(struct blk_mq_tag_set *set, struct request *,
--		unsigned int);
--
- typedef bool (busy_iter_fn)(struct blk_mq_hw_ctx *, struct request *, void *,
- 		bool);
- typedef bool (busy_tag_iter_fn)(struct request *, void *, bool);
--typedef int (poll_fn)(struct blk_mq_hw_ctx *);
--typedef int (map_queues_fn)(struct blk_mq_tag_set *set);
--typedef bool (busy_fn)(struct request_queue *);
--typedef void (complete_fn)(struct request *);
--typedef void (cleanup_rq_fn)(struct request *);
+ EOF
+     print $message;
+@@ -273,6 +274,7 @@ my $kernelversion;
+ my $dohighlight = "";
  
- /**
-  * struct blk_mq_ops - Callback functions that implements block driver
-@@ -297,7 +279,8 @@ struct blk_mq_ops {
- 	/**
- 	 * @queue_rq: Queue a new request from block IO.
- 	 */
--	queue_rq_fn		*queue_rq;
-+	blk_status_t (*queue_rq)(struct blk_mq_hw_ctx *,
-+				 const struct blk_mq_queue_data *);
+ my $verbose = 0;
++my $Werror = 0;
+ my $output_mode = "rst";
+ my $output_preformatted = 0;
+ my $no_doc_sections = 0;
+@@ -319,6 +321,18 @@ if (defined($ENV{'KBUILD_VERBOSE'})) {
+ 	$verbose = "$ENV{'KBUILD_VERBOSE'}";
+ }
  
- 	/**
- 	 * @commit_rqs: If a driver uses bd->last to judge when to submit
-@@ -306,7 +289,7 @@ struct blk_mq_ops {
- 	 * purpose of kicking the hardware (which the last request otherwise
- 	 * would have done).
- 	 */
--	commit_rqs_fn		*commit_rqs;
-+	void (*commit_rqs)(struct blk_mq_hw_ctx *);
- 
- 	/**
- 	 * @get_budget: Reserve budget before queue request, once .queue_rq is
-@@ -314,37 +297,38 @@ struct blk_mq_ops {
- 	 * reserved budget. Also we have to handle failure case
- 	 * of .get_budget for avoiding I/O deadlock.
- 	 */
--	get_budget_fn		*get_budget;
-+	bool (*get_budget)(struct request_queue *);
++if (defined($ENV{'KDOC_WERROR'})) {
++	$Werror = "$ENV{'KDOC_WERROR'}";
++}
 +
- 	/**
- 	 * @put_budget: Release the reserved budget.
- 	 */
--	put_budget_fn		*put_budget;
-+	void (*put_budget)(struct request_queue *);
++if (defined($ENV{'KCFLAGS'})) {
++	my $kcflags = "$ENV{'KCFLAGS'}";
++
++	if ($kcflags =~ /Werror/) {
++		$Werror = 1;
++	}
++}
++
+ # Generated docbook code is inserted in a template at a point where
+ # docbook v3.1 requires a non-zero sequence of RefEntry's; see:
+ # https://www.oasis-open.org/docbook/documentation/reference/html/refentry.html
+@@ -433,6 +447,8 @@ while ($ARGV[0] =~ m/^--?(.*)/) {
+ 	push(@export_file_list, $file);
+     } elsif ($cmd eq "v") {
+ 	$verbose = 1;
++    } elsif ($cmd eq "Werror") {
++	$Werror = 1;
+     } elsif (($cmd eq "h") || ($cmd eq "help")) {
+ 	usage();
+     } elsif ($cmd eq 'no-doc-sections') {
+@@ -2262,4 +2278,9 @@ if ($verbose && $warnings) {
+   print STDERR "$warnings warnings\n";
+ }
  
- 	/**
- 	 * @timeout: Called on request timeout.
- 	 */
--	timeout_fn		*timeout;
-+	enum blk_eh_timer_return (*timeout)(struct request *, bool);
- 
- 	/**
- 	 * @poll: Called to poll for completion of a specific tag.
- 	 */
--	poll_fn			*poll;
-+	int (*poll)(struct blk_mq_hw_ctx *);
- 
- 	/**
- 	 * @complete: Mark the request as complete.
- 	 */
--	complete_fn		*complete;
-+	void (*complete)(struct request *);
- 
- 	/**
- 	 * @init_hctx: Called when the block layer side of a hardware queue has
- 	 * been set up, allowing the driver to allocate/init matching
- 	 * structures.
- 	 */
--	init_hctx_fn		*init_hctx;
-+	int (*init_hctx)(struct blk_mq_hw_ctx *, void *, unsigned int);
- 	/**
- 	 * @exit_hctx: Ditto for exit/teardown.
- 	 */
--	exit_hctx_fn		*exit_hctx;
-+	void (*exit_hctx)(struct blk_mq_hw_ctx *, unsigned int);
- 
- 	/**
- 	 * @init_request: Called for every command allocated by the block layer
-@@ -353,11 +337,13 @@ struct blk_mq_ops {
- 	 * Tag greater than or equal to queue_depth is for setting up
- 	 * flush request.
- 	 */
--	init_request_fn		*init_request;
-+	int (*init_request)(struct blk_mq_tag_set *set, struct request *,
-+			    unsigned int, unsigned int);
- 	/**
- 	 * @exit_request: Ditto for exit/teardown.
- 	 */
--	exit_request_fn		*exit_request;
-+	void (*exit_request)(struct blk_mq_tag_set *set, struct request *,
-+			     unsigned int);
- 
- 	/**
- 	 * @initialize_rq_fn: Called from inside blk_get_request().
-@@ -368,18 +354,18 @@ struct blk_mq_ops {
- 	 * @cleanup_rq: Called before freeing one request which isn't completed
- 	 * yet, and usually for freeing the driver private data.
- 	 */
--	cleanup_rq_fn		*cleanup_rq;
-+	void (*cleanup_rq)(struct request *);
- 
- 	/**
- 	 * @busy: If set, returns whether or not this queue currently is busy.
- 	 */
--	busy_fn			*busy;
-+	bool (*busy)(struct request_queue *);
- 
- 	/**
- 	 * @map_queues: This allows drivers specify their own queue mapping by
- 	 * overriding the setup-time function that builds the mq_map.
- 	 */
--	map_queues_fn		*map_queues;
-+	int (*map_queues)(struct blk_mq_tag_set *set);
- 
- #ifdef CONFIG_BLK_DEBUG_FS
- 	/**
+-exit($output_mode eq "none" ? 0 : $errors);
++if ($Werror && $warnings) {
++    print STDERR "$warnings warnings as Errors\n";
++    exit($warnings);
++} else {
++    exit($output_mode eq "none" ? 0 : $errors)
++}
 -- 
-2.16.4
+2.25.1
 
