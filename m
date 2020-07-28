@@ -2,135 +2,100 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC454C433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD87AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9C2C21883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F3421775
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 04:24:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EASfrngd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MH+logvc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgG1ERi (ORCPT
+        id S1726519AbgG1EYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 00:17:38 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:44265 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726385AbgG1ERh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 00:17:37 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595909856; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=hCNM+2Lv+dQQBLrGuQbA6lyFD5H/2pzjFUsxm4GPBrU=; b=EASfrngd76WsCHcGmJQWRxIs5DogMtMA07IHijgViVEBTneRREXXfCGzHA5yP8iR3V5GtGFf
- OqcZ6ODA5kCl+i1UDyljm/Y4tDJ7tsBxaEg9cRJ3TcBeTzHF1mZQuhuyXCPXkMdnkfekONAJ
- ZJhz4AUy7ruj7PaBCV5dBG7b8Tc=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f1fa6df70ff737ddba4a70f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 04:17:35
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3E52BC43395; Tue, 28 Jul 2020 04:17:35 +0000 (UTC)
-Received: from [192.168.1.12] (unknown [61.3.20.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4FA49C433C6;
-        Tue, 28 Jul 2020 04:17:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4FA49C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
- power-domains for venus
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Taniya Das <tdas@codeaurora.org>
-References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
- <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
- <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
- <94581989-e069-55e5-6b70-919185eda33e@linaro.org>
- <e0c03ce2-136c-2c5c-6f36-bb0c69a82e2d@codeaurora.org>
- <5a8af2da-cc3f-005d-47e6-b36be1104d6a@codeaurora.org>
- <20200727153806.kgegadvghmkevch3@vireshk-mac-ubuntu>
- <159589753282.1360974.11628682178494669632@swboyd.mtv.corp.google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <e08e9822-7c0c-29d7-67b2-245af66b623a@codeaurora.org>
-Date:   Tue, 28 Jul 2020 09:47:28 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 00:24:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgG1EYe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 00:24:34 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A1AFC061794;
+        Mon, 27 Jul 2020 21:24:34 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id s144so6402086oie.3;
+        Mon, 27 Jul 2020 21:24:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lw8BChbOt+3cCy8fjAi9TdK1jevRdCglCZh6ivvQ72M=;
+        b=MH+logvcbnUxbInUxm2hCr72Kb94JCc1KO/eAd5bqlZeb/E1P66eAqFa8SQwF03vnF
+         WdWWTd/ijhP6EghdCKI4+c/ks8DWewsXLF7C7NTN4jh7yEVdf75KhZz3eTYj/W5mouik
+         pm8XA6M+x+RzLNfs899HLuhuiuP805qLtSM5GR4neoUjsnyv6Qm8T76jXFvl1hOt09eY
+         cUuhBYhRYpNcd6HnC4VH4sCpViYdwJRxtz5EY7A2xluVnGMDJqHpdo8Ck1frMdgsdDH3
+         u3IVNB7bxj+3ZIRY/8rIaHBwbYrHYNAGgXS46f/XyRu2SBvIqsBX2LXQh7GZmTqq9xUX
+         dhoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lw8BChbOt+3cCy8fjAi9TdK1jevRdCglCZh6ivvQ72M=;
+        b=rdakembw9bcMeDpBJMu50AkWelfWBUv3tYna7FCCa4TgHGP96TIhS79mc6u2VAjsvN
+         M0OYqp+znhKu1oaau3yq2COlCtlQS/LeRh751uG4VEaFysiuR96stYU5KpVQauZgGYwi
+         5kqtVVK8GeQVwFORGdSI9WckWgQsXWAyOPZE7mb6/hCct0lUPjTDU98AmIzAWYGjiHok
+         g8oSkkLYY10bQES5rw6IkW/4aUnFIS/Iqs2+Of6r7O1WyQ8GwhVl3dy1o/WdmIyA3gSA
+         5d606aLt5XHW+Y0hkng43x1Pma9gPXtzobNT9bHAujzN/s6/uo5zbgNvcTqTcVcM3tQ4
+         nZBA==
+X-Gm-Message-State: AOAM533mpB+xKzoXTyinG/c3JYo7aXlvDB9xNBUN02G/BwG2E7mHf/6R
+        2VuZM/01rgRl3PJl7vU+fxOW6xSJsIE=
+X-Google-Smtp-Source: ABdhPJxxmSPcnvbuf5zau6AmKRtUr2TWD8mhzcnltgIcV9JwRo+hu2H2eVHsVX6nHyw2rRGZ/s242w==
+X-Received: by 2002:aca:b2d5:: with SMTP id b204mr1970129oif.44.1595910273270;
+        Mon, 27 Jul 2020 21:24:33 -0700 (PDT)
+Received: from localhost.localdomain ([170.130.31.90])
+        by smtp.gmail.com with ESMTPSA id v3sm765198oiv.45.2020.07.27.21.24.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 21:24:32 -0700 (PDT)
+From:   Forest Crossman <cyrozap@gmail.com>
+To:     linux-usb@vger.kernel.org
+Cc:     Forest Crossman <cyrozap@gmail.com>, mathias.nyman@intel.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] Small fixes for ASMedia host controllers
+Date:   Mon, 27 Jul 2020 23:24:06 -0500
+Message-Id: <20200728042408.180529-1-cyrozap@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727090629.169701-1-cyrozap@gmail.com>
+References: <20200727090629.169701-1-cyrozap@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <159589753282.1360974.11628682178494669632@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The first patch just defines some host controller device IDs to make the
+code a bit easier to read (since the controller part number is not
+always the same as the DID) and to prepare for the next patch.
 
-On 7/28/2020 6:22 AM, Stephen Boyd wrote:
-> Quoting Viresh Kumar (2020-07-27 08:38:06)
->> On 27-07-20, 17:38, Rajendra Nayak wrote:
->>> On 7/27/2020 11:23 AM, Rajendra Nayak wrote:
->>>> On 7/24/2020 7:39 PM, Stanimir Varbanov wrote:
->>>>>>> +
->>>>>>> +                opp-533000000 {
->>>>>>> +                    opp-hz = /bits/ 64 <533000000>;
->>
->> Is this the highest OPP in table ?
->>
->>>>> Actually it comes from videocc, where ftbl_video_cc_venus_clk_src
->>>>> defines 533000000 but the real calculated freq is 533000097.
->>>>
->>>> I still don't quite understand why the videocc driver returns this
->>>> frequency despite this not being in the freq table.
->>>
->>> Ok, so I see the same issue on sc7180 also. clk_round_rate() does seem to
->>> return whats in the freq table, but clk_set_rate() goes ahead and sets it
-> 
-> I'm happy to see clk_round_rate() return the actual rate that would be
-> achieved and not just the rate that is in the frequency tables. Would
-> that fix the problem? 
+The second patch defines a new device ID for the ASM1142 and enables the
+XHCI_NO_64BIT_SUPPORT quirk for that device, since it has the same
+problem with truncating the higher bits as the ASM2142/ASM3142.
 
-It would, but only if I also update the OPP table to have 533000097
-instead of 533000000 (which I guess is needed anyway)
-If this is the actual frequency that's achievable, then perhaps even the clock
-freq table should have this? 533000097 and not 533000000?
-That way clk_round_rate() would return the actual rate that's achieved and
-we don't need any extra math. Isn't that the reason these freq tables exist
-anyway.
 
-> It may be that we need to make clk_round_rate() do
-> some more math on qcom platforms and actually figure out what the rate
-> is going to be instead of blindly trust the frequency that has been set
-> in the tables.
-> 
->>> to 533000097. Subsequently when we try to set a different OPP, it fails to
->>> find the 'current' OPP entry for 533000097. This sounds like an issue with the OPP
->>> framework? Should we not fall back to the highest OPP as the current OPP?
->>>
->>> Stephen/Viresh, any thoughts?
->>
->> I think we (in all frameworks generally) try to set a frequency <=
->> target frequency and so there may be a problem if the frequency is
->> larger than highest supported. IOW, you need to fix tables a bit.
->>
-> 
-> Rounding is annoying for sure.
-> 
+Changes since v1:
+ - Added changelog text to the first patch.
+
+
+Forest Crossman (2):
+  usb: xhci: define IDs for various ASMedia host controllers
+  usb: xhci: Fix ASMedia ASM1142 DMA addressing
+
+ drivers/usb/host/xhci-pci.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.20.1
+
