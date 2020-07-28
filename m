@@ -2,133 +2,126 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CCCC433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6D8C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4569520714
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:27:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Os0L1CDO"
+	by mail.kernel.org (Postfix) with ESMTP id EFCCB2250E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 18:28:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732404AbgG1S1p (ORCPT
+        id S1732428AbgG1S2p convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:27:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728179AbgG1S1o (ORCPT
+        Tue, 28 Jul 2020 14:28:45 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:57641 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728179AbgG1S2o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 14:27:44 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8E08C061794;
-        Tue, 28 Jul 2020 11:27:44 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id p1so10357068pls.4;
-        Tue, 28 Jul 2020 11:27:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1cAhV+T2vs/+U8dV/Lde+0qKXpHcbVwHA5qtTwaO+qE=;
-        b=Os0L1CDOY6KNC6QU5hdX3+SZ2mDYZ/l1g3X2IFen3J6qllE8qia6IUshH/D0dNtiBb
-         cFIBaFKbAyAL+2ZyB6SwDgMGKVfw4LYmTjgypBVUk+Q8am6flWCO5gnyzcaoPIlveGYc
-         v0kIQi6eDFO8/SLPxdnB1xbxOmOhD+0MSPPnvHteU2+h854NXwVFor6U9bNPBEuJ0tcW
-         zl716jcNFim8Bp35haz4aaUyEvReU1deYUo80Gh9L9lapBrcsgTO1zmsc/Cn495AJfyD
-         XeXqt0xIa+cH9+7ospps9a1UprKH5zshMd/jjv1UBFhoppl/r//7hlJtx5vhA3F6uQkh
-         mrMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1cAhV+T2vs/+U8dV/Lde+0qKXpHcbVwHA5qtTwaO+qE=;
-        b=YvODgMSqgdcypIuDLELCKNvNVeufhCvIr6LdtPy6azM1Tt3+7FHpJP2TOyBxSsyo8+
-         laPG/mdqIIMBs2PG58/okfAj1cIoqixifPFFBpzybOWa8p1Na6yTDA1qy4dqKRj44jg8
-         0jhl6X/yiheq4csbfwE+9UmRJXTFALXsZ7BvewMH7BNMzZKkGhvm9FegwgLn6pLaWwJV
-         4mf26uMeNsImzyN5RNdkKPZb5DyQOflDrS2/JKcAbmAuhAUxM4aKHta0V4JPgYkvXdk5
-         qSK9m3gYvfTOUZX51U7lRMkTty6/BeMBhvTYQ69zLU9ukbrwHBnFR7YXqeCQiXCwNrpN
-         Ep/Q==
-X-Gm-Message-State: AOAM5303z7B6mqoSa2VxHvCDa4E3aAVhb3YscCKoANqxSSG0yV7N8NdS
-        gGoGK/VyW8xbqX6zlhwSbn4PYaGCgCjXKD/ff6k=
-X-Google-Smtp-Source: ABdhPJwq320p5Lo3L6NtVYCg87vSIIhI2nTsTdoJdqF3kWLaPhvIQ021YpSGuUJz0u8dYgmc1U0fD9Tj18gBMPfCTVA=
-X-Received: by 2002:a17:90a:498b:: with SMTP id d11mr5987005pjh.129.1595960864133;
- Tue, 28 Jul 2020 11:27:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200728134226.27592-1-trix@redhat.com>
-In-Reply-To: <20200728134226.27592-1-trix@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Jul 2020 21:27:27 +0300
-Message-ID: <CAHp75VfLK=SQm7k=Gfj5pvgV9ncjuJkz2A6hJ4YqE6YDEdyyOQ@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: of: reset name variable in of_gpiochip_add_hog
-To:     trix@redhat.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        frank.rowand@sony.com,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 28 Jul 2020 14:28:44 -0400
+Received: from marcel-macbook.fritz.box (p4ff9f430.dip0.t-ipconnect.de [79.249.244.48])
+        by mail.holtmann.org (Postfix) with ESMTPSA id BD006CECD6;
+        Tue, 28 Jul 2020 20:38:43 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v3] Bluetooth: Fix suspend notifier race
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200728095711.v3.1.I7ebe9eaf684ddb07ae28634cb4d28cf7754641f1@changeid>
+Date:   Tue, 28 Jul 2020 20:28:41 +0200
+Cc:     chromeos-bluetooth-upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Bluetooth Kernel Mailing List 
+        <linux-bluetooth@vger.kernel.org>,
+        Miao-chen Chou <mcchou@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <D320E0AF-EFF1-47BD-85F6-59168B170F65@holtmann.org>
+References: <20200728095711.v3.1.I7ebe9eaf684ddb07ae28634cb4d28cf7754641f1@changeid>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 4:44 PM <trix@redhat.com> wrote:
->
-> From: Tom Rix <trix@redhat.com>
->
-> Clang static analysis reports this error
->
-> gpiolib-of.c:664:9: warning: 2nd function call argument
->   is an uninitialized value [core.CallAndMessage]
->         ret = gpiod_hog(desc, name, lflags, dflags);
->
+Hi Abhishek,
 
-> name is sometimes set by of_parse_own_gpio
-> name is always used by gpiod_hog
-
-It's not clear if it's the output of the analyser.
-If so, try to file a bug and fix there how it prints out functions,
-should be func().
-Otherwise fix in the commit message.
-
-> So it is necessary to reset name so an old value is
-
-the name
-
-> not mistakenly used by gpiod_hog.
-
-gpiod_hog()
-
-> Fixes: bc21077e084b ("gpio: of: Extract of_gpiochip_add_hog()")
->
-> Signed-off-by: Tom Rix <trix@redhat.com>
-
-Should be no blank line in between.
-
+> Unregister from suspend notifications and cancel suspend preparations
+> before running hci_dev_do_close. Otherwise, the suspend notifier may
+> race with unregister and cause cmd_timeout even after hdev has been
+> freed.
+> 
+> Below is the trace from when this panic was seen:
+> 
+> [  832.578518] Bluetooth: hci_core.c:hci_cmd_timeout() hci0: command 0x0c05 tx timeout
+> [  832.586200] BUG: kernel NULL pointer dereference, address: 0000000000000000
+> [  832.586203] #PF: supervisor read access in kernel mode
+> [  832.586205] #PF: error_code(0x0000) - not-present page
+> [  832.586206] PGD 0 P4D 0
+> [  832.586210] PM: suspend exit
+> [  832.608870] Oops: 0000 [#1] PREEMPT SMP NOPTI
+> [  832.613232] CPU: 3 PID: 10755 Comm: kworker/3:7 Not tainted 5.4.44-04894-g1e9dbb96a161 #1
+> [  832.630036] Workqueue: events hci_cmd_timeout [bluetooth]
+> [  832.630046] RIP: 0010:__queue_work+0xf0/0x374
+> [  832.630051] RSP: 0018:ffff9b5285f1fdf8 EFLAGS: 00010046
+> [  832.674033] RAX: ffff8a97681bac00 RBX: 0000000000000000 RCX: ffff8a976a000600
+> [  832.681162] RDX: 0000000000000000 RSI: 0000000000000009 RDI: ffff8a976a000748
+> [  832.688289] RBP: ffff9b5285f1fe38 R08: 0000000000000000 R09: ffff8a97681bac00
+> [  832.695418] R10: 0000000000000002 R11: ffff8a976a0006d8 R12: ffff8a9745107600
+> [  832.698045] usb 1-6: new full-speed USB device number 119 using xhci_hcd
+> [  832.702547] R13: ffff8a9673658850 R14: 0000000000000040 R15: 000000000000001e
+> [  832.702549] FS:  0000000000000000(0000) GS:ffff8a976af80000(0000) knlGS:0000000000000000
+> [  832.702550] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  832.702550] CR2: 0000000000000000 CR3: 000000010415a000 CR4: 00000000003406e0
+> [  832.702551] Call Trace:
+> [  832.702558]  queue_work_on+0x3f/0x68
+> [  832.702562]  process_one_work+0x1db/0x396
+> [  832.747397]  worker_thread+0x216/0x375
+> [  832.751147]  kthread+0x138/0x140
+> [  832.754377]  ? pr_cont_work+0x58/0x58
+> [  832.758037]  ? kthread_blkcg+0x2e/0x2e
+> [  832.761787]  ret_from_fork+0x22/0x40
+> [  832.846191] ---[ end trace fa93f466da517212 ]---
+> 
+> Fixes: 9952d90ea2885 ("Bluetooth: Handle PM_SUSPEND_PREPARE and PM_POST_SUSPEND")
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> Reviewed-by: Miao-chen Chou <mcchou@chromium.org>
 > ---
->  drivers/gpio/gpiolib-of.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index bd31dd3b6a75..277ada41d04a 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -657,6 +657,7 @@ static int of_gpiochip_add_hog(struct gpio_chip *chip, struct device_node *hog)
->         int ret;
->
->         for (i = 0;; i++) {
-> +               name = NULL;
->                 desc = of_parse_own_gpio(hog, chip, i, &name, &lflags, &dflags);
->                 if (IS_ERR(desc))
->                         break;
-> --
-> 2.18.1
->
+> Hi Marcel,
+> 
+> This fixes a race between hci_unregister_dev and the suspend notifier.
+> 
+> The suspend notifier handler seemed to be scheduling commands even after
+> it was cleaned up and this was resulting in a panic in cmd_timeout (when
+> it tries to requeue the cmd_timer).
+> 
+> This was tested on 5.4 kernel with a suspend+resume stress test for 500+
+> iterations. I also confirmed that after a usb disconnect, the suspend
+> notifier times out before the USB device is probed again (fixing the
+> original race between the usb_disconnect + probe and the notifier).
+> 
+> Thanks
+> Abhishek
+> 
+> 
+> Changes in v3:
+> * Added fixes tag
+> 
+> Changes in v2:
+> * Moved oops into commit message
+> 
+> net/bluetooth/hci_core.c | 5 +++--
+> 1 file changed, 3 insertions(+), 2 deletions(-)
 
+patch has been applied to bluetooth-next tree.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Regards
+
+Marcel
+
