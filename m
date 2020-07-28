@@ -2,148 +2,140 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E473BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 053BEC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B986521D95
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:48:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bojODVCb"
+	by mail.kernel.org (Postfix) with ESMTP id DA8CB21D95
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:48:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgG1HsY (ORCPT
+        id S1728019AbgG1Hsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:48:24 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:21452 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727815AbgG1HsX (ORCPT
+        Tue, 28 Jul 2020 03:48:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727815AbgG1Hsp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:48:23 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06S7lixs021797;
-        Tue, 28 Jul 2020 09:48:12 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=NkOHTuIum3uJvQxrbwjluQtz8Ukz7QuQntHgqGitDlw=;
- b=bojODVCblJyp8S4KJpH6pSb/TKSHi0RXB7DGidnYw1C6ywC2eUcka5l6Y0c5/IyQwKrY
- sWfnyugYKcJlPg6+ge0GlvzoseuKAyWY9gcVm1c5m8GYcROqZMzXTZr3KcYF00/6YlLE
- 0lnZFPwsC+rV1lZVAd195muEDXv6DrWLq28lNmA0fRog8KRmXEojSnpuFKm3zq0QYaUa
- A43rcrPfMr0UajwkhpN4cQGk2AW+Au8pW/tPBA52KPIlYC1JbnD6k5KKrOAx0Dqt0Rcl
- 8DQMcpfyE01+bI64/+HqmSskt3F0K7T3lwh9s1zYvPGJsW4a7oTeclfJ0dYmneGsqHhY CQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32gagv4yy8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 09:48:12 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E828610002A;
-        Tue, 28 Jul 2020 09:48:11 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D2CFA21FEA2;
-        Tue, 28 Jul 2020 09:48:11 +0200 (CEST)
-Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 28 Jul
- 2020 09:48:11 +0200
-Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
- SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
- 15.00.1473.003; Tue, 28 Jul 2020 09:48:11 +0200
-From:   Hugues FRUCHET <hugues.fruchet@st.com>
-To:     Alain VOLMAT <alain.volmat@st.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>
-CC:     "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] media: stm32-dcmi: create video dev within notifier
- bound
-Thread-Topic: [PATCH 1/2] media: stm32-dcmi: create video dev within notifier
- bound
-Thread-Index: AQHWZKm2hQlOt6e2MkK9C4kMLjRhyqkce/UA
-Date:   Tue, 28 Jul 2020 07:48:11 +0000
-Message-ID: <5650a872-3352-64cb-2f35-94e2be3b187f@st.com>
-References: <1595918278-9724-1-git-send-email-alain.volmat@st.com>
- <1595918278-9724-2-git-send-email-alain.volmat@st.com>
-In-Reply-To: <1595918278-9724-2-git-send-email-alain.volmat@st.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0E5966DDEF578E4E9CEA2E6722F65B2D@st.com>
-Content-Transfer-Encoding: base64
+        Tue, 28 Jul 2020 03:48:45 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28DC6C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 00:48:45 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k0KLV-0008OF-BB; Tue, 28 Jul 2020 09:48:21 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k0KLR-0005bP-Ru; Tue, 28 Jul 2020 09:48:17 +0200
+Date:   Tue, 28 Jul 2020 09:48:17 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Christian Eggers <ceggers@arri.de>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Matt Mackall <mpm@selenic.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH] hwrng: imx-rngc - setup default RNG quality
+Message-ID: <20200728074817.hlevn7ex2hckdbvi@pengutronix.de>
+References: <CAOMZO5ASnj7SpjjAEpWjRK-vMpFFKU00=rxKeBtaMSKE9pkX1g@mail.gmail.com>
+ <20200727124552.4336-1-ceggers@arri.de>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-28_01:2020-07-27,2020-07-28 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727124552.4336-1-ceggers@arri.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:39:33 up 255 days, 22:58, 251 users,  load average: 0.09, 0.04,
+ 0.04
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmV2aWV3ZWQtYnk6IEh1Z3VlcyBGcnVjaGV0IDxodWd1ZXMuZnJ1Y2hldEBzdC5jb20+DQoNCk9u
-IDcvMjgvMjAgODozNyBBTSwgQWxhaW4gVm9sbWF0IHdyb3RlOg0KPiBJbiBjYXNlIG9mIGFuIGVy
-cm9yIGR1cmluZyB0aGUgaW5pdGlhbGl6YXRpb24gb2YgdGhlIHNlbnNvciwNCj4gdGhlIHZpZGVv
-IGRldmljZSBpcyBzdGlsbCBhdmFpbGFibGUgc2luY2UgY3JlYXRlZCBhdCB0aGUNCj4gcHJvYmUg
-b2YgdGhlIGRjbWkgZHJpdmVyLiBNb3Jlb3ZlciB0aGUgZGV2aWNlIHdvdWxkbid0DQo+IGJlIHJl
-bGVhc2VkIGV2ZW4gd2hlbiByZW1vdmluZyB0aGUgbW9kdWxlIHNpbmNlIHRoZSByZWxlYXNlDQo+
-IGlzIHBlcmZvcm1lZCBhcyBwYXJ0IG9mIHRoZSBub3RpZmllciB1bmJpbmQgY2FsbGJhY2sNCj4g
-KG5vdCBjYWxsZWQgaWYgbm8gc2Vuc29yIGlzIHByb3Blcmx5IGluaXRpYWxpemVkKS4NCj4gDQo+
-IFRoaXMgcGF0Y2ggbW92ZSB0aGUgdmlkZW8gZGV2aWNlIGNyZWF0aW9uIHdpdGggdGhlIHY0bDIg
-bm90aWZpZXINCj4gYm91bmQgaGFuZGxlciBpbiBvcmRlciB0byBhdm9pZCBoYXZpbmcgYSB2aWRl
-byBkZXZpY2UgY3JlYXRlZCB3aGVuDQo+IGFuIGVycm9yIGhhcHBlbiBkdXJpbmcgdGhlIHBpcGUg
-KGRjbWkgLSBzZW5zb3IpIGluaXRpYWxpemF0aW9uLg0KPiANCj4gVGhpcyBhbHNvIG1ha2VzIHRo
-ZSB2aWRlbyBkZXZpY2UgY3JlYXRpb24gc3ltbWV0cmljIHdpdGggdGhlDQo+IHJlbGVhc2Ugd2hp
-Y2ggaXMgYWxyZWFkeSBkb25lIHdpdGhpbiB0aGUgbm90aWZpZXIgdW5iaW5kIGhhbmRsZXIuDQo+
-IA0KPiBGaXhlczogMzc0MDRmOTFlZjhiICgiW21lZGlhXSBzdG0zMi1kY21pOiBTVE0zMiBEQ01J
-IGNhbWVyYSBpbnRlcmZhY2UgZHJpdmVyIikNCj4gU2lnbmVkLW9mZi1ieTogQWxhaW4gVm9sbWF0
-IDxhbGFpbi52b2xtYXRAc3QuY29tPg0KPiAtLS0NCj4gICBkcml2ZXJzL21lZGlhL3BsYXRmb3Jt
-L3N0bTMyL3N0bTMyLWRjbWkuYyB8IDIzICsrKysrKysrKysrKy0tLS0tLS0tLS0tDQo+ICAgMSBm
-aWxlIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKyksIDExIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RtMzIvc3RtMzItZGNtaS5jIGIvZHJp
-dmVycy9tZWRpYS9wbGF0Zm9ybS9zdG0zMi9zdG0zMi1kY21pLmMNCj4gaW5kZXggYjg5MzE0OTBi
-ODNiLi41ZTYwZDRjNmVlZWIgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
-c3RtMzIvc3RtMzItZGNtaS5jDQo+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RtMzIv
-c3RtMzItZGNtaS5jDQo+IEBAIC0xNzQ3LDYgKzE3NDcsMTUgQEAgc3RhdGljIGludCBkY21pX2dy
-YXBoX25vdGlmeV9ib3VuZChzdHJ1Y3QgdjRsMl9hc3luY19ub3RpZmllciAqbm90aWZpZXIsDQo+
-ICAgDQo+ICAgCWRldl9kYmcoZGNtaS0+ZGV2LCAiU3ViZGV2IFwiJXNcIiBib3VuZFxuIiwgc3Vi
-ZGV2LT5uYW1lKTsNCj4gICANCj4gKwlyZXQgPSB2aWRlb19yZWdpc3Rlcl9kZXZpY2UoZGNtaS0+
-dmRldiwgVkZMX1RZUEVfVklERU8sIC0xKTsNCj4gKwlpZiAocmV0KSB7DQo+ICsJCWRldl9lcnIo
-ZGNtaS0+ZGV2LCAiRmFpbGVkIHRvIHJlZ2lzdGVyIHZpZGVvIGRldmljZVxuIik7DQo+ICsJCXJl
-dHVybiByZXQ7DQo+ICsJfQ0KPiArDQo+ICsJZGV2X2RiZyhkY21pLT5kZXYsICJEZXZpY2UgcmVn
-aXN0ZXJlZCBhcyAlc1xuIiwNCj4gKwkJdmlkZW9fZGV2aWNlX25vZGVfbmFtZShkY21pLT52ZGV2
-KSk7DQo+ICsNCj4gICAJLyoNCj4gICAJICogTGluayB0aGlzIHN1Yi1kZXZpY2UgdG8gRENNSSwg
-aXQgY291bGQgYmUNCj4gICAJICogYSBwYXJhbGxlbCBjYW1lcmEgc2Vuc29yIG9yIGEgYnJpZGdl
-DQo+IEBAIC0xNzU5LDEwICsxNzY4LDExIEBAIHN0YXRpYyBpbnQgZGNtaV9ncmFwaF9ub3RpZnlf
-Ym91bmQoc3RydWN0IHY0bDJfYXN5bmNfbm90aWZpZXIgKm5vdGlmaWVyLA0KPiAgIAkJCQkgICAg
-JmRjbWktPnZkZXYtPmVudGl0eSwgMCwNCj4gICAJCQkJICAgIE1FRElBX0xOS19GTF9JTU1VVEFC
-TEUgfA0KPiAgIAkJCQkgICAgTUVESUFfTE5LX0ZMX0VOQUJMRUQpOw0KPiAtCWlmIChyZXQpDQo+
-ICsJaWYgKHJldCkgew0KPiAgIAkJZGV2X2VycihkY21pLT5kZXYsICJGYWlsZWQgdG8gY3JlYXRl
-IG1lZGlhIHBhZCBsaW5rIHdpdGggc3ViZGV2IFwiJXNcIlxuIiwNCj4gICAJCQlzdWJkZXYtPm5h
-bWUpOw0KPiAtCWVsc2UNCj4gKwkJdmlkZW9fdW5yZWdpc3Rlcl9kZXZpY2UoZGNtaS0+dmRldik7
-DQo+ICsJfSBlbHNlDQo+ICAgCQlkZXZfZGJnKGRjbWktPmRldiwgIkRDTUkgaXMgbm93IGxpbmtl
-ZCB0byBcIiVzXCJcbiIsDQo+ICAgCQkJc3ViZGV2LT5uYW1lKTsNCj4gICANCj4gQEAgLTE5NzQs
-MTUgKzE5ODQsNiBAQCBzdGF0aWMgaW50IGRjbWlfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
-ZSAqcGRldikNCj4gICAJfQ0KPiAgIAlkY21pLT52ZGV2LT5lbnRpdHkuZmxhZ3MgfD0gTUVESUFf
-RU5UX0ZMX0RFRkFVTFQ7DQo+ICAgDQo+IC0JcmV0ID0gdmlkZW9fcmVnaXN0ZXJfZGV2aWNlKGRj
-bWktPnZkZXYsIFZGTF9UWVBFX1ZJREVPLCAtMSk7DQo+IC0JaWYgKHJldCkgew0KPiAtCQlkZXZf
-ZXJyKGRjbWktPmRldiwgIkZhaWxlZCB0byByZWdpc3RlciB2aWRlbyBkZXZpY2VcbiIpOw0KPiAt
-CQlnb3RvIGVycl9tZWRpYV9lbnRpdHlfY2xlYW51cDsNCj4gLQl9DQo+IC0NCj4gLQlkZXZfZGJn
-KGRjbWktPmRldiwgIkRldmljZSByZWdpc3RlcmVkIGFzICVzXG4iLA0KPiAtCQl2aWRlb19kZXZp
-Y2Vfbm9kZV9uYW1lKGRjbWktPnZkZXYpKTsNCj4gLQ0KPiAgIAkvKiBCdWZmZXIgcXVldWUgKi8N
-Cj4gICAJcS0+dHlwZSA9IFY0TDJfQlVGX1RZUEVfVklERU9fQ0FQVFVSRTsNCj4gICAJcS0+aW9f
-bW9kZXMgPSBWQjJfTU1BUCB8IFZCMl9SRUFEIHwgVkIyX0RNQUJVRjsNCj4g
+Hi Christian,
+
+On 20-07-27 14:45, Christian Eggers wrote:
+> When hw_random device's quality is non-zero, it will automatically fill
+> the kernel's entropy pool at boot.  For this purpose, one conservative
+> quality value is being picked up as the default value.
+
+IMHO your value is not conservative enough and the commit message should
+explain why we should use 900. Unfortunately I had not enough time to
+send my patch addressing this. However please check my commit message
+why 900 is not good:
+
+8<------------------------------------------------------------------------
+From 9f047eee5e4ce8353c9b764a47e7f584b2013347 Mon Sep 17 00:00:00 2001
+From: Marco Felsch <m.felsch@pengutronix.de>
+Date: Thu, 7 May 2020 12:01:28 +0200
+Subject: [PATCH] hwrng: imx-rngc - add quality to use it as kernel entropy
+ pool
+
+The RM describes the RNGB as follow:
+8<----------------------------------------------------------------
+The RNGB uses the True Random Number Generator (TRNG) and a
+Pseudo-Random Number Generator (PRNG) to achieve a true randomness and
+cryptographic strength.
+8<----------------------------------------------------------------
+
+The RNGB has 3 operation modes: self-test, seed-generation and the final
+'random number generation' mode. Befor we can retrieve random numbers
+from the RNGB we need to generate the seed pool:
+8<----------------------------------------------------------------
+During the seed generation, the RNGB adds the entropy generated in the
+TRNG to the 256-bit XKEY register. The PRNG algorithm executes 20.000
+entropy samples from the TRNG to create an initial seed for the random
+number generation.
+8<----------------------------------------------------------------
+
+The RNGB can generate 2^20 words (4byte) of 'random' data after the
+seed pool was initialized. The pool needs to be reseeded if more words
+are required. The reseeding is done automatically since
+commit 3acd9ea9331c ("hwrng: imx-rngc - use automatic seeding").
+
+We can't retrieve the TRNG values directly so we need a other way to get
+the quality level. We know that the PRNG uses 20.000 entropy samples
+from the TRNG to generate 2^20 words (1MiB) and the quality level is
+defined as (in bits of entropy per 1024 bits of input). So the quality
+level can be calculated by:
+
+   20.000 * 1024
+   ------------- = ~ 19.5
+        2^20
+
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ drivers/char/hw_random/imx-rngc.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
+index 9c47e431ce90..61c844baf26e 100644
+--- a/drivers/char/hw_random/imx-rngc.c
++++ b/drivers/char/hw_random/imx-rngc.c
+@@ -285,6 +285,7 @@ static int imx_rngc_probe(struct platform_device *pdev)
+ 	rngc->rng.init = imx_rngc_init;
+ 	rngc->rng.read = imx_rngc_read;
+ 	rngc->rng.cleanup = imx_rngc_cleanup;
++	rngc->rng.quality = 19;
+ 
+ 	rngc->dev = &pdev->dev;
+ 	platform_set_drvdata(pdev, rngc);
