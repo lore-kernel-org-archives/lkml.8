@@ -2,144 +2,101 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AD0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9994BC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 284F6206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F40206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:24:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mXf6epIT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729297AbgG1MYn (ORCPT
+        id S1729439AbgG1MYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:24:43 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:52196 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728300AbgG1MYm (ORCPT
+        Tue, 28 Jul 2020 08:24:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728300AbgG1MYz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:24:42 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: dafna)
-        with ESMTPSA id 87866297427
-Subject: Re: [PATCH v2 3/3] media: vimc: Join pipeline if one already exists
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>
-References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
- <20200724120213.17119-4-kgupta@es.iitr.ac.in>
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Message-ID: <e70ecfa2-695f-70ca-eccc-841477700445@collabora.com>
-Date:   Tue, 28 Jul 2020 14:24:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 08:24:55 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF251C061794;
+        Tue, 28 Jul 2020 05:24:54 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BGG8L1ZzLz9sT6;
+        Tue, 28 Jul 2020 22:24:49 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595939090;
+        bh=xE5KgJ0KYm9OWgxJkU6eZprqnvo190SKhgw0C7eXmTY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mXf6epITzmy0iFNTWgFA97LO3GepqBk4wICqbhK1p4K8172mdbK1KoL8cBSMCUSxc
+         7qzvSCcOMNYAP7qBA/20xd/QZFTVKp+LoivQNc5ytDvonwHN8zw6N9kpHD3qRAbY5I
+         EGi8oKTNgORMU3dlEhUHZG1e9i103ZGHHruyx4uxQlG1KCNO86h7VavhhEi9bFcGrB
+         3+sJqU5b4dhh+o7d8dOaN6fey1UY2Bo8IES0RYIj/2GN3E9tAvWcDKIMImRmpuv2Vq
+         02ZmTQ+KsLVQ2SsnvVV8R6jDp2+vBuNW64GPpJwe/6sQduPDz5lRTX9DnzZF3ZSn74
+         99YOTOX/e4ugg==
+Date:   Tue, 28 Jul 2020 22:24:48 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ismael Ferreras Morezuelas <swyterzone@gmail.com>
+Subject: linux-next: Fixes tag needs some work in the bluetooth tree
+Message-ID: <20200728222448.035e6280@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200724120213.17119-4-kgupta@es.iitr.ac.in>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/ynG/Bd_+_8L9q2AR0CQYUUy";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/ynG/Bd_+_8L9q2AR0CQYUUy
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 24.07.20 14:02, Kaaira Gupta wrote:
-> An output which is running is already part of a pipeline and trying to
-> start a new pipeline is not possible. This prevents two capture devices
-> from streaming at the same time.
-> 
-> Instead of failing to start the second capture device allow it to join
-> the already running pipeline. This allows two (or more) capture devices
-> to independently be started and stopped.
-> 
-> [Kaaira: Changed the search for an existing connected sensor, to search
-> for a non-NULL pipe instead, this helps to terminate the search at
-> output itself instead of going till the sensor, changed variable names,
-> commit message and conditions accordingly]
-> 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
-> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
-> ---
->   .../media/test-drivers/vimc/vimc-capture.c    | 35 ++++++++++++++++++-
->   1 file changed, 34 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/test-drivers/vimc/vimc-capture.c b/drivers/media/test-drivers/vimc/vimc-capture.c
-> index c63496b17b9a..423d5e5a508d 100644
-> --- a/drivers/media/test-drivers/vimc/vimc-capture.c
-> +++ b/drivers/media/test-drivers/vimc/vimc-capture.c
-> @@ -237,16 +237,49 @@ static void vimc_cap_return_all_buffers(struct vimc_cap_device *vcap,
->   	spin_unlock(&vcap->qlock);
->   }
->   
-> +static struct media_entity *vimc_cap_get_output(struct vimc_cap_device *vcap)
-> +{
-> +	struct media_entity *entity = &vcap->vdev.entity;
-> +	struct media_device *mdev = entity->graph_obj.mdev;
-> +	struct media_graph graph;
-> +
-> +	mutex_lock(&mdev->graph_mutex);
-> +	if (media_graph_walk_init(&graph, mdev)) {
-> +		mutex_unlock(&mdev->graph_mutex);
-> +		return NULL;
-> +	}
-> +
-> +	media_graph_walk_start(&graph, entity);
-> +
-> +	while ((entity = media_graph_walk_next(&graph)))
-> +		if (entity->pipe)
-> +			break;
-> +
-> +	mutex_unlock(&mdev->graph_mutex);
-> +
-> +	media_graph_walk_cleanup(&graph);
-> +
-> +	return entity;
-> +}
-> +
->   static int vimc_cap_start_streaming(struct vb2_queue *vq, unsigned int count)
->   {
->   	struct vimc_cap_device *vcap = vb2_get_drv_priv(vq);
->   	struct media_entity *entity = &vcap->vdev.entity;
-> +	struct media_pipeline *pipe = NULL;
-> +	struct media_entity *oent;
->   	int ret;
->   
->   	vcap->sequence = 0;
->   
->   	/* Start the media pipeline */
-> -	ret = media_pipeline_start(entity, &vcap->stream.pipe);
-> +	oent = vimc_cap_get_output(vcap);
-> +	if (oent)
-> +		pipe = oent->pipe;
-> +	else
-> +		pipe = &vcap->stream.pipe;
-> +
-> +	ret = media_pipeline_start(entity, pipe);
->   	if (ret) {
->   		vimc_cap_return_all_buffers(vcap, VB2_BUF_STATE_QUEUED);
->   		return ret;
->
+In commit
 
-I think there is actually no need to iterate the graph. If the capture is already connected to another capture
-that streams, it means that they both have the same pipe in the media core.
-So actually the code can just be:
+  cde1a8a99287 ("Bluetooth: btusb: Fix and detect most of the Chinese Bluet=
+ooth controllers")
 
-if (vcap->ved.ent->pipe)
-	pipe = vcap->ved.ent->pipe;
-else
-	pipe = &vcap->stream.pipe;
+Fixes tag
 
+  Fixes: 81cac64ba258ae (Deal with USB devices that are faking CSR vendor)
 
-(and no need the function vimc_cap_get_output)
+has these problem(s):
 
-Thanks,
-Dafna
-  
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ynG/Bd_+_8L9q2AR0CQYUUy
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8gGRAACgkQAVBC80lX
+0Gxcugf9FeyKqRKK5dCNA6QP7AVQdEBDEB80YCCQ3HgY8e2X3Ar6aO9O8GoGDGqF
+0ILhXiQrG131CeP2Np+axsy/HEEBpL0KxO0tk5fRW61V3RvgjsYIJuTwNRiwQ504
+oZGTh5nhTig7XhoxbxlyjbMSL1dMYyfMZqE7aP9Q/qoxh3o4HA6lVslwbCLtQfLC
+6vCcDKGMf4ySPyPXdt2Y6/FZTGUrxo6G4lRxvFSwj13nS2T0DN0rhQqL2whOo9x9
+IodFrMhRKjzUFWY2XPXoXdIQGUq+DKdWBVSO9p55nL0L37dUWEMrVEK8C26DG416
+JbnykkvTCZDF0PXJyo+gix3kZ0xq3Q==
+=uLLz
+-----END PGP SIGNATURE-----
+
+--Sig_/ynG/Bd_+_8L9q2AR0CQYUUy--
