@@ -2,220 +2,365 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A05C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98366C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7112C206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:25:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XvIojDIP"
+	by mail.kernel.org (Postfix) with ESMTP id 7538C2074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 13:31:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730121AbgG1NZG (ORCPT
+        id S1730116AbgG1Na7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:25:06 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50045 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729555AbgG1NZF (ORCPT
+        Tue, 28 Jul 2020 09:30:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21980 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729044AbgG1Na6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:25:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595942703;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mPe2kBPPIADxPOO35iN4ImqsjTLCSyuLAf8YdcjEsaI=;
-        b=XvIojDIPCmlvzXTkoRRTzDL36UASjINYwQRB1+dGy7d7vcpWCXloZP3o6qe3EXlT+eixOP
-        DR8ArjJl8Xo5xWdxYK8cba2O6WOiF1uKV8hlBTJE0lwIIVur9EShVadDuygCa/L/swSyx0
-        4FF69SHwBGMTSUqfZ3nfQCwPxdJDeaQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-44-gD3mRHsiM5qQNL6HDHZFVQ-1; Tue, 28 Jul 2020 09:25:01 -0400
-X-MC-Unique: gD3mRHsiM5qQNL6HDHZFVQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 312FE1005510;
-        Tue, 28 Jul 2020 13:24:59 +0000 (UTC)
-Received: from localhost (ovpn-12-117.pek2.redhat.com [10.72.12.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 900E27B41F;
-        Tue, 28 Jul 2020 13:24:56 +0000 (UTC)
-Date:   Tue, 28 Jul 2020 21:24:53 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     mike.kravetz@oracle.com, akpm@linux-foundation.org,
-        mhocko@kernel.org, rientjes@google.com, mgorman@suse.de,
-        walken@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Jianchao Guo <guojianchao@bytedance.com>
-Subject: Re: [PATCH v4] mm/hugetlb: add mempolicy check in the reservation
- routine
-Message-ID: <20200728132453.GB14854@MiWiFi-R3L-srv>
-References: <20200728034938.14993-1-songmuchun@bytedance.com>
+        Tue, 28 Jul 2020 09:30:58 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06SD2W2h044543;
+        Tue, 28 Jul 2020 09:30:21 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32j0a5ujc6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jul 2020 09:30:21 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06SD2kka045277;
+        Tue, 28 Jul 2020 09:30:20 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32j0a5ujb4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jul 2020 09:30:20 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06SDP7Tv019695;
+        Tue, 28 Jul 2020 13:30:19 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 32gcy4kqy0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jul 2020 13:30:18 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06SDSpkP66584934
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jul 2020 13:28:51 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4C319A406D;
+        Tue, 28 Jul 2020 13:30:16 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AE116A4057;
+        Tue, 28 Jul 2020 13:30:13 +0000 (GMT)
+Received: from [9.102.29.60] (unknown [9.102.29.60])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Jul 2020 13:30:13 +0000 (GMT)
+Subject: Re: [PATCH v3 1/2] cpuidle: Trace IPI based and timer based wakeup
+ latency from idle states
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, srivatsa@csail.mit.edu,
+        Shuah Khan <shuah@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        pratik.r.sampat@gmail.com, Linux PM <linux-pm@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org
+References: <20200721124300.65615-1-psampat@linux.ibm.com>
+ <20200721124300.65615-2-psampat@linux.ibm.com>
+ <CAJZ5v0j3ip77opkaW3Rtn0cqT7VTL_8goctFBDVehWoZowDY0Q@mail.gmail.com>
+From:   Pratik Sampat <psampat@linux.ibm.com>
+Message-ID: <9dfff062-9e68-c91f-f36c-8699e8c3fc1b@linux.ibm.com>
+Date:   Tue, 28 Jul 2020 19:00:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728034938.14993-1-songmuchun@bytedance.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <CAJZ5v0j3ip77opkaW3Rtn0cqT7VTL_8goctFBDVehWoZowDY0Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-28_07:2020-07-28,2020-07-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ phishscore=0 lowpriorityscore=0 impostorscore=0 spamscore=0 adultscore=0
+ mlxscore=0 mlxlogscore=999 malwarescore=0 clxscore=1011 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007280095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Muchun,
+Hello Rafael,
 
-On 07/28/20 at 11:49am, Muchun Song wrote:
-> In the reservation routine, we only check whether the cpuset meets
-> the memory allocation requirements. But we ignore the mempolicy of
-> MPOL_BIND case. If someone mmap hugetlb succeeds, but the subsequent
-> memory allocation may fail due to mempolicy restrictions and receives
-> the SIGBUS signal. This can be reproduced by the follow steps.
-> 
->  1) Compile the test case.
->     cd tools/testing/selftests/vm/
->     gcc map_hugetlb.c -o map_hugetlb
-> 
->  2) Pre-allocate huge pages. Suppose there are 2 numa nodes in the
->     system. Each node will pre-allocate one huge page.
->     echo 2 > /proc/sys/vm/nr_hugepages
-> 
->  3) Run test case(mmap 4MB). We receive the SIGBUS signal.
->     numactl --membind=0 ./map_hugetlb 4
 
-I think supporting the  mempolicy of MPOL_BIND case is a good idea.
-I am wondering what about the other mempolicy cases, e.g MPOL_INTERLEAVE,
-MPOL_PREFERRED. Asking these because we already have similar handling in
-sysfs, proc nr_hugepages_mempolicy writting. Please see
-__nr_hugepages_store_common() for detail.
+On 27/07/20 7:12 pm, Rafael J. Wysocki wrote:
+> On Tue, Jul 21, 2020 at 2:43 PM Pratik Rajesh Sampat
+> <psampat@linux.ibm.com> wrote:
+>> Fire directed smp_call_function_single IPIs from a specified source
+>> CPU to the specified target CPU to reduce the noise we have to wade
+>> through in the trace log.
+> And what's the purpose of it?
 
-Thanks
-Baoquan
+The idea for this comes from that fact that estimating wake-up
+latencies and residencies for stop states is not an easy task.
 
-> 
-> With this patch applied, the mmap will fail in the step 3) and throw
-> "mmap: Cannot allocate memory".
-> 
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> Reported-by: Jianchao Guo <guojianchao@bytedance.com>
-> Suggested-by: Michal Hocko <mhocko@kernel.org>
-> Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-> ---
-> changelog in v4:
->  1) Fix compilation errors with !CONFIG_NUMA.
-> 
-> changelog in v3:
->  1) Do not allocate nodemask on the stack.
->  2) Update comment.
-> 
-> changelog in v2:
->  1) Reuse policy_nodemask().
-> 
->  include/linux/mempolicy.h | 14 ++++++++++++++
->  mm/hugetlb.c              | 22 ++++++++++++++++++----
->  mm/mempolicy.c            |  2 +-
->  3 files changed, 33 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/mempolicy.h b/include/linux/mempolicy.h
-> index ea9c15b60a96..0656ece1ccf1 100644
-> --- a/include/linux/mempolicy.h
-> +++ b/include/linux/mempolicy.h
-> @@ -152,6 +152,15 @@ extern int huge_node(struct vm_area_struct *vma,
->  extern bool init_nodemask_of_mempolicy(nodemask_t *mask);
->  extern bool mempolicy_nodemask_intersects(struct task_struct *tsk,
->  				const nodemask_t *mask);
-> +extern nodemask_t *policy_nodemask(gfp_t gfp, struct mempolicy *policy);
-> +
-> +static inline nodemask_t *policy_nodemask_current(gfp_t gfp)
-> +{
-> +	struct mempolicy *mpol = get_task_policy(current);
-> +
-> +	return policy_nodemask(gfp, mpol);
-> +}
-> +
->  extern unsigned int mempolicy_slab_node(void);
->  
->  extern enum zone_type policy_zone;
-> @@ -281,5 +290,10 @@ static inline int mpol_misplaced(struct page *page, struct vm_area_struct *vma,
->  static inline void mpol_put_task_policy(struct task_struct *task)
->  {
->  }
-> +
-> +static inline nodemask_t *policy_nodemask_current(gfp_t gfp)
-> +{
-> +	return NULL;
-> +}
->  #endif /* CONFIG_NUMA */
->  #endif
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 589c330df4db..a34458f6a475 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -3463,13 +3463,21 @@ static int __init default_hugepagesz_setup(char *s)
->  }
->  __setup("default_hugepagesz=", default_hugepagesz_setup);
->  
-> -static unsigned int cpuset_mems_nr(unsigned int *array)
-> +static unsigned int allowed_mems_nr(struct hstate *h)
->  {
->  	int node;
->  	unsigned int nr = 0;
-> +	nodemask_t *mpol_allowed;
-> +	unsigned int *array = h->free_huge_pages_node;
-> +	gfp_t gfp_mask = htlb_alloc_mask(h);
-> +
-> +	mpol_allowed = policy_nodemask_current(gfp_mask);
->  
-> -	for_each_node_mask(node, cpuset_current_mems_allowed)
-> -		nr += array[node];
-> +	for_each_node_mask(node, cpuset_current_mems_allowed) {
-> +		if (!mpol_allowed ||
-> +		    (mpol_allowed && node_isset(node, *mpol_allowed)))
-> +			nr += array[node];
-> +	}
->  
->  	return nr;
->  }
-> @@ -3648,12 +3656,18 @@ static int hugetlb_acct_memory(struct hstate *h, long delta)
->  	 * we fall back to check against current free page availability as
->  	 * a best attempt and hopefully to minimize the impact of changing
->  	 * semantics that cpuset has.
-> +	 *
-> +	 * Apart from cpuset, we also have memory policy mechanism that
-> +	 * also determines from which node the kernel will allocate memory
-> +	 * in a NUMA system. So similar to cpuset, we also should consider
-> +	 * the memory policy of the current task. Similar to the description
-> +	 * above.
->  	 */
->  	if (delta > 0) {
->  		if (gather_surplus_pages(h, delta) < 0)
->  			goto out;
->  
-> -		if (delta > cpuset_mems_nr(h->free_huge_pages_node)) {
-> +		if (delta > allowed_mems_nr(h)) {
->  			return_unused_surplus_pages(h, delta);
->  			goto out;
->  		}
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 93fcfc1f2fa2..fce14c3f4f38 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -1873,7 +1873,7 @@ static int apply_policy_zone(struct mempolicy *policy, enum zone_type zone)
->   * Return a nodemask representing a mempolicy for filtering nodes for
->   * page allocation
->   */
-> -static nodemask_t *policy_nodemask(gfp_t gfp, struct mempolicy *policy)
-> +nodemask_t *policy_nodemask(gfp_t gfp, struct mempolicy *policy)
->  {
->  	/* Lower zones don't get a nodemask applied for MPOL_BIND */
->  	if (unlikely(policy->mode == MPOL_BIND) &&
-> -- 
-> 2.11.0
-> 
-> 
+The purpose is essentially to determine wakeup latencies, that are
+caused by either, an IPI or a timer and compare with the advertised
+wakeup latencies for each stop state.
+
+This might help in determining the accuracy of our advertised values
+and/or if they need any re-calibration.
+
+>> The module is based on the idea written by Srivatsa Bhat and maintained
+>> by Vaidyanathan Srinivasan internally.
+>>
+>> Queue HR timer and measure jitter. Wakeup latency measurement for idle
+>> states using hrtimer.  Echo a value in ns to timer_test_function and
+>> watch trace. A HRtimer will be queued and when it fires the expected
+>> wakeup vs actual wakeup is computes and delay printed in ns.
+>>
+>> Implemented as a module which utilizes debugfs so that it can be
+>> integrated with selftests.
+>>
+>> To include the module, check option and include as module
+>> kernel hacking -> Cpuidle latency selftests
+>>
+>> [srivatsa.bhat@linux.vnet.ibm.com: Initial implementation in
+>>   cpidle/sysfs]
+>>
+>> [svaidy@linux.vnet.ibm.com: wakeup latency measurements using hrtimer
+>>   and fix some of the time calculation]
+>>
+>> [ego@linux.vnet.ibm.com: Fix some whitespace and tab errors and
+>>   increase the resolution of IPI wakeup]
+>>
+>> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+>> Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+>> ---
+>>   drivers/cpuidle/Makefile               |   1 +
+>>   drivers/cpuidle/test-cpuidle_latency.c | 150 +++++++++++++++++++++++++
+>>   lib/Kconfig.debug                      |  10 ++
+>>   3 files changed, 161 insertions(+)
+>>   create mode 100644 drivers/cpuidle/test-cpuidle_latency.c
+>>
+>> diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
+>> index f07800cbb43f..2ae05968078c 100644
+>> --- a/drivers/cpuidle/Makefile
+>> +++ b/drivers/cpuidle/Makefile
+>> @@ -8,6 +8,7 @@ obj-$(CONFIG_ARCH_NEEDS_CPU_IDLE_COUPLED) += coupled.o
+>>   obj-$(CONFIG_DT_IDLE_STATES)             += dt_idle_states.o
+>>   obj-$(CONFIG_ARCH_HAS_CPU_RELAX)         += poll_state.o
+>>   obj-$(CONFIG_HALTPOLL_CPUIDLE)           += cpuidle-haltpoll.o
+>> +obj-$(CONFIG_IDLE_LATENCY_SELFTEST)      += test-cpuidle_latency.o
+>>
+>>   ##################################################################################
+>>   # ARM SoC drivers
+>> diff --git a/drivers/cpuidle/test-cpuidle_latency.c b/drivers/cpuidle/test-cpuidle_latency.c
+>> new file mode 100644
+>> index 000000000000..61574665e972
+>> --- /dev/null
+>> +++ b/drivers/cpuidle/test-cpuidle_latency.c
+>> @@ -0,0 +1,150 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +/*
+>> + * Module-based API test facility for cpuidle latency using IPIs and timers
+> I'd like to see a more detailed description of what it does and how it
+> works here.
+
+Right, I'll add that.
+Based on comments from Daniel I have also been working on a
+user-space only variant of this test as that does seem like
+a better way to go.
+
+The only downside is that the latency will be higher, but as we are
+taking baseline measurements the diff of that from our observed reading
+should still remain the same. Just that the test will take longer to run.
+I'm yet to accurately confirm this.
+
+I would appreciate your thoughts on that.
+
+>> + */
+>> +
+>> +#include <linux/debugfs.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +
+>> +/* IPI based wakeup latencies */
+>> +struct latency {
+>> +       unsigned int src_cpu;
+>> +       unsigned int dest_cpu;
+>> +       ktime_t time_start;
+>> +       ktime_t time_end;
+>> +       u64 latency_ns;
+>> +} ipi_wakeup;
+>> +
+>> +static void measure_latency(void *info)
+>> +{
+>> +       struct latency *v;
+>> +       ktime_t time_diff;
+>> +
+>> +       v = (struct latency *)info;
+>> +       v->time_end = ktime_get();
+>> +       time_diff = ktime_sub(v->time_end, v->time_start);
+>> +       v->latency_ns = ktime_to_ns(time_diff);
+>> +}
+>> +
+>> +void run_smp_call_function_test(unsigned int cpu)
+>> +{
+>> +       ipi_wakeup.src_cpu = smp_processor_id();
+>> +       ipi_wakeup.dest_cpu = cpu;
+>> +       ipi_wakeup.time_start = ktime_get();
+>> +       smp_call_function_single(cpu, measure_latency, &ipi_wakeup, 1);
+>> +}
+>> +
+>> +/* Timer based wakeup latencies */
+>> +struct timer_data {
+>> +       unsigned int src_cpu;
+>> +       u64 timeout;
+>> +       ktime_t time_start;
+>> +       ktime_t time_end;
+>> +       struct hrtimer timer;
+>> +       u64 timeout_diff_ns;
+>> +} timer_wakeup;
+>> +
+>> +static enum hrtimer_restart timer_called(struct hrtimer *hrtimer)
+>> +{
+>> +       struct timer_data *w;
+>> +       ktime_t time_diff;
+>> +
+>> +       w = container_of(hrtimer, struct timer_data, timer);
+>> +       w->time_end = ktime_get();
+>> +
+>> +       time_diff = ktime_sub(w->time_end, w->time_start);
+>> +       time_diff = ktime_sub(time_diff, ns_to_ktime(w->timeout));
+>> +       w->timeout_diff_ns = ktime_to_ns(time_diff);
+>> +       return HRTIMER_NORESTART;
+>> +}
+>> +
+>> +static void run_timer_test(unsigned int ns)
+>> +{
+>> +       hrtimer_init(&timer_wakeup.timer, CLOCK_MONOTONIC,
+>> +                    HRTIMER_MODE_REL);
+>> +       timer_wakeup.timer.function = timer_called;
+>> +       timer_wakeup.time_start = ktime_get();
+>> +       timer_wakeup.src_cpu = smp_processor_id();
+>> +       timer_wakeup.timeout = ns;
+>> +
+>> +       hrtimer_start(&timer_wakeup.timer, ns_to_ktime(ns),
+>> +                     HRTIMER_MODE_REL_PINNED);
+>> +}
+>> +
+>> +static struct dentry *dir;
+>> +
+>> +static int cpu_read_op(void *data, u64 *value)
+>> +{
+>> +       *value = ipi_wakeup.dest_cpu;
+>> +       return 0;
+>> +}
+>> +
+>> +static int cpu_write_op(void *data, u64 value)
+>> +{
+>> +       run_smp_call_function_test(value);
+>> +       return 0;
+>> +}
+>> +DEFINE_SIMPLE_ATTRIBUTE(ipi_ops, cpu_read_op, cpu_write_op, "%llu\n");
+>> +
+>> +static int timeout_read_op(void *data, u64 *value)
+>> +{
+>> +       *value = timer_wakeup.timeout;
+>> +       return 0;
+>> +}
+>> +
+>> +static int timeout_write_op(void *data, u64 value)
+>> +{
+>> +       run_timer_test(value);
+>> +       return 0;
+>> +}
+>> +DEFINE_SIMPLE_ATTRIBUTE(timeout_ops, timeout_read_op, timeout_write_op, "%llu\n");
+>> +
+>> +static int __init latency_init(void)
+>> +{
+>> +       struct dentry *temp;
+>> +
+>> +       dir = debugfs_create_dir("latency_test", 0);
+>> +       if (!dir) {
+>> +               pr_alert("latency_test: failed to create /sys/kernel/debug/latency_test\n");
+>> +               return -1;
+>> +       }
+>> +       temp = debugfs_create_file("ipi_cpu_dest",
+>> +                                  0666,
+>> +                                  dir,
+>> +                                  NULL,
+>> +                                  &ipi_ops);
+>> +       if (!temp) {
+>> +               pr_alert("latency_test: failed to create /sys/kernel/debug/ipi_cpu_dest\n");
+>> +               return -1;
+>> +       }
+>> +       debugfs_create_u64("ipi_latency_ns", 0444, dir, &ipi_wakeup.latency_ns);
+>> +       debugfs_create_u32("ipi_cpu_src", 0444, dir, &ipi_wakeup.src_cpu);
+>> +
+>> +       temp = debugfs_create_file("timeout_expected_ns",
+>> +                                  0666,
+>> +                                  dir,
+>> +                                  NULL,
+>> +                                  &timeout_ops);
+>> +       if (!temp) {
+>> +               pr_alert("latency_test: failed to create /sys/kernel/debug/timeout_expected_ns\n");
+>> +               return -1;
+>> +       }
+>> +       debugfs_create_u64("timeout_diff_ns", 0444, dir, &timer_wakeup.timeout_diff_ns);
+>> +       debugfs_create_u32("timeout_cpu_src", 0444, dir, &timer_wakeup.src_cpu);
+>> +       pr_info("Latency Test module loaded\n");
+>> +       return 0;
+>> +}
+>> +
+>> +static void __exit latency_cleanup(void)
+>> +{
+>> +       pr_info("Cleaning up Latency Test module.\n");
+>> +       debugfs_remove_recursive(dir);
+>> +}
+>> +
+>> +module_init(latency_init);
+>> +module_exit(latency_cleanup);
+>> +
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_AUTHOR("IBM Corporation");
+>> +MODULE_DESCRIPTION("Measuring idle latency for IPIs and Timers");
+>> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+>> index d74ac0fd6b2d..e2283790245a 100644
+>> --- a/lib/Kconfig.debug
+>> +++ b/lib/Kconfig.debug
+>> @@ -1375,6 +1375,16 @@ config DEBUG_KOBJECT
+>>            If you say Y here, some extra kobject debugging messages will be sent
+>>            to the syslog.
+>>
+>> +config IDLE_LATENCY_SELFTEST
+>> +       tristate "Cpuidle latency selftests"
+>> +       depends on CPU_IDLE
+>> +       help
+>> +         This option provides a kernel module that runs tests using the IPI and
+>> +         timers to measure latency.
+> What latency does it measure?
+
+It measures latencies incurred on wakeup after an IPI and a timer interrupt.
+
+>> +
+>> +         Say M if you want these self tests to build as a module.
+>> +         Say N if you are unsure.
+>> +
+>>   config DEBUG_KOBJECT_RELEASE
+>>          bool "kobject release debugging"
+>>          depends on DEBUG_OBJECTS_TIMERS
+>> --
+>> 2.25.4
+>>
+Thanks,
+Pratik
 
