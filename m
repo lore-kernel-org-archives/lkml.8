@@ -6,76 +6,76 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3194C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D00AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B361320829
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E788204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595933853;
-	bh=QmkjTL4+ot64Yxfj5gl0faqIndw3TZ3OSft3MSYRtJk=;
+	s=default; t=1595933907;
+	bh=61VcW7S4tJ9mcZBT0Ceel00V92s2J2sgrA221ViKFRs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BnqS/PyJcnQDk5niqskDbX695O9I7s34FFKtRtWHv8VqH5fdGbBH5ez8z220TujNx
-	 vtz1yiGo/0l9tXFYs4JIk+cYIkJcJWraK5VhsHIn3KaZKDDw7sO+crjPptRufHt5C/
-	 5vfqL6I+u69Q4rg48ZZ0BFMjZez98oc3UgJ0QSi4=
+	b=rIbU4bIamEO+fcrtpLCT0wZZfG+QHFdHaCLtMv+uHqrrUESgPuwTYlzvvcyH+huGf
+	 0C4J3X+q1+hzRjhfEUhK4L85pVZySplGtdXfqTNxaMDIqlKqSK1y5W5Xsm6kjpozGA
+	 MEjcE+Cl6UU1RCJlBwjtjkZFtNRINDdhvWjbZ/10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbgG1K5c (ORCPT
+        id S1728588AbgG1K6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 06:57:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59354 "EHLO
+        Tue, 28 Jul 2020 06:58:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728588AbgG1K5c (ORCPT
+        with ESMTP id S1728752AbgG1K6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 06:57:32 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E13ACC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:57:31 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id dk23so8311183ejb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:57:31 -0700 (PDT)
+        Tue, 28 Jul 2020 06:58:25 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA886C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:58:24 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id n2so14463655edr.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 03:58:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=ZmQ3dkwrohmJdjRb+T+ntOxqQdIdD0pDYwQoPTPtnBo=;
-        b=SrFLQ3/XqSIUt8W/CB7ZwPcVQHOAyNfAAwEdoHSWUQsaz1fheSYLb49l9yVXWmkQjw
-         vc0KUKexpJ2W+DgPfEAwZ9B4U/PN01/Tu0NVHZBKMZY5NO+GFqf/BevC3MLwdtVYdttB
-         UTxBjYCeooNvyPV2DySXjvLbdFmZXjKqMfKzy9EGhRj5OzJ9rA3r4Bca9KSSjBFcnvD8
-         PB28BGihHXu0aXeTR3dcbE6MnKgt0s5xFwqTsUFHSqzdkkUsc3P0Ke0jPZL/KN7skCTh
-         McFzqTsTKzm7V6fTV943bRirmw+iTkwEJmSHg35l7F8N9YXP/D13OBy5ojS9pmSoj+Te
-         e2QQ==
+        bh=0MkGALgLU1/JNMURw97YOk+hpUfJEVXG0OVfPqsaaPE=;
+        b=Yit+hdsaOSOSnirfAFneLmpBb4D2icJuJdHVCP9d5CaSFlaYrl3hkRvNer7945VNKc
+         piH1pioLdR1v3dy/31QsQ7EMviZcRVwY39CJ0gCTIGsDBXVdcQGg523KMlYBNBmadbNz
+         7Kj8T/6L40y26RFf1qOiDVpqJqbZ/Q6d4WNOZRhgj+0OG3+DhrfJh6yz4k4INZ85nvcF
+         +i1RijV4G7Sbe/oKogoRaEHMCee/8E1jjspuYuUVfNF0UCVhDOngEHLwFupxWmYxX6qd
+         uQWMsfw/+mWlA4FCLKi2Yf7V1PpAekKoVr97wcAuL3lj3/ZDJEDfizpQiA+B92WRJiGz
+         bOqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to;
-        bh=ZmQ3dkwrohmJdjRb+T+ntOxqQdIdD0pDYwQoPTPtnBo=;
-        b=tq0Uov+gfViv8rq7Zyma3SkFsrQmSqJ2x5e5v2mT7/ujBpSRSzhRjvPJ4HgpgzQjZQ
-         hUcZaDEhsG0b4Q1z/Q2tuoUi74K+Klla/P7foexOhVxrUVynsRbVtJG7LKDkG02x5H2e
-         vMx6WzrUky8uSIs9mg6VmDMd5PnUITCCbnClV1xMtgnxwHVViHCB6WiMGMp0Tuk4f9bP
-         wl5wcx8/ZMcJnnWFfhKOS32n0fKo9/xAuuKloeiZ3X0XrOdMJFzDfSjkZLlIcXJe7IS1
-         D8q8GTxs4VvavX1MOInZpid0F9JauV82eos1AsgX+pifvOg1INmLPZcAnHIsKok7gp1M
-         Qvuw==
-X-Gm-Message-State: AOAM533NCq3waWUS9PiCRS6ZgpDXWIWyYMM5wJUtjQyzfAjoCU9VFVsX
-        QvFsysNdhCUlQQqFVezdIZs=
-X-Google-Smtp-Source: ABdhPJzbso46BRXFiIITHCOBcbcfUVaVfaUZSQaIOAeeJWxfGQ+d8ozyN3pw2giVhMIFtW25suoKJg==
-X-Received: by 2002:a17:906:9399:: with SMTP id l25mr17112464ejx.212.1595933850672;
-        Tue, 28 Jul 2020 03:57:30 -0700 (PDT)
+        bh=0MkGALgLU1/JNMURw97YOk+hpUfJEVXG0OVfPqsaaPE=;
+        b=mmA1+wOKFBiUQaVtcGo08bZ248+3E/Su6tq/FKztUfFiFlfAOMut9LQUJmS8wN4aq8
+         j30JfQlMV3WmZ9peBMznzjEB9K8DHK/jPPdf73vCKSye/7lm2IJlYn7JwLbejGsbo+Lg
+         vxqXzxzWmLwgL8Qxk4JyXhCG1URDm+rOKIHgF6nBECl8aq5vZqcNXb6NVQF7O05coYSP
+         DYeA8typ21QmP1Ekcy0DpOmEFdL/jJrfW55ZuIvKAL0kkKieydYJt5TnO4TyGz3yInaN
+         mTvlkBajAdYXq3TstT51wcpDpfQBZajmJePahCvHix1ezCuimlwVOCKzbPqPVx/mrtqH
+         1CGg==
+X-Gm-Message-State: AOAM532FHgygqA5aA7FqnhPlMjBGwYi+//4/S1b43ilxln2YLgERz4AC
+        D00BhLRYRPfdXIDnokcu140=
+X-Google-Smtp-Source: ABdhPJwUF7JnEpFSsgUOu8UV2yrcWkgSET6TilztrI2zLG1qL+55CUAQglAht13LnDkVmy026wmUOQ==
+X-Received: by 2002:a50:fd8d:: with SMTP id o13mr6029394edt.313.1595933903716;
+        Tue, 28 Jul 2020 03:58:23 -0700 (PDT)
 Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id h24sm8840984ejg.53.2020.07.28.03.57.29
+        by smtp.gmail.com with ESMTPSA id yj16sm9056649ejb.122.2020.07.28.03.58.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 03:57:29 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 12:57:28 +0200
+        Tue, 28 Jul 2020 03:58:22 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 12:58:21 +0200
 From:   Ingo Molnar <mingo@kernel.org>
 To:     Arvind Sankar <nivedita@alum.mit.edu>
 Cc:     Kees Cook <keescook@chromium.org>, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/8] x86/kaslr: Simplify __process_mem_region
-Message-ID: <20200728105728.GB222284@gmail.com>
+Subject: Re: [PATCH 6/8] x86/kaslr: Simplify process_gb_huge_pages
+Message-ID: <20200728105821.GC222284@gmail.com>
 References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
- <20200727215047.3341098-6-nivedita@alum.mit.edu>
+ <20200727215047.3341098-7-nivedita@alum.mit.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200727215047.3341098-6-nivedita@alum.mit.edu>
+In-Reply-To: <20200727215047.3341098-7-nivedita@alum.mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -84,21 +84,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 * Arvind Sankar <nivedita@alum.mit.edu> wrote:
 
-> Get rid of unnecessary temporary variables and redundant tests in
-> __process_mem_region.
+> Short-circuit the whole function on 32-bit.
 > 
-> Fix one minor bug: in case of an overlap, the beginning of the region
-> should be used even if it is exactly image_size, not just strictly
-> larger.
+> Replace the loop to determine the number of 1Gb pages with arithmetic.
 > 
-> Change type of minimum/image_size arguments in process_mem_region to
-> unsigned long. These actually can never be above 4G (even on x86_64),
-> and they're unsigned long in every other function except this one.
+> Fix one minor bug: if the end of the region is aligned on a 1Gb
+> boundary, the current code will not use the last available 1Gb page due
+> to an off-by-one error.
 
-Please split this up into 3 separate patches. The KASLR code is 
-difficult to debug, so we want to approach changes as conservatively 
-as possible. This is also reinforced by the fact that this patch was 
-buggy in v1 already.
+Please split this up into two patches: first the minor bugfix, and 
+then the cleanup which will then be an invariant patch, in principle.
 
 Thanks,
 
