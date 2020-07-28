@@ -4,61 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A63EDC433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9433FC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8571520792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710F021744
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 07:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgG1HRs convert rfc822-to-8bit (ORCPT
+        id S1727893AbgG1HNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:17:48 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:53580 "EHLO
+        Tue, 28 Jul 2020 03:13:10 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:49209 "EHLO
         mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726854AbgG1HRs (ORCPT
+        with ESMTP id S1726854AbgG1HNJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:17:48 -0400
+        Tue, 28 Jul 2020 03:13:09 -0400
 Received: from marcel-macbook.fritz.box (p4ff9f430.dip0.t-ipconnect.de [79.249.244.48])
-        by mail.holtmann.org (Postfix) with ESMTPSA id A4312CECCE;
-        Tue, 28 Jul 2020 09:27:47 +0200 (CEST)
+        by mail.holtmann.org (Postfix) with ESMTPSA id D2B49CECCD;
+        Tue, 28 Jul 2020 09:23:09 +0200 (CEST)
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 2/2] Bluetooth: hci_serdev: Only unregister device if it
- was registered
+Subject: Re: [PATCH] Bluetooth: Return NOTIFY_DONE for hci_suspend_notifier
 From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200721103652.2.I8a2fdad30d42399fa5afc15d66b460d1738c3946@changeid>
-Date:   Tue, 28 Jul 2020 09:17:46 +0200
-Cc:     Ian Molton <ian@mnementh.co.uk>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Bluetooth Kernel Mailing List 
-        <linux-bluetooth@vger.kernel.org>, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <1D8C4C03-727F-4CC4-9FC9-6355A6C778FC@holtmann.org>
-References: <20200721103652.1.Idbc7eddf1f24f750a8bbcbc8e06743736ae3be31@changeid>
- <20200721103652.2.I8a2fdad30d42399fa5afc15d66b460d1738c3946@changeid>
-To:     Nicolas Boichat <drinkcat@chromium.org>
+In-Reply-To: <20200723104742.19780-1-max.chou@realtek.com>
+Date:   Tue, 28 Jul 2020 09:13:08 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        alex_lu@realsil.com.cn, hildawu@realtek.com
+Content-Transfer-Encoding: 7bit
+Message-Id: <818B8B6F-F093-40DC-9B02-CFF0B9C9DE08@holtmann.org>
+References: <20200723104742.19780-1-max.chou@realtek.com>
+To:     max.chou@realtek.com
 X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+Hi Max,
 
-> We should not call hci_unregister_dev if the device was not
-> successfully registered.
+> The original return is NOTIFY_STOP, but notifier_call_chain would stop
+> the future call for register_pm_notifier even registered on other Kernel
+> modules with the same priority which value is zero.
 > 
-> Fixes: c34dc3bfa7642fd ("Bluetooth: hci_serdev: Introduce hci_uart_unregister_device()")
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> 
+> Signed-off-by: Max Chou <max.chou@realtek.com>
 > ---
-> 
-> drivers/bluetooth/hci_serdev.c | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
+> net/bluetooth/hci_core.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 
 patch has been applied to bluetooth-next tree.
 
