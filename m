@@ -2,146 +2,135 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2983C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFA8C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB99B2065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 874122065E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:51:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lMzkVHQ6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yo+dSWbz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgG1Tuz (ORCPT
+        id S1728501AbgG1Tvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:50:55 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:57748 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728319AbgG1Tuz (ORCPT
+        Tue, 28 Jul 2020 15:51:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728431AbgG1Tvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:50:55 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06SJopaN014132;
-        Tue, 28 Jul 2020 14:50:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595965851;
-        bh=GOxC9kGRWqOj0TQmlS30/92/sD3Ixs/pmvo00uoKaCM=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=lMzkVHQ6dN0z/0u4/exO4bsD7dlESrMJxVjFSzX2phraezsRhczM1L41BmIzbt9pJ
-         epSJKW2fjMuV3dSQ7sbRvog7b/WQiAhOh0mg5+l3DJs+zf0VhGaMO6H00oUwqzQhMP
-         u6RMaDdmD65rtv7QsoZkSBDDx8ohOhZinoF+uJWE=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06SJop9j072663
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 Jul 2020 14:50:51 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
- Jul 2020 14:50:51 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 28 Jul 2020 14:50:51 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SJomZe003653;
-        Tue, 28 Jul 2020 14:50:49 -0500
-Subject: Re: [PATCH 0/4] arm64: Initial support for Texas Instrument's J7200
- Platform
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>
-CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-References: <20200723084628.19241-1-lokeshvutla@ti.com>
- <17a6e608-7ffc-a612-9caf-bad7315f5e60@ti.com>
-Message-ID: <c700e177-1fbe-cba0-8fc8-846caba0734d@ti.com>
-Date:   Tue, 28 Jul 2020 22:50:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 28 Jul 2020 15:51:47 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9437C0619D5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:51:46 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id l2so5237131pff.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:51:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=raGVKOv2WKcQ/HrShbgsHsL4qqFT5p7jAaAAKZ2AdxQ=;
+        b=Yo+dSWbzGAgOCDS7Yh9qW2rJwOKdOEATdhNeAi49R3TUJ0nG8LHe75MIpCYgi9QynD
+         G8rKEyC7zgPO2D994sTx70TN3SHAwrX9jQuJyBbDgZsYseYmZLcWmNMXUbhwK623KX/9
+         4ZLQRf6+FjH0ixTrvr0+KE4hRE3vhnO54Y/x4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=raGVKOv2WKcQ/HrShbgsHsL4qqFT5p7jAaAAKZ2AdxQ=;
+        b=pRA2AORYz4GfNjfcBlhbu0vo+IMwBYlY3EOC2CGkL3f3+fPNAbMi+vCMbk7BHA6MLz
+         98UjJfuGfnxtZXiJ7cdJ83505q48LCHF58M11VSMZ16bfAdLIP+FMP+AgDmwzASSaaN4
+         d5+GTF+R6vUxiF9svQCqrXIFqo7qj9Oe0O0YDlmo4JEludm6H/ghfan3zYh/6gsgnx+s
+         uioOOP2g6D14ylOYpp8vj75k8gy1Dj289YgWh3s1TyX7wVjbziIAXFa6FFgC+xm8aDka
+         f3c3h3NW8FUJbovCGq1/RvOHiQGdFDLSZXYGNbUQIHWDNGDwZvSDWCpEGQikqz7ZGZkx
+         WxjA==
+X-Gm-Message-State: AOAM533PKtWA7S9L1+NQsMHeHXWchVknVzlNIYB0jRLc7Da1GGrgKqxw
+        tNsrR4S6F1NXn9nVRDtjTqZ6zHDQK8I=
+X-Google-Smtp-Source: ABdhPJxJW8dnWHrxxPAXD96L95gMYdQW3Uds0KfVtVFZUPyALLIf4NYdk+96AddTTn4x0K6CmMWeDg==
+X-Received: by 2002:a63:3c09:: with SMTP id j9mr26042217pga.206.1595965906280;
+        Tue, 28 Jul 2020 12:51:46 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id j5sm7217037pfg.80.2020.07.28.12.51.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 12:51:45 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <17a6e608-7ffc-a612-9caf-bad7315f5e60@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200728165212.GA32586@codeaurora.org>
+References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org> <1595503612-2901-5-git-send-email-rnayak@codeaurora.org> <e68ff810-362a-5b99-206b-f676b204101d@linaro.org> <654e0fcb-ae4d-c151-fa8a-4d029fc823fb@codeaurora.org> <20200724162825.GH9185@codeaurora.org> <159589714088.1360974.13205114501389777927@swboyd.mtv.corp.google.com> <20200728165212.GA32586@codeaurora.org>
+Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and power-domains for venus
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Maulik Shah <mkshah@codeaurora.org>
+To:     Lina Iyer <ilina@codeaurora.org>
+Date:   Tue, 28 Jul 2020 12:51:44 -0700
+Message-ID: <159596590401.1360974.283437162250734878@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Lina Iyer (2020-07-28 09:52:12)
+> On Mon, Jul 27 2020 at 18:45 -0600, Stephen Boyd wrote:
+> >Quoting Lina Iyer (2020-07-24 09:28:25)
+> >> On Fri, Jul 24 2020 at 03:03 -0600, Rajendra Nayak wrote:
+> >> >Hi Maulik/Lina,
+> >> >
+> >> >On 7/23/2020 11:36 PM, Stanimir Varbanov wrote:
+> >> >>Hi Rajendra,
+> >> >>
+> >> >>After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I =
+see
+> >> >>below messages on db845:
+> >> >>
+> >> >>qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
+> >> >>current OPP for freq 533000097 (-34)
+> >> >>
+> >> >>^^^ This one is new.
+> >> >>
+> >> >>qcom_rpmh TCS Busy, retrying RPMH message send: addr=3D0x30000
+> >> >>
+> >> >>^^^ and this message is annoying, can we make it pr_debug in rpmh?
+> >> >
+> >> How annoyingly often do you see this message?
+> >> Usually, this is an indication of bad system state either on remote
+> >> processors in the SoC or in Linux itself. On a smooth sailing build you
+> >> should not see this 'warning'.
+> >>
+> >> >Would you be fine with moving this message to a pr_debug? Its current=
+ly
+> >> >a pr_info_ratelimited()
+> >> I would rather not, moving this out of sight will mask a lot serious
+> >> issues that otherwise bring attention to the developers.
+> >>
+> >
+> >I removed this warning message in my patch posted to the list[1]. If
+> >it's a serious problem then I suppose a timeout is more appropriate, on
+> >the order of several seconds or so and then a pr_warn() and bail out of
+> >the async call with an error.
+> >
+> The warning used to capture issues that happen within a second and it
+> helps capture system related issues. Timing out after many seconds
+> overlooks the system issues that generally tend to resolve itself, but
+> nevertheless need to be investigated.
+>=20
 
+Is it correct to read "system related issues" as performance problems
+where the thread is spinning forever trying to send a message and it
+can't? So the problem is mostly that it's an unbounded amount of time
+before the message is sent to rpmh and this printk helps identify those
+situations where that is happening?
 
-On 28/07/2020 22:19, Grygorii Strashko wrote:
-> 
-> 
-> On 23/07/2020 11:46, Lokesh Vutla wrote:
->> This series adds initial support for latest new SoC, J7200, from Texas Instruments.
->>
->> The J7200 SoC is a part of the K3 Multicore SoC architecture platform.
->> It is targeted for for automotive gateway, vehicle compute systems,
->> Vehicle-to-Vehicle (V2V) and Vehicle-to-Everything (V2X) applications.
->> The SoC aims to meet the complex processing needs of modern embedded products.
->>
->> See J7200 Technical Reference Manual (SPRUIU1, June 2020)
->> for further details: https://www.ti.com/lit/pdf/spruiu1
->>
->> Testing:
->> - Boot log: https://pastebin.ubuntu.com/p/FvpzWjf7tw/
->> - ./scripts/checkpatch --strict
->>     - Few warningns about Line length exceeding 100 columns.
->>       But these are corresponding to comments
->> - v8make dtbs_check
->> - DT_SCHEMA_FLAGS="-u"
->>    DT_SCHEMA_FILES="Documentation/devicetree/bindings/arm/ti/k3.yaml"
->>    v8make dtbs_check
->> - DT_SCHEMA_FLAGS="-u"
->>    DT_SCHEMA_FILES="Documentation/devicetree/bindings/arm/ti/k3.yaml"
->>    v8make dt_binding_check
->>
->> Lokesh Vutla (4):
->>    dt-bindings: arm: ti: Add bindings for J7200 SoC
->>    dt-bindings: arm: ti: Convert K3 board/soc bindings to DT schema
->>    arm64: dts: ti: Add support for J7200 SoC
->>    arm64: dts: ti: Add support for J7200 Common Processor Board
->>
->>   .../devicetree/bindings/arm/ti/k3.txt         |  26 ---
->>   .../devicetree/bindings/arm/ti/k3.yaml        |  28 +++
->>   MAINTAINERS                                   |   2 +-
->>   arch/arm64/boot/dts/ti/Makefile               |   3 +-
->>   .../dts/ti/k3-j7200-common-proc-board.dts     |  64 ++++++
->>   arch/arm64/boot/dts/ti/k3-j7200-main.dtsi     | 199 ++++++++++++++++++
->>   .../boot/dts/ti/k3-j7200-mcu-wakeup.dtsi      |  84 ++++++++
->>   arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi   |  29 +++
->>   arch/arm64/boot/dts/ti/k3-j7200.dtsi          | 165 +++++++++++++++
->>   9 files changed, 572 insertions(+), 28 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/arm/ti/k3.txt
->>   create mode 100644 Documentation/devicetree/bindings/arm/ti/k3.yaml
->>   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
->>   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
->>   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
->>   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
->>   create mode 100644 arch/arm64/boot/dts/ti/k3-j7200.dtsi
->>
-> 
-> I have networking enabled on top of this series here.
-> 
-> ssh://git@bitbucket.itg.ti.com/~x1045550/ti-priv-linux-kernel.git ti-linux-5.4.y-for-next-pull
-> 
-> But DMA failed for Main domain.
->      0.781005] ti-udma 31150000.dma-controller: NAVSS ti,sci-dev-id read failure -22
-> [    0.788684] ti-udma: probe of 31150000.dma-controller failed with error -22
-> 
-> http://lcpdresults.itg.ti.com/launcher/results/8013
-> 
-> Is there anything (except my comment for patch 3) which prevents this from been merged?
-> 
-
-Sry. Pls. ignore this mail.
-
--- 
-Best regards,
-grygorii
+Otherwise as you say above it's a bad system state where the rpmh
+processor has gotten into a bad state like a crash? Can we recover from
+that? Or is the only recovery a reboot of the system? Does the rpmh
+processor reboot the system if it crashes?
