@@ -2,102 +2,129 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE70DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CF4C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5D720759
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:54:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8kMpQVX"
+	by mail.kernel.org (Postfix) with ESMTP id DC68C20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 01:54:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595901264;
+	bh=9fa3MBrKIoK8rjFjfQ9vhP4BGItkjImru5IFZPPY4wM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FvT7w2Id/EZzbVBNUSNMfUKh0n/CXxp6SNibQ2qzkocJuGuZi3B8oMVWVxG1L+KTA
+	 yth7D7SQublYjztrnCqAuQLf8IUHK/RmbBeWGkyzt2xtqUsJoLfO26XYVL7LDC7xCU
+	 i+6f+nCTkvGdZC0PTPl69+tgZvEfuAm+36k1iW1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgG1ByK (ORCPT
+        id S1726859AbgG1ByX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 21:54:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgG1ByK (ORCPT
+        Mon, 27 Jul 2020 21:54:23 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:50595 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgG1ByX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 21:54:10 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15FECC061794;
-        Mon, 27 Jul 2020 18:54:10 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k13so1280183plk.13;
-        Mon, 27 Jul 2020 18:54:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=m2ea3+R1S5kPZb5AV5bSF6B2MxbIDLdQ7d/mAIo8LIY=;
-        b=R8kMpQVXOXmB8kMBJMdrq87r3DHILHZEjX2LldIxtaj7QoDScBF3+4paR8zB5ZnDmr
-         bVDdMYgwzvcHi/vyHYcdEj/wDuYkXB/12N9anHYB3C+D1YHUGdV0Nv7KG/qA3PrwkRvn
-         dJkDoikO2Ac3ggmswmvhjqMlidPLiHjohRMcmQOueu5qeJDV9JNI2kCdkHNeqUXEtc5x
-         yWAaUwzXS2yrt4CpkGfD1noXruvVtxf+CHDzB+OfWskiXVu8+5ZjJ1JNCYRNP++CFDGF
-         C8/F9lw0yiZEqJWMpe+DDP9+jqTkzQrlFTEBsjS2/itB/RYuM5tubfNbNuRXlUl45csr
-         LybA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=m2ea3+R1S5kPZb5AV5bSF6B2MxbIDLdQ7d/mAIo8LIY=;
-        b=X5MJ8sL5/H8l1rnCw/d9qRQNMXlp+0EJWKAnUbLXtuF5BlG98N87VvMVImofGRIBuR
-         dz8vAYKv0egcEe0qqDc2ajjg6q1mUzu+dZFTWTqkrGdwwlU+LIq39RcdEls4YwslDwJN
-         T3a5jaajVcRWUowINM9qBFRDciNBszhPO3ejYK5UteqRgb3e3tqBqA9mW6T3GNlFIj00
-         wgeEN220ksW75oCZtHVdo3iw67vj/km7Pfv/TtGZMvr7cgUsTXZcmpmv1S0U+kWsYp4+
-         5jrjqmXZvPm0vMTcmMCtCPruuTm9h665iuiMEfxZ3UYmrJndkw1A+n8J4a7voUYxp4D3
-         dbsw==
-X-Gm-Message-State: AOAM532TN5M+g82m7NqBnoE358YOMhR72DrplNV3In0aLoGNPyn5I0sb
-        waK7to/R9f6+16kSlL2v8z4=
-X-Google-Smtp-Source: ABdhPJz1wVdKmFeSV2Sh85lHePfMFtCaS+15EYZRzY0DNLsjwy+SPTseKklHrqG5eZK904qWoRhH5A==
-X-Received: by 2002:a17:90a:d314:: with SMTP id p20mr1762455pju.99.1595901249420;
-        Mon, 27 Jul 2020 18:54:09 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id q16sm6102376pfg.153.2020.07.27.18.54.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 18:54:08 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 10:54:08 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: Re: linux-next: build failure after merge of the printk tree
-Message-ID: <20200728015408.GA1296462@jagdpanzerIV.localdomain>
-References: <20200728114927.4590731f@canb.auug.org.au>
+        Mon, 27 Jul 2020 21:54:23 -0400
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 06S1rvox001453;
+        Tue, 28 Jul 2020 10:53:58 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 06S1rvox001453
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1595901238;
+        bh=fr77uZW5pkExE/2l945ZgcVmpIWMWixWve+W0/foO0I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iZFlIy/58eaeViqw4tzUSb6HqsIPeYtY1uoDAKOV451lh6++upzFdjAL9NAG8ngdm
+         ZnopSaGHNw2r5sijYo5lBsorJY9W7+vl+xhcbNP/ctAD26r9204FPybISlBNk50OKo
+         ayQU6sEVqQeKr7w95ZmgH3IwN/GDtcu+rxstGGpNICYvTQz6YTOvd9NwwECpmDCIzH
+         6t9PoKxmR3jtMMHZLiMtg5xz6h77SPOzOSdS3wMBIMiOogDRCuK3iwHm49jbgfa9nA
+         o+/7yNbNhd+OqNOTHVWKJS2w9wPTLFU4J01rxZ/0qhUdysiV9FNoMFhWlutJZzheHc
+         jTNmAE/CU0avw==
+X-Nifty-SrcIP: [209.85.217.50]
+Received: by mail-vs1-f50.google.com with SMTP id p8so1904826vsm.12;
+        Mon, 27 Jul 2020 18:53:58 -0700 (PDT)
+X-Gm-Message-State: AOAM532KnrHSchEvk6yZcWJ98rSQ9u85vQlpFAfLY9pWJ8ott1LnocJN
+        ZQvIMP49Xnpw+yKIE7QLR9hP9B5fDV7tfXlhASM=
+X-Google-Smtp-Source: ABdhPJxovGQm4W0p9SeE2Z2xLAA4JiVFPKljNJrhoYtrwsuRJbf/sEJepBRJg+FoHlyQxIlc+CPJ9Pw5gZLX5e0Ili8=
+X-Received: by 2002:a67:d908:: with SMTP id t8mr6595176vsj.215.1595901236916;
+ Mon, 27 Jul 2020 18:53:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728114927.4590731f@canb.auug.org.au>
+References: <20200727230606.906598-1-nickrterrell@gmail.com> <20200727230606.906598-8-nickrterrell@gmail.com>
+In-Reply-To: <20200727230606.906598-8-nickrterrell@gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 28 Jul 2020 10:53:20 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATHBfYHXoz5=b8hc7c61JeZP6UiJjOX3r+S3WHRwnUm6g@mail.gmail.com>
+Message-ID: <CAK7LNATHBfYHXoz5=b8hc7c61JeZP6UiJjOX3r+S3WHRwnUm6g@mail.gmail.com>
+Subject: Re: [PATCH v9 7/7] .gitignore: add ZSTD-compressed files
+To:     Nick Terrell <nickrterrell@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chris Mason <clm@fb.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        Ingo Molnar <mingo@kernel.org>,
+        Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Xu <alex_y_xu@yahoo.ca>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Terrell <terrelln@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/07/28 11:49), Stephen Rothwell wrote:
-[..]
-> Caused by commit
-> 
->   b4a461e72bcb ("printk: Make linux/printk.h self-contained")
-> 
-> This *may* be interacting with other include file changes in linux-next.
-> 
-> I have reverted that commit for today.
+On Tue, Jul 28, 2020 at 8:11 AM Nick Terrell <nickrterrell@gmail.com> wrote:
+>
+> From: Adam Borowski <kilobyte@angband.pl>
+>
+> For now, that's arch/x86/boot/compressed/vmlinux.bin.zst but probably more
+> will come, thus let's be consistent with all other compressors.
+>
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Nick Terrell <terrelln@fb.com>
+> Signed-off-by: Adam Borowski <kilobyte@angband.pl>
+> ---
+>  .gitignore | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/.gitignore b/.gitignore
+> index d5f4804ed07c..162bd2b67bdf 100644
+> --- a/.gitignore
+> +++ b/.gitignore
+> @@ -44,6 +44,7 @@
+>  *.tab.[ch]
+>  *.tar
+>  *.xz
+> +*.zst
 
-Hi Stephen,
 
-Sorry about that. This will be fixed for tomorrow's build. The problems
-is that we have commit dependency between printk and locking tree. So I
-pulled the
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=locking/core&id=c935cd62d3fe985d7f0ebea185d2759e8992e96f
+If you have any chance to update this,
+please remember to add '*.zst' to
+Documentation/dontdiff as well.
 
-into printk/for-next.
 
-	-ss
+
+
+>  Module.symvers
+>  modules.builtin
+>  modules.order
+> --
+> 2.27.0
+>
+
+
+--
+Best Regards
+Masahiro Yamada
