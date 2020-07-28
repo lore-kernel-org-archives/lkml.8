@@ -2,96 +2,118 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6995C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F10DC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B16DC207CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E4FF207CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:15:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GYq4C1ay"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MfTig2D+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgG1DNG (ORCPT
+        id S1726916AbgG1DPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 23:13:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44018 "EHLO
+        Mon, 27 Jul 2020 23:15:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbgG1DNF (ORCPT
+        with ESMTP id S1726738AbgG1DPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 23:13:05 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE6EC061794;
-        Mon, 27 Jul 2020 20:13:05 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id e64so19244056iof.12;
-        Mon, 27 Jul 2020 20:13:05 -0700 (PDT)
+        Mon, 27 Jul 2020 23:15:02 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48CDBC0619D4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 20:15:02 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k1so10742079pjt.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 20:15:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hz8xM5EG8YqCl30H84RX4Zce87vdHqx8q6aTfAYbNMs=;
-        b=GYq4C1ayueu3YaNY7Q29/QMADd+OnfFRbkYgQdzY2xYHw24Q5vxPc7cTlnABNycv7A
-         3ghH4tyQe288lCG/sdL/4wqq9iRX/btMuXB4kvpjJziC4yNlWMI76o/Fu7odOOXBb0BJ
-         2IvO8Dp69DXU2lyoZ/wUp2kq4nDgQV86cjWVg5K3YBu3SyXFc9CUYgD69v5XSE2zWpAy
-         C4qOe91qKjTI3MDp+yZxEAWJQLCS5ZHw7I/9P4VK7sdhEHcwpi35UwS/sd1uB1gtjwcM
-         j6soCuJtM2T3yamDa4n7+1dYMgoo/DJdlGpWKNecJVG/0pEm06zWWG/YdllKhp4zabPC
-         hJ3Q==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tqvPFptaXrqNLR/xpVd6gqyLWNSPgfU8K5sYlQ8u1qk=;
+        b=MfTig2D+aYwwa+XQpMSjtudJi6GMDOHV1l6mBKV7hAMMghTpxbq478ZNPNMlVsOeWi
+         yLsYPYGtEXOT2mrDzUb6BJx5lUg1V3gn6YdRJKKv1GUHL90KDPfHOfGINlaagEi/0hPC
+         3llxQQkuycFFeX7edCokUFbc5zSCiBKd6eZAYpIxPbCyYoxtGOgHWataeD38y9F14qGQ
+         TNx3jvz+sVvHBP3oT7jwF69qV4NA0tNRv9f7FZnUTKAJqTgSVNlfLdh+R3poOjPBqXzR
+         3BtmMml7SQBYhiG/ZFMCZ4nIZ1kIPOjvT/OAUchfyurXVgTWk856aYaZCf0zYEsHaXnv
+         OLxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hz8xM5EG8YqCl30H84RX4Zce87vdHqx8q6aTfAYbNMs=;
-        b=sa3FA/37/QTibXS91eH2tQgmwOV48ckP/U88nusQ+Vn2FAUQgA9nQYJajuqvesk6hn
-         qRHke/vpSs0V1+QcEoKVcsVF824DFBpsrnYVDiNeUNgRcPTH83KOJJiOsHv8dYjIoJ0N
-         V/WcJB7UsFxh1kKkMG9PVRkbxAzo3zSjAQ8Va70C5jHTgszpLAkrX18haJIlrKll3w/P
-         9f7ZmBXtPDkTjvndsHoyNj0IQngzb0abRGxlTn45CFYjQn/OTrnsINhZ8GVwehlSDKb2
-         FAAjaZ6ql5ImiaucsSlD3FgVyx8shLBsReXXmuRth8oUGvLmtyjzdXxGKl5kU0/itEfb
-         1VzQ==
-X-Gm-Message-State: AOAM5305LYeUlLT+k5BEeWCZhm2J+ZnCwk7XkRztuu3RhjfDpzwSSNH8
-        9BGEldUckysORtzaAZIWkP4f8Mj8acfMUmSta+yuqgXr
-X-Google-Smtp-Source: ABdhPJxgByQf1Qeq05PZtZfnw/SNvK3nfbcBGTp9JuGmp7+rwgTypLX3I9z+0qlPrytghjzXash3tCfTaQZ9S0YOybI=
-X-Received: by 2002:a02:1d04:: with SMTP id 4mr30893707jaj.16.1595905985110;
- Mon, 27 Jul 2020 20:13:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tqvPFptaXrqNLR/xpVd6gqyLWNSPgfU8K5sYlQ8u1qk=;
+        b=K8lLfB48zCUA/Sa7p5hGpc0E6noq0x58yW70eodtBhsxHWrTAxzdB2PbulLiyEVCSF
+         gwfJcSX/CrPJuY4esti2CSVxCcjM93BKI/FvMbQMQm6GRWvCvNYeO3/D7Zexp4nGTNQX
+         zH+UYpN+MDaHE58hie1L4hUJP+9AZwGepJ/yL7VzkkU+5UiLM8wjquPmP15ihWQ3ac/u
+         zGlB7H336P69HZtQtF4BRqB00qODh1D69ggFvXKgcw8eKrRZ1yVpzVh7ODZQTUb5ckgh
+         yJo+I9Kbew/eZT6LowhTGLCrsnKvr4PsLk35zdqsN+N3wVwEuLCd0BItlmEuwk6kmcHN
+         mujA==
+X-Gm-Message-State: AOAM5335IkTY83gtAv9lcpg1lFsFspXMoZr63P69gZdELNHR0TRJeUF2
+        tEkGhu7IbRT7MJ2ZbcWNxRy4x4TBVH3cyA==
+X-Google-Smtp-Source: ABdhPJxs1jdMEm+AIUYt11RFJG6KlKTFv/6nraFuHw6vmYq4NWdqisr5zlsOqt5+h+EYMaUvuXwCvQ==
+X-Received: by 2002:a17:902:b18b:: with SMTP id s11mr21796119plr.152.1595906101384;
+        Mon, 27 Jul 2020 20:15:01 -0700 (PDT)
+Received: from debian.flets-east.jp ([2400:2411:502:a100:c84b:19e2:9b53:48bb])
+        by smtp.gmail.com with ESMTPSA id s10sm3895285pjf.3.2020.07.27.20.14.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Jul 2020 20:15:00 -0700 (PDT)
+From:   Masahisa Kojima <masahisa.kojima@linaro.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     masahisa.kojima@linaro.org, jarkko.sakkinen@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, ardb@kernel.org,
+        devicetree@vger.kernel.org, linux-integrity@vger.kernel.org,
+        peterhuewe@gmx.de, jgg@ziepe.ca
+Subject: [PATCH v5 0/2] synquacer: add TPM support
+Date:   Tue, 28 Jul 2020 12:14:30 +0900
+Message-Id: <20200728031433.3370-1-masahisa.kojima@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200727033810.28883-1-gaurav1086@gmail.com> <20200728021348.4116-1-gaurav1086@gmail.com>
-In-Reply-To: <20200728021348.4116-1-gaurav1086@gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 27 Jul 2020 20:12:53 -0700
-Message-ID: <CAM_iQpWbT18cRfDc2f1wVUrS6QpOmPrZwBqaitD7545-itijfg@mail.gmail.com>
-Subject: Re: [PATCH] [net/ipv6] ip6_output: Add ipv6_pinfo null check
-To:     Gaurav Singh <gaurav1086@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "open list:NETWORKING [IPv4/IPv6]" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 7:14 PM Gaurav Singh <gaurav1086@gmail.com> wrote:
->
-> Add return to fix build issue. Haven't reproduced this issue at
-> my end.
->
-> My hypothesis is this: In function: ip6_xmit(), we have
-> const struct ipv6_pinfo *np = inet6_sk(sk); which returns NULL.
->
-> Further down the function, there's a check:
-> if (np) hlimit = hp->htop_limit
+This adds support for driving the TPM on Socionext SynQuacer platform
+using the driver for a memory mapped TIS frame.
 
-This check exists before git history, at that time 'sk' could be NULL,
-hence 'np', so it does not mean it is still necessary now.
+v5:
+- modify multi-line comment style
+- remove MODULE_AUTHOR() and MODULE_VERSION()
 
-I looked at all callers of ip6_xmit(), I don't see how it is called with
-a non-full socket, neither 'sk' could be NULL after
-commit b30bd282cbf5c46247a279a2e8d2aae027d9f1bf
-("[IPV6]: ip6_xmit: remove unnecessary NULL ptr check").
+v4:
+- add ACPI support
+- modify function and structure name
 
-Thanks.
+v3:
+- prepare new module to handle TPM MMIO access on SynQuacer platform
+
+v2:
+- don't use read/write_bytes() to implement read/write16/32 since that uses
+  the wrong address
+
+Cc: jarkko.sakkinen@linux.intel.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: ardb@kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-integrity@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: peterhuewe@gmx.de
+Cc: jgg@ziepe.ca
+
+Masahisa Kojima (2):
+  tpm: tis: add support for MMIO TPM on SynQuacer
+  dt-bindings: Add SynQucer TPM MMIO as a trivial device
+
+ .../devicetree/bindings/trivial-devices.yaml  |   2 +
+ drivers/char/tpm/Kconfig                      |  12 +
+ drivers/char/tpm/Makefile                     |   1 +
+ drivers/char/tpm/tpm_tis_synquacer.c          | 208 ++++++++++++++++++
+ 4 files changed, 223 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_tis_synquacer.c
+
+-- 
+2.20.1
+
