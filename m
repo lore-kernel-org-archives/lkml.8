@@ -2,163 +2,104 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2433AC433F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A2CC433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED3CF2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A1232074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:02:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="lFPlDrZA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q5LhnhZs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731264AbgG1QCJ (ORCPT
+        id S1731274AbgG1QCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50004 "EHLO
+        Tue, 28 Jul 2020 12:02:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731136AbgG1QCH (ORCPT
+        with ESMTP id S1731112AbgG1QC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:02:07 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C0EC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:02:06 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id q4so21749684lji.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:02:06 -0700 (PDT)
+        Tue, 28 Jul 2020 12:02:26 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D336EC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:02:25 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id w22so5891537vsi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 09:02:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4pYEC9dZ+jd5ZdpQ86R7MRp/YpojCjB5i3kRxOXIqZ4=;
-        b=lFPlDrZAPUQGkmZpmSCIMJDbvQtxgVtpwEqHn/z1SvDBcvz/7LeDdZGg4TSxdYSyqk
-         1AL+peXtrZTzNnqgR0xs7Y7977CKVPUok7j3yTy3fQYqP10ZqxqIy+9zptz2JJbZcWaM
-         1mA94lw8guaLpIHv0MPGhj0YPfLyPVmnef/ODkEwrC00hyOPvUfFWOSFl3+GXoyXNH0M
-         t0Vg8hdOAGTu3wxRXFazn8ao0NP1jTcE4K54hUNsuXJb/t0nZB3hCsK7SHo4Zm2aMn1+
-         wgBJCGNHD1ozmLFA67jDuE7KQ9jNegJ3U2Z89iqfBH4vcO/T/fCQt9+msff18hc1XoOU
-         +gfg==
+        bh=BWgk9dNeTI7P5Harbraq661vRoSXP3YNIUIGuCS2xQs=;
+        b=Q5LhnhZsWYW2J7hzozGLPrvuwJvn6C3rRrmPX5F+uYYdEqmdPbgTr9v8m7SC3Jsc2r
+         1XMUIyN6C64/Pzndv21km5JEt/aDywOOug9ONBPrfDTnfrYkM/RtFh5zuk+nGnxCtH9i
+         aMosLGf8G1NTsyRDOkOETebByHSpd5RLUSOxfPc8KmK9H0TjxF9VZwHEV2v6cqt/6S55
+         fodnl55bx2704i+Qdskcb2JXCLwrfU4lLVK8EBJubXu3g4Gb+poN4PbXGEs3Bje2ACMD
+         BGXEUrFAZ2TNJI8M9A0/TeLWeC5Hpzo33DHSMsRBWVGsfljM07pd7+y6fRLMEAoqzQn9
+         rfmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4pYEC9dZ+jd5ZdpQ86R7MRp/YpojCjB5i3kRxOXIqZ4=;
-        b=ajqnK72K2hXbq+hfNVnrpUUxAZdlwYfljppNQdKMqiEEPkc9FXoS1lO6/VkZpMkgwH
-         hsEahr0X6bdUgHb59WIOP6cc2V3rxJjdbOc9hAWsz7HphLbpnfag3zFQ3BfJhnUbcle4
-         6y3ooQyRCkzU1laFenEHqE/Q9AbzDGxRiHHNUZP6PnN7OguU7Z5CvOXumtV1oDDKwGa7
-         7DucUY2Px63pZXJeGQDjZ8Rjv6s3WSSmgpMW49f0wKtTBhaCsEQQhT3OD4OAVduX0gRO
-         6D6bZ06iX3yTTRcosSTPZbzQPOqCrTUn4P170w2WwoxZoaZHnVPNvQC955/GsIaLn9r5
-         VwdQ==
-X-Gm-Message-State: AOAM532RHoxlrc3XAiRQ91NwTqFPHWJK9yBg9zr36eNgVUeJgErSjHsa
-        M+kNWmanh3RjO4V7FysXTjAWbBCzBNIkhAdyHloGtw==
-X-Google-Smtp-Source: ABdhPJyNDixSOqhlBwh4RtvxiHRwy6t1BD/alks9BCgw7xmmuH8s5mdvp3+TVPFpJ/ycVp044ugkXyxzh7rvfBAZS+Q=
-X-Received: by 2002:a2e:6c14:: with SMTP id h20mr11602812ljc.176.1595952125171;
- Tue, 28 Jul 2020 09:02:05 -0700 (PDT)
+        bh=BWgk9dNeTI7P5Harbraq661vRoSXP3YNIUIGuCS2xQs=;
+        b=huaduIevgcc36NqQ6PUmI4nFs4nuXi00hDe3EnXaHxlM/bZhC9Pmy5/Qh9tloC+kcb
+         Y9yn7oHMkY7vW/k0nJPQ1hrpW93RbDFP4zc6qDiWODays/a3wDfYZluyHlZcyHmLBzs8
+         s6kZ65JcF4Pf8jrK9Hcb64pbho3PuZ3rhNNN8a+/8FoBLJICG29lsCxb5KvEY/6DJavw
+         z/lKjbJKk5dzLczi+e4vb5b+lPCcz/AXD5aC7lpeXa5G9+WqNtFKSLi41A7ONnM0RAtt
+         2l4xnRmecUfi8sDu09Gc9IoHUsXzY3DBRzRGRPl1pd5lWrbBG0O7s7BwUCudjgEshhQj
+         140g==
+X-Gm-Message-State: AOAM531dOPzINqIQqzpzzjlDl0NYSlzdZ6ymivSMP6YA2aqWDF+FaDao
+        36vKoENeFZDWAgr5ph1AQsRJnTKGV/V775BtLx2NLA==
+X-Google-Smtp-Source: ABdhPJyCzVnvJQHXogDaDGiJt+f1Dgl8tBnFZtpwzft/t9n/trKAgjWy6YSMN9JlG/KJ3xDzfiYjS19/XRCWU5VVh2M=
+X-Received: by 2002:a67:b601:: with SMTP id d1mr19852614vsm.46.1595952144353;
+ Tue, 28 Jul 2020 09:02:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200727120424.1627555-1-jannh@google.com> <CAB0TPYHx-SkaWR6i0LwLYRJv13_0V3Ak63H0=parZNvS5XdqgA@mail.gmail.com>
- <CAG48ez23-oOGjeNhFCzrWxJuuJUsdgbpiSiPvM0ov1n+FcLPhw@mail.gmail.com>
-In-Reply-To: <CAG48ez23-oOGjeNhFCzrWxJuuJUsdgbpiSiPvM0ov1n+FcLPhw@mail.gmail.com>
-From:   Martijn Coenen <maco@android.com>
-Date:   Tue, 28 Jul 2020 18:01:54 +0200
-Message-ID: <CAB0TPYEd-UeEeZbn7iDLwXYLRZfS5vSgY4hJTooYdCs3n6FTqA@mail.gmail.com>
-Subject: Re: [PATCH v2] binder: Prevent context manager from incrementing ref 0
-To:     Jann Horn <jannh@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Mattias Nissler <mnissler@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200724091520.880211-1-tweek@google.com> <CAEjxPJ45ij3obT37ywn_edb9xb89z-SdwzejfN6+jrvAtghXfA@mail.gmail.com>
+ <CAHC9VhS4aXD8kcXnQ2MsYvjc--xXSUpsM1xtgq3X5DBT59ohhw@mail.gmail.com>
+ <CA+zpnLfczC=9HQA8s1oBGKGQO+OkuydF85o89dhSxdOyKBHMgg@mail.gmail.com> <CAHC9VhT1sGSpfCKojbKR+O2Hf_h+wnKnBwwSo09CbFaCYLcOHA@mail.gmail.com>
+In-Reply-To: <CAHC9VhT1sGSpfCKojbKR+O2Hf_h+wnKnBwwSo09CbFaCYLcOHA@mail.gmail.com>
+From:   =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
+Date:   Tue, 28 Jul 2020 18:02:07 +0200
+Message-ID: <CA+zpnLecz_gvXYnrwNGW8SLaJsu==M_n9MuJgjqX9nPJtuTZBg@mail.gmail.com>
+Subject: Re: [PATCH] selinux: add tracepoint on denials
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Nick Kralevich <nnk@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks a lot for the detailed explanation, I understood now.
+On Tue, Jul 28, 2020 at 5:12 PM Paul Moore <paul@paul-moore.com> wrote:
+> Perhaps it would be helpful if you provided an example of how one
+> would be expected to use this new tracepoint?  That would help put
+> things in the proper perspective.
 
-Martijn
+The best example is the one I provided in the commit message, that is
+using perf (or a perf equivalent), to hook onto that tracepoint.
 
-On Tue, Jul 28, 2020 at 4:50 PM Jann Horn <jannh@google.com> wrote:
->
-> On Tue, Jul 28, 2020 at 3:50 PM Martijn Coenen <maco@android.com> wrote:
-> > On Mon, Jul 27, 2020 at 2:04 PM Jann Horn <jannh@google.com> wrote:
-> > >  - task B opens /dev/binder once, creating binder_proc instance P3
-> > >  - P3 calls P2 (via magic handle 0) with (void*)1 as argument (two-way
-> > >    transaction)
-> > >  - P2 receives the handle and uses it to call P3 (two-way transaction)
-> > >  - P3 calls P2 (via magic handle 0) (two-way transaction)
-> > >  - P2 calls P2 (via handle 1) (two-way transaction)
-> >
-> > Why do you need P3 involved at all? Could P2 just straight away make a
-> > call on handle 1?
->
-> Yes, it could, I think. IIRC these steps are necessary if you want to
-> actually get a KASAN splat, instead of just a transaction-to-self with
-> no further consequences. It has been a while since I looked at this,
-> but I'll try to figure out again what was going on...
->
->
-> A UAF occurs in the following code due to the transaction-to-self,
-> because the "if (t->to_thread == thread)" is tricked into believing
-> that the transaction has already been accepted.
->
-> static int binder_thread_release(struct binder_proc *proc,
->                                  struct binder_thread *thread)
-> {
->         struct binder_transaction *t;
->         struct binder_transaction *send_reply = NULL;
->         [...]
->         t = thread->transaction_stack;
->         if (t) {
->                 [...]
->                 if (t->to_thread == thread)
->                         send_reply = t;
->         } else {
->                 [...]
->         }
->         [...]
->         //NOTE: transaction is freed here because top-of-stack is
->         //      wrongly treated as already-accepted incoming transaction)
->         if (send_reply)
->                 binder_send_failed_reply(send_reply, BR_DEAD_REPLY);
->         //NOTE pending transaction work is processed here (transaction has not
->         //     yet been accepted)
->         binder_release_work(proc, &thread->todo);
->         [...]
-> }
->
-> An unaccepted transaction will only have a non-NULL ->to_thread if the
-> transaction has a specific target thread; for a non-reply transaction,
-> that is only the case if it is a two-way transaction that was sent
-> while the binder call stack already contained the target task (iow,
-> the transaction looks like a synchronous callback invocation).
->
-> With the steps:
->
->  - P3 calls P2 (via magic handle 0) with (void*)1 as argument (two-way
->    transaction)
->  - P2 receives the handle and uses it to call P3 (two-way transaction)
->  - P3 calls P2 (via magic handle 0) (two-way transaction)
->  - P2 calls P2 (via handle 1) (two-way transaction)
->
-> the call stack will look like this:
->
->     P3 -> P2 -> P3 -> P2 -> P2
->
-> The initial call from P3 to P2 was IIRC just to give P2 a handle to
-> P3; IIRC the relevant part of the call stack was:
->
->     P2 -> P3 -> P2 -> P2
->
-> Because P2 already occurs down in the call stack, the final
-> transaction "P2 -> P2" is considered to be a callback and is
-> thread-directed.
->
->
-> The reason why P3 has to be created from task B is the "if
-> (target_node && target_proc->pid == proc->pid)" check for transactions
-> to reference 0.
+> Well, to be honest, the very nature of this tracepoint is duplicating
+> the AVC audit record with a focus on using perf to establish a full
+> backtrace at the expense of reduced information.  At least that is how
+> it appears to me.
+
+I see both methods as complementary. By default, the kernel itself can
+do some reporting (i.e avc message) on which process triggered the
+denial, what was the context, etc. This is useful even in production
+and doesn't require any extra tooling.
+The case for adding this tracepoint can be seen as advanced debugging.
+That is, once an avc denial has been confirmed, a developer can use
+this tracepoint to surface the userland stacktrace. It requires more
+userland tools and symbols on the userland binaries.
