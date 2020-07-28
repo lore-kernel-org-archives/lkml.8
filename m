@@ -2,136 +2,156 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D47AC433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F56C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A13920792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:38:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595914715;
-	bh=kudBUbPYRIeiM4+47AqFUj+ZhdDE0WK7VWzk+AsvqF8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nk/B8CA+7hMpnTWZfdk9K/qPI60rKtiTdSuhq/edMDFb8p5fOFx2cubkJfZf0KrZS
-	 cyAvXUayAHlp/zxlnO8H5mVSkTo0oV0+8kBHNFbCuIdjMLJrC0W2DyQUbUUSFHEm+V
-	 CNg/8dT7JbONrCB7keWenRiDZ0QY8oJIuH22WpFg=
+	by mail.kernel.org (Postfix) with ESMTP id 27AD320792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:38:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NSUnyWdI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgG1Fie (ORCPT
+        id S1726820AbgG1Fit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 01:38:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44704 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 01:38:49 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:58227 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbgG1Fid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 01:38:33 -0400
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+        id S1726251AbgG1Fit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 01:38:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595914728; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=L6tv155ue/cM7vpR05om5vGytaUQTI2e5heAOFzZ2iI=; b=NSUnyWdIGyQBIc7FiPYJ9v/QAXm9BwwfyrQuWZPOcZN8wTRPQhgMaJfJxR/X6uMmmt5HbuQf
+ R8M2D8mRadiV0lT1VtyShVXhyqVIMsZBsN9061oyQJXPkbDOoHmblaDwp4doOcrBkdaQyfuA
+ sf2pLET0r0vMh2dG8tyFiTx0upc=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5f1fb9e735f3e3d3168ffca0 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 05:38:47
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CEB4AC433CB; Tue, 28 Jul 2020 05:38:47 +0000 (UTC)
+Received: from [192.168.0.13] (unknown [183.83.138.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44A4321D95;
-        Tue, 28 Jul 2020 05:38:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595914712;
-        bh=kudBUbPYRIeiM4+47AqFUj+ZhdDE0WK7VWzk+AsvqF8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hInOE7+y5Fpi5W4zXMbOEdFfW83PX6I01vR1lHuhWtV+CXX7D9Kjff3zVl3NPo4Ow
-         pO4FKUHUNTaE1+cMw7meKcSf8mlB2lmRP9ZS26X3ji69SxraAAwyfWIDOai5Luwni6
-         FzuXKI2WJo7px1mwHCIMXYyJ7PCYW77eJHDvCHWg=
-Received: by mail-lf1-f47.google.com with SMTP id y18so10286247lfh.11;
-        Mon, 27 Jul 2020 22:38:32 -0700 (PDT)
-X-Gm-Message-State: AOAM532A3U+nYJRL9ZgmB5jxUWVGk8Y9U9YN1d25ANRsbj1ELTqFv4uc
-        UiCMm1MOmjOUYmpYMGyCo+Yj23edkdbTReLzIsE=
-X-Google-Smtp-Source: ABdhPJyrFPzlDFJYgCalqg8Zv+yEzwKXrT9R4Ak9o5L/7YzejJFWLaYAllzlVJsHgsJ72RpZyKcn+mc+OPrltZ28u3E=
-X-Received: by 2002:a19:7710:: with SMTP id s16mr13555854lfc.162.1595914710550;
- Mon, 27 Jul 2020 22:38:30 -0700 (PDT)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C39CFC433C9;
+        Tue, 28 Jul 2020 05:38:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C39CFC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V2 2/3] arm64: dts: qcom: sc7180: Add sleep pin ctrl for
+ BT uart
+To:     satya priya <skakit@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        gregkh@linuxfoundation.org
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rojay@codeaurora.org,
+        msavaliy@qti.qualcomm.com
+References: <1595563082-2353-1-git-send-email-skakit@codeaurora.org>
+ <1595563082-2353-3-git-send-email-skakit@codeaurora.org>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <d47f055c-50e6-9bbb-2ab9-e76ff6aac1c9@codeaurora.org>
+Date:   Tue, 28 Jul 2020 11:08:40 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-25-guro@fb.com>
-In-Reply-To: <20200727184506.2279656-25-guro@fb.com>
-From:   Song Liu <song@kernel.org>
-Date:   Mon, 27 Jul 2020 22:38:19 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW46PNAfmBThianVpWD-w+it107Zn7OtW6SA0sMW4J+cfQ@mail.gmail.com>
-Message-ID: <CAPhsuW46PNAfmBThianVpWD-w+it107Zn7OtW6SA0sMW4J+cfQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 24/35] bpf: eliminate rlimit-based memory
- accounting for stackmap maps
-To:     Roman Gushchin <guro@fb.com>
-Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1595563082-2353-3-git-send-email-skakit@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:22 PM Roman Gushchin <guro@fb.com> wrote:
->
-> Do not use rlimit-based memory accounting for stackmap maps.
-> It has been replaced with the memcg-based memory accounting.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-Acked-by: Song Liu <songliubraving@fb.com>
+On 7/24/2020 9:28 AM, satya priya wrote:
+> Add sleep pin ctrl for BT uart, and also change the bias
+> configuration to match Bluetooth module.
 
+
+Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+
+> Signed-off-by: satya priya <skakit@codeaurora.org>
 > ---
->  kernel/bpf/stackmap.c | 16 +++-------------
->  1 file changed, 3 insertions(+), 13 deletions(-)
+> Changes in V2:
+>   - This patch adds sleep state for BT UART. Newly added in V2.
 >
-> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-> index 5beb2f8c23da..9ac0f405beef 100644
-> --- a/kernel/bpf/stackmap.c
-> +++ b/kernel/bpf/stackmap.c
-> @@ -90,7 +90,6 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *attr)
->  {
->         u32 value_size = attr->value_size;
->         struct bpf_stack_map *smap;
-> -       struct bpf_map_memory mem;
->         u64 cost, n_buckets;
->         int err;
+>   arch/arm64/boot/dts/qcom/sc7180-idp.dts | 42 ++++++++++++++++++++++++++++-----
+>   1 file changed, 36 insertions(+), 6 deletions(-)
 >
-> @@ -119,15 +118,9 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *attr)
->
->         cost = n_buckets * sizeof(struct stack_map_bucket *) + sizeof(*smap);
->         cost += n_buckets * (value_size + sizeof(struct stack_map_bucket));
-> -       err = bpf_map_charge_init(&mem, cost);
-> -       if (err)
-> -               return ERR_PTR(err);
-> -
->         smap = bpf_map_area_alloc(cost, bpf_map_attr_numa_node(attr));
-> -       if (!smap) {
-> -               bpf_map_charge_finish(&mem);
-> +       if (!smap)
->                 return ERR_PTR(-ENOMEM);
-> -       }
->
->         bpf_map_init_from_attr(&smap->map, attr);
->         smap->map.value_size = value_size;
-> @@ -135,20 +128,17 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *attr)
->
->         err = get_callchain_buffers(sysctl_perf_event_max_stack);
->         if (err)
-> -               goto free_charge;
-> +               goto free_smap;
->
->         err = prealloc_elems_and_freelist(smap);
->         if (err)
->                 goto put_buffers;
->
-> -       bpf_map_charge_move(&smap->map.memory, &mem);
-> -
->         return &smap->map;
->
->  put_buffers:
->         put_callchain_buffers();
-> -free_charge:
-> -       bpf_map_charge_finish(&mem);
-> +free_smap:
->         bpf_map_area_free(smap);
->         return ERR_PTR(err);
->  }
-> --
-> 2.26.2
->
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 26cc491..bc919f2 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -469,20 +469,50 @@
+>   
+>   &qup_uart3_default {
+>   	pinconf-cts {
+> -		/*
+> -		 * Configure a pull-down on 38 (CTS) to match the pull of
+> -		 * the Bluetooth module.
+> -		 */
+> +		/* Configure no pull on 38 (CTS) to match Bluetooth module */
+>   		pins = "gpio38";
+> +		bias-disable;
+> +	};
+> +
+> +	pinconf-rts {
+> +		/* We'll drive 39 (RTS), so configure pull-down */
+> +		pins = "gpio39";
+> +		drive-strength = <2>;
+>   		bias-pull-down;
+> +	};
+> +
+> +	pinconf-tx {
+> +		/* We'll drive 40 (TX), so no pull */
+> +		pins = "gpio40";
+> +		drive-strength = <2>;
+> +		bias-disable;
+>   		output-high;
+>   	};
+>   
+> +	pinconf-rx {
+> +		/*
+> +		 * Configure a pull-up on 41 (RX). This is needed to avoid
+> +		 * garbage data when the TX pin of the Bluetooth module is
+> +		 * in tri-state (module powered off or not driving the
+> +		 * signal yet).
+> +		 */
+> +		pins = "gpio41";
+> +		bias-pull-up;
+> +	};
+> +};
+> +
+> +&qup_uart3_sleep {
+> +	pinconf-cts {
+> +		/* Configure no-pull on 38 (CTS) to match Bluetooth module */
+> +		pins = "gpio38";
+> +		bias-disable;
+> +	};
+> +
+>   	pinconf-rts {
+> -		/* We'll drive 39 (RTS), so no pull */
+> +		/* We'll drive 39 (RTS), so configure pull-down */
+>   		pins = "gpio39";
+>   		drive-strength = <2>;
+> -		bias-disable;
+> +		bias-pull-down;
+>   	};
+>   
+>   	pinconf-tx {
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+
