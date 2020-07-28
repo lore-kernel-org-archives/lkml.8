@@ -2,117 +2,114 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F422C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 448022078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:57:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="I6r7eI3O"
+	by mail.kernel.org (Postfix) with ESMTP id 7F838206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:58:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbgG1O5k (ORCPT
+        id S1730562AbgG1O6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:57:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39942 "EHLO
+        Tue, 28 Jul 2020 10:58:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730483AbgG1O5i (ORCPT
+        with ESMTP id S1730483AbgG1O6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:57:38 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5E0C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:57:38 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f1so18057809wro.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BwhNWR8x4sReBUnXjkKAZ+VUi9i5Kb9McNJ2lAFUYVE=;
-        b=I6r7eI3O9VehcrKADawlnXf0PAyUWwxAU3XCL5cRdAeuursNuOJMO+HtHbxlxYS1Xv
-         AzghH5B+Pp1ChD3vptP4ouSznOVU5WsOSWiY3TRQYDooWtp7UT99tXpv23Gg1Bqa2WX2
-         z1pUy07I5jdbs76FEVP0aD/lpF/GMVebXdg4fTZTUO+hCMH+7OuECwRUGyAqGNP4gaJO
-         zpWnVoWVrt6knZRcHhO4EW6P7uM7luOEO1Sg660qoKgSbVpSJ4l2iVXZkMP5dsQH5pGn
-         99ojDgiGyDTuVsbhLGwQLTFT7o/ZxBfaBw56hnChQALvfqWdAptkdI+H86IJaeo63E+1
-         BgOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BwhNWR8x4sReBUnXjkKAZ+VUi9i5Kb9McNJ2lAFUYVE=;
-        b=P/Q4hud3gI2FlOSOqE+Fvksyxj8q0yUhH5Gpc3Bgh+p9C95dR6sVmE5iEnG00Q753n
-         si4p4P4JYzvE8wHG3x+HEHu+YxCAdPJmT6xuLuK2lkZV/MKnvcv8Cc6lUYnvJMzWPBWR
-         9G918ARsxHQGqavFpShYqfPCtu1sbv9w7blfglB9KGZ4aEiUmYWjuMVMr6VRYfmWHD5c
-         P/UAtccOTqAbEDf5ine/xZMwf9Z4FikWeEXhIgjrzQ9LjOGzyqO1bJJoHvBYwrk98IHQ
-         Nm/Uh0meKnmBibs3ZQUkiCeGT5Ma2SO/ZcL7t0bUuv7k3A9UUTpjs9C2mVEwt0JtIY8w
-         fS8A==
-X-Gm-Message-State: AOAM531DpmuIKw2deRzf7XFBPGj7qCYuZQ4ltGDSQ/Atjps2Q7CcFtJ4
-        1npCKsl4CeGe7dIrMANwTQIdG70RNc/3fZ64t8NDxA==
-X-Google-Smtp-Source: ABdhPJwdvN11Z/Q0YJ6kgQpbGgsMXnn1xBOigXdlYRNApIMYuC35kGIxzsnpR7nvqAx4GRIiJdQxadfOp+Nob0+zceo=
-X-Received: by 2002:adf:fdce:: with SMTP id i14mr20006305wrs.273.1595948257404;
- Tue, 28 Jul 2020 07:57:37 -0700 (PDT)
+        Tue, 28 Jul 2020 10:58:41 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B373AC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:58:41 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k0R3s-0008Kw-CQ; Tue, 28 Jul 2020 16:58:36 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k0R3p-0005II-Qu; Tue, 28 Jul 2020 16:58:33 +0200
+Date:   Tue, 28 Jul 2020 16:58:33 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Sandeep Singh <Sandeep.Singh@amd.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
+        Richard Neumann <mail@richard-neumann.de>,
+        Shyam-sundar.S-k@amd.com
+Subject: Re: [PATCH v5 0/4] SFH: Add Support for AMD Sensor Fusion Hub
+Message-ID: <20200728145833.xc53dpvwu7deqzjw@pengutronix.de>
+References: <1590759730-32494-1-git-send-email-Sandeep.Singh@amd.com>
+ <CAHp75VeDAc9pP16wf10xvJn6t34cTXkPAXHus1aSL_07HN3EAA@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <a47487bc8873abe33499e79d3c10d085e341614e.1594230107.git-series.maxime@cerno.tech>
-In-Reply-To: <a47487bc8873abe33499e79d3c10d085e341614e.1594230107.git-series.maxime@cerno.tech>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Tue, 28 Jul 2020 15:57:22 +0100
-Message-ID: <CAPY8ntCkuN-cahLd7Ex4awkcUhFVM43nGX4rZCtjRmy-wCyHGQ@mail.gmail.com>
-Subject: Re: [PATCH v4 63/78] drm/vc4: hdmi: Use clk_set_min_rate instead
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VeDAc9pP16wf10xvJn6t34cTXkPAXHus1aSL_07HN3EAA@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 16:53:55 up 256 days,  6:12, 240 users,  load average: 0.19, 0.14,
+ 0.06
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime
+Hi,
 
-On Wed, 8 Jul 2020 at 18:44, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> The HSM clock needs to be running at 101% the pixel clock of the HDMI
-> controller, however it's shared between the two HDMI controllers, which
-> means that if the resolutions are different between the two HDMI
-> controllers, and the lowest resolution is on the second (in enable order)
-> controller, the first HDMI controller will end up with a smaller than
-> expected clock rate.
->
-> Since we don't really need an exact frequency there, we can simply change
-> the minimum rate we expect instead.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+On 20-05-29 17:21, Andy Shevchenko wrote:
+> On Fri, May 29, 2020 at 4:42 PM Sandeep Singh <Sandeep.Singh@amd.com> wrote:
+> >
+> > From: Sandeep Singh <sandeep.singh@amd.com>
+> >
+> > AMD SFH(Sensor Fusion Hub) is HID based driver.SFH FW
+> > is part of MP2 processor (MP2 which is an ARM® Cortex-M4
+> > core based co-processor to x86) and it runs on MP2 where
+> > in driver resides on X86.The driver functionalities are
+> > divided  into three parts:-
+> >
+> > 1: amd-mp2-pcie:-       This module will communicate with MP2 FW and
+> >                         provide that data into DRAM.
+> > 2: Client driver :-     This part for driver will use dram data and
+> >                         convert that data into HID format based on
+> >                         HID reports.
+> > 3: Transport driver :-  This part of driver will communicate with
+> >                         HID core. Communication between devices and
+> >                         HID core is mostly done via HID reports
+> >
+> > In terms of architecture it is much more reassembles like
+> > ISH(Intel Integrated Sensor Hub). However the major difference
+> > is all the hid reports are generated as part of kernel driver.
+> > AMD SFH driver taken reference from ISH in terms of
+> > design and functionalities at fewer location.
+> >
+> > AMD sensor fusion Hub is part of a SOC 17h family based platforms.
+> > The solution is working well on several OEM products.
+> > AMD SFH uses HID over PCIe bus.
+> >
+> 
+> I can't believe this is fifth version.
+> Guys, you have to do much more work on these drivers.
 
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Is there any active development addressing Andy's comments? Else can we
+support you to bring these patches mainline?
 
-> ---
->  drivers/gpu/drm/vc4/vc4_hdmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> index 9f30fab744f2..d99188c90ff9 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> @@ -462,7 +462,7 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
->          * pixel clock, but HSM ends up being the limiting factor.
->          */
->         hsm_rate = max_t(unsigned long, 120000000, (pixel_rate / 100) * 101);
-> -       ret = clk_set_rate(vc4_hdmi->hsm_clock, hsm_rate);
-> +       ret = clk_set_min_rate(vc4_hdmi->hsm_clock, hsm_rate);
->         if (ret) {
->                 DRM_ERROR("Failed to set HSM clock rate: %d\n", ret);
->                 return;
-> --
-> git-series 0.9.1
+Regards,
+  Marco
