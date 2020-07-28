@@ -2,303 +2,150 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EFCC433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7077C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D14820792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:36:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rlNapVLn"
+	by mail.kernel.org (Postfix) with ESMTP id C679820829
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:37:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595914642;
+	bh=5/1hGHRcRs8noQyW4y70zKajX2QRb/KbTYQH/XkqGLo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lrcwCf/i1tbVRfKK9HUK9xVJ9A806eFduQns4C6Puq60Os3kKCNOm8de9JDH2JpI+
+	 qu5X94YHEAkZBwTMHFcq/aeOgp74vckzgr2B6oQMkEU9S4R+wb0LNrhttRy04NNwbW
+	 UcdOUZAf1L7r+IgNLIBonHbBdtmvXxeHyxbRcixo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgG1FgS (ORCPT
+        id S1726814AbgG1FhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 01:36:18 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:55009 "EHLO m43-7.mailgun.net"
+        Tue, 28 Jul 2020 01:37:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726826AbgG1FgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 01:36:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595914574; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=0YRvGKV06RwAWRcPYH2gqrLsA2RjLUXvQHRcb1sufaY=; b=rlNapVLng+G1WZHPppbvoYQSHQmIil6i0TwtojkaXA2QkojuUpdSrfBOSRYd4juKG+dZqo3i
- B0Sy7OkMXzi7glFzMQbFsHxLVqFB+g204B/hZMegGAW6TxFHTs0wrb4UxaynGcoDa7OZerjb
- T4FXpbg4Gmq0/XvbU9hkm98ZrkU=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f1fb94c49176bd382c352db (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 05:36:12
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E9C31C43395; Tue, 28 Jul 2020 05:36:11 +0000 (UTC)
-Received: from [192.168.0.13] (unknown [183.83.138.47])
+        id S1726251AbgG1FhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 01:37:21 -0400
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8EDB8C433C6;
-        Tue, 28 Jul 2020 05:36:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8EDB8C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V2 1/3] arm64: dts: sc7180: Add wakeup support over UART
- RX
-To:     satya priya <skakit@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        gregkh@linuxfoundation.org
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rojay@codeaurora.org,
-        msavaliy@qti.qualcomm.com
-References: <1595563082-2353-1-git-send-email-skakit@codeaurora.org>
- <1595563082-2353-2-git-send-email-skakit@codeaurora.org>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <36fbe841-4b53-fcc1-80d9-2f35939c590c@codeaurora.org>
-Date:   Tue, 28 Jul 2020 11:06:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CA7C21883;
+        Tue, 28 Jul 2020 05:37:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595914640;
+        bh=5/1hGHRcRs8noQyW4y70zKajX2QRb/KbTYQH/XkqGLo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AU0TgowGCR0CGpCzEHB+dK+d4zlq0wxcjxrklzhtxM8DoXiTtbye/9bDoyfr3rYw3
+         Cpc1spQE+8O4v5okj/HKLrFf1+69Fh6U+xm8Q6kCcBZbAdu8t8XWKuOnhxt86B5pmp
+         XQl8F+nIPJvQ1s/GB0+WKoPK8RFppmSKjvnQFIGU=
+Received: by mail-lj1-f179.google.com with SMTP id s16so4529907ljc.8;
+        Mon, 27 Jul 2020 22:37:20 -0700 (PDT)
+X-Gm-Message-State: AOAM530iSG+NgNzIIf9/W7o4WuZUVcLJKFMjlTd+TZjxY1n8qTskCNhR
+        PfJ4yq/sLcvIKQ9J8pEvjhqrgKUPFJiyEZ6SGRk=
+X-Google-Smtp-Source: ABdhPJw9Ihhk/7GIolHzsLcYxMM4WNd7zYLn9IMxzaHwG1XeTcrzGpvyiU4MB+PKJp5ng8tFB7HU7flbEtWk1o+l8DI=
+X-Received: by 2002:a2e:7c14:: with SMTP id x20mr11794649ljc.41.1595914638725;
+ Mon, 27 Jul 2020 22:37:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1595563082-2353-2-git-send-email-skakit@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-23-guro@fb.com>
+In-Reply-To: <20200727184506.2279656-23-guro@fb.com>
+From:   Song Liu <song@kernel.org>
+Date:   Mon, 27 Jul 2020 22:37:07 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7nHNaf9Cgjwr_3zLVae4yBiLsvd7+tVkpS6EaiGRZ4tA@mail.gmail.com>
+Message-ID: <CAPhsuW7nHNaf9Cgjwr_3zLVae4yBiLsvd7+tVkpS6EaiGRZ4tA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 22/35] bpf: eliminate rlimit-based memory
+ accounting for bpf ringbuffer
+To:     Roman Gushchin <guro@fb.com>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 27, 2020 at 12:22 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> Do not use rlimit-based memory accounting for bpf ringbuffer.
+> It has been replaced with the memcg-based memory accounting.
+>
+> bpf_ringbuf_alloc() can't return anything except ERR_PTR(-ENOMEM)
+> and a valid pointer, so to simplify the code make it return NULL
+> in the first case. This allows to drop a couple of lines in
+> ringbuf_map_alloc() and also makes it look similar to other memory
+> allocating function like kmalloc().
+>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-On 7/24/2020 9:28 AM, satya priya wrote:
-> Add the necessary pinctrl and interrupts to make UART
-> wakeup capable.
+Acked-by: Song Liu <songliubraving@fb.com>
 
-
-Reviewed-by: Akash Asthana <akashast@codeaurora.org>
-
-> Signed-off-by: satya priya <skakit@codeaurora.org>
 > ---
-> Changes in V2:
->   - As per Matthias's comment added wakeup support for all the UARTs
->     of SC7180.
+>  kernel/bpf/ringbuf.c | 24 ++++--------------------
+>  1 file changed, 4 insertions(+), 20 deletions(-)
 >
->   arch/arm64/boot/dts/qcom/sc7180.dtsi | 98 ++++++++++++++++++++++++++++++------
->   1 file changed, 84 insertions(+), 14 deletions(-)
+> diff --git a/kernel/bpf/ringbuf.c b/kernel/bpf/ringbuf.c
+> index e8e2c39cbdc9..e687b798d097 100644
+> --- a/kernel/bpf/ringbuf.c
+> +++ b/kernel/bpf/ringbuf.c
+> @@ -48,7 +48,6 @@ struct bpf_ringbuf {
 >
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 16df08d..044a4d0 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -787,9 +787,11 @@
->   				reg = <0 0x00880000 0 0x4000>;
->   				clock-names = "se";
->   				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
-> -				pinctrl-names = "default";
-> +				pinctrl-names = "default", "sleep";
->   				pinctrl-0 = <&qup_uart0_default>;
-> -				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-> +				pinctrl-1 = <&qup_uart0_sleep>;
-> +				interrupts-extended = <&intc GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>,
-> +							<&tlmm 37 IRQ_TYPE_EDGE_FALLING>;
->   				power-domains = <&rpmhpd SC7180_CX>;
->   				operating-points-v2 = <&qup_opp_table>;
->   				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
-> @@ -839,9 +841,11 @@
->   				reg = <0 0x00884000 0 0x4000>;
->   				clock-names = "se";
->   				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
-> -				pinctrl-names = "default";
-> +				pinctrl-names = "default", "sleep";
->   				pinctrl-0 = <&qup_uart1_default>;
-> -				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
-> +				pinctrl-1 = <&qup_uart1_sleep>;
-> +				interrupts-extended = <&intc GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>,
-> +							<&tlmm 3 IRQ_TYPE_EDGE_FALLING>;
->   				power-domains = <&rpmhpd SC7180_CX>;
->   				operating-points-v2 = <&qup_opp_table>;
->   				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
-> @@ -925,9 +929,11 @@
->   				reg = <0 0x0088c000 0 0x4000>;
->   				clock-names = "se";
->   				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
-> -				pinctrl-names = "default";
-> +				pinctrl-names = "default", "sleep";
->   				pinctrl-0 = <&qup_uart3_default>;
-> -				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
-> +				pinctrl-1 = <&qup_uart3_sleep>;
-> +				interrupts-extended = <&intc GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
-> +							<&tlmm 41 IRQ_TYPE_EDGE_FALLING>;
->   				power-domains = <&rpmhpd SC7180_CX>;
->   				operating-points-v2 = <&qup_opp_table>;
->   				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
-> @@ -1011,9 +1017,11 @@
->   				reg = <0 0x00894000 0 0x4000>;
->   				clock-names = "se";
->   				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
-> -				pinctrl-names = "default";
-> +				pinctrl-names = "default", "sleep";
->   				pinctrl-0 = <&qup_uart5_default>;
-> -				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
-> +				pinctrl-1 = <&qup_uart5_sleep>;
-> +				interrupts-extended = <&intc GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>,
-> +							<&tlmm 28 IRQ_TYPE_EDGE_FALLING>;
->   				power-domains = <&rpmhpd SC7180_CX>;
->   				operating-points-v2 = <&qup_opp_table>;
->   				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
-> @@ -1078,9 +1086,11 @@
->   				reg = <0 0x00a80000 0 0x4000>;
->   				clock-names = "se";
->   				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
-> -				pinctrl-names = "default";
-> +				pinctrl-names = "default", "sleep";
->   				pinctrl-0 = <&qup_uart6_default>;
-> -				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
-> +				pinctrl-1 = <&qup_uart6_sleep>;
-> +				interrupts-extended = <&intc GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>,
-> +							<&tlmm 62 IRQ_TYPE_EDGE_FALLING>;
->   				power-domains = <&rpmhpd SC7180_CX>;
->   				operating-points-v2 = <&qup_opp_table>;
->   				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
-> @@ -1250,9 +1260,11 @@
->   				reg = <0 0x00a90000 0 0x4000>;
->   				clock-names = "se";
->   				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
-> -				pinctrl-names = "default";
-> +				pinctrl-names = "default", "sleep";
->   				pinctrl-0 = <&qup_uart10_default>;
-> -				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-> +				pinctrl-1 = <&qup_uart10_sleep>;
-> +				interrupts-extended = <&intc GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>,
-> +							<&tlmm 89 IRQ_TYPE_EDGE_FALLING>;
->   				power-domains = <&rpmhpd SC7180_CX>;
->   				operating-points-v2 = <&qup_opp_table>;
->   				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
-> @@ -1302,9 +1314,11 @@
->   				reg = <0 0x00a94000 0 0x4000>;
->   				clock-names = "se";
->   				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
-> -				pinctrl-names = "default";
-> +				pinctrl-names = "default", "sleep";
->   				pinctrl-0 = <&qup_uart11_default>;
-> -				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-> +				pinctrl-1 = <&qup_uart11_sleep>;
-> +				interrupts-extended = <&intc GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>,
-> +							<&tlmm 56 IRQ_TYPE_EDGE_FALLING>;
->   				power-domains = <&rpmhpd SC7180_CX>;
->   				operating-points-v2 = <&qup_opp_table>;
->   				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
-> @@ -1632,6 +1646,14 @@
->   				};
->   			};
->   
-> +			qup_uart0_sleep: qup-uart0-sleep {
-> +				pinmux {
-> +					pins = "gpio34", "gpio35",
-> +					       "gpio36", "gpio37";
-> +					function = "gpio";
-> +				};
-> +			};
-> +
->   			qup_uart1_default: qup-uart1-default {
->   				pinmux {
->   					pins = "gpio0", "gpio1",
-> @@ -1640,6 +1662,14 @@
->   				};
->   			};
->   
-> +			qup_uart1_sleep: qup-uart1-sleep {
-> +				pinmux {
-> +					pins = "gpio0", "gpio1",
-> +					       "gpio2", "gpio3";
-> +					function = "gpio";
-> +				};
-> +			};
-> +
->   			qup_uart2_default: qup-uart2-default {
->   				pinmux {
->   					pins = "gpio15", "gpio16";
-> @@ -1655,6 +1685,14 @@
->   				};
->   			};
->   
-> +			qup_uart3_sleep: qup-uart3-sleep {
-> +				pinmux {
-> +					pins = "gpio38", "gpio39",
-> +					       "gpio40", "gpio41";
-> +					function = "gpio";
-> +				};
-> +			};
-> +
->   			qup_uart4_default: qup-uart4-default {
->   				pinmux {
->   					pins = "gpio115", "gpio116";
-> @@ -1670,6 +1708,14 @@
->   				};
->   			};
->   
-> +			qup_uart5_sleep: qup-uart5-sleep {
-> +				pinmux {
-> +					pins = "gpio25", "gpio26",
-> +					       "gpio27", "gpio28";
-> +					function = "gpio";
-> +				};
-> +			};
-> +
->   			qup_uart6_default: qup-uart6-default {
->   				pinmux {
->   					pins = "gpio59", "gpio60",
-> @@ -1678,6 +1724,14 @@
->   				};
->   			};
->   
-> +			qup_uart6_sleep: qup-uart6-sleep {
-> +				pinmux {
-> +					pins = "gpio59", "gpio60",
-> +					       "gpio61", "gpio62";
-> +					function = "gpio";
-> +				};
-> +			};
-> +
->   			qup_uart7_default: qup-uart7-default {
->   				pinmux {
->   					pins = "gpio6", "gpio7";
-> @@ -1707,6 +1761,14 @@
->   				};
->   			};
->   
-> +			qup_uart10_sleep: qup-uart10-sleep {
-> +				pinmux {
-> +					pins = "gpio86", "gpio87",
-> +					       "gpio88", "gpio89";
-> +					function = "gpio";
-> +				};
-> +			};
-> +
->   			qup_uart11_default: qup-uart11-default {
->   				pinmux {
->   					pins = "gpio53", "gpio54",
-> @@ -1715,6 +1777,14 @@
->   				};
->   			};
->   
-> +			qup_uart11_sleep: qup-uart11-sleep {
-> +				pinmux {
-> +					pins = "gpio53", "gpio54",
-> +					       "gpio55", "gpio56";
-> +					function = "gpio";
-> +				};
-> +			};
-> +
->   			sdc1_on: sdc1-on {
->   				pinconf-clk {
->   					pins = "sdc1_clk";
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
-
+>  struct bpf_ringbuf_map {
+>         struct bpf_map map;
+> -       struct bpf_map_memory memory;
+>         struct bpf_ringbuf *rb;
+>  };
+>
+> @@ -135,7 +134,7 @@ static struct bpf_ringbuf *bpf_ringbuf_alloc(size_t data_sz, int numa_node)
+>
+>         rb = bpf_ringbuf_area_alloc(data_sz, numa_node);
+>         if (!rb)
+> -               return ERR_PTR(-ENOMEM);
+> +               return NULL;
+>
+>         spin_lock_init(&rb->spinlock);
+>         init_waitqueue_head(&rb->waitq);
+> @@ -151,8 +150,6 @@ static struct bpf_ringbuf *bpf_ringbuf_alloc(size_t data_sz, int numa_node)
+>  static struct bpf_map *ringbuf_map_alloc(union bpf_attr *attr)
+>  {
+>         struct bpf_ringbuf_map *rb_map;
+> -       u64 cost;
+> -       int err;
+>
+>         if (attr->map_flags & ~RINGBUF_CREATE_FLAG_MASK)
+>                 return ERR_PTR(-EINVAL);
+> @@ -174,26 +171,13 @@ static struct bpf_map *ringbuf_map_alloc(union bpf_attr *attr)
+>
+>         bpf_map_init_from_attr(&rb_map->map, attr);
+>
+> -       cost = sizeof(struct bpf_ringbuf_map) +
+> -              sizeof(struct bpf_ringbuf) +
+> -              attr->max_entries;
+> -       err = bpf_map_charge_init(&rb_map->map.memory, cost);
+> -       if (err)
+> -               goto err_free_map;
+> -
+>         rb_map->rb = bpf_ringbuf_alloc(attr->max_entries, rb_map->map.numa_node);
+> -       if (IS_ERR(rb_map->rb)) {
+> -               err = PTR_ERR(rb_map->rb);
+> -               goto err_uncharge;
+> +       if (!rb_map->rb) {
+> +               kfree(rb_map);
+> +               return ERR_PTR(-ENOMEM);
+>         }
+>
+>         return &rb_map->map;
+> -
+> -err_uncharge:
+> -       bpf_map_charge_finish(&rb_map->map.memory);
+> -err_free_map:
+> -       kfree(rb_map);
+> -       return ERR_PTR(err);
+>  }
+>
+>  static void bpf_ringbuf_free(struct bpf_ringbuf *rb)
+> --
+> 2.26.2
+>
