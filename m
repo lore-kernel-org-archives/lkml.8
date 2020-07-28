@@ -2,252 +2,186 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96218C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 750432070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:16:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MFpv0OOj"
+	by mail.kernel.org (Postfix) with ESMTP id 789E32075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 20:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbgG1UQv (ORCPT
+        id S1728732AbgG1URP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:16:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728149AbgG1UQu (ORCPT
+        Tue, 28 Jul 2020 16:17:15 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60512 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728149AbgG1URP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 16:16:50 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0162C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:16:49 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id z17so15729642edr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 13:16:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wSt2JnaWx2nmE7TZWR1qBRnXBnXNBvi3wOezMkM0TJQ=;
-        b=MFpv0OOjcghLBTUZzL6xIkhQOQE6drPLIr7GjUZ34JU4DGBj951SzNfKh22bbNCFmr
-         /w8gNNg7Y1n2KW+39bsP2vr5O2OS4ykj5l/91Vbs6RZdcJAk2r9nPNqFbrCcqQbHgka9
-         YiCW8U+K4Rx1/TgWo3n1WGKY10Xtm1YUHp713t1BpZ87iTy+buRx+bRJwNH+LgLnQ97A
-         IzLNKDrAbngZA0mxz4eogTjSQ7ET2n82nYWH9u9+rQzNIbMtlsvAGQo6LVtYFfrZltku
-         RF+GLhjE/7UhR1isWppZc5R294qzXSfKuQwAkQVCNxUwQlj4UB3HBboEo00Hlqfar4hG
-         z8QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wSt2JnaWx2nmE7TZWR1qBRnXBnXNBvi3wOezMkM0TJQ=;
-        b=Ao61tJQwcpy87jlRiMpe8rHcRnGfczpvZE9IsIKsAVyswnxyt4OhBJXRc1QSQEi4wS
-         Q8/4OFSR6Hw2ExJWIDCaSoxoG3IBSgcN5FCPQVVFtflteAmmuzLxujlg1ZpXZCknN+d2
-         w2gapNk2DIAVKmveFOUZgX5qp29J9+3LawOfpMuCg1lBW+YT1aAhlWBoWn42z4RbkoiN
-         fg3Yu2earTL77GRcfqqE5KLlE5Tu1lI0Bcpfyi3rHyyjHb5F7H/NdxW25NWhRHFJwiIS
-         rbIRHHqr7PcQNQxqYzjNyveLxWqHLccRxSyl/aEY2/4ZPDNfMLIgm3Wk9k05i5ko6bKw
-         SIBg==
-X-Gm-Message-State: AOAM5313rPtKeaF726Rf+oM923kKC1Rp4Qdz97qO+vu7aHLnpGrrbdak
-        CwHlup0D+tKeOEGPSPXE1iC8xoZIFbWVvm2Bhvgzfw==
-X-Google-Smtp-Source: ABdhPJw5cXYGO/PmcyNXnEXiAEjFZph4a2w9FPo/PvgvfdUkaxB431e95MNpQuNd02Eqy+QmxetCX57ROtUJWSrHop4=
-X-Received: by 2002:aa7:da4c:: with SMTP id w12mr26991656eds.122.1595967408435;
- Tue, 28 Jul 2020 13:16:48 -0700 (PDT)
+        Tue, 28 Jul 2020 16:17:15 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06SK2xEG177198;
+        Tue, 28 Jul 2020 16:17:10 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32hs1dc2v8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jul 2020 16:17:09 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06SK4YbO182212;
+        Tue, 28 Jul 2020 16:17:09 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32hs1dc2ux-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jul 2020 16:17:09 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06SKFLhO006492;
+        Tue, 28 Jul 2020 20:17:08 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma01dal.us.ibm.com with ESMTP id 32gcy3b82q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jul 2020 20:17:08 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06SKH4c933161526
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jul 2020 20:17:05 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 316CDC6059;
+        Tue, 28 Jul 2020 20:17:07 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 16D25C6055;
+        Tue, 28 Jul 2020 20:17:02 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.77.202.134])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Jul 2020 20:17:02 +0000 (GMT)
+Subject: Re: [PATCH 16/19] perf metric: Make compute_single function more
+ precise
+To:     Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+References: <20200719181320.785305-1-jolsa@kernel.org>
+ <20200719181320.785305-17-jolsa@kernel.org>
+ <20200728123629.GW40195@kernel.org>
+ <CAP-5=fWAC4DkKiPzKvAiVpMDFWvf3HPZ5=tiSUbJ50w+kjXhfg@mail.gmail.com>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <8fbc4b4f-1886-0ab6-ee83-cdb0f2caefc9@linux.ibm.com>
+Date:   Wed, 29 Jul 2020 01:47:01 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200728075102.30807-1-saiprakash.ranjan@codeaurora.org>
-In-Reply-To: <20200728075102.30807-1-saiprakash.ranjan@codeaurora.org>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Tue, 28 Jul 2020 21:16:37 +0100
-Message-ID: <CAJ9a7VjQCEJ80+7AZnZ-Mv5-EUzOZHnnYr2HeFpm7aktYt5fHA@mail.gmail.com>
-Subject: Re: [PATCHv2] coresight: etm4x: Fix etm4_count race by moving cpuhp
- callbacks to init
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-msm@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAP-5=fWAC4DkKiPzKvAiVpMDFWvf3HPZ5=tiSUbJ50w+kjXhfg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-28_16:2020-07-28,2020-07-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 impostorscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 mlxlogscore=999 phishscore=0 spamscore=0
+ clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007280142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sai,
-
-On Tue, 28 Jul 2020 at 08:51, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> etm4_count keeps track of number of ETMv4 registered and on some systems,
-> a race is observed on etm4_count variable which can lead to multiple calls
-> to cpuhp_setup_state_nocalls_cpuslocked(). This function internally calls
-> cpuhp_store_callbacks() which prevents multiple registrations of callbacks
-> for a given state and due to this race, it returns -EBUSY leading to ETM
-> probe failures like below.
->
->  coresight-etm4x: probe of 7040000.etm failed with error -16
->
-> This race can easily be triggered with async probe by setting probe type
-> as PROBE_PREFER_ASYNCHRONOUS and with ETM power management property
-> "arm,coresight-loses-context-with-cpu".
->
-> Prevent this race by moving cpuhp callbacks to etm driver init since the
-> cpuhp callbacks doesn't have to depend on the etm4_count and can be once
-> setup during driver init. Similarly we move cpu_pm notifier registration
-> to driver init and completely remove etm4_count usage.
->
-> Fixes: 9b6a3f3633a5 ("coresight: etmv4: Fix CPU power management setup in probe() function")
-> Fixes: 58eb457be028 ("hwtracing/coresight-etm4x: Convert to hotplug state machine")
-> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->
-> Changes in v2:
->  * Rearrange cpuhp callbacks and move them to driver init (Suzuki K Poulose)
->
-> ---
->  drivers/hwtracing/coresight/coresight-etm4x.c | 51 ++++++++++---------
->  1 file changed, 27 insertions(+), 24 deletions(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-> index 6d7d2169bfb2..adb71987a1e3 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-> @@ -48,8 +48,6 @@ module_param(pm_save_enable, int, 0444);
->  MODULE_PARM_DESC(pm_save_enable,
->         "Save/restore state on power down: 1 = never, 2 = self-hosted");
->
-> -/* The number of ETMv4 currently registered */
-> -static int etm4_count;
->  static struct etmv4_drvdata *etmdrvdata[NR_CPUS];
->  static void etm4_set_default_config(struct etmv4_config *config);
->  static int etm4_set_event_filters(struct etmv4_drvdata *drvdata,
-> @@ -1403,12 +1401,9 @@ static int etm4_pm_setup_cpuslocked(void)
->  {
-
-consider renaming this to etm4_pm_setup() and handing any cpu locking
-inside the function.
-In the circumstances - as part of the driver init rather than probe it
-may be sufficient to call the cpuhp_setup functions without the
-_cpuslocked suffix and allow the calls to lock the cpus as they are
-made.
-i.e. cpuhp_setup_state_nocalls_cpuslocked() => cpuhp_setup_state_nocalls()
-
->         int ret;
->
-> -       if (etm4_count++)
-> -               return 0;
-> -
->         ret = cpu_pm_register_notifier(&etm4_cpu_pm_nb);
->         if (ret)
-> -               goto reduce_count;
-> +               return ret;
->
->         ret = cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ARM_CORESIGHT_STARTING,
->                                                    "arm/coresight4:starting",
-> @@ -1432,17 +1427,11 @@ static int etm4_pm_setup_cpuslocked(void)
->
->  unregister_notifier:
->         cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
-> -
-> -reduce_count:
-> -       --etm4_count;
->         return ret;
->  }
->
->  static void etm4_pm_clear(void)
->  {
-> -       if (--etm4_count != 0)
-> -               return;
-> -
->         cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
->         cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_STARTING);
->         if (hp_online) {
-> @@ -1498,22 +1487,12 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
->         if (!desc.name)
->                 return -ENOMEM;
->
-> -       cpus_read_lock();
->         etmdrvdata[drvdata->cpu] = drvdata;
->
->         if (smp_call_function_single(drvdata->cpu,
->                                 etm4_init_arch_data,  drvdata, 1))
->                 dev_err(dev, "ETM arch init failed\n");
->
-> -       ret = etm4_pm_setup_cpuslocked();
-> -       cpus_read_unlock();
-> -
-> -       /* etm4_pm_setup_cpuslocked() does its own cleanup - exit on error */
-> -       if (ret) {
-> -               etmdrvdata[drvdata->cpu] = NULL;
-> -               return ret;
-> -       }
-> -
->         if (etm4_arch_supported(drvdata->arch) == false) {
->                 ret = -EINVAL;
->                 goto err_arch_supported;
-> @@ -1560,7 +1539,6 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
->
->  err_arch_supported:
->         etmdrvdata[drvdata->cpu] = NULL;
-> -       etm4_pm_clear();
->         return ret;
->  }
->
-> @@ -1598,4 +1576,29 @@ static struct amba_driver etm4x_driver = {
->         .probe          = etm4_probe,
->         .id_table       = etm4_ids,
->  };
-> -builtin_amba_driver(etm4x_driver);
-> +
-> +static int __init etm4x_init(void)
-> +{
-> +       int ret;
-> +
-> +       cpus_read_lock();
-> +       ret = etm4_pm_setup_cpuslocked();
-> +       cpus_read_unlock();
-
-See my comment above about rename and use of cpus_read_lock
-
-Regards
-
-Mike
-
-> +
-> +       /* etm4_pm_setup_cpuslocked() does its own cleanup - exit on error */
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = amba_driver_register(&etm4x_driver);
-> +       if (ret) {
-> +               pr_info("Error registering etm4x driver\n");
-> +               goto err_init;
-> +       }
-> +
-> +       return ret;
-> +
-> +err_init:
-> +       etm4_pm_clear();
-> +       return ret;
-> +}
-> +module_init(etm4x_init);
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
-> _______________________________________________
-> CoreSight mailing list
-> CoreSight@lists.linaro.org
-> https://lists.linaro.org/mailman/listinfo/coresight
 
 
+On 7/28/20 10:56 PM, Ian Rogers wrote:
+> On Tue, Jul 28, 2020 at 5:36 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+>>
+>> Em Sun, Jul 19, 2020 at 08:13:17PM +0200, Jiri Olsa escreveu:
+>>> So far compute_single function relies on the fact, that
+>>> there's only single metric defined within evlist in all
+>>> tests. In following patch we will add test for metric
+>>> group, so we need to be able to compute metric by given
+>>> name.
+>>>
+>>> Adding the name argument to compute_single and iterating
+>>> evlist and evsel's expression to find the given metric.
+>>
+>> Applied, thanks.
+>>
+>> Ian, Kajol, I didn't notice your Acked-by or Reviewed-by, like for the
+>> other patches, can you check?
+> 
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
 
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+Reviewed-By: Kajol Jain<kjain@linux.ibm.com>
+
+Thanks,
+Kajol Jain
+> 
+> Thanks,
+> Ian
+> 
+>> - Arnaldo
+>>
+>>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+>>> ---
+>>>  tools/perf/tests/parse-metric.c | 22 +++++++++++++---------
+>>>  1 file changed, 13 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
+>>> index 01370ccb9ed9..5ac32f80f8ea 100644
+>>> --- a/tools/perf/tests/parse-metric.c
+>>> +++ b/tools/perf/tests/parse-metric.c
+>>> @@ -108,17 +108,21 @@ static void load_runtime_stat(struct runtime_stat *st, struct evlist *evlist,
+>>>  }
+>>>
+>>>  static double compute_single(struct rblist *metric_events, struct evlist *evlist,
+>>> -                          struct runtime_stat *st)
+>>> +                          struct runtime_stat *st, const char *name)
+>>>  {
+>>> -     struct evsel *evsel = evlist__first(evlist);
+>>> +     struct metric_expr *mexp;
+>>>       struct metric_event *me;
+>>> +     struct evsel *evsel;
+>>>
+>>> -     me = metricgroup__lookup(metric_events, evsel, false);
+>>> -     if (me != NULL) {
+>>> -             struct metric_expr *mexp;
+>>> -
+>>> -             mexp = list_first_entry(&me->head, struct metric_expr, nd);
+>>> -             return test_generic_metric(mexp, 0, st);
+>>> +     evlist__for_each_entry(evlist, evsel) {
+>>> +             me = metricgroup__lookup(metric_events, evsel, false);
+>>> +             if (me != NULL) {
+>>> +                     list_for_each_entry (mexp, &me->head, nd) {
+>>> +                             if (strcmp(mexp->metric_name, name))
+>>> +                                     continue;
+>>> +                             return test_generic_metric(mexp, 0, st);
+>>> +                     }
+>>> +             }
+>>>       }
+>>>       return 0.;
+>>>  }
+>>> @@ -162,7 +166,7 @@ static int compute_metric(const char *name, struct value *vals, double *ratio)
+>>>       load_runtime_stat(&st, evlist, vals);
+>>>
+>>>       /* And execute the metric */
+>>> -     *ratio = compute_single(&metric_events, evlist, &st);
+>>> +     *ratio = compute_single(&metric_events, evlist, &st, name);
+>>>
+>>>       /* ... clenup. */
+>>>       metricgroup__rblist_exit(&metric_events);
+>>> --
+>>> 2.25.4
+>>>
+>>
+>> --
+>>
+>> - Arnaldo
