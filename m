@@ -2,104 +2,146 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C18C43457
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9653FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E20B8207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:34:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595954051;
-	bh=uXUumP2+sNTXnE6EHRt6PUDgwtUeHTn5j+dNJH7KOVE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Sqd8c7qMUbPvhsPZwmli51+bqkC0IQX9ZlyZJ56/yX2dRSAvPXWs2suL7XneVr99a
-	 b1MOKIYZACC4tyQw1HCMu84b0kYT042ec2cTuIzoWJ1GfNNwczYZUDODlP1n43WJmN
-	 iCzL4bgPQdSaSN7IQ+ZJTweSmoGZiSjhQ2i/6lYc=
+	by mail.kernel.org (Postfix) with ESMTP id 70CE120792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 16:34:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sfXNdNHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731562AbgG1QeK (ORCPT
+        id S1731583AbgG1Qe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:34:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731422AbgG1QeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:34:09 -0400
-Received: from localhost (p54b330d0.dip0.t-ipconnect.de [84.179.48.208])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A79D20792;
-        Tue, 28 Jul 2020 16:34:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595954048;
-        bh=uXUumP2+sNTXnE6EHRt6PUDgwtUeHTn5j+dNJH7KOVE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cgrVwCnMxj91VP8xHGJ7740Jinf4MxWMNJ3NEkmqJ/yCMP4Dv2nlppxBjd3sCU4v6
-         CYFGKgh/oAIlXBgvSjuyyHcTn5tEK3k1OtiztCbtU2pcqzMDgv3CofEG+R75TuusMP
-         qvBF2E1miBiyOvrRv3rZ8yIwTrVjnBIfw5MNasxs=
-Date:   Tue, 28 Jul 2020 18:34:05 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [RFC PATCH v5 05/14] i2c: tegra: Avoid tegra_i2c_init_dma() for
- Tegra210 vi i2c
-Message-ID: <20200728163405.GE3736@ninjato>
-References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
- <1595883452-17343-6-git-send-email-skomatineni@nvidia.com>
+        Tue, 28 Jul 2020 12:34:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731422AbgG1QeZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:34:25 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 657C4C0619D2;
+        Tue, 28 Jul 2020 09:34:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=ePYrotlytJXvI0CdCW3tl0P3sQHCqpS3OjHeAMmpEaE=; b=sfXNdNHSuFEovpB8yATS1Pqah4
+        x2Kk41ftYlNLkrHzw7PiWtbrGa+zcWImnOvwWyXxUMSWcA/Zb4/rNH/9pTzll/I3W03bndgiwaUze
+        FveyJlPXap1sAoKiPpFlCQNXRX5To6jbfYKDOi2tRn6PCvHjLyEy/nOiUVDmW2vKFhp7kr9cLrsG0
+        /ZGFqwgwprfvCtZHtY1r/dSt7gQxOxiJ8zYDlGLExKx20oDdAg8QurXK9mjgv/BMozSANc05IaeIA
+        ROoyXC38ydo1+nrU070jHdjYH4u1t2OuVVHh8voYYe2cavufBgERY/9a9b9ZuqgrrJ3uKEEFVPfeQ
+        FMhmOoUg==;
+Received: from [2001:4bb8:180:6102:fd04:50d8:4827:5508] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0SYY-0006wz-6q; Tue, 28 Jul 2020 16:34:22 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH 02/23] fs: refactor ksys_umount
+Date:   Tue, 28 Jul 2020 18:33:55 +0200
+Message-Id: <20200728163416.556521-3-hch@lst.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200728163416.556521-1-hch@lst.de>
+References: <20200728163416.556521-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="FN+gV9K+162wdwwF"
-Content-Disposition: inline
-In-Reply-To: <1595883452-17343-6-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Factor out a path_umount helper that takes a struct path * instead of the
+actual file name.  This will allow to convert the init and devtmpfs code
+to properly mount based on a kernel pointer instead of relying on the
+implicit set_fs(KERNEL_DS) during early init.
 
---FN+gV9K+162wdwwF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/namespace.c | 40 ++++++++++++++++++----------------------
+ 1 file changed, 18 insertions(+), 22 deletions(-)
 
-On Mon, Jul 27, 2020 at 01:57:23PM -0700, Sowjanya Komatineni wrote:
-> VI I2C is on host1x bus so APB DMA can't be used for Tegra210 VI
-> I2C and there are no tx and rx dma channels for VI I2C.
->=20
-> So, avoid attempt of requesting DMA channels.
->=20
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 6f8234f74bed90..43834b59eff6c3 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -1706,36 +1706,19 @@ static inline bool may_mandlock(void)
+ }
+ #endif
+ 
+-/*
+- * Now umount can handle mount points as well as block devices.
+- * This is important for filesystems which use unnamed block devices.
+- *
+- * We now support a flag for forced unmount like the other 'big iron'
+- * unixes. Our API is identical to OSF/1 to avoid making a mess of AMD
+- */
+-
+-int ksys_umount(char __user *name, int flags)
++static int path_umount(struct path *path, int flags)
+ {
+-	struct path path;
+ 	struct mount *mnt;
+ 	int retval;
+-	int lookup_flags = LOOKUP_MOUNTPOINT;
+ 
+ 	if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | UMOUNT_NOFOLLOW))
+ 		return -EINVAL;
+-
+ 	if (!may_mount())
+ 		return -EPERM;
+ 
+-	if (!(flags & UMOUNT_NOFOLLOW))
+-		lookup_flags |= LOOKUP_FOLLOW;
+-
+-	retval = user_path_at(AT_FDCWD, name, lookup_flags, &path);
+-	if (retval)
+-		goto out;
+-	mnt = real_mount(path.mnt);
++	mnt = real_mount(path->mnt);
+ 	retval = -EINVAL;
+-	if (path.dentry != path.mnt->mnt_root)
++	if (path->dentry != path->mnt->mnt_root)
+ 		goto dput_and_out;
+ 	if (!check_mnt(mnt))
+ 		goto dput_and_out;
+@@ -1748,12 +1731,25 @@ int ksys_umount(char __user *name, int flags)
+ 	retval = do_umount(mnt, flags);
+ dput_and_out:
+ 	/* we mustn't call path_put() as that would clear mnt_expiry_mark */
+-	dput(path.dentry);
++	dput(path->dentry);
+ 	mntput_no_expire(mnt);
+-out:
+ 	return retval;
+ }
+ 
++int ksys_umount(char __user *name, int flags)
++{
++	int lookup_flags = LOOKUP_MOUNTPOINT;
++	struct path path;
++	int ret;
++
++	if (!(flags & UMOUNT_NOFOLLOW))
++		lookup_flags |= LOOKUP_FOLLOW;
++	ret = user_path_at(AT_FDCWD, name, lookup_flags, &path);
++	if (ret)
++		return ret;
++	return path_umount(&path, flags);
++}
++
+ SYSCALL_DEFINE2(umount, char __user *, name, int, flags)
+ {
+ 	return ksys_umount(name, flags);
+-- 
+2.27.0
 
-Applied to for-next, thanks!
-
-
---FN+gV9K+162wdwwF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8gU30ACgkQFA3kzBSg
-KbbAPg//ehPzd9wKNGR8liN8/pgm4FABYGaxyQIuEG4paVvdgwUOoQ0ZW+itZsTJ
-svnQjlamrbF65Yq1whqDLBiPMwfowGK6DUb9S2s9tyo4X2qsNJY9c2QTDZCnHqA2
-DOM52p7v1lN1wTb8bSFCgxA59TEkKuWpkJSvjN0fAXQ7mpq1ioH4su7+SQ6aqNVQ
-eg6XZPhsmg9uoneHBpaAT4irs7fR1X+GWppEwn2vMAGxcLEf5HaI/yhY2aalIpxu
-lAHfXBJK5Jreqn497B7WXT5WMJ97a/IXPbvW51S7Y0OAKpsrBgG/w4ga2Wqltj0C
-QfMY8aCukQhGRhlmUeC+kULlrcY1bhVAI20cIjNxLhaFCnymGAjCKU14MO75tfwl
-PdsyVnd/OvKhAKW/7lLXZyWNJK41xQ0sRgOT3C3Mg1+KdfWFJB9c8hqynjBnvuZb
-J0bdYJ1mNRVOEFn3QXOOb3BnYFdUhl03LYJYax+NEzZxbiZYyn7NjoPW+J1eBsjL
-cxOtzP12AbIXDj+EWVBGn2B0HrTIQhQMovsdgaDS7tW7ahUGnESO3EdpH0yF6Jk2
-+LnVRpFB1aHxze/dFahBmjBPtODTJQrsmHz5b93Nw5bjHWm10c+ro+IQF19V3/qW
-47na6KqnvslbLzHUiWW4WX5GMKYQYHbWY+dSwB8X7MEjAU/aysw=
-=cUam
------END PGP SIGNATURE-----
-
---FN+gV9K+162wdwwF--
