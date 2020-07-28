@@ -2,124 +2,268 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E7AC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 956662070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:07:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595912855;
-	bh=julnmZ6d99C3BH6F52UlRn44Ck82VwZ9mFMWkFSJq0E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=K/8QuCIIav+iLGyl1vwQbRmf22Yf8RQnlZ7rP1/1BKZEHhB2cHt1fFXLsV+H8ubII
-	 MTVJN6Tjh++SDt1MAkdQhHRmhMMROwR2Rkoq/bQspVsDjsbftsi7sbcLkGu+jzuAK4
-	 I5iNcsxkT1VH5gJqDMBz5zOLdgINYSFM+4/dyS4M=
+	by mail.kernel.org (Postfix) with ESMTP id 8987C21744
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 05:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgG1FHe (ORCPT
+        id S1726842AbgG1FDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 01:07:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbgG1FHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 01:07:34 -0400
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 354B222B47;
-        Tue, 28 Jul 2020 05:07:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595912853;
-        bh=julnmZ6d99C3BH6F52UlRn44Ck82VwZ9mFMWkFSJq0E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GiEob/uUATJb6NGdNXNRPIXJMwx5B1hmd89pvpgQ1A7bneO6GstY8d5UUx/Xzh3cX
-         rTw+eqI8jlyDCvT8aDqgDW2shNnG1Ip+L41mIssxsr9WnhIF264dq+dfevQdECGoYd
-         IBJsfXYE+eCnZir5jQMZr1HGV8XIwIL9uKm2aL48=
-Received: by mail-lj1-f176.google.com with SMTP id v4so10027279ljd.0;
-        Mon, 27 Jul 2020 22:07:33 -0700 (PDT)
-X-Gm-Message-State: AOAM531IRPBcM5FuHh/WX+4DNE11SPB8Flpz+CfVAPSp3nHL0lUqSxul
-        NOBpxK9RlF+XFYygNJR+LhqDqG64eWzHoOpNU3s=
-X-Google-Smtp-Source: ABdhPJytszNTur7+L8yYaMkkhh+bgs5XLkap0KlVaVnWI6a+xCWLQT4+KIxYTOVT5ftgIxWwP5luaCd2mGdDBu/bXb8=
-X-Received: by 2002:a2e:9996:: with SMTP id w22mr12656350lji.446.1595912851449;
- Mon, 27 Jul 2020 22:07:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200728022859.381819-1-yepeilin.cs@gmail.com>
-In-Reply-To: <20200728022859.381819-1-yepeilin.cs@gmail.com>
-From:   Song Liu <song@kernel.org>
-Date:   Mon, 27 Jul 2020 22:07:20 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7L6KWAM55=oLgQ2MtoJOB9i4mwZHOVF+KJj7W5ht_+YQ@mail.gmail.com>
-Message-ID: <CAPhsuW7L6KWAM55=oLgQ2MtoJOB9i4mwZHOVF+KJj7W5ht_+YQ@mail.gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH net] xdp: Prevent kernel-infoleak
- in xsk_getsockopt()
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 28 Jul 2020 01:03:31 -0400
+Received: from labrats.qualcomm.com ([199.106.110.90]:17171 "EHLO
+        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgG1FDb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 01:03:31 -0400
+IronPort-SDR: B7EdOlmVLo/SB0oIf74GFnD8vMJ90Zs77gTtBjgkhM+mzWFK/mQto+3jqLsSAxUWXP0k7j8Xgo
+ qugIQiq4wZj3arFT0KosuOZhNTzt8liUw+pU/EqPehC9eBLuJMmzxOr9jAuTlfNRFL0zphfn5c
+ qmgUN2DG1oRFwWHVzfuYKp5VtKcRhEIquflKaFKVDYhhhIN4tVK4QxA+7patyaM1TEra/9QjRt
+ 7Rxsa7WAdJtfJqFIzJlZTpRTJXDTLFswCehK7HOdVK7mHuQFQh5ArugZCra14Mg0fNmiYRQ0Op
+ ciE=
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="29056443"
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by labrats.qualcomm.com with ESMTP; 27 Jul 2020 22:01:30 -0700
+Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
+  by ironmsg04-sd.qualcomm.com with ESMTP; 27 Jul 2020 22:01:29 -0700
+Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
+        id 45DC322DA6; Mon, 27 Jul 2020 22:01:29 -0700 (PDT)
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        sh425.lee@samsung.com, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Satya Tangirala <satyat@google.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v7 6/8] scsi: ufs: Recover hba runtime PM error in error handler
+Date:   Mon, 27 Jul 2020 22:00:57 -0700
+Message-Id: <1595912460-8860-7-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595912460-8860-1-git-send-email-cang@codeaurora.org>
+References: <1595912460-8860-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 7:30 PM Peilin Ye <yepeilin.cs@gmail.com> wrote:
->
-> xsk_getsockopt() is copying uninitialized stack memory to userspace when
-> `extra_stats` is `false`. Fix it by initializing `stats` with memset().
->
-> Cc: stable@vger.kernel.org
+Current error handler cannot work well or recover hba runtime PM error if
+ufshcd_suspend/resume has failed due to UFS errors, e.g. hibern8 enter/exit
+error or SSU cmd error. When this happens, error handler may fail doing
+full reset and restore because error handler always assumes that powers,
+IRQs and clocks are ready after pm_runtime_get_sync returns, but actually
+they are not if ufshcd_reusme fails [1]. Besides, if ufschd_suspend/resume
+fails due to UFS error, runtime PM framework saves the error value to
+dev.power.runtime_error. After that, hba dev runtime suspend/resume would
+not be invoked anymore unless runtime_error is cleared [2].
 
-8aa5a33578e9 is not in stable branches yet, so we don't need to Cc stable.
+In case of ufshcd_suspend/resume fails due to UFS errors, for scenario [1],
+error handler cannot assume anything of pm_runtime_get_sync, meaning error
+handler should explicitly turn ON powers, IRQs and clocks again. To get the
+hba runtime PM work as regard for scenario [2], error handler can clear the
+runtime_error by calling pm_runtime_set_active() if full reset and restore
+succeeds. And, more important, if pm_runtime_set_active() returns no error,
+which means runtime_error has been cleared, we also need to resume those
+scsi devices under hba in case any of them has failed to be resumed due to
+hba runtime resume failure. This is to unblock blk_queue_enter in case
+there are bios waiting inside it.
 
-> Fixes: 8aa5a33578e9 ("xsk: Add new statistics")
-> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> ---
->  net/xdp/xsk.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-> index 26e3bba8c204..acf001908a0d 100644
-> --- a/net/xdp/xsk.c
-> +++ b/net/xdp/xsk.c
-> @@ -844,6 +844,8 @@ static int xsk_getsockopt(struct socket *sock, int level, int optname,
->                 bool extra_stats = true;
->                 size_t stats_size;
->
-> +               memset(&stats, 0, sizeof(stats));
-> +
+In addition, if ufshcd_resume errors out, ufshcd_release in ufshcd_resume
+would be skipped. After hba runtime PM error is recovered in error handler,
+we should do ufshcd_release once to get clock gating back to work.
 
-xsk.c doesn't include linux/string.h directly, so using memset may break
-build for some config combinations. We can probably just use
+Signed-off-by: Can Guo <cang@codeaurora.org>
+---
+ drivers/scsi/ufs/ufshcd.c | 91 +++++++++++++++++++++++++++++++++++++++++++----
+ drivers/scsi/ufs/ufshcd.h |  1 +
+ 2 files changed, 86 insertions(+), 6 deletions(-)
 
-struct xdp_statistics stats = {};
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index c2d7a90..c480823 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -15,6 +15,7 @@
+ #include <linux/of.h>
+ #include <linux/bitfield.h>
+ #include <linux/blk-pm.h>
++#include <linux/blkdev.h>
+ #include "ufshcd.h"
+ #include "ufs_quirks.h"
+ #include "unipro.h"
+@@ -229,6 +230,10 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba);
+ static int ufshcd_change_power_mode(struct ufs_hba *hba,
+ 			     struct ufs_pa_layer_attr *pwr_mode);
+ static void ufshcd_schedule_eh_work(struct ufs_hba *hba);
++static int ufshcd_setup_hba_vreg(struct ufs_hba *hba, bool on);
++static int ufshcd_setup_vreg(struct ufs_hba *hba, bool on);
++static inline int ufshcd_config_vreg_hpm(struct ufs_hba *hba,
++					 struct ufs_vreg *vreg);
+ static int ufshcd_wb_buf_flush_enable(struct ufs_hba *hba);
+ static int ufshcd_wb_buf_flush_disable(struct ufs_hba *hba);
+ static int ufshcd_wb_ctrl(struct ufs_hba *hba, bool enable);
+@@ -5553,6 +5558,78 @@ static inline void ufshcd_schedule_eh_work(struct ufs_hba *hba)
+ 	}
+ }
+ 
++static void ufshcd_err_handling_prepare(struct ufs_hba *hba)
++{
++	pm_runtime_get_sync(hba->dev);
++	if (pm_runtime_status_suspended(hba->dev)) {
++		/*
++		 * Don't assume anything of pm_runtime_get_sync(), if
++		 * resume fails, irq and clocks can be OFF, and powers
++		 * can be OFF or in LPM.
++		 */
++		ufshcd_setup_hba_vreg(hba, true);
++		ufshcd_setup_clocks(hba, true);
++		ufshcd_enable_irq(hba);
++		ufshcd_setup_vreg(hba, true);
++		ufshcd_config_vreg_hpm(hba, hba->vreg_info.vccq);
++		ufshcd_config_vreg_hpm(hba, hba->vreg_info.vccq2);
++		ufshcd_vops_resume(hba, UFS_RUNTIME_PM);
++	}
++	ufshcd_hold(hba, false);
++	if (ufshcd_is_clkscaling_supported(hba)) {
++		cancel_work_sync(&hba->clk_scaling.suspend_work);
++		cancel_work_sync(&hba->clk_scaling.resume_work);
++		ufshcd_suspend_clkscaling(hba);
++	}
++}
++
++static void ufshcd_err_handling_unprepare(struct ufs_hba *hba)
++{
++	/* If clk_gating is held by pm ops, release it */
++	if (pm_runtime_active(hba->dev) && hba->clk_gating.held_by_pm) {
++		hba->clk_gating.held_by_pm = false;
++		ufshcd_release(hba);
++	}
++	ufshcd_release(hba);
++	if (ufshcd_is_clkscaling_supported(hba))
++		ufshcd_resume_clkscaling(hba);
++	pm_runtime_put(hba->dev);
++}
++
++#ifdef CONFIG_PM
++static void ufshcd_recover_pm_error(struct ufs_hba *hba)
++{
++	struct Scsi_Host *shost = hba->host;
++	struct scsi_device *sdev;
++	struct request_queue *q;
++	int ret;
++
++	/*
++	 * Set RPM status of hba device to RPM_ACTIVE,
++	 * this also clears its runtime error.
++	 */
++	ret = pm_runtime_set_active(hba->dev);
++	/*
++	 * If hba device had runtime error, we also need to resume those
++	 * scsi devices under hba in case any of them has failed to be
++	 * resumed due to hba runtime resume failure. This is to unblock
++	 * blk_queue_enter in case there are bios waiting inside it.
++	 */
++	if (!ret) {
++		list_for_each_entry(sdev, &shost->__devices, siblings) {
++			q = sdev->request_queue;
++			if (q->dev && (q->rpm_status == RPM_SUSPENDED ||
++						q->rpm_status == RPM_SUSPENDING))
++				pm_request_resume(q->dev);
++		}
++	}
++}
++#else
++static inline void ufshcd_recover_pm_error(struct ufs_hba *hba)
++{
++}
++#endif
++
+ /**
+  * ufshcd_err_handler - handle UFS errors that require s/w attention
+  * @work: pointer to work structure
+@@ -5580,9 +5657,7 @@ static void ufshcd_err_handler(struct work_struct *work)
+ 	}
+ 	ufshcd_set_eh_in_progress(hba);
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
+-	pm_runtime_get_sync(hba->dev);
+-	ufshcd_hold(hba, false);
+-
++	ufshcd_err_handling_prepare(hba);
+ 	spin_lock_irqsave(hba->host->host_lock, flags);
+ 	hba->ufshcd_state = UFSHCD_STATE_RESET;
+ 
+@@ -5661,10 +5736,12 @@ static void ufshcd_err_handler(struct work_struct *work)
+ 		hba->force_reset = false;
+ 		spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 		err = ufshcd_reset_and_restore(hba);
+-		spin_lock_irqsave(hba->host->host_lock, flags);
+ 		if (err)
+ 			dev_err(hba->dev, "%s: reset and restore failed with err %d\n",
+ 					__func__, err);
++		else
++			ufshcd_recover_pm_error(hba);
++		spin_lock_irqsave(hba->host->host_lock, flags);
+ 	}
+ 
+ skip_err_handling:
+@@ -5679,8 +5756,7 @@ static void ufshcd_err_handler(struct work_struct *work)
+ 	ufshcd_clear_eh_in_progress(hba);
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 	ufshcd_scsi_unblock_requests(hba);
+-	ufshcd_release(hba);
+-	pm_runtime_put_sync(hba->dev);
++	ufshcd_err_handling_unprepare(hba);
+ }
+ 
+ /**
+@@ -8232,6 +8308,7 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 	 * just gate the clocks.
+ 	 */
+ 	ufshcd_hold(hba, false);
++	hba->clk_gating.held_by_pm = true;
+ 	hba->clk_gating.is_suspended = true;
+ 
+ 	if (hba->clk_scaling.is_allowed) {
+@@ -8351,6 +8428,7 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 	hba->clk_gating.is_suspended = false;
+ 	hba->dev_info.b_rpm_dev_flush_capable = false;
+ 	ufshcd_release(hba);
++	hba->clk_gating.held_by_pm = false;
+ out:
+ 	if (hba->dev_info.b_rpm_dev_flush_capable) {
+ 		schedule_delayed_work(&hba->rpm_dev_flush_recheck_work,
+@@ -8457,6 +8535,7 @@ static int ufshcd_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 
+ 	/* Schedule clock gating in case of no access to UFS device yet */
+ 	ufshcd_release(hba);
++	hba->clk_gating.held_by_pm = false;
+ 
+ 	goto out;
+ 
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 83e5cd9..585e58b 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -354,6 +354,7 @@ struct ufs_clk_gating {
+ 	struct device_attribute delay_attr;
+ 	struct device_attribute enable_attr;
+ 	bool is_enabled;
++	bool held_by_pm;
+ 	int active_reqs;
+ 	struct workqueue_struct *clk_gating_workq;
+ };
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
-Thanks,
-Song
-
-
->                 if (len < sizeof(struct xdp_statistics_v1)) {
->                         return -EINVAL;
->                 } else if (len < sizeof(stats)) {
-> --
-> 2.25.1
->
