@@ -2,55 +2,70 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C789C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2ED7C433FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 318FC204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:05:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="AiEK8xKa"
+	by mail.kernel.org (Postfix) with ESMTP id 9C63C207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 15:05:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730625AbgG1PFf (ORCPT
+        id S1730665AbgG1PFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:05:35 -0400
-Received: from mail.nic.cz ([217.31.204.67]:44782 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730505AbgG1PFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 11:05:35 -0400
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id 5265013FCD6;
-        Tue, 28 Jul 2020 17:05:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1595948732; bh=kzVqBbIS6DtL5EmGEiQ33EnuCsVpzAnrrTPvwFA1C0s=;
-        h=From:To:Date;
-        b=AiEK8xKa6LXajRuPNS6B7WOy58rfYdRs6AN1IbJjU+qr/1D4u4el2lyMEYQdrc48u
-         WhjpUhaEVF+3qX8ReFywkIBNmQuXPf6LgU90rxlZlvoLbO1+RyTWAlgsTtQCzN/jcy
-         wG5KKhOeOltVEy/V9XTRiFv7TyAK5nDKPaBWY3dE=
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-To:     netdev@vger.kernel.org
-Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH RFC leds + net-next v4 0/2] Add support for LEDs on Marvell PHYs
-Date:   Tue, 28 Jul 2020 17:05:28 +0200
-Message-Id: <20200728150530.28827-1-marek.behun@nic.cz>
-X-Mailer: git-send-email 2.26.2
+        Tue, 28 Jul 2020 11:05:41 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:34017 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730505AbgG1PFg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:05:36 -0400
+Received: from ThinkCentre ([81.14.225.83]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MybbH-1kzNwi3tL3-00z1gU; Tue, 28 Jul 2020 17:05:22 +0200
+Message-ID: <c8046227481b367a3a1bbd123234279fcde76f87.camel@richard-neumann.de>
+Subject: Re: [PATCH v5 0/4] SFH: Add Support for AMD Sensor Fusion Hub
+From:   Richard Neumann <mail@richard-neumann.de>
+To:     Marco Felsch <m.felsch@pengutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Sandeep Singh <Sandeep.Singh@amd.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
+        Shyam-sundar.S-k@amd.com
+Date:   Tue, 28 Jul 2020 17:05:20 +0200
+In-Reply-To: <20200728145833.xc53dpvwu7deqzjw@pengutronix.de>
+References: <1590759730-32494-1-git-send-email-Sandeep.Singh@amd.com>
+         <CAHp75VeDAc9pP16wf10xvJn6t34cTXkPAXHus1aSL_07HN3EAA@mail.gmail.com>
+         <20200728145833.xc53dpvwu7deqzjw@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: /
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+X-Provags-ID: V03:K1:NXpkszrA9og9+kV2+FrWLRxHSACXOXAN44gfv0kU+p4LQT/Io5H
+ 2/Hw0JiTYCJFf3aSLCjG8hma09jM0U9LheVGLa33OiBj+wiYNarF6DAVX2hvMnlFi8B4qly
+ GJDxcUvHJfpkPtRSa/KQrIiL7r+twhOjA73G4P+cZswHkMwv4rYuiTtwqgJsC/2ftbQp9HC
+ YWyWuePQq6jBfsIFT6WeA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FUtYt8PjYvQ=:/YEAIYjBV3wjZmEkEK7s6z
+ f1KSafvjIzWum6u2HgtKN8axM3B7EiFgTYc7K2ESamx5lFzWLPXkt2jNc9OjtXd9pkbUVUppT
+ 965u54QtxFRa2vecyyrAFYA8qnuA6OsGO533cTSWheISZthn4wAOcIeh6hRs1vS/pZl/ACRQX
+ +psug9I+XGFz9j7k6is64UrGHXeA000SyK1frmA+6BdDg+on8Ksga2pPMpf8BWOIPHnutELpK
+ ojjhxiY3CLGp79ZJ0JcPbXjyHyTi9qz7baVqO5fy24cD6qY1rQpx8poa/hGqATpfK5SrPKBS3
+ vkSkk61h1gBaEFMOLbGYL3PKG6Q61Az+eZuNdocyHGId/DJV7spr2BR8FSuXKzeFuEnUKejUW
+ 0NOXH0Zwg7KN5rixF843/N/BIRCdx/UFQPfw7ELmWMDd3twidzAKSD0NmSf/ihBVW4EoAKVXB
+ GPGJ1c4Qp03Qf4glC91YL5QMVEBdrMWv0LnhdPK5Gbc1Mp7anRQKoWZ13Ow4DrpbLr49kBfDJ
+ hpa4103NAZpA1lxsDRC0cn9p4UNrDtAB/8ShRiZFFqCK91z+MZXvjvhfQmQ/neNcW0AXA/9mE
+ EuUu3gjIpk3zqoW7HbRO49H8CRN0lWvjiEbMmoQPJ8pL4sd2UGbgWQHjIr0HVfxN/nyiWJI2s
+ ebAB2bpTsf+3TaxjdGL6C4Z/Gir9BjtREJ12+WknhvaJu+wWtjpFwASvV32AvW8+jxEZJkO53
+ 4k0ZEvyL9OGcpqKiagTPvQZcn76WgNGseSpassRETSQylTpBESSSofY4dSsHJK2BUgc2RMIuF
+ gB2YIJnPok/ma5DoBtjSvV5CUJa1hiMScVqzuBniCN4F9wQhwS7vPulj5qLU9FaYs3/cTZY
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,68 +73,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-this is v4 of my RFC adding support for LEDs connected to Marvell PHYs.
+Am Dienstag, den 28.07.2020, 16:58 +0200 schrieb Marco Felsch:
+> Hi,
+> 
+> On 20-05-29 17:21, Andy Shevchenko wrote:
+> > On Fri, May 29, 2020 at 4:42 PM Sandeep Singh <
+> > Sandeep.Singh@amd.com> wrote:
+> > > From: Sandeep Singh <sandeep.singh@amd.com>
+> > > 
+> > > AMD SFH(Sensor Fusion Hub) is HID based driver.SFH FW
+> > > is part of MP2 processor (MP2 which is an ARM® Cortex-M4
+> > > core based co-processor to x86) and it runs on MP2 where
+> > > in driver resides on X86.The driver functionalities are
+> > > divided  into three parts:-
+> > > 
+> > > 1: amd-mp2-pcie:-       This module will communicate with MP2 FW
+> > > and
+> > >                         provide that data into DRAM.
+> > > 2: Client driver :-     This part for driver will use dram data
+> > > and
+> > >                         convert that data into HID format based
+> > > on
+> > >                         HID reports.
+> > > 3: Transport driver :-  This part of driver will communicate with
+> > >                         HID core. Communication between devices
+> > > and
+> > >                         HID core is mostly done via HID reports
+> > > 
+> > > In terms of architecture it is much more reassembles like
+> > > ISH(Intel Integrated Sensor Hub). However the major difference
+> > > is all the hid reports are generated as part of kernel driver.
+> > > AMD SFH driver taken reference from ISH in terms of
+> > > design and functionalities at fewer location.
+> > > 
+> > > AMD sensor fusion Hub is part of a SOC 17h family based
+> > > platforms.
+> > > The solution is working well on several OEM products.
+> > > AMD SFH uses HID over PCIe bus.
+> > > 
+> > 
+> > I can't believe this is fifth version.
+> > Guys, you have to do much more work on these drivers.
+> 
+> Is there any active development addressing Andy's comments? Else can
+> we
+> support you to bring these patches mainline?
+> 
+> Regards,
+>   Marco
 
-Please note that if you want to test this, you still need to first apply
-the patch adding the LED private triggers support from Pavel's tree.
-https://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/commit/?h=for-next&id=93690cdf3060c61dfce813121d0bfc055e7fa30d
+I did some major refactoring¹ on the v4 patch series and am currently
+providing it for Arch Linux as a DKMS package in the AUR².
+A teensy bit of my changes seems to have influenced the v5 version but
+I actually did some major changes, like strictly separating the HID,
+platform and PCI driver parts.
+I did not submit my changes for upstream so far, since I do not want to
+undermine AMD's work on this nor cause competing driver
+implementations.
 
-What I still don't like about this is that the LEDs created by the code
-don't properly support device names. LEDs should have name in format
-"device:color:function", for example "eth0:green:activity".
+Sincerely,
 
-The code currently looks for attached netdev for a given PHY, but
-at the time this happens there is no netdev attached, so the LEDs gets
-names without the device part (ie ":green:activity").
+Richard
 
-This can be addressed in next version by renaming the LED when a netdev
-is attached to the PHY, but first a API for LED device renaming needs to
-be proposed. I am going to try to do that. This would also solve the
-same problem when userspace renames an interface.
-
-And no, I don't want phydev name there.
-
-Changes since v3:
-- addressed some of Andrew's suggestions
-- phy_hw_led_mode.c renamed to phy_led.c
-- the DT reading code is now also generic, moved to phy_led.c and called
-  from phy_probe
-- the function registering the phydev-hw-mode trigger is now called from
-  phy_device.c function phy_init before registering genphy drivers
-- PHY LED functionality now depends on CONFIG_LEDS_TRIGGERS
-
-Changes since v2:
-- to share code with other drivers which may want to also offer PHY HW
-  control of LEDs some of the code was refactored and now resides in
-  phy_hw_led_mode.c. This code is compiled in when config option
-  LED_TRIGGER_PHY_HW is enabled. Drivers wanting to offer PHY HW control
-  of LEDs should depend on this option.
-- the "hw-control" trigger is renamed to "phydev-hw-mode" and is
-  registered by the code in phy_hw_led_mode.c
-- the "hw_control" sysfs file is renamed to "hw_mode"
-- struct phy_driver is extended by three methods to support PHY HW LED
-  control
-- I renamed the various HW control modes offeret by Marvell PHYs to
-  conform to other Linux mode names, for example the "1000/100/10/else"
-  mode was renamed to "1Gbps/100Mbps/10Mbps", or "recv/else" was renamed
-  to "rx" (this is the name of the mode in netdev trigger).
-
-Marek
-
-
-Marek Behún (2):
-  net: phy: add API for LEDs controlled by PHY HW
-  net: phy: marvell: add support for PHY LEDs via LED class
-
- drivers/net/phy/Kconfig      |   4 +
- drivers/net/phy/Makefile     |   1 +
- drivers/net/phy/marvell.c    | 287 +++++++++++++++++++++++++++++++++++
- drivers/net/phy/phy_device.c |  25 ++-
- drivers/net/phy/phy_led.c    | 176 +++++++++++++++++++++
- include/linux/phy.h          |  51 +++++++
- 6 files changed, 537 insertions(+), 7 deletions(-)
- create mode 100644 drivers/net/phy/phy_led.c
-
--- 
-2.26.2
+[1] https://github.com/conqp/linux/tree/amd-sfh-hid/drivers/hid/amd-sfh-hid
+[2] https://aur.archlinux.org/packages/amd-sfh-hid-dkms/
 
