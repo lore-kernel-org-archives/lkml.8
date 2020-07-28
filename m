@@ -2,126 +2,121 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC33C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E25E206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2201B2065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 11:13:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="dC0xTiuZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Reko/uz8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbgG1LMc (ORCPT
+        id S1728982AbgG1LNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 07:12:32 -0400
-Received: from crapouillou.net ([89.234.176.41]:54234 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728699AbgG1LMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 07:12:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1595934749; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MmQj6eRea6iyuNFg5IchAc+jj4JkKEYDW/JJw4bGNXw=;
-        b=dC0xTiuZq1kuj8lPhJ/Y1NFDScrIHbi/xsOFaHQpEDJQux10XaHiWbhHW9JEpEjOmYTZka
-        0Y+wPCTK8UDmX+tpqwQQx72uuE+CojJsxcg0CS3Rb5l/N3GTIpwEgvk2AVCWthpaJEs8Dr
-        Xu25r3KIw3061V6qehZmN03C4M9TRo4=
-Date:   Tue, 28 Jul 2020 13:12:11 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v4 2/2] MIPS: ingenic: Enable JZ4780_NEMC manually
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>
-Message-Id: <B4F6EQ.WB2WZOY40FDR@crapouillou.net>
-In-Reply-To: <20200728104503.23655-2-krzk@kernel.org>
-References: <20200728104503.23655-1-krzk@kernel.org>
-        <20200728104503.23655-2-krzk@kernel.org>
+        Tue, 28 Jul 2020 07:13:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728699AbgG1LNJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 07:13:09 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54F0EC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 04:13:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PA/tyGEWDw6vKLglviCoSjcXo61IZIN6Uwk0RcC9WsI=; b=Reko/uz8yJAr/RR8GHuZPaRWeB
+        sbVWUQ/RryMAKaEvyjVw02qYrg1SHdGYlbwhtV31VnkLzsGeigtJHMeeVlR0G+sA6ENcwIBeFp5q9
+        j/om3venJu7sr6B+rbsmFTKdzTNDZ6mE8w4SDfWcZpBAluG+Gn6BVw/WeOUBOPeC7CAtO1y6rmO0K
+        0INzjZt5XjAnZyJiweBfJXw3a28O6wQaT35b9+eTDoisoUifYdKrQvAjT6dvrYeo2HwncBC9iW6j2
+        7ZYPPyQE/zc/8neMUJFnxlZC0vekz8pgNszfoBu7hR6cIiFKJfTN/MAvnKDC9hyWtM1ZciuSN08mk
+        DZsOBIHA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0NXd-0006HL-H8; Tue, 28 Jul 2020 11:13:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1620430411F;
+        Tue, 28 Jul 2020 13:13:03 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 00A762BE45AF1; Tue, 28 Jul 2020 13:13:02 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 13:13:02 +0200
+From:   peterz@infradead.org
+To:     Vincent Donnefort <vincent.donnefort@arm.com>
+Cc:     mingo@redhat.com, vincent.guittot@linaro.org,
+        linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
+        lukasz.luba@arm.com, valentin.schneider@arm.com
+Subject: Re: [PATCH] sched/fair: provide u64 read for 32-bits arch helper
+Message-ID: <20200728111302.GV119549@hirez.programming.kicks-ass.net>
+References: <1595847564-239957-1-git-send-email-vincent.donnefort@arm.com>
+ <20200727123801.GJ119549@hirez.programming.kicks-ass.net>
+ <20200727152303.GA301827@e120877-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727152303.GA301827@e120877-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+On Mon, Jul 27, 2020 at 04:23:03PM +0100, Vincent Donnefort wrote:
 
-Le mar. 28 juil. 2020 =E0 12:45, Krzysztof Kozlowski <krzk@kernel.org> a=20
-=E9crit :
-> The CONFIG_JZ4780_NEMC was previously a default on MIPS but now it has
-> to be enabled manually.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> For 32-bit architectures, both min_vruntime and last_update_time are using
+> similar access. This patch is simply an attempt to unify their usage by
+> introducing two macros to rely on when accessing those. At the same time, it
+> brings a comment regarding the barriers usage, as per the kernel policy. So
+> overall this is just a clean-up without any functional changes.
 
-I think you should swap the two so that there are no problems when=20
-bisecting.
+Ah, I though there was perhaps the idea to make use of armv7-lpae
+instructions.
 
-With that:
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+Aside of that, I think we need to spend a little time bike-shedding the
+API/naming here:
 
-Cheers,
--Paul
+> +# define u64_32read(val, copy) (val)
+> +# define u64_32read_set_copy(val, copy) do { } while (0)
 
->=20
-> ---
->=20
-> Changes since v3:
-> 1. New patch
-> ---
->  arch/mips/configs/ci20_defconfig    | 1 +
->  arch/mips/configs/qi_lb60_defconfig | 1 +
->  arch/mips/configs/rs90_defconfig    | 1 +
->  3 files changed, 3 insertions(+)
->=20
-> diff --git a/arch/mips/configs/ci20_defconfig=20
-> b/arch/mips/configs/ci20_defconfig
-> index e511fe0243a5..0a46199fdc3f 100644
-> --- a/arch/mips/configs/ci20_defconfig
-> +++ b/arch/mips/configs/ci20_defconfig
-> @@ -128,6 +128,7 @@ CONFIG_DMA_JZ4780=3Dy
->  CONFIG_INGENIC_OST=3Dy
->  # CONFIG_IOMMU_SUPPORT is not set
->  CONFIG_MEMORY=3Dy
-> +CONFIG_JZ4780_NEMC=3Dy
->  CONFIG_PWM=3Dy
->  CONFIG_PWM_JZ4740=3Dm
->  CONFIG_EXT4_FS=3Dy
-> diff --git a/arch/mips/configs/qi_lb60_defconfig=20
-> b/arch/mips/configs/qi_lb60_defconfig
-> index 97c9a69d1528..81bfbee72b0c 100644
-> --- a/arch/mips/configs/qi_lb60_defconfig
-> +++ b/arch/mips/configs/qi_lb60_defconfig
-> @@ -108,6 +108,7 @@ CONFIG_RTC_DRV_JZ4740=3Dy
->  CONFIG_DMADEVICES=3Dy
->  CONFIG_DMA_JZ4780=3Dy
->  CONFIG_MEMORY=3Dy
-> +CONFIG_JZ4780_NEMC=3Dy
->  CONFIG_IIO=3Dy
->  CONFIG_INGENIC_ADC=3Dy
->  CONFIG_PWM=3Dy
-> diff --git a/arch/mips/configs/rs90_defconfig=20
-> b/arch/mips/configs/rs90_defconfig
-> index 433ac5c0266a..de6752051ecc 100644
-> --- a/arch/mips/configs/rs90_defconfig
-> +++ b/arch/mips/configs/rs90_defconfig
-> @@ -145,6 +145,7 @@ CONFIG_DMA_JZ4780=3Dy
->  CONFIG_INGENIC_OST=3Dy
->  # CONFIG_IOMMU_SUPPORT is not set
->  CONFIG_MEMORY=3Dy
-> +CONFIG_JZ4780_NEMC=3Dy
->  CONFIG_IIO=3Dy
->  CONFIG_INGENIC_ADC=3Dy
->  CONFIG_IIO_RESCALE=3Dy
-> --
-> 2.17.1
->=20
+How about something like:
+
+#ifdef CONFIG_64BIT
+
+#define DEFINE_U64_U32(name)	u64 name
+#define u64_u32_load(name)	name
+#define u64_u32_store(name, val)name = val
+
+#else
+
+#define DEFINE_U64_U32(name)			\
+	struct {				\
+		u64 name;			\
+		u64 name##_copy;		\
+	}
+
+#define u64_u32_load(name)			\
+	({					\
+		u64 val, copy;			\
+		do {				\
+			val = name;		\
+			smb_rmb();		\
+			copy = name##_copy;	\
+		} while (val != copy);		\
+		val;
+	})
+
+#define u64_u32_store(name, val)		\
+	do {					\
+		typeof(val) __val = (val);	\
+		name = __val;			\
+		smp_wmb();			\
+		name##_copy = __val;		\
+	} while (0)
+
+#endif
 
 
