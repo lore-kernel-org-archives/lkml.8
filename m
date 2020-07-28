@@ -2,138 +2,91 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20857C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C85C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 077FF20792
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0EFC20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 06:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgG1GaL (ORCPT
+        id S1728115AbgG1GaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:30:11 -0400
-Received: from mailout12.rmx.de ([94.199.88.78]:37876 "EHLO mailout12.rmx.de"
+        Tue, 28 Jul 2020 02:30:15 -0400
+Received: from mga14.intel.com ([192.55.52.115]:10185 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726874AbgG1GaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:30:10 -0400
-Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout12.rmx.de (Postfix) with ESMTPS id 4BG6H26LyQzRrD6;
-        Tue, 28 Jul 2020 08:30:06 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin01.retarus.com (Postfix) with ESMTPS id 4BG6GX15wBz2xDh;
-        Tue, 28 Jul 2020 08:29:40 +0200 (CEST)
-Received: from N95HX1G2.wgnetz.xx (192.168.54.24) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 28 Jul
- 2020 08:29:40 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>
-CC:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Christian Eggers" <ceggers@arri.de>
-Subject: [PATCH v2 1/2] dt-bindings: iio: light: add AMS AS73211 support
-Date:   Tue, 28 Jul 2020 08:28:30 +0200
-Message-ID: <20200728062831.1143-2-ceggers@arri.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200728062831.1143-1-ceggers@arri.de>
-References: <20200728062831.1143-1-ceggers@arri.de>
+        id S1726874AbgG1GaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 02:30:13 -0400
+IronPort-SDR: p/HhuB93hZ7tbbPCIkNdApovHth82o8NWEypqO6wgsVdYJkW3573sGt22nE4/vJLX8mwoHcCZM
+ uGRKdk1VbYLw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="150330765"
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="150330765"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 23:30:12 -0700
+IronPort-SDR: DWFcw058aeNY33KCMXeApCFDsG3k6E7ZcSfHBPcNVTPWRdWaBobV5jB8SpVRTW/cLo+QKp2tl2
+ 6pcV2+CqE9Kw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="434208391"
+Received: from unknown (HELO [10.239.13.4]) ([10.239.13.4])
+  by orsmga004.jf.intel.com with ESMTP; 27 Jul 2020 23:30:10 -0700
+Message-ID: <5F1FC796.3090105@intel.com>
+Date:   Tue, 28 Jul 2020 14:37:10 +0800
+From:   Wei Wang <wei.w.wang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [192.168.54.24]
-X-RMX-ID: 20200728-082940-4BG6GX15wBz2xDh-0@kdin01
-X-RMX-SOURCE: 217.111.95.66
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+CC:     stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Liang Li <liang.z.li@intel.com>,
+        virtualization@lists.linux-foundation.org,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Subject: Re: [PATCH] virtio_balloon: fix up endian-ness for free cmd id
+References: <20200727160310.102494-1-mst@redhat.com>
+In-Reply-To: <20200727160310.102494-1-mst@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT bindings for AMS AS73211 XYZ True Color Sensor.
+On 07/28/2020 12:03 AM, Michael S. Tsirkin wrote:
+> free cmd id is read using virtio endian, spec says all fields
+> in balloon are LE. Fix it up.
+>
+> Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>   drivers/virtio/virtio_balloon.c | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index 774deb65a9bb..798ec304fe3e 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -578,10 +578,14 @@ static int init_vqs(struct virtio_balloon *vb)
+>   static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
+>   {
+>   	if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
+> -			       &vb->config_read_bitmap))
+> +			       &vb->config_read_bitmap)) {
+>   		virtio_cread(vb->vdev, struct virtio_balloon_config,
+>   			     free_page_hint_cmd_id,
+>   			     &vb->cmd_id_received_cache);
+> +		/* Legacy balloon config space is LE, unlike all other devices. */
+> +		if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
+> +			vb->cmd_id_received_cache = le32_to_cpu((__force __le32)vb->cmd_id_received_cache);
+Seems it exceeds 80 character length.
 
-Signed-off-by: Christian Eggers <ceggers@arri.de>
----
- .../bindings/iio/light/ams,as73211.yaml       | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
+Reviewed-by: Wei Wang <wei.w.wang@intel.com>
 
-diff --git a/Documentation/devicetree/bindings/iio/light/ams,as73211.yaml b/Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
-new file mode 100644
-index 000000000000..0e8cd02759b3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/ams,as73211.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: AMS AS73211 JENCOLOR(R) Digital XYZ Sensor
-+
-+maintainers:
-+  - Christian Eggers <ceggers@arri.de>
-+
-+description: |
-+  XYZ True Color Sensor with I2C Interface
-+  https://ams.com/documents/20143/36005/AS73211_DS000556_3-01.pdf/a65474c0-b302-c2fd-e30a-c98df87616df
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ams,as73211
-+
-+  reg:
-+    description:
-+      I2C address of the device (0x74...0x77).
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      Interrupt specifier for the READY interrupt generated by the device.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        as73211@74 {
-+            compatible = "ams,as73211";
-+            reg = <0x74>;
-+            pinctrl-names = "default";
-+            pinctrl-0 = <&pinctrl_color_sensor>;
-+            interrupt-parent = <&gpio2>;
-+            interrupts = <19 IRQ_TYPE_EDGE_RISING>; /* READY */
-+        };
-+    };
-+...
--- 
-Christian Eggers
-Embedded software developer
-
-Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
-Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
-Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
-
+Best,
+Wei
