@@ -2,149 +2,111 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A64C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A890C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2480120663
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B2C2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 14:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOMKIQEp"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="D7/86MC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbgG1OV3 (ORCPT
+        id S1730363AbgG1OXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 10:21:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34370 "EHLO
+        Tue, 28 Jul 2020 10:23:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730064AbgG1OV2 (ORCPT
+        with ESMTP id S1730089AbgG1OXH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 10:21:28 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50180C061794;
-        Tue, 28 Jul 2020 07:21:28 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id d27so14912282qtg.4;
-        Tue, 28 Jul 2020 07:21:28 -0700 (PDT)
+        Tue, 28 Jul 2020 10:23:07 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837CFC0619D4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:23:07 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id gc9so11666811pjb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 07:23:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0a7riHkmcNZX+GUojwCDuOWs6tGpRZUtzm7Jn91Fp0E=;
-        b=aOMKIQEpNlogZ8jiHhzLA/GEKWEn/zHsQjaZvchq/hUuV4/z9G7PYgam7xaPvK+XbC
-         +KZJHQ4LQ4Tgx6xDo3Fv31PeriH5Tmo651RamNk/C2F8C7A5PdTDOmnX41aMFCJNhhja
-         +KYI6gi38WMbm+HfI9xlHgB7F3MwUBAWDnLK8I5RFngm+BkcO6FCR8ZSgv1jUucUGoPz
-         9qz1IY2fipMOicd6bOlYRGokwL8gAQwLcprzyRp9p4ysvGuEoPBbmBLrc+N9m+mxTN50
-         2UZOGYCyhqw7eoUQOutmM6w2src1ou6n87VjBVorI7Z3i/kiJm3bR5kZdF2mgRulmCsz
-         qyWQ==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=0gezrYAszKsYKcLXi9TMmF45AfpArZp7tf2tQTcsIB4=;
+        b=D7/86MC1Tqp9oc0VICIhfafxb3tBKrlVgTQgo74JcMWGNVZjzmkRkSPO+UaELTUEwa
+         hA2GW+HERh5M2odXF3L1QZNAFFoTOnxCUqDuUqd+xD54MgRqydkWiLasAWQmucuiUX9y
+         /HA6vqfiAYDwCMBvJQPsnzD96xliQ3O0e++hOjll/2Z5APzOuNu7gH9zfRs4jk1u/4VI
+         49V7Y+MZGeI3h+zO6gZkKACbWgKi3SBDGtM0OP0OKRBoHDlHCLafa/fTo8q2s2AnY2mL
+         fhpECbWQwe8VhAil1beOIe84mykJJtKhpx/KmcnDNs3QlX6d51VI87/q+vivCNN/VjqH
+         7mig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0a7riHkmcNZX+GUojwCDuOWs6tGpRZUtzm7Jn91Fp0E=;
-        b=oC0MnjcX1OEMlMHOVo7kTweT2wwCM/QKVgN8d+/S8cPAu7qGHYtFeVP3WeAvOusOdD
-         ofltgpwgOk6xc8UaZ/ncVv1Z0FYMK8sbcphpvYWPl27efLB6FycBda9BwHLHdALjjiJc
-         oJuuh5zfFJ7G/hIARbfvymzA7WT/pFNNerAKKJh0VpWiqL7qB0yCIjetQQTz/6dT7Vnp
-         XZDKZCA/VS5QeHAbQ38NO/tU4XCLNuN5gE8psrjjnOMIszO3D3tpc++Ujgvze2YEffUH
-         9QbE8cFs2VR6YcNkWUenQVp2+a4mlgVxCU+BoGSfi9xVzF2A+DF6WcZYQwSJgRbMRky3
-         x8Uw==
-X-Gm-Message-State: AOAM5303ZicSvB4Z8UA/dM7lOnlwvA80nZLMfvBfvTqmK1zhCo58vMSH
-        NFRPkSJHojKX8E7XSOwGoA==
-X-Google-Smtp-Source: ABdhPJzzeiRIQxSjsjqXZ9i0X7fm6CZjBthtL+HGvt4+uWmVX+wcM3G8gwQYvj+9df1rB/Ghk+yOcA==
-X-Received: by 2002:ac8:65d3:: with SMTP id t19mr27140594qto.193.1595946087337;
-        Tue, 28 Jul 2020 07:21:27 -0700 (PDT)
-Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
-        by smtp.gmail.com with ESMTPSA id 6sm22142009qkj.134.2020.07.28.07.21.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 07:21:26 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Denis Efremov <efremov@linux.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH] block/floppy: Prevent kernel-infoleak in raw_cmd_copyout()
-Date:   Tue, 28 Jul 2020 10:19:46 -0400
-Message-Id: <20200728141946.426245-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=0gezrYAszKsYKcLXi9TMmF45AfpArZp7tf2tQTcsIB4=;
+        b=MB+Fgp5rYKO91hyfLwfCkPvT/hE93q2JOPbBMrDYLyUX7IH+Y+Y9aSkbMkeOYApe5G
+         idtsU/d0kMYVLYpg7LoC8j7B05+stIKv3HX2MDYsMvpreWDclvKQ5t3UY93aSYcn0NYB
+         6sP/U9nFWg6cVmnB2gx4R5EcNUP5dECzBL8u1JosGjFWzCYrboIk26brdVmKKedFZtrN
+         pHliJNlzS0wbbIGSX2saKStOW7TcBa+9tdYlG7ba+rZRkrfmQEL0epYM6RxylFQhTLCE
+         ZeybTljeUSKwcrC9/hN2XX7mU0eKRBJ2i21EwhCBzw3/jwC0Yw0vRZFrqXXuwRGtMM3q
+         7VTw==
+X-Gm-Message-State: AOAM532yniv4rSBZRBrzA9G0mIuzvtPZXLg7l6iY3wy2LPqEOPrewsDY
+        htX8TK9tTQy5yCugPDtXgvI38Q==
+X-Google-Smtp-Source: ABdhPJwGmlsbEVuJXdrA5FyCMv/IW/fPnSTAHwkj6VyQa14OnWq1IW5Sje+yw0TWIJZrFoMkdQtvhw==
+X-Received: by 2002:a17:90a:ce0c:: with SMTP id f12mr4957417pju.19.1595946186974;
+        Tue, 28 Jul 2020 07:23:06 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:1c3a:e74b:bd16:b3ab? ([2601:646:c200:1ef2:1c3a:e74b:bd16:b3ab])
+        by smtp.gmail.com with ESMTPSA id 4sm18047374pgk.68.2020.07.28.07.23.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 07:23:06 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
+Date:   Tue, 28 Jul 2020 07:23:03 -0700
+Message-Id: <1764B08C-CC1E-4636-944A-DB95B81C7A8E@amacapital.net>
+References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
+        gerg@linux-m68k.org, ktkhai@virtuozzo.com,
+        christian.brauner@ubuntu.com, peterz@infradead.org,
+        esyr@redhat.com, jgg@ziepe.ca, christian@kellner.me,
+        areber@redhat.com, cyphar@cyphar.com, steven.sistare@oracle.com
+In-Reply-To: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+To:     Anthony Yznaga <anthony.yznaga@oracle.com>
+X-Mailer: iPhone Mail (17F80)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-raw_cmd_copyout() is potentially copying uninitialized kernel stack memory
-since it is initializing `cmd` by assignment, which may cause the compiler
-to leave uninitialized holes in this structure. Fix it by using memcpy()
-instead.
 
-Cc: stable@vger.kernel.org
-Fixes: 2145e15e0557 ("floppy: don't write kernel-only members to FDRAWCMD ioctl output")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
-$ pahole -C "floppy_raw_cmd" drivers/block/floppy.o
-struct floppy_raw_cmd {
-	unsigned int               flags;                /*     0     4 */
 
-	/* XXX 4 bytes hole, try to pack */
+> On Jul 27, 2020, at 10:02 AM, Anthony Yznaga <anthony.yznaga@oracle.com> w=
+rote:
+>=20
+> =EF=BB=BFThis patchset adds support for preserving an anonymous memory ran=
+ge across
+> exec(3) using a new madvise MADV_DOEXEC argument.  The primary benefit for=
 
-	void *                     data;                 /*     8     8 */
-	char *                     kernel_data;          /*    16     8 */
-	struct floppy_raw_cmd *    next;                 /*    24     8 */
-	long int                   length;               /*    32     8 */
-	long int                   phys_length;          /*    40     8 */
-	int                        buffer_length;        /*    48     4 */
-	unsigned char              rate;                 /*    52     1 */
-	unsigned char              cmd_count;            /*    53     1 */
-	union {
-		struct {
-			unsigned char cmd[16];           /*    54    16 */
-			/* --- cacheline 1 boundary (64 bytes) was 6 bytes ago --- */
-			unsigned char reply_count;       /*    70     1 */
-			unsigned char reply[16];         /*    71    16 */
-		};                                       /*    54    33 */
-		unsigned char      fullcmd[33];          /*    54    33 */
-	};                                               /*    54    33 */
+> sharing memory in this manner, as opposed to re-attaching to a named share=
+d
+> memory segment, is to ensure it is mapped at the same virtual address in
+> the new process as it was in the old one.  An intended use for this is to
+> preserve guest memory for guests using vfio while qemu exec's an updated
+> version of itself.  By ensuring the memory is preserved at a fixed address=
+,
+> vfio mappings and their associated kernel data structures can remain valid=
+.
+> In addition, for the qemu use case, qemu instances that back guest RAM wit=
+h
+> anonymous memory can be updated.
 
-	/* XXX 1 byte hole, try to pack */
-
-	/* --- cacheline 1 boundary (64 bytes) was 24 bytes ago --- */
-	int                        track;                /*    88     4 */
-	int                        resultcode;           /*    92     4 */
-	int                        reserved1;            /*    96     4 */
-	int                        reserved2;            /*   100     4 */
-
-	/* size: 104, cachelines: 2, members: 14 */
-	/* sum members: 99, holes: 2, sum holes: 5 */
-	/* last cacheline: 40 bytes */
-};
-
- drivers/block/floppy.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 09079aee8dc4..b8ea98f7a9cb 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -3126,7 +3126,9 @@ static int raw_cmd_copyout(int cmd, void __user *param,
- 	int ret;
- 
- 	while (ptr) {
--		struct floppy_raw_cmd cmd = *ptr;
-+		struct floppy_raw_cmd cmd;
-+
-+		memcpy(&cmd, ptr, sizeof(cmd));
- 		cmd.next = NULL;
- 		cmd.kernel_data = NULL;
- 		ret = copy_to_user(param, &cmd, sizeof(cmd));
--- 
-2.25.1
+This will be an amazing attack surface. Perhaps use of this flag should requ=
+ire no_new_privs?  Arguably it should also require a special flag to execve(=
+) to honor it.  Otherwise library helpers that do vfork()+exec() or posix_sp=
+awn() could be quite surprised.
 
