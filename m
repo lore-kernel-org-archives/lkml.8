@@ -2,319 +2,236 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474C2C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACBAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9D32083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36FA92074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 23:10:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fn8zRKIE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YImhjnK1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730267AbgG1XIq (ORCPT
+        id S1730360AbgG1XKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 19:08:46 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:56557 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730115AbgG1XIm (ORCPT
+        Tue, 28 Jul 2020 19:10:12 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:54080 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729997AbgG1XKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 19:08:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595977721; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=TO8JX6qnJDlsSqQ9mywPrX6pIPHbZlNOf2xgMjimCJY=; b=fn8zRKIEm59fcdhpPImj2xiHRuREoJGUW+WzJ3ali3Vf/Fz28tDPIcHJUVKXgG71ECuH1Cqe
- vBQp0Wlnd/J/382PRLw+TySHQ/mQ2R/mrDHfaiSRfF+ps3jozo+C1vki2pr4SI8qUpITjiiQ
- MgT+TVSlj0KCuZkGZoaGdcHf93M=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
- 5f20afe998acebb4e93f3563 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 23:08:25
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8E36DC433CA; Tue, 28 Jul 2020 23:08:25 +0000 (UTC)
-Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Tue, 28 Jul 2020 19:10:09 -0400
+X-Greylist: delayed 304 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Jul 2020 19:10:08 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595977807;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=XUmHWaIn8FCqLTurCz3Fw/l96qXWW2bMBVNyIMdJ1Kw=;
+        b=YImhjnK1EfjVKPeDdPF3I3sliKJrpPIvS22Xz2NSJxMy8FHKBAtC7XDVxPMw8KLeHJ5llx
+        bFDASNkN12vwsU4z31oFcAFLRycPOPTPuganO85Tf63F4h841iihz4RUnhD95UVw8cenSQ
+        SzUi+Bd9fcACaEyCRUYF4K7/ktZyHbw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-226-C9CTVi7_MBG799-v11yjuA-1; Tue, 28 Jul 2020 19:03:59 -0400
+X-MC-Unique: C9CTVi7_MBG799-v11yjuA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 33051C433C6;
-        Tue, 28 Jul 2020 23:08:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33051C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
-From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
-To:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
-        tsoni@codeaurora.org, psodagud@codeaurora.org,
-        sidgup@codeaurora.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: [PATCH 1/2] remoteproc: Move coredump entry from debugfs to sysfs.
-Date:   Tue, 28 Jul 2020 16:08:16 -0700
-Message-Id: <1595977697-15389-2-git-send-email-rishabhb@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595977697-15389-1-git-send-email-rishabhb@codeaurora.org>
-References: <1595977697-15389-1-git-send-email-rishabhb@codeaurora.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B65D1005504;
+        Tue, 28 Jul 2020 23:03:58 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 40CC819C71;
+        Tue, 28 Jul 2020 23:03:57 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net] rxrpc: Fix race between recvmsg and sendmsg on immediate
+ call failure
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     syzbot+b54969381df354936d96@syzkaller.appspotmail.com,
+        Marc Dionne <marc.dionne@auristor.com>, dhowells@redhat.com,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Wed, 29 Jul 2020 00:03:56 +0100
+Message-ID: <159597743637.3473535.17426270487937799293.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Expose coredump configuration from sysfs instead of debugfs.
-In some operating systems access to debugfs might be limited.
-This restricts user from selecting the coredump configuration
-at all, hence move this interface to sysfs.
+There's a race between rxrpc_sendmsg setting up a call, but then failing to
+send anything on it due to an error, and recvmsg() seeing the call
+completion occur and trying to return the state to the user.
 
-Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+An assertion fails in rxrpc_recvmsg() because the call has already been
+released from the socket and is about to be released again as recvmsg deals
+with it.  (The recvmsg_q queue on the socket holds a ref, so there's no
+problem with use-after-free.)
+
+We also have to be careful not to end up reporting an error twice, in such
+a way that both returns indicate to userspace that the user ID supplied
+with the call is no longer in use - which could cause the client to
+malfunction if it recycles the user ID fast enough.
+
+Fix this by the following means:
+
+ (1) When sendmsg() creates a call after the point that the call has been
+     successfully added to the socket, don't return any errors through
+     sendmsg(), but rather complete the call and let recvmsg() retrieve
+     them.  Make sendmsg() return 0 at this point.  Further calls to
+     sendmsg() for that call will fail with ESHUTDOWN.
+
+     Note that at this point, we haven't send any packets yet, so the
+     server doesn't yet know about the call.
+
+ (2) If sendmsg() returns an error when it was expected to create a new
+     call, it means that the user ID wasn't used.
+
+ (3) Mark the call disconnected before marking it completed to prevent an
+     oops in rxrpc_release_call().
+
+ (4) recvmsg() will then retrieve the error and set MSG_EOR to indicate
+     that the user ID is no longer known by the kernel.
+
+
+An oops like the following is produced:
+
+	kernel BUG at net/rxrpc/recvmsg.c:605!
+	...
+	RIP: 0010:rxrpc_recvmsg+0x256/0x5ae
+	...
+	Call Trace:
+	 ? __init_waitqueue_head+0x2f/0x2f
+	 ____sys_recvmsg+0x8a/0x148
+	 ? import_iovec+0x69/0x9c
+	 ? copy_msghdr_from_user+0x5c/0x86
+	 ___sys_recvmsg+0x72/0xaa
+	 ? __fget_files+0x22/0x57
+	 ? __fget_light+0x46/0x51
+	 ? fdget+0x9/0x1b
+	 do_recvmmsg+0x15e/0x232
+	 ? _raw_spin_unlock+0xa/0xb
+	 ? vtime_delta+0xf/0x25
+	 __x64_sys_recvmmsg+0x2c/0x2f
+	 do_syscall_64+0x4c/0x78
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 357f5ef64628 ("rxrpc: Call rxrpc_release_call() on error in rxrpc_new_client_call()")
+Reported-by: syzbot+b54969381df354936d96@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
 ---
- Documentation/ABI/testing/sysfs-class-remoteproc | 40 +++++++++++
- drivers/remoteproc/remoteproc_debugfs.c          | 90 ------------------------
- drivers/remoteproc/remoteproc_sysfs.c            | 64 +++++++++++++++++
- 3 files changed, 104 insertions(+), 90 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-remoteproc b/Documentation/ABI/testing/sysfs-class-remoteproc
-index 36094fb..812582a 100644
---- a/Documentation/ABI/testing/sysfs-class-remoteproc
-+++ b/Documentation/ABI/testing/sysfs-class-remoteproc
-@@ -58,3 +58,43 @@ Description:	Remote processor name
- 		Reports the name of the remote processor. This can be used by
- 		userspace in exactly identifying a remote processor and ease
- 		up the usage in modifying the 'firmware' or 'state' files.
-+
-+What:		/sys/class/remoteproc/.../coredump
-+Date:		July 2020
-+Contact:	Rishabh Bhatnagar <rishabhb@codeaurora.org>
-+Description:	Remote processor coredump configuration
-+
-+		Reports the coredump configuration of the remote processor,
-+		which will be one of:
-+
-+		"default"
-+		"inline"
-+		"disabled"
-+
-+		"default" means when the remote processor's coredump is
-+		collected it will be copied to a separate buffer and that
-+		buffer is exposed to userspace.
-+
-+		"inline" means when the remote processor's coredump is
-+		collected userspace will directly read from the remote
-+		processor's device memory. Extra buffer will not be used to
-+		copy the dump. Also recovery process will not proceed until
-+		all data is read by usersapce.
-+
-+		"disabled" means no dump will be collected.
-+
-+		Writing this file controls the coredump configuration of the
-+		remote processor. The following configurations can be written:
-+
-+		"default"
-+		"inline"
-+		"disable"
-+
-+		Writing "default" will change the coredump configuration to
-+		default option.
-+
-+		Writing "inline" will change the coredump configuration to
-+		inline.
-+
-+		Writing "disable" will disable the coredump collection for
-+		that remoteproc.
-diff --git a/drivers/remoteproc/remoteproc_debugfs.c b/drivers/remoteproc/remoteproc_debugfs.c
-index 2e3b3e2..732770e 100644
---- a/drivers/remoteproc/remoteproc_debugfs.c
-+++ b/drivers/remoteproc/remoteproc_debugfs.c
-@@ -28,94 +28,6 @@
- static struct dentry *rproc_dbg;
+ net/rxrpc/call_object.c |   27 +++++++++++++++++++--------
+ net/rxrpc/conn_object.c |    8 +++++---
+ net/rxrpc/recvmsg.c     |    2 +-
+ net/rxrpc/sendmsg.c     |    3 +++
+ 4 files changed, 28 insertions(+), 12 deletions(-)
+
+diff --git a/net/rxrpc/call_object.c b/net/rxrpc/call_object.c
+index f07970207b54..38a46167523f 100644
+--- a/net/rxrpc/call_object.c
++++ b/net/rxrpc/call_object.c
+@@ -288,7 +288,7 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
+ 	 */
+ 	ret = rxrpc_connect_call(rx, call, cp, srx, gfp);
+ 	if (ret < 0)
+-		goto error;
++		goto error_attached_to_socket;
  
- /*
-- * A coredump-configuration-to-string lookup table, for exposing a
-- * human readable configuration via debugfs. Always keep in sync with
-- * enum rproc_coredump_mechanism
-- */
--static const char * const rproc_coredump_str[] = {
--	[RPROC_COREDUMP_DEFAULT]	= "default",
--	[RPROC_COREDUMP_INLINE]		= "inline",
--	[RPROC_COREDUMP_DISABLED]	= "disabled",
--};
+ 	trace_rxrpc_call(call->debug_id, rxrpc_call_connected,
+ 			 atomic_read(&call->usage), here, NULL);
+@@ -308,18 +308,29 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
+ error_dup_user_ID:
+ 	write_unlock(&rx->call_lock);
+ 	release_sock(&rx->sk);
+-	ret = -EEXIST;
 -
--/* Expose the current coredump configuration via debugfs */
--static ssize_t rproc_coredump_read(struct file *filp, char __user *userbuf,
--				   size_t count, loff_t *ppos)
--{
--	struct rproc *rproc = filp->private_data;
--	char buf[20];
--	int len;
--
--	len = scnprintf(buf, sizeof(buf), "%s\n",
--			rproc_coredump_str[rproc->dump_conf]);
--
--	return simple_read_from_buffer(userbuf, count, ppos, buf, len);
--}
--
--/*
-- * By writing to the 'coredump' debugfs entry, we control the behavior of the
-- * coredump mechanism dynamically. The default value of this entry is "default".
-- *
-- * The 'coredump' debugfs entry supports these commands:
-- *
-- * default:	This is the default coredump mechanism. When the remoteproc
-- *		crashes the entire coredump will be copied to a separate buffer
-- *		and exposed to userspace.
-- *
-- * inline:	The coredump will not be copied to a separate buffer and the
-- *		recovery process will have to wait until data is read by
-- *		userspace. But this avoid usage of extra memory.
-- *
-- * disabled:	This will disable coredump. Recovery will proceed without
-- *		collecting any dump.
-- */
--static ssize_t rproc_coredump_write(struct file *filp,
--				    const char __user *user_buf, size_t count,
--				    loff_t *ppos)
--{
--	struct rproc *rproc = filp->private_data;
--	int ret, err = 0;
--	char buf[20];
--
--	if (count > sizeof(buf))
--		return -EINVAL;
--
--	ret = copy_from_user(buf, user_buf, count);
--	if (ret)
--		return -EFAULT;
--
--	/* remove end of line */
--	if (buf[count - 1] == '\n')
--		buf[count - 1] = '\0';
--
--	if (rproc->state == RPROC_CRASHED) {
--		dev_err(&rproc->dev, "can't change coredump configuration\n");
--		err = -EBUSY;
--		goto out;
--	}
--
--	if (!strncmp(buf, "disable", count)) {
--		rproc->dump_conf = RPROC_COREDUMP_DISABLED;
--	} else if (!strncmp(buf, "inline", count)) {
--		rproc->dump_conf = RPROC_COREDUMP_INLINE;
--	} else if (!strncmp(buf, "default", count)) {
--		rproc->dump_conf = RPROC_COREDUMP_DEFAULT;
--	} else {
--		dev_err(&rproc->dev, "Invalid coredump configuration\n");
--		err = -EINVAL;
--	}
--out:
--	return err ? err : count;
--}
--
--static const struct file_operations rproc_coredump_fops = {
--	.read = rproc_coredump_read,
--	.write = rproc_coredump_write,
--	.open = simple_open,
--	.llseek = generic_file_llseek,
--};
--
--/*
-  * Some remote processors may support dumping trace logs into a shared
-  * memory buffer. We expose this trace buffer using debugfs, so users
-  * can easily tell what's going on remotely.
-@@ -425,8 +337,6 @@ void rproc_create_debug_dir(struct rproc *rproc)
- 			    rproc, &rproc_rsc_table_fops);
- 	debugfs_create_file("carveout_memories", 0400, rproc->dbg_dir,
- 			    rproc, &rproc_carveouts_fops);
--	debugfs_create_file("coredump", 0600, rproc->dbg_dir,
--			    rproc, &rproc_coredump_fops);
+-error:
+ 	__rxrpc_set_call_completion(call, RXRPC_CALL_LOCAL_ERROR,
+-				    RX_CALL_DEAD, ret);
++				    RX_CALL_DEAD, -EEXIST);
+ 	trace_rxrpc_call(call->debug_id, rxrpc_call_error,
+-			 atomic_read(&call->usage), here, ERR_PTR(ret));
++			 atomic_read(&call->usage), here, ERR_PTR(-EEXIST));
+ 	rxrpc_release_call(rx, call);
+ 	mutex_unlock(&call->user_mutex);
+ 	rxrpc_put_call(call, rxrpc_call_put);
+-	_leave(" = %d", ret);
+-	return ERR_PTR(ret);
++	_leave(" = -EEXIST");
++	return ERR_PTR(-EEXIST);
++
++	/* We got an error, but the call is attached to the socket and is in
++	 * need of release.  However, we might now race with recvmsg() when
++	 * completing the call queues it.  Return 0 from sys_sendmsg() and
++	 * leave the error to recvmsg() to deal with.
++	 */
++error_attached_to_socket:
++	trace_rxrpc_call(call->debug_id, rxrpc_call_error,
++			 atomic_read(&call->usage), here, ERR_PTR(ret));
++	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
++	__rxrpc_set_call_completion(call, RXRPC_CALL_LOCAL_ERROR,
++				    RX_CALL_DEAD, ret);
++	_leave(" = c=%08x [err]", call->debug_id);
++	return call;
  }
  
- void __init rproc_init_debugfs(void)
-diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
-index eea514c..40949a0 100644
---- a/drivers/remoteproc/remoteproc_sysfs.c
-+++ b/drivers/remoteproc/remoteproc_sysfs.c
-@@ -10,6 +10,69 @@
+ /*
+diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
+index 19e141eeed17..8cbe0bf20ed5 100644
+--- a/net/rxrpc/conn_object.c
++++ b/net/rxrpc/conn_object.c
+@@ -212,9 +212,11 @@ void rxrpc_disconnect_call(struct rxrpc_call *call)
  
- #define to_rproc(d) container_of(d, struct rproc, dev)
+ 	call->peer->cong_cwnd = call->cong_cwnd;
  
-+/*
-+ * A coredump-configuration-to-string lookup table, for exposing a
-+ * human readable configuration via sysfs. Always keep in sync with
-+ * enum rproc_coredump_mechanism
-+ */
-+static const char * const rproc_coredump_str[] = {
-+	[RPROC_COREDUMP_DEFAULT]	= "default",
-+	[RPROC_COREDUMP_INLINE]		= "inline",
-+	[RPROC_COREDUMP_DISABLED]	= "disabled",
-+};
-+
-+/* Expose the current coredump configuration via debugfs */
-+static ssize_t coredump_show(struct device *dev,
-+			     struct device_attribute *attr, char *buf)
-+{
-+	struct rproc *rproc = to_rproc(dev);
-+
-+	return sprintf(buf, "%s\n", rproc_coredump_str[rproc->dump_conf]);
-+}
-+
-+/*
-+ * By writing to the 'coredump' sysfs entry, we control the behavior of the
-+ * coredump mechanism dynamically. The default value of this entry is "default".
-+ *
-+ * The 'coredump' sysfs entry supports these commands:
-+ *
-+ * default:	This is the default coredump mechanism. When the remoteproc
-+ *		crashes the entire coredump will be copied to a separate buffer
-+ *		and exposed to userspace.
-+ *
-+ * inline:	The coredump will not be copied to a separate buffer and the
-+ *		recovery process will have to wait until data is read by
-+ *		userspace. But this avoid usage of extra memory.
-+ *
-+ * disabled:	This will disable coredump. Recovery will proceed without
-+ *		collecting any dump.
-+ */
-+static ssize_t coredump_store(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	struct rproc *rproc = to_rproc(dev);
-+
-+	if (rproc->state == RPROC_CRASHED) {
-+		dev_err(&rproc->dev, "can't change coredump configuration\n");
-+		return -EBUSY;
+-	spin_lock_bh(&conn->params.peer->lock);
+-	hlist_del_rcu(&call->error_link);
+-	spin_unlock_bh(&conn->params.peer->lock);
++	if (!hlist_unhashed(&call->error_link)) {
++		spin_lock_bh(&call->peer->lock);
++		hlist_del_rcu(&call->error_link);
++		spin_unlock_bh(&call->peer->lock);
 +	}
-+
-+	if (sysfs_streq(buf, "disable")) {
-+		rproc->dump_conf = RPROC_COREDUMP_DISABLED;
-+	} else if (sysfs_streq(buf, "inline")) {
-+		rproc->dump_conf = RPROC_COREDUMP_INLINE;
-+	} else if (sysfs_streq(buf, "default")) {
-+		rproc->dump_conf = RPROC_COREDUMP_DEFAULT;
-+	} else {
-+		dev_err(&rproc->dev, "Invalid coredump configuration\n");
-+		return -EINVAL;
-+	}
-+
-+	return count;
-+}
-+static DEVICE_ATTR_RW(coredump);
-+
- /* Expose the loaded / running firmware name via sysfs */
- static ssize_t firmware_show(struct device *dev, struct device_attribute *attr,
- 			  char *buf)
-@@ -138,6 +201,7 @@ static ssize_t name_show(struct device *dev, struct device_attribute *attr,
- static DEVICE_ATTR_RO(name);
  
- static struct attribute *rproc_attrs[] = {
-+	&dev_attr_coredump.attr,
- 	&dev_attr_firmware.attr,
- 	&dev_attr_state.attr,
- 	&dev_attr_name.attr,
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+ 	if (rxrpc_is_client_call(call))
+ 		return rxrpc_disconnect_client_call(call);
+diff --git a/net/rxrpc/recvmsg.c b/net/rxrpc/recvmsg.c
+index 490b1927215c..efecc5a8f67d 100644
+--- a/net/rxrpc/recvmsg.c
++++ b/net/rxrpc/recvmsg.c
+@@ -620,7 +620,7 @@ int rxrpc_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+ 			goto error_unlock_call;
+ 	}
+ 
+-	if (msg->msg_name) {
++	if (msg->msg_name && call->peer) {
+ 		struct sockaddr_rxrpc *srx = msg->msg_name;
+ 		size_t len = sizeof(call->peer->srx);
+ 
+diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
+index 03a30d014bb6..f3f6da6e4ad2 100644
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -681,6 +681,9 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *rx, struct msghdr *msg, size_t len)
+ 		if (IS_ERR(call))
+ 			return PTR_ERR(call);
+ 		/* ... and we have the call lock. */
++		ret = 0;
++		if (READ_ONCE(call->state) == RXRPC_CALL_COMPLETE)
++			goto out_put_unlock;
+ 	} else {
+ 		switch (READ_ONCE(call->state)) {
+ 		case RXRPC_CALL_UNINITIALISED:
+
 
