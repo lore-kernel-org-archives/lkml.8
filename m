@@ -2,123 +2,95 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9512C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41723C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 818B02070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:20:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+HG3I3f"
+	by mail.kernel.org (Postfix) with ESMTP id 21C9A2074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 12:26:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgG1MU5 (ORCPT
+        id S1729445AbgG1M02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:20:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728458AbgG1MU5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 08:20:57 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E70C061794;
-        Tue, 28 Jul 2020 05:20:54 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f7so18104990wrw.1;
-        Tue, 28 Jul 2020 05:20:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=tGckZViZqITBAI3FDO/Tnn1YZuHd5jwWQSY9Uj6T4mQ=;
-        b=C+HG3I3feTxibI/VstyFEzM9n687g46g7iSi7eN5cUcuMD+2sBqsTOllUtB7PKngaZ
-         nhFtFyDF6TloVcPFiLFQ8bvSSN1k8p9DrMEnt1oE1lyoKTYrmCVYmtf6HrrtVja5ln0t
-         zzCnh9bzOXP5vv2oj2Y3523FCniSTHhA5S/GxKOETKSmn4sUS3Y3KxO5pMR5Kp/QT9rj
-         +pWXgy35suxKetcSLZyuqLD0z0x5EVHbKYOmwnPzY79HK8blTyU+FQTgDLl1U3tBBzKw
-         RMVBaJu7DF+9tNjAbQZf5NvzOIp7XeT1tGdPYM7art+Re6t1WW1eyb2uVSXtrJ3jIifl
-         ZNvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tGckZViZqITBAI3FDO/Tnn1YZuHd5jwWQSY9Uj6T4mQ=;
-        b=qeKRhqruW3f0v9Z/OxEJHnEFs56ePMPcyBLm+3kkPrJohD38NL/5Hl0tDYhvzJ0xrA
-         edW41Vlb4CIZECJXmfyF5IpUFbqskrH3GMvuNJox2Ml7oMvGrKhpQXvQDApOPDFOr7lj
-         PpxviUayeA32k48Pd1rDJyVTTqHmBPKITOrNcHrAuJazyIKZF05wlR3UByP6GFsp06Xr
-         2v4gyPhb3ZcrNNhejJpFB5bFeDLvEvn1NwnOo484ITdbR+Ofmc7BJ3DdMfE+YR+CRIjj
-         hj+f4DGEUMDaf7psBGer/KFnnn3kRyq321eAvQRB7JmeXv5usB88J8eAEjYIg3CxjKSK
-         M4tA==
-X-Gm-Message-State: AOAM532SaX8HoAVCtOrz+slifuRnusjvTHfSlCYjBoj9TVwyMcTcTnFh
-        8j686SufT4V2gES9ZeRjcsM=
-X-Google-Smtp-Source: ABdhPJxoQOXWN1PiAi1gcZFqlLd3qbBzOJ2zch5QKJat1ZFDxbzmX3puX4rxb/iXc3VnmQn6IHcjkg==
-X-Received: by 2002:a5d:6452:: with SMTP id d18mr24371165wrw.284.1595938853447;
-        Tue, 28 Jul 2020 05:20:53 -0700 (PDT)
-Received: from ubuntu18_1.cisco.com ([173.38.220.51])
-        by smtp.gmail.com with ESMTPSA id 65sm19279463wre.6.2020.07.28.05.20.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 05:20:52 -0700 (PDT)
-From:   Ahmed Abdelsalam <ahabdels@gmail.com>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kuba@kernel.org
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        andrea.mayer@uniroma2.it, Ahmed Abdelsalam <ahabdels@gmail.com>
-Subject: [net-next] seg6: using DSCP of inner IPv4 packets
-Date:   Tue, 28 Jul 2020 12:20:44 +0000
-Message-Id: <20200728122044.1900-1-ahabdels@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 28 Jul 2020 08:26:28 -0400
+Received: from relay.sw.ru ([185.231.240.75]:51548 "EHLO relay3.sw.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728300AbgG1M02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:26:28 -0400
+X-Greylist: delayed 3052 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Jul 2020 08:26:26 EDT
+Received: from [192.168.15.38]
+        by relay3.sw.ru with esmtp (Exim 4.93)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1k0NsJ-0003Qb-E5; Tue, 28 Jul 2020 14:34:27 +0300
+Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
+To:     Anthony Yznaga <anthony.yznaga@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org
+Cc:     mhocko@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        viro@zeniv.linux.org.uk, akpm@linux-foundation.org, arnd@arndb.de,
+        ebiederm@xmission.com, keescook@chromium.org, gerg@linux-m68k.org,
+        christian.brauner@ubuntu.com, peterz@infradead.org,
+        esyr@redhat.com, jgg@ziepe.ca, christian@kellner.me,
+        areber@redhat.com, cyphar@cyphar.com, steven.sistare@oracle.com
+References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <46891e3b-ca08-197d-935f-fa0a52a60051@virtuozzo.com>
+Date:   Tue, 28 Jul 2020 14:34:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows copying the DSCP from inner IPv4 header to the
-outer IPv6 header, when doing SRv6 Encapsulation.
+On 27.07.2020 20:11, Anthony Yznaga wrote:
+> This patchset adds support for preserving an anonymous memory range across
+> exec(3) using a new madvise MADV_DOEXEC argument.  The primary benefit for
+> sharing memory in this manner, as opposed to re-attaching to a named shared
+> memory segment, is to ensure it is mapped at the same virtual address in
+> the new process as it was in the old one.  An intended use for this is to
+> preserve guest memory for guests using vfio while qemu exec's an updated
+> version of itself.  By ensuring the memory is preserved at a fixed address,
 
-This allows forwarding packet across the SRv6 fabric based on their
-original traffic class.
+So, the goal is an update of QEMU binary without a stopping of virtual machine?
 
-Signed-off-by: Ahmed Abdelsalam <ahabdels@gmail.com>
----
- net/ipv6/seg6_iptunnel.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/net/ipv6/seg6_iptunnel.c b/net/ipv6/seg6_iptunnel.c
-index e0e9f48ab14f..9753d10c4a51 100644
---- a/net/ipv6/seg6_iptunnel.c
-+++ b/net/ipv6/seg6_iptunnel.c
-@@ -110,6 +110,7 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
- 	struct dst_entry *dst = skb_dst(skb);
- 	struct net *net = dev_net(dst->dev);
- 	struct ipv6hdr *hdr, *inner_hdr;
-+	struct iphdr *inner_ipv4_hdr;
- 	struct ipv6_sr_hdr *isrh;
- 	int hdrlen, tot_len, err;
- 	__be32 flowlabel;
-@@ -121,7 +122,11 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
- 	if (unlikely(err))
- 		return err;
- 
--	inner_hdr = ipv6_hdr(skb);
-+	if (skb->protocol == htons(ETH_P_IPV6))
-+		inner_hdr = ipv6_hdr(skb);
-+	else
-+		inner_ipv4_hdr = ip_hdr(skb);
-+
- 	flowlabel = seg6_make_flowlabel(net, skb, inner_hdr);
- 
- 	skb_push(skb, tot_len);
-@@ -138,6 +143,10 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
- 		ip6_flow_hdr(hdr, ip6_tclass(ip6_flowinfo(inner_hdr)),
- 			     flowlabel);
- 		hdr->hop_limit = inner_hdr->hop_limit;
-+	} else if (skb->protocol == htons(ETH_P_IP)) {
-+		ip6_flow_hdr(hdr, inner_ipv4_hdr->tos, flowlabel);
-+		hdr->hop_limit = inner_ipv4_hdr->ttl;
-+		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
- 	} else {
- 		ip6_flow_hdr(hdr, 0, flowlabel);
- 		hdr->hop_limit = ip6_dst_hoplimit(skb_dst(skb));
--- 
-2.17.1
+> vfio mappings and their associated kernel data structures can remain valid.
+> In addition, for the qemu use case, qemu instances that back guest RAM with
+> anonymous memory can be updated.
+> 
+> Patches 1 and 2 ensure that loading of ELF load segments does not silently
+> clobber existing VMAS, and remove assumptions that the stack is the only
+> VMA in the mm when the stack is set up.  Patch 1 re-introduces the use of
+> MAP_FIXED_NOREPLACE to load ELF binaries that addresses the previous issues
+> and could be considered on its own.
+> 
+> Patches 3, 4, and 5 introduce the feature and an opt-in method for its use
+> using an ELF note.
+> 
+> Anthony Yznaga (5):
+>   elf: reintroduce using MAP_FIXED_NOREPLACE for elf executable mappings
+>   mm: do not assume only the stack vma exists in setup_arg_pages()
+>   mm: introduce VM_EXEC_KEEP
+>   exec, elf: require opt-in for accepting preserved mem
+>   mm: introduce MADV_DOEXEC
+> 
+>  arch/x86/Kconfig                       |   1 +
+>  fs/binfmt_elf.c                        | 196 +++++++++++++++++++++++++--------
+>  fs/exec.c                              |  33 +++++-
+>  include/linux/binfmts.h                |   7 +-
+>  include/linux/mm.h                     |   5 +
+>  include/uapi/asm-generic/mman-common.h |   3 +
+>  kernel/fork.c                          |   2 +-
+>  mm/madvise.c                           |  25 +++++
+>  mm/mmap.c                              |  47 ++++++++
+>  9 files changed, 266 insertions(+), 53 deletions(-)
+> 
 
