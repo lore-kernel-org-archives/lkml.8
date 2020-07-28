@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98BDC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 898BBC433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2A022B45
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CC2D2075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgG1CTK (ORCPT
+        id S1727116AbgG1CTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:19:10 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8284 "EHLO huawei.com"
+        Mon, 27 Jul 2020 22:19:18 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8282 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726362AbgG1CTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 22:19:09 -0400
+        id S1726357AbgG1CTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 22:19:15 -0400
 Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 827C03F2D34CF3D04A81;
+        by Forcepoint Email with ESMTP id 7887DCF508FBD69A4FE7;
         Tue, 28 Jul 2020 10:19:07 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 28 Jul 2020 10:18:59 +0800
+ 14.3.487.0; Tue, 28 Jul 2020 10:19:00 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
+        Jian Shen <shenjian15@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net 1/5] net: hns3: fix desc filling bug when skb is expanded or lineared
-Date:   Tue, 28 Jul 2020 10:16:48 +0800
-Message-ID: <1595902612-12880-2-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net 3/5] net: hns3: add reset check for VF updating port based VLAN
+Date:   Tue, 28 Jul 2020 10:16:50 +0800
+Message-ID: <1595902612-12880-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595902612-12880-1-git-send-email-tanhuazhong@huawei.com>
 References: <1595902612-12880-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,57 +48,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-The linear and frag data part may be changed when the skb is expanded
-or lineared in skb_cow_head() or skb_checksum_help(), which is called
-by hns3_fill_skb_desc(), so the linear len return by skb_headlen()
-before the calling of hns3_fill_skb_desc() is unreliable.
+Currently hclgevf_update_port_base_vlan_info() may be called when
+VF is resetting,  which may cause hns3_nic_net_open() being called
+twice unexpectedly.
 
-Move hns3_fill_skb_desc() before the calling of skb_headlen() to fix
-this bug.
+So fix it by adding a reset check for it, and extend critical
+region for rntl_lock in hclgevf_update_port_base_vlan_info().
 
-Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Fixes: 92f11ea177cd ("net: hns3: fix set port based VLAN issue for VF")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 30 +++++++++++++++-------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 33c481d..3328500 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1093,16 +1093,8 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
- 	int k, sizeoflast;
- 	dma_addr_t dma;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index a10b022..b8b72ac 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -3439,23 +3439,35 @@ void hclgevf_update_port_base_vlan_info(struct hclgevf_dev *hdev, u16 state,
+ {
+ 	struct hnae3_handle *nic = &hdev->nic;
+ 	struct hclge_vf_to_pf_msg send_msg;
++	int ret;
  
--	if (type == DESC_TYPE_SKB) {
--		struct sk_buff *skb = (struct sk_buff *)priv;
--		int ret;
--
--		ret = hns3_fill_skb_desc(ring, skb, desc);
--		if (unlikely(ret < 0))
--			return ret;
--
--		dma = dma_map_single(dev, skb->data, size, DMA_TO_DEVICE);
--	} else if (type == DESC_TYPE_FRAGLIST_SKB) {
-+	if (type == DESC_TYPE_FRAGLIST_SKB ||
-+	    type == DESC_TYPE_SKB) {
- 		struct sk_buff *skb = (struct sk_buff *)priv;
- 
- 		dma = dma_map_single(dev, skb->data, size, DMA_TO_DEVICE);
-@@ -1439,6 +1431,10 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
- 
- 	next_to_use_head = ring->next_to_use;
- 
-+	ret = hns3_fill_skb_desc(ring, skb, &ring->desc[ring->next_to_use]);
-+	if (unlikely(ret < 0))
-+		goto fill_err;
+ 	rtnl_lock();
+-	hclgevf_notify_client(hdev, HNAE3_DOWN_CLIENT);
+-	rtnl_unlock();
 +
- 	ret = hns3_fill_skb_to_desc(ring, skb, DESC_TYPE_SKB);
- 	if (unlikely(ret < 0))
- 		goto fill_err;
++	if (test_bit(HCLGEVF_STATE_RST_HANDLING, &hdev->state)) {
++		dev_warn(&hdev->pdev->dev,
++			 "is resetting when updating port based vlan info\n");
++		rtnl_unlock();
++		return;
++	}
++
++	ret = hclgevf_notify_client(hdev, HNAE3_DOWN_CLIENT);
++	if (ret) {
++		rtnl_unlock();
++		return;
++	}
+ 
+ 	/* send msg to PF and wait update port based vlan info */
+ 	hclgevf_build_send_msg(&send_msg, HCLGE_MBX_SET_VLAN,
+ 			       HCLGE_MBX_PORT_BASE_VLAN_CFG);
+ 	memcpy(send_msg.data, port_base_vlan_info, data_size);
+-	hclgevf_send_mbx_msg(hdev, &send_msg, false, NULL, 0);
+-
+-	if (state == HNAE3_PORT_BASE_VLAN_DISABLE)
+-		nic->port_base_vlan_state = HNAE3_PORT_BASE_VLAN_DISABLE;
+-	else
+-		nic->port_base_vlan_state = HNAE3_PORT_BASE_VLAN_ENABLE;
++	ret = hclgevf_send_mbx_msg(hdev, &send_msg, false, NULL, 0);
++	if (!ret) {
++		if (state == HNAE3_PORT_BASE_VLAN_DISABLE)
++			nic->port_base_vlan_state = state;
++		else
++			nic->port_base_vlan_state = HNAE3_PORT_BASE_VLAN_ENABLE;
++	}
+ 
+-	rtnl_lock();
+ 	hclgevf_notify_client(hdev, HNAE3_UP_CLIENT);
+ 	rtnl_unlock();
+ }
 -- 
 2.7.4
 
