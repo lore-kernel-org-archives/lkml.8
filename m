@@ -2,82 +2,146 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F06C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD788C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8193B20829
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:16:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MU8T8AEV"
+	by mail.kernel.org (Postfix) with ESMTP id 92A5120714
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 10:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbgG1KQd (ORCPT
+        id S1728723AbgG1KQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 06:16:33 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:19703 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728623AbgG1KQX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 06:16:24 -0400
+Received: from mailout08.rmx.de ([94.199.90.85]:42811 "EHLO mailout08.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728463AbgG1KQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jul 2020 06:16:23 -0400
-X-UUID: 5365a2184f45496fa0f507ed69ced540-20200728
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=+b+gg37ADEMMgnGEo469POvk0qcXvqRgsDtfenL9vqg=;
-        b=MU8T8AEVLGWGGFNQVgsgDIMZ22GW7lBJ9Gw0E3bObXqBUVKoHyQbH1lroaqhRcTm4MdzOQJOEDcXVoiLD+sXuAfmDB5DziYqWT1je2txDMCrB8hMXykXlZOelT1tIdwEp8pfaH+vpTJuy0j5lLyvtUhpBgml3dX+LU5OD8ZgRJA=;
-X-UUID: 5365a2184f45496fa0f507ed69ced540-20200728
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <freddy.hsin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 568498662; Tue, 28 Jul 2020 18:16:21 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 28 Jul 2020 18:16:18 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 28 Jul 2020 18:16:19 +0800
-From:   Freddy Hsin <freddy.hsin@mediatek.com>
-To:     <linux-mediatek@lists.infradead.or>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     Saravana Kannan <saravanak@google.com>,
-        <linux-kernel@vger.kernel.org>, <chang-an.chen@mediatek.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        <wsd_upstream@mediatek.com>, <kuohong.wang@mediatek.com>,
-        <stanley.chu@mediatek.com>, Freddy Hsin <freddy.hsin@mediatek.com>
-Subject: [PATCH v1 1/2] kernel: time: export sched_clock_register function
-Date:   Tue, 28 Jul 2020 18:16:16 +0800
-Message-ID: <1595931377-21627-2-git-send-email-freddy.hsin@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1595931377-21627-1-git-send-email-freddy.hsin@mediatek.com>
-References: <1595931377-21627-1-git-send-email-freddy.hsin@mediatek.com>
+Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout08.rmx.de (Postfix) with ESMTPS id 4BGCJ33CGdzMp4W;
+        Tue, 28 Jul 2020 12:16:19 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BGCHf5Pxyz2TRjk;
+        Tue, 28 Jul 2020 12:15:58 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.116) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 28 Jul
+ 2020 12:08:44 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Mark Brown <broonie@kernel.org>
+CC:     <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Christian Eggers" <ceggers@arri.de>, <stable@vger.kernel.org>
+Subject: [PATCH] spi: spidev: Align buffers for DMA
+Date:   Tue, 28 Jul 2020 12:08:32 +0200
+Message-ID: <20200728100832.24788-1-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.116]
+X-RMX-ID: 20200728-121558-4BGCHf5Pxyz2TRjk-0@kdin02
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ZXhwb3J0IHNjaGVkX2Nsb2NrX3JlZ2lzdGVyIGZ1bmN0aW9uLCBiZWNhdXNlIHRoZSBNZWRpYXRl
-ayB0aW1lcg0KbG9hZGFibGUgbW9kdWxlIGRlcGVuZHMgb24gdGhpcyBmdW5jdGlvbg0KDQpTaWdu
-ZWQtb2ZmLWJ5OiBGcmVkZHkgSHNpbiA8ZnJlZGR5LmhzaW5AbWVkaWF0ZWsuY29tPg0KLS0tDQog
-a2VybmVsL3RpbWUvc2NoZWRfY2xvY2suYyB8ICAgIDEgKw0KIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
-c2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEva2VybmVsL3RpbWUvc2NoZWRfY2xvY2suYyBiL2tl
-cm5lbC90aW1lL3NjaGVkX2Nsb2NrLmMNCmluZGV4IGZhM2Y4MDAuLmUxZDVhZmUgMTAwNjQ0DQot
-LS0gYS9rZXJuZWwvdGltZS9zY2hlZF9jbG9jay5jDQorKysgYi9rZXJuZWwvdGltZS9zY2hlZF9j
-bG9jay5jDQpAQCAtMjM5LDYgKzIzOSw3IEBAIHN0YXRpYyBlbnVtIGhydGltZXJfcmVzdGFydCBz
-Y2hlZF9jbG9ja19wb2xsKHN0cnVjdCBocnRpbWVyICpocnQpDQogDQogCXByX2RlYnVnKCJSZWdp
-c3RlcmVkICVwUyBhcyBzY2hlZF9jbG9jayBzb3VyY2VcbiIsIHJlYWQpOw0KIH0NCitFWFBPUlRf
-U1lNQk9MKHNjaGVkX2Nsb2NrX3JlZ2lzdGVyKTsNCiANCiB2b2lkIF9faW5pdCBnZW5lcmljX3Nj
-aGVkX2Nsb2NrX2luaXQodm9pZCkNCiB7DQotLSANCjEuNy45LjUNCg==
+Simply copying all xfers from userspace into one bounce buffer causes
+alignment problems if the SPI controller uses DMA.
+
+Ensure that all transfer data blocks within the rx and tx bounce buffers
+are aligned for DMA (according to ARCH_KMALLOC_MINALIGN).
+
+Alignment may increase the usage of the bounce buffers. In some cases,
+the buffers may need to be increased using the "bufsiz" module
+parameter.
+
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+Cc: stable@vger.kernel.org
+---
+ drivers/spi/spidev.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index 59e07675ef86..455e99c4958e 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -224,6 +224,11 @@ static int spidev_message(struct spidev_data *spidev,
+ 	for (n = n_xfers, k_tmp = k_xfers, u_tmp = u_xfers;
+ 			n;
+ 			n--, k_tmp++, u_tmp++) {
++		/* Ensure that also following allocations from rx_buf/tx_buf will meet
++		 * DMA alignment requirements.
++		 */
++		unsigned int len_aligned = ALIGN(u_tmp->len, ARCH_KMALLOC_MINALIGN);
++
+ 		k_tmp->len = u_tmp->len;
+ 
+ 		total += k_tmp->len;
+@@ -239,17 +244,17 @@ static int spidev_message(struct spidev_data *spidev,
+ 
+ 		if (u_tmp->rx_buf) {
+ 			/* this transfer needs space in RX bounce buffer */
+-			rx_total += k_tmp->len;
++			rx_total += len_aligned;
+ 			if (rx_total > bufsiz) {
+ 				status = -EMSGSIZE;
+ 				goto done;
+ 			}
+ 			k_tmp->rx_buf = rx_buf;
+-			rx_buf += k_tmp->len;
++			rx_buf += len_aligned;
+ 		}
+ 		if (u_tmp->tx_buf) {
+ 			/* this transfer needs space in TX bounce buffer */
+-			tx_total += k_tmp->len;
++			tx_total += len_aligned;
+ 			if (tx_total > bufsiz) {
+ 				status = -EMSGSIZE;
+ 				goto done;
+@@ -259,7 +264,7 @@ static int spidev_message(struct spidev_data *spidev,
+ 						(uintptr_t) u_tmp->tx_buf,
+ 					u_tmp->len))
+ 				goto done;
+-			tx_buf += k_tmp->len;
++			tx_buf += len_aligned;
+ 		}
+ 
+ 		k_tmp->cs_change = !!u_tmp->cs_change;
+@@ -293,16 +298,16 @@ static int spidev_message(struct spidev_data *spidev,
+ 		goto done;
+ 
+ 	/* copy any rx data out of bounce buffer */
+-	rx_buf = spidev->rx_buffer;
+-	for (n = n_xfers, u_tmp = u_xfers; n; n--, u_tmp++) {
++	for (n = n_xfers, k_tmp = k_xfers, u_tmp = u_xfers;
++			n;
++			n--, k_tmp++, u_tmp++) {
+ 		if (u_tmp->rx_buf) {
+ 			if (copy_to_user((u8 __user *)
+-					(uintptr_t) u_tmp->rx_buf, rx_buf,
++					(uintptr_t) u_tmp->rx_buf, k_tmp->rx_buf,
+ 					u_tmp->len)) {
+ 				status = -EFAULT;
+ 				goto done;
+ 			}
+-			rx_buf += u_tmp->len;
+ 		}
+ 	}
+ 	status = total;
+-- 
+Christian Eggers
+Embedded software developer
+
+Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
+Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
+Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
 
