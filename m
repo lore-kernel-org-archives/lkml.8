@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 898BBC433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8514C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC2D2075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D055A207CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 02:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgG1CTS (ORCPT
+        id S1727072AbgG1CTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:19:18 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8282 "EHLO huawei.com"
+        Mon, 27 Jul 2020 22:19:14 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8286 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726357AbgG1CTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 22:19:15 -0400
+        id S1726247AbgG1CTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 22:19:12 -0400
 Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7887DCF508FBD69A4FE7;
+        by Forcepoint Email with ESMTP id 8C8081CFD7E6C69A53A6;
         Tue, 28 Jul 2020 10:19:07 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
@@ -31,11 +31,11 @@ To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Jian Shen <shenjian15@huawei.com>,
+        Guojia Liao <liaoguojia@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net 3/5] net: hns3: add reset check for VF updating port based VLAN
-Date:   Tue, 28 Jul 2020 10:16:50 +0800
-Message-ID: <1595902612-12880-4-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net 4/5] net: hns3: fix aRFS FD rules leftover after add a user FD rule
+Date:   Tue, 28 Jul 2020 10:16:51 +0800
+Message-ID: <1595902612-12880-5-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595902612-12880-1-git-send-email-tanhuazhong@huawei.com>
 References: <1595902612-12880-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,71 +48,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Guojia Liao <liaoguojia@huawei.com>
 
-Currently hclgevf_update_port_base_vlan_info() may be called when
-VF is resetting,  which may cause hns3_nic_net_open() being called
-twice unexpectedly.
+When user had created a FD rule, all the aRFS rules should be clear up.
+HNS3 process flow as below:
+1.get spin lock of fd_ruls_list
+2.clear up all aRFS rules
+3.release lock
+4.get spin lock of fd_ruls_list
+5.creat a rules
+6.release lock;
 
-So fix it by adding a reset check for it, and extend critical
-region for rntl_lock in hclgevf_update_port_base_vlan_info().
+There is a short period of time between step 3 and step 4, which would
+creatting some new aRFS FD rules if driver was receiving packet.
+So refactor the fd_rule_lock to fix it.
 
-Fixes: 92f11ea177cd ("net: hns3: fix set port based VLAN issue for VF")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Fixes: 441228875706 ("net: hns3: refine the flow director handle")
+Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 30 +++++++++++++++-------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 28 ++++++++++++----------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index a10b022..b8b72ac 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -3439,23 +3439,35 @@ void hclgevf_update_port_base_vlan_info(struct hclgevf_dev *hdev, u16 state,
- {
- 	struct hnae3_handle *nic = &hdev->nic;
- 	struct hclge_vf_to_pf_msg send_msg;
-+	int ret;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index bb4a632..cee84e7 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -5806,9 +5806,9 @@ static int hclge_add_fd_entry(struct hnae3_handle *handle,
+ 	/* to avoid rule conflict, when user configure rule by ethtool,
+ 	 * we need to clear all arfs rules
+ 	 */
++	spin_lock_bh(&hdev->fd_rule_lock);
+ 	hclge_clear_arfs_rules(handle);
  
- 	rtnl_lock();
--	hclgevf_notify_client(hdev, HNAE3_DOWN_CLIENT);
--	rtnl_unlock();
-+
-+	if (test_bit(HCLGEVF_STATE_RST_HANDLING, &hdev->state)) {
-+		dev_warn(&hdev->pdev->dev,
-+			 "is resetting when updating port based vlan info\n");
-+		rtnl_unlock();
-+		return;
-+	}
-+
-+	ret = hclgevf_notify_client(hdev, HNAE3_DOWN_CLIENT);
-+	if (ret) {
-+		rtnl_unlock();
-+		return;
-+	}
+-	spin_lock_bh(&hdev->fd_rule_lock);
+ 	ret = hclge_fd_config_rule(hdev, rule);
  
- 	/* send msg to PF and wait update port based vlan info */
- 	hclgevf_build_send_msg(&send_msg, HCLGE_MBX_SET_VLAN,
- 			       HCLGE_MBX_PORT_BASE_VLAN_CFG);
- 	memcpy(send_msg.data, port_base_vlan_info, data_size);
--	hclgevf_send_mbx_msg(hdev, &send_msg, false, NULL, 0);
--
--	if (state == HNAE3_PORT_BASE_VLAN_DISABLE)
--		nic->port_base_vlan_state = HNAE3_PORT_BASE_VLAN_DISABLE;
--	else
--		nic->port_base_vlan_state = HNAE3_PORT_BASE_VLAN_ENABLE;
-+	ret = hclgevf_send_mbx_msg(hdev, &send_msg, false, NULL, 0);
-+	if (!ret) {
-+		if (state == HNAE3_PORT_BASE_VLAN_DISABLE)
-+			nic->port_base_vlan_state = state;
-+		else
-+			nic->port_base_vlan_state = HNAE3_PORT_BASE_VLAN_ENABLE;
-+	}
- 
--	rtnl_lock();
- 	hclgevf_notify_client(hdev, HNAE3_UP_CLIENT);
- 	rtnl_unlock();
+ 	spin_unlock_bh(&hdev->fd_rule_lock);
+@@ -5851,6 +5851,7 @@ static int hclge_del_fd_entry(struct hnae3_handle *handle,
+ 	return ret;
  }
+ 
++/* make sure being called after lock up with fd_rule_lock */
+ static void hclge_del_all_fd_entries(struct hnae3_handle *handle,
+ 				     bool clear_list)
+ {
+@@ -5863,7 +5864,6 @@ static void hclge_del_all_fd_entries(struct hnae3_handle *handle,
+ 	if (!hnae3_dev_fd_supported(hdev))
+ 		return;
+ 
+-	spin_lock_bh(&hdev->fd_rule_lock);
+ 	for_each_set_bit(location, hdev->fd_bmap,
+ 			 hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1])
+ 		hclge_fd_tcam_config(hdev, HCLGE_FD_STAGE_1, true, location,
+@@ -5880,8 +5880,6 @@ static void hclge_del_all_fd_entries(struct hnae3_handle *handle,
+ 		bitmap_zero(hdev->fd_bmap,
+ 			    hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1]);
+ 	}
+-
+-	spin_unlock_bh(&hdev->fd_rule_lock);
+ }
+ 
+ static int hclge_restore_fd_entries(struct hnae3_handle *handle)
+@@ -6263,7 +6261,7 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
+ 				      u16 flow_id, struct flow_keys *fkeys)
+ {
+ 	struct hclge_vport *vport = hclge_get_vport(handle);
+-	struct hclge_fd_rule_tuples new_tuples;
++	struct hclge_fd_rule_tuples new_tuples = {};
+ 	struct hclge_dev *hdev = vport->back;
+ 	struct hclge_fd_rule *rule;
+ 	u16 tmp_queue_id;
+@@ -6273,19 +6271,17 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
+ 	if (!hnae3_dev_fd_supported(hdev))
+ 		return -EOPNOTSUPP;
+ 
+-	memset(&new_tuples, 0, sizeof(new_tuples));
+-	hclge_fd_get_flow_tuples(fkeys, &new_tuples);
+-
+-	spin_lock_bh(&hdev->fd_rule_lock);
+-
+ 	/* when there is already fd rule existed add by user,
+ 	 * arfs should not work
+ 	 */
++	spin_lock_bh(&hdev->fd_rule_lock);
+ 	if (hdev->fd_active_type == HCLGE_FD_EP_ACTIVE) {
+ 		spin_unlock_bh(&hdev->fd_rule_lock);
+ 		return -EOPNOTSUPP;
+ 	}
+ 
++	hclge_fd_get_flow_tuples(fkeys, &new_tuples);
++
+ 	/* check is there flow director filter existed for this flow,
+ 	 * if not, create a new filter for it;
+ 	 * if filter exist with different queue id, modify the filter;
+@@ -6368,6 +6364,7 @@ static void hclge_rfs_filter_expire(struct hclge_dev *hdev)
+ #endif
+ }
+ 
++/* make sure being called after lock up with fd_rule_lock */
+ static void hclge_clear_arfs_rules(struct hnae3_handle *handle)
+ {
+ #ifdef CONFIG_RFS_ACCEL
+@@ -6420,10 +6417,14 @@ static void hclge_enable_fd(struct hnae3_handle *handle, bool enable)
+ 
+ 	hdev->fd_en = enable;
+ 	clear = hdev->fd_active_type == HCLGE_FD_ARFS_ACTIVE;
+-	if (!enable)
++
++	if (!enable) {
++		spin_lock_bh(&hdev->fd_rule_lock);
+ 		hclge_del_all_fd_entries(handle, clear);
+-	else
++		spin_unlock_bh(&hdev->fd_rule_lock);
++	} else {
+ 		hclge_restore_fd_entries(handle);
++	}
+ }
+ 
+ static void hclge_cfg_mac_mode(struct hclge_dev *hdev, bool enable)
+@@ -6886,8 +6887,9 @@ static void hclge_ae_stop(struct hnae3_handle *handle)
+ 	int i;
+ 
+ 	set_bit(HCLGE_STATE_DOWN, &hdev->state);
+-
++	spin_lock_bh(&hdev->fd_rule_lock);
+ 	hclge_clear_arfs_rules(handle);
++	spin_unlock_bh(&hdev->fd_rule_lock);
+ 
+ 	/* If it is not PF reset, the firmware will disable the MAC,
+ 	 * so it only need to stop phy here.
 -- 
 2.7.4
 
