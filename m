@@ -2,189 +2,123 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53415C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31576208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:18:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595895493;
-	bh=wWr2t+myCz/OZLXxwsQOJSX9Lblh8zNQcneKG8XmBR8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V/WMgIcZ4J+k6np1LGh6WEbJReGQMmiFTjOuOILNlOjNLUASYB/juUlpuMzdOcBfD
-	 1PPgWwlqblNFtJKb0EQa+ctXLsa9XCqtV1bd2MSSmjhexIXzh3gd0SqiqZmOlicGpj
-	 eKCkrC9F/HrJTFifHwRs00BeeNyGM85MroazUhNQ=
+	by mail.kernel.org (Postfix) with ESMTP id D6CDF20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 00:18:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DZjUvggI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgG1ASL (ORCPT
+        id S1726942AbgG1ASz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 20:18:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726278AbgG1ASK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 20:18:10 -0400
-Received: from earth.universe (unknown [185.213.155.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 27 Jul 2020 20:18:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgG1ASz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 20:18:55 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 547FBC061794;
+        Mon, 27 Jul 2020 17:18:55 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4189020786;
-        Tue, 28 Jul 2020 00:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595895489;
-        bh=wWr2t+myCz/OZLXxwsQOJSX9Lblh8zNQcneKG8XmBR8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rtGWh2cbv6sHXFH7lMi8Ke5ENZAG2MDClKJhz029nioffMK3RxaZj6CpDcNJOkUMe
-         wBF0FR54wPfAnBYx34anG0/CNSO7x4VNbf74TG44Kr8AiNsprdNc6IL4WJAHa3dazh
-         We6B8GwdI7WEuCRJLTpCJyueb61QSAKXknhBPw0A=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 7CBFD3C0B87; Tue, 28 Jul 2020 02:18:07 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 02:18:07 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v1] power: supply: max17040: Add
- POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN
-Message-ID: <20200728001807.zjyfgz2sphcysgx5@earth.universe>
-References: <20200706001003.663763-1-matheus@castello.eng.br>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFy2f07z3z9sSt;
+        Tue, 28 Jul 2020 10:18:49 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595895532;
+        bh=8Elas+GZy4aG143LOZC08U5Il/Mlcion7Q0KOmbQfEg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DZjUvggIf+h98zuWFbPFq5NgD1p9bbyJrP9fztkIhumWsbaKV6D9po5/pozSSqZRS
+         iaqw7OygVe7yKBUAlLuvJTi4ICP1OkvhqqNGpS4lzO56ASbsTMJBh36fgLaksFpP09
+         GzCNZxy5iPNfLy/elGCEDCOnBMJLhqJl+KfP2ZmvA4nB3FqLR5t87K5uTqwsqRVXL0
+         O4OV56G/+Q2UnOFBcZFdsJ/D7AjZwXK7goWMwzlo3WMsA/Qgv0iaSBeIeThoLs4j1e
+         0Rgkf4Uq9iccZEEUykHVI1L8HpsmKAG0iaWY2dNHw15P+OpQvwAngTCwfeQODMDQtC
+         CxewCn09BUpAQ==
+Date:   Tue, 28 Jul 2020 10:18:46 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Rich Felker <dalias@libc.org>, Guo Ren <ren_guo@c-sky.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
+Subject: linux-next: manual merge of the sh tree with the csky tree
+Message-ID: <20200728101846.73cf063c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vnx7d7i7pnisscty"
-Content-Disposition: inline
-In-Reply-To: <20200706001003.663763-1-matheus@castello.eng.br>
+Content-Type: multipart/signed; boundary="Sig_/R4JPgLYyfUn4NvlA+F+kfWi";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---vnx7d7i7pnisscty
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/R4JPgLYyfUn4NvlA+F+kfWi
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi all,
 
-On Sun, Jul 05, 2020 at 09:10:03PM -0300, Matheus Castello wrote:
-> Adds the property POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN to export the
-> chip->low_soc_alert and add the property as writeable, implementing
-> max17040_prop_writeable and max17040_set_property, so with that the
-> user space can readjust the alerts.
->=20
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
+Today's linux-next merge of the sh tree got a conflict in:
 
-Thanks, queued.
+  tools/testing/selftests/seccomp/seccomp_bpf.c
 
--- Sebastian
+between commit:
 
->  drivers/power/supply/max17040_battery.c | 51 ++++++++++++++++++++++---
->  1 file changed, 46 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supp=
-ly/max17040_battery.c
-> index 48aa44665e2f..6cb31b9a958d 100644
-> --- a/drivers/power/supply/max17040_battery.c
-> +++ b/drivers/power/supply/max17040_battery.c
-> @@ -69,6 +69,9 @@ static int max17040_get_property(struct power_supply *p=
-sy,
->  	case POWER_SUPPLY_PROP_CAPACITY:
->  		val->intval =3D chip->soc;
->  		break;
-> +	case POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN:
-> +		val->intval =3D chip->low_soc_alert;
-> +		break;
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -256,19 +259,57 @@ static int max17040_enable_alert_irq(struct max1704=
-0_chip *chip)
->  	return ret;
->  }
->=20
-> +static int max17040_prop_writeable(struct power_supply *psy,
-> +				   enum power_supply_property psp)
-> +{
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN:
-> +		return 1;
-> +	default:
-> +		return 0;
-> +	}
-> +}
-> +
-> +static int max17040_set_property(struct power_supply *psy,
-> +			    enum power_supply_property psp,
-> +			    const union power_supply_propval *val)
-> +{
-> +	struct max17040_chip *chip =3D power_supply_get_drvdata(psy);
-> +	int ret;
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN:
-> +		/* alert threshold can be programmed from 1% up to 32% */
-> +		if ((val->intval < 1) || (val->intval > 32)) {
-> +			ret =3D -EINVAL;
-> +			break;
-> +		}
-> +		ret =3D max17040_set_low_soc_alert(chip->client, val->intval);
-> +		chip->low_soc_alert =3D val->intval;
-> +		break;
-> +	default:
-> +		ret =3D -EINVAL;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static enum power_supply_property max17040_battery_props[] =3D {
->  	POWER_SUPPLY_PROP_STATUS,
->  	POWER_SUPPLY_PROP_ONLINE,
->  	POWER_SUPPLY_PROP_VOLTAGE_NOW,
->  	POWER_SUPPLY_PROP_CAPACITY,
-> +	POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN,
->  };
->=20
->  static const struct power_supply_desc max17040_battery_desc =3D {
-> -	.name		=3D "battery",
-> -	.type		=3D POWER_SUPPLY_TYPE_BATTERY,
-> -	.get_property	=3D max17040_get_property,
-> -	.properties	=3D max17040_battery_props,
-> -	.num_properties	=3D ARRAY_SIZE(max17040_battery_props),
-> +	.name			=3D "battery",
-> +	.type			=3D POWER_SUPPLY_TYPE_BATTERY,
-> +	.get_property		=3D max17040_get_property,
-> +	.set_property		=3D max17040_set_property,
-> +	.property_is_writeable  =3D max17040_prop_writeable,
-> +	.properties		=3D max17040_battery_props,
-> +	.num_properties		=3D ARRAY_SIZE(max17040_battery_props),
->  };
->=20
->  static int max17040_probe(struct i2c_client *client,
-> --
-> 2.27.0
->=20
+  f4dd2edafba0 ("csky: add support for SECCOMP and SECCOMP_FILTER")
 
---vnx7d7i7pnisscty
-Content-Type: application/pgp-signature; name="signature.asc"
+from the csky tree and commit:
+
+  469023465e79 ("sh: Add SECCOMP_FILTER")
+
+from the sh tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc tools/testing/selftests/seccomp/seccomp_bpf.c
+index 8d18a0ddafdd,6eb21685c88f..000000000000
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@@ -1703,8 -1699,7 +1709,8 @@@ void change_syscall(struct __test_metad
+  	EXPECT_EQ(0, ret) {}
+ =20
+  #if defined(__x86_64__) || defined(__i386__) || defined(__powerpc__) || \
+ -	defined(__s390__) || defined(__hppa__) || defined(__riscv) || defined(__=
+sh__)
+ +	defined(__s390__) || defined(__hppa__) || defined(__riscv) || \
+- 	defined(__csky__)
+++	defined(__csky__) || defined(__sh__)
+  	{
+  		regs.SYSCALL_NUM =3D syscall;
+  	}
+
+--Sig_/R4JPgLYyfUn4NvlA+F+kfWi
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8fbr8ACgkQ2O7X88g7
-+prB2w//XmjG/PbpXEnkEr9h9fHUQ3Str1QbxDFn+3JPh9W9G4RT+4caMAVS240t
-NdIOpfZP7ZvpyPksHP5FHavBxTTgtz+jhly38PZajKSMH20kdIqSeRH2wOscn+dI
-9LlXMX3Q417sC6+CvFprwrjZ4yWjMn8XBsnzvQtjzESuYhfHJrM8N0HpiaHrnWIl
-lmQYfSWTQ0Z94ikPP5COG074Ahhc+Mw8az/kE+QnGT/ToXVlv4VG3mLYJggaNeSN
-/BdywhelGennvrgwPWU6nzZ21HU+OBhYnKDxq6opXgbNhaCHA8dqSERIbl/AP4+R
-+4g3ODrD4swvNY+/VzvcJjQ+Q8yRX/EbSeAqwK1sta1gAj4g+lLFXdtNaBopBJo3
-DaRttGLxERvrIbJs2smIjrorTeO5ndn8W8a8iA39uAPqrJxr4zRqYGwdlCBh/hco
-3O3Q8kDGvSQcqawrVtB3FZtJLyd916ltitoNVUaXuQxGBbKvoLIfaguTYU86rvZ6
-hmTXfEiScuFbyB7WZ99ssGEtMOY4gD6v2gEEBskwZUC6ppVI7kz7SH/XN4RdQ9+E
-CABVPBTX4jHNUeG/0gDc1yuwOZY/fWqF7HS7QK6vh5o4jPB9MVWD3flb6ppW+PVS
-aT6c6JrSNEjWNQsV2ETm044Xcjl9OvpEk6goP3AfqoDKTjRLJKs=
-=fqVI
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8fbuYACgkQAVBC80lX
+0GyAHQf/dg9qwOF7ATm1BDj7lL98hYGbzbCkgID7JNK/dHx8iFn7rJMuajdOyX7d
+JbwbdtA9DseCWnVq9JYm2QKxXctopnqDLPTP+ZrhnbN9je3fnH3F5p2Di9sY6ifE
+u6x8MyskofVAWmGOM6lXCmrvytlmRnvJIqo56lOOMevefTfae1UifwqiVqc7XsAf
+Id+LhtGtvbgs2mWjS0XZ7jvlS5vCMInvOfgvFh17Bn7GgiZbXmqMZfb+RwVUKn3f
+63SuCdi1eQmvkLqiOn4tfR+SJK5Lkaae/t5C1Nfwa0vDQQlDsIikLvIdNSK/dGEc
+BKz9VOhKDnvsdjo+HILwcsVpHVg2kw==
+=hTCd
 -----END PGP SIGNATURE-----
 
---vnx7d7i7pnisscty--
+--Sig_/R4JPgLYyfUn4NvlA+F+kfWi--
