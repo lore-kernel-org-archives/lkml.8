@@ -2,93 +2,110 @@ Return-Path: <SRS0=jZ1s=BH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0267BC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C796C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC51720656
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 603762065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:27:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="myYva4PK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="feIz9NzY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732795AbgG1TYl (ORCPT
+        id S1729527AbgG1T1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:24:41 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:37916 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728334AbgG1TYl (ORCPT
+        Tue, 28 Jul 2020 15:27:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728589AbgG1T1T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:24:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kVGNoG+MJI4rM6HTew7uFrFowsLOmfKHPl5e6Ri5JTE=; b=myYva4PKGKUvQk6qKd+dUMnhSE
-        PmvXmKB2MXRTY0tN/vTtWsj8wpKCufXXCwCSg6aNU6aczeav8e479QtFx4ZgdYUHomcRY1YmquHe9
-        2m2AG2EmdaZNZGI/LnEE/SucBtATmGadyTEnexTpl9JyZ+vqPTlmSZtr3C/dSJZ/X8JwKepEcCyRF
-        YSJpBGzALtYDxH8agA28KBX44vzL+3QnJ2e4BGgtp69jb6WtptK/WPkPz2xQQHPZ5phe5h4t88h8e
-        Xnw3s/mKympr3iNkqf/iu0DmXwWIPUsT33kA1JLXFH8yJMCBVHyx2dCppPwfYumDlvrfijLFnT2ox
-        8Xs2DTdQ==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1k0VDK-00017E-K5; Tue, 28 Jul 2020 13:24:39 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1k0VDI-0004x7-UV; Tue, 28 Jul 2020 13:24:36 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Kelvin.Cao@microchip.com, Logan Gunthorpe <logang@deltatee.com>
-Date:   Tue, 28 Jul 2020 13:24:34 -0600
-Message-Id: <20200728192434.18993-2-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200728192434.18993-1-logang@deltatee.com>
-References: <20200728192434.18993-1-logang@deltatee.com>
+        Tue, 28 Jul 2020 15:27:19 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D1DBC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:27:19 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id l2so5193045pff.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:27:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ADR3sxjOiI8EIqhLZSouL3EW3hA1BdmVXcyDJSxtf1g=;
+        b=feIz9NzYxqlqeBvyyAc1jflhjVzz8J4U13VpEpSwtoe0a5xoAHqa5zj9JZPoaGp9OI
+         Gtguyun+XZ7PxMgQn9grw1fuZwRkkSo0A9fVzds0NXyOPE6iFJqPUmLdunNhxWJFIFNX
+         VsHJ+53FL3iwFfhSpElXpHgVF+wVhBTxQxVB8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ADR3sxjOiI8EIqhLZSouL3EW3hA1BdmVXcyDJSxtf1g=;
+        b=HfrLAXq0AMZIV62KDUY5Bi3y2+LfzYT+9HLQnTGTLeekUNbv9GeNwOwpsnSTomoYE7
+         FT1YH5ju02eTbIIbRG+wGGNRY/2guDTf4XS/7nU2+c3b5SJZZpQJJD58coqbl4+k8gp2
+         UERad92vHr/RoI5vCvjLPP6OiBqc2Mk7DYDpLgldoCOslUqJAUavnSzTFQXMMDpAZc7m
+         cbhR+WoYmo5lSnK/b0hYi29dZBfnDf//C7rMUPLs0JjVYOpNRAM/qdshWsJ7+aZXiGJl
+         d2Z/Xbi4heUCgf+9XlMHIwKTJ84NsUhSIFCVn6gAShPQOBzwbCnJgxNAzeWusmkZ1qvp
+         OrSQ==
+X-Gm-Message-State: AOAM533TIQdWdHB4g9tG+wmS8AJG4zJHYh1K4qcv3WqfZzhdzL7T1yrh
+        eAzWrxNFj+RaN723FL+MqJKZdA==
+X-Google-Smtp-Source: ABdhPJwoP+V2zTNbY5IIvsECqP+Psg0tENJtJc3/AQU1OrFGWLJNdvykxNYrHgKY3PRLF79keD3pLA==
+X-Received: by 2002:aa7:8557:: with SMTP id y23mr25596453pfn.148.1595964438941;
+        Tue, 28 Jul 2020 12:27:18 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y8sm3912560pjj.17.2020.07.28.12.27.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 12:27:18 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 12:27:17 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/8] x86/kaslr: Simplify process_gb_huge_pages
+Message-ID: <202007281225.C24B966D7@keescook>
+References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
+ <20200727230801.3468620-7-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, Kelvin.Cao@microchip.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 2/2] PCI/switechtec: Add missing __iomem tag to fix sparse warnings
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727230801.3468620-7-nivedita@alum.mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a missing __iomem tag in the init_pfn() function. This fixes a
-sparse warning of the form:
+On Mon, Jul 27, 2020 at 07:07:59PM -0400, Arvind Sankar wrote:
+> Short-circuit the whole function on 32-bit.
+> 
+> Replace the loop to determine the number of 1Gb pages with arithmetic.
+> 
+> Fix one minor bug: if the end of the region is aligned on a 1Gb
+> boundary, the current code will not use the last available 1Gb page due
+> to an off-by-one error.
+> 
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-   sparse: sparse: incorrect type assignment(different address spaces)
+Can you add some KUnit tests could be written to do validation of the
+refactorings? Touching this code is so painful. :)
 
-Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/pci/switch/switchtec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+-Kees
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 3d5da7f44378..ba52459928f7 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -1484,7 +1484,7 @@ static void init_pff(struct switchtec_dev *stdev)
- {
- 	int i;
- 	u32 reg;
--	struct part_cfg_regs *pcfg = stdev->mmio_part_cfg;
-+	struct part_cfg_regs __iomem *pcfg = stdev->mmio_part_cfg;
- 
- 	for (i = 0; i < SWITCHTEC_MAX_PFF_CSR; i++) {
- 		reg = ioread16(&stdev->mmio_pff_csr[i].vendor_id);
+> +++ b/arch/x86/boot/compressed/kaslr.c
+> @@ -546,49 +546,43 @@ static void store_slot_info(struct mem_vector *region, unsigned long image_size)
+>  static void
+>  process_gb_huge_pages(struct mem_vector *region, unsigned long image_size)
+>  {
+> -	unsigned long addr, size = 0;
+> +	unsigned long pud_start, pud_end, gb_huge_pages;
+>  	struct mem_vector tmp;
+> -	int i = 0;
+>  
+> -	if (!max_gb_huge_pages) {
+> +	if (IS_ENABLED(CONFIG_X86_32) || !max_gb_huge_pages) {
+>  		store_slot_info(region, image_size);
+>  		return;
+>  	}
+
+Won't max_gb_huge_pages always be false for 32-bit?
+
 -- 
-2.20.1
-
+Kees Cook
