@@ -7,133 +7,86 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD73DC433F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A3CC433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0B6D2065C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9740D2065C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 19:41:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k5XgwmE9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QA45me19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732927AbgG1Tlr (ORCPT
+        id S1732938AbgG1Tlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:41:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55820 "EHLO
+        Tue, 28 Jul 2020 15:41:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732919AbgG1Tlp (ORCPT
+        with ESMTP id S1732919AbgG1Tlw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 15:41:45 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 798F2C0619D6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:41:45 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k1so459655pjt.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:41:45 -0700 (PDT)
+        Tue, 28 Jul 2020 15:41:52 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E7D1C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:41:52 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id m22so12649765pgv.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 12:41:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=W/yJD4WINhIYjHDSpnZ6fTxiwzLWXNf1PH2+o88F2eI=;
-        b=k5XgwmE9tcOSmpNhY4WIUOwltfP1nOlJSUDS0n99vkcl8B8YnMUbPDxe7YGTs1mMQr
-         76iSMntY5i+fw5H/RDUwlQ0I8nd8NuTI/QS+tkBn1s8zi+fMQktc83D3xj8tuEDdbWc1
-         SPGIc7GDjQULMKCEbKzwKWRabOT0dDEOWSj6w=
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=xAePtirog7IdAkYtDEnGYm+mRDcMeWjIOobv7EO/fls=;
+        b=QA45me19PRN1AgIAcLPLUA2SmlfniO5PQjw90UuxM7WPdwz/L21Dd5QxYOdb2o9lRm
+         FWgB10mj9BiYopMriQGrhFy537beytEtIJV6UReeJZqiMGlrZCZW5xgBeMIJ9wPNDYq+
+         fYlfopXPkdJus7HYEgBDJeELtKrObkFjgL8UI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=W/yJD4WINhIYjHDSpnZ6fTxiwzLWXNf1PH2+o88F2eI=;
-        b=EtUaZiWgx4fiJJhxFgxJqUshKxBnwUp6ooxPXUaJl0bA3hI9KKeYCU8G3jyfbIvzpu
-         mnIaCn22CO97835xTXFasikm4vydizlyv4bfAFPGPw4ISz6koyoDXFw+Tj560FmoM2uh
-         N4G8TZRjcuKqzRG+3i/f9YYF7rK+FR+zX7TJbDUMr3yCiWg0ytewvvdJLzSbnUZX0Vqv
-         cMTOGP/+HMz92GDTSNfUfdv6etz3aUz2lLfGx8URlxmXSfj+aDtRhl6PcqBRftg3QAta
-         Q7LEXp6bj0lJeZxbgI2Rf7I8GM6KObFqL4Yf5l1AAphOWcuW7fqPC/Tq2JOnLG6EtrZi
-         S/2g==
-X-Gm-Message-State: AOAM533z7OgRLosMtkWpj0jmrxkVVZKkeJYaF2yNuI0SoPq3bEwMvDE2
-        6KySI5eBicBEg6UppXxHjS2P5g==
-X-Google-Smtp-Source: ABdhPJwA0Ct0Nh8rwlpqpca69OHRybL5jNVCYyJwjUessWHEG/MKS2+KIDWm6SaEJTBcGdmRE084Kg==
-X-Received: by 2002:a17:902:7244:: with SMTP id c4mr2350434pll.277.1595965304901;
-        Tue, 28 Jul 2020 12:41:44 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j36sm19509082pgj.39.2020.07.28.12.41.43
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=xAePtirog7IdAkYtDEnGYm+mRDcMeWjIOobv7EO/fls=;
+        b=Y7k8PVAF1hxNX+o0y7KDHBgSRApwOWWg43CjpCLQoI6OQaHj+6YA8SJbTPfmU0TVz5
+         2ekV5gEHgEWgvqufw7Nh78ml8H6voAR/2hbLITL/7W3qnAJedOfIU/YIy5+4pV3tmAV5
+         VDk7r5Zl+69zXm497uJlBZfMTNO2F8ugscrE4S+UDIr8cPmZwI9h1dkT3hF0nRWyMt/V
+         J/xnppHO5mfUSsjADYrHJ1THtVUjlSz9h0W7G+hlIjArizm3mtPHXHG8tDENS4onpCXs
+         64/kqbSVV+VJourdPcCu6WSZ19Hjxdr1aBmxOQ1hU74DdGwEOILR6JXwojwS7DWU87cD
+         4kTQ==
+X-Gm-Message-State: AOAM532ee7I+ERmZ6nEW/tv1gF+f4sjabR+yQyWvmG2awaCHXi63mQdd
+        1jM2LpaeGAijQbXvG9sQBRXyiw==
+X-Google-Smtp-Source: ABdhPJzw51teMkWyg/WSmUU/bmh78ycTkcPSDZmlOnRd5qRngoSAQqxe6niWrK4452ghk+zFg59GqA==
+X-Received: by 2002:a65:6644:: with SMTP id z4mr26754018pgv.391.1595965311946;
+        Tue, 28 Jul 2020 12:41:51 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id q17sm22182504pfk.0.2020.07.28.12.41.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 12:41:43 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 12:41:42 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Mimi Zohar <zohar@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 11/19] LSM: Introduce kernel_post_load_data() hook
-Message-ID: <202007281240.4EDD6D2E7B@keescook>
-References: <20200724213640.389191-1-keescook@chromium.org>
- <20200724213640.389191-12-keescook@chromium.org>
- <1595846951.4841.61.camel@kernel.org>
+        Tue, 28 Jul 2020 12:41:51 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1595846951.4841.61.camel@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200728091057.12.Iacab204f4164af12fa47206b98505bfbf8770cf3@changeid>
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid> <20200728151258.1222876-1-campello@chromium.org> <20200728091057.12.Iacab204f4164af12fa47206b98505bfbf8770cf3@changeid>
+Subject: Re: [PATCH 12/15] iio: sx9310: Miscellaneous format fixes
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+To:     Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Tue, 28 Jul 2020 12:41:50 -0700
+Message-ID: <159596531010.1360974.12485399142709122883@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 06:49:11AM -0400, Mimi Zohar wrote:
-> On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
-> > There are a few places in the kernel where LSMs would like to have
-> > visibility into the contents of a kernel buffer that has been loaded or
-> > read. While security_kernel_post_read_file() (which includes the
-> > buffer) exists as a pairing for security_kernel_read_file(), no such
-> > hook exists to pair with security_kernel_load_data().
-> > 
-> > Earlier proposals for just using security_kernel_post_read_file() with a
-> > NULL file argument were rejected (i.e. "file" should always be valid for
-> > the security_..._file hooks, but it appears at least one case was
-> > left in the kernel during earlier refactoring. (This will be fixed in
-> > a subsequent patch.)
-> > 
-> > Since not all cases of security_kernel_load_data() can have a single
-> > contiguous buffer made available to the LSM hook (e.g. kexec image
-> > segments are separately loaded), there needs to be a way for the LSM to
-> > reason about its expectations of the hook coverage. In order to handle
-> > this, add a "contents" argument to the "kernel_load_data" hook that
-> > indicates if the newly added "kernel_post_load_data" hook will be called
-> > with the full contents once loaded. That way, LSMs requiring full contents
-> > can choose to unilaterally reject "kernel_load_data" with contents=false
-> > (which is effectively the existing hook coverage), but when contents=true
-> > they can allow it and later evaluate the "kernel_post_load_data" hook
-> > once the buffer is loaded.
-> > 
-> > With this change, LSMs can gain coverage over non-file-backed data loads
-> > (e.g. init_module(2) and firmware userspace helper), which will happen
-> > in subsequent patches.
-> > 
-> > Additionally prepare IMA to start processing these cases.
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> At least from an IMA perspective, the original
-> security_kernel_load_data() hook was defined in order to prevent
-> certain syscalls - init_module, kexec_load - and loading firmware via
-> sysfs.  The resulting error messages were generic.
->   
-> Unlike security_kernel_load_data(), security_kernel_post_load_data()
-> is meant to be used, but without a file desciptor specific
-> information, like the filename associated with the buffer, is missing.
->  Having the filename isn't actually necessary for verifying the
-> appended signature, but it is needed for auditing signature
-> verification failures and including in the IMA measurement list.
+Quoting Daniel Campello (2020-07-28 08:12:55)
+> Miscellaneous format fixes throughout the whole file.
+>=20
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> ---
 
-Right -- I'm open to ideas on this, but as it stands, other LSMs (e.g.
-BPF LSM) can benefit from the security_kernel_post_load_data() to
-examine the contents, etc.
-
-Is there anything that needs to change in this patch?
-
--- 
-Kees Cook
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
