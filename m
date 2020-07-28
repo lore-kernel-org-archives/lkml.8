@@ -8,66 +8,67 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEDDC433ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F37ACC433F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9D622B45
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D071420672
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 Jul 2020 03:35:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JzX91hOG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBLIEBzi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgG1DfJ (ORCPT
+        id S1727940AbgG1DfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 23:35:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47378 "EHLO
+        Mon, 27 Jul 2020 23:35:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbgG1De5 (ORCPT
+        with ESMTP id S1727889AbgG1DfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 23:34:57 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2043CC061794;
-        Mon, 27 Jul 2020 20:34:57 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l12so38326pgt.13;
-        Mon, 27 Jul 2020 20:34:57 -0700 (PDT)
+        Mon, 27 Jul 2020 23:35:16 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF048C061794;
+        Mon, 27 Jul 2020 20:35:15 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t1so25462plq.0;
+        Mon, 27 Jul 2020 20:35:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wuGEwlNHfczwsScET5//DK/IY7Qs+PjjbY2XOsrR6EY=;
-        b=JzX91hOG9NtIuBKa4imFLxOSKGBFW9r08mPmUWXNkmqjdFSwsFP74SFBgDJwSsT814
-         fV25eF/NSdE6URAbiyqGs7Js38ZHNsC0AhFdTUyhCmEij7QkeDy1ZEvmkS46DAH7olR9
-         2fS6FHJZhA/62c1/TaMzOqXffaQdQlJUJb3fU5xnIF+3ItCX8cVcEJ8QJYGBZhd0aKC8
-         4ey+8pgO0OBn3NdLUoWzdfUmKRltKFTcI/aLSG8rIEU/eJqRm9Fi9xaHI2j/vmxbi8AP
-         xcuNFyJwQmDeInRiVoghZzqQpGROifpDe0LkKA/a5SOINwJrVMAtmfcnj2KC5i05addr
-         ZFcg==
+        bh=+UmEzZhiPmisvbll7oEJdJkdQLeJHaSjFNwT4kfLFeI=;
+        b=NBLIEBziSUKeh73IjmJleu8E8SgNKOIcKBiJPr0MC2P56V7thIUc8GQY2cVLRReF1f
+         jofwolDuDOKPAnoFoNN36vVks1/7WpIslDewwf8eHfvFeuUxedsEFHXBLYMWYFx1AEdm
+         nYW34dxA2YhoTMMjAp6an0Q/7b6HNgGOqY0fPYycNxAE0qKpMsrefABHPNKNNOIUbjaQ
+         QgYcyxeuTJX1/5Wfc7DzrMAt5+hgUe5cmdYuRZlAnm7IjmLa8mgIQ3sxn/APLmY9+XWn
+         GAOF5euTRYk3JrHP+ej5JQ/0Rw2tmbXH1PvNs4J7JNiniIG5UPP8/3tOuwLk8dNURNSZ
+         U1lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wuGEwlNHfczwsScET5//DK/IY7Qs+PjjbY2XOsrR6EY=;
-        b=aLKdLGXLmH8D56MC0TdPjD/CkvsQnDrQzFZu21NXWOhSicryhhYgO8uR5tT6FQGKgP
-         ali1xdsRWOKjFEdqN0PQpTCXEuvLYF/lbz6ROTIZsg49SwLKFY6kWnyC4yJ148DrdvLL
-         sRwsSg7k7XB47wvRB88ulP8rjV7KUBJzhB2mUZQDW/MgyvmY1xvJ8JCUUJtd4R0VIbV8
-         cO4lmnZoZYOudphYJVSB7GPW33CRxeuFnVP+NSLjL4qNgNavrK3P1Q0AzbMl8ZSbEuo3
-         ouvJQhUZMUV1HMmC/kWRnyPky/sKLrMIPo2yX+LIhyTwb8Kww1Qe49Ukwi6OlcRGEwya
-         2dkA==
-X-Gm-Message-State: AOAM5302b1d9DXl7DSqmWeIge6Fq8VfaeelW1jKlgsHY6bF1M+XJ08Ow
-        u5ShSxHHC6+SEjDQozyu2j6o4Y4I
-X-Google-Smtp-Source: ABdhPJyB9tiMjx9VoS++5n8lKmCAqBX9f+Qc6ZVPl2F8mSMoNW/T59n6KR87om073TyALKnI3ikReg==
-X-Received: by 2002:a63:d912:: with SMTP id r18mr22859487pgg.358.1595907296483;
-        Mon, 27 Jul 2020 20:34:56 -0700 (PDT)
+        bh=+UmEzZhiPmisvbll7oEJdJkdQLeJHaSjFNwT4kfLFeI=;
+        b=cRyXW4Oh8L5LZhOYF1sA9xD8+BRES5MjIEQR06e8jxzxDC+fbiFYEweWnfdTx+yEdi
+         4Rj9RtwrRtmDv/CFnqBjm3aW7COtI4aYWivmd+Lvq3yfmydTus+t6LOhdpf9Mc9F1dHn
+         nH9SxWzsM2dEDRYoGDnIIopQsi14WY7eDiJvqA3QgCXkTrnglND+GGTfzYy/EhBPOmUK
+         8zDYJ5w8kGpCd+hkFnzBcy/ht/QNqBZ6KqRLWOhlCnO8Is9Crtyj7PlHy5rFcIG47GHP
+         k00Bg5D1Ko9RKrcOcm146GF9uQu+WS2CDOXuEyDNRsNjg9gyxikMDkkSJSBHIyM8gPgT
+         RQ4A==
+X-Gm-Message-State: AOAM531hSk4Th1I9LcxxsbRNT5jqpPRInELhmLnk1uvXQqblHBEc4eAj
+        RMrB+1aP0fUpHngRuBXLxxTUXpWF
+X-Google-Smtp-Source: ABdhPJyxmfIxm31ZlyLcRWm1fbvoFARyVjQ9SkiBxu4lx9zz6vwRMcmi+fNZuU0y04kQFc06xx4pxw==
+X-Received: by 2002:a17:90a:1589:: with SMTP id m9mr2444530pja.122.1595907315336;
+        Mon, 27 Jul 2020 20:35:15 -0700 (PDT)
 Received: from bobo.ozlabs.ibm.com (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id r4sm998707pji.37.2020.07.27.20.34.53
+        by smtp.gmail.com with ESMTPSA id r4sm998707pji.37.2020.07.27.20.35.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 20:34:56 -0700 (PDT)
+        Mon, 27 Jul 2020 20:35:14 -0700 (PDT)
 From:   Nicholas Piggin <npiggin@gmail.com>
 To:     linux-arch@vger.kernel.org
 Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
-        Michal Simek <monstr@monstr.eu>
-Subject: [PATCH 10/24] microblaze: use asm-generic/mmu_context.h for no-op implementations
-Date:   Tue, 28 Jul 2020 13:33:51 +1000
-Message-Id: <20200728033405.78469-11-npiggin@gmail.com>
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org
+Subject: [PATCH 15/24] parisc: use asm-generic/mmu_context.h for no-op implementations
+Date:   Tue, 28 Jul 2020 13:33:56 +1000
+Message-Id: <20200728033405.78469-16-npiggin@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20200728033405.78469-1-npiggin@gmail.com>
 References: <20200728033405.78469-1-npiggin@gmail.com>
@@ -78,66 +79,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Michal Simek <monstr@monstr.eu>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: linux-parisc@vger.kernel.org
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/microblaze/include/asm/mmu_context_mm.h | 8 ++++----
- arch/microblaze/include/asm/processor.h      | 3 ---
- 2 files changed, 4 insertions(+), 7 deletions(-)
+ arch/parisc/include/asm/mmu_context.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/microblaze/include/asm/mmu_context_mm.h b/arch/microblaze/include/asm/mmu_context_mm.h
-index a1c7dd48454c..c2c77f708455 100644
---- a/arch/microblaze/include/asm/mmu_context_mm.h
-+++ b/arch/microblaze/include/asm/mmu_context_mm.h
-@@ -33,10 +33,6 @@
-    to represent all kernel pages as shared among all contexts.
-  */
+diff --git a/arch/parisc/include/asm/mmu_context.h b/arch/parisc/include/asm/mmu_context.h
+index 07b89c74abeb..71f8a3679b83 100644
+--- a/arch/parisc/include/asm/mmu_context.h
++++ b/arch/parisc/include/asm/mmu_context.h
+@@ -8,16 +8,13 @@
+ #include <asm/pgalloc.h>
+ #include <asm-generic/mm_hooks.h>
  
 -static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
 -{
 -}
 -
- # define NO_CONTEXT	256
- # define LAST_CONTEXT	255
- # define FIRST_CONTEXT	1
-@@ -105,6 +101,7 @@ static inline void get_mmu_context(struct mm_struct *mm)
- /*
-  * We're finished using the context for an address space.
-  */
+ /* on PA-RISC, we actually have enough contexts to justify an allocator
+  * for them.  prumpf */
+ 
+ extern unsigned long alloc_sid(void);
+ extern void free_sid(unsigned long);
+ 
++#define init_new_context init_new_context
+ static inline int
+ init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+ {
+@@ -27,6 +24,7 @@ init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+ 	return 0;
+ }
+ 
 +#define destroy_context destroy_context
- static inline void destroy_context(struct mm_struct *mm)
+ static inline void
+ destroy_context(struct mm_struct *mm)
  {
- 	if (mm->context != NO_CONTEXT) {
-@@ -126,6 +123,7 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
-  * After we have set current->mm to a new value, this activates
-  * the context for the new mm so we see the new mappings.
-  */
+@@ -72,8 +70,7 @@ static inline void switch_mm(struct mm_struct *prev,
+ }
+ #define switch_mm_irqs_off switch_mm_irqs_off
+ 
+-#define deactivate_mm(tsk,mm)	do { } while (0)
+-
 +#define activate_mm activate_mm
- static inline void activate_mm(struct mm_struct *active_mm,
- 			struct mm_struct *mm)
+ static inline void activate_mm(struct mm_struct *prev, struct mm_struct *next)
  {
-@@ -136,5 +134,7 @@ static inline void activate_mm(struct mm_struct *active_mm,
+ 	/*
+@@ -91,4 +88,7 @@ static inline void activate_mm(struct mm_struct *prev, struct mm_struct *next)
  
- extern void mmu_context_init(void);
- 
+ 	switch_mm(prev,next,current);
+ }
++
 +#include <asm-generic/mmu_context.h>
 +
- # endif /* __KERNEL__ */
- #endif /* _ASM_MICROBLAZE_MMU_CONTEXT_H */
-diff --git a/arch/microblaze/include/asm/processor.h b/arch/microblaze/include/asm/processor.h
-index 1ff5a82b76b6..616211871a6e 100644
---- a/arch/microblaze/include/asm/processor.h
-+++ b/arch/microblaze/include/asm/processor.h
-@@ -122,9 +122,6 @@ unsigned long get_wchan(struct task_struct *p);
- #  define KSTK_EIP(task)	(task_pc(task))
- #  define KSTK_ESP(task)	(task_sp(task))
- 
--/* FIXME */
--#  define deactivate_mm(tsk, mm)	do { } while (0)
--
- #  define STACK_TOP	TASK_SIZE
- #  define STACK_TOP_MAX	STACK_TOP
- 
+ #endif
 -- 
 2.23.0
 
