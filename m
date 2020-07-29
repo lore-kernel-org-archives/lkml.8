@@ -2,168 +2,108 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F59C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C001206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A38F20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:35:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Rl600GB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgG2Iez (ORCPT
+        id S1727948AbgG2Ifj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:34:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40406 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbgG2Iey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:34:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 60645AEA1;
-        Wed, 29 Jul 2020 08:35:04 +0000 (UTC)
-Subject: Re: [PATCH v3] drm/hisilicon: Fixed the warning: Assignment of 0/1 to
- bool variable
-To:     Tian Tao <tiantao6@hisilicon.com>, airlied@linux.ie,
-        daniel@ffwll.ch, kraxel@redhat.com, alexander.deucher@amd.com,
-        tglx@linutronix.de, dri-devel@lists.freedesktop.org,
-        xinliang.liu@linaro.org, linux-kernel@vger.kernel.org
-Cc:     linuxarm@huawei.com
-References: <1595940907-17874-1-git-send-email-tiantao6@hisilicon.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Message-ID: <e8035faa-8f0f-4269-ef20-24408baa6f7a@suse.de>
-Date:   Wed, 29 Jul 2020 10:34:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 04:35:39 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:44615 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726336AbgG2Ifi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 04:35:38 -0400
+X-UUID: 4e4ab3a91fca403f94f31a95a30ab41b-20200729
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Ia1XARyByvYXLRx9mXxEAiykte60Wo0wfVOMz7hQaag=;
+        b=Rl600GB3WJS55HmIodQw2NddouKCMuQpzR3iK/EXrxGrXxktCQVCSUdqNxWi618HKp2lXzNforX5An9nlGrPahLi4nYoxVPnkja1gCH6bT2rLJRMYCQcu+idXxOst7WGBd4R+EnceL/k4k0zyhVkq9BEwhjH+AproaFgZnSGAjk=;
+X-UUID: 4e4ab3a91fca403f94f31a95a30ab41b-20200729
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <crystal.guo@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 444962580; Wed, 29 Jul 2020 16:35:33 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs07n1.mediatek.inc
+ (172.21.101.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 29 Jul
+ 2020 16:35:32 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 29 Jul 2020 16:35:30 +0800
+Message-ID: <1596011707.11360.9.camel@mhfsdcap03>
+Subject: Re: [v2,2/3] dt-bindings: watchdog: add a new head file for toprgu
+ reset-controllers
+From:   Crystal Guo <crystal.guo@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     "linux@roeck-us.net" <linux@roeck-us.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        Seiya Wang =?UTF-8?Q?=28=E7=8E=8B=E8=BF=BA=E5=90=9B=29?= 
+        <seiya.wang@mediatek.com>,
+        Erin Lo =?UTF-8?Q?=28=E7=BE=85=E9=9B=85=E9=BD=A1=29?= 
+        <erin.lo@mediatek.com>
+Date:   Wed, 29 Jul 2020 16:35:07 +0800
+In-Reply-To: <72d317ef-7f69-9e61-b1d5-23d660c58560@gmail.com>
+References: <1596004249-28655-1-git-send-email-crystal.guo@mediatek.com>
+         <1596004249-28655-3-git-send-email-crystal.guo@mediatek.com>
+         <fb7ef8a7-5bbc-8e4b-7a23-c84f151587ba@gmail.com>
+         <1596010313.11360.2.camel@mhfsdcap03>
+         <72d317ef-7f69-9e61-b1d5-23d660c58560@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <1595940907-17874-1-git-send-email-tiantao6@hisilicon.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="uO4l2ZdX9DuIrwFrhS5RI4YN8UM86dXAl"
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---uO4l2ZdX9DuIrwFrhS5RI4YN8UM86dXAl
-Content-Type: multipart/mixed; boundary="J1iwjIBgda0yhT6h7FIQFKZJLCl5pVTaO";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Tian Tao <tiantao6@hisilicon.com>, airlied@linux.ie, daniel@ffwll.ch,
- kraxel@redhat.com, alexander.deucher@amd.com, tglx@linutronix.de,
- dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
- linux-kernel@vger.kernel.org
-Cc: linuxarm@huawei.com
-Message-ID: <e8035faa-8f0f-4269-ef20-24408baa6f7a@suse.de>
-Subject: Re: [PATCH v3] drm/hisilicon: Fixed the warning: Assignment of 0/1 to
- bool variable
-References: <1595940907-17874-1-git-send-email-tiantao6@hisilicon.com>
-In-Reply-To: <1595940907-17874-1-git-send-email-tiantao6@hisilicon.com>
+T24gV2VkLCAyMDIwLTA3LTI5IGF0IDE2OjE1ICswODAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMjkvMDcvMjAyMCAxMDoxMSwgQ3J5c3RhbCBHdW8gd3JvdGU6DQo+ID4gT24g
+V2VkLCAyMDIwLTA3LTI5IGF0IDE1OjQyICswODAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3RlOg0K
+PiA+PiBIaSBDcnlzdGFsLA0KPiA+Pg0KPiA+PiBPbiAyOS8wNy8yMDIwIDA4OjMwLCBDcnlzdGFs
+IEd1byB3cm90ZToNCj4gPj4+IG1lcmdlIGFsbCB0aGUgcmVzZXQgbnVtYmVycyBpbiBvbmUgaGVh
+ZCBmaWxlLg0KPiA+Pj4NCj4gPj4+IFNpZ25lZC1vZmYtYnk6IENyeXN0YWwgR3VvIDxjcnlzdGFs
+Lmd1b0BtZWRpYXRlay5jb20+DQo+ID4+PiAtLS0NCj4gPj4+ICAgIGluY2x1ZGUvZHQtYmluZGlu
+Z3MvcmVzZXQtY29udHJvbGxlci9tdGstcmVzZXRzLmggfCAxMyArKysrKysrKysrKysrDQo+ID4+
+PiAgICAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKQ0KPiA+Pj4gICAgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdGstcmVzZXRz
+LmgNCj4gPj4+DQo+ID4+PiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1j
+b250cm9sbGVyL210ay1yZXNldHMuaCBiL2luY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJv
+bGxlci9tdGstcmVzZXRzLmgNCj4gPj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4+PiBpbmRl
+eCAwMDAwMDAwLi5kNzNhNGJhDQo+ID4+PiAtLS0gL2Rldi9udWxsDQo+ID4+PiArKysgYi9pbmNs
+dWRlL2R0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xsZXIvbXRrLXJlc2V0cy5oDQo+ID4+PiBAQCAt
+MCwwICsxLDEzIEBADQo+ID4+PiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAg
+Ki8NCj4gPj4+ICsvKg0KPiA+Pj4gKyAqIENvcHlyaWdodCAoQykgMjAyMCBNZWRpYXRlayBJbmMu
+DQo+ID4+PiArICoNCj4gPj4+ICsgKi8NCj4gPj4+ICsNCj4gPj4+ICsjaWZuZGVmIF9EVF9CSU5E
+SU5HU19SRVNFVF9DT05UUk9MTEVSX01USw0KPiA+Pj4gKyNkZWZpbmUgX0RUX0JJTkRJTkdTX1JF
+U0VUX0NPTlRST0xMRVJfTVRLDQo+ID4+PiArDQo+ID4+PiArI2RlZmluZSBNVDI3MTJfVE9QUkdV
+X1NXX1JTVF9OVU0JMTENCj4gPj4+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfU1dfUlNUX05VTSAg
+ICAgICAgMTkNCj4gPj4NCj4gPj4gTWF5YmUgSSBkaWRuJ3QgZXhwbGFpbiBteXNlbGYgcHJvcGVy
+bHkuIFdlIHdhbnQgdG8gaGF2ZSBhbGwgcmVzZXRzIGluIG9uZSBmaWxlDQo+ID4+IGFuZCBkbyBu
+b3Qgd2FudCB0byBoYXZlIHRoZSByZXNldHMgZm9yIHRoZSB3YXRjaGRvZyBpbiBhIGRpZmZlcmVu
+dCBmaWxlLiBUaGF0DQo+ID4+IG1lYW5zIEkgZG9uJ3QgdGhpbiB5b3VyIHBhdGNoIGlzIGNvcnJl
+Y3QgYW5kIHRoZSBlZmZvcnQgc2hvdWxkIGJlIGFiYW5kb25lZC4NCj4gPj4NCj4gPj4gUmVnYXJk
+cywNCj4gPj4gTWF0dGhpYXMNCj4gPiANCj4gPiBEbyB5b3UgbWVhbiB0byBrZWVwIHRoZSBjdXJy
+ZW50IHdheSB1bmNoYW5nZWQ/IEZvciBleGFtcGxlLCB3aXRoIGEgbmV3DQo+ID4gU09DIDgxOTIs
+IHNob3VsZCBhZGQgYSBuZXcgaGVhZCBmaWxlIG10ODE5Ml9yZXNldHMuaCBmb3IgdGhlIHJlc2V0
+cw0KPiA+IG51bWJlcnMuDQo+ID4gDQo+IA0KPiBFeGFjdGx5Lg0KPiANCj4gUmVnYXJkcywNCj4g
+TWF0dGhpYXMNCg0KT0ssIGJ1dCB0aGUgZHQtYmluZGluZyBtdGstd2R0LnR4dCBzdGlsbCBuZWVk
+IHRvIHVwZGF0ZSwgcGxlYXNlIGhlbHAgbWUNCnRvIHJldmlldywgbWFueSB0aGFua3N+DQoNCg==
 
---J1iwjIBgda0yhT6h7FIQFKZJLCl5pVTaO
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-
-
-Am 28.07.20 um 14:55 schrieb Tian Tao:
-> fixed the following warning:
-> hibmc_drm_drv.c:296:1-18:WARNING: Assignment of 0/1 to bool variable.
-> hibmc_drm_drv.c:301:2-19: WARNING: Assignment of 0/1 to bool variable.
->=20
-> v2:
-> using the pci_dev.msi_enabled instead of priv->msi_enabled.
->=20
-> v3:
-> just call pci_enable_msi() and pci_disable_msi(), it's no need to
-> set dev->pdev->msi_enabled again.
->=20
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-
-Thanks. Added to drm-misc-next
-
-Best regards
-Thomas
-
-> ---
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 5 +----
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h | 1 -
->  2 files changed, 1 insertion(+), 5 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/=
-gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> index 249c298..b8d839a 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> @@ -254,9 +254,8 @@ static int hibmc_unload(struct drm_device *dev)
-> =20
->  	if (dev->irq_enabled)
->  		drm_irq_uninstall(dev);
-> -	if (priv->msi_enabled)
-> -		pci_disable_msi(dev->pdev);
-> =20
-> +	pci_disable_msi(dev->pdev);
->  	hibmc_kms_fini(priv);
->  	hibmc_mm_fini(priv);
->  	dev->dev_private =3D NULL;
-> @@ -294,12 +293,10 @@ static int hibmc_load(struct drm_device *dev)
->  		goto err;
->  	}
-> =20
-> -	priv->msi_enabled =3D 0;
->  	ret =3D pci_enable_msi(dev->pdev);
->  	if (ret) {
->  		DRM_WARN("enabling MSI failed: %d\n", ret);
->  	} else {
-> -		priv->msi_enabled =3D 1;
->  		ret =3D drm_irq_install(dev, dev->pdev->irq);
->  		if (ret)
->  			DRM_WARN("install irq failed: %d\n", ret);
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/=
-gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-> index 6097687..a683763 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-> @@ -25,7 +25,6 @@ struct hibmc_drm_private {
->  	void __iomem   *fb_map;
->  	unsigned long  fb_base;
->  	unsigned long  fb_size;
-> -	bool msi_enabled;
-> =20
->  	/* drm */
->  	struct drm_device  *dev;
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---J1iwjIBgda0yhT6h7FIQFKZJLCl5pVTaO--
-
---uO4l2ZdX9DuIrwFrhS5RI4YN8UM86dXAl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQFIBAEBCAAyFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl8hNKsUHHR6aW1tZXJt
-YW5uQHN1c2UuZGUACgkQaA3BHVMLeiPvjQf/YVEYHrNufhJAIt4F//Q0Kbi5U4JY
-LmIiNMkjVj8ktC52Oa5u+eCBABL6FerwSskbJhDN79GXThz/Fihdr499ge8BGmap
-Gpfe6rgPH+gBhhgRVnrTSaA/IrglAcpylj/X8LM/mO7inSNQqvBf7VncRSKe9Oqs
-DRCPo+VuRRfSJV+bUdkKIadc6kH462j462rk2yDG7nlmMC0XhOuEuyLNulIq5f34
-n+msj7uAD95JYqE/TLq2cWt7E8vdgeh7FlUhHI00NTBvKMn/8LZoRjOnWR+jKWNC
-PARENle50uRKpTijm6wZ5n//J2N0LsqRBMtUlebFqw84gHLWrk+ed9qvHg==
-=q/81
------END PGP SIGNATURE-----
-
---uO4l2ZdX9DuIrwFrhS5RI4YN8UM86dXAl--
