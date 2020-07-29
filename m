@@ -2,113 +2,107 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9ABCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8063B2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 033A92074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/wwpZme"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ofspQFuY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgG2Kv6 (ORCPT
+        id S1726799AbgG2KwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 06:51:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54400 "EHLO
+        Wed, 29 Jul 2020 06:52:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbgG2Kv5 (ORCPT
+        with ESMTP id S1726449AbgG2KwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 06:51:57 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71662C061794;
-        Wed, 29 Jul 2020 03:51:57 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x5so2296446wmi.2;
-        Wed, 29 Jul 2020 03:51:57 -0700 (PDT)
+        Wed, 29 Jul 2020 06:52:03 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34DB5C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 03:52:02 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t6so11642576plo.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 03:52:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MfydqwIyqBHYbsx5YX+ht7t/yzaaahxnXqOFDuf3JO4=;
-        b=d/wwpZmeZ+/LMdotSSAcC7Ni3EYCBWqFxvTfazuOMQ9rwsGTnG8Lz1+adN1ve0+0L2
-         ZCklyYkB5bjphiJLJQW/kOUwBCwCizXZpZtr3DPK1q7u7M1njgB6JKAAXKjsD/vdyvdO
-         ft77u9FQvWvO2bEMvoixTKiVOfK9iPwlr1ItQdDSe1fYnteeY31GmRwRKNScou0WouvB
-         eOBjyin8iwGZfBhdKJEBTLL7yGRfVFh3jL/rsa36h/zPsseiuSphB89h48elDApKQW0g
-         vXXDk/sIBOHxVi/n9re+PswQxEk5AYMsuOlIp5glig8AzQGn5EqmZGivUePVDwGnsy8h
-         mujQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WhFbVEYdBuWmbguHqgMJoIU8l6rj1YTSmDQVlgl0JpA=;
+        b=ofspQFuYcpGb1IknybKo34xrGON+rJ2a+Ss5wVRkJ9OPvepbIMIuhzs/LXMIeXfMDt
+         EX0trwU7s/GXEQkJ7R2xklmVLfb60q+XUuPMpv5CPLT490sG0EVALjs6jYlesclF9NqV
+         67V5FApMLc2o81VDmiRU3ZrdBEJ5SgwY2wnzEPcv4HXSfeUYaMT6T5Pk5bvvwkAU/h8x
+         fS0YwxVi2i6yZHFf1N8UvV97i37XjR1b/GjguzSeKlwe/5MKhFDnaM2iOST17Kga5rTG
+         2UlH0Nst8KRLBOuaWOY7bDUfOPd0RcH3PZR8vvJ3D/R6r51Uv+MeRP5FYTgnEaoNMDPK
+         +dDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MfydqwIyqBHYbsx5YX+ht7t/yzaaahxnXqOFDuf3JO4=;
-        b=HtJLo/yt0reGT+VOvdsAmPmdBobYhAvZnS3evEXz3ZG1M9i+Qj8STbqulkOOpIUtsM
-         cJ96wLhiYlOpGGId+VgoJuvtjYkT6HGXcLvmA7yI38cqWBTe4UG9qEdqEhLMe3z/OP3r
-         Me8P+QsVwuPMS4xaFLR+2NthMYWmSHCW2hR14feerbgJrBqF0hHj57b1Pjg8R1JuUkZ9
-         /Y0EoOfzVQParbz08KrgXalXb/wkw2uRnHe8FKao9Q229FN1A9Np6jh/SAXAdjnGhb0O
-         pdvCVqSMGtKvqhuN1fS+X6FqG6EVpmh9cDWxjpYt9qGWC4QCo0f/d3WBz1cv2mlHdwwL
-         aUGg==
-X-Gm-Message-State: AOAM531FmMESGGFGFAn7kPm2CTEpaufZxL6XIr72FKiucJT/UYkcEgCz
-        0zFWd9pWVPgXwSFJgrVs+6s=
-X-Google-Smtp-Source: ABdhPJxFD5dqpPgkq3nn8KnWDfcUuF3QzF/XcP2WVwa+ah/rtsjppFnQ0SlZgVGBx/quaeHZekwOpw==
-X-Received: by 2002:a1c:5f41:: with SMTP id t62mr8572734wmb.134.1596019916177;
-        Wed, 29 Jul 2020 03:51:56 -0700 (PDT)
-Received: from stancioi.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id z15sm3955697wrn.89.2020.07.29.03.51.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 03:51:55 -0700 (PDT)
-From:   Ioana-Ruxandra Stancioi <ioanaruxandra.stancioi@gmail.com>
-To:     david.lebrun@uclouvain.be, davem@davemloft.net,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     elver@google.com, glider@google.com,
-        =?UTF-8?q?Ioana-Ruxandra=20St=C4=83ncioi?= <stancioi@google.com>
-Subject: [PATCH] uapi, seg6_iptunnel: Add missing include in seg6_iptunnel.h
-Date:   Wed, 29 Jul 2020 10:49:03 +0000
-Message-Id: <20200729104903.3586064-1-ioanaruxandra.stancioi@gmail.com>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WhFbVEYdBuWmbguHqgMJoIU8l6rj1YTSmDQVlgl0JpA=;
+        b=lsXjIXGKNxHvDzU4n/kjCmFkhdGyl8njwtRuQcdtujgvF7lVNZPg8BKfk3lOOdOiD+
+         SC73tAMSLVEqwBjfj8f68tohRisbXDOnod6OoJfKNpxhUW9sZYUvUKqqip6+XgUsAVV1
+         kuLsD/qyCnWImYtUpsvHOIWhkkLtVJX41krdbDobNSXSL9aAcv+adS02PNZZksGRTUAD
+         Im/p6FaTKImfpwWgQefkp/tE9yvIRfdXDsbh/lLNDGVVFgSh2Ugq/HWDSiSAgascGFZF
+         JKcInDi3V2kolc1iDlVwu03SoikoXJ9e4esQ1pa9TfNdg9tEycGiKT/I0WoO98FRXENX
+         Sy8A==
+X-Gm-Message-State: AOAM5313vl4mWKOussS3vG8WNOou+kpLscJskZIbWikuS532RA0IpHVJ
+        QxinyDWKxJ8v0H+ALQk9SLGkWA==
+X-Google-Smtp-Source: ABdhPJyjqfmLd1KCGeokddfjZNoodziazvSIKGkL0tJgiQ4UQSUbAz3y7DMKjTVQ1iAX4qMdhRiSEA==
+X-Received: by 2002:a17:90b:4b82:: with SMTP id lr2mr4625029pjb.126.1596019921756;
+        Wed, 29 Jul 2020 03:52:01 -0700 (PDT)
+Received: from localhost ([182.68.37.99])
+        by smtp.gmail.com with ESMTPSA id w70sm1942251pfc.98.2020.07.29.03.52.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Jul 2020 03:52:00 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 16:21:57 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Alex Elder <elder@ieee.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [greybus-dev] [PATCH][next] greybus: Use fallthrough
+ pseudo-keyword
+Message-ID: <20200729105157.6acksxuzjdno5omq@vireshk-mac-ubuntu>
+References: <20200727183258.GA28571@embeddedor>
+ <63871608-e076-26b0-85df-cff11699c3a3@ieee.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63871608-e076-26b0-85df-cff11699c3a3@ieee.org>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ioana-Ruxandra Stăncioi <stancioi@google.com>
+On 28-07-20, 17:37, Alex Elder wrote:
+> On 7/27/20 1:32 PM, Gustavo A. R. Silva wrote:
+> > Replace the existing /* fall through */ comments and its variants with
+> > the new pseudo-keyword macro fallthrough[1].
+> > 
+> > [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> 
+> Thanks for the patch.  It looks good, but it raises
+> another question I'd like discussion on.
+> 
+> It seems that Johan likes default (or final) cases in
+> switch statements without a "break" statement.  Viresh
+> and Bryan appear to be fond of this too.
+> 
+> It's pedantic, but I don't like that.  Am I wrong?
+>   --> Johan/Viresh/Bryan would you please comment?
 
-Include <linux/ipv6.h> in uapi/linux/seg6_iptunnel.h to fix the
-following linux/seg6_iptunnel.h compilation error:
+I am not fond of them as they aren't required for the working of the code. It is
+a bit like using an empty return statement for a routine with void return type,
+though it surely adds some consistency to the switch case.
 
-   invalid application of 'sizeof' to incomplete type 'struct ipv6hdr'
-       head = sizeof(struct ipv6hdr);
-                     ^~~~~~
+But if people really feel it must be there, then its fine :)
 
-This is to allow including this header in places where <linux/ipv6.h>
-has not been included but __KERNEL__ is defined. In the kernel the easy
-workaround is including <linux/ipv6.h>, but the header may also be used
-by code analysis tools.
-
-Signed-off-by: Ioana-Ruxandra Stăncioi <stancioi@google.com>
----
- include/uapi/linux/seg6_iptunnel.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/uapi/linux/seg6_iptunnel.h b/include/uapi/linux/seg6_iptunnel.h
-index 09fb608a35ec..b904228f463c 100644
---- a/include/uapi/linux/seg6_iptunnel.h
-+++ b/include/uapi/linux/seg6_iptunnel.h
-@@ -38,6 +38,7 @@ enum {
- };
- 
- #ifdef __KERNEL__
-+#include <linux/ipv6.h>
- 
- static inline size_t seg6_lwt_headroom(struct seg6_iptunnel_encap *tuninfo)
- {
 -- 
-2.28.0.rc0.142.g3c755180ce-goog
-
+viresh
