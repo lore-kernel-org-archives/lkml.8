@@ -2,116 +2,73 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F40C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61916207F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596039707;
-	bh=kU7UT3i0MXW7gqzbaCFlt/VbDV/ZBUwOIl76CXUqX2c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x2FUVIqRcczQAUhK1kWLAS1WWG0U4Ngd/08V7epOID3v7Q3SOx9VstfI01SWDWgP0
-	 POzgAs4Zaf+N8e3zujDqw9AqKuZjUUAJHWA7eBKRm/aZMe689t+5vgIUyfuEGKqWq8
-	 X2ShhKPl9RKjeR3Q3ejtZoTniC63jtiNU4d/UscM=
+	by mail.kernel.org (Postfix) with ESMTP id 84A0F2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:21:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgG2QVq (ORCPT
+        id S1726958AbgG2QVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 12:21:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726341AbgG2QVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 12:21:46 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FA8F2075D;
-        Wed, 29 Jul 2020 16:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596039705;
-        bh=kU7UT3i0MXW7gqzbaCFlt/VbDV/ZBUwOIl76CXUqX2c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Byo40t5PhbmfTgovNn4pTryjQyJPinICU2cOtioUZM9MofRtpmqMkeY+Cri6Gb+R9
-         uKjxjiG4JQdUMbNG1WjF+crg9tQ8vQvJ0hDGyKOcWMtTP/Vy6nk9OYz2qE8gy+vo6Q
-         z5/2p7KaXf1M0R8ovcuf5rS/UWswH3NSXXsA9NKI=
-Date:   Wed, 29 Jul 2020 09:21:44 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <chao@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix deadlock between quota writes and
- checkpoint
-Message-ID: <20200729162144.GA1460954@google.com>
-References: <20200729070244.584518-1-jaegeuk@kernel.org>
- <054f161c-05db-73b7-3d83-be7addcd6015@kernel.org>
+        Wed, 29 Jul 2020 12:21:55 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:10985 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726341AbgG2QVy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 12:21:54 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 29 Jul 2020 09:21:54 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 29 Jul 2020 09:21:54 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 1D3DE1947; Wed, 29 Jul 2020 09:21:54 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 09:21:54 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Veera Vegivada <vvegivad@codeaurora.org>
+Subject: Re: [RESEND PATCH v1 2/2] thermal: qcom-spmi-temp-alarm: Don't
+ suppress negative temp
+Message-ID: <20200729162153.GB7773@codeaurora.org>
+References: <f22bb151d836f924b09cf80ffd6e58eb286be5d6.1595612650.git.gurus@codeaurora.org>
+ <6bb66f529eaab58b3a75eea3386233cbca27f818.1595612650.git.gurus@codeaurora.org>
+ <159598495264.1360974.13987140780290180679@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <054f161c-05db-73b7-3d83-be7addcd6015@kernel.org>
+In-Reply-To: <159598495264.1360974.13987140780290180679@swboyd.mtv.corp.google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/29, Chao Yu wrote:
-> On 2020-7-29 15:02, Jaegeuk Kim wrote:
-> > f2fs_write_data_pages(quota_mapping)
-> >  __f2fs_write_data_pages             f2fs_write_checkpoint
-> >   * blk_start_plug(&plug);
-> >   * add bio in write_io[DATA]
-> >                                       - block_operations
-> >                                       - skip syncing quota by
-> >                                                 >DEFAULT_RETRY_QUOTA_FLUSH_COUNT
-> >                                       - down_write(&sbi->node_write);
-> >   - f2fs_write_single_data_page
-> 
-> After commit 79963d967b49 ("f2fs: shrink node_write lock coverage"),
-> node_write lock was moved to f2fs_write_single_data_page() and
-> f2fs_write_compressed_pages().
-> 
-> So it needs to update the callstack.
-> 
-> - down_write(node_write)
-
-Yeah, applied. :)
-
-> 
-> Otherwise it looks good to me.
-> 
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
-> 
-> Thanks,
-> 
-> >     - f2fs_do_write_data_page
-> >       - f2fs_outplace_write_data
-> >         - do_write_page
-> >            - f2fs_allocate_data_block
-> >             - down_write(node_write)
-> >                                       - f2fs_wait_on_all_pages(F2FS_WB_CP_DATA);
+On Tue, Jul 28, 2020 at 06:09:12PM -0700, Stephen Boyd wrote:
+> Quoting Guru Das Srinagesh (2020-07-24 10:46:11)
+> > From: Veera Vegivada <vvegivad@codeaurora.org>
 > > 
-> > Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> > Currently driver is suppressing the negative temperature
+> > readings from the vadc. Consumers of the thermal zones need
+> > to read the negative temperature too. Don't suppress the
+> > readings.
+> > 
+> > Signed-off-by: Veera Vegivada <vvegivad@codeaurora.org>
+> > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 > > ---
-> >  fs/f2fs/checkpoint.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> > index 8c782d3f324f0..99c8061da55b9 100644
-> > --- a/fs/f2fs/checkpoint.c
-> > +++ b/fs/f2fs/checkpoint.c
-> > @@ -1269,6 +1269,8 @@ void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
-> >  		if (type == F2FS_DIRTY_META)
-> >  			f2fs_sync_meta_pages(sbi, META, LONG_MAX,
-> >  							FS_CP_META_IO);
-> > +		else if (type == F2FS_WB_CP_DATA)
-> > +			f2fs_submit_merged_write(sbi, DATA);
-> >  		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
-> >  	}
-> >  	finish_wait(&sbi->cp_wait, &wait);
-> > 
+> 
+> Probably needs a fixes tag. And why not make it first in the series?
+
+Will add one and move this to first in the series.
+
+> 
+> >  drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
