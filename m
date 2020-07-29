@@ -2,296 +2,222 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD53C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49159C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 950BC20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:52:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BbAS+8cK"
+	by mail.kernel.org (Postfix) with ESMTP id 2E3EF20809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:53:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgG2RwO (ORCPT
+        id S1727069AbgG2RxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:52:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgG2RwN (ORCPT
+        Wed, 29 Jul 2020 13:53:19 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:56218 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgG2RxS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 13:52:13 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7CA8C061794;
-        Wed, 29 Jul 2020 10:52:13 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id v6so10213540iow.11;
-        Wed, 29 Jul 2020 10:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VBlR6JvMKpFF4I6cEiozKbbb6b38RhwCuKSXFCxjOBY=;
-        b=BbAS+8cKgeQXImpsn8VUTIj5E9jS7pOeOZZuJs7yJcBS3WYt4zxTCXJncgw9qrRlKZ
-         JSEao8c1IRX7/KzDmjLH1TZkcv9XjoBA5hZNqnzhpmh7J1fbNQB9iaZY+vuk6kaVu2o1
-         D6w18a83AFD7Qea2KzU0Z4CfRQrwxMEAoxO0pU+iGD7Khq+imB/4kFtt+Cro8gVrfer6
-         PxXgXA/ElnRARXP39gBsugGIMwsIUcmfeTxCqavE0tWKC+RTdTO07VvLaWAj2brGnxTh
-         mbGLFtEii9t0scIc1deLu+4xGFiwO86SGDUVoq68nY9E9bPs+NOmcwbuhimgb8dROhlP
-         or8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VBlR6JvMKpFF4I6cEiozKbbb6b38RhwCuKSXFCxjOBY=;
-        b=NmLxsBf9E3s3S8rZI08/9VRNfFj6zyREjLt49uLg+KBTSImqL8gXWScO3vUZIqfdAE
-         AAVHSSfm6sINMkV10evEDIZ444ktIVtxfjZUdjePjJ2SVs8sxwCYyXoHWWKocnvd4KmB
-         OBj/Tv4pNK0AGGcTmQRNDRyMLqKv2UaSByWNQjU1KgTWFdJrfb5Eelpl7Jh2EuoKf02U
-         qVYI2QsnEMSsKwm/YEUAI+aazsnWapPVEJHs88m/h3FzimM3f1uCMPAG5E/mUmloEulD
-         2Dwg36YX+ZUWW65a3cwk7Dt5OL3WFkzyb08z/xkwGNo9UV2eYanGgHafyQZQZy/HL9NG
-         2j9w==
-X-Gm-Message-State: AOAM532W8XqFIETg4v5bRedsBMZh5UMDVHFzImA7jXD33aXBHyJRAaPT
-        u+kZW7FTKq44GLyB8CcU44xUCUwlfqREAhEb1cY=
-X-Google-Smtp-Source: ABdhPJy8ptUMPnNeTVvk544sb5TR8r+665OH7AZPqT7XUIQPGpVqzSqTZzmSG8WdDR+0ut5GmJTS9yod0augP8gi5tw=
-X-Received: by 2002:a02:c842:: with SMTP id r2mr39394965jao.87.1596045133015;
- Wed, 29 Jul 2020 10:52:13 -0700 (PDT)
+        Wed, 29 Jul 2020 13:53:18 -0400
+Received: from 89-64-89-103.dynamic.chello.pl (89.64.89.103) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id a89a326552f6a4de; Wed, 29 Jul 2020 19:52:45 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Francisco Jerez <currojerez@riseup.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Documentation <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Doug Smythies <dsmythies@telus.net>
+Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
+Date:   Wed, 29 Jul 2020 19:52:44 +0200
+Message-ID: <4159348.LxVl7G3d3V@kreacher>
+In-Reply-To: <87v9i6g9gf.fsf@riseup.net>
+References: <3955470.QvD6XneCf3@kreacher> <2440238.9qpzlEPeD7@kreacher> <87v9i6g9gf.fsf@riseup.net>
 MIME-Version: 1.0
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com> <1595681998-19193-19-git-send-email-alex.shi@linux.alibaba.com>
-In-Reply-To: <1595681998-19193-19-git-send-email-alex.shi@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Wed, 29 Jul 2020 10:52:01 -0700
-Message-ID: <CAKgT0UdFDcz=CQ+6mzcjh-apwy3UyPqAuOozvYr+2PSCNQrENA@mail.gmail.com>
-Subject: Re: [PATCH v17 18/21] mm/lru: introduce the relock_page_lruvec function
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 6:00 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->
-> Use this new function to replace repeated same code, no func change.
->
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: cgroups@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> ---
->  include/linux/memcontrol.h | 40 ++++++++++++++++++++++++++++++++++++++++
->  mm/mlock.c                 |  9 +--------
->  mm/swap.c                  | 33 +++++++--------------------------
->  mm/vmscan.c                |  8 +-------
->  4 files changed, 49 insertions(+), 41 deletions(-)
->
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index 258901021c6c..6e670f991b42 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -1313,6 +1313,46 @@ static inline void unlock_page_lruvec_irqrestore(struct lruvec *lruvec,
->         spin_unlock_irqrestore(&lruvec->lru_lock, flags);
->  }
->
-> +/* Don't lock again iff page's lruvec locked */
-> +static inline struct lruvec *relock_page_lruvec_irq(struct page *page,
-> +               struct lruvec *locked_lruvec)
-> +{
-> +       struct pglist_data *pgdat = page_pgdat(page);
-> +       bool locked;
-> +
-> +       rcu_read_lock();
-> +       locked = mem_cgroup_page_lruvec(page, pgdat) == locked_lruvec;
-> +       rcu_read_unlock();
-> +
-> +       if (locked)
-> +               return locked_lruvec;
-> +
-> +       if (locked_lruvec)
-> +               unlock_page_lruvec_irq(locked_lruvec);
-> +
-> +       return lock_page_lruvec_irq(page);
-> +}
-> +
-> +/* Don't lock again iff page's lruvec locked */
-> +static inline struct lruvec *relock_page_lruvec_irqsave(struct page *page,
-> +               struct lruvec *locked_lruvec, unsigned long *flags)
-> +{
-> +       struct pglist_data *pgdat = page_pgdat(page);
-> +       bool locked;
-> +
-> +       rcu_read_lock();
-> +       locked = mem_cgroup_page_lruvec(page, pgdat) == locked_lruvec;
-> +       rcu_read_unlock();
-> +
-> +       if (locked)
-> +               return locked_lruvec;
-> +
-> +       if (locked_lruvec)
-> +               unlock_page_lruvec_irqrestore(locked_lruvec, *flags);
-> +
-> +       return lock_page_lruvec_irqsave(page, flags);
-> +}
-> +
+On Wednesday, July 29, 2020 7:46:08 AM CEST Francisco Jerez wrote:
+> 
+> --==-=-=
+> Content-Type: multipart/mixed; boundary="=-=-="
+> 
+> --=-=-=
+> Content-Type: text/plain; charset=utf-8
+> Content-Disposition: inline
+> Content-Transfer-Encoding: quoted-printable
+> 
+> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
+> 
+> > On Tuesday, July 28, 2020 4:32:22 AM CEST Francisco Jerez wrote:
+> >>
+> >> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
+> >>=20
+> >> > On Tuesday, July 21, 2020 1:20:14 AM CEST Francisco Jerez wrote:
+> >> >
+> >> > [cut]
+> >> >
+> >> >> >
+> >> >> > However, in the active mode the only updater of hwp_req_cached is
+> >> >> > intel_pstate_hwp_set() and this patch doesn't introduce any
+> >> >> > differences in behavior in that case.
+> >> >> >
+> >> >>=3D20
+> >> >> intel_pstate_hwp_set() is the only updater, but there are other
+> >> >> consumers that can get out of sync with the HWP request value written=
+>  by
+> >> >> intel_pstate_set_energy_pref_index().  intel_pstate_hwp_boost_up() se=
+> ems
+> >> >> like the most concerning example I named earlier.
+> >> >>=3D20
+> >> >> >> > So there may be a short time window after the
+> >> >> >> > intel_pstate_set_energy_pref_index() invocation in which the new=
+>  EPP
+> >> >> >> > value may not be in effect, but in general there is no guarantee=
+>  th=3D
+> >> at
+> >> >> >> > the new EPP will take effect immediately after updating the MSR
+> >> >> >> > anyway, so that race doesn't matter.
+> >> >> >> >
+> >> >> >> > That said, that race is avoidable, but I was thinking that tryin=
+> g to
+> >> >> >> > avoid it might not be worth it.  Now I see a better way to avoid=
+>  it,
+> >> >> >> > though, so I'm going to update the patch to that end.
+> >> >> >> >
+> >> >> >> >> Seems like a bug to me.
+> >> >> >> >
+> >> >> >> > It is racy, but not every race is a bug.
+> >> >> >> >
+> >> >> >>
+> >> >> >> Still seems like there is a bug in intel_pstate_set_energy_pref_in=
+> dex=3D
+> >> ()
+> >> >> >> AFAICT.
+> >> >> >
+> >> >> > If there is a bug, then what exactly is it, from the users' perspec=
+> tiv=3D
+> >> e?
+> >> >> >
+> >> >>=3D20
+> >> >> It can be reproduced easily as follows:
+> >> >>=3D20
+> >> >> | echo 1 > /sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost
+> >> >> | for p in /sys/devices/system/cpu/cpufreq/policy*/energy_performance=
+> _pr=3D
+> >> eference; do echo performance > $p; done
+> >> >
+> >> > Is this the active mode or the passive mode with the $subject patch ap=
+> pli=3D
+> >> ed?
+> >> >
+> >> > If the former, the issue is there regardless of the patch, so it needs=
+>  to=3D
+> >>  be
+> >> > fixed.
+> >> >
+> >> > If the latter, there should be no effect of hwp_dynamic_boost (which w=
+> as
+> >> > overlooked by me).
+> >> >
+> >>=20
+> >> This seems to be a problem in active mode only, so yeah the bug exists
+> >> regardless of your patch, but the fix is likely to allow you to simplify
+> >> this series slightly if it allows you to take full advantage of
+> >> hwp_req_cached and drop the additional EPP cache.
+> >
+> > The additional EPP cache is there to avoid synchronizing the scheduler
+> > context directly with a random process running on another CPU and doing
+> > things that may take time.
+> >
+> > The difference between the active mode and the passive mode in this respe=
+> ct
+> > is that in the latter case hwp_req_cached generally needs to be updated f=
+> rom
+> > the scheduler context, whereas in the former case it does not.
+> >
+> 
+> Hm, that's unfortunate.  Though I'd be surprised to see any appreciable
+> performance penalty from synchronizing with a sysfs handler that should
+> hardly ever be called.  Anyway thanks for the fix.
 
-So looking these over they seem to be pretty inefficient for what they
-do. Basically in worst case (locked_lruvec == NULL) you end up calling
-mem_cgoup_page_lruvec and all the rcu_read_lock/unlock a couple times
-for a single page. It might make more sense to structure this like:
-if (locked_lruvec) {
-    if (lruvec_holds_page_lru_lock(page, locked_lruvec))
-        return locked_lruvec;
+No problem.
 
-    unlock_page_lruvec_irqrestore(locked_lruvec, *flags);
-}
-return lock_page_lruvec_irqsave(page, flags);
+> > [cut]
+> >
+> >> >> No, I explicitly dismissed that in my previous reply.
+> >> >
+> >> > But at the same time you seem to agree that without the non-CPU compon=
+> ent
+> >> > (or thermal pressure) the existing CPU performance scaling would be
+> >> > sufficient.
+> >> >
+> >>=20
+> >> Yes, but not necessarily in order to allow the non-CPU component to draw
+> >> more power as you said above, but also because the existence of a
+> >> bottleneck in a non-CPU component gives us an opportunity to improve the
+> >> energy efficiency of the CPU, regardless of whether that allows the
+> >> workload to run faster.
+> >
+> > But why would the bottleneck be there otherwise?
+> >
+> 
+> Because some resource of the system (e.g. memory bandwidth, GPU fill
+> rate) may be close to 100% utilized, causing a bottleneck for reasons
+> unrelated to its energy usage.
 
-The other piece that has me scratching my head is that I wonder if we
-couldn't do this without needing the rcu_read_lock. For example, what
-if we were to compare the page mem_cgroup pointer to the memcg back
-pointer stored in the mem_cgroup_per_node? It seems like ordering
-things this way would significantly reduce the overhead due to the
-pointer chasing to see if the page is in the locked lruvec or not.
+Well, not quite.  Or at least in that case the performance cannot be improved
+by limiting the CPU frequency below the frequency looked for by scaling
+governors, AFAICS.
 
->  #ifdef CONFIG_CGROUP_WRITEBACK
->
->  struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb);
-> diff --git a/mm/mlock.c b/mm/mlock.c
-> index 5d40d259a931..bc2fb3bfbe7a 100644
-> --- a/mm/mlock.c
-> +++ b/mm/mlock.c
-> @@ -303,17 +303,10 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
->         /* Phase 1: page isolation */
->         for (i = 0; i < nr; i++) {
->                 struct page *page = pvec->pages[i];
-> -               struct lruvec *new_lruvec;
->
->                 /* block memcg change in mem_cgroup_move_account */
->                 lock_page_memcg(page);
-> -               new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-> -               if (new_lruvec != lruvec) {
-> -                       if (lruvec)
-> -                               unlock_page_lruvec_irq(lruvec);
-> -                       lruvec = lock_page_lruvec_irq(page);
-> -               }
-> -
-> +               lruvec = relock_page_lruvec_irq(page, lruvec);
->                 if (TestClearPageMlocked(page)) {
->                         /*
->                          * We already have pin from follow_page_mask()
-> diff --git a/mm/swap.c b/mm/swap.c
-> index 09edac441eb6..6d9c7288f7de 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -209,19 +209,12 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
->
->         for (i = 0; i < pagevec_count(pvec); i++) {
->                 struct page *page = pvec->pages[i];
-> -               struct lruvec *new_lruvec;
->
->                 /* block memcg migration during page moving between lru */
->                 if (!TestClearPageLRU(page))
->                         continue;
->
-> -               new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-> -               if (lruvec != new_lruvec) {
-> -                       if (lruvec)
-> -                               unlock_page_lruvec_irqrestore(lruvec, flags);
-> -                       lruvec = lock_page_lruvec_irqsave(page, &flags);
-> -               }
-> -
-> +               lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
->                 (*move_fn)(page, lruvec);
->
->                 SetPageLRU(page);
-> @@ -864,17 +857,12 @@ void release_pages(struct page **pages, int nr)
->                 }
->
->                 if (PageLRU(page)) {
-> -                       struct lruvec *new_lruvec;
-> -
-> -                       new_lruvec = mem_cgroup_page_lruvec(page,
-> -                                                       page_pgdat(page));
-> -                       if (new_lruvec != lruvec) {
-> -                               if (lruvec)
-> -                                       unlock_page_lruvec_irqrestore(lruvec,
-> -                                                                       flags);
-> +                       struct lruvec *prev_lruvec = lruvec;
-> +
-> +                       lruvec = relock_page_lruvec_irqsave(page, lruvec,
-> +                                                                       &flags);
-> +                       if (prev_lruvec != lruvec)
->                                 lock_batch = 0;
-> -                               lruvec = lock_page_lruvec_irqsave(page, &flags);
-> -                       }
->
->                         __ClearPageLRU(page);
->                         del_page_from_lru_list(page, lruvec, page_off_lru(page));
-> @@ -980,15 +968,8 @@ void __pagevec_lru_add(struct pagevec *pvec)
->
->         for (i = 0; i < pagevec_count(pvec); i++) {
->                 struct page *page = pvec->pages[i];
-> -               struct lruvec *new_lruvec;
-> -
-> -               new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-> -               if (lruvec != new_lruvec) {
-> -                       if (lruvec)
-> -                               unlock_page_lruvec_irqrestore(lruvec, flags);
-> -                       lruvec = lock_page_lruvec_irqsave(page, &flags);
-> -               }
->
-> +               lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
->                 __pagevec_lru_add_fn(page, lruvec);
->         }
->         if (lruvec)
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 168c1659e430..bdb53a678e7e 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -4292,15 +4292,9 @@ void check_move_unevictable_pages(struct pagevec *pvec)
->
->         for (i = 0; i < pvec->nr; i++) {
->                 struct page *page = pvec->pages[i];
-> -               struct lruvec *new_lruvec;
->
->                 pgscanned++;
-> -               new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-> -               if (lruvec != new_lruvec) {
-> -                       if (lruvec)
-> -                               unlock_page_lruvec_irq(lruvec);
-> -                       lruvec = lock_page_lruvec_irq(page);
-> -               }
-> +               lruvec = relock_page_lruvec_irq(page, lruvec);
->
->                 if (!PageLRU(page) || !PageUnevictable(page))
->                         continue;
-> --
-> 1.8.3.1
->
+Scaling governors generally look for the maximum frequency at which there is no
+CPU idle time in the workload.  At that frequency the CPU time required by the
+workload to achieve the maximum performance is equal to the total CPU time
+available to it.  I till refer to that frequency as the maximum effective
+frequency (MEF) of the workload.
+
+By definition, running at frequencies above the MEF does not improve
+performance, but it causes CPU idle time to appear.  OTOH running at
+frequencies below the MEF increases the CPU time required by the workload
+to achieve the maximum performance, so effectively the workload does
+not get enough CPU time for the performance to be maximum, so it is lower
+than at the MEF.
+
+Of course, the MEF is well-defined as long as the processor does not share
+the power budget with another component that is also used by the workload
+(say, a GPU).  Without the sharing of a power budget, the MEF can be determined
+by looking at the CPU idle time (or CPU busy time, or CPU load, whichever is
+the most convenient) alone, because it already depends on the speed of any
+memory etc accessed by the workload and slowing down the processor doesn't
+improve the performance (because the other components don't run any faster
+as a result of that).
+
+However, if the processor is sharing the power budget with a GPU (say), it
+is not enough to look at the CPU idle time to determine the MEF, because
+slowing down the processor generally causes the GPU to get more power which
+allows it to run faster and CPUs can do more work, because they spend less
+time waiting for the GPU, so the CPU time available to the workload effectively
+increases and it can achieve the maximum performance at a lower frequency.
+So there is "effective MEF" depending on the relative performance balance
+between the processor and the GPU and on what "fraction" of the workload
+runs on the GPU.
+
+This means that the power budget sharing is essential here and the "if the
+energy-efficiency of the processor is improved, the other components get
+more power as a bonus" argument is not really valid.
+
+The frequency of the processor gets limited in order for the other components
+to get more power, which then allows the processor to do more work in the
+same time at the same frequency, so it becomes more energy-efficient.
+
+
+
