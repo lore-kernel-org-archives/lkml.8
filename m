@@ -2,122 +2,101 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 665E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E058C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41A5920809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ECE120809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:26:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LykoZLGI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ObaJwPdF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgG2RVC (ORCPT
+        id S1726581AbgG2R0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2RVB (ORCPT
+        Wed, 29 Jul 2020 13:26:05 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20564 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726449AbgG2R0E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 13:21:01 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EE8AC061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 10:21:01 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id w2so14585819pgg.10
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 10:21:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RkhmVmn+F8zZR3MXN6wM+ixzJP6uusXl8abDcaadbwU=;
-        b=LykoZLGIweffexQ73NX4n24tMeVD1jxrVEhBFJdBzix3ieNIhRJ1UyAW2pW9Xdc6Dd
-         +T4eZ8jXk9fGCOP3GjK/h9dTk9cRzBH9ZARUErXgO7WCIRjN5z9dJu3Smaps7hgACjS4
-         17VDpJ+EICAYp1oBGgmLp3aHiR6vfBiz686B/12/P5/yoOLRxFRhwyVPzowlRukVAVuN
-         8k0+DWeyk5EvjcRrjsQE6/hA3qY8SGfBBfOd53gR4i2ZqHrp0/g1s6JwMpxyh77i6rqE
-         j/vlvZj51WYAmbYXW9+Cu1ovFP6kdt+lU6uMfD8fdFRm1kAeE4xZwo4G3iNGEIlxH2B9
-         7s1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RkhmVmn+F8zZR3MXN6wM+ixzJP6uusXl8abDcaadbwU=;
-        b=N1KaHWJ+5R+06PcTaaskcAFw6cfdfuMQA3E4E4XepGuXolJkHRmo/JLqwudwENXNGf
-         BywTSOSB1UXgm2B9NFHRpj8kA5cZjXZTqHzKEuCTo2gcMzgbjdFqQ5nU4CprVrc12Y65
-         WM2b6rS0jE7Oj44FMD9hgVeSYFE3A+wjVi0w34I2Wx4MNCVd5gaJI/OZ0E6ZToeE/4qX
-         dmC66CVug24q7TCv2QDdHr1sEPoAdyvt5xAhabM4/pU9EmzwKIyXC6GrxufJ5sz6a9DH
-         477atqNG3XbknCMB3cRNKRzSb57gYDmqe1nrR6k34jH6D/1JnYyDSyy5X+p8G7AEYGzE
-         ddmg==
-X-Gm-Message-State: AOAM530htojZ07RYDmGhIRgUt5YDkfYFhYLilBf+G8LU2wIbmf1w2hiJ
-        7BRfLyNx1Q4o5L2bn94zOMJW6g==
-X-Google-Smtp-Source: ABdhPJzYsG6bJfs+OjDq/bcVUSUtHseUIVoDgm8UZLKpJ5a7m2X7FhMkTfYyTY/cwe3oMahk3ykPTw==
-X-Received: by 2002:a63:3c09:: with SMTP id j9mr30423593pga.206.1596043260739;
-        Wed, 29 Jul 2020 10:21:00 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id j11sm2950518pfn.38.2020.07.29.10.20.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 10:21:00 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 11:20:58 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mike.leach@linaro.org, coresight@lists.linaro.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH 14/14] dts: bindings: coresight: ETMv4.4 system
- register access only units
-Message-ID: <20200729172058.GA3060370@xps15>
-References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
- <20200722172040.1299289-15-suzuki.poulose@arm.com>
+        Wed, 29 Jul 2020 13:26:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596043563;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ECKupviQ1aLptZ6EkNAq107u67VqawNacT22OAEjUAo=;
+        b=ObaJwPdFTRpBvqKRpd3h1+OzutDoaVjhRHBU+YpmmYye1/d5j09uw5kCy5hWE4Cu8WP94O
+        UNz98wTBM6OGjbUzuJeS1M07ybI16WV6w38jzvNxdTVZW1bLB02UNQQdtHLr20k8iQitWs
+        1kfNzcQAxRZLvBxgeFiVWJ+hJvmzRKQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-169-ytXqQt6-MB-0Od1-PiTpdQ-1; Wed, 29 Jul 2020 13:26:01 -0400
+X-MC-Unique: ytXqQt6-MB-0Od1-PiTpdQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4016107BEF5;
+        Wed, 29 Jul 2020 17:25:59 +0000 (UTC)
+Received: from [10.10.114.255] (ovpn-114-255.rdu2.redhat.com [10.10.114.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 26D3010098AA;
+        Wed, 29 Jul 2020 17:25:59 +0000 (UTC)
+Subject: Re: [PATCH 2/7] modules: mark find_symbol static
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org
+References: <20200729062711.13016-1-hch@lst.de>
+ <20200729062711.13016-3-hch@lst.de> <20200729161318.GA30898@linux-8ccs>
+ <20200729162435.GB3664300@kroah.com>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <486d82d8-0fab-b662-ff6c-fb36c3150ea3@redhat.com>
+Date:   Wed, 29 Jul 2020 13:25:58 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722172040.1299289-15-suzuki.poulose@arm.com>
+In-Reply-To: <20200729162435.GB3664300@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 06:20:40PM +0100, Suzuki K Poulose wrote:
-> Document the bindings for ETMv4.4 and later with only system register
-> access.
+On 7/29/20 12:24 PM, Greg Kroah-Hartman wrote:
+> On Wed, Jul 29, 2020 at 06:13:18PM +0200, Jessica Yu wrote:
+>> +++ Christoph Hellwig [29/07/20 08:27 +0200]:
+>>> find_symbol is only used in module.c.
+>>>
+>>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>
+>> CCing the livepatching ML, as this may or may not impact its users.
+>>
+>> AFAIK, the out-of-tree kpatch module had used find_symbol() in the
+>> past, I am not sure what its current status is. I suspect all of its
+>> functionality has been migrated to upstream livepatch already.
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Mike Leach <mike.leach@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  Documentation/devicetree/bindings/arm/coresight.txt | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+> We still have symbol_get(), which is what I thought they were using.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index d711676b4a51..cfe47bdda728 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -34,9 +34,13 @@ its hardware characteristcs.
->  					Program Flow Trace Macrocell:
->  			"arm,coresight-etm3x", "arm,primecell";
->  
-> -		- Embedded Trace Macrocell (version 4.x):
-> +		- Embedded Trace Macrocell (version 4.x), with memory mapped access.
->  			"arm,coresight-etm4x", "arm,primecell";
->  
-> +		- Embedded Trace Macrocell (version 4.4 and later) with system
-> +		  register access only.
-> +			"arm,coresight-etm-v4.4";
 
-I would rather call this "arm,coresight-etm-v4.4+" so that the binding's
-semantic is still relevant when dealing with ETM v4.5 and onward. 
+The deprecated (though still in the repo) kpatch.ko still references 
+find_symbol(), but that module is no longer officially supported by the 
+project.
+
+Jessica is correct that the functionality has been migrated upstream.
+
+I don't see any references to symbol_get() either, so we're good on that 
+front, too.
 
 Thanks,
-Mathieu
 
-> +
->  		- Coresight programmable Replicator :
->  			"arm,coresight-dynamic-replicator", "arm,primecell";
->  
-> -- 
-> 2.24.1
-> 
+-- Joe
+
