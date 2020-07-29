@@ -2,118 +2,118 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7C9C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0C9C433DF
 	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B87220672
+	by mail.kernel.org (Postfix) with ESMTP id BD7C0206D4
 	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:04:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQ72dvnD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L8btYvGd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbgG2CEB (ORCPT
+        id S1730962AbgG2CER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 22:04:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58416 "EHLO
+        Tue, 28 Jul 2020 22:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728401AbgG2CEA (ORCPT
+        with ESMTP id S1728401AbgG2CEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 22:04:00 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C8F1C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 19:04:00 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k4so11061306pld.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 19:04:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=opm5/07OD3J2p/0n+7i7LzhKbmftCJUmIROWDMPvtU4=;
-        b=KQ72dvnDALPU5r/omXmjdtZI2XRViO+8jLujYN8p1OScazfUGU7iVn84MKvhxWdR2X
-         /QlikExYwVM9nSbPHOa6/fmtXlYXXOpn69tvZE/2cng2+Yto3ke8d/yfsmlL7ZJMi7TY
-         S3x7Xrj99aYdBZDGwD+hFBmGGfPoYLaNvRQLaVejUc0K7v0okGraPCGZBvbVaV/revk1
-         wpCJWHjQHO2ad/cyQ8oUDVxr9x/C2PFNcf3fwuJm6pEnqaOETaa0P/zL+A09z6BdJFiG
-         XS7Wl0XILYkRpZr2PkT10IPXVyjjGMN1CNKZ9Punu9fRxt5LKMbGRuM9hRBp2odHNHAG
-         /NPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=opm5/07OD3J2p/0n+7i7LzhKbmftCJUmIROWDMPvtU4=;
-        b=L+eUkJmth5Ehg2XqmmJYT0HFS7UpDYeDr7ttDg0dAUnCFpAiYmeMs6DrwWSDY58Ks3
-         B4HAHtUu3dd4OaQiPiwaaJECW96JQxFNCfbDSJs7eliNBiGId5K9bt0u6o+OheU2g1MZ
-         L4G6S+JhNPWVt4J43uDobY4kgatUMQ54mNWgJQfoid96f/UgBvMiY9sjMCoBj6P2/Gwh
-         sEC/MBZxMv3NKwuICdbfHkeUxkwPRoYxPifhP+J20cvwqTQ0luYtJWjDCHm8qR1ikhEr
-         h81qyINL5PwQT8a3kFHkOEGWYhf/B3dOVNrEZctffebP48AQoimK2cwpqBsZ3R2HsAck
-         +qqw==
-X-Gm-Message-State: AOAM533h7NPO5PatWgRDUgHwVPDa/n97StDq/q0LouRQCV/2bbeCRlLp
-        JVJjGzKxtDghK83MGwPTthM=
-X-Google-Smtp-Source: ABdhPJzfqV6zX0OF8YTJPMPc+QE9i+TUzyTtuShT2IGRvxssqK3wFB5dF5s6Ru/Dfve74pIFmvrHxA==
-X-Received: by 2002:a17:90a:9f4a:: with SMTP id q10mr7309395pjv.139.1595988239749;
-        Tue, 28 Jul 2020 19:03:59 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id lt17sm401897pjb.6.2020.07.28.19.03.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 19:03:56 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 11:03:55 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/4] printk: store instead of processing cont parts
-Message-ID: <20200729020355.GA1534750@jagdpanzerIV.localdomain>
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <20200717234818.8622-3-john.ogness@linutronix.de>
- <20200719143527.GA566@jagdpanzerIV.localdomain>
- <CAHk-=wg70es2rSYsHbBcWrBPsoHmbZ8vmeqTS_Kypv6zHAwQjA@mail.gmail.com>
- <20200720015057.GA463@jagdpanzerIV.localdomain>
- <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
- <20200721144220.GE44523@jagdpanzerIV.localdomain>
- <87ft9kx6er.fsf@jogness.linutronix.de>
+        Tue, 28 Jul 2020 22:04:16 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD28C0619D2;
+        Tue, 28 Jul 2020 19:04:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=ptZ4CaB+9ZPFK7eW316fU2oYVkH0yzLQ4pZT4nFsjOA=; b=L8btYvGdt15/+hqPaBMVifuHFP
+        mj1IC0WwS/5cB699Ff1misVVzWwylEgRgEeikp3o/HEiq+IyuXdd6WoWiXKDbcNet35tUEacF9F+9
+        mTYW32EXz7eJ/JSPU2++z/q2bQfBo5prJ2CKpSn404aT0xYiDT1cZoVI4cZ1GREvWMq8SK5FNhqgv
+        Lx/3DW/HMBwZBVDr0Rr7vmXvNb+UYGm6DsZZr5TKt+r2yhEvRq/kp4Jmg8cTkHauBvfjZeKgZL2CG
+        SCwjA23ZuC+u/AqV2hlZ4HIYdHMxBYe7VnBlWw0ukpM+T48gLB8uyjhAHWYmM98XD1fqBBbKRt2bI
+        LjM9hGDQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0bS1-0001A0-Q2; Wed, 29 Jul 2020 02:04:14 +0000
+Subject: Re: mmotm 2020-07-27-18-18 uploaded (mm/page_alloc.c)
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+References: <20200728011914.S-8vAYUK0%akpm@linux-foundation.org>
+ <ae87385b-f830-dbdf-ebc7-1afb82a7fed0@infradead.org>
+ <20200728145553.2a69fa2080de01922b3a74e0@linux-foundation.org>
+ <048cef07-ad4b-8788-94a4-e144de731ab6@infradead.org>
+ <20200728184419.4b137162844987c9199542bb@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <bdd0b49f-2cdd-02e1-3c91-d96b4f806490@infradead.org>
+Date:   Tue, 28 Jul 2020 19:04:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ft9kx6er.fsf@jogness.linutronix.de>
+In-Reply-To: <20200728184419.4b137162844987c9199542bb@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/07/21 17:03), John Ogness wrote:
-> On 2020-07-21, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
-> >> That said, we have traditionally used not just "current process", but
-> >> also "last irq-level" as the context information, so I do think it
-> >> would be good to continue to do that.
-> >
-> > OK, so basically, extending printk_caller_id() so that for IRQ/NMI
-> > we will have more info than just "0x80000000 + raw_smp_processor_id()".
+On 7/28/20 6:44 PM, Andrew Morton wrote:
+> On Tue, 28 Jul 2020 15:39:21 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
 > 
-> If bit31 is set, the upper 8 bits could specify what the lower 24 bits
-> represent. That would give some freedom for the future.
+>> On 7/28/20 2:55 PM, Andrew Morton wrote:
+>>> On Tue, 28 Jul 2020 05:33:58 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
+>>>
+>>>> On 7/27/20 6:19 PM, Andrew Morton wrote:
+>>>>> The mm-of-the-moment snapshot 2020-07-27-18-18 has been uploaded to
+>>>>>
+>>>>>    http://www.ozlabs.org/~akpm/mmotm/
+>>
+>>
+>>>> on x86_64:
+>>>>
+>>>> ../mm/page_alloc.c:8355:48: warning: ‘struct compact_control’ declared inside parameter list will not be visible outside of this definition or declaration
+>>>>  static int __alloc_contig_migrate_range(struct compact_control *cc,
+>>>>                                                 ^~~~~~~~~~~~~~~
+>>>
+>>> As is usually the case with your reports, I can't figure out how to
+>>> reproduce it.  I copy then .config, run `make oldconfig' (need to hit
+>>> enter a zillion times because the .config is whacky) then the build
+>>> succeeds.  What's the secret?
+>>
+>> I was not aware that there was a problem. cp .config and make oldconfig
+>> should be sufficient -- and I don't understand why you would need to hit
+>> enter many times.
+>>
+>> I repeated this on my system without having to answer any oldconfig prompts
+>> and still got build errors.
+>>
+>> There is no secret that I know of, but it would be good to get to the
+>> bottom of this problem.
 > 
-> For example:
+> Well the first thing I hit was
 > 
-> 0x80 = cpu id (generic context)
-> 0x81 = interrupt number
-> 0x82 = cpu id (nmi context)
+> Support for big SMP systems with more than 8 CPUs (X86_BIGSMP) [N/y/?] (NEW) 
+> 
+> and your .config doesn't mention that.
 
-Looks good to me. I'd probably add in_softirq state. So the contexts
-are: in_task, in_softirq, in_irq, in_nmi
+It's an x86_32 symbol and my config was for x86_64.
 
-For the purpose of future extensions, I would probably consider
-u64 for callerid. So that we can store more "state bits" in the future,
-like disabled/enabled preemption; disabled/enabled local irqs; etc.
 
-	-ss
+> make mrproper
+> cp ~/config-randy .config
+> make oldconfig
+
+make ARCH=x86_64 oldconfig
+
+HTH.
+-- 
+~Randy
+
