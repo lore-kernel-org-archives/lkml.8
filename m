@@ -7,59 +7,60 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA63C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFE3F20FC3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC9EB22B42
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:35:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OAbyTnFc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pAmBXemI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pk0yGCMa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rhSYbYzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgG2OfB (ORCPT
+        id S1728067AbgG2OfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:35:01 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42966 "EHLO
+        Wed, 29 Jul 2020 10:35:04 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42938 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbgG2Odd (ORCPT
+        with ESMTP id S1726916AbgG2Odb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:33:33 -0400
-Date:   Wed, 29 Jul 2020 14:33:29 -0000
+        Wed, 29 Jul 2020 10:33:31 -0400
+Date:   Wed, 29 Jul 2020 14:33:27 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596033210;
+        s=2020; t=1596033208;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4MHMRc9J3xW26AE/zZ9xnPxPhKLboMX+mZi+E25DpdE=;
-        b=OAbyTnFcabA0nU2pjYta+cGV7X1T9bTOerKUGg9nFLz0TTCTE41hGwwyS5lzaLPw/0Uwjl
-        1La3/LCqgMquj+fnLUT3OQygrYNT1aMF/EomnFh8wFsgVSzA3Bs3bZvGzJG1VjVlEhPPQ5
-        /KrymTvJ31LB3kZDonyMOUKwAdekYABwv4JcAVweGHgvSFWtItdJ0SOv7Spie0Oq4PZGAD
-        jmaJhTdMJxl8wCKrOhhndCbBwtR5IG/shADnnT6IMtWJVRwhY2vl/EnnFREOxATZ+TknVv
-        +PEEH9ow/0X9yf7keOpooTHIJUAnPPiXqGpL7SvME4chKIkfTiB7eRofawJL9g==
+        bh=TfEec54oaiWxDKtGoCTQPjFnBswneSzn0ldCkFiuN8Y=;
+        b=pk0yGCMa2/MiPKAjiKr8+h76fIdBReea1gbd6uxsa91KOsd9Wf/56YYLXdaaUTAtatcxQ/
+        Iu88KRS11KyQKrb7E4C7TXZ7H288TKrFT4TAmf0OURQZ6Rjs4/URKy/huoFNfwmyek04om
+        vKsT/D7WrnskXn3PFh1mlN1/izpvvzPHgXamcq7cwT7tIYpIf2+uVd1I240xOXH/UG6SvM
+        qktQ+b3bwHxm+yGJOCs+AW7qvBbfF0QYii1YNJ59gkeHLu13gnemYXjKS0E6JajJGgAqno
+        W7ojUsbIpNCDQjg9UaTPlYX5N3nAF+4vYjb2XlJlAkFIh8gHST7ZfJlR2TyPXQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596033210;
+        s=2020e; t=1596033208;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4MHMRc9J3xW26AE/zZ9xnPxPhKLboMX+mZi+E25DpdE=;
-        b=pAmBXemI180jeWDe+YdexoQigl1dqKgF2IjAt3wuT8zjqFK7RdoS0v3mTD/3q0m17TVNT5
-        dCLybZnzWvjbn/Cg==
+        bh=TfEec54oaiWxDKtGoCTQPjFnBswneSzn0ldCkFiuN8Y=;
+        b=rhSYbYzzgTmnUBPFIsQi6v1VDbSPoQy8qGcnbY4LSTSd2oDsDuj1o6KeqjCIFNLaeLbV49
+        1KpaRuhFzdpMNHCQ==
 From:   "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] iocost: Use sequence counter with associated spinlock
+Subject: [tip: locking/core] kvm/eventfd: Use sequence counter with associated
+ spinlock
 Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Daniel Wagner <dwagner@suse.de>, x86 <x86@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200720155530.1173732-21-a.darwish@linutronix.de>
-References: <20200720155530.1173732-21-a.darwish@linutronix.de>
+In-Reply-To: <20200720155530.1173732-24-a.darwish@linutronix.de>
+References: <20200720155530.1173732-24-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <159603320985.4006.12938811827876475485.tip-bot2@tip-bot2>
+Message-ID: <159603320780.4006.2176719373366704021.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -71,14 +72,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     67b7b641ca69cafb467f7560316b09b8ff0fa5c9
-Gitweb:        https://git.kernel.org/tip/67b7b641ca69cafb467f7560316b09b8ff0fa5c9
+Commit-ID:     5c73b9a2b1b4ecc809a914aa64970157b3d8c936
+Gitweb:        https://git.kernel.org/tip/5c73b9a2b1b4ecc809a914aa64970157b3d8c936
 Author:        Ahmed S. Darwish <a.darwish@linutronix.de>
-AuthorDate:    Mon, 20 Jul 2020 17:55:26 +02:00
+AuthorDate:    Mon, 20 Jul 2020 17:55:29 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 29 Jul 2020 16:14:28 +02:00
+CommitterDate: Wed, 29 Jul 2020 16:14:29 +02:00
 
-iocost: Use sequence counter with associated spinlock
+kvm/eventfd: Use sequence counter with associated spinlock
 
 A sequence counter write side critical section must be protected by some
 form of locking to serialize writers. A plain seqcount_t does not
@@ -95,39 +96,36 @@ neither storage size nor runtime overhead.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Daniel Wagner <dwagner@suse.de>
-Link: https://lkml.kernel.org/r/20200720155530.1173732-21-a.darwish@linutronix.de
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Link: https://lkml.kernel.org/r/20200720155530.1173732-24-a.darwish@linutronix.de
 ---
- block/blk-iocost.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ include/linux/kvm_irqfd.h | 2 +-
+ virt/kvm/eventfd.c        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 8ac4aad..8e940c2 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -406,7 +406,7 @@ struct ioc {
- 	enum ioc_running		running;
- 	atomic64_t			vtime_rate;
+diff --git a/include/linux/kvm_irqfd.h b/include/linux/kvm_irqfd.h
+index dc1da02..dac047a 100644
+--- a/include/linux/kvm_irqfd.h
++++ b/include/linux/kvm_irqfd.h
+@@ -42,7 +42,7 @@ struct kvm_kernel_irqfd {
+ 	wait_queue_entry_t wait;
+ 	/* Update side is protected by irqfds.lock */
+ 	struct kvm_kernel_irq_routing_entry irq_entry;
+-	seqcount_t irq_entry_sc;
++	seqcount_spinlock_t irq_entry_sc;
+ 	/* Used for level IRQ fast-path */
+ 	int gsi;
+ 	struct work_struct inject;
+diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
+index ef7ed91..d6408bb 100644
+--- a/virt/kvm/eventfd.c
++++ b/virt/kvm/eventfd.c
+@@ -303,7 +303,7 @@ kvm_irqfd_assign(struct kvm *kvm, struct kvm_irqfd *args)
+ 	INIT_LIST_HEAD(&irqfd->list);
+ 	INIT_WORK(&irqfd->inject, irqfd_inject);
+ 	INIT_WORK(&irqfd->shutdown, irqfd_shutdown);
+-	seqcount_init(&irqfd->irq_entry_sc);
++	seqcount_spinlock_init(&irqfd->irq_entry_sc, &kvm->irqfds.lock);
  
--	seqcount_t			period_seqcount;
-+	seqcount_spinlock_t		period_seqcount;
- 	u32				period_at;	/* wallclock starttime */
- 	u64				period_at_vtime; /* vtime starttime */
- 
-@@ -873,7 +873,6 @@ static void ioc_now(struct ioc *ioc, struct ioc_now *now)
- 
- static void ioc_start_period(struct ioc *ioc, struct ioc_now *now)
- {
--	lockdep_assert_held(&ioc->lock);
- 	WARN_ON_ONCE(ioc->running != IOC_RUNNING);
- 
- 	write_seqcount_begin(&ioc->period_seqcount);
-@@ -2001,7 +2000,7 @@ static int blk_iocost_init(struct request_queue *q)
- 
- 	ioc->running = IOC_IDLE;
- 	atomic64_set(&ioc->vtime_rate, VTIME_PER_USEC);
--	seqcount_init(&ioc->period_seqcount);
-+	seqcount_spinlock_init(&ioc->period_seqcount, &ioc->lock);
- 	ioc->period_at = ktime_to_us(ktime_get());
- 	atomic64_set(&ioc->cur_period, 0);
- 	atomic_set(&ioc->hweight_gen, 0);
+ 	f = fdget(args->fd);
+ 	if (!f.file) {
