@@ -2,157 +2,123 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA821C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D2FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA9B206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:21:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OULqUF8W"
+	by mail.kernel.org (Postfix) with ESMTP id E52B1206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596025311;
+	bh=2mnnHyWC547JExbWvUCq+tIdDHLBBpQ7TBTnFeNVHVU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gujKGduwMJ9gR27xlOF7ZFcwasUp/ozUP2sbsf6Mh6XnbKG0+Al3ITrA2I1/sOv5T
+	 b4+UCS6xIk2rieTir4iiH+55pAliOMjrsVIiPyeOnmiGusYonixQCq3fEdvIoolMoW
+	 vYP9jloKusX0zjbUmWmA7WHtVLiIlGA6Lu40gGHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbgG2MVC (ORCPT
+        id S1726909AbgG2MVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:21:02 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:36272 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726054AbgG2MVB (ORCPT
+        Wed, 29 Jul 2020 08:21:50 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38667 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgG2MVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:21:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596025260;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=d6W1T974VZvK5aHdyDKfm8iT0P3+yUruO/0hQztff7w=;
-        b=OULqUF8WQ+jBXyTFiyqDCBvQPyHTde9J5Lk6aOUxznUqwGmfyDJkRPu5c//BgneRKkAaYZ
-        pHk0QTrPZyBHi03s10yLnaGdSMvmarIY8Ko8ZmfpbCyvotZm80ey8MfBiMYf/GLBHcXbzS
-        t/r9+VNUlQWdf6BNQeKRqQaSvEhk9c0=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-511-8j5gBKxlMPWwXEr-4k2bSw-1; Wed, 29 Jul 2020 08:20:58 -0400
-X-MC-Unique: 8j5gBKxlMPWwXEr-4k2bSw-1
-Received: by mail-ed1-f71.google.com with SMTP id i3so8259672edq.21
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 05:20:58 -0700 (PDT)
+        Wed, 29 Jul 2020 08:21:49 -0400
+Received: by mail-ot1-f66.google.com with SMTP id q9so1673696oth.5;
+        Wed, 29 Jul 2020 05:21:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=d6W1T974VZvK5aHdyDKfm8iT0P3+yUruO/0hQztff7w=;
-        b=aMUnYURapv8RGHJV02mgwgcXyje8G0tGabVIu2oBrOzXSkbP/tG3jbjdRZlBKhuFFX
-         UGcejQ5mMkl+fDq8pJjgBiuB0lVVoDYxg4G9vo+qy68XTMsY4F93+0dxJV4zIQPDoWAN
-         3FPHnQs2dqlYa1F+XumSMhCUqJ1WGM5fUB+B/kF7CpVlRIxfG7B3ft95nuEwC1iCYmOi
-         5ffDDfQMufjrznJh0NlJ/tjdvrj7zsbxXMQHcY+5Oh44knMFB1ulbc4YQnu4DmeZ7a7H
-         +20yWXQx7TEojJFe6oSXSxf9fORo3ZC990xeUnjY5lsOS7uL0jgf6HD6DlvxdJzgw7mi
-         HIeQ==
-X-Gm-Message-State: AOAM532QHt5fz4vwVXwE5Nbp37xZl8oU/FDr6HEyOktba3TApFtiAqMs
-        rijO33rePssQB/vztkX4opF8oquVj1efvLYEiT0Yy+paj6FJc8cukox4I467kmcB1DTc3DjPLgJ
-        4DoDKGHXRd03FaRJIHRkCpyUC
-X-Received: by 2002:a05:6402:2031:: with SMTP id ay17mr4496494edb.46.1596025257246;
-        Wed, 29 Jul 2020 05:20:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyO5SyrFRx4z+lvlosTAQpCNz7fTshwRKVxOkDbzVCw5cgeIqEa4f1i3ysB4XP6Rnyox74DtQ==
-X-Received: by 2002:a05:6402:2031:: with SMTP id ay17mr4496471edb.46.1596025257037;
-        Wed, 29 Jul 2020 05:20:57 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id o7sm1655137edq.53.2020.07.29.05.20.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 05:20:56 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v2 3/3] KVM: SVM: Fix disable pause loop exit/pause filtering capability on SVM
-In-Reply-To: <1595929506-9203-3-git-send-email-wanpengli@tencent.com>
-References: <1595929506-9203-1-git-send-email-wanpengli@tencent.com> <1595929506-9203-3-git-send-email-wanpengli@tencent.com>
-Date:   Wed, 29 Jul 2020 14:20:54 +0200
-Message-ID: <87k0ymldg9.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2mnnHyWC547JExbWvUCq+tIdDHLBBpQ7TBTnFeNVHVU=;
+        b=rdYPEDlxp8xnPw215JCbUuZA7U17EG1Cstj+6GFHejHjCyACjqtfpC4x9zaRleLg6T
+         nsdJb/82cr/mbblLRwz15lRbpIT2z3AzSC6Odf/BfF1OhoJlR3NHhZkerID7drp57YD/
+         MSGr8qGQuo4M28MMlKiuceeoeostV+Nw7o2GGJOJWhzgZbBwFeONaXlK4dhE9VJZSjjZ
+         yAVs9Abbf0+gZC5Cb/qNc91iQKhA3VLEJtsj8hEuBccrkXtieEd7OGGrzFbFi84B6LoI
+         StJBp9sDZWCLddvjDEoWhQl7DKltKZW9u1ZKMCIxK3NK+9fuCt6c6/ZJc8ORMP/13yac
+         aTKA==
+X-Gm-Message-State: AOAM532e2/T+R+IN53M/P/E75iPsI0j/XcVv1ORzb20dF0sVJpjaK671
+        qdZEvgbNcUopNbUG8Le1pgnYccZsZ27XbdoQjTE=
+X-Google-Smtp-Source: ABdhPJwuvKQsPSVhOzwdYxBYA7KiJ/wJpm+ub0Wy7vHkExajp6uOO58dSKNk4G5BNIH2CvVx7N1UP9PNTCbrk72CpIw=
+X-Received: by 2002:a05:6830:1e5c:: with SMTP id e28mr9763613otj.118.1596025308833;
+ Wed, 29 Jul 2020 05:21:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <159528284411.993790.11733759435137949717.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159528289856.993790.11787167534159675987.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAJZ5v0jb87PnwVXKuvgFeP=c-BGstc4YmANGpbOOnXi-b1oL8w@mail.gmail.com> <25cb1c0c35d2ea2aa233c1db726abd86dadc54c0.camel@intel.com>
+In-Reply-To: <25cb1c0c35d2ea2aa233c1db726abd86dadc54c0.camel@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 29 Jul 2020 14:21:35 +0200
+Message-ID: <CAJZ5v0h3=xkSjZ3tWjK3NEJjtBw5KpfNOrHJ1yQ8nXpSG=SBBg@mail.gmail.com>
+Subject: Re: [PATCH v3 10/11] PM, libnvdimm: Add runtime firmware activation support
+To:     Vishal Verma <vishal.l.verma@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        Pavel Machek <pavel@ucw.cz>, Ira Weiny <ira.weiny@intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wanpeng Li <kernellwp@gmail.com> writes:
-
-> From: Wanpeng Li <wanpengli@tencent.com>
+On Wed, Jul 29, 2020 at 3:35 AM Vishal Verma <vishal.l.verma@intel.com> wrote:
 >
-> Commit 8566ac8b (KVM: SVM: Implement pause loop exit logic in SVM) drops
-> disable pause loop exit/pause filtering capability completely, I guess it
-> is a merge fault by Radim since disable vmexits capabilities and pause
-> loop exit for SVM patchsets are merged at the same time. This patch
-> reintroduces the disable pause loop exit/pause filtering capability
-> support.
+> On Mon, 2020-07-27 at 14:37 +0200, Rafael J. Wysocki wrote:
+> > On Tue, Jul 21, 2020 at 12:24 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > > Abstract platform specific mechanics for nvdimm firmware activation
+> > > behind a handful of generic ops. At the bus level ->activate_state()
+> > > indicates the unified state (idle, busy, armed) of all DIMMs on the bus,
+> > > and ->capability() indicates the system state expectations for activate.
+> > > At the DIMM level ->activate_state() indicates the per-DIMM state,
+> > > ->activate_result() indicates the outcome of the last activation
+> > > attempt, and ->arm() attempts to transition the DIMM from 'idle' to
+> > > 'armed'.
+> > >
+> > > A new hibernate_quiet_exec() facility is added to support firmware
+> > > activation in an OS defined system quiesce state. It leverages the fact
+> > > that the hibernate-freeze state wants to assert that a memory
+> > > hibernation snapshot can be taken. This is in contrast to a platform
+> > > firmware defined quiesce state that may forcefully quiet the memory
+> > > controller independent of whether an individual device-driver properly
+> > > supports hibernate-freeze.
+> > >
+> > > The libnvdimm sysfs interface is extended to support detection of a
+> > > firmware activate capability. The mechanism supports enumeration and
+> > > triggering of firmware activate, optionally in the
+> > > hibernate_quiet_exec() context.
+> > >
+> > > Cc: Pavel Machek <pavel@ucw.cz>
+> > > Cc: Ira Weiny <ira.weiny@intel.com>
+> > > Cc: Len Brown <len.brown@intel.com>
+> > > Cc: Jonathan Corbet <corbet@lwn.net>
+> > > Cc: Dave Jiang <dave.jiang@intel.com>
+> > > Cc: Vishal Verma <vishal.l.verma@intel.com>
+> > > [rafael: hibernate_quiet_exec() proposal]
+> > > Co-developed-by: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> >
+> > IMO it's better to change this to
+> >
+> > Co-developed-by: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> >
+> > and please to add
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > to it as per the development process documentation.
 >
-> We can observe 2.9% hackbench improvement for a 92 vCPUs guest on AMD 
-> Rome Server.
+> Thanks Rafael, I've fixed this up in the branch I've prepared for the pull
+> request:
 >
-> Reported-by: Haiwei Li <lihaiwei@tencent.com>
-> Tested-by: Haiwei Li <lihaiwei@tencent.com>
-> Fixes: 8566ac8b (KVM: SVM: Implement pause loop exit logic in SVM)
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/svm/svm.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index c0da4dd..c20f127 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -1090,7 +1090,7 @@ static void init_vmcb(struct vcpu_svm *svm)
->  	svm->nested.vmcb = 0;
->  	svm->vcpu.arch.hflags = 0;
->  
-> -	if (pause_filter_count) {
-> +	if (pause_filter_count && !kvm_pause_in_guest(svm->vcpu.kvm)) {
->  		control->pause_filter_count = pause_filter_count;
->  		if (pause_filter_thresh)
->  			control->pause_filter_thresh = pause_filter_thresh;
-> @@ -2693,7 +2693,7 @@ static int pause_interception(struct vcpu_svm *svm)
->  	struct kvm_vcpu *vcpu = &svm->vcpu;
->  	bool in_kernel = (svm_get_cpl(vcpu) == 0);
->  
-> -	if (pause_filter_thresh)
-> +	if (!kvm_pause_in_guest(vcpu->kvm))
->  		grow_ple_window(vcpu);
->  
->  	kvm_vcpu_on_spin(vcpu, in_kernel);
-> @@ -3780,7 +3780,7 @@ static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
->  
->  static void svm_sched_in(struct kvm_vcpu *vcpu, int cpu)
->  {
-> -	if (pause_filter_thresh)
-> +	if (!kvm_pause_in_guest(vcpu->kvm))
->  		shrink_ple_window(vcpu);
->  }
->  
-> @@ -3958,6 +3958,9 @@ static void svm_vm_destroy(struct kvm *kvm)
->  
->  static int svm_vm_init(struct kvm *kvm)
->  {
-> +	if (!pause_filter_thresh)
-> +		kvm->arch.pause_in_guest = true;
+> https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git/log/?h=libnvdimm-for-next
 
-Would it make sense to do
-
-        if (!pause_filter_count || !pause_filter_thresh)
-		kvm->arch.pause_in_guest = true;
-
-here and simplify the condition in init_vmcb()?
-
-> +
->  	if (avic) {
->  		int ret = avic_vm_init(kvm);
->  		if (ret)
-
--- 
-Vitaly
-
+LGTM, thanks!
