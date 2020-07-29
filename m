@@ -2,187 +2,282 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C819C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FEBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54F232076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1114207F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:18:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="e+s6DHmg"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="iDiyH8sJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgG2ISZ (ORCPT
+        id S1728053AbgG2IS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:18:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgG2ISZ (ORCPT
+        Wed, 29 Jul 2020 04:18:29 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:53386 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727907AbgG2ISZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Jul 2020 04:18:25 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8049C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:18:24 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id o72so11326597ota.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:18:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uGI4csuNiLS6fTAVR1vQNcVBEWSJTSk1oAgwrrB5NsI=;
-        b=e+s6DHmgRnUm69dvY6m2+wPD1X7mXvPZP0fswGknSPRvoHeYYGhzmpEn1hRP36juI+
-         V7TLksSzFpiPGZ8iBtvuXY677+7945nVOo6cGw3h1DxW9Egpg1lITwCjHofkkZSgWJco
-         0eO2GF3rPRG9tVA7CqAt0TGLANGNbH2HvhkYU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uGI4csuNiLS6fTAVR1vQNcVBEWSJTSk1oAgwrrB5NsI=;
-        b=lkJ4ux5ngcP5UAn2FZe/5dCytRArPO9o5S2UatQPomxmgOhxxMVpzg/lDeD/M9Q+mo
-         3dO6rEW1nJ31w8Wmu4po5Vn01cpOGc8vOgwswFi205C/mMYF8pxCwywXC/pmBN7JiicY
-         5faM0hXuyzpVbb8L1UQ6grAPnkfk/Sju9eZaQS0IKWE9kC4qctRX9KFiLgZqBaSWwOdQ
-         wwKB+Hbe/PvB6dIROvGYWcTqPsEEmJEpF/sOJWU2DjZto2p73aXKjGp/lk/5OysCaBA7
-         JAfkTQyLrbdpHWuZnAXuae1Gwc2pz0s/CIEVOU/YuEg5wceAAJfuHyzazeJywaRQrbbV
-         zFnA==
-X-Gm-Message-State: AOAM530RFX6gU9gZb4c7wZ/dTifLD8JqsQxFXjV+tya2pii56KQpmyhc
-        u8RTR1hGQ4cAQn3y0sKr09J8gWM//423Siuo9yoZIA==
-X-Google-Smtp-Source: ABdhPJzBH+27x3ZujuEpHEVy6Gcb6DYFt6r/ynfQcsmDo5vW4q292PZiJ8/qFIUa5jgMuBmctGSCddAR2m3AVK8RCQA=
-X-Received: by 2002:a9d:6052:: with SMTP id v18mr2509589otj.303.1596010704124;
- Wed, 29 Jul 2020 01:18:24 -0700 (PDT)
+X-UUID: f9ca2b709783475f8fbce760d8f49a8e-20200729
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=4HoCUm1VKa+OVqJwqdlK9Is/oFM+0Id/fxBkQMe/9cU=;
+        b=iDiyH8sJRZXAJXv3rFoV5pML4Thnsjy759HPsYVFLWpEDKwuJQRv7bA1Xe/6+NwWC1fgSlh4Zd9bv0t58XTlWlgBqkcuOFllKqp3wD3+Z0ex8vpVvSGhkf6L50Mj6rQaalbJs754nkH95aQ/sXtEvLTod/CsoIplHVN/e7zYgxk=;
+X-UUID: f9ca2b709783475f8fbce760d8f49a8e-20200729
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1070123174; Wed, 29 Jul 2020 16:18:13 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 29 Jul 2020 16:18:10 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 29 Jul 2020 16:18:10 +0800
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Neal Liu <neal.liu@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Subject: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
+Date:   Wed, 29 Jul 2020 16:18:10 +0800
+Message-ID: <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
+References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
 MIME-Version: 1.0
-References: <1596000620-4075-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <1596000620-4075-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 29 Jul 2020 10:18:12 +0200
-Message-ID: <CAKMK7uHeteS2+rKrZKrAM+zQO==hAX0XaVc9JfHPsdLTCtzKOw@mail.gmail.com>
-Subject: Re: [PATCH] vt: Handle recursion in vc_do_resize().
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: F4037C3EF092712B35F92E4A59BA033C2B72336223F6C9CDEDC4DC3748514F6C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 8:58 AM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
->
-> syzbot is reporting OOB read bug in vc_do_resize() [1] caused by memcpy()
-> based on outdated old_{rows,row_size} values, for resize_screen() can
-> recurse into vc_do_resize() which changes vc->vc_{cols,rows} that outdates
-> old_{rows,row_size} values which were read before calling resize_screen().
->
-> Minimal fix might be to read vc->vc_{rows,size_row} after resize_screen().
-> A different fix might be to forbid recursive vc_do_resize() request.
-> I can't tell which fix is the better.
->
-> But since I guess that new_cols == vc->vc_cols && new_rows == vc->vc_rows
-> check could become true after returning from resize_screen(), and I assume
-> that not calling clear_selection() when resize_screen() will return error
-> is harmless, let's redo the check by moving resize_screen() earlier.
->
-> [1] https://syzkaller.appspot.com/bug?id=c70c88cfd16dcf6e1d3c7f0ab8648b3144b5b25e
->
-> Reported-by: syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+TWVkaWFUZWsgYnVzIGZhYnJpYyBwcm92aWRlcyBUcnVzdFpvbmUgc2VjdXJpdHkgc3VwcG9ydCBh
+bmQgZGF0YQ0KcHJvdGVjdGlvbiB0byBwcmV2ZW50IHNsYXZlcyBmcm9tIGJlaW5nIGFjY2Vzc2Vk
+IGJ5IHVuZXhwZWN0ZWQNCm1hc3RlcnMuDQpUaGUgc2VjdXJpdHkgdmlvbGF0aW9uIGlzIGxvZ2dl
+ZCBhbmQgc2VudCB0byB0aGUgcHJvY2Vzc29yIGZvcg0KZnVydGhlciBhbmFseXNpcyBvciBjb3Vu
+dGVybWVhc3VyZXMuDQoNCkFueSBvY2N1cnJlbmNlIG9mIHNlY3VyaXR5IHZpb2xhdGlvbiB3b3Vs
+ZCByYWlzZSBhbiBpbnRlcnJ1cHQsIGFuZA0KaXQgd2lsbCBiZSBoYW5kbGVkIGJ5IG10ay1kZXZh
+cGMgZHJpdmVyLiBUaGUgdmlvbGF0aW9uDQppbmZvcm1hdGlvbiBpcyBwcmludGVkIGluIG9yZGVy
+IHRvIGZpbmQgdGhlIG11cmRlcmVyLg0KDQpTaWduZWQtb2ZmLWJ5OiBOZWFsIExpdSA8bmVhbC5s
+aXVAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvS2NvbmZpZyAgICAg
+IHwgICAgOSArKw0KIGRyaXZlcnMvc29jL21lZGlhdGVrL01ha2VmaWxlICAgICB8ICAgIDEgKw0K
+IGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1kZXZhcGMuYyB8ICAzMjMgKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKw0KIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1kZXZhcGMu
+aCB8ICAgNTQgKysrKysrKw0KIDQgZmlsZXMgY2hhbmdlZCwgMzg3IGluc2VydGlvbnMoKykNCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWRldmFwYy5jDQogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1kZXZhcGMuaA0KDQpkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvS2NvbmZpZyBiL2RyaXZlcnMvc29jL21lZGlh
+dGVrL0tjb25maWcNCmluZGV4IDU5YTU2Y2QuLjExNzdjOTggMTAwNjQ0DQotLS0gYS9kcml2ZXJz
+L3NvYy9tZWRpYXRlay9LY29uZmlnDQorKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9LY29uZmln
+DQpAQCAtMTcsNiArMTcsMTUgQEAgY29uZmlnIE1US19DTURRDQogCSAgdGltZSBsaW1pdGF0aW9u
+LCBzdWNoIGFzIHVwZGF0aW5nIGRpc3BsYXkgY29uZmlndXJhdGlvbiBkdXJpbmcgdGhlDQogCSAg
+dmJsYW5rLg0KIA0KK2NvbmZpZyBNVEtfREVWQVBDDQorCXRyaXN0YXRlICJNZWRpYXRlayBEZXZp
+Y2UgQVBDIFN1cHBvcnQiDQorCWhlbHANCisJICBTYXkgeWVzIGhlcmUgdG8gZW5hYmxlIHN1cHBv
+cnQgZm9yIE1lZGlhdGVrIERldmljZSBBUEMgZHJpdmVyLg0KKwkgIFRoaXMgZHJpdmVyIGlzIG1h
+aW5seSB1c2VkIHRvIGhhbmRsZSB0aGUgdmlvbGF0aW9uIHdoaWNoIGNhdGNoZXMNCisJICB1bmV4
+cGVjdGVkIHRyYW5zYWN0aW9uLg0KKwkgIFRoZSB2aW9sYXRpb24gaW5mb3JtYXRpb24gaXMgbG9n
+Z2VkIGZvciBmdXJ0aGVyIGFuYWx5c2lzIG9yDQorCSAgY291bnRlcm1lYXN1cmVzLg0KKw0KIGNv
+bmZpZyBNVEtfSU5GUkFDRkcNCiAJYm9vbCAiTWVkaWFUZWsgSU5GUkFDRkcgU3VwcG9ydCINCiAJ
+c2VsZWN0IFJFR01BUA0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL01ha2VmaWxl
+IGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvTWFrZWZpbGUNCmluZGV4IDAxZjlmODcuLmFiZmQ0YmEg
+MTAwNjQ0DQotLS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9NYWtlZmlsZQ0KKysrIGIvZHJpdmVy
+cy9zb2MvbWVkaWF0ZWsvTWFrZWZpbGUNCkBAIC0xLDUgKzEsNiBAQA0KICMgU1BEWC1MaWNlbnNl
+LUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQ0KIG9iai0kKENPTkZJR19NVEtfQ01EUSkgKz0gbXRr
+LWNtZHEtaGVscGVyLm8NCitvYmotJChDT05GSUdfTVRLX0RFVkFQQykgKz0gbXRrLWRldmFwYy5v
+DQogb2JqLSQoQ09ORklHX01US19JTkZSQUNGRykgKz0gbXRrLWluZnJhY2ZnLm8NCiBvYmotJChD
+T05GSUdfTVRLX1BNSUNfV1JBUCkgKz0gbXRrLXBtaWMtd3JhcC5vDQogb2JqLSQoQ09ORklHX01U
+S19TQ1BTWVMpICs9IG10ay1zY3BzeXMubw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlh
+dGVrL210ay1kZXZhcGMuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1kZXZhcGMuYw0KbmV3
+IGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAuLmRiNzUxZDANCi0tLSAvZGV2L251bGwN
+CisrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1kZXZhcGMuYw0KQEAgLTAsMCArMSwzMjMg
+QEANCisvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KKy8qDQorICogQ29weXJp
+Z2h0IChDKSAyMDIwIE1lZGlhVGVrIEluYy4NCisgKi8NCisNCisjaW5jbHVkZSA8bGludXgvY2xr
+Lmg+DQorI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPg0KKyNpbmNsdWRlIDxsaW51eC9pb3Bv
+bGwuaD4NCisjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQorI2luY2x1ZGUgPGxpbnV4L3BsYXRm
+b3JtX2RldmljZS5oPg0KKyNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4NCisjaW5jbHVkZSA8
+bGludXgvb2ZfaXJxLmg+DQorI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4NCisjaW5jbHVk
+ZSAibXRrLWRldmFwYy5oIg0KKw0KK3N0YXRpYyBpbnQgZ2V0X3NoaWZ0X2dyb3VwKHN0cnVjdCBt
+dGtfZGV2YXBjX2NvbnRleHQgKmN0eCkNCit7DQorCXUzMiB2aW9fc2hpZnRfc3RhOw0KKwl2b2lk
+IF9faW9tZW0gKnJlZzsNCisNCisJcmVnID0gY3R4LT5kZXZhcGNfcGRfYmFzZSArIGN0eC0+b2Zm
+c2V0LT52aW9fc2hpZnRfc3RhOw0KKwl2aW9fc2hpZnRfc3RhID0gcmVhZGwocmVnKTsNCisNCisJ
+aWYgKHZpb19zaGlmdF9zdGEpDQorCQlyZXR1cm4gX19mZnModmlvX3NoaWZ0X3N0YSk7DQorDQor
+CXJldHVybiAtRUlPOw0KK30NCisNCitzdGF0aWMgdm9pZCBjbGVhcl92aW9fc3RhdHVzKHN0cnVj
+dCBtdGtfZGV2YXBjX2NvbnRleHQgKmN0eCwgdTMyIG1vZHVsZSkNCit7DQorCXZvaWQgX19pb21l
+bSAqcmVnOw0KKw0KKwlyZWcgPSBjdHgtPmRldmFwY19wZF9iYXNlICsgY3R4LT5vZmZzZXQtPnZp
+b19zdGE7DQorCXJlZyArPSAweDQgKiBWSU9fTU9EX1RPX1JFR19JTkQobW9kdWxlKTsNCisNCisJ
+d3JpdGVsKDB4MSA8PCBWSU9fTU9EX1RPX1JFR19PRkYobW9kdWxlKSwgcmVnKTsNCit9DQorDQor
+c3RhdGljIHZvaWQgbWFza19tb2R1bGVfaXJxKHN0cnVjdCBtdGtfZGV2YXBjX2NvbnRleHQgKmN0
+eCwgdTMyIG1vZHVsZSwNCisJCQkgICAgYm9vbCBtYXNrKQ0KK3sNCisJdm9pZCBfX2lvbWVtICpy
+ZWc7DQorCXUzMiB2YWx1ZTsNCisNCisJcmVnID0gY3R4LT5kZXZhcGNfcGRfYmFzZSArIGN0eC0+
+b2Zmc2V0LT52aW9fbWFzazsNCisJcmVnICs9IDB4NCAqIFZJT19NT0RfVE9fUkVHX0lORChtb2R1
+bGUpOw0KKw0KKwl2YWx1ZSA9IHJlYWRsKHJlZyk7DQorCWlmIChtYXNrKQ0KKwkJdmFsdWUgfD0g
+KDB4MSA8PCBWSU9fTU9EX1RPX1JFR19PRkYobW9kdWxlKSk7DQorCWVsc2UNCisJCXZhbHVlICY9
+IH4oMHgxIDw8IFZJT19NT0RfVE9fUkVHX09GRihtb2R1bGUpKTsNCisNCisJd3JpdGVsKHZhbHVl
+LCByZWcpOw0KK30NCisNCisjZGVmaW5lIFBIWV9ERVZBUENfVElNRU9VVAkweDEwMDAwDQorDQor
+LyoNCisgKiBzeW5jX3Zpb19kYmcgLSBkbyAic2hpZnQiIG1lY2hhbnNpbSIgdG8gZ2V0IGZ1bGwg
+dmlvbGF0aW9uIGluZm9ybWF0aW9uLg0KKyAqICAgICAgICAgICAgICAgIHNoaWZ0IG1lY2hhbmlz
+bSBpcyBkZXBlbmRzIG9uIGRldmFwYyBoYXJkd2FyZSBkZXNpZ24uDQorICogICAgICAgICAgICAg
+ICAgTWVkaWF0ZWsgZGV2YXBjIHNldCBtdWx0aXBsZSBzbGF2ZXMgYXMgYSBncm91cC4gV2hlbiB2
+aW9sYXRpb24NCisgKiAgICAgICAgICAgICAgICBpcyB0cmlnZ2VyZWQsIHZpb2xhdGlvbiBpbmZv
+IGlzIGtlcHQgaW5zaWRlIGRldmFwYyBoYXJkd2FyZS4NCisgKiAgICAgICAgICAgICAgICBEcml2
+ZXIgc2hvdWxkIGRvIHNoaWZ0IG1lY2hhbnNpbSB0byAic2hpZnQiIGZ1bGwgdmlvbGF0aW9uDQor
+ICogICAgICAgICAgICAgICAgaW5mbyB0byBWSU9fREJHcyByZWdpc3RlcnMuDQorICoNCisgKi8N
+CitzdGF0aWMgaW50IHN5bmNfdmlvX2RiZyhzdHJ1Y3QgbXRrX2RldmFwY19jb250ZXh0ICpjdHgs
+IHUzMiBzaGlmdF9iaXQpDQorew0KKwl2b2lkIF9faW9tZW0gKnBkX3Zpb19zaGlmdF9zdGFfcmVn
+Ow0KKwl2b2lkIF9faW9tZW0gKnBkX3Zpb19zaGlmdF9zZWxfcmVnOw0KKwl2b2lkIF9faW9tZW0g
+KnBkX3Zpb19zaGlmdF9jb25fcmVnOw0KKwlpbnQgcmV0Ow0KKwl1MzIgdmFsOw0KKw0KKwlwZF92
+aW9fc2hpZnRfc3RhX3JlZyA9IGN0eC0+ZGV2YXBjX3BkX2Jhc2UgKyBjdHgtPm9mZnNldC0+dmlv
+X3NoaWZ0X3N0YTsNCisJcGRfdmlvX3NoaWZ0X3NlbF9yZWcgPSBjdHgtPmRldmFwY19wZF9iYXNl
+ICsgY3R4LT5vZmZzZXQtPnZpb19zaGlmdF9zZWw7DQorCXBkX3Zpb19zaGlmdF9jb25fcmVnID0g
+Y3R4LT5kZXZhcGNfcGRfYmFzZSArIGN0eC0+b2Zmc2V0LT52aW9fc2hpZnRfY29uOw0KKw0KKwkv
+KiBFbmFibGUgc2hpZnQgbWVjaGFuc2ltICovDQorCXdyaXRlbCgweDEgPDwgc2hpZnRfYml0LCBw
+ZF92aW9fc2hpZnRfc2VsX3JlZyk7DQorCXdyaXRlbCgweDEsIHBkX3Zpb19zaGlmdF9jb25fcmVn
+KTsNCisNCisJcmV0ID0gcmVhZGxfcG9sbF90aW1lb3V0KHBkX3Zpb19zaGlmdF9jb25fcmVnLCB2
+YWwsIHZhbCA9PSAweDMsIDAsDQorCQkJCSBQSFlfREVWQVBDX1RJTUVPVVQpOw0KKwlpZiAocmV0
+KQ0KKwkJZGV2X2VycihjdHgtPmRldiwgIiVzOiBTaGlmdCB2aW9sYXRpb24gaW5mbyBmYWlsZWRc
+biIsIF9fZnVuY19fKTsNCisNCisJLyogRGlzYWJsZSBzaGlmdCBtZWNoYW5pc20gKi8NCisJd3Jp
+dGVsKDB4MCwgcGRfdmlvX3NoaWZ0X2Nvbl9yZWcpOw0KKwl3cml0ZWwoMHgwLCBwZF92aW9fc2hp
+ZnRfc2VsX3JlZyk7DQorCXdyaXRlbCgweDEgPDwgc2hpZnRfYml0LCBwZF92aW9fc2hpZnRfc3Rh
+X3JlZyk7DQorDQorCXJldHVybiByZXQ7DQorfQ0KKw0KK3N0YXRpYyB2b2lkIGRldmFwY192aW9f
+aW5mb19wcmludChzdHJ1Y3QgbXRrX2RldmFwY19jb250ZXh0ICpjdHgpDQorew0KKwlzdHJ1Y3Qg
+bXRrX2RldmFwY192aW9faW5mbyAqdmlvX2luZm8gPSBjdHgtPnZpb19pbmZvOw0KKw0KKwkvKiBQ
+cmludCB2aW9sYXRpb24gaW5mb3JtYXRpb24gKi8NCisJaWYgKHZpb19pbmZvLT53cml0ZSkNCisJ
+CWRldl9pbmZvKGN0eC0+ZGV2LCAiV3JpdGUgVmlvbGF0aW9uXG4iKTsNCisJZWxzZSBpZiAodmlv
+X2luZm8tPnJlYWQpDQorCQlkZXZfaW5mbyhjdHgtPmRldiwgIlJlYWQgVmlvbGF0aW9uXG4iKTsN
+CisNCisJZGV2X2luZm8oY3R4LT5kZXYsICJWaW8gQWRkcjoweCV4LCBIaWdoOjB4JXgsIEJ1cyBJ
+RDoweCV4LCBEb20gSUQ6JXhcbiIsDQorCQkgdmlvX2luZm8tPnZpb19hZGRyLCB2aW9faW5mby0+
+dmlvX2FkZHJfaGlnaCwNCisJCSB2aW9faW5mby0+bWFzdGVyX2lkLCB2aW9faW5mby0+ZG9tYWlu
+X2lkKTsNCit9DQorDQorLyoNCisgKiBkZXZhcGNfZXh0cmFjdF92aW9fZGJnIC0gZXh0cmFjdCBm
+dWxsIHZpb2xhdGlvbiBpbmZvcm1hdGlvbiBhZnRlciBkb2luZw0KKyAqICAgICAgICAgICAgICAg
+ICAgICAgICAgICBzaGlmdCBtZWNoYW5pc20uDQorICovDQorc3RhdGljIHZvaWQgZGV2YXBjX2V4
+dHJhY3RfdmlvX2RiZyhzdHJ1Y3QgbXRrX2RldmFwY19jb250ZXh0ICpjdHgpDQorew0KKwljb25z
+dCBzdHJ1Y3QgbXRrX2RldmFwY192aW9fZGJncyAqdmlvX2RiZ3M7DQorCXN0cnVjdCBtdGtfZGV2
+YXBjX3Zpb19pbmZvICp2aW9faW5mbzsNCisJdm9pZCBfX2lvbWVtICp2aW9fZGJnMF9yZWc7DQor
+CXZvaWQgX19pb21lbSAqdmlvX2RiZzFfcmVnOw0KKwl1MzIgZGJnMDsNCisNCisJdmlvX2RiZzBf
+cmVnID0gY3R4LT5kZXZhcGNfcGRfYmFzZSArIGN0eC0+b2Zmc2V0LT52aW9fZGJnMDsNCisJdmlv
+X2RiZzFfcmVnID0gY3R4LT5kZXZhcGNfcGRfYmFzZSArIGN0eC0+b2Zmc2V0LT52aW9fZGJnMTsN
+CisNCisJdmlvX2RiZ3MgPSBjdHgtPnZpb19kYmdzOw0KKwl2aW9faW5mbyA9IGN0eC0+dmlvX2lu
+Zm87DQorDQorCS8qIFN0YXJ0cyB0byBleHRyYWN0IHZpb2xhdGlvbiBpbmZvcm1hdGlvbiAqLw0K
+KwlkYmcwID0gcmVhZGwodmlvX2RiZzBfcmVnKTsNCisJdmlvX2luZm8tPnZpb19hZGRyID0gcmVh
+ZGwodmlvX2RiZzFfcmVnKTsNCisNCisJdmlvX2luZm8tPm1hc3Rlcl9pZCA9IChkYmcwICYgdmlv
+X2RiZ3MtPm1zdGlkLm1hc2spID4+DQorCQkJICAgICAgdmlvX2RiZ3MtPm1zdGlkLnN0YXJ0Ow0K
+Kwl2aW9faW5mby0+ZG9tYWluX2lkID0gKGRiZzAgJiB2aW9fZGJncy0+ZG1uaWQubWFzaykgPj4N
+CisJCQkgICAgICB2aW9fZGJncy0+ZG1uaWQuc3RhcnQ7DQorCXZpb19pbmZvLT53cml0ZSA9ICgo
+ZGJnMCAmIHZpb19kYmdzLT52aW9fdy5tYXNrKSA+Pg0KKwkJCSAgICB2aW9fZGJncy0+dmlvX3cu
+c3RhcnQpID09IDE7DQorCXZpb19pbmZvLT5yZWFkID0gKChkYmcwICYgdmlvX2RiZ3MtPnZpb19y
+Lm1hc2spID4+DQorCQkJICB2aW9fZGJncy0+dmlvX3Iuc3RhcnQpID09IDE7DQorCXZpb19pbmZv
+LT52aW9fYWRkcl9oaWdoID0gKGRiZzAgJiB2aW9fZGJncy0+YWRkcl9oLm1hc2spID4+DQorCQkJ
+CSAgdmlvX2RiZ3MtPmFkZHJfaC5zdGFydDsNCisNCisJZGV2YXBjX3Zpb19pbmZvX3ByaW50KGN0
+eCk7DQorfQ0KKw0KKy8qDQorICogZGV2YXBjX2R1bXBfdmlvX2RiZyAtIHNoaWZ0IGFuZCBkdW1w
+IHRoZSB2aW9sYXRpb24gZGVidWcgaW5mb3JtYXRpb24uDQorICovDQorc3RhdGljIHZvaWQgZGV2
+YXBjX2R1bXBfdmlvX2RiZyhzdHJ1Y3QgbXRrX2RldmFwY19jb250ZXh0ICpjdHgpDQorew0KKwlp
+bnQgc2hpZnRfYml0Ow0KKw0KKwkvKg0KKwkgKiBBbGwgZ3JvdXBzIHZpb19pZHggYmVsb25ncyB0
+byBpcyBkZXRlcm1pbmVkIGJ5IGhhcmR3YXJlLA0KKwkgKiBhbmQgZWFjaCBncm91cCBjYW4gb25s
+eSBtYWludGFpbiBvbmUgdmlvbGF0aW9uIGluZm8gYXQgYSB0aW1lLg0KKwkgKg0KKwkgKiBTY2Fu
+IGFsbCBncm91cHMgd2hpY2ggdmlvX2lkeCBoYXMgdmlvbGF0aW9uLCBkdW1wIGl0IGZvcg0KKwkg
+KiBmdXJ0aGVyIGFuYWx5c2lzLg0KKwkgKi8NCisJd2hpbGUgKDEpIHsNCisJCXNoaWZ0X2JpdCA9
+IGdldF9zaGlmdF9ncm91cChjdHgpOw0KKw0KKwkJaWYgKHNoaWZ0X2JpdCA+PSAwICYmIHNoaWZ0
+X2JpdCA8PSAzMSkgew0KKwkJCWlmICghc3luY192aW9fZGJnKGN0eCwgc2hpZnRfYml0KSkNCisJ
+CQkJZGV2YXBjX2V4dHJhY3RfdmlvX2RiZyhjdHgpOw0KKw0KKwkJCWNvbnRpbnVlOw0KKwkJfQ0K
+Kw0KKwkJYnJlYWs7DQorCX0NCit9DQorDQorLyoNCisgKiBkZXZhcGNfdmlvbGF0aW9uX2lycSAt
+IHRoZSBkZXZhcGMgSW50ZXJydXB0IFNlcnZpY2UgUm91dGluZSAoSVNSKSB3aWxsIGR1bXANCisg
+KiAgICAgICAgICAgICAgICAgICAgICAgIHZpb2xhdGlvbiBpbmZvcm1hdGlvbiBpbmNsdWRpbmcg
+d2hpY2ggbWFzdGVyIHZpb2xhdGVzDQorICogICAgICAgICAgICAgICAgICAgICAgICBhY2Nlc3Mg
+c2xhdmUuDQorICovDQorc3RhdGljIGlycXJldHVybl90IGRldmFwY192aW9sYXRpb25faXJxKGlu
+dCBpcnFfbnVtYmVyLA0KKwkJCQkJc3RydWN0IG10a19kZXZhcGNfY29udGV4dCAqY3R4KQ0KK3sN
+CisJdTMyIHZpb19pZHg7DQorDQorCS8qDQorCSAqIE1hc2sgc2xhdmUncyBpcnEgYmVmb3JlIGNs
+ZWFyaW5nIHZpbyBzdGF0dXMuDQorCSAqIE11c3QgZG8gaXQgdG8gYXZvaWQgbmVzdGVkIGludGVy
+cnVwdCBhbmQgcHJldmVudA0KKwkgKiB1bmV4cGVjdGVkIGJlaGF2aW9yLg0KKwkgKi8NCisJZm9y
+ICh2aW9faWR4ID0gMDsgdmlvX2lkeCA8IGN0eC0+dmlvX2lkeF9udW07IHZpb19pZHgrKykNCisJ
+CW1hc2tfbW9kdWxlX2lycShjdHgsIHZpb19pZHgsIHRydWUpOw0KKw0KKwlkZXZhcGNfZHVtcF92
+aW9fZGJnKGN0eCk7DQorDQorCS8qDQorCSAqIEVuc3VyZSB0aGF0IHZpb2xhdGlvbiBpbmZvIGFy
+ZSB3cml0dGVuDQorCSAqIGJlZm9yZSBmdXJ0aGVyIG9wZXJhdGlvbnMNCisJICovDQorCXNtcF9t
+YigpOw0KKw0KKwlmb3IgKHZpb19pZHggPSAwOyB2aW9faWR4IDwgY3R4LT52aW9faWR4X251bTsg
+dmlvX2lkeCsrKSB7DQorCQljbGVhcl92aW9fc3RhdHVzKGN0eCwgdmlvX2lkeCk7DQorCQltYXNr
+X21vZHVsZV9pcnEoY3R4LCB2aW9faWR4LCBmYWxzZSk7DQorCX0NCisNCisJcmV0dXJuIElSUV9I
+QU5ETEVEOw0KK30NCisNCisvKg0KKyAqIHN0YXJ0X2RldmFwYyAtIHVubWFzayBzbGF2ZSdzIGly
+cSB0byBzdGFydCByZWNlaXZpbmcgZGV2YXBjIHZpb2xhdGlvbi4NCisgKi8NCitzdGF0aWMgdm9p
+ZCBzdGFydF9kZXZhcGMoc3RydWN0IG10a19kZXZhcGNfY29udGV4dCAqY3R4KQ0KK3sNCisJdTMy
+IHZpb19pZHg7DQorDQorCWZvciAodmlvX2lkeCA9IDA7IHZpb19pZHggPCBjdHgtPnZpb19pZHhf
+bnVtOyB2aW9faWR4KyspDQorCQltYXNrX21vZHVsZV9pcnEoY3R4LCB2aW9faWR4LCBmYWxzZSk7
+DQorfQ0KKw0KK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2RldmFwY19wZF9vZmZzZXQgbXQ2Nzc5
+X3BkX29mZnNldCA9IHsNCisJLnZpb19tYXNrID0gMHgwLA0KKwkudmlvX3N0YSA9IDB4NDAwLA0K
+KwkudmlvX2RiZzAgPSAweDkwMCwNCisJLnZpb19kYmcxID0gMHg5MDQsDQorCS5hcGNfY29uID0g
+MHhGMDAsDQorCS52aW9fc2hpZnRfc3RhID0gMHhGMTAsDQorCS52aW9fc2hpZnRfc2VsID0gMHhG
+MTQsDQorCS52aW9fc2hpZnRfY29uID0gMHhGMjAsDQorfTsNCisNCitzdGF0aWMgY29uc3Qgc3Ry
+dWN0IG10a19kZXZhcGNfdmlvX2RiZ3MgbXQ2Nzc5X3Zpb19kYmdzID0gew0KKwkubXN0aWQgPSAg
+ezB4MDAwMEZGRkYsIDB4MH0sDQorCS5kbW5pZCA9ICB7MHgwMDNGMDAwMCwgMHgxMH0sDQorCS52
+aW9fdyA9ICB7MHgwMDQwMDAwMCwgMHgxNn0sDQorCS52aW9fciA9ICB7MHgwMDgwMDAwMCwgMHgx
+N30sDQorCS5hZGRyX2ggPSB7MHgwRjAwMDAwMCwgMHgxOH0sDQorfTsNCisNCitzdGF0aWMgY29u
+c3Qgc3RydWN0IG10a19kZXZhcGNfY29udGV4dCBkZXZhcGNfbXQ2Nzc5ID0gew0KKwkudmlvX2lk
+eF9udW0gPSA1MTAsDQorCS5vZmZzZXQgPSAmbXQ2Nzc5X3BkX29mZnNldCwNCisJLnZpb19kYmdz
+ID0gJm10Njc3OV92aW9fZGJncywNCit9Ow0KKw0KK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2
+aWNlX2lkIG10a19kZXZhcGNfZHRfbWF0Y2hbXSA9IHsNCisJew0KKwkJLmNvbXBhdGlibGUgPSAi
+bWVkaWF0ZWssbXQ2Nzc5LWRldmFwYyIsDQorCQkuZGF0YSA9ICZkZXZhcGNfbXQ2Nzc5LA0KKwl9
+LCB7DQorCX0sDQorfTsNCisNCitzdGF0aWMgaW50IG10a19kZXZhcGNfcHJvYmUoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqcGRldikNCit7DQorCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSA9IHBk
+ZXYtPmRldi5vZl9ub2RlOw0KKwlzdHJ1Y3QgbXRrX2RldmFwY19jb250ZXh0ICpjdHg7DQorCXN0
+cnVjdCBjbGsgKmRldmFwY19pbmZyYV9jbGs7DQorCXUzMiBkZXZhcGNfaXJxOw0KKwlpbnQgcmV0
+Ow0KKw0KKwlpZiAoSVNfRVJSKG5vZGUpKQ0KKwkJcmV0dXJuIC1FTk9ERVY7DQorDQorCWN0eCA9
+IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LCBzaXplb2YoKmN0eCksIEdGUF9LRVJORUwpOw0KKwlp
+ZiAoIWN0eCkNCisJCXJldHVybiAtRU5PTUVNOw0KKw0KKwljdHggPSAoc3RydWN0IG10a19kZXZh
+cGNfY29udGV4dCAqKW9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YSgmcGRldi0+ZGV2KTsNCisJY3R4
+LT5kZXYgPSAmcGRldi0+ZGV2Ow0KKw0KKwljdHgtPnZpb19pbmZvID0gZGV2bV9remFsbG9jKCZw
+ZGV2LT5kZXYsDQorCQkJCSAgICAgc2l6ZW9mKHN0cnVjdCBtdGtfZGV2YXBjX3Zpb19pbmZvKSwN
+CisJCQkJICAgICBHRlBfS0VSTkVMKTsNCisJaWYgKCFjdHgtPnZpb19pbmZvKQ0KKwkJcmV0dXJu
+IC1FTk9NRU07DQorDQorCWN0eC0+ZGV2YXBjX3BkX2Jhc2UgPSBvZl9pb21hcChub2RlLCAwKTsN
+CisJaWYgKCFjdHgtPmRldmFwY19wZF9iYXNlKQ0KKwkJcmV0dXJuIC1FSU5WQUw7DQorDQorCWRl
+dmFwY19pcnEgPSBpcnFfb2ZfcGFyc2VfYW5kX21hcChub2RlLCAwKTsNCisJaWYgKCFkZXZhcGNf
+aXJxKQ0KKwkJcmV0dXJuIC1FSU5WQUw7DQorDQorCWRldmFwY19pbmZyYV9jbGsgPSBkZXZtX2Ns
+a19nZXQoJnBkZXYtPmRldiwgImRldmFwYy1pbmZyYS1jbG9jayIpOw0KKwlpZiAoSVNfRVJSKGRl
+dmFwY19pbmZyYV9jbGspKQ0KKwkJcmV0dXJuIC1FSU5WQUw7DQorDQorCWlmIChjbGtfcHJlcGFy
+ZV9lbmFibGUoZGV2YXBjX2luZnJhX2NsaykpDQorCQlyZXR1cm4gLUVJTlZBTDsNCisNCisJcmV0
+ID0gZGV2bV9yZXF1ZXN0X2lycSgmcGRldi0+ZGV2LCBkZXZhcGNfaXJxLA0KKwkJCSAgICAgICAo
+aXJxX2hhbmRsZXJfdClkZXZhcGNfdmlvbGF0aW9uX2lycSwNCisJCQkgICAgICAgSVJRRl9UUklH
+R0VSX05PTkUsICJkZXZhcGMiLCBjdHgpOw0KKwlpZiAocmV0KQ0KKwkJcmV0dXJuIHJldDsNCisN
+CisJc3RhcnRfZGV2YXBjKGN0eCk7DQorDQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMgaW50
+IG10a19kZXZhcGNfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKmRldikNCit7DQorCXJl
+dHVybiAwOw0KK30NCisNCitzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBtdGtfZGV2YXBj
+X2RyaXZlciA9IHsNCisJLnByb2JlID0gbXRrX2RldmFwY19wcm9iZSwNCisJLnJlbW92ZSA9IG10
+a19kZXZhcGNfcmVtb3ZlLA0KKwkuZHJpdmVyID0gew0KKwkJLm5hbWUgPSBLQlVJTERfTU9ETkFN
+RSwNCisJCS5vZl9tYXRjaF90YWJsZSA9IG10a19kZXZhcGNfZHRfbWF0Y2gsDQorCX0sDQorfTsN
+CisNCittb2R1bGVfcGxhdGZvcm1fZHJpdmVyKG10a19kZXZhcGNfZHJpdmVyKTsNCisNCitNT0RV
+TEVfREVTQ1JJUFRJT04oIk1lZGlhdGVrIERldmljZSBBUEMgRHJpdmVyIik7DQorTU9EVUxFX0FV
+VEhPUigiTmVhbCBMaXUgPG5lYWwubGl1QG1lZGlhdGVrLmNvbT4iKTsNCitNT0RVTEVfTElDRU5T
+RSgiR1BMIik7DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWRldmFwYy5o
+IGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWRldmFwYy5oDQpuZXcgZmlsZSBtb2RlIDEwMDY0
+NA0KaW5kZXggMDAwMDAwMC4uN2JkN2U2Ng0KLS0tIC9kZXYvbnVsbA0KKysrIGIvZHJpdmVycy9z
+b2MvbWVkaWF0ZWsvbXRrLWRldmFwYy5oDQpAQCAtMCwwICsxLDU0IEBADQorLyogU1BEWC1MaWNl
+bnNlLUlkZW50aWZpZXI6IEdQTC0yLjAgKi8NCisvKg0KKyAqIENvcHlyaWdodCAoQykgMjAyMCBN
+ZWRpYVRlayBJbmMuDQorICovDQorDQorI2lmbmRlZiBfX01US19ERVZBUENfSF9fDQorI2RlZmlu
+ZSBfX01US19ERVZBUENfSF9fDQorDQorI2RlZmluZSBWSU9fTU9EX1RPX1JFR19JTkQobSkJKCht
+KSAvIDMyKQ0KKyNkZWZpbmUgVklPX01PRF9UT19SRUdfT0ZGKG0pCSgobSkgJSAzMikNCisNCitz
+dHJ1Y3QgbXRrX2RldmFwY19wZF9vZmZzZXQgew0KKwl1MzIgdmlvX21hc2s7DQorCXUzMiB2aW9f
+c3RhOw0KKwl1MzIgdmlvX2RiZzA7DQorCXUzMiB2aW9fZGJnMTsNCisJdTMyIGFwY19jb247DQor
+CXUzMiB2aW9fc2hpZnRfc3RhOw0KKwl1MzIgdmlvX3NoaWZ0X3NlbDsNCisJdTMyIHZpb19zaGlm
+dF9jb247DQorfTsNCisNCitzdHJ1Y3QgbXRrX2RldmFwY192aW9fZGJnc19kZXNjIHsNCisJdTMy
+IG1hc2s7DQorCXUzMiBzdGFydDsNCit9Ow0KKw0KK3N0cnVjdCBtdGtfZGV2YXBjX3Zpb19kYmdz
+IHsNCisJc3RydWN0IG10a19kZXZhcGNfdmlvX2RiZ3NfZGVzYyBtc3RpZDsNCisJc3RydWN0IG10
+a19kZXZhcGNfdmlvX2RiZ3NfZGVzYyBkbW5pZDsNCisJc3RydWN0IG10a19kZXZhcGNfdmlvX2Ri
+Z3NfZGVzYyB2aW9fdzsNCisJc3RydWN0IG10a19kZXZhcGNfdmlvX2RiZ3NfZGVzYyB2aW9fcjsN
+CisJc3RydWN0IG10a19kZXZhcGNfdmlvX2RiZ3NfZGVzYyBhZGRyX2g7DQorfTsNCisNCitzdHJ1
+Y3QgbXRrX2RldmFwY192aW9faW5mbyB7DQorCWJvb2wgcmVhZDsNCisJYm9vbCB3cml0ZTsNCisJ
+dTMyIHZpb19hZGRyOw0KKwl1MzIgdmlvX2FkZHJfaGlnaDsNCisJdTMyIG1hc3Rlcl9pZDsNCisJ
+dTMyIGRvbWFpbl9pZDsNCit9Ow0KKw0KK3N0cnVjdCBtdGtfZGV2YXBjX2NvbnRleHQgew0KKwlz
+dHJ1Y3QgZGV2aWNlICpkZXY7DQorCXUzMiB2aW9faWR4X251bTsNCisJdm9pZCBfX2lvbWVtICpk
+ZXZhcGNfcGRfYmFzZTsNCisJc3RydWN0IG10a19kZXZhcGNfdmlvX2luZm8gKnZpb19pbmZvOw0K
+Kwljb25zdCBzdHJ1Y3QgbXRrX2RldmFwY19wZF9vZmZzZXQgKm9mZnNldDsNCisJY29uc3Qgc3Ry
+dWN0IG10a19kZXZhcGNfdmlvX2RiZ3MgKnZpb19kYmdzOw0KK307DQorDQorI2VuZGlmIC8qIF9f
+TVRLX0RFVkFQQ19IX18gKi8NCi0tIA0KMS43LjkuNQ0K
 
-Ok, I have actual insight on this one here, and I'm pretty sure this
-isn't the fix. Looking at the syzkaller splat we have a recursion of
-the form
-
-fb_ioctl -> fb_set_var -> fbcon_update_vcs -> fbcon_resize -> fb_set_var
-
-Which isn't supposed to be happening. I've dug around recently in
-fbcon code, and this is a fairly common issue: You can update fbcon
-state both from fb_ioctl, but also from the vc side. To avoid the
-above recursion problems the code is using FBINFO_MISC_USEREVENT, and
-should only set that from fb_ioctl entry points. That's all fairly
-fragile, so I've done a bit of reworking, e.g.
-
-commit de29ae5c092bd9a5360cfabf174b0f783248d278
-Author: Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Tue May 28 11:02:56 2019 +0200
-
-    fbmem: pull fbcon_fb_blanked out of fb_blank
-
-as an example.
-
-I think doing the same for fb_set_var, i.e. only calling
-fbcon_update_vcs for the 3 callers that want it, should fix this
-recursion. I think that's the much more robust fix instead of trying
-to paper over the fallout of this recursion here and everywhere else.
-
-Can you look into reworking your patch like that?
-
-Cheers, Daniel
-
-> ---
->  drivers/tty/vt/vt.c | 24 +++++++++++++++++-------
->  1 file changed, 17 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> index 42d8c67..952a067 100644
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -1217,7 +1217,24 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
->
->         if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
->                 return 0;
-> +       if (new_screen_size > KMALLOC_MAX_SIZE || !new_screen_size)
-> +               return -EINVAL;
->
-> +       /*
-> +        * Since fbcon_resize() from resize_screen() can recurse into
-> +        * this function via fb_set_var(), handle recursion now.
-> +        */
-> +       err = resize_screen(vc, new_cols, new_rows, user);
-> +       if (err)
-> +               return err;
-> +       /* Reload values in case recursion changed vc->vc_{cols,rows}. */
-> +       new_cols = (cols ? cols : vc->vc_cols);
-> +       new_rows = (lines ? lines : vc->vc_rows);
-> +       new_row_size = new_cols << 1;
-> +       new_screen_size = new_row_size * new_rows;
-> +
-> +       if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
-> +               return 0;
->         if (new_screen_size > KMALLOC_MAX_SIZE || !new_screen_size)
->                 return -EINVAL;
->         newscreen = kzalloc(new_screen_size, GFP_USER);
-> @@ -1238,13 +1255,6 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
->         old_rows = vc->vc_rows;
->         old_row_size = vc->vc_size_row;
->
-> -       err = resize_screen(vc, new_cols, new_rows, user);
-> -       if (err) {
-> -               kfree(newscreen);
-> -               vc_uniscr_free(new_uniscr);
-> -               return err;
-> -       }
-> -
->         vc->vc_rows = new_rows;
->         vc->vc_cols = new_cols;
->         vc->vc_size_row = new_row_size;
-> --
-> 1.8.3.1
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
