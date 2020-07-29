@@ -2,101 +2,117 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E058C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECE120809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 243C020809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:30:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ObaJwPdF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MuxK+0p9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgG2R0F (ORCPT
+        id S1726773AbgG2RaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:26:05 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20564 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726449AbgG2R0E (ORCPT
+        Wed, 29 Jul 2020 13:30:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgG2RaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 13:26:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596043563;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ECKupviQ1aLptZ6EkNAq107u67VqawNacT22OAEjUAo=;
-        b=ObaJwPdFTRpBvqKRpd3h1+OzutDoaVjhRHBU+YpmmYye1/d5j09uw5kCy5hWE4Cu8WP94O
-        UNz98wTBM6OGjbUzuJeS1M07ybI16WV6w38jzvNxdTVZW1bLB02UNQQdtHLr20k8iQitWs
-        1kfNzcQAxRZLvBxgeFiVWJ+hJvmzRKQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-169-ytXqQt6-MB-0Od1-PiTpdQ-1; Wed, 29 Jul 2020 13:26:01 -0400
-X-MC-Unique: ytXqQt6-MB-0Od1-PiTpdQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4016107BEF5;
-        Wed, 29 Jul 2020 17:25:59 +0000 (UTC)
-Received: from [10.10.114.255] (ovpn-114-255.rdu2.redhat.com [10.10.114.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 26D3010098AA;
-        Wed, 29 Jul 2020 17:25:59 +0000 (UTC)
-Subject: Re: [PATCH 2/7] modules: mark find_symbol static
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org
-References: <20200729062711.13016-1-hch@lst.de>
- <20200729062711.13016-3-hch@lst.de> <20200729161318.GA30898@linux-8ccs>
- <20200729162435.GB3664300@kroah.com>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <486d82d8-0fab-b662-ff6c-fb36c3150ea3@redhat.com>
-Date:   Wed, 29 Jul 2020 13:25:58 -0400
+        Wed, 29 Jul 2020 13:30:01 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 211FEC061794;
+        Wed, 29 Jul 2020 10:30:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=Qf4hOLrKqti/BrcIwmN2iDHq4yG0O43FA9u3ufNSp0k=; b=MuxK+0p92B5ZlzJuIQLJjB9DmL
+        So3A2s7hmsfeI84gIlQa72xri1ADO0LzN1Hk3due0uygnNhWE432G1UOP+fvLTIMBTOmVcNum2nEC
+        Z1JZ9ID76JhZRghZDrrJ/OW2NvVpaPMBuVXJ1fcleZ57884XO/zZZe14cwaKA1Hbqm9eUJjwxpxsv
+        oKEudhpSPNYuByEMGfoOnRnnr22U0H0h0fRxK924AFTH+WUNI/rBiPvQjt0s+nOBUByytfHrNSWv6
+        mlBwYLWJcwviYi4nLrRQIqHMqsqbFswEwETiA8BQbiUS3TNqL1MoN2LYUEN+HZeazVm/gAN7eGs9A
+        /r8viR3A==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0ptt-0003Q1-Pr; Wed, 29 Jul 2020 17:29:58 +0000
+Subject: Re: mmotm 2020-07-27-18-18 uploaded (mm/page_alloc.c)
+To:     David Hildenbrand <david@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, Jason Wang <jasowang@redhat.com>
+References: <20200728011914.S-8vAYUK0%akpm@linux-foundation.org>
+ <ae87385b-f830-dbdf-ebc7-1afb82a7fed0@infradead.org>
+ <20200728145553.2a69fa2080de01922b3a74e0@linux-foundation.org>
+ <20200729082053.6c2fb654@canb.auug.org.au>
+ <20200728153143.c94d5af061b20db609511bf3@linux-foundation.org>
+ <20200729101807-mutt-send-email-mst@kernel.org>
+ <e7173f3b-6e30-03ce-74ef-291236917da3@redhat.com>
+ <8271d9b6-431a-c8da-8591-4023ab6c8963@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <731f96d9-c780-5c5d-e338-e647b71fc677@infradead.org>
+Date:   Wed, 29 Jul 2020 10:29:53 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200729162435.GB3664300@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <8271d9b6-431a-c8da-8591-4023ab6c8963@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/20 12:24 PM, Greg Kroah-Hartman wrote:
-> On Wed, Jul 29, 2020 at 06:13:18PM +0200, Jessica Yu wrote:
->> +++ Christoph Hellwig [29/07/20 08:27 +0200]:
->>> find_symbol is only used in module.c.
+On 7/29/20 9:14 AM, David Hildenbrand wrote:
+> On 29.07.20 16:38, David Hildenbrand wrote:
+>> On 29.07.20 16:18, Michael S. Tsirkin wrote:
+>>> On Tue, Jul 28, 2020 at 03:31:43PM -0700, Andrew Morton wrote:
+>>>> On Wed, 29 Jul 2020 08:20:53 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>>>
+>>>>> Hi Andrew,
+>>>>>
+>>>>> On Tue, 28 Jul 2020 14:55:53 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
+>>>>>> config CONTIG_ALLOC
+>>>>>>         def_bool (MEMORY_ISOLATION && COMPACTION) || CMA
+>>>>>>
+>>>>>> says this is an improper combination.  And `make oldconfig' fixes it up.
+>>>>>>
+>>>>>> What's happening here?
+>>>>>
+>>>>> CONFIG_VIRTIO_MEM selects CONFIG_CONTIG_ALLOC ...
+>>>>
+>>>> Argh, select strikes again.
+>>>>
+>>>> So I guess VIRTIO_MEM should also select COMPACTION?
 >>>
->>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>> +Cc the maintainer.
+>>>
 >>
->> CCing the livepatching ML, as this may or may not impact its users.
+>> We had select CONFIG_CONTIG_ALLOC before and that seemed to be wrong. I
+>> was told select might be the wrong approach.
 >>
->> AFAIK, the out-of-tree kpatch module had used find_symbol() in the
->> past, I am not sure what its current status is. I suspect all of its
->> functionality has been migrated to upstream livepatch already.
+>> We want memory isolation and contig_alloc with virtio-mem (which depends
+>> on memory hot(un)plug). What would be the right way to achieve this?
+>>
 > 
-> We still have symbol_get(), which is what I thought they were using.
+> Okay, I think I am confused. I thought we had that already fixed. @mst
+> what happened to
 > 
+> https://lkml.kernel.org/r/d03c88ea-200d-54ab-d7f3-f3e5b7a0a9dd@redhat.com
+> 
+> That patch is almost a month old, can you pick it, I already acked it.
 
-The deprecated (though still in the repo) kpatch.ko still references 
-find_symbol(), but that module is no longer officially supported by the 
-project.
+That patch works for me.
 
-Jessica is correct that the functionality has been migrated upstream.
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-I don't see any references to symbol_get() either, so we're good on that 
-front, too.
-
-Thanks,
-
--- Joe
-
+thanks.
+-- 
+~Randy
