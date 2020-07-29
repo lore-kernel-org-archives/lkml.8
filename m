@@ -2,90 +2,93 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A644EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 909FB2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51002076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:38:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W/NNhbO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgG2Igk (ORCPT
+        id S1727817AbgG2Ii6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:36:40 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:51444 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727816AbgG2Igi (ORCPT
+        Wed, 29 Jul 2020 04:38:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726737AbgG2Ii6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:36:38 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-43-2zI0R3XJNsWV7u6ffLfy4w-1; Wed, 29 Jul 2020 09:36:34 +0100
-X-MC-Unique: 2zI0R3XJNsWV7u6ffLfy4w-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 29 Jul 2020 09:36:33 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 29 Jul 2020 09:36:33 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'Madhavan T. Venkataraman'" <madvenka@linux.microsoft.com>,
-        "Andy Lutomirski" <luto@kernel.org>
-CC:     "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: RE: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Thread-Topic: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Thread-Index: AQHWZOCQT+e4gDrzGEmP/30MMvDTCqkdFOrwgABBt1CAAORUsA==
-Date:   Wed, 29 Jul 2020 08:36:33 +0000
-Message-ID: <a159f2e8417746fb88f31a97c6f366ba@AcuMS.aculab.com>
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <c23de6ec47614f489943e1a89a21dfa3@AcuMS.aculab.com>
- <f5cfd11b-04fe-9db7-9d67-7ee898636edb@linux.microsoft.com>
- <CALCETrUta5-0TLJ9-jfdehpTAp2Efmukk2npYadFzz9ozOrG2w@mail.gmail.com>
- <59246260-e535-a9f1-d89e-4e953288b977@linux.microsoft.com>
-In-Reply-To: <59246260-e535-a9f1-d89e-4e953288b977@linux.microsoft.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 29 Jul 2020 04:38:58 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E33AEC0619D2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:38:56 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id t6so11505459plo.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:38:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=HbtJE63+eO8A7hJIYpadhjS7rkPV5HGagSVTfU+DbFQ=;
+        b=W/NNhbO1UHWwgBubTrG+vvCvJWc3ROwi3sun459A2CESXYwYFM9TussMxojmXwp6RP
+         BddeN0djhDJlRYMsXk1FpzwXIOSFQCST/Jxp3NfHEmSuliDqGq+RO62ZgCjv/I4kZDTy
+         LiJV6QOGKrhLhxhlJCSEdzatM2lEg2G4SJ0fk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=HbtJE63+eO8A7hJIYpadhjS7rkPV5HGagSVTfU+DbFQ=;
+        b=J6JDaAYOi7rPF9qW/96RuDQthCg/a4YWZO7ey6xYc3TR8kEkela1NSjthaOgGInMyJ
+         3ni/8M2fcTKFm0FF5V3BEGsOE97oP9J0w4V2CJHqC76hTPfXVm6+xM5zASS3dN+2jIzs
+         PJf0nQ1az5/qyDsk5XN7Ki8a9iNgJXIzjCbIIzlsml6gCCIb/MpzWxKe6cTISa6Ipz5N
+         weNI59bjxkEEaRAoVxbEd7rcqaLPTKQI0xzVwbQTswxDQnOwlbCHioPbCvJnAvGOX9tp
+         2mrmq8Mf5980GP5Vg1EwnKO8OZpu/WiF8rZUT4HypbFFRVGPTkgOA48K1jajCCxjkTuj
+         YuXw==
+X-Gm-Message-State: AOAM530Y5JjXA8Yi0FaQAUpbxKU74qZd+AnPznw+IdA4A7xZ3uCN5NUE
+        E/H2FwJ2SVVbXOdTdGX0quGIxQ==
+X-Google-Smtp-Source: ABdhPJydymo0wEUaSrTPX7MFw0FkDuVjogsdoOwK7zJwZa3jI6qPQwQePOSbT+8zQ7E9z43dmd+qvg==
+X-Received: by 2002:a17:90a:1f81:: with SMTP id x1mr7911944pja.115.1596011935538;
+        Wed, 29 Jul 2020 01:38:55 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id c9sm1394247pjr.35.2020.07.29.01.38.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 01:38:54 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200728170317.v2.4.I9bf713a86d6076b44441ef5f534f9c240271699a@changeid>
+References: <20200728151258.1222876-1-campello@chromium.org> <20200728230520.2011240-1-campello@chromium.org> <20200728170317.v2.4.I9bf713a86d6076b44441ef5f534f9c240271699a@changeid>
+Subject: Re: [PATCH v2 04/14] iio: sx9310: Remove acpi and of table macros
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        kbuild test robot <lkp@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+To:     Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 29 Jul 2020 01:38:52 -0700
+Message-ID: <159601193272.1360974.2787015814101675037@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTWFkaGF2YW4gVC4gVmVua2F0YXJhbWFuDQo+IFNlbnQ6IDI4IEp1bHkgMjAyMCAxOTo1
-Mg0KLi4uDQo+IHRyYW1wZmQgZmF1bHRzIGFyZSBpbnN0cnVjdGlvbiBmYXVsdHMgdGhhdCBnbyB0
-aHJvdWdoIGEgZGlmZmVyZW50IGNvZGUgcGF0aCB0aGFuDQo+IHRoZSBvbmUgdGhhdCBjYWxscyBo
-YW5kbGVfbW1fZmF1bHQoKS4gUGVyaGFwcywgaXQgaXMgdGhlIGhhbmRsZV9tbV9mYXVsdCgpIHRo
-YXQNCj4gaXMgdGltZSBjb25zdW1pbmcuIENvdWxkIHlvdSBjbGFyaWZ5Pw0KDQpHaXZlbiB0aGF0
-IHRoZSBleHBlY3RhdGlvbiBpcyBhIGZldyBpbnN0cnVjdGlvbnMgaW4gdXNlcnNwYWNlDQooZWcg
-dG8gcGljayB1cCB0aGUgb3JpZ2luYWwgYXJndW1lbnRzIGZvciBhIG5lc3RlZCBjYWxsKQ0KdGhl
-IChwcm9iYWJsZSkgdGhvdXNhbmRzIG9mIGNsb2NrcyB0YWtlbiBieSBlbnRlcmluZyB0aGUNCmtl
-cm5lbCAoZXNwZWNpYWxseSB3aXRoIHBhZ2UgdGFibGUgc2VwYXJhdGlvbikgaXMgYSBtYXNzaXZl
-DQpkZWx0YS4NCg0KSWYgZW50ZXJpbmcgdGhlIGtlcm5lbCB3ZXJlIGNoZWFwIG5vIG9uZSB3b3Vs
-ZCBoYXZlIGFkZGVkDQp0aGUgRFNPIGZ1bmN0aW9ucyBmb3IgZ2V0dGluZyB0aGUgdGltZSBvZiBk
-YXkuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkg
-Um9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlv
-biBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+Quoting Daniel Campello (2020-07-28 16:05:10)
+> Avoids unused warnings due to acpi/of table macros.
+>=20
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> ---
 
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
