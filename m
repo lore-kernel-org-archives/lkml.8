@@ -2,106 +2,90 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C5DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70E7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE5AF2068F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA292075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:41:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iYGtfwM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgG2Uk7 (ORCPT
+        id S1726883AbgG2Uls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:40:59 -0400
-Received: from mga06.intel.com ([134.134.136.31]:6863 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgG2Uk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:40:59 -0400
-IronPort-SDR: IlclRdZ/dBHb+STlDvBZu9yxeteqsh63vbHdzoI91hcGP8DAejxu48+5e9PFIvmPwGZb1bRjpc
- 0E/IXcRuhwsw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="213027585"
-X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
-   d="scan'208";a="213027585"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 13:40:58 -0700
-IronPort-SDR: f2Oxby9co8guUXawubDpyXpSuYqAnvH1MxNMVgFG1KeFEl3QKBohgwatooPdO6785yPW2i6ivU
- Psq5ocl7x5dQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
-   d="scan'208";a="328762989"
-Received: from otcwcpicx6.sc.intel.com ([172.25.55.29])
-  by FMSMGA003.fm.intel.com with ESMTP; 29 Jul 2020 13:40:57 -0700
-Date:   Wed, 29 Jul 2020 20:40:57 +0000
-From:   Fenghua Yu <fenghua.yu@intel.com>
+        Wed, 29 Jul 2020 16:41:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44908 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726476AbgG2Ulr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 16:41:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596055306;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tz3AJclcgpUUd5Ie5LOD0OGxJo0zoLyE3foe8l24nRs=;
+        b=iYGtfwM1QPF1Eb5HNsD0EOkj2xutyTFT+KM5wYrftob6UEvn+xznLuuVZrDTPpblgAPb1y
+        l0ys5aavG8HhqnUDIFF1l7pM40Y8nVYJdRofYrppBX27/GBJLHLSP/cfAuqk77cuufJdNH
+        3hsWggVZiv13VhPzWNCKw01HhrL52k0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-237-RahEJVJbP9CvmEsIJZ3KEQ-1; Wed, 29 Jul 2020 16:41:44 -0400
+X-MC-Unique: RahEJVJbP9CvmEsIJZ3KEQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B21101083E85;
+        Wed, 29 Jul 2020 20:41:41 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3DFD08A18A;
+        Wed, 29 Jul 2020 20:41:38 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200729111120.GA2638@hirez.programming.kicks-ass.net>
+References: <20200729111120.GA2638@hirez.programming.kicks-ass.net> <20200721195132.GJ10769@hirez.programming.kicks-ass.net> <202006142054.C00B3E9C9@keescook> <20200612183450.4189588-1-keescook@chromium.org> <7be4d56b-0406-099b-e505-02e074c5173e@huawei.com> <544539.1595328664@warthog.procyon.org.uk> <202007211144.A68C31D@keescook> <3211866.1595933798@warthog.procyon.org.uk>
 To:     peterz@infradead.org
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Tony Luck <tony.luck@intel.com>, H Peter Anvin <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>, x86 <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] x86/bus_lock: Enable bus lock detection
-Message-ID: <20200729204057.GB318595@otcwcpicx6.sc.intel.com>
-References: <1595021700-68460-1-git-send-email-fenghua.yu@intel.com>
- <20200729084947.GY119549@hirez.programming.kicks-ass.net>
+Cc:     dhowells@redhat.com, Kees Cook <keescook@chromium.org>,
+        Xiaoming Ni <nixiaoming@huawei.com>,
+        David Windsor <dwindsor@gmail.com>,
+        Hans Liljestrand <ishkamiel@gmail.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Paul Moore <paul@paul-moore.com>, edumazet@google.com,
+        paulmck@kernel.org, shakeelb@google.com,
+        James Morris <jamorris@linux.microsoft.com>,
+        alex.huangjianhui@huawei.com, dylix.dailei@huawei.com,
+        chenzefeng2@huawei.com, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>
+Subject: Re: [RFC][PATCH] locking/refcount: Provide __refcount API to obtain the old value
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729084947.GY119549@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4041519.1596055297.1@warthog.procyon.org.uk>
+Date:   Wed, 29 Jul 2020 21:41:37 +0100
+Message-ID: <4041520.1596055297@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Peter,
+peterz@infradead.org wrote:
 
-On Wed, Jul 29, 2020 at 10:49:47AM +0200, peterz@infradead.org wrote:
-> On Fri, Jul 17, 2020 at 02:35:00PM -0700, Fenghua Yu wrote:
-> 
-> > #DB for bus lock detect fixes all issues in #AC for split lock detect:
-> > 1) It's architectural ... just need to look at one CPUID bit to know it
-> >    exists
-> > 2) The IA32_DEBUGCTL MSR, which reports bus lock in #DB, is per-thread.
-> >    So each process or guest can have different behavior.
-> 
-> And it generates a whole new problem due to #DB being an IST, and
-> 
-> > diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> > index b038695f36c5..58725567da39 100644
-> > --- a/arch/x86/kernel/traps.c
-> > +++ b/arch/x86/kernel/traps.c
-> > @@ -812,6 +812,16 @@ static void handle_debug(struct pt_regs *regs, unsigned long dr6, bool user)
-> >  	if (!user && !dr6)
-> >  		return;
-> >  
-> > +	/* Handle bus lock. */
-> > +	if (!(dr6 & DR_BUS_LOCK)) {
-> > +		cond_local_irq_enable(regs);
-> > +		if (user)
-> > +			handle_user_bus_lock(regs);
-> > +		else
-> > +			handle_kernel_bus_lock(regs);
-> > +		goto out;
-> > +	}
-> > +
-> >  	/*
-> >  	 * If dr6 has no reason to give us about the origin of this trap,
-> >  	 * then it's very likely the result of an icebp/int01 trap.
-> 
-> we very much rely on #DB never recursing, which we carefully crafted by
-> disallowing hardare breakpoints on noinstr code and clearing DR7 early.
-> 
-> But now it can... please keep the pieces.
+> I'm not entirely sure what you mean with interpret, provided you don't
+> trigger a refcount fail, the number will be just what you expect and
+> would get from refcount_read(). If you do trigger a fail, you'll get a
+> negative value.
 
-Can we disable Bus Lock Detection before handle it and re-enable it
-after handle it? Will that resolve the recursion issue?
+That's fine.  I seem to remember talk about the possibility that the number
+wouldn't necessarily bottom out at zero - for instance if it was arranged such
+that the overflow flag was set on an overflow or underflow so that it could be
+trapped on (using INTO or TRAPV, for example).
 
-Thanks.
+David
 
--Fenghua
