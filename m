@@ -2,106 +2,141 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67335C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE99C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 452242070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596025808;
-	bh=5gdtqyYzHNXUduyS3z6Fo+0DDu3Naabec0c2Ib17zHE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=kZ8LoyslIVrjOElMomA5xgLl+WKsU1lPucAy1XeNMsH/gOZOHdALqesP4+xdLl+sM
-	 lEgITAqZECmiA/PQcq8c152j4hvIfIQ9tprDpjCNAJb82O69N1TpFUtQL73HX/lMQw
-	 43NYJMc/+Oo42RItLau2VIvwieCnf5Ef/g2pJoq8=
+	by mail.kernel.org (Postfix) with ESMTP id E1A122083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:30:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgG2MaG (ORCPT
+        id S1726976AbgG2Ma4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:30:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgG2MaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:30:04 -0400
-Received: from localhost (unknown [166.175.62.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AD562070B;
-        Wed, 29 Jul 2020 12:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596025804;
-        bh=5gdtqyYzHNXUduyS3z6Fo+0DDu3Naabec0c2Ib17zHE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EiLcXo4hnqx4SVOp3nLa2QptpSC6bi46vKjrpt5NPK3l0Wsjs4XOeBNeL/YR6Np69
-         w2WjOjcqTT8xxQV+08q4BZSbVKJ6YS5QsBbqdH0siXw07EwYYu52GKiTKLMpwNZwv0
-         FJVtFbjbepPQv93Zol3/MdTF3A626eZvEAvmmjqU=
-Date:   Wed, 29 Jul 2020 07:29:54 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kevin Curtis <kevin.curtis@farsite.co.uk>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v1] farsync: use generic power management
-Message-ID: <20200729122954.GA1920458@bjorn-Precision-5520>
+        Wed, 29 Jul 2020 08:30:56 -0400
+Received: from m9748.mail.qiye.163.com ([220.181.97.48]:64996 "EHLO
+        m9748.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgG2Ma4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 08:30:56 -0400
+X-Greylist: delayed 509 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Jul 2020 08:30:42 EDT
+Received: from ucloud.cn (wm-8.hmbj.internal [127.0.0.1])
+        by m9748.mail.qiye.163.com (Hmail) with ESMTP id 9F9852012A3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 20:22:11 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AP6AXwDuE2vKkeWl-pKSFKo*.1.1596025331642.Hmail.owen.si@ucloud.cn>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?B?bWlzYWxpZ25lZCB2c3lzY2FsbCB3aGVuIHZzeXNjYWxsPWVtdWxhdGU=?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2015-163.com
+X-Originating-IP: 117.48.120.186
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729101730.GA215923@gmail.com>
+Received: from owen.si@ucloud.cn( [117.48.120.186) ] by ajax-webmail ( [127.0.0.1] ) ; Wed, 29 Jul 2020 20:22:11 +0800 (GMT+08:00)
+From:   sibingsong <owen.si@ucloud.cn>
+Date:   Wed, 29 Jul 2020 20:22:11 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZS1VLWVdZKFlBSUI3V1ktWUFJV1kPCR
+        oVCBIfWUFZT05DSxgfHh9DGkpCVkpOQk1LSU5ISEpNTElVGRETFhoSFyQUDg9ZV1kWGg8SFR0UWU
+        FZVUtZBg++
+X-HM-Sender-Digest: e1kMHhlZQQ8JDh5XWRIfHhUPWUFZRzorTTojDD8OPkkNMBAeLBdWCzAo
+        PTAUUVVKVUpOQk1LSU5ISEpCS0tVMxYaEhdVFAweFVUIEjsOGBcUDh9VGBVFWVdZEgtZQVlKSkxV
+        T0NVSklLVUpDTVlXWQgBWUFDSEpLNwY+
+X-HM-Tid: 0a739a85dfc62076kuqy9f9852012a3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 03:47:30PM +0530, Vaibhav Gupta wrote:
-> On Tue, Jul 28, 2020 at 03:04:13PM -0500, Bjorn Helgaas wrote:
-> > On Tue, Jul 28, 2020 at 09:58:10AM +0530, Vaibhav Gupta wrote:
-> > > The .suspend() and .resume() callbacks are not defined for this driver.
-> > > Still, their power management structure follows the legacy framework. To
-> > > bring it under the generic framework, simply remove the binding of
-> > > callbacks from "struct pci_driver".
-> > 
-> > FWIW, this commit log is slightly misleading because .suspend and
-> > .resume are NULL by default, so this patch actually is a complete
-> > no-op as far as code generation is concerned.
-> > 
-> > This change is worthwhile because it simplifies the code a little, but
-> > it doesn't convert the driver from legacy to generic power management.
-> > This driver doesn't supply a .pm structure, so it doesn't seem to do
-> > *any* power management.
->
-> Agreed. Actually, as their presence only causes PCI core to call
-> pci_legacy_suspend/resume() for them, I thought that after removing
-> the binding from "struct pci_driver", this driver qualifies to be
-> grouped under genric framework, so used "use generic power
-> management" for the heading.
-> 
-> I should have written "remove legacy bindning".
-
-This removed the *mention* of fst_driver.suspend and fst_driver.resume,
-which is important because we want to eventually remove those members
-completely from struct pci_driver.
-
-But fst_driver.suspend and fst_driver.resume *exist* before and after
-this patch, and they're initialized to zero before and after this
-patch.
-
-Since they were zero before, and they're still zero after this patch,
-the PCI core doesn't call pci_legacy_suspend/resume().  This patch
-doesn't change that at all.
-
-> But David has applied the patch, should I send a v2 or fix to update
-> message?
-
-No, I don't think David updates patches after he's applied them.  But
-if the situation comes up again, you'll know how to describe it :)
-
-Bjorn
+PCEtLQpfZm9udC1mYWNlCkhlbGxvIGZvbGtzLApXaGVuIEkgcnVuIGEgdnN5c2NhbGwgaW4gbXkg
+YXBwIG9uIGNwdSA2MSBvciAyMSAoYm90aCBhcmUgb24gY29yZSAyMSksIEl0IGNyYXNoZWQgcXVp
+Y2tseS4gRnJvbSB0aGUga2VybmVsIGxvZywgQ1IyID09IGZmZmZmZmZmZmY2MDA1MDAsIGlwID09
+IGZmZmZmZmZmZmY2MDA0MDAsIGFuZCBDUjIgIT0gaXAgdHJpZ2dlcmVkIHRoaXMgYnVnLCBoYXMg
+YW55b25lIGVuY291bnRlcmVkIGl0PwrCoApDUFU6IEludGVsKFIpIFhlb24oUikgR29sZCA2MjQ4
+IENQVSBAIDIuNTBHSHoKS2VybmVsOiA1LjguMC1yYzcgYW5kIDUuNy4xMQpUZXN0IGNvZGUgYW5k
+IGtlcm5lbCBsb2cgYXJlIGFzIGZvbGxvd3M6CsKgCiNjYXQgdGltZS5jCiNpbmNsdWRlIDx0aW1l
+Lmg+CmludCBtYWluKHZvaWQpCnsKwqDCoMKgIGZvciAoOzspIHsKwqDCoMKgwqDCoMKgwqAgdGlt
+ZShOVUxMKTsKwqDCoMKgIH0KwqDCoMKgIHJldHVybiAwOwp9CiMgZ2NjIC0tc3RhdGljIC1vIHRp
+bWUgdGltZS5jICh3aXRoIGdsaWJjIDIuMTIgdGhhdCB1c2UgdnN5c2NhbGwpCiMgdGFza3NldCAt
+YyA2MSAuL3RpbWUKU2VnbWVudGF0aW9uIGZhdWx0IChjb3JlIGR1bXBlZCkKwqAKSnVsIDI5IDE3
+OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogLS0tLS0tLS0tLS0tWyBjdXQgaGVyZSBd
+LS0tLS0tLS0tLS0tCkp1bCAyOSAxNzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IFdB
+Uk5JTkc6IENQVTogNjEgUElEOiAxMzA0NCBhdCBhcmNoL3g4Ni9lbnRyeS92c3lzY2FsbC92c3lz
+Y2FsbF82NC5jOjE1MSBlbXVsYXRlX3ZzeXNjYWxsKzB4MzFlLzB4M2YwCkp1bCAyOSAxNzowNjox
+MyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IE1vZHVsZXMgbGlua2VkIGluOiBtbHg1X2liIGli
+X3V2ZXJicyBpYl9jb3JlIG1seDVfY29yZSBtbHhmdyBwdHAgcHBzX2NvcmUgcGNpX2h5cGVydl9p
+bnRmIG5iZCBlYnRhYmxlX2ZpbHRlciBlYnRhYmxlcyBpcDZ0YWJsZV9maWx0ZXIgaXA2X3RhYmxl
+cyBib25kaW5nIGVzcDZfb2ZmbG9hZCBlc3A2IGVzcDRfb2ZmbG9hZCBlc3A0IGFjdF9nYWN0IGNs
+c19mbG93ZXIgc2NoX2luZ3Jlc3MgaXBfZ3JlIGlwX3R1bm5lbCBncmUgb3BlbnZzd2l0Y2ggbnNo
+IG5mX2Nvbm5jb3VudCBuZl9uYXQgbmZfY29ubnRyYWNrIG5mX2RlZnJhZ19pcHY2IG5mX2RlZnJh
+Z19pcHY0IHNreF9lZGFjIG5maXQgeDg2X3BrZ190ZW1wX3RoZXJtYWwgaW50ZWxfcG93ZXJjbGFt
+cCBpcHRhYmxlX2ZpbHRlciBpVENPX3dkdCBjb3JldGVtcAppVENPX3ZlbmRvcl9zdXBwb3J0IGNy
+Y3QxMGRpZl9wY2xtdWwgY3JjMzJfcGNsbXVsIGdoYXNoX2NsbXVsbmlfaW50ZWwgYWVzbmlfaW50
+ZWwgY3J5cHRvX3NpbWQgY3J5cHRkIGdsdWVfaGVscGVyIHJhcGwgaW50ZWxfY3N0YXRlIHNlcyBl
+bmNsb3N1cmUgbWVpX21lIGxwY19pY2ggaTJjX2k4MDEgcGNzcGtyIHNnIGlucHV0X2xlZHMgam95
+ZGV2IG1mZF9jb3JlIGkyY19zbWJ1cyBtZWkgaW9hdGRtYSBkY2Egd21pIGFjcGlfaXBtaSBpcG1p
+X3NpIGlwbWlfZGV2aW50ZiBpcG1pX21zZ2hhbmRsZXIgYWNwaV9wb3dlcl9tZXRlciBhY3BpX3Bh
+ZCB2aG9zdF9uZXQgdHVuIHZob3N0IG5mc2Qgdmhvc3RfaW90bGIgdGFwIGt2bV9pbnRlbCBhdXRo
+X3JwY2dzcyBrdm0gbmZzX2FjbCBsb2NrZCBncmFjZSBpcnFieXBhc3Mgc3VucnBjIGlwX3RhYmxl
+cyB4ZnMgbGliY3JjMzJjIHNkX21vZCB0MTBfcGkgY3JjMzJjX2ludGVsIGFzdCBpMmNfYWxnb19i
+aXQgZHJtX3ZyYW1faGVscGVyIGRybV9rbXNfaGVscGVyIHN5c2NvcHlhcmVhIHN5c2ZpbGxyZWN0
+IHN5c2ltZ2JsdCBmYl9zeXNfZm9wcyBkcm1fdHRtX2hlbHBlciBzbWFydHBxaSB0dG0KSnVsIDI5
+IDE3OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogc2NzaV90cmFuc3BvcnRfc2FzIGFo
+Y2kgbGliYWhjaSBkcm0gbGliYXRhIFtsYXN0IHVubG9hZGVkOiBtbHhmd10KSnVsIDI5IDE3OjA2
+OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogQ1BVOiA2MSBQSUQ6IDEzMDQ0IENvbW06IHRp
+bWUgS2R1bXA6IGxvYWRlZCBOb3QgdGFpbnRlZCA1LjguMC1yYzcgIzMKSnVsIDI5IDE3OjA2OjEz
+IGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogSGFyZHdhcmUgbmFtZTogSDNDIFI0OTAwIEczL1JT
+MzNNMkM5UywgQklPUyAyLjAwLjM3UDIxIDAzLzEyLzIwMjAKSnVsIDI5IDE3OjA2OjEzIGhiMTAt
+dWhvc3QtMTQ3LTY4IGtlcm5lbDogUklQOiAwMDEwOmVtdWxhdGVfdnN5c2NhbGwrMHgzMWUvMHgz
+ZjAKSnVsIDI5IDE3OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogQ29kZTogNDggODkg
+ZGYgZTggNDQgZmIgMGYgMDAgZTkgNjAgZmUgZmYgZmYgNDggOGIgNmIgNjAgNDggYzcgNDMgNjAg
+MDAgMDAgMDAgMDAgNDggODkgZGYgZTggNWIgYzEgMDggMDAgNDggODkgNmIgNjAgZTkgNDMgZmUg
+ZmYgZmYgPDBmPiAwYiBlOSAyMCBmZCBmZiBmZiA0OCBjNyBjMiBlMCBiNSAwYiA4MiA0OCA4OQpk
+ZSA0OCBjNyBjNyA2ZCBiNApKdWwgMjkgMTc6MDY6MTMgaGIxMC11aG9zdC0xNDctNjgga2VybmVs
+OiBSU1A6IDAwMDA6ZmZmZmM5MDAwZWE1N2ViMCBFRkxBR1M6IDAwMDEwMjg3Ckp1bCAyOSAxNzow
+NjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IFJBWDogMDAwMDAwMDAwMDAwMDAwNCBSQlg6
+IGZmZmZjOTAwMGVhNTdmNTggUkNYOiAwMDAwMDAwMDAwMDAwMDEwCkp1bCAyOSAxNzowNjoxMyBo
+YjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IFJEWDogMDAwMDAwMDAwMDAwMDAwMCBSU0k6IGZmZmZj
+OTAwMGVhNTdmNTggUkRJOiAwMDAwMDAwMDAwMDAwMDEwCkp1bCAyOSAxNzowNjoxMyBoYjEwLXVo
+b3N0LTE0Ny02OCBrZXJuZWw6IFJCUDogZmZmZmZmZmZmZjYwMDUwMCBSMDg6IGZmZmZmZmZmZmY2
+MDAwMDAgUjA5OiAwMDAwMDAwMDAwMDAwMDAwCkp1bCAyOSAxNzowNjoxMyBoYjEwLXVob3N0LTE0
+Ny02OCBrZXJuZWw6IFIxMDogMDAwMDAwMDAwMDAwMDAwMCBSMTE6IDAwMDAwMDAwMDAwMDAwMDAg
+UjEyOiAwMDAwMDAwMDAwMDAwMDE1Ckp1bCAyOSAxNzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBr
+ZXJuZWw6IFIxMzogZmZmZmZmZmZmZjYwMDUwMCBSMTQ6IGZmZmY4OGZmNmM5MGJkMDAgUjE1OiBm
+ZmZmODhmZjdkNzAyYzAwCkp1bCAyOSAxNzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6
+IEZTOsKgIDAwMDAwMDAwMDIzNmQ4NjAoMDAwMCkgR1M6ZmZmZjg4ZmY3Zjk0MDAwMCgwMDAwKSBr
+bmxHUzowMDAwMDAwMDAwMDAwMDAwCkp1bCAyOSAxNzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBr
+ZXJuZWw6IENTOsKgIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMz
+Ckp1bCAyOSAxNzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IENSMjogZmZmZmZmZmZm
+ZjYwMDUwMCBDUjM6IDAwMDAwMDQ1N2RiYWMwMDYgQ1I0OiAwMDAwMDAwMDAwNzYwNmUwCkp1bCAy
+OSAxNzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IERSMDogMDAwMDAwMDAwMDAwMDAw
+MCBEUjE6IDAwMDAwMDAwMDAwMDAwMDAgRFIyOiAwMDAwMDAwMDAwMDAwMDAwCkp1bCAyOSAxNzow
+NjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IERSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6
+IDAwMDAwMDAwZmZmZTBmZjAgRFI3OiAwMDAwMDAwMDAwMDAwNDAwCkp1bCAyOSAxNzowNjoxMyBo
+YjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IFBLUlU6IDU1NTU1NTU0Ckp1bCAyOSAxNzowNjoxMyBo
+YjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IENhbGwgVHJhY2U6Ckp1bCAyOSAxNzowNjoxMyBoYjEw
+LXVob3N0LTE0Ny02OCBrZXJuZWw6IGV4Y19wYWdlX2ZhdWx0KzB4NDIzLzB4NjAwCkp1bCAyOSAx
+NzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6ID8gX19wcmVwYXJlX2V4aXRfdG9fdXNl
+cm1vZGUrMHgxM2IvMHgxNTAKSnVsIDI5IDE3OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5l
+bDogPyBhc21fZXhjX3BhZ2VfZmF1bHQrMHg4LzB4MzAKSnVsIDI5IDE3OjA2OjEzIGhiMTAtdWhv
+c3QtMTQ3LTY4IGtlcm5lbDogYXNtX2V4Y19wYWdlX2ZhdWx0KzB4MWUvMHgzMApKdWwgMjkgMTc6
+MDY6MTMgaGIxMC11aG9zdC0xNDctNjgga2VybmVsOiBSSVA6IDAwMzM6X19pbml0X3NjcmF0Y2hf
+ZW5kKzB4N2I2MDA0MDAvMHhmZmZmZmZmZmZmYTI2MDAwCkp1bCAyOSAxNzowNjoxMyBoYjEwLXVo
+b3N0LTE0Ny02OCBrZXJuZWw6IENvZGU6IEJhZCBSSVAgdmFsdWUuCkp1bCAyOSAxNzowNjoxMyBo
+YjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IFJTUDogMDAyYjowMDAwN2ZmYzlkOTNmNWQ4IEVGTEFH
+UzogMDAwMTAyMDIKSnVsIDI5IDE3OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogUkFY
+OiBmZmZmZmZmZmZmNjAwNDAwIFJCWDogMDAwMDAwMDAwMDQwMGUwMCBSQ1g6IDAwMDAwMDAwMDA0
+MGQ3MTAKSnVsIDI5IDE3OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogUkRYOiAwMDAw
+MDAwMDAwMDAwMDAwIFJTSTogMDAwMDdmZmM5ZDkzZjViMCBSREk6IDAwMDAwMDAwMDAwMDAwMDAK
+SnVsIDI5IDE3OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogUkJQOiAwMDAwN2ZmYzlk
+OTNmNWYwIFIwODogMDAwMDdmZmM5ZDkzZjQxMCBSMDk6IDAwMDAwMDAwMDAwMDAwM2YKSnVsIDI5
+IDE3OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogUjEwOiAwMDAwMDAwMDAwMDAwMDA4
+IFIxMTogMDAwMDAwMDAwMDAwMDI0NiBSMTI6IDAwMDAwMDAwMDAwMDAwMDAKSnVsIDI5IDE3OjA2
+OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogUjEzOiAwMDAwMDAwMDAwMDAwMDAwIFIxNDog
+MDAwMDAwMDAwMDAwMDAwMCBSMTU6IDAwMDAwMDAwMDAwMDAwMDAKSnVsIDI5IDE3OjA2OjEzIGhi
+MTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogLS0tWyBlbmQgdHJhY2UgMzU3NjU3MGY3NzNkMTQ0NCBd
+LS0tCkp1bCAyOSAxNzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IHRpbWVbMTMwNDRd
+IG1pc2FsaWduZWQgdnN5c2NhbGwgKGV4cGxvaXQgYXR0ZW1wdCBvciBidWdneSBwcm9ncmFtKSAt
+LSBsb29rIHVwIHRoZSB2c3lzY2FsbCBrZXJuZWwgcGFyYW1ldGVyIGlmIHlvdSBuZWVkIGEgd29y
+a2Fyb3VuZCBpcDpmZmZmZmZmZmZmNjAwNDAwIGNzOjMzIHNwOjdmZmM5ZDkzZjVkOCBheDpmZmZm
+ZmZmZmZmNjAwNDAwIHNpOjdmZmM5ZDkzZjViMCBkaTowCsKgCgrCoA0KDQo=
