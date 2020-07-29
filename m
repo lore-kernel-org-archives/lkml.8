@@ -2,112 +2,184 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 085E42070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC2C2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgG2HWE (ORCPT
+        id S1727855AbgG2HXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:22:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbgG2HWD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:22:03 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 603E6C0619D2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 00:22:03 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k0gPM-0003pE-ES; Wed, 29 Jul 2020 09:21:48 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k0gPJ-00042r-9P; Wed, 29 Jul 2020 09:21:45 +0200
-Date:   Wed, 29 Jul 2020 09:21:45 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Roy Im <roy.im.opensource@diasemi.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Support Opensource <support.opensource@diasemi.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v18 3/3] Input: new da7280 haptic driver
-Message-ID: <20200729072145.ifzoe656sjpxdior@pengutronix.de>
-References: <cover.1595991580.git.Roy.Im@diasemi.com>
- <23b3470401ec5cf525add8e1227cb67586b9f294.1595991580.git.Roy.Im@diasemi.com>
- <20200729063638.GY1665100@dtor-ws>
+        Wed, 29 Jul 2020 03:23:19 -0400
+Received: from mga04.intel.com ([192.55.52.120]:23959 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727112AbgG2HXS (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 03:23:18 -0400
+IronPort-SDR: p5+omKWVjITymiqCHJ1piW63LXyJ+Lpbbk+9s7vHNKnTuk0JINccEmu1Bh2xH85RKUU64rRJXl
+ g4D3gTxsPJoQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="148829886"
+X-IronPort-AV: E=Sophos;i="5.75,409,1589266800"; 
+   d="scan'208";a="148829886"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 00:23:16 -0700
+IronPort-SDR: GynbTJcHPsM4btdfc36s/y1JeLAoJOMRZnFrmbJM9Eq8ZwK1IUndL3PhS0Sr2E45mHEkap/iE5
+ 86+1nLLUNx+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,409,1589266800"; 
+   d="scan'208";a="320666570"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
+  by orsmga008.jf.intel.com with ESMTP; 29 Jul 2020 00:23:13 -0700
+Subject: Re: [PATCH v2] perf evsel: Don't set
+ sample_regs_intr/sample_regs_user for dummy event
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+To:     Jiri Olsa <jolsa@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com, irogers@google.com
+References: <20200720010013.18238-1-yao.jin@linux.intel.com>
+ <20200720091748.GH760733@krava>
+ <af1da971-5c60-4c17-e5d9-01430c928592@linux.intel.com>
+ <20200722110810.GD981884@krava>
+ <6f732f7f-7c5a-726f-5b09-2c6761f3b534@linux.intel.com>
+Message-ID: <dc2c18fa-85d3-84b7-8eff-53c9d1e61ce5@linux.intel.com>
+Date:   Wed, 29 Jul 2020 15:23:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jb6kq5unqof2j4e3"
-Content-Disposition: inline
-In-Reply-To: <20200729063638.GY1665100@dtor-ws>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <6f732f7f-7c5a-726f-5b09-2c6761f3b534@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Adrian,
 
---jb6kq5unqof2j4e3
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Could you help to check if following condition will break PT?
 
-Hello,
+"(opts->sample_intr_regs && !evsel->no_aux_samples && !evsel__is_dummy_event(evsel))"
 
-On Tue, Jul 28, 2020 at 11:36:38PM -0700, Dmitry Torokhov wrote:
-> > v9:=20
-> > 	- Removed the header file and put the definitions into the c file.
-> > 	- Updated the pwm code and error logs with %pE
->=20
-> I believe the %pE is to format an escaped buffer, you probably want to
-> %pe (lowercase) to print errors. I am also not quite sure if we want to
-> use it in cases when we have non-pointer error, or we should stick with
-> %d as most of the kernel does.
+Thanks
+Jin Yao
 
-compared with %d %pe is easier to understand as it emits "-ETIMEOUT"
-instead of "-110". And yes, %pE is wrong.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---jb6kq5unqof2j4e3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8hI4YACgkQwfwUeK3K
-7AkB5gf+N9Wv/PsK4tYxuCcM2KSR0mxt7QizYVPKeAI51kqD6cNZSJbMOdO27yWI
-7zr8A//A5v91uqmLbfZHTTK+fEqOFUbM4Btr9/euXT2Hat8S1ADSYsfvEv+6ntdl
-HFqjsbx1b13YPATOPoE0vWrTfnKMq9WDpCuc9G68B3fMSTZ9q3WU6bphpEW4viDq
-ZxYFYPJLZbVufvzH6Ad3PXwmJpsvtAoLVNzh/ZfFn3luTYKV9tkXb0xneS07xLTx
-/4eCgSi7kFlhvc3FGv3usecj3NfZ39EYVLgmwshl2jXa77wQo8NicQarzCfohhz2
-g3RvEx1zi/dTCvJYjKH4o1w3GiuF7w==
-=McvG
------END PGP SIGNATURE-----
-
---jb6kq5unqof2j4e3--
+On 7/23/2020 9:01 AM, Jin, Yao wrote:
+> Hi Jiri, Adrian,
+> 
+> On 7/22/2020 7:08 PM, Jiri Olsa wrote:
+>> On Wed, Jul 22, 2020 at 01:00:03PM +0800, Jin, Yao wrote:
+>>
+>> SNIP
+>>
+>>>>>
+>>>>> If we use -IXMM0, the attr>sample_regs_intr will be set with
+>>>>> PERF_REG_EXTENDED_MASK bit.
+>>>>>
+>>>>> It doesn't make sense to set attr->sample_regs_intr for a
+>>>>> software dummy event.
+>>>>>
+>>>>> This patch adds dummy event checking before setting
+>>>>> attr->sample_regs_intr and attr->sample_regs_user.
+>>>>>
+>>>>> After:
+>>>>>     # ./perf record -e cycles:p -IXMM0 -a -- sleep 1
+>>>>>     [ perf record: Woken up 1 times to write data ]
+>>>>>     [ perf record: Captured and wrote 0.413 MB perf.data (45 samples) ]
+>>>>>
+>>>>>    v2:
+>>>>>    ---
+>>>>>    Rebase to perf/core
+>>>>>
+>>>>> Fixes: 0a892c1c9472 ("perf record: Add dummy event during system wide synthesis")
+>>>>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+>>>>> ---
+>>>>>    tools/perf/util/evsel.c | 6 ++++--
+>>>>>    1 file changed, 4 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>>>>> index 9aa51a65593d..11794d3b7879 100644
+>>>>> --- a/tools/perf/util/evsel.c
+>>>>> +++ b/tools/perf/util/evsel.c
+>>>>> @@ -1014,12 +1014,14 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+>>>>>        if (callchain && callchain->enabled && !evsel->no_aux_samples)
+>>>>>            evsel__config_callchain(evsel, opts, callchain);
+>>>>> -    if (opts->sample_intr_regs && !evsel->no_aux_samples) {
+>>>>> +    if (opts->sample_intr_regs && !evsel->no_aux_samples &&
+>>>>> +        !evsel__is_dummy_event(evsel)) {
+>>>>
+>>>> hum, I thought it'd look something like this:
+>>>>
+>>>>     if (opts->sample_intr_regs && (!evsel->no_aux_samples || !evsel__is_dummy_event(evsel))
+>>>>
+>>>> but I'm not sure how no_aux_samples flag works exactly.. so it might be
+>>>> correct.. just making sure ;-)
+>>>>
+>>>> cc-ing Adrian
+>>>>
+>>>> jirka
+>>>>
+>>>>
+>>>
+>>> no_aux_samples is set to false by default and it's only set to true by pt, right?
+>>>
+>>> So most of the time, !evsel->no_aux_samples is always true.
+>>>
+>>> if (opts->sample_intr_regs && (!evsel->no_aux_samples || !evsel__is_dummy_event(evsel)) {
+>>>     attr->sample_regs_intr = opts->sample_intr_regs;
+>>>     evsel__set_sample_bit(evsel, REGS_INTR);
+>>> }
+>>>
+>>> So even if the evsel is dummy event, the condition check is true. :(
+>>>
+>>> Or maybe I misunderstand anything?
+>>
+>> I was just curious, because I did not follow the no_aux_samples
+>> usage in detail.. so how about a case where:
+>>
+>>     evsel->no_aux_samples == true and evsel__is_dummy_event(evsel) = false
+>>
+>> then the original condition will be false for non dummy event
+>>
+>>    (opts->sample_intr_regs && !evsel->no_aux_samples && !evsel__is_dummy_event(evsel))
+>>
+>> is that ok?
+>>
+> 
+> I searched the perf source and found the no_aux_samples was only set to true in intel-pt.c. So I 
+> assume for the non-pt usage, the no_aux_samples is always false.
+> 
+> For non-pt usage,
+> (opts->sample_intr_regs && !evsel->no_aux_samples && !evsel__is_dummy_event(evsel)) is equal to
+> (opts->sample_intr_regs && !evsel__is_dummy_event(evsel))
+> 
+> For pt usage, we need to consider the case that evsel__is_dummy_event(evsel) is true or false.
+> 
+> If evsel__is_dummy_event(evsel) is true:
+> (opts->sample_intr_regs && !evsel->no_aux_samples && !evsel__is_dummy_event(evsel)) is false.
+> It's expected.
+> 
+> If evsel__is_dummy_event(evsel) is false:
+> (opts->sample_intr_regs && !evsel->no_aux_samples && !evsel__is_dummy_event(evsel)) is equal to
+> (opts->sample_intr_regs && !evsel->no_aux_samples)
+> That's the current code logic.
+> 
+> So I think the condition "(opts->sample_intr_regs && !evsel->no_aux_samples && 
+> !evsel__is_dummy_event(evsel))" looks reasonable.
+> 
+> Adrian, please correct me if I'm wrong here.
+> 
+> Thanks
+> Jin Yao
+> 
+>> jirka
+>>
