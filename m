@@ -4,126 +4,145 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D38C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F81B207F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3006207F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596041942;
-	bh=kcEKB3QzEwAil6vLUBn483iFGDd4Ij/50IyvUbfn3jI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fM+UwFxpWvgl/H19/ZeYe3VNXShBQl9mCyAeuDnp2cnDWjXfhcwkTNbXa4usiLuZd
-	 2u678xf2ZOm3B2eDM2L/rlpCGfw3qYs8Wmj8l7/IamHvVEvS9Rq4CZCCm2vXZp5nac
-	 svdf5Y6WUj/sKYZE+TG3nJpg1d2PDjBZYtwmgFgk=
+	s=default; t=1596041981;
+	bh=crrIbsFPAeg/uDmn1xaqGi5GLnaItxGMCDzVYTWGaOw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HrWBFia+EMtUopendxBOYhLASk0vHabPZtUHUq0sEFq+7EiRCZyB1oLTot4OsQVYA
+	 YtciQmBd8R0tdRUVoaDikj/PawpjY9ZeKyzemk2cWoNeixaCoEqiMSbz+JJdTgZpxK
+	 59N88EAh1F72jl2A1bTSV4kfR+GjRmgcj8cOf8mU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgG2Q7B (ORCPT
+        id S1727050AbgG2Q7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 12:59:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60878 "EHLO mail.kernel.org"
+        Wed, 29 Jul 2020 12:59:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726341AbgG2Q7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 12:59:01 -0400
-Received: from earth.universe (dyndsl-095-033-172-175.ewe-ip-backbone.de [95.33.172.175])
+        id S1726336AbgG2Q7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 12:59:40 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9062B2075F;
-        Wed, 29 Jul 2020 16:59:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 530F02075F;
+        Wed, 29 Jul 2020 16:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596041940;
-        bh=kcEKB3QzEwAil6vLUBn483iFGDd4Ij/50IyvUbfn3jI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Jlyqb7Dk8h6hBB9q7zBIzaXTQOBQIBNt2zlpnKpmnI9Gkym6YVohzfZdZzVrV51oj
-         dAe1rzx5t9F1VP6o0u58DtOdexwg5B62w+GsY497Wh4wI3zSzTopr3s29SjhOJzttt
-         aEUwU4kLPt1VH7EdDx7dtCnu21smZWZzcl4PPdE4=
-Received: by earth.universe (Postfix, from userid 1000)
-        id EA98C3C0B87; Wed, 29 Jul 2020 18:58:58 +0200 (CEST)
-Date:   Wed, 29 Jul 2020 18:58:58 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] power: supply: Fix kerneldoc of
- power_supply_temp2resist_simple()
-Message-ID: <20200729165858.l7o54jv3z2r7nzhu@earth.universe>
-References: <20200729074348.28317-1-krzk@kernel.org>
- <20200729074348.28317-2-krzk@kernel.org>
+        s=default; t=1596041979;
+        bh=crrIbsFPAeg/uDmn1xaqGi5GLnaItxGMCDzVYTWGaOw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TrBKJ+2ct2wSEBci01nnKlcB/LLkbiQMjc75ofEwvttNh5QwB/wRsg3SOiEig226s
+         tAXspfSry7MbMWd5vFFWhReJrNb5rzyLD2G2G3RKcxJnhBcUM8APB4SbvRVMrRImMX
+         RhNs/lqnOTU79s2afAmJohsxXOfcf6/Ynl8j6MSA=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k0pQX-00Fztd-IY; Wed, 29 Jul 2020 17:59:37 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3phqothtz62xkjcn"
-Content-Disposition: inline
-In-Reply-To: <20200729074348.28317-2-krzk@kernel.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Jul 2020 17:59:37 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Wei Yongjun <weiyongjun1@huawei.com>
+Cc:     Hulk Robot <hulkci@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] irqchip/imx-intmux: Fix irqdata regs save in
+ imx_intmux_runtime_suspend()
+In-Reply-To: <20200729155849.33919-1-weiyongjun1@huawei.com>
+References: <20200729155849.33919-1-weiyongjun1@huawei.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <46666de74c4b03142524f514ea64ddad@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: weiyongjun1@huawei.com, hulkci@huawei.com, tglx@linutronix.de, jason@lakedaemon.net, shawnguo@kernel.org, s.hauer@pengutronix.de, qiangqing.zhang@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---3phqothtz62xkjcn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, Jul 29, 2020 at 09:43:48AM +0200, Krzysztof Kozlowski wrote:
-> Fix W=3D1 compile warnings (invalid kerneldoc):
->=20
->     drivers/power/supply/power_supply_core.c:747: warning: Function param=
-eter or member 'temp' not described in 'power_supply_temp2resist_simple'
->     drivers/power/supply/power_supply_core.c:747: warning: Excess functio=
-n parameter 'ocv' description in 'power_supply_temp2resist_simple'
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+On 2020-07-29 16:58, Wei Yongjun wrote:
+> Gcc report warning as follows:
+> 
+> drivers/irqchip/irq-imx-intmux.c:316:29: warning:
+>  variable 'irqchip_data' set but not used [-Wunused-but-set-variable]
+>   316 |  struct intmux_irqchip_data irqchip_data;
+>       |                             ^~~~~~~~~~~~
+> 
+> irqdata regs is stored to this variable on the stack in
+> imx_intmux_runtime_suspend(), which means a nop. this commit
+> fix to save regs to the right place.
+> 
+> Fixes: bb403111e017 ("irqchip/imx-intmux: Implement intmux runtime
+> power management")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 > ---
+>  drivers/irqchip/irq-imx-intmux.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-imx-intmux.c 
+> b/drivers/irqchip/irq-imx-intmux.c
+> index 4c9e40d193d6..e35b7b09c3ab 100644
+> --- a/drivers/irqchip/irq-imx-intmux.c
+> +++ b/drivers/irqchip/irq-imx-intmux.c
+> @@ -313,12 +313,12 @@ static int imx_intmux_remove(struct 
+> platform_device *pdev)
+>  static int imx_intmux_runtime_suspend(struct device *dev)
+>  {
+>  	struct intmux_data *data = dev_get_drvdata(dev);
+> -	struct intmux_irqchip_data irqchip_data;
+> +	struct intmux_irqchip_data *irqchip_data;
+>  	int i;
+> 
+>  	for (i = 0; i < data->channum; i++) {
+> -		irqchip_data = data->irqchip_data[i];
+> -		irqchip_data.saved_reg = readl_relaxed(data->regs + CHANIER(i));
+> +		irqchip_data = &data->irqchip_data[i];
+> +		irqchip_data->saved_reg = readl_relaxed(data->regs + CHANIER(i));
+>  	}
+> 
+>  	clk_disable_unprepare(data->ipg_clk);
+> @@ -329,7 +329,7 @@ static int imx_intmux_runtime_suspend(struct device 
+> *dev)
+>  static int imx_intmux_runtime_resume(struct device *dev)
+>  {
+>  	struct intmux_data *data = dev_get_drvdata(dev);
+> -	struct intmux_irqchip_data irqchip_data;
+> +	struct intmux_irqchip_data *irqchip_data;
+>  	int ret, i;
+> 
+>  	ret = clk_prepare_enable(data->ipg_clk);
+> @@ -339,8 +339,8 @@ static int imx_intmux_runtime_resume(struct device 
+> *dev)
+>  	}
+> 
+>  	for (i = 0; i < data->channum; i++) {
+> -		irqchip_data = data->irqchip_data[i];
+> -		writel_relaxed(irqchip_data.saved_reg, data->regs + CHANIER(i));
+> +		irqchip_data = &data->irqchip_data[i];
+> +		writel_relaxed(irqchip_data->saved_reg, data->regs + CHANIER(i));
+>  	}
+> 
+>  	return 0;
 
-Thanks, merged.
+Amazing. Thanks for fixing this.
 
--- Sebastian
+Johakim: I guess this was never tested, was it?
 
->  drivers/power/supply/power_supply_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/sup=
-ply/power_supply_core.c
-> index 90e56736d479..ccbad435ed12 100644
-> --- a/drivers/power/supply/power_supply_core.c
-> +++ b/drivers/power/supply/power_supply_core.c
-> @@ -733,7 +733,7 @@ EXPORT_SYMBOL_GPL(power_supply_put_battery_info);
->   * percent
->   * @table: Pointer to battery resistance temperature table
->   * @table_len: The table length
-> - * @ocv: Current temperature
-> + * @temp: Current temperature
->   *
->   * This helper function is used to look up battery internal resistance p=
-ercent
->   * according to current temperature value from the resistance temperatur=
-e table,
-> --=20
-> 2.17.1
->=20
-
---3phqothtz62xkjcn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8hqtIACgkQ2O7X88g7
-+prYvg/+KMhioz3PNtgPsW+e1QlHaTfb2IyiW6RXBEVxpSSCO0h5CsuEznDuhm5b
-YavOe/0bAqqCCopBmUQTFOLX3aTssEaY8BA9y7Ft+BdqZ4P2lj/JM6HYE2TF/tgV
-evrIOf7t1X3xrJ0WSL0kdh/vQyqhErK10frQLTtCgzVsiFw3xthD1FaclEyelCjY
-h6pPVYj0h96g7oYokBr0aj1yiZmB0cZyowIPDBhKNOTCsaf0V6XBhpdolactz5YV
-d/JOlyMbUWmlI67WQn8FNcYkycmgj73dtczb0dpAXYG0a+csPUNHhwzZH+xMIdaD
-uJehkXeO2ypd3RA8RLltAef1AjzIIaRRN7yy/j2BPcWe+gmmAieRTN9DvthFSD0q
-L/c9mO44Qxc3ukEE/8XZO2ts+t/HeHfVZoiLZswm2nLriLhFNlW/jGvMReDpS3Yb
-Nbkky4RxFz2caFNse2ignPxb0hoaCi8tvvoMdH1VgSoc9BWC+WYky7XIZIeLTZTB
-r/gAEhrV0eRpJk12Z8mdSTvhOW6FLyouqvk+Wv7BM+/kOwiix9qyO64UHK2cM0je
-6T8b9Ypf4AMf1MgeJtX+WLRm+OD1EyBgQ8X8gjADiGWpFXoyFlb0/WYTQauQOm56
-5zHAplUunRRTKlMgLd6ciZz5t6vs3DLT42GTBgmhc+r8LvcftvI=
-=BUS8
------END PGP SIGNATURE-----
-
---3phqothtz62xkjcn--
+         M.
+-- 
+Jazz is not dead. It just smells funny...
