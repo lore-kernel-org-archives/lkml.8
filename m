@@ -2,84 +2,114 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B8FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AF3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 560FA2075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1B02075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:40:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="REnBsV/R"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TBOgzEkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbgG2Jgl (ORCPT
+        id S1726631AbgG2Jkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:36:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgG2Jgk (ORCPT
+        Wed, 29 Jul 2020 05:40:31 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:28449 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726476AbgG2Jka (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:36:40 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E57C061794;
-        Wed, 29 Jul 2020 02:36:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=n6aG/JmP+LzY7spLF8PmebYkIDE5NWl60aSZUAMzQuI=; b=REnBsV/RL/3Swngd02XYtxvMkJ
-        A5qucqZ2sq6QgNrnmhpfaHNV2+tRL/vSJw18ayq8MpWa+XQfTA4rrJbgzvZgulK3RuKIdAWNZNa1P
-        Vi8EjE/mDd9iNmzY+iPnHzUEQ4tkDuwWlpJUMYSuNUfU2wUuC2E9QqzxSyQYjBNFhPh1li5KG30c6
-        dF0hV83NcqWXzmPSSOPtZB5jvNW6YABkwkJ9uBPLQVyC40SGVK8NhF2H8dde9w3rhPVRCOsyHatek
-        aZgyhi0+dkE2n+9BhzjAbRdNhu9DxZc09gAIoOO4VjX/7D2CsOpQqsVW+aprG+/esEw7rWlM5mFmB
-        6TyJFzGw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0iVm-0001s8-Gc; Wed, 29 Jul 2020 09:36:34 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0A274304B6D;
-        Wed, 29 Jul 2020 11:36:32 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BE8F02BB55740; Wed, 29 Jul 2020 11:36:32 +0200 (CEST)
-Date:   Wed, 29 Jul 2020 11:36:32 +0200
-From:   peterz@infradead.org
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, Neil Brown <neilb@suse.de>
-Subject: Re: Minor RST rant
-Message-ID: <20200729093632.GC119549@hirez.programming.kicks-ass.net>
-References: <20200724132200.51fd2065@oasis.local.home>
- <20200724113325.44923f75@lwn.net>
- <20200728125252.GW119549@hirez.programming.kicks-ass.net>
- <20200728112828.459307a5@oasis.local.home>
+        Wed, 29 Jul 2020 05:40:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596015629;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=k7LhEO6XCqGVUuc17BRfAuaIUsyKpv0HJUC9DTzz2Oc=;
+        b=TBOgzEkJTgQo//lafpsD2+YcX7VTZCWYb3AUeLD+sK5OHWPc+APplrl8iDAH6XtH6Wyr+m
+        AhiHk5H5i+Wddoj+I6qCr2loiVc6PJ+Cu7Sywitrm27vK5zGbhA6/V0izvFqw4VViwEx6g
+        O/8wORLJ8g/o68NCkp6bowfY6djS3gI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-6zor32TQNzyl7ZA_qOIfbA-1; Wed, 29 Jul 2020 05:40:25 -0400
+X-MC-Unique: 6zor32TQNzyl7ZA_qOIfbA-1
+Received: by mail-wm1-f69.google.com with SMTP id p23so464422wmc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 02:40:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=k7LhEO6XCqGVUuc17BRfAuaIUsyKpv0HJUC9DTzz2Oc=;
+        b=A/CuDIaq3wKgeNmtLHr+SYWS6lz/mYQ/+FDR4sm0RDmjqZCi62XuwLXY0Jl0l0XU0H
+         GMzQvCs1OKX+TitFzJJDjuAydLhBNvlL3WlBld6UI0BwFYDZIIIHNeXedJmDbIlPXrQ8
+         wINS1j3QWXH9xrIWsQaGSQQW3xoHKFDfiGA8VzY2eOH6HFe+TqAw6tS7gbtXR0XHGZet
+         oisl60dB3J2ChznmfgjVYme02QgU226nrz5LNb3+0+nW4KdtGP1wG3JPIrxsmkgXBZQe
+         dsmKh4pqJX96osJL0JJj1Ooq3zZ81NoUQwx9YDfl6YNicIdCqAJ0miJmefzfTJsxUwYf
+         L9WQ==
+X-Gm-Message-State: AOAM532whJrPDr+WrxI7GB/IE5WOw1cJU3Yi8ZSB2ekY4oj7z2LR7Sej
+        UbWanPxjTR+qO4Th8L2Jni3JWbcOpVGwR184X+tOCEhFowHX+g4LYh34z2VjTjPcounf6oKwIsY
+        bwh/ET2TXIYgjBM5f3UzjIGSZ
+X-Received: by 2002:adf:9c8c:: with SMTP id d12mr28254563wre.369.1596015622990;
+        Wed, 29 Jul 2020 02:40:22 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzSgh6jDxOdFmcD7rlJpBZFVipNvyIVfH2WgoMjLbmLGCkqivl8DMGS+QOpLJ4wheZJRWE1WQ==
+X-Received: by 2002:adf:9c8c:: with SMTP id d12mr28254546wre.369.1596015622705;
+        Wed, 29 Jul 2020 02:40:22 -0700 (PDT)
+Received: from steredhat.lan ([5.180.207.22])
+        by smtp.gmail.com with ESMTPSA id x2sm534205wrg.73.2020.07.29.02.40.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 02:40:22 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 11:40:18 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     davem@davemloft.net, decui@microsoft.com, jhansen@vmware.com,
+        kuba@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzbot+a61bac2fcc1a7c6623fe@syzkaller.appspotmail.com,
+        stefanha@redhat.com, syzkaller-bugs@googlegroups.com,
+        virtualization@lists.linux-foundation.org
+Subject: Re: general protection fault in vsock_poll
+Message-ID: <20200729094018.x6rr2jlzh3ne4pgx@steredhat.lan>
+References: <00000000000099052605aafb5923@google.com>
+ <00000000000093b5dc05ab90c468@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200728112828.459307a5@oasis.local.home>
+In-Reply-To: <00000000000093b5dc05ab90c468@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 11:28:28AM -0400, Steven Rostedt wrote:
-> Sometimes I do look at the html output on kernel.org, and it is nicely
-> organized. The future of developers will probably prefer that format
-> over plain text whether we like it or not, so I encourage that we
+On Wed, Jul 29, 2020 at 01:59:05AM -0700, syzbot wrote:
+> syzbot has bisected this issue to:
+> 
+> commit 408624af4c89989117bb2c6517bd50b7708a2fcd
+> Author: Stefano Garzarella <sgarzare@redhat.com>
+> Date:   Tue Dec 10 10:43:06 2019 +0000
+> 
+>     vsock: use local transport when it is loaded
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17e6489b100000
+> start commit:   92ed3019 Linux 5.8-rc7
+> git tree:       upstream
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=1416489b100000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1016489b100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=84f076779e989e69
+> dashboard link: https://syzkaller.appspot.com/bug?extid=a61bac2fcc1a7c6623fe
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15930b64900000
+> 
+> Reported-by: syzbot+a61bac2fcc1a7c6623fe@syzkaller.appspotmail.com
+> Fixes: 408624af4c89 ("vsock: use local transport when it is loaded")
+> 
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> 
 
-The future is doomed.
+I'll take a look.
 
-Anyway, the last time I checked, it was possible to select a monospace
-font in HTML. For bonus points, use a green bar paper css [1], add
-some line numbers, and use a daisy wheel font [2].
+At first glance it seems strange, because if sk_state is TCP_ESTABLISHED,
+the transport shouldn't be NULL, that's why we didn't put the check.
 
-That renders any actual .txt document with style, even if you absolutely
-must use a browser.
+Stefano
 
-
-[1] https://gist.github.com/BigEd/56f6c0001c8670d1647d5448e91346d6
-[2] https://www.dafont.com/daisy-wheel.font
