@@ -2,125 +2,96 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B2EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036E8C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4E02083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D724F20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:00:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZiqc0JD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731012AbgG2BAZ (ORCPT
+        id S1731048AbgG2BAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 21:00:25 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:44492 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729867AbgG2BAZ (ORCPT
+        Tue, 28 Jul 2020 21:00:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729867AbgG2BAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 21:00:25 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R561e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U46Ptxs_1595984420;
-Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U46Ptxs_1595984420)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 29 Jul 2020 09:00:21 +0800
-Subject: Re: [PATCH v17 17/21] mm/lru: replace pgdat lru_lock with lruvec lock
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
- <1595681998-19193-18-git-send-email-alex.shi@linux.alibaba.com>
- <CAKgT0UdaW4Rf43yULhQBuP07vQgmoPbaWHGKv1Z7fEPP6jH83w@mail.gmail.com>
- <ccd01046-451c-463d-7c5d-9c32794f4b1e@linux.alibaba.com>
- <CAKgT0UdrQpa9OSusi=TZoj4RgC63-BNiF1GmeTG=rS47r7rGvQ@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <09aeced7-cc36-0c9a-d40b-451db9dc54cc@linux.alibaba.com>
-Date:   Wed, 29 Jul 2020 09:00:06 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Tue, 28 Jul 2020 21:00:35 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4690C061794;
+        Tue, 28 Jul 2020 18:00:34 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id s144so9355860oie.3;
+        Tue, 28 Jul 2020 18:00:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JEhRoCG/lU8vWInqRMMLeNwglqgQ2Y0GNTOKaudATQY=;
+        b=mZiqc0JDiQd0utiAotGRCqhWVhmGENNGKibl4o6mA0ZcZIh3vES80oGDaeiifU3nIj
+         aHjPz2s4b1HQ3pir663dSykzgBJOL2Mo3Kg5X3sMY2aC1dpie6aBKg/MwfpKlOp7kohi
+         YDTMTXh+KqhY0YQlQrcH0Ae/ETipl53oLxq6S9Imr9LW2Ded8MLHgzMv5/+ZBoagZSv6
+         3p13ohlK0wHL6MIkLg1D/2vHtPfSARjp1yAMjZafPyG5U+oMWtaAwrSy9Ntj1fRdTsTh
+         YXaHSl/SOHGs2ywZAvgK8A90ysn/HBMvCQKyHdIbjUmiHU9wKGP+cVzxLTvBTFTp2brD
+         5pJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JEhRoCG/lU8vWInqRMMLeNwglqgQ2Y0GNTOKaudATQY=;
+        b=Q5GILY+oGnEB84mgl7kTeMKosE6Oj9/Ci//AECCVo6gDlaC0g9x6Jy0Qx28S14XLRW
+         t/Th9v5Q02JgFTOA2S1EHIysmK5IjKA1qAYp2GqkSkY0/4mI74dimd0ewlX4KH9xDbDF
+         3b/z2JtghY2UaNi09IOYDDjKONJrCQ3dVPsiEWvZwh3I7M6GVnG2av4Q8VAGWyiliI2E
+         Jre/cT9rMgnhvuMTnnpwFqIz35ehvpUZie8g/y5JwjNDx8KnXNRjNO1OnRv5IKQUskle
+         j0B5eJfcfuzxjpobNjEZBUd44B8NzMCaMMm/uiSsyxiypC+3en7DcpgaR9hvi2c6Flia
+         ff8Q==
+X-Gm-Message-State: AOAM5328EUscnGd+OdCYr/ZLZ98KMHTK15RSKIf4jtfnd1epkVkH0UVD
+        G4o+ODe6tuS4846NFaQwZoLtdaEaMY/OwYaXa5Y=
+X-Google-Smtp-Source: ABdhPJxWiV+84QJPgzngtJ4MAvLN1Yz/zUFEzfrUSVeUkCplsdRKVw/5aYHM0fGz2cuRgFgHt6mxOMS342usxvkB3ZQ=
+X-Received: by 2002:aca:5594:: with SMTP id j142mr5781232oib.33.1595984434290;
+ Tue, 28 Jul 2020 18:00:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UdrQpa9OSusi=TZoj4RgC63-BNiF1GmeTG=rS47r7rGvQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <ece36eb1-253a-8ec6-c183-309c10bb35d5@redhat.com>
+In-Reply-To: <ece36eb1-253a-8ec6-c183-309c10bb35d5@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 29 Jul 2020 09:00:22 +0800
+Message-ID: <CANRm+Cywhi1p5gYLfG=JcyTdYuWK+9bGqF6HD-LiBJM9Q5ykNQ@mail.gmail.com>
+Subject: Re: WARNING: suspicious RCU usage - while installing a VM on a CPU
+ listed under nohz_full
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        "frederic@kernel.org" <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juri Lelli <juri.lelli@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 28 Jul 2020 at 22:40, Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>
+> Hi,
+>
+> I have recently come across an RCU trace with the 5.8-rc7 kernel that has the
+> debug configs enabled while installing a VM on a CPU that is listed under
+> nohz_full.
+>
+> Based on some of the initial debugging, my impression is that the issue is
+> triggered because of the fastpath that is meant to optimize the writes to x2APIC
+> ICR that eventually leads to a virtual IPI in fixed delivery mode, is getting
+> invoked from the quiescent state.
 
-
-在 2020/7/28 下午10:54, Alexander Duyck 写道:
-> On Tue, Jul 28, 2020 at 4:20 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->>
->>
->>
->> 在 2020/7/28 上午7:34, Alexander Duyck 写道:
->>>> @@ -1876,6 +1876,12 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
->>>>                  *                                        list_add(&page->lru,)
->>>>                  *     list_add(&page->lru,) //corrupt
->>>>                  */
->>>> +               new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
->>>> +               if (new_lruvec != lruvec) {
->>>> +                       if (lruvec)
->>>> +                               spin_unlock_irq(&lruvec->lru_lock);
->>>> +                       lruvec = lock_page_lruvec_irq(page);
->>>> +               }
->>>>                 SetPageLRU(page);
->>>>
->>>>                 if (unlikely(put_page_testzero(page))) {
->>> I was going through the code of the entire patch set and I noticed
->>> these changes in move_pages_to_lru. What is the reason for adding the
->>> new_lruvec logic? My understanding is that we are moving the pages to
->>> the lruvec provided are we not?If so why do we need to add code to get
->>> a new lruvec? The code itself seems to stand out from the rest of the
->>> patch as it is introducing new code instead of replacing existing
->>> locking code, and it doesn't match up with the description of what
->>> this function is supposed to do since it changes the lruvec.
->>
->> this new_lruvec is the replacement of removed line, as following code:
->>>> -               lruvec = mem_cgroup_page_lruvec(page, pgdat);
->> This recheck is for the page move the root memcg, otherwise it cause the bug:
-> 
-> Okay, now I see where the issue is. You moved this code so now it has
-> a different effect than it did before. You are relocking things before
-> you needed to. Don't forget that when you came into this function you
-> already had the lock. In addition the patch is broken as it currently
-> stands as you aren't using similar logic in the code just above this
-> addition if you encounter an evictable page. As a result this is
-> really difficult to review as there are subtle bugs here.
-
-Why you think its a bug? the relock only happens if locked lruvec is different.
-and unlock the old one.
-
-> 
-> I suppose the correct fix is to get rid of this line, but  it should
-> be placed everywhere the original function was calling
-> spin_lock_irq().
-> 
-> In addition I would consider changing the arguments/documentation for
-> move_pages_to_lru. You aren't moving the pages to lruvec, so there is
-> probably no need to pass that as an argument. Instead I would pass
-> pgdat since that isn't going to be moving and is the only thing you
-> actually derive based on the original lruvec.
-
-yes, The comments should be changed with the line was introduced from long ago. :)
-Anyway, I am wondering if it worth a v18 version resend?
-
-> 
+I still can reproduce this after removing the ipi/timer fastpath
+codes, anyway, I will have a look.
