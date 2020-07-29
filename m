@@ -2,145 +2,118 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF328C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9EEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99E7D207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADCAD20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:41:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BClZOK3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730376AbgG2BfT (ORCPT
+        id S1730422AbgG2Bl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 21:35:19 -0400
-Received: from mga14.intel.com ([192.55.52.115]:6431 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730117AbgG2BfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 21:35:19 -0400
-IronPort-SDR: J6nrg5ZV2i6tp/dHjEMSSHNElqWo7VGGnMQhLFr63+4a7knAxY8SZsTdLqaEpE9rjypcNQUqHf
- oWvzaH2YXCPQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="150512010"
-X-IronPort-AV: E=Sophos;i="5.75,408,1589266800"; 
-   d="scan'208";a="150512010"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 18:35:11 -0700
-IronPort-SDR: YNsFNSmhqfBBgmI35x/2O7/pNXoR+a/bwag1n6Mwd4MKRcnT4XpSjxN7jGO6jeRF7/XLdB/SmJ
- NIW6+0gsiTZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,408,1589266800"; 
-   d="scan'208";a="364700282"
-Received: from vverma7-mobl4.lm.intel.com (HELO localhost6.localdomain6) ([10.254.21.148])
-  by orsmga001.jf.intel.com with ESMTP; 28 Jul 2020 18:35:09 -0700
-Message-ID: <25cb1c0c35d2ea2aa233c1db726abd86dadc54c0.camel@intel.com>
-Subject: Re: [PATCH v3 10/11] PM, libnvdimm: Add runtime firmware activation
- support
-From:   Vishal Verma <vishal.l.verma@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Pavel Machek <pavel@ucw.cz>, Ira Weiny <ira.weiny@intel.com>,
-        Len Brown <len.brown@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 28 Jul 2020 19:35:09 -0600
-In-Reply-To: <CAJZ5v0jb87PnwVXKuvgFeP=c-BGstc4YmANGpbOOnXi-b1oL8w@mail.gmail.com>
-References: <159528284411.993790.11733759435137949717.stgit@dwillia2-desk3.amr.corp.intel.com>
-         <159528289856.993790.11787167534159675987.stgit@dwillia2-desk3.amr.corp.intel.com>
-         <CAJZ5v0jb87PnwVXKuvgFeP=c-BGstc4YmANGpbOOnXi-b1oL8w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Tue, 28 Jul 2020 21:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730117AbgG2Bl5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 21:41:57 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5EDDC061794;
+        Tue, 28 Jul 2020 18:41:56 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 74so3824099pfx.13;
+        Tue, 28 Jul 2020 18:41:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ShpMJE4OIEv6PxHTCcLYNHQznGjFTXHy5yRHP4HI7Go=;
+        b=BClZOK3dAzubCSEkbwRfwnCusyjEcYWZ7pk8/KbxyBcExOrFWxmlvM19CYMKFTYj/w
+         C7sIyeILZs1yEzEVoYrjY2zvprbMcO9Vvjow5oWczQC1JIEi2oZ/bKDVqfReXYasxfjW
+         JaQtvkzKr/3qVnoSxEgL6Ebd8YtCEAbOlqC2D9JxOgpxYIhB2nhH+8zNg87hRGDFWrWe
+         q6GKmziLH6Oe4Hiit/fwwXxYnl0JSCMo8uFehR1mQU9RMgbUVTQ0Z8iup0dPlChQ/Pb3
+         qwGBs/ms5wfED9RjRmE0ZBybq53yewSsNNkLVDGESsXuhPSRQVKY7lI3KDKt79WuYK3v
+         TdQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ShpMJE4OIEv6PxHTCcLYNHQznGjFTXHy5yRHP4HI7Go=;
+        b=lipN9On+MtpkJn1ljpY8cGWST8NcYGtnr0Xe9Ej5vWdot18RGunoX9K43ENQw7xDGA
+         wPSPGVpjLa3XggUDbawQineWCXaNT9ZfbmEn25gYUTSmbvnupgdcPqXoDEAAUOd7xr3p
+         Dv9tX2vQ8upXjQlt03knuC1hnp+bAA258IOTyDnJFegGEJ1Z4+YXY9NQ1e7PDfqmwg0+
+         /HKkfLGqNmsLmhKTdNwXkl5mfOe0kRYxyQ4E2RJuFICUFuuzmvJwEG/cffY1R+fj91PQ
+         E7Z1VqT2/6rxLqLrSWbOXLhGNXlAvuZ3pGzTHsxF5kB+rdPEGFyDrZ87tFI5rGOtQEDM
+         oE9w==
+X-Gm-Message-State: AOAM530fWpjTwpbnHhL+QxOscWS7drhbL81fmncS+vYmkpg7rJziVdq9
+        aBWfy5Fp7wjVLtlnvC44HO6oMh4OkL0Vf1KzMJc=
+X-Google-Smtp-Source: ABdhPJzRyRPYIzQuluFIPUnCUXJqDzC9f1vexKbcyflvgO7aEhNqaBlnKXxoCBVGQgappFRHb7pbRVGvKerBnMB+f88=
+X-Received: by 2002:aa7:9d0e:: with SMTP id k14mr3291266pfp.162.1595986916147;
+ Tue, 28 Jul 2020 18:41:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200726110524.151957-1-xie.he.0141@gmail.com> <20200728195246.GA482576@google.com>
+In-Reply-To: <20200728195246.GA482576@google.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Tue, 28 Jul 2020 18:41:45 -0700
+Message-ID: <CAJht_EOcRx=J5PiZwsSh+0Yb0=QJFahqxVbeMgFbSxh+cNZLew@mail.gmail.com>
+Subject: Re: [PATCH] drivers/net/wan/lapbether: Use needed_headroom instead of hard_header_len
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-07-27 at 14:37 +0200, Rafael J. Wysocki wrote:
-> On Tue, Jul 21, 2020 at 12:24 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> > Abstract platform specific mechanics for nvdimm firmware activation
-> > behind a handful of generic ops. At the bus level ->activate_state()
-> > indicates the unified state (idle, busy, armed) of all DIMMs on the bus,
-> > and ->capability() indicates the system state expectations for activate.
-> > At the DIMM level ->activate_state() indicates the per-DIMM state,
-> > ->activate_result() indicates the outcome of the last activation
-> > attempt, and ->arm() attempts to transition the DIMM from 'idle' to
-> > 'armed'.
-> > 
-> > A new hibernate_quiet_exec() facility is added to support firmware
-> > activation in an OS defined system quiesce state. It leverages the fact
-> > that the hibernate-freeze state wants to assert that a memory
-> > hibernation snapshot can be taken. This is in contrast to a platform
-> > firmware defined quiesce state that may forcefully quiet the memory
-> > controller independent of whether an individual device-driver properly
-> > supports hibernate-freeze.
-> > 
-> > The libnvdimm sysfs interface is extended to support detection of a
-> > firmware activate capability. The mechanism supports enumeration and
-> > triggering of firmware activate, optionally in the
-> > hibernate_quiet_exec() context.
-> > 
-> > Cc: Pavel Machek <pavel@ucw.cz>
-> > Cc: Ira Weiny <ira.weiny@intel.com>
-> > Cc: Len Brown <len.brown@intel.com>
-> > Cc: Jonathan Corbet <corbet@lwn.net>
-> > Cc: Dave Jiang <dave.jiang@intel.com>
-> > Cc: Vishal Verma <vishal.l.verma@intel.com>
-> > [rafael: hibernate_quiet_exec() proposal]
-> > Co-developed-by: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> 
-> IMO it's better to change this to
-> 
-> Co-developed-by: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> 
-> and please to add
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> to it as per the development process documentation.
+Thank you for your detailed review, Brian!
 
-Thanks Rafael, I've fixed this up in the branch I've prepared for the pull
-request:
+I guess we have the same understanding on the "hard_header_len vs
+needed_headroom" part. I agree it is not well documented and is also
+confusing to driver developers. I didn't understand it either until I
+looked at af_packet.c.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git/log/?h=libnvdimm-for-next
+On Tue, Jul 28, 2020 at 12:52 PM -0700
+Brian Norris <briannorris@chromium.org> wrote:
+>
+> What's to say you shouldn't be implementing header_ops instead? Note
+> that with WiFi drivers, they're exposing themselves as ARPHRD_ETHER, and
+> only the Ethernet headers are part of the upper "protocol" headers. So
+> my patch deferred to the eth headers.
+>
+> What is the intention with this X25 protocol? I guess the headers added
+> in lapbeth_data_transmit() are supposed to be "invisible", as with this
+> note in af_packet.c?
+>
+>    - if device has no dev->hard_header routine, it adds and removes ll header
+>      inside itself. In this case ll header is invisible outside of device,
+>      but higher levels still should reserve dev->hard_header_len.
+>
+> If that's the case, then yes, I believe this patch should be correct.
 
-> 
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-nvdimm         |    2
-> >  .../driver-api/nvdimm/firmware-activate.rst        |   86 ++++++++++++
-> >  drivers/nvdimm/core.c                              |  149 ++++++++++++++++++++
-> >  drivers/nvdimm/dimm_devs.c                         |  115 +++++++++++++++
-> >  drivers/nvdimm/nd-core.h                           |    1
-> >  include/linux/libnvdimm.h                          |   44 ++++++
-> >  include/linux/suspend.h                            |    6 +
-> >  kernel/power/hibernate.c                           |   97 +++++++++++++
-> >  8 files changed, 500 insertions(+)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-nvdimm
-> >  create mode 100644 Documentation/driver-api/nvdimm/firmware-activate.rst
-> > 
+This driver is not intended to be used with IPv4 or IPv6 protocols,
+but is intended to be used with a special "X.25" protocol. That's the
+reason the device type is ARPHRD_X25. I used "grep" in the X.25
+network layer code (net/x25) and I found there's nowhere
+"dev_hard_header" is called. I also used "grep" in all the X.25
+drivers in the kernel (lapbether.c, x25_asy.c, hdlc_x25.c under
+drivers/net/wan) and I found no driver implemented "header_ops". So I
+think the X.25 networking code doesn't expect any header visible
+outside of the device driver, and X.25 drivers should make their
+headers invisible outside of them.
 
-[..]
+So I think hard_header_len should be 0 for all X.25 drivers, so that
+they can be used correctly with af_packet.c.
 
-> > @@ -464,6 +466,10 @@ static inline void hibernation_set_ops(const struct platform_hibernation_ops *op
-> >  static inline int hibernate(void) { return -ENOSYS; }
-> >  static inline bool system_entering_hibernation(void) { return false; }
-> >  static inline bool hibernation_available(void) { return false; }
-> > +
-> > +static inline hibernate_quiet_exec(int (*func)(void *data), void *data) {
-> 
-> This needs to be "static inline int".
-> 
-Yep I got a build warning for this and also fixed it up.
-
-Thanks,
--Vishal
-
-
+I don't know if this sounds plausible to you. If it does, could you
+please let me have your name in a "Reviewed_by" tag. It would be of
+great help to have your support. Thanks!
