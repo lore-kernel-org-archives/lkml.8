@@ -2,132 +2,147 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7385D2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D62832067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:18:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F0/twXqv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="HVEQ5APH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgG2XRv (ORCPT
+        id S1728068AbgG2XSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 19:17:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbgG2XRu (ORCPT
+        Wed, 29 Jul 2020 19:18:50 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:55744 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgG2XSu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 19:17:50 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9EE7C0619D4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:17:50 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id l2so7597624pff.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:17:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=R9HgHOXqVNgKdIpZbWbUHoQKwYNiPIQ6hR37SC3F4W0=;
-        b=F0/twXqvlLuXWYfAcB2/sK2KH7Vo0KM8YEPTPxzUM+c2KUAX7hft542jNg7au6To8O
-         8PuIdaDMGVV5WZp/uxoUnbVtdsAVB/RUeKN8N5AUFaYRbM5lwNU1YrcS1zzoGccQpTVY
-         MZ40lheu2dCFtdbdnR6bI6mqIJPN7Cj2Gfroc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=R9HgHOXqVNgKdIpZbWbUHoQKwYNiPIQ6hR37SC3F4W0=;
-        b=ri4UBjs20zkJCrUCnz8f76EhGkGTHKi/swQvv57IX3YyI8mIfeisbbtCunyIqWSe4M
-         0R9QM+543lijXOvc9DoRTy9wVk4qY08BfPlMl+5ZGHXfIannUTENTrHl88uB+rq1u/a5
-         xmAZye2H8hsQ+GHC2U6NcqOwBafqQzY62Ra/w7ZtBD+mnnBcUC+EAPIjN/IhNJkV7nx/
-         CdR9YoIqVwt51gnMTLol6ihoE/WY9Ap1XadCVBc+UNLU+bHIsXWI7pFyL9cfcXGvyEWj
-         TfcGG5Z1qdyWcDZL5pvyN1jXCoB3+oN7XbNmrKYbWw/zBOLQ8zsSgo9bVReyr93fVT7F
-         kixQ==
-X-Gm-Message-State: AOAM531E2vdi8zCrKWZHPZMI2ednaQvYMo8vDUdeGqQvdQUlfMhxtwdd
-        dGJzikANLWn+JJeB9x6sMrNJwA==
-X-Google-Smtp-Source: ABdhPJxHKfvbjFH/RI2aP1uExJ+na8MkvlhpokW2aSYM8Li6Xk9CijHIwGwIwEeK6WqpBK5kymCzJQ==
-X-Received: by 2002:aa7:93a6:: with SMTP id x6mr377357pff.37.1596064670156;
-        Wed, 29 Jul 2020 16:17:50 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:7220:84ff:fe09:2b94])
-        by smtp.gmail.com with ESMTPSA id x18sm3538093pfc.93.2020.07.29.16.17.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 16:17:49 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     marcel@holtmann.org
-Cc:     chromeos-bluetooth-upstreaming@chromium.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-bluetooth@vger.kernel.org, Alex Lu <alex_lu@realsil.com.cn>,
-        linux-pm@vger.kernel.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Revert "Bluetooth: btusb: Disable runtime suspend on Realtek devices"
-Date:   Wed, 29 Jul 2020 16:17:43 -0700
-Message-Id: <20200729161740.1.Ib03d0827c8e48fc3df887fec698f79fa335c9274@changeid>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+        Wed, 29 Jul 2020 19:18:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=89S+0e9qaMFizZD+RqQQwt4PtCqG160SQSXRodd2/rg=; b=HVEQ5APHaKvLskI7TAL5CaUC9X
+        pGYeq7ZPshVY64Hg8IB+e22hnLINwW/LMYgLoxtfKEYsXRqAZpchZC8TEDgjMBI1R8V66Vk2xwuEQ
+        xjFgOsfcv0uck1cZCu8/pyKreXsOHBwwmVc/3tCPrUpoKFuZVHsfBP/eejQ+KUTYfwNgYS1EvgnWj
+        BfAl6F78l2XuNaA+AQvNwrtHG1vOVfOgvNEzbG9+Y+Dy5nHgMVum/ITFGiiG9jEul8RIqUm/jNyx+
+        XFgO8vglejw+chzGuCfPbPVfQaSPW3WSirDgcE1xvB7mWD33jwhjuGSBM93AG3G3cLJZSjQ2GyAeT
+        CWwTtpRA==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1k0vLT-0002wJ-GY; Wed, 29 Jul 2020 17:18:49 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1k0vLS-0001Do-Du; Wed, 29 Jul 2020 17:18:46 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Deucher <alexdeucher@gmail.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>
+Date:   Wed, 29 Jul 2020 17:18:44 -0600
+Message-Id: <20200729231844.4653-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, logang@deltatee.com, bhelgaas@google.com, alexdeucher@gmail.com, christian.koenig@amd.com, ray.huang@amd.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v2] PCI/P2PDMA: Allow P2PDMA on all AMD CPUs newer than the Zen family
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 7ecacafc240638148567742cca41aa7144b4fe1e.
+In order to avoid needing to add every new AMD CPU host bridge to the list
+every cycle, allow P2PDMA if the CPUs vendor is AMD and family is
+greater than 0x17 (Zen).
 
-Testing this change on a board with RTL8822CE, I found that enabling
-autosuspend has no effect on the stability of the system. The board
-continued working after autosuspend, suspend and reboot.
+This should cut down a bunch of the churn adding to the list of allowed
+host bridges.
 
-The original commit makes it impossible to enable autosuspend on working
-systems so it should be reverted. Disabling autosuspend should be done
-via module param or udev in userspace instead.
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexdeucher@gmail.com>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: Huang Rui <ray.huang@amd.com>
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 ---
-We have a few Chromebooks using the RTL 8822CE part over USB and they
-are running without problems with autosuspend enabled. While bringing up
-a new board, I found some power regressions that I was able to narrow
-down to this change so I'm requesting a revert.
 
-I tested this on Hp Chromebook 14a (running 4.14 kernel and 5.4 kernel)
-with this revert:
-* Enabled autosuspend, used it normally with a HID device
-* Suspended the Chromebook and verified it worked normally on resume
-* Rebooted the Chromebook and verified Bluetooth was working on next
-  boot
+Here's a reworked patch to enable P2PDMA on Zen2 (and in fact all
+subsequent Zen platforms).
 
-I didn't see the issue that was originally reported with this fix. For
-the original reporter, if you're still seeing this issue, there are
-other ways to disable autosuspend for your device:
-* set module param: enable_autosuspend=0
-* change your kconfig so BT_HCIBTUSB_AUTOSUSPEND=n
-* use a udev rule to disable autosuspend for specific vid:pid
+This should remove all the churn on the list for the AMD side. Still
+don't have a good solution for Intel.
 
-Keeping this change in the kernel makes it impossible to enable
-autosuspend so it should be reverted.
+ drivers/pci/p2pdma.c | 26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
 
- drivers/bluetooth/btusb.c | 4 ----
- 1 file changed, 4 deletions(-)
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index e8e444eeb1cd..f1cab2c50595 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -273,6 +273,24 @@ static void seq_buf_print_bus_devfn(struct seq_buf *buf, struct pci_dev *pdev)
+ 	seq_buf_printf(buf, "%s;", pci_name(pdev));
+ }
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 1f51494f581812..8d2608ddfd0875 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -4086,10 +4086,6 @@ static int btusb_probe(struct usb_interface *intf,
- 			set_bit(BTUSB_USE_ALT1_FOR_WBS, &data->flags);
- 		else
- 			bt_dev_err(hdev, "Device does not support ALT setting 1");
++#ifdef CONFIG_X86
++static bool cpu_supports_p2pdma(void)
++{
++	struct cpuinfo_x86 *c = &cpu_data(0);
++
++	/* Any AMD CPU who's family id is newer than Zen will support p2pdma */
++	if (c->x86_vendor == X86_VENDOR_AMD && c->x86 >= 0x17)
++		return true;
++
++	return false;
++}
++#else
++static bool cpu_supports_p2pdma(void)
++{
++	return false;
++}
++#endif
++
+ static const struct pci_p2pdma_whitelist_entry {
+ 	unsigned short vendor;
+ 	unsigned short device;
+@@ -280,11 +298,6 @@ static const struct pci_p2pdma_whitelist_entry {
+ 		REQ_SAME_HOST_BRIDGE	= 1 << 0,
+ 	} flags;
+ } pci_p2pdma_whitelist[] = {
+-	/* AMD ZEN */
+-	{PCI_VENDOR_ID_AMD,	0x1450,	0},
+-	{PCI_VENDOR_ID_AMD,	0x15d0,	0},
+-	{PCI_VENDOR_ID_AMD,	0x1630,	0},
 -
--		err = usb_autopm_get_interface(intf);
--		if (err < 0)
--			goto out_free_dev;
- 	}
- 
- 	if (!reset)
--- 
-2.28.0.rc0.142.g3c755180ce-goog
+ 	/* Intel Xeon E5/Core i7 */
+ 	{PCI_VENDOR_ID_INTEL,	0x3c00, REQ_SAME_HOST_BRIDGE},
+ 	{PCI_VENDOR_ID_INTEL,	0x3c01, REQ_SAME_HOST_BRIDGE},
+@@ -473,7 +486,8 @@ upstream_bridge_distance(struct pci_dev *provider, struct pci_dev *client,
+ 					      acs_redirects, acs_list);
 
+ 	if (map_type == PCI_P2PDMA_MAP_THRU_HOST_BRIDGE) {
+-		if (!host_bridge_whitelist(provider, client))
++		if (!cpu_supports_p2pdma() &&
++		    !host_bridge_whitelist(provider, client))
+ 			map_type = PCI_P2PDMA_MAP_NOT_SUPPORTED;
+ 	}
+
+
+base-commit: 92ed301919932f777713b9172e525674157e983d
+--
+2.20.1
