@@ -2,109 +2,172 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A70CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0802075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 699AE2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:49:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J0L2YvLf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRkWoHYw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgG2RsQ (ORCPT
+        id S1727124AbgG2RtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:48:16 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13637 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbgG2RsN (ORCPT
+        Wed, 29 Jul 2020 13:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgG2RtP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 13:48:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f21b6300000>; Wed, 29 Jul 2020 10:47:28 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 29 Jul 2020 10:48:13 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 29 Jul 2020 10:48:13 -0700
-Received: from [10.2.160.194] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jul
- 2020 17:48:12 +0000
-Subject: Re: [RFC PATCH v5 12/14] gpu: host1x: mipi: Keep MIPI clock enabled
- till calibration is done
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>
-References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
- <1595883452-17343-13-git-send-email-skomatineni@nvidia.com>
- <b21e3227-d0d8-5b4a-ae69-aa29551a22c3@gmail.com>
- <69903c67-8e5f-11c2-45ec-c76b97634aba@nvidia.com>
- <d291d306-55d4-2264-dc05-0e47f0dfef20@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <b5fcc292-8ce3-2833-491f-5aefbe0196eb@nvidia.com>
-Date:   Wed, 29 Jul 2020 10:55:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 13:49:15 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22755C061794;
+        Wed, 29 Jul 2020 10:49:15 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id s21so20161833ilk.5;
+        Wed, 29 Jul 2020 10:49:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ycpaC4HDS5mWn3wrZmk78uipQQWS0G3LEzZ0F3Dgd/U=;
+        b=RRkWoHYwzXDFpUWYKFbsbzM3WXIDK7iWfjPNTsozoCQfOYxT7sbXZhXSzYdKGwwB0H
+         KpaST50MGkKYzAFhpwY4qgurIay8CcPHtQn8ABhCznnMp2vv289WbzaCMlyYHJT3NTeS
+         Go9xud04+Q3Y/zDYQfL/TddYRe9boA1FNbQkCXEXHijXE/+x6lEs0Jwt0BG2XAZCz/lH
+         2rHM326tBGOGKMVLUqgpGfLtEnoxMFTIdsKHTEQ3/1kZVFHHMYvNG3yP03qecvJyJ25W
+         HBH1kiPZAP4BnYRBqBTU8mBqelSqsXd8BJjb+eEzvJl2M2zlsGl885slmt9In/+WHJyb
+         14YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ycpaC4HDS5mWn3wrZmk78uipQQWS0G3LEzZ0F3Dgd/U=;
+        b=ZuRXbasZ5H9moMDXVWacCx/5Z4igQvIgt01rDgxTxCIESZSmVw1KAGYQ+Jk2j6frfh
+         UP3CcvjfTtfh/GzjJyPPbBf+EAwx0AQnG8rqhtgrJRtD9pXMJvFjX7Kw17bgI0Api4a1
+         +Invk9ZN3Q9spOgDJDLQlBZ5OGyn7KNDvWL8qtSBNAmnGOLA0LuNhTxI/8sijolczbeP
+         XrzJNbmMW70tM3NqYC+73gd1OCG/+z+PNE0EFeXU5g1IE8FAJpDDftNQRfg3VnfXyvnx
+         X7NPyCZXvPz5/XaaWFAzK0hNPiVJh8WnATjpgK3PzPajCv2H9pN+1UBIH9j+7NnFThPy
+         0q6Q==
+X-Gm-Message-State: AOAM530dRmsA82WdlbwKbPXCe5QaP3zUIYp4S8YqC8nQ5eskxrFYdBYg
+        9CrgnAwxL7TD59o5+y9zeGVSePx32zFGpFIBhHs=
+X-Google-Smtp-Source: ABdhPJwWoVUeS4X9JOjdrnx4Ap+phImEIiTzRGwLP5R7zQh4ra0gphXJu3YCyKiDLAJgGFxYKrDoA1WvmtLqwKPS00Y=
+X-Received: by 2002:a05:6e02:e10:: with SMTP id a16mr16254401ilk.204.1596044954472;
+ Wed, 29 Jul 2020 10:49:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d291d306-55d4-2264-dc05-0e47f0dfef20@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+References: <20200729160942.28867-1-krzk@kernel.org> <20200729160942.28867-4-krzk@kernel.org>
+In-Reply-To: <20200729160942.28867-4-krzk@kernel.org>
+From:   Tomasz Figa <tomasz.figa@gmail.com>
+Date:   Wed, 29 Jul 2020 19:49:02 +0200
+Message-ID: <CA+Ln22HWNSwVWARKL2NeUVx1y5yqHe0SGPZ1hcqBW88awySfPA@mail.gmail.com>
+Subject: Re: [PATCH 3/7] ARM: s3c: Remove plat-samsung/.../samsung-time.h
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Vincent Sanders <vince@simtec.co.uk>,
+        Simtec Linux Team <linux@simtec.co.uk>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        patches@opensource.cirrus.com,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org,
+        Sergio Prado <sergio.prado@e-labworks.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Cedric Roux <sed@free.fr>, Lihua Yao <ylhuajnu@outlook.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596044848; bh=WlqRhgzgQcue/GR0Zrfuhfw08PXoX9nLL9Uz68gPB6A=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=J0L2YvLfggXNKWADlDM+eCasPdwHDhj8F+Z6cwBwODvdJFoV2n8lYuQcuHfyfzvUI
-         vnkhEBtuw+vWMyAF5+squmzJmLFqetZTUqbj9XcubCnkZGgRAI22Cpshh0PgJr1il5
-         BS8yGVHJM2i7Ibvw+OwrI+UyEQsHCcLl+sbtVzD9yBzXx2YxMKm3tJ6jn5V97/7SAQ
-         vZNkq66AKKSMpA5j83S0TAxvj/jHoMnTo8YyqI32pJieVruFYA5jQMR/f2To1qqrW3
-         26SAa+IKuSI3+ub8djJ3wryyw44LszGsqF9ZKOyZqfOgNPGE/gMI60Lorswa7s2Ohl
-         s+EUOh1AfxNOQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 7/29/20 10:08 AM, Dmitry Osipenko wrote:
-> 28.07.2020 19:04, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> ...
->>>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
->>>> +{
->>> Doesn't MIPI_CAL need to be reset here?
->> No need to reset MIPI CAL
-> Could you please explain why. There is a calibration state-machine that
-> apparently needs to be returned into initial state, does it return by
-> itself?
+2020=E5=B9=B47=E6=9C=8829=E6=97=A5(=E6=B0=B4) 18:11 Krzysztof Kozlowski <kr=
+zk@kernel.org>:
 >
-> TRM says that MIPI block needs to be reset before of starting
-> calibration process. The reset is completely missing in the driver, I
-> assume it needs to be corrected with another patch.
+> Remove the arch/arm/plat-samsung/include/plat/samsung-time.h header and
+> move the contents to common.h headers in mach-s3c24xx and mach-s3c64xx.
+> The definition of declared functions is already in common.c in mach
+> directories, so it is logically to put declaration next to them.
+>
+> This is also one step further towards removal of plat-samsung directory
+> and it fixes W=3D1 build warnings:
+>
+>     arch/arm/mach-s3c64xx/common.c:174:13: warning:
+>         no previous prototype for 'samsung_set_timer_source' [-Wmissing-p=
+rototypes]
+>       174 | void __init samsung_set_timer_source(unsigned int event, unsi=
+gned int source)
+>
+>     arch/arm/mach-s3c64xx/common.c:180:13: warning:
+>         no previous prototype for 'samsung_timer_init' [-Wmissing-prototy=
+pes]
+>       180 | void __init samsung_timer_init(void)
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/mach-s3c24xx/common.h                | 12 +++++++++
+>  arch/arm/mach-s3c24xx/mach-amlm5900.c         |  2 --
+>  arch/arm/mach-s3c24xx/mach-anubis.c           |  1 -
+>  arch/arm/mach-s3c24xx/mach-at2440evb.c        |  1 -
+>  arch/arm/mach-s3c24xx/mach-bast.c             |  1 -
+>  arch/arm/mach-s3c24xx/mach-gta02.c            |  1 -
+>  arch/arm/mach-s3c24xx/mach-h1940.c            |  1 -
+>  arch/arm/mach-s3c24xx/mach-jive.c             |  1 -
+>  arch/arm/mach-s3c24xx/mach-mini2440.c         |  1 -
+>  arch/arm/mach-s3c24xx/mach-n30.c              |  1 -
+>  arch/arm/mach-s3c24xx/mach-nexcoder.c         |  1 -
+>  arch/arm/mach-s3c24xx/mach-osiris.c           |  1 -
+>  arch/arm/mach-s3c24xx/mach-otom.c             |  1 -
+>  arch/arm/mach-s3c24xx/mach-qt2410.c           |  1 -
+>  arch/arm/mach-s3c24xx/mach-rx1950.c           |  1 -
+>  arch/arm/mach-s3c24xx/mach-rx3715.c           |  1 -
+>  arch/arm/mach-s3c24xx/mach-smdk2410.c         |  1 -
+>  arch/arm/mach-s3c24xx/mach-smdk2413.c         |  1 -
+>  arch/arm/mach-s3c24xx/mach-smdk2416.c         |  1 -
+>  arch/arm/mach-s3c24xx/mach-smdk2440.c         |  1 -
+>  arch/arm/mach-s3c24xx/mach-smdk2443.c         |  1 -
+>  arch/arm/mach-s3c24xx/mach-tct_hammer.c       |  1 -
+>  arch/arm/mach-s3c24xx/mach-vr1000.c           |  1 -
+>  arch/arm/mach-s3c24xx/mach-vstms.c            |  1 -
+>  arch/arm/mach-s3c64xx/common.h                | 13 ++++++++++
+>  arch/arm/mach-s3c64xx/mach-anw6410.c          |  1 -
+>  arch/arm/mach-s3c64xx/mach-crag6410.c         |  1 -
+>  arch/arm/mach-s3c64xx/mach-hmt.c              |  1 -
+>  arch/arm/mach-s3c64xx/mach-mini6410.c         |  1 -
+>  arch/arm/mach-s3c64xx/mach-ncp.c              |  1 -
+>  arch/arm/mach-s3c64xx/mach-real6410.c         |  1 -
+>  arch/arm/mach-s3c64xx/mach-smartq.c           |  1 -
+>  arch/arm/mach-s3c64xx/mach-smartq5.c          |  1 -
+>  arch/arm/mach-s3c64xx/mach-smartq7.c          |  1 -
+>  arch/arm/mach-s3c64xx/mach-smdk6400.c         |  1 -
+>  arch/arm/mach-s3c64xx/mach-smdk6410.c         |  1 -
+>  .../plat-samsung/include/plat/samsung-time.h  | 26 -------------------
+>  37 files changed, 25 insertions(+), 61 deletions(-)
+>  delete mode 100644 arch/arm/plat-samsung/include/plat/samsung-time.h
+>
 
-TRM documented incorrectly. There is no need to reset MIPI_CAL.
+For the s3c64xx bits:
 
-MIPI CAL is FSM and it does not hang and done bit is to indicate if=20
-results are applied to pads or not.
+Reviewed-by: Tomasz Figa <tomasz.figa@gmail.com>
 
-If we don't see done bit set meaning, MIPI CAL did not see LP-11 and=20
-results are not applied to pads.
+I suppose the next step would be renaming those functions to s3c24xx_*
+and s3c64xx_* to avoid naming collisions?
 
-Also while multiple streams can happen in parallel and we can't reset=20
-MIPI CAL as other CSI channel streams (using other pads) may also be=20
-going thru calibration process in parallel depending and also DSI pads=20
-also are calibrated thru same MIPI CAL controller.
-
-
+Best regards,
+Tomasz
