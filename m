@@ -2,96 +2,121 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 391B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC74A2083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB6620809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:29:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596036412;
-	bh=FWwtNBSwhGrxS3G1Pkb3UzjmEygkFwEGVorAw8uBw2k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n6Zwh2k3JCqcX99pxxsbKNIxMVqM807UI8iJu+WoK97YoF/z1RNl0fHLLLPIVG5Q3
-	 f0K8C0rWup/eOSOyWHqIi0rftx/Il0aT3G37rUyh6larIbmetaH8ycvc6kiDW3GnDi
-	 Nl7jzKeyCUlhEJUUfpczxN/eGeDq5C5lrjEOP4CY=
+	s=default; t=1596036582;
+	bh=7peMLUE0O9Xbxur3E45fxOUA2yD+ATEOS7AqxQ6wedI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AFoFmqp7Jzo8IhivmoCB1SBo5F8f8eU61RFVgTihCS6HK771iJJAqOZcTIgk0YD7z
+	 uQC20+4P9ZHMVj464Rda84nOnh0EUsM5bi0bGLD+6e/e4gVc4BMzm3bfjbL49Hn6Jo
+	 DPqdoQVgoIC1Q9RIWB9gL9PaZg8+z0rYIDWDErRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgG2P0w (ORCPT
+        id S1726581AbgG2P3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:26:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726449AbgG2P0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:26:51 -0400
-Received: from dragon (unknown [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F6CF20809;
-        Wed, 29 Jul 2020 15:26:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596036411;
-        bh=FWwtNBSwhGrxS3G1Pkb3UzjmEygkFwEGVorAw8uBw2k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2YuX7Bt5KnWUEjuvOCOdbseEnj/NTHy0HPxwGBzOnFV5+nta+ZFbB085rzSfDSTOL
-         z9NNOuG27/Qyhnz0SFuX3Q7KKCOjLsd9RZiNYiTHfh3o4s3t+v+SngfsWznKs3X2TX
-         m1Lv8t52bnuS9Z+d1cTUkBzzMAorcoHKNDQ34kL8=
-Date:   Wed, 29 Jul 2020 23:26:35 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, aisheng.dong@nxp.com,
-        arnd@arndb.de, peng.fan@nxp.com, abel.vesa@nxp.com,
-        fugang.duan@nxp.com, daniel.baluta@nxp.com, yuehaibing@huawei.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V7 0/6] Support building i.MX ARMv8 platforms clock
- driver as module
-Message-ID: <20200729152634.GA26850@dragon>
-References: <1596034117-24246-1-git-send-email-Anson.Huang@nxp.com>
+        Wed, 29 Jul 2020 11:29:40 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:54314 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgG2P3k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 11:29:40 -0400
+Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 06TFT5iv016641;
+        Thu, 30 Jul 2020 00:29:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 06TFT5iv016641
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1596036546;
+        bh=QRGY5KyPyAu6gAEnoCYHadFp9xmMAfIGFPn8jJU/q30=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LfFB/5OpKEIYtUxjI4N6gfwdAqUfpSBstNRfNzzuNP9NYHWVJoucfhyD5h1U6GXyE
+         RTsF+fxkahemGycDAy+fbv36BSJjhNKnj1nrs72noi8ZjNA6UF8gHgoBVXL1Sw1ode
+         3QmF0OJrY5B+OF1Px8FFdgtrH98HOeUkz15X1cdK97Rx/5JzxTTeoZxI1CCo/CEmMP
+         xLfm13mEBy1+WrYgcuIa0EsGiw3TVlPK/wjtYqJrIpl4YN+vWz2esXfH7psKQPLYx0
+         wWUFPJ5ACPZ168sh2u7fgGzllLpBdkxAoDyeVvX4/hxAJsFUvVOBOPn8nZ2M05ngji
+         qzZkmwPvmfxyA==
+X-Nifty-SrcIP: [126.25.67.101]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        David Binderman <dcb314@hotmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kconfig: qconf: use delete[] instead of delete to free array
+Date:   Thu, 30 Jul 2020 00:29:04 +0900
+Message-Id: <20200729152904.136335-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596034117-24246-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 10:48:31PM +0800, Anson Huang wrote:
-> Nowdays, there are more and more requirements of building SoC specific drivers as
-> modules, such as Android GKI (generic kernel image), this patch set supports building
-> i.MX ARMv8 SoCs clock drivers as modules,
-> 
-> The CLK_IMXxxx is introduced for i.MX ARMv7 platforms in order to make the build
-> options aligned, the reason why i.MX ARMv7 platforms clock driver do NOT support
-> module build and COMPILE_TEST is because, some drivers like i.MX GPT timer driver
-> depends on clock driver to be ready before it, GPT driver uses TIMER_OF_DECLARE(),
-> while i.MX6/7 clock drivers use CLK_OF_DECLARE(), and GPT driver is critical for
-> i.MX6/7 platforms kernel boot up, so GPT driver needs to be changed to support
-> loadable clock driver first, then the i.MX6/7 clock drivers can support loadable
-> module, this will be done later.
-> 
-> Changes since V6:
-> 	- improve patch #6's subject and move it to be first patch of this series.
-> 
-> Anson Huang (6):
->   clk: imx6sl: Use BIT(x) to avoid shifting signed 32-bit value by 31
->     bits
->   clk: composite: Export clk_hw_register_composite()
->   clk: imx: Support building i.MX common clock driver as module
->   clk: imx: Add clock configuration for ARMv7 platforms
->   clk: imx8m: Support module build
->   clk: imx8qxp: Support building i.MX8QXP clock driver as module
+cppcheck reports "Mismatching allocation and deallocation".
 
-Acked-by: Shawn Guo <shawnguo@kernel.org>
+To make cppcheck check qconf.cc, you need to ensure qconf.moc
+is not remaining.
 
-Stephen,
+$ rm -f scripts/kconfig/qconf.moc
+$ cppcheck scripts/kconfig/qconf.cc
+Checking scripts/kconfig/qconf.cc ...
+scripts/kconfig/qconf.cc:1242:10: error: Mismatching allocation and deallocation: data [mismatchAllocDealloc]
+  delete data;
+         ^
+scripts/kconfig/qconf.cc:1236:15: note: Mismatching allocation and deallocation: data
+ char *data = new char[count + 1];
+              ^
+scripts/kconfig/qconf.cc:1242:10: note: Mismatching allocation and deallocation: data
+  delete data;
+         ^
+scripts/kconfig/qconf.cc:1255:10: error: Mismatching allocation and deallocation: data [mismatchAllocDealloc]
+  delete data;
+         ^
+scripts/kconfig/qconf.cc:1236:15: note: Mismatching allocation and deallocation: data
+ char *data = new char[count + 1];
+              ^
+scripts/kconfig/qconf.cc:1255:10: note: Mismatching allocation and deallocation: data
+  delete data;
+         ^
 
-I had sent v5.9 material off my hand to you, so please pick this up
-directly if it looks good to you.  Thanks!
+Fixes: c4f7398bee9c ("kconfig: qconf: make debug links work again")
+Reported-by: David Binderman <dcb314@hotmail.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-Shawn
+ scripts/kconfig/qconf.cc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+index 4a616128a154..5a9e83a2f8c2 100644
+--- a/scripts/kconfig/qconf.cc
++++ b/scripts/kconfig/qconf.cc
+@@ -1239,7 +1239,7 @@ void ConfigInfoView::clicked(const QUrl &url)
+ 
+ 	if (count < 1) {
+ 		qInfo() << "Clicked link is empty";
+-		delete data;
++		delete[] data;
+ 		return;
+ 	}
+ 
+@@ -1252,7 +1252,7 @@ void ConfigInfoView::clicked(const QUrl &url)
+ 	result = sym_re_search(data);
+ 	if (!result) {
+ 		qInfo() << "Clicked symbol is invalid:" << data;
+-		delete data;
++		delete[] data;
+ 		return;
+ 	}
+ 
+-- 
+2.25.1
+
