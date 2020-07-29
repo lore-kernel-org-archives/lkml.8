@@ -2,123 +2,236 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D62BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71395C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD9E20672
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:38:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OugQUVzj"
+	by mail.kernel.org (Postfix) with ESMTP id 56B49207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:39:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgG2Li3 (ORCPT
+        id S1726878AbgG2LjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 07:38:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgG2Li2 (ORCPT
+        Wed, 29 Jul 2020 07:39:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23990 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726858AbgG2LjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 07:38:28 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A05ACC061794;
-        Wed, 29 Jul 2020 04:38:27 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id e13so21801825qkg.5;
-        Wed, 29 Jul 2020 04:38:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Kq86ugZ9Kh4uvA8FGJVxsQ+ntooQ4buHazTmCg4C02E=;
-        b=OugQUVzjgJHFzjAaY04UeeW/f2lFj6q18wj/s6NeyGmXMYVBGC3HBg8OANBrExC4pu
-         mWq6CmVr+2tY6l83HfJlAquylDRJqXkr01Lakt5ttkOPv+Mdbklyze+Rnjzizv2n5eia
-         m1vbgF3jlB/ICPiYPKySvDDOz/sNBONWbBt/gc2rpwKTmudPpoTaZzGmMRhDX0B8/DxY
-         u/cUVpQJv+HdEJFGzwy1A8HPtWVTPNrXGuVebR8iwrcHfjeWw9OsIstqAF0+cC/ExnE2
-         Kyg92WKivbuwrRp+tV+CWLkWbJHWz+TvANJu8/mfMVq3nR9Rc5WoVu9te07DnWGPYuwb
-         Gcow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Kq86ugZ9Kh4uvA8FGJVxsQ+ntooQ4buHazTmCg4C02E=;
-        b=pdjPRwGXDNaWkOWXmxIXq8fuVp+/kaaXs99lM02kNpwcpe9IcETj2DdVs3qWEPUKdR
-         O9Y1iypv6JhMuwol2SBLnG7NddVxaH7Zwk8wyJcCEdmPsKWqjYSRcN9vtAXYX59ATvy5
-         Z/yTp0SWZGlJ+kDzYDlp3/sQzr2HT/aEOgTr8pLP5JVjboKyEsdoZJ/mAIBJx/dYNOs/
-         hLrm21ntr+spWtB3Xp3alxY7XIQAmvNMobLaPeQoWGDUXZKBn70U46iTz8TVs2IaaJnQ
-         7mEjcZIZrBRgk2HhduY+1bw3epn7uB/wuqG60TZSYo0oH67mI+KhtCdMGN4/ySbt6VRh
-         vLoA==
-X-Gm-Message-State: AOAM532fHvF28egRJUKSuJh2pvYF5aSYQ4owcdKPtsgYIgKZmH+XjGpe
-        8RABVMz2ZX0ht3G6dnf2EA==
-X-Google-Smtp-Source: ABdhPJw9BUCTIZt9eRkU3uKUsVVckjWP0KInvHs1YXHSPKjeWDir27IpG2UJ4zddVfZscf1Vj3OQnw==
-X-Received: by 2002:a37:4048:: with SMTP id n69mr30825844qka.421.1596022706871;
-        Wed, 29 Jul 2020 04:38:26 -0700 (PDT)
-Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
-        by smtp.gmail.com with ESMTPSA id k134sm1377330qke.60.2020.07.29.04.38.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 04:38:26 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH v2 RESEND] usbhid: Fix slab-out-of-bounds write in hiddev_ioctl_usage()
-Date:   Wed, 29 Jul 2020 07:37:12 -0400
-Message-Id: <20200729113712.8097-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200718231218.170730-1-yepeilin.cs@gmail.com>
-References: <20200718231218.170730-1-yepeilin.cs@gmail.com>
+        Wed, 29 Jul 2020 07:39:09 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06TBWiuw131703;
+        Wed, 29 Jul 2020 07:38:57 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32jp1mq05d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jul 2020 07:38:57 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06TBXSHI134334;
+        Wed, 29 Jul 2020 07:38:57 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32jp1mq04m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jul 2020 07:38:56 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06TBWup2022392;
+        Wed, 29 Jul 2020 11:38:54 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06fra.de.ibm.com with ESMTP id 32jgvps2sd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jul 2020 11:38:54 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06TBco0458458270
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Jul 2020 11:38:50 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B919E4C04A;
+        Wed, 29 Jul 2020 11:38:50 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1017F4C046;
+        Wed, 29 Jul 2020 11:38:47 +0000 (GMT)
+Received: from [192.168.0.8] (unknown [9.79.217.86])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 29 Jul 2020 11:38:46 +0000 (GMT)
+Subject: [PATCH v6 00/11] ppc64: enable kdump support for kexec_file_load
+ syscall
+From:   Hari Bathini <hbathini@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Dave Young <dyoung@redhat.com>, Pingfan Liu <piliu@redhat.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        kernel test robot <lkp@intel.com>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Pingfan Liu <piliu@redhat.com>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Pingfan Liu <piliu@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Wed, 29 Jul 2020 17:08:44 +0530
+Message-ID: <159602259854.575379.16910915605574571585.stgit@hbathini>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-29_04:2020-07-29,2020-07-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 phishscore=0 mlxlogscore=999 bulkscore=0
+ impostorscore=0 suspectscore=0 lowpriorityscore=0 mlxscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007290071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-`uref->usage_index` is not always being properly checked, causing
-hiddev_ioctl_usage() to go out of bounds under some cases. Fix it.
+Sorry! There was a gateway issue on my system while posting v5, due to
+which some patches did not make it through. Resending...
 
-Reported-by: syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?id=f2aebe90b8c56806b050a20b36f51ed6acabe802
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+This patch series enables kdump support for kexec_file_load system
+call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
+code but heavily modified for kernel consumption.
+
+The first patch adds a weak arch_kexec_locate_mem_hole() function to
+override locate memory hole logic suiting arch needs. There are some
+special regions in ppc64 which should be avoided while loading buffer
+& there are multiple callers to kexec_add_buffer making it complicated
+to maintain range sanity and using generic lookup at the same time.
+
+The second patch marks ppc64 specific code within arch/powerpc/kexec
+and arch/powerpc/purgatory to make the subsequent code changes easy
+to understand.
+
+The next patch adds helper function to setup different memory ranges
+needed for loading kdump kernel, booting into it and exporting the
+crashing kernel's elfcore.
+
+The fourth patch overrides arch_kexec_locate_mem_hole() function to
+locate memory hole for kdump segments by accounting for the special
+memory regions, referred to as excluded memory ranges, and sets
+kbuf->mem when a suitable memory region is found.
+
+The fifth patch moves walk_drmem_lmbs() out of .init section with
+a few changes to reuse it for setting up kdump kernel's usable memory
+ranges. The next patch uses walk_drmem_lmbs() to look up the LMBs
+and set linux,drconf-usable-memory & linux,usable-memory properties
+in order to restrict kdump kernel's memory usage.
+
+The next patch setups up backup region as a kexec segment while
+loading kdump kernel and teaches purgatory to copy data from source
+to destination.
+
+Patch 09 builds the elfcore header for the running kernel & passes
+the info to kdump kernel via "elfcorehdr=" parameter to export as
+/proc/vmcore file. The next patch sets up the memory reserve map
+for the kexec kernel and also claims kdump support for kdump as
+all the necessary changes are added.
+
+The next patch fixes a lookup issue for `kexec -l -s` case when
+memory is reserved for crashkernel.
+
+The last patch updates purgatory to setup r8 & r9 with opal base
+and opal entry addresses respectively to aid kernels built with
+CONFIG_PPC_EARLY_DEBUG_OPAL enabled.
+
+Tested the changes successfully on P8, P9 lpars, couple of OpenPOWER
+boxes, one with secureboot enabled, KVM guest and a simulator.
+
+v5 -> v6:
+* Fixed reference count leak in add_tce_mem_ranges() function and also
+  updated error handling in reading tce table base & sizes.
+* Instead of trying to reinvent the wheel with get_node_path() &
+  get_node_path_size() functions, used %pOF format as suggested by mpe.
+* Moved patch 07/11 to end of the series for mpe to take a call on
+  whether to have it or not.
+
+v4 -> v5:
+* Dropped patches 07/12 & 08/12 and updated purgatory to do everything
+  in assembly.
+* Added a new patch (which was part of patch 08/12 in v4) to update
+  r8 & r9 registers with opal base & opal entry addresses as it is
+  expected on kernels built with CONFIG_PPC_EARLY_DEBUG_OPAL enabled.
+* Fixed kexec load issue on KVM guest.
+
+v3 -> v4:
+* Updated get_node_path() function to be iterative instead of a recursive one.
+* Added comment explaining why low memory is added to kdump kernel's usable
+  memory ranges though it doesn't fall in crashkernel region.
+* Fixed stack_buf to be quadword aligned in accordance with ABI.
+* Added missing of_node_put() in setup_purgatory_ppc64().
+* Added a FIXME tag to indicate issue in adding opal/rtas regions to
+  core image.
+
+v2 -> v3:
+* Fixed TOC pointer calculation for purgatory by using section info
+  that has relocations applied.
+* Fixed arch_kexec_locate_mem_hole() function to fallback to generic
+  kexec_locate_mem_hole() lookup if exclude ranges list is empty.
+* Dropped check for backup_start in trampoline_64.S as purgatory()
+  function takes care of it anyway.
+
+v1 -> v2:
+* Introduced arch_kexec_locate_mem_hole() for override and dropped
+  weak arch_kexec_add_buffer().
+* Addressed warnings reported by lkp.
+* Added patch to address kexec load issue when memory is reserved
+  for crashkernel.
+* Used the appropriate license header for the new files added.
+* Added an option to merge ranges to minimize reallocations while
+  adding memory ranges.
+* Dropped within_crashkernel parameter for add_opal_mem_range() &
+  add_rtas_mem_range() functions as it is not really needed.
+
 ---
-Change in v2:
-    - Add the same check for the `HIDIOCGUSAGE` case. (Suggested by
-      Dan Carpenter <dan.carpenter@oracle.com>)
 
- drivers/hid/usbhid/hiddev.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Hari Bathini (11):
+      kexec_file: allow archs to handle special regions while locating memory hole
+      powerpc/kexec_file: mark PPC64 specific code
+      powerpc/kexec_file: add helper functions for getting memory ranges
+      ppc64/kexec_file: avoid stomping memory used by special regions
+      powerpc/drmem: make lmb walk a bit more flexible
+      ppc64/kexec_file: restrict memory usage of kdump kernel
+      ppc64/kexec_file: setup backup region for kdump kernel
+      ppc64/kexec_file: prepare elfcore header for crashing kernel
+      ppc64/kexec_file: add appropriate regions for memory reserve map
+      ppc64/kexec_file: fix kexec load failure with lack of memory hole
+      ppc64/kexec_file: enable early kernel's OPAL calls
 
-diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
-index 4140dea693e9..4f97e6c12059 100644
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -519,12 +519,16 @@ static noinline int hiddev_ioctl_usage(struct hiddev *hiddev, unsigned int cmd,
- 
- 		switch (cmd) {
- 		case HIDIOCGUSAGE:
-+			if (uref->usage_index >= field->report_count)
-+				goto inval;
- 			uref->value = field->value[uref->usage_index];
- 			if (copy_to_user(user_arg, uref, sizeof(*uref)))
- 				goto fault;
- 			goto goodreturn;
- 
- 		case HIDIOCSUSAGE:
-+			if (uref->usage_index >= field->report_count)
-+				goto inval;
- 			field->value[uref->usage_index] = uref->value;
- 			goto goodreturn;
- 
--- 
-2.25.1
+
+ arch/powerpc/include/asm/crashdump-ppc64.h |   19 
+ arch/powerpc/include/asm/drmem.h           |    9 
+ arch/powerpc/include/asm/kexec.h           |   29 +
+ arch/powerpc/include/asm/kexec_ranges.h    |   25 +
+ arch/powerpc/kernel/prom.c                 |   13 
+ arch/powerpc/kexec/Makefile                |    2 
+ arch/powerpc/kexec/elf_64.c                |   36 +
+ arch/powerpc/kexec/file_load.c             |   60 +-
+ arch/powerpc/kexec/file_load_64.c          | 1119 ++++++++++++++++++++++++++++
+ arch/powerpc/kexec/ranges.c                |  412 ++++++++++
+ arch/powerpc/mm/drmem.c                    |   87 +-
+ arch/powerpc/mm/numa.c                     |   13 
+ arch/powerpc/purgatory/Makefile            |    4 
+ arch/powerpc/purgatory/trampoline.S        |  117 ---
+ arch/powerpc/purgatory/trampoline_64.S     |  163 ++++
+ include/linux/kexec.h                      |   29 -
+ kernel/kexec_file.c                        |   16 
+ 17 files changed, 1958 insertions(+), 195 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
+ create mode 100644 arch/powerpc/include/asm/kexec_ranges.h
+ create mode 100644 arch/powerpc/kexec/file_load_64.c
+ create mode 100644 arch/powerpc/kexec/ranges.c
+ delete mode 100644 arch/powerpc/purgatory/trampoline.S
+ create mode 100644 arch/powerpc/purgatory/trampoline_64.S
+
 
