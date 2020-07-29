@@ -2,95 +2,120 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB24C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB4AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4DA2207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DBCC2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:34:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MZTp+V4Z"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RHnbMR3m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgG2Kbt (ORCPT
+        id S1726707AbgG2KeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 06:31:49 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46055 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbgG2Kbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 06:31:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 29 Jul 2020 06:34:11 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:37693 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726367AbgG2KeK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 06:34:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596018849;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=thftSHsPkDGewUeVkLBJnkZJRKIUZfFRNAXaBwnUwP8=;
+        b=RHnbMR3m2H4FAYohi3C9cpcx894w1kXXbPsIslb09hNZEbAVzcjG21HhGYBlygXcZwJ2pQ
+        YQ887WnPruxeDuRBzzOQfYhl2UwddRtPzWEif8ZolVqyp2gQsp96qGUhqCKPz9nJtLM3/1
+        gVeDRaGENVU38kAtcfvt9zarK3IKkN0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-37-UWsuWmXYMmuNPeKCqp9kJA-1; Wed, 29 Jul 2020 06:34:05 -0400
+X-MC-Unique: UWsuWmXYMmuNPeKCqp9kJA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BGqbP6pY6z9sSy;
-        Wed, 29 Jul 2020 20:31:45 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596018706;
-        bh=t0maApQGCxnVpZN64FrXzhSQq308d3DnF/qmn/ohK4A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MZTp+V4Zv9XcGGC7vKwcaqySHDrPJVpUj+NneEWnFaq0dPaVDU/Oj3fMBJ2GlIyyD
-         nE4mN5E6KPuTXc77ryTvmeJ0MuyZe8I+gyWj6n54kRfP+cw2XIAQm5bAgFgKVusEtG
-         AS9Fi+lAZItx3kUu44ewGWZcYwqlD3DuSrUaKE4uJwaJ1FGwo23FIF2PB5m64OFEXC
-         vPOg+v8IYQoTyGDwDMhIZkI/mR1UJtjrs96T4J9kpc7ug1NBznA1oGnMvMz24DVzmz
-         LrWlqE0jS86EXvk9oOpzWPEfYe7vHxOlzVqnCKTG8KRqIKqsXnrfOA2QkLwhgGUK/L
-         Udjuff1O3F9AQ==
-Date:   Wed, 29 Jul 2020 20:31:42 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh@kernel.org>
-Subject: linux-next: build warning after merge of the mips tree
-Message-ID: <20200729203142.18248463@canb.auug.org.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2FA4A79EC3;
+        Wed, 29 Jul 2020 10:34:03 +0000 (UTC)
+Received: from localhost (ovpn-12-32.pek2.redhat.com [10.72.12.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0F3FE10013D0;
+        Wed, 29 Jul 2020 10:34:01 +0000 (UTC)
+Date:   Wed, 29 Jul 2020 18:33:59 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Muchun Song <songmuchun@bytedance.com>, akpm@linux-foundation.org,
+        mhocko@kernel.org, rientjes@google.com, mgorman@suse.de,
+        walken@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Jianchao Guo <guojianchao@bytedance.com>
+Subject: Re: [PATCH v4] mm/hugetlb: add mempolicy check in the reservation
+ routine
+Message-ID: <20200729103359.GE14854@MiWiFi-R3L-srv>
+References: <20200728034938.14993-1-songmuchun@bytedance.com>
+ <20200728132453.GB14854@MiWiFi-R3L-srv>
+ <1b507031-d475-b495-bb4a-2cd9e665d02f@oracle.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/8u=t1DxTFtfH_cyhjn0PVya";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1b507031-d475-b495-bb4a-2cd9e665d02f@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/8u=t1DxTFtfH_cyhjn0PVya
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 07/28/20 at 09:46am, Mike Kravetz wrote:
+> On 7/28/20 6:24 AM, Baoquan He wrote:
+> > Hi Muchun,
+> > 
+> > On 07/28/20 at 11:49am, Muchun Song wrote:
+> >> In the reservation routine, we only check whether the cpuset meets
+> >> the memory allocation requirements. But we ignore the mempolicy of
+> >> MPOL_BIND case. If someone mmap hugetlb succeeds, but the subsequent
+> >> memory allocation may fail due to mempolicy restrictions and receives
+> >> the SIGBUS signal. This can be reproduced by the follow steps.
+> >>
+> >>  1) Compile the test case.
+> >>     cd tools/testing/selftests/vm/
+> >>     gcc map_hugetlb.c -o map_hugetlb
+> >>
+> >>  2) Pre-allocate huge pages. Suppose there are 2 numa nodes in the
+> >>     system. Each node will pre-allocate one huge page.
+> >>     echo 2 > /proc/sys/vm/nr_hugepages
+> >>
+> >>  3) Run test case(mmap 4MB). We receive the SIGBUS signal.
+> >>     numactl --membind=0 ./map_hugetlb 4
+> > 
+> > I think supporting the  mempolicy of MPOL_BIND case is a good idea.
+> > I am wondering what about the other mempolicy cases, e.g MPOL_INTERLEAVE,
+> > MPOL_PREFERRED. Asking these because we already have similar handling in
+> > sysfs, proc nr_hugepages_mempolicy writting. Please see
+> > __nr_hugepages_store_common() for detail.
+> 
+> There is a high level difference in the function of this code and the code
+> called by the sysfs and proc interfaces.  This patch is dealing with reserving
+> huge pages in the pool for later use.  The sysfs and proc interfaces are
+> allocating huge pages to be added to the pool.
+> 
+> Using mempolicy to decide how to allocate huge pages is pretty straight
+> forward.  Using mempolicy to reserve pages is almost impossible to get
+> correct.  The comment at the beginning of hugetlb_acct_memory() and modified
+> by this patch summarizes the issues.
+> 
+> IMO, at this time it makes little sense to perform checks for more than
+> MPOL_BIND at reservation time.  If we ever take on the monumental task of
+> supporting mempolicy directed per-node reservations throughout the life of
+> a process, support for other policies will need to be taken into account.
 
-Hi all,
+I haven't figured out the difficulty of using mempolicy very clearly, will 
+read more codes and digest and understand your words. Thanks a lot for
+these details.
 
-After merging the mips tree, today's linux-next build (powerpc
-allnoconfig) produced this warning:
+Thanks
+Baoquan
 
-drivers/of/address.c:104:21: warning: 'of_bus_pci_get_flags' defined but no=
-t used [-Wunused-function]
-  104 | static unsigned int of_bus_pci_get_flags(const __be32 *addr)
-      |                     ^~~~~~~~~~~~~~~~~~~~
-
-Introduced by commit
-
-  2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/8u=t1DxTFtfH_cyhjn0PVya
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8hUA4ACgkQAVBC80lX
-0Gyt6wf/TYJJ2pMxrB0BoOyK9y8Vg38zi2cPgwg18uSlAJHQRawceD/EL5vKHGN0
-cJ7LRvbJeiHNrQ9sc6cK+EWhjgfmX8WTXmf/F4J8x6wQ3i7poSwR3RKtontt1Y6L
-iDiKfpcxCuB5CYiJ6LyO3Gzq+bM2WEM4+TaPH+jK+FxkCQKz8Ypi/2ACQoyH+tQ7
-9dEw2dzGneYn/VX/UmbKNyFgiw2wmBp+VBRgbgAuqzRbNMjh4lX9+zkQFDe7d9FU
-RhHGm85FMSwXLeecOK3NZmwFUMU2qng87fXxVkmRBk+m6E5kJziVDNycPOXw7IHb
-MWnKXa9lQ0GVVOGmz0YFIHpHXylQNg==
-=IfPA
------END PGP SIGNATURE-----
-
---Sig_/8u=t1DxTFtfH_cyhjn0PVya--
