@@ -2,116 +2,98 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 275EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06BE92075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:41:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ORIXSWnC"
+	by mail.kernel.org (Postfix) with ESMTP id 932F822BEA
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:43:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596048193;
+	bh=44ZNimNQFWgcD02t6w47gYx7NlssPTjykd/B7afz3x0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SHusT8rqHP0PDHeBF2xLFwVbnQAGYfCStJMEyOeMI5XPdjqESdm8s5li22/aLonsP
+	 XB7EC4wTXwp03oVfDJ9kNA9oWYn0YKttp6Yb6qWgsxuBz63xfHRWjCjQ28U81gBy39
+	 fIcUUufjjUGKwdEYHotlOBO02O4dS3PBP6DNLIew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgG2Slx (ORCPT
+        id S1726947AbgG2SnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:41:53 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57163 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgG2Slw (ORCPT
+        Wed, 29 Jul 2020 14:43:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgG2SnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:41:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596048111;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2wnKx9MtANd6DxtgBYTEmqFSG4Uhuf/WkKPgtmoDTCE=;
-        b=ORIXSWnCozCzJXZFcNrZQb28rOVIIEJ/THYNhK6fxHpS+eNtGAZnJ3eafNoNaxjDxvDXGZ
-        pXPpfGMQ50LN9NfnCYfrSSpGc+j1TBlV62MBztyY5iu7b3kVVcMWHbpC3llIPAXkUYXTZP
-        BZF26elbKg8lbUn6AagWbR+FazWQkAA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-16--8aINfVjOZ64eSH74sWDJg-1; Wed, 29 Jul 2020 14:41:49 -0400
-X-MC-Unique: -8aINfVjOZ64eSH74sWDJg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 941EA1923761;
-        Wed, 29 Jul 2020 18:41:47 +0000 (UTC)
-Received: from Liberator.local (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 67AAE1C6;
-        Wed, 29 Jul 2020 18:41:46 +0000 (UTC)
-Subject: Re: Inverted mount options completely broken (iversion,relatime)
-To:     Josef Bacik <josef@toxicpanda.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        David Sterba <dsterba@suse.com>
-References: <0b154b9b-728f-7d57-d4c5-ec25fc9dfdf3@toxicpanda.com>
-From:   Eric Sandeen <sandeen@redhat.com>
-Message-ID: <1f56432b-a245-a010-51fd-814a9cf4e2b1@redhat.com>
-Date:   Wed, 29 Jul 2020 11:41:45 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Wed, 29 Jul 2020 14:43:11 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D8C7C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:43:11 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id t23so2644421ljc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SQrDOEGzsiONMvvyToZ6AXQOHof7I1W0ObrG53hfoy4=;
+        b=FF/FzVgGKEtoa6ZNMRJwrintVq5jh2Bq6c0fZ3NnY4HlUx2b3qO1S5u/W72THPB/D2
+         5kFWiGbok3mN4nIPfy2Ths4v0XwyP960SYtD0HijzSgeyLgDiA8+6SPRdmS8iBxiNCPG
+         mcfWzb1qVPadPo10hFFnqwskw1y2R0YA/EUtI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SQrDOEGzsiONMvvyToZ6AXQOHof7I1W0ObrG53hfoy4=;
+        b=H3DQN8wYwU27dMdvuO68ymzUxxt+OfW1JT+RC0244MExauVyUlMkpapVYkfTjLOmjj
+         /A133edvy1FpXec7MKJ9EjpA6OCX5I2k1U3ru0X7nrs6ZNxRreeDkMV51Opav6iyJfqk
+         JLslEBlRh0AhFNDPwxVGK7giykB0YvmBPDzoovn3+bYfQzxLdo5nJIPtV77FcRunv3Xl
+         I1n2mzlIzx6hFwcEZJSihSvhgJrjq2H/Cy3m5l2clTqpDA0mV5uxdbjdN0kHCrVppFiM
+         mn9qYe/rHuJZYUFLkwiZ8B9ThDhv34GxY+Q2Bzo8GC1p8uIYACyGwOvuXPCrxFCgVuGv
+         BJKA==
+X-Gm-Message-State: AOAM531KPXFIcr475yrTkqmliynqn3MI1zoSVmlGagTs5F71a1HXyU5p
+        XXlOwg5mIxLpVXLDbOryh4RTfTiuk0g=
+X-Google-Smtp-Source: ABdhPJz2lrhyjyK9k9lriJPFSzjz9nPNd6G9rw4hLI6EcfRypaKo7iuRyYxUuIynsmumB0GRfIZBEw==
+X-Received: by 2002:a2e:8990:: with SMTP id c16mr14635415lji.305.1596048189035;
+        Wed, 29 Jul 2020 11:43:09 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id l3sm537511lji.115.2020.07.29.11.43.07
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 11:43:08 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id s16so10938996ljc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:43:07 -0700 (PDT)
+X-Received: by 2002:a2e:9b42:: with SMTP id o2mr14882866ljj.102.1596048187597;
+ Wed, 29 Jul 2020 11:43:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0b154b9b-728f-7d57-d4c5-ec25fc9dfdf3@toxicpanda.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <CAPM=9tzCWbg3CUSeywiHxQ-fCE1FAGGdOt5Qm+sjsLQLBSExyw@mail.gmail.com>
+In-Reply-To: <CAPM=9tzCWbg3CUSeywiHxQ-fCE1FAGGdOt5Qm+sjsLQLBSExyw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 29 Jul 2020 11:42:51 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi8Oeg66=eOoR7XPxxPcOXBD+9QqFf=BtABsVudZObjKA@mail.gmail.com>
+Message-ID: <CAHk-=wi8Oeg66=eOoR7XPxxPcOXBD+9QqFf=BtABsVudZObjKA@mail.gmail.com>
+Subject: Re: [git pull] drm fixes for 5.8-rc8
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/20 11:32 AM, Josef Bacik wrote:
-> Hello,
-> 
-> Eric reported a problem to me where we were clearing SB_I_VERSION on remount of a btrfs file system.  After digging through I discovered it's because we expect the proper flags that we want to be passed in via the mount() syscall, and because we didn't have "iversion" in our show_options entry the mount binary (form util-linux) wasn't setting MS_I_VERSION for the remount, and thus the VFS was clearing SB_I_VERSION from our s_flags.
-> 
-> No big deal, I'll fix show_mount.  Except Eric then noticed that mount -o noiversion didn't do anything, we still get iversion set.  That's because btrfs just defaults to having SB_I_VERSION set.  Furthermore -o noiversion doesn't get sent into mount, it's handled by the mount binary itself, and it does this by not having MS_I_VERSION set in the mount flags.
+On Tue, Jul 28, 2020 at 9:44 PM Dave Airlie <airlied@gmail.com> wrote:
+>
+> If you feel this is too much I'm happy to respin with the
+> core/drm_fb_helper and nouveau fixes. we have one outstanding nouveau
+> regression fix, that I'll follow this up with in the next day or so
+> once Ben and James get it reviewed.
 
-This was beaten^Wdiscussed to death in an earlier thread,
-[PATCH] fs: i_version mntopt gets visible through /proc/mounts
+This looks fine to me, I've pulled it. I'll be looking forward to (not
+really ;) another pull for the remaining issue.
 
-https://lore.kernel.org/linux-fsdevel/20200616202123.12656-1-msys.mizuma@gmail.com/
+Thanks,
 
-tl;dr: hch doesn't think [no]iversion should be exposed as an option /at all/
-so exposing it in /proc/mounts in show_mnt_opts for mount(8)'s benefit was
-nacked.
-
-> This happens as well for -o relatime, it's the default and so if you do mount -o norelatime it won't do anything, you still get relatime behavior.
-
-I think that's a different issue.
-
-> The only time this changes is if you do mount -o remount,norelatime.
-
-Hm, not on xfs:
-
-# mount -o loop,norelatime xfsfile  mnt
-# grep loop /proc/mounts
-/dev/loop0 /tmp/mnt xfs rw,seclabel,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota 0 0
-
-# mount -o remount,norelatime mnt
-# grep loop /proc/mounts
-/dev/loop0 /tmp/mnt xfs rw,seclabel,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota 0 0
-
-Here, "norelatime" only makes the mount binary omit the MS_RELATIME flag.
-The only way to override relatime behavior is mount -o strictatime, AFAICT.
-
-IOWS "norelatime" and "strictatime" are the same (right?); perhaps
-mount -o norelatime should set the MS_STRICTATIME flag.
-
-> So my question is, what do we do here?  I know Christoph has the strong opinion that we just don't expose I_VERSION at all, which frankly I'm ok with.  However more what I'm asking is what do we do with these weird inverted flags that we all just kind of ignore on mount?  The current setup is just broken if we want to allow overriding the defaults at mount time.  Are we ok with it just being broken?  Are we ok with things like mount -o noiversion not working because the file system has decided that I_VERSION (or relatime) is the default, and we're going to ignore what the user asks for unless we're remounting?  Thanks,
-
-Are there other oddities besides iversion and relatime?
-
--Eric
-
+                   Linus
