@@ -2,99 +2,136 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD14C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2ECE20672
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:40:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="b8+a7zcp"
+	by mail.kernel.org (Postfix) with ESMTP id 23BDF207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:41:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbgG2Ckn (ORCPT
+        id S1731119AbgG2Clx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 22:40:43 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:53663 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730407AbgG2Ckn (ORCPT
+        Tue, 28 Jul 2020 22:41:53 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40538 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730407AbgG2Clw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 22:40:43 -0400
-X-UUID: d0e9ccca0dd34c9398f8429e711107a5-20200729
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=bsmSl6GhvNafW+/QxrJVytLlWNDF54Z01VPoq2J5LuA=;
-        b=b8+a7zcpU/1y3tgBJKc203MtEZGFdOe7ADIeUvjKRASg9p5lbb8SRMfSP7rEukGyFjhNnN1fdgpCwXhnHA5v7DO0Bs1o+zi9y5mDhQtzlkH5IJa49waHaGUv6+SKG+9LPR8ga+xZoDIOr3nm5LSozKbgofO9dcj/GYxVbCZ0XTg=;
-X-UUID: d0e9ccca0dd34c9398f8429e711107a5-20200729
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1933251817; Wed, 29 Jul 2020 10:40:40 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 29 Jul 2020 10:40:37 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 29 Jul 2020 10:40:38 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <bvanassche@acm.org>
-CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
-        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
-        <cc.chou@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v2] scsi: ufs: Fix possible infinite loop in ufshcd_hold
-Date:   Wed, 29 Jul 2020 10:40:37 +0800
-Message-ID: <20200729024037.23105-1-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Tue, 28 Jul 2020 22:41:52 -0400
+Received: by mail-pf1-f195.google.com with SMTP id k18so4919831pfp.7;
+        Tue, 28 Jul 2020 19:41:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Xje8KtqlaEQQPy6/KdcZB6xHoRB7xKpWv/qvhrY3jDY=;
+        b=jDdYd1Xi/zZ5OqUlCpcDKyp1AOenR7ForDRhXo7mLYSAyotVNoYTBJZ52pDp0tIP/U
+         Ri/I1/3ubOwBWfB9tXXr3uExtGJ2INDw7LA+XC2z90rYPPNG+WQvNvM1CUTVRuDkqLv9
+         nsj3ooyvFCCeXjIaxY6/XRbQLKlTEqTWh8A+AI1wHRkFvPN9IFVz7JQQWUV/BgPNYShL
+         8r5LFeA4yR54o5jWm+ejkxfBP9bwPFdvmeP+6lshkCG4YLys8rEP5ydZr7/+wZ24EdiA
+         S8qRPrMVPfQASvb3qllvXdOurW7FoA4SfBetfvHb/KYrzRoXgacMVB3ws8+N+hkX2oFo
+         7hlg==
+X-Gm-Message-State: AOAM532ay/0UVVyHtZMcI8pBxgpOl8mjKJvu58ALsDYFkdwfDtRuWQ/y
+        TToU4k898A+2TjytUpCss1iLej/s
+X-Google-Smtp-Source: ABdhPJxpHnWECdbzA2oIVzphb2Ww++nZqmamFR+xPMXotilldKnaN0b/CfscytsCldwoYU+d28EQxw==
+X-Received: by 2002:a63:105:: with SMTP id 5mr4048102pgb.114.1595990511228;
+        Tue, 28 Jul 2020 19:41:51 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id i66sm382345pfc.12.2020.07.28.19.41.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 19:41:50 -0700 (PDT)
+Subject: Re: [PATCH] block: fix possible race on blk_get_queue()
+To:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk
+Cc:     ming.lei@redhat.com, hch@infradead.org, jack@suse.cz,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200729015101.31534-1-mcgrof@kernel.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <74bd5f51-c8bd-a1b8-cf85-d9eeb0a82d16@acm.org>
+Date:   Tue, 28 Jul 2020 19:41:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 6DB1F27E1A9D8E1C51B5FB23D8BB069EFE1E31E88C79BDBB30C332B2C85C741A2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200729015101.31534-1-mcgrof@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SW4gdWZzaGNkX3N1c3BlbmQoKSwgYWZ0ZXIgY2xrLWdhdGluZyBpcyBzdXNwZW5kZWQgYW5kIGxp
-bmsgaXMgc2V0DQphcyBIaWJlcm44IHN0YXRlLCB1ZnNoY2RfaG9sZCgpIGlzIHN0aWxsIHBvc3Np
-Ymx5IGludm9rZWQgYmVmb3JlDQp1ZnNoY2Rfc3VzcGVuZCgpIHJldHVybnMuIEZvciBleGFtcGxl
-LCBNZWRpYVRlaydzIHN1c3BlbmQgdm9wcyBtYXkNCmlzc3VlIFVJQyBjb21tYW5kcyB3aGljaCB3
-b3VsZCBjYWxsIHVmc2hjZF9ob2xkKCkgZHVyaW5nIHRoZSBjb21tYW5kDQppc3N1aW5nIGZsb3cu
-DQoNCk5vdyBpZiBVRlNIQ0RfQ0FQX0hJQkVSTjhfV0lUSF9DTEtfR0FUSU5HIGNhcGFiaWxpdHkg
-aXMgZW5hYmxlZCwNCnRoZW4gdWZzaGNkX2hvbGQoKSBtYXkgZW50ZXIgaW5maW5pdGUgbG9vcHMg
-YmVjYXVzZSB0aGVyZSBpcyBubw0KY2xrLXVuZ2F0aW5nIHdvcmsgc2NoZWR1bGVkIG9yIHBlbmRp
-bmcuIEluIHRoaXMgY2FzZSwgdWZzaGNkX2hvbGQoKQ0Kc2hhbGwganVzdCBieXBhc3MsIGFuZCBr
-ZWVwIHRoZSBsaW5rIGFzIEhpYmVybjggc3RhdGUuDQoNClNpZ25lZC1vZmYtYnk6IFN0YW5sZXkg
-Q2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBBbmR5IFRlbmcg
-PGFuZHkudGVuZ0BtZWRpYXRlay5jb20+DQoNCi0tLQ0KDQpDaGFuZ2VzIHNpbmNlIHYxOg0KLSBG
-aXggcmV0dXJuIHZhbHVlOiBVc2UgdW5pcXVlIGJvb2wgdmFyaWFibGUgdG8gZ2V0IHRoZSByZXN1
-bHQgb2YgZmx1c2hfd29yaygpLiBUaGNhbiBwcmV2ZW50IGluY29ycmVjdCByZXR1cm5lZCB2YWx1
-ZSwgaS5lLiwgcmMsIGlmIGZsdXNoX3dvcmsoKSByZXR1cm5zIHRydWUNCi0gRml4IGNvbW1pdCBt
-ZXNzYWdlDQoNCi0tLQ0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMgfCA1ICsrKystDQogMSBm
-aWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMN
-CmluZGV4IDU3N2NjMGQ3NDg3Zi4uYWNiYTIyNzFjNWQzIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9z
-Y3NpL3Vmcy91ZnNoY2QuYw0KKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYw0KQEAgLTE1
-NjEsNiArMTU2MSw3IEBAIHN0YXRpYyB2b2lkIHVmc2hjZF91bmdhdGVfd29yayhzdHJ1Y3Qgd29y
-a19zdHJ1Y3QgKndvcmspDQogaW50IHVmc2hjZF9ob2xkKHN0cnVjdCB1ZnNfaGJhICpoYmEsIGJv
-b2wgYXN5bmMpDQogew0KIAlpbnQgcmMgPSAwOw0KKwlib29sIGZsdXNoX3Jlc3VsdDsNCiAJdW5z
-aWduZWQgbG9uZyBmbGFnczsNCiANCiAJaWYgKCF1ZnNoY2RfaXNfY2xrZ2F0aW5nX2FsbG93ZWQo
-aGJhKSkNCkBAIC0xNTkyLDcgKzE1OTMsOSBAQCBpbnQgdWZzaGNkX2hvbGQoc3RydWN0IHVmc19o
-YmEgKmhiYSwgYm9vbCBhc3luYykNCiAJCQkJYnJlYWs7DQogCQkJfQ0KIAkJCXNwaW5fdW5sb2Nr
-X2lycXJlc3RvcmUoaGJhLT5ob3N0LT5ob3N0X2xvY2ssIGZsYWdzKTsNCi0JCQlmbHVzaF93b3Jr
-KCZoYmEtPmNsa19nYXRpbmcudW5nYXRlX3dvcmspOw0KKwkJCWZsdXNoX3Jlc3VsdCA9IGZsdXNo
-X3dvcmsoJmhiYS0+Y2xrX2dhdGluZy51bmdhdGVfd29yayk7DQorCQkJaWYgKGhiYS0+Y2xrX2dh
-dGluZy5pc19zdXNwZW5kZWQgJiYgIWZsdXNoX3Jlc3VsdCkNCisJCQkJZ290byBvdXQ7DQogCQkJ
-c3Bpbl9sb2NrX2lycXNhdmUoaGJhLT5ob3N0LT5ob3N0X2xvY2ssIGZsYWdzKTsNCiAJCQlnb3Rv
-IHN0YXJ0Ow0KIAkJfQ0KLS0gDQoyLjE4LjANCg==
+On 2020-07-28 18:51, Luis Chamberlain wrote:
+> diff --git a/block/blk-core.c b/block/blk-core.c
+> index d9d632639bd1..febdd8e8d409 100644
+> --- a/block/blk-core.c
+> +++ b/block/blk-core.c
+> @@ -605,12 +605,18 @@ EXPORT_SYMBOL(blk_alloc_queue);
+>   */
+>  bool blk_get_queue(struct request_queue *q)
+>  {
+> -	if (likely(!blk_queue_dying(q))) {
+> -		__blk_get_queue(q);
+> -		return true;
+> +	struct kobject *obj;
+> +
+> +	obj = __blk_get_queue(q);
+> +	if (!obj)
+> +		return false;
+> +
+> +	if (unlikely(blk_queue_dying(q))) {
+> +		blk_put_queue(q);
+> +		return false;
+>  	}
+>  
+> -	return false;
+> +	return true;
+>  }
 
+This change is not sufficient to prevent that the QUEUE_FLAG_DYING flag
+is set immediately after this function returns. I propose not to modify
+this function but instead to add a comment that is the responsibility of
+the caller to prevent that such a race condition occurs.
+
+> -static inline void __blk_get_queue(struct request_queue *q)
+> +static inline struct kobject * __must_check
+> +__blk_get_queue(struct request_queue *q)
+>  {
+> -	kobject_get(&q->kobj);
+> +	return kobject_get_unless_zero(&q->kobj);
+>  }
+
+If a function passes a queue pointer to another function that calls
+blk_get_queue() then the caller should guarantee that 'q' is valid
+during the entire duration of the call. In other words, I'm not sure the
+above change is an improvement.
+
+Thanks,
+
+Bart.
