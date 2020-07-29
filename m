@@ -2,127 +2,73 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11965C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77289C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1B2320663
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:17:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595999822;
-	bh=qItqwNi4q4ELXpJAVlv3H8dC/ihmulIDrwoa1DDcrFY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=golpJlf77YVWmMSFx6xvZooWm5jMACd5Iq2YnWtzdAMS1CXWceCR7S9LpJ7bRZQpG
-	 +Aqs09j4PxvxHMv7Ki0JEaXR4ISNl20yHRbbRfdt/YDcay2QiZTq3xKdjdu8IrqgDR
-	 yyaKAw372LvXvsT5/GV3XvezbtfJ8eBEBH2F5AXs=
+	by mail.kernel.org (Postfix) with ESMTP id 164FD20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:18:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BU5BF+Sr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgG2FRA (ORCPT
+        id S1726825AbgG2FSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 01:17:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbgG2FQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 01:16:59 -0400
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E826621D95
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 05:16:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595999819;
-        bh=qItqwNi4q4ELXpJAVlv3H8dC/ihmulIDrwoa1DDcrFY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=k2/ypYf8chH29waA/oS7FzUjhmqJvZsAK5yreLc+JnHHzlqaz9vnEqabE+qyemEMh
-         V59mmT0x99Zz7xAAr4mzDnLpnXyxu10GUK80PkfmZzTfRw0ApQRzkJVmfxPNtOL+Nt
-         orHtR8IzwwnOF1rKVTvLOZzzbUFBmX6T//Qhyjrc=
-Received: by mail-wm1-f44.google.com with SMTP id k20so1616288wmi.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 22:16:58 -0700 (PDT)
-X-Gm-Message-State: AOAM532/KXNbuw+hurbZhkrbVJ/u2gH0qJTnXCyEKRMT2vIbul15Hn2y
-        6FX878u4o3WwvOW1N33ZGQHvu+dGbjchYfPsljh74g==
-X-Google-Smtp-Source: ABdhPJyc8ExWo5/AVhgh7lVVbcBRbBl+yZD/a1oDf2lJ2rOxAoDZo7htpcvpKEGk9rvSh0Xh0NAF4mmPRBSSCBjw09E=
-X-Received: by 2002:a1c:7511:: with SMTP id o17mr7308351wmc.49.1595999817430;
- Tue, 28 Jul 2020 22:16:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <c23de6ec47614f489943e1a89a21dfa3@AcuMS.aculab.com> <f5cfd11b-04fe-9db7-9d67-7ee898636edb@linux.microsoft.com>
- <CALCETrUta5-0TLJ9-jfdehpTAp2Efmukk2npYadFzz9ozOrG2w@mail.gmail.com> <81d744c0-923e-35ad-6063-8b186f6a153c@linux.microsoft.com>
-In-Reply-To: <81d744c0-923e-35ad-6063-8b186f6a153c@linux.microsoft.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 28 Jul 2020 22:16:45 -0700
-X-Gmail-Original-Message-ID: <CALCETrUWd4Gogz5EQNbbx7Babct4hGerz7sWiAuu2-Q1KB64yA@mail.gmail.com>
-Message-ID: <CALCETrUWd4Gogz5EQNbbx7Babct4hGerz7sWiAuu2-Q1KB64yA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-To:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        David Laight <David.Laight@aculab.com>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Wed, 29 Jul 2020 01:18:46 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:24451 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726054AbgG2FSq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 01:18:46 -0400
+X-UUID: 9c540533b7dd42d89f6968a9fddc5c63-20200729
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=C1/39yJS2kPY+cDq8Oy9VmQnSWX/p2YOszDQXCN9WyY=;
+        b=BU5BF+SrKGZQKcb86eHRjix8U93+3/X+2AfTZzjCZAhrscgyJQGDFha0RJ9hxV5oZKelMEdfHuin4LXvmJUN/dxXcmIdfU3/UzGE2ZnOhy+zomoVf0doxED3gR/PpWG5H02EwNOagUKmapA2r0lxJuRp96Tj3/1EA5tft7IGUAo=;
+X-UUID: 9c540533b7dd42d89f6968a9fddc5c63-20200729
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1926770979; Wed, 29 Jul 2020 13:18:43 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 29 Jul 2020 13:18:41 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 29 Jul 2020 13:18:37 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <beanhuo@micron.com>
+CC:     <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
+        <linux-mediatek@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
+        <cc.chou@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v1 0/2] scsi: ufs: Introduce and apply DELAY_AFTER_LPM device quirk
+Date:   Wed, 29 Jul 2020 13:18:38 +0800
+Message-ID: <20200729051840.31318-1-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 10:40 AM Madhavan T. Venkataraman
-<madvenka@linux.microsoft.com> wrote:
->
->
->
-> On 7/28/20 12:16 PM, Andy Lutomirski wrote:
->
-> On Tue, Jul 28, 2020 at 9:32 AM Madhavan T. Venkataraman
-> <madvenka@linux.microsoft.com> wrote:
->
-> Thanks. See inline..
->
-> On 7/28/20 10:13 AM, David Laight wrote:
->
-> From:  madvenka@linux.microsoft.com
->
-> Sent: 28 July 2020 14:11
->
-> ...
->
-> The kernel creates the trampoline mapping without any permissions. When
-> the trampoline is executed by user code, a page fault happens and the
-> kernel gets control. The kernel recognizes that this is a trampoline
-> invocation. It sets up the user registers based on the specified
-> register context, and/or pushes values on the user stack based on the
-> specified stack context, and sets the user PC to the requested target
-> PC. When the kernel returns, execution continues at the target PC.
-> So, the kernel does the work of the trampoline on behalf of the
-> application.
->
-> Isn't the performance of this going to be horrid?
->
-> It takes about the same amount of time as getpid(). So, it is
-> one quick trip into the kernel. I expect that applications will
-> typically not care about this extra overhead as long as
-> they are able to run.
->
-> What did you test this on?  A page fault on any modern x86_64 system
-> is much, much, much, much slower than a syscall.
->
->
-> I tested it in on a KVM guest running Ubuntu. So, when you say
-> that a page fault is much slower, do you mean a regular page
-> fault that is handled through the VM layer? Here is the relevant code
-> in do_user_addr_fault():
+SGksDQpUaGlzIHBhdGNoc2V0IGludHJvZHVjZXMgYW5kIGFwcGxpZXMgREVMQVlfQUZURVJfTFBN
+IGRldmljZSBxdWlyayBpbiBNZWRpYVRlayBwbGF0Zm9ybXMuDQoNClN0YW5sZXkgQ2h1ICgyKToN
+CiAgc2NzaTogdWZzOiBJbnRyb2R1Y2UgZGV2aWNlIHF1aXJrICJERUxBWV9BRlRFUl9MUE0iDQog
+IHNjc2k6IHVmcy1tZWRpYXRlazogQXBwbHkgREVMQVlfQUZURVJfTFBNIHF1aXJrIHRvIE1pY3Jv
+biBkZXZpY2VzDQoNCiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jIHwgIDIgKysNCiBk
+cml2ZXJzL3Njc2kvdWZzL3Vmc19xdWlya3MuaCAgIHwgIDcgKysrKysrKw0KIGRyaXZlcnMvc2Nz
+aS91ZnMvdWZzaGNkLmMgICAgICAgfCAxMSArKysrKysrKysrKw0KIDMgZmlsZXMgY2hhbmdlZCwg
+MjAgaW5zZXJ0aW9ucygrKQ0KDQotLSANCjIuMTguMA0K
 
-I mean that x86 CPUs have reasonably SYSCALL and SYSRET instructions
-(the former is used for 64-bit system calls on Linux and the latter is
-mostly used to return from system calls), but hardware page fault
-delivery and IRET (used to return from page faults) are very slow.
