@@ -2,133 +2,179 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D4FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38ACDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE97A20672
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:47:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="tulOiKgw"
+	by mail.kernel.org (Postfix) with ESMTP id 1B5972082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:48:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596048495;
+	bh=/qgyjZYOsbUKaNwiJ+v1Kmx4G1RECV4Bq+1dyTSlsQU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c8BRkrmdXC3oibF5WNHDjo2qEGuwlY3VTIDOTKHM48m6HM3bZH3yw7FqGW2TzZwB8
+	 Ojg43cZqEZ5vN/YdLr36didZ0w/aN6bN1g9cl6RnVcxUabLAokGs5yPlHFB5yrmqPx
+	 4QFJFGy3gVU2UvG75Mn3dtsfv5M5BNKXPXNi2hL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgG2Srr (ORCPT
+        id S1727032AbgG2SsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:47:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgG2Srq (ORCPT
+        Wed, 29 Jul 2020 14:48:13 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43190 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgG2SsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:47:46 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5E25C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:47:46 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id e13so23244102qkg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:47:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=de92zVYajUZRhB1uxDhwk9+GWBtXRj8Z9N8YqTT4pXA=;
-        b=tulOiKgwhpXla1+dxpXaNWsRkCJ6mqgeNv1wePakOerlPst9LSR8Oi165paGpcPkxE
-         Kp9DPcVm797w0sgwqPXc7A2VwW4rU4n5ayMEgKHtZ++NSvRc3jJqJWctzozvy0sR2qzn
-         Tw5+eRfsYxlM3sVvSwM/oeBwbmh9B6QskAYiimaHJPLToJJT9GnsXClPDCLFZgP4bBMO
-         C8U4geZPUs2F3AXkZm3HXw+Up1WyW9/Lj1YsmZLzQJdYUrFhGOiAdWyGPdLEmWLmNtf4
-         jApkbJdSlS7DWvEy2BNxbll75JfOZ7luEllg6d51ZQBtvI2CZc8q7WJY1n0Hjxu+M4Fi
-         reCw==
+        Wed, 29 Jul 2020 14:48:13 -0400
+Received: by mail-io1-f65.google.com with SMTP id k23so25594253iom.10;
+        Wed, 29 Jul 2020 11:48:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=de92zVYajUZRhB1uxDhwk9+GWBtXRj8Z9N8YqTT4pXA=;
-        b=tp/Q53TrNKyDHrdFJxmo2g3kxiSQw7fPigxI9xYECKEWf+xUBJf8CI1EMHKNoe0Lmi
-         tmLjqtmqfx+RvhjPRSmRtr4/42w7iQsrFiBzoV5+jbfZ/pgLP8ekY2rCzBxgUFUeTVV/
-         QbowZPnDSM7b/uhOfUvDCzi7L3AjQFbkdQDd0s9+95fdtMsKKi7O/6o+mA/5KRyveMCf
-         +3/ji7KCjM1oznWGgg+RGoRVz+1Ky2rAwaH0yYAIfBuNc9rbu5/5vLC+eCr69Okw+KTY
-         MhGrdSW04cXY/p0zrx4KGf1R/O0ZIFADyUGLqAaeCZyph43o9YCZiDN9wAFpvzFpKqX4
-         d7jg==
-X-Gm-Message-State: AOAM530S07qhy4baSzIt5WMoc9UuzgZFnDDLIa/dBoVTIPBQrEBWM6II
-        SkEkNcdXNCO6pf7YLPiwMUaBIA==
-X-Google-Smtp-Source: ABdhPJy+qIWfZGcgwPuaP0Yke5sjGxIvpb/hZbPh59TzQelDx2QYkw7+P7jjnyXIDnBgeCK4CFiCdw==
-X-Received: by 2002:a37:517:: with SMTP id 23mr35137201qkf.63.1596048465682;
-        Wed, 29 Jul 2020 11:47:45 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11e1::10a7? ([2620:10d:c091:480::1:2ed9])
-        by smtp.gmail.com with ESMTPSA id c133sm2231150qkb.111.2020.07.29.11.47.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 11:47:44 -0700 (PDT)
-Subject: Re: Inverted mount options completely broken (iversion,relatime)
-To:     Eric Sandeen <sandeen@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        David Sterba <dsterba@suse.com>
-References: <0b154b9b-728f-7d57-d4c5-ec25fc9dfdf3@toxicpanda.com>
- <1f56432b-a245-a010-51fd-814a9cf4e2b1@redhat.com>
-From:   Josef Bacik <josef@toxicpanda.com>
-Message-ID: <b8c98c88-d6e2-de53-5906-27970d23c0b2@toxicpanda.com>
-Date:   Wed, 29 Jul 2020 14:47:43 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=86wzVwARCnvB4VvS8GaiyYladnSK6F8nyeRAcDRPX1Q=;
+        b=og/62zrsCsDLda5iC83XcWHIRL6iVafeRtT5n4yHpdd6iTaB4RbyrlxNXi3ZpWPGNy
+         Cgag0nmUge7+Ty1XkLQIwURReyi+un4/mmIBzY/AsKyJOH59QQB4mGu77HkqBechORR8
+         8sx4NJNd4Brk5wP6HHrU/yEXkvfD9IWmTXLjOsn/6gwRUj7O5EGnbcAKAruPmECH24D4
+         r5xw7Bo7gF8E8mGQ6XS632kfDwOgikU3iLTOakJXnwH5cXRLHWlFD1XAoH+/NYBz3wpv
+         GwmDRm2wid4nm2khJvvh4twMyMXmgw5p80+l7thHVsL+xxbfOeRs2Q4RtZ82UpwLZ0vR
+         qFOQ==
+X-Gm-Message-State: AOAM530I7Y8Yi7Jrc8xUwMgzaH3RKYfqArz4h08XlODxDsMq8n9KBXrt
+        FMN8GdjFsS7MQ4GRYfIK9A==
+X-Google-Smtp-Source: ABdhPJwgwuy0pDlaSXWmtP5I+Zqw0S9AQViNseOQQ+EU0oaswOCUFKUX7Cl1E1bYP4sF81QLx0+7rw==
+X-Received: by 2002:a02:a389:: with SMTP id y9mr11786511jak.82.1596048492396;
+        Wed, 29 Jul 2020 11:48:12 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v87sm976014ilk.33.2020.07.29.11.48.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 11:48:11 -0700 (PDT)
+Received: (nullmailer pid 582408 invoked by uid 1000);
+        Wed, 29 Jul 2020 18:48:09 -0000
+Date:   Wed, 29 Jul 2020 12:48:09 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc:     linux-pci@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Xogium <contact@xogium.me>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Subject: Re: [PATCH 4/5] PCI: aardvark: Implement driver 'remove' function
+ and allow to build it as module
+Message-ID: <20200729184809.GA569408@bogus>
+References: <20200715142557.17115-1-marek.behun@nic.cz>
+ <20200715142557.17115-5-marek.behun@nic.cz>
 MIME-Version: 1.0
-In-Reply-To: <1f56432b-a245-a010-51fd-814a9cf4e2b1@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200715142557.17115-5-marek.behun@nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/20 2:41 PM, Eric Sandeen wrote:
-> On 7/29/20 11:32 AM, Josef Bacik wrote:
->> Hello,
->>
->> Eric reported a problem to me where we were clearing SB_I_VERSION on remount of a btrfs file system.Â  After digging through I discovered it's because we expect the proper flags that we want to be passed in via the mount() syscall, and because we didn't have "iversion" in our show_options entry the mount binary (form util-linux) wasn't setting MS_I_VERSION for the remount, and thus the VFS was clearing SB_I_VERSION from our s_flags.
->>
->> No big deal, I'll fix show_mount.Â  Except Eric then noticed that mount -o noiversion didn't do anything, we still get iversion set.Â  That's because btrfs just defaults to having SB_I_VERSION set.Â  Furthermore -o noiversion doesn't get sent into mount, it's handled by the mount binary itself, and it does this by not having MS_I_VERSION set in the mount flags.
+On Wed, Jul 15, 2020 at 04:25:56PM +0200, Marek Behún wrote:
+> From: Pali Rohár <pali@kernel.org>
 > 
-> This was beaten^Wdiscussed to death in an earlier thread,
-> [PATCH] fs: i_version mntopt gets visible through /proc/mounts
+> Providing driver's 'remove' function allows kernel to bind and unbind devices
+> from aardvark driver. It also allows to build aardvark driver as a module.
 > 
-> https://lore.kernel.org/linux-fsdevel/20200616202123.12656-1-msys.mizuma@gmail.com/
+> Compiling aardvark as a module simplifies development and debugging of
+> this driver as it can be reloaded at runtime without the need to reboot
+> to new kernel.
 > 
-> tl;dr: hch doesn't think [no]iversion should be exposed as an option /at all/
-> so exposing it in /proc/mounts in show_mnt_opts for mount(8)'s benefit was
-> nacked.
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Reviewed-by: Marek Behún <marek.behun@nic.cz>
+> ---
+>  drivers/pci/controller/Kconfig        |  2 +-
+>  drivers/pci/controller/pci-aardvark.c | 25 ++++++++++++++++++++++---
+>  2 files changed, 23 insertions(+), 4 deletions(-)
 > 
->> This happens as well for -o relatime, it's the default and so if you do mount -o norelatime it won't do anything, you still get relatime behavior.
-> 
-> I think that's a different issue.
-> 
->> The only time this changes is if you do mount -o remount,norelatime.
-> 
-> Hm, not on xfs:
-> 
-> # mount -o loop,norelatime xfsfile  mnt
-> # grep loop /proc/mounts
-> /dev/loop0 /tmp/mnt xfs rw,seclabel,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota 0 0
-> 
-> # mount -o remount,norelatime mnt
-> # grep loop /proc/mounts
-> /dev/loop0 /tmp/mnt xfs rw,seclabel,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota 0 0
-> 
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index adddf21fa381..f9da5ff2c517 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -12,7 +12,7 @@ config PCI_MVEBU
+>  	select PCI_BRIDGE_EMUL
+>  
+>  config PCI_AARDVARK
+> -	bool "Aardvark PCIe controller"
+> +	tristate "Aardvark PCIe controller"
+>  	depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
+>  	depends on OF
+>  	depends on PCI_MSI_IRQ_DOMAIN
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index d5f58684d962..0a5aa6d77f5d 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/irq.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/kernel.h>
+> +#include <linux/module.h>
+>  #include <linux/pci.h>
+>  #include <linux/init.h>
+>  #include <linux/phy/phy.h>
+> @@ -1114,6 +1115,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
+>  
+>  	pcie = pci_host_bridge_priv(bridge);
+>  	pcie->pdev = pdev;
+> +	platform_set_drvdata(pdev, pcie);
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	pcie->base = devm_ioremap_resource(dev, res);
+> @@ -1204,18 +1206,35 @@ static int advk_pcie_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int advk_pcie_remove(struct platform_device *pdev)
+> +{
+> +	struct advk_pcie *pcie = platform_get_drvdata(pdev);
+> +	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+> +
+> +	pci_stop_root_bus(bridge->bus);
+> +	pci_remove_root_bus(bridge->bus);
 
-Oops you're right, I'm blind.  Same happens for btrfs, so using -o norelatime 
-simply does nothing because it's considered a kernel wide default.
+Based on pci_host_common_remove() implementation, doesn't this need a 
+lock around it (pci_lock_rescan_remove)?
 
+We should probably have a common function (say pci_bridge_remove) to 
+implement this. You could use pci_host_common_remove(), but you'd have 
+to adjust drvdata.
+
+> +
+> +	advk_pcie_remove_msi_irq_domain(pcie);
+> +	advk_pcie_remove_irq_domain(pcie);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct of_device_id advk_pcie_of_match_table[] = {
+>  	{ .compatible = "marvell,armada-3700-pcie", },
+>  	{},
+>  };
+> +MODULE_DEVICE_TABLE(of, advk_pcie_of_match_table);
+>  
+>  static struct platform_driver advk_pcie_driver = {
+>  	.driver = {
+>  		.name = "advk-pcie",
+>  		.of_match_table = advk_pcie_of_match_table,
+> -		/* Driver unloading/unbinding currently not supported */
+> -		.suppress_bind_attrs = true,
+>  	},
+>  	.probe = advk_pcie_probe,
+> +	.remove = advk_pcie_remove,
+>  };
+> -builtin_platform_driver(advk_pcie_driver);
+> +module_platform_driver(advk_pcie_driver);
+> +
+> +MODULE_DESCRIPTION("Aardvark PCIe controller");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.26.2
 > 
-> Are there other oddities besides iversion and relatime?
-
-It doesn't look like it, I checked a few others of the MS_INVERT variety, these 
-appear to be the only ones.  I really don't want to have this discussion again 
-in the future tho when we introduce MS_SOME_NEW_AWESOME.  Thanks,
-
-Josef
-
