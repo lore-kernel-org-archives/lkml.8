@@ -2,138 +2,126 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C65BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA02620809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DDDC20809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:24:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iZ2nVyDq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgG2NXV (ORCPT
+        id S1727783AbgG2NY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:23:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49350 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727072AbgG2NWr (ORCPT
+        Wed, 29 Jul 2020 09:24:27 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59122 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726981AbgG2NY1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 09:22:47 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61383C0619D2;
-        Wed, 29 Jul 2020 06:22:47 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 480B3457; Wed, 29 Jul 2020 15:22:45 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 2/4] KVM: SVM: Add GHCB definitions
-Date:   Wed, 29 Jul 2020 15:22:32 +0200
-Message-Id: <20200729132234.2346-3-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200729132234.2346-1-joro@8bytes.org>
-References: <20200729132234.2346-1-joro@8bytes.org>
+        Wed, 29 Jul 2020 09:24:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596029065;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=e+6rKXaDig00lyfo9s/ybP+H50PWcqOHwLytlqkMNFQ=;
+        b=iZ2nVyDqG6FJbbhQZ+Fwd+3H6L/dGyGNi6xMVqa1O9if7EmrEiOAUjM2ihI6B38aZZsOyb
+        Gr5n8r7XVXCZq3YN4OW/9KPnaG8XPOd77+mYdkw4l7lh9k/ge9jSaIL15sNSK4DKKpITEr
+        DIJRlYvXodyvBQDBsmitXLmWrv0XcCk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-7-TKDYlOnqMN2Dbzl4Rd5ZAA-1; Wed, 29 Jul 2020 09:24:22 -0400
+X-MC-Unique: TKDYlOnqMN2Dbzl4Rd5ZAA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C4A3E102C7F2;
+        Wed, 29 Jul 2020 13:24:20 +0000 (UTC)
+Received: from localhost (ovpn-12-32.pek2.redhat.com [10.72.12.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 385D75F7D8;
+        Wed, 29 Jul 2020 13:24:14 +0000 (UTC)
+Date:   Wed, 29 Jul 2020 21:24:10 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH v1 3/6] mm/page_isolation: drop WARN_ON_ONCE() in
+ set_migratetype_isolate()
+Message-ID: <20200729132410.GG14854@MiWiFi-R3L-srv>
+References: <20200630142639.22770-1-david@redhat.com>
+ <20200630142639.22770-4-david@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630142639.22770-4-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+On 06/30/20 at 04:26pm, David Hildenbrand wrote:
+> Inside has_unmovable_pages(), we have a comment describing how unmovable
+> data could end up in ZONE_MOVABLE - via "movable_core". Also, besides
+					  ~~~ 'movablecore'
+> checking if the first page in the pageblock is reserved, we don't
+> perform any further checks in case of ZONE_MOVABLE.
+> 
+> In case of memory offlining, we set REPORT_FAILURE, properly
+> dump_page() the page and handle the error gracefully.
+> alloc_contig_pages() users currently never allocate from ZONE_MOVABLE.
+> E.g., hugetlb uses alloc_contig_pages() for the allocation of gigantic
+> pages only, which will never end up on the MOVABLE zone
+> (see htlb_alloc_mask()).
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Michael S. Tsirkin <mst@redhat.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/page_isolation.c | 16 ++++++----------
+>  1 file changed, 6 insertions(+), 10 deletions(-)
+> 
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index 553b49a34cf71..02a01bff6b219 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -58,16 +58,12 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
+>  	spin_unlock_irqrestore(&zone->lock, flags);
+>  	if (!ret) {
+>  		drain_all_pages(zone);
+> -	} else {
+> -		WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
+> -
+> -		if ((isol_flags & REPORT_FAILURE) && unmovable)
+> -			/*
+> -			 * printk() with zone->lock held will likely trigger a
+> -			 * lockdep splat, so defer it here.
+> -			 */
+> -			dump_page(unmovable, "unmovable page");
+> -	}
+> +	} else if ((isol_flags & REPORT_FAILURE) && unmovable)
 
-Extend the vmcb_safe_area with SEV-ES fields and add a new
-'struct ghcb' which will be used for guest-hypervisor communication.
+This else if branch should be enclosed in brace?
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/include/asm/svm.h | 45 +++++++++++++++++++++++++++++++++++++-
- arch/x86/kvm/svm/svm.c     |  2 ++
- 2 files changed, 46 insertions(+), 1 deletion(-)
+> +		/*
+> +		 * printk() with zone->lock held will likely trigger a
+> +		 * lockdep splat, so defer it here.
+> +		 */
+> +		dump_page(unmovable, "unmovable page");
+>  
+>  	return ret;
+>  }
 
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index 8a1f5382a4ea..9a3e0b802716 100644
---- a/arch/x86/include/asm/svm.h
-+++ b/arch/x86/include/asm/svm.h
-@@ -200,13 +200,56 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
- 	u64 br_to;
- 	u64 last_excp_from;
- 	u64 last_excp_to;
-+
-+	/*
-+	 * The following part of the save area is valid only for
-+	 * SEV-ES guests when referenced through the GHCB.
-+	 */
-+	u8 reserved_7[104];
-+	u64 reserved_8;		/* rax already available at 0x01f8 */
-+	u64 rcx;
-+	u64 rdx;
-+	u64 rbx;
-+	u64 reserved_9;		/* rsp already available at 0x01d8 */
-+	u64 rbp;
-+	u64 rsi;
-+	u64 rdi;
-+	u64 r8;
-+	u64 r9;
-+	u64 r10;
-+	u64 r11;
-+	u64 r12;
-+	u64 r13;
-+	u64 r14;
-+	u64 r15;
-+	u8 reserved_10[16];
-+	u64 sw_exit_code;
-+	u64 sw_exit_info_1;
-+	u64 sw_exit_info_2;
-+	u64 sw_scratch;
-+	u8 reserved_11[56];
-+	u64 xcr0;
-+	u8 valid_bitmap[16];
-+	u64 x87_state_gpa;
-+};
-+
-+struct __attribute__ ((__packed__)) ghcb {
-+	struct vmcb_save_area save;
-+	u8 reserved_save[2048 - sizeof(struct vmcb_save_area)];
-+
-+	u8 shared_buffer[2032];
-+
-+	u8 reserved_1[10];
-+	u16 protocol_version;	/* negotiated SEV-ES/GHCB protocol version */
-+	u32 ghcb_usage;
- };
- 
- 
- static inline void __unused_size_checks(void)
- {
--	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 0x298);
-+	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 1032);
- 	BUILD_BUG_ON(sizeof(struct vmcb_control_area) != 256);
-+	BUILD_BUG_ON(sizeof(struct ghcb) != 4096);
- }
- 
- struct __attribute__ ((__packed__)) vmcb {
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 783330d0e7b8..953cf947f022 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -4161,6 +4161,8 @@ static struct kvm_x86_init_ops svm_init_ops __initdata = {
- 
- static int __init svm_init(void)
- {
-+	__unused_size_checks();
-+
- 	return kvm_init(&svm_init_ops, sizeof(struct vcpu_svm),
- 			__alignof__(struct vcpu_svm), THIS_MODULE);
- }
--- 
-2.17.1
+Otherwise, the patch looks good to me.
+
+Reviewed-by: Baoquan He <bhe@redhat.com>
 
