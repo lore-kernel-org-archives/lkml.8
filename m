@@ -2,127 +2,281 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9005C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A73D32074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A572075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:56:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VudFFn9I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgG2Uz1 (ORCPT
+        id S1726929AbgG2U4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:55:27 -0400
-Received: from mga01.intel.com ([192.55.52.88]:12727 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgG2Uz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:55:26 -0400
-IronPort-SDR: BCC29Ox9ECEanjRvhMD+lhLPar9UyTKfVnH0vzkMifuTkjsByjWlPdnz8jYPabwL8eCcgATERx
- rb75R4P6Aa7Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="169620987"
-X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
-   d="scan'208";a="169620987"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 13:55:26 -0700
-IronPort-SDR: 0DKM30f/id2JQ/CzHqYbno4kUOprMvG1Qm70P/dUa79Jylsb1npgZ7A6/qw2aMjACkNgSg4bLv
- J2FwDP+m5iDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
-   d="scan'208";a="304347308"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga002.jf.intel.com with ESMTP; 29 Jul 2020 13:55:26 -0700
-Date:   Wed, 29 Jul 2020 14:02:15 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        "Jonathan Corbet" <corbet@lwn.net>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v6 1/6] docs: IOMMU user API
-Message-ID: <20200729140215.0f8c4aca@jacob-builder>
-In-Reply-To: <MWHPR11MB1645BA0C8436C3280DBDC5468C700@MWHPR11MB1645.namprd11.prod.outlook.com>
-References: <1595525140-23899-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1595525140-23899-2-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20200728131950.2aff140d@x1.home>
-        <MWHPR11MB1645BA0C8436C3280DBDC5468C700@MWHPR11MB1645.namprd11.prod.outlook.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 29 Jul 2020 16:56:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34956 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgG2U4s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 16:56:48 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449A0C0619D2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:56:48 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mt12so2598273pjb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:56:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=90mSVVj5S3skG4373m0mLWuJOCRc1yCkz2RoXhQeF5Y=;
+        b=VudFFn9I3paWVLXuRcojwE/SXEoux1fjrNyTljAzwFmlC4xWbDVdaDAvk34TLdvHc8
+         OEbhyqEedGXcr5jvjjpjuFGpv2+lymK+kNg9fQJmoGbLNN5kACqKZCkvKfPy39egPKyp
+         KWKVoeyhLeq5pBDQoyUZIgfECZ2A9CRfzi+i2ZGe0gvH72tqSrbrfkZv8Qp5p0AJMFqB
+         ZvDgZbehi8HR1liORgQuzCKgjjc0Otjs2vRvCz33G3g0poUjOiFLNeFOGHG+EyJ4rukw
+         MzwSomN8GKE88X6GUVWfsthe09iBWSu+97K3dmXxBeBBWQqTfb6PcqwqTMNKi1KUfBfJ
+         bMIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=90mSVVj5S3skG4373m0mLWuJOCRc1yCkz2RoXhQeF5Y=;
+        b=MPNIyUV9aE8J6W6QgGcpt5FnmcSr+ge2siD/huO+2auBQPB0CLjpCvQiSHIiY4lbQy
+         3jY4wQR+KU2eUq+xjuVe3P8GVnPJWEG05lJwhaAi5PGz9dxMgtu9qJUB4XXXW3QvmWCS
+         jkB7dUzaD3KhOI19nCkVdWt3oRdfaECxMVygULuyIau3oo2vjA6xvLfYSphJDz3f+8wa
+         cNZwQ9Ws+1TGOBWnM30un3G2tMNNJ5KVpOM55doO4Gig1XDEUKZ1CmXPRUPZ9L2nRuGX
+         6EflgDRSA9eqdxGDzPh2afe5QAwYtWRFi87EWg50Yd1i2xpypaXNKZ5iLPg6n4IF1hPW
+         o4QQ==
+X-Gm-Message-State: AOAM530bRfc2QuapwQ1Edm7Pw9gR02ycCe+rKha+rOa70XmyNMj3KwER
+        udsRYCDnW5wxDlUTflPCOUhYFg==
+X-Google-Smtp-Source: ABdhPJwSf6Rw50Rz2Hf74uRDyPmfI0JiwHpSfirDdgUXiUSuOWyU+hZvyRYp4AfdbO61dwcXdFBLRA==
+X-Received: by 2002:a17:902:9f82:: with SMTP id g2mr19162076plq.254.1596056207634;
+        Wed, 29 Jul 2020 13:56:47 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id b22sm3014939pju.26.2020.07.29.13.56.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 13:56:46 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 13:53:18 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     linux-pm@vger.kernel.org, evgreen@chromium.org,
+        akashast@codeaurora.org, mka@chromium.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] interconnect: Add bulk API helpers
+Message-ID: <20200729205318.GN229995@builder.lan>
+References: <20200729123439.9961-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729123439.9961-1-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jul 2020 01:18:04 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+On Wed 29 Jul 05:34 PDT 2020, Georgi Djakov wrote:
 
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Wednesday, July 29, 2020 3:20 AM
-> >   
-> [...]
-> > > +
-> > > +For example, IOTLB invalidations should always succeed. There is
-> > > no +architectural way to report back to the vIOMMU if the UAPI
-> > > data is +incompatible. If that happens, in order to guarantee
-> > > IOMMU iosolation,  
-> > 
-> > isolation
-> >   
-> > > +we have to resort to not giving completion status in vIOMMU.
-> > > This may +result in VM hang.
-> > > +
-> > > +For this reason the following IOMMU UAPIs cannot fail without
-> > > +catastrophic effect:
-> > > +
-> > > +1. Free PASID
-> > > +2. Unbind guest PASID
-> > > +3. Unbind guest PASID table (SMMU)
-> > > +4. Cache invalidate  
-> > 
-> > I'm not entirely sure what we're trying to assert here.  Clearly
-> > cache invalidation can fail and patch 5/6 goes on to add over a
-> > dozen checks of the user provided data that return an -errno.  Any
-> > user ioctl can fail if the user botches the parameters.  So are we
-> > just trying to explain the feature checking that should allow the
-> > user to know supported combinations and if they adhere to them,
-> > these should not fail?  It's not quite worded to that effect.
-> > Thanks, 
+> There are drivers which just need to get multiple interconnect paths,
+> request some predefined amounts of bandwidth and then just toggle the
+> paths between enabled/disabled state.
 > 
-> I guess the above wording is messed by what a UAPI should
-> behave and whether the vIOMMU reports associated errors.
-> UAPI can always fail, as you pointed out. vIOMMU may not
-> have a matching error code though, e.g. on Intel VT-d there is no
-> error reporting mechanism for cache invalidation. However,
-> it is not wise to assert UAPI behavior according to vIOMMU
-> definition. An error is an error. vIOMMU should just react to
-> UAPI errors according to its architecture definition (e.g. ignore,
-> forward to guest, hang, etc.). From this matter I feel above
-> section could better be removed.
+> The aim of this patch is simplify the above and to allow drivers to put
+> all the path names and bandwidth data into a single static icc_bulk_data
+> table and call the icc_bulk_* functions on that table in order to scale
+> all the interconnect paths in parallel.
 > 
-Yes, I agreed, the scope is not drawn clearly. This section is kind of
-the relic of a previous version where responsibility of feature
-checking lies with IOMMU UAPI instead of VFIO.
+> Suggested-by: Evan Green <evgreen@chromium.org>
+> Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-How about just briefly mention that upfront feature checking is
-encouraged to avoid complex and catastrophic error at runtime?
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-I will remove the rest.
+Regards,
+Bjorn
 
-> Thanks
-> Kevin
-
-[Jacob Pan]
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+> 
+> v2:
+> * Fix kernel-doc. (Bjorn)
+> * Do not print EPROBE_DEFER errors. (Bjorn)
+> 
+> v1: https://lore.kernel.org/r/20200528162542.30158-1-georgi.djakov@linaro.org/
+> 
+>  drivers/interconnect/Makefile |   2 +-
+>  drivers/interconnect/bulk.c   | 117 ++++++++++++++++++++++++++++++++++
+>  include/linux/interconnect.h  |  22 +++++++
+>  3 files changed, 140 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/interconnect/bulk.c
+> 
+> diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefile
+> index 4825c287ca13..d203520b0a56 100644
+> --- a/drivers/interconnect/Makefile
+> +++ b/drivers/interconnect/Makefile
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+>  CFLAGS_core.o				:= -I$(src)
+> -icc-core-objs				:= core.o
+> +icc-core-objs				:= core.o bulk.o
+>  
+>  obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
+>  obj-$(CONFIG_INTERCONNECT_IMX)		+= imx/
+> diff --git a/drivers/interconnect/bulk.c b/drivers/interconnect/bulk.c
+> new file mode 100644
+> index 000000000000..73e2c8d0a412
+> --- /dev/null
+> +++ b/drivers/interconnect/bulk.c
+> @@ -0,0 +1,117 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/interconnect-provider.h>
+> +#include <linux/device.h>
+> +#include <linux/export.h>
+> +
+> +/**
+> + * of_icc_bulk_get() - get interconnect paths
+> + * @dev: the device requesting the path
+> + * @num_paths: the number of icc_bulk_data
+> + * @paths: the table with the paths we want to get
+> + *
+> + * Returns 0 on success or negative errno otherwise.
+> + */
+> +int __must_check of_icc_bulk_get(struct device *dev, int num_paths,
+> +				 struct icc_bulk_data *paths)
+> +{
+> +	int ret, i;
+> +
+> +	for (i = 0; i < num_paths; i++) {
+> +		paths[i].path = of_icc_get(dev, paths[i].name);
+> +		if (IS_ERR(paths[i].path)) {
+> +			ret = PTR_ERR(paths[i].path);
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(dev, "of_icc_get() failed on path %s (%d)\n",
+> +					paths[i].name, ret);
+> +			paths[i].path = NULL;
+> +			goto err;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	icc_bulk_put(i, paths);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(of_icc_bulk_get);
+> +
+> +/**
+> + * icc_bulk_put() - put a list of interconnect paths
+> + * @num_paths: the number of icc_bulk_data
+> + * @paths: the icc_bulk_data table with the paths being put
+> + */
+> +void icc_bulk_put(int num_paths, struct icc_bulk_data *paths)
+> +{
+> +	while (--num_paths >= 0) {
+> +		icc_put(paths[num_paths].path);
+> +		paths[num_paths].path = NULL;
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(icc_bulk_put);
+> +
+> +/**
+> + * icc_bulk_set() - set bandwidth to a set of paths
+> + * @num_paths: the number of icc_bulk_data
+> + * @paths: the icc_bulk_data table containing the paths and bandwidth
+> + *
+> + * Returns 0 on success or negative errno otherwise.
+> + */
+> +int icc_bulk_set_bw(int num_paths, const struct icc_bulk_data *paths)
+> +{
+> +	int ret = 0;
+> +	int i;
+> +
+> +	for (i = 0; i < num_paths; i++) {
+> +		ret = icc_set_bw(paths[i].path, paths[i].avg_bw, paths[i].peak_bw);
+> +		if (ret) {
+> +			pr_err("icc_set_bw() failed on path %s (%d)\n", paths[i].name, ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(icc_bulk_set_bw);
+> +
+> +/**
+> + * icc_bulk_enable() - enable a previously disabled set of paths
+> + * @num_paths: the number of icc_bulk_data
+> + * @paths: the icc_bulk_data table containing the paths and bandwidth
+> + *
+> + * Returns 0 on success or negative errno otherwise.
+> + */
+> +int icc_bulk_enable(int num_paths, const struct icc_bulk_data *paths)
+> +{
+> +	int ret, i;
+> +
+> +	for (i = 0; i < num_paths; i++) {
+> +		ret = icc_enable(paths[i].path);
+> +		if (ret) {
+> +			pr_err("icc_enable() failed on path %s (%d)\n", paths[i].name, ret);
+> +			goto err;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	icc_bulk_disable(i, paths);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(icc_bulk_enable);
+> +
+> +/**
+> + * icc_bulk_disable() - disable a set of interconnect paths
+> + * @num_paths: the number of icc_bulk_data
+> + * @paths: the icc_bulk_data table containing the paths and bandwidth
+> + */
+> +void icc_bulk_disable(int num_paths, const struct icc_bulk_data *paths)
+> +{
+> +	while (--num_paths >= 0)
+> +		icc_disable(paths[num_paths].path);
+> +}
+> +EXPORT_SYMBOL_GPL(icc_bulk_disable);
+> diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
+> index 3a63d98613fc..f2dd2fc8d3cd 100644
+> --- a/include/linux/interconnect.h
+> +++ b/include/linux/interconnect.h
+> @@ -23,6 +23,28 @@
+>  struct icc_path;
+>  struct device;
+>  
+> +/**
+> + * struct icc_bulk_data - Data used for bulk icc operations.
+> + *
+> + * @path: reference to the interconnect path (internal use)
+> + * @name: the name from the "interconnect-names" DT property
+> + * @avg_bw: average bandwidth in icc units
+> + * @peak_bw: peak bandwidth in icc units
+> + */
+> +struct icc_bulk_data {
+> +	struct icc_path	*path;
+> +	const char *name;
+> +	u32 avg_bw;
+> +	u32 peak_bw;
+> +};
+> +
+> +int __must_check of_icc_bulk_get(struct device *dev, int num_paths,
+> +				 struct icc_bulk_data *paths);
+> +void icc_bulk_put(int num_paths, struct icc_bulk_data *paths);
+> +int icc_bulk_set_bw(int num_paths, const struct icc_bulk_data *paths);
+> +int icc_bulk_enable(int num_paths, const struct icc_bulk_data *paths);
+> +void icc_bulk_disable(int num_paths, const struct icc_bulk_data *paths);
+> +
+>  #if IS_ENABLED(CONFIG_INTERCONNECT)
+>  
+>  struct icc_path *icc_get(struct device *dev, const int src_id,
