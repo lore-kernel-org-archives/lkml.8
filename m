@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40E0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5ED5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84CBB208A9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C523A208A9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:35:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3N2DjixW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0ZHDmQQp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RFNMBsMg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ns2JRnNb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgG2OfD (ORCPT
+        id S1728074AbgG2OfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:35:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60244 "EHLO
+        Wed, 29 Jul 2020 10:35:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbgG2Odd (ORCPT
+        with ESMTP id S1726913AbgG2Od3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:33:33 -0400
+        Wed, 29 Jul 2020 10:33:29 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837C3C061794;
-        Wed, 29 Jul 2020 07:33:33 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 14:33:30 -0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AAB8C0619D2;
+        Wed, 29 Jul 2020 07:33:29 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 14:33:27 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596033211;
+        s=2020; t=1596033207;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FEocO7+NlDCoiTLQAY3eF2+pM8PAn8sjRfK4fBmQYkw=;
-        b=3N2DjixWSg5SvK/AoTqE+Ja8PmQinMHqq5zRoOmeui9hvRGaDFQSRYe++Gx+Z7qipHX2Hd
-        nUQOCqutenAxNPIIqKBgZGVYm9akcPQjt1XV/KLn9e+3qKkhpLrh28L7BfURS2dTzjaEkF
-        KmZL6qGWDuaYkX5lPk9R46dlCTFWWAz6Mv0ZDL+haACVrivexOL9Z0gXYr8EVN3wuGVicO
-        8N3VdMIQrOxS5sx8ZiYO/jKBe+2Et3gi1g1VC2aAowk2zpy2aHsAVgsr3QbHPMnfUbZw/l
-        qYwjSlLN4T9O+tuRzU2pPwU7lFoB2d1/JEuwQyt1mObdRB+o2Y0cNgUlTeTy7Q==
+        bh=iojurnLlFuOH+G6spO2lXW1oO32Pn7dx0k9FOweQP24=;
+        b=RFNMBsMgSNWftxKHxtKzicwxze/lCTBt2rwN9h+WZMVVanbelzc6NkMLGMMqT+U4GWYo3q
+        jpX9yjDXnLEFFbqYDXWjb7Qnht5wBuACskHzoT+cZSb5VJtaHYn6EC14D3QEnOkeryDYcy
+        Y0pmne+Q1N4O00gWYrIlBfDnVGGzSiDouJPve2CtW/Y11YvzXrVcaCijUmPOICC8j+ogPj
+        DJKEVeAtVRmbh+mRRe5i8FHUkpaLkOqrorr+K/10ZopWm8wL1yDhHIrpnVOmMcd/P1yJgh
+        q8yTBd702sTzQiqBVsdbeRQSH3XrBmef+FodBaE3alaC8sUR9N5TP+8Raj/ZbQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596033211;
+        s=2020e; t=1596033207;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FEocO7+NlDCoiTLQAY3eF2+pM8PAn8sjRfK4fBmQYkw=;
-        b=0ZHDmQQpSuY6RjNCHMxJPrN6V2qDaIx9tua23uHDVTGt1we622Fkl3YQRmq2uNBJ2vbPZp
-        KRrpJbn/G3qQfhBA==
+        bh=iojurnLlFuOH+G6spO2lXW1oO32Pn7dx0k9FOweQP24=;
+        b=Ns2JRnNb9x3BkWBgTZNVz/SfeVHbK+jnglJRdshDjCwYpv7JRBOktjwsWHRgRk7swjoNca
+        e+6ZsZ77nhKq/JAg==
 From:   "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] raid5: Use sequence counter with associated spinlock
+Subject: [tip: locking/core] hrtimer: Use sequence counter with associated raw
+ spinlock
 Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Song Liu <song@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200720155530.1173732-20-a.darwish@linutronix.de>
-References: <20200720155530.1173732-20-a.darwish@linutronix.de>
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200720155530.1173732-25-a.darwish@linutronix.de>
+References: <20200720155530.1173732-25-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <159603321049.4006.8865021952492232717.tip-bot2@tip-bot2>
+Message-ID: <159603320717.4006.4556629002081823174.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -74,60 +74,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     0a87b25ff2eb6169403c88b0d5f3c97bdaa3c930
-Gitweb:        https://git.kernel.org/tip/0a87b25ff2eb6169403c88b0d5f3c97bdaa3c930
+Commit-ID:     af5a06b582ec3d7b0160b4faaa65f73d8dcf989f
+Gitweb:        https://git.kernel.org/tip/af5a06b582ec3d7b0160b4faaa65f73d8dcf989f
 Author:        Ahmed S. Darwish <a.darwish@linutronix.de>
-AuthorDate:    Mon, 20 Jul 2020 17:55:25 +02:00
+AuthorDate:    Mon, 20 Jul 2020 17:55:30 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 29 Jul 2020 16:14:27 +02:00
+CommitterDate: Wed, 29 Jul 2020 16:14:29 +02:00
 
-raid5: Use sequence counter with associated spinlock
+hrtimer: Use sequence counter with associated raw spinlock
 
 A sequence counter write side critical section must be protected by some
 form of locking to serialize writers. A plain seqcount_t does not
 contain the information of which lock must be held when entering a write
 side critical section.
 
-Use the new seqcount_spinlock_t data type, which allows to associate a
-spinlock with the sequence counter. This enables lockdep to verify that
-the spinlock used for writer serialization is held when the write side
-critical section is entered.
+Use the new seqcount_raw_spinlock_t data type, which allows to associate
+a raw spinlock with the sequence counter. This enables lockdep to verify
+that the raw spinlock used for writer serialization is held when the
+write side critical section is entered.
 
 If lockdep is disabled this lock association is compiled out and has
 neither storage size nor runtime overhead.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Song Liu <song@kernel.org>
-Link: https://lkml.kernel.org/r/20200720155530.1173732-20-a.darwish@linutronix.de
+Link: https://lkml.kernel.org/r/20200720155530.1173732-25-a.darwish@linutronix.de
 ---
- drivers/md/raid5.c | 2 +-
- drivers/md/raid5.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ include/linux/hrtimer.h |  2 +-
+ kernel/time/hrtimer.c   | 13 ++++++++++---
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index ab8067f..892aefe 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6935,7 +6935,7 @@ static struct r5conf *setup_conf(struct mddev *mddev)
- 	} else
- 		goto abort;
- 	spin_lock_init(&conf->device_lock);
--	seqcount_init(&conf->gen_lock);
-+	seqcount_spinlock_init(&conf->gen_lock, &conf->device_lock);
- 	mutex_init(&conf->cache_size_mutex);
- 	init_waitqueue_head(&conf->wait_for_quiescent);
- 	init_waitqueue_head(&conf->wait_for_stripe);
-diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
-index f90e070..a2c9e9e 100644
---- a/drivers/md/raid5.h
-+++ b/drivers/md/raid5.h
-@@ -589,7 +589,7 @@ struct r5conf {
- 	int			prev_chunk_sectors;
- 	int			prev_algo;
- 	short			generation; /* increments with every reshape */
--	seqcount_t		gen_lock;	/* lock against generation changes */
-+	seqcount_spinlock_t	gen_lock;	/* lock against generation changes */
- 	unsigned long		reshape_checkpoint; /* Time we last updated
- 						     * metadata */
- 	long long		min_offset_diff; /* minimum difference between
+diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+index 15c8ac3..25993b8 100644
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -159,7 +159,7 @@ struct hrtimer_clock_base {
+ 	struct hrtimer_cpu_base	*cpu_base;
+ 	unsigned int		index;
+ 	clockid_t		clockid;
+-	seqcount_t		seq;
++	seqcount_raw_spinlock_t	seq;
+ 	struct hrtimer		*running;
+ 	struct timerqueue_head	active;
+ 	ktime_t			(*get_time)(void);
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index d89da1c..c403851 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -135,7 +135,11 @@ static const int hrtimer_clock_to_base_table[MAX_CLOCKS] = {
+  * timer->base->cpu_base
+  */
+ static struct hrtimer_cpu_base migration_cpu_base = {
+-	.clock_base = { { .cpu_base = &migration_cpu_base, }, },
++	.clock_base = { {
++		.cpu_base = &migration_cpu_base,
++		.seq      = SEQCNT_RAW_SPINLOCK_ZERO(migration_cpu_base.seq,
++						     &migration_cpu_base.lock),
++	}, },
+ };
+ 
+ #define migration_base	migration_cpu_base.clock_base[0]
+@@ -1998,8 +2002,11 @@ int hrtimers_prepare_cpu(unsigned int cpu)
+ 	int i;
+ 
+ 	for (i = 0; i < HRTIMER_MAX_CLOCK_BASES; i++) {
+-		cpu_base->clock_base[i].cpu_base = cpu_base;
+-		timerqueue_init_head(&cpu_base->clock_base[i].active);
++		struct hrtimer_clock_base *clock_b = &cpu_base->clock_base[i];
++
++		clock_b->cpu_base = cpu_base;
++		seqcount_raw_spinlock_init(&clock_b->seq, &cpu_base->lock);
++		timerqueue_init_head(&clock_b->active);
+ 	}
+ 
+ 	cpu_base->cpu = cpu;
