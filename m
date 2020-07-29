@@ -2,188 +2,107 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1341C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B79C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84EBD207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23282207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:27:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NNfs3ifh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgG2LVX convert rfc822-to-8bit (ORCPT
+        id S1726664AbgG2L10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 07:21:23 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2998 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726365AbgG2LVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 07:21:21 -0400
-Received: from dggemi406-hub.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id E3A8BB8278ABC432252B;
-        Wed, 29 Jul 2020 19:21:19 +0800 (CST)
-Received: from DGGEMI424-HUB.china.huawei.com (10.1.199.153) by
- dggemi406-hub.china.huawei.com (10.3.17.144) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Wed, 29 Jul 2020 19:21:19 +0800
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.120]) by
- DGGEMI424-HUB.china.huawei.com ([10.1.199.153]) with mapi id 14.03.0487.000;
- Wed, 29 Jul 2020 19:21:10 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "ganapatrao.kulkarni@cavium.com" <ganapatrao.kulkarni@cavium.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        huangdaode <huangdaode@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Steve Capper <steve.capper@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: RE: [PATCH v4 1/2] dma-direct: provide the ability to reserve
- per-numa CMA
-Thread-Topic: [PATCH v4 1/2] dma-direct: provide the ability to reserve
- per-numa CMA
-Thread-Index: AQHWYPN0xh/nM4EZ4kKvOhwzWqp/oakcYyKAgACGKwD//4JGAIACAmig
-Date:   Wed, 29 Jul 2020 11:21:09 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD25C8B1D@DGGEMI525-MBS.china.huawei.com>
-References: <20200723131344.41472-1-song.bao.hua@hisilicon.com>
- <20200723131344.41472-2-song.bao.hua@hisilicon.com>
- <20200728115231.GA793@lst.de>
- <B926444035E5E2439431908E3842AFD25C329D@DGGEMI525-MBS.china.huawei.com>
- <20200728122244.GA3639@lst.de>
-In-Reply-To: <20200728122244.GA3639@lst.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.203.121]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 29 Jul 2020 07:27:26 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57065 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbgG2L1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 07:27:25 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BGrqb1j6jz9sRK;
+        Wed, 29 Jul 2020 21:27:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596022043;
+        bh=3B1l9zsxDWHUUR26XQYf02znLLnavQzwvvwX89Hy1rc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NNfs3ifhLeqzO8x99kAQO0VXMYlyV1DmDUm5+wk0NzTwPx7k/FB1ctwECY+eswCj2
+         t/aNGzL7o75rnrbQVSjvt54Fl7Xm2KFbhDWngcpzehBOFifAgOr1evu4zhkItlYPJn
+         mDnGC8rJwJnDNawRr5yydtPQtfgv1cTEkrcUVzMtIKdEvl6XvjjtBFbgQ9FHl4o3Di
+         5LNfRj3dyArcwPZzMgOOY1ITfp2a+4e0OrNl69ECFdNmOc3y+37dWf5wQrJnJ61etf
+         aRHr8HxvX20hCDWSkjrQiFV0Op514bWKsySbsaEyFzk5AOUCOh8N7Dsfr+RS9DgnNG
+         VYw7YrC4Uxu7w==
+Date:   Wed, 29 Jul 2020 21:27:21 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brian Vazquez <brianvv@google.com>
+Subject: linux-next: build failure after merge of the net-next tree
+Message-ID: <20200729212721.1ee4eef8@canb.auug.org.au>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/w/x_VlSZc+ml8x648uLVh5w";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/w/x_VlSZc+ml8x648uLVh5w
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-> -----Original Message-----
-> From: Christoph Hellwig [mailto:hch@lst.de]
-> Sent: Wednesday, July 29, 2020 12:23 AM
-> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
-> Cc: Christoph Hellwig <hch@lst.de>; m.szyprowski@samsung.com;
-> robin.murphy@arm.com; will@kernel.org; ganapatrao.kulkarni@cavium.com;
-> catalin.marinas@arm.com; iommu@lists.linux-foundation.org; Linuxarm
-> <linuxarm@huawei.com>; linux-arm-kernel@lists.infradead.org;
-> linux-kernel@vger.kernel.org; Zengtao (B) <prime.zeng@hisilicon.com>;
-> huangdaode <huangdaode@huawei.com>; Jonathan Cameron
-> <jonathan.cameron@huawei.com>; Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de>; Steve Capper <steve.capper@arm.com>; Andrew
-> Morton <akpm@linux-foundation.org>; Mike Rapoport <rppt@linux.ibm.com>
-> Subject: Re: [PATCH v4 1/2] dma-direct: provide the ability to reserve
-> per-numa CMA
-> 
-> On Tue, Jul 28, 2020 at 12:19:03PM +0000, Song Bao Hua (Barry Song) wrote:
-> > I am sorry I haven't got your point yet. Do you mean something like the
-> below?
-> >
-> > arch/arm64/Kconfig:
-> > config CMDLINE
-> > 	string "Default kernel command string"
-> > -	default ""
-> > +	default "pernuma_cma=16M"
-> > 	help
-> > 	  Provide a set of default command-line options at build time by
-> > 	  entering them here. As a minimum, you should specify the the
-> > 	  root device (e.g. root=/dev/nfs).
-> 
-> Yes.
-> 
-> > A background of the current code is that Linux distributions can usually use
-> arch/arm64/configs/defconfig
-> > directly to build kernel. cmdline can be easily ignored during the generation
-> of Linux distributions.
-> 
-> I've not actually heard of a distro shipping defconfig yet..
-> 
-> >
-> > > if a way to expose this in the device tree might be useful, but people
-> > > more familiar with the device tree and the arm code will have to chime
-> > > in on that.
-> >
-> > Not sure if it is an useful user case as we are using ACPI but not device tree
-> since it is an ARM64
-> > server with NUMA.
-> 
-> Well, than maybe ACPI experts need to chime in on this.
-> 
-> > > This seems to have lost the dma_contiguous_default_area NULL check.
-> >
-> > cma_alloc() is doing the check by returning NULL if cma is NULL.
-> >
-> > struct page *cma_alloc(struct cma *cma, size_t count, unsigned int align,
-> > 		       bool no_warn)
-> > {
-> > 	...
-> > 	if (!cma || !cma->count)
-> > 		return NULL;
-> > }
-> >
-> > But I agree here the code can check before calling cma_alloc_aligned.
-> 
-> Oh, indeed.  Please split the removal of the NULL check in to a prep
-> patch then.
+After merging the net-next tree, today's linux-next build (i386 defconfig)
+failed like this:
 
-Do you mean removing the NULL check in cma_alloc()? If so, it seems lot of places
-need to be changed:
+x86_64-linux-gnu-ld: net/core/fib_rules.o: in function `fib_rules_lookup':
+fib_rules.c:(.text+0x5c6): undefined reference to `fib6_rule_match'
+x86_64-linux-gnu-ld: fib_rules.c:(.text+0x5d8): undefined reference to `fib=
+6_rule_match'
+x86_64-linux-gnu-ld: fib_rules.c:(.text+0x64d): undefined reference to `fib=
+6_rule_action'
+x86_64-linux-gnu-ld: fib_rules.c:(.text+0x662): undefined reference to `fib=
+6_rule_action'
+x86_64-linux-gnu-ld: fib_rules.c:(.text+0x67a): undefined reference to `fib=
+6_rule_suppress'
+x86_64-linux-gnu-ld: fib_rules.c:(.text+0x68d): undefined reference to `fib=
+6_rule_suppress'
 
-struct page *dma_alloc_from_contiguous(struct device *dev, size_t count,
-				       unsigned int align, bool no_warn)
-{
-	if (align > CONFIG_CMA_ALIGNMENT)
-		align = CONFIG_CMA_ALIGNMENT;
-+ code to check dev_get_cma_area(dev) is not NULL
-	return cma_alloc(dev_get_cma_area(dev), count, align, no_warn);
-}
+Caused by commit
 
-bool dma_release_from_contiguous(struct device *dev, struct page *pages,
-				 int count)
-{
-+ code to check dev_get_cma_area(dev) is not NULL
-	return cma_release(dev_get_cma_area(dev), pages, count);
-}
+  b9aaec8f0be5 ("fib: use indirect call wrappers in the most common fib_rul=
+es_ops")
 
-bool cma_release(struct cma *cma, const struct page *pages, unsigned int count)
-{
-	unsigned long pfn;
-+ do we need to remove this !cma too if we remove it in cma_alloc()?
-	if (!cma || !pages)
-		return false;
-	...
-}
+# CONFIG_IPV6_MULTIPLE_TABLES is not set
 
-And some other places where cma_alloc() and cma_release() are called:
+I have reverted that commit for today.
 
-arch/powerpc/kvm/book3s_hv_builtin.c
-drivers/dma-buf/heaps/cma_heap.c
-drivers/s390/char/vmcp.c
-drivers/staging/android/ion/ion_cma_heap.c
-mm/hugetlb.c
+--=20
+Cheers,
+Stephen Rothwell
 
-it seems many code were written with the assumption that cma_alloc/release will
-check if cma is null so they don't check it before calling cma_alloc().
+--Sig_/w/x_VlSZc+ml8x648uLVh5w
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-And I am not sure if kernel robot will report error like pointer reference before checking
-it if !cma is removed in cma_alloc().
+-----BEGIN PGP SIGNATURE-----
 
-Thanks
-Barry
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8hXRkACgkQAVBC80lX
+0Gwl4wf/a7UQAOA7rptHNQF+m0JcGAIWdcRBnTPxuMhF7/scEaGuBmLDeHvp6xU7
+Noe09vWdXZmm0nszSz56b1FUg7VBMMw71UeY4Dbm9FdR6cwA1mqlSjNza75d1txp
+Kl+8x4OEPTHf8CNr614LQxBE+ZaEzpGlx4Fp9wQKxvWQ/t/Mnc+fsm0BB2tmuJ47
+ubn7/l6mCCAdp569m7lWF0gliY8GwGTGYcBOF6ib9/j/sNVnwyw5EdCnNfVaSrwI
+C5YYEg28M8VwSwz9mA8nkJ/CrbafsY7f+6mhMPRJjm5PSTS/6bfzMU2xQRY8SHS5
+GVB4TOHGqEkkH1Y1bPLCxR8vXuRqgQ==
+=qzAe
+-----END PGP SIGNATURE-----
+
+--Sig_/w/x_VlSZc+ml8x648uLVh5w--
