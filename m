@@ -2,170 +2,116 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBA9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90066C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 389E720656
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6219520656
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:23:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="no3pLtDk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oQp6rQ8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgG2WV4 (ORCPT
+        id S1727935AbgG2WXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 18:21:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48028 "EHLO
+        Wed, 29 Jul 2020 18:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727908AbgG2WVz (ORCPT
+        with ESMTP id S1726365AbgG2WXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 18:21:55 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D90BC0619D4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 15:21:55 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id l2so7504135pff.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 15:21:55 -0700 (PDT)
+        Wed, 29 Jul 2020 18:23:44 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79672C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 15:23:44 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id b79so23845426qkg.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 15:23:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=lpiC6AK+sEWlZI+MwabZGhxpD0Px/85s+JfUHli9+h0=;
-        b=no3pLtDkQvk988NrIqu55gGquFsxaITQ7UhGPY59vNsdT3/wHypnp0nREjH3tTKKUt
-         TLvS8Mh4aRoXGSFmdrZpucz9FOy4DyTMD+0xP8u66YjUeR2i+jRX4ysVIBsZ01jULkBd
-         eKPPyJ0AbnKpPZYX5gMKguSUenBGh9JFLQDb8=
+        bh=6YCAc5J78Gb3CL6JITqJCex4PtmMFXj1bpF2ImMkMxc=;
+        b=oQp6rQ8YviAsRtGckYtsG48sNBe/wTftTbVYJ++XKEpZ/4ANT22UkOxvyuexNi14eN
+         HVXZiVIVvVPo61hUObdNnmSfMfwsqCRnGvoht5YFMBqHEeH1QFAWwo+KBa9fkIuacnO2
+         0mROGgZQLIJQ1RtGix8nHS5OSFvAndcXHiHOTtLwnzlqdhBkC92QUDMdU9o6dp5FP/5x
+         JgPFrvpeRYBIgICtpjgnVyBkkE1M1lDeR7h/azl6KyPhdzFN0oY3pkVghcBKXFXlhRwg
+         tLLuXODVmRb3pBQYnuvv9ZttkCe8ZZN1FA+8bBo7PL70m10t+JJeuBExJxpvShbNTZD3
+         7K5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lpiC6AK+sEWlZI+MwabZGhxpD0Px/85s+JfUHli9+h0=;
-        b=ZYQXlFkJjXHn5w/6FHCaV87hdUxX45GLuJJmc3y9g76nEnOkA3f4eKijuloCvmQMPt
-         qXlIENDgmzX/KrCIkSRZbaHab0jCIFKICyCkvhrwtfe/QhM1qMlfzBQoq96uF8Rbebfu
-         thO3JOryvcrtfBKgDR+04IQ4wA6eVChY3wK956xR9UqXTNDspwJY+/ZSvDvQ3Gt3du/Q
-         KIVmp8P+GKAnJilQIZoJJ+6Mms6GxKHZumpxlvsfQPmHF7JAVNpwfDvmhs4u6sUeogIT
-         AcR5qaCbpqiauJ6Q9ene+AO6VrXgM9BozJ14qZe2oNRpPW4HTW2murAUoaFJtH817NMD
-         PxjA==
-X-Gm-Message-State: AOAM531bZ+JAdqU4E43ywsArp762X22HS7Mp1oRRmz4aXaWosckrqdbK
-        zJfJTFLLPkQfsu5YBAzBQ5QQgA==
-X-Google-Smtp-Source: ABdhPJz70Chqk2QUSFLgh7Lwy2JGv32EpNClxZsvRzwYv3I6pThsiBrFjg6BexPfgxaoUEbRxP48PA==
-X-Received: by 2002:a63:d951:: with SMTP id e17mr30768959pgj.318.1596061314693;
-        Wed, 29 Jul 2020 15:21:54 -0700 (PDT)
-Received: from google.com ([2620:15c:202:1:8edc:d4ff:fe53:350d])
-        by smtp.gmail.com with ESMTPSA id 21sm3502393pfu.124.2020.07.29.15.21.52
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=6YCAc5J78Gb3CL6JITqJCex4PtmMFXj1bpF2ImMkMxc=;
+        b=pvPIKAQNRzN5qZWJri0pBbwmMBCoI5ImHA+aoCaZzu+2FaCbvy/SN7HnydiCUcQIAj
+         VnN4TRtN70v+92flH6eCAWL29KI6+0RCbR+lorTBeObZfOwPXbzSTcA2hwEaYPCIRV9s
+         oAsmpv18kRDIxt9X+ewn3n+MuxBDBsIdJ9ghu9uByNaLpq/PLdRXPPm/bgfDVj4BI9nz
+         ok6cFGgJunoplciPIg+PoUUWeDmafhRH+ey1GgMIpbC0Kb+xKnJRHmwSTqssfXRXCNis
+         0qiYxDA+ycu93+Tqv1e5V5PFdXHGvL1gV110P4zcpwaBTIiouqNScmFuj6co2hqS11pR
+         v79g==
+X-Gm-Message-State: AOAM533hS3rG2mukOrxoVw4yd6Tnt0DOdu1ZNQjloRhWTE1fxsgmbahR
+        arbjqJaD/kxIeAwtaUCOC3s=
+X-Google-Smtp-Source: ABdhPJyPO4gpLkvIa7v8JU9LISyoc9Q5v3ji5XzcrmAttwSDnq+Irld9YbTj1Z0P0WrCLdLo8KrMvg==
+X-Received: by 2002:a37:74c:: with SMTP id 73mr33611992qkh.468.1596061423588;
+        Wed, 29 Jul 2020 15:23:43 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id g61sm2865166qtd.65.2020.07.29.15.23.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 15:21:53 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 15:21:50 -0700
-From:   Brian Norris <briannorris@chromium.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>
-Subject: Re: [PATCH v3 6/6] platform/chrome: cros_ec_proto: Convert EC error
- codes to Linux error codes
-Message-ID: <20200729222150.GA970863@google.com>
-References: <20200726220101.29059-1-linux@roeck-us.net>
- <20200726220101.29059-7-linux@roeck-us.net>
+        Wed, 29 Jul 2020 15:23:43 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 29 Jul 2020 18:23:41 -0400
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux@googlegroups.com,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH-next v5 0/7] x86/boot: Remove run-time relocations from
+ compressed kernel
+Message-ID: <20200729222341.GA684483@rani.riverdale.lan>
+References: <CAKwvOdnTbatx8VB-rJSzyFPwfYnkMYK28yLBn1G+hUu8dyfYRA@mail.gmail.com>
+ <20200717201801.3661843-1-nivedita@alum.mit.edu>
+ <202007291502.18DC4C0F@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200726220101.29059-7-linux@roeck-us.net>
+In-Reply-To: <202007291502.18DC4C0F@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
-
-On Sun, Jul 26, 2020 at 03:01:01PM -0700, Guenter Roeck wrote:
-> v3: Use -ENOPROTOOPT for EC_RES_INVALID_VERSION
->     Implement function to convert error codes
-> v2: No change
+On Wed, Jul 29, 2020 at 03:04:43PM -0700, Kees Cook wrote:
+> On Fri, Jul 17, 2020 at 04:17:54PM -0400, Arvind Sankar wrote:
+> > Same as v5 previously posted, but rebased onto next-20200717.
+> > 
+> > v5: https://lore.kernel.org/lkml/20200715004133.1430068-1-nivedita@alum.mit.edu/
 > 
->  drivers/platform/chrome/cros_ec_proto.c | 52 ++++++++++++++++++++-----
->  1 file changed, 42 insertions(+), 10 deletions(-)
+> BTW, some bits of feedback on process:
 > 
-> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> index e5bbec979a2a..a081b8245682 100644
-> --- a/drivers/platform/chrome/cros_ec_proto.c
-> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> @@ -15,6 +15,43 @@
->  
->  #define EC_COMMAND_RETRIES	50
->  
-> +static const int cros_ec_error_map[] = {
-> +	[EC_RES_INVALID_COMMAND] = -EOPNOTSUPP,
-> +	[EC_RES_ERROR] = -EIO,
-> +	[EC_RES_INVALID_PARAM] = -EINVAL,
-> +	[EC_RES_ACCESS_DENIED] = -EACCES,
-> +	[EC_RES_INVALID_RESPONSE] = -EPROTO,
-> +	[EC_RES_INVALID_VERSION] = -ENOPROTOOPT,
-> +	[EC_RES_INVALID_CHECKSUM] = -EBADMSG,
-> +	[EC_RES_IN_PROGRESS] = -EINPROGRESS,
-> +	[EC_RES_UNAVAILABLE] = -ENODATA,
-> +	[EC_RES_TIMEOUT] = -ETIMEDOUT,
-> +	[EC_RES_OVERFLOW] = -EOVERFLOW,
-> +	[EC_RES_INVALID_HEADER] = -EBADR,
-> +	[EC_RES_REQUEST_TRUNCATED] = -EBADR,
-> +	[EC_RES_RESPONSE_TOO_BIG] = -EFBIG,
-> +	[EC_RES_BUS_ERROR] = -EFAULT,
-> +	[EC_RES_BUSY] = -EBUSY,
-> +	[EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
-> +	[EC_RES_INVALID_HEADER_CRC] = -EBADMSG,
-> +	[EC_RES_INVALID_DATA_CRC] = -EBADMSG,
-> +	[EC_RES_DUP_UNAVAILABLE] = -ENODATA,
-> +};
+> - please don't re-use version numbers, this is confusing :)
 
-Sorry I didn't pay attention to this earlier, but is there any
-programmatic way to ensure that we don't have unexpected holes here? If
-we do (e.g., we add new error codes, but they aren't contiguous for
-whatever reasons), then those will get treated as "success" with your
-current patch.
+This was a special case as there were no actual changes in this version.
 
-I say "unexpected" hole, because EC_RES_SUCCESS (0) is an expected hole.
+> - please fix whatever is happening with the "In-Reply-To:" headers, the
+>   threading is extremely hard to understand (each patch isn't a reply to
+>   the cover letter, and everything is a reply to a single earlier email)
+> 
+> -- 
+> Kees Cook
 
-> +
-> +static int cros_ec_map_error(uint32_t result)
-> +{
-> +	int ret = 0;
-> +
-> +	if (result != EC_RES_SUCCESS) {
-> +		if (result < ARRAY_SIZE(cros_ec_error_map) && cros_ec_error_map[result])
-> +			ret = cros_ec_error_map[result];
+I think this is because I'm passing --in-reply-to to format-patch.
+Seems like I should specify that in send-email instead, hopefully that
+will fix the threading.
 
-^^ Maybe we want to double check 'ret != 0'? Or maybe
-
-			ret = cros_ec_error_map[result];
-			if (!ret) {
-				ret = -EPROTO;
-				dev_err(..., "Unexpected EC result code %d\n", result);
-			}
-
-? Could even be WARN_ON(), since this would be an actionable programming
-error, not exactly an external factor. Or maybe I'm being paranoid, and
-future programmers are perfect.
-
-Otherwise:
-
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-
-> +		else
-> +			ret = -EPROTO;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int prepare_packet(struct cros_ec_device *ec_dev,
->  			  struct cros_ec_command *msg)
->  {
+Thanks.
