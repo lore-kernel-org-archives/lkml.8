@@ -2,106 +2,99 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD14C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A580F20672
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2ECE20672
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:40:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="POa67tst"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="b8+a7zcp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbgG2Cib (ORCPT
+        id S1731108AbgG2Ckn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 22:38:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731030AbgG2Cia (ORCPT
+        Tue, 28 Jul 2020 22:40:43 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:53663 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730407AbgG2Ckn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 22:38:30 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A91E9C061794;
-        Tue, 28 Jul 2020 19:38:30 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id p25so7097296oto.6;
-        Tue, 28 Jul 2020 19:38:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=K6A3KO8txqzFG9jCJSeANxOVnNRmay2PfFUV2ifoI8g=;
-        b=POa67tstwY8Q5qfUKdouIi54li2VWidsrp6f7xa56h+qZj0Rjroros1jeFILbGUuq7
-         7d2wyeedEEF6YLATbQ3WRyQgMUJLOVqaqOly98aEAtBrdydAPwT2wgPZRDsMmlt8i3Fi
-         VLqYmGZPpyj5NBVXSXABLaH7uY8Xd6zeC/iF0xS9qM8LyOb79GpsAr4bB6zTZQjbDrD6
-         E8Tce25t0JxvJbp2F7Hins7k9qqaHlnmN5rCMjEPJcmzwitpHSYdPg9fVUL1x9lKvD0I
-         oIVI3k60yHZL2LAuYpkNHp3sMtpxu2ci4dHod2KjOLtJ+z8vkySBh5GtAXFHWwS/AxXQ
-         mdaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=K6A3KO8txqzFG9jCJSeANxOVnNRmay2PfFUV2ifoI8g=;
-        b=Wybx+hkFdO6N1Gi483CGOpmYLNUulFWxslSXH5zh8DQc1hO3GFLrlomCvv54RX+UAu
-         XJXBG4uB995Rr2wB0h8/hjnB8OvoTe5We27ioQLwgiSIl81iVzRE6Nhd0aU9IhxnuqZ3
-         X2KChmHVTRrXaYkkkjINVotcivdZ8UsaEe9958g9X0IWOk1cnPTis3eMLwf+wEcLw5XX
-         k/LNjZlJ4sSJbRvhkKaunlF1VOy/J/BsiOdkBFydAQ/Xk4uwLxJxtGUcB+kpio7SOX+N
-         jos9p9GFEu7YfC7NBY/EtACCl4VPGu9DtOuZHuPLuMWdQtm7m3gMszJecmAonFhGN1S+
-         AGpQ==
-X-Gm-Message-State: AOAM533D4sHueEzUlKLG5L1oOUFmtdmnr1aPkevIqnSC3f2xFf5C2mSF
-        IkEyPh02Y8DxfEOUIydykCQyMsepzAAoXza/LEE=
-X-Google-Smtp-Source: ABdhPJzsvywrWS8TM3/1mOWcu/7q5UfAoRRvnRgCRRdxGnVsRyFrNYbRHEYoCzXpqcdGF4EMfGx+XGB6rWzre4STFY0=
-X-Received: by 2002:a05:6830:23a1:: with SMTP id m1mr14704705ots.185.1595990309932;
- Tue, 28 Jul 2020 19:38:29 -0700 (PDT)
+        Tue, 28 Jul 2020 22:40:43 -0400
+X-UUID: d0e9ccca0dd34c9398f8429e711107a5-20200729
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=bsmSl6GhvNafW+/QxrJVytLlWNDF54Z01VPoq2J5LuA=;
+        b=b8+a7zcpU/1y3tgBJKc203MtEZGFdOe7ADIeUvjKRASg9p5lbb8SRMfSP7rEukGyFjhNnN1fdgpCwXhnHA5v7DO0Bs1o+zi9y5mDhQtzlkH5IJa49waHaGUv6+SKG+9LPR8ga+xZoDIOr3nm5LSozKbgofO9dcj/GYxVbCZ0XTg=;
+X-UUID: d0e9ccca0dd34c9398f8429e711107a5-20200729
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1933251817; Wed, 29 Jul 2020 10:40:40 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 29 Jul 2020 10:40:37 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 29 Jul 2020 10:40:38 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <bvanassche@acm.org>
+CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
+        <cc.chou@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v2] scsi: ufs: Fix possible infinite loop in ufshcd_hold
+Date:   Wed, 29 Jul 2020 10:40:37 +0800
+Message-ID: <20200729024037.23105-1-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <ece36eb1-253a-8ec6-c183-309c10bb35d5@redhat.com> <CANRm+Cywhi1p5gYLfG=JcyTdYuWK+9bGqF6HD-LiBJM9Q5ykNQ@mail.gmail.com>
-In-Reply-To: <CANRm+Cywhi1p5gYLfG=JcyTdYuWK+9bGqF6HD-LiBJM9Q5ykNQ@mail.gmail.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 29 Jul 2020 10:38:18 +0800
-Message-ID: <CANRm+CwrT=gxxgkNdT3wFwzWYYh3FFrUU=aTqH8VT=MraU7jkw@mail.gmail.com>
-Subject: Re: WARNING: suspicious RCU usage - while installing a VM on a CPU
- listed under nohz_full
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        "frederic@kernel.org" <frederic@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 6DB1F27E1A9D8E1C51B5FB23D8BB069EFE1E31E88C79BDBB30C332B2C85C741A2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nitesh=EF=BC=8C
-On Wed, 29 Jul 2020 at 09:00, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> On Tue, 28 Jul 2020 at 22:40, Nitesh Narayan Lal <nitesh@redhat.com> wrot=
-e:
-> >
-> > Hi,
-> >
-> > I have recently come across an RCU trace with the 5.8-rc7 kernel that h=
-as the
-> > debug configs enabled while installing a VM on a CPU that is listed und=
-er
-> > nohz_full.
-> >
-> > Based on some of the initial debugging, my impression is that the issue=
- is
-> > triggered because of the fastpath that is meant to optimize the writes =
-to x2APIC
-> > ICR that eventually leads to a virtual IPI in fixed delivery mode, is g=
-etting
-> > invoked from the quiescent state.
+SW4gdWZzaGNkX3N1c3BlbmQoKSwgYWZ0ZXIgY2xrLWdhdGluZyBpcyBzdXNwZW5kZWQgYW5kIGxp
+bmsgaXMgc2V0DQphcyBIaWJlcm44IHN0YXRlLCB1ZnNoY2RfaG9sZCgpIGlzIHN0aWxsIHBvc3Np
+Ymx5IGludm9rZWQgYmVmb3JlDQp1ZnNoY2Rfc3VzcGVuZCgpIHJldHVybnMuIEZvciBleGFtcGxl
+LCBNZWRpYVRlaydzIHN1c3BlbmQgdm9wcyBtYXkNCmlzc3VlIFVJQyBjb21tYW5kcyB3aGljaCB3
+b3VsZCBjYWxsIHVmc2hjZF9ob2xkKCkgZHVyaW5nIHRoZSBjb21tYW5kDQppc3N1aW5nIGZsb3cu
+DQoNCk5vdyBpZiBVRlNIQ0RfQ0FQX0hJQkVSTjhfV0lUSF9DTEtfR0FUSU5HIGNhcGFiaWxpdHkg
+aXMgZW5hYmxlZCwNCnRoZW4gdWZzaGNkX2hvbGQoKSBtYXkgZW50ZXIgaW5maW5pdGUgbG9vcHMg
+YmVjYXVzZSB0aGVyZSBpcyBubw0KY2xrLXVuZ2F0aW5nIHdvcmsgc2NoZWR1bGVkIG9yIHBlbmRp
+bmcuIEluIHRoaXMgY2FzZSwgdWZzaGNkX2hvbGQoKQ0Kc2hhbGwganVzdCBieXBhc3MsIGFuZCBr
+ZWVwIHRoZSBsaW5rIGFzIEhpYmVybjggc3RhdGUuDQoNClNpZ25lZC1vZmYtYnk6IFN0YW5sZXkg
+Q2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBBbmR5IFRlbmcg
+PGFuZHkudGVuZ0BtZWRpYXRlay5jb20+DQoNCi0tLQ0KDQpDaGFuZ2VzIHNpbmNlIHYxOg0KLSBG
+aXggcmV0dXJuIHZhbHVlOiBVc2UgdW5pcXVlIGJvb2wgdmFyaWFibGUgdG8gZ2V0IHRoZSByZXN1
+bHQgb2YgZmx1c2hfd29yaygpLiBUaGNhbiBwcmV2ZW50IGluY29ycmVjdCByZXR1cm5lZCB2YWx1
+ZSwgaS5lLiwgcmMsIGlmIGZsdXNoX3dvcmsoKSByZXR1cm5zIHRydWUNCi0gRml4IGNvbW1pdCBt
+ZXNzYWdlDQoNCi0tLQ0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMgfCA1ICsrKystDQogMSBm
+aWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMN
+CmluZGV4IDU3N2NjMGQ3NDg3Zi4uYWNiYTIyNzFjNWQzIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9z
+Y3NpL3Vmcy91ZnNoY2QuYw0KKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYw0KQEAgLTE1
+NjEsNiArMTU2MSw3IEBAIHN0YXRpYyB2b2lkIHVmc2hjZF91bmdhdGVfd29yayhzdHJ1Y3Qgd29y
+a19zdHJ1Y3QgKndvcmspDQogaW50IHVmc2hjZF9ob2xkKHN0cnVjdCB1ZnNfaGJhICpoYmEsIGJv
+b2wgYXN5bmMpDQogew0KIAlpbnQgcmMgPSAwOw0KKwlib29sIGZsdXNoX3Jlc3VsdDsNCiAJdW5z
+aWduZWQgbG9uZyBmbGFnczsNCiANCiAJaWYgKCF1ZnNoY2RfaXNfY2xrZ2F0aW5nX2FsbG93ZWQo
+aGJhKSkNCkBAIC0xNTkyLDcgKzE1OTMsOSBAQCBpbnQgdWZzaGNkX2hvbGQoc3RydWN0IHVmc19o
+YmEgKmhiYSwgYm9vbCBhc3luYykNCiAJCQkJYnJlYWs7DQogCQkJfQ0KIAkJCXNwaW5fdW5sb2Nr
+X2lycXJlc3RvcmUoaGJhLT5ob3N0LT5ob3N0X2xvY2ssIGZsYWdzKTsNCi0JCQlmbHVzaF93b3Jr
+KCZoYmEtPmNsa19nYXRpbmcudW5nYXRlX3dvcmspOw0KKwkJCWZsdXNoX3Jlc3VsdCA9IGZsdXNo
+X3dvcmsoJmhiYS0+Y2xrX2dhdGluZy51bmdhdGVfd29yayk7DQorCQkJaWYgKGhiYS0+Y2xrX2dh
+dGluZy5pc19zdXNwZW5kZWQgJiYgIWZsdXNoX3Jlc3VsdCkNCisJCQkJZ290byBvdXQ7DQogCQkJ
+c3Bpbl9sb2NrX2lycXNhdmUoaGJhLT5ob3N0LT5ob3N0X2xvY2ssIGZsYWdzKTsNCiAJCQlnb3Rv
+IHN0YXJ0Ow0KIAkJfQ0KLS0gDQoyLjE4LjANCg==
 
-Could you try latest linux-next tree? I guess maybe some patches are
-pending in linux-next tree, I can't reproduce against linux-next tree.
