@@ -2,131 +2,145 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CAA9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CECC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B17820809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A63C62082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:01:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="B2dyOx1y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kDK1A5vL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgG2SBL (ORCPT
+        id S1726891AbgG2SBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:01:11 -0400
-Received: from mout.web.de ([212.227.15.14]:46365 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbgG2SBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:01:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1596045654;
-        bh=9PUsmeJ/Eu2U/dEfEIqHbVv+xuvUkaqLv2+jYfnT/UU=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=B2dyOx1yqvPo6hWQExWbPQ4KMDlUC4qGYCDQrifrAg+iMfabZxE5fzzccANXrH29O
-         K0rwz3on/p3eEq4xePqKUKpTIgf4FcRadRmr+FEK53GkVDJsnYW5BcxRYSi2feEhKt
-         snc5TC/4CNTCkdMN0odDKdgTx7u7ho3NOiG0AGe0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.175.129]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MJnvp-1kKQVL30tF-00K85N; Wed, 29
- Jul 2020 20:00:54 +0200
-To:     Yu Kuai <yukuai3@huawei.com>, dmaengine@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Anup Patel <anup.patel@broadcom.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ray Jui <ray.jui@broadcom.com>, Vinod Koul <vkoul@kernel.org>,
-        Yi Zhang <yi.zhang@huawei.com>
-Subject: Re: [PATCH V2] dmaengine: bcm-sba-raid: add missing put_device() call
- in sba_probe()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <0510b837-cb5f-c8d0-8cd9-1c7c871a4ea0@web.de>
-Date:   Wed, 29 Jul 2020 20:00:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 14:01:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726606AbgG2SBb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 14:01:31 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5754EC061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:01:31 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id l2so6998853pff.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:01:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7Fg1vKJS3H5jh+wjn/xw49NxzhVUYnMnmlb+Oe4mf7Y=;
+        b=kDK1A5vLlmS/z3Vg+YPyBmjuDb1ZO3FOFMg+2+2fXoCjZQNGiVWRf0YhABHnklf2wx
+         e0MAT7jjJzJrSjKXWeyvG/5FHi0PHQPx+QcOe+8xykcQt21VBj+10iL0WtrVZ4z0VCad
+         +/96WCno2ti/G7dhnRdIbraC0+r+kNs7Ykh4MvJ/KfSdgPIrSb9X2Mj5ngYDht4tOouO
+         qL/jJ9lLmTpmt0I73Hp7NzjS0jVCEOkr7xQl0snLWbtSsK55P+SOeSK86DQydWe+6uc0
+         kMGuD66PBX1y38OcF9bc2tqR7v+uxerJUOVAf9U3lvKO2R7ZPipfXNtzS2Uv86foZYau
+         0nkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7Fg1vKJS3H5jh+wjn/xw49NxzhVUYnMnmlb+Oe4mf7Y=;
+        b=nOt7LOl1rpJTedCo4KYGJkUflf//Oeuybn8EMDoWW7+q3o5gFSD4nZ8PQmydOfgNye
+         JMSv+isu3m7jFprRAvC0+uPFHQWDIqOfIp5xUXt5701foQQNvk5sFLBL3EGfr1QFhCVm
+         jZowBXIdKJJaVsDdMu5mtJz6DP4Jgx1hW8rs/xBsLg9w+XjoG5AUWeCKct7Ygx/48eG1
+         ZsIKCdTjGa3hP6B5ftqNwIv8EjazGgPVJgUl0mhe4/Vz+G44qZVSTFMS4XBGC0eQ7MOV
+         SvwzBuZvP+QSIL9T7q6t5Y/G/Ul4zxltLUf2swqcxDMekZs7OZv78ILV4UDbSC5y27Vd
+         zQmw==
+X-Gm-Message-State: AOAM531PLUPBHhlfee1RoakQn+9iZ8ouQxM54x12ZSDS1HCrT3+VLrIU
+        rdv6jaO2rYaaBYAJo4CR5jfMIWIzLbQ=
+X-Google-Smtp-Source: ABdhPJwD94zX5NtBLr5Jy/12mGTDvoDdqfTFGPhbmi5x+c3Ax7A49aYeRtseyww/3+YK6FMpN1jK3w==
+X-Received: by 2002:a63:1a0c:: with SMTP id a12mr29769031pga.24.1596045690787;
+        Wed, 29 Jul 2020 11:01:30 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id n15sm2931735pgs.25.2020.07.29.11.01.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 11:01:30 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 12:01:28 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mike.leach@linaro.org, coresight@lists.linaro.org
+Subject: Re: [RFC PATCH 01/14] coresight: etm4x: Skip save/restore before
+ device registration
+Message-ID: <20200729180128.GA3073178@xps15>
+References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
+ <20200722172040.1299289-2-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:pCl43vM7BT8F70NnD2x7YGLM7GW0DuYAzERvZ77H7pfwiq3Zt4J
- pqq2uq9c2xy1iqSHWRDY44AMkZYhJw0Xj8VDyBMDp73YEqx0nLrnqJyWw3NQ1FV5ue9NlW8
- AINQKvvmXR7hxxIJWbd+xfRCO3s4Gk1SVPiK+q7e2IuTx/zHsGHqBddFTAdI8jeQyCZZ7SI
- pROQ9g6aGOpID4DwXzUiw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ygTbAk2qY+s=:7tWJm7IO7CGOJ4SPn6m0YD
- I1bt5lG4fZlIyIuBwCDkpJJGNvCC0cw6DD/uQ6JkmEg/o0IY7ypVtkzsop8SakhEJD3b04xtQ
- Oc/e41OH0wuourBPjdKdKDLDkCBaWEgE1F3F5w0ssxe7HY8eVrw/fk0wn0mncsUWLtbga9DYW
- F/lfodxIS/Sro1GG547T6uufK6fzeO453k704cFl5yfkSPlNUzbGmpmA2UauQScFh3tCEKAcO
- WJHMtUmbJPRjLeMuoe8tY0g1vFD7wqBHzVBXzUDaHd09GFyckf7tnc4OkCaRVsuix7bsegQ1/
- 0AzFGDFXaopdco0r0eGdhUDR8LXbC+ptaJIhyacJo8D9qL/bdErHXz53JokDTRMBZnXEBkLOz
- UkJ9d+ACSe3W4B3eXCt51Pfm3l1N4caostnm+G472cwYJ/h8X5+GIAu1feZBUoPMR9abvUbJD
- CibOijbMRgBWsGhbiurD3C7KOhBaSJIGgsipkjUMqEWhHYnFkq0wAQXI/y0GDxNvaooowIv5l
- UcQeZw6EvrVbingD5N7iegGb7Ozh9gnMCLbgwo2FQ8PQJwoL7PtTbM/a5Ikd6ebe1fFfLnsRD
- OkxPCmuq/fqRoHfvApwogtEocXx7+6vEJ2+Xm4SorXKy1zsxg0oj3Unq0RiaFLDAf+dvIrAbX
- cWZfwd3J0Lra/9fm3SviyB3L4X5pyx24809UiukqPU+yKkVYnd+xvn8gGhZA4PpfdK0yV5nTc
- v4cOrnSrQxXrSz5kbrMSXit7UCI9bxQIcUMpe3LTFkwkizfghVGZqQXgoeXiUtwkfw8ph+0BI
- al+Qcpm2cLvO7+3gW6ZxvQPXN6xwJoBPbnXTTDL7eP23fvasyVy57u+ii0c9r5T1fj6s2/cn/
- wCG8zCUpO0Q9dp7kiH4SOZpv9hCoxld06leGQWU9O/eGO6IRyteqT+inpqhDvtUufTrZxuKRo
- 6nt8n1pGxJg2DvZ1ZWZ1kZB1hm+HNqOr+6FW9eSgR7mO9eErGBz7HoTvYZCZwHZu3bSAFEAf3
- 5PMLL6CLjlmtgPAdlWZEibEMcMIucd3DbsS4BkCObAVPxHd+YmkC5ZqJ3mGgYZQerJtxJg8Dm
- taWEWAf+lCyu+8HMDNH0nIP5XD4urxLNga+4z9Xf5WY9BMq21c0Syzl4a18aZv8oj0bItvsib
- GbkpiqMVDTqYLSf1a5CyjzPdhuqeidWyg+pw3Cghh6KN0NBMyTD6fSCMKPJtZ//0AWOxOfuYz
- 286SOPMh0ufpJg0+FbTJ9UUydd+feFC5Vuo9/lQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722172040.1299289-2-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> if of_find_device_by_node() succeed, sba_probe() doesn't have a
-> corresponding put_device(). =E2=80=A6
+Hi Suzuki,
 
-Wording adjustment:
-  If a of_find_device_by_node() call succeeded, sba_probe() did not
-  contain a corresponding put_device() call. =E2=80=A6
+I have starte to review this - comments will be scattered over a few days.
 
-Regards,
-Markus
+On Wed, Jul 22, 2020 at 06:20:27PM +0100, Suzuki K Poulose wrote:
+> Skip cpu save/restore before the coresight device is registered.
+> 
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Mike Leach <mike.leach@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/hwtracing/coresight/coresight-etm4x.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+> index 6d7d2169bfb2..cb83fb77ded6 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+> @@ -1135,7 +1135,13 @@ static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
+>  {
+>  	int i, ret = 0;
+>  	struct etmv4_save_state *state;
+> -	struct device *etm_dev = &drvdata->csdev->dev;
+> +	struct coresight_device *csdev = drvdata->csdev;
+> +	struct device *etm_dev;
+> +
+> +	if (WARN_ON(!csdev))
+> +		return -ENODEV;
+> +
+> +	etm_dev = &csdev->dev;
+>  
+>  	/*
+>  	 * As recommended by 3.4.1 ("The procedure when powering down the PE")
+> @@ -1261,6 +1267,10 @@ static void etm4_cpu_restore(struct etmv4_drvdata *drvdata)
+>  {
+>  	int i;
+>  	struct etmv4_save_state *state = drvdata->save_state;
+> +	struct coresight_device *csdev = drvdata->csdev;
+> +
+> +	if (WARN_ON(!csdev))
+> +		return;
+
+Restore and save operations are only called from etm4_cpu_pm_notify() where the
+check for a valid drvdata->csdev is already done.
+
+>  
+>  	CS_UNLOCK(drvdata->base);
+>  
+> @@ -1368,6 +1378,10 @@ static int etm4_cpu_pm_notify(struct notifier_block *nb, unsigned long cmd,
+>  
+>  	drvdata = etmdrvdata[cpu];
+>  
+> +	/* If we have not registered the device there is nothing to do */
+> +	if (!drvdata->csdev)
+> +		return NOTIFY_OK;
+
+Can you describe the scenario you've seen this happening in?  Probably best to
+add it to the changelog. 
+
+> +
+>  	if (!drvdata->save_state)
+>  		return NOTIFY_OK;
+>  
+> -- 
+> 2.24.1
+> 
