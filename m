@@ -2,124 +2,95 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7F2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3147C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6B72083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:49:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="B9wt8VX9";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="B9wt8VX9"
+	by mail.kernel.org (Postfix) with ESMTP id 77A752083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgG2Pti (ORCPT
+        id S1727808AbgG2Pts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:49:38 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:34926 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726365AbgG2Pth (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:49:37 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 478D18EE207;
-        Wed, 29 Jul 2020 08:49:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1596037776;
-        bh=gBu3zFOYSR4zGiNOEWmQCU6p4zT8YTvYTnY9Wyzgcc4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=B9wt8VX9EKLgo0NaDdMMlFsXeCL0b3DRhOJDk3MuPe+/w7uu0yhC6nMZxzxPgVqhS
-         buk5kTsVtdknXrOPKeuVun5vVc5+Er5Vhama8FPdEM1Zykx+L3Cn8D4Enc5F6qcoCq
-         8IM+ahaqCjxc0acNQYg3C9Szvpd/8NbSZCVR16/k=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1BhnMLkRJrm0; Wed, 29 Jul 2020 08:49:36 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id B58A38EE100;
-        Wed, 29 Jul 2020 08:49:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1596037776;
-        bh=gBu3zFOYSR4zGiNOEWmQCU6p4zT8YTvYTnY9Wyzgcc4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=B9wt8VX9EKLgo0NaDdMMlFsXeCL0b3DRhOJDk3MuPe+/w7uu0yhC6nMZxzxPgVqhS
-         buk5kTsVtdknXrOPKeuVun5vVc5+Er5Vhama8FPdEM1Zykx+L3Cn8D4Enc5F6qcoCq
-         8IM+ahaqCjxc0acNQYg3C9Szvpd/8NbSZCVR16/k=
-Message-ID: <1596037774.4356.42.camel@HansenPartnership.com>
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-Date:   Wed, 29 Jul 2020 08:49:34 -0700
-In-Reply-To: <20200729154056.GA1575761@rowland.harvard.edu>
-References: <20200706164135.GE704149@rowland.harvard.edu>
-         <d0ed766b-88b0-5ad5-9c10-a4c3b2f994e3@puri.sm>
-         <20200728200243.GA1511887@rowland.harvard.edu>
-         <f3958758-afce-8add-1692-2a3bbcc49f73@puri.sm>
-         <20200729143213.GC1530967@rowland.harvard.edu>
-         <1596033995.4356.15.camel@linux.ibm.com>
-         <1596034432.4356.19.camel@HansenPartnership.com>
-         <20200729154056.GA1575761@rowland.harvard.edu>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Wed, 29 Jul 2020 11:49:48 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8296 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726365AbgG2Pts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 11:49:48 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 332E61107CF368C86491;
+        Wed, 29 Jul 2020 23:49:45 +0800 (CST)
+Received: from kernelci-master.huawei.com (10.175.101.6) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 29 Jul 2020 23:49:35 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Hulk Robot <hulkci@huawei.com>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Omer Shpigelman <oshpigelman@habana.ai>,
+        Ofir Bitton <obitton@habana.ai>, Tomer Tayar <ttayar@habana.ai>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] habanalabs: make some functions static
+Date:   Wed, 29 Jul 2020 23:59:25 +0800
+Message-ID: <20200729155925.34131-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.175.101.6]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-29 at 11:40 -0400, Alan Stern wrote:
-> On Wed, Jul 29, 2020 at 07:53:52AM -0700, James Bottomley wrote:
-> > On Wed, 2020-07-29 at 07:46 -0700, James Bottomley wrote:
-[...]
-> > > That sense code means "NOT READY TO READY CHANGE, MEDIUM MAY HAVE
-> > > CHANGED" so it sounds like it something we should be
-> > > ignoring.  Usually this signals a problem, like you changed the
-> > > medium manually (ejected the CD).  But in this case you can tell
-> > > us to expect this by setting
-> > > 
-> > > sdev->expecting_cc_ua
-> > > 
-> > > And we'll retry.  I think you need to set this on all resumed
-> > > devices.
-> > 
-> > Actually, it's not quite that easy, we filter out this ASC/ASCQ
-> > combination from the check because we should never ignore medium
-> > might have changed events on running devices.  We could ignore it
-> > if we had a flag to say the power has been yanked (perhaps an
-> > additional sdev flag you set on resume) but we would still miss the
-> > case where you really had powered off the drive and then changed
-> > the media ... if you can regard this as the user's problem, then we
-> > might have a solution.
-> 
-> Indeed, I was going to make the same point.
-> 
-> The only reasonable conclusion is that suspending these SD card
-> readers isn't safe unless they don't contain a card -- or maybe just
-> if the device file isn't open or mounted.
+The sparse tool complains as follows:
 
-For standard removable media, I could see issuing an eject before
-suspend to emphasize the point.  However, sd cards don't work like that
-... they're not ejectable except manually and mostly used as the HDD of
-embedded, so the 99% use case is that the user will suspend and resume
-the device with the same sdd insert.  It does sound like a use case we
-should support.
+drivers/misc/habanalabs/gaudi/gaudi.c:6275:5: warning:
+ symbol 'gaudi_ctx_init' was not declared. Should it be static?
+drivers/misc/habanalabs/goya/goya.c:5228:5: warning:
+ symbol 'goya_ctx_init' was not declared. Should it be static?
 
-> Although support for this sort of thing could be added to the
-> kernel, for now it's best to rely on userspace doing the right
-> thing.  The kernel doesn't even know which devices suffer from this
-> problem.
+Those functions are not used outside of source file, so this
+commit marks them static.
 
-Can we solve from userspace the case where the user hasn't changed the
-media and the resume fails because we don't know?
+Fixes: a04b7cd97eef ("habanalabs: create internal CB pool")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ drivers/misc/habanalabs/gaudi/gaudi.c | 2 +-
+ drivers/misc/habanalabs/goya/goya.c | 2 +-
+ 2 file changed, 2 insertion(+), 2 deletion(-)
 
-James
+diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
+index d4b3b995f69d..00a0a7238d81 100644
+--- a/drivers/misc/habanalabs/gaudi/gaudi.c
++++ b/drivers/misc/habanalabs/gaudi/gaudi.c
+@@ -6272,7 +6272,7 @@ static enum hl_device_hw_state gaudi_get_hw_state(struct hl_device *hdev)
+ 	return RREG32(mmHW_STATE);
+ }
+ 
+-int gaudi_ctx_init(struct hl_ctx *ctx)
++static int gaudi_ctx_init(struct hl_ctx *ctx)
+ {
+ 	return 0;
+ }
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index dedcd2211fb7..85030759b2af 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -5225,7 +5225,7 @@ static enum hl_device_hw_state goya_get_hw_state(struct hl_device *hdev)
+ 	return RREG32(mmHW_STATE);
+ }
+ 
+-int goya_ctx_init(struct hl_ctx *ctx)
++static int goya_ctx_init(struct hl_ctx *ctx)
+ {
+ 	return 0;
+ }
 
