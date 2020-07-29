@@ -2,193 +2,419 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDBBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524FFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB10207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 215F120672
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:44:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QT7rhkgd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgG2Lo1 (ORCPT
+        id S1726950AbgG2Loc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 07:44:27 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19898 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726353AbgG2Lo0 (ORCPT
+        Wed, 29 Jul 2020 07:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgG2Lob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 07:44:26 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06TBWxLU050275;
-        Wed, 29 Jul 2020 07:44:16 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32k72ba5gt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 07:44:15 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06TBeJKb075474;
-        Wed, 29 Jul 2020 07:44:15 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32k72ba5ga-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 07:44:15 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06TBgtlD016170;
-        Wed, 29 Jul 2020 11:44:13 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma06ams.nl.ibm.com with ESMTP id 32gcqgn059-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 11:44:13 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06TBgjEj66584988
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jul 2020 11:42:45 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D30975204E;
-        Wed, 29 Jul 2020 11:44:10 +0000 (GMT)
-Received: from [192.168.0.8] (unknown [9.79.217.86])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 83E1352050;
-        Wed, 29 Jul 2020 11:44:07 +0000 (GMT)
-Subject: [PATCH v6 11/11] ppc64/kexec_file: enable early kernel's OPAL calls
-From:   Hari Bathini <hbathini@linux.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Pingfan Liu <piliu@redhat.com>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Pingfan Liu <piliu@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Wed, 29 Jul 2020 17:14:06 +0530
-Message-ID: <159602303975.575379.5032301944162937479.stgit@hbathini>
-In-Reply-To: <159602259854.575379.16910915605574571585.stgit@hbathini>
-References: <159602259854.575379.16910915605574571585.stgit@hbathini>
-User-Agent: StGit/0.21
+        Wed, 29 Jul 2020 07:44:31 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47B86C061794;
+        Wed, 29 Jul 2020 04:44:31 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t6so11693244plo.3;
+        Wed, 29 Jul 2020 04:44:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UfZkFdUtm92v6lauGj0QaqJS+CN5MOYNf5dXbxttiSc=;
+        b=QT7rhkgdZCfvjfbtyeRDv8IUaYMbmsEDUZT94eMpjJTFmYWV30j9KdiSxKJowYtdmD
+         6eVQ+eAI1EcKJmtpSLAKkzFNXxSx21C8JIsgeA+QxXUjwxdwv1FGY4974lqRqEz9IWAJ
+         r1KUIcIUewuL8+UqDxnKXU2JjLhVbr7Ngq1Nj0RWuW+HsP8HK1y6Zog60TmDAZz1sA1Y
+         vK85bj4UzfQobraadr09wTEPHNl1pK9gqHjanDHIA/tjhxVHsthPmGy21GL764i/s0gL
+         lITPHjGWS+QUiB6gr4nsPgy985Pdqac8vehJBPEV76pbr/+ehwAVDkh6XI1mW9rOhWkP
+         4zZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UfZkFdUtm92v6lauGj0QaqJS+CN5MOYNf5dXbxttiSc=;
+        b=F2XJk+W03QdQruJSZJTMKCzYSFpuvyvuMB2vbQrxSkz7RzTt7VoVLsZUhtIpPNp2lz
+         2Nf1zEXX6MttCtaDHqBGgMque3DFl0lhVnC5ckqEoigREft1Vjw44JhxChofrAagx56v
+         bxPlzQwJM1MCkvcV6kQJzHcTxIODBiP5fO/HB6v5s+RqX9xBU+2Rs60b795sC46UaU9O
+         8NkMTdAegkn4pEBFx1p7YbPh47ukBiTw35QtxG59fergVa3HZbRMab8DsdDaA5ZjI7p5
+         2gm8hMflDU5WoOxzNBO/U171XrYDZiaxx+QQFU8gSX6PACSNl/5JGV8rJKgjl9v/qiHR
+         ZykA==
+X-Gm-Message-State: AOAM532GQyoNQzFuuPJI0cW/KoQxNdeRnXOBE8Ak9CHx+ghSHpG4faDy
+        1eFJz7zfXehMho+4chzFytkyGd7Z
+X-Google-Smtp-Source: ABdhPJyIcqgm5cREtia06dSWkHUUx6dh5+uWkLfyUPbKX6kCHsUFZISxEAxg0K1hXldvozJ38kf99g==
+X-Received: by 2002:a17:90a:e390:: with SMTP id b16mr9482959pjz.20.1596023070673;
+        Wed, 29 Jul 2020 04:44:30 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id y69sm2156083pfc.111.2020.07.29.04.44.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 04:44:30 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: [PATCH V13] printk: Add monotonic, boottime, and realtime timestamps
+Date:   Wed, 29 Jul 2020 19:44:23 +0800
+Message-Id: <20200729114423.30606-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-29_04:2020-07-29,2020-07-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 suspectscore=0 impostorscore=0
- phishscore=0 adultscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007290071
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel built with CONFIG_PPC_EARLY_DEBUG_OPAL enabled expects r8 & r9
-to be filled with OPAL base & entry addresses respectively. Setting
-these registers allows the kernel to perform OPAL calls before the
-device tree is parsed.
+From: Prarit Bhargava <prarit@redhat.com>
 
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+printk.time=1/CONFIG_PRINTK_TIME=1 adds a unmodified local hardware clock
+timestamp to printk messages.  The local hardware clock loses time each
+day making it difficult to determine exactly when an issue has occurred in
+the kernel log, and making it difficult to determine how kernel and
+hardware issues relate to each other in real time.
+
+Make printk output different timestamps by adding options for no
+timestamp, the local hardware clock, the monotonic clock, the boottime
+clock, and the real clock.  Allow a user to pick one of the clocks by
+using the printk.time kernel parameter.  Output the type of clock in
+/sys/module/printk/parameters/time so userspace programs can interpret the
+timestamp.
+
+v2: Use peterz's suggested Kconfig options.  Merge patchset together.
+Fix i386 !CONFIG_PRINTK builds.
+
+v3: Fixed x86_64_defconfig. Added printk_time_type enum and
+printk_time_str for better output. Added BOOTTIME clock functionality.
+
+v4: Fix messages, add additional printk.time options, and fix configs.
+
+v5: Renaming of structures, and allow printk_time_set() to
+evaluate substrings of entries (eg: allow 'r', 'real', 'realtime').  From
+peterz, make fast functions return 0 until timekeeping is initialized
+(removes timekeeping_active & ktime_get_boot|real_log_ts() suggested by
+ tglx and adds ktime_get_real_offset()).  Switch to a function pointer
+for printk_get_ts() and reference fast functions.  Make timestamp_sources enum
+match choice options for CONFIG_PRINTK_TIME (adds PRINTK_TIME_UNDEFINED).
+
+v6: Define PRINTK_TIME_UNDEFINED for !CONFIG_PRINTK builds.  Separate
+timekeeping changes into separate patch.  Minor include file cleanup.
+
+v7: Add default case to printk_set_timestamp() and add PRINTK_TIME_DEBUG
+for users that want to set timestamp to different values during runtime.
+Add jstultz' Kconfig to avoid defconfig churn.
+
+v8: Add CONFIG_PRINTK_TIME_DEBUG to allow timestamp runtime switching.
+Rename PRINTK_TIME_DISABLE to PRINTK_TIME_DISABLED.  Rename
+printk_set_timestamp() to printk_set_ts_func().  Separate
+printk_set_ts_func() and printk_get_first_ts() portions.  Rename param
+functions.  Adjust configs, enum, and timestamp_sources_str to be 0-4.
+Add mention realtime clock is UTC in Documentation.
+
+v9: Fix typo.  Add __ktime_get_real_fast_ns_unsafe().
+
+v10: Remove time parameter restrictions.
+
+v11: Rework using tglx's real time patch
+
+v12: Reword Kconfig names.  Simplify timestamp logic and remove
+recursive code.
+
+v13: This patch seems have being forgotten for 3 years. Rebase it on
+the latest kernel v5.8, reolve conflicts and fix compiling errors.
+Change code to adapt new printk_time usage.
+Petr's concern on printk_time is addressed by current version of kernel, too.
+
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Cc: Mark Salyzyn <salyzyn@android.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Cc: Christoffer Dall <cdall@linaro.org>
+Cc: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Joel Fernandes <joelaf@google.com>
+Cc: Prarit Bhargava <prarit@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: linux-doc@vger.kernel.org
+[jstultz: reworked Kconfig settings to avoid defconfig noise]
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+[orson: rebase on v5.8 and make necessary changes]
+Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
 ---
+ Documentation/admin-guide/kernel-parameters.txt |   6 +-
+ kernel/printk/printk.c                          | 127 +++++++++++++++++++++++-
+ lib/Kconfig.debug                               |  48 ++++++++-
+ 3 files changed, 174 insertions(+), 7 deletions(-)
 
-v5 -> v6:
-* Added Reviewed-by tag from Thiago.
-* Moved the patch to end of the series for mpe to take a call on whether
-  to have it or not.
-
-v4 -> v5:
-* New patch. Updated opal_base & opal_entry values in r8 & r9 respectively.
-  This change was part of the below dropped patch in v4:
-    - https://lore.kernel.org/patchwork/patch/1275667/
-
-
- arch/powerpc/kexec/file_load_64.c      |   20 ++++++++++++++++++++
- arch/powerpc/purgatory/trampoline_64.S |   16 ++++++++++++++++
- 2 files changed, 36 insertions(+)
-
-diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-index c6a37ad5a0a4..53bb71e3a2e1 100644
---- a/arch/powerpc/kexec/file_load_64.c
-+++ b/arch/powerpc/kexec/file_load_64.c
-@@ -876,6 +876,7 @@ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
- 			  const void *fdt, unsigned long kernel_load_addr,
- 			  unsigned long fdt_load_addr)
- {
-+	struct device_node *dn = NULL;
- 	int ret;
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index fb95fad..0bf5f69 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3874,8 +3874,10 @@
+ 			ratelimit - ratelimit the logging
+ 			Default: ratelimit
  
- 	ret = setup_purgatory(image, slave_code, fdt, kernel_load_addr,
-@@ -903,9 +904,28 @@ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
- 					     &image->arch.backup_start,
- 					     sizeof(image->arch.backup_start),
- 					     false);
-+	if (ret)
-+		goto out;
-+
-+	/* Setup OPAL base & entry values */
-+	dn = of_find_node_by_path("/ibm,opal");
-+	if (dn) {
-+		u64 val;
-+
-+		of_property_read_u64(dn, "opal-base-address", &val);
-+		ret = kexec_purgatory_get_set_symbol(image, "opal_base", &val,
-+						     sizeof(val), false);
-+		if (ret)
-+			goto out;
-+
-+		of_property_read_u64(dn, "opal-entry-address", &val);
-+		ret = kexec_purgatory_get_set_symbol(image, "opal_entry", &val,
-+						     sizeof(val), false);
-+	}
- out:
- 	if (ret)
- 		pr_err("Failed to setup purgatory symbols");
-+	of_node_put(dn);
- 	return ret;
+-	printk.time=	Show timing data prefixed to each printk message line
+-			Format: <bool>  (1/Y/y=enable, 0/N/n=disable)
++	printk.time=	Show timestamp prefixed to each printk message line
++			Format: <string>
++				(0/N/n/disable, 1/Y/y/local,
++				 b/boot, m/monotonic, r/realtime (in UTC))
+ 
+ 	processor.max_cstate=	[HW,ACPI]
+ 			Limit processor to maximum C-state
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index b71eaf5..ba35f89 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -612,6 +612,9 @@ static u32 truncate_msg(u16 *text_len, u16 *trunc_msg_len,
+ 	return msg_used_size(*text_len + *trunc_msg_len, 0, pad_len);
  }
  
-diff --git a/arch/powerpc/purgatory/trampoline_64.S b/arch/powerpc/purgatory/trampoline_64.S
-index e79077ff1355..e6a6e7e6dfe4 100644
---- a/arch/powerpc/purgatory/trampoline_64.S
-+++ b/arch/powerpc/purgatory/trampoline_64.S
-@@ -87,6 +87,10 @@ master:
- 	li	%r4,28
- 	STWX_BE	%r17,%r3,%r4	/* Store my cpu as __be32 at byte 28 */
- 1:
-+	/* Load opal base and entry values in r8 & r9 respectively */
-+	ld	%r8,(opal_base - 0b)(%r18)
-+	ld	%r9,(opal_entry - 0b)(%r18)
++static u64 printk_get_first_ts(void);
++static u64 (*printk_get_ts)(void) = printk_get_first_ts;
 +
- 	/* load the kernel address */
- 	ld	%r4,(kernel - 0b)(%r18)
+ /* insert record into the buffer, discard old ones, update heads */
+ static int log_store(u32 caller_id, int facility, int level,
+ 		     enum log_flags flags, u64 ts_nsec,
+@@ -660,7 +663,7 @@ static int log_store(u32 caller_id, int facility, int level,
+ 	if (ts_nsec > 0)
+ 		msg->ts_nsec = ts_nsec;
+ 	else
+-		msg->ts_nsec = local_clock();
++		msg->ts_nsec = printk_get_ts();
+ #ifdef CONFIG_PRINTK_CALLER
+ 	msg->caller_id = caller_id;
+ #endif
+@@ -1284,8 +1287,124 @@ static inline void boot_delay_msec(int level)
+ }
+ #endif
  
-@@ -133,6 +137,18 @@ backup_start:
- 	.8byte  0x0
- 	.size backup_start, . - backup_start
+-static bool printk_time = IS_ENABLED(CONFIG_PRINTK_TIME);
+-module_param_named(time, printk_time, bool, S_IRUGO | S_IWUSR);
++/**
++ * enum timestamp_sources - Timestamp sources for printk() messages.
++ * @PRINTK_TIME_DISABLED: No time stamp.
++ * @PRINTK_TIME_LOCAL: Local hardware clock timestamp.
++ * @PRINTK_TIME_BOOT: Boottime clock timestamp.
++ * @PRINTK_TIME_MONO: Monotonic clock timestamp.
++ * @PRINTK_TIME_REAL: Realtime clock timestamp.
++ */
++enum timestamp_sources {
++	PRINTK_TIME_DISABLED = 0,
++	PRINTK_TIME_LOCAL = 1,
++	PRINTK_TIME_BOOT = 2,
++	PRINTK_TIME_MONO = 3,
++	PRINTK_TIME_REAL = 4,
++};
++
++static const char * const timestamp_sources_str[5] = {
++	"disabled",
++	"local",
++	"boottime",
++	"monotonic",
++	"realtime",
++};
++
++static int printk_time = CONFIG_PRINTK_TIME_TYPE;
++
++static int printk_set_ts_source(enum timestamp_sources ts_source)
++{
++	int err = 0;
++
++	switch (ts_source) {
++	case PRINTK_TIME_LOCAL:
++		printk_get_ts = local_clock;
++		break;
++	case PRINTK_TIME_BOOT:
++		printk_get_ts = ktime_get_boot_fast_ns;
++		break;
++	case PRINTK_TIME_MONO:
++		printk_get_ts = ktime_get_mono_fast_ns;
++		break;
++	case PRINTK_TIME_REAL:
++		printk_get_ts = ktime_get_real_fast_ns;
++		break;
++	case PRINTK_TIME_DISABLED:
++	/*
++	 * The timestamp is always stored into the log buffer.
++	 * Keep the current one.
++	 */
++		break;
++	default:
++		err = -EINVAL;
++		break;
++	}
++
++	if (!err)
++		printk_time = ts_source;
++	return err;
++}
++
++static u64 printk_get_first_ts(void)
++{
++	printk_set_ts_source(printk_time);
++
++	/* Fallback for invalid or disabled timestamp source */
++	if (printk_get_ts == printk_get_first_ts)
++		printk_get_ts = local_clock;
++
++	return printk_get_ts();
++}
++
++static int param_set_time(const char *val, const struct kernel_param *kp)
++{
++	char *param = strstrip((char *)val);
++	int time_source = -1;
++	int ts;
++	int err;
++
++	if (strlen(param) == 1) {
++		/* Preserve legacy boolean settings */
++		if ((param[0] == '0') || (param[0] == 'n') ||
++		    (param[0] == 'N'))
++			time_source = PRINTK_TIME_DISABLED;
++		if ((param[0] == '1') || (param[0] == 'y') ||
++		    (param[0] == 'Y'))
++			time_source = PRINTK_TIME_LOCAL;
++	}
++	if (time_source == -1) {
++		for (ts = 0; ts < ARRAY_SIZE(timestamp_sources_str); ts++) {
++			if (!strncmp(timestamp_sources_str[ts], param,
++				     strlen(param))) {
++				time_source = ts;
++				break;
++			}
++		}
++	}
++
++	err = printk_set_ts_source(time_source);
++	if (err) {
++		pr_warn("printk: invalid timestamp option %s\n", param);
++		return err;
++	}
++
++	pr_info("printk: timestamp set to %s\n",
++		timestamp_sources_str[printk_time]);
++	return 0;
++}
++
++static int param_get_time(char *buffer, const struct kernel_param *kp)
++{
++	return scnprintf(buffer, PAGE_SIZE, "%s",
++			 timestamp_sources_str[printk_time]);
++}
++
++static struct kernel_param_ops printk_time_ops = {
++	.set = param_set_time,
++	.get = param_get_time,
++};
++module_param_cb(time, &printk_time_ops, NULL, 0644);
  
-+	.balign 8
-+	.globl opal_base
-+opal_base:
-+	.8byte  0x0
-+	.size opal_base, . - opal_base
+ static size_t print_syslog(unsigned int level, char *buf)
+ {
+@@ -1876,7 +1995,7 @@ static bool cont_add(u32 caller_id, int facility, int level,
+ 		cont.facility = facility;
+ 		cont.level = level;
+ 		cont.caller_id = caller_id;
+-		cont.ts_nsec = local_clock();
++		cont.ts_nsec = printk_get_ts();
+ 		cont.flags = flags;
+ 	}
+ 
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 9ad9210..e34b905 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -11,12 +11,58 @@ config PRINTK_TIME
+ 	  messages to be added to the output of the syslog() system
+ 	  call and at the console.
+ 
++choice
++	prompt "printk default clock timestamp" if PRINTK_TIME
++	default PRINTK_TIME_LOCAL if PRINTK_TIME
++	help
++	  This option is selected by setting one of
++	  PRINTK_TIME_[DISABLE|LOCAL|BOOT|MONO|REAL] and causes time stamps of
++	  the printk() messages to be added to the output of the syslog()
++	  system call and at the console.
 +
-+	.balign 8
-+	.globl opal_entry
-+opal_entry:
-+	.8byte  0x0
-+	.size opal_entry, . - opal_entry
+ 	  The timestamp is always recorded internally, and exported
+ 	  to /dev/kmsg. This flag just specifies if the timestamp should
+ 	  be included, not that the timestamp is recorded.
+ 
+ 	  The behavior is also controlled by the kernel command line
+-	  parameter printk.time=1. See Documentation/admin-guide/kernel-parameters.rst
++	  parameter printk.time. See
++	  Documentation/admin-guide/kernel-parameters.rst
 +
- 	.data
- 	.balign 8
- .globl purgatory_sha256_digest
-
++config PRINTK_TIME_LOCAL
++	bool "Local Clock"
++	help
++	  Selecting this option causes the time stamps of printk() to be
++	  stamped with the unadjusted hardware clock.
++
++config PRINTK_TIME_BOOT
++	bool "Boot Time Clock"
++	help
++	  Selecting this option causes the time stamps of printk() to be
++	  stamped with the adjusted boottime clock.
++
++config PRINTK_TIME_MONO
++	bool "Monotonic Clock"
++	help
++	  Selecting this option causes the time stamps of printk() to be
++	  stamped with the adjusted monotonic clock.
++
++config PRINTK_TIME_REAL
++	bool "Real Time Clock"
++	help
++	  Selecting this option causes the time stamps of printk() to be
++	  stamped with the adjusted realtime clock (UTC).
++endchoice
++
++config PRINTK_TIME_TYPE
++	int
++	depends on PRINTK
++	range 0 4
++	default 0 if !PRINTK_TIME
++	default 1 if PRINTK_TIME_LOCAL
++	default 2 if PRINTK_TIME_BOOT
++	default 3 if PRINTK_TIME_MONO
++	default 4 if PRINTK_TIME_REAL
++
+ 
+ config PRINTK_CALLER
+ 	bool "Show caller information on printks"
+-- 
+2.7.4
 
