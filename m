@@ -2,83 +2,90 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A644EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFADD2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:35:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596011754;
-	bh=Qa/mUg1r63Osuladkh+ZhPXg7XvkuQp3LIxZHU411us=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ROkY2OJzUM+XbdUWCwl24oFZFGou8kfMVIvz5rAE3wdUmvA+3uaZULsB9KnAGi9sT
-	 gD1XrwzgL3jQkwSg0KAmDV410zLYBs/FNooV7lWrBKQoJleLovTkNoTZolKjpRA0aK
-	 4j4lmpBEv2SMWBcwkC0yU9HZaP6weDHePE2OVeIk=
+	by mail.kernel.org (Postfix) with ESMTP id 909FB2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:36:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgG2Ifx (ORCPT
+        id S1727994AbgG2Igk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:35:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbgG2Ifx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:35:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F36F2076E;
-        Wed, 29 Jul 2020 08:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596011752;
-        bh=Qa/mUg1r63Osuladkh+ZhPXg7XvkuQp3LIxZHU411us=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gp6DPJcPrsgDnpx3gD2rLVdnULNLsFahGYcbtMpGnFAriq5HEN2f2+4EsKQd1MPa/
-         9Cx9J1ulhnul4d+nfxic4P4zkZ7Je59ngVjs4G4G/826+MyZ4cLkoSjR+4i3jIdAFQ
-         GTYAXamL0BpfReLI5WH81nIHHnh1GqSiRROwDrDU=
-Date:   Wed, 29 Jul 2020 10:35:43 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH kernel] panic: Dump registers on panic_on_warn
-Message-ID: <20200729083543.GA718807@kroah.com>
-References: <20200630093846.100531-1-aik@ozlabs.ru>
- <a7d3459b-77f5-a65a-c407-e332d1b921ab@ozlabs.ru>
+        Wed, 29 Jul 2020 04:36:40 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:51444 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727816AbgG2Igi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 04:36:38 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-43-2zI0R3XJNsWV7u6ffLfy4w-1; Wed, 29 Jul 2020 09:36:34 +0100
+X-MC-Unique: 2zI0R3XJNsWV7u6ffLfy4w-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 29 Jul 2020 09:36:33 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 29 Jul 2020 09:36:33 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Madhavan T. Venkataraman'" <madvenka@linux.microsoft.com>,
+        "Andy Lutomirski" <luto@kernel.org>
+CC:     "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: RE: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+Thread-Topic: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+Thread-Index: AQHWZOCQT+e4gDrzGEmP/30MMvDTCqkdFOrwgABBt1CAAORUsA==
+Date:   Wed, 29 Jul 2020 08:36:33 +0000
+Message-ID: <a159f2e8417746fb88f31a97c6f366ba@AcuMS.aculab.com>
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <c23de6ec47614f489943e1a89a21dfa3@AcuMS.aculab.com>
+ <f5cfd11b-04fe-9db7-9d67-7ee898636edb@linux.microsoft.com>
+ <CALCETrUta5-0TLJ9-jfdehpTAp2Efmukk2npYadFzz9ozOrG2w@mail.gmail.com>
+ <59246260-e535-a9f1-d89e-4e953288b977@linux.microsoft.com>
+In-Reply-To: <59246260-e535-a9f1-d89e-4e953288b977@linux.microsoft.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a7d3459b-77f5-a65a-c407-e332d1b921ab@ozlabs.ru>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 06:24:26PM +1000, Alexey Kardashevskiy wrote:
-> Ping?
-> 
-> 
-> On 30/06/2020 19:38, Alexey Kardashevskiy wrote:
-> > Currently we print stack and registers for ordinary warnings but
-> > we do not for panic_on_warn which looks as oversight - panic()
-> > will reboot the machine but won't print registers.
-> > 
-> > This moves printing of registers and modules earlier.
-> > 
-> > This does not move the stack dumping as panic() dumps it.
-> > 
-> > Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-> > ---
-> >  kernel/panic.c | 12 ++++++------
-> >  1 file changed, 6 insertions(+), 6 deletions(-)
+RnJvbTogTWFkaGF2YW4gVC4gVmVua2F0YXJhbWFuDQo+IFNlbnQ6IDI4IEp1bHkgMjAyMCAxOTo1
+Mg0KLi4uDQo+IHRyYW1wZmQgZmF1bHRzIGFyZSBpbnN0cnVjdGlvbiBmYXVsdHMgdGhhdCBnbyB0
+aHJvdWdoIGEgZGlmZmVyZW50IGNvZGUgcGF0aCB0aGFuDQo+IHRoZSBvbmUgdGhhdCBjYWxscyBo
+YW5kbGVfbW1fZmF1bHQoKS4gUGVyaGFwcywgaXQgaXMgdGhlIGhhbmRsZV9tbV9mYXVsdCgpIHRo
+YXQNCj4gaXMgdGltZSBjb25zdW1pbmcuIENvdWxkIHlvdSBjbGFyaWZ5Pw0KDQpHaXZlbiB0aGF0
+IHRoZSBleHBlY3RhdGlvbiBpcyBhIGZldyBpbnN0cnVjdGlvbnMgaW4gdXNlcnNwYWNlDQooZWcg
+dG8gcGljayB1cCB0aGUgb3JpZ2luYWwgYXJndW1lbnRzIGZvciBhIG5lc3RlZCBjYWxsKQ0KdGhl
+IChwcm9iYWJsZSkgdGhvdXNhbmRzIG9mIGNsb2NrcyB0YWtlbiBieSBlbnRlcmluZyB0aGUNCmtl
+cm5lbCAoZXNwZWNpYWxseSB3aXRoIHBhZ2UgdGFibGUgc2VwYXJhdGlvbikgaXMgYSBtYXNzaXZl
+DQpkZWx0YS4NCg0KSWYgZW50ZXJpbmcgdGhlIGtlcm5lbCB3ZXJlIGNoZWFwIG5vIG9uZSB3b3Vs
+ZCBoYXZlIGFkZGVkDQp0aGUgRFNPIGZ1bmN0aW9ucyBmb3IgZ2V0dGluZyB0aGUgdGltZSBvZiBk
+YXkuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkg
+Um9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlv
+biBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-Why did you pick me and Nick as the people to get this patch?
-
-Always use scripts/get_maintainer.pl please, that's what it is there
-for...
-
-thanks,
-
-greg k-h
