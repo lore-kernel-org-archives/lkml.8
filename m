@@ -2,103 +2,127 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC965C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126D2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB3E52084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:14:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="NEIJjohV"
+	by mail.kernel.org (Postfix) with ESMTP id EF0B520838
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgG2JOH (ORCPT
+        id S1728042AbgG2JOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:14:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgG2JOH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:14:07 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE8FFC0619D2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 02:14:06 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id q76so988957wme.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 02:14:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UP89gGtNifZ2OXiYa2igFr8vAWMBLRJL0ocxb3qTc7I=;
-        b=NEIJjohV6bX1tKEzqf+d3D5YWkpcvrUyHjdAD7fzT7Rjms6K9mKPEiKdljtYOh4rOA
-         zZWmulfdjV2YX09WLBGwAufZi38QenV6qAA9nJYmi2uZZjdLhOkuQAKS/JegMqn1YMzU
-         8yIVkUZ2zLd+yFcPDVkfQsL5WhoYKUn6ct5yY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UP89gGtNifZ2OXiYa2igFr8vAWMBLRJL0ocxb3qTc7I=;
-        b=q8tRjhnhIep3fshDuvYUVTGw6bThObedCBISVyD70lD6Jeu740MbUh+402Cw6r3DcD
-         /e4K+yEGLEVkXBINCsROnuFRHkP8Z3oT5XUGX1L/rmlA4NLT5jMzMGf4uIuJGfn9zfv9
-         rFS8PD5r/YmtP78mbHDRnd1lo8itAxBfwJOqq6db0P3BsYjYG40tiu1F6H7+zubeuAgA
-         LMFQcfe6xXRrlTVW+fq2iOiR/hoRPpveoavDnbq8yd/U0lZPFvdOdlCaK2uzPjHd/xAT
-         s5G5qKAh9y9wTtr+YrLkz7MW02yWxZMcFZETfaCODkeK/fQshehgiOaIKoyTGAfI0BYQ
-         6hoA==
-X-Gm-Message-State: AOAM533USsD9qfKGuH2ud33P+NThhYVDs+q1Bf37ar5gjLcA80njTKjM
-        sIqyicpZduuCN+V/oOcROtqvVH6DtgiMbpMJvmAQcQ==
-X-Google-Smtp-Source: ABdhPJzZV+e1UFgavtykineiuRZ18D0h683RmsaU4kIGW+k7U8arE7aPOvS325+KBzLbYn/obtxmBpD3rS4T2RCsBao=
-X-Received: by 2002:a7b:c0c8:: with SMTP id s8mr8087059wmh.4.1596014045518;
- Wed, 29 Jul 2020 02:14:05 -0700 (PDT)
+        Wed, 29 Jul 2020 05:14:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:48378 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726336AbgG2JOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 05:14:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98600101E;
+        Wed, 29 Jul 2020 02:14:17 -0700 (PDT)
+Received: from localhost (unknown [10.1.198.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A2E43F718;
+        Wed, 29 Jul 2020 02:14:17 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 10:14:15 +0100
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/7] cpufreq: set invariance scale factor on
+ transition end
+Message-ID: <20200729091405.GB12941@arm.com>
+References: <20200722093732.14297-1-ionela.voinescu@arm.com>
+ <20200722093732.14297-3-ionela.voinescu@arm.com>
+ <CAJZ5v0iiF75+POMF5oX8_NOBiLLqMQSYTTf-X0QoLAPV7fF0-g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200728100321.1691745-1-daniel@0x0f.com> <20200728100321.1691745-2-daniel@0x0f.com>
- <20200728191842.GB2778962@bogus>
-In-Reply-To: <20200728191842.GB2778962@bogus>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Wed, 29 Jul 2020 18:13:54 +0900
-Message-ID: <CAFr9PXkwpNAhQvOJFqLUm-uWoaH=nsNiq_y+OgTf8Z60i4RhRw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: arm: mstar: Add binding details for mstar,pmsleep
-To:     Rob Herring <robh@kernel.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>, DTML <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0iiF75+POMF5oX8_NOBiLLqMQSYTTf-X0QoLAPV7fF0-g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Monday 27 Jul 2020 at 15:52:41 (+0200), Rafael J. Wysocki wrote:
+> On Wed, Jul 22, 2020 at 11:38 AM Ionela Voinescu
+> <ionela.voinescu@arm.com> wrote:
+> >
+> > While the move of the invariance setter calls (arch_set_freq_scale())
+> > from cpufreq drivers to cpufreq core maintained the previous
+> > functionality for existing drivers that use target_index() and
+> > fast_switch() for frequency switching, it also gives the possibility
+> > of adding support for users of the target() callback, which is exploited
+> > here.
+> >
+> > To be noted that the target() callback has been flagged as deprecated
+> > since:
+> >
+> > commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
+> >
+> > It also doesn't have that many users:
+> >
+> >   cpufreq-nforce2.c:371:2:      .target = nforce2_target,
+> >   cppc_cpufreq.c:416:2:         .target = cppc_cpufreq_set_target,
+> >   gx-suspmod.c:439:2:           .target = cpufreq_gx_target,
+> >   pcc-cpufreq.c:573:2:          .target = pcc_cpufreq_target,
+> >
+> > Similarly to the path taken for target_index() calls in the cpufreq core
+> > during a frequency change, all of the drivers above will mark the end of a
+> > frequency change by a call to cpufreq_freq_transition_end().
+> >
+> > Therefore, cpufreq_freq_transition_end() can be used as the location for
+> > the arch_set_freq_scale() call to potentially inform the scheduler of the
+> > frequency change.
+> >
+> > This change maintains the previous functionality for the drivers that
+> > implement the target_index() callback, while also adding support for the
+> > few drivers that implement the deprecated target() callback.
+> >
+> > Two notes are worthwhile here:
+> >  - In __target_index(), cpufreq_freq_transition_end() is called only for
+> >    drivers that have synchronous notifications enabled. There is only one
+> >    driver that disables them,
+> >
+> >    drivers/cpufreq/powernow-k8.c:1142: .flags = CPUFREQ_ASYNC_NOTIFICATION,
+> >
+> >    which is deprecated.
+> >
+> >  - Despite marking a successful frequency change, many cpufreq drivers
+> >    will populate the new policy->cur with the new requested frequency,
+> >    although this might not be the one granted by the hardware.
+> >
+> >    Therefore, the call to arch_set_freq_scale() is a "best effort" one,
+> >    and it is up to the architecture if the new frequency is used in the
+> >    new frequency scale factor setting or eventually used by the scheduler.
+> >    The architecture is in a better position to decide if it has better
+> >    methods to obtain more accurate information regarding the current
+> >    frequency (for example the use of counters).
+> >
+[..]
 
-On Wed, 29 Jul 2020 at 04:18, Rob Herring <robh@kernel.org> wrote:
+> I would fold this patch into the previous one.
+> 
+> I don't see much reason for it to be separate and it looks like
+> folding it in would cause the previous patch to be simpler.
 
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +         - enum:
-> > +             - mstar,pmsleep
->
-> Needs to be SoC specific. Random collections of bits are never
-> 'standard' from one SoC to the next.
+I kept it separate in this version as a proposal to move the call to
+cpufreq_freq_transition_end() and properly justify it in the commit
+message.
 
-I don't have a manual for any of the chips so I can't say for sure but
-so far all of the chips in this group (ARMv7 based MStar/Sigmastar)
-has the same layout for the registers i.e. the reset register,
-the resume address registers are at the same place for all of them.
-
-Does calling it "mstar,pmsleepv7" make more sense? I'm not sure what
-to call it really.
-
-> If your never going to have child nodes, then you can just add the
-> compatible to syscon.yaml.
-
-Considering the above would it make sense to drop the specific
-compatible string for now and just leave it as syscon until there is a reason
-to make it more specific?
+I'll squash it into the previous one, as recommended.
 
 Thanks,
-
-Daniel
+Ionela.
