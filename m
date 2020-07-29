@@ -2,112 +2,101 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02346C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD327206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDBA8206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTGn5BBR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UG2Q/Dcx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbgG2KCA (ORCPT
+        id S1726787AbgG2KCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 06:02:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46788 "EHLO
+        Wed, 29 Jul 2020 06:02:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgG2KB7 (ORCPT
+        with ESMTP id S1726208AbgG2KCD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 06:01:59 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0979C061794;
-        Wed, 29 Jul 2020 03:01:59 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id c6so1651447pje.1;
-        Wed, 29 Jul 2020 03:01:59 -0700 (PDT)
+        Wed, 29 Jul 2020 06:02:03 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84BD0C061794;
+        Wed, 29 Jul 2020 03:02:03 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id w2so13976471pgg.10;
+        Wed, 29 Jul 2020 03:02:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:cc:references:to:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dhqS/TVn+QryUKiM9kjYSdz+2PsU5CHJr52Pd8ZYJLU=;
-        b=jTGn5BBRGJieUMUNIYAc34bvJJ5Z19vAtcH5jNHg8608wPX+lXlJu5e8EVnw2RJM8C
-         tkbzoqVGwMS0V6qbqDpzlFXytGQc8Yt4wG7xR5jxtxD4nvvXO+6P4hLOfbXXS6GdKPIC
-         +EKaZejqDXEsuk0yVDsME6T0E/iC6awjr/EETG6YVXHJCHOk+jycp3we2epVk4ik0Pev
-         UYHcLsF4TvuLL08VWzLRZzdyn1Ey/GRVYLrmO68b5Z7SKphnyxmdqupMSsc89IV2PO6N
-         Zanpk1whq9sbH11u4+DAF93rGN7v2atRJweIvDZ2YIntbMLFUwOWosH0tbHh3ztHZiuE
-         vMKQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TcAbcu4b2MCOdxF06fdyH7UgcMhYEDFeJHrp4ij7/R4=;
+        b=UG2Q/DcxeP3B/3eMJa8fn4+P0L10ezGDWil0QNLIK3XVYn61soZPteCAuoGwTv2Ie5
+         JgzH1+L8pjQ0K+cZqIUKYcgV/g4gqhAuv0MMeuQS+puFp+IGl7LZ6WB2F6D7FUfp1CPo
+         LwFU1o460xSozJaSeTsOEI/htJ5EX/dxjgGP3etijEOYx0QidZchFRdovmRY4gF5Hkyd
+         wntOyVpBJnuhRnyXRusFBKjC08VMfkhNWJyBUqx4HpYMfCu585RUc8z8yxLabE2EYd2L
+         GXIUGNQ/Kn54GpQDMSszT13roSXz8Z2mspv/SgFSs7ytXHyIw3uo8dcokyYLvduRFI9Y
+         5Xaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:cc:references:to:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dhqS/TVn+QryUKiM9kjYSdz+2PsU5CHJr52Pd8ZYJLU=;
-        b=R8OfEYrL9vXXCSBLflD7Ww+UoTgPzNf/WQglKYrEOfZVqzCGxKJsXB3IaGBul7Dh9+
-         Wg/+rli8bot7UQlmJ7xBWkgdpqXqI0eAHQ/HJQwTUm04lPUhFEGDCF0byUln0bb1+MAF
-         QqMivJqvPERz0Mp0QdgQO73hrLEqPFClQrjMPsp4xTZLKRvLJ9WPhlnUChjTUmn5InSP
-         ZxO6hstDwcDe0neH8P264L1FBZw4kbDuhBLycqFljQPvCrbHS5LVyiSdOwPrkUMDPwrI
-         Uzezh/YFtvxKe/ikzPbElXcc9qAXQOlkOT7bM68HnT786vl09id20Vb7X9Ycq82nV+Lx
-         RdHg==
-X-Gm-Message-State: AOAM5312bJgMZA8b/2gD+e6MxUlWS3fzj1xf99pWzp0KI4oYyTS1uwl3
-        zc3abZ7jXk6gLf3qcrUl3nhSlp5x6QQ=
-X-Google-Smtp-Source: ABdhPJyz+O2zYB03eEDr+E6YXyvetH6FE51ND1NxpfVQ3sUGC2nxxxM6JOuebrri1jMzFdwF3k5D0A==
-X-Received: by 2002:a17:902:ee54:: with SMTP id 20mr27271592plo.197.1596016918944;
-        Wed, 29 Jul 2020 03:01:58 -0700 (PDT)
-Received: from ?IPv6:2404:7a87:83e0:f800:ccae:99d9:bebb:d2c4? ([2404:7a87:83e0:f800:ccae:99d9:bebb:d2c4])
-        by smtp.gmail.com with ESMTPSA id f15sm1797383pfk.58.2020.07.29.03.01.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 03:01:58 -0700 (PDT)
-Subject: Re: [PATCH v2] exfat: integrates dir-entry getting and validation
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200715012249.16378-1-kohada.t2@gmail.com>
-To:     Sungjong Seo <sj1557.seo@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <3959d0a7-8457-e722-88ce-8ad28423c12f@gmail.com>
-Date:   Wed, 29 Jul 2020 19:01:56 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TcAbcu4b2MCOdxF06fdyH7UgcMhYEDFeJHrp4ij7/R4=;
+        b=VbzZ+9ACPHcQrNyKey7vDXSN64qqbi0B9Rftn2fa/ii29jXZGOy+hfyehDjx4OZ+cZ
+         O1oqWaDYEXh3Prp1RKMKqlUDSJEDc14A++4X7rjEWuSLpwqBvsk0964w/bniIfiK1ZQt
+         CIpPZHaQDeGq5fRH4iwUIahsmE9BAUOSz3vGxtAa4+IrdkmXZP14X7RqE/VUQc9uA6uG
+         h+r4nxAJKJbxyUOIwO70w5p21Yv93rPUks5jwsp9Cgb6HM0b5kOk3/q0azhcGPZ/rc9k
+         FlKCMMpwNjunFM8JGxWi9M6XyMuSy46p5fiUoaPdx+nUhnkEK/6FOlmWZc2ZHtGnTjQv
+         BjDA==
+X-Gm-Message-State: AOAM530VwZouo9jF2kYVNwA0QvpEw2FVgmZwXzN9KWzzomEb+j3en4PJ
+        l8xnKZVZr5J0bSMmDlEYQwc=
+X-Google-Smtp-Source: ABdhPJxzag6GQkCa/vOhIcD+UJxGkue/MQu2bEm9A+8suxjrrR1GApoJcFOvJj+6J3XyhJFpbujQCQ==
+X-Received: by 2002:a63:1007:: with SMTP id f7mr22824756pgl.147.1596016923046;
+        Wed, 29 Jul 2020 03:02:03 -0700 (PDT)
+Received: from sol (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
+        by smtp.gmail.com with ESMTPSA id d128sm1742650pfa.24.2020.07.29.03.01.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 03:02:01 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 18:01:57 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 05/18] gpiolib: cdev: support GPIO_GET_LINE_IOCTL and
+ GPIOLINE_GET_VALUES_IOCTL
+Message-ID: <20200729100157.GA761242@sol>
+References: <20200725041955.9985-1-warthog618@gmail.com>
+ <20200725041955.9985-6-warthog618@gmail.com>
+ <CAHp75VcKtATPDKGAViWqjOJDqukDrgZ13aTU6rTJ1jEeB3vmVw@mail.gmail.com>
+ <20200726011244.GA6587@sol>
+ <20200729022814.GA1750878@sol>
+ <CAHp75VdUZ=N7Gd8NgYY4ifY68Rc5DyEOqrfjdTJvwiZ3ayNCMg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200715012249.16378-1-kohada.t2@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdUZ=N7Gd8NgYY4ifY68Rc5DyEOqrfjdTJvwiZ3ayNCMg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/15 10:22, Tetsuhiro Kohada wrote:
-> Add validation for num, bh and type on getting dir-entry.
-> ('file' and 'stream-ext' dir-entries are pre-validated to ensure success)
-> Renamed exfat_get_dentry_cached() to exfat_get_validated_dentry() due to
-> a change in functionality.
+On Wed, Jul 29, 2020 at 11:05:48AM +0300, Andy Shevchenko wrote:
+> On Wed, Jul 29, 2020 at 5:28 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > On Sun, Jul 26, 2020 at 09:12:44AM +0800, Kent Gibson wrote:
 > 
-> Integrate type-validation with simplified.
-> This will also recognize a dir-entry set that contains 'benign secondary'
-> dir-entries.
+> ...
 > 
-> And, rename TYPE_EXTEND to TYPE_NAME.
+> > I'll rework that for v3.
 > 
-> Suggested-by: Sungjong Seo <sj1557.seo@samsung.com>
-> Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
-> ---
-> Changes in v2
->   - Change verification order
->   - Verification loop start with index 2
+> Please give some more time to review v2. Especially the v2 API approach.
+> 
 
-Ping.
-Is there anything I should do?
+For sure.  I'll be spending some time setting up and testing on a BE 32
+target so I wont be ready to submit a v3 for a few days anyway.
 
-
-BR
----
-Tetsuhiro Kohada <kohada.t2@gmail.com>
+Cheers,
+Kent.
