@@ -2,111 +2,260 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2591CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA1DC2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBDF62070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:19:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KyNB6o8Y"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="QkPqHk7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgG2OSl (ORCPT
+        id S1726799AbgG2OTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:18:41 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54201 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726709AbgG2OSk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:18:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596032319;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=v3yRCdNgmRAYY03SE3GU+4EvBfKgO2Uc6QsVoa6VhTk=;
-        b=KyNB6o8YYC+Kg5akZN+wDWTQnxAeVuQBVXl4rkeDzN6KgVdQ44anh6btYpC+bSWZyjOQr2
-        m6lTMXgkLNH21QpL3WPlItwErckiJoPa18ckmmQh2Fl/k25eEXsj2nlms0IPEqB/p67/3i
-        ddna4rDPzDkxOBBVTXX/hgqYQSFccwk=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-149-UBPXAyquO1WbNull6QR39g-1; Wed, 29 Jul 2020 10:18:35 -0400
-X-MC-Unique: UBPXAyquO1WbNull6QR39g-1
-Received: by mail-wm1-f72.google.com with SMTP id h205so1077072wmf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 07:18:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=v3yRCdNgmRAYY03SE3GU+4EvBfKgO2Uc6QsVoa6VhTk=;
-        b=GaMqdJHs7N3kD7DZWmk9KAsMizuNp8ETbqB/lqGukMLG4Y8w+62TVHm/WYyejYhh7o
-         kHRqgcEddtfmIzPAzlS1kdemqiGexWI9CZ6eoEILe25IJKdNssdQoVF181KztYtrYIhQ
-         pq16W6olnUkO2PTbHYdyx5EN3WhJoL7ybkwrnbFT17LlR/uYaPzEnNxF5g5bXuRrpMdE
-         G1FmLYdw/sNLYQ/kV9H1GtSkyWAtmrNPS+DKxYrk+qWrBzIEqgreEyxtItbjKFIFFLeF
-         tkImG9NfU1ywIHxWazdLQHCzw6Wh5UseBQ/HMCbCvUfsvw0k8BMQX3jMS9YYreSmdoRM
-         SL4A==
-X-Gm-Message-State: AOAM532AfiDfO43E7HPH/2/vm4zdjtj6vJs50PHJqTp9rzJqV0zTQcXu
-        gJD1eEEjvm1i6fPjhRwd07LViVB+W6DHWxwMzx8A3/lVczNezSgt33/pOCMCsb6QxwZ+VRnFyiN
-        afFRlMPtxh95UZBtOxc/tS8iw
-X-Received: by 2002:a7b:cb47:: with SMTP id v7mr8508124wmj.57.1596032314736;
-        Wed, 29 Jul 2020 07:18:34 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzmmwjulBzKNnKWk+ryRFt1ck/MUmSlh4QEF+dyEOk3V/1QmT4D6lnSPhVTqHYJjenQPDZGtQ==
-X-Received: by 2002:a7b:cb47:: with SMTP id v7mr8508106wmj.57.1596032314505;
-        Wed, 29 Jul 2020 07:18:34 -0700 (PDT)
-Received: from redhat.com (bzq-79-179-105-63.red.bezeqint.net. [79.179.105.63])
-        by smtp.gmail.com with ESMTPSA id q7sm5949774wra.56.2020.07.29.07.18.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 07:18:33 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 10:18:30 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Randy Dunlap <rdunlap@infradead.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: mmotm 2020-07-27-18-18 uploaded (mm/page_alloc.c)
-Message-ID: <20200729101807-mutt-send-email-mst@kernel.org>
-References: <20200728011914.S-8vAYUK0%akpm@linux-foundation.org>
- <ae87385b-f830-dbdf-ebc7-1afb82a7fed0@infradead.org>
- <20200728145553.2a69fa2080de01922b3a74e0@linux-foundation.org>
- <20200729082053.6c2fb654@canb.auug.org.au>
- <20200728153143.c94d5af061b20db609511bf3@linux-foundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Wed, 29 Jul 2020 10:19:36 -0400
+Received: from mail-eopbgr40050.outbound.protection.outlook.com ([40.107.4.50]:14422
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726449AbgG2OTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 10:19:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nqDDinJX/h7SlFPB01b/HegH8R5CTxUNZP3acIZF+gabJVCeRdk2XhZR7G54HUuxQ6WBDAFQNmY7a8oIK0BdA/0ULnYsWeuKvG5PGKVTM+A8nXaam8RFfhzL75z5X/yNQu/VYVv2PZQ2Z1xGDdgccIii8GMjEVy4l5166XaM3HeZIe6wWZrYwq5A/l9xHa7/BNgsnX4PYdp4rQHW6UOltolEafnb02S/l1Az4EN6LHsW6z2SuMJBUFtxRTZurBjdEeorrIZlhLWZtlTHIeOHnnjgV8wMBi0MAwF1v7evxD8Ijrvdjh4yBXCqXXFLdLkyB/5TnmCkotzBNxdlWN7vyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R4qO9gihBSn2NbH+cf1yaCHaJ1vxPLw90gR+deLqPvs=;
+ b=QSZZinUbO1EL/tYTNIB1i39Xk5TJjf4LPL42NHruKKTg+/3fynmYtlWKfJP/6Ypsnh+9HuL5vEeLVgKzbWqDbK9TKVBWd0uc1he/rIO7+peBxFDqVZDLpxP95uplethfIADqMuh5MfV0IuR+DzHLBe+47j8x0wnNVLW4Wck7YIlUbwD1Rq5+bop+p5l2xrlyx37axmP5f5OQwUvMkI8ToYgnjsk08leJTiTTZ2zHTm6Gc4aSBI1TMjS9As6ZNyN4FXyi17ArRCpTczdP8l2Yzf9y0Rm0sL9WqmeMbhE6wSVCpiz3XlXOW4CTGM9tUmsQ4XVxSYKJhymtj/QUDxfM+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R4qO9gihBSn2NbH+cf1yaCHaJ1vxPLw90gR+deLqPvs=;
+ b=QkPqHk7bryZxq6uDeT6Jqct+XBFFE+nx86GzcIqAPPxBMQa2JCD7tY0mskw3Ul09b6SZjHfj5uP4qgT5Nr2fKoFKkOMMZOTYGtF5Ezu2DQGv1gwEUPGrOfACxicEKe7WeKqjNhEYaISLuntArAa69B/eTcysd5sb3akSXym3jXo=
+Authentication-Results: sigxcpu.org; dkim=none (message not signed)
+ header.d=none;sigxcpu.org; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
+ (2603:10a6:803:22::27) by VI1PR0401MB2557.eurprd04.prod.outlook.com
+ (2603:10a6:800:56::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Wed, 29 Jul
+ 2020 14:19:30 +0000
+Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
+ ([fe80::5c87:6dce:840d:d4c8]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
+ ([fe80::5c87:6dce:840d:d4c8%7]) with mapi id 15.20.3216.034; Wed, 29 Jul 2020
+ 14:19:30 +0000
+Date:   Wed, 29 Jul 2020 17:19:26 +0300
+From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, lukas@mntmn.com,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 5/5] dt-bindings: display: imx: add bindings for DCSS
+Message-ID: <20200729141926.hrky2e4hggf5renn@fsr-ub1864-141>
+References: <20200724090736.12228-1-laurentiu.palcu@oss.nxp.com>
+ <20200724090736.12228-6-laurentiu.palcu@oss.nxp.com>
+ <20200729132730.GA266947@bogon.m.sigxcpu.org>
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200728153143.c94d5af061b20db609511bf3@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200729132730.GA266947@bogon.m.sigxcpu.org>
+User-Agent: NeoMutt/20171215
+X-ClientProxiedBy: AM3PR03CA0065.eurprd03.prod.outlook.com
+ (2603:10a6:207:5::23) To VI1PR0402MB3902.eurprd04.prod.outlook.com
+ (2603:10a6:803:22::27)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1864-141 (83.217.231.2) by AM3PR03CA0065.eurprd03.prod.outlook.com (2603:10a6:207:5::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Wed, 29 Jul 2020 14:19:28 +0000
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 1d6a614b-fd8b-4866-6639-08d833ca6851
+X-MS-TrafficTypeDiagnostic: VI1PR0401MB2557:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0401MB2557E61712235B49AA229E77BE700@VI1PR0401MB2557.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Y0+sRzNl8ttHC7ge1KtzeQ3VDbdmfir5XLo/6UtxdKoUUQ4QfIOpNuvjYDRjGF3pUaP9KwnMEj7CGINo5T4XDEl1LFkhXpWzosvoBm0+mp+ALnJwIr9YG4puvxd5LD7dP6eU5eJzK8FvUrqa+I4sBeF3IdM6/8RwtUsU38cu0vBinFcrbs3ZX6Od0b7y5yy7fQbC0NqmE3nAb6py8OEo53L2K7iIj05YV9uCmh+nDHJHs+9d3lyWYMEei50ZYqI8CG52ii98j5Bnv2xm6YhCW0QMg3LHQku0kHPl+vNJshAtrXkl6Ix1/SmN3hbcdEHSSHLlgfu1D/0Shdmby4yO6ZyKu2RNlM2h18P9jsLDSTsmp2Ldupo9rqwdSQ89EnJ2j0oxHkIv/eQ3AMuwK/mjpA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(39860400002)(346002)(376002)(83380400001)(1076003)(4326008)(6496006)(52116002)(8676002)(5660300002)(33716001)(7416002)(44832011)(66574015)(86362001)(478600001)(6916009)(2906002)(55016002)(66946007)(66556008)(9686003)(66476007)(8936002)(186003)(16526019)(316002)(26005)(956004)(54906003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: DAXKPeJbX8+w1Ny2O4CYsKRoWS2aQmD+1uMRLAmdHZFL2huycnwJXw+n14MZPcUYDqo96j+Ozz1Fw88yRKwWQwg31Yo0l7w7cet/DJooG+CO+VjguM2FDDWrBF1zFhazVVQRq+BA1fe5VGG+lbtVFGn84JSxnxFAu4EwAQ4wexpf3LRP9dnUBa1Y9RlgT4rQOP4UaLxhSPpSjEu+ZKFIGrMnPJtKktaOW/CTF4or+Wk32IRJ7HrWEp8YP+tDRbu/u9T3+RZyEB3QHNdmgDP59p5LA6sm9TD0AtGpcMIHzjOpGTJq/vDEoMI/T31VvUuw+40OUsFedJfCoJEY4tjMqNrBPfWVFXfzRlPb41mJMptQmzd+TzozZI8gpdEb9YLWAOkbwECXcOfHEmlZMNAcdyhoWIUepGk9eCTywkUqsfHG6qxH9hAVRZhl8ig0oKsz4q8YnR/ekO+GAcCQdy1Ku4FDyf96pny7h4U7ZdMQhrM=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d6a614b-fd8b-4866-6639-08d833ca6851
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2020 14:19:30.1109
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zwBcqZ7ShM20RSPYDY/0oQIsAYy1pfO0kOPbpWNfnj9iFobXDWyMjY4/0tVufeCf3f6qDHuccVX1/1yfCxdzHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2557
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 03:31:43PM -0700, Andrew Morton wrote:
-> On Wed, 29 Jul 2020 08:20:53 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> 
-> > Hi Andrew,
+On Wed, Jul 29, 2020 at 03:27:30PM +0200, Guido Günther wrote:
+> Hi,
+> On Fri, Jul 24, 2020 at 12:07:34PM +0300, Laurentiu Palcu wrote:
+> > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
 > > 
-> > On Tue, 28 Jul 2020 14:55:53 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
-> > > config CONTIG_ALLOC
-> > >         def_bool (MEMORY_ISOLATION && COMPACTION) || CMA
-> > > 
-> > > says this is an improper combination.  And `make oldconfig' fixes it up.
-> > > 
-> > > What's happening here?
+> > Add bindings for iMX8MQ Display Controller Subsystem.
 > > 
-> > CONFIG_VIRTIO_MEM selects CONFIG_CONTIG_ALLOC ...
+> > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 104 ++++++++++++++++++
+> >  1 file changed, 104 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> > new file mode 100644
+> > index 000000000000..68e4635e4874
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> > @@ -0,0 +1,104 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +# Copyright 2019 NXP
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/display/imx/nxp,imx8mq-dcss.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: iMX8MQ Display Controller Subsystem (DCSS)
+> > +
+> > +maintainers:
+> > +  - Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > +
+> > +description:
+> > +
+> > +  The DCSS (display controller sub system) is used to source up to three
+> > +  display buffers, compose them, and drive a display using HDMI 2.0a(with HDCP
+> > +  2.2) or MIPI-DSI. The DCSS is intended to support up to 4kp60 displays. HDR10
+> > +  image processing capabilities are included to provide a solution capable of
+> > +  driving next generation high dynamic range displays.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: nxp,imx8mq-dcss
+> > +
+> > +  reg:
+> > +    items:
+> > +      - description: DCSS base address and size, up to IRQ steer start
+> > +      - description: DCSS BLKCTL base address and size
+> > +
+> > +  interrupts:
+> > +    items:
+> > +      - description: Context loader completion and error interrupt
+> > +      - description: DTG interrupt used to signal context loader trigger time
+> > +      - description: DTG interrupt for Vblank
+> > +
+> > +  interrupt-names:
+> > +    items:
+> > +      - const: ctxld
+> > +      - const: ctxld_kick
+> > +      - const: vblank
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: Display APB clock for all peripheral PIO access interfaces
+> > +      - description: Display AXI clock needed by DPR, Scaler, RTRAM_CTRL
+> > +      - description: RTRAM clock
+> > +      - description: Pixel clock, can be driven either by HDMI phy clock or MIPI
+> > +      - description: DTRC clock, needed by video decompressor
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: apb
+> > +      - const: axi
+> > +      - const: rtrm
+> > +      - const: pix
+> > +      - const: dtrc
+> > +
+> > +  assigned-clocks:
+> > +    items:
+> > +      - description: Phandle and clock specifier of IMX8MQ_CLK_DISP_AXI_ROOT
+> > +      - description: Phandle and clock specifier of IMX8MQ_CLK_DISP_RTRM
+> > +      - description: Phandle and clock specifier of either IMX8MQ_VIDEO2_PLL1_REF_SEL or
+> > +                     IMX8MQ_VIDEO_PLL1_REF_SEL
+> > +
+> > +  assigned-clock-parents:
+> > +    items:
+> > +      - description: Phandle and clock specifier of IMX8MQ_SYS1_PLL_800M
+> > +      - description: Phandle and clock specifier of IMX8MQ_SYS1_PLL_800M
+> > +      - description: Phandle and clock specifier of IMX8MQ_CLK_27M
+> > +
+> > +  assigned-clock-rates:
+> > +    items:
+> > +      - description: Must be 800 MHz
+> > +      - description: Must be 400 MHz
+> > +
+> > +  port:
+> > +    type: object
+> > +    description:
+> > +      A port node pointing to the input port of a HDMI/DP or MIPI display bridge.
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
 > 
-> Argh, select strikes again.
+> it would be nice to
 > 
-> So I guess VIRTIO_MEM should also select COMPACTION?
+>     #include <dt-bindings/clock/imx8mq-clock.h>
+> 
+> here...
+> 
+> > +    dcss: display-controller@32e00000 {
+> > +        compatible = "nxp,imx8mq-dcss";
+> > +        reg = <0x32e00000 0x2d000>, <0x32e2f000 0x1000>;
+> > +        interrupts = <6>, <8>, <9>;
+> > +        interrupt-names = "ctxld", "ctxld_kick", "vblank";
+> > +        interrupt-parent = <&irqsteer>;
+> > +        clocks = <&clk 248>, <&clk 247>, <&clk 249>,
+> > +                 <&clk 254>,<&clk 122>;
+> > +        clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
+> > +        assigned-clocks = <&clk 107>, <&clk 109>, <&clk 266>;
+> > +        assigned-clock-parents = <&clk 78>, <&clk 78>, <&clk 3>;
+> 
+> so that clock names like IMX8MQ_CLK_DISP_AXI could be used to make this
+> even more useful.
 
-+Cc the maintainer.
+That's a good idea. I'll add it in.
 
--- 
-MST
+Thanks,
+laurentiu
 
+> 
+> Cheers,
+>  -- Guido
+> 
+> > +        assigned-clock-rates = <800000000>,
+> > +                               <400000000>;
+> > +        port {
+> > +            dcss_out: endpoint {
+> > +                remote-endpoint = <&hdmi_in>;
+> > +            };
+> > +        };
+> > +    };
+> > +
+> > -- 
+> > 2.23.0
+> > 
