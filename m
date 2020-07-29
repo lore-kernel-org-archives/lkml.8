@@ -2,123 +2,100 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB032C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6570206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3823206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:27:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Jfc7UaVr"
+	dkim=pass (1024-bit key) header.d=inbox.ru header.i=@inbox.ru header.b="JvifuAN9";
+	dkim=pass (1024-bit key) header.d=inbox.ru header.i=@inbox.ru header.b="JvifuAN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgG2I0B (ORCPT
+        id S1727806AbgG2I1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:26:01 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:41840 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgG2I0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:26:01 -0400
-IronPort-SDR: s3aZZRkiaRId31Rgx3XSSnqB7Ye4mb0dz8GnjweqUPkWjkwMShRwyhouwHbYWYSscaBtGP47fI
- QJgKlLm1FB4jIG9wHnYnUWcotnDxKxE3/tnbv7cxr0/cyj9rJPbdcApgbdkVVRnNfnu/Ft/BFQ
- ZWeHb+OVxOHGQLib+e1ia5F6Q73WnesLPrKQchjedCriQBsmhVikJH9j0GwkbBdN2tmOiGjcXp
- /06GB2kdWPyyq90//foPHYEI5V8hbh7PTblMuGhDZjpZSqDjcCgmID8qdbLbujW7NOgdH8IB6x
- V8s=
-X-IronPort-AV: E=Sophos;i="5.75,409,1589234400"; 
-   d="scan'208";a="13273830"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 29 Jul 2020 10:25:58 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 29 Jul 2020 10:25:59 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 29 Jul 2020 10:25:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1596011158; x=1627547158;
-  h=from:to:cc:subject:date:message-id;
-  bh=X4BDx6M19hv4UdiOFzxtcHDit56u8qbxUVEnCv3QTvs=;
-  b=Jfc7UaVrsD00IGK3PbnX1f8+kkd2YFXKJbZTa7NztLb3i/7N0KF7Kqbu
-   hoJY4A6RzaommpDkhrfRK58L71+Sg62IRNrTydTjBTVXRb1GD6+aScHd1
-   y2XpGOiIych88k2zmR141vG3Fa8nKY7F9GCn72Xh32m7SPK9fzvu3R4Ji
-   6nmYJ6LJxxp+ty9a2ls2g6ZLhrtvpjZ/rgOFtMw31DJCoRTRS5S0AaYkd
-   VCq7DlJm5bdPaCeVV8ChWEVCsFkY9QciegRvF0AcXOdcvBPDx/0Sno/zI
-   c9dPOwpVbXAB/iHv/0m9UlEvMgSIrzSscF8RaacvqODaOjtKhY1Mxf+Zs
-   g==;
-IronPort-SDR: TIa/e1pr70w79xg8mIFNLYXhq20KRX6dL/5JSTGraAv1A/Lw5PJB3X9dasu/RzVetyXg79oSza
- PIQg240OM5sb2cDRDPIvhUjHJLl22aWCmmWh4jNTeHiw989mJ7Z9HvkLYUMLHESlIz7kp6fnpi
- U7sX/kqJqPG1qM7U3ma5cTKWZB16xDi2kKFzAsjh81Xl/XTYPNE0iymKnshU3GDSZlIsdLg7Jx
- 8SpKn0YItNS9VplzZOzr1ehNHsdY3YbHuRd9IMgIklWbqOjY9OXXcWn5bCePGPp9/523k+K1bm
- iow=
-X-IronPort-AV: E=Sophos;i="5.75,409,1589234400"; 
-   d="scan'208";a="13273829"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 29 Jul 2020 10:25:58 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 9BF35280065;
-        Wed, 29 Jul 2020 10:25:58 +0200 (CEST)
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH v3] arm: dts: imx7: add QSPI
-Date:   Wed, 29 Jul 2020 10:25:54 +0200
-Message-Id: <20200729082554.29282-1-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 29 Jul 2020 04:27:00 -0400
+Received: from fallback20.mail.ru ([185.5.136.252]:48774 "EHLO
+        fallback20.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgG2I1A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 04:27:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=FzI6tZMbt/R0+rSszFjKdj74FEFRvfkp3Ku74CsnY/A=;
+        b=JvifuAN91LWUtlTP1efawh1gBa4kuFoquLoe9ZLaRpmO1A6/Ek77Um0TZTJyAZ5lCKbKdV3QAHGHHb7DySjN6xBf4D7Dk6fzZhcgYy0KLQAaqALVGVmbWv9GpBuntsWuSvTLh2sRim9Eyk+SPHcvRwUCSRgB0x68f93t4FqbYL0=;
+Received: from [10.161.64.58] (port=55200 helo=smtp50.i.mail.ru)
+        by fallback20.m.smailru.net with esmtp (envelope-from <fido_max@inbox.ru>)
+        id 1k0hQN-0004LL-Iz; Wed, 29 Jul 2020 11:26:56 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=FzI6tZMbt/R0+rSszFjKdj74FEFRvfkp3Ku74CsnY/A=;
+        b=JvifuAN91LWUtlTP1efawh1gBa4kuFoquLoe9ZLaRpmO1A6/Ek77Um0TZTJyAZ5lCKbKdV3QAHGHHb7DySjN6xBf4D7Dk6fzZhcgYy0KLQAaqALVGVmbWv9GpBuntsWuSvTLh2sRim9Eyk+SPHcvRwUCSRgB0x68f93t4FqbYL0=;
+Received: by smtp50.i.mail.ru with esmtpa (envelope-from <fido_max@inbox.ru>)
+        id 1k0hQ8-0003MG-Df; Wed, 29 Jul 2020 11:26:40 +0300
+Subject: Re: [PATCH] iio: adc: ti-ads1015: fix conversion when CONFIG_PM is
+ not set
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     bigunclemax@gmail.com, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200729075908.10463-1-fido_max@inbox.ru>
+ <20200729082128.GJ3703480@smile.fi.intel.com>
+From:   Maxim Kochetkov <fido_max@inbox.ru>
+Message-ID: <5bfad7df-ee64-f94a-003b-06320b9fad0f@inbox.ru>
+Date:   Wed, 29 Jul 2020 11:26:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200729082128.GJ3703480@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD90521F83352E4771D993A5AF778ACCB6BD626CC7DA16DF88C182A05F538085040C2CA46D4983468D44DBEBCFF96989244A530695E06003E925F70375E164E67E1
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE78E88BD1CA827EF00C2099A533E45F2D0395957E7521B51C2CFCAF695D4D8E9FCEA1F7E6F0F101C6778DA827A17800CE74EB183AD45C8BEFBEA1F7E6F0F101C674E70A05D1297E1BBC6CDE5D1141D2B1CE894D00361F348800ABBA125B02E5E6C6791D0820EC505A09FA2833FD35BB23D9E625A9149C048EE9ECD01F8117BC8BEA471835C12D1D9774AD6D5ED66289B524E70A05D1297E1BBF6B57BC7E64490611E7FA7ABCAF51C92176DF2183F8FC7C07E7E81EEA8A9722B8941B15DA834481F9449624AB7ADAF37E2071C6999E77799D8FC6C240DEA76428AA50765F7900637A2D8A1A6CFF8D4D6D81D268191BDAD3DBD4B6F7A4D31EC0B7A15B7713DBEF166D81D268191BDAD3D78DA827A17800CE7E34610862E5853DDEC76A7562686271E8729DE7A884B61D135872C767BF85DA29E625A9149C048EE1B544F03EFBC4D573650B6F8DE40EA5F4AD6D5ED66289B524E70A05D1297E1BB35872C767BF85DA227C277FBC8AE2E8B9F5955FECEF5819E75ECD9A6C639B01B4E70A05D1297E1BBC6867C52282FAC85D9B7C4F32B44FF57285124B2A10EEC6C00306258E7E6ABB4E4A6367B16DE6309
+X-C8649E89: 33A8ECA4AF48A872707AC3AD012DFF9B2CBE3B0280CCAD82A230F7639BE59F72D39AF07C61583D7D
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojbl0bm2lVv3IpazKuAuhGEA==
+X-Mailru-Sender: 11C2EC085EDE56FA9C10FA2967F5AB244ACD2DA397360A76725F385C9060CCD22DC8CD00009A478AEE9242D420CFEBFD3DDE9B364B0DF2891A624F84B2C74EDA4239CF2AF0A6D4F80DA7A0AF5A3A8387
+X-Mras: Ok
+X-7564579A: 646B95376F6C166E
+X-77F55803: 6242723A09DB00B43A7801844A72E373BDE407F6AFEC0A43CC3F7EA2573C0A3F049FFFDB7839CE9EB969E7E82AF4D4E22E6A2FF17A881D525FAA5127445D842048A75CFE8623B9BD
+X-7FA49CB5: 0D63561A33F958A51453B523D9B6476B0254EA931EFC5E022CAD022E63613EF48941B15DA834481FA18204E546F3947C1D471462564A2E19F6B57BC7E64490618DEB871D839B7333395957E7521B51C2545D4CF71C94A83E9FA2833FD35BB23D27C277FBC8AE2E8BAA867293B0326636D2E47CDBA5A96583A67CD397AD5B4748AD7EC71F1DB884274AD6D5ED66289B5278DA827A17800CE783B01AA35CFCE167D32BA5DBAC0009BE395957E7521B51C20B4866841D68ED3567F23339F89546C55F5C1EE8F4F765FC09937EC86AE39D5175ECD9A6C639B01BBD4B6F7A4D31EC0BC0CAF46E325F83A522CA9DD8327EE4930A3850AC1BE2E735F43AACC0BCEB2632C4224003CC836476C0CAF46E325F83A50BF2EBBBDD9D6B0F05F538519369F3743B503F486389A921A5CC5B56E945C8DA
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojbl0bm2lVv3J12kxj97U6Fg==
+X-Mailru-MI: 800
+X-Mailru-Sender: A5480F10D64C90054F94DD2E9EA85DB616491A79AAC9634EAE967868DF060506B03078242870122EC099ADC76E806A99D50E20E2BC48EF5A30D242760C51EA9CEAB4BC95F72C04283CDA0F3B3F5B9367
+X-Mras: Ok
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for an update of the TQ-Systems TQMa7x/MBa7x DTS, add the
-QSPI controller to imx7s.dtsi.
+In case of CONFIG_PM is not set:
 
-Based-on-patch-by: Han Xu <han.xu@nxp.com>
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
-v3:
-- reverted node name change
+static inline int __pm_runtime_suspend(struct device *dev, int rpmflags)
+{
+	return -ENOSYS;
+}
 
-v2:
-- renamed node and label
-- reordered properties
+and ads1015_read_raw failed at:
 
+		ret = ads1015_set_power_state(data, false);
+		if (ret < 0)
+			goto release_direct;
 
- arch/arm/boot/dts/imx7s.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 1cfaf410aa43..85b8eddd77f2 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -1162,6 +1162,19 @@
- 				status = "disabled";
- 			};
- 
-+			qspi: spi@30bb0000 {
-+				compatible = "fsl,imx7d-qspi";
-+				reg = <0x30bb0000 0x10000>, <0x60000000 0x10000000>;
-+				reg-names = "QuadSPI", "QuadSPI-memory";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_QSPI_ROOT_CLK>,
-+					<&clks IMX7D_QSPI_ROOT_CLK>;
-+				clock-names = "qspi_en", "qspi";
-+				status = "disabled";
-+			};
-+
- 			sdma: sdma@30bd0000 {
- 				compatible = "fsl,imx7d-sdma", "fsl,imx35-sdma";
- 				reg = <0x30bd0000 0x10000>;
--- 
-2.17.1
-
+29.07.2020 11:21, Andy Shevchenko wrote:
+> On Wed, Jul 29, 2020 at 10:59:07AM +0300, Maxim Kochetkov wrote:
+>> To stop conversion ads1015_set_power_state function use unimplemented
+>> function pm_runtime_put_autosuspend if CONFIG_PM is not set.
+>> If CONFIG_PM is disabled, there is no need to start/stop conversion.
+>> Fix it by adding return 0 function variant if CONFIG_PM is not set.
+> 
+> I'm wondering if you check the real code (assembly) for any difference.
+> 
+> All calls AFAICS are statically defined in !CONFIG_PM case and compiler/linker
+> should be clever enough to drop this completely. Isn't it the case?
+> 
