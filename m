@@ -2,90 +2,87 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67196C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6512020663
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:37:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bn3B9Gqg"
+	by mail.kernel.org (Postfix) with ESMTP id 51CFE2075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:37:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgG2UhH (ORCPT
+        id S1726846AbgG2UhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:37:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45589 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726365AbgG2UhH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:37:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596055026;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JKV4hl15ZgHUpqQ9Lksec6wqiZBzDGUrjHq91E2NpOk=;
-        b=Bn3B9Gqg41Mcfiek5DIVDT7/IKBhOjQiC9Zx+EYLZWyeCiVrFrqA1VyMxFLJJYd12nh3hs
-        I9yMxkIxVFIE6tDDgxrZKTFSAqjq2xMewCM/+hrD2buy36dhTspQI4g5WAOplvwkAybf81
-        PjGaYtI3G2A/N9gViBa3QbeQ3WbwNsw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-307-Jb_l5AyvN1uvbQWUg6XcCA-1; Wed, 29 Jul 2020 16:37:04 -0400
-X-MC-Unique: Jb_l5AyvN1uvbQWUg6XcCA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7F19C8005B0;
-        Wed, 29 Jul 2020 20:37:02 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B8CDA5F7D8;
-        Wed, 29 Jul 2020 20:36:57 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <0b154b9b-728f-7d57-d4c5-ec25fc9dfdf3@toxicpanda.com>
-References: <0b154b9b-728f-7d57-d4c5-ec25fc9dfdf3@toxicpanda.com>
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     dhowells@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        David Sterba <dsterba@suse.com>
-Subject: Re: Inverted mount options completely broken (iversion,relatime)
+        Wed, 29 Jul 2020 16:37:12 -0400
+Received: from mga01.intel.com ([192.55.52.88]:10803 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726816AbgG2UhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 16:37:11 -0400
+IronPort-SDR: 9eACnjcFibkWVksOgqqAU1yDFQmiMD7NWfqNVuMNbwSA9iywWFd8ktUe7RzD5vG8Yyw4nLcEwq
+ jEXG0eqkuBlA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="169618237"
+X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
+   d="scan'208";a="169618237"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 13:37:09 -0700
+IronPort-SDR: AhBbttFInNRymbG7AeDpgZHAm401upJ2/B9J015ZQnLat1qHHvuQgZIhOq1EzVdM9qTLTLovj3
+ fodJr0dxeIpA==
+X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
+   d="scan'208";a="464991564"
+Received: from jayeshpa-mobl1.amr.corp.intel.com (HELO [10.209.169.93]) ([10.209.169.93])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 13:37:07 -0700
+Subject: Re: [PATCH 2/2] ASoC: Intel: Add period size constraint on strago
+ board
+To:     Brent Lu <brent.lu@intel.com>, alsa-devel@alsa-project.org
+Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Damian van Soelen <dj.vsoelen@gmail.com>
+References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
+ <1596020585-11517-3-git-send-email-brent.lu@intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <4fe97f63-e552-3b2f-803c-53894b196bfd@linux.intel.com>
+Date:   Wed, 29 Jul 2020 09:08:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4007795.1596055016.1@warthog.procyon.org.uk>
-Date:   Wed, 29 Jul 2020 21:36:56 +0100
-Message-ID: <4007797.1596055016@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <1596020585-11517-3-git-send-email-brent.lu@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Josef Bacik <josef@toxicpanda.com> wrote:
 
-> So my question is, what do we do here?
 
-Hmmm...  As the code stands, MS_RDONLY, MS_SYNCHRONOUS, MS_MANDLOCK,
-MS_I_VERSION and MS_LAZYTIME should all be masked off before the new flags are
-set if called from mount(2) rather than fsconfig(2).
+On 7/29/20 6:03 AM, Brent Lu wrote:
+> From: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+> 
+> The CRAS server does not set the period size in hw_param so ALSA will
+> calculate a value for period size which is based on the buffer size
+> and other parameters. The value may not always be aligned with Atom's
+> dsp design so a constraint is added to make sure the board always has
+> a good value.
+> 
+> Cyan uses chtmax98090 and others(banon, celes, edgar, kefka...) use
+> rt5650.
 
-do_remount() gives MS_RMT_MASK to fs_context_for_reconfigure() to load into
-fc->sb_flags_mask, which should achieve the desired effect in
-reconfigure_super() on this line:
-
-	WRITE_ONCE(sb->s_flags, ((sb->s_flags & ~fc->sb_flags_mask) |
-				 (fc->sb_flags & fc->sb_flags_mask)));
-
-David
+Is this patch required if you've already constrained the period sizes 
+for the platform driver in patch1?
 
