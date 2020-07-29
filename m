@@ -2,239 +2,157 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5CFC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 537192067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D7E52074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:24:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GsZ8rjPL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wGuLColH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbgG2XWJ (ORCPT
+        id S1727083AbgG2XYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 19:22:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57280 "EHLO
+        Wed, 29 Jul 2020 19:24:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728043AbgG2XWI (ORCPT
+        with ESMTP id S1726718AbgG2XYm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 19:22:08 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96C70C061794;
-        Wed, 29 Jul 2020 16:22:08 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id o1so12770735plk.1;
-        Wed, 29 Jul 2020 16:22:08 -0700 (PDT)
+        Wed, 29 Jul 2020 19:24:42 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42A34C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:24:42 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f18so3126295wmc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:24:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dYdPpgoeWUX12WEZRA5uofSu8jyLZ45WRjobjopXACQ=;
-        b=GsZ8rjPLeO518JYxeY5JaABnuRqY6ZcUKxPrhfUSOB6L9fK3nMQLLY4U8I6e5/yzPr
-         xInOccydDe4wZY+G4gjl32UjueOqfX+rutjgNg3xjX/1AKNzXJD9eTfxJQ6bjHwcXj6g
-         UnA2/EtGdlGuO642XZbpDkdIOLwVT9NyQE5ASRG5VOo6TcxN9uHpPP2/cKGJTWnAFkzw
-         hyjwmE0gS75ik0+6QqPSa0jtx6d5On6OFeHe1lA8A383tiPm0RhLlERfmtb03+2ytIEE
-         RZo/mmhcwPzFlfTuL0rmGHaVirgYuYMr5ORPfAU5gVuFUXu7PAH/3GiDG8kLuspa3013
-         UbvQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6Vid/bDwyKAx4BwcecnBtz+573/IH5tF8O95k6nel7Q=;
+        b=wGuLColHUeEnR/+pnRTEHr+CehDViADj2T/7m0JQzD4OJ25qpDd0Frb0QO7pXd+4MU
+         oR8iEDFQravsltjXVqqQgfGLvIkBjls1WV1pB9dSo0qloTLnQ7M9lhTTF905On1xmQcw
+         Z4khFbpFIW+8sEpWGmbWDSYlxTtlEGBHqQL4SvKVGjt8bQWmDVT6vRHpulidLrsrChMg
+         3ON13gdAKqV96e3I7vUrspej3hskaAOvJYiCqEzBik+XeWWcge5IqPz2OBWzl9drgseE
+         RNXiYCZRrSu9tVGJNJgnqSTVe7CBzvV/Tqgxd0DfeQw/mWAj7r6++2taGt2rBI8TOgbj
+         e+2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=dYdPpgoeWUX12WEZRA5uofSu8jyLZ45WRjobjopXACQ=;
-        b=iZj8JUwgp60+/L8vtW+fngIZcZlalW3Rtm0h6A47ZHAeEeWoaJZZQTq0HNGcAiGuvX
-         c1osukNYbkus33YT5Nald5vnlglINB/BEzCjd7VNo8AOE7700Izj3+MYG+q5yn0i890D
-         1whTn8s5h48Ww610SZrIXK1M9J3mKRijZNv3quOQ3TjfSQHV1wW2tL4SfXDg2RLGJoU6
-         /0WwammlulR2ZQPUPPc4t7y6C68OAlvZ4J5GCAwH2H7PYL1LHUuUbTZ5IGSgvSpigZdF
-         5y9gLTXD9g+hcldXzUzS9t8JA8J7vveI4avlVE9jJsVyseh5arCgxrtnDftuT4/EjijR
-         o9/A==
-X-Gm-Message-State: AOAM531GKQ/rbywD31hArKvkM5+uCS13qCQoeisWk17cQQ8yFLgg9mFv
-        QabcQxJCfpZlp3BafTbMy4U=
-X-Google-Smtp-Source: ABdhPJzMOzMbm5s6FvIAb74n6YtTT7uElMIMyHKqG8V3pDsBexBEYsgzc9d3v0fz5ykFb4afhYW7Cw==
-X-Received: by 2002:a17:90a:7c04:: with SMTP id v4mr154252pjf.191.1596064928142;
-        Wed, 29 Jul 2020 16:22:08 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o10sm3246501pjo.55.2020.07.29.16.22.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 16:22:07 -0700 (PDT)
-Subject: Re: [PATCH v3 6/6] platform/chrome: cros_ec_proto: Convert EC error
- codes to Linux error codes
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>
-References: <20200726220101.29059-1-linux@roeck-us.net>
- <20200726220101.29059-7-linux@roeck-us.net>
- <20200729222150.GA970863@google.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <ae5aeae1-4dfc-0fd7-3392-bf1ca3540866@roeck-us.net>
-Date:   Wed, 29 Jul 2020 16:22:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6Vid/bDwyKAx4BwcecnBtz+573/IH5tF8O95k6nel7Q=;
+        b=iesBjJdik0O/3P8wUigW+5oXok2hw9ylT4BHeMr9j/5gUHvU96Lbx9sczMfgFAvaUF
+         S3zvhy6gn1JP2x32CZc66HcEh5TOzmzZnI9S/WZlytThib8mVkvq/7I7+0vGRr3qwJwu
+         VlBJxcxMkd87iHnzuO1IBYIRjqeDRcHKhy3n+L8m6l8vOdFgs5601W/bidvLZFs2NuwC
+         0yE0g9DEBc9eJXPZe7jRL9wuaqeNTxHn0l5aG44/gLOz39j7TyiZF04x4Fbtbp4X0aUm
+         AZrW/R1Y14j7F+f0yzbBVDASzrfSyDv+VJHBa6zbLeOI3DnBbA4j4Hgx+4Vk2NftmWQq
+         1TdA==
+X-Gm-Message-State: AOAM5326GfBx1PLEXval2ZJnxvlN8mtzR9/49ZiRZcsTqInQcii2n/2t
+        WmHtqxAbjB87UnIouGfurbYuW/kop6gzZXaOLI0R5g==
+X-Google-Smtp-Source: ABdhPJyOuua7jlIFxpN/h+EHbIiE+S3oPLKPPuDHHT6GbYoawNV8FbDgzCDPHGbBm+BMUS9rJoIcmqcspMYdpR7fDGU=
+X-Received: by 2002:a1c:a9ce:: with SMTP id s197mr10474653wme.58.1596065080650;
+ Wed, 29 Jul 2020 16:24:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200729222150.GA970863@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200728085734.609930-1-irogers@google.com> <20200728085734.609930-3-irogers@google.com>
+ <20200728155940.GC1319041@krava> <20200728160954.GD1319041@krava>
+In-Reply-To: <20200728160954.GD1319041@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 29 Jul 2020 16:24:28 -0700
+Message-ID: <CAP-5=fVqto0LrwgW6dHQupp7jFA3wToRBonBaXXQW4wwYcTreg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] perf record: Prevent override of
+ attr->sample_period for libpfm4 events
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/20 3:21 PM, Brian Norris wrote:
-> Hi Guenter,
-> 
-> On Sun, Jul 26, 2020 at 03:01:01PM -0700, Guenter Roeck wrote:
->> v3: Use -ENOPROTOOPT for EC_RES_INVALID_VERSION
->>     Implement function to convert error codes
->> v2: No change
->>
->>  drivers/platform/chrome/cros_ec_proto.c | 52 ++++++++++++++++++++-----
->>  1 file changed, 42 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
->> index e5bbec979a2a..a081b8245682 100644
->> --- a/drivers/platform/chrome/cros_ec_proto.c
->> +++ b/drivers/platform/chrome/cros_ec_proto.c
->> @@ -15,6 +15,43 @@
->>  
->>  #define EC_COMMAND_RETRIES	50
->>  
->> +static const int cros_ec_error_map[] = {
->> +	[EC_RES_INVALID_COMMAND] = -EOPNOTSUPP,
->> +	[EC_RES_ERROR] = -EIO,
->> +	[EC_RES_INVALID_PARAM] = -EINVAL,
->> +	[EC_RES_ACCESS_DENIED] = -EACCES,
->> +	[EC_RES_INVALID_RESPONSE] = -EPROTO,
->> +	[EC_RES_INVALID_VERSION] = -ENOPROTOOPT,
->> +	[EC_RES_INVALID_CHECKSUM] = -EBADMSG,
->> +	[EC_RES_IN_PROGRESS] = -EINPROGRESS,
->> +	[EC_RES_UNAVAILABLE] = -ENODATA,
->> +	[EC_RES_TIMEOUT] = -ETIMEDOUT,
->> +	[EC_RES_OVERFLOW] = -EOVERFLOW,
->> +	[EC_RES_INVALID_HEADER] = -EBADR,
->> +	[EC_RES_REQUEST_TRUNCATED] = -EBADR,
->> +	[EC_RES_RESPONSE_TOO_BIG] = -EFBIG,
->> +	[EC_RES_BUS_ERROR] = -EFAULT,
->> +	[EC_RES_BUSY] = -EBUSY,
->> +	[EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
->> +	[EC_RES_INVALID_HEADER_CRC] = -EBADMSG,
->> +	[EC_RES_INVALID_DATA_CRC] = -EBADMSG,
->> +	[EC_RES_DUP_UNAVAILABLE] = -ENODATA,
->> +};
-> 
-> Sorry I didn't pay attention to this earlier, but is there any
-> programmatic way to ensure that we don't have unexpected holes here? If
-> we do (e.g., we add new error codes, but they aren't contiguous for
-> whatever reasons), then those will get treated as "success" with your
-> current patch.
-> 
-> I say "unexpected" hole, because EC_RES_SUCCESS (0) is an expected hole.
-> 
->> +
->> +static int cros_ec_map_error(uint32_t result)
->> +{
->> +	int ret = 0;
->> +
->> +	if (result != EC_RES_SUCCESS) {
->> +		if (result < ARRAY_SIZE(cros_ec_error_map) && cros_ec_error_map[result])
->> +			ret = cros_ec_error_map[result];
-> 
-> ^^ Maybe we want to double check 'ret != 0'? Or maybe
-> 
-> 			ret = cros_ec_error_map[result];
-> 			if (!ret) {
+On Tue, Jul 28, 2020 at 9:10 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Tue, Jul 28, 2020 at 05:59:46PM +0200, Jiri Olsa wrote:
+> > On Tue, Jul 28, 2020 at 01:57:31AM -0700, Ian Rogers wrote:
+> > > From: Stephane Eranian <eranian@google.com>
+> > >
+> > > Before:
+> > > $ perf record -c 10000 --pfm-events=cycles:period=77777
+> > >
+> > > Would yield a cycles event with period=10000, instead of 77777.
+> > >
+> > > This was due to an ordering issue between libpfm4 parsing
+> > > the event string and perf record initializing the event.
+> > >
+> > > This patch fixes the problem by preventing override for
+> > > events with attr->sample_period != 0 by the time
+> > > perf_evsel__config() is invoked. This seems to have been the
+> > > intent of the author.
+> > >
+> > > Signed-off-by: Stephane Eranian <eranian@google.com>
+> > > Reviewed-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/util/evsel.c | 3 +--
+> > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > >
+> > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > > index 811f538f7d77..8afc24e2ec52 100644
+> > > --- a/tools/perf/util/evsel.c
+> > > +++ b/tools/perf/util/evsel.c
+> > > @@ -976,8 +976,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+> > >      * We default some events to have a default interval. But keep
+> > >      * it a weak assumption overridable by the user.
+> > >      */
+> > > -   if (!attr->sample_period || (opts->user_freq != UINT_MAX ||
+> > > -                                opts->user_interval != ULLONG_MAX)) {
+> > > +   if (!attr->sample_period) {
+> >
+> > I was wondering why this wouldn't break record/top
+> > but we take care of the via record_opts__config
+> >
+> > as long as 'perf test attr' works it looks ok to me
+>
+> hum ;-)
+>
+> [jolsa@krava perf]$ sudo ./perf test 17 -v
+> 17: Setup struct perf_event_attr                          :
+> ...
+> running './tests/attr/test-record-C0'
+> expected sample_period=4000, got 3000
+> FAILED './tests/attr/test-record-C0' - match failure
 
-'ret' won't ever be 0 here. Above:
-							&& cros_ec_error_map[result]
-
-and below:
-
-		else
-			ret = -EPROTO;
-
-> 				ret = -EPROTO;
-> 				dev_err(..., "Unexpected EC result code %d\n", result);
-> 			}
-> 
-> ? Could even be WARN_ON(), since this would be an actionable programming
-> error, not exactly an external factor. Or maybe I'm being paranoid, and
-> future programmers are perfect.
-> 
-I think, if anything, we might consider adding the message below (result >=
-ARRAY_SIZE(cros_ec_error_map) is just as bad). Not sure myself. I am
-open to adding it if people think it would be useful/desirable.
+I'm not able to reproduce this. Do you have a build configuration or
+something else to look at? The test doesn't seem obviously connected
+with this patch.
 
 Thanks,
-Guenter
+Ian
 
-> Otherwise:
-> 
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-> 
->> +		else
->> +			ret = -EPROTO;
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->>  static int prepare_packet(struct cros_ec_device *ec_dev,
->>  			  struct cros_ec_command *msg)
->>  {
-
+> jirka
+>
+> >
+> > Acked-by: Jiri Olsa <jolsa@redhat.com>
+> >
+> > thanks,
+> > jirka
+>
