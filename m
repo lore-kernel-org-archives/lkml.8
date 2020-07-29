@@ -2,111 +2,175 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFE2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA0F62082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C59020809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:34:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="d5pNoGKh"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="qjM1MEPr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbgG2Sce (ORCPT
+        id S1726876AbgG2SeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:32:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgG2Scd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:32:33 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF2DC061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:32:33 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id o22so18157295qtt.13
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:32:33 -0700 (PDT)
+        Wed, 29 Jul 2020 14:34:05 -0400
+Received: from mail-bn7nam10on2073.outbound.protection.outlook.com ([40.107.92.73]:40321
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726336AbgG2SeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 14:34:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XSCHje+w+YD0IXJJ3K4iYfNqhaV8YnOfFUDGVPm1NgWrcWcVDTc7h30UeVnsxrZSO+vWKl8P6xKhPo6RHvGo6R12nxfjVSjs5ArGDaA8iXcQw6dbsu7km6bqH+vqEEB30tXM+9pnLYW6theKeL2/4ulJoCoMqRI9uNdmWxshYlugBo5pEy3MJsd62JZxqIwNtJi1qNcFGJG5ct63PYQSQx6HycPAQ2UDD3Gk8+Pl6MqA2B8Zg+fEDPiFmLf5PXzOVQDPmvR+k2yPrK9+L3qz9CswQ2AcjH2yL0319iptB9iRWWcA7TjDoTB7XRsiP7NVlRRq3XtKURnLX5o6Pj2D7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PN38+2pQd3VyojX34PAU0ZWrNsn5DniqXqI/U2phHgQ=;
+ b=Aj4cSoedlrSb8Ie+Ewqh9T7o8bQvyxSL6QKQyKXc39XBKZXzHJKjuXzNbz2HSjA4RRem6uoyRwlV0/3XHwWIjj1R1Rbo6tBB9FvBVau/bXOA1idh5Dn8BPYNOa1moqXq+ygdEViERmdJ4MiiPc9KhabXWakeW1MqixMS3YbBMU41IOZN3I7ac+He8elB1f0nGmxCDM4CH1vVayemwdalFoFWaXeW27eVRsnMxyKKTz2FoN5dzjzCqhsTaSieKlhWy86SNt2Tg63IApDebPdRGxRkm8qkiALuUKEktUqPLO4pPoC/5CRvmDT2TWsztKqjWG0CDNYgjTDzVbgqdk8Oqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=ffwll.ch smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=sbuGzfAXEu90/mb1KxvRVFNTEav+wJBHiGDp7KYLn/o=;
-        b=d5pNoGKhhZSJ1U2hnE2QgpyNRXyWdy5CzWssvK8e5m9UCWTFT3DivPdKlbrS8Lhroy
-         Q+Ory2dwx+5FMcg7WGADmy37Sw80SSCn2qGAfb13yHemobrCV+gw8VUpmnCGBjL4n05s
-         t9vW7n0M+ALckESz1KTapB8in/rEyUPPlhWZAQWW9L7UaLdOC/j006FGs35FQyfELq0l
-         sNyJUc3f1oWkgh26+VHo9fdtS3+R0gHjhwfo7g1dxsI9NCuf7/+gW7AmKLSVcVYQVnkv
-         wDCBysP/09LebzKqgezyGw9u5rd3sTnRHKdxfCgJxbKw+AikBNsNeN0ymqK+7U+NzQvO
-         UW5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=sbuGzfAXEu90/mb1KxvRVFNTEav+wJBHiGDp7KYLn/o=;
-        b=OST6jUDnK20TkUKVemvZa08453UHOt4k0ieFbdCIKIW2TenWv8rlIuLss/1Mw3kPsb
-         FxwwCLbAaabd53KlKS/2LuweFf+O86THgyB3xfAIG2VoYxZ3cWS92Ht+qdX03w59YAp8
-         6YvIt4nm5wTH5/Ktbzzy/I7l7SlMcx50NDR1VAlUEJATINSgj1g87V2lu1RjrnfaMo9e
-         vrWC8uvWChZS9WiSGQ0L/VOtuObd3Hf5nZSv9u2ndRMOsPCm4QuW9QPpOSgdxhP7KLGg
-         6u7aCioiBdXziYPC38VPOvReQtnLh0/sW2ke7zY/7uAUUf3KqRsp89g+YMkELFoebgUv
-         aP0A==
-X-Gm-Message-State: AOAM5334BMP1YAJQOE+ThmDa33dmr0qAB4Tec6LCMWrW/Fea7irQVLRo
-        CbuBayb2HkPFAa6khflixDZvYw==
-X-Google-Smtp-Source: ABdhPJzHnA3jlgx2Rkac90wfpWBQn+sE/m+x3vbkFuM/Hnpj8NhLqOoQ2DkMPjs2yAkNTunRkmfKaQ==
-X-Received: by 2002:ac8:478f:: with SMTP id k15mr32939604qtq.287.1596047552340;
-        Wed, 29 Jul 2020 11:32:32 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11e1::10a7? ([2620:10d:c091:480::1:2ed9])
-        by smtp.gmail.com with ESMTPSA id l64sm2118053qkc.21.2020.07.29.11.32.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 11:32:31 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        David Sterba <dsterba@suse.com>
-From:   Josef Bacik <josef@toxicpanda.com>
-Subject: Inverted mount options completely broken (iversion,relatime)
-Message-ID: <0b154b9b-728f-7d57-d4c5-ec25fc9dfdf3@toxicpanda.com>
-Date:   Wed, 29 Jul 2020 14:32:30 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PN38+2pQd3VyojX34PAU0ZWrNsn5DniqXqI/U2phHgQ=;
+ b=qjM1MEPr+h9MUoajJ9mlsJb0fK9y+Xd7EDOdkEbIduzYtSi0feS3/MmL9HEmBYo9EJNZBXT+T2vwWlnwGO0CxscuRQA9E5a3GpMhhxYC/dEE6eaXKtLLuE1oR2rzK5s6fQ4NyZrAKvJRbVgjCeE8m/dy9gahONpf1kY5eSTGJbI=
+Received: from SN6PR08CA0028.namprd08.prod.outlook.com (2603:10b6:805:66::41)
+ by MN2PR02MB6079.namprd02.prod.outlook.com (2603:10b6:208:185::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Wed, 29 Jul
+ 2020 18:34:01 +0000
+Received: from SN1NAM02FT023.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:805:66:cafe::e8) by SN6PR08CA0028.outlook.office365.com
+ (2603:10b6:805:66::41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend
+ Transport; Wed, 29 Jul 2020 18:34:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; ffwll.ch; dkim=none (message not signed)
+ header.d=none;ffwll.ch; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT023.mail.protection.outlook.com (10.152.72.156) with Microsoft SMTP
+ Server id 15.20.3216.10 via Frontend Transport; Wed, 29 Jul 2020 18:34:01
+ +0000
+Received: from [149.199.38.66] (port=56110 helo=smtp.xilinx.com)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <hyun.kwon@xilinx.com>)
+        id 1k0qru-0008Nc-IA; Wed, 29 Jul 2020 11:31:58 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <hyun.kwon@xilinx.com>)
+        id 1k0qtt-0004X5-Ax; Wed, 29 Jul 2020 11:34:01 -0700
+Received: from [172.19.2.244] (helo=xsjhyunkubuntu)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <hyun.kwon@xilinx.com>)
+        id 1k0qtj-0004Vi-SI; Wed, 29 Jul 2020 11:33:51 -0700
+Received: by xsjhyunkubuntu (Postfix, from userid 13638)
+        id A0B5F2C238C; Wed, 29 Jul 2020 11:30:00 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 11:30:00 -0700
+From:   Hyun Kwon <hyun.kwon@xilinx.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michal Simek <michals@xilinx.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH -next] drm: xlnx: Fix typo in parameter description
+Message-ID: <20200729183000.GA30361@xilinx.com>
+References: <20200725063429.172139-1-weiyongjun1@huawei.com>
+ <20200728223349.GT13753@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728223349.GT13753@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bfd52049-943f-48f0-a6d3-08d833edf6fc
+X-MS-TrafficTypeDiagnostic: MN2PR02MB6079:
+X-Microsoft-Antispam-PRVS: <MN2PR02MB6079896AAE5BF5FB13B902B0D6700@MN2PR02MB6079.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:785;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oPaeIc5Qos7Gh0/iqTrmijqs9hlJmHCEiJmwpLwT1dz4EDJsEAGpLy1GDkDLpdP3u5TZ/IM7Q3xM8o2tq87SpEvaRztpuuAcAzAUh/Q5bUre52jvFBwVX1iOrpttHtjGVYCsnnDF3jjLDuLEEOP3Uk848tjqFgLJrR/yORR1IsGSmNGAz1b4xSZVWUFYTilDQ83gjW7Nds0/KuqpLhTGoK1gn73xD0Uk49dKqB5QtDrkpQC0jZRDq09m0BnhCM58BMq79B29dTx1lyouMQqsdMfYpEsCaM5o5I4WvZwr2mn6lkxNiLEQxPYVghphCGbL2eUu0AFwIL7g3qui0f8ehsxq74fPoKk6XxO33rNTJAUfGcZNWI0OKustc8kZiiVtkAtYhkBTonMM6XEtp7bumA==
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(396003)(136003)(376002)(39860400002)(346002)(46966005)(186003)(83380400001)(8676002)(54906003)(478600001)(42186006)(47076004)(36756003)(81166007)(6266002)(356005)(316002)(26005)(82740400003)(82310400002)(2616005)(7416002)(70586007)(70206006)(4326008)(6916009)(8936002)(426003)(1076003)(2906002)(5660300002)(336012)(33656002)(44832011);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2020 18:34:01.6823
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bfd52049-943f-48f0-a6d3-08d833edf6fc
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT023.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Wei,
 
-Eric reported a problem to me where we were clearing SB_I_VERSION on remount of 
-a btrfs file system.  After digging through I discovered it's because we expect 
-the proper flags that we want to be passed in via the mount() syscall, and 
-because we didn't have "iversion" in our show_options entry the mount binary 
-(form util-linux) wasn't setting MS_I_VERSION for the remount, and thus the VFS 
-was clearing SB_I_VERSION from our s_flags.
+Thanks for the patch.
 
-No big deal, I'll fix show_mount.  Except Eric then noticed that mount -o 
-noiversion didn't do anything, we still get iversion set.  That's because btrfs 
-just defaults to having SB_I_VERSION set.  Furthermore -o noiversion doesn't get 
-sent into mount, it's handled by the mount binary itself, and it does this by 
-not having MS_I_VERSION set in the mount flags.
+On Tue, Jul 28, 2020 at 03:33:49PM -0700, Laurent Pinchart wrote:
+> Hi Wei,
+> 
+> Thank you for the patch.
+> 
+> On Sat, Jul 25, 2020 at 06:34:29AM +0000, Wei Yongjun wrote:
+> > Fix typo in parameter description.
+> > 
+> > Fixes: d76271d22694 ("drm: xlnx: DRM/KMS driver for Xilinx ZynqMP DisplayPort Subsystem")
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
 
-This happens as well for -o relatime, it's the default and so if you do mount -o 
-norelatime it won't do anything, you still get relatime behavior.  The only time 
-this changes is if you do mount -o remount,norelatime.
+Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
 
-So my question is, what do we do here?  I know Christoph has the strong opinion 
-that we just don't expose I_VERSION at all, which frankly I'm ok with.  However 
-more what I'm asking is what do we do with these weird inverted flags that we 
-all just kind of ignore on mount?  The current setup is just broken if we want 
-to allow overriding the defaults at mount time.  Are we ok with it just being 
-broken?  Are we ok with things like mount -o noiversion not working because the 
-file system has decided that I_VERSION (or relatime) is the default, and we're 
-going to ignore what the user asks for unless we're remounting?  Thanks,
+I'll commit this to drm-misc-next-fixes soon.
 
-Josef
+Thanks,
+-hyun
+
+> > ---
+> >  drivers/gpu/drm/xlnx/zynqmp_dp.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> > index 821f7a71e182..3d53638ab15e 100644
+> > --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> > +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> > @@ -44,7 +44,7 @@ MODULE_PARM_DESC(aux_timeout_ms, "DP aux timeout value in msec (default: 50)");
+> >   */
+> >  static uint zynqmp_dp_power_on_delay_ms = 4;
+> >  module_param_named(power_on_delay_ms, zynqmp_dp_power_on_delay_ms, uint, 0444);
+> > -MODULE_PARM_DESC(aux_timeout_ms, "DP power on delay in msec (default: 4)");
+> > +MODULE_PARM_DESC(power_on_delay_ms, "DP power on delay in msec (default: 4)");
+> >  
+> >  /* Link configuration registers */
+> >  #define ZYNQMP_DP_LINK_BW_SET				0x0
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
