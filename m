@@ -2,108 +2,83 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A38F20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:35:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Rl600GB3"
+	by mail.kernel.org (Postfix) with ESMTP id DFADD2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:35:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596011754;
+	bh=Qa/mUg1r63Osuladkh+ZhPXg7XvkuQp3LIxZHU411us=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ROkY2OJzUM+XbdUWCwl24oFZFGou8kfMVIvz5rAE3wdUmvA+3uaZULsB9KnAGi9sT
+	 gD1XrwzgL3jQkwSg0KAmDV410zLYBs/FNooV7lWrBKQoJleLovTkNoTZolKjpRA0aK
+	 4j4lmpBEv2SMWBcwkC0yU9HZaP6weDHePE2OVeIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbgG2Ifj (ORCPT
+        id S1727971AbgG2Ifx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:35:39 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:44615 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726336AbgG2Ifi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:35:38 -0400
-X-UUID: 4e4ab3a91fca403f94f31a95a30ab41b-20200729
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Ia1XARyByvYXLRx9mXxEAiykte60Wo0wfVOMz7hQaag=;
-        b=Rl600GB3WJS55HmIodQw2NddouKCMuQpzR3iK/EXrxGrXxktCQVCSUdqNxWi618HKp2lXzNforX5An9nlGrPahLi4nYoxVPnkja1gCH6bT2rLJRMYCQcu+idXxOst7WGBd4R+EnceL/k4k0zyhVkq9BEwhjH+AproaFgZnSGAjk=;
-X-UUID: 4e4ab3a91fca403f94f31a95a30ab41b-20200729
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
-        (envelope-from <crystal.guo@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 444962580; Wed, 29 Jul 2020 16:35:33 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs07n1.mediatek.inc
- (172.21.101.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 29 Jul
- 2020 16:35:32 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 29 Jul 2020 16:35:30 +0800
-Message-ID: <1596011707.11360.9.camel@mhfsdcap03>
-Subject: Re: [v2,2/3] dt-bindings: watchdog: add a new head file for toprgu
- reset-controllers
-From:   Crystal Guo <crystal.guo@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     "linux@roeck-us.net" <linux@roeck-us.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        Seiya Wang =?UTF-8?Q?=28=E7=8E=8B=E8=BF=BA=E5=90=9B=29?= 
-        <seiya.wang@mediatek.com>,
-        Erin Lo =?UTF-8?Q?=28=E7=BE=85=E9=9B=85=E9=BD=A1=29?= 
-        <erin.lo@mediatek.com>
-Date:   Wed, 29 Jul 2020 16:35:07 +0800
-In-Reply-To: <72d317ef-7f69-9e61-b1d5-23d660c58560@gmail.com>
-References: <1596004249-28655-1-git-send-email-crystal.guo@mediatek.com>
-         <1596004249-28655-3-git-send-email-crystal.guo@mediatek.com>
-         <fb7ef8a7-5bbc-8e4b-7a23-c84f151587ba@gmail.com>
-         <1596010313.11360.2.camel@mhfsdcap03>
-         <72d317ef-7f69-9e61-b1d5-23d660c58560@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 29 Jul 2020 04:35:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726336AbgG2Ifx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 04:35:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F36F2076E;
+        Wed, 29 Jul 2020 08:35:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596011752;
+        bh=Qa/mUg1r63Osuladkh+ZhPXg7XvkuQp3LIxZHU411us=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gp6DPJcPrsgDnpx3gD2rLVdnULNLsFahGYcbtMpGnFAriq5HEN2f2+4EsKQd1MPa/
+         9Cx9J1ulhnul4d+nfxic4P4zkZ7Je59ngVjs4G4G/826+MyZ4cLkoSjR+4i3jIdAFQ
+         GTYAXamL0BpfReLI5WH81nIHHnh1GqSiRROwDrDU=
+Date:   Wed, 29 Jul 2020 10:35:43 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH kernel] panic: Dump registers on panic_on_warn
+Message-ID: <20200729083543.GA718807@kroah.com>
+References: <20200630093846.100531-1-aik@ozlabs.ru>
+ <a7d3459b-77f5-a65a-c407-e332d1b921ab@ozlabs.ru>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a7d3459b-77f5-a65a-c407-e332d1b921ab@ozlabs.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA3LTI5IGF0IDE2OjE1ICswODAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
-Og0KPiANCj4gT24gMjkvMDcvMjAyMCAxMDoxMSwgQ3J5c3RhbCBHdW8gd3JvdGU6DQo+ID4gT24g
-V2VkLCAyMDIwLTA3LTI5IGF0IDE1OjQyICswODAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3RlOg0K
-PiA+PiBIaSBDcnlzdGFsLA0KPiA+Pg0KPiA+PiBPbiAyOS8wNy8yMDIwIDA4OjMwLCBDcnlzdGFs
-IEd1byB3cm90ZToNCj4gPj4+IG1lcmdlIGFsbCB0aGUgcmVzZXQgbnVtYmVycyBpbiBvbmUgaGVh
-ZCBmaWxlLg0KPiA+Pj4NCj4gPj4+IFNpZ25lZC1vZmYtYnk6IENyeXN0YWwgR3VvIDxjcnlzdGFs
-Lmd1b0BtZWRpYXRlay5jb20+DQo+ID4+PiAtLS0NCj4gPj4+ICAgIGluY2x1ZGUvZHQtYmluZGlu
-Z3MvcmVzZXQtY29udHJvbGxlci9tdGstcmVzZXRzLmggfCAxMyArKysrKysrKysrKysrDQo+ID4+
-PiAgICAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKQ0KPiA+Pj4gICAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdGstcmVzZXRz
-LmgNCj4gPj4+DQo+ID4+PiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1j
-b250cm9sbGVyL210ay1yZXNldHMuaCBiL2luY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJv
-bGxlci9tdGstcmVzZXRzLmgNCj4gPj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4+PiBpbmRl
-eCAwMDAwMDAwLi5kNzNhNGJhDQo+ID4+PiAtLS0gL2Rldi9udWxsDQo+ID4+PiArKysgYi9pbmNs
-dWRlL2R0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xsZXIvbXRrLXJlc2V0cy5oDQo+ID4+PiBAQCAt
-MCwwICsxLDEzIEBADQo+ID4+PiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAg
-Ki8NCj4gPj4+ICsvKg0KPiA+Pj4gKyAqIENvcHlyaWdodCAoQykgMjAyMCBNZWRpYXRlayBJbmMu
-DQo+ID4+PiArICoNCj4gPj4+ICsgKi8NCj4gPj4+ICsNCj4gPj4+ICsjaWZuZGVmIF9EVF9CSU5E
-SU5HU19SRVNFVF9DT05UUk9MTEVSX01USw0KPiA+Pj4gKyNkZWZpbmUgX0RUX0JJTkRJTkdTX1JF
-U0VUX0NPTlRST0xMRVJfTVRLDQo+ID4+PiArDQo+ID4+PiArI2RlZmluZSBNVDI3MTJfVE9QUkdV
-X1NXX1JTVF9OVU0JMTENCj4gPj4+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfU1dfUlNUX05VTSAg
-ICAgICAgMTkNCj4gPj4NCj4gPj4gTWF5YmUgSSBkaWRuJ3QgZXhwbGFpbiBteXNlbGYgcHJvcGVy
-bHkuIFdlIHdhbnQgdG8gaGF2ZSBhbGwgcmVzZXRzIGluIG9uZSBmaWxlDQo+ID4+IGFuZCBkbyBu
-b3Qgd2FudCB0byBoYXZlIHRoZSByZXNldHMgZm9yIHRoZSB3YXRjaGRvZyBpbiBhIGRpZmZlcmVu
-dCBmaWxlLiBUaGF0DQo+ID4+IG1lYW5zIEkgZG9uJ3QgdGhpbiB5b3VyIHBhdGNoIGlzIGNvcnJl
-Y3QgYW5kIHRoZSBlZmZvcnQgc2hvdWxkIGJlIGFiYW5kb25lZC4NCj4gPj4NCj4gPj4gUmVnYXJk
-cywNCj4gPj4gTWF0dGhpYXMNCj4gPiANCj4gPiBEbyB5b3UgbWVhbiB0byBrZWVwIHRoZSBjdXJy
-ZW50IHdheSB1bmNoYW5nZWQ/IEZvciBleGFtcGxlLCB3aXRoIGEgbmV3DQo+ID4gU09DIDgxOTIs
-IHNob3VsZCBhZGQgYSBuZXcgaGVhZCBmaWxlIG10ODE5Ml9yZXNldHMuaCBmb3IgdGhlIHJlc2V0
-cw0KPiA+IG51bWJlcnMuDQo+ID4gDQo+IA0KPiBFeGFjdGx5Lg0KPiANCj4gUmVnYXJkcywNCj4g
-TWF0dGhpYXMNCg0KT0ssIGJ1dCB0aGUgZHQtYmluZGluZyBtdGstd2R0LnR4dCBzdGlsbCBuZWVk
-IHRvIHVwZGF0ZSwgcGxlYXNlIGhlbHAgbWUNCnRvIHJldmlldywgbWFueSB0aGFua3N+DQoNCg==
+On Wed, Jul 29, 2020 at 06:24:26PM +1000, Alexey Kardashevskiy wrote:
+> Ping?
+> 
+> 
+> On 30/06/2020 19:38, Alexey Kardashevskiy wrote:
+> > Currently we print stack and registers for ordinary warnings but
+> > we do not for panic_on_warn which looks as oversight - panic()
+> > will reboot the machine but won't print registers.
+> > 
+> > This moves printing of registers and modules earlier.
+> > 
+> > This does not move the stack dumping as panic() dumps it.
+> > 
+> > Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+> > ---
+> >  kernel/panic.c | 12 ++++++------
+> >  1 file changed, 6 insertions(+), 6 deletions(-)
 
+Why did you pick me and Nick as the people to get this patch?
+
+Always use scripts/get_maintainer.pl please, that's what it is there
+for...
+
+thanks,
+
+greg k-h
