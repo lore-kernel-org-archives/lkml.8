@@ -2,177 +2,220 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4957C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4322074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C7220663
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VH5vh/h1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r5xDh54R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgG2Kwg (ORCPT
+        id S1726631AbgG2Kxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 06:52:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgG2Kwf (ORCPT
+        Wed, 29 Jul 2020 06:53:31 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:10491 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726353AbgG2Kxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 06:52:35 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA8C7C0619D4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 03:52:35 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id k17so1678503qvj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 03:52:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=VdvFgU2sJajZQhv3MVeiLmUvHk37Zjgz6OyvSzeJgPI=;
-        b=VH5vh/h1CiQfGCWkgXImQT9oye7oyZd7c/0RHFe5kCvjyEHi8SZqVsYVK3FzkSMEHc
-         CEe1qOhBCT1n50JP4yH8vtSkP078jQ/EJVp1f/8qbRdugGfpmofvtdEgFpZzFcOIED4B
-         M+KzbyZ+tvs2VQiPMe6iEzRnPyDOP23GrahJaX5PXNHJxTkw+aP7qAAx/Q/heLxvpDN1
-         /Ae+V0g+QucjPDoDgLxIduaBk1Vlpb8I+Ch8ChqvGpGk9+MS6e38s7Lh6kJ3Nwgb2gwS
-         gOt7jv6yrotV1bXbuE52ftjFPKgXTJULkEx5B3riqwXE/Xg98Dd2AL2F9pQCTz9U7lyP
-         pBAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=VdvFgU2sJajZQhv3MVeiLmUvHk37Zjgz6OyvSzeJgPI=;
-        b=ASj2pzLIf/jZrPAKQcL/rS8QBsdE9daimMnFFA7MYaxjaZApRSLRXYzD2UpkPbJptD
-         WnTyh9zbRlVYpw7o4rKNbR39KGMtL4TO1SAxAfbu7uEuEfyAs85LpM6zAlviq2dS5v/S
-         cVbBkjlD+pK/qjMjwJHZv3BgMWaJXoqUZH9maPJCDprfUvy5hxZWymU5KwahvtNxHI8K
-         v1wtBYAePhJdjBpL0Dv3NmdVFMdebou96HD/rLoNq47HUmrphu4Ls8qvaM1L3S9Z+7ph
-         5QKkA3PDfnLUYRWr9HT1wBDyTs/L0iTgRvOgn2FhE8rGJB1a0QVdxJgKVb8sXiMhwl99
-         g2lw==
-X-Gm-Message-State: AOAM533z7Axzv4BEQ3r8E2nLO/O57rim9tx0T6Pq8+h2chGbQmSNXtLa
-        nyxRFi15Tb9a+PYuMsk+2644Y/Y9PyIU09uhiG3A7AdG6JV7VRY09Rlglj8KMORTlgB5DeTUFKK
-        PZoFfpgq0jSFezm9brGtBfclucypJrIgdHZfCB9prvWwZ682dibRJr2RPdWQ7NHo7DH09xDdmaG
-        A4f83U
-X-Google-Smtp-Source: ABdhPJzrjvNW+LcyVgXeMphH9MDQ9h2e+pswLPo96f6zIMh99r83nvSU7HUjLd/mvwbwHf5YpATud9FHal58LYu1
-X-Received: by 2002:a0c:aedf:: with SMTP id n31mr1300551qvd.16.1596019954867;
- Wed, 29 Jul 2020 03:52:34 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 20:52:06 +1000
-In-Reply-To: <20200729105206.2991064-1-victording@google.com>
-Message-Id: <20200729205144.3.I01b89fb23d7498521c84cfdf417450cbbfca46bb@changeid>
-Mime-Version: 1.0
-References: <20200729105206.2991064-1-victording@google.com>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-Subject: [PATCH 3/3] powercap: Add AMD Fam17h RAPL support
-From:   Victor Ding <victording@google.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Victor Ding <victording@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vineela Tummalapalli <vineela.tummalapalli@intel.com>,
-        linux-pm@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 29 Jul 2020 06:53:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596020009; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=n1CY9UAqIvLrlKb0rj2uThTnQrOwR0zo841z1xrGeiw=;
+ b=r5xDh54R9jzZ0Gu/zFJZHzeNpBRaP97XnD7uuKSa627w+pZhRIUuBwSfPHr5coJqY3TvDeRa
+ pDDSOalk6zEkbH9N5tdvSlpqAeuJDe4nBkwYkBoTrIv2bf77CaVQnOnwN6/g6Gq5g9wa76TS
+ d45J8EGFQHcpm4K7FiWC9TKWEY4=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f215527fcbecb3df12f577b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 10:53:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5BE42C433AD; Wed, 29 Jul 2020 10:53:26 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DF473C433C6;
+        Wed, 29 Jul 2020 10:53:24 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Jul 2020 18:53:24 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
+        bvanassche@acm.org, beanhuo@micron.com, asutoshd@codeaurora.org,
+        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
+        chaotian.jing@mediatek.com, cc.chou@mediatek.com
+Subject: Re: [PATCH v2] scsi: ufs: Fix possible infinite loop in ufshcd_hold
+In-Reply-To: <1596018374.17247.41.camel@mtkswgap22>
+References: <20200729024037.23105-1-stanley.chu@mediatek.com>
+ <bfbb48b06fa3464da0cbd2aee8a32649@codeaurora.org>
+ <1596018374.17247.41.camel@mtkswgap22>
+Message-ID: <4cb7403fae7226b70a133d4a7ecee755@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables AMD Fam17h RAPL support for the power capping
-framework. The support is as per AMD Fam17h Model31h (Zen2) and
-model 00-ffh (Zen1) PPR.
+Hi Stanley,
 
-Tested by comparing the results of following two sysfs entries and the
-values directly read from corresponding MSRs via /dev/cpu/[x]/msr:
-  /sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj
-  /sys/class/powercap/intel-rapl/intel-rapl:0/intel-rapl:0:0/energy_uj
+On 2020-07-29 18:26, Stanley Chu wrote:
+> Hi Can,
+> 
+> On Wed, 2020-07-29 at 16:43 +0800, Can Guo wrote:
+>> Hi Stanley,
+>> 
+>> On 2020-07-29 10:40, Stanley Chu wrote:
+>> > In ufshcd_suspend(), after clk-gating is suspended and link is set
+>> > as Hibern8 state, ufshcd_hold() is still possibly invoked before
+>> > ufshcd_suspend() returns. For example, MediaTek's suspend vops may
+>> > issue UIC commands which would call ufshcd_hold() during the command
+>> > issuing flow.
+>> >
+>> > Now if UFSHCD_CAP_HIBERN8_WITH_CLK_GATING capability is enabled,
+>> > then ufshcd_hold() may enter infinite loops because there is no
+>> > clk-ungating work scheduled or pending. In this case, ufshcd_hold()
+>> > shall just bypass, and keep the link as Hibern8 state.
+>> >
+>> 
+>> The infinite loop is expected as ufshcd_hold is called again after
+>> link is put to hibern8 state, so in QCOM's code, we never do this.
+> 
+> Sadly MediaTek have to do this to make our UniPro to enter low-power
+> mode.
+> 
+>> The cap UFSHCD_CAP_HIBERN8_WITH_CLK_GATING means UIC link state
+>> must not be HIBERN8 after ufshcd_hold(async=false) returns.
+> 
+> If driver is not in PM scenarios, e.g., suspended, above statement 
+> shall
+> be always followed. But two obvious violations are existed,
+> 
+> 1. In ufshcd_suspend(), link is set as HIBERN8 behind ufshcd_hold()
+> 2. In ufshcd_resume(), link is set back as Active before
+> ufshcd_release() is invoked
+> 
+> So as my understanding, special conditions are allowed in PM scenarios,
+> and this is why "hba->clk_gating.is_suspended" is introduced. By this
+> thought, I used "hba->clk_gating.is_suspended" in this patch as the
+> mandatory condition to allow ufshcd_hold() usage in vendor suspend and
+> resume callbacks.
+> 
+> 
+>> Instead of bailing out from that loop, which makes the logic of
+>> ufshcd_hold and clk gating even more complex, how about removing
+>> ufshcd_hold/release from ufshcd_send_uic_cmd()? I think they are
+>> redundant and we should never send DME cmds if clocks/powers are
+>> not ready. I mean callers should make sure they are ready to send
+>> DME cmds (and only callers know when), but not leave that job to
+>> ufshcd_send_uic_cmd(). It is convenient to remove ufshcd_hold/
+>> release from ufshcd_send_uic_cmd() as there are not many places
+>> sending DME cmds without holding the clocks, ufs_bsg.c is one.
+>> And I have tested my idea on my setup, it worked well for me.
+>> Another benefit is that it also allows us to use DME cmds
+>> in clk gating/ungating contexts if we need to in the future.
+>> 
+> 
+> Brilliant idea! But this may not solve problems if vendor callbacks 
+> need
+> more than UIC commands in the future.
+> 
+> This simple patch could make all vendor operations on UFSHCI in PM
+> callbacks possible with UFSHCD_CAP_HIBERN8_WITH_CLK_GATING enabled, and
+> again, it allows those operations in PM scenarios only.
+> 
 
-Signed-off-by: Victor Ding <victording@google.com>
----
+Other than UIC cmds, I can only think of device manangement cmds (like 
+query).
+If device management cmds come into the way in the future, we fix it as 
+well.
+I mean that is the right thing to do in my opinion - just like we don't 
+call
+pm_runtime_get_sync() in ufshcd_send_uic_cmd().
 
- arch/x86/include/asm/msr-index.h     |  1 +
- drivers/powercap/intel_rapl_common.c |  2 ++
- drivers/powercap/intel_rapl_msr.c    | 27 ++++++++++++++++++++++++++-
- 3 files changed, 29 insertions(+), 1 deletion(-)
+I can understand that you want a simple/quick fix to get it work for you 
+once
+for all, but from my point of view, debugging clk gating/ungating really 
+takes
+huge efforts sometime (I've spent a lot of time on it). Some flash 
+vendors also
+use it in their own driver widely which makes some failure scenes even 
+harder to
+undertand/debug. So the first thing comes to my head is that we should 
+avoid
+making it more complex or giving it more exceptions.
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index c5e92317356e..533208998297 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -306,6 +306,7 @@
- #define MSR_PP1_POLICY			0x00000642
- 
- #define MSR_AMD_RAPL_POWER_UNIT		0xc0010299
-+#define MSR_AMD_CORE_ENERGY_STATUS	0xc001029a
- #define MSR_AMD_PKG_ENERGY_STATUS	0xc001029b
- 
- /* Config TDP MSRs */
-diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
-index 61a63a16b5e7..8ca4413ef2de 100644
---- a/drivers/powercap/intel_rapl_common.c
-+++ b/drivers/powercap/intel_rapl_common.c
-@@ -992,6 +992,8 @@ static const struct x86_cpu_id rapl_ids[] __initconst = {
- 
- 	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,	&rapl_defaults_hsw_server),
- 	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,	&rapl_defaults_hsw_server),
-+
-+	X86_MATCH_VENDOR_FAM(AMD, 0x17, &rapl_defaults_core),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, rapl_ids);
-diff --git a/drivers/powercap/intel_rapl_msr.c b/drivers/powercap/intel_rapl_msr.c
-index 430b4819d6ab..31d10a169e41 100644
---- a/drivers/powercap/intel_rapl_msr.c
-+++ b/drivers/powercap/intel_rapl_msr.c
-@@ -47,6 +47,21 @@ static struct rapl_if_priv rapl_msr_priv_intel = {
- 	.limits[RAPL_DOMAIN_PACKAGE] = 2,
- };
- 
-+static struct rapl_if_priv rapl_msr_priv_amd = {
-+	.reg_unit = MSR_AMD_RAPL_POWER_UNIT,
-+	.regs[RAPL_DOMAIN_PACKAGE] = {
-+		0, MSR_AMD_PKG_ENERGY_STATUS, 0, 0, 0 },
-+	.regs[RAPL_DOMAIN_PP0] = {
-+		0, MSR_AMD_CORE_ENERGY_STATUS, 0, 0, 0 },
-+	.regs[RAPL_DOMAIN_PP1] = {
-+		0, 0, 0, 0, 0 },
-+	.regs[RAPL_DOMAIN_DRAM] = {
-+		0, 0, 0, 0, 0 },
-+	.regs[RAPL_DOMAIN_PLATFORM] = {
-+		0, 0, 0, 0, 0},
-+	.limits[RAPL_DOMAIN_PACKAGE] = 1,
-+};
-+
- /* Handles CPU hotplug on multi-socket systems.
-  * If a CPU goes online as the first CPU of the physical package
-  * we add the RAPL package to the system. Similarly, when the last
-@@ -129,7 +144,17 @@ static int rapl_msr_probe(struct platform_device *pdev)
- {
- 	int ret;
- 
--	rapl_msr_priv = &rapl_msr_priv_intel;
-+	switch (boot_cpu_data.x86_vendor) {
-+	case X86_VENDOR_INTEL:
-+		rapl_msr_priv = &rapl_msr_priv_intel;
-+		break;
-+	case X86_VENDOR_AMD:
-+		rapl_msr_priv = &rapl_msr_priv_amd;
-+		break;
-+	default:
-+		pr_err("intel-rapl does not support CPU vendor %d\n", boot_cpu_data.x86_vendor);
-+		return -ENODEV;
-+	}
- 	rapl_msr_priv->read_raw = rapl_msr_read_raw;
- 	rapl_msr_priv->write_raw = rapl_msr_write_raw;
- 
--- 
-2.28.0.rc0.142.g3c755180ce-goog
+ From functionality point of view, it looks ok to me. It is just that I 
+cannot
+predict it won't cause new problems since the clk gating/ungating 
+sequeces are
+like magic in some use cases sometime.
 
+Thanks,
+
+Can Guo.
+
+>> Please let me know your idea, thanks.
+>> 
+>> Can Guo.
+> 
+> Thanks,
+> Stanley Chu
+> 
+>> 
+>> > Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+>> > Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+>> >
+>> > ---
+>> >
+>> > Changes since v1:
+>> > - Fix return value: Use unique bool variable to get the result of
+>> > flush_work(). Thcan prevent incorrect returned value, i.e., rc, if
+>> > flush_work() returns true
+>> > - Fix commit message
+>> >
+>> > ---
+>> >  drivers/scsi/ufs/ufshcd.c | 5 ++++-
+>> >  1 file changed, 4 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> > index 577cc0d7487f..acba2271c5d3 100644
+>> > --- a/drivers/scsi/ufs/ufshcd.c
+>> > +++ b/drivers/scsi/ufs/ufshcd.c
+>> > @@ -1561,6 +1561,7 @@ static void ufshcd_ungate_work(struct work_struct
+>> > *work)
+>> >  int ufshcd_hold(struct ufs_hba *hba, bool async)
+>> >  {
+>> >  	int rc = 0;
+>> > +	bool flush_result;
+>> >  	unsigned long flags;
+>> >
+>> >  	if (!ufshcd_is_clkgating_allowed(hba))
+>> > @@ -1592,7 +1593,9 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
+>> >  				break;
+>> >  			}
+>> >  			spin_unlock_irqrestore(hba->host->host_lock, flags);
+>> > -			flush_work(&hba->clk_gating.ungate_work);
+>> > +			flush_result = flush_work(&hba->clk_gating.ungate_work);
+>> > +			if (hba->clk_gating.is_suspended && !flush_result)
+>> > +				goto out;
+>> >  			spin_lock_irqsave(hba->host->host_lock, flags);
+>> >  			goto start;
+>> >  		}
