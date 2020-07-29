@@ -2,110 +2,89 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EA3C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 00:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 00:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE5E320829
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 00:00:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595980837;
-	bh=+2XKddAYfaltITXN0VY0V8q4QDdilMY0eb0ayDOLhHA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z6W0FE98Grh/pqIvSNALpr/rZYqdAHJAmCmTIx4jqCcyK2vUUb+idRE6MR5KJ1wpq
-	 V3hhm7S/PpWKXkU1xSPKO3c1HPZ5LwYDu2JBNnUODixus3innVCnczh1Tt4AIK5NJy
-	 BTOXnR4bFJy7BPAFQ+hyg+I/EzdT7V5rOO9V107Y=
+	by mail.kernel.org (Postfix) with ESMTP id 74ECD2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 00:01:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hPhGUzs6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730445AbgG2AAg (ORCPT
+        id S1730464AbgG2ABj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 20:00:36 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41798 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730247AbgG2AAf (ORCPT
+        Tue, 28 Jul 2020 20:01:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730203AbgG2ABj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 20:00:35 -0400
-Received: by mail-il1-f196.google.com with SMTP id c16so6023885ils.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 17:00:35 -0700 (PDT)
+        Tue, 28 Jul 2020 20:01:39 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C808C0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 17:01:39 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id t15so13758691iob.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 17:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8XkyWGDBtbZKzOaOShYJKTEnyEVVaISF88UxbpxpW24=;
+        b=hPhGUzs6xSlbNCUnN5ENUQ2bqcOMwofvm/bSyqjDn5UZrSkmnkTfoNc4UzdIZ/7m6X
+         DIQM3w4QSO+rpZ7k6v57H0Jq2S/b7myCXPs2//qDk9W/el5a0vQGb4m3UxuZiCMJEe6G
+         QbcXWnEH7feItnmCLtdl3qstnxvZphTXmxihMJh13J53vNdDn+YchYG6NWsxkUsAQtmT
+         7VsoljeD6LrmxtMmSbJWgca7xja+Nvp+9KGmCALC5MbZttZh9Xvo6SuNQHBFCBlZFpSk
+         7cZwKUnjT9KVr5SY7LWz4ILiytfrY4M5eev+6QZcXWlgArK5Zb8lbVFyUPRUsVwfiP56
+         CuEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=V9WqMZ97j3+53daSNfhsHBQoaaEy2kmohpeoSYJwCfQ=;
-        b=Agre9W3Adold3I3m2ju3LYZYRfBxdNMeVFgMyak8ZhPtC0o0lJEgk0S/oJndR4gyab
-         c7y1iEPLdfTg8z68z9vqqYFUg9ML1AywQSO1Q/c9930bhds2rA4pul1i3rcEubHjWXTm
-         JuIzAA7MZqopDojeoyDQHp+4D2dBm9qe8GaBNefWX1aLsQIQVq3YJhcMOD/c/WvQpeOH
-         /VulwJyOSswSrPATSz+EBEO5Rm3mp4wPBmzfW8yY1qT75SlYt4qtP+psj+m8hhh1zG7/
-         ambn34YwcoKjHy5VHzNvQrWoNksy0v41QOBUXtL5RXzq6v739m5GjCwhGNcHrdPXEzjC
-         Fk+w==
-X-Gm-Message-State: AOAM5302xCVAa9Om4QdtC7aQgh+mnS1cVldV1tPQKURPZhIAObrWglSr
-        j1xnrZ2KNx+OJlebirIBKlmUc6F/7KI=
-X-Google-Smtp-Source: ABdhPJy9Fg4c1obWsmgcmNM+bCfo5THx6FqSiWZzvjhS4PAj+pEMUEVVkOhZG7CHWaK/5D6fqYrEVA==
-X-Received: by 2002:a92:49c3:: with SMTP id k64mr28942967ilg.278.1595980834028;
-        Tue, 28 Jul 2020 17:00:34 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id i8sm198288ilq.67.2020.07.28.17.00.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 17:00:32 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 0E2E040945; Wed, 29 Jul 2020 00:00:31 +0000 (UTC)
-Date:   Wed, 29 Jul 2020 00:00:30 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     zong.li@sifive.com, linux-riscv@lists.infradead.org,
-        rppt@linux.ibm.com, linux@armlinux.org.uk, catalin.marinas@arm.com,
-        will@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, gxt@pku.edu.cn,
-        Arnd Bergmann <arnd@arndb.de>, linus.walleij@linaro.org,
-        akpm@linux-foundation.org, mchehab+samsung@kernel.org,
-        gregory.0xf0@gmail.com, masahiroy@kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        bgolaszewski@baylibre.com, steve@sk2.org, tglx@linutronix.de,
-        keescook@chromium.org, alex@ghiti.fr, mark.rutland@arm.com,
-        james.morse@arm.com, alex.shi@linux.alibaba.com,
-        andriy.shevchenko@linux.intel.com, broonie@kernel.org,
-        rdunlap@infradead.org, davem@davemloft.net, rostedt@goodmis.org,
-        dan.j.williams@intel.com, mhiramat@kernel.org, krzk@kernel.org,
-        zaslonko@linux.ibm.com, matti.vaittinen@fi.rohmeurope.com,
-        uwe@kleine-koenig.org, clabbe@baylibre.com, changbin.du@intel.com,
-        Greg KH <gregkh@linuxfoundation.org>, paulmck@kernel.org,
-        pmladek@suse.com, brendanhiggins@google.com, glider@google.com,
-        elver@google.com, davidgow@google.com, ardb@kernel.org,
-        takahiro.akashi@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: Add and use a generic version of devmem_is_allowed()
-Message-ID: <20200729000030.GI4332@42.do-not-panic.com>
-References: <20200709211925.1926557-1-palmer@dabbelt.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8XkyWGDBtbZKzOaOShYJKTEnyEVVaISF88UxbpxpW24=;
+        b=nyYLpTUP67dVwJedsrmtz25RohWwUN18EvwCmUknXL7b+M5v3D7w4LtsZvv6HtVMST
+         TXUP7fKIBt3V0WMNsQsfvgxWcYClog477BxaY7pCaxaa9MtpJTAe1EtCeCXo8CMs2FWX
+         byQpxxF584BqWfxhebUt5F0smcWF1/YZOk7HGvswfxHl6qxbQebnNr4y1A58TEGafnIM
+         DViR1qOgXs0ygulS6UPxX6LuNnelwSr0IwfXrZAuOBfkvpr7x9WUIwdD0ahyBUoqsnzo
+         om7tlFjTxscBSuigl0BGe5TcwqKiSZe5DTQSxq/hg4f+t6DeoodqdA0nvJIYUNc/JYbX
+         DpqA==
+X-Gm-Message-State: AOAM533oGK9eoyFrAL/8xQ3tbcykO2YGxJmtDWGixH+lk3T3VPvxM8Lq
+        DzlP0vTnTHW4SzaRW15MVAf0lA4rGE/7DOAjQcv+nw==
+X-Google-Smtp-Source: ABdhPJzjWvD542dhVukYVQQMW5U9zxcyUVZ+VZBDt1u6koTpGVlpV1NuE6aVl5uBNUoGzpd3RzJqE1naVz43ToAHomY=
+X-Received: by 2002:a5e:c311:: with SMTP id a17mr31245268iok.12.1595980898226;
+ Tue, 28 Jul 2020 17:01:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709211925.1926557-1-palmer@dabbelt.com>
+References: <159597929496.12744.14654593948763926416.stgit@bmoger-ubuntu> <159597952011.12744.5966486013997025592.stgit@bmoger-ubuntu>
+In-Reply-To: <159597952011.12744.5966486013997025592.stgit@bmoger-ubuntu>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 28 Jul 2020 17:01:27 -0700
+Message-ID: <CALMp9eRQyA+Mbu0iLqt88wv_sVxvJ=PX735tG99ji4WqSeWkPg@mail.gmail.com>
+Subject: Re: [PATCH v3 08/11] KVM: SVM: Remove set_cr_intercept,
+ clr_cr_intercept and is_cr_intercept
+To:     Babu Moger <babu.moger@amd.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm list <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 02:19:20PM -0700, Palmer Dabbelt wrote:
-> As part of adding STRICT_DEVMEM support to the RISC-V port, Zong provided an
-> implementation of devmem_is_allowed() that's exactly the same as the version in
-> a handful of other ports.  Rather than duplicate code, I've put a generic
-> version of this in lib/ and used it for the RISC-V port.
-> 
-> I've put those first two patches on riscv/for-next, which I'm targeting for 5.9
-> (though this is the first version, so they're unreviewed).  The other three
-> obviously depend on the first one going on, but I'm not putting them in the
-> RISC-V tree as I don't want to step on anyone's toes.  If you want me to take
-> yours along with the others then please say something, as otherwise I'll
-> probably forget.
-> 
-> I've put the whole thing at
-> ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/palmer/linux.git -b
-> generic-devmem .
-
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-
-  Luis
+On Tue, Jul 28, 2020 at 4:38 PM Babu Moger <babu.moger@amd.com> wrote:
+>
+> Remove set_cr_intercept, clr_cr_intercept and is_cr_intercept. Instead
+> call generic set_intercept, clr_intercept and is_intercept for all
+> cr intercepts.
+>
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
