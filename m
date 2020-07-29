@@ -2,142 +2,87 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D734C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E771720809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68CB420786
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:47:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YjGyXU2U"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="AjKvVfah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgG2GrQ (ORCPT
+        id S1727053AbgG2Grq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 02:47:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbgG2GrQ (ORCPT
+        Wed, 29 Jul 2020 02:47:46 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:41461 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726992AbgG2Grp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 02:47:16 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF447C061794;
-        Tue, 28 Jul 2020 23:47:15 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BGkcK12Y3z9sRW;
-        Wed, 29 Jul 2020 16:47:13 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596005233;
-        bh=ijyyUr82wI4HGbRSdFt2yLXZvyup+U2Kte8u90b/Go0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YjGyXU2UayxF+EpN+uQL/BM2Hyx/tT2nZSgTgjC1xzEkY6KSF9Yc22ixCNRNu0hjA
-         BEAtGCl67giZnwKliNaKWPUhofKH92pD+8XXgyBufPMltFc4xqzmjPxsCbOZVNAkL+
-         AwnXvyiM0DBLpTorLCJS7hc2bg7QeJz0oM4v0ennWaW5HD+FLD5Vz5TDO5QN/RsUat
-         0QtxeEmGROekvXVZb8CD9BdkNSk2bP0yW61QZa3NdTqjmqGGqcGSriJgVxHEYIdCKR
-         UJQuSy4u9FargUgsSz2HwgSLAw0KzDpw0mPGkEujn09EFdB+g6MsogXClPkpFssf9K
-         sLZy6z913zr8g==
-Date:   Wed, 29 Jul 2020 16:47:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: linux-next: manual merge of the kvm tree with the tip tree
-Message-ID: <20200729164712.4f429876@canb.auug.org.au>
+        Wed, 29 Jul 2020 02:47:45 -0400
+X-UUID: 72d84b59dde74e75b23aca5bac4e0f35-20200729
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=4Wp6qYtVm3ruKgDXHtkTEVIVi35QXL1gY0DmVlHqw0s=;
+        b=AjKvVfahjhvuIXrKbgQhZ0NDfn5E6NF1LkrBZn3iHMcc8nxsi4sxqYYckPwF25iioamXVNirh8OmH5Rz9bypFYPhiLkuy7SiNTVZFeFivD5na428w/HpCOFVvvYnesL2hkkTfpfEQcjXrmBAdUW5GGX08Ol3TgziL4nVAztYn0c=;
+X-UUID: 72d84b59dde74e75b23aca5bac4e0f35-20200729
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 317222806; Wed, 29 Jul 2020 14:47:41 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 29 Jul 2020 14:47:32 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by mtkcas07.mediatek.inc
+ (172.21.101.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 29 Jul
+ 2020 14:47:33 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 29 Jul 2020 14:47:28 +0800
+Message-ID: <1596005252.17247.6.camel@mtkswgap22>
+Subject: Re: [PATCH v7 1/8] scsi: ufs: Add checks before setting clk-gating
+ states
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Can Guo <cang@codeaurora.org>
+CC:     "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "sh425.lee@samsung.com" <sh425.lee@samsung.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "Bart Van Assche" <bvanassche@acm.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Wed, 29 Jul 2020 14:47:32 +0800
+In-Reply-To: <1595912460-8860-2-git-send-email-cang@codeaurora.org>
+References: <1595912460-8860-1-git-send-email-cang@codeaurora.org>
+         <1595912460-8860-2-git-send-email-cang@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/XHfzbWnBxBMDLwmII4hFvje";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/XHfzbWnBxBMDLwmII4hFvje
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+T24gVHVlLCAyMDIwLTA3LTI4IGF0IDEzOjAwICswODAwLCBDYW4gR3VvIHdyb3RlOg0KPiBDbG9j
+ayBnYXRpbmcgZmVhdHVyZXMgY2FuIGJlIHR1cm5lZCBvbi9vZmYgc2VsZWN0aXZlbHkgd2hpY2gg
+bWVhbnMgaXRzDQo+IHN0YXRlIGluZm9ybWF0aW9uIGlzIG9ubHkgaW1wb3J0YW50IGlmIGl0IGlz
+IGVuYWJsZWQuIFRoaXMgY2hhbmdlIG1ha2VzDQo+IHN1cmUgdGhhdCB3ZSBvbmx5IGxvb2sgYXQg
+c3RhdGUgb2YgY2xrLWdhdGluZyBpZiBpdCBpcyBlbmFibGVkLg0KPiANCj4gU2lnbmVkLW9mZi1i
+eTogQ2FuIEd1byA8Y2FuZ0Bjb2RlYXVyb3JhLm9yZz4NCj4gUmV2aWV3ZWQtYnk6IEF2cmkgQWx0
+bWFuIDxhdnJpLmFsdG1hbkB3ZGMuY29tPg0KPiBSZXZpZXdlZC1ieTogSG9uZ3d1IFN1IDxob25n
+d3VzQGNvZGVhdXJvcmEub3JnPg0KDQpSZXZpZXdlZC1ieTogU3RhbmxleSBDaHUgPHN0YW5sZXku
+Y2h1QG1lZGlhdGVrLmNvbT4NCg0KDQoNCg==
 
-Hi all,
-
-Today's linux-next merge of the kvm tree got a conflict in:
-
-  arch/x86/kernel/kvm.c
-
-between commits:
-
-  b037b09b9058 ("x86/entry: Rename idtentry_enter/exit_cond_rcu() to idtent=
-ry_enter/exit()")
-  a27a0a55495c ("x86/entry: Cleanup idtentry_enter/exit")
-
-from the tip tree and commits:
-
-  b1d405751cd5 ("KVM: x86: Switch KVM guest to using interrupts for page re=
-ady APF delivery")
-  26d05b368a5c ("Merge branch 'kvm-async-pf-int' into HEAD")
-
-from the kvm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/x86/kernel/kvm.c
-index 233c77d056c9,d9995931ea18..000000000000
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@@ -232,18 -235,13 +235,13 @@@ EXPORT_SYMBOL_GPL(kvm_read_and_reset_ap
- =20
-  noinstr bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
-  {
-- 	u32 reason =3D kvm_read_and_reset_apf_flags();
-+ 	u32 flags =3D kvm_read_and_reset_apf_flags();
- -	bool rcu_exit;
- +	irqentry_state_t state;
- =20
-- 	switch (reason) {
-- 	case KVM_PV_REASON_PAGE_NOT_PRESENT:
-- 	case KVM_PV_REASON_PAGE_READY:
-- 		break;
-- 	default:
-+ 	if (!flags)
-  		return false;
-- 	}
- =20
- -	rcu_exit =3D idtentry_enter_cond_rcu(regs);
- +	state =3D irqentry_enter(regs);
-  	instrumentation_begin();
- =20
-  	/*
-
---Sig_/XHfzbWnBxBMDLwmII4hFvje
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8hG3AACgkQAVBC80lX
-0GzXTAf/UAzhjiwuIBm+VzF5IuHJ0gdp9QmrlbRsW2OIKY3Py04zMX8umaPT08dF
-tGEV/2hAwC8bBVm10fhfXeQonLsRiIrgsCHyTaRi31okGrqkFNc/ntKqKLK9qJf6
-iZt/TdJOaGZRV+dusjOK8Z8Vo+ndUhPR2NFCVV2digKBbFfaM2En0lBpNEMtxDJM
-ZsIhORnUv3JfQ0AdpkVoUb46mKb17jHkqWTewdFJGnfxR3F9ijhtsveEMp1PxGhv
-39RzeCeSu6GTZtaWLmdA/mqdKXUWms44wCDc+RGbzFuLwV+sItWB74i10ovWzbZZ
-5GZzPlqX0s1r9y2M5qoyHX9fdSomYw==
-=Q1Ke
------END PGP SIGNATURE-----
-
---Sig_/XHfzbWnBxBMDLwmII4hFvje--
