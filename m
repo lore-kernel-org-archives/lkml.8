@@ -2,145 +2,126 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E22BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 368F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02FF420658
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121932076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P9cG23A4"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="XCZiliPR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgG2IPQ (ORCPT
+        id S1728005AbgG2IPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:15:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgG2IPP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:15:15 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96C0EC061794;
-        Wed, 29 Jul 2020 01:15:15 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 184so2038731wmb.0;
-        Wed, 29 Jul 2020 01:15:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rlchZqwkXTtwtE28PNsYh99vPS/5jVQbHUXJ9dhuRrA=;
-        b=P9cG23A4bFDPWjtj4larjxw9qub354zQJMGt5m62NGpQZpZF1zWrdiDiI0E56b8bbe
-         Ibl63wLkvwrYw1yO6bvu5qRR9Is94HvtOtHxhoV9oNvJaQ6wzhwYo58wAPYP6JEmn5ss
-         Fxh0ydAuS41xj5OPLQZeuyR6PC2OE20K19zt26Wi35TVcs6YS4rEz7U2RT7l4TI14jpK
-         GTF52mTM953Tbhi4XahEtPtjuefcbB0wRQ/zCPFf3HwOtRa5ydkptAcivPwhBZ33d7hs
-         vjfp2wbqX5WHkzIB1+JoASZsOhQc+oxdW+PUvytH/UlkuJOnqcb9Vp2rZUcAW/2Mg4gO
-         Q7Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rlchZqwkXTtwtE28PNsYh99vPS/5jVQbHUXJ9dhuRrA=;
-        b=Kuc4zgLqKVHwT+foG33YBcLyzpQrS0lHDf34O/h6OfLCEq5Ql/3yVKdOYG2jXFBAdK
-         mcweZRiye6qev9IvS3rbbtfF6ccOrqkq1odH8qjljVEF6DziYN4GPUuy6QXzbLkzMIl5
-         Ts9pescZrCcJGKzKD+o8amPwFz65x4aSe2X4nLKIKQRwz6tV8++mlK5rJfqAhGSJE4a2
-         FnLloUQjbiBU5tLfU3Z6fWq+RWeG8zhPYfW5W5RM9Kqaar6HI15Ou3QGbkLub5CbSMoF
-         jF47s5qNcFM0BW7KGOAh3jmHBa5LRHKS0EgQ2PuUI6D3qVjdzaqbexvVWYdVocnOKK1r
-         5jRA==
-X-Gm-Message-State: AOAM5302LwFYTSvWr5ZbNnRsr9ycRfho4W6ZFvMXNdQhF9v+DTM7y0cH
-        UlYeNqcSsbLFcJYtT07Zzts=
-X-Google-Smtp-Source: ABdhPJyFW7pSFOpmJYqx4oK1oTZOOOz/JCxfYIwaWtqZ29VmQTDiliOunqQhsLOYzEtFTRU+wQ5fgA==
-X-Received: by 2002:a7b:c258:: with SMTP id b24mr7413895wmj.122.1596010514275;
-        Wed, 29 Jul 2020 01:15:14 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id p6sm3336770wru.33.2020.07.29.01.15.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 01:15:13 -0700 (PDT)
-Subject: Re: [v2,2/3] dt-bindings: watchdog: add a new head file for toprgu
- reset-controllers
-To:     Crystal Guo <crystal.guo@mediatek.com>
-Cc:     "linux@roeck-us.net" <linux@roeck-us.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        =?UTF-8?B?U2VpeWEgV2FuZyAo546L6L+65ZCbKQ==?= 
-        <seiya.wang@mediatek.com>,
-        =?UTF-8?B?RXJpbiBMbyAo576F6ZuF6b2hKQ==?= <erin.lo@mediatek.com>
-References: <1596004249-28655-1-git-send-email-crystal.guo@mediatek.com>
- <1596004249-28655-3-git-send-email-crystal.guo@mediatek.com>
- <fb7ef8a7-5bbc-8e4b-7a23-c84f151587ba@gmail.com>
- <1596010313.11360.2.camel@mhfsdcap03>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <72d317ef-7f69-9e61-b1d5-23d660c58560@gmail.com>
-Date:   Wed, 29 Jul 2020 10:15:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 29 Jul 2020 04:15:51 -0400
+Received: from mout.gmx.net ([212.227.17.20]:34621 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgG2IPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 04:15:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1596010525;
+        bh=SEqiVovF7XeGtohoS2GMeFwDMUmZ9pW/KT58etbzx3I=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=XCZiliPRjvI4fnxBMHTK8ktxBj8sm8c/suvC2q8k3NejMEYSicFhklCixPYr8jL/q
+         p1s0lmomB8VJWQ3JsjfhEHquqim7j0pwfdIs7m46HB5x6m66dlD40RnA59WugB/3i0
+         yUz3c1y3zCJnzX1w5V7FO4NHoO2sDc7T7nuYWa4U=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([185.75.74.240]) by mail.gmx.com
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1M9Fnj-1k6SfS2l1j-006QTq; Wed, 29 Jul 2020 10:15:25 +0200
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     linux-mediatek@lists.infradead.org
+Cc:     Landen Chao <landen.chao@mediatek.com>,
+        Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v4] net: ethernet: mtk_eth_soc: fix MTU warnings
+Date:   Wed, 29 Jul 2020 10:15:17 +0200
+Message-Id: <20200729081517.4026-1-frank-w@public-files.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <1596010313.11360.2.camel@mhfsdcap03>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:SIqtPyJoGFptjlcPcxyQb71WF05R8NP7BOYsxZfVn4TevUka2hv
+ 16bkgQRk2SbtWS26redKg5T9xwqZyS6LYPZc4nlqNtdOfjc06O3Jrl08QXrr6YDL/rstb1f
+ l0xWrYmKz/JACy8a9r7NVqZ4c8VThH2ylroN+QjDMqc0cPtmCd+236ZK1kPKzt1RGF4+1GM
+ 8VtrTh/CFp4NgsEdY2c9Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3EloKpSUWt8=:iY6EPOZWtHi/ZM6E34hZlR
+ 2xSfHxvGFSXGxamCo079Z4sANGXK3lUhCJ+AQLOA9MkvmzRmwvhwHYa7aQwcfH0e9CIEipuBg
+ GEngknl+qZuHctfDasmRn3F2KTtOywyAwgqVpmHaqQfpl5hH5ScWJSuxH/cLBr8Ek9Oa7q1Dr
+ +zf0UEgCupZML5LpvsCnOoOS5GSFr6DtYMprSc+h3M2lT3OS+72eOCUmao/yDIUQGjabX38VJ
+ NLuOCcsgyrjfRQHaRWxp6vOx1DKzclBdHJWpY7XZiEGE+c9Fpv0MiuLikJGvI2TQkQ/pgKwTW
+ 6DsrbaD2vLZ4r/Bs7W5mJos+RF4gR1F3tEgzP60BLcw5NNO8wFuEg/MCjmgOoZSC9znRa4Td7
+ hmGscGs/I/zKN8rz5vrjX5gr8oPuusM7Q4NMgafAHuKYjTwu6XhW9wmIM5158VqhhCV8hfpBJ
+ tpFhnqmxS1iwilu+3w6Z2VIQzH2Q/7imS5JXTkEQLngvCpl9LKNYC5kFWYuGfBr5bRjB627Ll
+ ICSqqxd3qGMKuehRy9DSFFdZjI8oc1xeMc5fY9f96LVZw1vtTfdtgppss78XeH+8wOJatIhBY
+ EyhaWfZPkul6GRtgs6sSmQvRmUNyb6bCF7itUbEXGKV7H6NZ2UhBW5JJIeuKqeHNk9QjAHPV3
+ zJPE6xvXUJa3W2HGC0FEuxte//wjUamhgd2gRS92xZn84VuZikNhhROrNKL7f88usifF1aOZQ
+ mjpxid9UwrvBoiODjCQ0iS222hls0dpLDKsTJnPUpJrX84Qgg+pWYZ7KYRyyhQOGfjkzyt9SW
+ mr0nubXYx1GCyzDcmz/XvpVoMwNqgl26092wYHvAYFXXD5ROUMeL31JX06S3XrEM7jhrmdwuB
+ H6E+PBlxWLeu7UWwsvhbLz8sOKJbB2G5VwJhoN6sltjIJPCN/LkRaLQOndWiWMNR629HM6TlS
+ AU+MtZYQvBOD03K5ggKTDgJl7HDa5jaldAJV4oa5mkW2W0Yy/GfPcLhdHLNloMQvQ+7fDrNGy
+ 2PseCo4ehl+PUHN9WgUxctTxE5LDbbn75IfpasO2/Hz7jQ3T9dY9rolYKNKvZGhqSfPPzEQSp
+ bUer4W27aVniiQtPAXaJmXN+BrgcHsTAnhHcaaXXHfXvMYy1OKLDW32vU6UnX7bYWbGrv0guT
+ uKiqi35C9tqTAJypDlFi3T86ksHJAnRFK2rH/CUWZkvaYr1HmyeLb7NvO8aukyh6iXXVcK7UY
+ wMicRZde5dkHaP+DpmOHh5gjVFF86/SJeFQ6cqA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Landen Chao <landen.chao@mediatek.com>
 
+in recent kernel versions there are warnings about incorrect MTU size
+like these:
 
-On 29/07/2020 10:11, Crystal Guo wrote:
-> On Wed, 2020-07-29 at 15:42 +0800, Matthias Brugger wrote:
->> Hi Crystal,
->>
->> On 29/07/2020 08:30, Crystal Guo wrote:
->>> merge all the reset numbers in one head file.
->>>
->>> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
->>> ---
->>>    include/dt-bindings/reset-controller/mtk-resets.h | 13 +++++++++++++
->>>    1 file changed, 13 insertions(+)
->>>    create mode 100644 include/dt-bindings/reset-controller/mtk-resets.h
->>>
->>> diff --git a/include/dt-bindings/reset-controller/mtk-resets.h b/include/dt-bindings/reset-controller/mtk-resets.h
->>> new file mode 100644
->>> index 0000000..d73a4ba
->>> --- /dev/null
->>> +++ b/include/dt-bindings/reset-controller/mtk-resets.h
->>> @@ -0,0 +1,13 @@
->>> +/* SPDX-License-Identifier: GPL-2.0 */
->>> +/*
->>> + * Copyright (C) 2020 Mediatek Inc.
->>> + *
->>> + */
->>> +
->>> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_MTK
->>> +#define _DT_BINDINGS_RESET_CONTROLLER_MTK
->>> +
->>> +#define MT2712_TOPRGU_SW_RST_NUM	11
->>> +#define MT8183_TOPRGU_SW_RST_NUM        19
->>
->> Maybe I didn't explain myself properly. We want to have all resets in one file
->> and do not want to have the resets for the watchdog in a different file. That
->> means I don't thin your patch is correct and the effort should be abandoned.
->>
->> Regards,
->> Matthias
-> 
-> Do you mean to keep the current way unchanged? For example, with a new
-> SOC 8192, should add a new head file mt8192_resets.h for the resets
-> numbers.
-> 
+eth0: mtu greater than device maximum
+mtk_soc_eth 1b100000.ethernet eth0: error -22 setting MTU to include DSA o=
+verhead
 
-Exactly.
+Fixes: bfcb813203e6 ("net: dsa: configure the MTU for switch ports")
+Fixes: 72579e14a1d3 ("net: dsa: don't fail to probe if we couldn't set the=
+ MTU")
+Fixes: 7a4c53bee332 ("net: report invalid mtu value via netlink extack")
+Signed-off-by: Landen Chao <landen.chao@mediatek.com>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+=2D--
+v3->v4
+  - fix commit-message (hyphernations,capitalisation) as suggested by Russ=
+ell
+  - add Signed-off-by Landen
+  - dropped wrong signed-off from rene (because previous v1/2 was from him=
+)
+=2D--
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Regards,
-Matthias
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/eth=
+ernet/mediatek/mtk_eth_soc.c
+index 85735d32ecb0..a1c45b39a230 100644
+=2D-- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -2891,6 +2891,8 @@ static int mtk_add_mac(struct mtk_eth *eth, struct d=
+evice_node *np)
+ 	eth->netdev[id]->irq =3D eth->irq[0];
+ 	eth->netdev[id]->dev.of_node =3D np;
+
++	eth->netdev[id]->max_mtu =3D MTK_MAX_RX_LENGTH - MTK_RX_ETH_HLEN;
++
+ 	return 0;
+
+ free_netdev:
+=2D-
+2.25.1
+
