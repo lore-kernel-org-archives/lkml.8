@@ -2,170 +2,175 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28458C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC9172053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:46:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XAdzVPMm"
+	by mail.kernel.org (Postfix) with ESMTP id 0F0862053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgG2WqC (ORCPT
+        id S1727965AbgG2Wqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 18:46:02 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:50246 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726628AbgG2WqC (ORCPT
+        Wed, 29 Jul 2020 18:46:45 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:53796 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbgG2Wqp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 18:46:02 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596062761; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=DNhClZ5F3J2ftESrdBiYlqeVHdgvkBigRNnujyyth30=; b=XAdzVPMmS+YhGkmaIxLJQcGvGBSuBmBKSXgUP8ijEMVozsWxjbOB2CgDffQvfRH4ukoCZ8Cc
- 992ASXj6yAl9aUiLGymNd3RbIHSoRqEQXr4Q5vd1ViTswbQKKOU8ifFyYuYHoOh3PfZQn6tl
- /Ts1DnLFxsewQyPqorW8TyAm2r4=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f21fc11634c4259e3526baf (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 22:45:37
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5C0E1C43391; Wed, 29 Jul 2020 22:45:37 +0000 (UTC)
-Received: from [192.168.8.168] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D62B4C433C9;
-        Wed, 29 Jul 2020 22:45:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D62B4C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
-Subject: Re: [PATCH v7 7/8] scsi: ufs: Move dumps in IRQ handler to error
- handler
-To:     Can Guo <cang@codeaurora.org>
-Cc:     nguyenb@codeaurora.org, hongwus@codeaurora.org,
-        rnayak@codeaurora.org, sh425.lee@samsung.com,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1595912460-8860-1-git-send-email-cang@codeaurora.org>
- <1595912460-8860-8-git-send-email-cang@codeaurora.org>
- <7e5e942d-449b-bd52-32da-7f5beed116b7@codeaurora.org>
- <dff9541177ebf68950ca13d2f13d88ba@codeaurora.org>
-From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Message-ID: <d66389fa-4ca2-bf7e-6b3d-d77eada4eb0e@codeaurora.org>
-Date:   Wed, 29 Jul 2020 15:45:31 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Wed, 29 Jul 2020 18:46:45 -0400
+Received: from fsav109.sakura.ne.jp (fsav109.sakura.ne.jp [27.133.134.236])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06TMkhCG049026;
+        Thu, 30 Jul 2020 07:46:43 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav109.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp);
+ Thu, 30 Jul 2020 07:46:43 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06TMkhGb049020
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 30 Jul 2020 07:46:43 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: [PATCH] fbmem: pull fbcon_update_vcs() out of fb_set_var()
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
+References: <1596000620-4075-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <CAKMK7uHeteS2+rKrZKrAM+zQO==hAX0XaVc9JfHPsdLTCtzKOw@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <a3bb6544-064d-54a1-1215-d92188cb4209@i-love.sakura.ne.jp>
+Date:   Thu, 30 Jul 2020 07:46:40 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <dff9541177ebf68950ca13d2f13d88ba@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAKMK7uHeteS2+rKrZKrAM+zQO==hAX0XaVc9JfHPsdLTCtzKOw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/2020 6:02 AM, Can Guo wrote:
-> Hi Asutosh,
-> 
-> On 2020-07-29 02:06, Asutosh Das (asd) wrote:
->> On 7/27/2020 10:00 PM, Can Guo wrote:
->>> Sometime dumps in IRQ handler are heavy enough to cause system stability
->>> issues, move them to error handler.
->>>
->>> Signed-off-by: Can Guo <cang@codeaurora.org>
->>> ---
->>>   drivers/scsi/ufs/ufshcd.c | 31 +++++++++++++++----------------
->>>   1 file changed, 15 insertions(+), 16 deletions(-)
->>>
->>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
->>> index c480823..b2bafa3 100644
->>> --- a/drivers/scsi/ufs/ufshcd.c
->>> +++ b/drivers/scsi/ufs/ufshcd.c
->>> @@ -5682,6 +5682,21 @@ static void ufshcd_err_handler(struct 
->>> work_struct *work)
->>>                       UFSHCD_UIC_DL_TCx_REPLAY_ERROR))))
->>>           needs_reset = true;
->>>   +    if (hba->saved_err & (INT_FATAL_ERRORS | UIC_ERROR |
->>> +                  UFSHCD_UIC_HIBERN8_MASK)) {
->>> +        bool pr_prdt = !!(hba->saved_err & SYSTEM_BUS_FATAL_ERROR);
->>> +
->>> +        dev_err(hba->dev, "%s: saved_err 0x%x saved_uic_err 0x%x\n",
->>> +                __func__, hba->saved_err, hba->saved_uic_err);
->>> +        spin_unlock_irqrestore(hba->host->host_lock, flags);
->>> +        ufshcd_print_host_state(hba);
->>> +        ufshcd_print_pwr_info(hba);
->>> +        ufshcd_print_host_regs(hba);
->>> +        ufshcd_print_tmrs(hba, hba->outstanding_tasks);
->>> +        ufshcd_print_trs(hba, hba->outstanding_reqs, pr_prdt);
->>> +        spin_lock_irqsave(hba->host->host_lock, flags);
->>> +    }
->>> +
->>>       /*
->>>        * if host reset is required then skip clearing the pending
->>>        * transfers forcefully because they will get cleared during
->>> @@ -5900,22 +5915,6 @@ static irqreturn_t ufshcd_check_errors(struct 
->>> ufs_hba *hba)
->>>             /* block commands from scsi mid-layer */
->>>           ufshcd_scsi_block_requests(hba);
->>> -
->>> -        /* dump controller state before resetting */
->>> -        if (hba->saved_err & (INT_FATAL_ERRORS | UIC_ERROR)) {
->>> -            bool pr_prdt = !!(hba->saved_err &
->>> -                    SYSTEM_BUS_FATAL_ERROR);
->>> -
->>> -            dev_err(hba->dev, "%s: saved_err 0x%x saved_uic_err 
->>> 0x%x\n",
->>> -                    __func__, hba->saved_err,
->>> -                    hba->saved_uic_err);
->>> -
->>> -            ufshcd_print_host_regs(hba);
->>> -            ufshcd_print_pwr_info(hba);
->> How about keep the above prints and move the tmrs and trs to eh?
->> Sometimes in system instability, the eh may not get a chance to run
->> even. Still the above prints would provide some clues.
-> 
-> Here is the IRQ handler, ufshcd_print_host_regs() is sometime heavy
-> enough to cause stability issues during my fault injection test, since
-> it prints host regs, reg's history, crypto debug infos plus prints
-> from vops_dump.
-> 
-> How about just printing host regs and reg history here? Most time, these
-> infos are enough.
-> 
-That'd work too.
+syzbot is reporting OOB read bug in vc_do_resize() [1] caused by memcpy()
+based on outdated old_{rows,row_size} values, for resize_screen() can
+recurse into vc_do_resize() which changes vc->vc_{cols,rows} that outdates
+old_{rows,row_size} values which were saved before calling resize_screen().
 
-> Thanks,
-> 
-> Can Guo.
-> 
->>> -            ufshcd_print_tmrs(hba, hba->outstanding_tasks);
->>> -            ufshcd_print_trs(hba, hba->outstanding_reqs,
->>> -                    pr_prdt);
->>> -        }
->>>           ufshcd_schedule_eh_work(hba);
->>>           retval |= IRQ_HANDLED;
->>>       }
->>>
+Daniel Vetter explained that resize_screen() should not recurse into
+fbcon_update_vcs() path due to FBINFO_MISC_USEREVENT being still set
+when calling resize_screen().
 
+Instead of masking FBINFO_MISC_USEREVENT before calling fbcon_update_vcs(),
+we can remove FBINFO_MISC_USEREVENT by calling fbcon_update_vcs() only if
+fb_set_var() returned 0. This change assumes that it is harmless to call
+fbcon_update_vcs() when fb_set_var() returned 0 without reaching
+fb_notifier_call_chain().
 
+[1] https://syzkaller.appspot.com/bug?id=c70c88cfd16dcf6e1d3c7f0ab8648b3144b5b25e
+
+Reported-and-tested-by: syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
+Suggested-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+---
+ drivers/video/fbdev/core/fbmem.c   | 8 ++------
+ drivers/video/fbdev/core/fbsysfs.c | 4 ++--
+ drivers/video/fbdev/ps3fb.c        | 4 ++--
+ include/linux/fb.h                 | 2 --
+ 4 files changed, 6 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+index 30e73ec..da7c88f 100644
+--- a/drivers/video/fbdev/core/fbmem.c
++++ b/drivers/video/fbdev/core/fbmem.c
+@@ -957,7 +957,6 @@ static int fb_check_caps(struct fb_info *info, struct fb_var_screeninfo *var,
+ int
+ fb_set_var(struct fb_info *info, struct fb_var_screeninfo *var)
+ {
+-	int flags = info->flags;
+ 	int ret = 0;
+ 	u32 activate;
+ 	struct fb_var_screeninfo old_var;
+@@ -1052,9 +1051,6 @@ static int fb_check_caps(struct fb_info *info, struct fb_var_screeninfo *var,
+ 	event.data = &mode;
+ 	fb_notifier_call_chain(FB_EVENT_MODE_CHANGE, &event);
+ 
+-	if (flags & FBINFO_MISC_USEREVENT)
+-		fbcon_update_vcs(info, activate & FB_ACTIVATE_ALL);
+-
+ 	return 0;
+ }
+ EXPORT_SYMBOL(fb_set_var);
+@@ -1105,9 +1101,9 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 			return -EFAULT;
+ 		console_lock();
+ 		lock_fb_info(info);
+-		info->flags |= FBINFO_MISC_USEREVENT;
+ 		ret = fb_set_var(info, &var);
+-		info->flags &= ~FBINFO_MISC_USEREVENT;
++		if (!ret)
++			fbcon_update_vcs(info, var.activate & FB_ACTIVATE_ALL);
+ 		unlock_fb_info(info);
+ 		console_unlock();
+ 		if (!ret && copy_to_user(argp, &var, sizeof(var)))
+diff --git a/drivers/video/fbdev/core/fbsysfs.c b/drivers/video/fbdev/core/fbsysfs.c
+index d54c88f..65dae05 100644
+--- a/drivers/video/fbdev/core/fbsysfs.c
++++ b/drivers/video/fbdev/core/fbsysfs.c
+@@ -91,9 +91,9 @@ static int activate(struct fb_info *fb_info, struct fb_var_screeninfo *var)
+ 
+ 	var->activate |= FB_ACTIVATE_FORCE;
+ 	console_lock();
+-	fb_info->flags |= FBINFO_MISC_USEREVENT;
+ 	err = fb_set_var(fb_info, var);
+-	fb_info->flags &= ~FBINFO_MISC_USEREVENT;
++	if (!err)
++		fbcon_update_vcs(fb_info, var->activate & FB_ACTIVATE_ALL);
+ 	console_unlock();
+ 	if (err)
+ 		return err;
+diff --git a/drivers/video/fbdev/ps3fb.c b/drivers/video/fbdev/ps3fb.c
+index 9df78fb..4b4a99f 100644
+--- a/drivers/video/fbdev/ps3fb.c
++++ b/drivers/video/fbdev/ps3fb.c
+@@ -824,12 +824,12 @@ static int ps3fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 				var = info->var;
+ 				fb_videomode_to_var(&var, vmode);
+ 				console_lock();
+-				info->flags |= FBINFO_MISC_USEREVENT;
+ 				/* Force, in case only special bits changed */
+ 				var.activate |= FB_ACTIVATE_FORCE;
+ 				par->new_mode_id = val;
+ 				retval = fb_set_var(info, &var);
+-				info->flags &= ~FBINFO_MISC_USEREVENT;
++				if (!retval)
++					fbcon_update_vcs(info, var.activate & FB_ACTIVATE_ALL);
+ 				console_unlock();
+ 			}
+ 			break;
+diff --git a/include/linux/fb.h b/include/linux/fb.h
+index 3b4b2f0..b11eb02 100644
+--- a/include/linux/fb.h
++++ b/include/linux/fb.h
+@@ -400,8 +400,6 @@ struct fb_tile_ops {
+ #define FBINFO_HWACCEL_YPAN		0x2000 /* optional */
+ #define FBINFO_HWACCEL_YWRAP		0x4000 /* optional */
+ 
+-#define FBINFO_MISC_USEREVENT          0x10000 /* event request
+-						  from userspace */
+ #define FBINFO_MISC_TILEBLITTING       0x20000 /* use tile blitting */
+ 
+ /* A driver may set this flag to indicate that it does want a set_par to be
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-Linux Foundation Collaborative Project
+1.8.3.1
+
+
