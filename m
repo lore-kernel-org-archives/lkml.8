@@ -2,141 +2,120 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F338C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF5EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB0B2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40A1206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:59:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3Tpz0Ml"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rb8/dupy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgG2Jzb (ORCPT
+        id S1726536AbgG2J7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:55:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45796 "EHLO
+        Wed, 29 Jul 2020 05:59:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgG2Jza (ORCPT
+        with ESMTP id S1726054AbgG2J7e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:55:30 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6805C061794;
-        Wed, 29 Jul 2020 02:55:30 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id k4so20246245oik.2;
-        Wed, 29 Jul 2020 02:55:30 -0700 (PDT)
+        Wed, 29 Jul 2020 05:59:34 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D061CC061794;
+        Wed, 29 Jul 2020 02:59:34 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a9so1647357pjd.3;
+        Wed, 29 Jul 2020 02:59:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E7erpnfbP9UW/PH4NnSfoZeY+/w2CdxSy9rFIVFRNZw=;
-        b=X3Tpz0Ml4211y0EgfEepTuWScOzS31v5EVUVlXKb8olwLZ1tCn4QmmbGVBsluBqM36
-         n8K8r63CMUd00feYm21azqMlTsAZhrFzVG6XQGuZ2ELkrK8qFxR4bpXM/EfLxLwZO6sn
-         yR3L7jQGv2jrt2Vd4AtTeP1xSR8cniJRpDu3OyeCrkbIZDgwObOhS1UT8aUSclNWRSIn
-         fau5A6NP8REwCxoF5lVotENxM1g0cxoXhSh0l4JGuO6GNpp1cvyRAxGkMyI/xqVz+YB6
-         Y8FnG+M/BnABiRV36CRg+FRkvfjWNV3SekzcZ50hov8Lh4kXpC+cG4REsjXgOXjKqCNa
-         JO0g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T0Z6YHYdP/kQD0cMS+cNQldOhqY6T8q1pjXPvT/YgO4=;
+        b=rb8/dupyCMFbBH4YZJuE/RPbByMpGQ5LAydsXv+QjPXvhSZxULUuuRV8XlGBj1j99K
+         XFszBCZ2K4ch/ddu2OZLiYmUBUeRhRcbu8a3Yu8TAZA5bE2F4mG5ltCYhNeoIFUJ61ru
+         dbWRev/5xq+8WUIhLulvMFFuSBNToV5Vr8YCCTuPFgOHfGo0l95lBrQH2s6enGdm98ab
+         YadDobj5jWlZYvQI61D7RjMi1YuDBExT4iDSKpotJY0g8mdjfoffFRt437s530RMwJx9
+         8Y+G0QWfDnEINXow8ElKpN8xnB5aVnJhiz6hciPST9mC0ScqccExXerDwCKuLEIQd1Wi
+         BzPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E7erpnfbP9UW/PH4NnSfoZeY+/w2CdxSy9rFIVFRNZw=;
-        b=krgTHrv6aan0iwZmGsCrFM4f1DAC394ueTHd+u9fpaIrvvqXvm0IV1rwwdfHRZVmrr
-         7Xh7B6sLGOGnsHmbbf0xNK0TuXDVB5nuKc67oF/myOwY1OGo58ggaRHCIr9wXFX+WV9i
-         B7QFFb5vodJ3EhKmLkxCZLKz7EBtx95Ao4tWncLjA6RGolZc5SRR6lTtaxny0CzSIok1
-         y9i8tGO6EtjxW/IJqokbOVKA5mSgQ1Wi/z9+Q/bmbPkLRVmPf4opamhjH+DeCQqyjUuk
-         i87N+3KC811IAgXdCd+T2OnE5arTOynO8zNb2X+UHgZM8GsB5ITixFqkg57OCFg0+qsD
-         Zd8w==
-X-Gm-Message-State: AOAM531j022h9Eqt5PGeODZJUmGcMyQ7xS4ddpUJ9PE7QO3kSPIxtHD1
-        9HsKjS6f54yuUKMnpQLnbuwbUgeWLjCgqlQ4lpJ/oLNa
-X-Google-Smtp-Source: ABdhPJyYq4OAA2WzDvrnilNqWmUhqYkFI4Sk7Ft9ummr0yDDDAt5ED3rQ5g6xDPinkB+vDftpXh4I8m4RUUVk8DOoKg=
-X-Received: by 2002:aca:a990:: with SMTP id s138mr7133132oie.154.1596016529937;
- Wed, 29 Jul 2020 02:55:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T0Z6YHYdP/kQD0cMS+cNQldOhqY6T8q1pjXPvT/YgO4=;
+        b=eygxYyQgE0rASdBxf8KnqlqVstsmp/NuXP/HkjRa8zEUH2NCB0P3zorEdtFDzOZBVw
+         +RKfOCz9SsGgKil5foI9Qgv812lXlU7pYSYBnZQVTTxPtQgBVN2QrLjIYpH1Pb+I50yT
+         sEPMHONAa2iMIRZNvCQAK44rGZLKY2vkGoCAwhl/jYEl9BtSIz1ZtHkzZgGoCKCq2snx
+         SNL3S+B9cSA98J1Opcfjfc5jFWnQHFU9LZKTPZBLYG6HBYw/az2KSy1EtuN/1+FcmFj6
+         rjIEfMT9d/AyGzAGN+2UVhypMh5o76WSeerE5ypRCdENeE5DbR9Sdj+sxkZoRQIRJZFN
+         Rv1w==
+X-Gm-Message-State: AOAM533zwv7L9L+s2kb9GuacWAAeATXqd3NSgOoURYfrQ4vMfZRaL4kd
+        8ZT60Jw7vkFc+0STQmDDslc=
+X-Google-Smtp-Source: ABdhPJwlUgeMIQUydEFbTDZ99rxEoaivKlj3ebAXEwUBoUc6lmxEGQaE2R4Y9pOgdMTLv9N/en648Q==
+X-Received: by 2002:a17:902:7b92:: with SMTP id w18mr27533925pll.258.1596016773345;
+        Wed, 29 Jul 2020 02:59:33 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id i128sm1815776pfe.74.2020.07.29.02.59.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 02:59:32 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Daniele Venzano <venza@brownhat.org>,
+        Samuel Chessman <chessman@tux.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v1 0/3] net: ethernet: use generic power management
+Date:   Wed, 29 Jul 2020 15:26:57 +0530
+Message-Id: <20200729095700.193150-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200727180831.6c356fc1@canb.auug.org.au> <20200727092448.GB1764157@kroah.com>
- <20200728173331.5bf1f438@canb.auug.org.au> <20200728075336.GB351768@kroah.com>
- <20200728182359.2b9b31bf@canb.auug.org.au> <20200728171705.GD43359@kroah.com> <20200728171913.GE43359@kroah.com>
-In-Reply-To: <20200728171913.GE43359@kroah.com>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Wed, 29 Jul 2020 12:55:00 +0300
-Message-ID: <CAFCwf11_h8eC5B8Fod=LiJJ2vjaOrdNs3W+pHnK-YhM=jD-yeQ@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the char-misc tree
-To:     Greg KH <greg@kroah.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Omer Shpigelman <oshpigelman@habana.ai>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Great, thanks!
-Oded
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-On Tue, Jul 28, 2020 at 8:19 PM Greg KH <greg@kroah.com> wrote:
->
-> On Tue, Jul 28, 2020 at 07:17:05PM +0200, Greg KH wrote:
-> > On Tue, Jul 28, 2020 at 06:23:59PM +1000, Stephen Rothwell wrote:
-> > > Hi Greg,
-> > >
-> > > On Tue, 28 Jul 2020 09:53:36 +0200 Greg KH <greg@kroah.com> wrote:
-> > > >
-> > > > On Tue, Jul 28, 2020 at 05:33:31PM +1000, Stephen Rothwell wrote:
-> > > > > Hi Greg,
-> > > > >
-> > > > > On Mon, 27 Jul 2020 11:24:48 +0200 Greg KH <greg@kroah.com> wrote:
-> > > > > >
-> > > > > > On Mon, Jul 27, 2020 at 06:08:31PM +1000, Stephen Rothwell wrote:
-> > > > > > > Hi all,
-> > > > > > >
-> > > > > > > After merging the char-misc tree, today's linux-next build (x86_64
-> > > > > > > allmodconfig) failed like this:
-> > > > > > >
-> > > > > > > In file included from drivers/misc/habanalabs/goya/goya.c:8:
-> > > > > > > drivers/misc/habanalabs/goya/goyaP.h:12:10: fatal error: habanalabs.h: No such file or directory
-> > > > > > >    12 | #include "habanalabs.h"
-> > > > > > >       |          ^~~~~~~~~~~~~~
-> > > > > > > In file included from drivers/misc/habanalabs/goya/goya_security.c:8:
-> > > > > > > drivers/misc/habanalabs/goya/goyaP.h:12:10: fatal error: habanalabs.h: No such file or directory
-> > > > > > >    12 | #include "habanalabs.h"
-> > > > > > >       |          ^~~~~~~~~~~~~~
-> > > > > > >
-> > > > > > > Presumably caused by commit
-> > > > > > >
-> > > > > > >   70b2f993ea4a ("habanalabs: create common folder")
-> > > > > > >
-> > > > > > > I have used the char-misc tree from next-20200724 for today.
-> > > > > >
-> > > > > > Ugh, this is a mess of a merge with this driver.
-> > > > > >
-> > > > > > Oded, I'll take Stephen's merge resolutions here and push out a new
-> > > > > > version, and try to resolve this error, but if you could verify I got it
-> > > > > > correct, that would be great.
-> > > > >
-> > > > > The conflicts are gone, but I still get these errors.
-> > > >
-> > > > Very odd, I can not duplicate this at all here.  I just did a clean
-> > > > checkout of the char-misc-next branch and a full 'make allmodconfig' for
-> > > > x86_64, and it worked just fine.
-> > > >
-> > > > Are you sure it's not coming from some other tree?
-> > >
-> > > Do you build with a separate object tree?  I always use make O=...
-> > > which makes the difference.  I tested with just your tree.
-> >
-> > Ah, no, I do not.  Odd, let me see what kind of crazy they are doing
-> > with include build directives...
-> >
-> > thanks for the hint.
->
-> Ok, fix sent out, that should resolve this.
->
-> thanks,
->
-> greg k-h
+The purpose of this patch series is to upgrade power management in net ethernet
+drivers. This has been done by upgrading .suspend() and .resume() callbacks.
+
+The upgrade makes sure that the involvement of PCI Core does not change the
+order of operations executed in a driver. Thus, does not change its behavior.
+
+In general, drivers with legacy PM, .suspend() and .resume() make use of PCI
+helper functions like pci_enable/disable_device_mem(), pci_set_power_state(),
+pci_save/restore_state(), pci_enable/disable_device(), etc. to complete
+their job.
+
+The conversion requires the removal of those function calls, change the
+callbacks' definition accordingly and make use of dev_pm_ops structure.
+
+All patches are compile-tested only.
+
+Test tools:
+    - Compiler: gcc (GCC) 10.1.0
+    - allmodconfig build: make -j$(nproc) W=1 all
+
+Vaibhav Gupta (3):
+  sc92031: use generic power management
+  sis900: use generic power management
+  tlan: use generic power management
+
+ drivers/net/ethernet/silan/sc92031.c | 26 ++++++++---------------
+ drivers/net/ethernet/sis/sis900.c    | 23 +++++++--------------
+ drivers/net/ethernet/ti/tlan.c       | 31 ++++++----------------------
+ 3 files changed, 22 insertions(+), 58 deletions(-)
+
+-- 
+2.27.0
+
