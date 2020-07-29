@@ -2,155 +2,181 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DC5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B88C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3400320829
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:14:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596035693;
-	bh=nKNEQKTvIoBzcmYITZ+D9Tf7NnPmwUDUufW9bzlqp5M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xNXIVUUYEmEKS767Xxc9fiZStUkMVWsEp8RcpHlEEfxVNWZfpDs+7L/m7dqyDB1AB
-	 HbXefjKmjlZ6goW5j4RfnDaY2vJT2iR0SQjX7vH6lFw6am5FQ2lyZW720Else95IXo
-	 lAMzTDNN4MPhE3uKlKjQqEnXrkS+u5R62AR9DAz0=
+	by mail.kernel.org (Postfix) with ESMTP id 291F720829
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:14:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgG2POw (ORCPT
+        id S1726942AbgG2PO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:14:52 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:29214 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2POv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:14:51 -0400
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 06TFEDHc030372;
-        Thu, 30 Jul 2020 00:14:14 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 06TFEDHc030372
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1596035654;
-        bh=K/lBXbWR+x3txyjbotv/nZAEEMUAZKchfnFj0DToDWk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uvIaubtEdgqQhZN5q3je9HyiqlDhgFOwhJAXmAorB38dYKVyuf3iaU/4QIQekt/ou
-         q2s7aKQmNuFezqPlFZdXU1JmjILyBT5HH6dWcKBIEbOHRVl92uthyb/1gx6LSULxEf
-         d5BaDB86rifemvBOgKQX5hfXkEGRSS02NQ0msW7LBBvAuBDIz4FwrzvQBKoXdbEdRG
-         qyWwL0/Gg597sCbwgEPAhc7xENBYiptI1+381Tw7+Rg8xnlBqyFHjynfPkPI3lR5P4
-         gpJauwPT7iZF6PkRLC2xSjXf3LXHtsW9x2shvSFq5cBmLqW9/im4Mase5tWr3U7i1B
-         tRfM+NK8I3T9Q==
-X-Nifty-SrcIP: [209.85.222.52]
-Received: by mail-ua1-f52.google.com with SMTP id p27so3477359uaa.12;
-        Wed, 29 Jul 2020 08:14:14 -0700 (PDT)
-X-Gm-Message-State: AOAM532OJ/T+3gtbxaA7HjHnBpn1DNBKfPT8rU7ckCByo2Nbf+O7ejts
-        SOp57ysObCGe928NkAr9DZnkPGYLyFmRue7l5Pw=
-X-Google-Smtp-Source: ABdhPJyCO5ocIjSjCCCrBg/b+UNbHdAmrpbxBUNLui4XBSWgs2nOELlaJBu55/dPeNbkp8CEnFdZM5xW9ytKZxMTdfg=
-X-Received: by 2002:ab0:2390:: with SMTP id b16mr6263692uan.25.1596035652852;
- Wed, 29 Jul 2020 08:14:12 -0700 (PDT)
+        Wed, 29 Jul 2020 11:14:57 -0400
+Received: from mga06.intel.com ([134.134.136.31]:33739 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726802AbgG2PO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 11:14:56 -0400
+IronPort-SDR: Zw5ZNS+VRAWHOk95oYhugVe0rU4/N72f8Lt3Pt8VjP1QnnzEcs3Y+nxqIR8R6/qCNcHFkHMtsx
+ 0E6XH3KiH2ug==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="212966923"
+X-IronPort-AV: E=Sophos;i="5.75,410,1589266800"; 
+   d="scan'208";a="212966923"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 08:14:55 -0700
+IronPort-SDR: MKShLvdEyM3yvsmg01aB6FLbJ2ASbO1OSN76CEeN/s6p+0KtLELT8YBy7+trkPlWXiBy5+aOIL
+ RrEknSY6LgGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,410,1589266800"; 
+   d="scan'208";a="286543206"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga003.jf.intel.com with ESMTP; 29 Jul 2020 08:14:55 -0700
+Date:   Wed, 29 Jul 2020 08:14:55 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 1/4] KVM: SVM: nested: Don't allocate VMCB structures on
+ stack
+Message-ID: <20200729151454.GB27751@linux.intel.com>
+References: <20200729132234.2346-1-joro@8bytes.org>
+ <20200729132234.2346-2-joro@8bytes.org>
 MIME-Version: 1.0
-References: <DB7PR08MB380100FDD4D1B11062FA57819C690@DB7PR08MB3801.eurprd08.prod.outlook.com>
- <CAK7LNAQm87ykKi=OfToZRy2JtNt0OX3n6kXpNxNW5W7HREh4NA@mail.gmail.com> <DB7PR08MB38014590A0A929CF017546E89C700@DB7PR08MB3801.eurprd08.prod.outlook.com>
-In-Reply-To: <DB7PR08MB38014590A0A929CF017546E89C700@DB7PR08MB3801.eurprd08.prod.outlook.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 30 Jul 2020 00:13:35 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATO-z+S_jH_g9J1WFvzG1vqtODdK5vrav6xOV341yGX9g@mail.gmail.com>
-Message-ID: <CAK7LNATO-z+S_jH_g9J1WFvzG1vqtODdK5vrav6xOV341yGX9g@mail.gmail.com>
-Subject: Re: linux-5.8-rc4/scripts/kconfig/qconf.cc: 2 * bad delete ?
-To:     David Binderman <dcb314@hotmail.com>
-Cc:     "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729132234.2346-2-joro@8bytes.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 3:28 PM David Binderman <dcb314@hotmail.com> wrote:
->
-> Hello there,
->
-> >Will you send a patch, or shall I do it?
->
-> Option 2 please. I gave up doing kernel patches a long time ago.
+On Wed, Jul 29, 2020 at 03:22:31PM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> Do not allocate a vmcb_control_area and a vmcb_save_area on the stack,
+> as these structures will become larger with future extenstions of
+> SVM and thus the svm_set_nested_state() function will become a too large
+> stack frame.
 
-OK, I will send a patch.
+Speaking of too large, would it be overly paranoid to add:
 
+  BUILD_BUG_ON(sizeof(struct vmcb_control_area) + sizeof(struct vmcb_save_area) <
+	       KVM_STATE_NESTED_SVM_VMCB_SIZE)
 
-> >Could you please teach me how to reproduce them?
->
-> --language=c++ looks like a good candidate for a fix.
->
-> Regards
->
-> David Binderman
->
+More so for documentation than for any real concern that the SVM architecture
+will do something silly, e.g. to make it obvious that patch 2 in this series
+won't break backwards compatibility.
+ 
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/kvm/svm/nested.c | 44 ++++++++++++++++++++++++++-------------
+>  1 file changed, 30 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index 61378a3c2ce4..f3c3c4e1ca7f 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -1061,8 +1061,9 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+>  	struct vmcb *hsave = svm->nested.hsave;
+>  	struct vmcb __user *user_vmcb = (struct vmcb __user *)
+>  		&user_kvm_nested_state->data.svm[0];
+> -	struct vmcb_control_area ctl;
+> -	struct vmcb_save_area save;
+> +	struct vmcb_control_area *ctl;
+> +	struct vmcb_save_area *save;
+> +	int ret;
+>  	u32 cr0;
+>  
+>  	if (kvm_state->format != KVM_STATE_NESTED_FORMAT_SVM)
+> @@ -1096,13 +1097,22 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+>  		return -EINVAL;
+>  	if (kvm_state->size < sizeof(*kvm_state) + KVM_STATE_NESTED_SVM_VMCB_SIZE)
+>  		return -EINVAL;
+> -	if (copy_from_user(&ctl, &user_vmcb->control, sizeof(ctl)))
+> -		return -EFAULT;
+> -	if (copy_from_user(&save, &user_vmcb->save, sizeof(save)))
+> -		return -EFAULT;
+>  
+> -	if (!nested_vmcb_check_controls(&ctl))
+> -		return -EINVAL;
+> +	ret  = -ENOMEM;
+> +	ctl  = kzalloc(sizeof(*ctl),  GFP_KERNEL);
+> +	save = kzalloc(sizeof(*save), GFP_KERNEL);
+> +	if (!ctl || !save)
+> +		goto out_free;
+> +
+> +	ret = -EFAULT;
+> +	if (copy_from_user(ctl, &user_vmcb->control, sizeof(ctl)))
 
---language=c++ made no difference, but
-I figured out why cppcheck did not work for me.
+The sizeof() calc is wrong, this is now calculating the size of the pointer,
+not the size of the struct.  It'd need to be sizeof(*ctl).
 
+> +		goto out_free;
+> +	if (copy_from_user(save, &user_vmcb->save, sizeof(save)))
 
-If scripts/kconfig/qconf.moc is remaining,
-cppcheck does not work.
+Same bug here.
 
-
-After I deleted it, cppcheck worked for me.
-
-
-masahiro@oscar:~/workspace/linux$ make build_xconfig
-  HOSTCC  scripts/basic/fixdep
-  HOSTCC  scripts/kconfig/images.o
-  HOSTCC  scripts/kconfig/confdata.o
-  HOSTCC  scripts/kconfig/expr.o
-  LEX     scripts/kconfig/lexer.lex.c
-  YACC    scripts/kconfig/parser.tab.[ch]
-  HOSTCC  scripts/kconfig/lexer.lex.o
-  HOSTCC  scripts/kconfig/parser.tab.o
-  HOSTCC  scripts/kconfig/preprocess.o
-  HOSTCC  scripts/kconfig/symbol.o
-  HOSTCC  scripts/kconfig/util.o
-  UPD     scripts/kconfig/qconf-cfg
-  MOC     scripts/kconfig/qconf.moc
-  HOSTCXX scripts/kconfig/qconf.o
-  HOSTLD  scripts/kconfig/qconf
-masahiro@oscar:~/workspace/linux$ cppcheck  scripts/kconfig/qconf.cc
-Checking scripts/kconfig/qconf.cc ...
-masahiro@oscar:~/workspace/linux$ rm -f scripts/kconfig/qconf.moc
-masahiro@oscar:~/workspace/linux$ cppcheck  scripts/kconfig/qconf.cc
-Checking scripts/kconfig/qconf.cc ...
-scripts/kconfig/qconf.cc:1242:10: error: Mismatching allocation and
-deallocation: data [mismatchAllocDealloc]
-  delete data;
-         ^
-scripts/kconfig/qconf.cc:1236:15: note: Mismatching allocation and
-deallocation: data
- char *data = new char[count + 1];
-              ^
-scripts/kconfig/qconf.cc:1242:10: note: Mismatching allocation and
-deallocation: data
-  delete data;
-         ^
-scripts/kconfig/qconf.cc:1255:10: error: Mismatching allocation and
-deallocation: data [mismatchAllocDealloc]
-  delete data;
-         ^
-scripts/kconfig/qconf.cc:1236:15: note: Mismatching allocation and
-deallocation: data
- char *data = new char[count + 1];
-              ^
-scripts/kconfig/qconf.cc:1255:10: note: Mismatching allocation and
-deallocation: data
-  delete data;
-         ^
-
-
-
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> +		goto out_free;
+> +
+> +	ret = -EINVAL;
+> +	if (!nested_vmcb_check_controls(ctl))
+> +		goto out_free;
+>  
+>  	/*
+>  	 * Processor state contains L2 state.  Check that it is
+> @@ -1110,15 +1120,15 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+>  	 */
+>  	cr0 = kvm_read_cr0(vcpu);
+>          if (((cr0 & X86_CR0_CD) == 0) && (cr0 & X86_CR0_NW))
+> -                return -EINVAL;
+> +                goto out_free;
+>  
+>  	/*
+>  	 * Validate host state saved from before VMRUN (see
+>  	 * nested_svm_check_permissions).
+>  	 * TODO: validate reserved bits for all saved state.
+>  	 */
+> -	if (!(save.cr0 & X86_CR0_PG))
+> -		return -EINVAL;
+> +	if (!(save->cr0 & X86_CR0_PG))
+> +		goto out_free;
+>  
+>  	/*
+>  	 * All checks done, we can enter guest mode.  L1 control fields
+> @@ -1127,15 +1137,21 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+>  	 * contains saved L1 state.
+>  	 */
+>  	copy_vmcb_control_area(&hsave->control, &svm->vmcb->control);
+> -	hsave->save = save;
+> +	hsave->save = *save;
+>  
+>  	svm->nested.vmcb = kvm_state->hdr.svm.vmcb_pa;
+> -	load_nested_vmcb_control(svm, &ctl);
+> +	load_nested_vmcb_control(svm, ctl);
+>  	nested_prepare_vmcb_control(svm);
+>  
+>  out_set_gif:
+>  	svm_set_gif(svm, !!(kvm_state->flags & KVM_STATE_NESTED_GIF_SET));
+> -	return 0;
+> +
+> +	ret = 0;
+> +out_free:
+> +	kfree(save);
+> +	kfree(ctl);
+> +
+> +	return ret;
+>  }
+>  
+>  struct kvm_x86_nested_ops svm_nested_ops = {
+> -- 
+> 2.17.1
+> 
