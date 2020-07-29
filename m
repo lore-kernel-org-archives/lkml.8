@@ -4,131 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C44C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1F6122D2C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E3720FC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:57:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgG2Nx1 (ORCPT
+        id S1726724AbgG2N5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:53:27 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40454 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726336AbgG2Nx1 (ORCPT
+        Wed, 29 Jul 2020 09:57:47 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:58753 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgG2N5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 09:53:27 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06TDWXnQ044942;
-        Wed, 29 Jul 2020 09:53:24 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32jqrt03hb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 09:53:24 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06TDpuZn031806;
-        Wed, 29 Jul 2020 13:53:22 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 32gcpx556c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 13:53:22 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06TDrKVM27656604
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jul 2020 13:53:20 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E0590AE051;
-        Wed, 29 Jul 2020 13:53:19 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 96F51AE045;
-        Wed, 29 Jul 2020 13:53:19 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 29 Jul 2020 13:53:19 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf tests: Fix test 68 zstd compression for s390
-Date:   Wed, 29 Jul 2020 15:53:14 +0200
-Message-Id: <20200729135314.91281-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-29_07:2020-07-29,2020-07-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 lowpriorityscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0
- spamscore=0 adultscore=0 impostorscore=0 suspectscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007290087
+        Wed, 29 Jul 2020 09:57:46 -0400
+X-Originating-IP: 84.44.14.226
+Received: from nexussix.ar.arcelik (unknown [84.44.14.226])
+        (Authenticated sender: cengiz@kernel.wtf)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 758C61C0012;
+        Wed, 29 Jul 2020 13:57:42 +0000 (UTC)
+From:   Cengiz Can <cengiz@kernel.wtf>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Cengiz Can <cengiz@kernel.wtf>
+Subject: [PATCH] staging: atomisp: move null check to earlier point
+Date:   Wed, 29 Jul 2020 16:56:37 +0300
+Message-Id: <20200729135636.9220-1-cengiz@kernel.wtf>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 5aa98879efe7 ("s390/cpum_sf: prohibit callchain data collection")
-prohibits call graph sampling for hardware events on s390. The
-information recorded is out of context and does not match.
+`find_gmin_subdev` function that returns a pointer to `struct
+gmin_subdev` can return NULL.
 
-On s390 this commit now breaks test case 68
-Zstd perf.data compression/decompression.
+In `gmin_v2p8_ctrl` there's a call to this function but the possibility
+of a NULL was not checked before its being dereferenced. ie:
 
-Therefore omit call graph sampling on s390 in this test.
+```
+/* Acquired here --------v */
+struct gmin_subdev *gs = find_gmin_subdev(subdev);
+int ret;
+int value;
 
-Output before:
-  [root@t35lp46 perf]# ./perf test -Fv 68
-  68: Zstd perf.data compression/decompression              :
-  --- start ---
-  Collecting compressed record file:
-  Error:
-  cycles: PMU Hardware doesn't support sampling/overflow-interrupts.
-                                Try 'perf stat'
-  ---- end ----
-  Zstd perf.data compression/decompression: FAILED!
-  [root@t35lp46 perf]#
+/*  v------Dereferenced here */
+if (gs->v2p8_gpio >= 0) {
+	pr_info("atomisp_gmin_platform: 2.8v power on GPIO %d\n",
+		gs->v2p8_gpio);
+	ret = gpio_request(gs->v2p8_gpio, "camera_v2p8");
+	if (!ret)
+		ret = gpio_direction_output(gs->v2p8_gpio, 0);
+	if (ret)
+		pr_err("V2P8 GPIO initialization failed\n");
+}
+```
 
-Output after:
-[root@t35lp46 perf]# ./perf test -Fv 68
-  68: Zstd perf.data compression/decompression              :
-  --- start ---
-  Collecting compressed record file:
-  500+0 records in
-  500+0 records out
-  256000 bytes (256 kB, 250 KiB) copied, 0.00615638 s, 41.6 MB/s
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.004 MB /tmp/perf.data.X3M,
-                        compressed (original 0.002 MB, ratio is 3.609) ]
-  Checking compressed events stats:
-  # compressed : Zstd, level = 1, ratio = 4
-        COMPRESSED events:          1
-  2ELIFREPh---- end ----
-  Zstd perf.data compression/decompression: Ok
-  [root@t35lp46 perf]#
+I have moved the NULL check before deref point.
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Caught-by: Coverity Static Analyzer CID 1465536
+Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
 ---
- tools/perf/tests/shell/record+zstd_comp_decomp.sh | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/record+zstd_comp_decomp.sh b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-index 63a91ec473bb..045723b3d992 100755
---- a/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-+++ b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-@@ -12,7 +12,8 @@ skip_if_no_z_record() {
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+index 0df46a1af5f0..8e9c5016f299 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+@@ -871,6 +871,11 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, int on)
+ 	int ret;
+ 	int value;
  
- collect_z_record() {
- 	echo "Collecting compressed record file:"
--	$perf_tool record -o $trace_file -g -z -F 5000 -- \
-+	[[ "$(uname -m)" != s390x ]] && gflag='-g'
-+	$perf_tool record -o $trace_file $gflag -z -F 5000 -- \
- 		dd count=500 if=/dev/urandom of=/dev/null
- }
++	if (!gs) {
++		pr_err("Unable to find gmin subdevice\n");
++		return -EINVAL;
++	}
++
+ 	if (gs->v2p8_gpio >= 0) {
+ 		pr_info("atomisp_gmin_platform: 2.8v power on GPIO %d\n",
+ 			gs->v2p8_gpio);
+@@ -881,7 +886,7 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, int on)
+ 			pr_err("V2P8 GPIO initialization failed\n");
+ 	}
+ 
+-	if (!gs || gs->v2p8_on == on)
++	if (gs->v2p8_on == on)
+ 		return 0;
+ 	gs->v2p8_on = on;
  
 -- 
-2.26.2
+2.27.0
 
