@@ -2,107 +2,123 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F6BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B505C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE88206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7FFB2250E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:35:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F4+6Si+X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fnaj/oNA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgG2Jdy (ORCPT
+        id S1728122AbgG2JfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:33:54 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:51771 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726536AbgG2Jdx (ORCPT
+        Wed, 29 Jul 2020 05:35:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgG2JfC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:33:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596015232;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NcytAw49Ogv+T6nX8O+DUO/ud353HRXDgEw6dxPF2is=;
-        b=F4+6Si+XQDWskJTMdGhm3TRK8ydUqS0364w9mXolDuM6CVG/8CP+et2QEZqQ0lq/BgsI0E
-        fMpvC0MueoZdryp3edvaOjA9x/yPeO0RSOOJybdheVpPbOGz4/i584QQBh59rBBXl8VYsu
-        sgYk8m1xbAiPSTc3PkvuPyU6cE2kVvU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-474-IqC2wmCtN_6Xj1-G6eL3FQ-1; Wed, 29 Jul 2020 05:33:33 -0400
-X-MC-Unique: IqC2wmCtN_6Xj1-G6eL3FQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5207980183C;
-        Wed, 29 Jul 2020 09:33:32 +0000 (UTC)
-Received: from [10.72.13.120] (ovpn-13-120.pek2.redhat.com [10.72.13.120])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F0F6512FE;
-        Wed, 29 Jul 2020 09:33:05 +0000 (UTC)
-Subject: Re: [PATCH] virtio_balloon: fix up endian-ness for free cmd id
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Liang Li <liang.z.li@intel.com>,
-        Wei Wang <wei.w.wang@intel.com>,
-        virtualization@lists.linux-foundation.org,
-        Alexander Duyck <alexander.duyck@gmail.com>
-References: <20200727160310.102494-1-mst@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <0dceaf8c-de35-93d6-f81b-67c2fdebf5ef@redhat.com>
-Date:   Wed, 29 Jul 2020 17:33:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 05:35:02 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6519C061794;
+        Wed, 29 Jul 2020 02:35:02 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id u10so2065843plr.7;
+        Wed, 29 Jul 2020 02:35:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/VC/uuXlxbfidiPavUNDWLqmh29pPpdY7lZrRMtmTSc=;
+        b=Fnaj/oNACCtyQMFYLfrPnYYFEhKCzFNvxIB+REhxwQtfO6HNXrjwHVqcjBE4C5qOY5
+         D4cojmVmzOBAOffao2GprTw330iIZXLBP0QE0bB/ncaXGv2wO6V7Q+ZVUjOXbujTnOyH
+         bvSff2vbnQ6/eZZrlrHwohIPCjfsx2U0M+OhMN6A028p9rbp3YGpDGJcKBwCg12tAvvh
+         z/JlB4L9gJpvs+Ok4X3m7tVKWKbNWmFiPXCsXxZjCrTFoiRXOo4T2RnDPZP0CbWIp9pg
+         orntmTtxxaRQde7TOqshbXt6yleDAxbpthaaEZPTcY5bsuqPzbumF7gaZbrKfAm41Fqb
+         tdgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/VC/uuXlxbfidiPavUNDWLqmh29pPpdY7lZrRMtmTSc=;
+        b=ZB/Ns2VxY7rDFIa1kGuCxglL1m1bwPHSokAThMmeDJWdYuZ/qgvPU0DAnfVct/Hi7u
+         9rE7koYkTBhgxePEHKSr/KKSt+H45OTocar2bAfMVLSk5h6UHsy+/h+2ON3HcRqRZdk5
+         DYdIPPEjpMgmmscqji9l5cSshfBWD2mpsltwJbkso9E3m1D6ePeVdIf8uvYz6xsjzrn/
+         CP4LtUyrlA70/aHYdZLIH/Xge9ffQ4QahZ3fbeuIBFibHYi0JGti06DiXWRwsvq40hUw
+         X7L12iENuaE+lVpugSM5wEv2ZvfEzw6gDav8QmdY24xa7zL4mkNo9x3ORSsUbdrtf0e3
+         ggAQ==
+X-Gm-Message-State: AOAM533/Y4s+rHi+CKlGnoblaUxV2m7UgktWd+MzoYXwbEXbZwgj5wcx
+        H/GgbrFwpuRRnlK2ycNUyD4=
+X-Google-Smtp-Source: ABdhPJzEexquEKUe9twCBLq1d8kcS0mozlBLo29gmEHYFZHa4AzIjwOg61M04XVBKrqC6uNu+MhaBA==
+X-Received: by 2002:a17:90a:1b42:: with SMTP id q60mr8823265pjq.78.1596015302196;
+        Wed, 29 Jul 2020 02:35:02 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id b21sm1677814pfp.172.2020.07.29.02.34.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 02:35:01 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Taiping Lai <taiping.lai@unisoc.com>
+Subject: [PATCH] gpio: sprd: Clear interrupt when setting the type as edge
+Date:   Wed, 29 Jul 2020 17:34:50 +0800
+Message-Id: <20200729093450.28585-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200727160310.102494-1-mst@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Taiping Lai <taiping.lai@unisoc.com>
 
-On 2020/7/28 上午12:03, Michael S. Tsirkin wrote:
-> free cmd id is read using virtio endian, spec says all fields
-> in balloon are LE. Fix it up.
->
-> Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->   drivers/virtio/virtio_balloon.c | 6 +++++-
->   1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> index 774deb65a9bb..798ec304fe3e 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -578,10 +578,14 @@ static int init_vqs(struct virtio_balloon *vb)
->   static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
->   {
->   	if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
-> -			       &vb->config_read_bitmap))
-> +			       &vb->config_read_bitmap)) {
->   		virtio_cread(vb->vdev, struct virtio_balloon_config,
->   			     free_page_hint_cmd_id,
->   			     &vb->cmd_id_received_cache);
-> +		/* Legacy balloon config space is LE, unlike all other devices. */
-> +		if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
-> +			vb->cmd_id_received_cache = le32_to_cpu((__force __le32)vb->cmd_id_received_cache);
-> +	}
->   
->   	return vb->cmd_id_received_cache;
->   }
+The raw interrupt status of GPIO maybe set before the interrupt is enabled,
+which would trigger the interrupt event once enabled it from user side.
+This is the case for edge interrupts only. Adding a clear operation when
+setting interrupt type can avoid that.
 
+Fixes: 9a3821c2bb47 ("gpio: Add GPIO driver for Spreadtrum SC9860 platform")
+Signed-off-by: Taiping Lai <taiping.lai@unisoc.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+---
+ drivers/gpio/gpio-sprd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Acked-by: Jason Wang <jasowang@redhat.com>
-
+diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
+index d7314d39ab65..36ea8a3bd451 100644
+--- a/drivers/gpio/gpio-sprd.c
++++ b/drivers/gpio/gpio-sprd.c
+@@ -149,17 +149,20 @@ static int sprd_gpio_irq_set_type(struct irq_data *data,
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 1);
++		sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+ 		irq_set_handler_locked(data, handle_edge_irq);
+ 		break;
+ 	case IRQ_TYPE_EDGE_FALLING:
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 0);
++		sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+ 		irq_set_handler_locked(data, handle_edge_irq);
+ 		break;
+ 	case IRQ_TYPE_EDGE_BOTH:
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
+ 		sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 1);
++		sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
+ 		irq_set_handler_locked(data, handle_edge_irq);
+ 		break;
+ 	case IRQ_TYPE_LEVEL_HIGH:
+-- 
+2.20.1
 
