@@ -2,370 +2,107 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F38C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 489E5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3676820829
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 286F720809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:28:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="E/AwBxty"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XEmLoBDr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgG2N14 (ORCPT
+        id S1727091AbgG2N2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:27:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50158 "EHLO
+        Wed, 29 Jul 2020 09:28:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbgG2N14 (ORCPT
+        with ESMTP id S1726336AbgG2N2w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 09:27:56 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B93BAC061794;
-        Wed, 29 Jul 2020 06:27:55 -0700 (PDT)
-Received: from [192.168.0.20] (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0F6C031F;
-        Wed, 29 Jul 2020 15:27:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1596029273;
-        bh=6HTm8IbNAN7aowz5xfK1qM2SEFgaSs/aEMBKTuFHDIs=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=E/AwBxtyCRBdKfpGfwBMcZzkw/GnlJ8i2DKs27FDlhJ9LZ4rsJLT4zCXPKd1kZCsG
-         +8eBE3MGYSya+w5hlg/ir1pewQTYrIfDkjp4XB32gre3+1gFLmf8j5g5qn7bSY45q9
-         0WMsZB0VZkluQCc9EUY04wuSppmkNBpovDDTHPTE=
-Reply-To: kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v2 0/3] media: vimc: Allow multiple capture devices to use
- the same sensor
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Helen Koike <helen.koike@collabora.com>
-Cc:     =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
- <20200724121521.GA2705690@oden.dyn.berto.se>
- <20200724122104.GA18482@kaaira-HP-Pavilion-Notebook>
- <a6f4eabf-6cd5-950b-f2e3-853370c77629@ideasonboard.com>
- <2a6cb067-283d-ca65-2698-1fae66a17d02@collabora.com>
- <20200728113959.GA6350@kaaira-HP-Pavilion-Notebook>
- <3a9ac970-77b8-1bc5-536a-5b4f2bd60745@collabora.com>
- <b5fd3811-2f0e-7563-13fa-bb1e32189814@collabora.com>
- <f2fc6d81-16a6-206b-6bb2-fb99d5a84f65@ideasonboard.com>
- <cd1d18ef-d4ff-8240-e9dd-2d9f9c7c5a45@collabora.com>
-From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
-Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
- 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
- WZw01QYHU/GUV/zHJSFk
-Organization: Ideas on Board
-Message-ID: <a2ae2dba-6076-0abc-f620-9047a52b513c@ideasonboard.com>
-Date:   Wed, 29 Jul 2020 14:27:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 09:28:52 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BD72C061794;
+        Wed, 29 Jul 2020 06:28:52 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id t6so14261763pgq.1;
+        Wed, 29 Jul 2020 06:28:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cULnoqyNJJnXVuC40A9E1u8TE8EnnT1/19zUse3T/VI=;
+        b=XEmLoBDrinHYCFTcJcW+UOEZ8KxuIKH9iTnRDN5wudpntw9HVcVp37oW3GiBezImF9
+         gEZBQs9DDbA0/95nTc4Gd6FmmziJUv3u/YorcpXTOUvSqDagORo+Z2H96c01C1dvgx8n
+         GqHae3pyM2+c4BMUIkH0+brnn2PfqjE/SGphKQqlnmTSNhiPe6Ss9hMPjfHA+Y88odFD
+         2rTz0YHu7nImtxBcBOeNazkuGfTCi49mBN7dP5QBCvIzK4gFs8273xYam97GIBaV+jZd
+         RnTjN+xRr2gIETgcw2oh+N1/t8wuivIniMttocLAu8Y2ak4bBDvfP9P7IrHR7Ky1CSnF
+         sJcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cULnoqyNJJnXVuC40A9E1u8TE8EnnT1/19zUse3T/VI=;
+        b=dT7lS7KHKCyCQH9WhXUvEA/3Yp9TcJLiE2eu3n1Qgu1Ubbx9dTfKXk8AEKIbPdliEo
+         Ejb8PkTg6McBfVIxufoKm/LVNUdYvxxupZXYPjO6sJdbZFOGvFod0pgLPeQwafv4oWZo
+         AEnBJ3UnixYPFhZQ/5hFGk2hLPE0ZvlVfQtPtfARz+FgBVRqovPeXxzfPlbseqwP/2Bu
+         7TaI6/Df5GGDECRg5EEbmMfVBKFrJahU6OGsLb7JlSo+80s2oNUSMln2/kLf5ZbSJL89
+         DjaxLadrrKLlULeJx/gT/4VxVsZDNUrMazNvWPj/FUN5NHZKP5NGOZgnbow4ZAyYFMq5
+         29vg==
+X-Gm-Message-State: AOAM530sv6/gQCU2Mw2agFPYhLp34xoEs6v8NzetUHGapW2AQAH3ObxF
+        6CPH+gY/UeUTAD63hzNHY8s=
+X-Google-Smtp-Source: ABdhPJzGy/nO7aDpLYUGwmJgQbgVB6LKzJ+sGz8VEuSG3KJsjQseU5I9sMmRLzMNwC1mHwfcKS7KFA==
+X-Received: by 2002:a65:484c:: with SMTP id i12mr30697513pgs.145.1596029331998;
+        Wed, 29 Jul 2020 06:28:51 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id o128sm2491688pfg.127.2020.07.29.06.28.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 06:28:51 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 22:28:49 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     peterz@infradead.org
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH 0/2] locking/qspinlock: Break qspinlock_types.h header
+ loop
+Message-ID: <20200729132849.GA1160@jagdpanzerIV.localdomain>
+References: <20200729210311.425d0e9b@canb.auug.org.au>
+ <20200729114757.GA19388@gondor.apana.org.au>
+ <20200729122807.GA7047@gondor.apana.org.au>
+ <20200729124744.GC2638@hirez.programming.kicks-ass.net>
+ <20200729125144.GA7184@gondor.apana.org.au>
+ <20200729130000.GA2655@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <cd1d18ef-d4ff-8240-e9dd-2d9f9c7c5a45@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729130000.GA2655@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dafna, Kaaira,
-
-On 29/07/2020 14:16, Dafna Hirschfeld wrote:
+On (20/07/29 15:00), peterz@infradead.org wrote:
+> On Wed, Jul 29, 2020 at 10:51:44PM +1000, Herbert Xu wrote:
+> > On Wed, Jul 29, 2020 at 02:47:44PM +0200, peterz@infradead.org wrote:
+> > >
+[..]
+> > > Anyway, the patches look sane enough, I'll go stick them in
+> > > tip/locking/core or somesuch.
+> > 
+> > Perhaps add them on top of the other two patches in locking/header?
 > 
-> 
-> On 29.07.20 15:05, Kieran Bingham wrote:
->> Hi Dafna,
->>
->> On 28/07/2020 15:00, Dafna Hirschfeld wrote:
->>>
->>>
->>> On 28.07.20 14:07, Dafna Hirschfeld wrote:
->>>> Hi
->>>>
->>>> On 28.07.20 13:39, Kaaira Gupta wrote:
->>>>> On Mon, Jul 27, 2020 at 02:54:30PM -0300, Helen Koike wrote:
->>>>>> Hi,
->>>>>>
->>>>>> On 7/27/20 11:31 AM, Kieran Bingham wrote:
->>>>>>> Hi all,
->>>>>>>
->>>>>>> +Dafna for the thread discussion, as she's missed from the to/cc
->>>>>>> list.
->>>>>>>
->>>>>>>
->>>>>>> On 24/07/2020 13:21, Kaaira Gupta wrote:
->>>>>>>> On Fri, Jul 24, 2020 at 02:15:21PM +0200, Niklas Söderlund wrote:
->>>>>>>> Hi,
->>>>>>>>
->>>>>>>>> Hi Kaaira,
->>>>>>>>>
->>>>>>>>> Thanks for your work.
->>>>>>>>
->>>>>>>> Thanks for yours :D
->>>>>>>>
->>>>>>>>>
->>>>>>>>> On 2020-07-24 17:32:10 +0530, Kaaira Gupta wrote:
->>>>>>>>>> This is version 2 of the patch series posted by Niklas for
->>>>>>>>>> allowing
->>>>>>>>>> multiple streams in VIMC.
->>>>>>>>>> The original series can be found here:
->>>>>>>>>> https://patchwork.kernel.org/cover/10948831/
->>>>>>>>>>
->>>>>>>>>> This series adds support for two (or more) capture devices to be
->>>>>>>>>> connected to the same sensors and run simultaneously. Each
->>>>>>>>>> capture device
->>>>>>>>>> can be started and stopped independent of each other.
->>>>>>>>>>
->>>>>>>>>> Patch 1/3 and 2/3 deals with solving the issues that arises once
->>>>>>>>>> two
->>>>>>>>>> capture devices can be part of the same pipeline. While 3/3
->>>>>>>>>> allows for
->>>>>>>>>> two capture devices to be part of the same pipeline and thus
->>>>>>>>>> allows for
->>>>>>>>>> simultaneously use.
->>>>
->>>> I wonder if these two patches are enough, since each vimc entity also
->>>> have
->>>> a 'process_frame' callback, but only one allocated frame. That means
->>>> that the 'process_frame' can be called concurrently by two different
->>>> streams
->>>> on the same frame and cause corruption.
->>>>
->>>
->>> I think we should somehow change the vimc-stream.c code so that we have
->>> only
->>> one stream process per pipe. So if one capture is already streaming,
->>> then the new
->>> capture that wants to stream uses the same thread so we don't have two
->>> threads
->>> both calling 'process_frame'.
->>
->>
->> Yes, I think it looks and sounds like there are two threads running when
->> there are two streams.
->>
->> so in effect, although they 'share a pipe', aren't they in effect just
->> sending two separate buffers through their stream-path?
->>
->> If that's the case, then I don't think there's any frame corruption,
->> because they would both have grabbed their own frame separately.
-> 
-> But each entity allocates just one buffer. So the same buffer is used for
-> both stream.
+> Can do,
 
-Aha, ok, I hadn't realised there was only a single buffer available in
-the pipeline for each entity. Indeed there is a risk of corruption in
-that case.
+locking/header would be better
 
-> What for example can happen is that the debayer of one stream can read the
-> sensor's buffer while the sensor itself writes to the buffer for the other
-> stream.
-
-
-So, In that case, we have currently got a scenario where each 'stream'
-really is operating it's own pipe (even though all components are reused).
-
-Two questions:
-
-Is this acceptable, and we should just use a mutex to ensure the buffers
-are not corrupted, but essentially each stream is a separate temporal
-capture?
-
-
-Or B:
-
-Should we refactor to make sure that there is a single thread, and the
-code which calls process_frame on each entity should become aware of the
-potential for multiple paths at the point of the sensor.
-
-
-I suspect option B is really the 'right' path to take, but it is more
-complicated of course.
-
---
-Kieran
-
-
-
-
-> Thanks,
-> Dafna
-> 
->>
->>
->> I don't think that's a good example of the hardware though, as that
->> doesn't reflect what 'should' happen where the TPG runs once to generate
->> a frame at the sensor, which is then read by both the debayer entity and
->> the RAW capture device when there are two streams...
->>
->>
->> So I suspect trying to move to a single thread is desirable, but that
->> might be a fair bit of work also.
->>
->> -- 
->> Kieran
->>
->>
->>
->>> The second capture that wants to stream should iterate the topology
->>> downwards until
->>> reaching an entity that already belong to the stream path of the other
->>> streaming capture
->>> and tell the streamer it wants to read the frames this entity
->>> produces.
->>>
->>> Thanks,
->>> Dafna
->>>
->>>> Thanks,
->>>> Dafna
->>>>
->>>>>>>>>
->>>>>>>>> I'm just curious if you are aware of this series? It would
->>>>>>>>> replace the
->>>>>>>>> need for 1/3 and 2/3 of this series right?
->>>>>>>>
->>>>>>>> v3 of this series replaces the need for 1/3, but not the current
->>>>>>>> version
->>>>>>>> (ie v4). v4 of patch 2/5 removes the stream_counter that is
->>>>>>>> needed to
->>>>>>>> keep count of the calls to s_stream. Hence 1/3 becomes relevant
->>>>>>>> again.
->>>>>>>
->>>>>>> So the question really is, how do we best make use of the two
->>>>>>> current
->>>>>>> series, to achieve our goal of supporting multiple streams.
->>>>>>>
->>>>>>> Having not parsed Dafna's series yet, do we need to combine
->>>>>>> elements of
->>>>>>> both ? Or should we work towards starting with this series and get
->>>>>>> dafna's patches built on top ?
->>>>>>>
->>>>>>> Or should patch 1/3 and 3/3 of this series be on top of Dafna's v4 ?
->>>>>>>
->>>>>>> (It might be noteworthy to say that Kaaira has reported successful
->>>>>>> multiple stream operation from /this/ series and her development
->>>>>>> branch
->>>>>>> on libcamera).
->>>>>>
->>>>>> Dafna's patch seems still under discussion, but I don't want to
->>>>>> block progress in Vimc either.
->>>>>>
->>>>>> So I was wondering if we can move forward with Vimc support for
->>>>>> multistreaming,
->>>>>> without considering Dafna's patchset, and we can do the clean up
->>>>>> later once we solve that.
->>>>>>
->>>>>> What do you think?
->>>>>
->>>>> I agree with supporting multiple streams with VIMC with this patchset,
->>>>> and then we can refactor the counters for s_stream in VIMC later (over
->>>>> this series) if dafna includes them in subsequent version of her
->>>>> patchset.
->>>>>
->>>>
->>>> I also think that adding support in the code will take much longer and
->>>> should not
->>>> stop us from supporting vimc independently.
->>>>
->>>> Thanks,
->>>> Dafna
->>>>
->>>>>>
->>>>>> Regards,
->>>>>> Helen
->>>>>>
->>>>>>>
->>>>>>>
->>>>>>>>> 1.
->>>>>>>>> https://lore.kernel.org/linux-media/20200522075522.6190-1-dafna.hirschfeld@collabora.com/
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Changes since v1:
->>>>>>>>>>      - All three patches rebased on latest media-tree.
->>>>>>>>>>      Patch 3:
->>>>>>>>>>      - Search for an entity with a non-NULL pipe instead of
->>>>>>>>>> searching
->>>>>>>>>>        for sensor. This terminates the search at output itself.
->>>>>>>>>>
->>>>>>>>>> Kaaira Gupta (3):
->>>>>>>>>>     media: vimc: Add usage count to subdevices
->>>>>>>>>>     media: vimc: Serialize vimc_streamer_s_stream()
->>>>>>>>>>     media: vimc: Join pipeline if one already exists
->>>>>>>>>>
->>>>>>>>>>    .../media/test-drivers/vimc/vimc-capture.c    | 35
->>>>>>>>>> ++++++++++++++++++-
->>>>>>>>>>    .../media/test-drivers/vimc/vimc-debayer.c    |  8 +++++
->>>>>>>>>>    drivers/media/test-drivers/vimc/vimc-scaler.c |  8 +++++
->>>>>>>>>>    drivers/media/test-drivers/vimc/vimc-sensor.c |  9 ++++-
->>>>>>>>>>    .../media/test-drivers/vimc/vimc-streamer.c   | 23
->>>>>>>>>> +++++++-----
->>>>>>>>>>    5 files changed, 73 insertions(+), 10 deletions(-)
->>>>>>>>>>
->>>>>>>>>> -- 
->>>>>>>>>> 2.17.1
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>> -- 
->>>>>>>>> Regards,
->>>>>>>>> Niklas Söderlund
->>>>>>>
->>
-
--- 
-Regards
---
-Kieran
+	-ss
