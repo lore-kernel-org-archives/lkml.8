@@ -2,98 +2,264 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64C4C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E05222075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935882053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:15:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596050153;
+	bh=zbHTicE/c9neTc8f6wwtdhkgsPiRJ2V21XdJuKaX+h8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WzHZt1GZseo+RKSfoo4HQjHxz3PGVXsJ6nSnednaxvflxj9yQAoHaSra6ZifnEerv
+	 JSsrdHXewC8JPm5owcBF7LFlDLw5cdnItkOgG8QGmEzpV7IxhpJRq+UUS+nkSCqpJC
+	 YJwhd3sE/taN7PZnIq+48b1LEzrmxvD47Nhv/1vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgG2TN3 convert rfc822-to-8bit (ORCPT
+        id S1726746AbgG2TPw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 15:13:29 -0400
-Received: from mga01.intel.com ([192.55.52.88]:2252 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbgG2TN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 15:13:29 -0400
-IronPort-SDR: APilKWlAra2BRvFzKRAk5pYx9pOqQ1yAwQ89Ao3M3WQd21Fa+8RxR8qb2RMwT0BfP79ZIeiq+O
- AWe4moDyXe9g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="169609180"
-X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
-   d="scan'208";a="169609180"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 12:13:29 -0700
-IronPort-SDR: myaKcCtokUJMkzeggkpvAj5yxerRteQIEo9VLaiKhg7BXQhs0cG1Dr2nExr3NPQZHn5rKMBVyK
- g63hxz7RTLnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
-   d="scan'208";a="490391579"
-Received: from askotian-mobl2.amr.corp.intel.com (HELO ellie) ([10.212.6.60])
-  by fmsmga006.fm.intel.com with ESMTP; 29 Jul 2020 12:13:28 -0700
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     "Zhang\, Qiang" <Qiang.Zhang@windriver.com>,
-        syzbot <syzbot+9f78d5c664a8c33f4cce@syzkaller.appspotmail.com>,
-        "davem\@davemloft.net" <davem@davemloft.net>,
-        "fweisbec\@gmail.com" <fweisbec@gmail.com>,
-        "jhs\@mojatatu.com" <jhs@mojatatu.com>,
-        "jiri\@resnulli.us" <jiri@resnulli.us>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo\@kernel.org" <mingo@kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        "syzkaller-bugs\@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "xiyou.wangcong\@gmail.com" <xiyou.wangcong@gmail.com>
-Subject: Re: =?utf-8?B?5Zue5aSNOg==?= INFO: rcu detected stall in
- tc_modify_qdisc
-In-Reply-To: <BYAPR11MB2632784BE3AD9F03C5C95263FF700@BYAPR11MB2632.namprd11.prod.outlook.com>
-References: <0000000000006f179d05ab8e2cf2@google.com> <BYAPR11MB2632784BE3AD9F03C5C95263FF700@BYAPR11MB2632.namprd11.prod.outlook.com>
-Date:   Wed, 29 Jul 2020 12:13:25 -0700
-Message-ID: <87tuxqxhgq.fsf@intel.com>
+        Wed, 29 Jul 2020 15:15:52 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:39930 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgG2TPv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 15:15:51 -0400
+Received: by mail-ej1-f67.google.com with SMTP id f24so4991616ejx.6;
+        Wed, 29 Jul 2020 12:15:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=QZvLyh/VTiAroCKTHFmeviwTx1lu+DKij2yBWYhIrcw=;
+        b=G9bggxMB1xUmuQebRKNSKXFkdL466vZOuAuEv+NRzyFQapAr7eu5N1nW4TKq4WfIIs
+         rHILIs3vsdndInHTsiccxM7m8eu/iS7CMvn/r3CjG7HqdVl6NPxXC4jyduqvEaekGnMW
+         rXznwJCsmvgYpB4wT6DyzfLnB0N3bNHWOvtkJfKNrYzeq58RuLJ6GOiJMgHdXUjf0ous
+         R2nZKDQR6hRaLjuBA1rHUX++bL2PZLbhCpsCcI7uRVPPtpYUcwi1c0iRhRjZ741KgtHu
+         VrsoDBKr6rvZu7ewxejxtiX8/Rs7QUwni52qBaO8+wbyl1Ja1Zr2XRLztE1PorMxaxsQ
+         yPcw==
+X-Gm-Message-State: AOAM531POhmbcCzQ5Y97K891zHxvuIUMtd1Sz9mQ2waT7a0rofqg0jhY
+        61jg3YWmCBODTrxjnOrX5gw=
+X-Google-Smtp-Source: ABdhPJxbsPHi+l7rio/Z0goWffH1GbVr5+PSMaXjywPWSYEaxGui4MiOyNpWy06XsJSiPrUEKZdNFQ==
+X-Received: by 2002:a17:906:264d:: with SMTP id i13mr7219416ejc.284.1596050148541;
+        Wed, 29 Jul 2020 12:15:48 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id m12sm1550383edv.94.2020.07.29.12.15.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Jul 2020 12:15:47 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 21:15:44 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tomasz Figa <tomasz.figa@gmail.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Vincent Sanders <vince@simtec.co.uk>,
+        Simtec Linux Team <linux@simtec.co.uk>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        patches@opensource.cirrus.com,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org,
+        Sergio Prado <sergio.prado@e-labworks.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Cedric Roux <sed@free.fr>, Lihua Yao <ylhuajnu@outlook.com>
+Subject: Re: [PATCH 6/7] ARM: s3c64xx: Switch to generic watchdog driver reset
+Message-ID: <20200729191544.GB5822@kozik-lap>
+References: <20200729160942.28867-1-krzk@kernel.org>
+ <20200729160942.28867-7-krzk@kernel.org>
+ <CA+Ln22F_PaEMNyEg4XSR0PXHTa+3dQyEvzgtnRNHMu61uZytQg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8BIT
+In-Reply-To: <CA+Ln22F_PaEMNyEg4XSR0PXHTa+3dQyEvzgtnRNHMu61uZytQg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jul 29, 2020 at 07:33:33PM +0200, Tomasz Figa wrote:
+> Hi Krzysztof,
+> 
+> 2020年7月29日(水) 18:11 Krzysztof Kozlowski <krzk@kernel.org>:
+> >
+> > Similarly to commit f6361c6b3880 ("ARM: S3C24XX: remove separate restart
+> > code"), the platform watchdog reset code can be removed in favor of
+> > a generic watchdog driver which already handles reset.
+> >
+> > This allows removal of a bunch of machine code and fixes also W=1
+> > compile warnings:
+> >
+> >     arch/arm/plat-samsung/watchdog-reset.c:29:6: warning: no previous prototype for 'samsung_wdt_reset' [-Wmissing-prototypes]
+> >        29 | void samsung_wdt_reset(void)
+> >           |      ^~~~~~~~~~~~~~~~~
+> >     arch/arm/plat-samsung/watchdog-reset.c:69:13: warning: no previous prototype for 'samsung_wdt_reset_of_init' [-Wmissing-prototypes]
+> >        69 | void __init samsung_wdt_reset_of_init(void)
+> >           |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+> >     arch/arm/plat-samsung/watchdog-reset.c:89:13: warning: no previous prototype for 'samsung_wdt_reset_init' [-Wmissing-prototypes]
+> >        89 | void __init samsung_wdt_reset_init(void __iomem *base)
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  arch/arm/mach-s3c64xx/Kconfig           |  3 +-
+> >  arch/arm/mach-s3c64xx/common.c          | 15 +---
+> >  arch/arm/mach-s3c64xx/common.h          |  2 -
+> >  arch/arm/mach-s3c64xx/mach-anw6410.c    |  1 -
+> >  arch/arm/mach-s3c64xx/mach-crag6410.c   |  1 -
+> >  arch/arm/mach-s3c64xx/mach-hmt.c        |  1 -
+> >  arch/arm/mach-s3c64xx/mach-mini6410.c   |  1 -
+> >  arch/arm/mach-s3c64xx/mach-ncp.c        |  1 -
+> >  arch/arm/mach-s3c64xx/mach-real6410.c   |  1 -
+> >  arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c | 17 -----
+> >  arch/arm/mach-s3c64xx/mach-smartq5.c    |  1 -
+> >  arch/arm/mach-s3c64xx/mach-smartq7.c    |  1 -
+> >  arch/arm/mach-s3c64xx/mach-smdk6400.c   |  1 -
+> >  arch/arm/mach-s3c64xx/mach-smdk6410.c   |  1 -
+> >  arch/arm/mach-s3c64xx/watchdog-reset.h  | 16 -----
+> >  arch/arm/plat-samsung/Kconfig           |  6 --
+> >  arch/arm/plat-samsung/Makefile          |  1 -
+> >  arch/arm/plat-samsung/watchdog-reset.c  | 93 -------------------------
+> >  18 files changed, 5 insertions(+), 158 deletions(-)
+> >  delete mode 100644 arch/arm/mach-s3c64xx/watchdog-reset.h
+> >  delete mode 100644 arch/arm/plat-samsung/watchdog-reset.c
+> >
+> 
+> Thanks for the patch! Please see my comments inline.
+> 
+> > diff --git a/arch/arm/mach-s3c64xx/Kconfig b/arch/arm/mach-s3c64xx/Kconfig
+> > index e208c2b48853..f3fcb570edf5 100644
+> > --- a/arch/arm/mach-s3c64xx/Kconfig
+> > +++ b/arch/arm/mach-s3c64xx/Kconfig
+> > @@ -18,9 +18,10 @@ menuconfig ARCH_S3C64XX
+> >         select PM_GENERIC_DOMAINS if PM
+> >         select S3C_DEV_NAND if ATAGS
+> >         select S3C_GPIO_TRACK if ATAGS
+> > +       select S3C2410_WATCHDOG
+> >         select SAMSUNG_ATAGS if ATAGS
+> >         select SAMSUNG_WAKEMASK if PM
+> > -       select SAMSUNG_WDT_RESET
+> > +       select WATCHDOG
+> >         help
+> >           Samsung S3C64XX series based systems
+> >
+> > diff --git a/arch/arm/mach-s3c64xx/common.c b/arch/arm/mach-s3c64xx/common.c
+> > index a655bf0c7802..42e96d196f61 100644
+> > --- a/arch/arm/mach-s3c64xx/common.c
+> > +++ b/arch/arm/mach-s3c64xx/common.c
+> > @@ -50,7 +50,6 @@
+> >
+> >  #include "common.h"
+> >  #include "irq-uart.h"
+> > -#include "watchdog-reset.h"
+> >
+> >  /* External clock frequency */
+> >  static unsigned long xtal_f __ro_after_init = 12000000;
+> > @@ -232,10 +231,11 @@ void __init s3c64xx_init_irq(u32 vic0_valid, u32 vic1_valid)
+> >         /*
+> >          * FIXME: there is no better place to put this at the moment
+> >          * (s3c64xx_clk_init needs ioremap and must happen before init_time
+> > -        * samsung_wdt_reset_init needs clocks)
+> > +        * samsung_wdt_reset_init needs clocks).  However
+> > +        * samsung_wdt_reset_init() was removed in favor of watchdog driver
+> > +        * so this should be revised.
+> 
+> This leaves the comment referring to an inexistent function.
 
-"Zhang, Qiang" <Qiang.Zhang@windriver.com> writes:
+Yes, I left it as a reference/reason. Although might be quite confusing
+now...
 
-> ________________________________________
-> 发件人: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> 代表 syzbot <syzbot+9f78d5c664a8c33f4cce@syzkaller.appspotmail.com>
-> 发送时间: 2020年7月29日 13:53
-> 收件人: davem@davemloft.net; fweisbec@gmail.com; jhs@mojatatu.com; jiri@resnulli.us; linux-kernel@vger.kernel.org; mingo@kernel.org; netdev@vger.kernel.org; syzkaller-bugs@googlegroups.com; tglx@linutronix.de; vinicius.gomes@intel.com; xiyou.wangcong@gmail.com
-> 主题: INFO: rcu detected stall in tc_modify_qdisc
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    181964e6 fix a braino in cmsghdr_from_user_compat_to_kern()
-> git tree:       net
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12925e38900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f87a5e4232fdb267
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9f78d5c664a8c33f4cce
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:
-> https://syzkaller.appspot.com/x/repro.syz?x=16587f8c900000
+> 
+> I wonder if this being here is actually a problem at all. It's legacy
+> code and probably there isn't much value in reshuffling it further.
+> Rather than that, we would probably want to make sure that everything
+> migrated to DT and just drop the board files.
 
-It seems that syzkaller is generating an schedule with too small
-intervals (3ns in this case) which causes a hrtimer busy-loop which
-starves other kernel threads.
+Maybe let's remove the FIXME and leave the clock init. Since all these
+times no one fixed the FIXME, so now with limited hardware access I do
+not expect any movements here.
 
-We could put some limits on the interval when running in software mode,
-but I don't like this too much, because we are talking about users with
-CAP_NET_ADMIN and they have easier ways to do bad things to the system.
+> 
+> >          */
+> >         s3c64xx_clk_init(NULL, xtal_f, xusbxti_f, soc_is_s3c6400(), S3C_VA_SYS);
+> > -       samsung_wdt_reset_init(S3C_VA_WATCHDOG);
+> >
+> >         printk(KERN_DEBUG "%s: initialising interrupts\n", __func__);
+> >
+> > @@ -429,12 +429,3 @@ static int __init s3c64xx_init_irq_eint(void)
+> >         return 0;
+> >  }
+> >  arch_initcall(s3c64xx_init_irq_eint);
+> > -
+> > -void s3c64xx_restart(enum reboot_mode mode, const char *cmd)
+> > -{
+> > -       if (mode != REBOOT_SOFT)
+> > -               samsung_wdt_reset();
+> > -
+> > -       /* if all else fails, or mode was for soft, jump to 0 */
+> > -       soft_restart(0);
+> 
+> Does this remove the soft reboot capability? I'm not sure how much of
+> a problem that would be, though.
 
+1. No one cared about it in f6361c6b3880 :)
+2. Exynos does not have it
+3. Does soft_restart really work? It would be worth to keep it if more
+   or less it was working.
 
-Cheers,
--- 
-Vinicius
+Best regards,
+Krzysztof
+
+> 
+> [snip]
+> > diff --git a/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c b/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c
+> > index 1724f5ea5c46..09c4e8742629 100644
+> > --- a/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c
+> > +++ b/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c
+> > @@ -12,7 +12,6 @@
+> >  #include <mach/map.h>
+> >
+> >  #include "common.h"
+> > -#include "watchdog-reset.h"
+> >
+> >  /*
+> >   * IO mapping for shared system controller IP.
+> > @@ -39,20 +38,6 @@ static void __init s3c64xx_dt_map_io(void)
+> >                 panic("SoC is not S3C64xx!");
+> >  }
+> >
+> > -static void __init s3c64xx_dt_init_machine(void)
+> > -{
+> > -       samsung_wdt_reset_of_init();
+> > -}
+> > -
+> > -static void s3c64xx_dt_restart(enum reboot_mode mode, const char *cmd)
+> > -{
+> > -       if (mode != REBOOT_SOFT)
+> > -               samsung_wdt_reset();
+> > -
+> > -       /* if all else fails, or mode was for soft, jump to 0 */
+> > -       soft_restart(0);
+> 
+> Ditto.
+> 
+> Best regards,
+> Tomasz
