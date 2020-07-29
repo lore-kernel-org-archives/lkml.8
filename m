@@ -2,146 +2,211 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FC8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 361EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD9B20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03919207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:53:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="WLoVAOKI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lIOC7BMx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgG2Jxd (ORCPT
+        id S1726779AbgG2Jxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:53:33 -0400
-Received: from mail-bn7nam10on2076.outbound.protection.outlook.com ([40.107.92.76]:41601
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726054AbgG2Jxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:53:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SeHsqlByvSX8flYRtjBoCJDIsd6yIq/CWPkHrKNXRLHBD/moTbRKtbppEQMyNllxkvrx+gQCuMYlfg1j0XDaS0bKr853dhEUCRPdn5Wyt/yBU6glGzPLzi2twXU6+xKwWi2Oi7OND49t5axWWp+1TrLNjeS7U3Bm+rk/j/Kl96NamWZQ0CG8EU+1qOeAPHn7gSjwEZKUCud4vnlPRj87eqzY6cHSnFwjxTcVDZOxgS9P3kwoZi/AwOd49Sxi8iVRwhHiJLcN9HGBb5IfjEwrxeK1x/dzwdPV3EU8Ke25W/Cby5hPhkznwRA9RJoR73zvwIYq8uF4bcGSItam+ohpPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ch/qpkYkYUHew5syPlUqLv6r3azsJvidhvJX3xZNSZM=;
- b=cJ93nBv1fpUWkEQmpiYxOOpVJt3V9rJGOx8w4+dyoAC+eFcsuxjgwswSbSIDtqSuRIWuCH8mXJrnmaeclWbfJtabsmdSoR4YMZ/sHeH3PCGIlpC7MAsdgexif7EwSfU0k6O0mg1wonXLa8AP+2lC2AlpxFu8VyPM9sqM8m/Q4zbCr1OzlVRsCia2NSHsU+FGI863wF9AJDpSD/fyo85sV07m3qivnxAn//yYohIyORcAuzdwqLDFjrMENFZnTiVkdZllxTcHjAZE+PYGUe2MEL8iNSuCqcr7P8utBAPl4TdF8Mrrjv7hgpOCpM5nWjNx8KGLigLnSLpbahcZdZ7WGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+        Wed, 29 Jul 2020 05:53:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgG2Jxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 05:53:34 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ECA9C061794;
+        Wed, 29 Jul 2020 02:53:34 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id g18so3561273ooa.0;
+        Wed, 29 Jul 2020 02:53:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ch/qpkYkYUHew5syPlUqLv6r3azsJvidhvJX3xZNSZM=;
- b=WLoVAOKIkuvQEB2GVAxiMlyXafs+cdKFXmmscAEGDGbxK/WJSmrxE6zIMz+53Qu1KlVbpIihDx/edBmHIKdvVKdHGJobDPq1UTmbWiWyJ4GSU+GW2xKlA6jZcu4drayka+1bjZYNV2xn/hST4aVmYzyLo60k121S3MSCC1Tw3wA=
-Authentication-Results: davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=none action=none
- header.from=synaptics.com;
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
- by SJ0PR03MB5565.namprd03.prod.outlook.com (2603:10b6:a03:27a::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Wed, 29 Jul
- 2020 09:53:30 +0000
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::b5cc:ca6b:3c25:a99c]) by BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::b5cc:ca6b:3c25:a99c%4]) with mapi id 15.20.3216.033; Wed, 29 Jul 2020
- 09:53:30 +0000
-Date:   Wed, 29 Jul 2020 17:53:12 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     thomas.petazzoni@bootlin.com, kuba@kernel.org,
-        linux@armlinux.org.uk, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-nex 2/2] net: mvneta: Don't speed down the PHY when
- changing mtu
-Message-ID: <20200729175312.6d6370cf@xhacker.debian>
-In-Reply-To: <20200728.175202.598794850221205861.davem@davemloft.net>
-References: <20200727195012.4bcd069d@xhacker.debian>
-        <20200727195314.704dfaed@xhacker.debian>
-        <20200728.175202.598794850221205861.davem@davemloft.net>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYAPR01CA0058.jpnprd01.prod.outlook.com
- (2603:1096:404:2b::22) To BYAPR03MB3573.namprd03.prod.outlook.com
- (2603:10b6:a02:ae::15)
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dSPSCJP1B8FFQ4jru/jknXZJ0F7AjGqANGzZ0MmcwoM=;
+        b=lIOC7BMxg0i3gaLTPiKIqQZ26oN3EKt3MwpLLUUIy24/B3snuIWEqdrxTjAB35H8Dl
+         PJjiXUVULIB843EPpUO4reI82egXXsJ3EkP1/FgV5RPDhHCHT36cbezjM2JEJAlSx11z
+         mVDEmHa/W3gwdmHTrM74ZRxYqRo5eGkaTy85FDfkWtZSnyb0YDn8k5+kG4xMlZl6Amkh
+         hgFe9Zv3NxFeipsLJ1D54xUeKl2esIONeeREh4KlKau6YVHJFeqEYRMfiZMmaXTYQtqR
+         9KtKXBw8SYqr4haun76+qo16Gw4rtXdWV/t0fWys1dZk4WOJ/6INU7xOu573110m3kNp
+         wz+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dSPSCJP1B8FFQ4jru/jknXZJ0F7AjGqANGzZ0MmcwoM=;
+        b=W5VfYop95C4eyAE86sgMfINDj/L04TwDoi5kxp9YbfHrohjkcG0VTOOHAYtdNzoHbr
+         z+xRfa/cNsFbkbo7Ib4HqrDZlooFVw7+tT/9qH0NP7hfejkex1Sk6KBTLEH8fajq2J1y
+         OLCfjBENgNG1oBEmAplVbT+uhbFOvZIEF/EBQCYaSFMEbqpueL2pXCIDN8NVVyRqJm13
+         xzlxRwxf40THdmnHBg6WRw9PK4qmF+anlY/xGQM4QXMNO8U2uj2cek13koRX9jeKoa8f
+         NRUR18Q0O/S7ukqhAZy0IPdPvwRFKrMJe5Pa3rsNrIWnA6tkmvVogbJ9asyBjRYCWe8/
+         qHqg==
+X-Gm-Message-State: AOAM531n5FETnWiA7AWLgExOIVIlaRvUrDKvJ9c6lRJTIWI/s0Gtoxaq
+        IXLY0xceIc+8xrGiQ6fdC6vVjkzh3qlMDzB7jCw=
+X-Google-Smtp-Source: ABdhPJyyOU2hznwlmIrHYNfEBoEk/NsCxsBtvitRQo5gm44xcrVCwOjDRFKaXRc6e+fpkQx/Dnv/JSJs3AUwUS6Ipq4=
+X-Received: by 2002:a4a:b2cc:: with SMTP id l12mr832013ooo.15.1596016413286;
+ Wed, 29 Jul 2020 02:53:33 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0058.jpnprd01.prod.outlook.com (2603:1096:404:2b::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17 via Frontend Transport; Wed, 29 Jul 2020 09:53:27 +0000
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 26d3307a-2e24-42fd-b853-08d833a53f2e
-X-MS-TrafficTypeDiagnostic: SJ0PR03MB5565:
-X-Microsoft-Antispam-PRVS: <SJ0PR03MB55652D64D9EF5FA7A0825DA1ED700@SJ0PR03MB5565.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:513;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eWjIAYznvKZG6iNY163bSXjbPb5mds1H9Dj3To/thiw46L/v9U9WgW4KvE6VMy992bGrh6wC5GM2TvNx82CWpl0tkIR8uJMsmSeFeT8E4NYnY7DwPrKFLZ1P8Yw7eWMF2zXHPXq/N/XCLL4+binMVrAdDh/JHGEBwNvshuFlFoopVbq3pHGshatSrTfkRzM/OahF6D8UWTo6hvFvRY3wTBrzzPOIBoDLLBxANVQrBa9LkuR5mjkVxj9a1DsXM3YUdssZL4AK43BqQ3Dd0PP78Jg8VLM9ZrASmO43QtS7TdaLawB9autAfSWvFd9KKO7t0IGJt3Uep8ZR2mSY9mG6YA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(376002)(366004)(396003)(346002)(39850400004)(9686003)(83380400001)(66476007)(6916009)(956004)(86362001)(66556008)(5660300002)(66946007)(8676002)(26005)(55016002)(52116002)(186003)(478600001)(16526019)(2906002)(6666004)(316002)(8936002)(7696005)(6506007)(1076003)(4326008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: +q8r83WNqHk73cC+ZcXda14lX6HYMAhyTK5YE/kBcQNQdmj4bC+E9KIoejo6By4WrANu2Yoz+xTcc+IV+UYFTSoskKTxhMetl0E5tkIPRatpuk5LSzeyhaY//j1VSOvYsy3aeVaMTHIISLMYAY99K7GRCMvAs15h36P7kf0/3zxyNp9oW1TAf7PP1zQ/1bzc0aS5VsSzj84maw7G9Yca4DNDJkSCEs94EVKB7eWHURTaLBI4VA5lXBd6KdSkQpVqEK1F6Dj1qUWtp7g+9SO2OyuEmfvrMfvkF7pXyp9TgG4CZQUmVx4msZqZ4j2OaXjV/G2/dh3k66zM8UMq3PnDDZi6qMim2NYS01qpQd62nbf5S2Zl2XG+qeDiw/rtoPl6XDpuZRhsjQJckd2g3kVJ62bR6jB8OyN9PnZBKo+zPqpG3I1tkzTwa9UeGeycCy9/3R9/1JbbekDjrglA2k18CdKDo1tTGgsmoIdkkVSjDV4=
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26d3307a-2e24-42fd-b853-08d833a53f2e
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3573.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2020 09:53:29.8240
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0mbzKxlYgTv+t4SYCEVCXESJmowZbFoqCRYPiQS1m0oM+ydhKZXKBa9/C99Qoof+oh3l96xCUCp5bz/LCe86Xg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR03MB5565
+References: <1596012277-8448-1-git-send-email-weiyi.lu@mediatek.com> <1596012277-8448-2-git-send-email-weiyi.lu@mediatek.com>
+In-Reply-To: <1596012277-8448-2-git-send-email-weiyi.lu@mediatek.com>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Wed, 29 Jul 2020 11:53:22 +0200
+Message-ID: <CAFqH_50+_Bt97roTACRhoq8XkfSc1UcHyQP3OCacQR5oK-viOg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: ARM: Mediatek: Document bindings for MT8192
+To:     Weiyi Lu <weiyi.lu@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, linux-clk@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Wendell Lin <wendell.lin@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+Hi Weiyu,
 
-On Tue, 28 Jul 2020 17:52:02 -0700 (PDT) David Miller wrote:
+Thanks for the patch, some comments below. I am not sure what
+maintainers think but your patches, in general, are really big and I'm
+wondering if wouldn't be better split by functionalities. Will make
+your series much longer but easy to review in my opinion. Anyway, I'm
+going to comment a few files but the comments can be applied to other
+files.
 
-> 
-> 
-> > @@ -3651,7 +3651,8 @@ static void mvneta_stop_dev(struct mvneta_port *pp)
-> >
-> >       set_bit(__MVNETA_DOWN, &pp->state);
-> >
-> > -     if (device_may_wakeup(&pp->dev->dev))
-> > +     if (device_may_wakeup(&pp->dev->dev) &&
-> > +         pp->pkt_size == MVNETA_RX_PKT_SIZE(pp->dev->mtu))
-> >               phylink_speed_down(pp->phylink, false);
-> >  
-> 
-> This is too much for me.
-> 
-> You shouldn't have to shut down the entire device and take it back up
-> again just to change the MTU.
-> 
-> Unfortunately, this is a common pattern in many drivers and it is very
-> dangerous to take this lazy path of just doing "stop/start" around
-> the MTU change.
-> 
-> It means you can't recover from partial failures properly,
-> f.e. recovering from an inability to allocate queue resources for the
-> new MTU.
-> 
-> To solve this properly, you must restructure the MTU change such that
-> is specifically stops the necessary and only the units of the chip
-> necessary to change the MTU.
-> 
-> It should next try to allocate the necessary resources to satisfy the
-> MTU change, keeping the existing resources allocated in case of
-> failure.
-> 
-> Then, only is all resources are successfully allocated, it should
-> commit the MTU change fully and without errors.
-> 
-> Then none of these link flapping issues are even possible.
+Missatge de Weiyi Lu <weiyi.lu@mediatek.com> del dia dc., 29 de jul.
+2020 a les 10:46:
+>
+> This patch adds the binding documentation for apmixedsys, audsys,
+> camsys-raw, camsys, imgsys, imp_iic_wrap, infracfg, ipesys, mdpsys,
+> mfgcfg, mmsys, msdc, pericfg, scp-adsp, topckgen, vdecsys-soc,
+> vdecsys and vencsys for Mediatek MT8192.
+>
+> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> ---
+>  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |  1 +
+>  .../bindings/arm/mediatek/mediatek,audsys.txt      |  1 +
+>  .../bindings/arm/mediatek/mediatek,camsys-raw.yaml | 40 ++++++++++++++++++++
+>  .../bindings/arm/mediatek/mediatek,camsys.txt      |  1 +
+>  .../bindings/arm/mediatek/mediatek,imgsys.txt      |  2 +
+>  .../arm/mediatek/mediatek,imp_iic_wrap.yaml        | 43 ++++++++++++++++++++++
+>  .../bindings/arm/mediatek/mediatek,infracfg.txt    |  1 +
+>  .../bindings/arm/mediatek/mediatek,ipesys.txt      |  1 +
+>  .../bindings/arm/mediatek/mediatek,mdpsys.yaml     | 38 +++++++++++++++++++
+>  .../bindings/arm/mediatek/mediatek,mfgcfg.txt      |  1 +
+>  .../bindings/arm/mediatek/mediatek,mmsys.txt       |  1 +
+>  .../bindings/arm/mediatek/mediatek,msdc.yaml       | 39 ++++++++++++++++++++
+>  .../bindings/arm/mediatek/mediatek,pericfg.yaml    |  1 +
+>  .../bindings/arm/mediatek/mediatek,scp-adsp.yaml   | 38 +++++++++++++++++++
+>  .../bindings/arm/mediatek/mediatek,topckgen.txt    |  1 +
+>  .../arm/mediatek/mediatek,vdecsys-soc.yaml         | 38 +++++++++++++++++++
+>  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |  1 +
+>  .../bindings/arm/mediatek/mediatek,vencsys.txt     |  1 +
+>  18 files changed, 249 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,camsys-raw.yaml
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,imp_iic_wrap.yaml
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mdpsys.yaml
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,msdc.yaml
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,scp-adsp.yaml
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys-soc.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+> index bd7a0fa..6942ad4 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+> @@ -17,6 +17,7 @@ Required Properties:
+>         - "mediatek,mt8135-apmixedsys"
+>         - "mediatek,mt8173-apmixedsys"
+>         - "mediatek,mt8183-apmixedsys", "syscon"
+> +       - "mediatek,mt8192-apmixedsys", "syscon"
+>         - "mediatek,mt8516-apmixedsys"
+>  - #clock-cells: Must be 1
+>
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
+> index 38309db..fdcb267 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
+> @@ -12,6 +12,7 @@ Required Properties:
+>         - "mediatek,mt7622-audsys", "syscon"
+>         - "mediatek,mt7623-audsys", "mediatek,mt2701-audsys", "syscon"
+>         - "mediatek,mt8183-audiosys", "syscon"
+> +       - "mediatek,mt8192-audsys", "syscon"
+>         - "mediatek,mt8516-audsys", "syscon"
+>  - #clock-cells: Must be 1
+>
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,camsys-raw.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,camsys-raw.yaml
+> new file mode 100644
+> index 0000000..db6f425
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,camsys-raw.yaml
+> @@ -0,0 +1,40 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/mediatek/mediatek,camsys-raw.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MediaTek CAMSYS RAW Controller
+> +
+> +maintainers:
+> +  - Weiyi Lu <weiyi.lu@mediatek.com>
+> +
+> +description:
+> +  The Mediatek camsys raw controller provides various clocks to the system.
+> +
 
-Thanks a lot for pointing out the correct direction. Refactoring change
-mtu method needs more time(maybe for linux-5.10 is reasonable), so I
-just drop patch2 in v2.
+It only provides clocks or also provides configuration registers
+non-clock related?
+
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - mediatek,mt8192-camsys_rawa
+> +          - mediatek,mt8192-camsys_rawb
+> +          - mediatek,mt8192-camsys_rawc
+> +      - const: syscon
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    camsys_rawa: camsys_rawa@1a04f000 {
+
+I think that this should be  "syscon@1a04f000", since node names are
+supposed to match the class of the device instead of the name of the
+device.
+
+Just because I am curious, can you show me an example of
+"mediatek,mt8192-camsys_rawb" or "mediatek,mt8192-camsys_rawc"? It's a
+different address space?
+
+> +        compatible = "mediatek,mt8192-camsys_rawa", "syscon";
+> +        reg = <0 0x1a04f000 0 0x1000>;
+> +        #clock-cells = <1>;
+> +    };
+
+[snip]
