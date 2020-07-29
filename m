@@ -2,109 +2,103 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C10A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99E3C2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08CD92082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:55:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ciUZh/ty"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Djc/rBMj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgG2Vv7 (ORCPT
+        id S1727079AbgG2Vze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 17:51:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43386 "EHLO
+        Wed, 29 Jul 2020 17:55:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2Vv6 (ORCPT
+        with ESMTP id S1726365AbgG2Vzd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 17:51:58 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65D8AC061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 14:51:58 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id o8so8108819ybg.16
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 14:51:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=XqcTC2vuCfQSKcre8J8WDJG0kMjtcm07zH5Lw6F6DXE=;
-        b=ciUZh/tyeIpxCmoN49V9pS1Pb3wFhICO4qpRrMW4s7CpOO2y4afzwi7mI7svGpNzL7
-         TIPXQXit4KOcXK/NFMZknWpABt8PAtcxRHiL93WeER/9d9MWAdYXkZKKHrRJtigDilrQ
-         CBL3Vyp4C6ssPu8jj+8QfGdw89fxA5PR1SHMxkeBnfVC8qjsZtwyL+3FLo6utNvFjt48
-         7mD5qP2SRDSnmFNVeyLizSsKqxQm9sTn6HWB8f/Hf5W2/pTLZm8pVTPDzYqhM9vu/ee1
-         pbHyM622DIC2ZrAc/Y0AgYfFTlZtQJrM0crebAe+ESjSMcrZiVnEEpjnQrN6FEIHDAj5
-         Q3Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=XqcTC2vuCfQSKcre8J8WDJG0kMjtcm07zH5Lw6F6DXE=;
-        b=dsiu7w/RYv2ItKlfFzAJ5tgqe8qkCoVX0SiEP9wQ8VK5gtBTM//8FeHtsiFGwAFV5B
-         2Y6ZKjOJ9AbMuLgl+4LujObk0e7zbx6Hj6Ed5fWBRlXwHrToqJga3HwMhXfWvCDdETME
-         rvlYGM/v8/r0zyE9mOOPJhjH0l4tWFrdMdptsS4quSwh7dAsBvRjLMlGAiASEGJ1SrQ+
-         TlHFa0p1FkoYBhz0CpHCLsviFGBouTMQsOiaR5BxueD5wypEpw9vsa6+bjnApGqWcxcs
-         Hx1As3LjnD5oRicDr8LV+i8n2KcLulBX4sU3rhKjIDAP0Fg6/DmWosUFK86eajrdfIlf
-         iSQQ==
-X-Gm-Message-State: AOAM5313BoZ4sy8/2Ex/XIXj/FKaD3AoBZozoyTfxAQOk0yZsu94kGdB
-        uFQigkFFlQYvU5mpuiYFM5hxkhz34HmyiSNdb28=
-X-Google-Smtp-Source: ABdhPJyMfJOTToVvOJpGfO0ho8OnKO0EPuPzbcMB2MHnlEC4slmPojpIMwvkFTM/tGsMoMggcjg7ygEppHiQECY2j5Y=
-X-Received: by 2002:a25:a107:: with SMTP id z7mr719351ybh.310.1596059517661;
- Wed, 29 Jul 2020 14:51:57 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 14:51:52 -0700
-Message-Id: <20200729215152.662225-1-samitolvanen@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH] arm64/alternatives: move length validation inside the subsection
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Sami Tolvanen <samitolvanen@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 29 Jul 2020 17:55:33 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2646BC061794;
+        Wed, 29 Jul 2020 14:55:33 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BH6mL5mgbz9sRN;
+        Thu, 30 Jul 2020 07:55:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596059731;
+        bh=feb3M2Tk7QoN+CzEDFxCJPGadKxz1RoZ7BeKRMA8ws0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Djc/rBMjXX06vHBQ6rISKwYiBCTgzF7w6G7b7UcN8xfz2tv5rcu7JTBlTAoQNcTLm
+         eUkTv3nFcSig2ivGJ7SNl7tefJzb8gOejqKTSHJyDKDj1jDM5aR/UfXfM7WDdcg2IV
+         McLqLa/k7I7MKC9J61qh6jXDgm5Py92ivciH0R5zfoKkzCj11BsPYeT5YRSOEivRL6
+         +9ZSHHly3y+yiwSWLrXatiipqjfLI8wyShqDCURY6xEWqA0LarSvyEQ48syImKK1GK
+         Sq3u37Ba9ekKUU38k/RuUofMF0AHopRnx+eub1MX6Xo6oLsfdwfdqo8C7jGhwmDSJ0
+         jtL4cVjjI/42A==
+Date:   Thu, 30 Jul 2020 07:55:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Subject: linux-next: Fixes tag needs some work in the powerpc tree
+Message-ID: <20200730075530.02c7eb5f@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/ftLvL+EvRwAOYve/warG=5m";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit f7b93d42945c ("arm64/alternatives: use subsections for replacement
-sequences") breaks LLVM's integrated assembler, because due to its
-one-pass design, it cannot compute instruction sequence lengths before the
-layout for the subsection has been finalized. This change fixes the build
-by moving the .org directives inside the subsection, so they are processed
-after the subsection layout is known.
+--Sig_/ftLvL+EvRwAOYve/warG=5m
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/1078
-Cc: <stable@vger.kernel.org> # 4.14+
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- arch/arm64/include/asm/alternative.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi all,
 
-diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
-index 12f0eb56a1cc..619db9b4c9d5 100644
---- a/arch/arm64/include/asm/alternative.h
-+++ b/arch/arm64/include/asm/alternative.h
-@@ -77,9 +77,9 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
- 	"663:\n\t"							\
- 	newinstr "\n"							\
- 	"664:\n\t"							\
--	".previous\n\t"							\
- 	".org	. - (664b-663b) + (662b-661b)\n\t"			\
--	".org	. - (662b-661b) + (664b-663b)\n"			\
-+	".org	. - (662b-661b) + (664b-663b)\n\t"			\
-+	".previous\n"							\
- 	".endif\n"
- 
- #define __ALTERNATIVE_CFG_CB(oldinstr, feature, cfg_enabled, cb)	\
+In commit
 
-base-commit: 6ba1b005ffc388c2aeaddae20da29e4810dea298
--- 
-2.28.0.163.g6104cc2f0b6-goog
+  443359aebce0 ("powerpc/perf: Fix MMCRA_BHRB_DISABLE define for binutils <=
+ 2.28")
 
+Fixes tag
+
+  Fixes: 9908c826d5ed ("Add Power10 PMU feature to DT CPU features")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+Just a hint for the future.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ftLvL+EvRwAOYve/warG=5m
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8h8FIACgkQAVBC80lX
+0Gykmgf8Dx0n7wa4xu6xO0gRMPjJuLp/+yab4jJ+BjqOQ/nY1RXB2jXEqOjon6Gw
+3+C0L4ZwCnPlLmkoc5eGa2mauYfqqn9xvB5LwdtG9wt2weymCgNmPeRQ5zmNeupQ
+9kuavgmrBK48SVxuMapq6goBse7azECS6LBAexuvKjye3FKS6njxIZh/Msb0cPLS
+mQtH6FikGwkNRNeWOlMHWTSRJSk0DUKZD9H/AHhjolcXV0aGw2Qskx+5+FV4vrt2
+9CUg1I4FprDueCDJUV0tBTZGDPaewDXUJ1sYDFvp/ZSjFBrgZvI/HfDDvOXaXVQH
+QscrAe9TkG0mXDbnVUe9D3iSqAA9Hw==
+=g8tK
+-----END PGP SIGNATURE-----
+
+--Sig_/ftLvL+EvRwAOYve/warG=5m--
