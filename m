@@ -2,120 +2,125 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B51C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DBCC2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AEE204EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:38:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RHnbMR3m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XD6KRO6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgG2KeL (ORCPT
+        id S1726631AbgG2Kis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 06:34:11 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:37693 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726367AbgG2KeK (ORCPT
+        Wed, 29 Jul 2020 06:38:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52374 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgG2Kir (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 06:34:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596018849;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=thftSHsPkDGewUeVkLBJnkZJRKIUZfFRNAXaBwnUwP8=;
-        b=RHnbMR3m2H4FAYohi3C9cpcx894w1kXXbPsIslb09hNZEbAVzcjG21HhGYBlygXcZwJ2pQ
-        YQ887WnPruxeDuRBzzOQfYhl2UwddRtPzWEif8ZolVqyp2gQsp96qGUhqCKPz9nJtLM3/1
-        gVeDRaGENVU38kAtcfvt9zarK3IKkN0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-37-UWsuWmXYMmuNPeKCqp9kJA-1; Wed, 29 Jul 2020 06:34:05 -0400
-X-MC-Unique: UWsuWmXYMmuNPeKCqp9kJA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2FA4A79EC3;
-        Wed, 29 Jul 2020 10:34:03 +0000 (UTC)
-Received: from localhost (ovpn-12-32.pek2.redhat.com [10.72.12.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0F3FE10013D0;
-        Wed, 29 Jul 2020 10:34:01 +0000 (UTC)
-Date:   Wed, 29 Jul 2020 18:33:59 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Muchun Song <songmuchun@bytedance.com>, akpm@linux-foundation.org,
-        mhocko@kernel.org, rientjes@google.com, mgorman@suse.de,
-        walken@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Jianchao Guo <guojianchao@bytedance.com>
-Subject: Re: [PATCH v4] mm/hugetlb: add mempolicy check in the reservation
- routine
-Message-ID: <20200729103359.GE14854@MiWiFi-R3L-srv>
-References: <20200728034938.14993-1-songmuchun@bytedance.com>
- <20200728132453.GB14854@MiWiFi-R3L-srv>
- <1b507031-d475-b495-bb4a-2cd9e665d02f@oracle.com>
+        Wed, 29 Jul 2020 06:38:47 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7BFFC061794;
+        Wed, 29 Jul 2020 03:38:45 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u185so12739529pfu.1;
+        Wed, 29 Jul 2020 03:38:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OOt4am3ptH3bamAsHkPtkKBdiD36zwsqmzqbepXBWe8=;
+        b=XD6KRO6w63ECQYGfBkLoQt17DuEmY+HHbmecVpVQ/Dye7/R2WatECNMg/Cmyx+/ouM
+         H7PfoB/r8C97XyCP5VsRUc3AeK6wOAUOuIXALkj8koSqlFAVZNvUm2G9+eRtjVm18cbj
+         b1Ioczc3J0prvsJyRP0nWrBEh7bq1/Ham3sd/hGY7c/PweS5ZcmTxX8lQLoWBkZWIL9g
+         ldith4ETV8JcFUWzZukT22w67q7FSMFR1M10L6GgqVMdSaSVI7xIs87KJt+RWXHeI0nc
+         IgPXyewpZr3MuTmUDEP+bWVriX264EIFBYgwI3zkjBSshDX9D847ePk7/dejH6pnp7Fa
+         FbYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OOt4am3ptH3bamAsHkPtkKBdiD36zwsqmzqbepXBWe8=;
+        b=LCQGiPEwf562ba9Ovu9fQPUYNXDUAPuD6OHEBmOCfuAZWwDl2pYpou4W1dD/tQE01Y
+         qOwZIYdvKo7GDMM1BUNWFn/VjxMNj6e7fmdIZW96v42tZ/Uk5rjvQrnlMdb64R0DuCEY
+         pLR+Ea6tEXUJaN8s7JoyOfRVtjywQUMvKUrfuJJK1C+k92e2cwSXkrETDJw3Mrbpa8+G
+         7HRTQe7ck4k9VD51oz/OWY/PZZDudQcOYGUDpL7nnAh6snZCzEB0RB/GYSPDl0NEy08G
+         s2RTOvGIHcKVZB8zm5Lq60ylGz11DWO3oCX2acXlm8nETmEwNH4C85zmpp+2nDsHr5PN
+         ywgw==
+X-Gm-Message-State: AOAM532OWX/8WVPY6O3UxVlq+VYFTneDoFQX0UHVSipg1p9a6BZL+EeN
+        3REmVt1tUsvZOU0/U08Ds51S5V30K5tN69OlvZo=
+X-Google-Smtp-Source: ABdhPJzC1lAmhZulWVw4qiVD9FP1U166ENhLOQOFnXgSQ/Llia+le+rSXDIzcFNIr0FAW8wTygu45FQnF6S8QQzNE3w=
+X-Received: by 2002:a62:758f:: with SMTP id q137mr10134826pfc.170.1596019125374;
+ Wed, 29 Jul 2020 03:38:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1b507031-d475-b495-bb4a-2cd9e665d02f@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <CAHp75VcmMf5dt7mu9N0C=6Rej-WzZ0EpzntHYCQkgNLVZkPbgg@mail.gmail.com>
+ <20200729081155.3228-1-b18007@students.iitmandi.ac.in>
+In-Reply-To: <20200729081155.3228-1-b18007@students.iitmandi.ac.in>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 29 Jul 2020 13:38:28 +0300
+Message-ID: <CAHp75VdCBWLLMT7jm0CO+oK8eZf7cSMOM5sb9xZ1Po1_YFAMxw@mail.gmail.com>
+Subject: Re: [PATCH -v2] Staging: iio: Fixed a punctuation and a spelling mistake.
+To:     Ankit Baluni <b18007@students.iitmandi.ac.in>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/28/20 at 09:46am, Mike Kravetz wrote:
-> On 7/28/20 6:24 AM, Baoquan He wrote:
-> > Hi Muchun,
-> > 
-> > On 07/28/20 at 11:49am, Muchun Song wrote:
-> >> In the reservation routine, we only check whether the cpuset meets
-> >> the memory allocation requirements. But we ignore the mempolicy of
-> >> MPOL_BIND case. If someone mmap hugetlb succeeds, but the subsequent
-> >> memory allocation may fail due to mempolicy restrictions and receives
-> >> the SIGBUS signal. This can be reproduced by the follow steps.
-> >>
-> >>  1) Compile the test case.
-> >>     cd tools/testing/selftests/vm/
-> >>     gcc map_hugetlb.c -o map_hugetlb
-> >>
-> >>  2) Pre-allocate huge pages. Suppose there are 2 numa nodes in the
-> >>     system. Each node will pre-allocate one huge page.
-> >>     echo 2 > /proc/sys/vm/nr_hugepages
-> >>
-> >>  3) Run test case(mmap 4MB). We receive the SIGBUS signal.
-> >>     numactl --membind=0 ./map_hugetlb 4
-> > 
-> > I think supporting the  mempolicy of MPOL_BIND case is a good idea.
-> > I am wondering what about the other mempolicy cases, e.g MPOL_INTERLEAVE,
-> > MPOL_PREFERRED. Asking these because we already have similar handling in
-> > sysfs, proc nr_hugepages_mempolicy writting. Please see
-> > __nr_hugepages_store_common() for detail.
-> 
-> There is a high level difference in the function of this code and the code
-> called by the sysfs and proc interfaces.  This patch is dealing with reserving
-> huge pages in the pool for later use.  The sysfs and proc interfaces are
-> allocating huge pages to be added to the pool.
-> 
-> Using mempolicy to decide how to allocate huge pages is pretty straight
-> forward.  Using mempolicy to reserve pages is almost impossible to get
-> correct.  The comment at the beginning of hugetlb_acct_memory() and modified
-> by this patch summarizes the issues.
-> 
-> IMO, at this time it makes little sense to perform checks for more than
-> MPOL_BIND at reservation time.  If we ever take on the monumental task of
-> supporting mempolicy directed per-node reservations throughout the life of
-> a process, support for other policies will need to be taken into account.
+On Wed, Jul 29, 2020 at 11:12 AM Ankit Baluni
+<b18007@students.iitmandi.ac.in> wrote:
+>
+> Added a missing comma and changed 'it it useful' to 'it is useful'.
 
-I haven't figured out the difficulty of using mempolicy very clearly, will 
-read more codes and digest and understand your words. Thanks a lot for
-these details.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Thanks
-Baoquan
+> Signed-off-by: Ankit Baluni <b18007@students.iitmandi.ac.in>
+> ---
+> Changes in -v2:
+>         -Remove space before ':' in subject line.
+>
+>  drivers/staging/iio/Documentation/overview.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/staging/iio/Documentation/overview.txt b/drivers/staging/iio/Documentation/overview.txt
+> index ebdc64f451d7..00409d5dab4e 100644
+> --- a/drivers/staging/iio/Documentation/overview.txt
+> +++ b/drivers/staging/iio/Documentation/overview.txt
+> @@ -9,7 +9,7 @@ The aim is to fill the gap between the somewhat similar hwmon and
+>  input subsystems.  Hwmon is very much directed at low sample rate
+>  sensors used in applications such as fan speed control and temperature
+>  measurement.  Input is, as its name suggests focused on input
+> -devices. In some cases there is considerable overlap between these and
+> +devices. In some cases, there is considerable overlap between these and
+>  IIO.
+>
+>  A typical device falling into this category would be connected via SPI
+> @@ -38,7 +38,7 @@ series and Analog Devices ADXL345 accelerometers.  Each buffer supports
+>  polling to establish when data is available.
+>
+>  * Trigger and software buffer support. In many data analysis
+> -applications it it useful to be able to capture data based on some
+> +applications it is useful to be able to capture data based on some
+>  external signal (trigger).  These triggers might be a data ready
+>  signal, a gpio line connected to some external system or an on
+>  processor periodic interrupt.  A single trigger may initialize data
+> --
+> 2.25.1
+>
 
+
+-- 
+With Best Regards,
+Andy Shevchenko
