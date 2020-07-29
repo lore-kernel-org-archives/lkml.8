@@ -2,137 +2,111 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1700C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA9BC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D42C9207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8159207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:33:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="WnK6zVse"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgG2OcR (ORCPT
+        id S1726800AbgG2OdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:32:17 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:57977 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726650AbgG2OcO (ORCPT
+        Wed, 29 Jul 2020 10:33:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgG2OdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:32:14 -0400
-Received: (qmail 1533731 invoked by uid 1000); 29 Jul 2020 10:32:13 -0400
-Date:   Wed, 29 Jul 2020 10:32:13 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     Bart Van Assche <bvanassche@acm.org>, jejb@linux.ibm.com,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-Message-ID: <20200729143213.GC1530967@rowland.harvard.edu>
-References: <20200706164135.GE704149@rowland.harvard.edu>
- <d0ed766b-88b0-5ad5-9c10-a4c3b2f994e3@puri.sm>
- <20200728200243.GA1511887@rowland.harvard.edu>
- <f3958758-afce-8add-1692-2a3bbcc49f73@puri.sm>
+        Wed, 29 Jul 2020 10:33:16 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B2E6C0619D2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 07:33:16 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id g19so10778729ejc.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 07:33:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kMlKqVpMYZrkq++S2RWxZ8THr8EJ0z+y5ejuGh6soGk=;
+        b=WnK6zVseynpYShz7AuRIaVykQvUyr0PeVQ+YEYnugHbrxaPTg77BOqUSx+H2KBXM90
+         zw/paDsb8vkp0/OZUl2xs+7ygdSQRg4NI2g9Jwz4Fk10Twtc8cpCHx+S8Ap/7hExNtA6
+         Hu9L2x/lVBxvSXEjHdf6Pr0V7+zzd39waCyQTvSz6DPcpPdKsJP6tA48AihdTV2SmUeO
+         HNJwe6HGBi6mFDaC0EZ7qT8yiGYcxvJBRgzvZ8XoUf7A4RZqwAaIkwBzssEXW6BQal5q
+         /FMsF+6sAVsfK+X6uBrpfnNJlYdQSume74AVeI1gtosVjPYW1BUwpAaRsSJnStmGab3/
+         5Yow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kMlKqVpMYZrkq++S2RWxZ8THr8EJ0z+y5ejuGh6soGk=;
+        b=cLJF7GRoG/ySWtbiIyRLMqIjSlEFIqXDxDI29ch1QfMYRAQ1ozCz1Fkj22J/J8cMIS
+         FyIYEKAh3FBO+Xt7JpFToJ2Xru25h7ZuXHKya1A3Si5eHnV6jUwB1Vkw2w721vWCYGCx
+         paA4GKN81JdP8Natz9Od1P03g8On+c4T14rOmTzZ+wGNXbnWOeLJhXrbnwYEWQglpVyD
+         HERlSbByAShztrhgptUs1AZTL7bESnVEdIT1hUdOnrrMpx8OTZxQCwGLUgi4iRN4k8bf
+         tRHbsIA1iFmW/FXDHpGbLreaZExUb94ycDWB7KL1yPemzePqRL725gIXGRvzq2Dll8pN
+         OyhQ==
+X-Gm-Message-State: AOAM533TQi7o8i3mz7dcHx+jgjrveVsPjIxfhiU8Y0jqitHLBCWqzhdk
+        uD9uIRwiH3VlAPkGdRY1x9wbKyFf30/v/HupJd60
+X-Google-Smtp-Source: ABdhPJxu3J7ZoN3kZhJpKA1IX3J82l3Bi86eK/HpPbP3LYDzrwmhud5SD+ftjnc27nh35GLdzF1yxpuRBb6pIis3cPs=
+X-Received: by 2002:a17:906:43c9:: with SMTP id j9mr14520051ejn.542.1596033194870;
+ Wed, 29 Jul 2020 07:33:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f3958758-afce-8add-1692-2a3bbcc49f73@puri.sm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <e3e9c9da9115fd233c5a7895dbb4a698a365b1b0.1595884394.git.rgb@redhat.com>
+ <CAHC9VhSx23JiN6GprskxdEcs9uftJOp03Svh7YJbQLOV91AMiQ@mail.gmail.com>
+ <20200728162722.djvy3qyclj57wsfn@madcap2.tricolour.ca> <CAHC9VhSDoi8QS3c6Wmx6agmmphja60cS3+aTKVx76xvdkxJ0DQ@mail.gmail.com>
+ <20200729020106.x5tfijvnxdmujtbj@madcap2.tricolour.ca>
+In-Reply-To: <20200729020106.x5tfijvnxdmujtbj@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 29 Jul 2020 10:33:03 -0400
+Message-ID: <CAHC9VhSf6eSjTvUA4FfUP+qBv_GDufBPfs=t3+BPPdFcTCD_4w@mail.gmail.com>
+Subject: Re: [PATCH V3fix ghak120] audit: initialize context values in case of
+ mandatory events
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Eric Paris <eparis@parisplace.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 04:12:22PM +0200, Martin Kepplinger wrote:
-> On 28.07.20 22:02, Alan Stern wrote:
-> > On Tue, Jul 28, 2020 at 09:02:44AM +0200, Martin Kepplinger wrote:
-> >> Hi Alan,
-> >>
-> >> Any API cleanup is of course welcome. I just wanted to remind you that
-> >> the underlying problem: broken block device runtime pm. Your initial
-> >> proposed fix "almost" did it and mounting works but during file access,
-> >> it still just looks like a runtime_resume is missing somewhere.
-> > 
-> > Well, I have tested that proposed fix several times, and on my system 
-> > it's working perfectly.  When I stop accessing a drive it autosuspends, 
-> > and when I access it again it gets resumed and works -- as you would 
-> > expect.
-> 
-> that's weird. when I mount, everything looks good, "sda1". But as soon
-> as I cd to the mountpoint and do "ls" (on another SD card "ls" works but
-> actual file reading leads to the exact same errors), I get:
-> 
-> [   77.474632] sd 0:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result:
-> hostbyte=0x00 driverbyte=0x08 cmd_age=0s
-> [   77.474647] sd 0:0:0:0: [sda] tag#0 Sense Key : 0x6 [current]
-> [   77.474655] sd 0:0:0:0: [sda] tag#0 ASC=0x28 ASCQ=0x0
-> [   77.474667] sd 0:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 60
-> 40 00 00 01 00
+On Tue, Jul 28, 2020 at 10:01 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+>
+> On 2020-07-28 14:47, Paul Moore wrote:
+> > On Tue, Jul 28, 2020 at 12:27 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > I know you like only really minimal fixes this late, but this seemed
+> > > pretty minimal to me...
+> >
+> > Minimal is a one (two?) line NULL check in audit_log_name(), this
+> > patch is not that.
+>
+> I didn't try and test that since I'm not sure that would have worked
+> because there appeared to be a low non-NULL value in it.  brauer1's trace had
+> 0x60 and mine had 0xd0.  Or am I missing something obvious?
 
-This error report comes from the SCSI layer, not the block layer.
+Well, you mentioned the obvious already: both 0x60 and 0xd0 are not
+NULL.  We already have a NULL check for context->pwd elsewhere so
+there is precedence for this solving a similar problem, although
+without going through the git log I'm not sure what problem that
+solved, or if it was precautionary.
 
-> [   77.474678] blk_update_request: I/O error, dev sda, sector 24640 op
-> 0x0:(READ) flags 0x80700 phys_seg 1 prio class 0
-> [   77.485836] sd 0:0:0:0: [sda] tag#0 device offline or changed
-> [   77.491628] blk_update_request: I/O error, dev sda, sector 24641 op
-> 0x0:(READ) flags 0x80700 phys_seg 1 prio class 0
-> [   77.502275] sd 0:0:0:0: [sda] tag#0 device offline or changed
-> [   77.508051] blk_update_request: I/O error, dev sda, sector 24642 op
-> 0x0:(READ) flags 0x80700 phys_seg 1 prio class 0
-> [   77.518651] sd 0:0:0:0: [sda] tag#0 device offline or changed
-> (...)
-> [   77.947653] sd 0:0:0:0: [sda] tag#0 device offline or changed
-> [   77.953434] FAT-fs (sda1): Directory bread(block 16448) failed
-> [   77.959333] sd 0:0:0:0: [sda] tag#0 device offline or changed
-> [   77.965118] FAT-fs (sda1): Directory bread(block 16449) failed
-> [   77.971014] sd 0:0:0:0: [sda] tag#0 device offline or changed
-> [   77.976802] FAT-fs (sda1): Directory bread(block 16450) failed
-> [   77.982698] sd 0:0:0:0: [sda] tag#0 device offline or changed
-> (...)
-> [   78.384929] FAT-fs (sda1): Filesystem has been set read-only
-> [  103.070973] sd 0:0:0:0: [sda] tag#0 device offline or changed
-> [  103.076751] print_req_error: 118 callbacks suppressed
-> [  103.076760] blk_update_request: I/O error, dev sda, sector 9748 op
-> 0x1:(WRITE) flags 0x100000 phys_seg 1 prio class 0
-> [  103.087428] Buffer I/O error on dev sda1, logical block 1556, lost
-> async page write
-> [  103.095309] sd 0:0:0:0: [sda] tag#0 device offline or changed
-> [  103.101123] blk_update_request: I/O error, dev sda, sector 17162 op
-> 0x1:(WRITE) flags 0x100000 phys_seg 1 prio class 0
-> [  103.111883] Buffer I/O error on dev sda1, logical block 8970, lost
-> async page write
+I agree the low value looks suspicious, it almost looks like an offset
+to me, ideally it would be good to understand how/why that value is
+"off'.  It could be that the audit_context is not being properly
+initialized, reset, or something unrelated is clobbering the value;
+all things that would be nice to know.
 
-I can't tell why you're getting that error.  In one of my tests the 
-device returned the same kind of error status (Sense Key = 6, ASC = 
-0x28) but the operation was then retried successfully.  Perhaps the 
-problem lies in the device you are testing.
+> The patch provided the information rather than ignoring the problem ...
 
-> >> As we need to have that working at some point, I might look into it, but
-> >> someone who has experience in the block layer can surely do it more
-> >> efficiently.
-> > 
-> > I suspect that any problems you still face are caused by something else.
-> > 
-> 
-> I then formatted sda1 to ext2 (on the runtime suspend system testing
-> your patch) and that seems to have worked!
-> 
-> Again accessing the mountpoint then yield the very same "device offline
-> or changed" errors.
-> 
-> What kind of device are you testing? You should be easily able to
-> reproduce this using an "sd" device.
+I disagree.
 
-I tested two devices: a SanDisk Cruzer USB flash drive and a 
-g-mass-storage gadget running under dummy-hcd.  They each showed up as 
-/dev/sdb on my system.
-
-I haven't tried testing with an SD card.  If you have any specific 
-sequence of commands you would like me to run, let me know.
-
-> The problems must lie in the different other drivers we use I guess.
-
-Or the devices.  Have you tried testing with a USB flash drive?
-
-Alan Stern
+--
+paul moore
+www.paul-moore.com
