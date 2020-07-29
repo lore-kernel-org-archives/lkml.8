@@ -2,151 +2,60 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAE7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DD5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB3BF206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:12:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596053560;
-	bh=dpUFo+a7/by7OwDh4oaNLD2JZxAldvHdSI9yKa6o100=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mlL3DzSAXiqGoHHabnr58g6r2ODs4QO7YDxQQRfVmWSv2G5sohlX8XY/joBseYBWb
-	 gNTGOvCFfPaxcxNlGMZtd+rMff9k6Cn0OOPaylkxiilAjVM6U8oqud4cEI7WwPV42Q
-	 vtRBUN4QNF0xRwjIQIaj1USFFzituaQXV+uzZMJE=
+	by mail.kernel.org (Postfix) with ESMTP id EF1982082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:12:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgG2UMk (ORCPT
+        id S1726942AbgG2UMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:12:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgG2UMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 16:12:45 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:51363 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726884AbgG2UMn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 16:12:43 -0400
+Received: from callcc.thunk.org (pool-96-230-252-158.bstnma.fios.verizon.net [96.230.252.158])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 06TKCbZx023499
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Wed, 29 Jul 2020 16:12:38 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EAF82082E;
-        Wed, 29 Jul 2020 20:12:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596053557;
-        bh=dpUFo+a7/by7OwDh4oaNLD2JZxAldvHdSI9yKa6o100=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u5hfMepN9W0v/k26zsPusjpaQvmgqzu/qmFRniCFc3nXSh6q2z8YSEHAphIirZOJ3
-         0MQSpl4R3vQtQ18+8uNWs72Yy3PLkdmUXSVcPb0/3dHiiXaxLxPt3RPjnUx0KgEL96
-         FHVFaa3FAQJHaaJvBlclZI2uTm1iSxV26RQKabeI=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 1/6] PCI: Fix kerneldoc
-Date:   Wed, 29 Jul 2020 22:12:19 +0200
-Message-Id: <20200729201224.26799-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200729201224.26799-1-krzk@kernel.org>
-References: <20200729201224.26799-1-krzk@kernel.org>
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 41997420304; Wed, 29 Jul 2020 16:12:37 -0400 (EDT)
+Date:   Wed, 29 Jul 2020 16:12:37 -0400
+From:   tytso@mit.edu
+To:     Keyur Patel <iamkeyur96@gmail.com>
+Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ext4: fix spelling mistakes in extents.c
+Message-ID: <20200729201237.GB44720@mit.edu>
+References: <20200611031947.165079-1-iamkeyur96@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611031947.165079-1-iamkeyur96@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix W=1 compile warnings (invalid kerneldoc):
+On Wed, Jun 10, 2020 at 11:19:46PM -0400, Keyur Patel wrote:
+> Fix spelling issues over the comments in the code.
+> 
+> requsted ==> requested
+> deterimined ==> determined
+> insde ==> inside
+> neet ==> need
+> somthing ==> something
+> 
+> Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
 
-    drivers/pci/ats.c:196: warning: Function parameter or member 'pdev' not described in 'pci_enable_pri'
-    drivers/pci/ats.c:196: warning: Function parameter or member 'reqs' not described in 'pci_enable_pri'
-    drivers/pci/of.c:262: warning: Function parameter or member 'ib_resources' not described in 'devm_of_pci_get_host_bridge_resources'
-    drivers/pci/pci-pf-stub.c:20: warning: cannot understand function prototype: 'const struct pci_device_id pci_pf_stub_whitelist[] = '
-    drivers/pci/setup-bus.c:62: warning: Function parameter or member 'min_align' not described in 'add_to_list'
-    drivers/pci/vc.c:188: warning: Excess function parameter 'name' description in 'pci_vc_do_save_buffer'
+Applied, thanks.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/pci/ats.c         | 3 ++-
- drivers/pci/of.c          | 2 ++
- drivers/pci/pci-pf-stub.c | 2 +-
- drivers/pci/setup-bus.c   | 1 +
- drivers/pci/vc.c          | 1 -
- 5 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index b761c1f72f67..2e1073052509 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -188,7 +188,8 @@ void pci_pri_init(struct pci_dev *pdev)
- 
- /**
-  * pci_enable_pri - Enable PRI capability
-- * @ pdev: PCI device structure
-+ * @pdev: PCI device structure
-+ * @reqs: outstanding requests
-  *
-  * Returns 0 on success, negative value on error
-  */
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 22727fc9558d..d9621a603702 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -243,6 +243,8 @@ EXPORT_SYMBOL_GPL(of_pci_check_probe_only);
-  * @busno: bus number associated with the bridge root bus
-  * @bus_max: maximum number of buses for this bridge
-  * @resources: list where the range of resources will be added after DT parsing
-+ * @ib_resources: list where the range of inbound resources (with addresses
-+ *                from 'dma-ranges' will be added after DT parsing
-  * @io_base: pointer to a variable that will contain on return the physical
-  * address for the start of the I/O range. Can be NULL if the caller doesn't
-  * expect I/O ranges to be present in the device tree.
-diff --git a/drivers/pci/pci-pf-stub.c b/drivers/pci/pci-pf-stub.c
-index ef293e735c55..a0b2bd6c918a 100644
---- a/drivers/pci/pci-pf-stub.c
-+++ b/drivers/pci/pci-pf-stub.c
-@@ -9,7 +9,7 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- 
--/**
-+/*
-  * pci_pf_stub_whitelist - White list of devices to bind pci-pf-stub onto
-  *
-  * This table provides the list of IDs this driver is supposed to bind
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 4d870ed89385..3951e02b7ded 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -55,6 +55,7 @@ static void free_list(struct list_head *head)
-  * @dev:	Device to which the resource belongs
-  * @res:	Resource to be tracked
-  * @add_size:	Additional size to be optionally added to the resource
-+ * @min_align:	Minimum memory window alignment
-  */
- static int add_to_list(struct list_head *head, struct pci_dev *dev,
- 		       struct resource *res, resource_size_t add_size,
-diff --git a/drivers/pci/vc.c b/drivers/pci/vc.c
-index 5486f8768c86..5fc59ac31145 100644
---- a/drivers/pci/vc.c
-+++ b/drivers/pci/vc.c
-@@ -172,7 +172,6 @@ static void pci_vc_enable(struct pci_dev *dev, int pos, int res)
-  * @dev: device
-  * @pos: starting position of VC capability (VC/VC9/MFVC)
-  * @save_state: buffer for save/restore
-- * @name: for error message
-  * @save: if provided a buffer, this indicates what to do with it
-  *
-  * Walking Virtual Channel config space to size, save, or restore it
--- 
-2.17.1
-
+						- Ted
