@@ -2,159 +2,156 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34470C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 079232076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:39:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="dL3EnT1y"
+	by mail.kernel.org (Postfix) with ESMTP id 4B1472084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgG2IjM (ORCPT
+        id S1727951AbgG2Ijl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:39:12 -0400
-Received: from mout.web.de ([212.227.15.4]:50469 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727837AbgG2IjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:39:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1596011925;
-        bh=0nHnWyTi1/5z4jViX6/fk8/97w0RRKZVTE+kBJBTFJY=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=dL3EnT1ytm6BHpdkhN5++VEgxre61wCfDjqFXylyB4mrtsksKtyBOd8rcG7T7FgPR
-         jMxqJeDOiJBiuOHm2k9pdQ85MpTioN0pYv/v7C1D7YKY5E6H+RYmwFcHP7pC+qRU6w
-         SOo0LxLQ+WlixKuoS6kbX+e6h8EeiALBZ6A7gfQE=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.175.129]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MVcvn-1kHV0s1LPb-00YwEd; Wed, 29
- Jul 2020 10:38:45 +0200
-To:     Lu Wei <luwei32@huawei.com>, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Subject: Re: [PATCH] ethernet: fix potential memory leak in
- gemini_ethernet_port_probe()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <c9c7e5a3-4909-e0c9-1c69-0ad3643ca3f5@web.de>
-Date:   Wed, 29 Jul 2020 10:38:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 04:39:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbgG2Ijk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 04:39:40 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 966DCC061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:39:40 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k0hcg-0004vI-85; Wed, 29 Jul 2020 10:39:38 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k0hce-0006kb-TI; Wed, 29 Jul 2020 10:39:36 +0200
+Date:   Wed, 29 Jul 2020 10:39:36 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     robh+dt@kernel.org, frowand.list@gmail.com
+Cc:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] arm: dts: imx7: add QSPI
+Message-ID: <20200729083936.p5t66bf5envimgur@pengutronix.de>
+References: <20200729071106.8213-1-matthias.schiffer@ew.tq-group.com>
+ <33fbac338c9d9accda37837eb1338003b28cafee.camel@ew.tq-group.com>
+ <20200729075841.2fiudq2ypcbvlymx@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:DIURh6r5a5qyKYK5piPq9bQqL5bdgzfI0Lt5o3pwFgdexj93y0b
- 9iccCfI87+I2IVXyJYPWYgr2lh9qEQKxMPJnTAUz6GABamYHjFUYjK3x6ZuXthiVqjSWAGQ
- kAQIAkH+y8cyEFJjznuJCJKdEEbp5Ud9alJglAROU67Th4b2ZK7xUGZUKDXb9cp57ei/QcW
- GYLe8KFCtWOwj4FGsQWRQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CvAf/U/2krw=:jnm5GT4alMrsp5cOHacWIm
- V1iIXBhpPKa4zfqA+WBmO/gCoklqsKNdDsFeuBAH4pIR94mL/IbTGefc9KVqUYqlOMpMwL4nB
- J+7N1jZvLI8xyaFrcRdnyTOBOVAAic2pMiG9JqnGe7h2pxQevgXwQ6iF1pbm1G/v8Rd05ae/5
- eZqGNrwID+QaSwVS3OZ3G6OmhOTurYqfu9VdYkNmh1AeHttgsmnTLusY8BOrPAL4kiNAys5Si
- uTGa2viILDKASi5SDFwI+CDzhQDJXf5lXcGV9yobL96Y84TNU+868PuBp1UkDbsXA3zGiYW5f
- WzjYp783dwbD9Aebi/RYFEG5UZ3mSDC48qLInfI9OdywZjGIxB7q9GZIowyNHmZpEFvPfRziG
- jMp6KGUXkSPpnrDY+iL1E7n7xqYt3uouJjJ2iJHl5sPM+1ctMo0ttvauCWGTbYuSJbXccosco
- 4prBJasX3dNWmGKZfLApAiDmtsd0bVWlQWRuOe0udYB+pqDSLASuEZ3kmfQNlHkTtRbLSDiXZ
- 1ws2tKX8IeKYtDSNg7k/inyHnB0K2OCSODeNgQ6li1E8pzod+08YSNWdVQ4V8N/yYeR9q321t
- xmyl3Cj4w+CVwj9c20hNjpSrHg9W4eWDapqpoJcN0nh/vLmHKZwKzrEiBJ0ruEkp/wUMsoOpR
- dx80wd/bEFMXk9zlpZUJ/dmmyuuHXIdm0KSFI1cwxCe8sGbGjBE8s9XuPqFBuP3GxmkcWgV1d
- 2/L0Uwu2wnF6H83uZxSHvK2RgL3HWKZSlzM4Sz/Ip1RMqQTE4XXhaOUlEpPNL73cWaMj5O8tr
- OF46uqsXuDRd1OzkAY2Afzv/J8Wo0u7ZJmbhpM9RtU3RyMDeDoSFwLdg5tw/LxzEJNMGJxd9e
- JnldnJGjqCpOPZLQ+ZNhiF4ULMM0x/xmyC/Zr5DuYg0p0a+Zv+XX3g6sMURug/sJJZbNKszQi
- zU09dPiOasEKyHdqfVHCYMWRPsGwZ9Nn5UO96mwsXkfEJusEBOaMXsNLyAWd2gc689hCxdfU+
- g3bFhMKVDmQ7RRbjPd5uPlnZLYj+FT1ncmTAhR13xBWNyjkwP+P1Z2wpA8RjROltBb+q70FGi
- osXbCCEr87vpF6YOxlhC8VJRWw1QnjiqHOxdGV07A9aIcCB/EQssmlkSLTbb6kio9e5aVW5su
- FAp3Wull0KboABBYhMqExz/eamPxrGWV6fBx7bSLzmT2o/EkJv/FOZ8W7HhkrwmI/YiU6M3q9
- HW6NMhXHgY2OL+Z4l/jjrc7DG3cxK+N68xbp94A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729075841.2fiudq2ypcbvlymx@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:37:01 up 256 days, 23:55, 239 users,  load average: 0.07, 0.09,
+ 0.09
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> If some processes in gemini_ethernet_port_probe() fail,
-> free_netdev(dev) needs to be called to avoid a memory leak.
+Added Rob and Frank.
 
-Would you like to use an imperative wording for this change description?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3D6ba1b005ffc388c2aeaddae20d=
-a29e4810dea298#n151
+Maybe they can explain us this behaviour.
 
+On 20-07-29 09:58, Marco Felsch wrote:
+> Hi Matthias,
+> 
+> On 20-07-29 09:14, Matthias Schiffer wrote:
+> > On Wed, 2020-07-29 at 09:11 +0200, Matthias Schiffer wrote:
+> > > In preparation for an update of the TQ-Systems TQMa7x/MBa7x DTS, add
+> > > the
+> > > QSPI controller to imx7s.dtsi.
+> > > 
+> > > Based-on-patch-by: Han Xu <han.xu@nxp.com>
+> > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> > > ---
+> > > 
+> > > v2:
+> > > - renamed node and label
+> > > - reordered properties
+> > > (as suggested by Marco Felsch)
+> > 
+> > Ugh, I neglected to check for compile warnings after adjusting the node
+> > name. This now gives the following warning:
+> > 
+> > arch/arm/boot/dts/imx7s.dtsi:1165.24-1176.6: Warning (spi_bus_bridge): 
+> > /soc/bus@30800000/qspi@30bb0000: node name for SPI buses should be
+> > 'spi'
+> > 
+> > So I guess this should be called spi@ after all?
+> 
+> Unfortunately yes, this would cause a longer discussion but it still
+> seems wrong to me.
+> 
+> Regards,
+>   Marco
+> 
+> > > 
+> > > 
+> > >  arch/arm/boot/dts/imx7s.dtsi | 13 +++++++++++++
+> > >  1 file changed, 13 insertions(+)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/imx7s.dtsi
+> > > b/arch/arm/boot/dts/imx7s.dtsi
+> > > index 1cfaf410aa43..22e4c38223bd 100644
+> > > --- a/arch/arm/boot/dts/imx7s.dtsi
+> > > +++ b/arch/arm/boot/dts/imx7s.dtsi
+> > > @@ -1162,6 +1162,19 @@
+> > >  				status = "disabled";
+> > >  			};
+> > >  
+> > > +			qspi: qspi@30bb0000 {
+> > > +				compatible = "fsl,imx7d-qspi";
+> > > +				reg = <0x30bb0000 0x10000>, <0x60000000
+> > > 0x10000000>;
+> > > +				reg-names = "QuadSPI", "QuadSPI-
+> > > memory";
+> > > +				#address-cells = <1>;
+> > > +				#size-cells = <0>;
+> > > +				interrupts = <GIC_SPI 107
+> > > IRQ_TYPE_LEVEL_HIGH>;
+> > > +				clocks = <&clks IMX7D_QSPI_ROOT_CLK>,
+> > > +					<&clks IMX7D_QSPI_ROOT_CLK>;
+> > > +				clock-names = "qspi_en", "qspi";
+> > > +				status = "disabled";
+> > > +			};
+> > > +
+> > >  			sdma: sdma@30bd0000 {
+> > >  				compatible = "fsl,imx7d-sdma",
+> > > "fsl,imx35-sdma";
+> > >  				reg = <0x30bd0000 0x10000>;
+> > 
+> > 
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+> 
 
-=E2=80=A6
-> +++ b/drivers/net/ethernet/cortina/gemini.c
-> @@ -2501,8 +2513,10 @@  static int gemini_ethernet_port_probe(struct pla=
-tform_device *pdev)
->  					IRQF_SHARED,
->  					port_names[port->id],
->  					port);
-> -	if (ret)
-> +	if (ret) {
-> +		free_netdev(netdev);
->  		return ret;
-> +	}
->
->  	ret =3D register_netdev(netdev);
-=E2=80=A6
-
-I suggest to add a jump target for the desired exception handling
-in this function implementation.
-
- 	if (ret)
--		return ret;
-+		goto free_netdev;
-
-Regards,
-Markus
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
