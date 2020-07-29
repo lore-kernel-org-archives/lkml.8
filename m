@@ -2,138 +2,261 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E020CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D50CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C020620809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596051308;
-	bh=NzOavhypQiRK+fikxf4URNUQ281LTHgwzpWksY2B5j8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=gWaNZWhGLWpaUhI+R7UOnepNpm5EH3PFJiDH6HJdmqupqCjZBZ6ccBPW1xCnaxSu/
-	 xjTV5SzwrqWVQ52rDNE1Lv5keZ1LDznC0KZMNw5rZRfVN9xUt8WZRG76grKW1Su5nF
-	 Y+QQvY/v+aC7P5wXVJSqI2k/RJ7cf2+vja3K86uc=
+	by mail.kernel.org (Postfix) with ESMTP id 7ADFC206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:41:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f6Ovl8hH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgG2TfH (ORCPT
+        id S1726707AbgG2Tln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 15:35:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgG2TfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 15:35:07 -0400
-Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 29 Jul 2020 15:41:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20369 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726519AbgG2Tlm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 15:41:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596051700;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ocuSVhxqqmtvpediuEKQksstiWw3qVg+isufvOVyA6E=;
+        b=f6Ovl8hHZjOGgy527BBegZVukE2/sQ/WK1ylu2qi1gdd7geOEJML5yY9zt5hW5JxHOAa1x
+        L8mU22eL0QPuDH04j/Or6JmDP4W2HyvoPC2tzQZacwHAxGDROFPEILrJB/HG9hHPX3rln1
+        Cl5r4jnRpimNfJ2FR3/b5ClzAHQ9KGo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-259-uxtA_-JJOqm2veOjkX2iqw-1; Wed, 29 Jul 2020 15:41:25 -0400
+X-MC-Unique: uxtA_-JJOqm2veOjkX2iqw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4401206D4;
-        Wed, 29 Jul 2020 19:35:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596051306;
-        bh=NzOavhypQiRK+fikxf4URNUQ281LTHgwzpWksY2B5j8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=va7MDQS4LRM/ecdjwCpXltGEt61+wCS4zFLaeboEgcCzWoFtgvvCQ4mSKNBo1v66o
-         wz2Uh5D6HO6Dy9eG/p1Bf0vSGoUPoVI+35+kLyInUV3IjtOr90muXlZHNNr4BbqMhN
-         JZLkbfYMCKz4mg72FAqJvBOtPjkvQUEKTX0JFhJw=
-Date:   Wed, 29 Jul 2020 14:35:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, Kelvin.Cao@microchip.com
-Subject: Re: [PATCH 1/2] PCI/switechtec: Add missing __iomem and __user tags
- to fix sparse warnings
-Message-ID: <20200729193504.GA1960928@bjorn-Precision-5520>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BC5771800D4A;
+        Wed, 29 Jul 2020 19:41:23 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 65F968A177;
+        Wed, 29 Jul 2020 19:41:02 +0000 (UTC)
+Date:   Wed, 29 Jul 2020 15:40:58 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, Ondrej Mosnacek <omosnace@redhat.com>,
+        dhowells@redhat.com, simo@redhat.com,
+        Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Subject: Re: [PATCH ghak90 V9 05/13] audit: log container info of syscalls
+Message-ID: <20200729194058.kcbsqjhzunjpipgm@madcap2.tricolour.ca>
+References: <cover.1593198710.git.rgb@redhat.com>
+ <6e2e10432e1400f747918eeb93bf45029de2aa6c.1593198710.git.rgb@redhat.com>
+ <CAHC9VhSCm5eeBcyY8bBsnxr-hK4rkso9_NJHJec2OXLu4m5QTA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200728192434.18993-1-logang@deltatee.com>
+In-Reply-To: <CAHC9VhSCm5eeBcyY8bBsnxr-hK4rkso9_NJHJec2OXLu4m5QTA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 01:24:33PM -0600, Logan Gunthorpe wrote:
-> Fix a number of missing __iomem and __user tags in the ioctl functions of
-> the switchtec driver. This fixes a number of sparse warnings of the form:
+On 2020-07-05 11:10, Paul Moore wrote:
+> On Sat, Jun 27, 2020 at 9:22 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >
+> > Create a new audit record AUDIT_CONTAINER_ID to document the audit
+> > container identifier of a process if it is present.
+> >
+> > Called from audit_log_exit(), syscalls are covered.
+> >
+> > Include target_cid references from ptrace and signal.
+> >
+> > A sample raw event:
+> > type=SYSCALL msg=audit(1519924845.499:257): arch=c000003e syscall=257 success=yes exit=3 a0=ffffff9c a1=56374e1cef30 a2=241 a3=1b6 items=2 ppid=606 pid=635 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=3 comm="bash" exe="/usr/bin/bash" subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key="tmpcontainerid"
+> > type=CWD msg=audit(1519924845.499:257): cwd="/root"
+> > type=PATH msg=audit(1519924845.499:257): item=0 name="/tmp/" inode=13863 dev=00:27 mode=041777 ouid=0 ogid=0 rdev=00:00 obj=system_u:object_r:tmp_t:s0 nametype= PARENT cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0
+> > type=PATH msg=audit(1519924845.499:257): item=1 name="/tmp/tmpcontainerid" inode=17729 dev=00:27 mode=0100644 ouid=0 ogid=0 rdev=00:00 obj=unconfined_u:object_r:user_tmp_t:s0 nametype=CREATE cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0
+> > type=PROCTITLE msg=audit(1519924845.499:257): proctitle=62617368002D6300736C65657020313B206563686F2074657374203E202F746D702F746D70636F6E7461696E65726964
+> > type=CONTAINER_ID msg=audit(1519924845.499:257): contid=123458
+> >
+> > Please see the github audit kernel issue for the main feature:
+> >   https://github.com/linux-audit/audit-kernel/issues/90
+> > Please see the github audit userspace issue for supporting additions:
+> >   https://github.com/linux-audit/audit-userspace/issues/51
+> > Please see the github audit testsuiite issue for the test case:
+> >   https://github.com/linux-audit/audit-testsuite/issues/64
+> > Please see the github audit wiki for the feature overview:
+> >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > Acked-by: Serge Hallyn <serge@hallyn.com>
+> > Acked-by: Steve Grubb <sgrubb@redhat.com>
+> > Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > ---
+> >  include/linux/audit.h      |  7 +++++++
+> >  include/uapi/linux/audit.h |  1 +
+> >  kernel/audit.c             | 25 +++++++++++++++++++++++--
+> >  kernel/audit.h             |  4 ++++
+> >  kernel/auditsc.c           | 45 +++++++++++++++++++++++++++++++++++++++------
+> >  5 files changed, 74 insertions(+), 8 deletions(-)
 > 
->   sparse: sparse: incorrect type in ... (different address spaces)
+> ...
 > 
-> Fixes: 52eabba5bcdb ("switchtec: Add IOCTLs to the Switchtec driver")
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index 9e0b38ce1ead..a09f8f661234 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > @@ -2211,6 +2211,27 @@ void audit_log_session_info(struct audit_buffer *ab)
+> >         audit_log_format(ab, "auid=%u ses=%u", auid, sessionid);
+> >  }
+> >
+> > +/*
+> > + * audit_log_container_id - report container info
+> > + * @context: task or local context for record
+> > + * @cont: container object to report
+> > + */
+> > +void audit_log_container_id(struct audit_context *context,
+> > +                           struct audit_contobj *cont)
+> > +{
+> > +       struct audit_buffer *ab;
+> > +
+> > +       if (!cont)
+> > +               return;
+> > +       /* Generate AUDIT_CONTAINER_ID record with container ID */
+> > +       ab = audit_log_start(context, GFP_KERNEL, AUDIT_CONTAINER_ID);
+> > +       if (!ab)
+> > +               return;
+> > +       audit_log_format(ab, "contid=%llu", contid);
+> 
+> Did this patch compile?  Where is "contid" coming from?  I'm guessing
+> you mean to get it from "cont", but that isn't what appears to be
+> happening; likely a casualty of the object vs token discussion we had
+> during the last review cycle.
 
-Applied to pci/switchtec for v5.9, thanks!
+Yes, it was supposed to be cont->id.
 
-> ---
+> I'm assuming this code gets modified later in this patchset and you
+> only compiled tested the patchset as a whole.  Please make sure the
+> patchset compiles at each patch along the way to applying them all;
+> this helps ensure that git bisect remains useful and it fits better
+> with the general idea that individual patches must have merit on their
+> own.
+
+Yes, agreed.
+
+> ... and yes, I do check for this when merging patchsets, it isn't just
+> a visual inspection, I compile test each patch.
 > 
-> Here are a couple quick patches to fix some sparse warnings I was
-> notified about a couple weeks ago.
+> If nothing else, at least this answers the question of if it is worth
+> respinning or not (this alone requires a respin).
 > 
-> I've split them into two patches based on Fixes tag, but they could be
-> squashed depending on the preference.
+> > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> > index f03d3eb0752c..9e79645e5c0e 100644
+> > --- a/kernel/auditsc.c
+> > +++ b/kernel/auditsc.c
+> > @@ -1458,6 +1466,7 @@ static void audit_log_exit(void)
+> >         struct audit_buffer *ab;
+> >         struct audit_aux_data *aux;
+> >         struct audit_names *n;
+> > +       struct audit_contobj *cont;
+> >
+> >         context->personality = current->personality;
+> >
+> > @@ -1541,7 +1550,7 @@ static void audit_log_exit(void)
+> >         for (aux = context->aux_pids; aux; aux = aux->next) {
+> >                 struct audit_aux_data_pids *axs = (void *)aux;
+> >
+> > -               for (i = 0; i < axs->pid_count; i++)
+> > +               for (i = 0; i < axs->pid_count; i++) {
+> >                         if (audit_log_pid_context(context, axs->target_pid[i],
+> >                                                   axs->target_auid[i],
+> >                                                   axs->target_uid[i],
+> > @@ -1549,14 +1558,20 @@ static void audit_log_exit(void)
+> >                                                   axs->target_sid[i],
+> >                                                   axs->target_comm[i]))
+> >                                 call_panic = 1;
+> > +                       audit_log_container_id(context, axs->target_cid[i]);
+> > +               }
 > 
-> Thanks!
+> It might be nice to see an audit event example including the
+> ptrace/signal information.  I'm concerned there may be some confusion
+> about associating the different audit container IDs with the correct
+> information in the event.
+
+This is the subject of ghat81, which is a test for ptrace and signal
+records.
+
+This was the reason I had advocated for an op= field since there is a
+possibility of multiple contid records per event.
+
+> >         }
+> >
+> > -       if (context->target_pid &&
+> > -           audit_log_pid_context(context, context->target_pid,
+> > -                                 context->target_auid, context->target_uid,
+> > -                                 context->target_sessionid,
+> > -                                 context->target_sid, context->target_comm))
+> > +       if (context->target_pid) {
+> > +               if (audit_log_pid_context(context, context->target_pid,
+> > +                                         context->target_auid,
+> > +                                         context->target_uid,
+> > +                                         context->target_sessionid,
+> > +                                         context->target_sid,
+> > +                                         context->target_comm))
+> >                         call_panic = 1;
+> > +               audit_log_container_id(context, context->target_cid);
+> > +       }
+> >
+> >         if (context->pwd.dentry && context->pwd.mnt) {
+> >                 ab = audit_log_start(context, GFP_KERNEL, AUDIT_CWD);
+> > @@ -1575,6 +1590,14 @@ static void audit_log_exit(void)
+> >
+> >         audit_log_proctitle();
+> >
+> > +       rcu_read_lock();
+> > +       cont = _audit_contobj_get(current);
+> > +       rcu_read_unlock();
+> > +       audit_log_container_id(context, cont);
+> > +       rcu_read_lock();
+> > +       _audit_contobj_put(cont);
+> > +       rcu_read_unlock();
 > 
-> drivers/pci/switch/switchtec.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+> Do we need to grab an additional reference for the audit container
+> object here?  We don't create any additional references here that
+> persist beyond the lifetime of this function, right?
+
+Why do we need another reference?  There's one for each pointer pointing
+to it and so far we have just one from this task.  Or are you thinking
+of the contid hash list, which is only added to when a task points to it
+and gets removed from that list when the last task stops pointing to it.
+Later that gets more complicated with network namespaces and nested
+container objects.  For now we just needed it while generating the
+record, then it gets freed.
+
+> >         audit_log_container_drop();
+> >
+> >         /* Send end of event record to help user space know we are finished */
 > 
-> diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-> index 850cfeb74608..3d5da7f44378 100644
-> --- a/drivers/pci/switch/switchtec.c
-> +++ b/drivers/pci/switch/switchtec.c
-> @@ -940,7 +940,7 @@ static u32 __iomem *event_hdr_addr(struct switchtec_dev *stdev,
->  	size_t off;
-> 
->  	if (event_id < 0 || event_id >= SWITCHTEC_IOCTL_MAX_EVENTS)
-> -		return ERR_PTR(-EINVAL);
-> +		return (u32 __iomem *)ERR_PTR(-EINVAL);
-> 
->  	off = event_regs[event_id].offset;
-> 
-> @@ -948,10 +948,10 @@ static u32 __iomem *event_hdr_addr(struct switchtec_dev *stdev,
->  		if (index == SWITCHTEC_IOCTL_EVENT_LOCAL_PART_IDX)
->  			index = stdev->partition;
->  		else if (index < 0 || index >= stdev->partition_count)
-> -			return ERR_PTR(-EINVAL);
-> +			return (u32 __iomem *)ERR_PTR(-EINVAL);
->  	} else if (event_regs[event_id].map_reg == pff_ev_reg) {
->  		if (index < 0 || index >= stdev->pff_csr_count)
-> -			return ERR_PTR(-EINVAL);
-> +			return (u32 __iomem *)ERR_PTR(-EINVAL);
->  	}
-> 
->  	return event_regs[event_id].map_reg(stdev, off, index);
-> @@ -1057,11 +1057,11 @@ static int ioctl_event_ctl(struct switchtec_dev *stdev,
->  }
-> 
->  static int ioctl_pff_to_port(struct switchtec_dev *stdev,
-> -			     struct switchtec_ioctl_pff_port *up)
-> +			     struct switchtec_ioctl_pff_port __user *up)
->  {
->  	int i, part;
->  	u32 reg;
-> -	struct part_cfg_regs *pcfg;
-> +	struct part_cfg_regs __iomem *pcfg;
->  	struct switchtec_ioctl_pff_port p;
-> 
->  	if (copy_from_user(&p, up, sizeof(p)))
-> @@ -1104,10 +1104,10 @@ static int ioctl_pff_to_port(struct switchtec_dev *stdev,
->  }
-> 
->  static int ioctl_port_to_pff(struct switchtec_dev *stdev,
-> -			     struct switchtec_ioctl_pff_port *up)
-> +			     struct switchtec_ioctl_pff_port __user *up)
->  {
->  	struct switchtec_ioctl_pff_port p;
-> -	struct part_cfg_regs *pcfg;
-> +	struct part_cfg_regs __iomem *pcfg;
-> 
->  	if (copy_from_user(&p, up, sizeof(p)))
->  		return -EFAULT;
-> 
-> base-commit: 92ed301919932f777713b9172e525674157e983d
-> --
-> 2.20.1
+> paul moore
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
