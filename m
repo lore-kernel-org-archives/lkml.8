@@ -2,147 +2,162 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E28C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58B4C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAEFC20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5FB620672
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:49:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="KOFeHxCK";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="adE0Jopx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730670AbgG2Brc (ORCPT
+        id S1730869AbgG2BtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 21:47:32 -0400
-Received: from mga03.intel.com ([134.134.136.65]:30261 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730346AbgG2Brb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 21:47:31 -0400
-IronPort-SDR: D/XYOS2B35gEdIqen0AFylxLApDPeP+fz01l/hzY3VgJk22o+LgHMyrAbTaZ4K7dzeOeldejBh
- GOwnXXsmw3yA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="151326225"
-X-IronPort-AV: E=Sophos;i="5.75,408,1589266800"; 
-   d="scan'208";a="151326225"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 18:47:29 -0700
-IronPort-SDR: buweFr5FXr4/wTlV5YC7qLAkiGV9FFRoWmrr2Zj2m8xiK0wIq4Jp90yg5jDZ3MfVW3CESDyZyn
- 9NEDaro4wMXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,408,1589266800"; 
-   d="scan'208";a="364702365"
-Received: from lkp-server01.sh.intel.com (HELO d27eb53fc52b) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 28 Jul 2020 18:47:28 -0700
-Received: from kbuild by d27eb53fc52b with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k0bBn-0001A6-IU; Wed, 29 Jul 2020 01:47:27 +0000
-Date:   Wed, 29 Jul 2020 09:47:06 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:sched/core] BUILD SUCCESS
- 21a6ee14a8f277766618ef07154432b46528113e
-Message-ID: <5f20d51a.xjfwIJj4SuCWbefb%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Tue, 28 Jul 2020 21:49:07 -0400
+Received: from relay3.mymailcheap.com ([217.182.119.157]:40261 "EHLO
+        relay3.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730328AbgG2BtG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 21:49:06 -0400
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
+        by relay3.mymailcheap.com (Postfix) with ESMTPS id 2755C3ECDF;
+        Wed, 29 Jul 2020 03:49:02 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by filter1.mymailcheap.com (Postfix) with ESMTP id 549192A0F5;
+        Tue, 28 Jul 2020 21:49:01 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1595987341;
+        bh=Y642tKKWgaamRJ0vO0FY457Lm355lqPLigYlI2p5Pcs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=KOFeHxCKT1huBJbk/aEC3ze8xmPxhPt/ZCea/xfcAsjLew0gurqP+lL265P8FX98z
+         bc5yg3bDCZZ3f2u/q1PcSYDj7QexS6TpzpQhPcaWD4arSN9Akxdblx6KuyzAogmG3b
+         ZdoJhEeOyIfiS1cjRKuCBIOAMKg7QRsCvNKYJ0tg=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+        by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id DjZu8um8qhIu; Tue, 28 Jul 2020 21:49:00 -0400 (EDT)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by filter1.mymailcheap.com (Postfix) with ESMTPS;
+        Tue, 28 Jul 2020 21:49:00 -0400 (EDT)
+Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id 22093418CF;
+        Wed, 29 Jul 2020 01:48:57 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="adE0Jopx";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from [0.0.0.0] (li161-247.members.linode.com [173.230.151.247])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 0FB6041312;
+        Wed, 29 Jul 2020 01:48:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
+        s=default; t=1595987331;
+        bh=Y642tKKWgaamRJ0vO0FY457Lm355lqPLigYlI2p5Pcs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=adE0JopxLVYe/8QD+JX/Qp5LmqWNVxuheA83vJ/IdxSQrmoda4TQq/Uh1fOLy0CF7
+         xsdMscfHdA1tPstCh3oMsn5Vq7H5u1kOvJ0B6HXTh8j0w4CELFVsBTtk2BoAAlaH8X
+         bQKt0kGjwRof9AsnrCSon9YsbnT3XKmb1U/8pNcg=
+Subject: Re: [PATCH v4 0/5] MIPS: Loongson64: Process ISA Node in DeviceTree
+To:     linux-mips@vger.kernel.org
+Cc:     Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
+        maobibo@loongson.cn, git@xen0n.name
+References: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
+ <20200728205245.GC22052@alpha.franken.de>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <0a0847d1-8d9b-8fdb-54cf-e1b07100b1f8@flygoat.com>
+Date:   Wed, 29 Jul 2020 09:48:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200728205245.GC22052@alpha.franken.de>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 22093418CF
+X-Spamd-Result: default: False [-0.10 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         RCPT_COUNT_FIVE(0.00)[5];
+         ML_SERVERS(-3.10)[213.133.102.83];
+         DKIM_TRACE(0.00)[flygoat.com:+];
+         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
+         RCVD_IN_DNSWL_NONE(0.00)[213.133.102.83:from];
+         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1]
+X-Rspamd-Server: mail20.mymailcheap.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  sched/core
-branch HEAD: 21a6ee14a8f277766618ef07154432b46528113e  sched: Remove duplicated tick_nohz_full_enabled() check
 
-elapsed time: 724m
 
-configs tested: 76
-configs skipped: 3
+ÔÚ 2020/7/29 4:52, Thomas Bogendoerfer Ð´µÀ:
+> On Tue, Jul 28, 2020 at 11:36:54PM +0800, Jiaxun Yang wrote:
+>> Hi,
+>>
+>> This series convert reservation of Loongson64 Logic PIO into DeviceTree based
+>> method.
+>>
+>> It can be used to replace Huacai's
+>> "MIPS: Loongson64: Reserve legacy MMIO space according to bridge type".
+>>
+>> Thanks.
+>>
+>> v2:
+>>    - Address Rob and Huacai's review comments.
+>> v3:
+>>    - Address Rob, Thomas's review comments.
+>> v4:
+>>    - Fix typo & grammar issue according to Xuerui's suggestion.
+>>
+>> Jiaxun Yang (5):
+>>    of_address: Add bus type match for pci ranges parser
+>>    MIPS: Loongson64: Process ISA Node in DeviceTree
+>>    MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
+>>    MIPS: Loongson64: DTS: Fix ISA and PCI I/O ranges for RS780E PCH
+>>    MIPS: Loongson64: Add ISA node for LS7A PCH
+>>
+>>   arch/mips/boot/dts/loongson/ls7a-pch.dtsi     |  7 ++
+>>   arch/mips/boot/dts/loongson/rs780e-pch.dtsi   |  4 +-
+>>   arch/mips/include/asm/io.h                    |  2 -
+>>   arch/mips/include/asm/mach-generic/spaces.h   |  4 +
+>>   .../mips/include/asm/mach-loongson64/spaces.h |  3 +-
+>>   arch/mips/loongson64/init.c                   | 87 +++++++++++++------
+>>   drivers/of/address.c                          | 29 ++++---
+>>   include/linux/of_address.h                    |  4 +
+>>   8 files changed, 97 insertions(+), 43 deletions(-)
+> series applied to mips-next.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
++ Xuerui & Bibo,
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                            qcom_defconfig
-powerpc                      ep88xc_defconfig
-mips                  decstation_64_defconfig
-xtensa                           alldefconfig
-mips                          ath79_defconfig
-arm                     davinci_all_defconfig
-nios2                            alldefconfig
-arm                         vf610m4_defconfig
-m68k                            mac_defconfig
-sh                          lboxre2_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a003-20200728
-i386                 randconfig-a004-20200728
-i386                 randconfig-a005-20200728
-i386                 randconfig-a002-20200728
-i386                 randconfig-a006-20200728
-i386                 randconfig-a001-20200728
-x86_64               randconfig-a014-20200728
-x86_64               randconfig-a012-20200728
-x86_64               randconfig-a015-20200728
-x86_64               randconfig-a016-20200728
-x86_64               randconfig-a013-20200728
-x86_64               randconfig-a011-20200728
-i386                 randconfig-a016-20200728
-i386                 randconfig-a012-20200728
-i386                 randconfig-a013-20200728
-i386                 randconfig-a014-20200728
-i386                 randconfig-a011-20200728
-i386                 randconfig-a015-20200728
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+This series should fix the issue that RTC on RS780E chipset failed
+to be probed, please kindly test latest mips-next.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Thanks!
+
+- Jiaxun
+
+>
+> Thomas.
+>
