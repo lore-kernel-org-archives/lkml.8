@@ -2,114 +2,101 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29979C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BD8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC302070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1C8207F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=students-iitmandi-ac-in.20150623.gappssmtp.com header.i=@students-iitmandi-ac-in.20150623.gappssmtp.com header.b="PiK/1LIl"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Xq9chmJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgG2IMT (ORCPT
+        id S1728027AbgG2IMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:12:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgG2IMT (ORCPT
+        Wed, 29 Jul 2020 04:12:23 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:28274 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726476AbgG2IMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:12:19 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D062EC0619D2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:12:18 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id j20so12548346pfe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:12:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=students-iitmandi-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=S46xE3v5DrbbnFv9e5puvYo4jscSSSdvbX89O6S8DDQ=;
-        b=PiK/1LIl8E/ZxiNOPlZOco9DGDkPa8InSq+tT3BBXy/JusYHitRQcDlma6dXh8ftfj
-         AuJf5HzZMpsifHvouWzlUvFmSf9eV0+u32GHTv5nNoI3LT2PWK7u4L7XcnOjc5q55oMx
-         VmKjk5ZpzVaIBk8VuoVF15/rlJFfgsjJCvFPh/HVrogN9lJ+7NOekYius/EzvM4b2nwi
-         I9r/advsb8QODpGxlZJZNCw1ZfhwAU2z3vwVodmAdzL9UhBOmF0ebnmURz41vhYBzO+5
-         mNTDS8uGUV4V6um2lOoPViqL93dqxUdQSn7SFCNivJ85WrEFy+J1kmDNg9AMMyXXOltL
-         Lccg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=S46xE3v5DrbbnFv9e5puvYo4jscSSSdvbX89O6S8DDQ=;
-        b=JKOS2gDx/Z8II+JSwW0sxT73E5edlF6n8HDRBhry1Z5qz4vSPNG+yjvh0MokJEttNe
-         MsybAus5dfZQJgSSFJcTC78QewMq4ls7CKw8rY06M0+Kta/dFCarlvLk8+nQpbVosZfb
-         yaEwUH0005CYX6nKBm+dojJXCY26A1eu8U5wUqWJaGSjjHuuCGQDuKJxwNbn13p+Uml+
-         zpsBtECZbxOHDgFVZtZydyzV5VOmMxD+GKUoWSaNQq7B6i1QhdPHz4qgVXbnDQGFopqQ
-         QLv03DWfRe6sBn2natuR22KCgFGajgfQBiUbPP5bvHFQztmTYTc+EHqa+7OgTS8rY7bu
-         MCFA==
-X-Gm-Message-State: AOAM531mm/6/Zl4hDCu+15z0a8QwduJN8+0utib7BGQ548EQG5RBRAer
-        UKRhXEQniuN400vCTa3iZcT/QA==
-X-Google-Smtp-Source: ABdhPJyDQEJ/JkWYuadFiwHxJB1gNPr4kQTXQ5jj2him+TlG+sTNSnHWHZofs9Eb9EhwLTAzDULJow==
-X-Received: by 2002:a62:5284:: with SMTP id g126mr2422012pfb.139.1596010338199;
-        Wed, 29 Jul 2020 01:12:18 -0700 (PDT)
-Received: from devil-VirtualBox.www.tendawifi.com ([103.198.174.215])
-        by smtp.gmail.com with ESMTPSA id s6sm1377206pfd.20.2020.07.29.01.12.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 01:12:17 -0700 (PDT)
-From:   Ankit Baluni <b18007@students.iitmandi.ac.in>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, gregkh@linuxfoundation.org
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Ankit Baluni <b18007@students.iitmandi.ac.in>
-Subject: [PATCH -v2] Staging: iio: Fixed a punctuation and a spelling mistake.
-Date:   Wed, 29 Jul 2020 13:41:55 +0530
-Message-Id: <20200729081155.3228-1-b18007@students.iitmandi.ac.in>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAHp75VcmMf5dt7mu9N0C=6Rej-WzZ0EpzntHYCQkgNLVZkPbgg@mail.gmail.com>
-References: <CAHp75VcmMf5dt7mu9N0C=6Rej-WzZ0EpzntHYCQkgNLVZkPbgg@mail.gmail.com>
+        Wed, 29 Jul 2020 04:12:22 -0400
+X-UUID: 2413338d715b4af9863f7465faf99924-20200729
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=H3idPQTUXz+EWlLU7Ek+7vnRUsZER+6TN+XpZ69MkBo=;
+        b=Xq9chmJJZU4nKTZwiwj30gbXYzJ3eQxN7j8exLZ8FsmaopQ92ZYtk7B2k+dE2Hctx7YTqlYxR7uD5s50Rqj1EXo7ouerVxApd0jS/Mq1B0QJQ5D6pFZ2oIXLwOI0+mhiX+KkXRH6Q6lKl2YTKJ1oz/faHEVt0fPJOe538KAMRUY=;
+X-UUID: 2413338d715b4af9863f7465faf99924-20200729
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <crystal.guo@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1357280908; Wed, 29 Jul 2020 16:12:20 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs02n2.mediatek.inc
+ (172.21.101.101) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 29 Jul
+ 2020 16:12:17 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 29 Jul 2020 16:12:16 +0800
+Message-ID: <1596010313.11360.2.camel@mhfsdcap03>
+Subject: Re: [v2,2/3] dt-bindings: watchdog: add a new head file for toprgu
+ reset-controllers
+From:   Crystal Guo <crystal.guo@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     "linux@roeck-us.net" <linux@roeck-us.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        Seiya Wang =?UTF-8?Q?=28=E7=8E=8B=E8=BF=BA=E5=90=9B=29?= 
+        <seiya.wang@mediatek.com>,
+        Erin Lo =?UTF-8?Q?=28=E7=BE=85=E9=9B=85=E9=BD=A1=29?= 
+        <erin.lo@mediatek.com>
+Date:   Wed, 29 Jul 2020 16:11:53 +0800
+In-Reply-To: <fb7ef8a7-5bbc-8e4b-7a23-c84f151587ba@gmail.com>
+References: <1596004249-28655-1-git-send-email-crystal.guo@mediatek.com>
+         <1596004249-28655-3-git-send-email-crystal.guo@mediatek.com>
+         <fb7ef8a7-5bbc-8e4b-7a23-c84f151587ba@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: 49384A5751F6C3098C0961C234D96D309D10B032A745AB30AF2B8990DB3650B52000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added a missing comma and changed 'it it useful' to 'it is useful'.
-
-Signed-off-by: Ankit Baluni <b18007@students.iitmandi.ac.in>
----
-Changes in -v2:
-	-Remove space before ':' in subject line.
-
- drivers/staging/iio/Documentation/overview.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/iio/Documentation/overview.txt b/drivers/staging/iio/Documentation/overview.txt
-index ebdc64f451d7..00409d5dab4e 100644
---- a/drivers/staging/iio/Documentation/overview.txt
-+++ b/drivers/staging/iio/Documentation/overview.txt
-@@ -9,7 +9,7 @@ The aim is to fill the gap between the somewhat similar hwmon and
- input subsystems.  Hwmon is very much directed at low sample rate
- sensors used in applications such as fan speed control and temperature
- measurement.  Input is, as its name suggests focused on input
--devices. In some cases there is considerable overlap between these and
-+devices. In some cases, there is considerable overlap between these and
- IIO.
- 
- A typical device falling into this category would be connected via SPI
-@@ -38,7 +38,7 @@ series and Analog Devices ADXL345 accelerometers.  Each buffer supports
- polling to establish when data is available.
- 
- * Trigger and software buffer support. In many data analysis
--applications it it useful to be able to capture data based on some
-+applications it is useful to be able to capture data based on some
- external signal (trigger).  These triggers might be a data ready
- signal, a gpio line connected to some external system or an on
- processor periodic interrupt.  A single trigger may initialize data
--- 
-2.25.1
+T24gV2VkLCAyMDIwLTA3LTI5IGF0IDE1OjQyICswODAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiBIaSBDcnlzdGFsLA0KPiANCj4gT24gMjkvMDcvMjAyMCAwODozMCwgQ3J5c3RhbCBHdW8g
+d3JvdGU6DQo+ID4gbWVyZ2UgYWxsIHRoZSByZXNldCBudW1iZXJzIGluIG9uZSBoZWFkIGZpbGUu
+DQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogQ3J5c3RhbCBHdW8gPGNyeXN0YWwuZ3VvQG1lZGlh
+dGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgIGluY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJv
+bGxlci9tdGstcmVzZXRzLmggfCAxMyArKysrKysrKysrKysrDQo+ID4gICAxIGZpbGUgY2hhbmdl
+ZCwgMTMgaW5zZXJ0aW9ucygrKQ0KPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQt
+YmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdGstcmVzZXRzLmgNCj4gPiANCj4gPiBkaWZmIC0t
+Z2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210ay1yZXNldHMuaCBi
+L2luY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdGstcmVzZXRzLmgNCj4gPiBu
+ZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLmQ3M2E0YmENCj4gPiAtLS0g
+L2Rldi9udWxsDQo+ID4gKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVy
+L210ay1yZXNldHMuaA0KPiA+IEBAIC0wLDAgKzEsMTMgQEANCj4gPiArLyogU1BEWC1MaWNlbnNl
+LUlkZW50aWZpZXI6IEdQTC0yLjAgKi8NCj4gPiArLyoNCj4gPiArICogQ29weXJpZ2h0IChDKSAy
+MDIwIE1lZGlhdGVrIEluYy4NCj4gPiArICoNCj4gPiArICovDQo+ID4gKw0KPiA+ICsjaWZuZGVm
+IF9EVF9CSU5ESU5HU19SRVNFVF9DT05UUk9MTEVSX01USw0KPiA+ICsjZGVmaW5lIF9EVF9CSU5E
+SU5HU19SRVNFVF9DT05UUk9MTEVSX01USw0KPiA+ICsNCj4gPiArI2RlZmluZSBNVDI3MTJfVE9Q
+UkdVX1NXX1JTVF9OVU0JMTENCj4gPiArI2RlZmluZSBNVDgxODNfVE9QUkdVX1NXX1JTVF9OVU0g
+ICAgICAgIDE5DQo+IA0KPiBNYXliZSBJIGRpZG4ndCBleHBsYWluIG15c2VsZiBwcm9wZXJseS4g
+V2Ugd2FudCB0byBoYXZlIGFsbCByZXNldHMgaW4gb25lIGZpbGUgDQo+IGFuZCBkbyBub3Qgd2Fu
+dCB0byBoYXZlIHRoZSByZXNldHMgZm9yIHRoZSB3YXRjaGRvZyBpbiBhIGRpZmZlcmVudCBmaWxl
+LiBUaGF0IA0KPiBtZWFucyBJIGRvbid0IHRoaW4geW91ciBwYXRjaCBpcyBjb3JyZWN0IGFuZCB0
+aGUgZWZmb3J0IHNob3VsZCBiZSBhYmFuZG9uZWQuDQo+IA0KPiBSZWdhcmRzLA0KPiBNYXR0aGlh
+cw0KDQpEbyB5b3UgbWVhbiB0byBrZWVwIHRoZSBjdXJyZW50IHdheSB1bmNoYW5nZWQ/IEZvciBl
+eGFtcGxlLCB3aXRoIGEgbmV3DQpTT0MgODE5Miwgc2hvdWxkIGFkZCBhIG5ldyBoZWFkIGZpbGUg
+bXQ4MTkyX3Jlc2V0cy5oIGZvciB0aGUgcmVzZXRzDQpudW1iZXJzLg0KDQo=
 
