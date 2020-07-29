@@ -2,126 +2,141 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182A0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8834AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED4A220809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:17:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="Sdzx2Sqp"
+	by mail.kernel.org (Postfix) with ESMTP id 6B4CC206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:23:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgG2URN (ORCPT
+        id S1726804AbgG2UXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:17:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726799AbgG2URN (ORCPT
+        Wed, 29 Jul 2020 16:23:20 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:47426 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbgG2UXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:17:13 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E90DC0619D2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:17:13 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id 133so13216384ybu.7
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:17:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jsAi/yM0dYoTsEAduerPAEeoeBRABFVM36ZfoeomatY=;
-        b=Sdzx2SqpXH3YztrrLNOADE5QjX5DPMw9qzcr7aHGCh/zp+I48O4kqqRZpqulQK7b2A
-         C0RuSwWADNheZUXSP4rEN1wGIvAHpzoqMuGaY9bfPEyvF7S943eq2s4cUgghOcvSf/gF
-         pgSXR0NUIxtUVLHek5C2iWFuwwFK1cYRX3ViHbez65SiI4fPMcJckFrPEMykGyiQCS78
-         qAbpP8IMzkK2emxhZ0eXkv50SN/md9uBSLITI1PlvPb8m7/drlC3Ebg9l9hlt1cSmd1U
-         zk+/6KjyjmyFpbWHSa1K7nCrIHFc4aSgPROhI0PTheyPL6km/Re6ghueTxNzyrTKrFW1
-         WtBA==
+        Wed, 29 Jul 2020 16:23:19 -0400
+Received: by mail-il1-f199.google.com with SMTP id o2so17430082ilg.14
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:23:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jsAi/yM0dYoTsEAduerPAEeoeBRABFVM36ZfoeomatY=;
-        b=ofGV9s/FddqKB32S8n1WDEq4YEXV4NO31f+S2ajKGuutyAAcr2wp1qAgWaUXydjVAJ
-         pk99b0RufFYlTQODyI+0qvr2X6gtpwMG3wVdqTjIvgfutuLVanBcu+PSHW4N/nd+5YnP
-         IH0D1qzx5E1C8en5d473eRpL2oZIqZpGsfASv6Qqtbw8DZW9RQrsGUgqRpA2FRCfVGSY
-         thbt+vdnhEWB7hT3I7z3IAhJ04jI1XUBJ4bS1Hz49CKgtufYiNyHdA8lN0ZMv/aWE+hv
-         m8HzDuYqTC34j6njLRKX8XEZgFsszNcffu4SgojWWbACP4OewbQw4rQh8LMXWIDMLWNX
-         gm7Q==
-X-Gm-Message-State: AOAM532YMrokaO9j7YBlkzVIIiwd4IFn/ZmZM0lPaG1Qi/IwdLIoS8A6
-        POkP0AjwoLDskedPuxfcogwHLcm3uDZm5gYdqCFTXA==
-X-Google-Smtp-Source: ABdhPJyPk3kjiGNYFFk4yzHPEbfFcoZIfz0gAfhNJ3Fsk1YWxiMbGPNT80Yqs2GsCLymQyrnK2dqTUc8spmJdwVOFPE=
-X-Received: by 2002:a25:bb0d:: with SMTP id z13mr229226ybg.488.1596053832271;
- Wed, 29 Jul 2020 13:17:12 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=SFOYc9QJsN32c68HMrVfj1JqMrsQS93FcU4Q9C3mXf8=;
+        b=nJTOk8s9h5QOexva9aNjQqoqArCwBTOqxyomi5Hd91HhXq+U7Ge2LVBkI0wgNNo/Na
+         ciMhS47zE7FCyGrk9PsdWRI2HV6An+fuHL+MIpdtMJsHRfSyGJDsD1psmBhl47cVn95W
+         VI4SeevQCSotgTU2Lg2tFwX6h8nmmxa6D0W5BusFrPtiHEbmVe6GHifj5HaYOrbLdTgI
+         vGKCpUNYu3vzr1wXrxjtxY/gbK4O60jL8RpFt5/UDNdAo3y5EsG+imjHHh0zdgPiclcf
+         72cCNB0cpeyZKaVAszCBmN837xTvqCK3jcfBzTMQqBlSu4RRe2cdgGyyZJvpzloMvq1a
+         iWAA==
+X-Gm-Message-State: AOAM5320YPHcJJ4HuxzNDlz+H2g94KJStjYPTl8t5FjJdI5PycIUDgfv
+        hDA0HVMhiASkexmaQjdfCHH0KnCbAKf1DSnD4zcOpB01uJPX
+X-Google-Smtp-Source: ABdhPJxbV+cdUBH6DFzxJ+/nfvfsKrP4dUWI8e7yDBknNiQv0kletRB6o2eHPxypXYe1vaS1BKFPD++GJFnVefmIpp6fno3Rm1nt
 MIME-Version: 1.0
-References: <20200729191151.476368-1-vitor@massaru.org> <20200729191948.GZ3703480@smile.fi.intel.com>
-In-Reply-To: <20200729191948.GZ3703480@smile.fi.intel.com>
-From:   Vitor Massaru Iha <vitor@massaru.org>
-Date:   Wed, 29 Jul 2020 17:16:29 -0300
-Message-ID: <CADQ6JjU1wg_mrhuGkgiNWmJLCvNcOVwS0Hysda+OXuDcCj8y=Q@mail.gmail.com>
-Subject: Re: [PATCH v2] lib: kunit: Convert test_sort to KUnit test
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        tglx@linutronix.de, fkostenzer@live.at, geert@linux-m68k.org,
-        paul.gortmaker@windriver.com, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org
+X-Received: by 2002:a92:dc8c:: with SMTP id c12mr36077018iln.243.1596054198592;
+ Wed, 29 Jul 2020 13:23:18 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 13:23:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008caae305ab9a5318@google.com>
+Subject: general protection fault in security_inode_getattr
+From:   syzbot <syzbot+f07cc9be8d1d226947ed@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, jmorris@namei.org, john.fastabend@gmail.com,
+        kafai@fb.com, kpsingh@chromium.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
+        serge@hallyn.com, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 4:19 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Jul 29, 2020 at 04:11:51PM -0300, Vitor Massaru Iha wrote:
-> > This adds the conversion of the test_sort.c to KUnit test.
-> >
-> > Please apply this commit first (linux-kselftest/kunit-fixes):
-> > 3f37d14b8a3152441f36b6bc74000996679f0998 kunit: kunit_config: Fix parsing of CONFIG options with space
->
-> Looks like you mixed up commit message and changelog / comments.
->
-> > Code Style Documentation: [0]
-> >
-> > Fix these warnings Reported-by lkp@intel.com
-> >
-> > WARNING: modpost: vmlinux.o(.data+0x4fc70): Section mismatch in reference from the variable sort_test_cases to the variable .init.text:sort_test
-> >    The variable sort_test_cases references
-> >    the variable __init sort_test
-> >    If the reference is valid then annotate the
-> >    variable with or __refdata (see linux/init.h) or name the variable
-> >
-> > WARNING: modpost: lib/sort_kunit.o(.data+0x11c): Section mismatch in reference from the variable sort_test_cases to the function .init.text:sort_test()
-> >    The variable sort_test_cases references
-> >    the function __init sort_test()
->
-> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Link: [0] https://lore.kernel.org/linux-kselftest/20200620054944.167330-1-davidgow@google.com/T/#u
->
-> This should be in different order: Link, Reported-by, SoB.
-> Also [0] is unnecessary
+Hello,
 
-Sure, thanks!
+syzbot found the following issue on:
 
->
-> >  lib/{test_sort.c => sort_kunit.c} | 31 +++++++++++++++----------------
->
-> Still opened question why kunit is a suffix? Can't we leave same name? Can't we
-> do it rather prefix?
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+HEAD commit:    92ed3019 Linux 5.8-rc7
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=140003ac900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=84f076779e989e69
+dashboard link: https://syzkaller.appspot.com/bug?extid=f07cc9be8d1d226947ed
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f07cc9be8d1d226947ed@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xdffffc000000000c: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000060-0x0000000000000067]
+CPU: 0 PID: 9214 Comm: syz-executor.3 Not tainted 5.8.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:d_backing_inode include/linux/dcache.h:549 [inline]
+RIP: 0010:security_inode_getattr+0x46/0x140 security/security.c:1276
+Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 04 01 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b 5d 08 48 8d 7b 60 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 d7 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b
+RSP: 0018:ffffc9000d41f638 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffc9000f539000
+RDX: 000000000000000c RSI: ffffffff8354f8ee RDI: 0000000000000060
+RBP: ffffc9000d41f810 R08: 0000000000000001 R09: ffff88804edc2dc8
+R10: 0000000000000000 R11: 00000000000ebc58 R12: ffff888089f10170
+R13: ffffc9000d41f810 R14: 00000000000007ff R15: 0000000000000000
+FS:  00007f3599717700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2c12c000 CR3: 0000000099919000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ vfs_getattr+0x22/0x60 fs/stat.c:121
+ ovl_copy_up_one+0x13b/0x1870 fs/overlayfs/copy_up.c:850
+ ovl_copy_up_flags+0x14b/0x1d0 fs/overlayfs/copy_up.c:931
+ ovl_maybe_copy_up+0x140/0x190 fs/overlayfs/copy_up.c:963
+ ovl_open+0xba/0x270 fs/overlayfs/file.c:147
+ do_dentry_open+0x501/0x1290 fs/open.c:828
+ do_open fs/namei.c:3243 [inline]
+ path_openat+0x1bb9/0x2750 fs/namei.c:3360
+ do_filp_open+0x17e/0x3c0 fs/namei.c:3387
+ file_open_name+0x290/0x400 fs/open.c:1124
+ acct_on+0x78/0x770 kernel/acct.c:207
+ __do_sys_acct kernel/acct.c:286 [inline]
+ __se_sys_acct kernel/acct.c:273 [inline]
+ __x64_sys_acct+0xab/0x1f0 kernel/acct.c:273
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45c369
+Code: 8d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f3599716c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a3
+RAX: ffffffffffffffda RBX: 0000000000000700 RCX: 000000000045c369
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000440
+RBP: 000000000078bf30 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
+R13: 00007ffda41ffbef R14: 00007f35997179c0 R15: 000000000078bf0c
+Modules linked in:
+---[ end trace d1398a63985d3915 ]---
+RIP: 0010:d_backing_inode include/linux/dcache.h:549 [inline]
+RIP: 0010:security_inode_getattr+0x46/0x140 security/security.c:1276
+Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 04 01 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b 5d 08 48 8d 7b 60 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 d7 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b
+RSP: 0018:ffffc9000d41f638 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffc9000f539000
+RDX: 000000000000000c RSI: ffffffff8354f8ee RDI: 0000000000000060
+RBP: ffffc9000d41f810 R08: 0000000000000001 R09: ffff88804edc2dc8
+R10: 0000000000000000 R11: 00000000000ebc58 R12: ffff888089f10170
+R13: ffffc9000d41f810 R14: 00000000000007ff R15: 0000000000000000
+FS:  00007f3599717700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000440 CR3: 0000000099919000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
