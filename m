@@ -2,118 +2,109 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2943C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4ACF20809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596044804;
-	bh=iJfOY4V7h8b/jAUwAz2HmUOfqngO6/3LFQgTni0vyUs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=c03Rv+ZqtpLVmv5c6T+n42IbyS1YvNvuwadWCXDMktJW3R3cbcLiGptJET1zZRKcp
-	 Bc+1ijGU0UL/pVPVyw7gXozVxI0610irr7vELB0HPI1Ric4YBuHGR1C+23JcV7q5wL
-	 gzAWhPXNFgxmFcssn+ZQ3knaZGDG4X8NDytbw1wI=
+	by mail.kernel.org (Postfix) with ESMTP id 9E0802075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:48:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J0L2YvLf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgG2Rqn (ORCPT
+        id S1727114AbgG2RsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:46:43 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:32170 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgG2Rqn (ORCPT
+        Wed, 29 Jul 2020 13:48:16 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13637 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726449AbgG2RsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 13:46:43 -0400
-Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 06THkLYL020666;
-        Thu, 30 Jul 2020 02:46:21 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 06THkLYL020666
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1596044781;
-        bh=80NhEGhFnmq+LfOA+LEcAhYXbr9MxvJGqlh6jZrySBk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Yu+P3IsdxyXhfbKXHNFyUz3t3xywcMI5rvCA4aI0RoxoeFRMF9nRec3Hk6IDZo7p6
-         iYzc1twLphxG9fEL4CLi01f3cx0mGLlKY1VyZWJkYGPBgCo5LG/ayrQsS9W3+NOBJr
-         i1TaHSC0fDlfTgJfwYfPnCzK0mShf1W+xfqV3l9I4XzqJKF4mbd2Op51AnkFk1cXjY
-         dIe9cmQ1by5PS3TrbdvvpduAM36p/ZaJhL24HSEb8uzE/n8eCz0tm6ydwi67YiYxpR
-         2J5s6Rp8kgkBMai7KEzjyFd50cJgDlRtrv5+9HM2AvWZvPpo3FzQtETipX6zwXgb/X
-         tsRgZOjbSCOBA==
-X-Nifty-SrcIP: [126.25.67.101]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Revert "kconfig: qconf: Change title for the item window"
-Date:   Thu, 30 Jul 2020 02:46:17 +0900
-Message-Id: <20200729174617.169319-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Wed, 29 Jul 2020 13:48:13 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f21b6300000>; Wed, 29 Jul 2020 10:47:28 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 29 Jul 2020 10:48:13 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 29 Jul 2020 10:48:13 -0700
+Received: from [10.2.160.194] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jul
+ 2020 17:48:12 +0000
+Subject: Re: [RFC PATCH v5 12/14] gpu: host1x: mipi: Keep MIPI clock enabled
+ till calibration is done
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>
+References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
+ <1595883452-17343-13-git-send-email-skomatineni@nvidia.com>
+ <b21e3227-d0d8-5b4a-ae69-aa29551a22c3@gmail.com>
+ <69903c67-8e5f-11c2-45ec-c76b97634aba@nvidia.com>
+ <d291d306-55d4-2264-dc05-0e47f0dfef20@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <b5fcc292-8ce3-2833-491f-5aefbe0196eb@nvidia.com>
+Date:   Wed, 29 Jul 2020 10:55:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <d291d306-55d4-2264-dc05-0e47f0dfef20@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596044848; bh=WlqRhgzgQcue/GR0Zrfuhfw08PXoX9nLL9Uz68gPB6A=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=J0L2YvLfggXNKWADlDM+eCasPdwHDhj8F+Z6cwBwODvdJFoV2n8lYuQcuHfyfzvUI
+         vnkhEBtuw+vWMyAF5+squmzJmLFqetZTUqbj9XcubCnkZGgRAI22Cpshh0PgJr1il5
+         BS8yGVHJM2i7Ibvw+OwrI+UyEQsHCcLl+sbtVzD9yBzXx2YxMKm3tJ6jn5V97/7SAQ
+         vZNkq66AKKSMpA5j83S0TAxvj/jHoMnTo8YyqI32pJieVruFYA5jQMR/f2To1qqrW3
+         26SAa+IKuSI3+ub8djJ3wryyw44LszGsqF9ZKOyZqfOgNPGE/gMI60Lorswa7s2Ohl
+         s+EUOh1AfxNOQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 5752ff07fd90d764d96e3c586cc95c09598abfdd.
 
-It added pointless dead code to ConfigList:ConfigList().
+On 7/29/20 10:08 AM, Dmitry Osipenko wrote:
+> 28.07.2020 19:04, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+>>>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
+>>>> +{
+>>> Doesn't MIPI_CAL need to be reset here?
+>> No need to reset MIPI CAL
+> Could you please explain why. There is a calibration state-machine that
+> apparently needs to be returned into initial state, does it return by
+> itself?
+>
+> TRM says that MIPI block needs to be reset before of starting
+> calibration process. The reset is completely missing in the driver, I
+> assume it needs to be corrected with another patch.
 
-The constructor of ConfigList has the initializer, mode(singleMode).
+TRM documented incorrectly. There is no need to reset MIPI_CAL.
 
-    if (mode == symbolMode)
-           setHeaderLabels(QStringList() << "Item" << "Name" << "N" << "M" << "Y" << "Value");
-    else
-           setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
+MIPI CAL is FSM and it does not hang and done bit is to indicate if=20
+results are applied to pads or not.
 
-... always takes the else part.
+If we don't see done bit set meaning, MIPI CAL did not see LP-11 and=20
+results are not applied to pads.
 
-The change to ConfigList::updateSelection() is strange too.
-When you click the split view icon for the first time, the titles in
-both windows show "Option". After you click something in the right
-window, the title suddenly changes to "Item".
+Also while multiple streams can happen in parallel and we can't reset=20
+MIPI CAL as other CSI channel streams (using other pads) may also be=20
+going thru calibration process in parallel depending and also DSI pads=20
+also are calibrated thru same MIPI CAL controller.
 
-ConfigList::updateSelection() is not the right place to do this,
-at least. It was not a good idea, I think.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- scripts/kconfig/qconf.cc | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
-
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 1c61c768b99e..dfd0b5863a9b 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -308,10 +308,7 @@ ConfigList::ConfigList(ConfigView* p, const char *name)
- 	setVerticalScrollMode(ScrollPerPixel);
- 	setHorizontalScrollMode(ScrollPerPixel);
- 
--	if (mode == symbolMode)
--		setHeaderLabels(QStringList() << "Item" << "Name" << "N" << "M" << "Y" << "Value");
--	else
--		setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
-+	setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
- 
- 	connect(this, SIGNAL(itemSelectionChanged(void)),
- 		SLOT(updateSelection(void)));
-@@ -392,11 +389,6 @@ void ConfigList::updateSelection(void)
- 	struct menu *menu;
- 	enum prop_type type;
- 
--	if (mode == symbolMode)
--		setHeaderLabels(QStringList() << "Item" << "Name" << "N" << "M" << "Y" << "Value");
--	else
--		setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
--
- 	if (selectedItems().count() == 0)
- 		return;
- 
--- 
-2.25.1
 
