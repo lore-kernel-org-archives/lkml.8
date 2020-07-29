@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18868C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 268E8C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE6632083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A3D2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596053581;
-	bh=sHLe5FuGDRZbbcJ2DSTc7bJp/OFHU619yFh5NL4U0aM=;
+	s=default; t=1596053584;
+	bh=2H2F2qOPJfU1SZxbWzf7bM4+AUNctmYvKQWay3zlHls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WoMEkcz3O871QwBXBtYBP2L04T6yky+qElqlxX9ieaYabPrKmX1E628vGqrDGtfe8
-	 GnHZTebvG3xTHvh8aBGdU+8gME1/2k0fa5QeuNDX7Nn2W9LqGsCxrdkL+672V0Jo63
-	 vbBi9EhHTNn86WnZbJsBjjcZz4tFo2xHZt4XErVA=
+	b=VleeDFC/7POdbN6Nvf+lFg9ECNxkQI0rTU6yzvlJH6aoA7svKMRbizQp93cvyUZJv
+	 +Xtuj4utW7RHOyRhY+K3UixRHoXm3lqO38rUcSLbEJfbeEAtyWvO+8S622n1nxfSPc
+	 KVLv8F83ZXtM2je/UFKucNriR4u4qWvPFNSvmJ/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgG2UNA (ORCPT
+        id S1726910AbgG2UMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50076 "EHLO mail.kernel.org"
+        Wed, 29 Jul 2020 16:12:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726883AbgG2UM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:12:57 -0400
+        id S1726628AbgG2UMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 16:12:42 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77AF02082E;
-        Wed, 29 Jul 2020 20:12:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20C1C21883;
+        Wed, 29 Jul 2020 20:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596053577;
-        bh=sHLe5FuGDRZbbcJ2DSTc7bJp/OFHU619yFh5NL4U0aM=;
+        s=default; t=1596053561;
+        bh=2H2F2qOPJfU1SZxbWzf7bM4+AUNctmYvKQWay3zlHls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rp3Qd9sQ9P8TZLVuMXChB7CXqlnfo/dqXWu4FRNN6t0ptX3rEABLFCP3tncyfSOir
-         OjGFH1gXoWXB1u1xvkA0tz6CA3X7GWUR2bVIhL6yn+vpoxELbyxvlM82KFBajSXHRW
-         a4z/xjY14D/2HeDPXBYAXo2v/Befm22pd2jwhjcg=
+        b=1MwIztj0NYN/ZAGQLwcTBtY6f39mlg+nxT7sZ+OrdmfDnfpF5zab/As1nXF4LSL8V
+         3FCK4Daess5lNCpDPuKLGI4Zi+VP7AfSxUFEt/1AmY8Xw1GUtshMOmdXJX42ppMxuO
+         tu6bjBuWVm7rfEUmaERBZ2OsGj5uYGRQgzjm8JEw=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Jingoo Han <jingoohan1@gmail.com>,
@@ -54,9 +54,9 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
         linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 6/6] PCI: xilinx: Fix kerneldoc
-Date:   Wed, 29 Jul 2020 22:12:24 +0200
-Message-Id: <20200729201224.26799-7-krzk@kernel.org>
+Subject: [PATCH v3 2/6] PCI: endpoint: Fix kerneldoc
+Date:   Wed, 29 Jul 2020 22:12:20 +0200
+Message-Id: <20200729201224.26799-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200729201224.26799-1-krzk@kernel.org>
 References: <20200729201224.26799-1-krzk@kernel.org>
@@ -67,25 +67,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fix W=1 compile warnings (invalid kerneldoc):
 
-    drivers/pci/controller/pcie-xilinx-cpm.c:122: warning: Function parameter or member 'cpm_domain' not described in 'xilinx_cpm_pcie_port'
+    drivers/pci/endpoint/pci-epc-core.c:18: warning: cannot understand function prototype: 'struct class *pci_epc_class; '
+    drivers/pci/endpoint/pci-ep-cfs.c:17: warning: Function parameter or member 'functions_idr' not described in 'DEFINE_IDR'
+    drivers/pci/endpoint/pci-epf-core.c:18: warning: Function parameter or member 'pci_epf_mutex' not described in 'DEFINE_MUTEX'
+    drivers/pci/endpoint/pci-epf-core.c:80: warning: Function parameter or member 'epf' not described in 'pci_epf_free_space'
+    drivers/pci/endpoint/pci-epf-core.c:107: warning: Function parameter or member 'epf' not described in 'pci_epf_alloc_space'
+    drivers/pci/endpoint/pci-epc-mem.c:16: warning: Incorrect use of kernel-doc format:  * pci_epc_mem_get_order() - determine the allocation order of a memory size
+    drivers/pci/endpoint/pci-epc-mem.c:24: warning: Function parameter or member 'mem' not described in 'pci_epc_mem_get_order'
+    drivers/pci/endpoint/pci-epc-mem.c:24: warning: Function parameter or member 'size' not described in 'pci_epc_mem_get_order'
+    drivers/pci/endpoint/functions/pci-epf-test.c:189: warning: Function parameter or member 'epf_test' not described in 'pci_epf_test_clean_dma_chan'
+    drivers/pci/endpoint/functions/pci-epf-test.c:189: warning: Excess function parameter 'epf' description in 'pci_epf_test_clean_dma_chan'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/pci/controller/pcie-xilinx-cpm.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
+ drivers/pci/endpoint/pci-ep-cfs.c             | 2 +-
+ drivers/pci/endpoint/pci-epc-core.c           | 2 +-
+ drivers/pci/endpoint/pci-epc-mem.c            | 2 +-
+ drivers/pci/endpoint/pci-epf-core.c           | 4 +++-
+ 5 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-index 66f554694e03..cd8c77457b5f 100644
---- a/drivers/pci/controller/pcie-xilinx-cpm.c
-+++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-@@ -104,6 +104,7 @@
-  * @cpm_base: CPM System Level Control and Status Register(SLCR) Base
-  * @dev: Device pointer
-  * @intx_domain: Legacy IRQ domain pointer
-+ * @cpm_domain: CPM IRQ domain pointer
-  * @cfg: Holds mappings of config space window
-  * @intx_irq: legacy interrupt number
-  * @irq: Error interrupt number
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index c89a9561439f..e4e51d884553 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -181,7 +181,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
+ 
+ /**
+  * pci_epf_test_clean_dma_chan() - Function to cleanup EPF test DMA channel
+- * @epf: the EPF test device that performs data transfer operation
++ * @epf_test: the EPF test device that performs data transfer operation
+  *
+  * Helper to cleanup EPF test DMA channel.
+  */
+diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+index 55edce50be96..3710adf51912 100644
+--- a/drivers/pci/endpoint/pci-ep-cfs.c
++++ b/drivers/pci/endpoint/pci-ep-cfs.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/**
++/*
+  * configfs to configure the PCI endpoint
+  *
+  * Copyright (C) 2017 Texas Instruments
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index 82ba0dc7f2f5..cadd3db0cbb0 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/**
++/*
+  * PCI Endpoint *Controller* (EPC) library
+  *
+  * Copyright (C) 2017 Texas Instruments
+diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+index 80c46f3a4590..a97b56a6d2db 100644
+--- a/drivers/pci/endpoint/pci-epc-mem.c
++++ b/drivers/pci/endpoint/pci-epc-mem.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/**
++/*
+  * PCI Endpoint *Controller* Address Space Management
+  *
+  * Copyright (C) 2017 Texas Instruments
+diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+index 244e00f48c5c..c977cf9dce56 100644
+--- a/drivers/pci/endpoint/pci-epf-core.c
++++ b/drivers/pci/endpoint/pci-epf-core.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/**
++/*
+  * PCI Endpoint *Function* (EPF) library
+  *
+  * Copyright (C) 2017 Texas Instruments
+@@ -71,6 +71,7 @@ EXPORT_SYMBOL_GPL(pci_epf_bind);
+ 
+ /**
+  * pci_epf_free_space() - free the allocated PCI EPF register space
++ * @epf: the EPF device from whom to free the memory
+  * @addr: the virtual address of the PCI EPF register space
+  * @bar: the BAR number corresponding to the register space
+  *
+@@ -96,6 +97,7 @@ EXPORT_SYMBOL_GPL(pci_epf_free_space);
+ 
+ /**
+  * pci_epf_alloc_space() - allocate memory for the PCI EPF register space
++ * @epf: the EPF device to whom allocate the memory
+  * @size: the size of the memory that has to be allocated
+  * @bar: the BAR number corresponding to the allocated register space
+  * @align: alignment size for the allocation region
 -- 
 2.17.1
 
