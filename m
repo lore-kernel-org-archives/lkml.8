@@ -2,74 +2,79 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A344C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D11C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7925920809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E5B22075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:59:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="CXPoDUsE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cfJA1yoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgG2R7B (ORCPT
+        id S1727929AbgG2R7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:59:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35664 "EHLO
+        Wed, 29 Jul 2020 13:59:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbgG2R64 (ORCPT
+        with ESMTP id S1727864AbgG2R7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 13:58:56 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FE6FC061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 10:58:56 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id d14so23053999qke.13
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 10:58:56 -0700 (PDT)
+        Wed, 29 Jul 2020 13:59:01 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C480FC0619DF
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 10:59:01 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mt12so2236907pjb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 10:59:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IR8kl6q02JQVV7/sYzqm1Sm6y7ctVZjq+Lwk1QFsbIY=;
-        b=CXPoDUsEGcDQYbZMW+Rn6nD+0PCCPwiwRLZExgj5iUx1tW06qD45DsVfCnJnkTXJeq
-         pnTo4s7uRNKDygqcufUAMIrMxLqiKqrqI0a6JW/IKEsTTCLVWji4LA3kwZMTDxoo87WO
-         c56vVUR2OKwY9BtXTqUAqdPYnfzp0vBso1Yp5f87ObH63BWUUDhoXA3VjCZlGm+G0Tez
-         ZxxRTyWNuUBYDqyUFHkIOv+vUH6Ko0pZH6ANv+x84zO85KRARuwNvLkSzMxU8GAInQz3
-         e34Wb2/H97fjDaWiJ9hDjt9zLuisSiK0hmvFMa8F9SpWbG75282gnMNA452o+iG+EC8U
-         TrTQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jU2VJx8QGZyxpfIxF1fo6TrEFAt4UxU1npx7vrAKnZ8=;
+        b=cfJA1yoLRS1EuKB6SD/UZbVHyHN2opnYoF3ty8DxzWqNZIqnI10tluoUMCaXOaLBuQ
+         +UqNF0lhPk6ughdqC/jshZTZ0iLCkahWZgnil8QJ2Q/jgcCqlWZN9Ehlh1yFsO8+qmhK
+         xWfmFj9xY99va9E6S8WpZMcLDlcIrEat3nR7o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IR8kl6q02JQVV7/sYzqm1Sm6y7ctVZjq+Lwk1QFsbIY=;
-        b=Y1N1mCVYrZ6JpKJdxA08wbrUkfiDHBKnkA2xmQPQPb/X5yM0q9vFIVZl4N3an7uGzd
-         yBBrHbYVZjGF7OjQ4T59rnNmOOK228j/oOyBuEsM6udjXA/4BVD1FLmYjJymeOJ8MWFY
-         ej8RfNYqhdtOEBsNAnT5jKDx3aRRoAv4kUK3ZJwgukkgZrMbPYClLaR/M/Iw7uRtPjyI
-         cYh/LIPs+kkCGnXsftpsO8z01TU+E4ON1BdUE/b5w8+D2ojP25CO72olNtfLDv18jI+V
-         xqaDARrlMCIXkQKyZ6mvrECY46kqzVHisAjuhNslrdPijoUHKAtloK0JiAAj7vDZdOnf
-         pOwA==
-X-Gm-Message-State: AOAM532igq7791NdmHnaq/Jywj3QU0AVhw+hUYK7NMTfMzhdDx39Cmwn
-        viVlSdHttdLe+DrEXApx4+FBMg==
-X-Google-Smtp-Source: ABdhPJzLCTFy8pCLR85PV/ZE79tLd8wUmFZrt7pruhZOb0N5M7MYNCV+YDocdMWsEc9EgXrgW9Dmmg==
-X-Received: by 2002:a37:4185:: with SMTP id o127mr34187889qka.478.1596045534623;
-        Wed, 29 Jul 2020 10:58:54 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id s128sm2026340qkd.108.2020.07.29.10.58.51
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jU2VJx8QGZyxpfIxF1fo6TrEFAt4UxU1npx7vrAKnZ8=;
+        b=PQkmscqCQkWwS/A9ihI7FnbFVIuJWGdUaTHelSZOBqM54qE15LBFF5df56KmNKajBj
+         xDuX8RSVJoAmU+TCFKXjwWMih+0ossWTRZQVVMJpoW8ymks85XiDJgutjdVSQoImsFGN
+         RDPdlvgkGf8VL4Yec9aSO0p48N+7EeEUM38TSSP4qE/UDNUcpgocj7xEaXhtFyewWpRL
+         ePWEgYxwZ/mqfJ+Jibebv3I+JH6HeGd/itqxIqh5AsDbBdybIFxcuG/DbyU6Ej7oAHwk
+         KoOzOIjgTe+XjXtBnbaZTfAgHnWa34L2nKKgKtTvAqVv1VUOAlM8Wjl9mKD2jWf0bl/F
+         ixMg==
+X-Gm-Message-State: AOAM5313rGEhJJ7t+CVVjibXCJFqYIOaY5MYq+IWhJRU3dV9LztfrvnA
+        c5rQXNKJafoLNZrTXtEpMPuQLA==
+X-Google-Smtp-Source: ABdhPJy6PwoNCyC8rVomCYFtW5CtQ1E6nIw60akd0htXreCsvmisuIrvcMKK3sC9okq9AG7t/KI7oA==
+X-Received: by 2002:a17:902:ea8c:: with SMTP id x12mr15675315plb.60.1596045541329;
+        Wed, 29 Jul 2020 10:59:01 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z13sm3142496pfq.220.2020.07.29.10.58.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 10:58:54 -0700 (PDT)
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     kunit-dev@googlegroups.com
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brendanhiggins@google.com, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        andy.shevchenko@gmail.com, johannes@sipsolutions.net,
-        kvalo@codeaurora.org
-Subject: [PATCH] lib: kunit: add bitfield test conversion to KUnit
-Date:   Wed, 29 Jul 2020 14:58:49 -0300
-Message-Id: <20200729175849.148332-1-vitor@massaru.org>
-X-Mailer: git-send-email 2.26.2
+        Wed, 29 Jul 2020 10:58:58 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Takashi Iwai <tiwai@suse.de>, Jessica Yu <jeyu@kernel.org>,
+        SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 08/17] fs/kernel_read_file: Add file_size output argument
+Date:   Wed, 29 Jul 2020 10:58:36 -0700
+Message-Id: <20200729175845.1745471-9-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200729175845.1745471-1-keescook@chromium.org>
+References: <20200729175845.1745471-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,253 +82,205 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the conversion of the runtime tests of test_bitfield,
-from `lib/test_bitfield.c` to KUnit tests.
+In preparation for adding partial read support, add an optional output
+argument to kernel_read_file*() that reports the file size so callers
+can reason more easily about their reading progress.
 
-Please apply this commit first (linux-kselftest/kunit-fixes):
-3f37d14b8a3152441f36b6bc74000996679f0998 kunit: kunit_config: Fix parsing of CONFIG options with space
-
-Code Style Documentation: [0]
-
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-Link: [0] https://lore.kernel.org/linux-kselftest/20200620054944.167330-1-davidgow@google.com/T/#u
+Acked-by: Scott Branden <scott.branden@broadcom.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- lib/Kconfig.debug                         | 23 ++++--
- lib/Makefile                              |  2 +-
- lib/{test_bitfield.c => bitfield_kunit.c} | 92 ++++++++++-------------
- 3 files changed, 57 insertions(+), 60 deletions(-)
- rename lib/{test_bitfield.c => bitfield_kunit.c} (66%)
+ drivers/base/firmware_loader/main.c |  1 +
+ fs/kernel_read_file.c               | 19 +++++++++++++------
+ include/linux/kernel_read_file.h    |  4 ++++
+ kernel/kexec_file.c                 |  4 ++--
+ kernel/module.c                     |  2 +-
+ security/integrity/digsig.c         |  2 +-
+ security/integrity/ima/ima_fs.c     |  2 +-
+ 7 files changed, 23 insertions(+), 11 deletions(-)
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 9ad9210d70a1..16c5574bf103 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1986,13 +1986,6 @@ config TEST_BITMAP
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index 9b425437afe6..6a5d407279e3 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -495,6 +495,7 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
  
- 	  If unsure, say N.
- 
--config TEST_BITFIELD
--	tristate "Test bitfield functions at runtime"
--	help
--	  Enable this option to test the bitfield functions at boot.
--
--	  If unsure, say N.
--
- config TEST_UUID
- 	tristate "Test functions located in the uuid module at runtime"
- 
-@@ -2142,6 +2135,22 @@ config TEST_SYSCTL
- 
- 	  If unsure, say N.
- 
-+config BITFIELD_KUNIT
-+	tristate "KUnit test bitfield functions at runtime"
-+	depends on KUNIT
-+	help
-+	  Enable this option to test the bitfield functions at boot.
-+
-+	  KUnit tests run during boot and output the results to the debug log
-+	  in TAP format (http://testanything.org/). Only useful for kernel devs
-+	  running the KUnit test harness, and not intended for inclusion into a
-+	  production build.
-+
-+	  For more information on KUnit and unit tests in general please refer
-+	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-+
-+	  If unsure, say N.
-+
- config SYSCTL_KUNIT_TEST
- 	tristate "KUnit test for sysctl" if !KUNIT_ALL_TESTS
- 	depends on KUNIT
-diff --git a/lib/Makefile b/lib/Makefile
-index b1c42c10073b..56019c34f5ed 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -84,7 +84,6 @@ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
- obj-$(CONFIG_TEST_PRINTF) += test_printf.o
- obj-$(CONFIG_TEST_BITMAP) += test_bitmap.o
- obj-$(CONFIG_TEST_STRSCPY) += test_strscpy.o
--obj-$(CONFIG_TEST_BITFIELD) += test_bitfield.o
- obj-$(CONFIG_TEST_UUID) += test_uuid.o
- obj-$(CONFIG_TEST_XARRAY) += test_xarray.o
- obj-$(CONFIG_TEST_PARMAN) += test_parman.o
-@@ -316,5 +315,6 @@ obj-$(CONFIG_GENERIC_LIB_UCMPDI2) += ucmpdi2.o
- obj-$(CONFIG_OBJAGG) += objagg.o
- 
- # KUnit tests
-+obj-$(CONFIG_BITFIELD_KUNIT) += bitfield_kunit.o
- obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
- obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
-diff --git a/lib/test_bitfield.c b/lib/bitfield_kunit.c
-similarity index 66%
-rename from lib/test_bitfield.c
-rename to lib/bitfield_kunit.c
-index 5b8f4108662d..d63a2be5aff8 100644
---- a/lib/test_bitfield.c
-+++ b/lib/bitfield_kunit.c
-@@ -5,8 +5,7 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
--#include <linux/kernel.h>
--#include <linux/module.h>
-+#include <kunit/test.h>
- #include <linux/bitfield.h>
- 
- #define CHECK_ENC_GET_U(tp, v, field, res) do {				\
-@@ -14,13 +13,11 @@
- 			u##tp _res;					\
- 									\
- 			_res = u##tp##_encode_bits(v, field);		\
--			if (_res != res) {				\
--				pr_warn("u" #tp "_encode_bits(" #v ", " #field ") is 0x%llx != " #res "\n",\
--					(u64)_res);			\
--				return -EINVAL;				\
--			}						\
--			if (u##tp##_get_bits(_res, field) != v)		\
--				return -EINVAL;				\
-+			KUNIT_ASSERT_FALSE_MSG(context, _res != res,	\
-+				       "u" #tp "_encode_bits(" #v ", " #field ") is 0x%llx != " #res "\n",	\
-+				       (u64)_res);			\
-+			KUNIT_ASSERT_FALSE(context,			\
-+				   u##tp##_get_bits(_res, field) != v);	\
- 		}							\
- 	} while (0)
- 
-@@ -29,14 +26,13 @@
- 			__le##tp _res;					\
- 									\
- 			_res = le##tp##_encode_bits(v, field);		\
--			if (_res != cpu_to_le##tp(res)) {		\
--				pr_warn("le" #tp "_encode_bits(" #v ", " #field ") is 0x%llx != 0x%llx\n",\
--					(u64)le##tp##_to_cpu(_res),	\
--					(u64)(res));			\
--				return -EINVAL;				\
--			}						\
--			if (le##tp##_get_bits(_res, field) != v)	\
--				return -EINVAL;				\
-+			KUNIT_ASSERT_FALSE_MSG(context,			\
-+				       _res != cpu_to_le##tp(res),	\
-+				       "le" #tp "_encode_bits(" #v ", " #field ") is 0x%llx != 0x%llx",\
-+				       (u64)le##tp##_to_cpu(_res),	\
-+				       (u64)(res));			\
-+			KUNIT_ASSERT_FALSE(context,			\
-+				   le##tp##_get_bits(_res, field) != v);\
- 		}							\
- 	} while (0)
- 
-@@ -45,14 +41,13 @@
- 			__be##tp _res;					\
- 									\
- 			_res = be##tp##_encode_bits(v, field);		\
--			if (_res != cpu_to_be##tp(res)) {		\
--				pr_warn("be" #tp "_encode_bits(" #v ", " #field ") is 0x%llx != 0x%llx\n",\
--					(u64)be##tp##_to_cpu(_res),	\
--					(u64)(res));			\
--				return -EINVAL;				\
--			}						\
--			if (be##tp##_get_bits(_res, field) != v)	\
--				return -EINVAL;				\
-+			KUNIT_ASSERT_FALSE_MSG(context,			\
-+				       _res != cpu_to_be##tp(res),	\
-+				       "be" #tp "_encode_bits(" #v ", " #field ") is 0x%llx != 0x%llx",	\
-+				       (u64)be##tp##_to_cpu(_res),	\
-+				       (u64)(res));			\
-+			KUNIT_ASSERT_FALSE(context,			\
-+				   be##tp##_get_bits(_res, field) != v);\
- 		}							\
- 	} while (0)
- 
-@@ -62,7 +57,7 @@
- 		CHECK_ENC_GET_BE(tp, v, field, res);			\
- 	} while (0)
- 
--static int test_constants(void)
-+static void __init test_bitfields_constants(struct kunit *context)
+ 		/* load firmware files from the mount namespace of init */
+ 		rc = kernel_read_file_from_path_initns(path, &buffer, msize,
++						       NULL,
+ 						       READING_FIRMWARE);
+ 		if (rc < 0) {
+ 			if (rc != -ENOENT)
+diff --git a/fs/kernel_read_file.c b/fs/kernel_read_file.c
+index e21a76001fff..2e29c38eb4df 100644
+--- a/fs/kernel_read_file.c
++++ b/fs/kernel_read_file.c
+@@ -14,6 +14,8 @@
+  *		@buf_size will be ignored)
+  * @buf_size	size of buf, if already allocated. If @buf not
+  *		allocated, this is the largest size to allocate.
++ * @file_size	if non-NULL, the full size of @file will be
++ *		written here.
+  * @id		the kernel_read_file_id identifying the type of
+  *		file contents being read (for LSMs to examine)
+  *
+@@ -22,7 +24,8 @@
+  *
+  */
+ int kernel_read_file(struct file *file, void **buf,
+-		     size_t buf_size, enum kernel_read_file_id id)
++		     size_t buf_size, size_t *file_size,
++		     enum kernel_read_file_id id)
  {
- 	/*
- 	 * NOTE
-@@ -95,19 +90,17 @@ static int test_constants(void)
- 	CHECK_ENC_GET(64,  7, 0x00f0000000000000ull, 0x0070000000000000ull);
- 	CHECK_ENC_GET(64, 14, 0x0f00000000000000ull, 0x0e00000000000000ull);
- 	CHECK_ENC_GET(64, 15, 0xf000000000000000ull, 0xf000000000000000ull);
--
--	return 0;
- }
+ 	loff_t i_size, pos;
+ 	ssize_t bytes = 0;
+@@ -49,6 +52,8 @@ int kernel_read_file(struct file *file, void **buf,
+ 		ret = -EFBIG;
+ 		goto out;
+ 	}
++	if (file_size)
++		*file_size = i_size;
  
- #define CHECK(tp, mask) do {						\
- 		u64 v;							\
- 									\
- 		for (v = 0; v < 1 << hweight32(mask); v++)		\
--			if (tp##_encode_bits(v, mask) != v << __ffs64(mask)) \
--				return -EINVAL;				\
-+			KUNIT_ASSERT_FALSE(context,			\
-+				tp##_encode_bits(v, mask) != v << __ffs64(mask));\
- 	} while (0)
+ 	if (!*buf)
+ 		*buf = allocated = vmalloc(i_size);
+@@ -91,7 +96,8 @@ int kernel_read_file(struct file *file, void **buf,
+ EXPORT_SYMBOL_GPL(kernel_read_file);
  
--static int test_variables(void)
-+static void __init test_bitfields_variables(struct kunit *context)
+ int kernel_read_file_from_path(const char *path, void **buf,
+-			       size_t buf_size, enum kernel_read_file_id id)
++			       size_t buf_size, size_t *file_size,
++			       enum kernel_read_file_id id)
  {
- 	CHECK(u8, 0x0f);
- 	CHECK(u8, 0xf0);
-@@ -130,39 +123,34 @@ static int test_variables(void)
- 	CHECK(u64, 0x000000007f000000ull);
- 	CHECK(u64, 0x0000000018000000ull);
- 	CHECK(u64, 0x0000001f8000000ull);
--
--	return 0;
+ 	struct file *file;
+ 	int ret;
+@@ -103,14 +109,14 @@ int kernel_read_file_from_path(const char *path, void **buf,
+ 	if (IS_ERR(file))
+ 		return PTR_ERR(file);
+ 
+-	ret = kernel_read_file(file, buf, buf_size, id);
++	ret = kernel_read_file(file, buf, buf_size, file_size, id);
+ 	fput(file);
+ 	return ret;
  }
+ EXPORT_SYMBOL_GPL(kernel_read_file_from_path);
  
--static int __init test_bitfields(void)
--{
--	int ret = test_constants();
--
--	if (ret) {
--		pr_warn("constant tests failed!\n");
--		return ret;
--	}
--
--	ret = test_variables();
--	if (ret) {
--		pr_warn("variable tests failed!\n");
--		return ret;
--	}
+ int kernel_read_file_from_path_initns(const char *path, void **buf,
+-				      size_t buf_size,
++				      size_t buf_size, size_t *file_size,
+ 				      enum kernel_read_file_id id)
+ {
+ 	struct file *file;
+@@ -129,13 +135,14 @@ int kernel_read_file_from_path_initns(const char *path, void **buf,
+ 	if (IS_ERR(file))
+ 		return PTR_ERR(file);
  
--#ifdef TEST_BITFIELD_COMPILE
-+static void __init test_bitfields_compile(struct kunit *context)
-+{
- 	/* these should fail compilation */
- 	CHECK_ENC_GET(16, 16, 0x0f00, 0x1000);
- 	u32_encode_bits(7, 0x06000000);
+-	ret = kernel_read_file(file, buf, buf_size, id);
++	ret = kernel_read_file(file, buf, buf_size, file_size, id);
+ 	fput(file);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(kernel_read_file_from_path_initns);
  
- 	/* this should at least give a warning */
- 	u16_encode_bits(0, 0x60000);
-+}
-+
-+static struct kunit_case __refdata bitfields_test_cases[] = {
-+	KUNIT_CASE(test_bitfields_constants),
-+	KUNIT_CASE(test_bitfields_variables),
-+#ifdef TEST_BITFIELD_COMPILE
-+	KUNIT_CASE(test_bitfields_compile),
- #endif
-+	{}
-+};
+ int kernel_read_file_from_fd(int fd, void **buf, size_t buf_size,
++			     size_t *file_size,
+ 			     enum kernel_read_file_id id)
+ {
+ 	struct fd f = fdget(fd);
+@@ -144,7 +151,7 @@ int kernel_read_file_from_fd(int fd, void **buf, size_t buf_size,
+ 	if (!f.file)
+ 		goto out;
  
--	pr_info("tests passed\n");
-+static struct kunit_suite bitfields_test_suite = {
-+	.name = "bitfields",
-+	.test_cases = bitfields_test_cases,
-+};
+-	ret = kernel_read_file(f.file, buf, buf_size, id);
++	ret = kernel_read_file(f.file, buf, buf_size, file_size, id);
+ out:
+ 	fdput(f);
+ 	return ret;
+diff --git a/include/linux/kernel_read_file.h b/include/linux/kernel_read_file.h
+index 910039e7593e..023293eaf948 100644
+--- a/include/linux/kernel_read_file.h
++++ b/include/linux/kernel_read_file.h
+@@ -37,15 +37,19 @@ static inline const char *kernel_read_file_id_str(enum kernel_read_file_id id)
  
--	return 0;
--}
--module_init(test_bitfields)
-+kunit_test_suites(&bitfields_test_suite);
+ int kernel_read_file(struct file *file,
+ 		     void **buf, size_t buf_size,
++		     size_t *file_size,
+ 		     enum kernel_read_file_id id);
+ int kernel_read_file_from_path(const char *path,
+ 			       void **buf, size_t buf_size,
++			       size_t *file_size,
+ 			       enum kernel_read_file_id id);
+ int kernel_read_file_from_path_initns(const char *path,
+ 				      void **buf, size_t buf_size,
++				      size_t *file_size,
+ 				      enum kernel_read_file_id id);
+ int kernel_read_file_from_fd(int fd,
+ 			     void **buf, size_t buf_size,
++			     size_t *file_size,
+ 			     enum kernel_read_file_id id);
  
- MODULE_AUTHOR("Johannes Berg <johannes@sipsolutions.net>");
- MODULE_LICENSE("GPL");
-
-base-commit: d43c7fb05765152d4d4a39a8ef957c4ea14d8847
+ #endif /* _LINUX_KERNEL_READ_FILE_H */
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index eda19ca256a3..878ca684a3a1 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -222,7 +222,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 	void *ldata;
+ 
+ 	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
+-				       INT_MAX, READING_KEXEC_IMAGE);
++				       INT_MAX, NULL, READING_KEXEC_IMAGE);
+ 	if (ret < 0)
+ 		return ret;
+ 	image->kernel_buf_len = ret;
+@@ -242,7 +242,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 	/* It is possible that there no initramfs is being loaded */
+ 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+ 		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
+-					       INT_MAX,
++					       INT_MAX, NULL,
+ 					       READING_KEXEC_INITRAMFS);
+ 		if (ret < 0)
+ 			goto out;
+diff --git a/kernel/module.c b/kernel/module.c
+index 0792ce3bf643..16558bc842de 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -4004,7 +4004,7 @@ SYSCALL_DEFINE3(finit_module, int, fd, const char __user *, uargs, int, flags)
+ 		      |MODULE_INIT_IGNORE_VERMAGIC))
+ 		return -EINVAL;
+ 
+-	err = kernel_read_file_from_fd(fd, &hdr, INT_MAX,
++	err = kernel_read_file_from_fd(fd, &hdr, INT_MAX, NULL,
+ 				       READING_MODULE);
+ 	if (err < 0)
+ 		return err;
+diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
+index 04f779c4f5ed..8a523dfd7fd7 100644
+--- a/security/integrity/digsig.c
++++ b/security/integrity/digsig.c
+@@ -175,7 +175,7 @@ int __init integrity_load_x509(const unsigned int id, const char *path)
+ 	int rc;
+ 	key_perm_t perm;
+ 
+-	rc = kernel_read_file_from_path(path, &data, INT_MAX,
++	rc = kernel_read_file_from_path(path, &data, INT_MAX, NULL,
+ 					READING_X509_CERTIFICATE);
+ 	if (rc < 0) {
+ 		pr_err("Unable to open file: %s (%d)", path, rc);
+diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+index 692b83e82edf..5fc56ccb6678 100644
+--- a/security/integrity/ima/ima_fs.c
++++ b/security/integrity/ima/ima_fs.c
+@@ -284,7 +284,7 @@ static ssize_t ima_read_policy(char *path)
+ 	datap = path;
+ 	strsep(&datap, "\n");
+ 
+-	rc = kernel_read_file_from_path(path, &data, INT_MAX, READING_POLICY);
++	rc = kernel_read_file_from_path(path, &data, INT_MAX, NULL, READING_POLICY);
+ 	if (rc < 0) {
+ 		pr_err("Unable to open file: %s (%d)", path, rc);
+ 		return rc;
 -- 
-2.26.2
+2.25.1
 
