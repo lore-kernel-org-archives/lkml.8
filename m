@@ -2,134 +2,170 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91163C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE7B2075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:22:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Wi8/DT43"
+	by mail.kernel.org (Postfix) with ESMTP id 797BA2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:22:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgG2QWW (ORCPT
+        id S1727022AbgG2QWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 12:22:22 -0400
-Received: from mail-eopbgr700098.outbound.protection.outlook.com ([40.107.70.98]:47456
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726341AbgG2QWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 12:22:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=djjnSaAx8ZHd8g9424XrNVk8lZtH8azm5gZuuAdLro0qyxbrqf95a9y0v8R4VRh1nbnG4LkwKe1ulRgqSkdATq8VrZn0VYCx3nCr/6qZfK5W7bZOK8nzj1WTLobZ5nXIN/J8UKGd7cbtqEMqkhvftE5Ga1ftRVHH3sRLUIjaMjuFrIxqyVSKVpmvEdRaAugrqPT1isPszSQ/urKhOleII/PhruSomWh0Y5ihyKRdeHJI5WA79qQvpr6/QxT9YblrHyxnNEpcgpJgsYzX3wsuUOVc0hs/b8gzOmcPs+cELg5BQzCEWGbNPOdyGijZuqilUpFDKVL7Z0oyE7SZSMbFbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p2H8Brmggi4mWMcCuT3mtXYn8AEdI2qesKEYmLtCWkQ=;
- b=WImCFoayPIqsYuc143eKlvIiiOfi2nxR78KCCsKwaIbKuXllkdsDK7HWLKTrVM+yd0LUZj2cVZmJuVkNkIyDbfnpeR4Wj0Bb1Lf0x1TrCxOokoKX+GxubKhDK1qYppAMpW62s12YvrKfsjMNGn48cGY5Z4GMyB8oGWq53yLmQ8dcnZcxF31XYAiwpMYHijiAN6O4aXMGdZIOahODsYn3qtnNeVCb+aC8Yqr8GPRbRmfZIY0rl7fjBZ0CFdia+wbyG02bTt+ieoMOKl54Cyd+oXbUuBMeWX8p5wCXjFge82M/3LUo267hLgXUjkRXjO5kNPfSnhBaQMyiu8y2+nBx2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p2H8Brmggi4mWMcCuT3mtXYn8AEdI2qesKEYmLtCWkQ=;
- b=Wi8/DT43hNU/96f/iKzFodDkGBrhMfsS2JJnRbSCMb+PP5PAI3kS2/QrxWgVnqXX2DNVZ6cZNmC1/Oa9iezWO+ir2IxW28tYeWaiPQAsCeXpT+Tz2ge2T7sYwtmAOqaDJbihD53Dw1vbNW2G5nuiwXEgIgGD5h1cK16JmEm8t+0=
-Received: from BN6PR21MB0836.namprd21.prod.outlook.com (2603:10b6:404:9e::14)
- by BN6PR21MB0771.namprd21.prod.outlook.com (2603:10b6:404:9c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9; Wed, 29 Jul
- 2020 16:22:18 +0000
-Received: from BN6PR21MB0836.namprd21.prod.outlook.com
- ([fe80::81c5:8d93:da4:ec76]) by BN6PR21MB0836.namprd21.prod.outlook.com
- ([fe80::81c5:8d93:da4:ec76%14]) with mapi id 15.20.3239.001; Wed, 29 Jul 2020
- 16:22:18 +0000
-From:   Stephen Hemminger <sthemmin@microsoft.com>
-To:     Andres Beltran <lkmlabelt@gmail.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Saruhan Karademir <skarade@microsoft.com>
-Subject: RE: [PATCH] hv_utils: Add validation for untrusted Hyper-V values
-Thread-Topic: [PATCH] hv_utils: Add validation for untrusted Hyper-V values
-Thread-Index: AQHWZR/iQ6HgFROTW0GjWwUNqZZCe6kdeuRwgAFAW4CAAAMlUA==
-Date:   Wed, 29 Jul 2020 16:22:18 +0000
-Message-ID: <BN6PR21MB083600994098D204DF141AB3CC700@BN6PR21MB0836.namprd21.prod.outlook.com>
-References: <20200728204417.23912-1-lkmlabelt@gmail.com>
- <BN6PR21MB08361CE726C8D3541E657054CC730@BN6PR21MB0836.namprd21.prod.outlook.com>
- <CAGpZZ6un6VT2ZVje0tVXbZkvH_HH+pn2Du6WPa5qeJDOz7rUmg@mail.gmail.com>
-In-Reply-To: <CAGpZZ6un6VT2ZVje0tVXbZkvH_HH+pn2Du6WPa5qeJDOz7rUmg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-29T16:22:15Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=57ced0d5-6a61-439b-ac8a-89e37fda176b;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [204.195.22.127]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ac76835d-6e78-4b2f-3dbb-08d833db9039
-x-ms-traffictypediagnostic: BN6PR21MB0771:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN6PR21MB07712C3A9946C967DF552D7DCC700@BN6PR21MB0771.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ljOF9zkcfJi+LYQC33BcG3k3qg+Ee8oM6wqbr/MD1BpEVubvDhzKGxWSsrT0fo0hkU3b9Ct5Em0OoHLxc3nx5FuNkbqBAmTpzWvfq2kQFhL2+WoAty1uRin2IGTqce+JB1GPJ+PMXpz+fX8OKBVE6mxVd029LLFLQKOio6GsQlrjuPCqniTkSkNbZkgd1RZ5svegvbXowMQ5FnI+R8Zed8a55O4RIIpAy85dVlyTdiTFHbjci3bR0KC5mB6APQlSzhMrFWIKfXi1ZpowbSanPYrLDb3IETAljJm184wgrk+ETWaJP/tNTXf95I/FOzsmGKDlUn73uitnW0GBIAVHlw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR21MB0836.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(376002)(366004)(39860400002)(136003)(5660300002)(7696005)(8936002)(316002)(86362001)(66556008)(6916009)(64756008)(66446008)(4744005)(10290500003)(107886003)(52536014)(66476007)(478600001)(82960400001)(82950400001)(2906002)(71200400001)(8676002)(4326008)(26005)(54906003)(8990500004)(9686003)(76116006)(53546011)(6506007)(66946007)(55016002)(186003)(83380400001)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Dm8xUg7SJzJIU8vBurnGddAP6n2ZTwKP0rGdxairJO4lonEZ+PYhkMffN+LiiM057lO79Fj14pDfQ6tFnYsOtON+zR+/Tjm8prcF+wdxk7rfjbZte5Of6cAmXZdfxVUoq6NIt6BuZ0AaslN+sSJb3YDVzgSmO4Hly4dJ76y1f07pIYzAq8cbIVRddkjEh/LsWTX7K667lTXN6N+q/4YgSKl9dCnCq4+dFRAy0PKivJqW67bx8z9ICdmyPz/BbxgmiyEPwcWqfkqioS+AxW5iAWs/BAD42RYZfJ+xzQUwyy06uR8QEM7c5MihHIZ70WL07WtWFmFl8mWmdRkg+XX8GpEWdpOmtzkDEdNeS1jdVHBW+yR/hn5ne7DTU1xbgakZ8lkubg9B+MiVY+C+KSLyBNdVIuyhmi6FlozWS1QGChJcM3HmcpjYOJQ32RWG6ucR04yE3JO9CQqloXG4kPEmI5iV6n1qtM1SOU89tEhDnJfQBFpY595mEoFbOEQm4ZvfJiwDXONDEYl2Dle0OnDzO5EKvjAXMT0B67XXi0+5N5KpEFsUxnxN1WIaGwbBr7VlJle//xAOzrppjWzylRnJK6DI1b1AD2dSvdNGod8RvQLvMKhSEw3HI0xn6cYFlSNoGwlIB7zeo47SkI3CLHfUHQ==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 29 Jul 2020 12:22:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbgG2QWa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 12:22:30 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1678C061794;
+        Wed, 29 Jul 2020 09:22:29 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 7291A298404
+Subject: Re: [PATCH 2/3] ARM: l2c: update prefetch bits in L2X0_AUX_CTRL using
+ DT value
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <860eb8a1eed879e55daf960c96acdac514cbda93.1596028601.git.guillaume.tucker@collabora.com>
+ <79a628daef56c2d542e379f550de21da4fe3c901.1596028601.git.guillaume.tucker@collabora.com>
+ <20200729141801.GB1551@shell.armlinux.org.uk>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <a85d7b4e-abfd-268a-01a5-f78068d7e30c@collabora.com>
+Date:   Wed, 29 Jul 2020 17:22:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR21MB0836.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac76835d-6e78-4b2f-3dbb-08d833db9039
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2020 16:22:18.1430
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZEGv1mpi7ESq1HTGL6nKIubZaDPhylpaazWOj1bu4UoNizO5KkU3lzHHMgVr5kSQ4fS6uiyx+9pfjvuCfXX+Vg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0771
+In-Reply-To: <20200729141801.GB1551@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T2sgYXQgbGVhc3QgdXNlIHRoZSByYXRlbGltaXQgZm9ybSBvZiBrZXJuZWwgbG9nZ2luZy4NCg0K
-TmV0ZGV2X2Vycl9yYXRlbGltaXRlZC4uLg0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
-RnJvbTogQW5kcmVzIEJlbHRyYW4gPGxrbWxhYmVsdEBnbWFpbC5jb20+IA0KU2VudDogV2VkbmVz
-ZGF5LCBKdWx5IDI5LCAyMDIwIDk6MTAgQU0NClRvOiBTdGVwaGVuIEhlbW1pbmdlciA8c3RoZW1t
-aW5AbWljcm9zb2Z0LmNvbT4NCkNjOiBLWSBTcmluaXZhc2FuIDxreXNAbWljcm9zb2Z0LmNvbT47
-IEhhaXlhbmcgWmhhbmcgPGhhaXlhbmd6QG1pY3Jvc29mdC5jb20+OyBXZWkgTGl1IDx3ZWkubGl1
-QGtlcm5lbC5vcmc+OyBsaW51eC1oeXBlcnZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxA
-dmdlci5rZXJuZWwub3JnOyBNaWNoYWVsIEtlbGxleSA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT47
-IEFuZHJlYSBQYXJyaSA8cGFycmkuYW5kcmVhQGdtYWlsLmNvbT47IFNhcnVoYW4gS2FyYWRlbWly
-IDxza2FyYWRlQG1pY3Jvc29mdC5jb20+DQpTdWJqZWN0OiBSZTogW1BBVENIXSBodl91dGlsczog
-QWRkIHZhbGlkYXRpb24gZm9yIHVudHJ1c3RlZCBIeXBlci1WIHZhbHVlcw0KDQpPbiBUdWUsIEp1
-bCAyOCwgMjAyMCBhdCA1OjA0IFBNIFN0ZXBoZW4gSGVtbWluZ2VyDQo8c3RoZW1taW5AbWljcm9z
-b2Z0LmNvbT4gd3JvdGU6DQo+DQo+IFlvdSBtYXkgd2FudCB0byB1c2Ugb25lIG9mIHRoZSBtYWNy
-b3MgdGhhdCBwcmludHMgdGhpcyBvbmNlIG9ubHkuDQo+IFRoaXMgaXMgYSAic2hvdWxkIG5ldmVy
-IGhhcHBlbiIgdHlwZSBlcnJvciwgc28gaWYgc29tZXRoaW5nIGdvZXMgd3JvbmcgaXQgbWlnaHQg
-aGFwcGVucyBzbyBtdWNoIHRoYXQgam91cm5hbC9zeXNsb2cgd291bGQgZ2V0IG92ZXJsb2FkZWQu
-DQoNCkNlcnRhaW5seSwgcHJpbnRpbmcgZXJyb3IgbWVzc2FnZXMgb25jZSB3b3VsZCBiZSBpZGVh
-bCBpZiB3ZSB3ZXJlIG9ubHkNCmRlYWxpbmcgd2l0aCBMaW51eCBrZXJuZWwgYnVncy4gQnV0IHVu
-ZGVyIHRoZSBhc3N1bXB0aW9uIHRoYXQgSHlwZXItVg0KY2FuIHNlbmQgYm9ndXMgdmFsdWVzIGF0
-IGFueSB0aW1lLCBJIHRoaW5rIGl0IHdvdWxkIGJlIGJldHRlciB0byBwcmludA0KZXJyb3IgbWVz
-c2FnZXMgZXZlcnkgdGltZSBzbyB0aGF0IHdlIGFyZSBhd2FyZSBvZiBtYWxpY2lvdXMvZXJyb25l
-b3VzDQpkYXRhIHNlbnQgYnkgdGhlIGhvc3QuDQo=
+On 29/07/2020 15:18, Russell King - ARM Linux admin wrote:
+> On Wed, Jul 29, 2020 at 02:47:32PM +0100, Guillaume Tucker wrote:
+>> The L310_PREFETCH_CTRL register bits 28 and 29 to enable data and
+>> instruction prefetch respectively can also be accessed via the
+>> L2X0_AUX_CTRL register.  They appear to be actually wired together in
+>> hardware between the registers.  Changing them in the prefetch
+>> register only will get undone when restoring the aux control register
+>> later on.  For this reason, set these bits in both registers during
+>> initialisation according to the DT attributes.
+> 
+> How will that happen?
+> 
+> We write the auxiliary control register before the prefetch control
+> register, so the prefetch control register will take precedence.  See
+> l2c310_configure() - l2c_configure() writes the auxiliary control
+> register, and the function writes the prefetch control register later.
+
+What I'm seeing is that outer_cache.configure() gets called, at
+least on exynos4412-odroidx2.  See l2c_enable():
+
+	if (outer_cache.configure)
+		outer_cache.configure(&l2x0_saved_regs);
+	else
+		l2x0_data->configure(base);
+
+Then instead of l2c310_configure(), exynos_l2_configure() gets
+called and writes prefetch_ctrl right before aux_ctrl.  Should
+exynos_l2_configure() be changed to swap the register writes?
+
+
+> I think the real issue is that Exynos has been modifying the prefetch
+> settings via its machine .aux_mask / .aux_val configuration, and the
+> opposite is actually true: the prefetch control register values will
+> overwrite the attempt to modify the auxiliary control values set through
+> the machine .aux_mask/.aux_val.
+
+Yes with l2c310_configure() but not with exynos_l2_configure().
+
+To be clear, this is what I've found to be happening, if you
+switch to using the device tree prefetch attributes and clear
+the bits in the default l2c_aux_val (see PATCH 3/3):
+
+1. l2x0_of_init() first gets called with the default aux_val
+
+2. l2c310_of_parse() sets the bits in l2x0_saved_regs.prefetch_ctrl
+   but not in aux_val (unless you apply this patch 2/3)
+
+3. l2c_enable() calls exynos_l2_configure() which writes
+   prefetch_ctrl and then aux_ctrl - thus setting the prefetch bits
+   and then clearing them just after
+
+4. l2c310_enable() reads back aux_ctrl and prefetch, both of which
+   now have the bits cleared (the pr_info() message about prefetch
+   enabled gets skipped)
+
+
+That's why I thought it would be safer to set the prefetch bits
+in both registers so it should work regardless if the
+initialisation sequence.  Also, if we want these bits to be
+changed, we should clear them in the aux_mask value to not get
+another error message about register corruption - so I'm doing
+that too.
+
+Thanks,
+Guillaume
+
+
+>> Fixes: ec3bd0e68a67 ("ARM: 8391/1: l2c: add options to overwrite prefetching behavior")
+>> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+>> ---
+>>  arch/arm/mm/cache-l2x0.c | 16 ++++++++++++----
+>>  1 file changed, 12 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+>> index 12c26eb88afb..43d91bfd2360 100644
+>> --- a/arch/arm/mm/cache-l2x0.c
+>> +++ b/arch/arm/mm/cache-l2x0.c
+>> @@ -1249,20 +1249,28 @@ static void __init l2c310_of_parse(const struct device_node *np,
+>>  
+>>  	ret = of_property_read_u32(np, "prefetch-data", &val);
+>>  	if (ret == 0) {
+>> -		if (val)
+>> +		if (val) {
+>>  			prefetch |= L310_PREFETCH_CTRL_DATA_PREFETCH;
+>> -		else
+>> +			*aux_val |= L310_PREFETCH_CTRL_DATA_PREFETCH;
+>> +		} else {
+>>  			prefetch &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
+>> +			*aux_val &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
+>> +		}
+>> +		*aux_mask &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
+>>  	} else if (ret != -EINVAL) {
+>>  		pr_err("L2C-310 OF prefetch-data property value is missing\n");
+>>  	}
+>>  
+>>  	ret = of_property_read_u32(np, "prefetch-instr", &val);
+>>  	if (ret == 0) {
+>> -		if (val)
+>> +		if (val) {
+>>  			prefetch |= L310_PREFETCH_CTRL_INSTR_PREFETCH;
+>> -		else
+>> +			*aux_val |= L310_PREFETCH_CTRL_INSTR_PREFETCH;
+>> +		} else {
+>>  			prefetch &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
+>> +			*aux_val &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
+>> +		}
+>> +		*aux_mask &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
+>>  	} else if (ret != -EINVAL) {
+>>  		pr_err("L2C-310 OF prefetch-instr property value is missing\n");
+>>  	}
+>> -- 
+>> 2.20.1
+>>
+>>
+> 
+
