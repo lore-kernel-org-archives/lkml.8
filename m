@@ -2,159 +2,88 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D22C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B20062083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D982083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:48:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgG2PsO (ORCPT
+        id S1726981AbgG2PsW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:48:14 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:46324 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgG2PsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:48:13 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 40641FB03;
-        Wed, 29 Jul 2020 17:48:11 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GeLiyG1p29WJ; Wed, 29 Jul 2020 17:48:09 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 1EBD845341; Wed, 29 Jul 2020 17:48:09 +0200 (CEST)
-Date:   Wed, 29 Jul 2020 17:48:09 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Samuel Holland <samuel@sholland.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Fix st7703 panel initialization failures
-Message-ID: <20200729154809.GA435075@bogon.m.sigxcpu.org>
-References: <20200716123753.3552425-1-megous@megous.com>
- <20200716140843.GA359122@bogon.m.sigxcpu.org>
- <20200716143209.ud6ote4q545bo2c7@core.my.home>
- <20200718173124.GA88021@bogon.m.sigxcpu.org>
- <20200718174215.mgjl3klytfa3nf3t@core.my.home>
+        Wed, 29 Jul 2020 11:48:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43860 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgG2PsW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 11:48:22 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32C89C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 08:48:22 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k0oJB-0001x3-1O; Wed, 29 Jul 2020 17:47:57 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k0oJ7-0005C1-FL; Wed, 29 Jul 2020 17:47:53 +0200
+Message-ID: <6501768cd96f88a65fd15d93433203c203b28b45.camel@pengutronix.de>
+Subject: Re: [PATCH V3 1/3] reset: imx7: Support module build
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Anson Huang <Anson.Huang@nxp.com>, catalin.marinas@arm.com,
+        will@kernel.org, robh@kernel.org, bhelgaas@google.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, bjorn.andersson@linaro.org, leoyang.li@nxp.com,
+        vkoul@kernel.org, geert+renesas@glider.be, olof@lixom.net,
+        amurray@thegoodpenguin.co.uk, treding@nvidia.com,
+        vidyas@nvidia.com, hayashi.kunihiko@socionext.com,
+        jonnyc@amazon.com, eswara.kota@linux.intel.com, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Linux-imx@nxp.com
+Date:   Wed, 29 Jul 2020 17:47:53 +0200
+In-Reply-To: <20200728105345.GC905@e121166-lin.cambridge.arm.com>
+References: <1595254921-26050-1-git-send-email-Anson.Huang@nxp.com>
+         <e89fa4f3ba2b1b6fe94e662c6ab3cfbaa25867fa.camel@pengutronix.de>
+         <20200728105345.GC905@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200718174215.mgjl3klytfa3nf3t@core.my.home>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Sat, Jul 18, 2020 at 07:42:15PM +0200, Ondřej Jirman wrote:
-> Hello,
-> 
-> On Sat, Jul 18, 2020 at 07:31:24PM +0200, Guido Günther wrote:
-> > Hi,
-> > On Thu, Jul 16, 2020 at 04:32:09PM +0200, Ondřej Jirman wrote:
-> > > Hi Guido,
+On Tue, 2020-07-28 at 11:53 +0100, Lorenzo Pieralisi wrote:
+> On Fri, Jul 24, 2020 at 10:03:11AM +0200, Philipp Zabel wrote:
+> > On Mon, 2020-07-20 at 22:21 +0800, Anson Huang wrote:
+> > > Use module_platform_driver(), add module device table, author,
+> > > description and license to support module build, and
+> > > CONFIG_RESET_IMX7 is changed to default 'y' ONLY for i.MX7D,
+> > > other platforms need to select it in defconfig.
 > > > 
-> > > On Thu, Jul 16, 2020 at 04:08:43PM +0200, Guido Günther wrote:
-> > > > Hi Ondrej,
-> > > > On Thu, Jul 16, 2020 at 02:37:51PM +0200, Ondrej Jirman wrote:
-> > > > > When extending the driver for xbd599 panel support I tried to do minimal
-> > > > > changes and keep the existing initialization timing.
-> > > > > 
-> > > > > It turned out that it's not good enough and the existing init sequence
-> > > > > is too aggressive and doesn't follow the specification. On PinePhone
-> > > > > panel is being powered down/up during suspend/resume and with current
-> > > > > timings this frequently leads to corrupted display.
-> > > > 
-> > > > Given the amount of ST7703 look alikes i don't think you can go by the
-> > > > datasheet and hope not to break other panels. The current sleeps cater
-> > > > for the rocktech panel (which suffered from similar issues you describe
-> > > > when we took other parameters) so you need to make those panel specific.
-> > > 
-> > > It should work on rocktech too. The patch mostly increases/reorders the delays
-> > > slightly, to match the controller documentation. I don't see a reason to
-> > > complicate the driver with per panel special delays, unless these patches don't
-> > > work on your panel.
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > ---
+> > > Changes since V2:
+> > > 	- use module_platform_driver() instead of builtin_platform_driver().
 > > 
-> > That's why i brought it up. It breaks the rocktech panel on
-> > blank/unblank loops where it just stays blank and then starts hitting
-> > DSI command timeouts.
+> > Thank you, applied to reset/next.
 > 
-> Good to know. Does keeping the msleep(20); after init sequence and before sleep
-> exit make it work?
+> I think you should pick up patch (3) as well please if PCI_IMX6
+> maintainers ACK it - merging just patch(1) will trigger regressions
+> AFAICS.
 
-We need both sleeps to make this work reliably so basically
-reverting your 'drm/panel: st7703: Make the sleep exit timing match the
-spec' makes things stable again.
+Thank you for raising this, I'll put these patches on hold until the
+PCI_IMX6 issue is resolved.
 
-We don't need to sleep 120ms after sleep out though since our panel only
-requires 15ms as per data sheet there so it really makes sense to make
-these configurable.
-Cheers,
- -- Guido
-
-> 
-> thank you and regards,
-> 	o.
-> 
-> > Cheers,
-> >  -- Guido
-> > 
-> > > 
-> > > The init sequence is still suboptimal, and doesn't follow the kernel docs
-> > > completely, even after these patches. Controller spec also talks about adding
-> > > some delay before enabling the backlight to avoid visual glitches.
-> > > 
-> > > Which is what enable callback is documented to be for. Currently part of the
-> > > initialization that belongs to prepare callback is also done in enable callback.
-> > > 
-> > > I see the glitch (small vertical shift of the image on powerup), but personally
-> > > don't care much to introduce even more delays to the driver, just for the
-> > > cosmetic issue.
-> > > 
-> > > regards,
-> > > 	o.
-> > > 
-> > > > Cheers,
-> > > >  -- Guido
-> > > > 
-> > > > > 
-> > > > > This patch series fixes the problems.
-> > > > > 
-> > > > > The issue was reported by Samuel Holland.
-> > > > > 
-> > > > > Relevant screenshots from the datasheet:
-> > > > > 
-> > > > >   Power on timing: https://megous.com/dl/tmp/35b72e674ce0ca27.png
-> > > > >   Power off timing: https://megous.com/dl/tmp/dea195517106ff17.png
-> > > > >   More optimal reset on poweron: https://megous.com/dl/tmp/a9e5caf14e1b0dc6.png
-> > > > >   Less optimal reset on poweron: https://megous.com/dl/tmp/246761039283c4cf.png
-> > > > >   Datasheet: https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
-> > > > > 
-> > > > > Please take a look.
-> > > > > 
-> > > > > thank you and regards,
-> > > > >   Ondrej Jirman
-> > > > > 
-> > > > > Ondrej Jirman (2):
-> > > > >   drm/panel: st7703: Make the sleep exit timing match the spec
-> > > > >   drm/panel: st7703: Fix the power up sequence of the panel
-> > > > > 
-> > > > >  drivers/gpu/drm/panel/panel-sitronix-st7703.c | 29 ++++++++++---------
-> > > > >  1 file changed, 15 insertions(+), 14 deletions(-)
-> > > > > 
-> > > > > -- 
-> > > > > 2.27.0
-> > > > > 
-> > > 
-> 
+regards
+Philipp
