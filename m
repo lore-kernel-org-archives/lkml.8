@@ -2,171 +2,226 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BABC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 00:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBC1C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB82A207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 00:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A620620829
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:03:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="UuNmFd9S"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BY7xswnq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbgG2A4j (ORCPT
+        id S1730011AbgG2BDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 20:56:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48110 "EHLO
+        Tue, 28 Jul 2020 21:03:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730766AbgG2A4j (ORCPT
+        with ESMTP id S1728254AbgG2BDg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 20:56:39 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15BDFC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 17:56:39 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t1so1836974plq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 17:56:39 -0700 (PDT)
+        Tue, 28 Jul 2020 21:03:36 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F922C0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 18:03:35 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id e8so13319602pgc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 18:03:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=xMlai4+jYP0XrSSpHNRx/rApchrWP8YqEYA3eY+3yls=;
-        b=UuNmFd9SMA7htAxW4sk6ClTo4x1omHZFcWzYRt5hGDpJxWyUpEoQdzPWx0yFpZcbh0
-         /94zTKZffmlVR4Smb/AA0kX8EhNye1sQ9sMKtxxPavv8nWJR7iSJNVzKrFoHY0Dy2vCz
-         stZ99OEFzbDDzy3KFzZZDdD+XRHc5I/Yd6PxtQ87OP9Qh0SHqTSnUNiSjryTQgJ3idJ5
-         X4lqLMbels7SAPYzl5j6Cj6H9D0JtS5x8T1Y6+HK3iXK8Uv889tR8Ti9qsyP1Vp9Jl47
-         WVml3qZbKUNVldZGnIeNy13uukFrf4dbWQcdD51ayCOqrgKQy1r80ODAFS3jPyCRL+EH
-         U2dA==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=bWQ5cNwAp1U8fuRjdwC2moXHDAbmr4xMaXTHz6nTZ1A=;
+        b=BY7xswnqLwkaPjFKiGdpVGKtY1qOlCnsnq+JyFAikf6g9r4CYQNY2tSvWu8W7CyWsH
+         kw19tbZkT4y/kCuXJjHoXsLYemXyrxN2dwkSegMb+9erv4b7KUivTEm1rtPQ3GF3jV3w
+         vbekATMTMm4g2wXVfhwizPGnWy7LHo+XeFzRc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=xMlai4+jYP0XrSSpHNRx/rApchrWP8YqEYA3eY+3yls=;
-        b=VClXky7jiGMEi+/4cR3f0Mk/3qmyBXnqNX3dIgtPGaOkHkBIL116xu/J2/9JtNYHXu
-         mVN5/nf1lkuMtJtXAlDf6/q4PsWcPlSDO0pPxRN1DPpQw8qt1f/PP922or+8bp4DssR0
-         hWx2xnmT7yAAS5W/iCVLkXBsijszEfl6Iyi9v/2EBEkQMfDNSk/8CALRNKMnP3926FrP
-         45rx2r3hTk8T6YMlw4x0iCUC8ATJH+DvZ4kxNwJjLfo0dEM921iu+hgp9Sf2Yz3XZ10d
-         LRz9uqUa0vcE1a0UWBJDMq8RULiq/eYehY1UqHuY+yO7DAk3+r1KtYyFmH/ZQ7xP17KG
-         yD1g==
-X-Gm-Message-State: AOAM531J02fSyBoOotHkfCj3U2dBVr0lCBqqrjoUQQba7YHWpEFK2qd8
-        541/Tb/V1PBMvJym816vXloXiw==
-X-Google-Smtp-Source: ABdhPJxyaClYApBVWjGKj622ZwObVsWm9VC/kN6X2i+bkoDF7/tTFZxO0l+X9QNHJaTFgoHn4lNZ+A==
-X-Received: by 2002:a17:90a:8985:: with SMTP id v5mr6918771pjn.181.1595984198399;
-        Tue, 28 Jul 2020 17:56:38 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:eca9:c737:f7c5:9694? ([2601:646:c200:1ef2:eca9:c737:f7c5:9694])
-        by smtp.gmail.com with ESMTPSA id x15sm222810pfr.208.2020.07.28.17.56.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 17:56:37 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=bWQ5cNwAp1U8fuRjdwC2moXHDAbmr4xMaXTHz6nTZ1A=;
+        b=aKAlrqWubkjus7D69AT6oCtyZh2kcLIwOl9z2+f8bzKtKSddV2vhv6vvRyvoyJETk3
+         0uVcia4LERIoCER7fQOyibAzDef0E/3EBq3d6UCUPQhMbN8KIpSCg1kriqqJQUCfispM
+         qNT7ttxy9gjgi07GSsRf92xQoyfqbDO1ZBBvjmttszEiM9tt5i+uv4uPWmGwHAnG10nc
+         sg3N4LFjtFo4t07GhlMoo69/JtXLj1I+OcSpF48FAE6bQz6iGVls/eZjntFVBZZAFqn2
+         SaxSgHzZx0Nk16FBP9h/sxivzXlGQPmdpxgj8Va6Emh++TRkEoCQfKMyVqXEFPU3KC55
+         +3kA==
+X-Gm-Message-State: AOAM533bf4H5EoFfpx5NHmRqf1/5fwX70EEdG45ATFUy5iyjSF/svmkj
+        +MBLFlJVfEnbZhbZtdfRrZAvBg==
+X-Google-Smtp-Source: ABdhPJxjz4++FkngpE03Ru2RmLgubdO6Te1eOvdKzggkzhIW+sZIXZmxlO3XsxCvB3jU2MjoxnrkAw==
+X-Received: by 2002:a65:4b85:: with SMTP id t5mr26492451pgq.36.1595984614727;
+        Tue, 28 Jul 2020 18:03:34 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id k2sm251817pgm.11.2020.07.28.18.03.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 18:03:34 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: Random shadow stack pointer corruption
-Date:   Tue, 28 Jul 2020 17:56:20 -0700
-Message-Id: <9CB08BDB-0245-474A-BE03-C529F659581F@amacapital.net>
-References: <CAMe9rOr=WsOnKk3x8AK-iB5JLCjJ7FaDKXsFp01+3BbJvLZqMA@mail.gmail.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Weijiang Yang <weijiang.yang@intel.com>
-In-Reply-To: <CAMe9rOr=WsOnKk3x8AK-iB5JLCjJ7FaDKXsFp01+3BbJvLZqMA@mail.gmail.com>
-To:     "H.J. Lu" <hjl.tools@gmail.com>
-X-Mailer: iPhone Mail (17F80)
+In-Reply-To: <20200728170317.v2.7.Iecaa50e469918a385b3e5dab375e442540ea2ad4@changeid>
+References: <20200728151258.1222876-1-campello@chromium.org> <20200728230520.2011240-1-campello@chromium.org> <20200728170317.v2.7.Iecaa50e469918a385b3e5dab375e442540ea2ad4@changeid>
+Subject: Re: [PATCH v2 07/14] iio: sx9310: Use long instead of int for channel bitmaps
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+To:     Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Tue, 28 Jul 2020 18:03:32 -0700
+Message-ID: <159598461271.1360974.15436404116157938506@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Daniel Campello (2020-07-28 16:05:13)
+> Uses for_each_set_bit() macro to loop over channel bitmaps.
+>=20
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> ---
+>=20
+> Changes in v2:
+>  - Changed prox_stat to chan_prox_stat bitmap.
+>=20
+>  drivers/iio/proximity/sx9310.c | 38 ++++++++++++++++++----------------
+>  1 file changed, 20 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx931=
+0.c
+> index 75e85dcd6b3572..1f04ab8507ec62 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -130,14 +130,15 @@ struct sx9310_data {
+>          * Last reading of the proximity status for each channel.
+>          * We only send an event to user space when this changes.
+>          */
+> -       bool prox_stat[SX9310_NUM_CHANNELS];
+> +       unsigned long chan_prox_stat;
+
+This can be DECLARE_BITMAP(chan_prox_stat, SX9310_NUM_CHANNELS)
+
+>         bool trigger_enabled;
+>         /* 64-bit data + 64-bit timestamp buffer */
+>         __be16 buffer[SX9310_NUM_CHANNELS + 4] __aligned(8);
+>         /* Remember enabled channels and sample rate during suspend. */
+>         unsigned int suspend_ctrl0;
+>         struct completion completion;
+> -       unsigned int chan_read, chan_event;
+> +       unsigned long chan_read;
+> +       unsigned long chan_event;
+
+Same for these?
+
+>         int channel_users[SX9310_NUM_CHANNELS];
+>         unsigned int whoami;
+>  };
+> @@ -280,15 +281,16 @@ static const struct regmap_config sx9310_regmap_con=
+fig =3D {
+>  };
+> =20
+>  static int sx9310_update_chan_en(struct sx9310_data *data,
+> -                                unsigned int chan_read,
+> -                                unsigned int chan_event)
+> +                                unsigned long chan_read,
+> +                                unsigned long chan_event)
+>  {
+>         int ret;
+> +       unsigned long channels =3D chan_read | chan_event;
+> =20
+> -       if ((data->chan_read | data->chan_event) !=3D (chan_read | chan_e=
+vent)) {
+> +       if ((data->chan_read | data->chan_event) !=3D channels) {
+>                 ret =3D regmap_update_bits(data->regmap, SX9310_REG_PROX_=
+CTRL0,
+>                                          SX9310_REG_PROX_CTRL0_SENSOREN_M=
+ASK,
+> -                                        chan_read | chan_event);
+> +                                        channels);
+>                 if (ret)
+>                         return ret;
+>         }
+> @@ -531,6 +533,7 @@ static void sx9310_push_events(struct iio_dev *indio_=
+dev)
+>         unsigned int val, chan;
+>         struct sx9310_data *data =3D iio_priv(indio_dev);
+>         s64 timestamp =3D iio_get_time_ns(indio_dev);
+> +       unsigned long prox_changed;
+> =20
+>         /* Read proximity state on all channels */
+>         ret =3D regmap_read(data->regmap, SX9310_REG_STAT0, &val);
+> @@ -539,24 +542,23 @@ static void sx9310_push_events(struct iio_dev *indi=
+o_dev)
+>                 return;
+>         }
+> =20
+> -       for (chan =3D 0; chan < SX9310_NUM_CHANNELS; chan++) {
+> +       /*
+> +        * Only iterate over channels with changes on proximity status th=
+at have
+> +        * events enabled.
+> +        */
+> +       prox_changed =3D (data->chan_prox_stat ^ val) & data->chan_event;
+
+I was expecting:
 
 
-> On Jul 28, 2020, at 5:36 PM, H.J. Lu <hjl.tools@gmail.com> wrote:
->=20
-> =EF=BB=BFOn Sat, Jul 18, 2020 at 4:35 PM Yu-cheng Yu <yu-cheng.yu@intel.co=
-m> wrote:
->>=20
->>> On Sat, 2020-07-18 at 15:41 -0700, Dave Hansen wrote:
->>> On 7/18/20 11:24 AM, Yu-cheng Yu wrote:
->>>> On Sat, 2020-07-18 at 11:00 -0700, Andy Lutomirski wrote:
->>>>> On Sat, Jul 18, 2020 at 10:58 AM Yu-cheng Yu <yu-cheng.yu@intel.com> w=
-rote:
->>>>>> Hi,
->>>>>>=20
->>>>>> My shadow stack tests start to have random shadow stack pointer corru=
-ption after
->>>>>> v5.7 (excluding).  The symptom looks like some locking issue or the k=
-ernel is
->>>>>> confused about which CPU a task is on.  In later tip/master, this can=
- be
->>>>>> triggered by creating two tasks and each does continuous
->>>>>> pthread_create()/pthread_join().  If the kernel has max_cpus=3D1, the=
- issue goes
->>>>>> away.  I also checked XSAVES/XRSTORS, but this does not seem to be an=
- issue
->>>>>> coming from there.
->>>>>=20
->>>>> What do you mean "shadow stack pointer corruption"?  Is SSP itself
->>>>> corrupt while running in the kernel?  Is one of the MSRs getting
->>>>> corrupted?  Is the memory to which the shadow stack points getting
->>>>> corrupted? Is the CPU rejecting an attempt to change SSP?
->>>>=20
->>>> What I see is, a new thread after ret_from_fork() and iret back to ring=
--3,
->>>> its shadow stack pointer (MSR_IA32_PL3_SSP) is corrupted.
->>>=20
->>> Does corrupt mean random?  Or is it a valid stack address, just not for
->>> _this_ thread?  Or NULL?  Or is it a kernel address?  Have you tried
->>> tracing *ALL* the WRMSR's and XRSTOR's that write to the MSR?
->>=20
->> When a shadow stack address is changed, the address appears to be other t=
-ask's.
->> I traced all WRMSR's and XRSTOR's.  I also verified there have not been a=
-ny
->> XRSTORS from a wrong buffer.  When rc6 is tagged, I will re-base, test, a=
-nd
->> share current patches.
->>=20
->=20
-> We have identified that
->=20
-> ommit 91eeafea1e4b7c95cc4f38af186d7d48fceef89a
-> Author: Thomas Gleixner <tglx@linutronix.de>
-> Date:   Thu May 21 22:05:28 2020 +0200
->=20
->    x86/entry: Switch page fault exception to IDTENTRY_RAW
->=20
->    Convert page fault exceptions to IDTENTRY_RAW:
->=20
->      - Implement the C entry point with DEFINE_IDTENTRY_RAW
->      - Add the CR2 read into the exception handler
->      - Add the idtentry_enter/exit_cond_rcu() invocations in
->        in the regular page fault handler and in the async PF
->        part.
->      - Emit the ASM stub with DECLARE_IDTENTRY_RAW
->      - Remove the ASM idtentry in 64-bit
->      - Remove the CR2 read from 64-bit
->      - Remove the open coded ASM entry code in 32-bit
->      - Fix up the XEN/PV code
->      - Remove the old prototypes
->=20
->    No functional change.
->=20
-> triggered the shadow stack corruption when the process returned from sysca=
-ll.
-> SSP MSR somehow was changed between setting SSP MSR and IRET.    Could
-> there be a page fault between setting SSP MSR and IRET?
+	bitmap_xor(&prox_changed, &data->chan_prox_stat, &val, SX9310_NUM_CHANNELS=
+);
+	bitmap_and(&prox_changed, &data->chan_event, SX9310_NUM_CHANNELS);
+=09
+> +
+> +       for_each_set_bit(chan, &prox_changed, SX9310_NUM_CHANNELS) {
+>                 int dir;
+>                 u64 ev;
+> -               bool new_prox =3D val & BIT(chan);
+> -
+> -               if (!(data->chan_event & BIT(chan)))
+> -                       continue;
+> -               if (new_prox =3D=3D data->prox_stat[chan])
+> -                       /* No change on this channel. */
+> -                       continue;
+> =20
+> -               dir =3D new_prox ? IIO_EV_DIR_FALLING : IIO_EV_DIR_RISING;
+> +               dir =3D val & BIT(chan) ? IIO_EV_DIR_FALLING : IIO_EV_DIR=
+_RISING;
+>                 ev =3D IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, chan,
+>                                           IIO_EV_TYPE_THRESH, dir);
+> =20
+>                 iio_push_event(indio_dev, ev, timestamp);
+> -               data->prox_stat[chan] =3D new_prox;
+>         }
+> +       data->chan_prox_stat =3D val;
+>  }
+> =20
+>  static irqreturn_t sx9310_irq_thread_handler(int irq, void *private)
+> @@ -713,13 +715,13 @@ static irqreturn_t sx9310_trigger_handler(int irq, =
+void *private)
+>  static int sx9310_buffer_preenable(struct iio_dev *indio_dev)
+>  {
+>         struct sx9310_data *data =3D iio_priv(indio_dev);
+> -       unsigned int channels =3D 0;
+> +       unsigned long channels =3D 0;
 
-Not upstream because there=E2=80=99s no SSP MSR.
+Use DECLARE_BITMAP(channels, SX9310_NUM_CHANNELS)?
 
->=20
-> --=20
-> H.J.
+>         int bit, ret;
+> =20
+>         mutex_lock(&data->mutex);
+>         for_each_set_bit(bit, indio_dev->active_scan_mask,
+>                          indio_dev->masklength)
+> -               channels |=3D BIT(indio_dev->channels[bit].channel);
+> +               __set_bit(indio_dev->channels[bit].channel, &channels);
+> =20
+>         ret =3D sx9310_update_chan_en(data, channels, data->chan_event);
+>         mutex_unlock(&data->mutex);
