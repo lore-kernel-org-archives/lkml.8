@@ -2,128 +2,140 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C56C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38787C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1BAA20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1272420838
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596014364;
+	bh=WZrVsNGMujSDGMeMNw5iNOypN5gAuERBjuuxAz4WX7o=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=yOVch6Fb21Y7TfphuG9c7KQybshAp/m2EmaBozb4C7FlunYONl5lRFxIzMz5aGmNd
+	 vvDC1UbHD9Mn0FjtghNqRAkV5DsG/HWFX8NIsk7goaGSg5uRUp7dEZ+Z8y4vdG1rY0
+	 AF8rYEm7kMjnDS3d4uv5VXnaDM76SlHlPwzPzszU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgG2JSs (ORCPT
+        id S1728158AbgG2JTW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:18:48 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38265 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728122AbgG2JSs (ORCPT
+        Wed, 29 Jul 2020 05:19:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52380 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727849AbgG2JTW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:18:48 -0400
-Received: by mail-lf1-f65.google.com with SMTP id 140so12618415lfi.5;
-        Wed, 29 Jul 2020 02:18:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=5QxkY45+uCy195vrLbQYBt0kHQqjeOPMda3MxmvESpo=;
-        b=U4bsrf5w/dXVIqf1U43Tlu+fGy6n4kXjZo56Qz57a2rSgFglQPNbtnQ9HoECyEoRxQ
-         2xidSDi1ySWiAUJMWOvAfjG78amwBzNBgw6icX0OkZASY89TkOYWl2XITUvAsU9wTXcd
-         hZaua3l8Ad/oj9+4z/YV6dxHUsGiNiMY8xCHSXU25wDhdLAzarXtmg+2S275iHHVzfVn
-         OpMSll1OsWuXq1AZmLh+1bPmJ/5F/rr4oculEqnaSlJilkk34NKzVWivozzmbTCjKd+i
-         Z4mTHa2ps0v7HDwELGKxQmYsWomBzUo+IDFMPfgNwzcWMzuyaG6i6p0dGv/KnWOCifuQ
-         9LIw==
-X-Gm-Message-State: AOAM533obqtluuCH2iWCBZskOjqfbymKRgX2m/YSI4Mjwhw0P1LMaeQt
-        nnU8VMDxFTHa2NchcqmMOck=
-X-Google-Smtp-Source: ABdhPJxUtN4D/kIeSqIdHGZhpYfyQqlo5gDTMNn8jl5XcXrXmDY/FqRDWRKOkx4Y/DYIK6PFs8DkuQ==
-X-Received: by 2002:a05:6512:752:: with SMTP id c18mr16550623lfs.53.1596014324266;
-        Wed, 29 Jul 2020 02:18:44 -0700 (PDT)
-Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.gmail.com with ESMTPSA id d14sm325942lfj.30.2020.07.29.02.18.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 02:18:43 -0700 (PDT)
-Reply-To: efremov@linux.com
-To:     Peilin Ye <yepeilin.cs@gmail.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-References: <20200728141946.426245-1-yepeilin.cs@gmail.com>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- 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
-Subject: Re: [Linux-kernel-mentees] [PATCH] block/floppy: Prevent
- kernel-infoleak in raw_cmd_copyout()
-Message-ID: <f80acf0f-3e7e-89c5-a00e-d5a89553f0b4@linux.com>
-Date:   Wed, 29 Jul 2020 12:18:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 05:19:22 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-205-zvOwstDRNwOF9G991N9Nbw-1; Wed, 29 Jul 2020 05:19:14 -0400
+X-MC-Unique: zvOwstDRNwOF9G991N9Nbw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E0A98800597;
+        Wed, 29 Jul 2020 09:19:12 +0000 (UTC)
+Received: from krava.redhat.com (unknown [10.40.193.247])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 802F26931E;
+        Wed, 29 Jul 2020 09:19:09 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Subject: [PATCHv4 00/19] perf metric: Add support to reuse metric
+Date:   Wed, 29 Jul 2020 11:18:49 +0200
+Message-Id: <20200729091908.1378911-1-jolsa@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200728141946.426245-1-yepeilin.cs@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+hi,
+this patchset is adding the support to reused metric in
+another metric.
+
+For example, to define IPC by using CPI with change like:
+
+     {
+         "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+-        "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
++        "MetricExpr": "1/CPI",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "IPC"
+     },
+
+I won't be able to find all the possible places we could
+use this at, so I wonder you guys (who was asking for this)
+would try it and come up with comments if there's something
+missing or we could already use it at some places.
+
+It's based on Arnaldo's tmp.perf/core.
+
+v4 changes:
+  - removed acks from patch because it changed a bit
+    with the last fixes:
+      perf metric: Collect referenced metrics in struct metric_ref_node
+  - fixed runtime metrics [Kajol Jain]
+  - increased recursion depth [Paul A. Clarke]
+  - changed patches due to dependencies:
+      perf metric: Collect referenced metrics in struct metric_ref_node
+      perf metric: Add recursion check when processing nested metrics
+      perf metric: Rename struct egroup to metric
+      perf metric: Rename group_list to metric_list
+
+Also available in here:
+  git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  perf/metric
+
+thanks,
+jirka
 
 
-On 7/28/20 5:19 PM, Peilin Ye wrote:
-> raw_cmd_copyout() is potentially copying uninitialized kernel stack memory
-> since it is initializing `cmd` by assignment, which may cause the compiler
-> to leave uninitialized holes in this structure. Fix it by using memcpy()
-> instead.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 2145e15e0557 ("floppy: don't write kernel-only members to FDRAWCMD ioctl output")
+---
+Jiri Olsa (19):
+      perf metric: Fix memory leak in expr__add_id function
+      perf metric: Add expr__add_id function
+      perf metric: Change expr__get_id to return struct expr_id_data
+      perf metric: Add expr__del_id function
+      perf metric: Add macros for iterating map events
+      perf metric: Add add_metric function
+      perf metric: Rename __metricgroup__add_metric to __add_metric
+      perf metric: Collect referenced metrics in struct metric_ref_node
+      perf metric: Collect referenced metrics in struct metric_expr
+      perf metric: Add referenced metrics to hash data
+      perf metric: Compute referenced metrics
+      perf metric: Add events for the current list
+      perf metric: Add cache_miss_cycles to metric parse test
+      perf metric: Add DCache_L2 to metric parse test
+      perf metric: Add recursion check when processing nested metrics
+      perf metric: Make compute_single function more precise
+      perf metric: Add metric group test
+      perf metric: Rename struct egroup to metric
+      perf metric: Rename group_list to metric_list
 
-Nitpick, I would say this fix is not related to commit 2145e15e0557.
+ tools/perf/tests/parse-metric.c | 206 +++++++++++++++++++++++++++++++++++++++++++++++++----
+ tools/perf/util/expr.c          | 143 ++++++++++++++++++++++++++++++++-----
+ tools/perf/util/expr.h          |  30 +++++++-
+ tools/perf/util/expr.y          |  16 +++--
+ tools/perf/util/metricgroup.c   | 466 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------
+ tools/perf/util/metricgroup.h   |   6 ++
+ tools/perf/util/stat-shadow.c   |  20 ++++--
+ 7 files changed, 751 insertions(+), 136 deletions(-)
 
-> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
