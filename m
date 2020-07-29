@@ -2,150 +2,157 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 298DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECBFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05EE620809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0D82075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:17:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="G236nRod"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="NYB/oLSk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgG2RQy (ORCPT
+        id S1727032AbgG2RRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:16:54 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2496 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2RQy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 13:16:54 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f21aef80000>; Wed, 29 Jul 2020 10:16:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 29 Jul 2020 10:16:53 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 29 Jul 2020 10:16:53 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jul
- 2020 17:16:53 +0000
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.108)
- by HQMAIL109.nvidia.com (172.20.187.15) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Wed, 29 Jul 2020 17:16:53 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TSsNpsbav4rWCKZpPDdoR7k3joMHQU6OM0CwVN7yxOeYJDYLgE39p9afzxmJyipUK0MCbqxXhLL0C8rPNVv/PS2UOVg5UCjyNSaurfTWaO20WHsCs/q5ta+a25ZQsbHBx04KPoKN40ZtSMeHC6jJw3hc7ftDVmoO1T4UbgsMDukVC35CiRsQKfyGWj5eeD3620LB2zqneec8a1VqyWy6dt0ptJEW30Br6aE0ZbypmjbEfNCaQjIlIvm06nA3PocZ/J8hrOjUAUkFxXJM6HfAj/b6lf2PJsGWqzztLUNsO80cOkRezugNGuuWxRsKx53xazV8BAEw7t9iL01S3bPhBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W5Zbk7sYINEjXUBgX0oFptGT36ANoqiyy19yg+5ckns=;
- b=aFVAh1iXa8W3+CL4h9C3YYbj3Mzeg/d8uq/oiLmiXj26EMehV3m+qD39J2tnGFOH0K8v+XYLifzqTgnmlcrmUeVqW0R9Ib0gM4Ya7EqGxN8bZzE2HoMzRIUnEq71JgwJnRgVl+4ROR+GZ5Q6niui3b0rQ4l2WKCiJqa+0hivJq2wICumNNcScYIcRYcSOuOpc89D74xhOBLDd2tx4b8VKgspMVFwgXYZXixuQVswrq2bO1bvLCHCu0v1BgqhE3H+ylW9kkSPsKIfmLu/MLHIvBeMUU0C6ZnpqhreuXMLqq2nhKCU0vhuuFzWTrqch/6Oa4OpR3m/wpQjOWUllgfA6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR1201MB0105.namprd12.prod.outlook.com (2603:10b6:4:54::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Wed, 29 Jul
- 2020 17:16:52 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3216.034; Wed, 29 Jul 2020
- 17:16:52 +0000
-Date:   Wed, 29 Jul 2020 14:16:50 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Leon Romanovsky <leon@kernel.org>
-CC:     Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
-Subject: Re: [PATCH rdma-next 0/4] Fix bugs around RDMA CM destroying state
-Message-ID: <20200729171650.GA250741@nvidia.com>
-References: <20200723070707.1771101-1-leon@kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200723070707.1771101-1-leon@kernel.org>
-X-ClientProxiedBy: BL0PR0102CA0008.prod.exchangelabs.com
- (2603:10b6:207:18::21) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Wed, 29 Jul 2020 13:17:44 -0400
+Received: from mout.web.de ([212.227.15.3]:37071 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726365AbgG2RRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 13:17:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1596043020;
+        bh=RKOWU4KnTFnmgAVqc36bMgqqFzdhsWbGy0mCh3maaGE=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=NYB/oLSk3EpyoHBrmXfzACnYCjQDyLql4xaQJSExVErhR+wROKFxMgoMJ8DjP06oE
+         CwWhZ6jZr3Bi4sl5Ogh1bpy5Ztc0DIyGIv+Gob31nLdSXsRORAbph5w4RbOUY8+kxO
+         JzOmDGU5XhCM5LUzp0TQ4Bwb0tjAggxCpzmY061U=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.175.129]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LuMER-1kk5xz0Ptn-011fSy; Wed, 29
+ Jul 2020 19:17:00 +0200
+To:     Xin Xiong <xiongx18@fudan.edu.cn>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Chas Williams <3chas3@gmail.com>,
+        Yuan Zhang <yuanxzhang@fudan.edu.cn>
+Subject: Re: [PATCH] atm: Fix atm_dev reference count leaks in
+ atmtcp_remove_persistent()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <444f9cec-db06-c3b1-eadc-14b11260a4ec@web.de>
+Date:   Wed, 29 Jul 2020 19:16:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR0102CA0008.prod.exchangelabs.com (2603:10b6:207:18::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Wed, 29 Jul 2020 17:16:51 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k0phC-0013Ei-EK; Wed, 29 Jul 2020 14:16:50 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 765c17bf-944d-4560-9575-08d833e32f56
-X-MS-TrafficTypeDiagnostic: DM5PR1201MB0105:
-X-Microsoft-Antispam-PRVS: <DM5PR1201MB0105E54B43A9B2BC8B14D689C2700@DM5PR1201MB0105.namprd12.prod.outlook.com>
-X-MS-Exchange-Transport-Forked: True
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rhLP7qbqDfNqRFyhFoXVJQGZnTI18zDHTA63WCFvGuO+4bIZfj0uGtMK/dW8D4QGuwuC/yIDvptmbWtXetaT5tTaoMkmED5c8mjQYK7Xx6szhY8Mhcp3xeKIq3EkjfO1r4OUGOL3RSGmaO9rJ9w2qXeClnZeI7v3Whoq8sRgFXpVuAhWwUThKQxM2SKOchv7pbEmjJJTdvayLi35o6Q8deWOObtYcHbmY5lcX6nI40q385jsKIawPQXqRmI7gdK3gxaNP61o0zIzpBd2u/0AnZQb7D6iPxN9l9Znw3bRLpw3btgfLD3uTVdcbsY2JsZiSkgDyUL2oQKnM8K2N0ykpqPtB4/Zn9lY48iywKeuHtuIkJ5sFS1Gwbb75KWRRy/2
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(396003)(39860400002)(376002)(346002)(426003)(186003)(4326008)(66946007)(83380400001)(66476007)(66556008)(2616005)(8676002)(2906002)(33656002)(54906003)(4744005)(316002)(5660300002)(1076003)(86362001)(478600001)(9786002)(9746002)(6916009)(36756003)(26005)(8936002)(27376004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 6HRG6lwjFhMSVZe2hMrxK2JnO/votBAoT4qxbormVGQzelf1WX76VmdknncjdqpPQz7BjB48yvrQwMbfOBQLwbTRqY4vq+YH5mNoGXqOfx+Hhwba/Sb5iWRPhFoKRkYc+HdOrp9sMGjLV89Ik7auBNEim+FZ+r3RATs9rQB+h7Eqr/etX/LCt0YjBNgiYIHLr1AgIqX9rDfMr3RIHUzEweYmNcL+c2DWmm5sPEZJIImDz+MBimCVnaGdTmYgYQ9DV7Gs8TS1+ULTiZIzQ/4xz3TXAGTqHdYvOXn47JSVhHAU7dgXG4fggdR1EToR9wLPMBD3P08UHMaTqzPDNO3d5Ywm3ac/V5muBcbVMF4vquInFDnYVyHAaC/OhGO+c0VLrLtxgvNuQ45AdWOtrzmLjxCuX8TJcyS+c8QL2DMYFYVTsmrlFaooOelOG3vQtsDg/M89A1CcARpOL1JmIgb8jxPxPbt6R+W9iquuJ3yqH0kE33gBumMAGBThrrxYiNquQMqz29S2oVIPa89paz5Vxa4UcAgt5G5fbp0x0daesAqcfsFcnlzFlfyfEG9y1NPdK5Jdkw37YtPLHwDIwht8tMULtISYXtvCS0AcP4iQt1i5Fv4iErx9267PBABt4Q5sNpeGTUYvpfR5wisZ5WvCYQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 765c17bf-944d-4560-9575-08d833e32f56
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2020 17:16:52.0359
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WDnZJBIJh6qHKuSBWN7HnmqJq17ltvYeHuN8ML7S/e9NRdydvaHO+d5G3hn9InnX
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0105
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596043000; bh=W5Zbk7sYINEjXUBgX0oFptGT36ANoqiyy19yg+5ckns=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
-         X-MS-Exchange-Transport-Forked:X-MS-Oob-TLC-OOBClassifiers:
-         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=G236nRodlj1fdYrqMGpWfKJImjmzxLzZhIgQhQuKd3aRB4csJgfkCPMzR11VTjN3C
-         RllvgvqpTbJwHIPFw6Uuww2CrMDtgf++JIBPVhBm/stQ7OHvgj4uiQ3MR6f0TW3GeH
-         1MUOCdqHpFnk8S01sreP+tO/W4eVXslgQcfEZqbUmYkVFy4dbx53o+yfyRvIKxgM+g
-         JyfEo+VPkMAJfGW6aW6DjCqKg3+VoGKmZc1ia+zadIcygkmiP3GEnSymwBSQFMtDD8
-         JEUmlZJpN3KCf+LCdg2SGBLGk8TzmnH13K7rcP2ag+n/7HelHVFnenQxmovmDqXjGz
-         cyo/bwQBZ1FdQ==
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:DwWHRbDtrBGH1idtyQUY7BlxMNsJhg58nZahHAbWideycf9caWH
+ ww9N+Hgl1F8yvlQL4B/rh+rJJ2Ckb1PihTCpUFrDZ6tfhhuzlcz6WAIchm1ix15TH2HcgG5
+ wHG2huel/NW32+rFz2fkwiaJdak1xiLAokXpwTBKw9KkQTyJyUBUdKPG7SnzCKjmfBikHF3
+ KTtCjc7+5z+hUuejDqq9g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tX5pEz0tZi4=:0yRs8JcDOcmAuFK7pxzMgZ
+ 0kMV9V360etoBkV2bWLFoWEZTPYz3u+IhPGPCEugihkxFdV3+PqrjOE7oM/OLWmJGCJubmLSY
+ 7OMYiZ2MQvfY8MlJ3dnEU3PARuenT6ngmVrgMGJ2vxYa67tlqAGHS5KhqhtFq3agNIaHhGYRO
+ ajG78UDct+rlx7HNK/5WH0WWPJpss2k5GtGz/lZrQO3M1zxufY7Few7/RRZ2pJcDUR8cEidGe
+ 6TcSD3RvPI/6pdpcwPfu6B4p3GZJSITSCohiMZFzzhJKE3CNQcOJVhmw2GZ139JkeyHJlXP9M
+ kcIqTGW0T9Q+4IUr0XK8DBgvAIvP1im/ctHyV+Mimc2ummJapheFlZpCvFlIuwo5Tmm3xU9Xr
+ u9hrdnPqTS2jIK9TcJAG+j/cjRR0Q5xYmA9bltc65xrCbqu1qXFSP3mpuMajeSOqAFKroBPqS
+ C3f2lMvkk8h9QhgPtT28v7BtXXiluDiC1K8GCvF4cRsHTTRmw3bdJ0NS+7mpBZIXM1NwJgCV9
+ SgVlccfx3X0qJjQKTNyVO4zjH1C8Cso6OrzzzRI1tmUWOgcC2Qe0J1R7OpUow3Cr+Tg7l7Rld
+ BiE08lHqCZYFcBYZO00SVIQLCAfG2HzxIZ8qzyWS4i9Mo7vz1euzdDLr2PPWlLryMfIdBzlJy
+ T8KpWmi7pkG3cnuhq4n6TVkvKNYypxtwfXyF5UHGPICMu9zwQNZP8e5RclCRyRxSt7gsQsF3i
+ g0L1EPR+9BeqYpddk/fra9tC7F4ISqAXE0gBdP6U18t41SwOofSmBlxbUvRHP0n0L4oGwlo+K
+ 0chsRv7YXok2EQ70lhVl/vDlDlC5Je1Csq14fMTcif1xqV0jk5+TSUPpXpLkTQuYB80tZG8o5
+ bFL7OdGYzHqK0ZUaf7OVLgAcJYsgKnBrns7cbD7EIT7cbTjsv44XYAmgd11Yrm/HHqv/VKw5h
+ OonviGHwbhqqfE5unrbs8Ax7NUKv+g+ZpmDHBTjySElQwTHd4fOwgQpMpTF1x4juFeSnxN6Zv
+ dKF3Czf63ehsicHtjnuq0OPYbJw+q4THEbYzfuOxjvGQrEAEgfPAJXY3YP5c9kCYjXqLQmYYg
+ lCy6m5dIG2CMNF+rh9Ppbbu5VYac7yrcVlfD/haUtIvvTkTLBdjSo8BGT0O3j04wtzZjQwxBk
+ jkVlTE9l0EOSE79EsCtrDAoeX6moct9x4TxgZ1rGcm7Q6rnZUWNWIxzD5j6GAttBsp4mFnHkT
+ xjCBMYXxu5MI5PFlfXwttKAlDUooSfdRorvHMQQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 10:07:03AM +0300, Leon Romanovsky wrote:
+=E2=80=A6
+> The refcount leaks issues occur in two error handling paths.
 
-> This small series simplifies some of the RDMA CM state transitions
-> connected with DESTROYING states and in the process resolves a bug
-> discovered by syzkaller.
-> 
-> Thanks
-> 
-> Jason Gunthorpe (4):
->   RDMA/cma: Simplify DEVICE_REMOVAL for internal_id
->   RDMA/cma: Using the standard locking pattern when delivering the
->     removal event
->   RDMA/cma: Remove unneeded locking for req paths
->   RDMA/cma: Execute rdma_cm destruction from a handler properly
+Can it be nicer to use the term =E2=80=9Creference count=E2=80=9D for the =
+commit message?
 
-Applied to for-next
 
-Jason
+> Fix the issue by =E2=80=A6
+
+I suggest to replace this wording by the tag =E2=80=9CFixes=E2=80=9D.
+
+
+=E2=80=A6
+> +++ b/drivers/atm/atmtcp.c
+> @@ -433,9 +433,15 @@  static int atmtcp_remove_persistent(int itf)
+>  		return -EMEDIUMTYPE;
+>  	}
+>  	dev_data =3D PRIV(dev);
+> -	if (!dev_data->persist) return 0;
+> +	if (!dev_data->persist) {
+> +		atm_dev_put(dev);
+> +		return 0;
+> +	}
+=E2=80=A6
+
+I propose to add a jump target for the desired exception handling
+in this function implementation.
+
++	if (!dev_data->persist)
++		goto put_device;
+
+
+Regards,
+Markus
