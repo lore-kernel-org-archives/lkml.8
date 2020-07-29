@@ -2,204 +2,209 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8258CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1472C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56B622084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F4E206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wvW/rLi3"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ioB6S3hj";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="fi/wSoPm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgG2HJJ (ORCPT
+        id S1727789AbgG2HJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:09:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbgG2HJI (ORCPT
+        Wed, 29 Jul 2020 03:09:48 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:12136 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726299AbgG2HJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:09:08 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BDA1C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 00:09:08 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id l2so6136235pff.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 00:09:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2obqLjys8AeYSVhAJYGRsNrAjNS+DMczZ9/H7mL1HFo=;
-        b=wvW/rLi3izA2Xhmlvs6bxFF2t+hckjft3bkzJuxO8hAs5k1q5smDywONrcHFowXXxi
-         BkRXBVZGbAKp9KzowuitT+2FZdD7DKUHa+TYO/1MO5hCT5hKgJ+tWcdpn6QwfBWiGOll
-         1+sVz8iGFQ4TYrhUCaiAv9SUWUk1Lo1HBDh1XHHCuegSu44GcD46lOyBSbbjQvkiylbY
-         l6ksv4NfWTWR4j6hUX5JGViou692sRcvZup/gxwUF5ShFpzSmm2asK+7Zq5awvj2WrLL
-         wSvIURVcKP2mzrNf1OI7w/GXQs5zw4GHu3cef+K8Bg42Mp7pDKSqUnzsSF76o6rwFj4H
-         Osig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2obqLjys8AeYSVhAJYGRsNrAjNS+DMczZ9/H7mL1HFo=;
-        b=Hy2bLR7cxt/5QyHAeZpVlyTdUa8qjEBa7dRcHGly2ix+T1gBy7p/xJ4OH1FvGQ9tAy
-         17SRA5+3Xq0wVRH90kxrNgXrnhXxz8L/uoKpnBWV/vJkHucc1NTXBNmBoqUy8vma+emo
-         znixf5LT32IPeLwk5CHhRkdmSe/twJ2NCEJu1p7elrGtA4TCP/ivgxPRMpUsX/Tmefno
-         8vW7oy9225itwYNIfeWFPSBFbZeJkCnEeE/9K0b+2CDXemtvLVlOk0wjBJrT1lZ4G/hO
-         u4axSygHkSDu1rHqKi0NUXhgm5RwlH7jdEwJ+qwg4KTZTpWlKAlSxDLhnXpkCsiQ5dhe
-         669A==
-X-Gm-Message-State: AOAM533z5ZK0sYjmEwTAnO3+Y9TZqdNeg22DxA/vubpcda5ap0NLbJfG
-        ZCT8d9vRt02pGzvFYMV4UvwfDQ==
-X-Google-Smtp-Source: ABdhPJzBA6ghqqfikYLCUBQXKEqaYTg6w2z2pyFkR+M88VMWpZUPAcv/psv5HZVaJYNg9uk9UoKXvw==
-X-Received: by 2002:aa7:971d:: with SMTP id a29mr18617453pfg.308.1596006547727;
-        Wed, 29 Jul 2020 00:09:07 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id e124sm1075048pfe.176.2020.07.29.00.08.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jul 2020 00:09:07 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 15:08:55 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     "liwei (GF)" <liwei391@huawei.com>, Al Grant <Al.Grant@arm.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        zhangshaokun@hisilicon.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, guohanjun@huawei.com
-Subject: Re: [PATCH 1/4] drivers/perf: Add support for ARMv8.3-SPE
-Message-ID: <20200729070855.GG4343@leoy-ThinkPad-X240s>
-References: <20200724091607.41903-1-liwei391@huawei.com>
- <20200724091607.41903-2-liwei391@huawei.com>
- <20200728122742.GB4343@leoy-ThinkPad-X240s>
- <c2ce17a9-bd3a-e828-fe76-769c9feabece@huawei.com>
+        Wed, 29 Jul 2020 03:09:47 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06T71p4H031929;
+        Wed, 29 Jul 2020 00:09:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=GQ9p+7CKJq4s86DzvdOsdjyYjz4YWKx35qdNo3Dm7oo=;
+ b=ioB6S3hjt6dUzVlMbZ6NUdSnbdVAs00uXlAGO3V3TF7PcoJ+uEovmX5bUkSwLb9AhAxF
+ ScLwjF2IJ2CvXna5j5ecd6esp+PeOjjANpLLQ2hU1SQn/NCln/jOxl4tLaGLA8tebkHX
+ cqqtZ/7JW9rbg8xZ0Iq4gtCPvBNd7OB/AOo= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32jk9d4dcj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 29 Jul 2020 00:09:44 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 29 Jul 2020 00:09:43 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TaKDTvOwKo8aKA7suf84pfZd1ruUpNreHeDTDgkpKuGyxUuZnso02N35MSYUfBqgZbzkzk2GhIugUxoBVWWsnRg1bRpuUBg84gHs/MmWAFEXgSS3MdGQrZmgn8LWi5Q+Z+I4IRuA53ON/aQDFWsE4jPLgdw5/DkCN46xm2gf6gCWwMT1qNZqXiATNrGPi1y46+WP2eHYcI/xXGAF0TlkTgaSICdwb40FXqGogrdUQVF5zuD+87+jTa+EMPTWZduaxHxKnVYJBAjtvhP7T7Jag6IYonPoX37aAYEbvXjTwgwCsaKP6lTdZmtWvpsMrhWFQLzYpWMwNAHihh/lGEmzOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GQ9p+7CKJq4s86DzvdOsdjyYjz4YWKx35qdNo3Dm7oo=;
+ b=ijQZp1/LmSKtSgD1WQa4WboSlGnA8pnetTCM11XqFubS8mhqc1wdzBmMqgaTsjWIR+V4uB3OoTz/MVD/aCWzPC8K7Zwcl/4ZNgesblpbFxJLBLz2RrRvdRaZK0atHy0/2OIyWaMPkV07wqVoNAGUNt68O54FeU/4YpRuz4PKhCsnUAaD2TLA9Q2gyL+/dkIdC0CfTjkYzBaFsYi5MyNl2v1fJs+dPDk6IXL1YGhy1c5os/IHjP52GZHZ+95kdvUPa3jGv3RYWuEAL7X2+mN4OnO0f4unmj1vfrr2W4wifrRkJnaesYopprCz4Pzyk00OThcuwnxv3v8oZo+I/xBmoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GQ9p+7CKJq4s86DzvdOsdjyYjz4YWKx35qdNo3Dm7oo=;
+ b=fi/wSoPmPHf53fpxZhR27Gny8dWxHt5wW2XFOQjoe4en1XDFZOMOWyv2OUHFXYp5FiYpfPNuMN96yWo3SnRr9EJaHX02fmK93HX9nISHlVEIDll6ktdQbbPJDTeUFcN3+hpUloTH0UJxPb0nPv7NivWb7fjZS45EpfE+WIEHVFY=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+ by BYAPR15MB3205.namprd15.prod.outlook.com (2603:10b6:a03:104::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Wed, 29 Jul
+ 2020 07:09:42 +0000
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80]) by BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80%7]) with mapi id 15.20.3216.034; Wed, 29 Jul 2020
+ 07:09:42 +0000
+Subject: Re: BTF_KIND_FWD enums
+To:     Giuliano Procida <gprocida@google.com>
+CC:     <linux-kernel@vger.kernel.org>
+References: <CAGvU0H=AAPt0wSTh1dyb-aTnG9zeUY6U2uBkmi6K9Bvpuc9YAA@mail.gmail.com>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <9d9a48e0-844d-8ba4-b839-92cb1af622ee@fb.com>
+Date:   Wed, 29 Jul 2020 00:09:40 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
+In-Reply-To: <CAGvU0H=AAPt0wSTh1dyb-aTnG9zeUY6U2uBkmi6K9Bvpuc9YAA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY5PR03CA0029.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::39) To BYAPR15MB4088.namprd15.prod.outlook.com
+ (2603:10b6:a02:c3::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c2ce17a9-bd3a-e828-fe76-769c9feabece@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2620:10d:c085:21c1::1215] (2620:10d:c090:400::5:df59) by BY5PR03CA0029.namprd03.prod.outlook.com (2603:10b6:a03:1e0::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Wed, 29 Jul 2020 07:09:41 +0000
+X-Originating-IP: [2620:10d:c090:400::5:df59]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 66520013-0b11-4f15-b31f-08d8338e5d58
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3205:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB3205AA492CCA16DB98C97F63D3700@BYAPR15MB3205.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Mlz+4MaFWd4J51CNHhc95Scrlc+B6iufSrUcK5+ToUznKdT+NttmyTeAZfWvB8ESnjfK9nFCfnjon/PhAgtDFnTL3+hlsgvmQC0okaiINC6hPL1P41FOtjkp8d0dOmMEm3+GGvLUw3E7FUOJbP1nwvq0PIwjideZrqKs5uH1mICKLazb/zWM+BwNlC8RnI/GsR04IZ22j/xKb+JrqGQMuj1e/2XQau+ykBsq+QrlM+rzCNSCFiHS07N4S/rKzmSF+jF2H0Eoqu2lbCmE0kKnD3d8SGdo2sy2fnxoitG9KABpsLyr6AeZOvxKL987S6W75nF36vYSqzuwBwrVsQg7jltPZf2bLQst0ZJtffRR/4GPw8V3A5euit8DFy5P6DfVnGrhElYrXsJwlLx9LUKbxdCA6D0I0q1AFXfJfB3dF5Cb0uDqxjgK3D4vEY0NJL355esoWcnKuXEvt8NcdBer5A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(366004)(346002)(376002)(396003)(39860400002)(36756003)(2616005)(5660300002)(6916009)(316002)(31696002)(7116003)(52116002)(86362001)(966005)(6486002)(53546011)(478600001)(31686004)(2906002)(186003)(16526019)(83380400001)(8676002)(66946007)(66556008)(66476007)(4326008)(8936002)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 6/j+GaoV3/VdmSJpzhoT5/NjWfsbK4cUNsibGYdOOpIOhIKhjdAT2AIWr6NQ1Dvien7IdxPv8+6Nz3ECkVYfRKRc2tB0/YCdumUU3AnO+0JDiaS85BgGSg8EYefqe5ZddRza0u9WLxLpNjZRShRbQ04jUdBosnqHluqshHythnqYxi0BLpwkU+b1RgYbaO2W+JTT3xaEXCcQu2THsUtPJVEN3xAqiuCofCW9Sn97afMqPW/FrMsdCRFBWFHCiF8dhs10ob/kLMYrThhtab64HfZlRgvpojcpT4PN9r+rwQ6bdIDnWnJItcz3P2FxWUkTUmqkUARICVmIWJnbfnG2K1x6ua/NLcRQu9/AhYD3+qMY56hTj5wiDUwiZfkMNYo4OVtEiAtcx6/vijsWBqQqPS+ZeYT+fKZIHvIkaDDWF30uPFU0Rft8Mtn8hqgyIRA21l1bLDUJTrgCTv6BQkpgMqunlgauXXASJIWbKHyet+HYlZQjlACsYkHz0J3Y/jK8OTONV1l502J3vign1+GCvA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66520013-0b11-4f15-b31f-08d8338e5d58
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2020 07:09:42.0919
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sAOxUjX7cpBiojIe1exbNz1K3vCqVCvgtnIdeOidJadc9RwXB0bOp4/8do4CpHKn
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3205
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-29_03:2020-07-28,2020-07-29 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ clxscore=1011 impostorscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 priorityscore=1501 phishscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007290046
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 09:24:42PM +0800, liwei (GF) wrote:
 
-[...]
 
-> >> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> >> index e51ddb6d63ed..5ec7ee0c8fa1 100644
-> >> --- a/drivers/perf/arm_spe_pmu.c
-> >> +++ b/drivers/perf/arm_spe_pmu.c
-> >> @@ -54,7 +54,7 @@ struct arm_spe_pmu {
-> >>  	struct hlist_node			hotplug_node;
-> >>  
-> >>  	int					irq; /* PPI */
-> >> -
-> >> +	int					pmuver;
-> > 
-> > Since the version number is only 4 bits width, 'u16' would be enough
-> > to record SPE version number.
+On 7/28/20 1:56 PM, Giuliano Procida wrote:
+> Hi.
 > 
-> Sounds reasonable, i can change it to 'u16' if you insist.
+> Re: https://github.com/torvalds/linux/commit/9d5f9f701b1891466fb3dbb1806ad97716f95cc3
 > 
-> >>  	u16					min_period;
-> >>  	u16					counter_sz;
-> >>  
-> >> @@ -80,6 +80,15 @@ struct arm_spe_pmu {
-> >>  /* Keep track of our dynamic hotplug state */
-> >>  static enum cpuhp_state arm_spe_pmu_online;
-> >>  
-> >> +static u64 sys_pmsevfr_el1_mask[] = {
-> >> +	[ID_AA64DFR0_PMSVER_8_2] = GENMASK_ULL(63, 48) | GENMASK_ULL(31, 24) |
-> >> +		GENMASK_ULL(15, 12) | BIT_ULL(7) | BIT_ULL(5) | BIT_ULL(3) |
-> >> +		BIT_ULL(1),
-> >> +	[ID_AA64DFR0_PMSVER_8_3] = GENMASK_ULL(63, 48) | GENMASK_ULL(31, 24) |
-> >> +		GENMASK_ULL(18, 17) | GENMASK_ULL(15, 11) | BIT_ULL(7) |
-> >> +		BIT_ULL(5) | BIT_ULL(3) | BIT_ULL(1),
-> >> +};
-> > 
-> > Seems to me, the definitions for Aarch64 system registers should be
-> > placed into the file 'arch/arm64/include/asm/sysreg.h'.  Like below
-> > two macros:
-> > 
-> >   #define SYS_PMSEVFR_EL1_RES0_8_2		0x0000ffff00ff0f55UL
-> >   #define SYS_PMSEVFR_EL1_RES0_8_3		...
+> Both GCC and LLVM support forward-declared (a.k.a. incomplete) enums
+> as a language extension -
+> https://gcc.gnu.org/onlinedocs/gcc/Incomplete-Enums.html.
 > 
-> I really think using GENMASK_ULL() to generate the mask is better than a definition
-> with magic number. It is beneficial to be reviewed and extended later.
-
-Understand.  Here I just want to remind, you could see the ARMv8's
-system registers definition usually are placed into the global header
-sysreg.h rather than define them in separate source files.
-
-You could define the bit mask with GENMASK_ULL() for the two macros
-in sysreg.h.
-
-> > Let's wait for Will or Mark Rutland's comments for this, in case I
-> > mislead for this.
-> >> +
-> >>  enum arm_spe_pmu_buf_fault_action {
-> >>  	SPE_PMU_BUF_FAULT_ACT_SPURIOUS,
-> >>  	SPE_PMU_BUF_FAULT_ACT_FATAL,
-> >> @@ -670,7 +679,7 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
-> >>  	    !cpumask_test_cpu(event->cpu, &spe_pmu->supported_cpus))
-> >>  		return -ENOENT;
-> >>  
-> >> -	if (arm_spe_event_to_pmsevfr(event) & SYS_PMSEVFR_EL1_RES0)
-> >> +	if (arm_spe_event_to_pmsevfr(event) & ~sys_pmsevfr_el1_mask[spe_pmu->pmuver])
-> >>  		return -EOPNOTSUPP;
-> >>  
-> >>  	if (attr->exclude_idle)
-> >> @@ -937,6 +946,7 @@ static void __arm_spe_pmu_dev_probe(void *info)
-> >>  			fld, smp_processor_id());
-> >>  		return;
-> >>  	}
-> >> +	spe_pmu->pmuver = fld;
-> >>  
-> >>  	/* Read PMBIDR first to determine whether or not we have access */
-> >>  	reg = read_sysreg_s(SYS_PMBIDR_EL1);
-> >> @@ -1027,8 +1037,8 @@ static void __arm_spe_pmu_dev_probe(void *info)
-> >>  	}
-> >>  
-> >>  	dev_info(dev,
-> >> -		 "probed for CPUs %*pbl [max_record_sz %u, align %u, features 0x%llx]\n",
-> >> -		 cpumask_pr_args(&spe_pmu->supported_cpus),
-> >> +		 "v%d probed for CPUs %*pbl [max_record_sz %u, align %u, features 0x%llx]\n",
-> > 
-> > Let's output explict info, like:
-> > 
-> >   "probed for CPUs %*pbl [pmuver %d, max_record_sz %u, align %u, features 0x%llx]\n",
-> > 
+> (C++11 has a different notion of incomplete enum type - opaque enum
+> declaration - storage size is known but enumerators are not)
 > 
-> Agree, and i have a little question here:
-> Currently, the of_compatible of SPE PMU is "arm,statistical-profiling-extension-v1", and
-> the platform_device name is "arm,spe-v1". So this message looks weird when supporting
-> ARMv8.3-SPE because the pmuver is 2.
+> Forward-declared enums feature in various places in kernel code and
+> allow the usual things to be done (passing around pointers to such).
+> I'm curious as to if and how they are they are handled by BTF and
+> whether a further change to btf_type is needed:
+> 
+> 1. Use BTF_KIND_FWD, with another spare bit to allow up to 4 kinds of
+> forward-declaration; or
+> 2. use BTF_KIND_ENUM, kind_flag 0 and vlen 0 (as empty enums are
+> currently illegal C); or
 
-I think here we need to distinguish two things: SPE (as an IP) and
-ARMv8.2/ARMv8.3 (as CPU architectures).  From my understanding, now we
-are working on SPE-v1, but it needs to support ARMv8 variants, e.g.
-ARMv8.2 and ARMv8.3 with SVE extension.
+#2 above is the current way.
+-bash-4.4$ cat t.c
+enum H;
+enum H * func(enum H *arg) { return arg; }
+-bash-4.4$ clang -target bpf -S -g -O2 t.c 
 
-I am not the best person to clarify the version number for SPE, if Arm
-colleagues disagree with this, very welcome to correct me.
+-bash-4.4$
 
-Also loop in Al for this.
+The generated BTF enum type:
 
-> As the version of SPE can be probed by reading 'ID_AA64DFR0_EL1.PMSVer', can we remove
-> the version hint in of_compatible and platform_device name?
+         .long   1                               # BTF_KIND_ENUM(id = 2)
+         .long   100663296                       # 0x6000000
+         .long   0
 
-No, for device tree, usually we need to keep back compability for the
-DT binding, so we cannot remove compatible string.
+So vlen = 0 here indicates it is a forward declaration.
 
-Thanks,
-Leo
+> 3. use BTF_KIND_ENUM, kind_flag 1 and vlen 0.
+> 
+> If I had a working pahole -J, I'd test this myself. :-)
+> 
+> $ cat /tmp/en.c
+> enum H;
+> enum H * fun(enum H * x) { return x; }
+> $ clang -Wall -Wextra -ggdb -c /tmp/en.c
+> $ build/pahole -J /tmp/en.o
+> Segmentation fault
+> $ build/pahole -J /dev/null
+> btf_elf__new: cannot get elf header.
+> ctf__new: cannot get elf header.
+> Segmentation fault
+
+-bash-4.4$ cat t.c
+enum H;
+enum H * func(enum H *arg) { return arg; }
+-bash-4.4$ ~/work/pahole/build/pahole --version
+v1.17
+-bash-4.4$ clang -Wall -Wextra -ggdb -c t.c 
+
+-bash-4.4$ ~/work/pahole/build/pahole -JV t.o
+File t.o:
+[1] PTR (anon) type_id=2
+[2] ENUM H size=4 vlen=0
+[3] INT (anon) size=4 bit_offset=0 nr_bits=32 encoding=(none)
+[4] FUNC_PROTO (anon) return=1 args=(1 arg)
+[5] FUNC func type_id=4
+
+pahole also generates vlen=0 ENUM type to indicate it is a
+forward declaration.
+
+Maybe your pahole is too old?
+
+> 
+> My interest here is that I helped add support for incomplete enums to
+> libabigail which we're using to monitor kernel ABIs.
+> 
+> Regards,
+> Giuliano.
+> 
+> (resend due to email address typo)
+> 
