@@ -2,131 +2,105 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DC8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74F852074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6932074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:09:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="jdF86K/i"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="nBqrzgJc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbgG2KJV (ORCPT
+        id S1726774AbgG2KJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 06:09:21 -0400
-Received: from mail-eopbgr30095.outbound.protection.outlook.com ([40.107.3.95]:24843
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725851AbgG2KJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 06:09:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MDaDYmHuLijU0dCuQ5z84EaJGRaZd3l5ylMGPYmZtr0zNgCjAuVbCH1T89O2G7sufGYNxWZCX12zybDucGTYK0MZiJJPmKNnjR8jzKlyWsYPqjLxm9fdkX8JZEstOfysdPoFZAvuVyg9W1efQs5ndRPGlB5PXsT1mk8qMcAhZizo3Wu7j9WqtplXln6gdhTG6ZrfySIZ5TCis8jCI3wuTeTiPk3k5vkf+p8z5VYoZGgfzCzL+4VuGMndF2CkqQr987X4EGaxjR0N7uMs4ztcHKH1FlaNp5PQYfDcdXsd0gdJvxsnimePM43OhkRJKjBa+/mt1IwZYLZs5N+pJKbLVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L5i7/9Q7pu7PXRJhtVsbX0nC5kxlbm0EJB+i7bkPtWA=;
- b=Go4YdmdbQw60R3U+cMsFty7Fgj8duBSm2s6UcLT4FIRvcVYhRmR0xJEfqQGzrdU/RxmpCzbgGiE7HvmhNL+FN2WloV4JMjkfISUPzVbdLDE8k3sZuCf6vlLnPgt0Vy+sdKOT5ZyLWO261imh6gPAxiFPYQ/E9d69bZ9BNoC+zJHKYflE75ktsrfUGCBwQoo3dRvm7+3NrCgZhlxrYjV3WauWTZWUzzdVJHi0eM8oo133gus10kVM/c49lGkcV1EfbKrlCJyRWIXhcSpy+ScEubj4lzFEquX8xqo+yirUrmFOIcHXNhDgPBoN+rMNQkc9j1ly/3Jsm9M6VmZO9pqhSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 131.228.2.8) smtp.rcpttodomain=zeniv.linux.org.uk
- smtp.mailfrom=nokia-sbell.com; dmarc=pass (p=none sp=none pct=100)
- action=none header.from=nokia-sbell.com; dkim=none (message not signed);
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L5i7/9Q7pu7PXRJhtVsbX0nC5kxlbm0EJB+i7bkPtWA=;
- b=jdF86K/igusJKUgu7aqSxFsV54mWlVnp5caK+z6cxSMFVelVLYTzr2JwWEg6ZVTpOkJprz6lkbk14DQ2ozLFVlAO89ZLmGKxGgcN8iH7FQEnMFVrTOnFW5F/JWDAQfzqs4wofPpfFQQdpt026+g/OM+gg9J7vyexqgyb2PsCs+I=
-Received: from DB6PR07CA0049.eurprd07.prod.outlook.com (2603:10a6:6:2a::11) by
- VI1PR0701MB2192.eurprd07.prod.outlook.com (2603:10a6:800:31::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9; Wed, 29 Jul
- 2020 10:09:12 +0000
-Received: from DB5EUR03FT009.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:6:2a:cafe::4a) by DB6PR07CA0049.outlook.office365.com
- (2603:10a6:6:2a::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9 via Frontend
- Transport; Wed, 29 Jul 2020 10:09:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 131.228.2.8)
- smtp.mailfrom=nokia-sbell.com; zeniv.linux.org.uk; dkim=none (message not
- signed) header.d=none;zeniv.linux.org.uk; dmarc=pass action=none
- header.from=nokia-sbell.com;
-Received-SPF: Pass (protection.outlook.com: domain of nokia-sbell.com
- designates 131.228.2.8 as permitted sender) receiver=protection.outlook.com;
- client-ip=131.228.2.8; helo=fihe3nok0734.emea.nsn-net.net;
-Received: from fihe3nok0734.emea.nsn-net.net (131.228.2.8) by
- DB5EUR03FT009.mail.protection.outlook.com (10.152.20.117) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3216.10 via Frontend Transport; Wed, 29 Jul 2020 10:09:12 +0000
-Received: from hzling02.china.nsn-net.net (hzling02.china.nsn-net.net [10.159.215.126])
-        by fihe3nok0734.emea.nsn-net.net (GMO) with ESMTP id 06TA9AHE005064;
-        Wed, 29 Jul 2020 10:09:10 GMT
-Received: by hzling02.china.nsn-net.net (Postfix, from userid 61462992)
-        id 753F54849; Wed, 29 Jul 2020 18:09:08 +0800 (CST)
-Date:   Wed, 29 Jul 2020 18:09:08 +0800
-From:   Libing Zhou <libing.zhou@nokia-sbell.com>
-To:     viro@zeniv.linux.org.uk, dhowells@redhat.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] ROMFS: support inode blocks calculation
-Message-ID: <20200729100908.GA25571@hzling02.china.nsn-net.net>
+        Wed, 29 Jul 2020 06:09:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgG2KJo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 06:09:44 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F49DC061794;
+        Wed, 29 Jul 2020 03:09:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9VLx7XLhsIIS2PJl5PxWQxoij3g76m8f2RROcdU7zfY=; b=nBqrzgJcR0aO5Ce+T9pbh2c+X
+        zmV1XVvZcxiZuLzb5NfQ5GmuOVFw3ZDqxFC4g52+HZcnS65k/aF2cN8bQtqLiSvwsQB/B3xDD99hh
+        uUngJ6Zu9LOZRYpGlpgO7Zu37AmiI4f5eVlHfHYwdfTxlnRkJTIX/oS4cMCWq7BtnXg+/xpKjR11U
+        FoGZ+7vdbG1cNWWjiWHXcSkDHHaZMhVgGm7afAKoVapHXmt6vM2iWpTcy00IVthd2kGuX/qd1n4Lc
+        CgXcpA31KbQLEubPjhEhg08unOPdlqjGNzH1j632ODkfrOqAGEX50vfRDdE1QKyt0VM7qGlJ2YuNl
+        vnHNTr4AA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45634)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1k0j1o-0005H2-Va; Wed, 29 Jul 2020 11:09:41 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1k0j1o-0005bG-GN; Wed, 29 Jul 2020 11:09:40 +0100
+Date:   Wed, 29 Jul 2020 11:09:40 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] net: mvneta: fix comment about
+ phylink_speed_down
+Message-ID: <20200729100940.GY1551@shell.armlinux.org.uk>
+References: <20200729174909.276590fb@xhacker.debian>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d6ffc777-bfde-407a-e784-08d833a77146
-X-MS-TrafficTypeDiagnostic: VI1PR0701MB2192:
-X-Microsoft-Antispam-PRVS: <VI1PR0701MB21926F9ACE91ABE37A888564AF700@VI1PR0701MB2192.eurprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vlMM8nvGNUawu7PLlkiGn3QEWB11UbpURIp8StChZPQvgEWIm+pplvae3ZuBxiLkHmWbS2FnmY8Bq3hez5FWN+QxaJeVVqpNySjt5tdQY0XQoIl4Y7dFV8MAvjjkzOPbf/37DgmSR7rmcmnDciJaYIR55PqnBaRmrIRzOllKiKvK5Z8WBPUxRi5nBERwGbwoEXntZrOIyRJMeu8cXGCcV2T77A21FVQu8ySBzW6d9ausdloGg20MfZOPV+ZWLdOjHsswsZAGs5qEVuLunglXkNpXotygEyyonVk2tsom1e9FKw5qeIpUMkf30gZr5vV8Tkph+3k2PODSfyb8sIYwYPoB0gITgZaRLnsGOK9X9eJ/QMDPmVifv8WJ9WRiLAoYXBjvNtVHXd1iUkpHDJj2Kg==
-X-Forefront-Antispam-Report: CIP:131.228.2.8;CTRY:FI;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:fihe3nok0734.emea.nsn-net.net;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(346002)(136003)(39860400002)(46966005)(316002)(8676002)(42186006)(8936002)(81166007)(356005)(70586007)(186003)(82310400002)(82740400003)(26005)(70206006)(33656002)(47076004)(6266002)(4326008)(478600001)(9686003)(336012)(44832011)(83380400001)(86362001)(4744005)(5660300002)(1076003)(2906002);DIR:OUT;SFP:1102;
-X-OriginatorOrg: nokia-sbell.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2020 10:09:12.5052
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6ffc777-bfde-407a-e784-08d833a77146
-X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5d471751-9675-428d-917b-70f44f9630b0;Ip=[131.228.2.8];Helo=[fihe3nok0734.emea.nsn-net.net]
-X-MS-Exchange-CrossTenant-AuthSource: DB5EUR03FT009.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0701MB2192
+In-Reply-To: <20200729174909.276590fb@xhacker.debian>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When use 'stat' tool to display file status, the 'Blocks' field
-always in '0', this is not good for tool 'du'(e.g.: busybox 'du'),
-it always output '0' size for the files under ROMFS since such
-tool calculates number of 512B Blocks.
+On Wed, Jul 29, 2020 at 05:49:09PM +0800, Jisheng Zhang wrote:
+> mvneta has switched to phylink, so the comment should look
+> like "We may have called phylink_speed_down before".
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-This patch calculates approx. number of 512B blocks based on inode
-size.
+Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-Signed-off-by: Libing Zhou <libing.zhou@nokia-sbell.com>
----
- fs/romfs/super.c | 1 +
- 1 file changed, 1 insertion(+)
+> ---
+> Since v1:
+>   - drop patch2 which tries to avoid link flapping when changing mtu
+>     I need more time on the change mtu refactoring.
+> 
+>  drivers/net/ethernet/marvell/mvneta.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+> index 2c9277e73cef..c9b6b0f85bb0 100644
+> --- a/drivers/net/ethernet/marvell/mvneta.c
+> +++ b/drivers/net/ethernet/marvell/mvneta.c
+> @@ -3637,7 +3637,7 @@ static void mvneta_start_dev(struct mvneta_port *pp)
+>  
+>  	phylink_start(pp->phylink);
+>  
+> -	/* We may have called phy_speed_down before */
+> +	/* We may have called phylink_speed_down before */
+>  	phylink_speed_up(pp->phylink);
+>  
+>  	netif_tx_start_all_queues(pp->dev);
+> -- 
+> 2.28.0.rc0
+> 
+> 
 
-diff --git a/fs/romfs/super.c b/fs/romfs/super.c
-index e582d001f792..b1b7d3f5752f 100644
---- a/fs/romfs/super.c
-+++ b/fs/romfs/super.c
-@@ -356,6 +356,7 @@ static struct inode *romfs_iget(struct super_block *sb, unsigned long pos)
- 	}
- 
- 	i->i_mode = mode;
-+	i->i_blocks = (i->i_size + 511) >> 9;
- 
- 	unlock_new_inode(i);
- 	return i;
 -- 
-2.22.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
