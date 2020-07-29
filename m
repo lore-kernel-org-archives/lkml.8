@@ -2,87 +2,179 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5907DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743A0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A83D2075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:13:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596042794;
-	bh=U9yK4rA4vnyNSuuZ06mgk4pcxLrfq9iISSpo/ulIYuc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=R2edp9d3KdXk24gXBKdvHtrLrC/Iyq1BjYjw9MAAL0mUKWvvIHeoJjkPlAWK4GdGq
-	 Cu7pHW04b3Sky502F6SSLqZTJ1TBnWuxbLzlRCr4Jl37MJgyvM9czMmBeEZqujoMuX
-	 AaQ6B4ZKipv8aKDEzV9WTBeyYUmFwTniKHJLEtVs=
+	by mail.kernel.org (Postfix) with ESMTP id 4C4242075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:15:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jBYsPjh/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgG2RNM (ORCPT
+        id S1726814AbgG2RPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:13:12 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:40635 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2RNL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 13:13:11 -0400
-Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 06THCgws019450;
-        Thu, 30 Jul 2020 02:12:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 06THCgws019450
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1596042763;
-        bh=lk0I/Dg28bXoBBt4r0Lfq8tN0wHrQnDacMX36px4Pkc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YosVqdP/+0GpnsdGPeZerw1+Fd13ETNid8Yt6CEnTzoznrCJcttVAC9Mm4tVnfqJB
-         xs8IBbKl9x7xgszsB5ERLqHHTy5eHHN/AzJHE0jgK45ObANXPOq1x5/3lKJdsErdxx
-         BbjEoGv3L9DzsFm22cQyy/Hj5ANEQ9RH6DaF5JH/Q/QGf5A044DUngPtZCQFwhull6
-         IH5PO9/PdhX9i9oSoyrQmRDB/tE2+r13YsQYsAVG200b2G4M10WAenRM5P6WjKzT5m
-         mHJr3i5SG6QQmeoEIFdiqxcT6qb3XCObKEmTSQZ+GB9tuIdAHAVy0zWTfSY3X1Y/qa
-         ZIS+qD3SrBGRQ==
-X-Nifty-SrcIP: [126.25.67.101]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kconfig: qconf: remove "goBack" debug message
-Date:   Thu, 30 Jul 2020 02:12:40 +0900
-Message-Id: <20200729171240.163494-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Wed, 29 Jul 2020 13:15:52 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:11007 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726336AbgG2RPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 13:15:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596042950; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=1cULKMzNtdk8DlQ9NLAgOegKaEdRUEW58bZV9Y9kTSc=; b=jBYsPjh/V49y9MHGkn7YrN+QjnZU0yaOSPLXjgLN+ys1Ow3yNNycr+uHAdYmsmk4qwb3t3gk
+ t3ZddpdBiJcA1t3qw218S8sudKOvR7KStHGYunr7eUd22oscbonjlqxKEEHVhYm9ORnIT9go
+ MxJCyZk5pUgYwSNzfNNl0Aag72g=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5f21aebbca55a5604c5ca829 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 17:15:39
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4E897C433CA; Wed, 29 Jul 2020 17:15:38 +0000 (UTC)
+Received: from [192.168.1.179] (cpe-76-167-231-33.san.res.rr.com [76.167.231.33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: eberman)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8D07DC433C9;
+        Wed, 29 Jul 2020 17:15:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8D07DC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
+Subject: Re: [PATCH 1/2] firmware: qcom_scm: Add memory protect virtual
+ address ranges
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <20200709115829.8194-1-stanimir.varbanov@linaro.org>
+ <20200709115829.8194-2-stanimir.varbanov@linaro.org>
+ <33a63665-2f75-1b58-8a0c-3b0a8979fb85@linaro.org>
+From:   Elliot Berman <eberman@codeaurora.org>
+Message-ID: <46632fb9-e07e-fa40-5f13-fb45b4014e03@codeaurora.org>
+Date:   Wed, 29 Jul 2020 10:15:36 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <33a63665-2f75-1b58-8a0c-3b0a8979fb85@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Every time the goback icon is clicked, the annoying message "goBack"
-is displayed on the console.
+++
 
-I guess this line is the left-over debug code of commit af737b4defe1
-("kconfig: qconf: simplify the goBack() logic").
+On 7/24/2020 8:04 AM, Stanimir Varbanov wrote:
+> Hi,
+> 
+> Gentle ping for review.
+> 
+> On 7/9/20 2:58 PM, Stanimir Varbanov wrote:
+>> This adds a new SCM memprotect command to set virtual address ranges.
+>>
+>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>> ---
+>>  drivers/firmware/qcom_scm.c | 24 ++++++++++++++++++++++++
+>>  drivers/firmware/qcom_scm.h |  1 +
+>>  include/linux/qcom_scm.h    |  8 +++++++-
+>>  3 files changed, 32 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+>> index 0e7233a20f34..a73870255c2e 100644
+>> --- a/drivers/firmware/qcom_scm.c
+>> +++ b/drivers/firmware/qcom_scm.c
+>> @@ -864,6 +864,30 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+>>  }
+>>  EXPORT_SYMBOL(qcom_scm_assign_mem);
+>>  
+>> +int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+>> +				   u32 cp_nonpixel_start,
+>> +				   u32 cp_nonpixel_size)
+>> +{
+>> +	int ret;
+>> +	struct qcom_scm_desc desc = {
+>> +		.svc = QCOM_SCM_SVC_MP,
+>> +		.cmd = QCOM_SCM_MP_VIDEO_VAR,
+>> +		.arginfo = QCOM_SCM_ARGS(4, QCOM_SCM_VAL, QCOM_SCM_VAL,
+>> +					 QCOM_SCM_VAL, QCOM_SCM_VAL),
+>> +		.args[0] = cp_start,
+>> +		.args[1] = cp_size,
+>> +		.args[2] = cp_nonpixel_start,
+>> +		.args[3] = cp_nonpixel_size,
+>> +		.owner = ARM_SMCCC_OWNER_SIP,
+>> +	};
+>> +	struct qcom_scm_res res;
+>> +
+>> +	ret = qcom_scm_call(__scm->dev, &desc, &res);
+>> +
+>> +	return ret ? : res.result[0];
+>> +}
+>> +EXPORT_SYMBOL(qcom_scm_mem_protect_video_var);
+>> +
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+Small nit, can you bump the function above assign_mem? It would keep order aligned with
+the macros in qcom_scm.h
 
- scripts/kconfig/qconf.cc | 1 -
- 1 file changed, 1 deletion(-)
+>>  /**
+>>   * qcom_scm_ocmem_lock_available() - is OCMEM lock/unlock interface available
+>>   */
+>> diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+>> index d9ed670da222..14da834ac593 100644
+>> --- a/drivers/firmware/qcom_scm.h
+>> +++ b/drivers/firmware/qcom_scm.h
+>> @@ -97,6 +97,7 @@ extern int scm_legacy_call(struct device *dev, const struct qcom_scm_desc *desc,
+>>  #define QCOM_SCM_MP_RESTORE_SEC_CFG		0x02
+>>  #define QCOM_SCM_MP_IOMMU_SECURE_PTBL_SIZE	0x03
+>>  #define QCOM_SCM_MP_IOMMU_SECURE_PTBL_INIT	0x04
+>> +#define QCOM_SCM_MP_VIDEO_VAR			0x08
+>>  #define QCOM_SCM_MP_ASSIGN			0x16
+>>  
+>>  #define QCOM_SCM_SVC_OCMEM		0x0f
+>> diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
+>> index 3d6a24697761..19b5188d17f4 100644
+>> --- a/include/linux/qcom_scm.h
+>> +++ b/include/linux/qcom_scm.h
+>> @@ -81,7 +81,9 @@ extern int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+>>  			       unsigned int *src,
+>>  			       const struct qcom_scm_vmperm *newvm,
+>>  			       unsigned int dest_cnt);
+>> -
+>> +extern int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+>> +					  u32 cp_nonpixel_start,
+>> +					  u32 cp_nonpixel_size);
 
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 006e7493306c..1c61c768b99e 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -1735,7 +1735,6 @@ void ConfigMainWindow::listFocusChanged(void)
- 
- void ConfigMainWindow::goBack(void)
- {
--qInfo() << __FUNCTION__;
- 	if (configList->rootEntry == &rootmenu)
- 		return;
- 
+Same here.
+
+>>  extern bool qcom_scm_ocmem_lock_available(void);
+>>  extern int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
+>>  			       u32 size, u32 mode);
+>> @@ -131,6 +133,10 @@ static inline int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare)
+>>  static inline int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+>>  		unsigned int *src, const struct qcom_scm_vmperm *newvm,
+>>  		unsigned int dest_cnt) { return -ENODEV; }
+>> +extern inline int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+>> +						 u32 cp_nonpixel_start,
+>> +						 u32 cp_nonpixel_size)
+>> +		{ return -ENODEV; }
+
+Same here.
+
+>>  
+>>  static inline bool qcom_scm_ocmem_lock_available(void) { return false; }
+>>  static inline int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
+>>
+> 
+
 -- 
-2.25.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
