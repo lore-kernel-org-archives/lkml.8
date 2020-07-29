@@ -2,264 +2,190 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64C4C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFB9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 935882053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:15:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596050153;
-	bh=zbHTicE/c9neTc8f6wwtdhkgsPiRJ2V21XdJuKaX+h8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WzHZt1GZseo+RKSfoo4HQjHxz3PGVXsJ6nSnednaxvflxj9yQAoHaSra6ZifnEerv
-	 JSsrdHXewC8JPm5owcBF7LFlDLw5cdnItkOgG8QGmEzpV7IxhpJRq+UUS+nkSCqpJC
-	 YJwhd3sE/taN7PZnIq+48b1LEzrmxvD47Nhv/1vg=
+	by mail.kernel.org (Postfix) with ESMTP id 6A8642053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:16:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="SmB7UulX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgG2TPw convert rfc822-to-8bit (ORCPT
+        id S1726773AbgG2TQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 15:15:52 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:39930 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbgG2TPv (ORCPT
+        Wed, 29 Jul 2020 15:16:39 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:53290 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgG2TQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 15:15:51 -0400
-Received: by mail-ej1-f67.google.com with SMTP id f24so4991616ejx.6;
-        Wed, 29 Jul 2020 12:15:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=QZvLyh/VTiAroCKTHFmeviwTx1lu+DKij2yBWYhIrcw=;
-        b=G9bggxMB1xUmuQebRKNSKXFkdL466vZOuAuEv+NRzyFQapAr7eu5N1nW4TKq4WfIIs
-         rHILIs3vsdndInHTsiccxM7m8eu/iS7CMvn/r3CjG7HqdVl6NPxXC4jyduqvEaekGnMW
-         rXznwJCsmvgYpB4wT6DyzfLnB0N3bNHWOvtkJfKNrYzeq58RuLJ6GOiJMgHdXUjf0ous
-         R2nZKDQR6hRaLjuBA1rHUX++bL2PZLbhCpsCcI7uRVPPtpYUcwi1c0iRhRjZ741KgtHu
-         VrsoDBKr6rvZu7ewxejxtiX8/Rs7QUwni52qBaO8+wbyl1Ja1Zr2XRLztE1PorMxaxsQ
-         yPcw==
-X-Gm-Message-State: AOAM531POhmbcCzQ5Y97K891zHxvuIUMtd1Sz9mQ2waT7a0rofqg0jhY
-        61jg3YWmCBODTrxjnOrX5gw=
-X-Google-Smtp-Source: ABdhPJxbsPHi+l7rio/Z0goWffH1GbVr5+PSMaXjywPWSYEaxGui4MiOyNpWy06XsJSiPrUEKZdNFQ==
-X-Received: by 2002:a17:906:264d:: with SMTP id i13mr7219416ejc.284.1596050148541;
-        Wed, 29 Jul 2020 12:15:48 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id m12sm1550383edv.94.2020.07.29.12.15.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jul 2020 12:15:47 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 21:15:44 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tomasz Figa <tomasz.figa@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Kukjin Kim <kgene@kernel.org>,
-        Vincent Sanders <vince@simtec.co.uk>,
-        Simtec Linux Team <linux@simtec.co.uk>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        patches@opensource.cirrus.com,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org,
-        Sergio Prado <sergio.prado@e-labworks.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Cedric Roux <sed@free.fr>, Lihua Yao <ylhuajnu@outlook.com>
-Subject: Re: [PATCH 6/7] ARM: s3c64xx: Switch to generic watchdog driver reset
-Message-ID: <20200729191544.GB5822@kozik-lap>
-References: <20200729160942.28867-1-krzk@kernel.org>
- <20200729160942.28867-7-krzk@kernel.org>
- <CA+Ln22F_PaEMNyEg4XSR0PXHTa+3dQyEvzgtnRNHMu61uZytQg@mail.gmail.com>
+        Wed, 29 Jul 2020 15:16:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=DMu/9cwtHmi0bix+JDlgrcS0fN7h/PuWcrGpUj9X+KI=; b=SmB7UulXmX8eWXCcTcGcEqgK70
+        7ZRvPLKAbaAmUq6OCoufsd7b4Z3BNjxqSiPIx9de+Gt3qGhK8O/nN6S0jJUVvkQoRZbOVMCDavoXy
+        51z1uz7oLa1tX4P0NZRXYJn3O5eb8lepOBB1OuSiC2eBqYNIXYNFHNaL7E+XuEPWd1F71cdwfDqlH
+        zUrZtKvJ2dlY7W9em0MgkSrvpAfPshaSXLGNoftFRozjiSrFi2EhYnLVNLl40ZnyagxrcAzd+0pjI
+        3nUsyggzIbGsLicD6HtMPnAsHYRWeJ/qft9rWRfltVIjisHmo2req3bPjVsz3b6WCpXFcE/jHrEtZ
+        YKm2Q7Xg==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1k0rZ6-0007cQ-Ke; Wed, 29 Jul 2020 13:16:37 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1k0rZ3-0001FC-94; Wed, 29 Jul 2020 13:16:33 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, Keith Busch <kbusch@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <keith.busch@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Hannes Reinecke <hare@suse.de>,
+        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier.gonz@samsung.com>,
+        Daniel Wagner <dwagner@suse.de>,
+        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <matias.bjorling@wdc.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Wed, 29 Jul 2020 13:16:28 -0600
+Message-Id: <20200729191628.4741-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <CA+Ln22F_PaEMNyEg4XSR0PXHTa+3dQyEvzgtnRNHMu61uZytQg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me, axboe@kernel.dk, martin.petersen@oracle.com, javier.gonz@samsung.com, hare@suse.de, dwagner@suse.de, keith.busch@wdc.com, johannes.thumshirn@wdc.com, matias.bjorling@wdc.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH] nvme: Use spin_lock_irqsave() when taking the ctrl->lock
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 07:33:33PM +0200, Tomasz Figa wrote:
-> Hi Krzysztof,
-> 
-> 2020年7月29日(水) 18:11 Krzysztof Kozlowski <krzk@kernel.org>:
-> >
-> > Similarly to commit f6361c6b3880 ("ARM: S3C24XX: remove separate restart
-> > code"), the platform watchdog reset code can be removed in favor of
-> > a generic watchdog driver which already handles reset.
-> >
-> > This allows removal of a bunch of machine code and fixes also W=1
-> > compile warnings:
-> >
-> >     arch/arm/plat-samsung/watchdog-reset.c:29:6: warning: no previous prototype for 'samsung_wdt_reset' [-Wmissing-prototypes]
-> >        29 | void samsung_wdt_reset(void)
-> >           |      ^~~~~~~~~~~~~~~~~
-> >     arch/arm/plat-samsung/watchdog-reset.c:69:13: warning: no previous prototype for 'samsung_wdt_reset_of_init' [-Wmissing-prototypes]
-> >        69 | void __init samsung_wdt_reset_of_init(void)
-> >           |             ^~~~~~~~~~~~~~~~~~~~~~~~~
-> >     arch/arm/plat-samsung/watchdog-reset.c:89:13: warning: no previous prototype for 'samsung_wdt_reset_init' [-Wmissing-prototypes]
-> >        89 | void __init samsung_wdt_reset_init(void __iomem *base)
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  arch/arm/mach-s3c64xx/Kconfig           |  3 +-
-> >  arch/arm/mach-s3c64xx/common.c          | 15 +---
-> >  arch/arm/mach-s3c64xx/common.h          |  2 -
-> >  arch/arm/mach-s3c64xx/mach-anw6410.c    |  1 -
-> >  arch/arm/mach-s3c64xx/mach-crag6410.c   |  1 -
-> >  arch/arm/mach-s3c64xx/mach-hmt.c        |  1 -
-> >  arch/arm/mach-s3c64xx/mach-mini6410.c   |  1 -
-> >  arch/arm/mach-s3c64xx/mach-ncp.c        |  1 -
-> >  arch/arm/mach-s3c64xx/mach-real6410.c   |  1 -
-> >  arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c | 17 -----
-> >  arch/arm/mach-s3c64xx/mach-smartq5.c    |  1 -
-> >  arch/arm/mach-s3c64xx/mach-smartq7.c    |  1 -
-> >  arch/arm/mach-s3c64xx/mach-smdk6400.c   |  1 -
-> >  arch/arm/mach-s3c64xx/mach-smdk6410.c   |  1 -
-> >  arch/arm/mach-s3c64xx/watchdog-reset.h  | 16 -----
-> >  arch/arm/plat-samsung/Kconfig           |  6 --
-> >  arch/arm/plat-samsung/Makefile          |  1 -
-> >  arch/arm/plat-samsung/watchdog-reset.c  | 93 -------------------------
-> >  18 files changed, 5 insertions(+), 158 deletions(-)
-> >  delete mode 100644 arch/arm/mach-s3c64xx/watchdog-reset.h
-> >  delete mode 100644 arch/arm/plat-samsung/watchdog-reset.c
-> >
-> 
-> Thanks for the patch! Please see my comments inline.
-> 
-> > diff --git a/arch/arm/mach-s3c64xx/Kconfig b/arch/arm/mach-s3c64xx/Kconfig
-> > index e208c2b48853..f3fcb570edf5 100644
-> > --- a/arch/arm/mach-s3c64xx/Kconfig
-> > +++ b/arch/arm/mach-s3c64xx/Kconfig
-> > @@ -18,9 +18,10 @@ menuconfig ARCH_S3C64XX
-> >         select PM_GENERIC_DOMAINS if PM
-> >         select S3C_DEV_NAND if ATAGS
-> >         select S3C_GPIO_TRACK if ATAGS
-> > +       select S3C2410_WATCHDOG
-> >         select SAMSUNG_ATAGS if ATAGS
-> >         select SAMSUNG_WAKEMASK if PM
-> > -       select SAMSUNG_WDT_RESET
-> > +       select WATCHDOG
-> >         help
-> >           Samsung S3C64XX series based systems
-> >
-> > diff --git a/arch/arm/mach-s3c64xx/common.c b/arch/arm/mach-s3c64xx/common.c
-> > index a655bf0c7802..42e96d196f61 100644
-> > --- a/arch/arm/mach-s3c64xx/common.c
-> > +++ b/arch/arm/mach-s3c64xx/common.c
-> > @@ -50,7 +50,6 @@
-> >
-> >  #include "common.h"
-> >  #include "irq-uart.h"
-> > -#include "watchdog-reset.h"
-> >
-> >  /* External clock frequency */
-> >  static unsigned long xtal_f __ro_after_init = 12000000;
-> > @@ -232,10 +231,11 @@ void __init s3c64xx_init_irq(u32 vic0_valid, u32 vic1_valid)
-> >         /*
-> >          * FIXME: there is no better place to put this at the moment
-> >          * (s3c64xx_clk_init needs ioremap and must happen before init_time
-> > -        * samsung_wdt_reset_init needs clocks)
-> > +        * samsung_wdt_reset_init needs clocks).  However
-> > +        * samsung_wdt_reset_init() was removed in favor of watchdog driver
-> > +        * so this should be revised.
-> 
-> This leaves the comment referring to an inexistent function.
+When locking the ctrl->lock spinlock IRQs need to be disabled to avoid a
+dead lock. The new spin_lock() calls recently added produce the
+following lockdep warning when running the blktest nvme/003:
 
-Yes, I left it as a reference/reason. Although might be quite confusing
-now...
+    ================================
+    WARNING: inconsistent lock state
+    --------------------------------
+    inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+    ksoftirqd/2/22 [HC0[0]:SC1[1]:HE0:SE0] takes:
+    ffff888276a8c4c0 (&ctrl->lock){+.?.}-{2:2}, at: nvme_keep_alive_end_io+0x50/0xc0
+    {SOFTIRQ-ON-W} state was registered at:
+      lock_acquire+0x164/0x500
+      _raw_spin_lock+0x28/0x40
+      nvme_get_effects_log+0x37/0x1c0
+      nvme_init_identify+0x9e4/0x14f0
+      nvme_reset_work+0xadd/0x2360
+      process_one_work+0x66b/0xb70
+      worker_thread+0x6e/0x6c0
+      kthread+0x1e7/0x210
+      ret_from_fork+0x22/0x30
+    irq event stamp: 1449221
+    hardirqs last  enabled at (1449220): [<ffffffff81c58e69>] ktime_get+0xf9/0x140
+    hardirqs last disabled at (1449221): [<ffffffff83129665>] _raw_spin_lock_irqsave+0x25/0x60
+    softirqs last  enabled at (1449210): [<ffffffff83400447>] __do_softirq+0x447/0x595
+    softirqs last disabled at (1449215): [<ffffffff81b489b5>] run_ksoftirqd+0x35/0x50
 
-> 
-> I wonder if this being here is actually a problem at all. It's legacy
-> code and probably there isn't much value in reshuffling it further.
-> Rather than that, we would probably want to make sure that everything
-> migrated to DT and just drop the board files.
+    other info that might help us debug this:
+     Possible unsafe locking scenario:
 
-Maybe let's remove the FIXME and leave the clock init. Since all these
-times no one fixed the FIXME, so now with limited hardware access I do
-not expect any movements here.
+           CPU0
+           ----
+      lock(&ctrl->lock);
+      <Interrupt>
+        lock(&ctrl->lock);
 
-> 
-> >          */
-> >         s3c64xx_clk_init(NULL, xtal_f, xusbxti_f, soc_is_s3c6400(), S3C_VA_SYS);
-> > -       samsung_wdt_reset_init(S3C_VA_WATCHDOG);
-> >
-> >         printk(KERN_DEBUG "%s: initialising interrupts\n", __func__);
-> >
-> > @@ -429,12 +429,3 @@ static int __init s3c64xx_init_irq_eint(void)
-> >         return 0;
-> >  }
-> >  arch_initcall(s3c64xx_init_irq_eint);
-> > -
-> > -void s3c64xx_restart(enum reboot_mode mode, const char *cmd)
-> > -{
-> > -       if (mode != REBOOT_SOFT)
-> > -               samsung_wdt_reset();
-> > -
-> > -       /* if all else fails, or mode was for soft, jump to 0 */
-> > -       soft_restart(0);
-> 
-> Does this remove the soft reboot capability? I'm not sure how much of
-> a problem that would be, though.
+     *** DEADLOCK ***
 
-1. No one cared about it in f6361c6b3880 :)
-2. Exynos does not have it
-3. Does soft_restart really work? It would be worth to keep it if more
-   or less it was working.
+    no locks held by ksoftirqd/2/22.
 
-Best regards,
-Krzysztof
+    stack backtrace:
+    CPU: 2 PID: 22 Comm: ksoftirqd/2 Not tainted 5.8.0-rc4-eid-vmlocalyes-dbg-00157-g7236657c6b3a #1450
+    Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-1 04/01/2014
+    Call Trace:
+     dump_stack+0xc8/0x11a
+     print_usage_bug.cold.63+0x235/0x23e
+     mark_lock+0xa9c/0xcf0
+     __lock_acquire+0xd9a/0x2b50
+     lock_acquire+0x164/0x500
+     _raw_spin_lock_irqsave+0x40/0x60
+     nvme_keep_alive_end_io+0x50/0xc0
+     blk_mq_end_request+0x158/0x210
+     nvme_complete_rq+0x146/0x500
+     nvme_loop_complete_rq+0x26/0x30 [nvme_loop]
+     blk_done_softirq+0x187/0x1e0
+     __do_softirq+0x118/0x595
+     run_ksoftirqd+0x35/0x50
+     smpboot_thread_fn+0x1d3/0x310
+     kthread+0x1e7/0x210
+     ret_from_fork+0x22/0x30
 
-> 
-> [snip]
-> > diff --git a/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c b/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c
-> > index 1724f5ea5c46..09c4e8742629 100644
-> > --- a/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c
-> > +++ b/arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c
-> > @@ -12,7 +12,6 @@
-> >  #include <mach/map.h>
-> >
-> >  #include "common.h"
-> > -#include "watchdog-reset.h"
-> >
-> >  /*
-> >   * IO mapping for shared system controller IP.
-> > @@ -39,20 +38,6 @@ static void __init s3c64xx_dt_map_io(void)
-> >                 panic("SoC is not S3C64xx!");
-> >  }
-> >
-> > -static void __init s3c64xx_dt_init_machine(void)
-> > -{
-> > -       samsung_wdt_reset_of_init();
-> > -}
-> > -
-> > -static void s3c64xx_dt_restart(enum reboot_mode mode, const char *cmd)
-> > -{
-> > -       if (mode != REBOOT_SOFT)
-> > -               samsung_wdt_reset();
-> > -
-> > -       /* if all else fails, or mode was for soft, jump to 0 */
-> > -       soft_restart(0);
-> 
-> Ditto.
-> 
-> Best regards,
-> Tomasz
+Fixes: be93e87e7802 ("nvme: support for multiple Command Sets Supported and Effects log pages")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+
+Note: this patch may be squashed with the patch noted in the fixes
+tag, currently in nvme-5.9.
+
+ drivers/nvme/host/core.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 05aa568a60af..ed8872022219 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2971,15 +2971,16 @@ int nvme_get_log(struct nvme_ctrl *ctrl, u32 nsid, u8 log_page, u8 lsp, u8 csi,
+ static struct nvme_cel *nvme_find_cel(struct nvme_ctrl *ctrl, u8 csi)
+ {
+ 	struct nvme_cel *cel, *ret = NULL;
++	unsigned long flags;
+
+-	spin_lock(&ctrl->lock);
++	spin_lock_irqsave(&ctrl->lock, flags);
+ 	list_for_each_entry(cel, &ctrl->cels, entry) {
+ 		if (cel->csi == csi) {
+ 			ret = cel;
+ 			break;
+ 		}
+ 	}
+-	spin_unlock(&ctrl->lock);
++	spin_unlock_irqrestore(&ctrl->lock, flags);
+
+ 	return ret;
+ }
+@@ -2988,6 +2989,7 @@ static int nvme_get_effects_log(struct nvme_ctrl *ctrl, u8 csi,
+ 				struct nvme_effects_log **log)
+ {
+ 	struct nvme_cel *cel = nvme_find_cel(ctrl, csi);
++	unsigned long flags;
+ 	int ret;
+
+ 	if (cel)
+@@ -3006,9 +3008,9 @@ static int nvme_get_effects_log(struct nvme_ctrl *ctrl, u8 csi,
+
+ 	cel->csi = csi;
+
+-	spin_lock(&ctrl->lock);
++	spin_lock_irqsave(&ctrl->lock, flags);
+ 	list_add_tail(&cel->entry, &ctrl->cels);
+-	spin_unlock(&ctrl->lock);
++	spin_unlock_irqrestore(&ctrl->lock, flags);
+ out:
+ 	*log = &cel->log;
+ 	return 0;
+
+base-commit: b6cec06d19d90db5dbcc50034fb33983f6259b8b
+--
+2.20.1
