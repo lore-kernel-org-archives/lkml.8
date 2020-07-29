@@ -2,40 +2,48 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C44C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D964CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47E3720FC3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8D97208A9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:58:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbgG2N5r (ORCPT
+        id S1726862AbgG2N6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:57:47 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:58753 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgG2N5q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 09:57:46 -0400
-X-Originating-IP: 84.44.14.226
-Received: from nexussix.ar.arcelik (unknown [84.44.14.226])
-        (Authenticated sender: cengiz@kernel.wtf)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 758C61C0012;
-        Wed, 29 Jul 2020 13:57:42 +0000 (UTC)
-From:   Cengiz Can <cengiz@kernel.wtf>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Cengiz Can <cengiz@kernel.wtf>
-Subject: [PATCH] staging: atomisp: move null check to earlier point
-Date:   Wed, 29 Jul 2020 16:56:37 +0300
-Message-Id: <20200729135636.9220-1-cengiz@kernel.wtf>
+        Wed, 29 Jul 2020 09:58:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:52160 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726496AbgG2N6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 09:58:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7721430E;
+        Wed, 29 Jul 2020 06:58:48 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5E4F93F66E;
+        Wed, 29 Jul 2020 06:58:46 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Cc:     Qian Cai <cai@lca.pw>, Russell King <linux@armlinux.org.uk>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Quentin Perret <qperret@google.com>
+Subject: [PATCH] arm, arm64: Fix selection of CONFIG_SCHED_THERMAL_PRESSURE
+Date:   Wed, 29 Jul 2020 14:57:18 +0100
+Message-Id: <20200729135718.1871-1-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -44,63 +52,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-`find_gmin_subdev` function that returns a pointer to `struct
-gmin_subdev` can return NULL.
+Qian reported that the current setup forgoes the Kconfig dependencies and
+results in warnings such as:
 
-In `gmin_v2p8_ctrl` there's a call to this function but the possibility
-of a NULL was not checked before its being dereferenced. ie:
+  WARNING: unmet direct dependencies detected for SCHED_THERMAL_PRESSURE
+    Depends on [n]: SMP [=y] && CPU_FREQ_THERMAL [=n]
+    Selected by [y]:
+    - ARM64 [=y]
 
-```
-/* Acquired here --------v */
-struct gmin_subdev *gs = find_gmin_subdev(subdev);
-int ret;
-int value;
+Revert commit
 
-/*  v------Dereferenced here */
-if (gs->v2p8_gpio >= 0) {
-	pr_info("atomisp_gmin_platform: 2.8v power on GPIO %d\n",
-		gs->v2p8_gpio);
-	ret = gpio_request(gs->v2p8_gpio, "camera_v2p8");
-	if (!ret)
-		ret = gpio_direction_output(gs->v2p8_gpio, 0);
-	if (ret)
-		pr_err("V2P8 GPIO initialization failed\n");
-}
-```
+  e17ae7fea871 ("arm, arm64: Select CONFIG_SCHED_THERMAL_PRESSURE")
 
-I have moved the NULL check before deref point.
+and re-implement it by making the option default to 'y' for arm64 and arm,
+which respects Kconfig dependencies (i.e. will remain 'n' if
+CPU_FREQ_THERMAL=n).
 
-Caught-by: Coverity Static Analyzer CID 1465536
-Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+Fixes: e17ae7fea871 ("arm, arm64: Select CONFIG_SCHED_THERMAL_PRESSURE")
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 ---
- drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/arm/Kconfig   | 1 -
+ arch/arm64/Kconfig | 1 -
+ init/Kconfig       | 2 ++
+ 3 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-index 0df46a1af5f0..8e9c5016f299 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-@@ -871,6 +871,11 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, int on)
- 	int ret;
- 	int value;
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 6cd0f9f086f6..809e8047d669 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -47,7 +47,6 @@ config ARM
+ 	select EDAC_ATOMIC_SCRUB
+ 	select GENERIC_ALLOCATOR
+ 	select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
+-	select SCHED_THERMAL_PRESSURE if ARM_CPU_TOPOLOGY
+ 	select GENERIC_ATOMIC64 if CPU_V7M || CPU_V6 || !CPU_32v6K || !AEABI
+ 	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
+ 	select GENERIC_CPU_AUTOPROBE
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 2d4abbc9f8d0..baffe8b66da2 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -192,7 +192,6 @@ config ARM64
+ 	select PCI_SYSCALL if PCI
+ 	select POWER_RESET
+ 	select POWER_SUPPLY
+-	select SCHED_THERMAL_PRESSURE
+ 	select SPARSE_IRQ
+ 	select SWIOTLB
+ 	select SYSCTL_EXCEPTION_TRACE
+diff --git a/init/Kconfig b/init/Kconfig
+index 37b089f87804..f2244892d7a8 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -493,6 +493,8 @@ config HAVE_SCHED_AVG_IRQ
  
-+	if (!gs) {
-+		pr_err("Unable to find gmin subdevice\n");
-+		return -EINVAL;
-+	}
-+
- 	if (gs->v2p8_gpio >= 0) {
- 		pr_info("atomisp_gmin_platform: 2.8v power on GPIO %d\n",
- 			gs->v2p8_gpio);
-@@ -881,7 +886,7 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, int on)
- 			pr_err("V2P8 GPIO initialization failed\n");
- 	}
- 
--	if (!gs || gs->v2p8_on == on)
-+	if (gs->v2p8_on == on)
- 		return 0;
- 	gs->v2p8_on = on;
- 
+ config SCHED_THERMAL_PRESSURE
+ 	bool
++	default y if ARM && ARM_CPU_TOPOLOGY
++	default y if ARM64
+ 	depends on SMP
+ 	depends on CPU_FREQ_THERMAL
+ 	help
 -- 
 2.27.0
 
