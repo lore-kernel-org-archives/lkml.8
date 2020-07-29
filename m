@@ -2,76 +2,122 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC99C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83B432076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:45:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596008726;
-	bh=bw1/Arb/2b6w1pJkHqZYV38vMRfsiNEx/wIM0DDNp2U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BSrMCgBK9giLrgYcsW8uzoXarnXSqnwhkhaXn4vNuU/Tf+IC9aYTFntGxjLMUjK4s
-	 WRagjMFGHbXK3v6eTDUjY00wbQ2q2lwLPBNssVdFW+rv9bCfDccJTBlyKQS7Yaiv5S
-	 8y6+9QhLNUQVGpvfAkOgx0IwX46iIhqz3ZBnU5TY=
+	by mail.kernel.org (Postfix) with ESMTP id DF4B92076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:45:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldxAiEUF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgG2HpZ (ORCPT
+        id S1727975AbgG2Hpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:45:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbgG2HpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:45:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12C7C2076E;
-        Wed, 29 Jul 2020 07:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596008724;
-        bh=bw1/Arb/2b6w1pJkHqZYV38vMRfsiNEx/wIM0DDNp2U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NL9UVLc6ikjjZauImbC/h5+dC/RQA9IL7yQuVoxtTvH4x/YBoFGEhQKK5VmxM7sMu
-         9eJ+ODtqI1/RzY5LVVXXTniX4saTwFwUZVG36tu/3c2Zfe+Lc+BZNFciNcigkrIM5u
-         v84A5cr2x8N1USJqrmHB3Pms+hfjNRCENk7lXn7A=
-Date:   Wed, 29 Jul 2020 09:45:16 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Ankit Baluni <b18007@students.iitmandi.ac.in>
-Cc:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH v3] Staging : media : atomisp : fixed a brace coding
- sytle issue
-Message-ID: <20200729074516.GA497024@kroah.com>
-References: <20200728225935.28880-1-b18007@students.iitmandi.ac.in>
- <20200729073902.1704-1-b18007@students.iitmandi.ac.in>
+        Wed, 29 Jul 2020 03:45:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgG2Hpc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 03:45:32 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB234C061794;
+        Wed, 29 Jul 2020 00:45:30 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id r4so17663866wrx.9;
+        Wed, 29 Jul 2020 00:45:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=O+ETSXA6RyFZRpnWcbmn7fgTJlT89iJkYuFlDE0wwHw=;
+        b=ldxAiEUF7m47Z96S6vgEZzfr3N9UpXPqj1PG8UnrxVKo8qRfizI9cjQLMlMP5AS7tj
+         e2txp0GTVY7DIj4OlM9lIISC4YoeY/+0N6/eAWBzEewvqIiCRlBuaVBDZvg4ZthMoO7e
+         CP+tkipdL6V50KMfZmRTbSA1mKr4y79WlC+3aYH/4yd896dfBw3VL3AnWytEm1wa9BdW
+         KXBIdqFLicgjYThAF0GYX2nFIpPI0ST8Gw/IWvVSVpeK/tB7ys4T5K55YNszjvzbOkxC
+         MOKuiM83Do4EwqlM3RbaCXYt1UtTaMKLG3vqPjhfrspupQns4dMeNPVA4wI8HuOyo4ze
+         C2pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=O+ETSXA6RyFZRpnWcbmn7fgTJlT89iJkYuFlDE0wwHw=;
+        b=XgIliVuO4QueqMEIdcX5/s/b1vKBZvbXF9zLIf2eSd1MaozystfkDsz40zV2wS1k7z
+         1IScr+3OLBVdUBeKbocyGRUSxv93F4EoqQwCwFwwsiaDmtjnWByFuRqFdZmAmRP6d+I2
+         uoKEV3OvfkN97gjF2MonnpnSTyXBhelMtxm0pwr0YVtbCLZaREVmpyad98/pi65lWPqC
+         Ary1YdWyG4AV4GKdyn1OCII/f5gRXSlkRriUCGszXrIYJoNrQUGQ1QWvK+imvbU9+X8j
+         Y+3rZJs+UB1T+fndwg7jzNaNRbMZT/9QYXRTPAILoqiy9N6gVlhKRqI3r94PxOVuaHoK
+         ePLw==
+X-Gm-Message-State: AOAM530tYeJTVvKw/8m/8XJiMDXY0U5xGNRV0s/s3mRBSX24tKs+a1wR
+        DMIRkZA3Z94CBevtIzBg8aI=
+X-Google-Smtp-Source: ABdhPJwfFlS5I2dKSqCQPxUR7kjkBgQTVm6GIWd3Aw/T37/KvKHZ0aX3Vj7Y/eIYZFtX/E6njpeFGA==
+X-Received: by 2002:adf:ed88:: with SMTP id c8mr26645654wro.233.1596008729618;
+        Wed, 29 Jul 2020 00:45:29 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.122.158])
+        by smtp.gmail.com with ESMTPSA id c7sm3540328wrq.58.2020.07.29.00.45.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 00:45:28 -0700 (PDT)
+Subject: Re: [PATCH 2/2] arm64: dts: mt8192: add infracfg_rst node
+To:     Crystal Guo <crystal.guo@mediatek.com>, p.zabel@pengutronix.de,
+        robh+dt@kernel.org
+Cc:     srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, seiya.wang@mediatek.com
+References: <1596008357-11213-1-git-send-email-crystal.guo@mediatek.com>
+ <1596008357-11213-3-git-send-email-crystal.guo@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <b81f1936-caf0-e843-9556-14e3024d6d6f@gmail.com>
+Date:   Wed, 29 Jul 2020 09:45:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729073902.1704-1-b18007@students.iitmandi.ac.in>
+In-Reply-To: <1596008357-11213-3-git-send-email-crystal.guo@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 01:09:02PM +0530, Ankit Baluni wrote:
-> Removed braces for a 'if' condition as it contain only single line & 
-> there is no need for braces for such case according to coding style
-> rules.
-> 
-> Signed-off-by: Ankit Baluni <b18007@students.iitmandi.ac.in>
-> 
-> ---
-> Changes in v2:
-> 	-Added more description about the patch.
-> 	-Added space before the symobol '<' in 'From'
-> 	 and 'Signed-off-by' line.
-> Changes in v3:
-> 	-Removed space before ':' in subject line.
 
-No you did not :(
+
+On 29/07/2020 09:39, Crystal Guo wrote:
+> add infracfg_rst node which is for MT8192 platform
+> 
+> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8192.dtsi | 10 +++++++++-
+>   1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8192.dtsi b/arch/arm64/boot/dts/mediatek/mt8192.dtsi
+> index b16dbbd..adc6239 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8192.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8192.dtsi
+> @@ -217,9 +217,17 @@
+>   		};
+>   
+>   		infracfg: infracfg@10001000 {
+> -			compatible = "mediatek,mt8192-infracfg", "syscon";
+> +			compatible = "mediatek,mt8192-infracfg", "syscon", "simple-mfd";
+>   			reg = <0 0x10001000 0 0x1000>;
+>   			#clock-cells = <1>;
+> +
+> +			infracfg_rst: reset-controller {
+> +				compatible = "ti,syscon-reset";
+> +				#reset-cells = <1>;
+> +				ti,reset-bits = <
+> +					0x140 15 0x144 15 0 0 (ASSERT_SET | DEASSERT_SET | STATUS_NONE) /* 0: pcie */
+
+You have Texas Instruments hardware inside infracfg? Are you sure?
+
+> +				>;
+> +			};
+>   		};
+>   
+>   		pericfg: pericfg@10003000 {
+> 
