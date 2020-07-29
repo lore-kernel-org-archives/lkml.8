@@ -2,141 +2,262 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E0FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BD6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D89220838
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F941207F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:59:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NfyQpnB9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgG2H6p (ORCPT
+        id S1727977AbgG2H7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:58:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56106 "EHLO
+        Wed, 29 Jul 2020 03:59:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgG2H6p (ORCPT
+        with ESMTP id S1727059AbgG2H7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:58:45 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED47C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 00:58:44 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k0gz3-0007if-Qp; Wed, 29 Jul 2020 09:58:41 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k0gz3-0005B2-63; Wed, 29 Jul 2020 09:58:41 +0200
-Date:   Wed, 29 Jul 2020 09:58:41 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v2] arm: dts: imx7: add QSPI
-Message-ID: <20200729075841.2fiudq2ypcbvlymx@pengutronix.de>
-References: <20200729071106.8213-1-matthias.schiffer@ew.tq-group.com>
- <33fbac338c9d9accda37837eb1338003b28cafee.camel@ew.tq-group.com>
+        Wed, 29 Jul 2020 03:59:48 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F9A0C061794;
+        Wed, 29 Jul 2020 00:59:48 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z18so17113999wrm.12;
+        Wed, 29 Jul 2020 00:59:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Z5da3dx2SAn+bVOvyHxQOVatBrN8Ykye0kzHE6DAqV0=;
+        b=NfyQpnB9G7M/mRumGDa4PyxncFONzIQPe4J7blxFyH+Ryj3ihh197KaeLo2Y13CHai
+         II013x6AH4Qcod8ylw9wYU3Ni/7ZX1nLS9McnJX5VSkDwait471nEyHD0MmjTw7XM57/
+         pgPzc6Ir7A/rYPtPEkJANVVCB2hxCVX6fU9GpaRGuTU0ycD+9iO6ufFJ7JBSU0iJH5ip
+         en4ZpzG5Pt5bRmW95dZklfUg4vQpjHPnrIWVT1vebuCcYv7+l6WkWbL/sBH+GZH7X+7C
+         WujIRwi1JrAyz4IpHL5SP56lNX9sZDzuQgS/hAlaYmUACjMrguj/HOy+3SxMUdDZfwY4
+         sl/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Z5da3dx2SAn+bVOvyHxQOVatBrN8Ykye0kzHE6DAqV0=;
+        b=nn8aMwy8YLAoMywsAC6Gs5Je7vxlH87cK2X22QUVNsYizpXryen/RW5ekh8mXe1Ih0
+         8fAbYym6AbQExEhBPIvgJFt3bgCTgYi5veUyLNlG0MewwcITyl4Nli5ILJXVdArZvFwH
+         ixNCIto3LWPAwYrQDq9w7PIrC4JuXnsY06yQ7Mxv8gJXv6oA9cENVdTXPPmQvBMewowr
+         Ab48dmceCpoNKABYbulavCyPp2avz7fTehws5YdyUSrJ2pYDOQA8GezLqDVxHQW07Ce1
+         LJtBlxU1PIMKlKb0uOSIY7m71beT/S1DYQuaAj1wA7ZQXuBzFnacKV+iHX/qhqT48Ixi
+         craQ==
+X-Gm-Message-State: AOAM532QdiEL0YtD3jZdZvAxNkaYxGFn8F5X4FcComC90PpQbmYBFfy2
+        37onyoAq18tPLe1fDtuQL/M=
+X-Google-Smtp-Source: ABdhPJwGStf0UKkkT0IHuZkO3DIghNUfUWpgTVBI4oN+HOrXJy1ffPv96tWb7B+ddXIu3I6Ov4OccQ==
+X-Received: by 2002:a5d:526d:: with SMTP id l13mr26968687wrc.279.1596009587006;
+        Wed, 29 Jul 2020 00:59:47 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.122.158])
+        by smtp.gmail.com with ESMTPSA id w14sm3418220wrt.55.2020.07.29.00.59.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 00:59:46 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] i2c: mediatek: Add access to more than 8GB dram in
+ i2c driver
+To:     Qii Wang <qii.wang@mediatek.com>, wsa@the-dreams.de
+Cc:     qiangming.xia@mediatek.com, devicetree@vger.kernel.org,
+        srv_heupstream@mediatek.com, leilk.liu@mediatek.com,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1595939446-5484-1-git-send-email-qii.wang@mediatek.com>
+ <1595939446-5484-3-git-send-email-qii.wang@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <25ff4899-5e7d-f6e5-599c-4bf368a731e1@gmail.com>
+Date:   Wed, 29 Jul 2020 09:59:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33fbac338c9d9accda37837eb1338003b28cafee.camel@ew.tq-group.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:57:24 up 256 days, 23:15, 248 users,  load average: 0.29, 0.22,
- 0.14
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <1595939446-5484-3-git-send-email-qii.wang@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
 
-On 20-07-29 09:14, Matthias Schiffer wrote:
-> On Wed, 2020-07-29 at 09:11 +0200, Matthias Schiffer wrote:
-> > In preparation for an update of the TQ-Systems TQMa7x/MBa7x DTS, add
-> > the
-> > QSPI controller to imx7s.dtsi.
-> > 
-> > Based-on-patch-by: Han Xu <han.xu@nxp.com>
-> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> > ---
-> > 
-> > v2:
-> > - renamed node and label
-> > - reordered properties
-> > (as suggested by Marco Felsch)
-> 
-> Ugh, I neglected to check for compile warnings after adjusting the node
-> name. This now gives the following warning:
-> 
-> arch/arm/boot/dts/imx7s.dtsi:1165.24-1176.6: Warning (spi_bus_bridge): 
-> /soc/bus@30800000/qspi@30bb0000: node name for SPI buses should be
-> 'spi'
-> 
-> So I guess this should be called spi@ after all?
 
-Unfortunately yes, this would cause a longer discussion but it still
-seems wrong to me.
+On 28/07/2020 14:30, Qii Wang wrote:
+> Newer MTK chip support more than 8GB of dram. Replace support_33bits
+> with more general dma_max_support and remove mtk_i2c_set_4g_mode.
+> 
+> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> ---
+>   drivers/i2c/busses/i2c-mt65xx.c | 38 +++++++++++++++++---------------------
+>   1 file changed, 17 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> index e6b984a..49777a6 100644
+> --- a/drivers/i2c/busses/i2c-mt65xx.c
+> +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> @@ -204,11 +204,11 @@ struct mtk_i2c_compatible {
+>   	unsigned char dcm: 1;
+>   	unsigned char auto_restart: 1;
+>   	unsigned char aux_len_reg: 1;
+> -	unsigned char support_33bits: 1;
+>   	unsigned char timing_adjust: 1;
+>   	unsigned char dma_sync: 1;
+>   	unsigned char ltiming_adjust: 1;
+>   	unsigned char apdma_sync: 1;
+> +	unsigned char max_dma_support;
+>   };
+>   
+>   struct mtk_i2c_ac_timing {
+> @@ -311,11 +311,11 @@ struct i2c_spec_values {
+>   	.dcm = 1,
+>   	.auto_restart = 1,
+>   	.aux_len_reg = 1,
+> -	.support_33bits = 1,
+>   	.timing_adjust = 1,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+>   	.apdma_sync = 0,
+> +	.max_dma_support = 33,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt6577_compat = {
+> @@ -325,11 +325,11 @@ struct i2c_spec_values {
+>   	.dcm = 1,
+>   	.auto_restart = 0,
+>   	.aux_len_reg = 0,
+> -	.support_33bits = 0,
+>   	.timing_adjust = 0,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+>   	.apdma_sync = 0,
+> +	.max_dma_support = 32,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt6589_compat = {
+> @@ -339,11 +339,11 @@ struct i2c_spec_values {
+>   	.dcm = 0,
+>   	.auto_restart = 0,
+>   	.aux_len_reg = 0,
+> -	.support_33bits = 0,
+>   	.timing_adjust = 0,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+>   	.apdma_sync = 0,
+> +	.max_dma_support = 32,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt7622_compat = {
+> @@ -353,11 +353,11 @@ struct i2c_spec_values {
+>   	.dcm = 1,
+>   	.auto_restart = 1,
+>   	.aux_len_reg = 1,
+> -	.support_33bits = 0,
+>   	.timing_adjust = 0,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+>   	.apdma_sync = 0,
+> +	.max_dma_support = 32,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt8173_compat = {
+> @@ -366,11 +366,11 @@ struct i2c_spec_values {
+>   	.dcm = 1,
+>   	.auto_restart = 1,
+>   	.aux_len_reg = 1,
+> -	.support_33bits = 1,
+>   	.timing_adjust = 0,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+>   	.apdma_sync = 0,
+> +	.max_dma_support = 33,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt8183_compat = {
+> @@ -380,11 +380,11 @@ struct i2c_spec_values {
+>   	.dcm = 0,
+>   	.auto_restart = 1,
+>   	.aux_len_reg = 1,
+> -	.support_33bits = 1,
+>   	.timing_adjust = 1,
+>   	.dma_sync = 1,
+>   	.ltiming_adjust = 1,
+>   	.apdma_sync = 0,
+> +	.max_dma_support = 33,
+>   };
+>   
+>   static const struct of_device_id mtk_i2c_of_match[] = {
+> @@ -796,11 +796,6 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
+>   	return 0;
+>   }
+>   
+> -static inline u32 mtk_i2c_set_4g_mode(dma_addr_t addr)
+> -{
+> -	return (addr & BIT_ULL(32)) ? I2C_DMA_4G_MODE : I2C_DMA_CLR_FLAG;
+
+I think you missed my comment in the last version:
+I2C_DMA_4G_MODE is no longer needed, you can delete it.
 
 Regards,
-  Marco
+Matthias
 
-> > 
-> > 
-> >  arch/arm/boot/dts/imx7s.dtsi | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx7s.dtsi
-> > b/arch/arm/boot/dts/imx7s.dtsi
-> > index 1cfaf410aa43..22e4c38223bd 100644
-> > --- a/arch/arm/boot/dts/imx7s.dtsi
-> > +++ b/arch/arm/boot/dts/imx7s.dtsi
-> > @@ -1162,6 +1162,19 @@
-> >  				status = "disabled";
-> >  			};
-> >  
-> > +			qspi: qspi@30bb0000 {
-> > +				compatible = "fsl,imx7d-qspi";
-> > +				reg = <0x30bb0000 0x10000>, <0x60000000
-> > 0x10000000>;
-> > +				reg-names = "QuadSPI", "QuadSPI-
-> > memory";
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +				interrupts = <GIC_SPI 107
-> > IRQ_TYPE_LEVEL_HIGH>;
-> > +				clocks = <&clks IMX7D_QSPI_ROOT_CLK>,
-> > +					<&clks IMX7D_QSPI_ROOT_CLK>;
-> > +				clock-names = "qspi_en", "qspi";
-> > +				status = "disabled";
-> > +			};
-> > +
-> >  			sdma: sdma@30bd0000 {
-> >  				compatible = "fsl,imx7d-sdma",
-> > "fsl,imx35-sdma";
-> >  				reg = <0x30bd0000 0x10000>;
+> -}
+> -
+>   static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>   			       int num, int left_num)
+>   {
+> @@ -885,8 +880,8 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>   			return -ENOMEM;
+>   		}
+>   
+> -		if (i2c->dev_comp->support_33bits) {
+> -			reg_4g_mode = mtk_i2c_set_4g_mode(rpaddr);
+> +		if (i2c->dev_comp->max_dma_support > 32) {
+> +			reg_4g_mode = upper_32_bits(rpaddr);
+>   			writel(reg_4g_mode, i2c->pdmabase + OFFSET_RX_4G_MODE);
+>   		}
+>   
+> @@ -908,8 +903,8 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>   			return -ENOMEM;
+>   		}
+>   
+> -		if (i2c->dev_comp->support_33bits) {
+> -			reg_4g_mode = mtk_i2c_set_4g_mode(wpaddr);
+> +		if (i2c->dev_comp->max_dma_support > 32) {
+> +			reg_4g_mode = upper_32_bits(wpaddr);
+>   			writel(reg_4g_mode, i2c->pdmabase + OFFSET_TX_4G_MODE);
+>   		}
+>   
+> @@ -954,11 +949,11 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>   			return -ENOMEM;
+>   		}
+>   
+> -		if (i2c->dev_comp->support_33bits) {
+> -			reg_4g_mode = mtk_i2c_set_4g_mode(wpaddr);
+> +		if (i2c->dev_comp->max_dma_support > 32) {
+> +			reg_4g_mode = upper_32_bits(wpaddr);
+>   			writel(reg_4g_mode, i2c->pdmabase + OFFSET_TX_4G_MODE);
+>   
+> -			reg_4g_mode = mtk_i2c_set_4g_mode(rpaddr);
+> +			reg_4g_mode = upper_32_bits(rpaddr);
+>   			writel(reg_4g_mode, i2c->pdmabase + OFFSET_RX_4G_MODE);
+>   		}
+>   
+> @@ -1232,8 +1227,9 @@ static int mtk_i2c_probe(struct platform_device *pdev)
+>   		return -EINVAL;
+>   	}
+>   
+> -	if (i2c->dev_comp->support_33bits) {
+> -		ret = dma_set_mask(&pdev->dev, DMA_BIT_MASK(33));
+> +	if (i2c->dev_comp->max_dma_support > 32) {
+> +		ret = dma_set_mask(&pdev->dev,
+> +				DMA_BIT_MASK(i2c->dev_comp->max_dma_support));
+>   		if (ret) {
+>   			dev_err(&pdev->dev, "dma_set_mask return error.\n");
+>   			return ret;
 > 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
