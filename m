@@ -2,66 +2,156 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEF9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC56C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE166207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:51:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596023489;
-	bh=uiazbZon5DuuV7nkm5kCUJtsQgzorujkgMSDAtUtSqI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uEEe64v76b55yCM9PEzmtBmM7MCE7maID/x4ELaEGtbSzeke4SDgWLopMFytrP51a
-	 3yK6QF5BkDAVIbkCol+hzw04if6JwlYNPBBSZhxWFXEENU2Ejpw8ejZWup2u1iHit0
-	 VnKd6S2J6aibRJp/CjnqmyzA+x7uXM/Vwk5DY4u0=
+	by mail.kernel.org (Postfix) with ESMTP id 1AAC8207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:53:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D1akJVMB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgG2Lv2 (ORCPT
+        id S1726631AbgG2LxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 07:51:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726341AbgG2Lv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 07:51:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18A3A2076E;
-        Wed, 29 Jul 2020 11:51:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596023487;
-        bh=uiazbZon5DuuV7nkm5kCUJtsQgzorujkgMSDAtUtSqI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Oge3bW96sp9UtoK92txsHC/RcHVb1cbyaf3d6/AcLcBBTikzDmqMcSpegqGJUvag0
-         hTpJyxCrxfjh1h9V7SKBgYjG1DnpvQIJpLoi/+30IPEv7gk/y52Im8svZdtlztxh65
-         mPKvyCCuQhDVq9l5E511+w8PWL4vfveWsdlY4k5U=
-Date:   Wed, 29 Jul 2020 13:51:19 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     John Donnelly <John.P.donnelly@oracle.com>, stable@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: (resend) [PATCH [linux-4.14.y]] dm cache: submit writethrough
- writes in parallel to origin and cache
-Message-ID: <20200729115119.GB2674635@kroah.com>
-References: <37c5a615-655d-c106-afd0-54e03f3c0eef@oracle.com>
- <20200727150014.GA27472@redhat.com>
+        Wed, 29 Jul 2020 07:53:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbgG2LxU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 07:53:20 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 247C2C061794;
+        Wed, 29 Jul 2020 04:53:19 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id dd12so5650382qvb.0;
+        Wed, 29 Jul 2020 04:53:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=dbKVQJEsi5OmCf8gsZhOgLkAF5HCvO25GsJ5HLwdED8=;
+        b=D1akJVMB2ic6FJCvXtcIzudguNqpnLRruyjPU8sZzd1/Da8Jj41grupYH1YBvyjZ8Z
+         o79A5fLQK0YnmLT/SaG4/tbNPvD1Q1ZnnUyYtgC6S73UCjZWfQcRNCxgN87znrbnHRpZ
+         rVQdTG5RTwa3ASIVKxl35FtEQcPvzIbuOy5Eb7i18wTqykLymIicaqWUzTIJgN3PPwYq
+         u33/cU12qu8fH9CnJ4QWLs6gbmL21DYOzf+zTSr3I20Gv+zqw+H2rW+tuJddEPwdgAJ1
+         o/fHLXOntqrV/8y/a7wy6JOhUgTH784T/g+QZkkL0iPtoqgTfdChi5a8QIPdCe6vO0Do
+         rAUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=dbKVQJEsi5OmCf8gsZhOgLkAF5HCvO25GsJ5HLwdED8=;
+        b=IR3WFJf/QFfxF/6uVsSVegbOQt0nZUuC/BD2yE0P29I+mrSwY1xcphK4abS6BvLxYu
+         o5428iCs9kMx1kK1MlQcbnv8eAOyXoprxearBqtxmhFAyxbHW3WrJxnhiIy0AgeGrYgp
+         aCSZm1yRU76fhnf4JUvmUNMzKm+mjx0LRsqr/S09OMUPvZdagTQACrY5ElBwLzGvTe4R
+         lWQ40uvBD4d0mN6aUlJbhw4gNTMGqlTUQaEFI9dm+YGkpLdcT3CatmcOwu6vhUmlsDFc
+         G3Qsh+IaI1LCRf3DHbrRvO/NMKzdynEB1N27vM4e0MXuSBn7JiAcQ7P2ZpIvjZSPrrql
+         Kt+g==
+X-Gm-Message-State: AOAM530D7dtIc14VilcB1O+J12OOaWykh+mrMveZeUN0y2vUeDdASWuE
+        aja/CcYP3/mMIQhDRNEzjQ==
+X-Google-Smtp-Source: ABdhPJz66BNCjHBTDeXGIlu2MYFSm0jp9sVQTPG9hCtDssdlKFCd++Ii3AmkngoUIVJXrS+Dj+YasA==
+X-Received: by 2002:a0c:e5cc:: with SMTP id u12mr32198398qvm.54.1596023598259;
+        Wed, 29 Jul 2020 04:53:18 -0700 (PDT)
+Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
+        by smtp.gmail.com with ESMTPSA id o13sm1330478qko.48.2020.07.29.04.53.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 04:53:17 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Denis Efremov <efremov@linux.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH v2] block/floppy: Prevent kernel-infoleak in raw_cmd_copyout()
+Date:   Wed, 29 Jul 2020 07:51:57 -0400
+Message-Id: <20200729115157.8519-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200728141946.426245-1-yepeilin.cs@gmail.com>
+References: <20200728141946.426245-1-yepeilin.cs@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727150014.GA27472@redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:00:14AM -0400, Mike Snitzer wrote:
-> This mail needs to be saent to stable@vger.kernel.org (now cc'd).
-> 
-> Greg et al: please backport 2df3bae9a6543e90042291707b8db0cbfbae9ee9
+raw_cmd_copyout() is potentially copying uninitialized kernel stack memory
+since it is initializing `cmd` by assignment, which may cause the compiler
+to leave uninitialized holes in this structure. Fix it by using memcpy()
+instead.
 
-Now backported, thanks.
+Cc: stable@vger.kernel.org
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+Change in v2:
+    - Remove inappropriate "Fixes:" tag. (Suggested by: Denis Efremov
+      <efremov@linux.com>)
 
-greg k-h
+Reference: https://lwn.net/Articles/417989/
+
+$ pahole -C "floppy_raw_cmd" drivers/block/floppy.o
+struct floppy_raw_cmd {
+	unsigned int               flags;                /*     0     4 */
+
+	/* XXX 4 bytes hole, try to pack */
+
+	void *                     data;                 /*     8     8 */
+	char *                     kernel_data;          /*    16     8 */
+	struct floppy_raw_cmd *    next;                 /*    24     8 */
+	long int                   length;               /*    32     8 */
+	long int                   phys_length;          /*    40     8 */
+	int                        buffer_length;        /*    48     4 */
+	unsigned char              rate;                 /*    52     1 */
+	unsigned char              cmd_count;            /*    53     1 */
+	union {
+		struct {
+			unsigned char cmd[16];           /*    54    16 */
+			/* --- cacheline 1 boundary (64 bytes) was 6 bytes ago --- */
+			unsigned char reply_count;       /*    70     1 */
+			unsigned char reply[16];         /*    71    16 */
+		};                                       /*    54    33 */
+		unsigned char      fullcmd[33];          /*    54    33 */
+	};                                               /*    54    33 */
+
+	/* XXX 1 byte hole, try to pack */
+
+	/* --- cacheline 1 boundary (64 bytes) was 24 bytes ago --- */
+	int                        track;                /*    88     4 */
+	int                        resultcode;           /*    92     4 */
+	int                        reserved1;            /*    96     4 */
+	int                        reserved2;            /*   100     4 */
+
+	/* size: 104, cachelines: 2, members: 14 */
+	/* sum members: 99, holes: 2, sum holes: 5 */
+	/* last cacheline: 40 bytes */
+};
+
+ drivers/block/floppy.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index 09079aee8dc4..b8ea98f7a9cb 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3126,7 +3126,9 @@ static int raw_cmd_copyout(int cmd, void __user *param,
+ 	int ret;
+ 
+ 	while (ptr) {
+-		struct floppy_raw_cmd cmd = *ptr;
++		struct floppy_raw_cmd cmd;
++
++		memcpy(&cmd, ptr, sizeof(cmd));
+ 		cmd.next = NULL;
+ 		cmd.kernel_data = NULL;
+ 		ret = copy_to_user(param, &cmd, sizeof(cmd));
+-- 
+2.25.1
+
