@@ -2,95 +2,129 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF764C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F32C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4372074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:57:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596056231;
-	bh=us69NBFeFCvCXZFBU2qcw5Cmbco3nD42iGG/gPhfYJg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2exuXbyyt47CUUvSr0jPrPyIezwNgeKYItEDdJQ+uQEse55gsNxHfd1qSewNuhv0L
-	 CErsKtaO4HjAGpYE3HjpSzoezI6YVdxGHSZcTDddo35+0kI84P3oQY2+nrKZHpWABF
-	 /YtThhYz6oUgpxMVNw+2RlrO4koTUU6DMQeFuUMs=
+	by mail.kernel.org (Postfix) with ESMTP id BF6BB2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:58:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gHtP/1IA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgG2U5K (ORCPT
+        id S1727031AbgG2U6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:57:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgG2U5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:57:10 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 29 Jul 2020 16:58:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36855 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726496AbgG2U6v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 16:58:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596056329;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vLUygYYzd++JIlYknve101yWy4mcR2ip0YkY0hzcOSk=;
+        b=gHtP/1IA1hEEk41GDr3RfEQUyKVQ2kONfyT7DV9tMeWVeTda6jjTvfByvgDq85XBzQT+cm
+        Cw66Q4+p0LR8qAlHB+qkJmMfL2mCJN4I2gcVETBfGqzQvsXJHQxt9ifSIutm+ssFw57gK7
+        qBuor5vVCjU4kCq7RwU1O7uEi7ujcgs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-456-Q_tBaD1HMNSuLNq5odNeeA-1; Wed, 29 Jul 2020 16:58:47 -0400
+X-MC-Unique: Q_tBaD1HMNSuLNq5odNeeA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E3852074B;
-        Wed, 29 Jul 2020 20:57:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596056229;
-        bh=us69NBFeFCvCXZFBU2qcw5Cmbco3nD42iGG/gPhfYJg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fRKYBmIXhYRcCs7Z8k4qgx2Qr879o1vXtYdDcOLrLzLmrmOs8VBHF6IpPoQ8lt5Q3
-         WuPg5+pl741bKVGgyeJJNkG3gfYLoT68JilULQWwAKZMw/XkeTKp4n4AIg6lMp/qTC
-         4qV9aIeKE+PYUvAmPIXobkOlEKLW4YG+q/DB98cg=
-Date:   Wed, 29 Jul 2020 13:57:07 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Moshe Shemesh <moshe@mellanox.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next RFC 09/13] devlink: Add enable_remote_dev_reset
- generic parameter
-Message-ID: <20200729135707.5fc65fc8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <5baf2825-a550-f68f-f76e-3a8688aa6ae6@mellanox.com>
-References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
-        <1595847753-2234-10-git-send-email-moshe@mellanox.com>
-        <20200727175935.0785102a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <5baf2825-a550-f68f-f76e-3a8688aa6ae6@mellanox.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 827E918C63C0;
+        Wed, 29 Jul 2020 20:58:46 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E7C8A19C71;
+        Wed, 29 Jul 2020 20:58:41 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <4007797.1596055016@warthog.procyon.org.uk>
+References: <4007797.1596055016@warthog.procyon.org.uk> <0b154b9b-728f-7d57-d4c5-ec25fc9dfdf3@toxicpanda.com>
+Cc:     dhowells@redhat.com, Josef Bacik <josef@toxicpanda.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        David Sterba <dsterba@suse.com>
+Subject: Re: Inverted mount options completely broken (iversion,relatime)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4056339.1596056321.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Wed, 29 Jul 2020 21:58:41 +0100
+Message-ID: <4056340.1596056321@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jul 2020 17:42:12 +0300 Moshe Shemesh wrote:
-> On 7/28/2020 3:59 AM, Jakub Kicinski wrote:
-> > On Mon, 27 Jul 2020 14:02:29 +0300 Moshe Shemesh wrote:  
-> >> The enable_remote_dev_reset devlink param flags that the host admin
-> >> allows device resets that can be initiated by other hosts. This
-> >> parameter is useful for setups where a device is shared by different
-> >> hosts, such as multi-host setup. Once the user set this parameter to
-> >> false, the driver should NACK any attempt to reset the device while the
-> >> driver is loaded.
-> >>
-> >> Signed-off-by: Moshe Shemesh <moshe@mellanox.com>  
-> > There needs to be a devlink event generated when reset is triggered
-> > (remotely or not).
-> >
-> > You're also missing failure reasons. Users need to know if the reset
-> > request was clearly nacked by some host, not supported, etc. vs
-> > unexpected failure.  
-> 
-> I will fix and send extack message to the user accordingly.
+David Howells <dhowells@redhat.com> wrote:
 
-I'd suggest the reason codes to be somewhat standard.
+> > So my question is, what do we do here?
+> =
 
-The groups I can think of:
- - timeout - device did not respond to the reset request
- - device reject - FW or else has nacked the activation req
- - host incapable - one of the participating hosts (in MH) is not
-   capable of handling live activation
- - host denied - one of the participating hosts has NACKed
- - host timeout - one of the p. hosts did not ack or done the procedure
-   in time (e.g. has not toggled the link)
- - failed reset - the activation itself had failed
- - failed reinit - one of p. hosts was not able to cleanly come back up
+> Hmmm...  As the code stands, MS_RDONLY, MS_SYNCHRONOUS, MS_MANDLOCK,
+> MS_I_VERSION and MS_LAZYTIME should all be masked off before the new fla=
+gs are
+> set if called from mount(2) rather than fsconfig(2).
+> =
+
+> do_remount() gives MS_RMT_MASK to fs_context_for_reconfigure() to load i=
+nto
+> fc->sb_flags_mask, which should achieve the desired effect in
+> reconfigure_super() on this line:
+> =
+
+> 	WRITE_ONCE(sb->s_flags, ((sb->s_flags & ~fc->sb_flags_mask) |
+> 				 (fc->sb_flags & fc->sb_flags_mask)));
+
+So applying the attached patch and then doing:
+
+mount -t tmpfs none /mnt
+mount -o remount,iversion /mnt
+mount -o remount,noiversion /mnt
+mount -o remount,norelatime /mnt
+mount -o remount,relatime /mnt
+
+prints:
+
+sb=3D70010000 set=3D800000 mask=3D2800051
+sb=3D70810000 set=3D0 mask=3D2800051
+sb=3D70010000 set=3D0 mask=3D2800051
+sb=3D70010000 set=3D0 mask=3D2800051
+
+MS_RELATIME isn't included in MS_RMT_MASK, so remount shouldn't be able to
+change it.
+
+David
+---
+diff --git a/fs/super.c b/fs/super.c
+index 904459b35119..540cb37c11e7 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -964,6 +964,7 @@ int reconfigure_super(struct fs_context *fc)
+ 		}
+ 	}
+ =
+
++	printk("sb=3D%lx set=3D%x mask=3D%x\n", sb->s_flags, fc->sb_flags, fc->s=
+b_flags_mask);
+ 	WRITE_ONCE(sb->s_flags, ((sb->s_flags & ~fc->sb_flags_mask) |
+ 				 (fc->sb_flags & fc->sb_flags_mask)));
+ 	/* Needs to be ordered wrt mnt_is_readonly() */
+
