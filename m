@@ -2,147 +2,172 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34645C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0DED2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:02:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="LO5oXVTe"
+	by mail.kernel.org (Postfix) with ESMTP id 127072082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596049369;
+	bh=VSU69l2AYUz8eBvS8KYMLrmd1i3B1jrkwHHv6hS70ag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Fm8xB/omEQyTa4VzUXWbMlRwHQ+Twp6BLRusb4nX0jlL0l75PnpLO+GHO+ltgcB2N
+	 jAcZl0Wc84VM46lSwhPASsd+byqcaxGYE1rZG4Q1zNEBK+vhoIsaZcVzO9WrD6oKgN
+	 2vStpGC6uduI4TEmM0JCOHWi3xJf1FmyhpfBbyJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgG2TCW (ORCPT
+        id S1726819AbgG2TCr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 15:02:22 -0400
-Received: from mail-vi1eur05on2068.outbound.protection.outlook.com ([40.107.21.68]:7494
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726502AbgG2TCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 15:02:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MDokbeVw6lxIdCz4a0Ts8lx8NphYUe2b0AJCJAmx3fkGE+6xpbUN3atfVl2G4nqre6NfOJ6ykSfW7xJ9HUUAwqthWnbYnFTfp0TSWDfM0TovzqU260xgW+d3MSWFQ2d28UdMcw0d6DpulkUuTv7MRc9aGjc5LeUagmMvohuvFwfIXH1/gCyZcA/QkNl0ahCUUKRs9eQw2lwElFXSP/IxpxvtJ4YdkuKnGrB6VMSOaBOB7i1ObS9x2RijdcZT7WfakMuNRBe3jmAopj/pd1ZJ19E3roXCY8zX0YDLN64+47F9qWSr7105qIkY37iqsY2PUbRKv/78DXmC1QQZbbqSyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eOhEenbLskpcoVZxbtSjZ1RjDJBXDQfGDFe+mHLxTtU=;
- b=LB+2AEfzpnHaULiG+nPcCs0cc9SK8XCCiPyrQixJj0CjzkT3efE/WM4gmK3FBl6EIKSmUvdyNfFiM1uPAFvBRuicSff5TTqRXUXgPU3jUj6KZQgcppg/XBEK4h5hlsYyWIxQQ30MhJUinbk6i4F/U+w3L2aD7dGtrABYA2z0ROCMY4dwmN79ynbxUTvtkmW3t9UOjg15si8Lq5iugEfmL6XHqC6aeH3vBKgJz/yOMlTlG9y2YOx8i2DMyYPMEOckLuuVei8cOzHp+9vEHXTMnFUw7SaBB6BJIuwGTEncjbrYXKWmOqIfggdKalNI0YQQL0MIuE8Ytz0ZMrum25jGLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eOhEenbLskpcoVZxbtSjZ1RjDJBXDQfGDFe+mHLxTtU=;
- b=LO5oXVTeZWknl5ZlY+WX3iFvf80nFK+4PFOd7LApZIw6Mb++yynWIuh9PS7BU7/dl4XvmPDTc4ahWeOtaQMDyPHNv3ldg8hYIMkhJx3sMSe/HsLNhk089rExwy//emydaCxDn4OZwbWQ6jIX2H8t1EWhXyqy4EWw7W5at5n9zww=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
- by VI1PR0501MB2784.eurprd05.prod.outlook.com (2603:10a6:800:9b::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Wed, 29 Jul
- 2020 19:02:16 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::508a:d074:ad3a:3529]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::508a:d074:ad3a:3529%5]) with mapi id 15.20.3216.034; Wed, 29 Jul 2020
- 19:02:16 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "songliubraving@fb.com" <songliubraving@fb.com>,
-        "hawk@kernel.org" <hawk@kernel.org>, "kafai@fb.com" <kafai@fb.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kpsingh@chromium.org" <kpsingh@chromium.org>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "xiongx18@fudan.edu.cn" <xiongx18@fudan.edu.cn>,
-        "yhs@fb.com" <yhs@fb.com>, "andriin@fb.com" <andriin@fb.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "xiyuyang19@fudan.edu.cn" <xiyuyang19@fudan.edu.cn>,
-        "tanxin.ctf@gmail.com" <tanxin.ctf@gmail.com>,
-        "yuanxzhang@fudan.edu.cn" <yuanxzhang@fudan.edu.cn>
-Subject: Re: [PATCH] net/mlx5e: fix bpf_prog refcnt leaks in mlx5e_alloc_rq
-Thread-Topic: [PATCH] net/mlx5e: fix bpf_prog refcnt leaks in mlx5e_alloc_rq
-Thread-Index: AQHWZaSD4+bJSZVEQUqH8FFGnSv/eKke6kCA
-Date:   Wed, 29 Jul 2020 19:02:15 +0000
-Message-ID: <613fe5f56cb60982937c826ed915ada2de5e93a2.camel@mellanox.com>
-References: <20200729123334.GA6766@xin-virtual-machine>
-In-Reply-To: <20200729123334.GA6766@xin-virtual-machine>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.36.4 (3.36.4-1.fc32) 
-authentication-results: fb.com; dkim=none (message not signed)
- header.d=none;fb.com; dmarc=none action=none header.from=mellanox.com;
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d21119a7-6309-4cd8-a1cf-08d833f1e8f6
-x-ms-traffictypediagnostic: VI1PR0501MB2784:
-x-microsoft-antispam-prvs: <VI1PR0501MB27845DB2AAA3C72EF17C6B31BE700@VI1PR0501MB2784.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: I3oLNH4EpNhwLHBGZ1SBOM/Zu0B686xW+XjlC0wnPpoYQXAAFkvYSnQKJg9QIbDtvh/KMaFLXexhh9Sl8X/WFQsueBDXSg9srszFWxV009RarUfIMHKDxck9dkRzt/05edx/eiHdgIcA7ovvTg3A1VVnyvPgnTqWp/FEbT3jxg8TT4YkpbkXFeOEqYUuZbq2H38scAZNbm3x39+cEFP5//bDnnG55Rg7KxIJ58dKnYeVh/7S4/uT+74x3qmmfF4S/H6lnpGcXuzuwOo9vEvdIBNH+cEg37jZ+X1AJO43C6EeaT7M8qsgd3H0Mz45ThHwShUAIApxBTmHeHJiKDaCBgHvpovKEtmEq1asD2GWE7PgcnfBgjbl16F8DLszuCC6
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(346002)(136003)(39860400002)(396003)(6506007)(71200400001)(5660300002)(186003)(26005)(86362001)(36756003)(6486002)(316002)(54906003)(66946007)(110136005)(66446008)(64756008)(66556008)(66476007)(76116006)(83380400001)(91956017)(2616005)(478600001)(6512007)(7416002)(8936002)(8676002)(4326008)(2906002)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: z/ZFnQUZlEwZUckpd33B9TLzfCtbAg4FEYLQrCJfE5z47j40Iokx/aoGvFxQBaEC3Gq9DwtylS7XEFHI2CCQOdmecpk/LhFpRGGD872efJGokJb8JzKgZlKKvu+v0MJNkj+VmTELCxyvkeN8VQpbi+dkChcIvkuOR2GpeHdMbZj0bbHCAZWIzXX7GDvP31mX1YRFkav9uLJ8psVsXSSIAa1tTPyDjBvx0DcJeXpKYuWPET/+uY2dMg75R8toU3BjndIr3oV85/59taqpvbJIkTZzrcZFJ14yNJsthRSPm5ti1huARnhkCd7zS01hJ0aCs4grm9FUTcYkzqZOsR5uJBM6oUii/NN0mREfq445dn5Ecrl1G+ptnqWDQGXeGd3Q9CmBgMnkr3zT33PtB/IJAYcKubdssNxGiXr6tbAR+ySIjo/73VYi8CN5y9tfBYzwG8A1z5V/t67lM40B7ISydv2Qxk0DYSjTAO1Bw6wNZeVnESsGPLzw7rRC2B8e9D4QukFMC8hIk5DdxC3iH6CMEeq0xiNZ90qY8ssQB3J6me8Mn6Nx+29zJLMSqf0lPQ1TKCaxZUlswkucp/Ep+DIpFLXki/4HbobIjbeqmn8MbEOoqydVyXP/M2HxKrMyux0u4qDCQFw8DO6uCQRmrmQPCw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <85B799C4F07D4F498545FE711C372F98@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 29 Jul 2020 15:02:47 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:36988 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgG2TCr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 15:02:47 -0400
+Received: by mail-ej1-f66.google.com with SMTP id qc22so10660087ejb.4;
+        Wed, 29 Jul 2020 12:02:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=F6RvPQWo2rxOQUwgKhzdatI6SzUaFewn4ve7RS5gdpo=;
+        b=ehqWLc3J+gIujHKHyBDLFImxsfMwYeRTUnH84F2YLGdnwZlTXqdb0657/9M9e7Q+Wf
+         AMCue2v0sFkEPzXdg8EHPkNP4KRg72b4ff8CKxIhLdd22SuGPhdMjIFsFWySfGJQk4Zr
+         yqwH7b6tfyopMiGPPog6TZ0ii/CmWpNAGbGH5pZOueUBpnAZfEAT7sqSXXoQi4ZCUY3o
+         WqQ1q+dXt0wmBETCOpCqKApXAdqkh7fqoyQHBvZiTn1ia47ucdUl5yXFhQMohtHCt1bx
+         BX59tzXYUUtBRk76MPvfBo45nQqW6gfGHfFdCl9IPkqbUuO3qz1VuOhsqLbq4EpJmyNb
+         ewiQ==
+X-Gm-Message-State: AOAM531TeRngt0G2R+oJEuWsWtaRJAUPTZ9Kar4LEsft+bKgu+JvaEjg
+        cge9K0240u6uH7QS1yukILU=
+X-Google-Smtp-Source: ABdhPJwrigyfWYWlC1oTscTi/S00vRyVwCtVK1J8TCQ1Ndue3IczGeg0UBI6RW2qdkMOGa4mUYUFCw==
+X-Received: by 2002:a17:907:42a0:: with SMTP id ny24mr25051905ejb.328.1596049363432;
+        Wed, 29 Jul 2020 12:02:43 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id i10sm2593802edx.42.2020.07.29.12.02.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Jul 2020 12:02:42 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 21:02:39 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tomasz Figa <tomasz.figa@gmail.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Vincent Sanders <vince@simtec.co.uk>,
+        Simtec Linux Team <linux@simtec.co.uk>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        patches@opensource.cirrus.com,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org,
+        Sergio Prado <sergio.prado@e-labworks.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Cedric Roux <sed@free.fr>, Lihua Yao <ylhuajnu@outlook.com>
+Subject: Re: [PATCH 3/7] ARM: s3c: Remove plat-samsung/.../samsung-time.h
+Message-ID: <20200729190239.GA5723@kozik-lap>
+References: <20200729160942.28867-1-krzk@kernel.org>
+ <20200729160942.28867-4-krzk@kernel.org>
+ <CA+Ln22HWNSwVWARKL2NeUVx1y5yqHe0SGPZ1hcqBW88awySfPA@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB5102.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d21119a7-6309-4cd8-a1cf-08d833f1e8f6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2020 19:02:16.0329
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5WeL9EEQBVqYtlHb7tD6l13FSYHAtYRWmDloMDrGfhik6qIACkRjf5YYHP9fj5meaSwI1r7aEnNN/3XuxCURKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2784
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <CA+Ln22HWNSwVWARKL2NeUVx1y5yqHe0SGPZ1hcqBW88awySfPA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA3LTI5IGF0IDIwOjMzICswODAwLCBYaW4gWGlvbmcgd3JvdGU6DQo+IFRo
-ZSBmdW5jdGlvbiBpbnZva2VzIGJwZl9wcm9nX2luYygpLCB3aGljaCBpbmNyZWFzZXMgdGhlIHJl
-ZmNvdW50IG9mDQo+IGENCj4gYnBmX3Byb2cgb2JqZWN0ICJycS0+eGRwX3Byb2ciIGlmIHRoZSBv
-YmplY3QgaXNuJ3QgTlVMTC4NCj4gDQo+IFRoZSByZWZjb3VudCBsZWFrIGlzc3VlcyB0YWtlIHBs
-YWNlIGluIHR3byBlcnJvciBoYW5kbGluZyBwYXRocy4gV2hlbg0KPiBtbHg1X3dxX2xsX2NyZWF0
-ZSgpIG9yIG1seDVfd3FfY3ljX2NyZWF0ZSgpIGZhaWxzLCB0aGUgZnVuY3Rpb24NCj4gc2ltcGx5
-DQo+IHJldHVybnMgdGhlIGVycm9yIGNvZGUgYW5kIGZvcmdldHMgdG8gZHJvcCB0aGUgcmVmY291
-bnQgaW5jcmVhc2VkDQo+IGVhcmxpZXIsIGNhdXNpbmcgYSByZWZjb3VudCBsZWFrIG9mICJycS0+
-eGRwX3Byb2ciLg0KPiANCj4gRml4IHRoaXMgaXNzdWUgYnkganVtcGluZyB0byB0aGUgZXJyb3Ig
-aGFuZGxpbmcgcGF0aA0KPiBlcnJfcnFfd3FfZGVzdHJveQ0KPiB3aGVuIGVpdGhlciBmdW5jdGlv
-biBmYWlscy4NCj4gDQoNCkZpeGVzOiA0MjJkNGM0MDFlZGQgKCJuZXQvbWx4NWU6IFJYLCBTcGxp
-dCBXUSBvYmplY3RzIGZvciBkaWZmZXJlbnQgUlENCnR5cGVzIikNCg0KPiANCj4gU2lnbmVkLW9m
-Zi1ieTogWGluIFhpb25nIDx4aW9uZ3gxOEBmdWRhbi5lZHUuY24+DQo+IFNpZ25lZC1vZmYtYnk6
-IFhpeXUgWWFuZyA8eGl5dXlhbmcxOUBmdWRhbi5lZHUuY24+DQo+IFNpZ25lZC1vZmYtYnk6IFhp
-biBUYW4gPHRhbnhpbi5jdGZAZ21haWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbmV0L2V0aGVy
-bmV0L21lbGxhbm94L21seDUvY29yZS9lbl9tYWluLmMgfCA0ICsrLS0NCj4gIDEgZmlsZSBjaGFu
-Z2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2VuX21haW4uYw0KPiBiL2Ry
-aXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lbl9tYWluLmMNCj4gaW5kZXgg
-YTgzNmEwMmEyMTE2Li44ZTFiMWFiNDE2ZDggMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbmV0L2V0
-aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lbl9tYWluLmMNCj4gKysrIGIvZHJpdmVycy9uZXQv
-ZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2VuX21haW4uYw0KPiBAQCAtNDE5LDcgKzQxOSw3
-IEBAIHN0YXRpYyBpbnQgbWx4NWVfYWxsb2NfcnEoc3RydWN0IG1seDVlX2NoYW5uZWwNCj4gKmMs
-DQo+ICAJCWVyciA9IG1seDVfd3FfbGxfY3JlYXRlKG1kZXYsICZycXAtPndxLCBycWNfd3EsICZy
-cS0NCj4gPm1wd3FlLndxLA0KPiAgCQkJCQkmcnEtPndxX2N0cmwpOw0KPiAgCQlpZiAoZXJyKQ0K
-PiAtCQkJcmV0dXJuIGVycjsNCj4gKwkJCWdvdG8gZXJyX3JxX3dxX2Rlc3Ryb3k7DQo+ICANCj4g
-IAkJcnEtPm1wd3FlLndxLmRiID0gJnJxLT5tcHdxZS53cS5kYltNTFg1X1JDVl9EQlJdOw0KPiAg
-DQo+IEBAIC00NzAsNyArNDcwLDcgQEAgc3RhdGljIGludCBtbHg1ZV9hbGxvY19ycShzdHJ1Y3Qg
-bWx4NWVfY2hhbm5lbA0KPiAqYywNCj4gIAkJZXJyID0gbWx4NV93cV9jeWNfY3JlYXRlKG1kZXYs
-ICZycXAtPndxLCBycWNfd3EsICZycS0NCj4gPndxZS53cSwNCj4gIAkJCQkJICZycS0+d3FfY3Ry
-bCk7DQo+ICAJCWlmIChlcnIpDQo+IC0JCQlyZXR1cm4gZXJyOw0KPiArCQkJZ290byBlcnJfcnFf
-d3FfZGVzdHJveTsNCj4gIA0KPiAgCQlycS0+d3FlLndxLmRiID0gJnJxLT53cWUud3EuZGJbTUxY
-NV9SQ1ZfREJSXTsNCj4gIA0K
+On Wed, Jul 29, 2020 at 07:49:02PM +0200, Tomasz Figa wrote:
+> 2020年7月29日(水) 18:11 Krzysztof Kozlowski <krzk@kernel.org>:
+> >
+> > Remove the arch/arm/plat-samsung/include/plat/samsung-time.h header and
+> > move the contents to common.h headers in mach-s3c24xx and mach-s3c64xx.
+> > The definition of declared functions is already in common.c in mach
+> > directories, so it is logically to put declaration next to them.
+> >
+> > This is also one step further towards removal of plat-samsung directory
+> > and it fixes W=1 build warnings:
+> >
+> >     arch/arm/mach-s3c64xx/common.c:174:13: warning:
+> >         no previous prototype for 'samsung_set_timer_source' [-Wmissing-prototypes]
+> >       174 | void __init samsung_set_timer_source(unsigned int event, unsigned int source)
+> >
+> >     arch/arm/mach-s3c64xx/common.c:180:13: warning:
+> >         no previous prototype for 'samsung_timer_init' [-Wmissing-prototypes]
+> >       180 | void __init samsung_timer_init(void)
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  arch/arm/mach-s3c24xx/common.h                | 12 +++++++++
+> >  arch/arm/mach-s3c24xx/mach-amlm5900.c         |  2 --
+> >  arch/arm/mach-s3c24xx/mach-anubis.c           |  1 -
+> >  arch/arm/mach-s3c24xx/mach-at2440evb.c        |  1 -
+> >  arch/arm/mach-s3c24xx/mach-bast.c             |  1 -
+> >  arch/arm/mach-s3c24xx/mach-gta02.c            |  1 -
+> >  arch/arm/mach-s3c24xx/mach-h1940.c            |  1 -
+> >  arch/arm/mach-s3c24xx/mach-jive.c             |  1 -
+> >  arch/arm/mach-s3c24xx/mach-mini2440.c         |  1 -
+> >  arch/arm/mach-s3c24xx/mach-n30.c              |  1 -
+> >  arch/arm/mach-s3c24xx/mach-nexcoder.c         |  1 -
+> >  arch/arm/mach-s3c24xx/mach-osiris.c           |  1 -
+> >  arch/arm/mach-s3c24xx/mach-otom.c             |  1 -
+> >  arch/arm/mach-s3c24xx/mach-qt2410.c           |  1 -
+> >  arch/arm/mach-s3c24xx/mach-rx1950.c           |  1 -
+> >  arch/arm/mach-s3c24xx/mach-rx3715.c           |  1 -
+> >  arch/arm/mach-s3c24xx/mach-smdk2410.c         |  1 -
+> >  arch/arm/mach-s3c24xx/mach-smdk2413.c         |  1 -
+> >  arch/arm/mach-s3c24xx/mach-smdk2416.c         |  1 -
+> >  arch/arm/mach-s3c24xx/mach-smdk2440.c         |  1 -
+> >  arch/arm/mach-s3c24xx/mach-smdk2443.c         |  1 -
+> >  arch/arm/mach-s3c24xx/mach-tct_hammer.c       |  1 -
+> >  arch/arm/mach-s3c24xx/mach-vr1000.c           |  1 -
+> >  arch/arm/mach-s3c24xx/mach-vstms.c            |  1 -
+> >  arch/arm/mach-s3c64xx/common.h                | 13 ++++++++++
+> >  arch/arm/mach-s3c64xx/mach-anw6410.c          |  1 -
+> >  arch/arm/mach-s3c64xx/mach-crag6410.c         |  1 -
+> >  arch/arm/mach-s3c64xx/mach-hmt.c              |  1 -
+> >  arch/arm/mach-s3c64xx/mach-mini6410.c         |  1 -
+> >  arch/arm/mach-s3c64xx/mach-ncp.c              |  1 -
+> >  arch/arm/mach-s3c64xx/mach-real6410.c         |  1 -
+> >  arch/arm/mach-s3c64xx/mach-smartq.c           |  1 -
+> >  arch/arm/mach-s3c64xx/mach-smartq5.c          |  1 -
+> >  arch/arm/mach-s3c64xx/mach-smartq7.c          |  1 -
+> >  arch/arm/mach-s3c64xx/mach-smdk6400.c         |  1 -
+> >  arch/arm/mach-s3c64xx/mach-smdk6410.c         |  1 -
+> >  .../plat-samsung/include/plat/samsung-time.h  | 26 -------------------
+> >  37 files changed, 25 insertions(+), 61 deletions(-)
+> >  delete mode 100644 arch/arm/plat-samsung/include/plat/samsung-time.h
+> >
+> 
+> For the s3c64xx bits:
+> 
+> Reviewed-by: Tomasz Figa <tomasz.figa@gmail.com>
+> 
+> I suppose the next step would be renaming those functions to s3c24xx_*
+> and s3c64xx_* to avoid naming collisions?
+
+That's a good point. I will send a follow up patch. Thanks!
+
+Best regards,
+Krzysztof
+
