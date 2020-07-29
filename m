@@ -2,221 +2,283 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A520C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BC2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39E23207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B7652076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:11:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fBDgIpc0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hcTf9sVp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgG2LJx (ORCPT
+        id S1726628AbgG2LLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 07:09:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57190 "EHLO
+        Wed, 29 Jul 2020 07:11:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgG2LJv (ORCPT
+        with ESMTP id S1726385AbgG2LLq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 07:09:51 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE8ADC061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 04:09:50 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id x10so10419593ybj.19
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 04:09:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=hCZz7pD2WpbFrBmK0yvXbCAHYFWZieUEyvav6WgX9Ww=;
-        b=fBDgIpc0vOgaoQ/c5Acm19xM8Ng1SzkonK/8XqMgrHbmpQab5QBVSTafbTKumrT4cv
-         2+UG+2kWEoEzT/cLNCHB+rebdSRbaM4i07yPfMPhgczEDiHdZE8wr8LCmZVHNWIWYJbj
-         4gA1SJyQ984td/pcUrzGyQBEmUU5Es41Ea1YAEoj8tA0nJHBv/DSKiWvF5BaLo6tmuMQ
-         qRPqFZxZjH8jI0mpGZWSjJYjjnUEXrwLN8CToBs5Pe6Dl2J8vIG7k+9iw+odWkbsi95v
-         6oWeygH+nZgnGfUHunxEi3cZmYrKtQhHkXytykugUKrxa8AMJg7u9/DOhGtfCLCs9R9p
-         iWOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=hCZz7pD2WpbFrBmK0yvXbCAHYFWZieUEyvav6WgX9Ww=;
-        b=pRJPgR7K/rQB9eiTW+uOB0dpSsn52pLLMmubZh3bnzpZlNV3tJolTbrYTmLuJDa5XW
-         +2cOy20vPVCWq09NY2rlKd+Vv4f71b1/omrJYortv/DewJqMhnYm7A6pZDOhNzwab2dI
-         Dt2mOwQuqgUYejxSPNpzAQT96l+Cky/5OBCoWiOFusH81TG58010Yk0bfPsokRDKjNkz
-         q/zKWV3I+Ee+gho3tIlKZWsnqo3tp5P2vKvfrsO3UCsARnn0tg1vnxH69peKIg+Ebgrf
-         F8+5ODz41FqZ3QuqzBPeexdfxoHv6V2aCza4HDt57g4Eli8X+vR04sRGV2U1oW01PfE/
-         mmkA==
-X-Gm-Message-State: AOAM532vsmDECr5RvL4n2Zg8amV7FPCmEOiwWLHz2HuZt5+keV+Du9QJ
-        Ijt24qXbU/3fVA2gqQ2VfxGr9R6Srg==
-X-Google-Smtp-Source: ABdhPJwemBwyrcQmtq+i6JehXshDb3Z/EDFY3af/tGxRmGei/ZmHiIhqREN96vheiKWPySsokH4rkvJIxA==
-X-Received: by 2002:a25:7908:: with SMTP id u8mr30559476ybc.144.1596020989922;
- Wed, 29 Jul 2020 04:09:49 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 13:09:16 +0200
-In-Reply-To: <20200729110916.3920464-1-elver@google.com>
-Message-Id: <20200729110916.3920464-2-elver@google.com>
-Mime-Version: 1.0
-References: <20200729110916.3920464-1-elver@google.com>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-Subject: [PATCH tip/locking/core v2 2/2] kcsan: Improve IRQ state trace reporting
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com, peterz@infradead.org, mingo@kernel.org
-Cc:     tglx@linutronix.de, bp@alien8.de, paulmck@kernel.org,
-        will@kernel.org, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 29 Jul 2020 07:11:46 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1119C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 04:11:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=/4UVzO6/pt+sWOpUFWJZhxoXijPadOzKX6cBV5BoYo4=; b=hcTf9sVp6162AIpmShRCKxyVPV
+        6tAOPO6k7fTQQU8rujn8GwQwh+lh8SLc3Y6foQE+0LeXaqG4hnUzk0Wh4WMhZSOV7jx2GiNO8z3cZ
+        pGG/19/c4sZCqmcJoXrB9zcachhxWRuyfsxiTqr7l1r1Xt9IZHk7kNqhm8WHMFIgAynPabCKezLGP
+        V4Lm1G0HNeLF+s9X2drhnwHSa9JfXu6HjDhx6W1Yg7BAblqNMaFIiwquIY/UbWiQS8f9sBUJeKMPb
+        cZQq3VenK9vvV9zE3gFaTVsdYVjQ0FxWZhFGES/DE2ot5X5UFm3mM37acRql+jDeo3M6BGdR58+cp
+        pkbYE1yQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0jzW-000170-OT; Wed, 29 Jul 2020 11:11:24 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 725C830411F;
+        Wed, 29 Jul 2020 13:11:20 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4D2EC21411B81; Wed, 29 Jul 2020 13:11:20 +0200 (CEST)
+Date:   Wed, 29 Jul 2020 13:11:20 +0200
+From:   peterz@infradead.org
+To:     David Howells <dhowells@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Xiaoming Ni <nixiaoming@huawei.com>,
+        David Windsor <dwindsor@gmail.com>,
+        Hans Liljestrand <ishkamiel@gmail.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Paul Moore <paul@paul-moore.com>, edumazet@google.com,
+        paulmck@kernel.org, shakeelb@google.com,
+        James Morris <jamorris@linux.microsoft.com>,
+        alex.huangjianhui@huawei.com, dylix.dailei@huawei.com,
+        chenzefeng2@huawei.com, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>
+Subject: [RFC][PATCH] locking/refcount: Provide __refcount API to obtain the
+ old value
+Message-ID: <20200729111120.GA2638@hirez.programming.kicks-ass.net>
+References: <20200721195132.GJ10769@hirez.programming.kicks-ass.net>
+ <202006142054.C00B3E9C9@keescook>
+ <20200612183450.4189588-1-keescook@chromium.org>
+ <7be4d56b-0406-099b-e505-02e074c5173e@huawei.com>
+ <544539.1595328664@warthog.procyon.org.uk>
+ <202007211144.A68C31D@keescook>
+ <3211866.1595933798@warthog.procyon.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3211866.1595933798@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To improve the general usefulness of the IRQ state trace events with
-KCSAN enabled, save and restore the trace information when entering and
-exiting the KCSAN runtime as well as when generating a KCSAN report.
+On Tue, Jul 28, 2020 at 11:56:38AM +0100, David Howells wrote:
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > > Please do not _undo_ the changes; just add the API you need.
+> > 
+> > add_return and sub_return are horrible interface for refcount, which is
+> > the problem.
+> > 
+> > If you meant: refcount_dec(), but want the old value for tracing, you
+> > want a different ordering than if you wanted to do
+> > refcount_dec_and_test(); dec_return can't know this.
+> > 
+> > David, would something like a __refcount_*() API work where there is a
+> > 3rd argument (int *), which, if !NULL, will be assigned the old value?
+> 
+> That would be fine, though the number needs to be something I can interpret
+> easily when looking through the traces.  It would also be okay if there was an
+> interpretation function that I could use in the trace point when setting the
+> variable.
 
-Without this, reporting the IRQ trace events (whether via a KCSAN report
-or outside of KCSAN via a lockdep report) is rather useless due to
-continuously being touched by KCSAN. This is because if KCSAN is
-enabled, every instrumented memory access causes changes to IRQ trace
-events (either by KCSAN disabling/enabling interrupts or taking
-report_lock when generating a report).
+I'm not entirely sure what you mean with interpret, provided you don't
+trigger a refcount fail, the number will be just what you expect and
+would get from refcount_read(). If you do trigger a fail, you'll get a
+negative value.
 
-Before "lockdep: Prepare for NMI IRQ state tracking", KCSAN avoided
-touching the IRQ trace events via raw_local_irq_save/restore() and
-lockdep_off/on().
+How's the below? I didn't provide __refcount versions for the external
+functions, I suppose that can be done too, but wondered if you really
+needed those.
 
-Fixes: 248591f5d257 ("kcsan: Make KCSAN compatible with new IRQ state tracking")
-Signed-off-by: Marco Elver <elver@google.com>
 ---
-v2:
-* Use simple struct copy, now that the IRQ trace events are in a struct.
+Subject: locking/refcount: Provide __refcount API to obtain the old value
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Wed Jul 29 13:00:57 CEST 2020
 
-Depends on:  "lockdep: Prepare for NMI IRQ state tracking"
+David requested means to obtain the old/previous value from the
+refcount API for tracing purposes.
+
+Duplicate (most of) the API as __refcount*() with an additional
+'int *' argument into which, if !NULL, the old value will be stored.
+
+Requested-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- include/linux/sched.h |  4 ++++
- kernel/kcsan/core.c   | 23 +++++++++++++++++++++++
- kernel/kcsan/kcsan.h  |  7 +++++++
- kernel/kcsan/report.c |  3 +++
- 4 files changed, 37 insertions(+)
+ include/linux/refcount.h |   65 +++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 57 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 52e0fdd6a555..060e9214c8b5 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1184,8 +1184,12 @@ struct task_struct {
- #ifdef CONFIG_KASAN
- 	unsigned int			kasan_depth;
- #endif
-+
- #ifdef CONFIG_KCSAN
- 	struct kcsan_ctx		kcsan_ctx;
-+#ifdef CONFIG_TRACE_IRQFLAGS
-+	struct irqtrace_events		kcsan_save_irqtrace;
-+#endif
- #endif
+--- a/include/linux/refcount.h
++++ b/include/linux/refcount.h
+@@ -165,7 +165,7 @@ static inline unsigned int refcount_read
+  *
+  * Return: false if the passed refcount is 0, true otherwise
+  */
+-static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
++static inline __must_check bool __refcount_add_not_zero(int i, refcount_t *r, int *oldp)
+ {
+ 	int old = refcount_read(r);
  
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 732623c30359..0fe068192781 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -291,6 +291,20 @@ static inline unsigned int get_delay(void)
- 				0);
+@@ -174,12 +174,20 @@ static inline __must_check bool refcount
+ 			break;
+ 	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &old, old + i));
+ 
++	if (oldp)
++		*oldp = old;
++
+ 	if (unlikely(old < 0 || old + i < 0))
+ 		refcount_warn_saturate(r, REFCOUNT_ADD_NOT_ZERO_OVF);
+ 
+ 	return old;
  }
  
-+void kcsan_save_irqtrace(struct task_struct *task)
++static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
 +{
-+#ifdef CONFIG_TRACE_IRQFLAGS
-+	task->kcsan_save_irqtrace = task->irqtrace;
-+#endif
++	return __refcount_add_not_zero(i, r, NULL);
 +}
 +
-+void kcsan_restore_irqtrace(struct task_struct *task)
-+{
-+#ifdef CONFIG_TRACE_IRQFLAGS
-+	task->irqtrace = task->kcsan_save_irqtrace;
-+#endif
-+}
+ /**
+  * refcount_add - add a value to a refcount
+  * @i: the value to add to the refcount
+@@ -196,16 +204,24 @@ static inline __must_check bool refcount
+  * cases, refcount_inc(), or one of its variants, should instead be used to
+  * increment a reference count.
+  */
+-static inline void refcount_add(int i, refcount_t *r)
++static inline void __refcount_add(int i, refcount_t *r, int *oldp)
+ {
+ 	int old = atomic_fetch_add_relaxed(i, &r->refs);
+ 
++	if (oldp)
++		*oldp = old;
 +
- /*
-  * Pull everything together: check_access() below contains the performance
-  * critical operations; the fast-path (including check_access) functions should
-@@ -336,9 +350,11 @@ static noinline void kcsan_found_watchpoint(const volatile void *ptr,
- 	flags = user_access_save();
- 
- 	if (consumed) {
-+		kcsan_save_irqtrace(current);
- 		kcsan_report(ptr, size, type, KCSAN_VALUE_CHANGE_MAYBE,
- 			     KCSAN_REPORT_CONSUMED_WATCHPOINT,
- 			     watchpoint - watchpoints);
-+		kcsan_restore_irqtrace(current);
- 	} else {
- 		/*
- 		 * The other thread may not print any diagnostics, as it has
-@@ -396,6 +412,12 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 		goto out;
- 	}
- 
-+	/*
-+	 * Save and restore the IRQ state trace touched by KCSAN, since KCSAN's
-+	 * runtime is entered for every memory access, and potentially useful
-+	 * information is lost if dirtied by KCSAN.
-+	 */
-+	kcsan_save_irqtrace(current);
- 	if (!kcsan_interrupt_watcher)
- 		local_irq_save(irq_flags);
- 
-@@ -539,6 +561,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- out_unlock:
- 	if (!kcsan_interrupt_watcher)
- 		local_irq_restore(irq_flags);
-+	kcsan_restore_irqtrace(current);
- out:
- 	user_access_restore(ua_flags);
+ 	if (unlikely(!old))
+ 		refcount_warn_saturate(r, REFCOUNT_ADD_UAF);
+ 	else if (unlikely(old < 0 || old + i < 0))
+ 		refcount_warn_saturate(r, REFCOUNT_ADD_OVF);
  }
-diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
-index 763d6d08d94b..29480010dc30 100644
---- a/kernel/kcsan/kcsan.h
-+++ b/kernel/kcsan/kcsan.h
-@@ -9,6 +9,7 @@
- #define _KERNEL_KCSAN_KCSAN_H
  
- #include <linux/kcsan.h>
-+#include <linux/sched.h>
- 
- /* The number of adjacent watchpoints to check. */
- #define KCSAN_CHECK_ADJACENT 1
-@@ -22,6 +23,12 @@ extern unsigned int kcsan_udelay_interrupt;
-  */
- extern bool kcsan_enabled;
- 
-+/*
-+ * Save/restore IRQ flags state trace dirtied by KCSAN.
-+ */
-+void kcsan_save_irqtrace(struct task_struct *task);
-+void kcsan_restore_irqtrace(struct task_struct *task);
++static inline void refcount_add(int i, refcount_t *r)
++{
++	__refcount_add(i, r, NULL);
++}
 +
- /*
-  * Initialize debugfs file.
+ /**
+  * refcount_inc_not_zero - increment a refcount unless it is 0
+  * @r: the refcount to increment
+@@ -219,9 +235,14 @@ static inline void refcount_add(int i, r
+  *
+  * Return: true if the increment was successful, false otherwise
   */
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index 6b2fb1a6d8cd..9d07e175de0f 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -308,6 +308,9 @@ static void print_verbose_info(struct task_struct *task)
- 	if (!task)
- 		return;
- 
-+	/* Restore IRQ state trace for printing. */
-+	kcsan_restore_irqtrace(task);
++static inline __must_check bool __refcount_inc_not_zero(refcount_t *r, int *oldp)
++{
++	return __refcount_add_not_zero(1, r, oldp);
++}
 +
- 	pr_err("\n");
- 	debug_show_held_locks(task);
- 	print_irqtrace_events(task);
--- 
-2.28.0.rc0.142.g3c755180ce-goog
-
+ static inline __must_check bool refcount_inc_not_zero(refcount_t *r)
+ {
+-	return refcount_add_not_zero(1, r);
++	return __refcount_inc_not_zero(r, NULL);
+ }
+ 
+ /**
+@@ -236,9 +257,14 @@ static inline __must_check bool refcount
+  * Will WARN if the refcount is 0, as this represents a possible use-after-free
+  * condition.
+  */
++static inline void __refcount_inc(refcount_t *r, int *oldp)
++{
++	__refcount_add(1, r, oldp);
++}
++
+ static inline void refcount_inc(refcount_t *r)
+ {
+-	refcount_add(1, r);
++	__refcount_inc(r, NULL);
+ }
+ 
+ /**
+@@ -261,10 +287,13 @@ static inline void refcount_inc(refcount
+  *
+  * Return: true if the resulting refcount is 0, false otherwise
+  */
+-static inline __must_check bool refcount_sub_and_test(int i, refcount_t *r)
++static inline __must_check bool __refcount_sub_and_test(int i, refcount_t *r, int *oldp)
+ {
+ 	int old = atomic_fetch_sub_release(i, &r->refs);
+ 
++	if (oldp)
++		*oldp = old;
++
+ 	if (old == i) {
+ 		smp_acquire__after_ctrl_dep();
+ 		return true;
+@@ -276,6 +305,11 @@ static inline __must_check bool refcount
+ 	return false;
+ }
+ 
++static inline __must_check bool refcount_sub_and_test(int i, refcount_t *r)
++{
++	return __refcount_sub_and_test(i, r, NULL);
++}
++
+ /**
+  * refcount_dec_and_test - decrement a refcount and test if it is 0
+  * @r: the refcount
+@@ -289,9 +323,14 @@ static inline __must_check bool refcount
+  *
+  * Return: true if the resulting refcount is 0, false otherwise
+  */
++static inline __must_check bool __refcount_dec_and_test(refcount_t *r, int *oldp)
++{
++	return __refcount_sub_and_test(1, r, oldp);
++}
++
+ static inline __must_check bool refcount_dec_and_test(refcount_t *r)
+ {
+-	return refcount_sub_and_test(1, r);
++	return __refcount_dec_and_test(r, NULL);
+ }
+ 
+ /**
+@@ -304,12 +343,22 @@ static inline __must_check bool refcount
+  * Provides release memory ordering, such that prior loads and stores are done
+  * before.
+  */
+-static inline void refcount_dec(refcount_t *r)
++static inline void __refcount_dec(refcount_t *r, int *oldp)
+ {
+-	if (unlikely(atomic_fetch_sub_release(1, &r->refs) <= 1))
++	int old = atomic_fetch_sub_release(1, &r->refs);
++
++	if (oldp)
++		*oldp = old;
++
++	if (unlikely(old <= 1))
+ 		refcount_warn_saturate(r, REFCOUNT_DEC_LEAK);
+ }
+ 
++static inline void refcount_dec(refcount_t *r)
++{
++	__refcount_dec(r, NULL);
++}
++
+ extern __must_check bool refcount_dec_if_one(refcount_t *r);
+ extern __must_check bool refcount_dec_not_one(refcount_t *r);
+ extern __must_check bool refcount_dec_and_mutex_lock(refcount_t *r, struct mutex *lock);
