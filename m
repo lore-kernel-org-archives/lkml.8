@@ -2,148 +2,194 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D566C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3962C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2551E2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:58:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CH7YDNUz"
+	by mail.kernel.org (Postfix) with ESMTP id D1CE4206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgG2M6S (ORCPT
+        id S1726913AbgG2M6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:58:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgG2M6S (ORCPT
+        Wed, 29 Jul 2020 08:58:48 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:52606 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgG2M6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:58:18 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32DFDC061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 05:58:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=DRXfqwwDeUly+kRvqYsw11Rt3/TZjw0rr4u8zuHz294=; b=CH7YDNUz7YReX1UolTC/KTlSas
-        YhuVNsZGUCL9njHVW4aXOIbVWHKDXtXABE8sKCPKwTfgOfi6v+cND5hyg8Yb5fi3AuBKCOTR9HakL
-        CB/jo39N6qW9sCbL/c3/YC9j10VlqHWvoH5xDO5O1cMzeIcZqHP6OkOjqscVxokruK11ghLefWfUk
-        o/sziKBz/I9Vvf4I+QreUDHg2bgVkMBnZsX8TUF3W56MeGx+npa19SkuRm/SY4BrwNhV1ctOEfQPf
-        Ur4YCReilGWjzIpjZF+ZyxZ7rT3hlOJhv7yElR7ogtxqDcjOtWMmLSggxf3FZ11/eehQiaXZel/Fr
-        D3nKwHAw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0leu-0001sg-Mf; Wed, 29 Jul 2020 12:58:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7933A300238;
-        Wed, 29 Jul 2020 14:58:11 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5D717201CB85F; Wed, 29 Jul 2020 14:58:11 +0200 (CEST)
-Date:   Wed, 29 Jul 2020 14:58:11 +0200
-From:   peterz@infradead.org
-To:     syzbot <syzbot+cb3b69ae80afd6535b0e@syzkaller.appspotmail.com>
-Cc:     fweisbec@gmail.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Subject: Re: INFO: rcu detected stall in smp_call_function
-Message-ID: <20200729125811.GA70158@hirez.programming.kicks-ass.net>
-References: <000000000000903d5805ab908fc4@google.com>
+        Wed, 29 Jul 2020 08:58:47 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id DFBAF8030866;
+        Wed, 29 Jul 2020 12:58:38 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id F5-UpB_0Hej0; Wed, 29 Jul 2020 15:58:38 +0300 (MSK)
+Date:   Wed, 29 Jul 2020 15:58:37 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+Message-ID: <20200729125837.b27ncvd2eeixstba@mobilestation>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+ <20200723100317.GJ3703480@smile.fi.intel.com>
+ <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+ <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <000000000000903d5805ab908fc4@google.com>
+In-Reply-To: <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 01:44:15AM -0700, syzbot wrote:
-> Hello,
+On Mon, Jul 27, 2020 at 12:22:28AM +0200, Linus Walleij wrote:
+> On Sat, Jul 25, 2020 at 1:03 AM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
 > 
-> syzbot found the following issue on:
+> > According to the DW APB GPIO databook it can be configured to provide either a
+> > combined IRQ line or multiple interrupt signals for each GPIO. It's up to
+> > the platform which of those signals are connected to an embedded IRQ
+> > controller. So I guess theoretically the array values can be sparse.
+> >
+> > Anyway now I see it's rather problematic. I didn't forget about the sparse IRQs
+> > array case. I just thought it would work out-of-box. Before getting your comment
+> > and digging deeper into the IRQ subsystem I had thought that it wasn't a problem
+> > passing invalid IRQ numbers to the irq_set_chained_handler_and_data() especially
+> > seeing zero IRQ number was supposed to be considered as invalid. That method shall
+> > just ignore the invalid IRQs since the method irq_to_desc() calling radix_tree_lookup()
+> > will fail to find a descriptor with invalid IRQ value and return NULL. So after
+> > getting a NULL irq_desc the method irq_set_chained_handler_and_data() would
+> > have stopped setting the handler. But turns out it may work only for
+> > CONFIG_SPARSE_IRQ. If that config isn't enabled, then a very first IRQ
+> > descriptor will be returned for zero IRQ number. That descriptor will be
+> > initialized with the passed parent_handler callback, which isn't what we want.
 > 
-> HEAD commit:    6ba1b005 Merge tag 'asm-generic-fixes-5.8' of git://git.ke..
-
-Bit useless, having git://git.ke... there, that doesn't really narrow
-things down.
-
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14da5522900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=812bbfcb6ae2cd60
-> dashboard link: https://syzkaller.appspot.com/bug?extid=cb3b69ae80afd6535b0e
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> Ouch but different beahviour on the outside of the irqchip API depending
+> on whether IRQs are sparse or not on some particular system seems to
+> be a problem with irqchip reallty, if we wanna get to the bottom of things.
+> (paging Marc)
 > 
-> Unfortunately, I don't have any reproducer for this issue yet.
+> > So in order to fix the problem we could follow either of the next paths:
+> > 1) Just make sure the passed IRQs array is not sparse for instance by remapping
+> >    it to be linear.
+> > 2) Move "if (gc->irq.parents[i]) irq_set_chained_handler_and_data()" statement to the
+> >    gpiochip_add_irqchip() method.
+> >
+> > What to you think? Linus?
 > 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+cb3b69ae80afd6535b0e@syzkaller.appspotmail.com
+
+> What about (3) fixing irqchip?
 > 
-> rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> rcu: 	Tasks blocked on level-0 rcu_node (CPUs 0-1):
-> ------------[ cut here ]------------
-> IRQs not enabled as expected
-> WARNING: CPU: 0 PID: 32297 at kernel/sched/core.c:2701 try_invoke_on_locked_down_task+0x18b/0x320 kernel/sched/core.c:2701
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 32297 Comm: syz-executor.2 Not tainted 5.8.0-rc7-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  <IRQ>
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x1f0/0x31e lib/dump_stack.c:118
->  panic+0x264/0x7a0 kernel/panic.c:231
->  __warn+0x227/0x250 kernel/panic.c:600
->  report_bug+0x1b1/0x2e0 lib/bug.c:198
->  handle_bug+0x42/0x80 arch/x86/kernel/traps.c:235
->  exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:255
->  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:540
-> RIP: 0010:try_invoke_on_locked_down_task+0x18b/0x320 kernel/sched/core.c:2701
-> Code: 48 89 df e8 f7 35 09 00 4c 89 f7 e8 df b5 cf 06 e9 b5 00 00 00 c6 05 34 82 38 08 01 48 c7 c7 8c d7 07 89 31 c0 e8 a5 a9 f5 ff <0f> 0b e9 15 ff ff ff 48 c7 c1 30 71 8d 89 80 e1 07 80 c1 03 38 c1
-> RSP: 0018:ffffc90000007c50 EFLAGS: 00010046
-> RAX: 1aaa08be6903c500 RBX: ffff888085d16ac8 RCX: ffff888085d16240
-> RDX: 0000000000010004 RSI: 0000000000010004 RDI: 0000000000000000
-> RBP: ffff888085d16b0c R08: ffffffff815dd389 R09: ffffed1015d041c3
-> R10: ffffed1015d041c3 R11: 0000000000000000 R12: 0000000000000000
-> R13: ffff8880a8bac140 R14: ffff8880a8bac4c0 R15: dffffc0000000000
->  rcu_print_task_stall kernel/rcu/tree_stall.h:269 [inline]
->  print_other_cpu_stall kernel/rcu/tree_stall.h:477 [inline]
+> Else (2), making the code inside gpiolib be careful and skip over
+> invalid IRQs.
 
-Ha, that calls it with IRQs already disabled,
+Sorry for a delay with a response to this issue. I had to give it a more thorough
+thought since the problem is a bit more complex than it seemed originally. As I
+see it now It might be wrong to implement the cases 2) and 3), but 1) is more
+appropriate.
 
-So I'm thinking we want something like so?
+First of all we need to note that GPIOlib framework provides the next parameters
+to describe the IRQ-chip:
+gc->irq.num_parents - number of parental IRQ numbers.
+gc->irq.parents[] - array of parental IRQ numbers.
+*gc->irq.valid_mask - a mask of IRQ/GPIO lines describing a valid IRQ.
+*gc->irq.map - mapping of hw IRQ/GPIO ID -> parental IRQ numbers.
 
----
+Using that set we can handle any case of linear and sparse parental IRQs. Here
+is how it can be implemented in the framework of DW APB GPIO controller.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2142c6767682..3182caf14844 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2694,12 +2694,11 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
-  */
- bool try_invoke_on_locked_down_task(struct task_struct *p, bool (*func)(struct task_struct *t, void *arg), void *arg)
- {
--	bool ret = false;
- 	struct rq_flags rf;
-+	bool ret = false;
- 	struct rq *rq;
- 
--	lockdep_assert_irqs_enabled();
--	raw_spin_lock_irq(&p->pi_lock);
-+	raw_spin_lock_irqsave(&p->pi_lock, rf.flags);
- 	if (p->on_rq) {
- 		rq = __task_rq_lock(p, &rf);
- 		if (task_rq(p) == rq)
-@@ -2716,7 +2715,7 @@ bool try_invoke_on_locked_down_task(struct task_struct *p, bool (*func)(struct t
- 				ret = func(p, arg);
- 		}
- 	}
--	raw_spin_unlock_irq(&p->pi_lock);
-+	raw_spin_unlock_irqrestore(&p->pi_lock, rf.flags);
- 	return ret;
- }
- 
+DW APB GPIO can be synthesized with two configs:
+1) Combined IRQ line (GPIO_INTR_IO == True),
+2) Multiple interrupt signals for each GPIO (GPIO_INTR_IO == False).
+
+Obviously the former case is trivial:
+
+     IRQ_combined
+    ______^________
+   /_ _ _ _ _ ___ _\
+   |_|_|_|_|_|...|_| - GPIOs
+
+In that case
+gc->irq.num_parents = 1;
+gc->irq.parents[0] = IRQ_combined;
+*gc->irq.valid_mask = GENMASK(ngpio - 1, 0); // This is done by the GPIOlib core itself.
+
+The later one (when multiple interrupt signals are involved) can be a bit more
+complicated. It can be also split up into two cases:
+2a) One-on-one GPIO-IRQ mapping.
+2b) Sparse GPIO-IRQ mapping.
+
+It's straightforward to implement 2a):
+
+   i1i2i3i4i5 ... iN
+    _ _ _ _ _ ___ _
+   |_|_|_|_|_|...|_| - GPIOs
+
+In that case
+gc->irq.num_parents = ngpio;
+gc->irq.parents[] = {i1, i2, i3, i4, i5, ... iN};
+gc->irq.map = {i1, i2, i3, i4, i5, ... iN};
+*gc->irq.valid_mask = GENMASK(ngpio - 1, 0);
+
+The complication starts when we get to implementing 2b):
+
+   i1 xi3i4 x ... iN
+    _ _ _ _ _ ___ _
+   |_|_|_|_|_|...|_| - GPIOs
+
+In order to cover this case we need to answer on two question.
+Firstly how to get such platform config? I am not sure about ACPI, but
+aside from straightforward platform_data-based setup such configuration
+can be reached by setting up the "interrupts-extended" DT-property with
+zeroed phandle.
+
+Ok, since it's possible to meet such platform config, we need to think
+how to handle it and here is the second question. How to describe such
+case in the framework of GPIOlib-IRQchip?
+
+So from my side it was wrong to set the sparse IRQs array to
+gc->irq.parents. Instead I should have scanned the sparse IRQs array,
+calculated the number of non-empty parental IRQs, created an array of linear
+(non-sparse) IRQs, initialized *gc->irq.valid_mask in accordance with the
+sparse parental IRQs array. In other words it was wrong to assume, that
+each gc->irq.parents entry corresponds to the IRQ/GPIO line. The gc->irq.parents
+array just describes the parental IRQs and nothing else.
+
+Shortly speaking here is how the GPIOlib IRQchip parameters should be
+initialized in this case:
+gc->irq.num_parents - number of valid parental IRQs.
+gc->irq.parents - non-sparse, linear array of valid IRQs.
+*gc->irq.valid_mask - mask initialized by means of the gc->irq.init_valid_mask()
+callback, which indicates valid IRQ/GPIO IDs.
+*gc->irq.map - sparse array of parental IRQ numbers (which I mistakenly tried to
+pass through the gc->irq.parents pointer).
+
+After that GPIOlib IRQchip should work just fine without need to be patched 
+in order to check whether the passed parental IRQs are valid or not.
+
+Please correct me if I am wrong in some aspects of the solution described above.
+I'll send a fix of the problem shortly.
+
+-Sergey
+
+> 
+> Yours,
+> Linus Walleij
