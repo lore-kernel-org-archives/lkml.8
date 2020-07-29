@@ -2,111 +2,133 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B614C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB90C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37D9B206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596066935;
-	bh=2qQU4K0e6W1DjVLwg3WLwYj6OxB4s7i2Sd31hVUu5eM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=tfEV+S1f9/sDKOrlsJYhlTEjzagRVSItODcBlv0280gGpWglG9kIM6vHVtIK0s/uq
-	 bOBs+Q5rMGhBqudUiIvLZroCHvTv4Wm9h9j1u1TpU0KvYk5JFjSWd3E8Wj5yv2VmQ0
-	 OmYZ1Ydqjh0tv9u0cTsCp+kA80xoTonygWAeVj14=
+	by mail.kernel.org (Postfix) with ESMTP id 4DE0D2072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:59:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Ra6kVtES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgG2Xzd (ORCPT
+        id S1728102AbgG2X7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 19:55:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38390 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727072AbgG2Xzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 19:55:31 -0400
-Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD7A82053B;
-        Wed, 29 Jul 2020 23:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596066931;
-        bh=2qQU4K0e6W1DjVLwg3WLwYj6OxB4s7i2Sd31hVUu5eM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=S2DX0SCmU+RLfcr2hkR9YySOo/Xullv+roovdeaql6qa9XySXHetZRaUhKmjfx9p1
-         KEX5mkuXB8aMrOsJxcrWqyBmVNmoTiNkj4nsUzSpvJAPQYBEPanlz7lV3XJtE7KSrw
-         qsYu5YcLZEGlacvt2NiwsAi5K0Eo1gB04ye2biL8=
-Date:   Wed, 29 Jul 2020 18:55:28 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] PCI: Minor kerneldoc warning fixes
-Message-ID: <20200729235528.GA1981103@bjorn-Precision-5520>
+        Wed, 29 Jul 2020 19:59:50 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:8562 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727087AbgG2X7t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 19:59:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1596067189; x=1627603189;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=BnIoflnIdc7ZyZiSo9RV0WJeZH5KULhyI7DfDJalzNI=;
+  b=Ra6kVtESpLO9GPojeksrVnxR3DZQNpqJTUTA/PPbiR8CL5Lf76ih/7jN
+   kcPWEqDt0/EGbWFXZZ1qWIGbFlDFup+Yt7cRax8oLqHT5U4lnxiVAVRbP
+   gI3gCiaqNzWJtK/JEF8j2OnPacv65L+5Zb3v6l/T/RaEw235zPgr4ODu6
+   M=;
+IronPort-SDR: 3mDP/UKhfqQQDllXMLHoST5EQR2tSsGYoX9QG/BFDcReTHRLM80nOZKQkr7AwpTTAn59Yegu6s
+ uVkpBuqFlt/Q==
+X-IronPort-AV: E=Sophos;i="5.75,412,1589241600"; 
+   d="scan'208";a="64109951"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 29 Jul 2020 23:59:44 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id C0D07A247B;
+        Wed, 29 Jul 2020 23:59:40 +0000 (UTC)
+Received: from EX13D20UWC002.ant.amazon.com (10.43.162.163) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 29 Jul 2020 23:59:40 +0000
+Received: from u79c5a0a55de558.ant.amazon.com (10.43.162.109) by
+ EX13D20UWC002.ant.amazon.com (10.43.162.163) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 29 Jul 2020 23:59:37 +0000
+From:   Alexander Graf <graf@amazon.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+CC:     Jonathan Corbet <corbet@lwn.net>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        "Joerg Roedel" <joro@8bytes.org>,
+        KarimAllah Raslan <karahmed@amazon.de>, <kvm@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/3] Allow user space to restrict and augment MSR emulation
+Date:   Thu, 30 Jul 2020 01:59:26 +0200
+Message-ID: <20200729235929.379-1-graf@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729201224.26799-1-krzk@kernel.org>
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.109]
+X-ClientProxiedBy: EX13D04UWA002.ant.amazon.com (10.43.160.31) To
+ EX13D20UWC002.ant.amazon.com (10.43.162.163)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 10:12:18PM +0200, Krzysztof Kozlowski wrote:
-> Hi,
-> 
-> Changes since v2:
-> 1. Fix almost all warnings, except:
->    drivers/pci/controller/pci-hyperv.c:2534: warning: Function parameter or member 'version' not described in 'hv_pci_protocol_negotiation'
->    drivers/pci/controller/pci-hyperv.c:2534: warning: Function parameter or member 'num_version' not described in 'hv_pci_protocol_negotiation'
->    Not sure what are these.
-> 
-> 2. New patches, split per driver or subdirectory
-> 
-> Best regards,
-> Krzysztof
-> 
-> Krzysztof Kozlowski (6):
->   PCI: Fix kerneldoc
->   PCI: endpoint: Fix kerneldoc
->   PCI: hotplug: Fix kerneldoc
->   PCI: dwc: Fix kerneldoc
->   PCI: rockchip: Fix kerneldoc
->   PCI: xilinx: Fix kerneldoc
-> 
->  drivers/pci/ats.c                               | 3 ++-
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 2 +-
->  drivers/pci/controller/pcie-rockchip-ep.c       | 1 +
->  drivers/pci/controller/pcie-xilinx-cpm.c        | 1 +
->  drivers/pci/endpoint/functions/pci-epf-test.c   | 2 +-
->  drivers/pci/endpoint/pci-ep-cfs.c               | 2 +-
->  drivers/pci/endpoint/pci-epc-core.c             | 2 +-
->  drivers/pci/endpoint/pci-epc-mem.c              | 2 +-
->  drivers/pci/endpoint/pci-epf-core.c             | 4 +++-
->  drivers/pci/hotplug/acpi_pcihp.c                | 4 ++--
->  drivers/pci/hotplug/pciehp_core.c               | 1 +
->  drivers/pci/of.c                                | 2 ++
->  drivers/pci/pci-pf-stub.c                       | 2 +-
->  drivers/pci/setup-bus.c                         | 1 +
->  drivers/pci/vc.c                                | 1 -
->  15 files changed, 19 insertions(+), 11 deletions(-)
+While tying to add support for the MSR_CORE_THREAD_COUNT MSR in KVM,
+I realized that we were still in a world where user space has no control
+over what happens with MSR emulation in KVM.
 
-Thanks, I squashed these all together and applied them on pci/doc for
-v5.9.
+That is bad for multiple reasons. In my case, I wanted to emulate the
+MSR in user space, because it's a CPU specific register that does not
+exist on older CPUs and that really only contains informational data that
+is on the package level, so it's a natural fit for user space to provide
+it.
 
-This was a tiny bit messy because pcie-xilinx-cpm.c is new this cycle
-and ideally we would have squashed that fix into the original commit,
-but we don't need to bother with that.
+However, it is also bad on a platform compatibility level. Currrently,
+KVM has no way to expose different MSRs based on the selected target CPU
+type.
+
+This patch set introduces a way for user space to indicate to KVM which
+MSRs should be handled in kernel space. With that, we can solve part of
+the platform compatibility story. Or at least we can not handle AMD specific
+MSRs on an Intel platform and vice versa.
+
+In addition, it introduces a way for user space to get into the loop
+when an MSR access would generate a #GP fault, such as when KVM finds an
+MSR that is not handled by the in-kernel MSR emulation or when the guest
+is trying to access reserved registers.
+
+In combination with the allow list, the user space trapping allows us
+to emulate arbitrary MSRs in user space, paving the way for target CPU
+specific MSR implementations from user space.
+
+Alexander Graf (3):
+  KVM: x86: Deflect unknown MSR accesses to user space
+  KVM: x86: Introduce allow list for MSR emulation
+  KVM: selftests: Add test for user space MSR handling
+
+ Documentation/virt/kvm/api.rst                | 115 +++++++++
+ arch/x86/include/asm/kvm_host.h               |  13 +
+ arch/x86/include/uapi/asm/kvm.h               |  15 ++
+ arch/x86/kvm/emulate.c                        |  18 +-
+ arch/x86/kvm/x86.c                            | 234 +++++++++++++++++-
+ include/trace/events/kvm.h                    |   2 +-
+ include/uapi/linux/kvm.h                      |  15 ++
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../selftests/kvm/x86_64/user_msr_test.c      | 199 +++++++++++++++
+ 9 files changed, 605 insertions(+), 7 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/user_msr_test.c
+
+-- 
+2.17.1
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
