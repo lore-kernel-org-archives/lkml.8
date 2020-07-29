@@ -2,88 +2,94 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2611C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96918206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:01:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="noBLcc+J"
+	by mail.kernel.org (Postfix) with ESMTP id C59902076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:02:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596006167;
+	bh=PsG28ZKBgOwqSDbxUyTDDzHrSZ08sLR2QQcOJCPJkbg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=osKnnBIF7VV+RAVL8oQRSY7T8RABR4ptHaWYgPuPCeq5JD4cFQnUOBYljl5PzF/Yn
+	 ztNi7LxVs5oyqILtkYqTtvtWbYHPckF2JyYDD0Ahw7I0ib3oSd1V3j8AAUxXuo6eTd
+	 F3FLN8VgQ1xIbrgLz4Ry82MvTvxgFeufwPzAyHqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgG2HBD (ORCPT
+        id S1727113AbgG2HCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:01:03 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:52267 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726314AbgG2HBC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:01:02 -0400
-X-UUID: a131defefa254890b22a2b39d581cb53-20200729
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=q5ldSUPNgQ68Q35WAqjWkWypxVf1COme3q/I/kw3nEY=;
-        b=noBLcc+JLDU8aEnadp7afUkBhGKCJMbvpWrgm7CgjoD22tLskUREy55QqQqdCsSp2Yv3pb9Ik2g7EFCIL8LA60+EbZSNnyaQleaRhyhT/e3FVo1plBAV7xyP8tvx9+aLKSIV/lD8i7/6XP/UmJDOr0Zgvphg+2TmgvnaQFEEboY=;
-X-UUID: a131defefa254890b22a2b39d581cb53-20200729
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1352443270; Wed, 29 Jul 2020 15:00:56 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 29 Jul 2020 15:00:54 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 29 Jul 2020 15:00:51 +0800
-Message-ID: <1596006055.17247.7.camel@mtkswgap22>
-Subject: Re: [PATCH v7 4/8] scsi: ufs: Add some debug infos to
- ufshcd_print_host_state
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Can Guo <cang@codeaurora.org>
-CC:     "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
-        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
-        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
-        "sh425.lee@samsung.com" <sh425.lee@samsung.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        "saravanak@google.com" <saravanak@google.com>,
-        "salyzyn@google.com" <salyzyn@google.com>,
-        "Alim Akhtar" <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Bart Van Assche" <bvanassche@acm.org>,
-        Satya Tangirala <satyat@google.com>,
-        "open list" <linux-kernel@vger.kernel.org>
-Date:   Wed, 29 Jul 2020 15:00:55 +0800
-In-Reply-To: <1595912460-8860-5-git-send-email-cang@codeaurora.org>
-References: <1595912460-8860-1-git-send-email-cang@codeaurora.org>
-         <1595912460-8860-5-git-send-email-cang@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 29 Jul 2020 03:02:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726314AbgG2HCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 03:02:46 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D99112070B;
+        Wed, 29 Jul 2020 07:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596006166;
+        bh=PsG28ZKBgOwqSDbxUyTDDzHrSZ08sLR2QQcOJCPJkbg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KlNOKaUxeBPVXLkj+pydQcG5m7sPnUW6DnUrO1n1hlDwdy6+BUgLgBCkM9dPrv6uh
+         o6+5xOO/UsOYrvMc97JJNWyz1cNIUoHVG6BIf+NEkzghCrLt81UkA6YZQSWmcmfEZp
+         /JJ3LPd10QyBCUSEbkgjBSsvpB+t/zQe3qdvyi/g=
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH] f2fs: fix deadlock between quota writes and checkpoint
+Date:   Wed, 29 Jul 2020 00:02:44 -0700
+Message-Id: <20200729070244.584518-1-jaegeuk@kernel.org>
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA3LTI4IGF0IDEzOjAwICswODAwLCBDYW4gR3VvIHdyb3RlOg0KPiBUaGUg
-aW5mb3Mgb2YgdGhlIGxhc3QgaW50ZXJydXB0IHN0YXR1cyBhbmQgaXRzIHRpbWVzdGFtcCBhcmUg
-dmVyeSBoZWxwZnVsDQo+IHdoZW4gZGVidWcgc3lzdGVtIHN0YWJpbGl0eSBpc3N1ZXMsIGUuZy4g
-SVJRIHN0YXJ2YXRpb24sIHNvIGFkZCB0aGVtIHRvDQo+IHVmc2hjZF9wcmludF9ob3N0X3N0YXRl
-LiBNZWFud2hpbGUsIFVGUyBkZXZpY2UgaW5mb3MgbGlrZSBtb2RlbCBuYW1lIGFuZA0KPiBpdHMg
-RlcgdmVyc2lvbiBhbHNvIGNvbWUgaW4gaGFuZHkgZHVyaW5nIGRlYnVnLiBJbiBhZGRpdGlvbiwg
-dGhpcyBjaGFuZ2UNCj4gbWFrZXMgY2xlYW51cCB0byBzb21lIHByaW50cyBpbiB1ZnNoY2RfcHJp
-bnRfaG9zdF9yZWdzIGFzIHNpbWlsYXIgcHJpbnRzDQo+IGFyZSBhbHJlYWR5IGF2YWlsYWJsZSBp
-biB1ZnNoY2RfcHJpbnRfaG9zdF9zdGF0ZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IENhbiBHdW8g
-PGNhbmdAY29kZWF1cm9yYS5vcmc+DQo+IFJldmlld2VkLWJ5OiBBdnJpIEFsdG1hbiA8YXZyaS5h
-bHRtYW5Ad2RjLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBt
-ZWRpYXRlay5jb20+DQoNCg==
+f2fs_write_data_pages(quota_mapping)
+ __f2fs_write_data_pages             f2fs_write_checkpoint
+  * blk_start_plug(&plug);
+  * add bio in write_io[DATA]
+                                      - block_operations
+                                      - skip syncing quota by
+                                                >DEFAULT_RETRY_QUOTA_FLUSH_COUNT
+                                      - down_write(&sbi->node_write);
+  - f2fs_write_single_data_page
+    - f2fs_do_write_data_page
+      - f2fs_outplace_write_data
+        - do_write_page
+           - f2fs_allocate_data_block
+            - down_write(node_write)
+                                      - f2fs_wait_on_all_pages(F2FS_WB_CP_DATA);
+
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+---
+ fs/f2fs/checkpoint.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index 8c782d3f324f0..99c8061da55b9 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -1269,6 +1269,8 @@ void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
+ 		if (type == F2FS_DIRTY_META)
+ 			f2fs_sync_meta_pages(sbi, META, LONG_MAX,
+ 							FS_CP_META_IO);
++		else if (type == F2FS_WB_CP_DATA)
++			f2fs_submit_merged_write(sbi, DATA);
+ 		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
+ 	}
+ 	finish_wait(&sbi->cp_wait, &wait);
+-- 
+2.28.0.rc0.142.g3c755180ce-goog
 
