@@ -2,103 +2,270 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A91C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08CD92082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251432082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:55:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Djc/rBMj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKqQtSnc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgG2Vze (ORCPT
+        id S1727781AbgG2Vzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 17:55:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43956 "EHLO
+        Wed, 29 Jul 2020 17:55:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2Vzd (ORCPT
+        with ESMTP id S1726365AbgG2Vzz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 17:55:33 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2646BC061794;
-        Wed, 29 Jul 2020 14:55:33 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BH6mL5mgbz9sRN;
-        Thu, 30 Jul 2020 07:55:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596059731;
-        bh=feb3M2Tk7QoN+CzEDFxCJPGadKxz1RoZ7BeKRMA8ws0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Djc/rBMjXX06vHBQ6rISKwYiBCTgzF7w6G7b7UcN8xfz2tv5rcu7JTBlTAoQNcTLm
-         eUkTv3nFcSig2ivGJ7SNl7tefJzb8gOejqKTSHJyDKDj1jDM5aR/UfXfM7WDdcg2IV
-         McLqLa/k7I7MKC9J61qh6jXDgm5Py92ivciH0R5zfoKkzCj11BsPYeT5YRSOEivRL6
-         +9ZSHHly3y+yiwSWLrXatiipqjfLI8wyShqDCURY6xEWqA0LarSvyEQ48syImKK1GK
-         Sq3u37Ba9ekKUU38k/RuUofMF0AHopRnx+eub1MX6Xo6oLsfdwfdqo8C7jGhwmDSJ0
-         jtL4cVjjI/42A==
-Date:   Thu, 30 Jul 2020 07:55:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: linux-next: Fixes tag needs some work in the powerpc tree
-Message-ID: <20200730075530.02c7eb5f@canb.auug.org.au>
+        Wed, 29 Jul 2020 17:55:55 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0420BC061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 14:55:55 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k8so4409107wma.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 14:55:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TiiQwPk5+wOcxrYMTcSS5MR4bewjoZWHQZN/jXHtdiY=;
+        b=gKqQtSncl3aZQrpCwzujZGt/kEYgdOrn7K97OchbFtV6qAJ+AerT2QZqhONhgsO/BU
+         z+eftmao4cxw//G57++dPfV1FINhUppAQQhsT/QrFjwtFMpp0cbQ4Zi23vy1lOABTSfj
+         DzemwfZLHraQOvZsxJbCJkPlK9Ony3NEQ3qaXfkuESwBjY9Iq7Bs3wpIq1xs9FgYubT7
+         tGqLmMzUrrdj4wIkU08sVubHzFgyX5R57qpvcSNPBUk904JItj1EfOSZ1VlkIXYDUnqF
+         bl/Ew4Jtn9PCNpDGKyrYbSdgFV+iWzNy1G+Wj3EKEpi+WNyhKLt/DjD+c7afiDOu4c2v
+         5GEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TiiQwPk5+wOcxrYMTcSS5MR4bewjoZWHQZN/jXHtdiY=;
+        b=jvTFLLBXRgIBtbiyHUX0ugfcI0w+uO4/QITDpe0ezx0MKEintO4rnrMuOtsJNKRydp
+         SMqcY2FtrqAPf1MkadbLgt18Rn4PAk/2N4vJ1IhSrss4b8eDeptKlInfXA/H3PkC21Ke
+         jzfiXnQXmOgRmh9L6DJFcgc5dwn5KkmMetT4DDb5S+SXTSwssUrOcI3MQXkfvGVBmGOw
+         oAOcwqwiiOlKmPcQmImDEwm01AkOJlGmakRYuyhpGJ5s/4NrZZSXVRZDPWX89/seRuwC
+         V4TgLwgMbimbtV0T8XicALy6wCaPb1yGJUjndCKA0MoRtBxnvvuuO5sHhgBTyRycq2pm
+         hHAw==
+X-Gm-Message-State: AOAM530Julmm1HtXVVz2WchX7wBaKn0mfW/nr92uQNW7X9thOlp8VfRl
+        DGt7A7qB8eZwZrjc/mo2DvYpOx6Tzqu0ni9cfYg=
+X-Google-Smtp-Source: ABdhPJy6xeXbe287qC13KOwKNKQS5Im4azlgXn6R3Xvzb5UezGM3otbEEztVP2ILmuILeliBoMojwbe/rnAUjzLzlrs=
+X-Received: by 2002:a1c:2:: with SMTP id 2mr10798884wma.79.1596059753614; Wed,
+ 29 Jul 2020 14:55:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ftLvL+EvRwAOYve/warG=5m";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200728192924.441570-1-yepeilin.cs@gmail.com> <30b2a31f-77c2-56c1-ecde-875c6eea99d5@gmail.com>
+In-Reply-To: <30b2a31f-77c2-56c1-ecde-875c6eea99d5@gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 29 Jul 2020 17:55:42 -0400
+Message-ID: <CADnq5_Pzz5A4kRyF061K+0hjsBEe7GT6j3zrfKZUrbjGcy1GBQ@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH] drm/amdgpu: Prevent
+ kernel-infoleak in amdgpu_info_ioctl()
+To:     Christian Koenig <christian.koenig@amd.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Leo Liu <leo.liu@amd.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        =?UTF-8?B?TWFyZWsgT2zFocOhaw==?= <marek.olsak@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>, Trek <trek00@inbox.ru>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Evan Quan <evan.quan@amd.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Xiaojie Yuan <xiaojie.yuan@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ftLvL+EvRwAOYve/warG=5m
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Applied.  Thanks!
 
-Hi all,
+Alex
 
-In commit
-
-  443359aebce0 ("powerpc/perf: Fix MMCRA_BHRB_DISABLE define for binutils <=
- 2.28")
-
-Fixes tag
-
-  Fixes: 9908c826d5ed ("Add Power10 PMU feature to DT CPU features")
-
-has these problem(s):
-
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
-Just a hint for the future.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ftLvL+EvRwAOYve/warG=5m
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8h8FIACgkQAVBC80lX
-0Gykmgf8Dx0n7wa4xu6xO0gRMPjJuLp/+yab4jJ+BjqOQ/nY1RXB2jXEqOjon6Gw
-3+C0L4ZwCnPlLmkoc5eGa2mauYfqqn9xvB5LwdtG9wt2weymCgNmPeRQ5zmNeupQ
-9kuavgmrBK48SVxuMapq6goBse7azECS6LBAexuvKjye3FKS6njxIZh/Msb0cPLS
-mQtH6FikGwkNRNeWOlMHWTSRJSk0DUKZD9H/AHhjolcXV0aGw2Qskx+5+FV4vrt2
-9CUg1I4FprDueCDJUV0tBTZGDPaewDXUJ1sYDFvp/ZSjFBrgZvI/HfDDvOXaXVQH
-QscrAe9TkG0mXDbnVUe9D3iSqAA9Hw==
-=g8tK
------END PGP SIGNATURE-----
-
---Sig_/ftLvL+EvRwAOYve/warG=5m--
+On Wed, Jul 29, 2020 at 4:11 AM Christian K=C3=B6nig
+<ckoenig.leichtzumerken@gmail.com> wrote:
+>
+> Am 28.07.20 um 21:29 schrieb Peilin Ye:
+> > Compiler leaves a 4-byte hole near the end of `dev_info`, causing
+> > amdgpu_info_ioctl() to copy uninitialized kernel stack memory to usersp=
+ace
+> > when `size` is greater than 356.
+> >
+> > In 2015 we tried to fix this issue by doing `=3D {};` on `dev_info`, wh=
+ich
+> > unfortunately does not initialize that 4-byte hole. Fix it by using
+> > memset() instead.
+> >
+> > Cc: stable@vger.kernel.org
+> > Fixes: c193fa91b918 ("drm/amdgpu: information leak in amdgpu_info_ioctl=
+()")
+> > Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+> > Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+>
+> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+>
+> I can't count how many of those we have fixed over the years.
+>
+> At some point we should probably document that using "=3D {}" or "=3D { 0=
+ }"
+> in the kernel is a really bad idea and should be avoided.
+>
+> Thanks,
+> Christian.
+>
+> > ---
+> > $ pahole -C "drm_amdgpu_info_device" drivers/gpu/drm/amd/amdgpu/amdgpu_=
+kms.o
+> > struct drm_amdgpu_info_device {
+> >       __u32                      device_id;            /*     0     4 *=
+/
+> >       __u32                      chip_rev;             /*     4     4 *=
+/
+> >       __u32                      external_rev;         /*     8     4 *=
+/
+> >       __u32                      pci_rev;              /*    12     4 *=
+/
+> >       __u32                      family;               /*    16     4 *=
+/
+> >       __u32                      num_shader_engines;   /*    20     4 *=
+/
+> >       __u32                      num_shader_arrays_per_engine; /*    24=
+     4 */
+> >       __u32                      gpu_counter_freq;     /*    28     4 *=
+/
+> >       __u64                      max_engine_clock;     /*    32     8 *=
+/
+> >       __u64                      max_memory_clock;     /*    40     8 *=
+/
+> >       __u32                      cu_active_number;     /*    48     4 *=
+/
+> >       __u32                      cu_ao_mask;           /*    52     4 *=
+/
+> >       __u32                      cu_bitmap[4][4];      /*    56    64 *=
+/
+> >       /* --- cacheline 1 boundary (64 bytes) was 56 bytes ago --- */
+> >       __u32                      enabled_rb_pipes_mask; /*   120     4 =
+*/
+> >       __u32                      num_rb_pipes;         /*   124     4 *=
+/
+> >       /* --- cacheline 2 boundary (128 bytes) --- */
+> >       __u32                      num_hw_gfx_contexts;  /*   128     4 *=
+/
+> >       __u32                      _pad;                 /*   132     4 *=
+/
+> >       __u64                      ids_flags;            /*   136     8 *=
+/
+> >       __u64                      virtual_address_offset; /*   144     8=
+ */
+> >       __u64                      virtual_address_max;  /*   152     8 *=
+/
+> >       __u32                      virtual_address_alignment; /*   160   =
+  4 */
+> >       __u32                      pte_fragment_size;    /*   164     4 *=
+/
+> >       __u32                      gart_page_size;       /*   168     4 *=
+/
+> >       __u32                      ce_ram_size;          /*   172     4 *=
+/
+> >       __u32                      vram_type;            /*   176     4 *=
+/
+> >       __u32                      vram_bit_width;       /*   180     4 *=
+/
+> >       __u32                      vce_harvest_config;   /*   184     4 *=
+/
+> >       __u32                      gc_double_offchip_lds_buf; /*   188   =
+  4 */
+> >       /* --- cacheline 3 boundary (192 bytes) --- */
+> >       __u64                      prim_buf_gpu_addr;    /*   192     8 *=
+/
+> >       __u64                      pos_buf_gpu_addr;     /*   200     8 *=
+/
+> >       __u64                      cntl_sb_buf_gpu_addr; /*   208     8 *=
+/
+> >       __u64                      param_buf_gpu_addr;   /*   216     8 *=
+/
+> >       __u32                      prim_buf_size;        /*   224     4 *=
+/
+> >       __u32                      pos_buf_size;         /*   228     4 *=
+/
+> >       __u32                      cntl_sb_buf_size;     /*   232     4 *=
+/
+> >       __u32                      param_buf_size;       /*   236     4 *=
+/
+> >       __u32                      wave_front_size;      /*   240     4 *=
+/
+> >       __u32                      num_shader_visible_vgprs; /*   244    =
+ 4 */
+> >       __u32                      num_cu_per_sh;        /*   248     4 *=
+/
+> >       __u32                      num_tcc_blocks;       /*   252     4 *=
+/
+> >       /* --- cacheline 4 boundary (256 bytes) --- */
+> >       __u32                      gs_vgt_table_depth;   /*   256     4 *=
+/
+> >       __u32                      gs_prim_buffer_depth; /*   260     4 *=
+/
+> >       __u32                      max_gs_waves_per_vgt; /*   264     4 *=
+/
+> >       __u32                      _pad1;                /*   268     4 *=
+/
+> >       __u32                      cu_ao_bitmap[4][4];   /*   272    64 *=
+/
+> >       /* --- cacheline 5 boundary (320 bytes) was 16 bytes ago --- */
+> >       __u64                      high_va_offset;       /*   336     8 *=
+/
+> >       __u64                      high_va_max;          /*   344     8 *=
+/
+> >       __u32                      pa_sc_tile_steering_override; /*   352=
+     4 */
+> >
+> >       /* XXX 4 bytes hole, try to pack */
+> >
+> >       __u64                      tcc_disabled_mask;    /*   360     8 *=
+/
+> >
+> >       /* size: 368, cachelines: 6, members: 49 */
+> >       /* sum members: 364, holes: 1, sum holes: 4 */
+> >       /* last cacheline: 48 bytes */
+> > };
+> >
+> >   drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 ++-
+> >   1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/=
+amd/amdgpu/amdgpu_kms.c
+> > index a8c47aecd342..0047da06041f 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+> > @@ -707,9 +707,10 @@ static int amdgpu_info_ioctl(struct drm_device *de=
+v, void *data, struct drm_file
+> >               return n ? -EFAULT : 0;
+> >       }
+> >       case AMDGPU_INFO_DEV_INFO: {
+> > -             struct drm_amdgpu_info_device dev_info =3D {};
+> > +             struct drm_amdgpu_info_device dev_info;
+> >               uint64_t vm_size;
+> >
+> > +             memset(&dev_info, 0, sizeof(dev_info));
+> >               dev_info.device_id =3D dev->pdev->device;
+> >               dev_info.chip_rev =3D adev->rev_id;
+> >               dev_info.external_rev =3D adev->external_rev_id;
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
