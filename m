@@ -2,220 +2,197 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B83C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63C7220663
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12ACE20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:54:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r5xDh54R"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GjCNvXhc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vm5laUuT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgG2Kxb (ORCPT
+        id S1726757AbgG2Kyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 06:53:31 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:10491 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726353AbgG2Kxb (ORCPT
+        Wed, 29 Jul 2020 06:54:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41282 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgG2Kyw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 06:53:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596020009; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=n1CY9UAqIvLrlKb0rj2uThTnQrOwR0zo841z1xrGeiw=;
- b=r5xDh54R9jzZ0Gu/zFJZHzeNpBRaP97XnD7uuKSa627w+pZhRIUuBwSfPHr5coJqY3TvDeRa
- pDDSOalk6zEkbH9N5tdvSlpqAeuJDe4nBkwYkBoTrIv2bf77CaVQnOnwN6/g6Gq5g9wa76TS
- d45J8EGFQHcpm4K7FiWC9TKWEY4=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f215527fcbecb3df12f577b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 10:53:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5BE42C433AD; Wed, 29 Jul 2020 10:53:26 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DF473C433C6;
-        Wed, 29 Jul 2020 10:53:24 +0000 (UTC)
+        Wed, 29 Jul 2020 06:54:52 -0400
+Date:   Wed, 29 Jul 2020 10:54:48 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596020089;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2YtiANiuId38HfM0lHPbqZZRMIQuKvJ65i0+RblqyVA=;
+        b=GjCNvXhcY7htkn24fs0XRyH5DffEHZNPCN2a1ri+/kGl7yH0TJ4oQYZ8Qx9IRohwFnHLr+
+        9Oi0ciVonoT2EnFdIayd5MBE3Kw8eqRN5wPg7GHzeR1bybl3ofd4ikFEb/YZwt7gYmwMjA
+        4PbGxug3w+0XQPpGNR5/n5RVO0cTe/g1Vv5NyKAp8epxkuuL30BUWZZVUf43d4l5VBmRNh
+        Hj1u1WzjjpnGE4EPRS6uT02l+9smo/m0XUOAHwwD1zUzO4nv9MzeLuL4YcrfiKcq18LlZn
+        ZDkMVmD692jBnShF0YJC1kwutQSz7LLpVqOHuttQ0tLm8KG0WhCyjRZ8r7cjLw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596020089;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2YtiANiuId38HfM0lHPbqZZRMIQuKvJ65i0+RblqyVA=;
+        b=Vm5laUuTb1zD30BrhcfjMYcp+fbzkZDilL7Zjx3MJm6mTXTXLyHuFOoCn+DlkFzl5rEQZA
+        fuq3vjOoV52vm/Dw==
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/fifo] sched,tracing: Convert to sched_set_fifo()
+Cc:     kernel test robot <lkp@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200720214918.GM5523@worktop.programming.kicks-ass.net>
+References: <20200720214918.GM5523@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Message-ID: <159602008837.4006.13518683366691612365.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 29 Jul 2020 18:53:24 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        bvanassche@acm.org, beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
-        chaotian.jing@mediatek.com, cc.chou@mediatek.com
-Subject: Re: [PATCH v2] scsi: ufs: Fix possible infinite loop in ufshcd_hold
-In-Reply-To: <1596018374.17247.41.camel@mtkswgap22>
-References: <20200729024037.23105-1-stanley.chu@mediatek.com>
- <bfbb48b06fa3464da0cbd2aee8a32649@codeaurora.org>
- <1596018374.17247.41.camel@mtkswgap22>
-Message-ID: <4cb7403fae7226b70a133d4a7ecee755@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanley,
+The following commit has been merged into the sched/fifo branch of tip:
 
-On 2020-07-29 18:26, Stanley Chu wrote:
-> Hi Can,
-> 
-> On Wed, 2020-07-29 at 16:43 +0800, Can Guo wrote:
->> Hi Stanley,
->> 
->> On 2020-07-29 10:40, Stanley Chu wrote:
->> > In ufshcd_suspend(), after clk-gating is suspended and link is set
->> > as Hibern8 state, ufshcd_hold() is still possibly invoked before
->> > ufshcd_suspend() returns. For example, MediaTek's suspend vops may
->> > issue UIC commands which would call ufshcd_hold() during the command
->> > issuing flow.
->> >
->> > Now if UFSHCD_CAP_HIBERN8_WITH_CLK_GATING capability is enabled,
->> > then ufshcd_hold() may enter infinite loops because there is no
->> > clk-ungating work scheduled or pending. In this case, ufshcd_hold()
->> > shall just bypass, and keep the link as Hibern8 state.
->> >
->> 
->> The infinite loop is expected as ufshcd_hold is called again after
->> link is put to hibern8 state, so in QCOM's code, we never do this.
-> 
-> Sadly MediaTek have to do this to make our UniPro to enter low-power
-> mode.
-> 
->> The cap UFSHCD_CAP_HIBERN8_WITH_CLK_GATING means UIC link state
->> must not be HIBERN8 after ufshcd_hold(async=false) returns.
-> 
-> If driver is not in PM scenarios, e.g., suspended, above statement 
-> shall
-> be always followed. But two obvious violations are existed,
-> 
-> 1. In ufshcd_suspend(), link is set as HIBERN8 behind ufshcd_hold()
-> 2. In ufshcd_resume(), link is set back as Active before
-> ufshcd_release() is invoked
-> 
-> So as my understanding, special conditions are allowed in PM scenarios,
-> and this is why "hba->clk_gating.is_suspended" is introduced. By this
-> thought, I used "hba->clk_gating.is_suspended" in this patch as the
-> mandatory condition to allow ufshcd_hold() usage in vendor suspend and
-> resume callbacks.
-> 
-> 
->> Instead of bailing out from that loop, which makes the logic of
->> ufshcd_hold and clk gating even more complex, how about removing
->> ufshcd_hold/release from ufshcd_send_uic_cmd()? I think they are
->> redundant and we should never send DME cmds if clocks/powers are
->> not ready. I mean callers should make sure they are ready to send
->> DME cmds (and only callers know when), but not leave that job to
->> ufshcd_send_uic_cmd(). It is convenient to remove ufshcd_hold/
->> release from ufshcd_send_uic_cmd() as there are not many places
->> sending DME cmds without holding the clocks, ufs_bsg.c is one.
->> And I have tested my idea on my setup, it worked well for me.
->> Another benefit is that it also allows us to use DME cmds
->> in clk gating/ungating contexts if we need to in the future.
->> 
-> 
-> Brilliant idea! But this may not solve problems if vendor callbacks 
-> need
-> more than UIC commands in the future.
-> 
-> This simple patch could make all vendor operations on UFSHCI in PM
-> callbacks possible with UFSHCD_CAP_HIBERN8_WITH_CLK_GATING enabled, and
-> again, it allows those operations in PM scenarios only.
-> 
+Commit-ID:     4fd5750af02ab7bba7c58a073060cc1da8a69173
+Gitweb:        https://git.kernel.org/tip/4fd5750af02ab7bba7c58a073060cc1da8a69173
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Mon, 20 Jul 2020 23:49:18 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 29 Jul 2020 11:43:53 +02:00
 
-Other than UIC cmds, I can only think of device manangement cmds (like 
-query).
-If device management cmds come into the way in the future, we fix it as 
-well.
-I mean that is the right thing to do in my opinion - just like we don't 
-call
-pm_runtime_get_sync() in ufshcd_send_uic_cmd().
+sched,tracing: Convert to sched_set_fifo()
 
-I can understand that you want a simple/quick fix to get it work for you 
-once
-for all, but from my point of view, debugging clk gating/ungating really 
-takes
-huge efforts sometime (I've spent a lot of time on it). Some flash 
-vendors also
-use it in their own driver widely which makes some failure scenes even 
-harder to
-undertand/debug. So the first thing comes to my head is that we should 
-avoid
-making it more complex or giving it more exceptions.
+One module user of sched_setscheduler() was overlooked and is
+obviously causing build failures.
 
- From functionality point of view, it looks ok to me. It is just that I 
-cannot
-predict it won't cause new problems since the clk gating/ungating 
-sequeces are
-like magic in some use cases sometime.
+Convert ring_buffer_benchmark to use sched_set_fifo_low() when fifo==1
+and sched_set_fifo() when fifo==2. This is a bit of an abuse, but it
+makes the thing 'work' again.
 
-Thanks,
+Specifically, it enables all combinations that were previously
+possible:
 
-Can Guo.
+  producer higher than consumer
+  consumer higher than producer
 
->> Please let me know your idea, thanks.
->> 
->> Can Guo.
-> 
-> Thanks,
-> Stanley Chu
-> 
->> 
->> > Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
->> > Signed-off-by: Andy Teng <andy.teng@mediatek.com>
->> >
->> > ---
->> >
->> > Changes since v1:
->> > - Fix return value: Use unique bool variable to get the result of
->> > flush_work(). Thcan prevent incorrect returned value, i.e., rc, if
->> > flush_work() returns true
->> > - Fix commit message
->> >
->> > ---
->> >  drivers/scsi/ufs/ufshcd.c | 5 ++++-
->> >  1 file changed, 4 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
->> > index 577cc0d7487f..acba2271c5d3 100644
->> > --- a/drivers/scsi/ufs/ufshcd.c
->> > +++ b/drivers/scsi/ufs/ufshcd.c
->> > @@ -1561,6 +1561,7 @@ static void ufshcd_ungate_work(struct work_struct
->> > *work)
->> >  int ufshcd_hold(struct ufs_hba *hba, bool async)
->> >  {
->> >  	int rc = 0;
->> > +	bool flush_result;
->> >  	unsigned long flags;
->> >
->> >  	if (!ufshcd_is_clkgating_allowed(hba))
->> > @@ -1592,7 +1593,9 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
->> >  				break;
->> >  			}
->> >  			spin_unlock_irqrestore(hba->host->host_lock, flags);
->> > -			flush_work(&hba->clk_gating.ungate_work);
->> > +			flush_result = flush_work(&hba->clk_gating.ungate_work);
->> > +			if (hba->clk_gating.is_suspended && !flush_result)
->> > +				goto out;
->> >  			spin_lock_irqsave(hba->host->host_lock, flags);
->> >  			goto start;
->> >  		}
+Fixes: 616d91b68cd5 ("sched: Remove sched_setscheduler*() EXPORTs")
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lkml.kernel.org/r/20200720214918.GM5523@worktop.programming.kicks-ass.net
+---
+ kernel/trace/ring_buffer_benchmark.c | 48 ++++++++++++---------------
+ 1 file changed, 23 insertions(+), 25 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer_benchmark.c b/kernel/trace/ring_buffer_benchmark.c
+index 8df0aa8..78e5765 100644
+--- a/kernel/trace/ring_buffer_benchmark.c
++++ b/kernel/trace/ring_buffer_benchmark.c
+@@ -45,8 +45,8 @@ MODULE_PARM_DESC(write_iteration, "# of writes between timestamp readings");
+ static int producer_nice = MAX_NICE;
+ static int consumer_nice = MAX_NICE;
+ 
+-static int producer_fifo = -1;
+-static int consumer_fifo = -1;
++static int producer_fifo;
++static int consumer_fifo;
+ 
+ module_param(producer_nice, int, 0644);
+ MODULE_PARM_DESC(producer_nice, "nice prio for producer");
+@@ -55,10 +55,10 @@ module_param(consumer_nice, int, 0644);
+ MODULE_PARM_DESC(consumer_nice, "nice prio for consumer");
+ 
+ module_param(producer_fifo, int, 0644);
+-MODULE_PARM_DESC(producer_fifo, "fifo prio for producer");
++MODULE_PARM_DESC(producer_fifo, "use fifo for producer: 0 - disabled, 1 - low prio, 2 - fifo");
+ 
+ module_param(consumer_fifo, int, 0644);
+-MODULE_PARM_DESC(consumer_fifo, "fifo prio for consumer");
++MODULE_PARM_DESC(consumer_fifo, "use fifo for consumer: 0 - disabled, 1 - low prio, 2 - fifo");
+ 
+ static int read_events;
+ 
+@@ -303,22 +303,22 @@ static void ring_buffer_producer(void)
+ 		trace_printk("ERROR!\n");
+ 
+ 	if (!disable_reader) {
+-		if (consumer_fifo < 0)
++		if (consumer_fifo)
++			trace_printk("Running Consumer at SCHED_FIFO %s\n",
++				     consumer_fifo == 1 ? "low" : "high");
++		else
+ 			trace_printk("Running Consumer at nice: %d\n",
+ 				     consumer_nice);
+-		else
+-			trace_printk("Running Consumer at SCHED_FIFO %d\n",
+-				     consumer_fifo);
+ 	}
+-	if (producer_fifo < 0)
++	if (producer_fifo)
++		trace_printk("Running Producer at SCHED_FIFO %s\n",
++			     producer_fifo == 1 ? "low" : "high");
++	else
+ 		trace_printk("Running Producer at nice: %d\n",
+ 			     producer_nice);
+-	else
+-		trace_printk("Running Producer at SCHED_FIFO %d\n",
+-			     producer_fifo);
+ 
+ 	/* Let the user know that the test is running at low priority */
+-	if (producer_fifo < 0 && consumer_fifo < 0 &&
++	if (!producer_fifo && !consumer_fifo &&
+ 	    producer_nice == MAX_NICE && consumer_nice == MAX_NICE)
+ 		trace_printk("WARNING!!! This test is running at lowest priority.\n");
+ 
+@@ -455,21 +455,19 @@ static int __init ring_buffer_benchmark_init(void)
+ 	 * Run them as low-prio background tasks by default:
+ 	 */
+ 	if (!disable_reader) {
+-		if (consumer_fifo >= 0) {
+-			struct sched_param param = {
+-				.sched_priority = consumer_fifo
+-			};
+-			sched_setscheduler(consumer, SCHED_FIFO, &param);
+-		} else
++		if (consumer_fifo >= 2)
++			sched_set_fifo(consumer);
++		else if (consumer_fifo == 1)
++			sched_set_fifo_low(consumer);
++		else
+ 			set_user_nice(consumer, consumer_nice);
+ 	}
+ 
+-	if (producer_fifo >= 0) {
+-		struct sched_param param = {
+-			.sched_priority = producer_fifo
+-		};
+-		sched_setscheduler(producer, SCHED_FIFO, &param);
+-	} else
++	if (producer_fifo >= 2)
++		sched_set_fifo(producer);
++	else if (producer_fifo == 1)
++		sched_set_fifo_low(producer);
++	else
+ 		set_user_nice(producer, producer_nice);
+ 
+ 	return 0;
