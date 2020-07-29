@@ -2,125 +2,79 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C982C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B4FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31FD3207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5152083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgG2Oqu (ORCPT
+        id S1726757AbgG2Ot2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:46:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34998 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726353AbgG2Oqt (ORCPT
+        Wed, 29 Jul 2020 10:49:28 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:49614 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726385AbgG2Ot1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:46:49 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06TEk1TK181432;
-        Wed, 29 Jul 2020 10:46:40 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32jqrt1vxw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 10:46:40 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06TEjMvB017665;
-        Wed, 29 Jul 2020 14:46:39 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma03wdc.us.ibm.com with ESMTP id 32gcy5th53-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 14:46:39 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06TEka1720971854
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jul 2020 14:46:36 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B46707805C;
-        Wed, 29 Jul 2020 14:46:38 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 155B57805E;
-        Wed, 29 Jul 2020 14:46:36 +0000 (GMT)
-Received: from [153.66.254.194] (unknown [9.80.208.235])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 29 Jul 2020 14:46:36 +0000 (GMT)
-Message-ID: <1596033995.4356.15.camel@linux.ibm.com>
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-From:   James Bottomley <jejb@linux.ibm.com>
-Reply-To: jejb@linux.ibm.com
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-Date:   Wed, 29 Jul 2020 07:46:35 -0700
-In-Reply-To: <20200729143213.GC1530967@rowland.harvard.edu>
-References: <20200706164135.GE704149@rowland.harvard.edu>
-         <d0ed766b-88b0-5ad5-9c10-a4c3b2f994e3@puri.sm>
-         <20200728200243.GA1511887@rowland.harvard.edu>
-         <f3958758-afce-8add-1692-2a3bbcc49f73@puri.sm>
-         <20200729143213.GC1530967@rowland.harvard.edu>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-29_10:2020-07-29,2020-07-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 lowpriorityscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0
- spamscore=0 adultscore=0 impostorscore=0 suspectscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007290095
+        Wed, 29 Jul 2020 10:49:27 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R831e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U4A94nS_1596034160;
+Received: from IT-FVFX43SYHV2H.lan(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4A94nS_1596034160)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 29 Jul 2020 22:49:20 +0800
+Subject: Re: [PATCH v17 00/21] per memcg lru lock
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+ <49d4f3bf-ccce-3c97-3a4c-f5cefe2d623a@linux.alibaba.com>
+Message-ID: <c00ac587-7f69-768a-84ea-53cbf7469ae9@linux.alibaba.com>
+Date:   Wed, 29 Jul 2020 22:49:19 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <49d4f3bf-ccce-3c97-3a4c-f5cefe2d623a@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-29 at 10:32 -0400, Alan Stern wrote:
-> On Wed, Jul 29, 2020 at 04:12:22PM +0200, Martin Kepplinger wrote:
-> > On 28.07.20 22:02, Alan Stern wrote:
-> > > On Tue, Jul 28, 2020 at 09:02:44AM +0200, Martin Kepplinger
-> > > wrote:
-> > > > Hi Alan,
-> > > > 
-> > > > Any API cleanup is of course welcome. I just wanted to remind
-> > > > you that the underlying problem: broken block device runtime
-> > > > pm. Your initial proposed fix "almost" did it and mounting
-> > > > works but during file access, it still just looks like a
-> > > > runtime_resume is missing somewhere.
-> > > 
-> > > Well, I have tested that proposed fix several times, and on my
-> > > system it's working perfectly.  When I stop accessing a drive it
-> > > autosuspends, and when I access it again it gets resumed and
-> > > works -- as you would expect.
-> > 
-> > that's weird. when I mount, everything looks good, "sda1". But as
-> > soon as I cd to the mountpoint and do "ls" (on another SD card "ls"
-> > works but actual file reading leads to the exact same errors), I
-> > get:
-> > 
-> > [   77.474632] sd 0:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result:
-> > hostbyte=0x00 driverbyte=0x08 cmd_age=0s
-> > [   77.474647] sd 0:0:0:0: [sda] tag#0 Sense Key : 0x6 [current]
-> > [   77.474655] sd 0:0:0:0: [sda] tag#0 ASC=0x28 ASCQ=0x0
-> > [   77.474667] sd 0:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00
-> > 60 40 00 00 01 00
+
+Is there any comments or suggestion for this patchset?
+Any hints will be very appreciated.
+
+Thanks
+Alex
+
+在 2020/7/27 下午1:40, Alex Shi 写道:
+
+> A standard for new page isolation steps like the following:
+> 1, get_page(); #pin the page avoid be free
+> 2, TestClearPageLRU(); #serialize other isolation, also memcg change
+> 3, spin_lock on lru_lock; #serialize lru list access
+> The step 2 could be optimzed/replaced in scenarios which page is unlikely
+> be accessed by others.
 > 
-> This error report comes from the SCSI layer, not the block layer.
-
-That sense code means "NOT READY TO READY CHANGE, MEDIUM MAY HAVE
-CHANGED" so it sounds like it something we should be ignoring.  Usually
-this signals a problem, like you changed the medium manually (ejected
-the CD).  But in this case you can tell us to expect this by setting
-
-sdev->expecting_cc_ua
-
-And we'll retry.  I think you need to set this on all resumed devices.
-
-James
-
+> 
+> 
+> 在 2020/7/25 下午8:59, Alex Shi 写道:
+>> The new version which bases on v5.8-rc6. It includes Hugh Dickins fix in 
+>> mm/swap.c and mm/mlock.c fix which Alexander Duyck pointed out, then
+>> removes 'mm/mlock: reorder isolation sequence during munlock' 
+>>
+>> Hi Johanness & Hugh & Alexander & Willy,
+>>
+>> Could you like to give a reviewed by since you address much of issue and
+>> give lots of suggestions! Many thanks!
