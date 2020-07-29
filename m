@@ -2,112 +2,98 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D516C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4192C2075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LojD0Veh"
+	by mail.kernel.org (Postfix) with ESMTP id E05222075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:13:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgG2TNQ (ORCPT
+        id S1726826AbgG2TN3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 15:13:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726615AbgG2TNP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 15:13:15 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68BB5C0619D5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 12:13:15 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id l2so7128891pff.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 12:13:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qGFRcRgcR931cJAUtagqOosR/FnU7E14dUW/H6LUoV0=;
-        b=LojD0VehSq43MKm3UY2ptAJKk1Fg+Dz890OJAqBxww80QsP0ZXG0+NsI3rnP3MRS80
-         gcs7DulgfW5Xl39kdQCI3ZvqNfNq/6oU5h1k4Pn4y8/j/4zZzrI0lVIUUJQG4UXyxn0t
-         gt1XYvCjNMWuFltFntSdXqB5KY+Pk8nOPPRdA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qGFRcRgcR931cJAUtagqOosR/FnU7E14dUW/H6LUoV0=;
-        b=Z7BFuFEoXYgipr9JUgQTcEW/9/0buxXkw/CzGNnovo4UmXecS2YrOXI9eeOmz25jo+
-         YsNeygTDcd0RbbuzBNVgyIZP3E4YFn6sRvgnvvvUaayAJAtl3WTirI/zCfztiqjPI1ak
-         ImrBwSumZWi+997Q7lIvZ1W48yS1D17c0+5DqfGCAlP80MpAljQyEHwT6fqsdiV1lDu+
-         4yNg1r0niMUmyvtfic0gXApUO3SQucmLV3FD3h8r45P7NaxngmcaGOGPAdU4wrzEVRbP
-         Gmi0jM1CH2lGfzQWhy3N/bDlBKreOLL6YMqJqvO+iGlFN3bdR8m+CyEj5AyZ+JNt8eBu
-         vnLA==
-X-Gm-Message-State: AOAM533/8+cCQ1I4TSFzAGUZZWQY6MP+fGHJsgi6NCq4c8JqkFI48uqI
-        pOWAu+K/Xt8S/o05td4Yhop9WA==
-X-Google-Smtp-Source: ABdhPJwm3az6fUsmpW7/xrdfcyj4XHND2YQG4viZO33agdGtUSFkCSCWvvsJEvQgoeB/2eV7qKkUlA==
-X-Received: by 2002:a63:4450:: with SMTP id t16mr7500213pgk.3.1596049994849;
-        Wed, 29 Jul 2020 12:13:14 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 4sm3113116pgk.68.2020.07.29.12.13.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 12:13:13 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 12:13:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 12/19] firmware_loader: Use security_post_load_data()
-Message-ID: <202007291205.CA09294424@keescook>
-References: <20200724213640.389191-1-keescook@chromium.org>
- <20200724213640.389191-13-keescook@chromium.org>
- <1595847465.4841.63.camel@kernel.org>
- <202007281242.B6016AE4B@keescook>
- <e5ed8876b9907315c2a906ab248639ea8c6d2cd5.camel@linux.ibm.com>
- <e6f7ce4aa506ff016dde9a75c607849587c1ca2c.camel@linux.ibm.com>
+        Wed, 29 Jul 2020 15:13:29 -0400
+Received: from mga01.intel.com ([192.55.52.88]:2252 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726710AbgG2TN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 15:13:29 -0400
+IronPort-SDR: APilKWlAra2BRvFzKRAk5pYx9pOqQ1yAwQ89Ao3M3WQd21Fa+8RxR8qb2RMwT0BfP79ZIeiq+O
+ AWe4moDyXe9g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="169609180"
+X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
+   d="scan'208";a="169609180"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 12:13:29 -0700
+IronPort-SDR: myaKcCtokUJMkzeggkpvAj5yxerRteQIEo9VLaiKhg7BXQhs0cG1Dr2nExr3NPQZHn5rKMBVyK
+ g63hxz7RTLnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
+   d="scan'208";a="490391579"
+Received: from askotian-mobl2.amr.corp.intel.com (HELO ellie) ([10.212.6.60])
+  by fmsmga006.fm.intel.com with ESMTP; 29 Jul 2020 12:13:28 -0700
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     "Zhang\, Qiang" <Qiang.Zhang@windriver.com>,
+        syzbot <syzbot+9f78d5c664a8c33f4cce@syzkaller.appspotmail.com>,
+        "davem\@davemloft.net" <davem@davemloft.net>,
+        "fweisbec\@gmail.com" <fweisbec@gmail.com>,
+        "jhs\@mojatatu.com" <jhs@mojatatu.com>,
+        "jiri\@resnulli.us" <jiri@resnulli.us>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo\@kernel.org" <mingo@kernel.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        "syzkaller-bugs\@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>,
+        "xiyou.wangcong\@gmail.com" <xiyou.wangcong@gmail.com>
+Subject: Re: =?utf-8?B?5Zue5aSNOg==?= INFO: rcu detected stall in
+ tc_modify_qdisc
+In-Reply-To: <BYAPR11MB2632784BE3AD9F03C5C95263FF700@BYAPR11MB2632.namprd11.prod.outlook.com>
+References: <0000000000006f179d05ab8e2cf2@google.com> <BYAPR11MB2632784BE3AD9F03C5C95263FF700@BYAPR11MB2632.namprd11.prod.outlook.com>
+Date:   Wed, 29 Jul 2020 12:13:25 -0700
+Message-ID: <87tuxqxhgq.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e6f7ce4aa506ff016dde9a75c607849587c1ca2c.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 02:10:18PM -0400, Mimi Zohar wrote:
-> Actually, the partial firmware read should be calling
-> security_kernel_read_file().
+Hi,
 
-Yup, it does[1], and when "whole_file" is true, it will call
-security_kernel_post_read_file() with the buffer contents at the end.
+"Zhang, Qiang" <Qiang.Zhang@windriver.com> writes:
 
-> The sysfs firmware fallback is calling security_kernel_load_data().
+> ________________________________________
+> 发件人: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> 代表 syzbot <syzbot+9f78d5c664a8c33f4cce@syzkaller.appspotmail.com>
+> 发送时间: 2020年7月29日 13:53
+> 收件人: davem@davemloft.net; fweisbec@gmail.com; jhs@mojatatu.com; jiri@resnulli.us; linux-kernel@vger.kernel.org; mingo@kernel.org; netdev@vger.kernel.org; syzkaller-bugs@googlegroups.com; tglx@linutronix.de; vinicius.gomes@intel.com; xiyou.wangcong@gmail.com
+> 主题: INFO: rcu detected stall in tc_modify_qdisc
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    181964e6 fix a braino in cmsghdr_from_user_compat_to_kern()
+> git tree:       net
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12925e38900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=f87a5e4232fdb267
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9f78d5c664a8c33f4cce
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> syz repro:
+> https://syzkaller.appspot.com/x/repro.syz?x=16587f8c900000
 
-Correct[2]; it has no file associated with it (same as the EFI platform
-source).
+It seems that syzkaller is generating an schedule with too small
+intervals (3ns in this case) which causes a hrtimer busy-loop which
+starves other kernel threads.
 
-> Which firmware is calling security_kernel_post_load_data()?
-
-sysfs and platform both call it[2], matched with their
-security_kernel_load_data() calls.
-
--Kees
+We could put some limits on the interval when running in software mode,
+but I don't like this too much, because we are talking about users with
+CAP_NET_ADMIN and they have easier ways to do bad things to the system.
 
 
-[1] v4 patch 14: "fs/kernel_file_read: Add "offset" arg for partial reads"
-    https://lore.kernel.org/lkml/20200729175845.1745471-1-keescook@chromium.org/T/#iZ2e.:..:20200729175845.1745471-15-keescook::40chromium.org:0fs:kernel_read_file.c
-[2] v4 patch 10: "firmware_loader: Use security_post_load_data()"
-    https://lore.kernel.org/lkml/20200729175845.1745471-1-keescook@chromium.org/T/#iZ2e.:..:20200729175845.1745471-11-keescook::40chromium.org:0drivers:base:firmware_loader:fallback.c
-
+Cheers,
 -- 
-Kees Cook
+Vinicius
