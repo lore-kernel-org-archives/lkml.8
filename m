@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A76C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93EBB2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D1422074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="QB7ZaMw0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="N0FEpTXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgG2XhJ (ORCPT
+        id S1728141AbgG2Xg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 19:37:09 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:22290 "EHLO
+        Wed, 29 Jul 2020 19:36:56 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:22294 "EHLO
         esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728127AbgG2Xg5 (ORCPT
+        with ESMTP id S1727072AbgG2Xgy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 19:36:57 -0400
+        Wed, 29 Jul 2020 19:36:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596065817; x=1627601817;
+  t=1596065814; x=1627601814;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=VBOr+qoUXJh0RpysyJa96iru/UM0dSObehT5hXsovlk=;
-  b=QB7ZaMw0y203pt25hl/DBha9bgrZXLper3yO1ge1/fup7bCWw5S1xFhk
-   PeZ1F4uOsMr2hiRm+S60GBFvRHgAh+O07fzfTmeZJISTtHcKfp9PD00Oq
-   ssnVPm1lQO+BcWuqaDAD1xRMikQUGB0KpGpYCsSKD5Z9LY/CyQd7jP5YH
-   IzCZ9tlHapHeOG9jtB5jvxnAC0LLo7ywVOMFC0DfRa4BZfICIKQBNbZrU
-   vuAzN91SGADsY7SCd3yATovbB1UI3ESg4UohR3BLY93or+3tk98lQkPFy
-   Ls5MsZQTLZNyAswSerRpS0+x11O0t85g8wCaVBXBvEC34oUgsdAWTIZ4b
-   A==;
-IronPort-SDR: oeZHwbgCNY3R3PfZx76q5n874FlsSUMZhD74DkQmdkiTsIoCjsnD3tbdFiw4f0NNe24eP9fRAY
- /37KfliqMNEhweTZZrKORcIvgnsjK+sDNRBScNLQKA27g8HAS1AoOtArxCW0BhG3o/cIxHsemA
- QqXRzpZD3pSTV9ita+x7zUFSJHxT1UUaOzo6Hi5c16Vyx0hCJ1RgYTt2CzV8gw0TLofW0BriF+
- cGmcgN9KKJ2g5P2i6qb5h+9XeNBNo2niqTkQy3m6wtCSk17C1TqB8/Lv6b66My6S9C0P+jV7F3
- 0l4=
+  bh=26oXiLmEk//X+up29RI/EZbGFDEHEWmiWMJCIV9Ghqs=;
+  b=N0FEpTXpw3b/sDCTXkKiMqH3kjuemGNCsyq9ops+jBRpiCTmuqmLEzJV
+   UuH8GuXimWBq93Bt5leNDrUmrH4+GWM4Jf8zlPn+Z7g7s1lvuBBaeE+pz
+   cfRTXiaZltsrIMdLHxZD92CvquRL6tFH2o+m7oT6BJDtVQJuwg+Akh2za
+   MQiWKJQju8jWnwreP3Bjcyfk/7OZCTgOUnc28lUfhnISOqBIMhNmyUH4O
+   FQ/e04mi7GIUgxT835iNZMZhLl1SdUAsj+wV2UsSTrCIphY4FJhgDwkrf
+   UtVCfOVkFKyE9vD70Ldfq3JL+V0tCdumAQf4h22G70LKfdzq7nqMXKxhN
+   Q==;
+IronPort-SDR: dT3uTie+I0jrFFSB9FZv8fBqqzcv7eZlPTS4ltOSI0BC0g7sR4SkQsySRY+6O6TM5WfiRU6uF9
+ +o8qrvtLqxQfjJN3d2JiOkcgqD+EwS0DaBcNL3DgsFks08mNQ6au/F5Y/IO3DbKkbALIsNbGsF
+ 4QoOHW1TW3hCfmrdx3pjhgAaeRN0C36QMPNO26x3iez1/bzZZ3bdkf81rKSjEjAsl4DAGftcx+
+ 4hjsgSSZ6Y57+m7bLOeePxX6nJdj6Xy4AGZbfvzs+QxiR5epGmQsDJLRt3ggfyVGhSOnAkrc+M
+ cKU=
 X-IronPort-AV: E=Sophos;i="5.75,412,1589212800"; 
-   d="scan'208";a="144951817"
+   d="scan'208";a="144951789"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 30 Jul 2020 07:36:57 +0800
-IronPort-SDR: 0YiBkumyH1uoPhiOMzreKlLeOfwxGjYqWL7u0pby4xWQ8169UDf+jBRVPdvOiX23Nh20Ah0RX9
- 5fJv1TdG95CNsuq3Ru9qyZZ8PBuBHuRBk=
+  by ob1.hgst.iphmx.com with ESMTP; 30 Jul 2020 07:36:53 +0800
+IronPort-SDR: 9eTEuYeDyD+2NRF4sOveqLyuVllVpSKqadxReWCrOTIOi+hHZccqUPGIjBJewE1+oRQN1jWjSW
+ lAhfi5Nu93FJxt5vUXPi0f3kwoHtjGihw=
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 16:25:04 -0700
-IronPort-SDR: SwdFapu+6ETHmhvxgz5w3R35F3kTH/oAFdxKY2TdKREAguOtyT53wiz6+XhGBHt0+Sm7i81QyI
- hhBgAxJWmGfA==
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 16:25:00 -0700
+IronPort-SDR: wGLdob+fziPPG6+IBCU1U2mEoOFmnY9rGsdTPoGHWFxZRMuLzlxIHDeR3rAo7j3h+0NIm9M90G
+ GlY4I3Sx9kNQ==
 WDCIronportException: Internal
 Received: from jpf009043.ad.shared (HELO jedi-01.hgst.com) ([10.86.58.210])
-  by uls-op-cesaip01.wdc.com with ESMTP; 29 Jul 2020 16:36:57 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 29 Jul 2020 16:36:52 -0700
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
+Cc:     Anup Patel <anup.patel@wdc.com>, Atish Patra <atish.patra@wdc.com>,
         Ard Biesheuvel <ardb@kernel.org>,
-        Anup Patel <anup.patel@wdc.com>,
         Arvind Sankar <nivedita@alum.mit.edu>,
         Greentime Hu <greentime.hu@sifive.com>,
         Ingo Molnar <mingo@kernel.org>,
@@ -74,9 +73,9 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Will Deacon <will@kernel.org>,
         Yash Shah <yash.shah@sifive.com>, Zong Li <zong.li@sifive.com>
-Subject: [RFT PATCH v4 6/9] RISC-V: Add EFI stub support.
-Date:   Wed, 29 Jul 2020 16:36:32 -0700
-Message-Id: <20200729233635.14406-7-atish.patra@wdc.com>
+Subject: [RFT PATCH v4 1/9] RISC-V: Move DT mapping outof fixmap
+Date:   Wed, 29 Jul 2020 16:36:27 -0700
+Message-Id: <20200729233635.14406-2-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200729233635.14406-1-atish.patra@wdc.com>
 References: <20200729233635.14406-1-atish.patra@wdc.com>
@@ -87,300 +86,183 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a RISC-V architecture specific stub code that actually copies the
-actual kernel image to a valid address and jump to it after boot services
-are terminated. Enable UEFI related kernel configs as well for RISC-V.
+From: Anup Patel <anup.patel@wdc.com>
 
+Currently, RISC-V reserves 1MB of fixmap memory for device tree. However,
+it maps only single PMD (2MB) space for fixmap which leaves only < 1MB space
+left for other kernel features such as early ioremap which requires fixmap
+as well. The fixmap size can be increased by another 2MB but it brings
+additional complexity and changes the virtual memory layout as well.
+If we require some additional feature requiring fixmap again, it has to be
+moved again.
+
+Technically, DT doesn't need a fixmap as the memory occupied by the DT is
+only used during boot. That's why, We map device tree in early page table
+using two consecutive PGD mappings at lower addresses (< PAGE_OFFSET).
+This frees lot of space in fixmap and also makes maximum supported
+device tree size supported as PGDIR_SIZE. Thus, init memory section can be used
+for the same purpose as well. This simplifies fixmap implementation.
+
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Link: https://lore.kernel.org/r/20200421033336.9663-4-atish.patra@wdc.com
-[ardb: - move hartid fetch into check_platform_features()
-       - use image_size not reserve_size
-       - select ISA_C ]
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/riscv/Kconfig                        |  22 +++++
- arch/riscv/Makefile                       |   1 +
- arch/riscv/configs/defconfig              |   1 +
- arch/riscv/include/asm/efi.h              |  36 +++++++
- drivers/firmware/efi/Kconfig              |   3 +-
- drivers/firmware/efi/libstub/Makefile     |  10 ++
- drivers/firmware/efi/libstub/riscv-stub.c | 110 ++++++++++++++++++++++
- 7 files changed, 182 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/include/asm/efi.h
- create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
+ arch/riscv/include/asm/fixmap.h  |  3 ---
+ arch/riscv/include/asm/pgtable.h |  1 +
+ arch/riscv/kernel/head.S         |  1 -
+ arch/riscv/kernel/head.h         |  2 --
+ arch/riscv/kernel/setup.c        |  9 +++++++--
+ arch/riscv/mm/init.c             | 26 ++++++++++++--------------
+ 6 files changed, 20 insertions(+), 22 deletions(-)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index e6c1c98a53fb..a6569c268565 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -390,6 +390,26 @@ config CMDLINE_FORCE
+diff --git a/arch/riscv/include/asm/fixmap.h b/arch/riscv/include/asm/fixmap.h
+index 1ff075a8dfc7..11613f38228a 100644
+--- a/arch/riscv/include/asm/fixmap.h
++++ b/arch/riscv/include/asm/fixmap.h
+@@ -22,9 +22,6 @@
+  */
+ enum fixed_addresses {
+ 	FIX_HOLE,
+-#define FIX_FDT_SIZE	SZ_1M
+-	FIX_FDT_END,
+-	FIX_FDT = FIX_FDT_END + FIX_FDT_SIZE / PAGE_SIZE - 1,
+ 	FIX_PTE,
+ 	FIX_PMD,
+ 	FIX_TEXT_POKE1,
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index eaea1f717010..815f8c959dd4 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -464,6 +464,7 @@ static inline void __kernel_map_pages(struct page *page, int numpages, int enabl
+ #define kern_addr_valid(addr)   (1) /* FIXME */
  
- endchoice
+ extern void *dtb_early_va;
++extern uintptr_t dtb_early_pa;
+ void setup_bootmem(void);
+ void paging_init(void);
  
-+config EFI_STUB
-+	bool
-+
-+config EFI
-+	bool "UEFI runtime support"
-+	depends on OF
-+	select LIBFDT
-+	select UCS2_STRING
-+	select EFI_PARAMS_FROM_FDT
-+	select EFI_STUB
-+	select EFI_GENERIC_STUB
-+	select RISCV_ISA_C
-+	default y
-+	help
-+	  This option provides support for runtime services provided
-+	  by UEFI firmware (such as non-volatile variables, realtime
-+	  clock, and platform reset). A UEFI stub is also provided to
-+	  allow the kernel to be booted as an EFI application. This
-+	  is only useful on systems that have UEFI firmware.
-+
- endmenu
+diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+index d0c5c316e9bb..eb123eda3663 100644
+--- a/arch/riscv/kernel/head.S
++++ b/arch/riscv/kernel/head.S
+@@ -250,7 +250,6 @@ clear_bss_done:
+ #endif
+ 	/* Start the kernel */
+ 	call soc_early_init
+-	call parse_dtb
+ 	tail start_kernel
  
- config BUILTIN_DTB
-@@ -402,3 +422,5 @@ menu "Power management options"
- source "kernel/power/Kconfig"
+ .Lsecondary_start:
+diff --git a/arch/riscv/kernel/head.h b/arch/riscv/kernel/head.h
+index 105fb0496b24..b48dda3d04f6 100644
+--- a/arch/riscv/kernel/head.h
++++ b/arch/riscv/kernel/head.h
+@@ -16,6 +16,4 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa);
+ extern void *__cpu_up_stack_pointer[];
+ extern void *__cpu_up_task_pointer[];
  
- endmenu
-+
-+source "drivers/firmware/Kconfig"
-diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index fb6e37db836d..10df59f28add 100644
---- a/arch/riscv/Makefile
-+++ b/arch/riscv/Makefile
-@@ -80,6 +80,7 @@ head-y := arch/riscv/kernel/head.o
- core-y += arch/riscv/
+-void __init parse_dtb(void);
+-
+ #endif /* __ASM_HEAD_H */
+diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+index f04373be54a6..6a0ee2405813 100644
+--- a/arch/riscv/kernel/setup.c
++++ b/arch/riscv/kernel/setup.c
+@@ -49,8 +49,9 @@ atomic_t hart_lottery __section(.sdata);
+ unsigned long boot_cpu_hartid;
+ static DEFINE_PER_CPU(struct cpu, cpu_devices);
  
- libs-y += arch/riscv/lib/
-+libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+-void __init parse_dtb(void)
++static void __init parse_dtb(void)
+ {
++	/* Early scan of device tree from init memory */
+ 	if (early_init_dt_scan(dtb_early_va))
+ 		return;
  
- PHONY += vdso_install
- vdso_install:
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index 4da4886246a4..ae69e12d306a 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -129,3 +129,4 @@ CONFIG_DEBUG_BLOCK_EXT_DEVT=y
- # CONFIG_RUNTIME_TESTING_MENU is not set
- CONFIG_MEMTEST=y
- # CONFIG_SYSFS_SYSCALL is not set
-+CONFIG_EFI=y
-diff --git a/arch/riscv/include/asm/efi.h b/arch/riscv/include/asm/efi.h
-new file mode 100644
-index 000000000000..86da231909bb
---- /dev/null
-+++ b/arch/riscv/include/asm/efi.h
-@@ -0,0 +1,36 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-+ */
-+#ifndef _ASM_EFI_H
-+#define _ASM_EFI_H
-+
-+#include <asm/io.h>
-+#include <asm/mmu_context.h>
-+#include <asm/ptrace.h>
-+#include <asm/tlbflush.h>
-+
-+/* on RISC-V, the FDT may be located anywhere in system RAM */
-+static inline unsigned long efi_get_max_fdt_addr(unsigned long dram_base)
-+{
-+	return ULONG_MAX;
-+}
-+
-+/* Load initrd at enough distance from DRAM start */
-+static inline unsigned long efi_get_max_initrd_addr(unsigned long dram_base,
-+						    unsigned long image_addr)
-+{
-+	return dram_base + SZ_256M;
-+}
-+
-+#define alloc_screen_info(x...)		(&screen_info)
-+
-+static inline void free_screen_info(struct screen_info *si)
-+{
-+}
-+
-+static inline void efifb_setup_from_dmi(struct screen_info *si, const char *opt)
-+{
-+}
-+
-+#endif /* _ASM_EFI_H */
-diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-index 3939699e62fe..a29fbd6e657e 100644
---- a/drivers/firmware/efi/Kconfig
-+++ b/drivers/firmware/efi/Kconfig
-@@ -111,7 +111,7 @@ config EFI_GENERIC_STUB
+@@ -63,6 +64,7 @@ void __init parse_dtb(void)
  
- config EFI_ARMSTUB_DTB_LOADER
- 	bool "Enable the DTB loader"
--	depends on EFI_GENERIC_STUB
-+	depends on EFI_GENERIC_STUB && !RISCV
- 	default y
- 	help
- 	  Select this config option to add support for the dtb= command
-@@ -128,6 +128,7 @@ config EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER
- 	bool "Enable the command line initrd loader" if !X86
- 	depends on EFI_STUB && (EFI_GENERIC_STUB || X86)
- 	default y
-+	depends on !RISCV
- 	help
- 	  Select this config option to add support for the initrd= command
- 	  line parameter, allowing an initrd that resides on the same volume
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 75daaf20374e..d1564ffcf82f 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -22,6 +22,8 @@ cflags-$(CONFIG_ARM64)		:= $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
- cflags-$(CONFIG_ARM)		:= $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
- 				   -fno-builtin -fpic \
- 				   $(call cc-option,-mno-single-pic-base)
-+cflags-$(CONFIG_RISCV)		:= $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-+				   -fpic
+ void __init setup_arch(char **cmdline_p)
+ {
++	parse_dtb();
+ 	init_mm.start_code = (unsigned long) _stext;
+ 	init_mm.end_code   = (unsigned long) _etext;
+ 	init_mm.end_data   = (unsigned long) _edata;
+@@ -77,7 +79,10 @@ void __init setup_arch(char **cmdline_p)
+ #if IS_ENABLED(CONFIG_BUILTIN_DTB)
+ 	unflatten_and_copy_device_tree();
+ #else
+-	unflatten_device_tree();
++	if (early_init_dt_verify(__va(dtb_early_pa)))
++		unflatten_device_tree();
++	else
++		pr_err("No DTB found in kernel mappings\n");
+ #endif
+ 	clint_init_boot_cpu();
  
- cflags-$(CONFIG_EFI_GENERIC_STUB) += -I$(srctree)/scripts/dtc/libfdt
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 79e9d55bdf1a..9c5f3e35adc2 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -28,7 +28,9 @@ unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
+ EXPORT_SYMBOL(empty_zero_page);
  
-@@ -63,6 +65,7 @@ lib-$(CONFIG_EFI_GENERIC_STUB)	+= efi-stub.o fdt.o string.o \
- lib-$(CONFIG_ARM)		+= arm32-stub.o
- lib-$(CONFIG_ARM64)		+= arm64-stub.o
- lib-$(CONFIG_X86)		+= x86-stub.o
-+lib-$(CONFIG_RISCV)		+= riscv-stub.o
- CFLAGS_arm32-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
- CFLAGS_arm64-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
+ extern char _start[];
+-void *dtb_early_va;
++#define DTB_EARLY_BASE_VA      PGDIR_SIZE
++void *dtb_early_va __initdata;
++uintptr_t dtb_early_pa __initdata;
  
-@@ -106,6 +109,13 @@ STUBCOPY_FLAGS-$(CONFIG_ARM64)	+= --prefix-alloc-sections=.init \
- 				   --prefix-symbols=__efistub_
- STUBCOPY_RELOC-$(CONFIG_ARM64)	:= R_AARCH64_ABS
+ static void __init zone_sizes_init(void)
+ {
+@@ -141,8 +143,6 @@ static void __init setup_initrd(void)
+ }
+ #endif /* CONFIG_BLK_DEV_INITRD */
  
-+# For RISC-V, we don't need anything special other than arm64. Keep all the
-+# symbols in .init section and make sure that no absolute symbols references
-+# doesn't exist.
-+STUBCOPY_FLAGS-$(CONFIG_RISCV)	+= --prefix-alloc-sections=.init \
-+				   --prefix-symbols=__efistub_
-+STUBCOPY_RELOC-$(CONFIG_RISCV)	:= R_RISCV_HI20
-+
- $(obj)/%.stub.o: $(obj)/%.o FORCE
- 	$(call if_changed,stubcopy)
+-static phys_addr_t dtb_early_pa __initdata;
+-
+ void __init setup_bootmem(void)
+ {
+ 	struct memblock_region *reg;
+@@ -399,7 +399,7 @@ static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t size)
  
-diff --git a/drivers/firmware/efi/libstub/riscv-stub.c b/drivers/firmware/efi/libstub/riscv-stub.c
-new file mode 100644
-index 000000000000..77c3fd6f820e
---- /dev/null
-+++ b/drivers/firmware/efi/libstub/riscv-stub.c
-@@ -0,0 +1,110 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-+ */
-+
-+#include <linux/efi.h>
-+#include <linux/libfdt.h>
-+
-+#include <asm/efi.h>
-+#include <asm/sections.h>
-+
-+#include "efistub.h"
-+
-+/*
-+ * RISC-V requires the kernel image to placed 2 MB aligned base for 64 bit and
-+ * 4MB for 32 bit.
-+ */
-+#ifdef CONFIG_64BIT
-+#define MIN_KIMG_ALIGN		SZ_2M
-+#else
-+#define MIN_KIMG_ALIGN		SZ_4M
-+#endif
-+
-+typedef void __noreturn (*jump_kernel_func)(unsigned int, unsigned long);
-+
-+static u32 hartid;
-+
-+static u32 get_boot_hartid_from_fdt(void)
-+{
-+	const void *fdt;
-+	int chosen_node, len;
-+	const fdt32_t *prop;
-+
-+	fdt = get_efi_config_table(DEVICE_TREE_GUID);
-+	if (!fdt)
-+		return U32_MAX;
-+
-+	chosen_node = fdt_path_offset(fdt, "/chosen");
-+	if (chosen_node < 0)
-+		return U32_MAX;
-+
-+	prop = fdt_getprop((void *)fdt, chosen_node, "boot-hartid", &len);
-+	if (!prop || len != sizeof(u32))
-+		return U32_MAX;
-+
-+	return fdt32_to_cpu(*prop);
-+}
-+
-+efi_status_t check_platform_features(void)
-+{
-+	hartid = get_boot_hartid_from_fdt();
-+	if (hartid == U32_MAX) {
-+		efi_err("/chosen/boot-hartid missing or invalid!\n");
-+		return EFI_UNSUPPORTED;
-+	}
-+	return EFI_SUCCESS;
-+}
-+
-+void __noreturn efi_enter_kernel(unsigned long entrypoint, unsigned long fdt,
-+				 unsigned long fdt_size)
-+{
-+	unsigned long stext_offset = _start_kernel - _start;
-+	unsigned long kernel_entry = entrypoint + stext_offset;
-+	jump_kernel_func jump_kernel = (jump_kernel_func)kernel_entry;
-+
-+	/*
-+	 * Jump to real kernel here with following constraints.
-+	 * 1. MMU should be disabled.
-+	 * 2. a0 should contain hartid
-+	 * 3. a1 should DT address
-+	 */
-+	csr_write(CSR_SATP, 0);
-+	jump_kernel(hartid, fdt);
-+}
-+
-+efi_status_t handle_kernel_image(unsigned long *image_addr,
-+				 unsigned long *image_size,
-+				 unsigned long *reserve_addr,
-+				 unsigned long *reserve_size,
-+				 unsigned long dram_base,
-+				 efi_loaded_image_t *image)
-+{
-+	unsigned long kernel_size = 0;
-+	unsigned long preferred_addr;
-+	efi_status_t status;
-+
-+	kernel_size = _edata - _start;
-+	*image_addr = (unsigned long)_start;
-+	*image_size = kernel_size + (_end - _edata);
-+
-+	/*
-+	 * RISC-V kernel maps PAGE_OFFSET virtual address to the same physical
-+	 * address where kernel is booted. That's why kernel should boot from
-+	 * as low as possible to avoid wastage of memory. Currently, dram_base
-+	 * is occupied by the firmware. So the preferred address for kernel to
-+	 * boot is next aligned address. If preferred address is not available,
-+	 * relocate_kernel will fall back to efi_low_alloc_above to allocate
-+	 * lowest possible memory region as long as the address and size meets
-+	 * the alignment constraints.
-+	 */
-+	preferred_addr = round_up(dram_base, MIN_KIMG_ALIGN) + MIN_KIMG_ALIGN;
-+	status = efi_relocate_kernel(image_addr, kernel_size, *image_size,
-+				     preferred_addr, MIN_KIMG_ALIGN, dram_base);
-+
-+	if (status != EFI_SUCCESS) {
-+		efi_err("Failed to relocate kernel\n");
-+		*image_size = 0;
-+	}
-+	return status;
-+}
+ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+ {
+-	uintptr_t va, end_va;
++	uintptr_t va, pa, end_va;
+ 	uintptr_t load_pa = (uintptr_t)(&_start);
+ 	uintptr_t load_sz = (uintptr_t)(&_end) - load_pa;
+ 	uintptr_t map_size = best_map_size(load_pa, MAX_EARLY_MAPPING_SIZE);
+@@ -448,16 +448,13 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+ 				   load_pa + (va - PAGE_OFFSET),
+ 				   map_size, PAGE_KERNEL_EXEC);
+ 
+-	/* Create fixed mapping for early FDT parsing */
+-	end_va = __fix_to_virt(FIX_FDT) + FIX_FDT_SIZE;
+-	for (va = __fix_to_virt(FIX_FDT); va < end_va; va += PAGE_SIZE)
+-		create_pte_mapping(fixmap_pte, va,
+-				   dtb_pa + (va - __fix_to_virt(FIX_FDT)),
+-				   PAGE_SIZE, PAGE_KERNEL);
+-
+-	/* Save pointer to DTB for early FDT parsing */
+-	dtb_early_va = (void *)fix_to_virt(FIX_FDT) + (dtb_pa & ~PAGE_MASK);
+-	/* Save physical address for memblock reservation */
++	/* Create two consecutive PGD mappings for FDT early scan */
++	pa = dtb_pa & ~(PGDIR_SIZE - 1);
++	create_pgd_mapping(early_pg_dir, DTB_EARLY_BASE_VA,
++			   pa, PGDIR_SIZE, PAGE_KERNEL);
++	create_pgd_mapping(early_pg_dir, DTB_EARLY_BASE_VA + PGDIR_SIZE,
++			   pa + PGDIR_SIZE, PGDIR_SIZE, PAGE_KERNEL);
++	dtb_early_va = (void *)DTB_EARLY_BASE_VA + (dtb_pa & (PGDIR_SIZE - 1));
+ 	dtb_early_pa = dtb_pa;
+ }
+ 
+@@ -516,6 +513,7 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+ #else
+ 	dtb_early_va = (void *)dtb_pa;
+ #endif
++	dtb_early_pa = dtb_pa;
+ }
+ 
+ static inline void setup_vm_final(void)
 -- 
 2.24.0
 
