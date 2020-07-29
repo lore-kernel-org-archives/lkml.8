@@ -2,104 +2,142 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11970C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3D8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C0D206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:56:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dAg2f074"
+	by mail.kernel.org (Postfix) with ESMTP id E5C91206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgG2P4C (ORCPT
+        id S1726876AbgG2P4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:56:02 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:60826 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgG2P4C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:56:02 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06TFu00U004597;
-        Wed, 29 Jul 2020 10:56:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596038160;
-        bh=dErOzIho34fxvJcb68vhO2ZIVDb37+iIzl5rCrT1rGU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dAg2f074lHJEzqnf7SuTzPpJnsRcs1+O9lTJgE88Wp/dKdfxLv8sZOQCHD3CRtbp+
-         sKJOfC5RVJfCgg2XBspNiTRn1N7sMebq8Zgm5LDtpZ6DLe/sDQ8ezgGyIiiFrxkUFI
-         rAGkTJoBx7cp/KsOcO7/XVpB22HIVND6y/aLEzX0=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06TFu03E058504;
-        Wed, 29 Jul 2020 10:56:00 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
- Jul 2020 10:56:00 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 29 Jul 2020 10:56:00 -0500
-Received: from [10.250.35.195] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06TFtxOX006537;
-        Wed, 29 Jul 2020 10:55:59 -0500
-Subject: Re: [PATCH v5 2/4] power: supply: bq27xxx_battery: Add the BQ27z561
- Battery monitor
-To:     <sre@kernel.org>, <afd@ti.com>, <pali@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh@kernel.org>
-References: <20200729120609.22427-1-dmurphy@ti.com>
- <20200729120609.22427-2-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <a757fcf1-0215-3926-f74c-22183457be3e@ti.com>
-Date:   Wed, 29 Jul 2020 10:55:54 -0500
+        Wed, 29 Jul 2020 11:56:12 -0400
+Received: from mga05.intel.com ([192.55.52.43]:45859 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726341AbgG2P4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 11:56:11 -0400
+IronPort-SDR: GCDXTmlTOwpWj8psFXHAuM/OGuAWjBzyivdANsND9GpGYHoYIlmY0zy83Q2eMS2nk97olNdlGX
+ MZ2y8FXT195Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="236307529"
+X-IronPort-AV: E=Sophos;i="5.75,410,1589266800"; 
+   d="scan'208";a="236307529"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 08:56:10 -0700
+IronPort-SDR: IDiwGItDXIzja3qJHXtAQwZsgkfdvjN51ZFJYyn4gETjqIXmWP3NNyN85itVh4GNZZCNBIn5O4
+ HqvTijKzaFgQ==
+X-IronPort-AV: E=Sophos;i="5.75,410,1589266800"; 
+   d="scan'208";a="322594221"
+Received: from vmlivin-mobl1.amr.corp.intel.com (HELO [10.209.108.29]) ([10.209.108.29])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 08:56:08 -0700
+Subject: Re: [PATCH] ASoC: core: restore dpcm flags semantics
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>, zhangn1985@outlook.com,
+        Stephan Gerhold <stephan@gerhold.net>
+References: <20200723180533.220312-1-pierre-louis.bossart@linux.intel.com>
+ <20200729154639.1983854-1-jbrunet@baylibre.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <2ad13f95-434d-376a-bc38-b209623b461e@linux.intel.com>
+Date:   Wed, 29 Jul 2020 10:56:05 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200729120609.22427-2-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200729154639.1983854-1-jbrunet@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
 
-On 7/29/20 7:06 AM, Dan Murphy wrote:
-> Add the Texas Instruments BQ27z561 battery monitor.  The register address
-> map is laid out the same as compared to other devices within the file.
-> The battery status register has differing bits to determine if the
-> battery is full, discharging or dead.
->
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+
+On 7/29/20 10:46 AM, Jerome Brunet wrote:
+> commit b73287f0b0745 ('ASoC: soc-pcm: dpcm: fix playback/capture checks')
+> changed dpcm_playback and dpcm_capture semantic by throwing an error if
+> these flags are not aligned with DAIs capabilities on the link.
+> 
+> The former semantic did not force the flags and DAI caps to be aligned.
+> The flag previously allowed card drivers to disable a stream direction on
+> a link (whether or not such feature is deemed useful).
+> 
+> With change ('ASoC: core: use less strict tests for dailink capabilities')
+> an error is thrown if the flags and and the DAI caps are not aligned. Those
+> parameters were not meant to aligned initially. No technical reason was
+> given about why cards should now be considered "broken" in such condition
+> is not met, or why it should be considered to be an improvement to enforce
+> that.
+> 
+> Forcing the flags to be aligned with DAI caps just make the information
+> the flag carry redundant with DAI caps, breaking a few cards along the way.
+> 
+> This change drops the added error conditions and restore the initial flag
+> semantics.
+
+or rather lack thereof.
+
+I am ok to move dev_err to dev_warn and remove the return -EINVAL, but I 
+maintain that we have to reach a point where configurations make sense 
+before we can clean them up. If we implicitly push issues under the rug 
+by not even being aware of them we'll never make progress.
+
+> 
+> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->   drivers/power/supply/bq27xxx_battery.c     | 69 +++++++++++++++++++++-
->   drivers/power/supply/bq27xxx_battery_i2c.c |  2 +
->   include/linux/power/bq27xxx_battery.h      |  1 +
->   3 files changed, 71 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-> index acaafed037be..a858e3b2a0ee 100644
-> --- a/drivers/power/supply/bq27xxx_battery.c
-> +++ b/drivers/power/supply/bq27xxx_battery.c
-> @@ -18,6 +18,7 @@
->    * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
->    *
->    * Datasheets:
-> +<<<<<<< HEAD
-
-Need to remove this artifact from a rebase.
-
-Not sure how this got here as it does not appear in my source.
-
-Dan
-
-
+> 
+>   Hi Mark,
+> 
+>   Because b73287f0b0745 ('ASoC: soc-pcm: dpcm: fix playback/capture checks')
+>   introduced more than one problem, the change
+>   "ASoC: core: use less strict tests for dailink capabilities" [0] is still
+>   necessary but the change of semantic remains a problem with it.
+> 
+>   This patch applies on top of it.
+> 
+>   sound/soc/soc-pcm.c | 14 --------------
+>   1 file changed, 14 deletions(-)
+> 
+> diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+> index 00ac1cbf6f88..2e205b738eae 100644
+> --- a/sound/soc/soc-pcm.c
+> +++ b/sound/soc/soc-pcm.c
+> @@ -2749,13 +2749,6 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
+>   					break;
+>   				}
+>   			}
+> -
+> -			if (!playback) {
+> -				dev_err(rtd->card->dev,
+> -					"No CPU DAIs support playback for stream %s\n",
+> -					rtd->dai_link->stream_name);
+> -				return -EINVAL;
+> -			}
+>   		}
+>   		if (rtd->dai_link->dpcm_capture) {
+>   			stream = SNDRV_PCM_STREAM_CAPTURE;
+> @@ -2766,13 +2759,6 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
+>   					break;
+>   				}
+>   			}
+> -
+> -			if (!capture) {
+> -				dev_err(rtd->card->dev,
+> -					"No CPU DAIs support capture for stream %s\n",
+> -					rtd->dai_link->stream_name);
+> -				return -EINVAL;
+> -			}
+>   		}
+>   	} else {
+>   		/* Adapt stream for codec2codec links */
+> 
