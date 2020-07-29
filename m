@@ -2,75 +2,107 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D460FC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA798C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B26182076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:23:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595985824;
-	bh=ZEQ8acauTeo/vlplG6VpP6uu8XrzCrepryaFriXIl0k=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=XpvGxrS//rXiNE+nyEOjHKUqbTBvNdfXPqAPGQVlEaSWT3KMsQYrlVLJvyjZwKpsy
-	 ZoHFYunVzD8/bqMAXBMfonyOeRFeBaDkVmQKLGVxYQZezR4JShAGAXCHliwG2IrHLS
-	 AkYLrGSznLiEW+NL0sX1k1iuiyVTW7IEJuc40xqY=
+	by mail.kernel.org (Postfix) with ESMTP id A7BC32078E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:23:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nXwe4SMQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbgG2BXn (ORCPT
+        id S1730340AbgG2BXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 21:23:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728364AbgG2BXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 21:23:43 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4B632076E;
-        Wed, 29 Jul 2020 01:23:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595985822;
-        bh=ZEQ8acauTeo/vlplG6VpP6uu8XrzCrepryaFriXIl0k=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=aTca3T4g86Fi3svMdHBkdbhLG31p0iZ2AFbMr4vpOCWD+bkgMPXF+bLxj7mk6jFTx
-         RMYlBPiQihob+CN4wF3jlLfcmHdD8Oy5gnv7zelMHgZJf7Jp+X/o+ep8UYWDuXyhLe
-         Zn2+daSsB8GNtc3pgCkZEvk88IE4ELvibBIxptnI=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200728120049.90632-7-konradybcio@gmail.com>
-References: <20200728120049.90632-1-konradybcio@gmail.com> <20200728120049.90632-7-konradybcio@gmail.com>
-Subject: Re: [PATCH 6/9] clk: qcom: gcc-msm8994: Add missing clocks, resets and GDSCs
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     lauren.kelly@msn.com, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-To:     konradybcio@gmail.com
+        Tue, 28 Jul 2020 21:23:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728364AbgG2BXp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 21:23:45 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3BE9C061794;
+        Tue, 28 Jul 2020 18:23:44 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id k27so13365806pgm.2;
+        Tue, 28 Jul 2020 18:23:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=39Fa9ZWtwvl7NbKoGzRfKnzpxN8mlG9ibr8kyfnWLig=;
+        b=nXwe4SMQObUre653mpr+8/vgQq0+w/Buw5OH9WA6GWzqGygo5VX6XTsF0xACpUUpWZ
+         3Q58bRXvyZT9gN4ebmV4V/gjo8HIov/HPt4mPA5hIisnkU0ezs69PaxS1ZK7fKaWBEVN
+         hwJwBtorrFl4wce0opgoNLJXXK5U8WKEEcBs80ItyVLWKxG3OfPhLNdUoj7IBAY1Y49B
+         BE/Ske5XIYDUjnWuCS4lf3se9tMqTy2oH8rNQj94DOSKDsUmKKnsmoKd0LhcDUc5dwl2
+         QhLJv7gl+bSFyZjCUkAeqzMkk0Yo04JBD6i3NtBR5LpaIBPeW1drQVrd+apVzF+hSxJT
+         w3eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=39Fa9ZWtwvl7NbKoGzRfKnzpxN8mlG9ibr8kyfnWLig=;
+        b=Sw0BWvizvmcxhiDLl7mNEV6zGYOZCl7v0oKw9+gIRFB6V90yLuhpRW1z1b4hRH/do9
+         a3YJFqCXea6mnDbcfUNhwP6LRMkuLVJAfHVAeuST8dXlvdGDDN+Mb9FBimK5Ue6QS2Nm
+         AP3JDaNaicWZUWqSMa7EfWdPZ2BTVuUAvzGboGxQ53vqoMFHBBBQ9gmTSw9brTQzW35T
+         FHI7+wdWsIBSywB/KLCSUY/ruDg3nD2OweSgpu3l0A8CaVVQfF9+hmnzJPRVzMEORWWB
+         D4N22HzwQ1wkPKSuNquie15ZePK9Z9a7Jv2s4yiD2fcIlIAYaWTatl1dGglDF1nb6cA2
+         +bLA==
+X-Gm-Message-State: AOAM530wq6fBGaM41M8byzvb2y7BYDko8YWSdbR1ZCf4d6emwhKboC2z
+        DqzjdEtf1JdV8iuF+o8Y1zs=
+X-Google-Smtp-Source: ABdhPJzSmPN1CuhBlK64vxmgtlEOgYy5sVjI3onVqCYmbXIzpiJVMUCSV5lSchdS6OSHaXP+yPe4vw==
+X-Received: by 2002:a63:1406:: with SMTP id u6mr26395140pgl.108.1595985824127;
+        Tue, 28 Jul 2020 18:23:44 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id f3sm299250pju.54.2020.07.28.18.23.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 18:23:43 -0700 (PDT)
 Date:   Tue, 28 Jul 2020 18:23:41 -0700
-Message-ID: <159598582154.1360974.14382448860412146673@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Pavel Machek <pavel@ucw.cz>, linux-input@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        trivial@kernel.org
+Subject: Re: [PATCH] Input: fix typo in function name documentation
+Message-ID: <20200729012341.GW1665100@dtor-ws>
+References: <20200724084025.GB31930@amd>
+ <20200727163208.4e956816@lwn.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727163208.4e956816@lwn.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Konrad Dybcio (2020-07-28 05:00:45)
-> This change adds GDSCs, resets and most of the missing
-> clocks to the msm8994 GCC driver. The remaining ones
-> are of local_vote_clk and gate_clk type, which are not
-> yet supported upstream. Also reorder them to match the
-> original downstream driver.
->=20
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> ---
-> I plan on converting this to use parent_data later on,
-> but I think we could merge it as-is for now..?
+On Mon, Jul 27, 2020 at 04:32:08PM -0600, Jonathan Corbet wrote:
+> On Fri, 24 Jul 2020 10:40:25 +0200
+> Pavel Machek <pavel@ucw.cz> wrote:
+> 
+> > Fix non-existing constant in documentation.
+> > 
+> > Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+> > 
+> > diff --git a/Documentation/input/uinput.rst b/Documentation/input/uinput.rst
+> > index b8e90b6a126c..10c62e62a0a6 100644
+> > --- a/Documentation/input/uinput.rst
+> > +++ b/Documentation/input/uinput.rst
+> > @@ -99,7 +99,7 @@ the sake of simplicity.
+> >  
+> >        /*
+> >         * Give userspace some time to read the events before we destroy the
+> > -       * device with UI_DEV_DESTOY.
+> > +       * device with UI_DEV_DESTROY.
+> >         */
+> >        sleep(1);
+> 
+> Seems good...Dmitry, do you want this, or would you rather I picked it up?
 
-Why not convert to parent_data now? Otherwise we can wait given that the
-merge window is near anyway.
+I picked it up, thank you.
+
+-- 
+Dmitry
