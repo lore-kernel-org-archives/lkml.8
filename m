@@ -2,120 +2,126 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78565C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373D8C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 502A9208A9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:22:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596028958;
-	bh=2nO1aS9EUs24pPVkavg7mosszYZtF5AQTrcRye3PWI0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eLxwGf658CbMbwWEd45KFVZ7LwrId5+IlEew+3AVjFYvTAmIHAr6YgvKtAxdVFwba
-	 m2YSJu8BwF7EadyEXc4dP//CjCjNakN4I/w1PSl5iAMFHX7SJt5jXvzGBN//I6Q5TX
-	 B19rot+7xhzQt5tKUut2UjZubGip3mjLgSDxvn6o=
+	by mail.kernel.org (Postfix) with ESMTP id 15439208A9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgG2NWg (ORCPT
+        id S1727809AbgG2NWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:22:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58424 "EHLO mail.kernel.org"
+        Wed, 29 Jul 2020 09:22:54 -0400
+Received: from 8bytes.org ([81.169.241.247]:33846 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727032AbgG2NWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 09:22:34 -0400
-Received: from localhost.localdomain (unknown [49.65.247.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 445C420829;
-        Wed, 29 Jul 2020 13:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596028953;
-        bh=2nO1aS9EUs24pPVkavg7mosszYZtF5AQTrcRye3PWI0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sTlBironlpJOkLWkS4ZrSH2Cu33V9KhUh0n/hJq7JEr8gq7JDcAhG/+zYxjMpjsFG
-         DCVIplbZTbeV/GfSaktdtqs6o/uAGR0dYQb74POhIZK1bG8T30wmjPXao2v+iCmSzc
-         edDC3+n4lGO/vK66ZnwBn1TAaTqKt2JLhLLRPJLk=
-From:   Chao Yu <chao@kernel.org>
-To:     jaegeuk@kernel.org
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 2/2] f2fs: compress: disable compression mount option if compression is off
-Date:   Wed, 29 Jul 2020 21:21:36 +0800
-Message-Id: <20200729132136.11134-2-chao@kernel.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200729132136.11134-1-chao@kernel.org>
-References: <20200729132136.11134-1-chao@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1727031AbgG2NWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 09:22:47 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 85F8C76D; Wed, 29 Jul 2020 15:22:45 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 3/4] KVM: SVM: Add GHCB Accessor functions
+Date:   Wed, 29 Jul 2020 15:22:33 +0200
+Message-Id: <20200729132234.2346-4-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200729132234.2346-1-joro@8bytes.org>
+References: <20200729132234.2346-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-If CONFIG_F2FS_FS_COMPRESSION is off, don't allow to configure or
-show compression related mount option.
+Building a correct GHCB for the hypervisor requires setting valid bits
+in the GHCB. Simplify that process by providing accessor functions to
+set values and to update the valid bitmap.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- fs/f2fs/super.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/svm.h | 61 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 5e0a3eeb8ca4..cdca2087dba0 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -460,9 +460,12 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
- {
- 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
- 	substring_t args[MAX_OPT_ARGS];
-+#ifdef CONFIG_F2FS_FS_COMPRESSION
- 	unsigned char (*ext)[F2FS_EXTENSION_LEN];
-+	int ext_cnt;
-+#endif
- 	char *p, *name;
--	int arg = 0, ext_cnt;
-+	int arg = 0;
- 	kuid_t uid;
- 	kgid_t gid;
- 	int ret;
-@@ -853,6 +856,7 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
- 		case Opt_checkpoint_enable:
- 			clear_opt(sbi, DISABLE_CHECKPOINT);
- 			break;
-+#ifdef CONFIG_F2FS_FS_COMPRESSION
- 		case Opt_compress_algorithm:
- 			if (!f2fs_sb_has_compression(sbi)) {
- 				f2fs_err(sbi, "Compression feature if off");
-@@ -918,6 +922,13 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
- 			F2FS_OPTION(sbi).compress_ext_cnt++;
- 			kfree(name);
- 			break;
-+#else
-+		case Opt_compress_algorithm:
-+		case Opt_compress_log_size:
-+		case Opt_compress_extension:
-+			f2fs_info(sbi, "compression options not supported");
-+			break;
-+#endif
- 		default:
- 			f2fs_err(sbi, "Unrecognized mount option \"%s\" or missing value",
- 				 p);
-@@ -1608,7 +1619,9 @@ static int f2fs_show_options(struct seq_file *seq, struct dentry *root)
- 	else if (F2FS_OPTION(sbi).fsync_mode == FSYNC_MODE_NOBARRIER)
- 		seq_printf(seq, ",fsync_mode=%s", "nobarrier");
+diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+index 9a3e0b802716..0420250b008b 100644
+--- a/arch/x86/include/asm/svm.h
++++ b/arch/x86/include/asm/svm.h
+@@ -341,4 +341,65 @@ struct __attribute__ ((__packed__)) vmcb {
  
-+#ifdef CONFIG_F2FS_FS_COMPRESSION
- 	f2fs_show_compress_options(seq, sbi->sb);
-+#endif
- 	return 0;
- }
+ #define SVM_CR0_SELECTIVE_MASK (X86_CR0_TS | X86_CR0_MP)
  
++/* GHCB Accessor functions */
++
++#define DEFINE_GHCB_INDICES(field)					\
++	u16 idx = offsetof(struct vmcb_save_area, field) / 8;		\
++	u16 byte_idx  = idx / 8;					\
++	u16 bit_idx   = idx % 8;					\
++	BUILD_BUG_ON(byte_idx > ARRAY_SIZE(ghcb->save.valid_bitmap));
++
++#define GHCB_SET_VALID(ghcb, field)					\
++	{								\
++		DEFINE_GHCB_INDICES(field)				\
++		(ghcb)->save.valid_bitmap[byte_idx] |= BIT(bit_idx);	\
++	}
++
++#define DEFINE_GHCB_SETTER(field)					\
++	static inline void						\
++	ghcb_set_##field(struct ghcb *ghcb, u64 value)			\
++	{								\
++		GHCB_SET_VALID(ghcb, field)				\
++		(ghcb)->save.field = value;				\
++	}
++
++#define DEFINE_GHCB_ACCESSORS(field)					\
++	static inline bool ghcb_is_valid_##field(const struct ghcb *ghcb)	\
++	{								\
++		DEFINE_GHCB_INDICES(field)				\
++		return !!((ghcb)->save.valid_bitmap[byte_idx]		\
++						& BIT(bit_idx));	\
++	}								\
++									\
++	static inline void						\
++	ghcb_set_##field(struct ghcb *ghcb, u64 value)			\
++	{								\
++		GHCB_SET_VALID(ghcb, field)				\
++		(ghcb)->save.field = value;				\
++	}
++
++DEFINE_GHCB_ACCESSORS(cpl)
++DEFINE_GHCB_ACCESSORS(rip)
++DEFINE_GHCB_ACCESSORS(rsp)
++DEFINE_GHCB_ACCESSORS(rax)
++DEFINE_GHCB_ACCESSORS(rcx)
++DEFINE_GHCB_ACCESSORS(rdx)
++DEFINE_GHCB_ACCESSORS(rbx)
++DEFINE_GHCB_ACCESSORS(rbp)
++DEFINE_GHCB_ACCESSORS(rsi)
++DEFINE_GHCB_ACCESSORS(rdi)
++DEFINE_GHCB_ACCESSORS(r8)
++DEFINE_GHCB_ACCESSORS(r9)
++DEFINE_GHCB_ACCESSORS(r10)
++DEFINE_GHCB_ACCESSORS(r11)
++DEFINE_GHCB_ACCESSORS(r12)
++DEFINE_GHCB_ACCESSORS(r13)
++DEFINE_GHCB_ACCESSORS(r14)
++DEFINE_GHCB_ACCESSORS(r15)
++DEFINE_GHCB_ACCESSORS(sw_exit_code)
++DEFINE_GHCB_ACCESSORS(sw_exit_info_1)
++DEFINE_GHCB_ACCESSORS(sw_exit_info_2)
++DEFINE_GHCB_ACCESSORS(sw_scratch)
++DEFINE_GHCB_ACCESSORS(xcr0)
++
+ #endif
 -- 
-2.22.0
+2.17.1
 
