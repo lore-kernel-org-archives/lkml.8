@@ -2,223 +2,201 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7172C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F38C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B81B720809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D933207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="OG5EldDE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRWA/Grj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgG2OnP (ORCPT
+        id S1726877AbgG2OnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:43:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgG2OnP (ORCPT
+        Wed, 29 Jul 2020 10:43:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41310 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726385AbgG2OnS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:43:15 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B620EC061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 07:43:14 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id p14so2967826wmg.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 07:43:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Wd61Bbp9ukgeA9Chq75iGFckRsvukuJaOV9sT03x+48=;
-        b=OG5EldDEwNlD9cxTierr+fUm2xb5qV3Pm2ihUpCVFluLtG85Na7ozcsIz4ro2MsILb
-         dtWgwO1md/MNqjPwiEXxkOE440Hz5oNVbjbkVNBSYn1a+EIjXNNur4ofrXFdyJKsEvLk
-         lpGOfqeFxlhd0BaJgKXASjH9aWGymd9nd85sug879ctdNp2muWe8MkvbR7UCLNJX1CtI
-         G14YrXsH7QLXWVzM7I6wxGlTcuG8nU85f6vNNboNXefJvEXMwYFcFudfXJxhcu+iWgvK
-         Kwb8MZn2bZZdcjZTDKaIO3HEbN9RIq3+FJCqFZbwroCJmT86hzSf00jDZcx0sigP7g+a
-         dyng==
+        Wed, 29 Jul 2020 10:43:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596033796;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8fCssoJ0CAlfROhDCOU7igjf0xT9ILRTmoPs/GspefE=;
+        b=IRWA/Grj0f60nAx9zjr4jrTwh3KIoWDMhgKP4XIfFWBJ+UsjjH1X5YCfhkKIJYJG4E2sVl
+        ORlQNvB469ZwIO+EP7eroFW/OTKmnqF1iLPjc8XbPYSR9LuwXXNkJglW4edLl7IPuzwTmG
+        eREgDCKObGkdgPE5h/Vd9Zy8XfLi29s=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-267-weUibggTN8e1jF3E5hjfFw-1; Wed, 29 Jul 2020 10:43:13 -0400
+X-MC-Unique: weUibggTN8e1jF3E5hjfFw-1
+Received: by mail-wm1-f72.google.com with SMTP id v4so1096476wmh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 07:43:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wd61Bbp9ukgeA9Chq75iGFckRsvukuJaOV9sT03x+48=;
-        b=gQoR7JAIyinnFcZVShO18ZdbQZy3GRb/N4qqgfHxTU+s7o5lq/eOFdEK4+cA4OEoCy
-         kmzktcyYpveLji9o5dwIJDSSU+nE5RFwqUipXUArekevRC2wG6vVtaoYgveLGc+oFay6
-         U9M/tslu0/wY9o55WmjjM4P4JahnIiaVRgNwtQUbUvlA/bPp5oyKi6ArbZNx/+66VQtU
-         ncYM0ohRq/tRXtXa6K68SwGdkA7TY6zU3wrE8fUo5oL6+zGGPsm5Q1aCakBnnMXwPKSu
-         VmZtAgSpHyEpFJd0+7Ts+c7/kPhYedZI44cAEJos9ifRTLDjlNioqkeYLpP/hQY0+sj9
-         0PzQ==
-X-Gm-Message-State: AOAM532dtwJuBz7DOrnPvD71QE19R/hVLTw4wY7BLhmheIjs5FMRbCxQ
-        Ps7TS/JOq4/tfZMz/nyXLbi5MOidRDsTWu4cPKV/Fg==
-X-Google-Smtp-Source: ABdhPJy3mR2QPQLt8ZWC7EQcPTfuGgEJLKjzXyye2XbQ4GaXVMFnr52bXDKHL24OZKHgZ1GIoThbGmJzND3CSjaSBb4=
-X-Received: by 2002:a1c:e382:: with SMTP id a124mr8417867wmh.96.1596033793425;
- Wed, 29 Jul 2020 07:43:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8fCssoJ0CAlfROhDCOU7igjf0xT9ILRTmoPs/GspefE=;
+        b=bcWdg6RySuAVmkgAE9znC/2DuPM9dX9wDMCcq2wQWVHBYTAcrzmgjuGGxheJ62gc9A
+         3EIkZDWU1gX3vnWIURcAEB0/p7BoRyuyzoClzqKhyHw4t8+lidbJWyZLQlzcMbdSVU1H
+         EkPwtceu3448SgDmcStEW2B36rhWTp7QAHRfYlyfur3G/St6ZQb5M4uc6xOGBgibNvgx
+         IfC1A3Hqg9UQiStQubCEl97n/6asyzXEOR7CGYfXdU3PN2VcfstY18zAcLV8Yh6I1N9B
+         jL/Y9U1XE/ip6ujIUPhUG51kXFAj4SWS650aa5Z8OWYn7xQAsEjbtlFPQNMa6NtAxWZC
+         XNKg==
+X-Gm-Message-State: AOAM5308vD8DzHQbfwP59x7lnTCeu5TfvVPNPlmLLwJrYkLApQN2GF6f
+        jpk7n4bcHiIgaDS4UIPOjMpk2b9C0wKjApRaZaJ8qL3Xz5fS08RPXwcrmiAAP1WD0Mg930qrgsf
+        D8esT/lPV5QQg/FzbSDe2s7XV
+X-Received: by 2002:adf:bb07:: with SMTP id r7mr24257296wrg.102.1596033792187;
+        Wed, 29 Jul 2020 07:43:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzYXjCm41zHA5xm/lx0SlII2xk4YGjjpxRkb8AiBUjlMgTECEyydjR3gkD0C7MR9w7QpW4fzQ==
+X-Received: by 2002:adf:bb07:: with SMTP id r7mr24257279wrg.102.1596033791914;
+        Wed, 29 Jul 2020 07:43:11 -0700 (PDT)
+Received: from redhat.com (bzq-79-179-105-63.red.bezeqint.net. [79.179.105.63])
+        by smtp.gmail.com with ESMTPSA id z15sm5003496wrn.89.2020.07.29.07.43.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 07:43:11 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 10:43:07 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Julia Suvorova <jusual@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
+Message-ID: <20200729102929-mutt-send-email-mst@kernel.org>
+References: <20200722001513.298315-1-jusual@redhat.com>
+ <20200722231929.GA1314067@bjorn-Precision-5520>
+ <CAMDeoFUCanfvrxAmW4_QH=L9BExCAydCifE_tvRaW_XTd0OQXw@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <e9e7b46a827d430d402b22cc25d31e6002dead1d.1594230107.git-series.maxime@cerno.tech>
-In-Reply-To: <e9e7b46a827d430d402b22cc25d31e6002dead1d.1594230107.git-series.maxime@cerno.tech>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Wed, 29 Jul 2020 15:42:54 +0100
-Message-ID: <CAPY8ntB4_rRNaxLkqrYRamegbvrbCir0gnTBoUpyumj+FwxneQ@mail.gmail.com>
-Subject: Re: [PATCH v4 23/78] drm/vc4: crtc: Move the HVS gamma LUT setup to
- our init function
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMDeoFUCanfvrxAmW4_QH=L9BExCAydCifE_tvRaW_XTd0OQXw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime
+On Sun, Jul 26, 2020 at 08:58:45PM +0200, Julia Suvorova wrote:
+> On Thu, Jul 23, 2020 at 1:19 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Wed, Jul 22, 2020 at 02:15:13AM +0200, Julia Suvorova wrote:
+> > > Scanning for PCI devices at boot takes a long time for KVM guests. It
+> > > can be reduced if KVM will handle all configuration space accesses for
+> > > non-existent devices without going to userspace [1]. But for this to
+> > > work, all accesses must go through MMCONFIG.
+> > > This change allows to use pci_mmcfg as raw_pci_ops for 64-bit KVM
+> > > guests making MMCONFIG the default access method.
+> >
+> > The above *looks* like it's intended to be two paragraphs, which would
+> > be easier to read with a blank line between.
+> >
+> > The last sentence should say what the patch actually *does*, e.g.,
+> > "Use pci_mmcfg as raw_pci_ops ..."
+> >
+> > > [1] https://lkml.org/lkml/2020/5/14/936
+> >
+> > Please use a lore.kernel.org URL instead because it's more usable and
+> > I'd rather depend on kernel.org than lkml.org.
+> >
+> > > Signed-off-by: Julia Suvorova <jusual@redhat.com>
+> > > ---
+> > >  arch/x86/pci/direct.c      | 5 +++++
+> > >  arch/x86/pci/mmconfig_64.c | 3 +++
+> > >  2 files changed, 8 insertions(+)
+> > >
+> > > diff --git a/arch/x86/pci/direct.c b/arch/x86/pci/direct.c
+> > > index a51074c55982..8ff6b65d8f48 100644
+> > > --- a/arch/x86/pci/direct.c
+> > > +++ b/arch/x86/pci/direct.c
+> > > @@ -6,6 +6,7 @@
+> > >  #include <linux/pci.h>
+> > >  #include <linux/init.h>
+> > >  #include <linux/dmi.h>
+> > > +#include <linux/kvm_para.h>
+> > >  #include <asm/pci_x86.h>
+> > >
+> > >  /*
+> > > @@ -264,6 +265,10 @@ void __init pci_direct_init(int type)
+> > >  {
+> > >       if (type == 0)
+> > >               return;
+> > > +
+> > > +     if (raw_pci_ext_ops && kvm_para_available())
+> > > +             return;
+> > >       printk(KERN_INFO "PCI: Using configuration type %d for base access\n",
+> > >                type);
+> > >       if (type == 1) {
+> > > diff --git a/arch/x86/pci/mmconfig_64.c b/arch/x86/pci/mmconfig_64.c
+> > > index 0c7b6e66c644..9eb772821766 100644
+> > > --- a/arch/x86/pci/mmconfig_64.c
+> > > +++ b/arch/x86/pci/mmconfig_64.c
+> > > @@ -10,6 +10,7 @@
+> > >  #include <linux/init.h>
+> > >  #include <linux/acpi.h>
+> > >  #include <linux/bitmap.h>
+> > > +#include <linux/kvm_para.h>
+> > >  #include <linux/rcupdate.h>
+> > >  #include <asm/e820/api.h>
+> > >  #include <asm/pci_x86.h>
+> > > @@ -122,6 +123,8 @@ int __init pci_mmcfg_arch_init(void)
+> > >               }
+> > >
+> > >       raw_pci_ext_ops = &pci_mmcfg;
+> > > +     if (kvm_para_available())
+> > > +             raw_pci_ops = &pci_mmcfg;
+> >
+> > The idea of using MMCONFIG for *all* config space, not just extended
+> > config space, makes sense to me, although the very long discussion at
+> > https://lore.kernel.org/lkml/20071225032605.29147200@laptopd505.fenrus.org/
+> > makes me wary.  Of course I realize you're talking specifically about
+> > KVM, not doing this in general.
+> >
+> > But it doesn't seem right to make this specific to KVM, since it's not
+> > obvious to me that there's a basis in PCI for making this distinction.
+> 
+> Bugs that were fixed (or more accurately, avoided) by a0ca99096094
+> ("PCI x86: always use conf1 to access config space below 256 bytes")
+> are still present. And to enable MMCONFIG for the entire config space,
+> we need to re-introduce all these fixes or at least identify affected
+> devices, which may be impossible.
 
-On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Since most of the HVS channel is setup in the init function, let's move the
-> gamma setup there too. As this makes the HVS mode_set function empty, let's
-> remove it in the process.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+What *is* about KVM here is that there's no real benefit
+to this change if not running on x86 within a hypervisor.
+And this should be better documented in a code comment and
+commit log.
 
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-> ---
->  drivers/gpu/drm/vc4/vc4_crtc.c |  2 +-
->  drivers/gpu/drm/vc4/vc4_drv.h  |  1 +-
->  drivers/gpu/drm/vc4/vc4_hvs.c  | 59 +++++++++--------------------------
->  drivers/gpu/drm/vc4/vc4_txp.c  |  1 +-
->  4 files changed, 16 insertions(+), 47 deletions(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-> index 181d3fd57bc7..284a85b9d7d4 100644
-> --- a/drivers/gpu/drm/vc4/vc4_crtc.c
-> +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-> @@ -379,8 +379,6 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
->  static void vc4_crtc_mode_set_nofb(struct drm_crtc *crtc)
->  {
->         vc4_crtc_config_pv(crtc);
-> -
-> -       vc4_hvs_mode_set_nofb(crtc);
->  }
->
->  static void require_hvs_enabled(struct drm_device *dev)
-> diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-> index 4126506b3a69..dfcc684f5d28 100644
-> --- a/drivers/gpu/drm/vc4/vc4_drv.h
-> +++ b/drivers/gpu/drm/vc4/vc4_drv.h
-> @@ -904,7 +904,6 @@ int vc4_hvs_atomic_check(struct drm_crtc *crtc, struct drm_crtc_state *state);
->  void vc4_hvs_atomic_enable(struct drm_crtc *crtc, struct drm_crtc_state *old_state);
->  void vc4_hvs_atomic_disable(struct drm_crtc *crtc, struct drm_crtc_state *old_state);
->  void vc4_hvs_atomic_flush(struct drm_crtc *crtc, struct drm_crtc_state *state);
-> -void vc4_hvs_mode_set_nofb(struct drm_crtc *crtc);
->  void vc4_hvs_dump_state(struct drm_device *dev);
->  void vc4_hvs_unmask_underrun(struct drm_device *dev, int channel);
->  void vc4_hvs_mask_underrun(struct drm_device *dev, int channel);
-> diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
-> index 78bb1c0b0b76..c7de77afbf0a 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hvs.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hvs.c
-> @@ -201,6 +201,8 @@ static int vc4_hvs_init_channel(struct vc4_dev *vc4, struct drm_crtc *crtc,
->  {
->         struct vc4_crtc_state *vc4_crtc_state = to_vc4_crtc_state(crtc->state);
->         unsigned int chan = vc4_crtc_state->assigned_channel;
-> +       bool interlace = mode->flags & DRM_MODE_FLAG_INTERLACE;
-> +       u32 dispbkgndx;
->         u32 dispctrl;
->
->         /* Turn on the scaler, which will wait for vstart to start
-> @@ -225,6 +227,20 @@ static int vc4_hvs_init_channel(struct vc4_dev *vc4, struct drm_crtc *crtc,
->
->         HVS_WRITE(SCALER_DISPCTRLX(chan), dispctrl);
->
-> +       dispbkgndx = HVS_READ(SCALER_DISPBKGNDX(chan));
-> +       dispbkgndx &= ~SCALER_DISPBKGND_GAMMA;
-> +       dispbkgndx &= ~SCALER_DISPBKGND_INTERLACE;
-> +
-> +       HVS_WRITE(SCALER_DISPBKGNDX(chan), dispbkgndx |
-> +                 SCALER_DISPBKGND_AUTOHS |
-> +                 ((!vc4->hvs->hvs5) ? SCALER_DISPBKGND_GAMMA : 0) |
-> +                 (interlace ? SCALER_DISPBKGND_INTERLACE : 0));
-> +
-> +       /* Reload the LUT, since the SRAMs would have been disabled if
-> +        * all CRTCs had SCALER_DISPBKGND_GAMMA unset at once.
-> +        */
-> +       vc4_hvs_lut_load(crtc);
-> +
->         return 0;
->  }
->
-> @@ -421,49 +437,6 @@ void vc4_hvs_atomic_flush(struct drm_crtc *crtc,
->         }
->  }
->
-> -void vc4_hvs_mode_set_nofb(struct drm_crtc *crtc)
-> -{
-> -       struct drm_device *dev = crtc->dev;
-> -       struct vc4_dev *vc4 = to_vc4_dev(dev);
-> -       struct vc4_crtc_state *vc4_state = to_vc4_crtc_state(crtc->state);
-> -       struct drm_display_mode *mode = &crtc->state->adjusted_mode;
-> -       bool interlace = mode->flags & DRM_MODE_FLAG_INTERLACE;
-> -
-> -       if (vc4_state->assigned_channel == 2) {
-> -               u32 dispctrl;
-> -               u32 dsp3_mux;
-> -
-> -               /*
-> -                * SCALER_DISPCTRL_DSP3 = X, where X < 2 means 'connect DSP3 to
-> -                * FIFO X'.
-> -                * SCALER_DISPCTRL_DSP3 = 3 means 'disable DSP 3'.
-> -                *
-> -                * DSP3 is connected to FIFO2 unless the transposer is
-> -                * enabled. In this case, FIFO 2 is directly accessed by the
-> -                * TXP IP, and we need to disable the FIFO2 -> pixelvalve1
-> -                * route.
-> -                */
-> -               if (vc4_state->feed_txp)
-> -                       dsp3_mux = VC4_SET_FIELD(3, SCALER_DISPCTRL_DSP3_MUX);
-> -               else
-> -                       dsp3_mux = VC4_SET_FIELD(2, SCALER_DISPCTRL_DSP3_MUX);
-> -
-> -               dispctrl = HVS_READ(SCALER_DISPCTRL) &
-> -                          ~SCALER_DISPCTRL_DSP3_MUX_MASK;
-> -               HVS_WRITE(SCALER_DISPCTRL, dispctrl | dsp3_mux);
-> -       }
-> -
-> -       HVS_WRITE(SCALER_DISPBKGNDX(vc4_state->assigned_channel),
-> -                 SCALER_DISPBKGND_AUTOHS |
-> -                 ((!vc4->hvs->hvs5) ? SCALER_DISPBKGND_GAMMA : 0) |
-> -                 (interlace ? SCALER_DISPBKGND_INTERLACE : 0));
-> -
-> -       /* Reload the LUT, since the SRAMs would have been disabled if
-> -        * all CRTCs had SCALER_DISPBKGND_GAMMA unset at once.
-> -        */
-> -       vc4_hvs_lut_load(crtc);
-> -}
-> -
->  void vc4_hvs_mask_underrun(struct drm_device *dev, int channel)
->  {
->         struct vc4_dev *vc4 = to_vc4_dev(dev);
-> diff --git a/drivers/gpu/drm/vc4/vc4_txp.c b/drivers/gpu/drm/vc4/vc4_txp.c
-> index a2380d856000..849dcafbfff1 100644
-> --- a/drivers/gpu/drm/vc4/vc4_txp.c
-> +++ b/drivers/gpu/drm/vc4/vc4_txp.c
-> @@ -436,7 +436,6 @@ static const struct drm_crtc_helper_funcs vc4_txp_crtc_helper_funcs = {
->         .atomic_flush   = vc4_hvs_atomic_flush,
->         .atomic_enable  = vc4_txp_atomic_enable,
->         .atomic_disable = vc4_txp_atomic_disable,
-> -       .mode_set_nofb  = vc4_hvs_mode_set_nofb,
->  };
->
->  static irqreturn_t vc4_txp_interrupt(int irq, void *data)
-> --
-> git-series 0.9.1
+
+What is *not* about KVM here is that it's known to be
+safe when running on QEMU and on the specific implementation.
+Other implementations - even if they are using kvm -
+might freeze if you disable memory of the pci host device,
+or try to size BARs so they overlap the MMCONFIG.
+
+So to proceed with your approach, I would say either we limit this to
+just a known good QEMU device, or disable this when poking at unsafe
+registers.
+
+But I have another idea: isn't it true that we can get a large part of
+the benefit simply by reading the device/vendor ID through MMCONFIG?
+That is almost sure to be safe anyway, even though I would limit it to
+just KVM simply because other systems do not benefit.
+
+> 
+> We can avoid KVM-specific changes in the generic PCI code by
+> implementing x86_init.pci.arch_init inside KVM code, as Vitaly
+> suggested. What do you think?
+> 
+> Best regards, Julia Suvorova.
+
+Makes sense.
+
+-- 
+MST
+
