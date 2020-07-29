@@ -2,115 +2,110 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25972C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4082FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01DA920829
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:29:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aRWtLfuQ"
+	by mail.kernel.org (Postfix) with ESMTP id 2367320809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:29:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgG2N3k (ORCPT
+        id S1727772AbgG2N3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:29:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30448 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726365AbgG2N3j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 09:29:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596029378;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pHdy6Zb9Xi6Br1uklysJIGNGzShuC9IUN8gmmUSKfJ8=;
-        b=aRWtLfuQT+4jdgoCsYV/8Kohq6UzLvVlKez2chiloW2tblAG/Uy0mBhIe2G+HlU+GcjQLU
-        aLl1rhnwhQDuIxfbAid2URxFc6mkOAYtEIQZt41QiBfFG2vcAEEZa6XqjSyDAcyRINkOb2
-        CJM7c7PBLWnkxot6U5aGSeB2RzQLc8Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-185-oUnvNmSeOLyVa6xnjYceCQ-1; Wed, 29 Jul 2020 09:29:36 -0400
-X-MC-Unique: oUnvNmSeOLyVa6xnjYceCQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE5481902EA0;
-        Wed, 29 Jul 2020 13:29:34 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-113-29.ams2.redhat.com [10.36.113.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B422869327;
-        Wed, 29 Jul 2020 13:29:32 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     madvenka@linux.microsoft.com,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
-        <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
-Date:   Wed, 29 Jul 2020 15:29:31 +0200
-In-Reply-To: <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
-        (Andy Lutomirski's message of "Tue, 28 Jul 2020 10:31:59 -0700")
-Message-ID: <87pn8eo3es.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Wed, 29 Jul 2020 09:29:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:51714 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726365AbgG2N3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 09:29:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A7A61FB;
+        Wed, 29 Jul 2020 06:29:45 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C1903F66E;
+        Wed, 29 Jul 2020 06:29:43 -0700 (PDT)
+References: <20200712165917.9168-1-valentin.schneider@arm.com> <20200712165917.9168-3-valentin.schneider@arm.com> <20200727141825.GA4174@lca.pw> <16f8c1d4-778b-3ab8-f328-bae80f3973b4@arm.com> <jhjpn8fiphi.mognet@arm.com> <20200729130910.GA1075614@google.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Quentin Perret <qperret@google.com>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>, Qian Cai <cai@lca.pw>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v2 2/3] sched: Cleanup SCHED_THERMAL_PRESSURE kconfig entry
+In-reply-to: <20200729130910.GA1075614@google.com>
+Date:   Wed, 29 Jul 2020 14:29:37 +0100
+Message-ID: <jhjo8nyih4u.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Andy Lutomirski:
 
-> This is quite clever, but now I=E2=80=99m wondering just how much kernel =
-help
-> is really needed. In your series, the trampoline is an non-executable
-> page.  I can think of at least two alternative approaches, and I'd
-> like to know the pros and cons.
+On 29/07/20 14:09, Quentin Perret wrote:
+> On Tuesday 28 Jul 2020 at 17:16:57 (+0100), Valentin Schneider wrote:
+>> We could change the arch Kconfig into
+>>
+>>   select SCHED_THERMAL_PRESSURE if CPU_FREQ_THERMAL
+>>
+>> but that seems redundant; this dependency is already expressed in
+>> SCHED_THERMAL_PRESSURE's definition. Is there a proper pattern to select
+>> some Kconfig option only if all of its dependencies are met?
 >
-> 1. Entirely userspace: a return trampoline would be something like:
+> How about something like this (totally untested):
 >
-> 1:
-> pushq %rax
-> pushq %rbc
-> pushq %rcx
-> ...
-> pushq %r15
-> movq %rsp, %rdi # pointer to saved regs
-> leaq 1b(%rip), %rsi # pointer to the trampoline itself
-> callq trampoline_handler # see below
+> ---8<---
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 939c4d6bbc2e..2ac74904a3ce 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -46,7 +46,6 @@ config ARM
+>       select EDAC_ATOMIC_SCRUB
+>       select GENERIC_ALLOCATOR
+>       select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
+> -	select SCHED_THERMAL_PRESSURE if ARM_CPU_TOPOLOGY
+>       select GENERIC_ATOMIC64 if CPU_V7M || CPU_V6 || !CPU_32v6K || !AEABI
+>       select GENERIC_CLOCKEVENTS_BROADCAST if SMP
+>       select GENERIC_CPU_AUTOPROBE
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index c403e6f5db86..66dc41fd49f2 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -192,7 +192,6 @@ config ARM64
+>       select PCI_SYSCALL if PCI
+>       select POWER_RESET
+>       select POWER_SUPPLY
+> -	select SCHED_THERMAL_PRESSURE
+>       select SPARSE_IRQ
+>       select SWIOTLB
+>       select SYSCTL_EXCEPTION_TRACE
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 0a97d85568b2..c2e1f3ac527e 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -493,6 +493,7 @@ config HAVE_SCHED_AVG_IRQ
 >
-> You would fill a page with a bunch of these, possibly compacted to get
-> more per page, and then you would remap as many copies as needed.
+>  config SCHED_THERMAL_PRESSURE
+>       bool
+> +	default y if ARM64 || ARM_CPU_TOPOLOGY
+>       depends on SMP
+>       depends on CPU_FREQ_THERMAL
+>       help
+> --->8---
+>
 
-libffi does something like this for iOS, I believe.
+That does seem to do just what I was looking for, thanks!
 
-The only thing you really need is a PC-relative indirect call, with the
-target address loaded from a different page.  The trampoline handler can
-do all the rest because it can identify the trampoline from the stack.
-Having a closure parameter loaded into a register will speed things up,
-of course.
-
-I still hope to transition libffi to this model for most Linux targets.
-It really simplifies things because you don't have to deal with cache
-flushes (on both the data and code aliases for SELinux support).
-
-But the key observation is that efficient trampolines do not need
-run-time code generation at all because their code is so regular.
-
-Thanks,
-Florian
-
+> Thanks,
+> Quentin
