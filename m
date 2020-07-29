@@ -2,103 +2,142 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35FCC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D734C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 924A420786
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E771720809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:47:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ubn/W4qS"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YjGyXU2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgG2Gp1 (ORCPT
+        id S1727017AbgG2GrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 02:45:27 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:55647 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbgG2Gp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 02:45:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596005126; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=F8Dx2k2QTTUlJ3PVcw289iUoRDVJ4gqpdkDJN4dKpe8=; b=ubn/W4qSOoZRRteYWukQtEwAfTssbHgYgRt0KsEiGUdJ861GpZzIKPpoMTIMOxANBw9QuyJR
- ca0WbgMGZesA7jI6LVpCqHL3zboJAD+IXspMdDeIgQs9+9HHEzxhq/C5X40odYhWAXXxrjhO
- P295fWPYzGuX1cRBQ76z9sbMNH0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f211b0570ff737ddbb67b23 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 06:45:25
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6D9EDC4339C; Wed, 29 Jul 2020 06:45:24 +0000 (UTC)
-Received: from [192.168.0.101] (unknown [49.204.127.128])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 29 Jul 2020 02:47:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbgG2GrQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 02:47:16 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF447C061794;
+        Tue, 28 Jul 2020 23:47:15 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: sivaprak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 232CEC433C9;
-        Wed, 29 Jul 2020 06:45:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 232CEC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
-Subject: Re: [PATCH 5/9] phy: qcom-qmp: use correct values for ipq8074 gen2
- pcie phy init
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
-        robh+dt@kernel.org, kishon@ti.com, mturquette@baylibre.com,
-        sboyd@kernel.org, svarbanov@mm-sol.com, lorenzo.pieralisi@arm.com,
-        p.zabel@pengutronix.de, mgautam@codeaurora.org,
-        smuthayy@codeaurora.org, varada@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, stable@vger.kernel.org,
-        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
- <1593940680-2363-6-git-send-email-sivaprak@codeaurora.org>
- <20200713055558.GB34333@vkoul-mobl>
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Message-ID: <9988249f-53aa-e615-f64b-28c0c0641ab4@codeaurora.org>
-Date:   Wed, 29 Jul 2020 12:15:13 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BGkcK12Y3z9sRW;
+        Wed, 29 Jul 2020 16:47:13 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596005233;
+        bh=ijyyUr82wI4HGbRSdFt2yLXZvyup+U2Kte8u90b/Go0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YjGyXU2UayxF+EpN+uQL/BM2Hyx/tT2nZSgTgjC1xzEkY6KSF9Yc22ixCNRNu0hjA
+         BEAtGCl67giZnwKliNaKWPUhofKH92pD+8XXgyBufPMltFc4xqzmjPxsCbOZVNAkL+
+         AwnXvyiM0DBLpTorLCJS7hc2bg7QeJz0oM4v0ennWaW5HD+FLD5Vz5TDO5QN/RsUat
+         0QtxeEmGROekvXVZb8CD9BdkNSk2bP0yW61QZa3NdTqjmqGGqcGSriJgVxHEYIdCKR
+         UJQuSy4u9FargUgsSz2HwgSLAw0KzDpw0mPGkEujn09EFdB+g6MsogXClPkpFssf9K
+         sLZy6z913zr8g==
+Date:   Wed, 29 Jul 2020 16:47:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: linux-next: manual merge of the kvm tree with the tip tree
+Message-ID: <20200729164712.4f429876@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200713055558.GB34333@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; boundary="Sig_/XHfzbWnBxBMDLwmII4hFvje";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/XHfzbWnBxBMDLwmII4hFvje
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 7/13/2020 11:25 AM, Vinod Koul wrote:
-> On 05-07-20, 14:47, Sivaprakash Murugesan wrote:
->> There were some problem in ipq8074 gen2 pcie phy init sequence, fix
-> Can you please describe these problems, it would help review to
-> understand the issues and also for future reference to you
+Hi all,
 
-Hi Vinod,
+Today's linux-next merge of the kvm tree got a conflict in:
 
-As you mentioned we are updating few register values
+  arch/x86/kernel/kvm.c
 
-and also adding clocks and resets.
+between commits:
 
-the register values are given by the Hardware team and there
+  b037b09b9058 ("x86/entry: Rename idtentry_enter/exit_cond_rcu() to idtent=
+ry_enter/exit()")
+  a27a0a55495c ("x86/entry: Cleanup idtentry_enter/exit")
 
-is some fine tuning values are provided by Hardware team for the
+from the tip tree and commits:
 
-issues we faced downstream.
+  b1d405751cd5 ("KVM: x86: Switch KVM guest to using interrupts for page re=
+ady APF delivery")
+  26d05b368a5c ("Merge branch 'kvm-async-pf-int' into HEAD")
 
-Also, few register values are typos for example QSERDES_RX_SIGDET_CNTRL
+from the kvm tree.
 
-is a rx register it was wrongly in serdes table.
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-I will try to mention these details in next patch.
+--=20
+Cheers,
+Stephen Rothwell
 
+diff --cc arch/x86/kernel/kvm.c
+index 233c77d056c9,d9995931ea18..000000000000
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@@ -232,18 -235,13 +235,13 @@@ EXPORT_SYMBOL_GPL(kvm_read_and_reset_ap
+ =20
+  noinstr bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
+  {
+- 	u32 reason =3D kvm_read_and_reset_apf_flags();
++ 	u32 flags =3D kvm_read_and_reset_apf_flags();
+ -	bool rcu_exit;
+ +	irqentry_state_t state;
+ =20
+- 	switch (reason) {
+- 	case KVM_PV_REASON_PAGE_NOT_PRESENT:
+- 	case KVM_PV_REASON_PAGE_READY:
+- 		break;
+- 	default:
++ 	if (!flags)
+  		return false;
+- 	}
+ =20
+ -	rcu_exit =3D idtentry_enter_cond_rcu(regs);
+ +	state =3D irqentry_enter(regs);
+  	instrumentation_begin();
+ =20
+  	/*
+
+--Sig_/XHfzbWnBxBMDLwmII4hFvje
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8hG3AACgkQAVBC80lX
+0GzXTAf/UAzhjiwuIBm+VzF5IuHJ0gdp9QmrlbRsW2OIKY3Py04zMX8umaPT08dF
+tGEV/2hAwC8bBVm10fhfXeQonLsRiIrgsCHyTaRi31okGrqkFNc/ntKqKLK9qJf6
+iZt/TdJOaGZRV+dusjOK8Z8Vo+ndUhPR2NFCVV2digKBbFfaM2En0lBpNEMtxDJM
+ZsIhORnUv3JfQ0AdpkVoUb46mKb17jHkqWTewdFJGnfxR3F9ijhtsveEMp1PxGhv
+39RzeCeSu6GTZtaWLmdA/mqdKXUWms44wCDc+RGbzFuLwV+sItWB74i10ovWzbZZ
+5GZzPlqX0s1r9y2M5qoyHX9fdSomYw==
+=Q1Ke
+-----END PGP SIGNATURE-----
+
+--Sig_/XHfzbWnBxBMDLwmII4hFvje--
