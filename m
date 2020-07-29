@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7971EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5746222BEF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249BA20809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:33:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MLvWqUUn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2gJ0v1qS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WjjA4ta8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sHbeNGDv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgG2Odn (ORCPT
+        id S1727801AbgG2Odq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:33:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42938 "EHLO
+        Wed, 29 Jul 2020 10:33:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42978 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbgG2Odg (ORCPT
+        with ESMTP id S1727054AbgG2Odk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:33:36 -0400
-Date:   Wed, 29 Jul 2020 14:33:33 -0000
+        Wed, 29 Jul 2020 10:33:40 -0400
+Date:   Wed, 29 Jul 2020 14:33:37 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596033213;
+        s=2020; t=1596033218;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=+21/d33zSJQzOrFuH9hDP7UKKlTattNthwOTTDKc/Z0=;
-        b=MLvWqUUnGhEtzsxIqWVpWYz3GHrA2SIoArx4KdgGNIjxiRofnbmFhzXUlV5ci5gd+zc0ix
-        KzC9fOjxMgMorvdCSrYTkCGlwh6fkoCuDHSM/TdDvMC+E6ea5N7wmdZ5CS3fdN+wummEDj
-        5lT5c6BqHrGPB03wl2pm8sjzIgRWItJuTu31zWf+EsmLELnSDDrHMleK49J9AGW8f3tHcm
-        oTWGjpgiXgJ3anQuIaIW0TpiIYqwutkSrL7sBZ5xpnqhQPWwyCq+1314EZpBvEDxh2gjrJ
-        tYkNk8kIspQ8huRmnpiYVz4fZXzChgVOsDQ90ecMmr1OdgesE0fASCg14aB3mA==
+        bh=d+R7r+ARNRtKTiPALl/ABkNglcqeAzt55FscC1cm4cM=;
+        b=WjjA4ta84rjnSW3/jVwvUGaT4DAIbu1lNhHHrN5Ap/UFbKLWlIWfWT34NEuzOjB8HxkTte
+        3Kv0fyUUw+347E8p07uPU7uIjiD1sZtaditXdUi24dwQC6c13UGQvsMDMJW4vC3GfxUT5I
+        mHPytKCbW245DsOr1WWX6YoV/A76CFKdno2C0ry+BUkqHAxQngX9oiJ8RNOKXErLyLsPZz
+        jIrdxYSD5CyBZZWFGR4c3AWw6j1WM7rtB1mT1X971A/1WrR6s3MpuCoohjKLo8Ji3bHUcb
+        wPeZw0VYFOlwRaXZqJdKcK5lx3wQ9vRfUZLCEWtOruqO0XLo4uxTjSgLWj+ocQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596033213;
+        s=2020e; t=1596033218;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=+21/d33zSJQzOrFuH9hDP7UKKlTattNthwOTTDKc/Z0=;
-        b=2gJ0v1qSuRsBDL/G4fw3Zs7KFpwocLsWGzErJyY/K6Cb+1d2QEZf2SFYpmFcdozE8dk2N0
-        QnVZ/p7gc+8cptDA==
+        bh=d+R7r+ARNRtKTiPALl/ABkNglcqeAzt55FscC1cm4cM=;
+        b=sHbeNGDvnjDk/0RQLjNAyRdWz1YO1oNL2Yf3bW1nFIZS1KH5tLCHsCCoUY57OgMFAmZ+iD
+        VfI8EJKiDf0ChZAA==
 From:   "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] netfilter: nft_set_rbtree: Use sequence counter
- with associated rwlock
+Subject: [tip: locking/core] seqlock: lockdep assert non-preemptibility on
+ seqcount_t write
 Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200720155530.1173732-16-a.darwish@linutronix.de>
-References: <20200720155530.1173732-16-a.darwish@linutronix.de>
+In-Reply-To: <20200720155530.1173732-9-a.darwish@linutronix.de>
+References: <20200720155530.1173732-9-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <159603321315.4006.14315455150696649562.tip-bot2@tip-bot2>
+Message-ID: <159603321790.4006.4488497808280914537.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -71,54 +71,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     b901892b51317b321c7bc96e2ccd2f522d1380ee
-Gitweb:        https://git.kernel.org/tip/b901892b51317b321c7bc96e2ccd2f522d1380ee
+Commit-ID:     859247d39fb008ea812e8f0c398a58a20c12899e
+Gitweb:        https://git.kernel.org/tip/859247d39fb008ea812e8f0c398a58a20c12899e
 Author:        Ahmed S. Darwish <a.darwish@linutronix.de>
-AuthorDate:    Mon, 20 Jul 2020 17:55:21 +02:00
+AuthorDate:    Mon, 20 Jul 2020 17:55:14 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 29 Jul 2020 16:14:26 +02:00
+CommitterDate: Wed, 29 Jul 2020 16:14:24 +02:00
 
-netfilter: nft_set_rbtree: Use sequence counter with associated rwlock
+seqlock: lockdep assert non-preemptibility on seqcount_t write
 
-A sequence counter write side critical section must be protected by some
-form of locking to serialize writers. A plain seqcount_t does not
-contain the information of which lock must be held when entering a write
-side critical section.
+Preemption must be disabled before entering a sequence count write side
+critical section.  Failing to do so, the seqcount read side can preempt
+the write side section and spin for the entire scheduler tick.  If that
+reader belongs to a real-time scheduling class, it can spin forever and
+the kernel will livelock.
 
-Use the new seqcount_rwlock_t data type, which allows to associate a
-rwlock with the sequence counter. This enables lockdep to verify that
-the rwlock used for writer serialization is held when the write side
-critical section is entered.
-
-If lockdep is disabled this lock association is compiled out and has
-neither storage size nor runtime overhead.
+Assert through lockdep that preemption is disabled for seqcount writers.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200720155530.1173732-16-a.darwish@linutronix.de
+Link: https://lkml.kernel.org/r/20200720155530.1173732-9-a.darwish@linutronix.de
 ---
- net/netfilter/nft_set_rbtree.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/seqlock.h | 29 +++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
 
-diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
-index b6aad3f..4b2834f 100644
---- a/net/netfilter/nft_set_rbtree.c
-+++ b/net/netfilter/nft_set_rbtree.c
-@@ -18,7 +18,7 @@
- struct nft_rbtree {
- 	struct rb_root		root;
- 	rwlock_t		lock;
--	seqcount_t		count;
-+	seqcount_rwlock_t	count;
- 	struct delayed_work	gc_work;
- };
+diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+index e885702..54bc204 100644
+--- a/include/linux/seqlock.h
++++ b/include/linux/seqlock.h
+@@ -266,6 +266,12 @@ static inline void raw_write_seqcount_end(seqcount_t *s)
+ 	kcsan_nestable_atomic_end();
+ }
  
-@@ -523,7 +523,7 @@ static int nft_rbtree_init(const struct nft_set *set,
- 	struct nft_rbtree *priv = nft_set_priv(set);
++static inline void __write_seqcount_begin_nested(seqcount_t *s, int subclass)
++{
++	raw_write_seqcount_begin(s);
++	seqcount_acquire(&s->dep_map, subclass, 0, _RET_IP_);
++}
++
+ /**
+  * write_seqcount_begin_nested() - start a seqcount_t write section with
+  *                                 custom lockdep nesting level
+@@ -276,8 +282,19 @@ static inline void raw_write_seqcount_end(seqcount_t *s)
+  */
+ static inline void write_seqcount_begin_nested(seqcount_t *s, int subclass)
+ {
+-	raw_write_seqcount_begin(s);
+-	seqcount_acquire(&s->dep_map, subclass, 0, _RET_IP_);
++	lockdep_assert_preemption_disabled();
++	__write_seqcount_begin_nested(s, subclass);
++}
++
++/*
++ * A write_seqcount_begin() variant w/o lockdep non-preemptibility checks.
++ *
++ * Use for internal seqlock.h code where it's known that preemption is
++ * already disabled. For example, seqlock_t write side functions.
++ */
++static inline void __write_seqcount_begin(seqcount_t *s)
++{
++	__write_seqcount_begin_nested(s, 0);
+ }
  
- 	rwlock_init(&priv->lock);
--	seqcount_init(&priv->count);
-+	seqcount_rwlock_init(&priv->count, &priv->lock);
- 	priv->root = RB_ROOT;
+ /**
+@@ -575,7 +592,7 @@ static inline unsigned read_seqretry(const seqlock_t *sl, unsigned start)
+ static inline void write_seqlock(seqlock_t *sl)
+ {
+ 	spin_lock(&sl->lock);
+-	write_seqcount_begin(&sl->seqcount);
++	__write_seqcount_begin(&sl->seqcount);
+ }
  
- 	INIT_DEFERRABLE_WORK(&priv->gc_work, nft_rbtree_gc);
+ /**
+@@ -601,7 +618,7 @@ static inline void write_sequnlock(seqlock_t *sl)
+ static inline void write_seqlock_bh(seqlock_t *sl)
+ {
+ 	spin_lock_bh(&sl->lock);
+-	write_seqcount_begin(&sl->seqcount);
++	__write_seqcount_begin(&sl->seqcount);
+ }
+ 
+ /**
+@@ -628,7 +645,7 @@ static inline void write_sequnlock_bh(seqlock_t *sl)
+ static inline void write_seqlock_irq(seqlock_t *sl)
+ {
+ 	spin_lock_irq(&sl->lock);
+-	write_seqcount_begin(&sl->seqcount);
++	__write_seqcount_begin(&sl->seqcount);
+ }
+ 
+ /**
+@@ -649,7 +666,7 @@ static inline unsigned long __write_seqlock_irqsave(seqlock_t *sl)
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&sl->lock, flags);
+-	write_seqcount_begin(&sl->seqcount);
++	__write_seqcount_begin(&sl->seqcount);
+ 	return flags;
+ }
+ 
