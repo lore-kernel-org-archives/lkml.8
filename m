@@ -2,123 +2,91 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 745C2206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F55721D95
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:21:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596010886;
+	bh=RGd0GtquPwow/H/h1jo+bv6mNBeDVKUjoL5I9qGsWjA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j2RGSSRM4mTEWh6XlLw0QEZayTSnthdqQN0MUf0lhGNe/ZkkiLegb1GhkQMEuy0Vy
+	 D8FVgiTdWY9XNJySibtJfXY3fpx5f/lzT/ioQ6IGpOYgXna5M2qjpu7qrnWf1an+JL
+	 tz39kGMrkkO5JLyoArqe7VERExDtJyXIMkp0EKtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgG2IUR (ORCPT
+        id S1727985AbgG2IVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:20:17 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:37209 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727885AbgG2IUQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:20:16 -0400
-Received: by mail-io1-f69.google.com with SMTP id f6so1316422ioa.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:20:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=cl416RZjUF3O9jXjZQ0k7KWHBcYWC7cjCtLUFQMx9CY=;
-        b=Ga8MJa+y/Kuz+6iZzOkcfuJZPni/S9mH3fE0MHftsB9hHl5rbM9LgAAkgyOB2b789Z
-         Bh58TdWIykTQAAtoZk7YXjQZy09Ty76AlbgRK3EpYmnLHZeAezW2jZkTUntUyqa2qSxT
-         7ZTuMmcGhqwynmifdccqoRMswkczi4zdT95YEe2WgJRsWxNykwWs5miMKGUnFyKLJ50u
-         VoZn0ott5n5vUlywyCNCvCo3pAqI7lsd2AYgXK4oRwQHuEmb/GvZCW+ZkiEFUhhnR311
-         ro/qYUjOl+waiQHZYWzjrtNjEa7g1P7gN1sVS3jP0OuiUGvceP5ckf8WBovlMmxRzFDD
-         06xg==
-X-Gm-Message-State: AOAM530vLprYHeiyaXpwq9BvTz5ZZlVgPL5Q1TfQ4sCR0jTMai5VTKKD
-        zNHoHSYqRfcX4joF3PFAdVy0KP96TIHSv2fni32LYrbBEa4d
-X-Google-Smtp-Source: ABdhPJxL9LdW97OSd1IKs5yaFXouU/Fjr1b85o13NOy0MxxGgoXq2IBV5g08QwJaz1+n03lC8bIroLaMPPMFiHTm61YSOLmmcwN7
+        Wed, 29 Jul 2020 04:21:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgG2IVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 04:21:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97FAC206D4;
+        Wed, 29 Jul 2020 08:21:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596010883;
+        bh=RGd0GtquPwow/H/h1jo+bv6mNBeDVKUjoL5I9qGsWjA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kvDh4Ivq1qifkU6ugzlMsEwktazzFY51KYAVcubMdNGduqtvZln9+xESPIlnK8yet
+         5Dz3UZ1pSulPh1lwIfgwljtstStmgDpJ/IZo0CU5YVx2Dv9Lmdq7KrtLz5MfdP5eYA
+         +2KG653m5ohnWRXJ44WWZjlcIeSK2XsLgnSEB6T8=
+Date:   Wed, 29 Jul 2020 10:21:14 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.7 000/179] 5.7.11-rc1 review
+Message-ID: <20200729082114.GA529870@kroah.com>
+References: <20200727134932.659499757@linuxfoundation.org>
+ <63f634e5-e2bb-fea4-90da-774790ced38d@linuxfoundation.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:154d:: with SMTP id h13mr33043619iow.210.1596010814962;
- Wed, 29 Jul 2020 01:20:14 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 01:20:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000af016405ab903954@google.com>
-Subject: KASAN: vmalloc-out-of-bounds Read in get_counters
-From:   syzbot <syzbot+a450cb4aa95912e62487@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        kadlec@netfilter.org, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63f634e5-e2bb-fea4-90da-774790ced38d@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Jul 27, 2020 at 07:31:20PM -0600, Shuah Khan wrote:
+> On 7/27/20 8:02 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.7.11 release.
+> > There are 179 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Wed, 29 Jul 2020 13:48:51 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.11-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> Compiled and booted on my test system. No dmesg regressions.
+> 
+> Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-syzbot found the following issue on:
+Thanks for testing all of these and letting me know.
 
-HEAD commit:    68845a55 Merge branch 'akpm' into master (patches from And..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13668964900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f87a5e4232fdb267
-dashboard link: https://syzkaller.appspot.com/bug?extid=a450cb4aa95912e62487
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+And I've added your tested-by: to the release commit as well, thanks for
+that.
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a450cb4aa95912e62487@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: vmalloc-out-of-bounds in get_counters+0x593/0x610 net/ipv6/netfilter/ip6_tables.c:780
-Read of size 8 at addr ffffc9000528b048 by task syz-executor.1/6968
-
-CPU: 1 PID: 6968 Comm: syz-executor.1 Not tainted 5.8.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0x5/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- get_counters+0x593/0x610 net/ipv6/netfilter/ip6_tables.c:780
- do_ip6t_get_ctl+0x516/0x910 net/ipv6/netfilter/ip6_tables.c:821
- nf_sockopt net/netfilter/nf_sockopt.c:104 [inline]
- nf_getsockopt+0x72/0xd0 net/netfilter/nf_sockopt.c:122
- ipv6_getsockopt+0x1bf/0x270 net/ipv6/ipv6_sockglue.c:1468
- tcp_getsockopt+0x86/0xd0 net/ipv4/tcp.c:3893
- __sys_getsockopt+0x14b/0x2e0 net/socket.c:2172
- __do_sys_getsockopt net/socket.c:2187 [inline]
- __se_sys_getsockopt net/socket.c:2184 [inline]
- __x64_sys_getsockopt+0xba/0x150 net/socket.c:2184
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ee7a
-Code: Bad RIP value.
-RSP: 002b:0000000000c9f618 EFLAGS: 00000212 ORIG_RAX: 0000000000000037
-RAX: ffffffffffffffda RBX: 0000000000c9f640 RCX: 000000000045ee7a
-RDX: 0000000000000041 RSI: 0000000000000029 RDI: 0000000000000003
-RBP: 0000000000744ca0 R08: 0000000000c9f63c R09: 0000000000004000
-R10: 0000000000c9f740 R11: 0000000000000212 R12: 0000000000000003
-R13: 0000000000000000 R14: 0000000000000029 R15: 00000000007445e0
-
-
-Memory state around the buggy address:
- ffffc9000528af00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
- ffffc9000528af80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
->ffffc9000528b000: 00 00 00 00 00 00 00 00 f9 f9 f9 f9 f9 f9 f9 f9
-                                              ^
- ffffc9000528b080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
- ffffc9000528b100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+greg k-h
