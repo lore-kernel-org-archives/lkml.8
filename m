@@ -2,151 +2,122 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C24C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20ED1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4744220809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E1C207F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:43:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIeeARmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgG2HnC (ORCPT
+        id S1727781AbgG2HnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:43:02 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59948 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726299AbgG2HnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:43:01 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7C583CB271A10AF009FB;
-        Wed, 29 Jul 2020 15:42:57 +0800 (CST)
-Received: from [10.174.178.63] (10.174.178.63) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 29 Jul 2020 15:42:46 +0800
-Subject: Re: [PATCH 2/4] perf: arm-spe: Add support for ARMv8.3-SPE
-To:     Leo Yan <leo.yan@linaro.org>
-CC:     Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>, <zhangshaokun@hisilicon.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        "Peter Zijlstra" <peterz@infradead.org>, <guohanjun@huawei.com>
-References: <20200724091607.41903-1-liwei391@huawei.com>
- <20200724091607.41903-3-liwei391@huawei.com>
- <20200729062951.GE4343@leoy-ThinkPad-X240s>
- <a8f9df67-adf1-09e7-b117-ff4163cc2a03@huawei.com>
- <20200729072844.GH4343@leoy-ThinkPad-X240s>
-From:   "liwei (GF)" <liwei391@huawei.com>
-Message-ID: <beabfb2a-e9ec-fe8e-a6ae-a7d4935a421e@huawei.com>
-Date:   Wed, 29 Jul 2020 15:42:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.0
+        Wed, 29 Jul 2020 03:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgG2HnE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 03:43:04 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F30BAC061794;
+        Wed, 29 Jul 2020 00:43:02 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g8so1793226wmk.3;
+        Wed, 29 Jul 2020 00:43:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=szBubxity4186U3bdeuflQScz96ZCzKJmi9LmSH2cAg=;
+        b=VIeeARmOqTNBT95O1KFhQALpovswxaeK0oTFi/+t2mEyBQ6LYcC3gpgYrI3G0EmeAz
+         047ZKs6aW4pIswVaM9s9AYTv7FG6Do+Nk729Fqh5WQk0/TffbcxH6miCnceHSCRI+fVT
+         3iYwMoZ7g6OsoDGKRKAs9C3XQhdTzYx0Afx5rFgfJRy3tbJ7YXRN1sJYrVZLX5iawH7t
+         5sbipe9WuBnIqHitgUeVMdg2GFmkNqKRsMHY6+HJlggOmDnBW7yuAE2wR9PLer+ff84O
+         m5XHKnngkTx/TN2o28AojJ1tHTQLB0E07aVbfklnFxikWDpLwDQnwv3ndzS8k9fNVpBf
+         EazA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=szBubxity4186U3bdeuflQScz96ZCzKJmi9LmSH2cAg=;
+        b=Nf5W9/WbwkvVwjHsRFvzCW9PAgDUupTA/7E342SouBGf3DQmWwGfVYFl306mgJOODR
+         ySXcRidGsVFLeSWeyvbHTSPdc7h7Bxx0Ao8/0oJ12Aq3Zyh6FTpkZMZOG4tGWs+WnYry
+         nKnwbMqQLeI9OPizXn2TFI063LW/VFOUsHRRKIzCSyVbCCgeGNF1BjJIj0RiPO4qOlSv
+         DcmF4xtnHrG6+Sggn06f8FStwfZPvVn0KMQxgddcmTsbxcBh11c76tYSPxovLHQEeMlA
+         xxG4erhAgomqhmWvitiE/6jmxwS/LcrvmJbAOEOfvxQDSnA+qnIdav9T06gPoSCe7XAr
+         kthg==
+X-Gm-Message-State: AOAM532WsBlxGp6GWodo0L42WVk3yr8vLHkz3J+mH3anUEvVBVXvTesF
+        DSHBXcyouySOGelwtbBvh+w=
+X-Google-Smtp-Source: ABdhPJweUAeyZOUZCWitl1m8gdeOtMPiKJACXt8jbVFYXdixwyDiY+1vsMVdDmkTNtLHRwX/NsnAvQ==
+X-Received: by 2002:a1c:28a:: with SMTP id 132mr7315864wmc.109.1596008581632;
+        Wed, 29 Jul 2020 00:43:01 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.122.158])
+        by smtp.gmail.com with ESMTPSA id c7sm3526265wrq.58.2020.07.29.00.43.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 00:43:00 -0700 (PDT)
+Subject: Re: [v2,2/3] dt-bindings: watchdog: add a new head file for toprgu
+ reset-controllers
+To:     Crystal Guo <crystal.guo@mediatek.com>, linux@roeck-us.net,
+        robh+dt@kernel.org
+Cc:     srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, seiya.wang@mediatek.com,
+        erin.lo@mediatek.com
+References: <1596004249-28655-1-git-send-email-crystal.guo@mediatek.com>
+ <1596004249-28655-3-git-send-email-crystal.guo@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <fb7ef8a7-5bbc-8e4b-7a23-c84f151587ba@gmail.com>
+Date:   Wed, 29 Jul 2020 09:42:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200729072844.GH4343@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset="gbk"
+In-Reply-To: <1596004249-28655-3-git-send-email-crystal.guo@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.178.63]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Leo,
+Hi Crystal,
 
-On 2020/7/29 15:28, Leo Yan wrote:
-> On Wed, Jul 29, 2020 at 03:21:20PM +0800, liwei (GF) wrote:
+On 29/07/2020 08:30, Crystal Guo wrote:
+> merge all the reset numbers in one head file.
 > 
-> [...]
+> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
+> ---
+>   include/dt-bindings/reset-controller/mtk-resets.h | 13 +++++++++++++
+>   1 file changed, 13 insertions(+)
+>   create mode 100644 include/dt-bindings/reset-controller/mtk-resets.h
 > 
->>>> @@ -354,8 +372,38 @@ int arm_spe_pkt_desc(const struct arm_spe_pkt *packet, char *buf,
->>>>  	}
->>>>  	case ARM_SPE_OP_TYPE:
->>>>  		switch (idx) {
->>>> -		case 0:	return snprintf(buf, buf_len, "%s", payload & 0x1 ?
->>>> -					"COND-SELECT" : "INSN-OTHER");
->>>> +		case 0:	{
->>>> +			if (payload & 0x8) {
->>>
->>> Some nitpicks for packet format checking ...
->>>
->>> For SVE operation, the payload partten is: 0b0xxx1xx0.
->>>
->>> So it's good to check the partten like:
->>>
->>>   /* SVE operation subclass is: 0b0xxx1xx0 */
->>>   if ((payload & 0x8081) == 0x80) {
->>>      ....
->>>   }
->>>
->>> If later the packet format is extended, this will not introduce any
->>> confliction.
->>
->> Get it, but i think what you are really meaning is:
->> if ((payload & 0x89) == 0x80) {
->> 	...
->> }
-> 
-> Yes.
-> 
->>>
->>>> +				size_t blen = buf_len;
->>>> +
->>>> +				ret = snprintf(buf, buf_len, "SVE-OTHER");
->>>> +				buf += ret;
->>>> +				blen -= ret;
->>>> +				if (payload & 0x2) {
->>>
->>> Here should express as binary results: " FP" or " INT".
->>
->> I think this is a style choice, i add these just like the current code where
->> processing "AT", "EXCL", "AR", "COND" and so on. So should we modify all the corresponding code together?
-> 
-> Okay, understood.  Let's just follow the existed style and later can
-> enhance the output log with more readable format.
-> 
-> [...]
-> 
->>>
->>>> +					ret = snprintf(buf, buf_len, " FP");
->>>> +					buf += ret;
->>>> +					blen -= ret;
->>>> +				}
->>>> +				if (payload & 0x4) {
->>>> +					ret = snprintf(buf, buf_len, " PRED");
->>>
->>> Here should express as binary results: " PRED" or " NOT-PRED".
->>
->> Ditto.
->>
->>>
->>>> +					buf += ret;
->>>> +					blen -= ret;
->>>> +				}
->>>> +				if (payload & 0x70) {
->>>
->>> This is incorrect.  If bits[6:4] is zero, it presents vector length is 32 bits.
->>>
->>
->> I am a little confused here.
->> Refer to the ARM DDI 0487F.b (ID040120), page D10-2830, if bits[6:4] is zero,
->> it presents vector length is 32 bits indeed.
-> 
-> Yes, if bits[6:4] is zero, your current code will not output any info.
-> 
+> diff --git a/include/dt-bindings/reset-controller/mtk-resets.h b/include/dt-bindings/reset-controller/mtk-resets.h
+> new file mode 100644
+> index 0000000..d73a4ba
+> --- /dev/null
+> +++ b/include/dt-bindings/reset-controller/mtk-resets.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2020 Mediatek Inc.
+> + *
+> + */
+> +
+> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_MTK
+> +#define _DT_BINDINGS_RESET_CONTROLLER_MTK
+> +
+> +#define MT2712_TOPRGU_SW_RST_NUM	11
+> +#define MT8183_TOPRGU_SW_RST_NUM        19
 
-Yes, thanks for spotting this.
-And thanks for you review.
+Maybe I didn't explain myself properly. We want to have all resets in one file 
+and do not want to have the resets for the watchdog in a different file. That 
+means I don't thin your patch is correct and the effort should be abandoned.
 
-
-Thanks,
-Wei
+Regards,
+Matthias
