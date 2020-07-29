@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C30C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 400E422CA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB6C20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgG2OxH (ORCPT
+        id S1726910AbgG2OxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:53:07 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:47844 "EHLO inva021.nxp.com"
+        Wed, 29 Jul 2020 10:53:08 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:58618 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbgG2OxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:53:05 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3D3E620100A;
-        Wed, 29 Jul 2020 16:53:03 +0200 (CEST)
+        id S1726353AbgG2OxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 10:53:06 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D0D6D1A0005;
+        Wed, 29 Jul 2020 16:53:04 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9B64D201007;
-        Wed, 29 Jul 2020 16:52:56 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2DD011A0ECA;
+        Wed, 29 Jul 2020 16:52:58 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 51D03402F3;
-        Wed, 29 Jul 2020 16:52:48 +0200 (CEST)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CD44C40302;
+        Wed, 29 Jul 2020 16:52:49 +0200 (CEST)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
@@ -37,9 +37,9 @@ To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
         yuehaibing@huawei.com, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V7 1/6] clk: imx6sl: Use BIT(x) to avoid shifting signed 32-bit value by 31 bits
-Date:   Wed, 29 Jul 2020 22:48:32 +0800
-Message-Id: <1596034117-24246-2-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V7 2/6] clk: composite: Export clk_hw_register_composite()
+Date:   Wed, 29 Jul 2020 22:48:33 +0800
+Message-Id: <1596034117-24246-3-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596034117-24246-1-git-send-email-Anson.Huang@nxp.com>
 References: <1596034117-24246-1-git-send-email-Anson.Huang@nxp.com>
@@ -49,70 +49,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use readl_relaxed() instead of __raw_readl(), and use BIT(x)
-instead of (1 << X) to fix below build warning reported by kernel
-test robot:
+Export clk_hw_register_composite() to support user built as module.
 
-drivers/clk/imx/clk-imx6sl.c:149:49: warning: Shifting signed 32-bit
-value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
-     while (!(__raw_readl(anatop_base + PLL_ARM) & BM_PLL_ARM_LOCK))
+ERROR: modpost: "clk_hw_register_composite" [drivers/clk/imx/mxc-clk.ko]
+undefined!
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reported-by: kernel test robot <lkp@intel.com>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 ---
-Changes since V6:
-	- improve the subject.
+no change.
 ---
- drivers/clk/imx/clk-imx6sl.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/clk/clk-composite.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/imx/clk-imx6sl.c b/drivers/clk/imx/clk-imx6sl.c
-index 0f647d1..e69dba1 100644
---- a/drivers/clk/imx/clk-imx6sl.c
-+++ b/drivers/clk/imx/clk-imx6sl.c
-@@ -3,6 +3,7 @@
-  * Copyright 2013-2014 Freescale Semiconductor, Inc.
-  */
+diff --git a/drivers/clk/clk-composite.c b/drivers/clk/clk-composite.c
+index 7376f57..2ddb54f 100644
+--- a/drivers/clk/clk-composite.c
++++ b/drivers/clk/clk-composite.c
+@@ -328,6 +328,7 @@ struct clk_hw *clk_hw_register_composite(struct device *dev, const char *name,
+ 					   rate_hw, rate_ops, gate_hw,
+ 					   gate_ops, flags);
+ }
++EXPORT_SYMBOL_GPL(clk_hw_register_composite);
  
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/clkdev.h>
- #include <linux/err.h>
-@@ -14,19 +15,19 @@
- #include "clk.h"
- 
- #define CCSR			0xc
--#define BM_CCSR_PLL1_SW_CLK_SEL	(1 << 2)
-+#define BM_CCSR_PLL1_SW_CLK_SEL	BIT(2)
- #define CACRR			0x10
- #define CDHIPR			0x48
--#define BM_CDHIPR_ARM_PODF_BUSY	(1 << 16)
-+#define BM_CDHIPR_ARM_PODF_BUSY	BIT(16)
- #define ARM_WAIT_DIV_396M	2
- #define ARM_WAIT_DIV_792M	4
- #define ARM_WAIT_DIV_996M	6
- 
- #define PLL_ARM			0x0
--#define BM_PLL_ARM_DIV_SELECT	(0x7f << 0)
--#define BM_PLL_ARM_POWERDOWN	(1 << 12)
--#define BM_PLL_ARM_ENABLE	(1 << 13)
--#define BM_PLL_ARM_LOCK		(1 << 31)
-+#define BM_PLL_ARM_DIV_SELECT	0x7f
-+#define BM_PLL_ARM_POWERDOWN	BIT(12)
-+#define BM_PLL_ARM_ENABLE	BIT(13)
-+#define BM_PLL_ARM_LOCK		BIT(31)
- #define PLL_ARM_DIV_792M	66
- 
- static const char *step_sels[]		= { "osc", "pll2_pfd2", };
-@@ -145,7 +146,7 @@ static void imx6sl_enable_pll_arm(bool enable)
- 		val |= BM_PLL_ARM_ENABLE;
- 		val &= ~BM_PLL_ARM_POWERDOWN;
- 		writel_relaxed(val, anatop_base + PLL_ARM);
--		while (!(__raw_readl(anatop_base + PLL_ARM) & BM_PLL_ARM_LOCK))
-+		while (!(readl_relaxed(anatop_base + PLL_ARM) & BM_PLL_ARM_LOCK))
- 			;
- 	} else {
- 		 writel_relaxed(saved_pll_arm, anatop_base + PLL_ARM);
+ struct clk_hw *clk_hw_register_composite_pdata(struct device *dev,
+ 			const char *name,
 -- 
 2.7.4
 
