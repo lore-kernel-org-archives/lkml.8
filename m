@@ -2,88 +2,169 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D802AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD74C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAB7E2078E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661CE2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:11:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="sGPJgNzY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731214AbgG2DEc (ORCPT
+        id S1730742AbgG2DL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 23:04:32 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8292 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731057AbgG2DEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 23:04:31 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 27FFA65DC97449FFB3C6;
-        Wed, 29 Jul 2020 11:04:29 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Wed, 29 Jul 2020
- 11:04:21 +0800
-From:   Lu Wei <luwei32@huawei.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <wangyunjian@huawei.com>,
-        <dan.carpenter@oracle.com>, <andrew@lunn.ch>,
-        <alex.williams@ni.com>, <mdf@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] net: nixge: fix potential memory leak in nixge_probe()
-Date:   Wed, 29 Jul 2020 11:50:05 +0800
-Message-ID: <20200729035005.89161-1-luwei32@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 28 Jul 2020 23:11:29 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:54148 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728401AbgG2DL2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 23:11:28 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 04AEA8066C;
+        Wed, 29 Jul 2020 15:11:23 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1595992283;
+        bh=sM+KrmY3WOU8L/ZS1k+NWdBz7cBUxHr8G+rFhcVUeqU=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=sGPJgNzYhAEtiofKoz6NPlXjzQGLBSqGgbnSo32KIo+ovZBA/CcZ8sPkxj7WeeA0V
+         t581nWWfrlHWohZhXbXeZAelhaHCdAvGRQDG+z7T4xONNfN4wOfYRri+NujoJeUtVg
+         KHn4P9v5PYSappS3XKXelNLK92+C5m6xAd06NNBaWeeKTOYQpe5XdkO1bDqsFG+PQV
+         wQb1C+UeFYgpZfj8Fw1JIXXUxEiTSQ3Etwz1IJovppkYxRSZtYn5MXdmtuDvbfVYU1
+         AjYFDgVVS2k9P0zprKm0CqqIFbKUZq/8JmRpqp7AyQbTNcbpBH9x0D8YvUJ122JtEb
+         xb7bDjWS2fLyg==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f20e8db0001>; Wed, 29 Jul 2020 15:11:23 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Wed, 29 Jul 2020 15:11:22 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Wed, 29 Jul 2020 15:11:22 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>
+CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] i2c: mv64xxx: Add bus error recovery
+Thread-Topic: [PATCH] i2c: mv64xxx: Add bus error recovery
+Thread-Index: AQHWZVXvhTA0ImruIUmTOKEyZ1Tv4Q==
+Date:   Wed, 29 Jul 2020 03:11:21 +0000
+Message-ID: <e7004338-20ba-8c1d-aa75-2bd5e997da3f@alliedtelesis.co.nz>
+References: <20200707211036.12896-1-mark.tomlinson@alliedtelesis.co.nz>
+In-Reply-To: <20200707211036.12896-1-mark.tomlinson@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E264F0330C37744F80EC1C16EDF50AEE@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If some processes in nixge_probe() fail, free_netdev(dev)
-needs to be called to aviod a memory leak.
-
-Fixes: 87ab207981ec ("net: nixge: Separate ctrl and dma resources")
-Fixes: abcd3d6fc640 ("net: nixge: Fix error path for obtaining mac address")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Lu Wei <luwei32@huawei.com>
----
- drivers/net/ethernet/ni/nixge.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/ni/nixge.c b/drivers/net/ethernet/ni/nixge.c
-index d2708a57f2ff..4075f5e59955 100644
---- a/drivers/net/ethernet/ni/nixge.c
-+++ b/drivers/net/ethernet/ni/nixge.c
-@@ -1299,19 +1299,21 @@ static int nixge_probe(struct platform_device *pdev)
- 	netif_napi_add(ndev, &priv->napi, nixge_poll, NAPI_POLL_WEIGHT);
- 	err = nixge_of_get_resources(pdev);
- 	if (err)
--		return err;
-+		goto free_netdev;
- 	__nixge_hw_set_mac_address(ndev);
- 
- 	priv->tx_irq = platform_get_irq_byname(pdev, "tx");
- 	if (priv->tx_irq < 0) {
- 		netdev_err(ndev, "could not find 'tx' irq");
--		return priv->tx_irq;
-+		err = priv->tx_irq;
-+		goto free_netdev;
- 	}
- 
- 	priv->rx_irq = platform_get_irq_byname(pdev, "rx");
- 	if (priv->rx_irq < 0) {
- 		netdev_err(ndev, "could not find 'rx' irq");
--		return priv->rx_irq;
-+		err = priv->rx_irq;
-+		goto free_netdev;
- 	}
- 
- 	priv->coalesce_count_rx = XAXIDMA_DFT_RX_THRESHOLD;
--- 
-2.17.1
-
+SGkgTWFyaywNCg0KT24gOC8wNy8yMCA5OjEwIGFtLCBNYXJrIFRvbWxpbnNvbiB3cm90ZToNCj4g
+VGhpcyBhZGRzIGkyYyBidXMgcmVjb3ZlcnkgdG8gdGhlIG12NjR4eHggZHJpdmVyLg0KPg0KPiBJ
+bXBsZW1lbnQgYnVzIHJlY292ZXJ5IHRvIHJlY292ZXIgZnJvbSBTQ0wvU0RBIHN0dWNrIGxvdy4N
+Cj4NCj4gVGhpcyB1c2VzIHRoZSBnZW5lcmljIHJlY292ZXJ5IGZ1bmN0aW9uLCBzZXR0aW5nIHRo
+ZSBjbG9jay9kYXRhIGxpbmVzIGFzDQo+IEdQSU8gcGlucywgYW5kIHNlbmRpbmcgOSBjbG9ja3Mg
+dG8gdHJ5IGFuZCByZWNvdmVyIHRoZSBidXMuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IE1hcmsgVG9t
+bGluc29uIDxtYXJrLnRvbWxpbnNvbkBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0KDQpSZXZpZXdlZC1i
+eTogQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0KDQpP
+bmUgYWRkaXRpb25hbCBjb21tZW50IGJlbG93DQoNCj4gLS0tDQo+ICAgZHJpdmVycy9pMmMvYnVz
+c2VzL2kyYy1tdjY0eHh4LmMgfCA3NyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLQ0K
+PiAgIDEgZmlsZSBjaGFuZ2VkLCA3NiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+DQo+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW12NjR4eHguYyBiL2RyaXZlcnMv
+aTJjL2J1c3Nlcy9pMmMtbXY2NHh4eC5jDQo+IGluZGV4IDgyOWI4Yzk4YWU1MS4uZTU4ODUzYmEz
+ZWYwIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW12NjR4eHguYw0KPiAr
+KysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW12NjR4eHguYw0KPiBAQCAtMjEsNiArMjEsNyBA
+QA0KPiAgICNpbmNsdWRlIDxsaW51eC9pby5oPg0KPiAgICNpbmNsdWRlIDxsaW51eC9vZi5oPg0K
+PiAgICNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9vZl9n
+cGlvLmg+DQo+ICAgI2luY2x1ZGUgPGxpbnV4L29mX2lycS5oPg0KPiAgICNpbmNsdWRlIDxsaW51
+eC9jbGsuaD4NCj4gICAjaW5jbHVkZSA8bGludXgvZXJyLmg+DQo+IEBAIC0xNDcsNiArMTQ4LDEw
+IEBAIHN0cnVjdCBtdjY0eHh4X2kyY19kYXRhIHsNCj4gICAJYm9vbAkJCWlycV9jbGVhcl9pbnZl
+cnRlZDsNCj4gICAJLyogQ2xrIGRpdiBpcyAyIHRvIHRoZSBwb3dlciBuLCBub3QgMiB0byB0aGUg
+cG93ZXIgbiArIDEgKi8NCj4gICAJYm9vbAkJCWNsa19uX2Jhc2VfMDsNCj4gKwlzdHJ1Y3QgcGlu
+Y3RybAkJKnBpbmN0cmw7DQo+ICsJc3RydWN0IGkyY19idXNfcmVjb3ZlcnlfaW5mbwlyaW5mbzsN
+Cj4gKwlzdHJ1Y3QgcGluY3RybF9zdGF0ZQkqcGluX2RlZmF1bHRfc3RhdGU7DQo+ICsJc3RydWN0
+IHBpbmN0cmxfc3RhdGUJKnBpbl9ncGlvX3N0YXRlOw0KPiAgIH07DQo+ICAgDQo+ICAgc3RhdGlj
+IHN0cnVjdCBtdjY0eHh4X2kyY19yZWdzIG12NjR4eHhfaTJjX3JlZ3NfbXY2NHh4eCA9IHsNCj4g
+QEAgLTMyNSw3ICszMzAsOCBAQCBtdjY0eHh4X2kyY19mc20oc3RydWN0IG12NjR4eHhfaTJjX2Rh
+dGEgKmRydl9kYXRhLCB1MzIgc3RhdHVzKQ0KPiAgIAkJCSBkcnZfZGF0YS0+bXNnLT5mbGFncyk7
+DQo+ICAgCQlkcnZfZGF0YS0+YWN0aW9uID0gTVY2NFhYWF9JMkNfQUNUSU9OX1NFTkRfU1RPUDsN
+Cj4gICAJCW12NjR4eHhfaTJjX2h3X2luaXQoZHJ2X2RhdGEpOw0KPiAtCQlkcnZfZGF0YS0+cmMg
+PSAtRUlPOw0KPiArCQlpMmNfcmVjb3Zlcl9idXMoJmRydl9kYXRhLT5hZGFwdGVyKTsNCj4gKwkJ
+ZHJ2X2RhdGEtPnJjID0gLUVBR0FJTjsNCj4gICAJfQ0KPiAgIH0NCj4gICANCj4gQEAgLTU2Myw2
+ICs1NjksNyBAQCBtdjY0eHh4X2kyY193YWl0X2Zvcl9jb21wbGV0aW9uKHN0cnVjdCBtdjY0eHh4
+X2kyY19kYXRhICpkcnZfZGF0YSkNCj4gICAJCQkJInRpbWVfbGVmdDogJWRcbiIsIGRydl9kYXRh
+LT5ibG9jaywNCj4gICAJCQkJKGludCl0aW1lX2xlZnQpOw0KPiAgIAkJCW12NjR4eHhfaTJjX2h3
+X2luaXQoZHJ2X2RhdGEpOw0KPiArCQkJaTJjX3JlY292ZXJfYnVzKCZkcnZfZGF0YS0+YWRhcHRl
+cik7DQo+ICAgCQl9DQo+ICAgCX0gZWxzZQ0KPiAgIAkJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgm
+ZHJ2X2RhdGEtPmxvY2ssIGZsYWdzKTsNCj4gQEAgLTg3Miw2ICs4NzksNjkgQEAgbXY2NHh4eF9v
+Zl9jb25maWcoc3RydWN0IG12NjR4eHhfaTJjX2RhdGEgKmRydl9kYXRhLA0KPiAgIH0NCj4gICAj
+ZW5kaWYgLyogQ09ORklHX09GICovDQo+ICAgDQo+ICsvKg0KPiArICogU3dpdGNoIHRvIGJpdCBi
+YW5nIG1vZGUgdG8gcHJlcGFyZSBmb3IgaTJjIGdlbmVyaWMgcmVjb3ZlcnkuDQo+ICsgKi8NCj4g
+K3N0YXRpYyB2b2lkIG12NjR4eHhfaTJjX3ByZXBhcmVfcmVjb3Zlcnkoc3RydWN0IGkyY19hZGFw
+dGVyICphZGFwKQ0KPiArew0KPiArCXN0cnVjdCBtdjY0eHh4X2kyY19kYXRhICpkcnZfZGF0YSA9
+IGkyY19nZXRfYWRhcGRhdGEoYWRhcCk7DQo+ICsNCj4gKwlwaW5jdHJsX3NlbGVjdF9zdGF0ZShk
+cnZfZGF0YS0+cGluY3RybCwgZHJ2X2RhdGEtPnBpbl9ncGlvX3N0YXRlKTsNCj4gK30NCj4gKw0K
+PiArLyoNCj4gKyAqIFJldHVybiB0byBub3JtYWwgaTJjIG9wZXJhdGlvbiBmb2xsb3dpbmcgcmVj
+b3ZlcnkuDQo+ICsgKi8NCj4gK3N0YXRpYyB2b2lkIG12NjR4eHhfaTJjX3VucHJlcGFyZV9yZWNv
+dmVyeShzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmFkYXApDQo+ICt7DQo+ICsJc3RydWN0IG12NjR4eHhf
+aTJjX2RhdGEgKmRydl9kYXRhID0gaTJjX2dldF9hZGFwZGF0YShhZGFwKTsNCj4gKw0KPiArCXBp
+bmN0cmxfc2VsZWN0X3N0YXRlKGRydl9kYXRhLT5waW5jdHJsLCBkcnZfZGF0YS0+cGluX2RlZmF1
+bHRfc3RhdGUpOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaW50IG12NjR4eHhfaTJjX2luaXRfcmVj
+b3ZlcnlfaW5mbyhzdHJ1Y3QgbXY2NHh4eF9pMmNfZGF0YSAqZHJ2X2RhdGEsDQo+ICsJCQkJCSAg
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGQpDQo+ICt7DQo+ICsJc3RydWN0IGkyY19idXNfcmVj
+b3ZlcnlfaW5mbyAqcmluZm8gPSAmZHJ2X2RhdGEtPnJpbmZvOw0KPiArCXN0cnVjdCBkZXZpY2Ug
+KmRldiA9ICZwZC0+ZGV2Ow0KPiArDQo+ICsJZHJ2X2RhdGEtPnBpbmN0cmwgPSBkZXZtX3BpbmN0
+cmxfZ2V0KGRldik7DQo+ICsJaWYgKCFkcnZfZGF0YS0+cGluY3RybCB8fCBJU19FUlIoZHJ2X2Rh
+dGEtPnBpbmN0cmwpKSB7DQo+ICsJCWRldl9lcnIoZGV2LCAiY2FuJ3QgZ2V0IHBpbmN0cmwsIGJ1
+cyByZWNvdmVyeSBub3Qgc3VwcG9ydGVkXG4iKTsNCj4gKwkJcmV0dXJuIFBUUl9FUlIoZHJ2X2Rh
+dGEtPnBpbmN0cmwpOw0KPiArCX0NCj4gKw0KPiArCWRydl9kYXRhLT5waW5fZGVmYXVsdF9zdGF0
+ZSA9IHBpbmN0cmxfbG9va3VwX3N0YXRlKGRydl9kYXRhLT5waW5jdHJsLA0KPiArCQkJUElOQ1RS
+TF9TVEFURV9ERUZBVUxUKTsNCj4gKwlkcnZfZGF0YS0+cGluX2dwaW9fc3RhdGUgPSBwaW5jdHJs
+X2xvb2t1cF9zdGF0ZShkcnZfZGF0YS0+cGluY3RybCwNCj4gKwkJCSJncGlvIik7DQo+ICsJcmlu
+Zm8tPnNjbF9ncGlvZCA9IGRldm1fZ3Bpb2RfZ2V0KGRldiwgInNjbCIsDQo+ICsJCQkJCSAgR1BJ
+T0RfT1VUX0hJR0hfT1BFTl9EUkFJTik7DQo+ICsJcmluZm8tPnNkYV9ncGlvZCA9IGRldm1fZ3Bp
+b2RfZ2V0KGRldiwgInNkYSIsIEdQSU9EX0lOKTsNCg0KU2hvdWxkIHRoZXNlIGJlIG1lbnRpb25l
+ZCBpbiANCkRvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvbWFydmVsbCxtdjY0
+eHh4LWkyYy55YW1sPw0KDQo+ICsJaWYgKFBUUl9FUlIocmluZm8tPnNjbF9ncGlvZCkgPT0gLUVQ
+Uk9CRV9ERUZFUiB8fA0KPiArCSAgICBQVFJfRVJSKHJpbmZvLT5zZGFfZ3Bpb2QpID09IC1FUFJP
+QkVfREVGRVIpDQo+ICsJCXJldHVybiAtRVBST0JFX0RFRkVSOw0KPiArDQo+ICsJaWYgKElTX0VS
+UihyaW5mby0+c2RhX2dwaW9kKSB8fA0KPiArCSAgICBJU19FUlIocmluZm8tPnNjbF9ncGlvZCkg
+fHwNCj4gKwkgICAgSVNfRVJSKGRydl9kYXRhLT5waW5fZGVmYXVsdF9zdGF0ZSkgfHwNCj4gKwkg
+ICAgSVNfRVJSKGRydl9kYXRhLT5waW5fZ3Bpb19zdGF0ZSkpIHsNCj4gKwkJZGV2X2RiZyhkZXYs
+ICJyZWNvdmVyeSBpbmZvcm1hdGlvbiBpbmNvbXBsZXRlXG4iKTsNCj4gKwkJcmV0dXJuIDA7DQo+
+ICsJfQ0KPiArDQo+ICsJZGV2X2RiZyhkZXYsICJ1c2luZyBzY2wtZ3BpbyAlZCBhbmQgc2RhLWdw
+aW8gJWQgZm9yIHJlY292ZXJ5XG4iLA0KPiArCQlyaW5mby0+c2NsX2dwaW9kID8gZGVzY190b19n
+cGlvKHJpbmZvLT5zY2xfZ3Bpb2QpIDogLTEsDQo+ICsJCXJpbmZvLT5zZGFfZ3Bpb2QgPyBkZXNj
+X3RvX2dwaW8ocmluZm8tPnNkYV9ncGlvZCkgOiAtMSk7DQo+ICsNCj4gKwlyaW5mby0+cHJlcGFy
+ZV9yZWNvdmVyeSA9IG12NjR4eHhfaTJjX3ByZXBhcmVfcmVjb3Zlcnk7DQo+ICsJcmluZm8tPnVu
+cHJlcGFyZV9yZWNvdmVyeSA9IG12NjR4eHhfaTJjX3VucHJlcGFyZV9yZWNvdmVyeTsNCj4gKwly
+aW5mby0+cmVjb3Zlcl9idXMgPSBpMmNfZ2VuZXJpY19zY2xfcmVjb3Zlcnk7DQo+ICsJZHJ2X2Rh
+dGEtPmFkYXB0ZXIuYnVzX3JlY292ZXJ5X2luZm8gPSByaW5mbzsNCj4gKw0KPiArCXJldHVybiAw
+Ow0KPiArfQ0KPiArDQo+ICAgc3RhdGljIGludA0KPiAgIG12NjR4eHhfaTJjX3Byb2JlKHN0cnVj
+dCBwbGF0Zm9ybV9kZXZpY2UgKnBkKQ0KPiAgIHsNCj4gQEAgLTkzOSw2ICsxMDA5LDEwIEBAIG12
+NjR4eHhfaTJjX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkKQ0KPiAgIA0KPiAgIAlt
+djY0eHh4X2kyY19od19pbml0KGRydl9kYXRhKTsNCj4gICANCj4gKwlyYyA9IG12NjR4eHhfaTJj
+X2luaXRfcmVjb3ZlcnlfaW5mbyhkcnZfZGF0YSwgcGQpOw0KPiArCWlmIChyYyA9PSAtRVBST0JF
+X0RFRkVSKQ0KPiArCQlnb3RvIGV4aXRfcmVzZXQ7DQo+ICsNCj4gICAJcmMgPSByZXF1ZXN0X2ly
+cShkcnZfZGF0YS0+aXJxLCBtdjY0eHh4X2kyY19pbnRyLCAwLA0KPiAgIAkJCSBNVjY0WFhYX0ky
+Q19DVExSX05BTUUsIGRydl9kYXRhKTsNCj4gICAJaWYgKHJjKSB7DQo+IEBAIC05NTEsNiArMTAy
+NSw3IEBAIG12NjR4eHhfaTJjX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkKQ0KPiAg
+IAkJCSJtdjY0eHh4OiBDYW4ndCBhZGQgaTJjIGFkYXB0ZXIsIHJjOiAlZFxuIiwgLXJjKTsNCj4g
+ICAJCWdvdG8gZXhpdF9mcmVlX2lycTsNCj4gICAJfQ0KPiArCWkyY19yZWNvdmVyX2J1cygmZHJ2
+X2RhdGEtPmFkYXB0ZXIpOw0KPiAgIA0KPiAgIAlyZXR1cm4gMDsNCj4gICA=
