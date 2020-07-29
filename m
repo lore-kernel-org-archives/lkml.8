@@ -2,100 +2,91 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 894D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6877C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EDBC20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A159420672
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:36:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbgG2LfL (ORCPT
+        id S1726773AbgG2LgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 07:35:11 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:56255 "EHLO
+        Wed, 29 Jul 2020 07:36:02 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:60417 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgG2LfK (ORCPT
+        with ESMTP id S1726341AbgG2LgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 07:35:10 -0400
-Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N0nOF-1kwod728W5-00wjt6; Wed, 29 Jul 2020 13:35:00 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: mmp: avoid missing prototype warning
-Date:   Wed, 29 Jul 2020 13:34:39 +0200
-Message-Id: <20200729113456.4072290-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.27.0
+        Wed, 29 Jul 2020 07:36:01 -0400
+Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mth79-1kvAid1FJ1-00vAI7; Wed, 29 Jul 2020 13:36:00 +0200
+Received: by mail-qk1-f180.google.com with SMTP id 11so21837735qkn.2;
+        Wed, 29 Jul 2020 04:35:59 -0700 (PDT)
+X-Gm-Message-State: AOAM5301V01koQiw8Zw6Dp5bdFx6mxV7aSAmfU89DR0H+8bEiS9JLDtU
+        sT1tCZYpoEFjft0trMxxHBdMiInA3LLVWs5OJhE=
+X-Google-Smtp-Source: ABdhPJxo5fJ/F5KzuBO5kZ+/n0/36DVRpoaDEQranqdtWjA+xCyBnXOZvsxgXoxLXMaovJ3lcU7ByGMB4VEd0o6ogTw=
+X-Received: by 2002:a37:b484:: with SMTP id d126mr32582255qkf.394.1596022558928;
+ Wed, 29 Jul 2020 04:35:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ZB+A3F76Zy/nPLsxkoFZDxI4aWKkSGC/60YSpFP6DlGeS6N6XSv
- em/F1tgQsmEufky1Zae1UAuMigBxLTXYNX2QGKNlCHBo9BHBfVCGswKTp7SfcfE89e3AXXn
- ht7KheSD907VjmKiVVfjo61VOWUNEENaX65LulzCb65iNTrlpaVG/nUSuVnt3xrNNneWwTK
- v2/b0hlnMXZgwbiF48OUw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ogXTt3n8Ay0=:D2Xfv3HsDUdKgzXOlA/SRi
- UEpoDWp6r3GfMndTBTR6D9rPmgIy8FQayAQFwBF9xofg80EFNHKyZmLdWoQXeVORNZ7dsDc/z
- lF0oqsoJ2e6wNTkMNgO0AVootr7bDMUh6BYTdOrPbM9UtZhd86MVXQ2ycbAEC9uYzdwJq885N
- uqEkYPuQ3EUoonL+elIlVih++pu1/XWkr5IGhiYBrsda6brF+tghi8y9CLzBE9wtiug5hEncl
- XqAbDL1yyrPUxcFDs89c34G1wcH6VKU6UYhKDQ8j62nfcb1V+TTgZgPO9wZKSLDGe5/7MlnZk
- Dy9JNeg9V2wwStV5wAf9U9qtcKK1tUd1+hz15tYyliT8k8S1ulSwA4eQbW7K7mpWxw+uthFs9
- QE02k+BWEMOeNNzKvwIZLrHlkga7t0Ogc5PRNQ8UaQEeceyl47xkOcaFQgMQNMXXpI7gIz7Vk
- MqB5E+ldbExKnI6ZVjbGorZb+IjY5uHsVJqMev4aZj/ljPjPRfpGV0DeFRTjRYk0Z+SkFiEGw
- lO3Wk02YBpVX+PMOufk2W9sbUrMwzdDsyPfeXQxom1m+mJMI0GoF52UngvWAUDaiVTs/LwVju
- 5K+rzXaXvYdOpcPZdK7Q8WJ1Hn5IilAchLNkhcKicCAGatvcUU+TW9cGVxAiwkkBuwgJoIcuY
- wsn2qOit7b8n6AqIpFMDelb52d8BPCJTsFV13mxxaQ9Vq7SnlDIJ1deIprW90zKyOtUgUGQbb
- SHPD0+UssnTgEOECUYveqqP6EzuTKuzuuyW/9F0eJbt6StMZ6BqJLZVoXa17BpF0aIzIbgAFD
- /OXMj2uPeNdK/Lfc7rC4wXVQnEuJg2zIlBsycsTdqNR75MioadEwERlsoCcOXyeUcsrfx0o
+References: <202007291721.W8cazfJX%lkp@intel.com>
+In-Reply-To: <202007291721.W8cazfJX%lkp@intel.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 29 Jul 2020 13:35:42 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1koFEQ6qzok8t+3XKbO5Xi_q29d64Y_QofKXRwL4Dr9g@mail.gmail.com>
+Message-ID: <CAK8P3a1koFEQ6qzok8t+3XKbO5Xi_q29d64Y_QofKXRwL4Dr9g@mail.gmail.com>
+Subject: Re: drivers/clk/mmp/clk-pxa168.c:68:13: warning: no previous
+ prototype for 'pxa168_clk_init'
+To:     kernel test robot <lkp@intel.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        kbuild-all@lists.01.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:PZHV07tB/+bO7U+PL09M5gXjLWJXut9tkC1eAfiRCx5hwYsFP7n
+ /TEsCwC8840ezPiY2Sd0A1Y/jDO7fiViC3cxxVYTsHwFw0CXg8GeontfHXn5lVRNGJx/BSH
+ Eg4Wf/MjwAsw4gv7dMTwer/CW+zkylvjbsXW74pRxxSeOwsbap5aqpOFbEKPH91rpNtG8vy
+ uWOKE5IfBvWETADlYS33A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0shy1hTtKwA=:l+c7txhUebPH1G4Ug3L3jb
+ ZvKf1qrTVwqtUCJpCgSovlzsPKKHcje5o3MNOmb2XsTH5LgHqUVyPjKH0MYA+beVfjQLiFLYL
+ VvYA+F/08SXpwaM5kmN/s1oXP3uh7y6jl/IZaaPad/JHTPtQhrYD5jvZOeY340BGSSAWVrmlL
+ ybQ4HjN3jvhe8S1dCQtKjCuqbtsAlgOxrqGDsalVtPJHJXIgMzSMt69NHxPTL6oKJQd1iS+Kv
+ DZ5aOQvYrWo72q/vN4hZKo9bDlimvNm3D9zXPUSYLrQt+NOrORikaCG2tRFWx5fc0eBgMSgzR
+ qaNGgCjIx2R/Zdvzo/Wx9y9v5OGuMqHhNv/2Xr+f0Hf38NMHcirylpBhck124dgIWK0/lvDkZ
+ clerpevI035mI+jZudtPQOpvp8WhYkA8V+H/heR3mEncB7PbGnAUGg8Nck529JdMnGHeUG2iM
+ y9/8KRgj1NIf3PPgZtEGL6S+sB97xT3qUe7gryHBDC3XbT2NAmGFldDw8kQD8x30sDxEBz6wN
+ YInWVNEAZjCUo1wbZm2NlETnzfMOMXLw7Nd86xL97FWjJHVgB2ehACv/BKfJXPo/jDYv5Cm7h
+ BEmT04TUhRxoHuMRBUUT0z7e59+GHgCHk4QW1zqBTNAXEzIc8qwlVjGSpDe2Js6OhBkfq4W0H
+ G9TMz31ieB7GrIh8NoBPFlc6MRbUksXrH0NJ1KwsFq+6cQ09nPp/dvs6K3B/rShlG44dSRkQe
+ ti5G+95wswiMTaeKYv/kSyFPHV6uqvXLoGiO7eHqyafp3EWJb1CQcDgajsdcv4oaEAuRK9GYA
+ vbI3y40rQhKek5i3iqh7CrLfWdK1Jd4gR4efskRAse94d3QE/bTPmAPRXB4vkb1QmkVT7hM
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel test robot points out two harmless warnings in the
-mmp clk drivers:
+On Wed, Jul 29, 2020 at 11:23 AM kernel test robot <lkp@intel.com> wrote:
+>
+> Hi Bartosz,
+>
+> First bad commit (maybe != root cause):
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   6ba1b005ffc388c2aeaddae20da29e4810dea298
+> commit: f962396ce29244d9a64f241481fa73fa370404c3 ARM: davinci: support multiplatform build for ARM v5
+> date:   11 months ago
+> config: arm-randconfig-r012-20200729 (attached as .config)
+> compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout f962396ce29244d9a64f241481fa73fa370404c3
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=arm
 
-drivers/clk/mmp/clk-pxa168.c:68:13: warning: no previous prototype for 'pxa168_clk_init' [-Wmissing-prototypes]
-drivers/clk/mmp/clk-pxa910.c:66:13: warning: no previous prototype for 'pxa910_clk_init' [-Wmissing-prototypes]
+I don't think this is related to the patch above, but I've sent a fix anyway.
 
-Fix these by including corresponding header file.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/clk/mmp/clk-pxa168.c | 1 +
- drivers/clk/mmp/clk-pxa910.c | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/drivers/clk/mmp/clk-pxa168.c b/drivers/clk/mmp/clk-pxa168.c
-index 8e2551ab8462..b351039cac09 100644
---- a/drivers/clk/mmp/clk-pxa168.c
-+++ b/drivers/clk/mmp/clk-pxa168.c
-@@ -10,6 +10,7 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/clk/mmp.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/spinlock.h>
-diff --git a/drivers/clk/mmp/clk-pxa910.c b/drivers/clk/mmp/clk-pxa910.c
-index 7a7965141918..f254ceff3ea7 100644
---- a/drivers/clk/mmp/clk-pxa910.c
-+++ b/drivers/clk/mmp/clk-pxa910.c
-@@ -10,6 +10,7 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/clk/mmp.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/spinlock.h>
--- 
-2.27.0
-
+      Arnd
