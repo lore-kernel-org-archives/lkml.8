@@ -2,201 +2,105 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F38C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB49C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D933207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A798E207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:44:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRWA/Grj"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vzlCiuKB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgG2OnT (ORCPT
+        id S1726820AbgG2Oor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:43:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41310 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726385AbgG2OnS (ORCPT
+        Wed, 29 Jul 2020 10:44:47 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:54366 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgG2Oor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:43:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596033796;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8fCssoJ0CAlfROhDCOU7igjf0xT9ILRTmoPs/GspefE=;
-        b=IRWA/Grj0f60nAx9zjr4jrTwh3KIoWDMhgKP4XIfFWBJ+UsjjH1X5YCfhkKIJYJG4E2sVl
-        ORlQNvB469ZwIO+EP7eroFW/OTKmnqF1iLPjc8XbPYSR9LuwXXNkJglW4edLl7IPuzwTmG
-        eREgDCKObGkdgPE5h/Vd9Zy8XfLi29s=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-267-weUibggTN8e1jF3E5hjfFw-1; Wed, 29 Jul 2020 10:43:13 -0400
-X-MC-Unique: weUibggTN8e1jF3E5hjfFw-1
-Received: by mail-wm1-f72.google.com with SMTP id v4so1096476wmh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 07:43:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8fCssoJ0CAlfROhDCOU7igjf0xT9ILRTmoPs/GspefE=;
-        b=bcWdg6RySuAVmkgAE9znC/2DuPM9dX9wDMCcq2wQWVHBYTAcrzmgjuGGxheJ62gc9A
-         3EIkZDWU1gX3vnWIURcAEB0/p7BoRyuyzoClzqKhyHw4t8+lidbJWyZLQlzcMbdSVU1H
-         EkPwtceu3448SgDmcStEW2B36rhWTp7QAHRfYlyfur3G/St6ZQb5M4uc6xOGBgibNvgx
-         IfC1A3Hqg9UQiStQubCEl97n/6asyzXEOR7CGYfXdU3PN2VcfstY18zAcLV8Yh6I1N9B
-         jL/Y9U1XE/ip6ujIUPhUG51kXFAj4SWS650aa5Z8OWYn7xQAsEjbtlFPQNMa6NtAxWZC
-         XNKg==
-X-Gm-Message-State: AOAM5308vD8DzHQbfwP59x7lnTCeu5TfvVPNPlmLLwJrYkLApQN2GF6f
-        jpk7n4bcHiIgaDS4UIPOjMpk2b9C0wKjApRaZaJ8qL3Xz5fS08RPXwcrmiAAP1WD0Mg930qrgsf
-        D8esT/lPV5QQg/FzbSDe2s7XV
-X-Received: by 2002:adf:bb07:: with SMTP id r7mr24257296wrg.102.1596033792187;
-        Wed, 29 Jul 2020 07:43:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzYXjCm41zHA5xm/lx0SlII2xk4YGjjpxRkb8AiBUjlMgTECEyydjR3gkD0C7MR9w7QpW4fzQ==
-X-Received: by 2002:adf:bb07:: with SMTP id r7mr24257279wrg.102.1596033791914;
-        Wed, 29 Jul 2020 07:43:11 -0700 (PDT)
-Received: from redhat.com (bzq-79-179-105-63.red.bezeqint.net. [79.179.105.63])
-        by smtp.gmail.com with ESMTPSA id z15sm5003496wrn.89.2020.07.29.07.43.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 07:43:11 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 10:43:07 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Julia Suvorova <jusual@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
-Message-ID: <20200729102929-mutt-send-email-mst@kernel.org>
-References: <20200722001513.298315-1-jusual@redhat.com>
- <20200722231929.GA1314067@bjorn-Precision-5520>
- <CAMDeoFUCanfvrxAmW4_QH=L9BExCAydCifE_tvRaW_XTd0OQXw@mail.gmail.com>
+        Wed, 29 Jul 2020 10:44:47 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06TEgsaZ046823;
+        Wed, 29 Jul 2020 14:44:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=4rEO8k4nNPfnY1pN/MMDY9F6Q2fLbVFIcq67BVaIyxk=;
+ b=vzlCiuKBWeAv7hs3MtDK7rxllc6HbsR34ZvvE/neEYclt4oHjgnmL07um+sV8VqROE3n
+ NOULNU0/vuPzzLvS+eJNrkHYzN2RiYYirGjAFkM18GQQGN+aMr14LKGEXfAg4SH9TNAK
+ Ydt7eQWdBPz7j/MGZZYLDKhXk4TbCu2EOgy7WTvBhhpwnzcATb+FlFhWqyzO9i60an79
+ n+Zm08jrW/At0xxMhbrt9rZg6Ai84Dv6xyWm3uEVpRH2BdsbUBB0rRVvNW/DWRtNEMS4
+ WnkF8m4riK5+MWkkPtboXk6jrA1vdd1Xm7bfaCEO7LJUAOYxr0bx0jYZR0WUpnWrNQ1T /A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 32hu1je2bh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 29 Jul 2020 14:44:36 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06TEglE8151910;
+        Wed, 29 Jul 2020 14:44:35 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 32hu5vv0m8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Jul 2020 14:44:35 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06TEiVvE025291;
+        Wed, 29 Jul 2020 14:44:31 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 Jul 2020 07:44:30 -0700
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Bart Van Assche <bvanassche@acm.org>, jejb@linux.ibm.com,
+        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm
+Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq15za68k17.fsf@ca-mkp.ca.oracle.com>
+References: <20200706164135.GE704149@rowland.harvard.edu>
+        <d0ed766b-88b0-5ad5-9c10-a4c3b2f994e3@puri.sm>
+        <20200728200243.GA1511887@rowland.harvard.edu>
+        <f3958758-afce-8add-1692-2a3bbcc49f73@puri.sm>
+        <20200729143213.GC1530967@rowland.harvard.edu>
+Date:   Wed, 29 Jul 2020 10:44:26 -0400
+In-Reply-To: <20200729143213.GC1530967@rowland.harvard.edu> (Alan Stern's
+        message of "Wed, 29 Jul 2020 10:32:13 -0400")
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMDeoFUCanfvrxAmW4_QH=L9BExCAydCifE_tvRaW_XTd0OQXw@mail.gmail.com>
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9696 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=848
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007290100
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9696 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 spamscore=0 suspectscore=1 bulkscore=0 priorityscore=1501
+ phishscore=0 mlxlogscore=855 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007290100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 08:58:45PM +0200, Julia Suvorova wrote:
-> On Thu, Jul 23, 2020 at 1:19 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Wed, Jul 22, 2020 at 02:15:13AM +0200, Julia Suvorova wrote:
-> > > Scanning for PCI devices at boot takes a long time for KVM guests. It
-> > > can be reduced if KVM will handle all configuration space accesses for
-> > > non-existent devices without going to userspace [1]. But for this to
-> > > work, all accesses must go through MMCONFIG.
-> > > This change allows to use pci_mmcfg as raw_pci_ops for 64-bit KVM
-> > > guests making MMCONFIG the default access method.
-> >
-> > The above *looks* like it's intended to be two paragraphs, which would
-> > be easier to read with a blank line between.
-> >
-> > The last sentence should say what the patch actually *does*, e.g.,
-> > "Use pci_mmcfg as raw_pci_ops ..."
-> >
-> > > [1] https://lkml.org/lkml/2020/5/14/936
-> >
-> > Please use a lore.kernel.org URL instead because it's more usable and
-> > I'd rather depend on kernel.org than lkml.org.
-> >
-> > > Signed-off-by: Julia Suvorova <jusual@redhat.com>
-> > > ---
-> > >  arch/x86/pci/direct.c      | 5 +++++
-> > >  arch/x86/pci/mmconfig_64.c | 3 +++
-> > >  2 files changed, 8 insertions(+)
-> > >
-> > > diff --git a/arch/x86/pci/direct.c b/arch/x86/pci/direct.c
-> > > index a51074c55982..8ff6b65d8f48 100644
-> > > --- a/arch/x86/pci/direct.c
-> > > +++ b/arch/x86/pci/direct.c
-> > > @@ -6,6 +6,7 @@
-> > >  #include <linux/pci.h>
-> > >  #include <linux/init.h>
-> > >  #include <linux/dmi.h>
-> > > +#include <linux/kvm_para.h>
-> > >  #include <asm/pci_x86.h>
-> > >
-> > >  /*
-> > > @@ -264,6 +265,10 @@ void __init pci_direct_init(int type)
-> > >  {
-> > >       if (type == 0)
-> > >               return;
-> > > +
-> > > +     if (raw_pci_ext_ops && kvm_para_available())
-> > > +             return;
-> > >       printk(KERN_INFO "PCI: Using configuration type %d for base access\n",
-> > >                type);
-> > >       if (type == 1) {
-> > > diff --git a/arch/x86/pci/mmconfig_64.c b/arch/x86/pci/mmconfig_64.c
-> > > index 0c7b6e66c644..9eb772821766 100644
-> > > --- a/arch/x86/pci/mmconfig_64.c
-> > > +++ b/arch/x86/pci/mmconfig_64.c
-> > > @@ -10,6 +10,7 @@
-> > >  #include <linux/init.h>
-> > >  #include <linux/acpi.h>
-> > >  #include <linux/bitmap.h>
-> > > +#include <linux/kvm_para.h>
-> > >  #include <linux/rcupdate.h>
-> > >  #include <asm/e820/api.h>
-> > >  #include <asm/pci_x86.h>
-> > > @@ -122,6 +123,8 @@ int __init pci_mmcfg_arch_init(void)
-> > >               }
-> > >
-> > >       raw_pci_ext_ops = &pci_mmcfg;
-> > > +     if (kvm_para_available())
-> > > +             raw_pci_ops = &pci_mmcfg;
-> >
-> > The idea of using MMCONFIG for *all* config space, not just extended
-> > config space, makes sense to me, although the very long discussion at
-> > https://lore.kernel.org/lkml/20071225032605.29147200@laptopd505.fenrus.org/
-> > makes me wary.  Of course I realize you're talking specifically about
-> > KVM, not doing this in general.
-> >
-> > But it doesn't seem right to make this specific to KVM, since it's not
-> > obvious to me that there's a basis in PCI for making this distinction.
-> 
-> Bugs that were fixed (or more accurately, avoided) by a0ca99096094
-> ("PCI x86: always use conf1 to access config space below 256 bytes")
-> are still present. And to enable MMCONFIG for the entire config space,
-> we need to re-introduce all these fixes or at least identify affected
-> devices, which may be impossible.
 
-What *is* about KVM here is that there's no real benefit
-to this change if not running on x86 within a hypervisor.
-And this should be better documented in a code comment and
-commit log.
+Alan,
 
+>> [   77.474632] sd 0:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result:
+>> hostbyte=0x00 driverbyte=0x08 cmd_age=0s
+>> [   77.474647] sd 0:0:0:0: [sda] tag#0 Sense Key : 0x6 [current]
+>> [   77.474655] sd 0:0:0:0: [sda] tag#0 ASC=0x28 ASCQ=0x0
+>> [   77.474667] sd 0:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 60
+>> 40 00 00 01 00
+>
+> This error report comes from the SCSI layer, not the block layer.
 
-
-What is *not* about KVM here is that it's known to be
-safe when running on QEMU and on the specific implementation.
-Other implementations - even if they are using kvm -
-might freeze if you disable memory of the pci host device,
-or try to size BARs so they overlap the MMCONFIG.
-
-So to proceed with your approach, I would say either we limit this to
-just a known good QEMU device, or disable this when poking at unsafe
-registers.
-
-But I have another idea: isn't it true that we can get a large part of
-the benefit simply by reading the device/vendor ID through MMCONFIG?
-That is almost sure to be safe anyway, even though I would limit it to
-just KVM simply because other systems do not benefit.
-
-> 
-> We can avoid KVM-specific changes in the generic PCI code by
-> implementing x86_init.pci.arch_init inside KVM code, as Vitaly
-> suggested. What do you think?
-> 
-> Best regards, Julia Suvorova.
-
-Makes sense.
+This the device telling us that the media (SD card?) has changed.
 
 -- 
-MST
-
+Martin K. Petersen	Oracle Linux Engineering
