@@ -2,108 +2,160 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF5DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87714C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3441120838
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BC02076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:41:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t6PkU2q3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e3pNxZN4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OYYYKBNh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgG2Ikd (ORCPT
+        id S1728020AbgG2IlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:40:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34270 "EHLO
+        Wed, 29 Jul 2020 04:41:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgG2Ikc (ORCPT
+        with ESMTP id S1727820AbgG2IlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:40:32 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 286B5C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:40:32 -0700 (PDT)
-From:   Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596012030;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4LCjeGJpW4pRVYi1eLYqbWJFyRnJudboor6NQDbeb54=;
-        b=t6PkU2q3bp2ma+U68h7q6mcQN2qiLxZo+KMZAWJm9VwrzUjWFebpTFrXhmY/wgsQ393EBV
-        MELhUDf2jMs6eORs8NLADjRR1k0BvQ5Rsw9tceDhx4PfxOqcpy+siIQOWMj6H4ftu5fwxc
-        uiDMO2/AjTxvjBo6SRLqv5uQm70PSM8pOZJfn9ogYeAAQq8n9cAdFGOmHyKHsjmYbTrVaz
-        ymwbFAUuqi+KETvgZP+YG4/bKjRkr6GLmRBnitUbZN9x04fZ4jRZCWU10u4emOrA9BjUv0
-        lzu9L3Na3EyL7VyFYMF3oUf/nDPAeHKTz/mRJSaFO/pkJZNt2SeR6jjD9Qckvg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596012030;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4LCjeGJpW4pRVYi1eLYqbWJFyRnJudboor6NQDbeb54=;
-        b=e3pNxZN41wFtpnA4LNXpl9jFk14S3QKaJWjCnYR33VgZEMbp41vPWxmrC+PhOBv9HRgGL1
-        8cZpvbWW9dinB/Bw==
-To:     Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
-        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
-        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     alison.wang@nxp.com, Thomas Gleixner <tglx@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>
-Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level IRQ time accounting
-In-Reply-To: <20200729033934.22349-1-alison.wang@nxp.com>
-References: <20200729033934.22349-1-alison.wang@nxp.com>
-Date:   Wed, 29 Jul 2020 10:40:29 +0200
-Message-ID: <877dumbtoi.fsf@kurt>
+        Wed, 29 Jul 2020 04:41:02 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB513C0619D2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:41:01 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ha11so1719137pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=UZ6MAhR5j6amGSoFFGPG4pk0azdkEksnZheJKcn2abA=;
+        b=OYYYKBNhL9fF72pj0+bLFlk7Y5oNif9G8mquMQtqxeEELXBrS2SPrfcPZpogKcRn0N
+         2HPWXia7c5PwiAMCkjbJtfvSdMUehP7GB5vgzl9r5HqIBT3sC3cpO68Z0lAesIPP9Yx2
+         UahdJ+RiDKdIDsEOlhWfmu7Vm7K68mjNGVFYI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=UZ6MAhR5j6amGSoFFGPG4pk0azdkEksnZheJKcn2abA=;
+        b=jGxR5CKqQ4peE0NiBdu3oraf6nK5j2pRNIKjNU9pS8UT8tiyMnYdipOeAtuhAiSvlB
+         S97iLDnNffCJUDk9lmfO2sO+Lwu4d2NeQgDtVLgARHki1JPI8wLUm8yqVPnyeLlRzu8X
+         /1gzkz0aNCQm+TcKUxdbsWijN+DOs4vO7vRvjFdPSIvXVGYhHW+6FgkIBzocUR72YiZi
+         s+w+NXSkvKGnn08FJCckW+3AZEP5bMcYZDF92PhZ2ZWt6mm441jjHjc4bpw2TX6/ep5l
+         Cg3d4IYVD9h3dLaQvTjP1vj1giuEuu0of8imLv5k7tZmbXVuTJUCRaN3Q5ixECXcxZlr
+         fxkQ==
+X-Gm-Message-State: AOAM532dukXIlAKJYxPFavKR3OEqg3RtKPsMOAGXYAL5JDs8cg+k8gFC
+        /sTHmmmNW5mHIovkn6LkMvpuog==
+X-Google-Smtp-Source: ABdhPJzrnA7zEGw1DgXocfYDrn7TERVujMt11CJIltoSmzrN2INTqf2WnQcYSHVJGV5yRbWBbVrDRw==
+X-Received: by 2002:a17:90a:3fc7:: with SMTP id u7mr8565488pjm.231.1596012061371;
+        Wed, 29 Jul 2020 01:41:01 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id z190sm1511032pfz.67.2020.07.29.01.41.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 01:41:00 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200728170317.v2.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
+References: <20200728151258.1222876-1-campello@chromium.org> <20200728230520.2011240-1-campello@chromium.org> <20200728170317.v2.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
+Subject: Re: [PATCH v2 03/14] iio: sx9310: Fix irq handling
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+To:     Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 29 Jul 2020 01:40:59 -0700
+Message-ID: <159601205939.1360974.7963147221648753018@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Quoting Daniel Campello (2020-07-28 16:05:09)
+> Fixes enable/disable irq handling at various points. The driver needs to
+> only enable/disable irqs if there is an actual irq handler installed.
+>=20
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> ---
+>=20
+> Changes in v2:
+>  - Reordered error handling on sx9310_resume()
+>=20
+>  drivers/iio/proximity/sx9310.c | 26 ++++++++++++++++----------
+>  1 file changed, 16 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx931=
+0.c
+> index 07895d4b935d12..108d82ba81146e 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -376,13 +376,15 @@ static int sx9310_read_proximity(struct sx9310_data=
+ *data,
+>         if (ret < 0)
+>                 goto out;
+> =20
+> -       ret =3D sx9310_enable_irq(data, SX9310_CONVDONE_IRQ);
+> -       if (ret < 0)
+> -               goto out_put_channel;
+> +       if (data->client->irq) {
+> +               ret =3D sx9310_enable_irq(data, SX9310_CONVDONE_IRQ);
 
-Hi Alison,
+I still think it makes more sense to push the if condition inside the
+enable/disable irq functions so that the call sites read simpler.
 
-On Wed Jul 29 2020, Alison Wang wrote:
-> In the current arm64 defconfig, CONFIG_IRQ_TIME_ACCOUNTING is enabled as
-> default. According to my tests on NXP's LayerScape and i.MX platforms,
-> the system hangs when running the command "stress-ng --hrtimers 1" with
-> CONFIG_IRQ_TIME_ACCOUNTING enabled. Disabling this option, the issue
-> disappears. CONFIG_IRQ_TIME_ACCOUNTING causes serious performance impact
-> when running hrtimer stress test at the same time.
+> +               if (ret)
+> +                       goto out_put_channel;
+> +       }
+> =20
+>         mutex_unlock(&data->mutex);
+> =20
+> -       if (data->client->irq > 0) {
+> +       if (data->client->irq) {
+>                 ret =3D wait_for_completion_interruptible(&data->completi=
+on);
+>                 reinit_completion(&data->completion);
+>         } else {
+> @@ -401,9 +403,11 @@ static int sx9310_read_proximity(struct sx9310_data =
+*data,
+>         *val =3D sign_extend32(be16_to_cpu(rawval),
+>                              (chan->address =3D=3D SX9310_REG_DIFF_MSB ? =
+11 : 15));
+> =20
+> -       ret =3D sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
+> -       if (ret < 0)
+> -               goto out_put_channel;
+> +       if (data->client->irq) {
+> +               ret =3D sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
+> +               if (ret)
+> +                       goto out_put_channel;
+> +       }
+> =20
+>         ret =3D sx9310_put_read_channel(data, chan->channel);
+>         if (ret < 0)
+> @@ -414,7 +418,8 @@ static int sx9310_read_proximity(struct sx9310_data *=
+data,
+>         return IIO_VAL_INT;
+> =20
+>  out_disable_irq:
+> -       sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
+> +       if (data->client->irq)
+> +               sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
 
-I think instead of disabling the option for all arm64 devices, it might
-be better to analyze the root-cause why the hrtimer test hangs when this
-option is enabled.
+And so this isn't duplicated check.
 
-+Cc hrtimer maintainers: Thomas and Anna-Maria
-
-Thanks,
-Kurt
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl8hNf0ACgkQeSpbgcuY
-8KYpxQ//RjoQxUEmK/uS9tpUYaIyXBsdzn1QHI+DocwbnDs2kQZWBS6lEaibJsTN
-U1f/ZVzo8kXCMKT4Nw0PZUF2RMKoD3+BM7Gvp9qIW8cOcISf+BkxVZDQzgLwdnny
-9Mj6eeDD3JAkDYvWIlHfnG8t7x8yrTTVapEUsslv8qDwmzu8/GaAi7wIdSGRja+3
-1XStS4ZO7IAdl1hxR6sFdkZKT4vxWc96F0V9Pv18MttddCvhs/S5EdeaBWWic2Rk
-4fAxYPycj1HJORz0PIc05vFE6dglAMjrN5lKdq6w487eeDStBNJncjhyEPspJqSD
-/ASSvXu4Ow65MAtEfzqJ8Iaw4SEi5Z3nF0iPeTNGAy2TnEHK5mGgSalVIf+mE7OT
-cm2+mE62B3pOGRYWju8VXjay/scJ62NT6DZX+NWBsAcvoik0g16iUo+89wxmB2IN
-OU7fBTm3y9tX7QpvLn5RjkEQsWdypeAshb3vQrhvefjbZ1pSpqbjEC/AOrHDVPSH
-AUG/OrImA1PB1sUA5fjhD4GmJ6zGmFfwrRheEWqGJeDoBrVcmgO0OSIjVqY888G8
-PcQV8j65TrCCrhYLX8N1WF+7pOHouWADGNVrtrWAo1D7Gr+7rNql7LebQxUyTzEU
-sT2KRBxmrfkkJMFCGTVtFEM68dqXtnrWIXlA6lGRnAqEo/qNmh8=
-=XV1c
------END PGP SIGNATURE-----
---=-=-=--
+>  out_put_channel:
+>         sx9310_put_read_channel(data, chan->channel);
+>  out:
