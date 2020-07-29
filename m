@@ -2,148 +2,97 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4673DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2733A20809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DCF20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596041199;
-	bh=MNvYf6Zn28rLdP7ViMy29aZYD0eAurNF8FmA6PG23JU=;
+	s=default; t=1596041285;
+	bh=yHrC5HQOUk5Y7gT6GTdE36nk5tu2EZikXrmHSHeTyeo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T3hyt2kYHKh2/X/7sqAKveqEPhMYyypchOR9QBJNLm2Vyc3e4tbj1BwZBTnQLeNGE
-	 l5etwQBvxQjuBYSGfVeSuKTI0Xt/unMJYdONwkcM76bhMvJgJqX6KhGlnJs5VpZaYD
-	 AyncNQCoqOeoq24oyIYDykHfQcaIeKpirN6yeScQ=
+	b=BqqsN0AhYhlqGXQT1gvqXmrhHNzZhUVuYqxiJ07CjkCE5IZxWbNfT0YxvsXGWHD99
+	 5KRrWx+npJFAR6imX9Apk3YW493+HlNg08jDZ2fWk/jd0LXvwzIlDFkVwYVvXILCN3
+	 WaK7T3xsFwdoIqqjBFtZcFTdI9AjT+ZX3/1zEoIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgG2Qqi (ORCPT
+        id S1726876AbgG2QsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 12:46:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58492 "EHLO mail.kernel.org"
+        Wed, 29 Jul 2020 12:48:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbgG2Qqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 12:46:37 -0400
-Received: from earth.universe (dyndsl-095-033-172-175.ewe-ip-backbone.de [95.33.172.175])
+        id S1726365AbgG2QsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 12:48:04 -0400
+Received: from linux-8ccs (p57a236d4.dip0.t-ipconnect.de [87.162.54.212])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21C1D20809;
-        Wed, 29 Jul 2020 16:46:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7DF820809;
+        Wed, 29 Jul 2020 16:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596041197;
-        bh=MNvYf6Zn28rLdP7ViMy29aZYD0eAurNF8FmA6PG23JU=;
+        s=default; t=1596041283;
+        bh=yHrC5HQOUk5Y7gT6GTdE36nk5tu2EZikXrmHSHeTyeo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lis10wwiitfP0LyrSXjMssjlm6eWl7WazeT8122FO4ao/JhL0ZMoiwM99GAMwOaoS
-         14i5g80JxD+Z/QzF3SZvVFLQ0gAuZjy5TFNMbU2IWECN2Brdb2+VsKM4LVqfmfYy4F
-         7PRwKpxRMNQYTJvbzRT95aKo+cp44lZIPeLuY2XE=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 7F44F3C0B87; Wed, 29 Jul 2020 18:46:35 +0200 (CEST)
-Date:   Wed, 29 Jul 2020 18:46:35 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Cc:     pali@kernel.org, robh@kernel.org, afd@ti.com, dmurphy@ti.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, sspatil@android.com
-Subject: Re: [PATCH v18 2/4] dt-bindings: power: Convert battery.txt to
- battery.yaml
-Message-ID: <20200729164635.cnjbadpq22tigwlc@earth.universe>
-References: <20200728200814.26501-1-r-rivera-matos@ti.com>
- <20200728200814.26501-3-r-rivera-matos@ti.com>
+        b=rtQFz4u9SvE8K2F0Zsz4xsll5bLgcjbpJKwx4jPVrlLPbma7WzR4/D/tgMyj42IxD
+         ZMkiQX5QSyrG14Oc4J0AyAyUJMqakBiAMXSYmWCKe75tOBbKILVSLcZKBPTqMyhPhx
+         lFsFUd3sm9K0Ltiy+e7v+a3l7y6h81y/dmvMTQDU=
+Date:   Wed, 29 Jul 2020 18:48:00 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/7] modules: return licensing information from
+ find_symbol
+Message-ID: <20200729164759.GA17594@linux-8ccs>
+References: <20200729062711.13016-1-hch@lst.de>
+ <20200729062711.13016-7-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pocjiyfjiv2tcf6l"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200728200814.26501-3-r-rivera-matos@ti.com>
+In-Reply-To: <20200729062711.13016-7-hch@lst.de>
+X-OS:   Linux linux-8ccs 5.5.0-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
++++ Christoph Hellwig [29/07/20 08:27 +0200]:
+>Report the GPLONLY status through a new argument.
+>
+>Signed-off-by: Christoph Hellwig <hch@lst.de>
+>---
+> include/linux/module.h |  2 +-
+> kernel/module.c        | 16 +++++++++++-----
+> 2 files changed, 12 insertions(+), 6 deletions(-)
+>
+>diff --git a/include/linux/module.h b/include/linux/module.h
+>index b79219eed83c56..c9bc3412ae4465 100644
+>--- a/include/linux/module.h
+>+++ b/include/linux/module.h
+>@@ -582,7 +582,7 @@ struct module *find_module(const char *name);
+> struct symsearch {
+> 	const struct kernel_symbol *start, *stop;
+> 	const s32 *crcs;
+>-	enum {
+>+	enum mod_licence {
+> 		NOT_GPL_ONLY,
+> 		GPL_ONLY,
+> 		WILL_BE_GPL_ONLY,
+>diff --git a/kernel/module.c b/kernel/module.c
+>index 54e853c7212f72..a907bc57d343f9 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -495,6 +495,7 @@ struct find_symbol_arg {
+> 	struct module *owner;
+> 	const s32 *crc;
+> 	const struct kernel_symbol *sym;
+>+	enum mod_licence licence;
 
---pocjiyfjiv2tcf6l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Just a small nit. Most of module.c uses license rather than licence -
+could we unify the spelling to remain consistent? Sigh, American vs.
+British English.. :)
 
-Hi Ricardo and Dan,
-
-On Tue, Jul 28, 2020 at 03:08:12PM -0500, Ricardo Rivera-Matos wrote:
-> From: Dan Murphy <dmurphy@ti.com>
->=20
-> Convert the battery.txt file to yaml and fix up the examples.
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-
-I merged this doing some modifcations while applying, so that this
-is not postponed and risking conflicts due to added properties:
-
-
-> [...]
-> +patternProperties:
-> +  '^ocv-capacity-table-[0-100]$':
-> [...]
-
-[0-100] is a valid regex, but counterintuitively only allows 0 and
-1. For example it does not apply for ocv-capacity-table-2.
-
-I used [0-9]+ instead, which is being used by pinctrl.
-
-> +examples:
-> +  - |
-> +    power {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      battery: battery {
-> +        compatible =3D "simple-battery";
-> +        over-voltage-threshold-microvolt =3D <4500000>;
-> +        re-charge-voltage-microvolt =3D <250000>;
-> +        voltage-min-design-microvolt =3D <3200000>;
-> +        voltage-max-design-microvolt =3D <4200000>;
-> +        energy-full-design-microwatt-hours =3D <5290000>;
-> +        charge-full-design-microamp-hours =3D <1430000>;
-> +        precharge-current-microamp =3D <256000>;
-> +        precharge-upper-limit-microvolt =3D <2500000>;
-> +        charge-term-current-microamp =3D <128000>;
-> +        constant-charge-current-max-microamp =3D <900000>;
-> +        constant-charge-voltage-max-microvolt =3D <4200000>;
-> +        factory-internal-resistance-micro-ohms =3D <250000>;
-> +        ocv-capacity-celsius =3D <(-10) 10>;
-
-You state, that there is a table for -10 degrees and one for 10
-degrees...
-
-> +        ocv-capacity-table-0 =3D <4185000 100>, <4113000 95>, <4066000 9=
-0>;
-
-=2E.. and then you provide only the table for -10 degrees. I fixed
-this by simply using the previous example (tables for -10, 0 and 10
-degrees) and 3 tables and added a comment above the tables.
-
--- Sebastian
-
---pocjiyfjiv2tcf6l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8hp9kACgkQ2O7X88g7
-+prgIA//fWkFK0IS/82O/WY4vEVu36fFAWgJ1uOcVLkDRPVz9DO7Q4TIyVY7FOzW
-B7+DuzvHS6/7HFcb89spYKCDPlVtx5dLgjd+wIsrGi2YpeiIIUus3+cKLmiHsi3t
-+dHfFYq2Hgg7JFvRhmSi7a9f2tKtOYCeOlCfJ56MOxWVggHnl7v3ytOEiQEyeFN3
-/tE/HdIlXtRleLWXPWIBsR7QRW3TJEk7BRIgyfenwvrJXu27/w8AZoXeiisJaJBW
-VN4ApBkln1RYHzsiwoobo5j9Z2S/pWfl5AaRabOqdwtxbaZ6Tg96+vkb9J4hFNj6
-vXd6DKVOTBhHnQLqbM9pVGpasQoC2d/2v2e5jIRxpjp+5EqYOqTCEeH7SVDznAo+
-t5Kv7lvfozuakPOQHmaigyI27Eg1UJ8iLKBRycnwvnwdzm7tJqtOLq1Wj/50LacY
-/jjCZ3AG75wHzorusn2kKeBWEGRpFqG7iE7AW2z/sN5NREmyuvSVqXJ908VSMoVJ
-VpwRXpfsitMLQhmaKYQXyyeheopOfo69O1CDGk/KwHOtpl3eDatA45Nzn7XhDnsx
-n3HIRRl09R1ZE2p4RBU2p+fHN01CluJK+o0FL9JPfjAMB2lAT64OuPBww7TISl4H
-vQqDBKlRzOsYU57yvNCHfArwDx/fVp4VlTbTHU0lm7CjNreWw+8=
-=d5pW
------END PGP SIGNATURE-----
-
---pocjiyfjiv2tcf6l--
