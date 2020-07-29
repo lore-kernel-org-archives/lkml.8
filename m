@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FD2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FBFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C608B2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF7C2083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:02:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i4040fEM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sLf7sCNV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgG2OCu (ORCPT
+        id S1727789AbgG2OCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:02:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55504 "EHLO
+        Wed, 29 Jul 2020 10:02:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgG2OCr (ORCPT
+        with ESMTP id S1726838AbgG2OCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:02:47 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD625C0619D5;
+        Wed, 29 Jul 2020 10:02:46 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62FBBC0619D4;
         Wed, 29 Jul 2020 07:02:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=bn3PTm0Vm+Yp3fAFaIy0i1fx6Q8yyX38/osPy+x74Sg=; b=i4040fEMXoJUqp2l/FBJJd6GLb
-        oA0AaQIY1gmQl/rFKxBaEPaSzEbweARMkn8yTPes/XwEFaQyKTudlYEiFqPhwkqxLasNU60GaIA0O
-        Dh0BHBOx53R7n3dfhF+sD5I/ZsLlAAM1DrYm6H+uhnWKWC1VC/hfpqyIB/zbycz+7FT2zywWEvG9W
-        t3PTxyytSDYf1kx7p5m2j/kwfxKjSYaFhBdNWEfgB6VZj0+MuumCx9Jh25gdLZ+pLu2tiSAHx4+5Y
-        6JR0ZCT2E3WgOao/HdaEg0oGMJUoyjFVgWG44+WpQGqUKl8MxV+PpBHskjLEmUT/Aq9RvrOKUYdJF
-        9ocL1gMA==;
+        bh=+/Tirmir55AdeagnQ62Gu9rCQgL6iLT5YK7e0Fyr+J8=; b=sLf7sCNVZnAYOEXZxKLMLf/MTn
+        Bg6Hp+vDRoka4Zjto8qXGiheE76EhlFYInp/JRX1MwsJbeCp/5ZcxnpEDY1yFqnUYgXfHCLqlhCNt
+        VMZNB0xR97VY6uu36vzWFzpGBHolbFSJD95sIHZnxUYGyb+mf+LT0AmuzFXRE2/cRNrSDpRaJZk/6
+        DUWup5zpllSA3s4/rBFNWYx/zQfj0yNiZdE2WoF41B0wFIXuBLxvIDM1aMU1IhaV/0M9LUtgdTrOs
+        Ypky0blsfF8K86RsJ+uP23bGRw+ERrUu+//ni7xOO0XsH0whPUfO1BrB0KaTJTjshoSU2lbyKo+CS
+        2yXfWyNg==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0mfD-0001Dr-Go; Wed, 29 Jul 2020 14:02:35 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0mfB-00011G-Go; Wed, 29 Jul 2020 14:02:34 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3702F304B6D;
-        Wed, 29 Jul 2020 16:02:31 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3F6CC3056DE;
+        Wed, 29 Jul 2020 16:02:32 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id E338F200D4153; Wed, 29 Jul 2020 16:02:31 +0200 (CEST)
-Message-ID: <20200729140142.277485074@infradead.org>
+        id EECF22C0EDC6E; Wed, 29 Jul 2020 16:02:31 +0200 (CEST)
+Message-ID: <20200729140142.483528362@infradead.org>
 User-Agent: quilt/0.66
-Date:   Wed, 29 Jul 2020 15:52:50 +0200
+Date:   Wed, 29 Jul 2020 15:52:53 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     peterz@infradead.org, mingo@kernel.org, will@kernel.org,
         a.darwish@linutronix.de
@@ -57,7 +57,7 @@ Cc:     tglx@linutronix.de, paulmck@kernel.org, bigeasy@linutronix.de,
         davem@davemloft.net, netdev@vger.kernel.org,
         linux-doc@vger.kernel.org, viro@zeniv.linux.org.uk,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH 1/5] seqlock: s/__SEQ_LOCKDEP/__SEQ_LOCK/g
+Subject: [PATCH 4/5] seqcount: Compress SEQCNT_LOCKNAME_ZERO()
 References: <20200729135249.567415950@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -66,98 +66,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__SEQ_LOCKDEP() is an expression gate for the
-seqcount_LOCKNAME_t::lock member. Rename it to be about the member,
-not the gate condition.
-
-Later (PREEMPT_RT) patches will make the member available for !LOCKDEP
-configs.
+Less is more.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- include/linux/seqlock.h |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ include/linux/seqlock.h |   63 +++++++++++++-----------------------------------
+ 1 file changed, 18 insertions(+), 45 deletions(-)
 
 --- a/include/linux/seqlock.h
 +++ b/include/linux/seqlock.h
-@@ -133,20 +133,20 @@ static inline void seqcount_lockdep_read
-  */
- 
- #ifdef CONFIG_LOCKDEP
--#define __SEQ_LOCKDEP(expr)	expr
-+#define __SEQ_LOCK(expr)	expr
- #else
--#define __SEQ_LOCKDEP(expr)
-+#define __SEQ_LOCK(expr)
+@@ -138,51 +138,6 @@ static inline void seqcount_lockdep_read
+ #define __SEQ_LOCK(expr)
  #endif
  
- #define SEQCOUNT_LOCKTYPE_ZERO(seq_name, assoc_lock) {			\
- 	.seqcount		= SEQCNT_ZERO(seq_name.seqcount),	\
--	__SEQ_LOCKDEP(.lock	= (assoc_lock))				\
+-#define SEQCOUNT_LOCKTYPE_ZERO(seq_name, assoc_lock) {			\
+-	.seqcount		= SEQCNT_ZERO(seq_name.seqcount),	\
+-	__SEQ_LOCK(.lock	= (assoc_lock))				\
+-}
+-
+-/**
+- * SEQCNT_SPINLOCK_ZERO - static initializer for seqcount_spinlock_t
+- * @name:	Name of the seqcount_spinlock_t instance
+- * @lock:	Pointer to the associated spinlock
+- */
+-#define SEQCNT_SPINLOCK_ZERO(name, lock)				\
+-	SEQCOUNT_LOCKTYPE_ZERO(name, lock)
+-
+-/**
+- * SEQCNT_RAW_SPINLOCK_ZERO - static initializer for seqcount_raw_spinlock_t
+- * @name:	Name of the seqcount_raw_spinlock_t instance
+- * @lock:	Pointer to the associated raw_spinlock
+- */
+-#define SEQCNT_RAW_SPINLOCK_ZERO(name, lock)				\
+-	SEQCOUNT_LOCKTYPE_ZERO(name, lock)
+-
+-/**
+- * SEQCNT_RWLOCK_ZERO - static initializer for seqcount_rwlock_t
+- * @name:	Name of the seqcount_rwlock_t instance
+- * @lock:	Pointer to the associated rwlock
+- */
+-#define SEQCNT_RWLOCK_ZERO(name, lock)					\
+-	SEQCOUNT_LOCKTYPE_ZERO(name, lock)
+-
+-/**
+- * SEQCNT_MUTEX_ZERO - static initializer for seqcount_mutex_t
+- * @name:	Name of the seqcount_mutex_t instance
+- * @lock:	Pointer to the associated mutex
+- */
+-#define SEQCNT_MUTEX_ZERO(name, lock)					\
+-	SEQCOUNT_LOCKTYPE_ZERO(name, lock)
+-
+-/**
+- * SEQCNT_WW_MUTEX_ZERO - static initializer for seqcount_ww_mutex_t
+- * @name:	Name of the seqcount_ww_mutex_t instance
+- * @lock:	Pointer to the associated ww_mutex
+- */
+-#define SEQCNT_WW_MUTEX_ZERO(name, lock)				\
+-	SEQCOUNT_LOCKTYPE_ZERO(name, lock)
+-
+ /**
+  * typedef seqcount_LOCKNAME_t - sequence counter with LOCKTYPR associated
+  * @seqcount:	The real sequence counter
+@@ -263,6 +218,24 @@ SEQCOUNT_LOCKTYPE(rwlock_t,		rwlock,		fa
+ SEQCOUNT_LOCKTYPE(struct mutex,		mutex,		true,	s->lock)
+ SEQCOUNT_LOCKTYPE(struct ww_mutex,	ww_mutex,	true,	&s->lock->base)
+ 
++/**
++ * SEQCNT_LOCKNAME_ZERO - static initializer for seqcount_LOCKNAME_t
++ * @name:	Name of the seqcount_LOCKNAME_t instance
++ * @lock:	Pointer to the associated LOCKTYPE
++ */
++
++#define SEQCOUNT_LOCKTYPE_ZERO(seq_name, assoc_lock) {			\
++	.seqcount		= SEQCNT_ZERO(seq_name.seqcount),	\
 +	__SEQ_LOCK(.lock	= (assoc_lock))				\
- }
++}
++
++#define SEQCNT_SPINLOCK_ZERO(name, lock)	SEQCOUNT_LOCKTYPE_ZERO(name, lock)
++#define SEQCNT_RAW_SPINLOCK_ZERO(name, lock)	SEQCOUNT_LOCKTYPE_ZERO(name, lock)
++#define SEQCNT_RWLOCK_ZERO(name, lock)		SEQCOUNT_LOCKTYPE_ZERO(name, lock)
++#define SEQCNT_MUTEX_ZERO(name, lock)		SEQCOUNT_LOCKTYPE_ZERO(name, lock)
++#define SEQCNT_WW_MUTEX_ZERO(name, lock) 	SEQCOUNT_LOCKTYPE_ZERO(name, lock)
++
++
+ #define __seqprop_case(s, lockname, prop)				\
+ 	seqcount_##lockname##_t: __seqcount_##lockname##_##prop((void *)(s))
  
- #define seqcount_locktype_init(s, assoc_lock)				\
- do {									\
- 	seqcount_init(&(s)->seqcount);					\
--	__SEQ_LOCKDEP((s)->lock = (assoc_lock));			\
-+	__SEQ_LOCK((s)->lock = (assoc_lock));				\
- } while (0)
- 
- /**
-@@ -161,7 +161,7 @@ do {									\
-  */
- typedef struct seqcount_spinlock {
- 	seqcount_t	seqcount;
--	__SEQ_LOCKDEP(spinlock_t	*lock);
-+	__SEQ_LOCK(spinlock_t	*lock);
- } seqcount_spinlock_t;
- 
- /**
-@@ -192,7 +192,7 @@ typedef struct seqcount_spinlock {
-  */
- typedef struct seqcount_raw_spinlock {
- 	seqcount_t      seqcount;
--	__SEQ_LOCKDEP(raw_spinlock_t	*lock);
-+	__SEQ_LOCK(raw_spinlock_t	*lock);
- } seqcount_raw_spinlock_t;
- 
- /**
-@@ -223,7 +223,7 @@ typedef struct seqcount_raw_spinlock {
-  */
- typedef struct seqcount_rwlock {
- 	seqcount_t      seqcount;
--	__SEQ_LOCKDEP(rwlock_t		*lock);
-+	__SEQ_LOCK(rwlock_t		*lock);
- } seqcount_rwlock_t;
- 
- /**
-@@ -257,7 +257,7 @@ typedef struct seqcount_rwlock {
-  */
- typedef struct seqcount_mutex {
- 	seqcount_t      seqcount;
--	__SEQ_LOCKDEP(struct mutex	*lock);
-+	__SEQ_LOCK(struct mutex	*lock);
- } seqcount_mutex_t;
- 
- /**
-@@ -291,7 +291,7 @@ typedef struct seqcount_mutex {
-  */
- typedef struct seqcount_ww_mutex {
- 	seqcount_t      seqcount;
--	__SEQ_LOCKDEP(struct ww_mutex	*lock);
-+	__SEQ_LOCK(struct ww_mutex	*lock);
- } seqcount_ww_mutex_t;
- 
- /**
-@@ -329,7 +329,7 @@ __seqcount_##locktype##_preemptible(seqc
- static inline void							\
- __seqcount_##locktype##_assert(seqcount_##locktype##_t *s)		\
- {									\
--	__SEQ_LOCKDEP(lockdep_assert_held(lockmember));			\
-+	__SEQ_LOCK(lockdep_assert_held(lockmember));			\
- }
- 
- /*
 
 
