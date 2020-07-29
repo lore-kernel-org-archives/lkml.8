@@ -2,149 +2,133 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D00AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2801CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1686C206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0495F206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:18:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="qA4y5elz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ov00EPcp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgG2VM6 (ORCPT
+        id S1726989AbgG2VSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 17:12:58 -0400
-Received: from mail.efficios.com ([167.114.26.124]:33292 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2VM5 (ORCPT
+        Wed, 29 Jul 2020 17:18:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgG2VSU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 17:12:57 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 99B802A5E0A;
-        Wed, 29 Jul 2020 17:12:56 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id PjpLV9blDGpj; Wed, 29 Jul 2020 17:12:56 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 547642A5D17;
-        Wed, 29 Jul 2020 17:12:56 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 547642A5D17
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1596057176;
-        bh=K2nMzy/H0qY2M0iIGGx1Xz7GR1ONonTRnzZJzdk/15Q=;
-        h=From:To:Date:Message-Id;
-        b=qA4y5elzjbnMNqlKLxUW0fyFb7ErWl/0zdH/M9APWY8faKKcRQvDowiEcRMEpNuZJ
-         kKX5CTUMqaO2V367tsF6CZ4qxR+4zNTneJ5BK/UTuLnCMzm0Iy4gmZZuCt0Fyi7dUl
-         Nt7MsutEfRO65G4sq1pHn0T0wM/w32vbOVQqinUzBufuK631LMQhehdmz9KS7jLpR7
-         zEX6nUkLGMQXin8A5mXtJG9OdbqQo3HqFg06NJzhjrZ1Z6oqEt5IZQQkwIehTTOKcj
-         hVQCaOzWoFTYVBE8HwcVWWaUqJH4D5E9yhRgkSU96Snpt81UMBp5g37dbGZlTjyfE6
-         C8xxVxVhPmt+w==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 5DL3LmW7KUMp; Wed, 29 Jul 2020 17:12:56 -0400 (EDT)
-Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id 1FE2C2A5D8D;
-        Wed, 29 Jul 2020 17:12:56 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     David Ahern <dsa@cumulusnetworks.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: [RFC PATCH 2/3] ipv4/icmp: l3mdev: Perform icmp error route lookup on source device routing table
-Date:   Wed, 29 Jul 2020 17:12:47 -0400
-Message-Id: <20200729211248.10146-2-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200729211248.10146-1-mathieu.desnoyers@efficios.com>
-References: <20200729211248.10146-1-mathieu.desnoyers@efficios.com>
+        Wed, 29 Jul 2020 17:18:20 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F16DC061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 14:18:20 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id k71so2648097pje.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 14:18:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=g0KUC06W8wfVDa5/aZnaCNDXj9N7Ln444BL6AjoPMxY=;
+        b=Ov00EPcpcds4iXOLfFieegwR7hRlUtJeKUY5QQkoF0Jh9tZT4y47ON4fxaZEsShZVi
+         fUtVBaFg6UI206ysebvZU7XlJKrNCGUtO3b3dYfZbBpeEv2+k58TFlsv9W2l+H5RlU/x
+         xMnrIcH5vYD2zHkhisMgP8KYicUzt69+3EeaY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=g0KUC06W8wfVDa5/aZnaCNDXj9N7Ln444BL6AjoPMxY=;
+        b=JrV1n4IjJAfZfNIEdfwCtn9nXmYNmPZ2AyaFFPjG3rpt6xstSQoqyQ00U75xUhZRef
+         mcPYNuiSb6LtQiIZfBExvX8h89u6f09yC5dJA+N62B++lL/rWTThy9qEP5NQXzYwHBCX
+         HC50lNwAAYFvySmmcXfUBMd6453sbQdLdfV2DdU2H4KHMETR2HqkrXo7fffKULoGXLYG
+         6rDgNRdTxp7SxOyzsAOalg69n9RgCkA8gb9hGq/numAr2WPY0y2uH7h+vRoq+i8O0Vcf
+         EN22ZL7A4QxtAmgKjMkQXY8fjWFRj2P2b0GzQ5w5Njmrrm+/vMqWN+BiK9fCumY1R2oY
+         HySw==
+X-Gm-Message-State: AOAM530Gu/Wgjyo8rgzGJ20EY7bqUp70kFSDc2sklrJF33lBEkXZvoqE
+        u55aTOYHv4gua70XBFCbfSEnPg==
+X-Google-Smtp-Source: ABdhPJwi4J+xm/nvozPDUCQnat7NJCVcTCoGI36EfCZlyYLjp9/7AClfhzP1RAFLsh2ytY1lCy1vVg==
+X-Received: by 2002:a17:90a:3488:: with SMTP id p8mr12222748pjb.211.1596057499443;
+        Wed, 29 Jul 2020 14:18:19 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h63sm2367630pjb.29.2020.07.29.14.18.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 14:18:18 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 14:18:17 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, Emese Revfy <re.emese@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] kbuild: move shared library build rules to
+ scripts/gcc-plugins/Makefile
+Message-ID: <202007291401.A50E25BB@keescook>
+References: <20200729031537.37926-1-masahiroy@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729031537.37926-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As per RFC792, ICMP errors should be sent to the source host.
+On Wed, Jul 29, 2020 at 12:15:36PM +0900, Masahiro Yamada wrote:
+> The shared library build rules are currently implemented in
+> scripts/Makefile.host, but actually GCC-plugin is the only user of
+> them. Hence, they do not need to be treewide available.
 
-However, in configurations with Virtual Routing and Forwarding tables,
-looking up which routing table to use is currently done by using the
-destination net_device.
+Are none of the VDSOs intending to use these rules?
 
-commit 9d1a6c4ea43e ("net: icmp_route_lookup should use rt dev to
-determine L3 domain") changes the interface passed to
-l3mdev_master_ifindex() and inet_addr_type_dev_table() from skb_in->dev
-to skb_dst(skb_in)->dev. This effectively uses the destination device
-rather than the source device for choosing which routing table should be
-used to lookup where to send the ICMP error.
+> Move all the relevant build rules to scripts/gcc-plugins/Makefile.
+> 
+> I also optimized the build steps so *.so is directly built from .c
+> because every upstream plugin is compiled from a single source file.
+> 
+> I am still keeping the infrastructure to build a plugin from multiple
+> files because Kees suggested to do so in my previous attempt.
+> (https://lkml.org/lkml/2019/1/11/1107)
+> 
+> If the plugin, foo.so, is compiled from two files foo.c and foo2.c,
+> then you can do like follows:
+> 
+>   foo-objs := foo.o foo2.o
+> 
+> Single-file plugins do not need the *-objs notation.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Therefore, if the source and destination interfaces are within separate
-VRFs, or one in the global routing table and the other in a VRF, looking
-up the source host in the destination interface's routing table will
-fail if the destination interface's routing table contains no route to
-the source host.
+But, yeah, sure!
 
-One observable effect of this issue is that traceroute does not work in
-the following cases:
+Acked-by: Kees Cook <keescook@chromium.org>
 
-- Route leaking between global routing table and VRF
-- Route leaking between VRFs
+Unrelated, but I do note that objtool maybe has the wrong indentation,
+path name reporting, and tool names (HOSTLD vs CC)?
 
-Preferably use the source device routing table when sending ICMPv6 error
-messages. If no source device is set, fall-back on the destination
-device routing table.
+...
+  HOSTCC  scripts/asn1_compiler
+  HOSTCC  scripts/extract-cert
+  HOSTCC  scripts/genksyms/genksyms.o
+  YACC    scripts/genksyms/parse.tab.[ch]
+  LEX     scripts/genksyms/lex.lex.c
+  DESCEND  objtool
+  HOSTCXX scripts/gcc-plugins/cyc_complexity_plugin.so
+  HOSTCXX scripts/gcc-plugins/latent_entropy_plugin.so
+  HOSTCXX scripts/gcc-plugins/structleak_plugin.so
+  GENSEED scripts/gcc-plugins/randomize_layout_seed.h
+  HOSTCXX scripts/gcc-plugins/stackleak_plugin.so
+  HOSTCC  scripts/genksyms/parse.tab.o
+  HOSTCC  scripts/genksyms/lex.lex.o
+  HOSTCC   /home/kees/src/linux-build/plugins/tools/objtool/fixdep.o
+  HOSTLD  arch/x86/tools/relocs
+  HOSTLD   /home/kees/src/linux-build/plugins/tools/objtool/fixdep-in.o
+  LINK     /home/kees/src/linux-build/plugins/tools/objtool/fixdep
+  CC       /home/kees/src/linux-build/plugins/tools/objtool/exec-cmd.o
+  CC       /home/kees/src/linux-build/plugins/tools/objtool/help.o
+  CC       /home/kees/src/linux-build/plugins/tools/objtool/weak.o
+...
 
-Fixes: 9d1a6c4ea43e ("net: icmp_route_lookup should use rt dev to determine L3 domain")
-Link: https://tools.ietf.org/html/rfc792
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: David Ahern <dsa@cumulusnetworks.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
----
- net/ipv4/icmp.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
-
-diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
-index e30515f89802..029e12d35b19 100644
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -465,6 +465,7 @@ static struct rtable *icmp_route_lookup(struct net *net,
- 					int type, int code,
- 					struct icmp_bxm *param)
- {
-+	struct net_device *route_lookup_dev = NULL;
- 	struct rtable *rt, *rt2;
- 	struct flowi4 fl4_dec;
- 	int err;
-@@ -479,7 +480,17 @@ static struct rtable *icmp_route_lookup(struct net *net,
- 	fl4->flowi4_proto = IPPROTO_ICMP;
- 	fl4->fl4_icmp_type = type;
- 	fl4->fl4_icmp_code = code;
--	fl4->flowi4_oif = l3mdev_master_ifindex(skb_dst(skb_in)->dev);
-+	/*
-+	 * The device used for looking up which routing table to use is
-+	 * preferably the source whenever it is set, which should ensure
-+	 * the icmp error can be sent to the source host, else fallback
-+	 * on the destination device.
-+	 */
-+	if (skb_in->dev)
-+		route_lookup_dev = skb_in->dev;
-+	else if (skb_dst(skb_in))
-+		route_lookup_dev = skb_dst(skb_in)->dev;
-+	fl4->flowi4_oif = l3mdev_master_ifindex(route_lookup_dev);
- 
- 	security_skb_classify_flow(skb_in, flowi4_to_flowi(fl4));
- 	rt = ip_route_output_key_hash(net, fl4, skb_in);
-@@ -503,7 +514,7 @@ static struct rtable *icmp_route_lookup(struct net *net,
- 	if (err)
- 		goto relookup_failed;
- 
--	if (inet_addr_type_dev_table(net, skb_dst(skb_in)->dev,
-+	if (inet_addr_type_dev_table(net, route_lookup_dev,
- 				     fl4_dec.saddr) == RTN_LOCAL) {
- 		rt2 = __ip_route_output_key(net, &fl4_dec);
- 		if (IS_ERR(rt2))
 -- 
-2.17.1
-
+Kees Cook
