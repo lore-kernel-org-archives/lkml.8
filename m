@@ -2,103 +2,91 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87082C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48ECBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62F6620829
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B8320809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:01:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596034871;
+	bh=ESM/C4n2/9SZm7+Qrh9WZ3Nyo1d10BOHwjAtSu+wytc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R1u/JT7RHmsElR7VLUo4DmErvbGHla0d9BAsDtNpSgZHgUHCX7Ma4rADC2Y7vNklG
+	 lPkDhfoIToHzV9skEMN5nw4mtj70lrPu0YyKWkfO2s7xqANqf6cKF9Y3yGvd6aNHiT
+	 IZwIyeXtF8VTpBvBToGMn4DG9036aww0pPzYxobI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgG2O5p (ORCPT
+        id S1726671AbgG2PBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:57:45 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:64897 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgG2O5p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:57:45 -0400
-Received: from fsav102.sakura.ne.jp (fsav102.sakura.ne.jp [27.133.134.229])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06TEvC3h096906;
-        Wed, 29 Jul 2020 23:57:12 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav102.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav102.sakura.ne.jp);
- Wed, 29 Jul 2020 23:57:12 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav102.sakura.ne.jp)
-Received: from localhost.localdomain (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06TEv5ul096808
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 29 Jul 2020 23:57:12 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        syzbot <syzbot+9116ecc1978ca3a12f43@syzkaller.appspotmail.com>
-Subject: [PATCH] vt: defer kfree() of vc_screenbuf in vc_do_resize()
-Date:   Wed, 29 Jul 2020 23:57:01 +0900
-Message-Id: <1596034621-4714-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 29 Jul 2020 11:01:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbgG2PBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 11:01:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF74E207E8;
+        Wed, 29 Jul 2020 15:01:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596034869;
+        bh=ESM/C4n2/9SZm7+Qrh9WZ3Nyo1d10BOHwjAtSu+wytc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ikyk9lb/olM7+v7ejcklpKjX1TxtamqCPeSAIp0xtA7IAEt7QEM0UDxkzNNNzosw5
+         MCyBjrZyd2YJiyUU+L9hfpqZs5ckGC9TZlWwHF+E19ZIUB6GkdXNlCNzYrpWoB2/7e
+         dLVnnd5jKRn8M2XhUaGgKUY4DCLzQD3Mik1d2VL0=
+Date:   Wed, 29 Jul 2020 17:01:00 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v5 1/1] power: Emit changed uevent on
+ wakeup_sysfs_add/remove
+Message-ID: <20200729150100.GA3508555@kroah.com>
+References: <20200707172845.4177903-1-abhishekpandit@chromium.org>
+ <20200707102823.v5.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
+ <20200723183235.GA3445384@kroah.com>
+ <CAJZ5v0jXcfO3YiMgkc7u=qqZy+jyT=RGagF3yAFnAhiJfyfcuQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0jXcfO3YiMgkc7u=qqZy+jyT=RGagF3yAFnAhiJfyfcuQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot is reporting UAF bug in set_origin() from vc_do_resize() [1], for
-vc_do_resize() calls kfree(vc->vc_screenbuf) before calling set_origin().
+On Mon, Jul 27, 2020 at 03:38:02PM +0200, Rafael J. Wysocki wrote:
+> On Thu, Jul 23, 2020 at 8:32 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Jul 07, 2020 at 10:28:44AM -0700, Abhishek Pandit-Subedi wrote:
+> > > Udev rules that depend on the power/wakeup attribute don't get triggered
+> > > correctly if device_set_wakeup_capable is called after the device is
+> > > created. This can happen for several reasons (driver sets wakeup after
+> > > device is created, wakeup is changed on parent device, etc) and it seems
+> > > reasonable to emit a changed event when adding or removing attributes on
+> > > the device.
+> > >
+> > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> >
+> > Rafael, any objection to this?  Do you want me to take it through my
+> > tree, or are you going to take it through yours?  Either is fine for me.
+> 
+> It's already there in my tree with the R-by tag from you.
 
-Unfortunately, in set_origin(), vc->vc_sw->con_set_origin() might access
-vc->vc_pos when scroll is involved in order to manipulate cursor, but
-vc->vc_pos refers already released vc->vc_screenbuf until vc->vc_pos gets
-updated based on the result of vc->vc_sw->con_set_origin().
+{sigh}  Sorry for the noise.
 
-Preserving old buffer and tolerating outdated vc members until set_origin()
-completes would be easier than preventing vc->vc_sw->con_set_origin() from
-accessing outdated vc members.
-
-[1] https://syzkaller.appspot.com/bug?id=6649da2081e2ebdc65c0642c214b27fe91099db3
-
-Reported-by: syzbot <syzbot+9116ecc1978ca3a12f43@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
- drivers/tty/vt/vt.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 42d8c67..c9ee8e9 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -1196,7 +1196,7 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
- 	unsigned int old_rows, old_row_size, first_copied_row;
- 	unsigned int new_cols, new_rows, new_row_size, new_screen_size;
- 	unsigned int user;
--	unsigned short *newscreen;
-+	unsigned short *oldscreen, *newscreen;
- 	struct uni_screen *new_uniscr = NULL;
- 
- 	WARN_CONSOLE_UNLOCKED();
-@@ -1294,10 +1294,11 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
- 	if (new_scr_end > new_origin)
- 		scr_memsetw((void *)new_origin, vc->vc_video_erase_char,
- 			    new_scr_end - new_origin);
--	kfree(vc->vc_screenbuf);
-+	oldscreen = vc->vc_screenbuf;
- 	vc->vc_screenbuf = newscreen;
- 	vc->vc_screenbuf_size = new_screen_size;
- 	set_origin(vc);
-+	kfree(oldscreen);
- 
- 	/* do part of a reset_terminal() */
- 	vc->vc_top = 0;
--- 
-1.8.3.1
-
+greg k-h
