@@ -2,179 +2,196 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38ACDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59244C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5972082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:48:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596048495;
-	bh=/qgyjZYOsbUKaNwiJ+v1Kmx4G1RECV4Bq+1dyTSlsQU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c8BRkrmdXC3oibF5WNHDjo2qEGuwlY3VTIDOTKHM48m6HM3bZH3yw7FqGW2TzZwB8
-	 Ojg43cZqEZ5vN/YdLr36didZ0w/aN6bN1g9cl6RnVcxUabLAokGs5yPlHFB5yrmqPx
-	 4QFJFGy3gVU2UvG75Mn3dtsfv5M5BNKXPXNi2hL0=
+	by mail.kernel.org (Postfix) with ESMTP id 3E65620672
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:48:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="0lRICiKk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgG2SsN (ORCPT
+        id S1727791AbgG2Sst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:48:13 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43190 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2SsN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:48:13 -0400
-Received: by mail-io1-f65.google.com with SMTP id k23so25594253iom.10;
-        Wed, 29 Jul 2020 11:48:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=86wzVwARCnvB4VvS8GaiyYladnSK6F8nyeRAcDRPX1Q=;
-        b=og/62zrsCsDLda5iC83XcWHIRL6iVafeRtT5n4yHpdd6iTaB4RbyrlxNXi3ZpWPGNy
-         Cgag0nmUge7+Ty1XkLQIwURReyi+un4/mmIBzY/AsKyJOH59QQB4mGu77HkqBechORR8
-         8sx4NJNd4Brk5wP6HHrU/yEXkvfD9IWmTXLjOsn/6gwRUj7O5EGnbcAKAruPmECH24D4
-         r5xw7Bo7gF8E8mGQ6XS632kfDwOgikU3iLTOakJXnwH5cXRLHWlFD1XAoH+/NYBz3wpv
-         GwmDRm2wid4nm2khJvvh4twMyMXmgw5p80+l7thHVsL+xxbfOeRs2Q4RtZ82UpwLZ0vR
-         qFOQ==
-X-Gm-Message-State: AOAM530I7Y8Yi7Jrc8xUwMgzaH3RKYfqArz4h08XlODxDsMq8n9KBXrt
-        FMN8GdjFsS7MQ4GRYfIK9A==
-X-Google-Smtp-Source: ABdhPJwgwuy0pDlaSXWmtP5I+Zqw0S9AQViNseOQQ+EU0oaswOCUFKUX7Cl1E1bYP4sF81QLx0+7rw==
-X-Received: by 2002:a02:a389:: with SMTP id y9mr11786511jak.82.1596048492396;
-        Wed, 29 Jul 2020 11:48:12 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v87sm976014ilk.33.2020.07.29.11.48.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 11:48:11 -0700 (PDT)
-Received: (nullmailer pid 582408 invoked by uid 1000);
-        Wed, 29 Jul 2020 18:48:09 -0000
-Date:   Wed, 29 Jul 2020 12:48:09 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     linux-pci@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Xogium <contact@xogium.me>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Subject: Re: [PATCH 4/5] PCI: aardvark: Implement driver 'remove' function
- and allow to build it as module
-Message-ID: <20200729184809.GA569408@bogus>
-References: <20200715142557.17115-1-marek.behun@nic.cz>
- <20200715142557.17115-5-marek.behun@nic.cz>
+        Wed, 29 Jul 2020 14:48:49 -0400
+Received: from vern.gendns.com ([98.142.107.122]:34900 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726365AbgG2Sss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 14:48:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Rh4+f4yuq/e7FtK2/wT/sGMAB05nb7iicjjSHxqWAgI=; b=0lRICiKkfrwEJ4hCMkOoG0hSCs
+        LSlE65op0UoG8Wr6nDkbzBkEet3HZn7eIOGD9rSSZOHLxtg9s9RRdposwMWn9g9EhZLALsmxNfjjG
+        gN3iVrmIjqqaMcoK3z12Z9H985i4BhIyVgyTyKrCyLBvIBGXG+L3LQgcsOj17YpAWuffVhrZ8+fN8
+        dAB9KrvyUp3SCJQP/LAO5E2DsXNP2PR8TyI+Uzn094HD+P/hb0ly4oV0NoCQmQBfwmAyXv8lbXr+k
+        IOumosSzijy0HrUTUBgXZiZbvpQRAf96URhK9rZiu0R3pG6SKa2fraks6DEgbOra7YhT4oOg/7QKO
+        ipow0rtA==;
+Received: from [2600:1700:4830:165f::19e] (port=42956)
+        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <david@lechnology.com>)
+        id 1k0r89-0002kH-Co; Wed, 29 Jul 2020 14:48:45 -0400
+Subject: Re: [PATCH v4 3/5] irqchip/irq-pruss-intc: Add logic for handling
+ reserved interrupts
+To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        s-anna@ti.com
+Cc:     robh+dt@kernel.org, lee.jones@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        wmills@ti.com, praneeth@ti.com
+References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1595927918-19845-4-git-send-email-grzegorz.jaszczyk@linaro.org>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <c2695e63-dd4f-9eb9-afbc-fa52d7e88a86@lechnology.com>
+Date:   Wed, 29 Jul 2020 13:48:43 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200715142557.17115-5-marek.behun@nic.cz>
+In-Reply-To: <1595927918-19845-4-git-send-email-grzegorz.jaszczyk@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 04:25:56PM +0200, Marek Behún wrote:
-> From: Pali Rohár <pali@kernel.org>
+On 7/28/20 4:18 AM, Grzegorz Jaszczyk wrote:
+> From: Suman Anna <s-anna@ti.com>
 > 
-> Providing driver's 'remove' function allows kernel to bind and unbind devices
-> from aardvark driver. It also allows to build aardvark driver as a module.
+> The PRUSS INTC has a fixed number of output interrupt lines that are
+> connected to a number of processors or other PRUSS instances or other
+> devices (like DMA) on the SoC. The output interrupt lines 2 through 9
+> are usually connected to the main Arm host processor and are referred
+> to as host interrupts 0 through 7 from ARM/MPU perspective.
 > 
-> Compiling aardvark as a module simplifies development and debugging of
-> this driver as it can be reloaded at runtime without the need to reboot
-> to new kernel.
+> All of these 8 host interrupts are not always exclusively connected
+> to the Arm interrupt controller. Some SoCs have some interrupt lines
+> not connected to the Arm interrupt controller at all, while a few others
+> have the interrupt lines connected to multiple processors in which they
+> need to be partitioned as per SoC integration needs. For example, AM437x
+> and 66AK2G SoCs have 2 PRUSS instances each and have the host interrupt 5
+> connected to the other PRUSS, while AM335x has host interrupt 0 shared
+> between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU and
+> a DMA controller.
 > 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> Reviewed-by: Marek Behún <marek.behun@nic.cz>
+> Add logic to the PRUSS INTC driver to ignore both these shared and
+> invalid interrupts.
+
+If a person wanted to use DMA with a PRU what will handle the mapping
+of a PRU event to host interrupt 6 or 7 if they are being ignored here?
+
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
 > ---
->  drivers/pci/controller/Kconfig        |  2 +-
->  drivers/pci/controller/pci-aardvark.c | 25 ++++++++++++++++++++++---
->  2 files changed, 23 insertions(+), 4 deletions(-)
+> v3->v4:
+> - Due to changes in DT bindings which converts irqs-reserved
+>    property from uint8-array to bitmask requested by Rob introduce
+>    relevant changes in the driver.
+> - Merge the irqs-reserved and irqs-shared to one property since they
+>    can be handled by one logic (relevant change was introduced to DT
+>    binding).
+> - Update commit message.
+> v2->v3:
+> - Extra checks for (intc->irqs[i]) in error/remove path was moved from
+>    "irqchip/irq-pruss-intc: Add a PRUSS irqchip driver for PRUSS
+>    interrupts" to this patch
+> v1->v2:
+> - https://patchwork.kernel.org/patch/11069757/
+> ---
+>   drivers/irqchip/irq-pruss-intc.c | 29 ++++++++++++++++++++++++-----
+>   1 file changed, 24 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index adddf21fa381..f9da5ff2c517 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -12,7 +12,7 @@ config PCI_MVEBU
->  	select PCI_BRIDGE_EMUL
->  
->  config PCI_AARDVARK
-> -	bool "Aardvark PCIe controller"
-> +	tristate "Aardvark PCIe controller"
->  	depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
->  	depends on OF
->  	depends on PCI_MSI_IRQ_DOMAIN
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index d5f58684d962..0a5aa6d77f5d 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -14,6 +14,7 @@
->  #include <linux/irq.h>
->  #include <linux/irqdomain.h>
->  #include <linux/kernel.h>
-> +#include <linux/module.h>
->  #include <linux/pci.h>
->  #include <linux/init.h>
->  #include <linux/phy/phy.h>
-> @@ -1114,6 +1115,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
->  
->  	pcie = pci_host_bridge_priv(bridge);
->  	pcie->pdev = pdev;
-> +	platform_set_drvdata(pdev, pcie);
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	pcie->base = devm_ioremap_resource(dev, res);
-> @@ -1204,18 +1206,35 @@ static int advk_pcie_probe(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static int advk_pcie_remove(struct platform_device *pdev)
-> +{
-> +	struct advk_pcie *pcie = platform_get_drvdata(pdev);
-> +	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> +
-> +	pci_stop_root_bus(bridge->bus);
-> +	pci_remove_root_bus(bridge->bus);
+> diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
+> index 45b966a..cf9a59b 100644
+> --- a/drivers/irqchip/irq-pruss-intc.c
+> +++ b/drivers/irqchip/irq-pruss-intc.c
+> @@ -474,7 +474,7 @@ static int pruss_intc_probe(struct platform_device *pdev)
+>   	struct pruss_intc *intc;
+>   	struct pruss_host_irq_data *host_data[MAX_NUM_HOST_IRQS] = { NULL };
+>   	int i, irq, ret;
+> -	u8 max_system_events;
+> +	u8 max_system_events, invalid_intr = 0;
+>   
+>   	data = of_device_get_match_data(dev);
+>   	if (!data)
+> @@ -496,6 +496,16 @@ static int pruss_intc_probe(struct platform_device *pdev)
+>   		return PTR_ERR(intc->base);
+>   	}
+>   
+> +	ret = of_property_read_u8(dev->of_node, "ti,irqs-reserved",
+> +				  &invalid_intr);
 
-Based on pci_host_common_remove() implementation, doesn't this need a 
-lock around it (pci_lock_rescan_remove)?
-
-We should probably have a common function (say pci_bridge_remove) to 
-implement this. You could use pci_host_common_remove(), but you'd have 
-to adjust drvdata.
+Why not make the variable name match the property name?
 
 > +
-> +	advk_pcie_remove_msi_irq_domain(pcie);
-> +	advk_pcie_remove_irq_domain(pcie);
+> +	/*
+> +	 * The irqs-reserved is used only for some SoC's therefore not having
+> +	 * this property is still valid
+> +	 */
+> +	if (ret < 0 && ret != -EINVAL)
+> +		return ret;
 > +
-> +	return 0;
-> +}
+>   	pruss_intc_init(intc);
+>   
+>   	mutex_init(&intc->lock);
+> @@ -506,6 +516,9 @@ static int pruss_intc_probe(struct platform_device *pdev)
+>   		return -ENOMEM;
+>   
+>   	for (i = 0; i < MAX_NUM_HOST_IRQS; i++) {
+> +		if (invalid_intr & BIT(i))
+> +			continue;
 > +
->  static const struct of_device_id advk_pcie_of_match_table[] = {
->  	{ .compatible = "marvell,armada-3700-pcie", },
->  	{},
->  };
-> +MODULE_DEVICE_TABLE(of, advk_pcie_of_match_table);
->  
->  static struct platform_driver advk_pcie_driver = {
->  	.driver = {
->  		.name = "advk-pcie",
->  		.of_match_table = advk_pcie_of_match_table,
-> -		/* Driver unloading/unbinding currently not supported */
-> -		.suppress_bind_attrs = true,
->  	},
->  	.probe = advk_pcie_probe,
-> +	.remove = advk_pcie_remove,
->  };
-> -builtin_platform_driver(advk_pcie_driver);
-> +module_platform_driver(advk_pcie_driver);
-> +
-> +MODULE_DESCRIPTION("Aardvark PCIe controller");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.26.2
+>   		irq = platform_get_irq_byname(pdev, irq_names[i]);
+>   		if (irq <= 0) {
+>   			dev_err(dev, "platform_get_irq_byname failed for %s : %d\n",
+> @@ -533,8 +546,11 @@ static int pruss_intc_probe(struct platform_device *pdev)
+>   	return 0;
+>   
+>   fail_irq:
+> -	while (--i >= 0)
+> -		irq_set_chained_handler_and_data(intc->irqs[i], NULL, NULL);
+> +	while (--i >= 0) {
+> +		if (intc->irqs[i])
+> +			irq_set_chained_handler_and_data(intc->irqs[i], NULL,
+> +							 NULL);
+> +	}
+>   
+>   	irq_domain_remove(intc->domain);
+>   
+> @@ -548,8 +564,11 @@ static int pruss_intc_remove(struct platform_device *pdev)
+>   	unsigned int hwirq;
+>   	int i;
+>   
+> -	for (i = 0; i < MAX_NUM_HOST_IRQS; i++)
+> -		irq_set_chained_handler_and_data(intc->irqs[i], NULL, NULL);
+> +	for (i = 0; i < MAX_NUM_HOST_IRQS; i++) {
+> +		if (intc->irqs[i])
+> +			irq_set_chained_handler_and_data(intc->irqs[i], NULL,
+> +							 NULL);
+> +	}
+>   
+>   	for (hwirq = 0; hwirq < max_system_events; hwirq++)
+>   		irq_dispose_mapping(irq_find_mapping(intc->domain, hwirq));
 > 
+
