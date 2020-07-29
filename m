@@ -2,79 +2,48 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7522AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DB6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FCD220663
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:22:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fbGsG/PU"
+	by mail.kernel.org (Postfix) with ESMTP id 4C7892076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgG2JWw (ORCPT
+        id S1728045AbgG2JW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:22:52 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:21067 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728161AbgG2JWv (ORCPT
+        Wed, 29 Jul 2020 05:22:59 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:29404 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgG2JW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:22:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596014570;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cleKEEqa/Yi8QZ9Y9pY/hJ9mwP+xc/IFgNkiTAzi7w4=;
-        b=fbGsG/PU1VJ2Shj4AEx5/bAZTcQPDWI1dKiEstm4Sc67BTZSztoP7wGK6WA4Lbqs+kP5dF
-        s28gsnoio2fVo6CVg35k2mFBhFpCtauWVFJyDC8nO9S6KbJKD3+BfXkt+eKz/PHuC+fHnk
-        9SjEX7cDUXamHV+DyqBlOaApWO3mylM=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-401-GORSUEwZPNqI1IUsqlHALw-1; Wed, 29 Jul 2020 05:22:47 -0400
-X-MC-Unique: GORSUEwZPNqI1IUsqlHALw-1
-Received: by mail-ej1-f72.google.com with SMTP id r14so3422964eji.16
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 02:22:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=cleKEEqa/Yi8QZ9Y9pY/hJ9mwP+xc/IFgNkiTAzi7w4=;
-        b=gPHYo3l+wSvm/LS0SkEUafvJdebDko16xDifNTDAKWzG+d9AQfkGIfRLfm/EqEA+Pk
-         /tlMHsUW3guIiZ2Fk3vc8I77JbNed4ltkbJXSiIbgJUNUANwaww17CFOr4ZaoDatvBz6
-         EOFPWFVsSvQNYVyDmjefTAm3ID79Vb5YVIi3yTjXVuwhrm++qV6aa91AGI88VAqF0+kr
-         mMFAJX4bu89Ng6gnpZ7crxc97naYguJXRD/DByW0le4l/eJv3NHSSpN0XM5u/KxDySCd
-         m3xi7axnXnizA/+ra/o9RN4YMPYAyLUZBSil/kJXrQwpJ4Gl0sdiuWDyNVm36xjIVll9
-         ianA==
-X-Gm-Message-State: AOAM532v7i1Cy/q9WENNfabqZzH1sb84mVaEN3sa6H23g9d+wTqQ0MGU
-        hR3ljw1hIVB/uvA3Rhdlz/bDjLdMx5IFeVWpV7NnPesSK1Da8+w+zv4edBOI+7oBAQ3JuanNN17
-        EyC5U0DFSgceceM7Y/b8EPB4Q
-X-Received: by 2002:aa7:c885:: with SMTP id p5mr31451501eds.100.1596014566900;
-        Wed, 29 Jul 2020 02:22:46 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxCfeK5XNoFAzUDf6eYvR8YIVLMGH++FnVZqU3fYGpDuVRQRBQL15uPpm5p2erVWzHIwOY8Cg==
-X-Received: by 2002:aa7:c885:: with SMTP id p5mr31451482eds.100.1596014566725;
-        Wed, 29 Jul 2020 02:22:46 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id c15sm1343755edm.47.2020.07.29.02.22.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 02:22:46 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Alexander Graf <graf@amazon.com>, Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Aaron Lewis <aaronlewis@google.com>
-Subject: Re: [PATCH] KVM: x86: Deflect unknown MSR accesses to user space
-In-Reply-To: <173948e8-4c7a-6dc4-de17-99151bc56d91@amazon.com>
-References: <20200728004446.932-1-graf@amazon.com> <87d04gm4ws.fsf@vitty.brq.redhat.com> <a1f30fc8-09f5-fe2f-39e2-136b881ed15a@amazon.com> <CALMp9eQ3OxhQZYiHPiebX=KyvjWQgxQEO-owjSoxgPKsOMRvjw@mail.gmail.com> <87y2n2log7.fsf@vitty.brq.redhat.com> <173948e8-4c7a-6dc4-de17-99151bc56d91@amazon.com>
-Date:   Wed, 29 Jul 2020 11:22:45 +0200
-Message-ID: <87pn8ellp6.fsf@vitty.brq.redhat.com>
+        Wed, 29 Jul 2020 05:22:58 -0400
+IronPort-SDR: DQW/OrdW6y9aBLoNFuSz+u29IKhdkeiJEMYOnKHmwZCke314r3qFaWu2LoMyZln1Ubkeo+dxxe
+ sfhGgL3GE6q8X5wxkOXV1MpZnf9SFftdKFh3kMLOQrgOi5LUXHtl5IJOIJt5P2fOUtUitT/mT7
+ m3kh53kXwjSHYwnQRUtpAC5tMUJZePAPRSQkGZopHslU6QqaGbGznrIa+hZ5CNfsu4i8jNwt9N
+ vF6CYb8WUyfCuExGJpQ4/WOovghTT6HM1IB3hrB8Ypwz0CtJJqg5UkBdcibSC2GvMsMn2QAIkT
+ LOA=
+X-IronPort-AV: E=Sophos;i="5.75,409,1589270400"; 
+   d="scan'208";a="51525656"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa4.mentor.iphmx.com with ESMTP; 29 Jul 2020 01:22:57 -0800
+IronPort-SDR: F3bDoXGx/6X38yatA2Y/3REPwZxCD7Tk6gQCa4cYBJ89X0DQObeKnNzW8JP3aeYLx6AYRP+Goz
+ DZqDPN48xwG/a+74hFJSwJhKvXa4wyNpGX/Jvu3hfev/0yvO2DJ7KG2sAlZvbjaA5PqIo245f8
+ RdGTZtFxQ3lmUcQgIPxBPsRahAv84S5KtB8T9FdP66IugJuO6VCoWsG7+76I/RG2ApMbghMqyV
+ EY+n7iRXo/wSFyu2KZVD0bG68n26oLDAEqkh78fbhggL2zmgT2zUSWML7ksbhxnMrW4WD7OJXm
+ gks=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
+        <digetx@gmail.com>, <jiada_wang@mentor.com>
+Subject: [PATCH 1/1] Input: atmel_mxt_ts: split large i2c transfers into blocks
+Date:   Wed, 29 Jul 2020 18:22:52 +0900
+Message-ID: <20200729092252.6394-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,46 +51,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexander Graf <graf@amazon.com> writes:
+From: Jiada wang <jiada_wang@mentor.com>
 
-> On 29.07.20 10:23, Vitaly Kuznetsov wrote:
->> 
->> 
->> 
->> Jim Mattson <jmattson@google.com> writes:
->> 
->>> On Tue, Jul 28, 2020 at 5:41 AM Alexander Graf <graf@amazon.com> wrote:
->>>>
->> 
->> ...
->> 
->>>> While it does feel a bit overengineered, it would solve the problem that
->>>> we're turning in-KVM handled MSRs into an ABI.
->>>
->>> It seems unlikely that userspace is going to know what to do with a
->>> large number of MSRs. I suspect that a small enumerated list will
->>> suffice.
->> 
->> The list can also be 'wildcarded', i.e.
->> {
->>   u32 index;
->>   u32 mask;
->>   ...
->> }
->> 
->> to make it really short.
->
-> I like the idea of wildcards, but I can't quite wrap my head around how 
-> we would implement ignore_msrs in user space with them?
->
+Some I2C controllers constrain maximum transferred data in an I2C
+transaction by set max_[read|write]_len of i2c_adapter_quirk.
+Large i2c transfer transaction beyond this limitation may fail to complete,
+cause I2C controller driver aborts the transaction and returns failure.
 
-For that I think we can still deflect all unknown MSR accesses to
-userspace (when the CAP is enabled of course ) but MSRs which are on the
-list will *have to be deflected*, i.e. KVM can't handle them internally
-without consulting with userspace.
+Therefore this patch was created to split large i2c transaction into
+smaller chunks which can complete within max_[read|write]_len defined
+by I2C controller driver.
 
-We can make it tunable through a parameter for CAP enablement if needed.
+CC: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Jiada wang <jiada_wang@mentor.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 60 ++++++++++++++++++++++--
+ 1 file changed, 55 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index a2189739e30f..d7c3c24aa663 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -620,8 +620,8 @@ static int mxt_send_bootloader_cmd(struct mxt_data *data, bool unlock)
+ 	return 0;
+ }
+ 
+-static int __mxt_read_reg(struct i2c_client *client,
+-			       u16 reg, u16 len, void *val)
++static int __mxt_read_chunk(struct i2c_client *client,
++			    u16 reg, u16 len, void *val)
+ {
+ 	struct i2c_msg xfer[2];
+ 	u8 buf[2];
+@@ -655,8 +655,33 @@ static int __mxt_read_reg(struct i2c_client *client,
+ 	return ret;
+ }
+ 
+-static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
+-			   const void *val)
++static int __mxt_read_reg(struct i2c_client *client,
++			  u16 reg, u16 len, void *buf)
++{
++	const struct i2c_adapter_quirks *quirks = client->adapter->quirks;
++	u16 size, offset = 0, max_read_len = len;
++	int ret;
++
++	if (quirks && quirks->max_read_len)
++		max_read_len = quirks->max_read_len;
++
++	while (offset < len) {
++		size = min_t(u16, max_read_len, len - offset);
++
++		ret = __mxt_read_chunk(client,
++				       reg + offset,
++				       size, buf + offset);
++		if (ret)
++			return ret;
++
++		offset += size;
++	}
++
++	return 0;
++}
++
++static int __mxt_write_chunk(struct i2c_client *client, u16 reg, u16 len,
++			     const void *val)
+ {
+ 	u8 *buf;
+ 	size_t count;
+@@ -685,9 +710,34 @@ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
+ 	return ret;
+ }
+ 
++static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
++			   const void *val)
++{
++	const struct i2c_adapter_quirks *quirks = client->adapter->quirks;
++	u16 size, offset = 0, max_write_len = len;
++	int ret;
++
++	if (quirks && quirks->max_write_len)
++		max_write_len = quirks->max_write_len;
++
++	while (offset < len) {
++		size = min_t(u16, max_write_len, len - offset);
++
++		ret = __mxt_write_chunk(client,
++					reg + offset,
++					size, val + offset);
++		if (ret)
++			return ret;
++
++		offset += size;
++	}
++
++	return 0;
++}
++
+ static int mxt_write_reg(struct i2c_client *client, u16 reg, u8 val)
+ {
+-	return __mxt_write_reg(client, reg, 1, &val);
++	return __mxt_write_chunk(client, reg, 1, &val);
+ }
+ 
+ static struct mxt_object *
 -- 
-Vitaly
+2.17.1
 
