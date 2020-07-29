@@ -2,157 +2,126 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D1CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA624C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAB4820809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:13:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Xd04k/SG"
+	by mail.kernel.org (Postfix) with ESMTP id 875B92074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:15:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596053737;
+	bh=lInpnetoKshxhmnjMZbgVxSMLhE/DGB38anI0Jpt0dA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t3nraRkpq3hKRYoe6IWbieDpJXq/Oc+/gl71nHpChYexRFgUF1k6aoPKsxDW+/Ehb
+	 kbTQZyAJIoe0E/D1Me/h5CRDAm+X8QWFtr7c/JR7+9gqxMIAxJCvjzXqVqwtbar3qX
+	 7z/s98ybHqWg4A5OeMr83tFrlwQylcPydep/vYIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbgG2UNe (ORCPT
+        id S1726774AbgG2UPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:13:34 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60560 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgG2UNe (ORCPT
+        Wed, 29 Jul 2020 16:15:37 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:34641 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgG2UPg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:13:34 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06TK73Zf063041;
-        Wed, 29 Jul 2020 20:12:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : from : subject :
- message-id : date : mime-version : content-type :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=qzSfUS/Rp2ulvqyMDe+EvIgqFbdpJi8rxeigqDoBeG0=;
- b=Xd04k/SGT5Z6oX9HuCCvn9/3ErOREEK8s62CyZ3AltBiRyGcTwcpBDJudQhdpzubwDBZ
- cTf/BggPDv/vo/qqjPTUX3hS7m8+b6gyAsihm7Fr3lHqlIRBX8bVzBoAaDgf5Hc49wbl
- Nl85U80Dm3NtCShVNoBxmMbST1KpK663Xp4QrgVBwNflnS5KO1RoaRBVuUt9xJNMYX8r
- osnVFHD+TbsmIvI1NUDWuABdnOmHIu4z9U62syn7XoXDwS4tV3lWaMZCp3nlF91oC3mZ
- b8mqbe0eJGf7BUC03kZYQpaVJDn6sL9aHvZYiZlzJdiYnB+BrkqOvM4NMkWyB8Jx0vZ3 Dw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 32hu1jfv9q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Jul 2020 20:12:43 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06TK8mHx185741;
-        Wed, 29 Jul 2020 20:12:43 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 32hu5wae0h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jul 2020 20:12:43 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06TKCft9026114;
-        Wed, 29 Jul 2020 20:12:41 GMT
-Received: from localhost.localdomain (/10.159.247.173)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 Jul 2020 13:12:41 -0700
-To:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        chris hyser <chris.hyser@oracle.com>,
-        vincent.guittot@linaro.org,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        bristot@redhat.com, rostedt@goodmis.org,
-        Juri Lelli <juri.lelli@redhat.com>
-From:   Dhaval Giani <dhaval.giani@oracle.com>
-Subject: [CFP LPC 2020] Scheduler Microconference
-Autocrypt: addr=dhaval.giani@oracle.com; keydata=
- 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
-Message-ID: <c65e5cdc-6027-9159-ba7d-4b6acaeaabcf@oracle.com>
-Date:   Wed, 29 Jul 2020 13:12:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 29 Jul 2020 16:15:36 -0400
+Received: by mail-ej1-f66.google.com with SMTP id y10so25678785eje.1;
+        Wed, 29 Jul 2020 13:15:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ouwd0qsnQ1Adj/+zRaVzdVpCm+8h05KMUp30fVnhcA8=;
+        b=WCCGLGBn4hHDnNsd2nRwgnhe8aAXRQj2ynpVy+i38o8UZn2udLkh/grnd0yeaMMFq2
+         hN9//4RPCYOySl5MB0sUD+1zZYq6zoTZgn0oaNitKEt6phlMgE2sSht0YgvuTuN2+0V3
+         iWt4WNRSV2bj38c1BKskGUnocTJFBqAQoPLb9DG9lP3kDeIwWtFtmAj4//bJCHSn0PmC
+         tupufDmoGcV77qM5nmhsr0WSat+Slkq302m3eTt7unuTjqblhHkwVYxBdQwC4IyJFifK
+         ebXPIxDA7lR/QFtHMJUkZU2RL8XcAgm22K2XtYXLfoP6ruarohb07siTIW9f+sabvRIG
+         A9Kg==
+X-Gm-Message-State: AOAM531lUqBVwShDkv/n/9QUfBWr2XpPEVtExrQT4TSTC47TOWioYVGx
+        basX4GuFDommhUxpiM4p7Yo=
+X-Google-Smtp-Source: ABdhPJwzrwf3LW20eQQQ23yUjSgwrzDTiF8v8xCprZhLNGtK2AACk3VnEMiEQ8SoXRyfDGmBo2eFdQ==
+X-Received: by 2002:a17:906:5013:: with SMTP id s19mr96306ejj.26.1596053734270;
+        Wed, 29 Jul 2020 13:15:34 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id qc23sm2624999ejb.97.2020.07.29.13.15.31
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Jul 2020 13:15:33 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 22:15:30 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Vincent Sanders <vince@simtec.co.uk>,
+        Simtec Linux Team <linux@simtec.co.uk>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        patches@opensource.cirrus.com,
+        linux-clk <linux-clk@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Sergio Prado <sergio.prado@e-labworks.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Cedric Roux <sed@free.fr>, Lihua Yao <ylhuajnu@outlook.com>
+Subject: Re: [PATCH 0/7] ARM: samsung: Cleanup of various S3C bits
+Message-ID: <20200729201530.GA26917@kozik-lap>
+References: <20200729160942.28867-1-krzk@kernel.org>
+ <CAK8P3a38VC5UD+1HHRFWnafM7ZLMc34Ay23FUCjjgiz46SCV=A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9697 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007290134
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9697 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
- malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007290134
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a38VC5UD+1HHRFWnafM7ZLMc34Ay23FUCjjgiz46SCV=A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Wed, Jul 29, 2020 at 10:01:26PM +0200, Arnd Bergmann wrote:
+> On Wed, Jul 29, 2020 at 6:11 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Hi,
+> >
+> > I tried to cleanup few warnings in S3C machine code which lead to
+> > finding some bigger issues.
+> >
+> > Patches touch mostly the ARM Samsung machine code except patch #1 (clk)
+> > and #5 (watchdog).  They are independent from each other, except
+> > some conflicting lines.
+> >
+> > The last three patches would welcome some testing... as I did not
+> > perform such (lack of S3C hardware).
+> 
+> I have an older series that I mean to repost. Please have a look at
+> the s3c-multiplatform branch of
+> git://git.kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git
+> 
+> The patches in there need to be rebased on a newer kernel, which
+> should be easy, but they will conflict with your work. If there is
+> anything in there you can easily pick up into your series, please
+> do so.
 
-We are pleased to announce the Scheduler Microconference has been
-accepted at LPC this year.
+Indeed now I remember you were doing it some time ago but a follow up
+never happened.  I can take a look and either cherry pick or even take
+over the series.
 
-Please submit your proposals on the LPC website at:
-
-https://www.linuxplumbersconf.org/event/7/abstracts/#submit-abstract
-
-And be sure to select "Scheduler MC" in the Track pulldown menu.
-
-
-Topics we are interested in, but certainly not limited to, this year are,
-
-- Load Balancer Rework
-- Idle Balance optimizations
-- Flattening the group scheduling hierarchy
-- Core scheduling
-- Proxy Execution for CFS
-- What was formerly known as latency nice
-
-Please get your submissions in by Aug 7th!
-
-Thanks!
-The organizers of the Scheduler Microconference
+Best regards,
+Krzysztof
 
