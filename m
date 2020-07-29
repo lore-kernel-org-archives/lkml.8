@@ -2,143 +2,129 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88710C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D06CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8E420FC3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAF4C20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:53:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="KaxddRhc";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="KaxddRhc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgG2OxS (ORCPT
+        id S1727042AbgG2Oxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:53:18 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:59120 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726909AbgG2OxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:53:17 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A5FF1A01FA;
-        Wed, 29 Jul 2020 16:53:15 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A06891A0DFF;
-        Wed, 29 Jul 2020 16:53:08 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DC0824031F;
-        Wed, 29 Jul 2020 16:52:55 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        aisheng.dong@nxp.com, arnd@arndb.de, peng.fan@nxp.com,
-        abel.vesa@nxp.com, fugang.duan@nxp.com, daniel.baluta@nxp.com,
-        yuehaibing@huawei.com, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V7 6/6] clk: imx8qxp: Support building i.MX8QXP clock driver as module
-Date:   Wed, 29 Jul 2020 22:48:37 +0800
-Message-Id: <1596034117-24246-7-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596034117-24246-1-git-send-email-Anson.Huang@nxp.com>
-References: <1596034117-24246-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 29 Jul 2020 10:53:55 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:34296 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726476AbgG2Oxz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 10:53:55 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 705CC8EE207;
+        Wed, 29 Jul 2020 07:53:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1596034434;
+        bh=52QMwb7Jds0gQp46DIWjlg4uzDKqmp0+MN9kfbsWbYw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=KaxddRhcrEATgtc3+DrhSJ4n0NFDWD+jQycTwDg09AbWbe/mSXbaq8HlO1hL4TQYm
+         j8w03aVpW523vOV84ICUC+NZOgQV30n9x3L90GaIc52gNGLdqlPwddRqMGEeIPwX4K
+         dw5s6o3o+2E3141yBGgNBZfVMHMkNxcOJaEnVwCk=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id oXOLaPWPO5AT; Wed, 29 Jul 2020 07:53:54 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id C87708EE100;
+        Wed, 29 Jul 2020 07:53:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1596034434;
+        bh=52QMwb7Jds0gQp46DIWjlg4uzDKqmp0+MN9kfbsWbYw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=KaxddRhcrEATgtc3+DrhSJ4n0NFDWD+jQycTwDg09AbWbe/mSXbaq8HlO1hL4TQYm
+         j8w03aVpW523vOV84ICUC+NZOgQV30n9x3L90GaIc52gNGLdqlPwddRqMGEeIPwX4K
+         dw5s6o3o+2E3141yBGgNBZfVMHMkNxcOJaEnVwCk=
+Message-ID: <1596034432.4356.19.camel@HansenPartnership.com>
+Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm
+Date:   Wed, 29 Jul 2020 07:53:52 -0700
+In-Reply-To: <1596033995.4356.15.camel@linux.ibm.com>
+References: <20200706164135.GE704149@rowland.harvard.edu>
+         <d0ed766b-88b0-5ad5-9c10-a4c3b2f994e3@puri.sm>
+         <20200728200243.GA1511887@rowland.harvard.edu>
+         <f3958758-afce-8add-1692-2a3bbcc49f73@puri.sm>
+         <20200729143213.GC1530967@rowland.harvard.edu>
+         <1596033995.4356.15.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change configuration to "tristate", add module author, description and
-license to support building i.MX8QXP clock drivers as module.
+On Wed, 2020-07-29 at 07:46 -0700, James Bottomley wrote:
+> On Wed, 2020-07-29 at 10:32 -0400, Alan Stern wrote:
+> > On Wed, Jul 29, 2020 at 04:12:22PM +0200, Martin Kepplinger wrote:
+> > > On 28.07.20 22:02, Alan Stern wrote:
+> > > > On Tue, Jul 28, 2020 at 09:02:44AM +0200, Martin Kepplinger
+> > > > wrote:
+> > > > > Hi Alan,
+> > > > > 
+> > > > > Any API cleanup is of course welcome. I just wanted to remind
+> > > > > you that the underlying problem: broken block device runtime
+> > > > > pm. Your initial proposed fix "almost" did it and mounting
+> > > > > works but during file access, it still just looks like a
+> > > > > runtime_resume is missing somewhere.
+> > > > 
+> > > > Well, I have tested that proposed fix several times, and on my
+> > > > system it's working perfectly.  When I stop accessing a drive
+> > > > it autosuspends, and when I access it again it gets resumed and
+> > > > works -- as you would expect.
+> > > 
+> > > that's weird. when I mount, everything looks good, "sda1". But as
+> > > soon as I cd to the mountpoint and do "ls" (on another SD card
+> > > "ls" works but actual file reading leads to the exact same
+> > > errors), I get:
+> > > 
+> > > [   77.474632] sd 0:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result:
+> > > hostbyte=0x00 driverbyte=0x08 cmd_age=0s
+> > > [   77.474647] sd 0:0:0:0: [sda] tag#0 Sense Key : 0x6 [current]
+> > > [   77.474655] sd 0:0:0:0: [sda] tag#0 ASC=0x28 ASCQ=0x0
+> > > [   77.474667] sd 0:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00
+> > > 00 60 40 00 00 01 00
+> > 
+> > This error report comes from the SCSI layer, not the block layer.
+> 
+> That sense code means "NOT READY TO READY CHANGE, MEDIUM MAY HAVE
+> CHANGED" so it sounds like it something we should be
+> ignoring.  Usually this signals a problem, like you changed the
+> medium manually (ejected the CD).  But in this case you can tell us
+> to expect this by setting
+> 
+> sdev->expecting_cc_ua
+> 
+> And we'll retry.  I think you need to set this on all resumed
+> devices.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
----
-no change.
----
- drivers/clk/imx/Kconfig            | 10 ++++++----
- drivers/clk/imx/Makefile           |  9 ++++-----
- drivers/clk/imx/clk-imx8qxp-lpcg.c |  4 ++++
- drivers/clk/imx/clk-imx8qxp.c      |  4 ++++
- 4 files changed, 18 insertions(+), 9 deletions(-)
+Actually, it's not quite that easy, we filter out this ASC/ASCQ
+combination from the check because we should never ignore medium might
+have changed events on running devices.  We could ignore it if we had a
+flag to say the power has been yanked (perhaps an additional sdev flag
+you set on resume) but we would still miss the case where you really
+had powered off the drive and then changed the media ... if you can
+regard this as the user's problem, then we might have a solution.
 
-diff --git a/drivers/clk/imx/Kconfig b/drivers/clk/imx/Kconfig
-index 3897712..e7defba 100644
---- a/drivers/clk/imx/Kconfig
-+++ b/drivers/clk/imx/Kconfig
-@@ -5,8 +5,9 @@ config MXC_CLK
- 	depends on ARCH_MXC || COMPILE_TEST
+James
  
- config MXC_CLK_SCU
--	bool
--	depends on IMX_SCU
-+	tristate "IMX SCU clock"
-+	depends on ARCH_MXC || COMPILE_TEST
-+	depends on IMX_SCU && HAVE_ARM_SMCCC
- 
- config CLK_IMX1
- 	def_bool SOC_IMX1
-@@ -97,8 +98,9 @@ config CLK_IMX8MQ
- 	    Build the driver for i.MX8MQ CCM Clock Driver
- 
- config CLK_IMX8QXP
--	bool "IMX8QXP SCU Clock"
--	depends on ARCH_MXC && IMX_SCU && ARM64
-+	tristate "IMX8QXP SCU Clock"
-+	depends on (ARCH_MXC && ARM64) || COMPILE_TEST
-+	depends on IMX_SCU && HAVE_ARM_SMCCC
- 	select MXC_CLK_SCU
- 	help
- 	  Build the driver for IMX8QXP SCU based clocks.
-diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-index 17f5d12..79e53f2 100644
---- a/drivers/clk/imx/Makefile
-+++ b/drivers/clk/imx/Makefile
-@@ -21,15 +21,14 @@ mxc-clk-objs += clk-pll14xx.o
- mxc-clk-objs += clk-sscg-pll.o
- obj-$(CONFIG_MXC_CLK) += mxc-clk.o
- 
--obj-$(CONFIG_MXC_CLK_SCU) += \
--	clk-scu.o \
--	clk-lpcg-scu.o
--
- obj-$(CONFIG_CLK_IMX8MM) += clk-imx8mm.o
- obj-$(CONFIG_CLK_IMX8MN) += clk-imx8mn.o
- obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o
- obj-$(CONFIG_CLK_IMX8MQ) += clk-imx8mq.o
--obj-$(CONFIG_CLK_IMX8QXP) += clk-imx8qxp.o clk-imx8qxp-lpcg.o
-+
-+obj-$(CONFIG_MXC_CLK_SCU) += clk-imx-scu.o clk-imx-lpcg-scu.o
-+clk-imx-scu-$(CONFIG_CLK_IMX8QXP) += clk-scu.o clk-imx8qxp.o
-+clk-imx-lpcg-scu-$(CONFIG_CLK_IMX8QXP) += clk-lpcg-scu.o clk-imx8qxp-lpcg.o
- 
- obj-$(CONFIG_CLK_IMX1)   += clk-imx1.o
- obj-$(CONFIG_CLK_IMX21)  += clk-imx21.o
-diff --git a/drivers/clk/imx/clk-imx8qxp-lpcg.c b/drivers/clk/imx/clk-imx8qxp-lpcg.c
-index 04c8ee3..e947a70 100644
---- a/drivers/clk/imx/clk-imx8qxp-lpcg.c
-+++ b/drivers/clk/imx/clk-imx8qxp-lpcg.c
-@@ -232,3 +232,7 @@ static struct platform_driver imx8qxp_lpcg_clk_driver = {
- };
- 
- builtin_platform_driver(imx8qxp_lpcg_clk_driver);
-+
-+MODULE_AUTHOR("Aisheng Dong <aisheng.dong@nxp.com>");
-+MODULE_DESCRIPTION("NXP i.MX8QXP LPCG clock driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/clk/imx/clk-imx8qxp.c b/drivers/clk/imx/clk-imx8qxp.c
-index 5e2903e..d650ca3 100644
---- a/drivers/clk/imx/clk-imx8qxp.c
-+++ b/drivers/clk/imx/clk-imx8qxp.c
-@@ -152,3 +152,7 @@ static struct platform_driver imx8qxp_clk_driver = {
- 	.probe = imx8qxp_clk_probe,
- };
- builtin_platform_driver(imx8qxp_clk_driver);
-+
-+MODULE_AUTHOR("Aisheng Dong <aisheng.dong@nxp.com>");
-+MODULE_DESCRIPTION("NXP i.MX8QXP clock driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
-
