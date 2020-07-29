@@ -2,141 +2,174 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8834AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4CC206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0692C2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:25:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ca6ABU1R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgG2UXU (ORCPT
+        id S1726820AbgG2UZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:23:20 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:47426 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbgG2UXT (ORCPT
+        Wed, 29 Jul 2020 16:25:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39016 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726476AbgG2UZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:23:19 -0400
-Received: by mail-il1-f199.google.com with SMTP id o2so17430082ilg.14
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:23:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=SFOYc9QJsN32c68HMrVfj1JqMrsQS93FcU4Q9C3mXf8=;
-        b=nJTOk8s9h5QOexva9aNjQqoqArCwBTOqxyomi5Hd91HhXq+U7Ge2LVBkI0wgNNo/Na
-         ciMhS47zE7FCyGrk9PsdWRI2HV6An+fuHL+MIpdtMJsHRfSyGJDsD1psmBhl47cVn95W
-         VI4SeevQCSotgTU2Lg2tFwX6h8nmmxa6D0W5BusFrPtiHEbmVe6GHifj5HaYOrbLdTgI
-         vGKCpUNYu3vzr1wXrxjtxY/gbK4O60jL8RpFt5/UDNdAo3y5EsG+imjHHh0zdgPiclcf
-         72cCNB0cpeyZKaVAszCBmN837xTvqCK3jcfBzTMQqBlSu4RRe2cdgGyyZJvpzloMvq1a
-         iWAA==
-X-Gm-Message-State: AOAM5320YPHcJJ4HuxzNDlz+H2g94KJStjYPTl8t5FjJdI5PycIUDgfv
-        hDA0HVMhiASkexmaQjdfCHH0KnCbAKf1DSnD4zcOpB01uJPX
-X-Google-Smtp-Source: ABdhPJxbV+cdUBH6DFzxJ+/nfvfsKrP4dUWI8e7yDBknNiQv0kletRB6o2eHPxypXYe1vaS1BKFPD++GJFnVefmIpp6fno3Rm1nt
+        Wed, 29 Jul 2020 16:25:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596054314;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NCZpvlTRYeKn2G2IpCrrj/S3gke7jRP5RvQ+owSSG9A=;
+        b=Ca6ABU1R9C70AarbV3y+iuoM6OUVPPR6mFvcpR/gFYww6F8dHIiEgMw6WR1qjLJdQy1nBr
+        mBvhY7aqALB+VvJz5oospbjDjHQd+E7UVyFveVhHyZ2LhCZHKkQB6kDOivFg3clUwD5XwZ
+        c2wNKV8vywP4t9JV9MDq/HwjAz1hGSc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-125-q_PLVkyGOsiYWaHlKxve7w-1; Wed, 29 Jul 2020 16:25:10 -0400
+X-MC-Unique: q_PLVkyGOsiYWaHlKxve7w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09D638017FB;
+        Wed, 29 Jul 2020 20:25:09 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 12A4B512FE;
+        Wed, 29 Jul 2020 20:25:07 +0000 (UTC)
+Date:   Wed, 29 Jul 2020 14:25:07 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] iommu: Add iommu_aux_get_domain_for_dev()
+Message-ID: <20200729142507.182cd18a@x1.home>
+In-Reply-To: <20200714055703.5510-4-baolu.lu@linux.intel.com>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+        <20200714055703.5510-4-baolu.lu@linux.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-X-Received: by 2002:a92:dc8c:: with SMTP id c12mr36077018iln.243.1596054198592;
- Wed, 29 Jul 2020 13:23:18 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 13:23:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008caae305ab9a5318@google.com>
-Subject: general protection fault in security_inode_getattr
-From:   syzbot <syzbot+f07cc9be8d1d226947ed@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, jmorris@namei.org, john.fastabend@gmail.com,
-        kafai@fb.com, kpsingh@chromium.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
-        serge@hallyn.com, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, 14 Jul 2020 13:57:02 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-syzbot found the following issue on:
+> The device driver needs an API to get its aux-domain. A typical usage
+> scenario is:
+> 
+>         unsigned long pasid;
+>         struct iommu_domain *domain;
+>         struct device *dev = mdev_dev(mdev);
+>         struct device *iommu_device = vfio_mdev_get_iommu_device(dev);
+> 
+>         domain = iommu_aux_get_domain_for_dev(dev);
+>         if (!domain)
+>                 return -ENODEV;
+> 
+>         pasid = iommu_aux_get_pasid(domain, iommu_device);
+>         if (pasid <= 0)
+>                 return -EINVAL;
+> 
+>          /* Program the device context */
+>          ....
+> 
+> This adds an API for such use case.
+> 
+> Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/iommu/iommu.c | 18 ++++++++++++++++++
+>  include/linux/iommu.h |  7 +++++++
+>  2 files changed, 25 insertions(+)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index cad5a19ebf22..434bf42b6b9b 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -2817,6 +2817,24 @@ void iommu_aux_detach_group(struct iommu_domain *domain,
+>  }
+>  EXPORT_SYMBOL_GPL(iommu_aux_detach_group);
+>  
+> +struct iommu_domain *iommu_aux_get_domain_for_dev(struct device *dev)
+> +{
+> +	struct iommu_domain *domain = NULL;
+> +	struct iommu_group *group;
+> +
+> +	group = iommu_group_get(dev);
+> +	if (!group)
+> +		return NULL;
+> +
+> +	if (group->aux_domain_attached)
+> +		domain = group->domain;
 
-HEAD commit:    92ed3019 Linux 5.8-rc7
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=140003ac900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=84f076779e989e69
-dashboard link: https://syzkaller.appspot.com/bug?extid=f07cc9be8d1d226947ed
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+Why wouldn't the aux domain flag be on the domain itself rather than
+the group?  Then if we wanted sanity checking in patch 1/ we'd only
+need to test the flag on the object we're provided.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+If we had such a flag, we could create an iommu_domain_is_aux()
+function and then simply use iommu_get_domain_for_dev() and test that
+it's an aux domain in the example use case.  It seems like that would
+resolve the jump from a domain to an aux-domain just as well as adding
+this separate iommu_aux_get_domain_for_dev() interface.  The is_aux
+test might also be useful in other cases too.  Thanks,
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f07cc9be8d1d226947ed@syzkaller.appspotmail.com
+Alex
 
-general protection fault, probably for non-canonical address 0xdffffc000000000c: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000060-0x0000000000000067]
-CPU: 0 PID: 9214 Comm: syz-executor.3 Not tainted 5.8.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:d_backing_inode include/linux/dcache.h:549 [inline]
-RIP: 0010:security_inode_getattr+0x46/0x140 security/security.c:1276
-Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 04 01 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b 5d 08 48 8d 7b 60 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 d7 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b
-RSP: 0018:ffffc9000d41f638 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffc9000f539000
-RDX: 000000000000000c RSI: ffffffff8354f8ee RDI: 0000000000000060
-RBP: ffffc9000d41f810 R08: 0000000000000001 R09: ffff88804edc2dc8
-R10: 0000000000000000 R11: 00000000000ebc58 R12: ffff888089f10170
-R13: ffffc9000d41f810 R14: 00000000000007ff R15: 0000000000000000
-FS:  00007f3599717700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2c12c000 CR3: 0000000099919000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- vfs_getattr+0x22/0x60 fs/stat.c:121
- ovl_copy_up_one+0x13b/0x1870 fs/overlayfs/copy_up.c:850
- ovl_copy_up_flags+0x14b/0x1d0 fs/overlayfs/copy_up.c:931
- ovl_maybe_copy_up+0x140/0x190 fs/overlayfs/copy_up.c:963
- ovl_open+0xba/0x270 fs/overlayfs/file.c:147
- do_dentry_open+0x501/0x1290 fs/open.c:828
- do_open fs/namei.c:3243 [inline]
- path_openat+0x1bb9/0x2750 fs/namei.c:3360
- do_filp_open+0x17e/0x3c0 fs/namei.c:3387
- file_open_name+0x290/0x400 fs/open.c:1124
- acct_on+0x78/0x770 kernel/acct.c:207
- __do_sys_acct kernel/acct.c:286 [inline]
- __se_sys_acct kernel/acct.c:273 [inline]
- __x64_sys_acct+0xab/0x1f0 kernel/acct.c:273
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c369
-Code: 8d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f3599716c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a3
-RAX: ffffffffffffffda RBX: 0000000000000700 RCX: 000000000045c369
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000440
-RBP: 000000000078bf30 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
-R13: 00007ffda41ffbef R14: 00007f35997179c0 R15: 000000000078bf0c
-Modules linked in:
----[ end trace d1398a63985d3915 ]---
-RIP: 0010:d_backing_inode include/linux/dcache.h:549 [inline]
-RIP: 0010:security_inode_getattr+0x46/0x140 security/security.c:1276
-Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 04 01 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b 5d 08 48 8d 7b 60 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 d7 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b
-RSP: 0018:ffffc9000d41f638 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffc9000f539000
-RDX: 000000000000000c RSI: ffffffff8354f8ee RDI: 0000000000000060
-RBP: ffffc9000d41f810 R08: 0000000000000001 R09: ffff88804edc2dc8
-R10: 0000000000000000 R11: 00000000000ebc58 R12: ffff888089f10170
-R13: ffffc9000d41f810 R14: 00000000000007ff R15: 0000000000000000
-FS:  00007f3599717700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000440 CR3: 0000000099919000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> +
+> +	iommu_group_put(group);
+> +
+> +	return domain;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_aux_get_domain_for_dev);
+> +
+>  /**
+>   * iommu_sva_bind_device() - Bind a process address space to a device
+>   * @dev: the device
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 9506551139ab..cda6cef7579e 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -639,6 +639,7 @@ int iommu_aux_attach_group(struct iommu_domain *domain,
+>  			   struct iommu_group *group, struct device *dev);
+>  void iommu_aux_detach_group(struct iommu_domain *domain,
+>  			   struct iommu_group *group, struct device *dev);
+> +struct iommu_domain *iommu_aux_get_domain_for_dev(struct device *dev);
+>  
+>  struct iommu_sva *iommu_sva_bind_device(struct device *dev,
+>  					struct mm_struct *mm,
+> @@ -1040,6 +1041,12 @@ iommu_aux_detach_group(struct iommu_domain *domain,
+>  {
+>  }
+>  
+> +static inline struct iommu_domain *
+> +iommu_aux_get_domain_for_dev(struct device *dev)
+> +{
+> +	return NULL;
+> +}
+> +
+>  static inline struct iommu_sva *
+>  iommu_sva_bind_device(struct device *dev, struct mm_struct *mm, void *drvdata)
+>  {
 
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
