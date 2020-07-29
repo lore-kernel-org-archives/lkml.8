@@ -2,185 +2,100 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85020C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9BBC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5471D207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D55207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:44:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FS6h71u5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgG2Pnb (ORCPT
+        id S1726884AbgG2PoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:43:31 -0400
-Received: from mga17.intel.com ([192.55.52.151]:13603 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726385AbgG2Pnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:43:31 -0400
-IronPort-SDR: jV++8P81WKSBHh6HivO1ISI4wy7UJb9FQPqK6qWf1QV2ind6JPAlfyfwIYOMzWN6wgnw+PzU1x
- J5iuVf9C53HQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="131506505"
-X-IronPort-AV: E=Sophos;i="5.75,410,1589266800"; 
-   d="scan'208";a="131506505"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 08:43:29 -0700
-IronPort-SDR: 4tiCkFH6jrL3naXMpZNC6yZ2li25w2kDxZDy+RU4W+F4CylMRZ4uwwrNvtgXnTIu/dxfMkx6ze
- p/yfMlTdzFQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,410,1589266800"; 
-   d="scan'208";a="290571942"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga006.jf.intel.com with ESMTP; 29 Jul 2020 08:43:28 -0700
-Date:   Wed, 29 Jul 2020 08:43:28 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 3/4] KVM: SVM: Add GHCB Accessor functions
-Message-ID: <20200729154328.GC27751@linux.intel.com>
-References: <20200729132234.2346-1-joro@8bytes.org>
- <20200729132234.2346-4-joro@8bytes.org>
+        Wed, 29 Jul 2020 11:44:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbgG2PoI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 11:44:08 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3171DC0619D4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 08:44:08 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a15so22081805wrh.10
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 08:44:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Tuiwq6PL49LgBLJB2iEw3NbuM/jiIuCvykCzTBqHaAA=;
+        b=FS6h71u5nG4XhXmL0xBxzPU4diQE9Q2Zpew4j4jjY4WuGIDjtKoxp0YtFc9dj8HhrN
+         QoIgPpKfjk6Soe8qvPm3YZMHmP0SRtiDVUBnoEPPmjbqkI9eaiPuNt/hjt6di05vUfOj
+         sCR1Q+Lrnz+hYJ+ACuqXBgwWdmTWTgDb8jShGJDuuAF6oWFDJBEwaPu3N+lSLavKpMJI
+         29f8AjvI6+LmYSO7I4uhSysBwYF1Nk/2NZxQBDu1FlJks0amxkSRjc7F3JevXv/D5pXZ
+         s4l4bvNHDcNxZI+w6gMwVDs97ktovsnGTXTJNs3L8UEMeLVlKNSVmZrpDZdxnQqHDG74
+         pmEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Tuiwq6PL49LgBLJB2iEw3NbuM/jiIuCvykCzTBqHaAA=;
+        b=WqFICaR98n/UjhgR5ZNGMXD4lulBt8vxgz3QbuMuD7luey5pyyR0cmlRZslEdOFKrk
+         sQW6991EFQNy2/yHdfC3/plMX9pX0bX3lGVq8vHS23Owph1y2oL+fgOZT5HEoEvYaXpL
+         TSIzeaQsPYR6KNqMkvJ7yjkYH7Gsf6/ewTXlbkTuaeHvhF6X4u52RT9xvIyjjhhlOA8n
+         pM8uXsXPa125jo8EMoS72tBAwdIBleMpK/8QdsJTlw/vR4UT9OQNlPHUnJug14oNvrH/
+         z6E61uFWqKQjMysW56Q0Fj2ymIKJsKVxE6ftcGGenDmrnbUc0DcYupWE+wdTVqxfE6tS
+         WXcA==
+X-Gm-Message-State: AOAM533+hg74xK9yracOMNjyg9oB3Onv1L1iYBWxjUVqny0wCi4owplS
+        nLnj+HAKgzfR/KfDRA/1z0o8cPitiYOXQg==
+X-Google-Smtp-Source: ABdhPJyTMeEr287ehDzeTN6mcV+wNZneeb9TvFO04zB+QZ6QobJZHTZKK3fS+lbNnvjc9AqXgsXxZw==
+X-Received: by 2002:adf:ea4f:: with SMTP id j15mr30067384wrn.253.1596037446658;
+        Wed, 29 Jul 2020 08:44:06 -0700 (PDT)
+Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id a134sm6526030wmd.17.2020.07.29.08.44.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 08:44:06 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] clk: meson: axg-audio: fix tdmout sclk inverter
+Date:   Wed, 29 Jul 2020 17:43:56 +0200
+Message-Id: <20200729154359.1983085-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729132234.2346-4-joro@8bytes.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 03:22:33PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> Building a correct GHCB for the hypervisor requires setting valid bits
-> in the GHCB. Simplify that process by providing accessor functions to
-> set values and to update the valid bitmap.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/include/asm/svm.h | 61 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 61 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-> index 9a3e0b802716..0420250b008b 100644
-> --- a/arch/x86/include/asm/svm.h
-> +++ b/arch/x86/include/asm/svm.h
-> @@ -341,4 +341,65 @@ struct __attribute__ ((__packed__)) vmcb {
->  
->  #define SVM_CR0_SELECTIVE_MASK (X86_CR0_TS | X86_CR0_MP)
->  
-> +/* GHCB Accessor functions */
-> +
-> +#define DEFINE_GHCB_INDICES(field)					\
-> +	u16 idx = offsetof(struct vmcb_save_area, field) / 8;		\
+The patchset fixes a problem with TDMOUT sclk inverter found on the
+g12a and following SoCs.
 
-Using sizeof(u64) instead of '8' would be helpful here.
+On the the axg, a single bit was enough to drive the inverter. On
+the g12a a bit was added to, somehow, change how the clock is sampled.
+For the inverter to behave as intended, the new bit should be the
+inverse of the inverter bit at all time.
 
-> +	u16 byte_idx  = idx / 8;					\
-> +	u16 bit_idx   = idx % 8;					\
+Quite a lot of lines for a single bit ...
 
-Oof.  I love macro frameworks as much as the next person, but declaring
-local variables in a macro like this is nasty.
+Jerome Brunet (3):
+  clk: meson: add sclk-ws driver
+  clk: meson: axg-audio: separate axg and g12a regmap tables
+  clk: meson: axg-audio: fix g12a tdmout sclk inverter
 
-> +	BUILD_BUG_ON(byte_idx > ARRAY_SIZE(ghcb->save.valid_bitmap));
-> +
-> +#define GHCB_SET_VALID(ghcb, field)					\
-> +	{								\
-> +		DEFINE_GHCB_INDICES(field)				\
-> +		(ghcb)->save.valid_bitmap[byte_idx] |= BIT(bit_idx);	\
+ drivers/clk/meson/axg-audio.c | 214 +++++++++++++++++++++++++++++-----
+ drivers/clk/meson/clk-phase.c |  56 +++++++++
+ drivers/clk/meson/clk-phase.h |   6 +
+ 3 files changed, 246 insertions(+), 30 deletions(-)
 
-Rather than manually calculate the byte/bit indices just use __set_bit()
-and test_bit().  That will also solve the variable declaration issue.
+-- 
+2.25.4
 
-E.g.
-
-#define GHB_BITMAP_IDX(field)		\
-	(offsetof(struct vmcb_save_area, (field)) / sizeof(u64))
-
-#define GHCB_SET_VALID(ghcb, field)	\
-	__set_bit(GHCB_BITMAP_IDX(field), (unsigned long *)&ghcb->save.valid_bitmap)
-
-Or alternatively drop GHCB_SET_VALID() and just open code the two users.
-
-> +	}
-> +
-> +#define DEFINE_GHCB_SETTER(field)					\
-> +	static inline void						\
-> +	ghcb_set_##field(struct ghcb *ghcb, u64 value)			\
-> +	{								\
-> +		GHCB_SET_VALID(ghcb, field)				\
-> +		(ghcb)->save.field = value;				\
-
-
-The ghcb doesn't need to be wrapped in (), it's a parameter to a function.
-Same comment for the below usage.
-
-> +	}
-> +
-> +#define DEFINE_GHCB_ACCESSORS(field)					\
-> +	static inline bool ghcb_is_valid_##field(const struct ghcb *ghcb)	\
-
-I'd prefer to follow the naming of the arch reg accessors, i.e.
-
-	static inline bool ghcb_##field##_is_valid(...)
-
-to pair with
-
-	kvm_##lname##_read
-	kvm_##lname##_write
-
-And because ghcb_is_valid_rip() reads a bit weird, e.g. IMO is more likely
-to be read as "does the RIP in the GHCB hold a valid (canonical) value",
-versus ghcb_rip_is_valid() reading as "is RIP valid in the GHCB".
-
-> +	{								\
-> +		DEFINE_GHCB_INDICES(field)				\
-> +		return !!((ghcb)->save.valid_bitmap[byte_idx]		\
-> +						& BIT(bit_idx));	\
-> +	}								\
-> +									\
-> +	static inline void						\
-> +	ghcb_set_##field(struct ghcb *ghcb, u64 value)			\
-> +	{								\
-> +		GHCB_SET_VALID(ghcb, field)				\
-> +		(ghcb)->save.field = value;				\
-
-> +	}
-> +
-> +DEFINE_GHCB_ACCESSORS(cpl)
-> +DEFINE_GHCB_ACCESSORS(rip)
-> +DEFINE_GHCB_ACCESSORS(rsp)
-> +DEFINE_GHCB_ACCESSORS(rax)
-> +DEFINE_GHCB_ACCESSORS(rcx)
-> +DEFINE_GHCB_ACCESSORS(rdx)
-> +DEFINE_GHCB_ACCESSORS(rbx)
-> +DEFINE_GHCB_ACCESSORS(rbp)
-> +DEFINE_GHCB_ACCESSORS(rsi)
-> +DEFINE_GHCB_ACCESSORS(rdi)
-> +DEFINE_GHCB_ACCESSORS(r8)
-> +DEFINE_GHCB_ACCESSORS(r9)
-> +DEFINE_GHCB_ACCESSORS(r10)
-> +DEFINE_GHCB_ACCESSORS(r11)
-> +DEFINE_GHCB_ACCESSORS(r12)
-> +DEFINE_GHCB_ACCESSORS(r13)
-> +DEFINE_GHCB_ACCESSORS(r14)
-> +DEFINE_GHCB_ACCESSORS(r15)
-> +DEFINE_GHCB_ACCESSORS(sw_exit_code)
-> +DEFINE_GHCB_ACCESSORS(sw_exit_info_1)
-> +DEFINE_GHCB_ACCESSORS(sw_exit_info_2)
-> +DEFINE_GHCB_ACCESSORS(sw_scratch)
-> +DEFINE_GHCB_ACCESSORS(xcr0)
-> +
->  #endif
-> -- 
-> 2.17.1
-> 
