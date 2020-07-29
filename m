@@ -2,141 +2,874 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3832C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A975C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82BE522D2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595987468;
-	bh=HuNGtf+QiT3i3ZfjMR+UMTcddc9pCBYv+A5ANtBYJOo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=m/0oLWQhRj32NKfk0I5+gt7VWqD5Y9JZP/qVcCx7PQrfKAxkVdhOCAiybw2jZgdXw
-	 lbi1ALBZ6lnGE9nQz1dqEkEGttHIKFVLzGko0l0BHZQDJheqnp0ZxbvAdZhnF9Ep/v
-	 wzaMMEq3rUqLBMG5EA2sEUzGBL444glu93WvoWWs=
+	by mail.kernel.org (Postfix) with ESMTP id 1F6CC20672
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:56:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ir7mhZso"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730911AbgG2BvH (ORCPT
+        id S1730864AbgG2B4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 21:51:07 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40528 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730328AbgG2BvG (ORCPT
+        Tue, 28 Jul 2020 21:56:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730328AbgG2B4u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 21:51:06 -0400
-Received: by mail-io1-f67.google.com with SMTP id l17so22889925iok.7;
-        Tue, 28 Jul 2020 18:51:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7Q2EY9e3cTo0JOR4/27Xy901b/9YvW+sJJFfNc7uEPg=;
-        b=T4GWiig56pLW8HRB8E+TR3ocxiqsm1WaoeXUUQ8+uI/UyLPxyQB3vjyaiUhC9DB7xa
-         LhUwkWy2H9qKo2WIgv7na/AINlbG7G9EdIhd2/9ErSzEkqJqspDN6GO1Bm3KABh0FgzH
-         DNibqmUaHrGvwMzu3D31HckwtSquEqjNxLAYyivo0DUTw4gP/usEJbwuvPKdWFggm/xs
-         vUybXLRviwS3b+tVcpq5fOFuUBr3w9LwOALFs7HMvadauiZssrgXup9Wgw45mNSz+aR7
-         zgUxrMGd841ZohCCoIZa6JFZlhajT8p4GeiooTL85dwv+Y/OT+I/intVf6hq+MxbFu7Q
-         zHUg==
-X-Gm-Message-State: AOAM530PooXqtJpBRJzVKQr60hlgYj2xbUYFKP8BBP155reusPYcxGVl
-        bm+SSNK6YnkEjInzlb8k4Aw=
-X-Google-Smtp-Source: ABdhPJz1/m95VGzk/wgnRayACeeYLmHUXNGesxghAXu8giycAYZpIw2852f7wF/1ZHW9++qcPDTHZA==
-X-Received: by 2002:a02:4083:: with SMTP id n125mr35630122jaa.83.1595987465469;
-        Tue, 28 Jul 2020 18:51:05 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id c9sm341219ilm.57.2020.07.28.18.51.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 18:51:04 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 3B12240945; Wed, 29 Jul 2020 01:51:03 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     axboe@kernel.dk
-Cc:     bvanassche@acm.org, ming.lei@redhat.com, hch@infradead.org,
-        jack@suse.cz, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH] block: fix possible race on blk_get_queue()
-Date:   Wed, 29 Jul 2020 01:51:01 +0000
-Message-Id: <20200729015101.31534-1-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
+        Tue, 28 Jul 2020 21:56:50 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12296C061794;
+        Tue, 28 Jul 2020 18:56:50 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BGc9D35WTz9sSy;
+        Wed, 29 Jul 2020 11:56:47 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595987808;
+        bh=6O0uzyfc3uiPTTiR9UpsYgIH56RYos6QRR4MAVcQikA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ir7mhZsoMKW0G8nw3S0vK6JTE0R13FwVVAZDxrjEKivdZ7eJuGj96sT7HfUD5jY0r
+         fziPolLQvQqqxnyJqaa5FRbTnnCyWG3ylu/agBQdQdnMRPbQhePivqifOk7EaAZHf/
+         C41KuYb+QKZtctMzoVuqwj6kJ0B99q3lbciOwZFyaZ/onuN50/4fWq863H0O6HoPtH
+         TwzjAvI2o4Mxli51TR2pdhK/RE+EY1aInNuCdIUOcN+AJmF2XXGne+WnoRzL+6AjY9
+         EhUcnQPkoQNXDAAJHp8zf7kBcha7K5rDxnQDkRhYfc4k9gg7FmpGdMc8bRRorAqbcx
+         cVKX1ozEaOF2w==
+Date:   Wed, 29 Jul 2020 11:56:45 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: build failure after merge of the vfs tree
+Message-ID: <20200729115645.3fe3beec@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/ExN=r8j4_P/Kc+HG1hQ.HyR";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The queue can flip to dying after we check if it is dying,
-and then we call __blk_get_queue(). This is a purely
-theoretical race, but just fix it. We do this by
-Using the atomic kobject_get_unless_zero() first, and
-*then* check if the queue is dying *after*.
+--Sig_/ExN=r8j4_P/Kc+HG1hQ.HyR
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This issue was found while doing patch review on the
-recent blktrace fixes [0].
+Hi all,
 
-[0] https://lore.kernel.org/linux-block/20200415123434.GU11244@42.do-not-panic.com/
+After merging the vfs tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-Reported-by: Christoph Hellwig <hch@infradead.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
+In file included from <command-line>:
+In function 'signal_compat_build_tests',
+    inlined from 'sigaction_compat_abi' at arch/x86/kernel/signal_compat.c:=
+166:2:
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_980' declared with attribute error: BUILD_BUG_ON failed: sizeof(compat_sig=
+info_t) !=3D 128
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:37:2: note: in expansion of macro 'BUILD_BU=
+G_ON'
+   37 |  BUILD_BUG_ON(sizeof(compat_siginfo_t) !=3D 128);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_981' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_s=
+iginfo_t, _sifields) !=3D 3 * sizeof(int)
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:43:2: note: in expansion of macro 'BUILD_BU=
+G_ON'
+   43 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, _sifields) !=3D 3 * sizeof=
+(int));
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_993' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_s=
+iginfo_t, si_pid) !=3D 0xC
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:75:2: note: in expansion of macro 'BUILD_BU=
+G_ON'
+   75 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_pid) !=3D 0xC);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_994' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_s=
+iginfo_t, si_uid) !=3D 0x10
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:76:2: note: in expansion of macro 'BUILD_BU=
+G_ON'
+   76 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_uid) !=3D 0x10);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1001' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_tid) !=3D 0x0C
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:85:2: note: in expansion of macro 'BUILD_BU=
+G_ON'
+   85 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_tid)     !=3D 0x0C);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1002' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_overrun) !=3D 0x10
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:86:2: note: in expansion of macro 'BUILD_BU=
+G_ON'
+   86 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_overrun) !=3D 0x10);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1003' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_value) !=3D 0x14
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:87:2: note: in expansion of macro 'BUILD_BU=
+G_ON'
+   87 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_value)   !=3D 0x14);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1010' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_pid) !=3D 0x0C
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:96:2: note: in expansion of macro 'BUILD_BU=
+G_ON'
+   96 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_pid)   !=3D 0x0C);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1011' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_uid) !=3D 0x10
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:97:2: note: in expansion of macro 'BUILD_BU=
+G_ON'
+   97 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_uid)   !=3D 0x10);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1012' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_value) !=3D 0x14
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:98:2: note: in expansion of macro 'BUILD_BU=
+G_ON'
+   98 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_value) !=3D 0x14);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1021' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_pid) !=3D 0x0C
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:109:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  109 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_pid)    !=3D 0x0C);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1022' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_uid) !=3D 0x10
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:110:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  110 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_uid)    !=3D 0x10);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1023' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_status) !=3D 0x14
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:111:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  111 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_status) !=3D 0x14);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1024' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_utime) !=3D 0x18
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:112:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  112 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_utime)  !=3D 0x18);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1025' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_stime) !=3D 0x1C
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:113:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  113 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_stime)  !=3D 0x1C);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1027' declared with attribute error: BUILD_BUG_ON failed: 7*sizeof(int) !=
+=3D sizeof(((compat_siginfo_t *)0)->_sifields._sigchld_x32)
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:66:36: note: in expansion of macro 'BUILD_B=
+UG_ON'
+   66 | #define CHECK_CSI_SIZE(name, size) BUILD_BUG_ON(size !=3D sizeof(((=
+compat_siginfo_t *)0)->_sifields.name))
+      |                                    ^~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:117:2: note: in expansion of macro 'CHECK_C=
+SI_SIZE'
+  117 |  CHECK_CSI_SIZE  (_sigchld_x32, 7*sizeof(int));
+      |  ^~~~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1028' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, _sifields._sigchld_x32._utime) !=3D 0x18
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:119:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  119 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, _sifields._sigchld_x32._ut=
+ime)  !=3D 0x18);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1029' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, _sifields._sigchld_x32._stime) !=3D 0x20
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:120:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  120 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, _sifields._sigchld_x32._st=
+ime)  !=3D 0x20);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1034' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_addr) !=3D 0x0C
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:128:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  128 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_addr) !=3D 0x0C);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1036' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_addr_lsb) !=3D 0x10
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:131:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  131 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_addr_lsb) !=3D 0x10);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1039' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_lower) !=3D 0x14
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:135:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  135 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_lower) !=3D 0x14);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1040' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_upper) !=3D 0x18
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:136:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  136 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_upper) !=3D 0x18);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1042' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_pkey) !=3D 0x14
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:139:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  139 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_pkey) !=3D 0x14);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1048' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_band) !=3D 0x0C
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:147:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  147 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_band) !=3D 0x0C);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1049' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_fd) !=3D 0x10
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:148:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  148 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_fd)   !=3D 0x10);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1056' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_call_addr) !=3D 0x0C
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:157:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  157 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_call_addr) !=3D 0x0C);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1057' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_syscall) !=3D 0x10
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:158:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  158 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_syscall)   !=3D 0x10);
+      |  ^~~~~~~~~~~~
+include/linux/compiler_types.h:313:38: error: call to '__compiletime_assert=
+_1058' declared with attribute error: BUILD_BUG_ON failed: offsetof(compat_=
+siginfo_t, si_arch) !=3D 0x14
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+include/linux/compiler_types.h:294:4: note: in definition of macro '__compi=
+letime_assert'
+  294 |    prefix ## suffix();    \
+      |    ^~~~~~
+include/linux/compiler_types.h:313:2: note: in expansion of macro '_compile=
+time_assert'
+  313 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_a=
+ssert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_M=
+SG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+arch/x86/kernel/signal_compat.c:159:2: note: in expansion of macro 'BUILD_B=
+UG_ON'
+  159 |  BUILD_BUG_ON(offsetof(compat_siginfo_t, si_arch)      !=3D 0x14);
+      |  ^~~~~~~~~~~~
+kernel/trace/blktrace.c: In function 'blk_trace_ioctl':
+kernel/trace/blktrace.c:741:2: error: duplicate case value
+  741 |  case BLKTRACESETUP32:
+      |  ^~~~
+kernel/trace/blktrace.c:736:2: note: previously used here
+  736 |  case BLKTRACESETUP:
+      |  ^~~~
 
-This goes tested against blktest without finding a regression.
+Caused by commit
 
- block/blk-core.c | 14 ++++++++++----
- block/blk.h      |  5 +++--
- 2 files changed, 13 insertions(+), 6 deletions(-)
+  1ef5f0ad8784 ("compat: lift compat_s64 and compat_u64 to <linux/compat.h>=
+")
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index d9d632639bd1..febdd8e8d409 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -605,12 +605,18 @@ EXPORT_SYMBOL(blk_alloc_queue);
-  */
- bool blk_get_queue(struct request_queue *q)
- {
--	if (likely(!blk_queue_dying(q))) {
--		__blk_get_queue(q);
--		return true;
-+	struct kobject *obj;
-+
-+	obj = __blk_get_queue(q);
-+	if (!obj)
-+		return false;
-+
-+	if (unlikely(blk_queue_dying(q))) {
-+		blk_put_queue(q);
-+		return false;
- 	}
- 
--	return false;
-+	return true;
- }
- EXPORT_SYMBOL(blk_get_queue);
- 
-diff --git a/block/blk.h b/block/blk.h
-index 49e2928a1632..bdbc9b084d5b 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -39,9 +39,10 @@ blk_get_flush_queue(struct request_queue *q, struct blk_mq_ctx *ctx)
- 	return blk_mq_map_queue(q, REQ_OP_FLUSH, ctx)->fq;
- }
- 
--static inline void __blk_get_queue(struct request_queue *q)
-+static inline struct kobject * __must_check
-+__blk_get_queue(struct request_queue *q)
- {
--	kobject_get(&q->kobj);
-+	return kobject_get_unless_zero(&q->kobj);
- }
- 
- static inline bool
--- 
-2.27.0
+Missing CONFIG_ prefix on COMPAT_FOR_U64_ALIGNMENT in include/linux/compat.=
+h.
 
+I have used the vfs tree from next-20200728 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ExN=r8j4_P/Kc+HG1hQ.HyR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8g110ACgkQAVBC80lX
+0GzL5Qf/WdTxflvIixzFxUkk6rbJ4qaF485HpmlQyZ8WzDqHpDicFrjriyVxDOd3
+4LW13QpPva0Mbik+Ql5WX9lKQV67BIfTYafs3OwCzWO/sDHfCFx1HmfiL35OrEeA
+f+zFf32kBczSARSNvcpn05N2Din1ztejqTFLi0zd3OeCxkwVvA37QUpvI+7l3kJK
+5j92jikP7CsqYZ07vp3X3g38gTBlCD9nwF3xul7RJw8Gy4rLtlno0/0e7EoGS8oG
+MTbYMj+NULmVD88A4PRAGIp+5i1rvuqAQl8xmARISk+r6MypF/2cmq3sY7Mn4ovT
+O8TOeuKSTHvo6dsD335BQE+a37tqww==
+=sYzG
+-----END PGP SIGNATURE-----
+
+--Sig_/ExN=r8j4_P/Kc+HG1hQ.HyR--
