@@ -2,114 +2,109 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE41C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E267C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A666F20809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596056832;
-	bh=M/zi3Ba/rJ5poH34D/CQvvQgxq8zobEznQ2SvzhMlik=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=h+upPj+hMWwMap/ter5MSPp+zmxLveicX+YC7mvykMgsUPNuiwmnhurWpL4fSshzd
-	 Fdl1avRGQQtZVo/i84YPE/wv6GqsKaKTsQ00DVCdSCG5xmhR/gdQf4/MKkuf+n+1GO
-	 zKIAA3zo+4mxhlqI9e/9x/EQmX4hS6jmq/93HAYU=
+	by mail.kernel.org (Postfix) with ESMTP id D4333206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:09:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kyk5tFIQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgG2VHL (ORCPT
+        id S1726925AbgG2VJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 17:07:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgG2VHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 17:07:11 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        Wed, 29 Jul 2020 17:09:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgG2VJq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 17:09:46 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBDB8C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 14:09:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ldeactPP2MK53RYxP/W+cgHYIxH/k2Qar+sK5RkMayk=; b=Kyk5tFIQBUsugNqJFDyrrX6A9i
+        QrpTpj/seDaVNothU/mPzdCb4H78qVfvxVOg9vi+UXmCAteIEeUG7h4CnQvb0vole3qVXIztWbvGp
+        F2b07+7kC6xAUxJ4Cb8gQlm3+hT0+TTnGIn46aaUGb6e/OWGBJ9aLxZlQeyXWFEoKsLffa78zw9jE
+        w/OzAiXcuIBkjEaU+ArvkjjhSScm0INsZ8ZxNpsFWW5j3NEXgPyz7gSDhOH43F6hok8TsxsDWpyo/
+        Vyo+5upX3hLo3XRgv+t6g4Ec+uJfcKVRLO4Yc7r/ssRmrIvaxYsPrWIqtDSseWXY0ms0iCHMVgLfY
+        mBm9nDdg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0tKT-00027f-Sh; Wed, 29 Jul 2020 21:09:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECE8D206D4;
-        Wed, 29 Jul 2020 21:07:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596056830;
-        bh=M/zi3Ba/rJ5poH34D/CQvvQgxq8zobEznQ2SvzhMlik=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=o9KjevY6+Emau0YuzRccD1dHbz/j03rXBXUALm/KBHKG9XUgmdVX5PYD5am8msgca
-         wve3ZCS8VCY93WPI6BIuJODhNPK4rsfUSSarBB64rrzn8p7Zzi/xQAosENePHcsSKl
-         SxNhyWnWW48ncBAbJxiPRQ8JiOZtjr2ZJT3fNfv4=
-Date:   Wed, 29 Jul 2020 14:07:08 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Moshe Shemesh <moshe@mellanox.com>
-Cc:     Jacob Keller <jacob.e.keller@intel.com>,
-        Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
- devlink reload command
-Message-ID: <20200729140708.5f914c15@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <04f00024-758c-bc19-c187-49847c24a5a4@mellanox.com>
-References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
-        <1595847753-2234-2-git-send-email-moshe@mellanox.com>
-        <20200727175802.04890dd3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <20200728135808.GC2207@nanopsycho>
-        <464add44-3ab1-21b8-3dba-a88202350bb9@intel.com>
-        <20200728114458.762b5396@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <d6fbfedd-9022-ff67-23ed-418607beecc2@intel.com>
-        <20200728130653.7ce2f013@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <04f00024-758c-bc19-c187-49847c24a5a4@mellanox.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 757D230411F;
+        Wed, 29 Jul 2020 23:09:35 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 658482B60F0CB; Wed, 29 Jul 2020 23:09:35 +0200 (CEST)
+Date:   Wed, 29 Jul 2020 23:09:35 +0200
+From:   peterz@infradead.org
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Tony Luck <tony.luck@intel.com>, H Peter Anvin <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>, x86 <x86@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] x86/bus_lock: Enable bus lock detection
+Message-ID: <20200729210935.GE2655@hirez.programming.kicks-ass.net>
+References: <1595021700-68460-1-git-send-email-fenghua.yu@intel.com>
+ <20200729084947.GY119549@hirez.programming.kicks-ass.net>
+ <20200729204057.GB318595@otcwcpicx6.sc.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729204057.GB318595@otcwcpicx6.sc.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jul 2020 17:54:08 +0300 Moshe Shemesh wrote:
-> On 7/28/2020 11:06 PM, Jakub Kicinski wrote:
-> > On Tue, 28 Jul 2020 12:18:30 -0700 Jacob Keller wrote:  
-> >> On 7/28/2020 11:44 AM, Jakub Kicinski wrote:  
-> >>>  From user perspective what's important is what the reset achieves (and
-> >>> perhaps how destructive it is). We can define the reset levels as:
-> >>>
-> >>> $ devlink dev reload pci/0000:82:00.0 net-ns-respawn
-> >>> $ devlink dev reload pci/0000:82:00.0 driver-param-init
-> >>> $ devlink dev reload pci/0000:82:00.0 fw-activate
-> >>>
-> >>> combining should be possible when user wants multiple things to happen:
-> >>>
-> >>> $ devlink dev reload pci/0000:82:00.0 fw-activate driver-param-init  
-> >> Where today "driver-param-init" is the default behavior. But didn't we
-> >> just say that mlxsw also does the equivalent of fw-activate?  
-> > Actually the default should probably be the combination of
-> > driver-param-init and net-ns-respawn.  
+On Wed, Jul 29, 2020 at 08:40:57PM +0000, Fenghua Yu wrote:
+> On Wed, Jul 29, 2020 at 10:49:47AM +0200, peterz@infradead.org wrote:
+> > On Fri, Jul 17, 2020 at 02:35:00PM -0700, Fenghua Yu wrote:
+> > 
+> > > #DB for bus lock detect fixes all issues in #AC for split lock detect:
+> > > 1) It's architectural ... just need to look at one CPUID bit to know it
+> > >    exists
+> > > 2) The IA32_DEBUGCTL MSR, which reports bus lock in #DB, is per-thread.
+> > >    So each process or guest can have different behavior.
+> > 
+> > And it generates a whole new problem due to #DB being an IST, and
+
+> > we very much rely on #DB never recursing, which we carefully crafted by
+> > disallowing hardare breakpoints on noinstr code and clearing DR7 early.
+> > 
+> > But now it can... please keep the pieces.
 > 
-> What about the support of these combinations, one device needs to reset 
-> fw to apply the param init, while another device can apply param-init
-> without fw reset, but has to reload the driver for fw-reset.
-> 
-> So the support per driver will be a matrix of combinations ?
+> Can we disable Bus Lock Detection before handle it and re-enable it
+> after handle it? Will that resolve the recursion issue?
 
-Note that there is no driver reload in my examples, driver reload is
-likely not user's goal. Whatever the driver needs to reset to satisfy
-the goal is fair game IMO.
+Because WRMSR is cheap, right?
 
-It's already the case that some drivers reset FW for param init and some
-don't and nobody is complaining.
+You have to unconditionally {dis,en}able it on #DB entry/exit. Not only
+when it's a DR_BUS_LOCK, _always_. Then maybe. I'm too tired to think
+through the IST mess.
 
-We should treat constraints separate (in this set we have the live
-activation which is a constraint on the reload operation).
+IST's suck, they're horrible crap.
 
-> > My expectations would be that the driver must perform the lowest
-> > reset level possible that satisfies the requested functional change.
-> > IOW driver may do more, in fact it should be acceptable for the
-> > driver to always for a full HW reset (unless --live or other
-> > constraint is specified).  
-> 
-> OK, but some combinations may still not be valid for specific driver 
-> even if it tries lowest level possible.
+Suppose we get a #DB, then we get an NMI right before it does WRMSR, so
+BUS_LOCK is still on, then the NMI does a dodgy LOCK op, we die.
 
-Can you give an example?
+So that means, you get to disable it on every NMI-like exception too,
+but we happen to care about performance for those, you loose.
+
+
+Also, what happens if you have a hardware watchpoint on the instruction
+that causes DR_BUS_LOCK? Does that work as expected?
+
+
