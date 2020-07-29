@@ -2,101 +2,123 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CF9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEF9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8B820809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57D220809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:33:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="fnf7yXZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbgG2MdZ (ORCPT
+        id S1726799AbgG2Mdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:33:25 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:60012 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgG2MdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:33:25 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1k0lGm-0000oL-A6; Wed, 29 Jul 2020 22:33:17 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 29 Jul 2020 22:33:16 +1000
-Date:   Wed, 29 Jul 2020 22:33:16 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Waiman Long <longman@redhat.com>
-Subject: [PATCH 2/2] locking/qspinlock: Do not include atomic.h from
- qspinlock_types.h
-Message-ID: <20200729123316.GC7047@gondor.apana.org.au>
-References: <20200729210311.425d0e9b@canb.auug.org.au>
- <20200729114757.GA19388@gondor.apana.org.au>
- <20200729122807.GA7047@gondor.apana.org.au>
+        Wed, 29 Jul 2020 08:33:55 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.73]:48464 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726054AbgG2Mdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 08:33:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fudan.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
+        Message-ID:MIME-Version:Content-Type:Content-Disposition; bh=ckL
+        fjXtDlNzfBaiEh1n2WcNgMFoH6IBrBoFHbV5jBXk=; b=fnf7yXZz1XG1VNx8A0G
+        P4HxGvbRGReDWbincy2f3kynybLSC3IMgsbUHPjD/qfWHFxTL31NniB634/rzCCi
+        oEJjjyakdrtR8A+77LWS4LFdp2MkciXGICA9ZFGcnRgzXTrEQ4fTEc52rD+0BW3L
+        HPTtyfYhnRNJbCvS7krRiVQc=
+Received: from xin-virtual-machine (unknown [111.192.143.50])
+        by app2 (Coremail) with SMTP id XQUFCgDHzbmebCFfDJqTAg--.8049S3;
+        Wed, 29 Jul 2020 20:33:35 +0800 (CST)
+Date:   Wed, 29 Jul 2020 20:33:34 +0800
+From:   Xin Xiong <xiongx18@fudan.edu.cn>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     Xin Xiong <xiongx18@fudan.edu.cn>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, yuanxzhang@fudan.edu.cn
+Subject: [PATCH] net/mlx5e: fix bpf_prog refcnt leaks in mlx5e_alloc_rq
+Message-ID: <20200729123334.GA6766@xin-virtual-machine>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200729122807.GA7047@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CM-TRANSID: XQUFCgDHzbmebCFfDJqTAg--.8049S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF1DCFy8JF1rJw1rGr45KFg_yoW8WF4Upr
+        47X3sFyrZ5ta4UJw4DAaykXa4rKan0vF1kWr1avayfZr4DAan5Ar9Ygry7uF1UGFy8Gw12
+        qws2kws8AFn5C3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v
+        4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK67AK6ryUMxAIw28IcxkI7VAKI48JMx
+        C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+        wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+        vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
+        0xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+        v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUewIDDUUUU
+X-CM-SenderInfo: arytiiqsuqiimz6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch breaks a header loop involving qspinlock_types.h.
-The issue is that qspinlock_types.h includes atomic.h, which then
-eventually includes kernel.h which could lead back to the original
-file via spinlock_types.h.
+The function invokes bpf_prog_inc(), which increases the refcount of a
+bpf_prog object "rq->xdp_prog" if the object isn't NULL.
 
-As ATOMIC_INIT is now defined by linux/types.h, there is no longer
-any need to include atomic.h from qspinlock_types.h.  This also
-allows the CONFIG_PARAVIRT hack to be removed since it was trying
-to prevent exactly this loop.
+The refcount leak issues take place in two error handling paths. When
+mlx5_wq_ll_create() or mlx5_wq_cyc_create() fails, the function simply
+returns the error code and forgets to drop the refcount increased
+earlier, causing a refcount leak of "rq->xdp_prog".
 
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fix this issue by jumping to the error handling path err_rq_wq_destroy
+when either function fails.
 
-diff --git a/include/asm-generic/qspinlock.h b/include/asm-generic/qspinlock.h
-index 38ca14e79a86..4fe7fd0fe834 100644
---- a/include/asm-generic/qspinlock.h
-+++ b/include/asm-generic/qspinlock.h
-@@ -11,6 +11,7 @@
- #define __ASM_GENERIC_QSPINLOCK_H
+Signed-off-by: Xin Xiong <xiongx18@fudan.edu.cn>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index a836a02a2116..8e1b1ab416d8 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -419,7 +419,7 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
+ 		err = mlx5_wq_ll_create(mdev, &rqp->wq, rqc_wq, &rq->mpwqe.wq,
+ 					&rq->wq_ctrl);
+ 		if (err)
+-			return err;
++			goto err_rq_wq_destroy;
  
- #include <asm-generic/qspinlock_types.h>
-+#include <linux/atomic.h>
+ 		rq->mpwqe.wq.db = &rq->mpwqe.wq.db[MLX5_RCV_DBR];
  
- #ifndef queued_spin_is_locked
- /**
-diff --git a/include/asm-generic/qspinlock_types.h b/include/asm-generic/qspinlock_types.h
-index 56d1309d32f8..2fd1fb89ec36 100644
---- a/include/asm-generic/qspinlock_types.h
-+++ b/include/asm-generic/qspinlock_types.h
-@@ -9,15 +9,7 @@
- #ifndef __ASM_GENERIC_QSPINLOCK_TYPES_H
- #define __ASM_GENERIC_QSPINLOCK_TYPES_H
+@@ -470,7 +470,7 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
+ 		err = mlx5_wq_cyc_create(mdev, &rqp->wq, rqc_wq, &rq->wqe.wq,
+ 					 &rq->wq_ctrl);
+ 		if (err)
+-			return err;
++			goto err_rq_wq_destroy;
  
--/*
-- * Including atomic.h with PARAVIRT on will cause compilation errors because
-- * of recursive header file incluson via paravirt_types.h. So don't include
-- * it if PARAVIRT is on.
-- */
--#ifndef CONFIG_PARAVIRT
- #include <linux/types.h>
--#include <linux/atomic.h>
--#endif
+ 		rq->wqe.wq.db = &rq->wqe.wq.db[MLX5_RCV_DBR];
  
- typedef struct qspinlock {
- 	union {
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.25.1
+
