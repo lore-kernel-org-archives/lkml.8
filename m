@@ -2,147 +2,209 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDB5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88865C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 549ED2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A50A20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgG2ONc (ORCPT
+        id S1726939AbgG2OOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:13:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25944 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726449AbgG2ON2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:13:28 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06TE25Et133130;
-        Wed, 29 Jul 2020 10:13:13 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32jg248neb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 10:13:13 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06TE2IcL134462;
-        Wed, 29 Jul 2020 10:13:12 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32jg248nd0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 10:13:12 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06TE54n7014351;
-        Wed, 29 Jul 2020 14:13:10 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma05fra.de.ibm.com with ESMTP id 32gcqk34qk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 14:13:10 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06TEBgMf62128482
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jul 2020 14:11:42 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD224AE061;
-        Wed, 29 Jul 2020 14:13:07 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2B073AE056;
-        Wed, 29 Jul 2020 14:12:57 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.204.160])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 29 Jul 2020 14:12:57 +0000 (GMT)
-Date:   Wed, 29 Jul 2020 17:12:54 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Justin He <Justin.He@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Anshuman Khandual <Anshuman.Khandual@arm.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Wed, 29 Jul 2020 10:14:45 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52236 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726449AbgG2OOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 10:14:45 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 53FFB2D61C162CC64CB8;
+        Wed, 29 Jul 2020 22:14:42 +0800 (CST)
+Received: from [127.0.0.1] (10.174.176.220) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 29 Jul 2020
+ 22:14:33 +0800
+Subject: Re: [PATCH v10 4/5] arm64: kdump: fix kdump broken with ZONE_DMA
+ reintroduced
+To:     Catalin Marinas <catalin.marinas@arm.com>
+References: <20200703035816.31289-1-chenzhou10@huawei.com>
+ <20200703035816.31289-5-chenzhou10@huawei.com> <20200727173014.GL13938@gaia>
+ <dd40f6ee-d5bd-1798-e7d6-1fb8ae91dc8b@huawei.com>
+ <20200729115851.GC5524@gaia>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <dyoung@redhat.com>,
+        <bhe@redhat.com>, <will@kernel.org>, <james.morse@arm.com>,
+        <robh+dt@kernel.org>, <arnd@arndb.de>,
+        <John.P.donnelly@oracle.com>, <prabhakar.pkin@gmail.com>,
+        <nsaenzjulienne@suse.de>, <corbet@lwn.net>, <bhsharma@redhat.com>,
+        <horms@verge.net.au>, <guohanjun@huawei.com>,
+        <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
+        <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Ira Weiny <ira.weiny@intel.com>, Kaly Xin <Kaly.Xin@arm.com>
-Subject: Re: [RFC PATCH 0/6] decrease unnecessary gap due to pmem kmem
- alignment
-Message-ID: <20200729141254.GE3672596@linux.ibm.com>
-References: <20200729033424.2629-1-justin.he@arm.com>
- <D1981D47-61F1-42E9-A426-6FEF0EC310C8@redhat.com>
- <AM6PR08MB40690714A2E77A7128B2B2ADF7700@AM6PR08MB4069.eurprd08.prod.outlook.com>
- <20200729093150.GC3672596@linux.ibm.com>
- <e128f304-7d1d-c1eb-2def-fee7d105424f@redhat.com>
- <20200729130025.GD3672596@linux.ibm.com>
- <170d7861-4df8-ecaf-dbdd-9e9a4a832f8f@redhat.com>
+        <kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>
+From:   chenzhou <chenzhou10@huawei.com>
+Message-ID: <217004f5-dd8e-d04c-038b-c88b132d5495@huawei.com>
+Date:   Wed, 29 Jul 2020 22:14:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <170d7861-4df8-ecaf-dbdd-9e9a4a832f8f@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-29_07:2020-07-29,2020-07-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- mlxlogscore=550 phishscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 suspectscore=0 spamscore=0 adultscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007290091
+In-Reply-To: <20200729115851.GC5524@gaia>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.176.220]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 03:03:04PM +0200, David Hildenbrand wrote:
-> On 29.07.20 15:00, Mike Rapoport wrote:
-> > On Wed, Jul 29, 2020 at 11:35:20AM +0200, David Hildenbrand wrote:
-> >>>  
-> >>> There is still large gap with ARM64_64K_PAGES, though.
-> >>>
-> >>> As for SPARSEMEM without VMEMMAP, are there actual benefits to use it?
-> >>
-> >> I was asking myself the same question a while ago and didn't really find
-> >> a compelling one.
-> > 
-> > Memory overhead for VMEMMAP is larger, especially for arm64 that knows
-> > how to free empty parts of the memory map with "classic" SPARSEMEM.
-> 
-> You mean the hole punching within section memmap? (which is why their
-> pfn_valid() implementation is special)
+Hi Catalin,
 
-Yes, arm (both 32 and 64) do this. And for smaller systems with a few
-memory banks this is very reasonable to trade slight (if any) slowdown
-in pfn_valid() for several megs of memory.
- 
-> (I do wonder why that shouldn't work with VMEMMAP, or is it simply not
-> implemented?)
- 
-It's not implemented. There was a patch [1] recently to implement this. 
+On 2020/7/29 19:58, Catalin Marinas wrote:
+> Hi Chen,
+>
+> On Wed, Jul 29, 2020 at 11:52:39AM +0800, chenzhou wrote:
+>> On 2020/7/28 1:30, Catalin Marinas wrote:
+>>> Anyway, there are two series solving slightly different issues with
+>>> kdump reservations:
+>>>
+>>> 1. This series which relaxes the crashkernel= allocation to go anywhere
+>>>    in the accessible space while having a dedicated crashkernel=X,low
+>>>    option for ZONE_DMA.
+>>>
+>>> 2. Bhupesh's series [1] forcing crashkernel=X allocations only from
+>>>    ZONE_DMA.
+>>>
+>>> For RPi4 support, we limited ZONE_DMA allocations to the 1st GB.
+>>> Existing crashkernel= uses may no longer work, depending on where the
+>>> allocation falls. Option (2) above is a quick fix assuming that the
+>>> crashkernel reservation is small enough. What's a typical crashkernel
+>>> option here? That series is probably more prone to reservation failures.
+>>>
+>>> Option (1), i.e. this series, doesn't solve the problem raised by
+>>> Bhupesh unless one uses the crashkernel=X,low argument. It can actually
+>>> make it worse even for ZONE_DMA32 since the allocation can go above 4G
+>>> (assuming that we change the ZONE_DMA configuration to only limit it to
+>>> 1GB on RPi4).
+>>>
+>>> I'm more inclined to keep the crashkernel= behaviour to ZONE_DMA
+>>> allocations. If this is too small for typical kdump, we can look into
+>>> expanding ZONE_DMA to 4G on non-RPi4 hardware (we had patches on the
+>>> list). In addition, if Chen thinks allocations above 4G are still needed
+>>> or if RPi4 needs a sufficiently large crashkernel=, I'd rather have a
+>>> ",high" option to explicitly require such access.
+>> Thanks for your reply and exhaustive explanation.
+>>
+>> In our ARM servers, we need to to reserve a large chunk for kdump(512M
+>> or 1G), there is no enough low memory. So we proposed this patch
+>> series "support reserving crashkernel above 4G on arm64 kdump" In
+>> April 2019.
+> Trying to go through the discussions last year, hopefully things get
+> clearer.
+>
+> So prior to the ZONE_DMA change, you still couldn't reserve 1G in the
+> first 4GB? It shouldn't be sparsely populated during early boot.
+Yes, we prior to the ZONE_DMA change, you still couldn't reserve 1G/512M in the first 4GB.
+The memory reported by the bios may be splitted by some "reserved" entries.
+Like this:
+...
+2f126000-2fbfffff : reserved
+2fc00000-396affff : System RAM
+  30de8000-30de9fff : reserved
+  30dec000-30decfff : reserved
+  30df2000-30df2fff : reserved
+  30e20000-30e4ffff : reserved
+  39620000-3968ffff : reserved
+396b0000-3974ffff : reserved
+39750000-397affff : System RAM
+397b0000-398fffff : reserved
+39900000-3990ffff : System RAM
+  39900000-3990ffff : reserved
+...
+>
+>> I introduce parameters "crashkernel=X,[high,low]" as x86_64 does in earlier versions.
+>> Suggested by James, to simplify, we call reserve_crashkernel_low() at the beginning of
+>> reserve_crashkernel() and then relax the arm64_dma32_phys_limit if reserve_crashkernel_low()
+>> allocated something.
+>> That is, just the parameter "crashkernel=X,low" is ok and i deleted "crashkernel=X,high".
+> The problem I see is that with your patches we diverge from x86
+> behaviour (and the arm64 behaviour prior to the ZONE_DMA reduction) as
+> we now require that crashkernel=X,low is always passed if you want
+> something in ZONE_DMA (and you do want, otherwise the crashdump kernel
+> fails to boot).
+>
+> My main requirement is that crashkernel=X, without any suffix, still
+> works which I don't think is guaranteed with your patches (well,
+> ignoring RPi4 ZONE_DMA). Bhupesh's series is a quick fix but doesn't
+> solve your large allocation requirements (that may have worked prior to
+> the ZONE_DMA change).
+The main purpose of this series is to solve the large allocation requirements.
+Before the DMA_ZONE, both the original crashkernel=X and large allocation with my  patches
+work well.
 
-[1] https://lore.kernel.org/lkml/20200721073203.107862-1-liwei213@huawei.com/
+With the DMA_ZONE, both the original crashkernel=X and large allocation with my  patches
+may fail to boot. Both need to think about the DMA_ZONE.
 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
-> 
+>
+>> After the ZONE_DMA introduced in December 2019, the issue occurred as
+>> you said above. In fact, we didn't have RPi4 machine.
+> You don't even need to have a RPi4 machine, ZONE_DMA has been set to 1GB
+> unconditionally. And while we could move it back to 4GB on non-RPi4
+> hardware, I'd rather have a solution that fixes kdump for RPi4 as well.
+>
+>> Originally, i suggested to fix this based on this patch series and
+>> used the dedicated option.
+>>
+>> According to your clarify, for typical kdump, there are other
+>> solutions. In this case, "keep the crashkernel= behaviour to ZONE_DMA
+>> allocations" looks much better.
+>>
+>> How about like this:
+>> 1. For ZONE_DMA issue, use Bhupesh's solution, keep the crashkernel=
+>>    behaviour to ZONE_DMA allocations.
+>> 2. For this patch series, make the reserve_crashkernel_low() to
+>>    ZONE_DMA allocations.
+> So you mean rebasing your series on top of Bhupesh's? I guess you can
+> combine the two, I really don't care which way as long as we fix both
+> issues and agree on the crashkernel= semantics. I think with some tweaks
+> we can go with your series alone.
+>
+> IIUC from the x86 code (especially the part you #ifdef'ed out for
+> arm64), if ",low" is not passed (so just standard crashkernel=X), it
+> still allocates sufficient low memory for the swiotlb in ZONE_DMA. The
+> rest can go in a high region. Why can't we do something similar on
+> arm64? Of course, you can keep the ",low" argument for explicit
+> allocation but I don't want to mandate it.
+It is a good idea to combine the two.
 
--- 
-Sincerely yours,
-Mike.
+For parameter crashkernel=X, we do like this:
+1. allocate some low memory in ZONE_DMA(or ZONE_DMA32 if CONFIG_ZONE_DMA=n)
+2. allocate X size memory in a high region
+
+",low" argument can be used to specify the low memory.
+
+Do i understand correctly?
+>
+> So with an implicit ZONE_DMA allocation similar to the x86 one, we
+> probably don't need Bhupesh's series at all. In addition, we can limit
+> crashkernel= to the first 4G with a fall-back to high like x86 (not sure
+> if memblock_find_in_range() is guaranteed to search in ascending order).
+> I don't think we need an explicit ",high" annotation.
+>
+> So with the above, just a crashkernel=1G gives you at least 256MB in
+> ZONE_DMA followed by the rest anywhere, with a preference for
+> ZONE_DMA32. This way we can also keep the reserve_crashkernel_low()
+> mostly intact from x86 (less #ifdef's).
+>
+> Do I miss anything?
+Yes. We can let crashkernel=X  try to reserve low memory and fall back to use high memory
+if failing to find a low range.
+
+About the function reserve_crashkernel_low(), if we put it in arch/arm64, there is some common
+code with x86_64. Some suggestions about this?
+
+Thanks,
+Chen Zhou
+>
+
+
