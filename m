@@ -2,818 +2,126 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939A6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4ABC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB8B20809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51A120809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cpxF7bS0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZIAkcopr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgG2Rhk (ORCPT
+        id S1726842AbgG2RkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:37:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60626 "EHLO
+        Wed, 29 Jul 2020 13:40:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2Rhj (ORCPT
+        with ESMTP id S1726336AbgG2RkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 13:37:39 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B8D6C061794;
-        Wed, 29 Jul 2020 10:37:39 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id p1so12116245pls.4;
-        Wed, 29 Jul 2020 10:37:39 -0700 (PDT)
+        Wed, 29 Jul 2020 13:40:01 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01064C061794;
+        Wed, 29 Jul 2020 10:40:01 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id c16so8333007ils.8;
+        Wed, 29 Jul 2020 10:40:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5eAnZ1UU9TTkK/NZFZKIdLEciDhCiVS3t95cAckSx2Y=;
-        b=cpxF7bS0O3p6OWP4Ij321779Z/ekRzdJM6S0ofQs5S0TGuRz4KBV12NM7a7CZ8NJG9
-         g5rHGVqsqENgSrRgm60945voaFKhq6z9yEXn3TloepGpmgvVU2fllyfugJ8ZSE/jwtuK
-         +/mK1bHKQYUWSxX4J7T1WY04uuXP4Zue0HK5zF8Ep2oCv7Cq7Hb4Ri0ujSJjYnq2rS1s
-         sfV+9SB40580X3hJ+gHAvdYFGkMBKStSg31YszTORJt2R50zNkUywz1PskNfSzIUbiph
-         mCugezwCyitQPh0+H3igugIoIMmZn3ema+fVQkRfV2lQKz6N9/RNMWmq5QXWDzBT0Oc4
-         ljZA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=aEIYYq2kW/WiB6gUi4gfbO509LEn/L/Pyhh8ZaCEkmE=;
+        b=ZIAkcoprPEJ+NVIytPXW7aSmDNMFVtiigUDPl/ClKFR8KIIQsziLh0oVZ0wnHihULU
+         uXFjNq74e7qd8p4nRqlufhnQ+KV4/AnDIfG6PkEccPwwY53UWbBQdoKVHDbnlYm0x/zt
+         7g85MxLYVCd60/lbpRH2F1wAn8yCWMLdffq31MXEdjhEL95Y5uXMgJ8QNfLUm6QMcLK0
+         gTFcJh5phQAFCZbSYhfQx3ULbKrbPvIYdy8Q8W0XjxIxO9rs75F7+8Bjf9c4SdBjpjdY
+         VRqzj/RazUGauvupuwGUFHaVitpZT5dE8vtqXDkAJ/1m5e15P/awYrDdN2P3aNKb0Cjm
+         EhwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5eAnZ1UU9TTkK/NZFZKIdLEciDhCiVS3t95cAckSx2Y=;
-        b=J2r2JJNii1axM76hrcpwQFNOXWUHONjiujlPi5CB8XMjCxoBkhLvV3Vy59Q3Ri9SOm
-         eNVzanewKT7OU7DhW+khjJlbWZnbJaWoe+RSL4rHADHvWg2Dgj9TWGjodD2nTzb24hGl
-         ZJLEoFrqlPEAtf+EW/r/h3pF8CuEtQzByi1icq/OdiNgZN/swzCmRc+VIylWN4lQVkjv
-         oS84YNWbGo0Yg7M16K6WsxKOg9XdzmISvkcKo17HMy5cgP8JqilvhpmhRX6L34VEc4lr
-         smI/yxC3BhZiDXHUAOlRWVx1l32TeV06hrlKOC7MKw8FNr+yfHnDdLP5Zxq8etOcABRf
-         RTrg==
-X-Gm-Message-State: AOAM533fsb790PD5DROSKmAeH9s7WO7sdsNp5z4SlpaQ2ATEtNZyKDVf
-        0lEfE/a7020qyyXrqLvbFoE=
-X-Google-Smtp-Source: ABdhPJycgNPBL48WwKRPnRmszhOS3NOfzQgsDmJjIeDnCI4wRvbKQjWU5XOFKi3VuY+vWtvkSSWtBw==
-X-Received: by 2002:a17:902:b943:: with SMTP id h3mr29589133pls.38.1596044258747;
-        Wed, 29 Jul 2020 10:37:38 -0700 (PDT)
-Received: from localhost.localdomain ([131.107.160.194])
-        by smtp.gmail.com with ESMTPSA id t29sm3050549pfq.50.2020.07.29.10.37.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 10:37:38 -0700 (PDT)
-From:   Andres Beltran <lkmlabelt@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mikelley@microsoft.com, parri.andrea@gmail.com,
-        skarade@microsoft.com, Andres Beltran <lkmlabelt@gmail.com>
-Subject: [PATCH v2] hv_utils: Add validation for untrusted Hyper-V values
-Date:   Wed, 29 Jul 2020 13:37:35 -0400
-Message-Id: <20200729173735.38273-1-lkmlabelt@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=aEIYYq2kW/WiB6gUi4gfbO509LEn/L/Pyhh8ZaCEkmE=;
+        b=e5uFTRCq9gyjuZVhbmhfVdGPhIwi0kP+Wd5Kj+dBSAvg7o+WOovp5nR7pf8uG1FDQ+
+         fq0ATRZiVQdIQIktEk4wWvh1aKrSkLV2sronIREko+hZQ7aJ1k+JTQhK0+X69s8rvmSs
+         /wzuDp+jwH9t8+6PDvDWj35NV+LXTA2mDGF8WhyTtKTI1GYTghI6lcqkNHYzW+ILxgBi
+         cGHFQW7zK35sMcGl4kXNJePVPG/8RdeiyJ4cAI1aPAbwI1McEVtGR21/QNbm8M86Oluv
+         +4F1t/xl0bM7zJfFGz/TWAeUXlgjpC8PI7ZZ4n6ibvxazwbWJ+2qkW9wUA4YlOYHhqbm
+         /+Aw==
+X-Gm-Message-State: AOAM532wnusYvQ2O5QqKh8XEpdsMAxaUGCdgjMJfi0FhQeBLmfPf7U83
+        YrpHKYrdqO7rb7oi8SU16thjy193m6CoA713Qt0=
+X-Google-Smtp-Source: ABdhPJwlp3xYVIJRiw+Y130nbuhCK+JvFexj+zBfdC3ovRWCIz3H/lUQR0sXo63rj1TyhNei7XVXo1nGHy8fELiAB2A=
+X-Received: by 2002:a92:8946:: with SMTP id n67mr16523409ild.168.1596044400155;
+ Wed, 29 Jul 2020 10:40:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200729160942.28867-1-krzk@kernel.org> <20200729160942.28867-2-krzk@kernel.org>
+In-Reply-To: <20200729160942.28867-2-krzk@kernel.org>
+From:   Tomasz Figa <tomasz.figa@gmail.com>
+Date:   Wed, 29 Jul 2020 19:39:47 +0200
+Message-ID: <CA+Ln22E_VkAYz7cpE1TdVGj6AkjWOgyVm01gzSjMPs=JE8+qLw@mail.gmail.com>
+Subject: Re: [PATCH 1/7] clk: samsung: s3c64xx: Declare s3c64xx_clk_init() in
+ shared header
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Vincent Sanders <vince@simtec.co.uk>,
+        Simtec Linux Team <linux@simtec.co.uk>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        patches@opensource.cirrus.com,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org,
+        Sergio Prado <sergio.prado@e-labworks.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Cedric Roux <sed@free.fr>, Lihua Yao <ylhuajnu@outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For additional robustness in the face of Hyper-V errors or malicious
-behavior, validate all values that originate from packets that Hyper-V
-has sent to the guest in the host-to-guest ring buffer. Ensure that
-invalid values cannot cause indexing off the end of the icversion_data
-array in vmbus_prep_negotiate_resp().
+2020=E5=B9=B47=E6=9C=8829=E6=97=A5(=E6=B0=B4) 18:11 Krzysztof Kozlowski <kr=
+zk@kernel.org>:
+>
+> The s3c64xx_clk_init() is defined and used by clk-s3c64xx driver and
+> also used in mach-s3c64xx machine code.  Move the declaration to a
+> header to fix W=3D1 build warning:
+>
+>     drivers/clk/samsung/clk-s3c64xx.c:391:13: warning: no previous protot=
+ype for 's3c64xx_clk_init' [-Wmissing-prototypes]
+>       391 | void __init s3c64xx_clk_init(struct device_node *np, unsigned=
+ long xtal_f,
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  MAINTAINERS                       |  1 +
+>  arch/arm/mach-s3c64xx/common.c    |  1 +
+>  arch/arm/mach-s3c64xx/common.h    |  2 --
+>  drivers/clk/samsung/clk-s3c64xx.c |  1 +
+>  include/linux/clk/samsung.h       | 21 +++++++++++++++++++++
+>  5 files changed, 24 insertions(+), 2 deletions(-)
+>  create mode 100644 include/linux/clk/samsung.h
+>
 
-Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
----
-Changes in v2:
-	-Use ratelimited form of kernel logging to print error messages.
+Reviewed-by: Tomasz Figa <tomasz.figa@gmail.com>
 
- drivers/hv/channel_mgmt.c |  17 ++-
- drivers/hv/hv_fcopy.c     |  36 +++--
- drivers/hv/hv_kvp.c       | 122 +++++++++--------
- drivers/hv/hv_snapshot.c  |  89 +++++++------
- drivers/hv/hv_util.c      | 267 +++++++++++++++++++++++---------------
- include/linux/hyperv.h    |   9 +-
- 6 files changed, 332 insertions(+), 208 deletions(-)
-
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 591106cf58fc..ed29f0f10f04 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -202,8 +202,8 @@ static u16 hv_get_dev_type(const struct vmbus_channel *channel)
-  * Set up and fill in default negotiate response message.
-  * Mainly used by Hyper-V drivers.
-  */
--bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp,
--				u8 *buf, const int *fw_version, int fw_vercnt,
-+bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp, u8 *buf,
-+				u32 buflen, const int *fw_version, int fw_vercnt,
- 				const int *srv_version, int srv_vercnt,
- 				int *nego_fw_version, int *nego_srv_version)
- {
-@@ -216,9 +216,7 @@ bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp,
- 	struct icmsg_negotiate *negop;
- 
- 	icmsghdrp->icmsgsize = 0x10;
--	negop = (struct icmsg_negotiate *)&buf[
--		sizeof(struct vmbuspipe_hdr) +
--		sizeof(struct icmsg_hdr)];
-+	negop = (struct icmsg_negotiate *)&buf[ICMSG_HDR];
- 
- 	icframe_major = negop->icframe_vercnt;
- 	icframe_minor = 0;
-@@ -226,6 +224,15 @@ bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp,
- 	icmsg_major = negop->icmsg_vercnt;
- 	icmsg_minor = 0;
- 
-+	/* Validate negop packet */
-+	if (icframe_major > IC_VERSION_NEGOTIATION_MAX_VER_COUNT ||
-+	    icmsg_major > IC_VERSION_NEGOTIATION_MAX_VER_COUNT ||
-+	    ICMSG_NEGOTIATE_PKT_SIZE(icframe_major, icmsg_major) > buflen) {
-+		pr_err_ratelimited("Invalid icmsg negotiate - icframe_major: %u, icmsg_major: %u",
-+				   icframe_major, icmsg_major);
-+		goto fw_error;
-+	}
-+
- 	/*
- 	 * Select the framework version number we will
- 	 * support.
-diff --git a/drivers/hv/hv_fcopy.c b/drivers/hv/hv_fcopy.c
-index 5040d7e0cd9e..59ce85e00a02 100644
---- a/drivers/hv/hv_fcopy.c
-+++ b/drivers/hv/hv_fcopy.c
-@@ -235,15 +235,27 @@ void hv_fcopy_onchannelcallback(void *context)
- 	if (fcopy_transaction.state > HVUTIL_READY)
- 		return;
- 
--	vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 2, &recvlen,
--			 &requestid);
--	if (recvlen <= 0)
-+	if (vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 2, &recvlen, &requestid)) {
-+		pr_err_ratelimited("Fcopy request received. Could not read into recv buf\n");
- 		return;
-+	}
-+
-+	if (!recvlen)
-+		return;
-+
-+	/* Ensure recvlen is big enough to read header data */
-+	if (recvlen < ICMSG_HDR) {
-+		pr_err_ratelimited("Fcopy request received. Packet length too small: %d\n",
-+				   recvlen);
-+		return;
-+	}
- 
- 	icmsghdr = (struct icmsg_hdr *)&recv_buffer[
- 			sizeof(struct vmbuspipe_hdr)];
-+
- 	if (icmsghdr->icmsgtype == ICMSGTYPE_NEGOTIATE) {
--		if (vmbus_prep_negotiate_resp(icmsghdr, recv_buffer,
-+		if (vmbus_prep_negotiate_resp(icmsghdr,
-+				recv_buffer, recvlen,
- 				fw_versions, FW_VER_COUNT,
- 				fcopy_versions, FCOPY_VER_COUNT,
- 				NULL, &fcopy_srv_version)) {
-@@ -252,10 +264,14 @@ void hv_fcopy_onchannelcallback(void *context)
- 				fcopy_srv_version >> 16,
- 				fcopy_srv_version & 0xFFFF);
- 		}
--	} else {
--		fcopy_msg = (struct hv_fcopy_hdr *)&recv_buffer[
--				sizeof(struct vmbuspipe_hdr) +
--				sizeof(struct icmsg_hdr)];
-+	} else if (icmsghdr->icmsgtype == ICMSGTYPE_FCOPY) {
-+		/* Ensure recvlen is big enough to contain hv_fcopy_hdr */
-+		if (recvlen < ICMSG_HDR + sizeof(struct hv_fcopy_hdr)) {
-+			pr_err_ratelimited("Invalid Fcopy hdr. Packet length too small: %u\n",
-+					   recvlen);
-+			return;
-+		}
-+		fcopy_msg = (struct hv_fcopy_hdr *)&recv_buffer[ICMSG_HDR];
- 
- 		/*
- 		 * Stash away this global state for completing the
-@@ -280,6 +296,10 @@ void hv_fcopy_onchannelcallback(void *context)
- 		schedule_delayed_work(&fcopy_timeout_work,
- 				      HV_UTIL_TIMEOUT * HZ);
- 		return;
-+	} else {
-+		pr_err_ratelimited("Fcopy request received. Invalid msg type: %d\n",
-+				   icmsghdr->icmsgtype);
-+		return;
- 	}
- 	icmsghdr->icflags = ICMSGHDRFLAG_TRANSACTION | ICMSGHDRFLAG_RESPONSE;
- 	vmbus_sendpacket(channel, recv_buffer, recvlen, requestid,
-diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
-index e74b144b8f3d..46d171abb47d 100644
---- a/drivers/hv/hv_kvp.c
-+++ b/drivers/hv/hv_kvp.c
-@@ -662,71 +662,87 @@ void hv_kvp_onchannelcallback(void *context)
- 	if (kvp_transaction.state > HVUTIL_READY)
- 		return;
- 
--	vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 4, &recvlen,
--			 &requestid);
--
--	if (recvlen > 0) {
--		icmsghdrp = (struct icmsg_hdr *)&recv_buffer[
--			sizeof(struct vmbuspipe_hdr)];
--
--		if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
--			if (vmbus_prep_negotiate_resp(icmsghdrp,
--				 recv_buffer, fw_versions, FW_VER_COUNT,
--				 kvp_versions, KVP_VER_COUNT,
--				 NULL, &kvp_srv_version)) {
--				pr_info("KVP IC version %d.%d\n",
--					kvp_srv_version >> 16,
--					kvp_srv_version & 0xFFFF);
--			}
--		} else {
--			kvp_msg = (struct hv_kvp_msg *)&recv_buffer[
--				sizeof(struct vmbuspipe_hdr) +
--				sizeof(struct icmsg_hdr)];
-+	if (vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 4, &recvlen, &requestid)) {
-+		pr_err_ratelimited("KVP request received. Could not read into recv buf\n");
-+		return;
-+	}
- 
--			/*
--			 * Stash away this global state for completing the
--			 * transaction; note transactions are serialized.
--			 */
-+	if (!recvlen)
-+		return;
- 
--			kvp_transaction.recv_len = recvlen;
--			kvp_transaction.recv_req_id = requestid;
--			kvp_transaction.kvp_msg = kvp_msg;
-+	/* Ensure recvlen is big enough to read header data */
-+	if (recvlen < ICMSG_HDR) {
-+		pr_err_ratelimited("KVP request received. Packet length too small: %d\n",
-+				   recvlen);
-+		return;
-+	}
- 
--			if (kvp_transaction.state < HVUTIL_READY) {
--				/* Userspace is not registered yet */
--				kvp_respond_to_host(NULL, HV_E_FAIL);
--				return;
--			}
--			kvp_transaction.state = HVUTIL_HOSTMSG_RECEIVED;
-+	icmsghdrp = (struct icmsg_hdr *)&recv_buffer[sizeof(struct vmbuspipe_hdr)];
-+
-+	if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
-+		if (vmbus_prep_negotiate_resp(icmsghdrp,
-+				recv_buffer, recvlen,
-+				fw_versions, FW_VER_COUNT,
-+				kvp_versions, KVP_VER_COUNT,
-+				NULL, &kvp_srv_version)) {
-+			pr_info("KVP IC version %d.%d\n",
-+				kvp_srv_version >> 16,
-+				kvp_srv_version & 0xFFFF);
-+		}
-+	} else if (icmsghdrp->icmsgtype == ICMSGTYPE_KVPEXCHANGE) {
-+		/*
-+		 * recvlen is not checked against sizeof(struct kvp_msg) because kvp_msg contains
-+		 * a union of structs and the msg type received is not known. Code using this
-+		 * struct should provide validation when accessing its fields.
-+		 */
-+		kvp_msg = (struct hv_kvp_msg *)&recv_buffer[ICMSG_HDR];
- 
--			/*
--			 * Get the information from the
--			 * user-mode component.
--			 * component. This transaction will be
--			 * completed when we get the value from
--			 * the user-mode component.
--			 * Set a timeout to deal with
--			 * user-mode not responding.
--			 */
--			schedule_work(&kvp_sendkey_work);
--			schedule_delayed_work(&kvp_timeout_work,
--					      HV_UTIL_TIMEOUT * HZ);
-+		/*
-+		 * Stash away this global state for completing the
-+		 * transaction; note transactions are serialized.
-+		 */
- 
--			return;
-+		kvp_transaction.recv_len = recvlen;
-+		kvp_transaction.recv_req_id = requestid;
-+		kvp_transaction.kvp_msg = kvp_msg;
- 
-+		if (kvp_transaction.state < HVUTIL_READY) {
-+			/* Userspace is not registered yet */
-+			kvp_respond_to_host(NULL, HV_E_FAIL);
-+			return;
- 		}
-+		kvp_transaction.state = HVUTIL_HOSTMSG_RECEIVED;
- 
--		icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
--			| ICMSGHDRFLAG_RESPONSE;
-+		/*
-+		 * Get the information from the
-+		 * user-mode component.
-+		 * component. This transaction will be
-+		 * completed when we get the value from
-+		 * the user-mode component.
-+		 * Set a timeout to deal with
-+		 * user-mode not responding.
-+		 */
-+		schedule_work(&kvp_sendkey_work);
-+		schedule_delayed_work(&kvp_timeout_work,
-+					HV_UTIL_TIMEOUT * HZ);
- 
--		vmbus_sendpacket(channel, recv_buffer,
--				       recvlen, requestid,
--				       VM_PKT_DATA_INBAND, 0);
-+		return;
- 
--		host_negotiatied = NEGO_FINISHED;
--		hv_poll_channel(kvp_transaction.recv_channel, kvp_poll_wrapper);
-+	} else {
-+		pr_err_ratelimited("KVP request received. Invalid msg type: %d\n",
-+				   icmsghdrp->icmsgtype);
-+		return;
- 	}
- 
-+	icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
-+		| ICMSGHDRFLAG_RESPONSE;
-+
-+	vmbus_sendpacket(channel, recv_buffer,
-+			 recvlen, requestid,
-+			 VM_PKT_DATA_INBAND, 0);
-+
-+	host_negotiatied = NEGO_FINISHED;
-+	hv_poll_channel(kvp_transaction.recv_channel, kvp_poll_wrapper);
- }
- 
- static void kvp_on_reset(void)
-diff --git a/drivers/hv/hv_snapshot.c b/drivers/hv/hv_snapshot.c
-index 783779e4cc1a..2267bd4c3472 100644
---- a/drivers/hv/hv_snapshot.c
-+++ b/drivers/hv/hv_snapshot.c
-@@ -298,49 +298,64 @@ void hv_vss_onchannelcallback(void *context)
- 	if (vss_transaction.state > HVUTIL_READY)
- 		return;
- 
--	vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 2, &recvlen,
--			 &requestid);
--
--	if (recvlen > 0) {
--		icmsghdrp = (struct icmsg_hdr *)&recv_buffer[
--			sizeof(struct vmbuspipe_hdr)];
--
--		if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
--			if (vmbus_prep_negotiate_resp(icmsghdrp,
--				 recv_buffer, fw_versions, FW_VER_COUNT,
--				 vss_versions, VSS_VER_COUNT,
--				 NULL, &vss_srv_version)) {
--
--				pr_info("VSS IC version %d.%d\n",
--					vss_srv_version >> 16,
--					vss_srv_version & 0xFFFF);
--			}
--		} else {
--			vss_msg = (struct hv_vss_msg *)&recv_buffer[
--				sizeof(struct vmbuspipe_hdr) +
--				sizeof(struct icmsg_hdr)];
--
--			/*
--			 * Stash away this global state for completing the
--			 * transaction; note transactions are serialized.
--			 */
--
--			vss_transaction.recv_len = recvlen;
--			vss_transaction.recv_req_id = requestid;
--			vss_transaction.msg = (struct hv_vss_msg *)vss_msg;
--
--			schedule_work(&vss_handle_request_work);
-+	if (vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 2, &recvlen, &requestid)) {
-+		pr_err_ratelimited("VSS request received. Could not read into recv buf\n");
-+		return;
-+	}
-+
-+	if (!recvlen)
-+		return;
-+
-+	/* Ensure recvlen is big enough to read header data */
-+	if (recvlen < ICMSG_HDR) {
-+		pr_err_ratelimited("VSS request received. Packet length too small: %d\n",
-+				   recvlen);
-+		return;
-+	}
-+
-+	icmsghdrp = (struct icmsg_hdr *)&recv_buffer[sizeof(struct vmbuspipe_hdr)];
-+
-+	if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
-+		if (vmbus_prep_negotiate_resp(icmsghdrp,
-+				recv_buffer, recvlen,
-+				fw_versions, FW_VER_COUNT,
-+				vss_versions, VSS_VER_COUNT,
-+				NULL, &vss_srv_version)) {
-+
-+			pr_info("VSS IC version %d.%d\n",
-+				vss_srv_version >> 16,
-+				vss_srv_version & 0xFFFF);
-+		}
-+	} else if (icmsghdrp->icmsgtype == ICMSGTYPE_VSS) {
-+		/* Ensure recvlen is big enough to contain hv_vss_msg */
-+		if (recvlen < ICMSG_HDR + sizeof(struct hv_vss_msg)) {
-+			pr_err_ratelimited("Invalid VSS msg. Packet length too small: %u\n",
-+					   recvlen);
- 			return;
- 		}
-+		vss_msg = (struct hv_vss_msg *)&recv_buffer[ICMSG_HDR];
-+
-+		/*
-+		 * Stash away this global state for completing the
-+		 * transaction; note transactions are serialized.
-+		 */
- 
--		icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
--			| ICMSGHDRFLAG_RESPONSE;
-+		vss_transaction.recv_len = recvlen;
-+		vss_transaction.recv_req_id = requestid;
-+		vss_transaction.msg = (struct hv_vss_msg *)vss_msg;
- 
--		vmbus_sendpacket(channel, recv_buffer,
--				       recvlen, requestid,
--				       VM_PKT_DATA_INBAND, 0);
-+		schedule_work(&vss_handle_request_work);
-+		return;
-+	} else {
-+		pr_err_ratelimited("VSS request received. Invalid msg type: %d\n",
-+				   icmsghdrp->icmsgtype);
-+		return;
- 	}
- 
-+	icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION |
-+		ICMSGHDRFLAG_RESPONSE;
-+	vmbus_sendpacket(channel, recv_buffer, recvlen, requestid,
-+			 VM_PKT_DATA_INBAND, 0);
- }
- 
- static void vss_on_reset(void)
-diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
-index 92ee0fe4c919..f78840b98fe6 100644
---- a/drivers/hv/hv_util.c
-+++ b/drivers/hv/hv_util.c
-@@ -195,73 +195,91 @@ static void shutdown_onchannelcallback(void *context)
- 
- 	struct icmsg_hdr *icmsghdrp;
- 
--	vmbus_recvpacket(channel, shut_txf_buf,
--			 HV_HYP_PAGE_SIZE, &recvlen, &requestid);
-+	if (vmbus_recvpacket(channel, shut_txf_buf, HV_HYP_PAGE_SIZE, &recvlen, &requestid)) {
-+		pr_err_ratelimited("Shutdown request received. Could not read into shut txf buf\n");
-+		return;
-+	}
- 
--	if (recvlen > 0) {
--		icmsghdrp = (struct icmsg_hdr *)&shut_txf_buf[
--			sizeof(struct vmbuspipe_hdr)];
-+	if (!recvlen)
-+		return;
- 
--		if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
--			if (vmbus_prep_negotiate_resp(icmsghdrp, shut_txf_buf,
--					fw_versions, FW_VER_COUNT,
--					sd_versions, SD_VER_COUNT,
--					NULL, &sd_srv_version)) {
--				pr_info("Shutdown IC version %d.%d\n",
--					sd_srv_version >> 16,
--					sd_srv_version & 0xFFFF);
--			}
--		} else {
--			shutdown_msg =
--				(struct shutdown_msg_data *)&shut_txf_buf[
--					sizeof(struct vmbuspipe_hdr) +
--					sizeof(struct icmsg_hdr)];
-+	/* Ensure recvlen is big enough to read header data */
-+	if (recvlen < ICMSG_HDR) {
-+		pr_err_ratelimited("Shutdown request received. Packet length too small: %d\n",
-+				   recvlen);
-+		return;
-+	}
- 
--			/*
--			 * shutdown_msg->flags can be 0(shut down), 2(reboot),
--			 * or 4(hibernate). It may bitwise-OR 1, which means
--			 * performing the request by force. Linux always tries
--			 * to perform the request by force.
--			 */
--			switch (shutdown_msg->flags) {
--			case 0:
--			case 1:
--				icmsghdrp->status = HV_S_OK;
--				work = &shutdown_work;
--				pr_info("Shutdown request received -"
--					    " graceful shutdown initiated\n");
--				break;
--			case 2:
--			case 3:
--				icmsghdrp->status = HV_S_OK;
--				work = &restart_work;
--				pr_info("Restart request received -"
--					    " graceful restart initiated\n");
--				break;
--			case 4:
--			case 5:
--				pr_info("Hibernation request received\n");
--				icmsghdrp->status = hibernation_supported ?
--					HV_S_OK : HV_E_FAIL;
--				if (hibernation_supported)
--					work = &hibernate_context.work;
--				break;
--			default:
--				icmsghdrp->status = HV_E_FAIL;
--				pr_info("Shutdown request received -"
--					    " Invalid request\n");
--				break;
--			}
-+	icmsghdrp = (struct icmsg_hdr *)&shut_txf_buf[sizeof(struct vmbuspipe_hdr)];
-+
-+	if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
-+		if (vmbus_prep_negotiate_resp(icmsghdrp,
-+				shut_txf_buf, recvlen,
-+				fw_versions, FW_VER_COUNT,
-+				sd_versions, SD_VER_COUNT,
-+				NULL, &sd_srv_version)) {
-+			pr_info("Shutdown IC version %d.%d\n",
-+				sd_srv_version >> 16,
-+				sd_srv_version & 0xFFFF);
-+		}
-+	} else if (icmsghdrp->icmsgtype == ICMSGTYPE_SHUTDOWN) {
-+		/* Ensure recvlen is big enough to contain shutdown_msg_data struct */
-+		if (recvlen < ICMSG_HDR + sizeof(struct shutdown_msg_data)) {
-+			pr_err_ratelimited("Invalid shutdown msg data. Packet length too small: %u\n",
-+					   recvlen);
-+			return;
- 		}
- 
--		icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
--			| ICMSGHDRFLAG_RESPONSE;
--
--		vmbus_sendpacket(channel, shut_txf_buf,
--				       recvlen, requestid,
--				       VM_PKT_DATA_INBAND, 0);
-+		shutdown_msg = (struct shutdown_msg_data *)&shut_txf_buf[ICMSG_HDR];
-+
-+		/*
-+		 * shutdown_msg->flags can be 0(shut down), 2(reboot),
-+		 * or 4(hibernate). It may bitwise-OR 1, which means
-+		 * performing the request by force. Linux always tries
-+		 * to perform the request by force.
-+		 */
-+		switch (shutdown_msg->flags) {
-+		case 0:
-+		case 1:
-+			icmsghdrp->status = HV_S_OK;
-+			work = &shutdown_work;
-+			pr_info("Shutdown request received -"
-+					" graceful shutdown initiated\n");
-+			break;
-+		case 2:
-+		case 3:
-+			icmsghdrp->status = HV_S_OK;
-+			work = &restart_work;
-+			pr_info("Restart request received -"
-+					" graceful restart initiated\n");
-+			break;
-+		case 4:
-+		case 5:
-+			pr_info("Hibernation request received\n");
-+			icmsghdrp->status = hibernation_supported ?
-+				HV_S_OK : HV_E_FAIL;
-+			if (hibernation_supported)
-+				work = &hibernate_context.work;
-+			break;
-+		default:
-+			icmsghdrp->status = HV_E_FAIL;
-+			pr_info("Shutdown request received -"
-+					" Invalid request\n");
-+			break;
-+		}
-+	} else {
-+		icmsghdrp->status = HV_E_FAIL;
-+		pr_err_ratelimited("Shutdown request received. Invalid msg type: %d\n",
-+				   icmsghdrp->icmsgtype);
- 	}
- 
-+	icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
-+		| ICMSGHDRFLAG_RESPONSE;
-+
-+	vmbus_sendpacket(channel, shut_txf_buf,
-+			 recvlen, requestid,
-+			 VM_PKT_DATA_INBAND, 0);
-+
- 	if (work)
- 		schedule_work(work);
- }
-@@ -361,50 +379,71 @@ static void timesync_onchannelcallback(void *context)
- 	struct ictimesync_ref_data *refdata;
- 	u8 *time_txf_buf = util_timesynch.recv_buffer;
- 
--	vmbus_recvpacket(channel, time_txf_buf,
--			 HV_HYP_PAGE_SIZE, &recvlen, &requestid);
-+	if (vmbus_recvpacket(channel, time_txf_buf, HV_HYP_PAGE_SIZE, &recvlen, &requestid)) {
-+		pr_err_ratelimited("Timesync request received. Could not read into time txf buf\n");
-+		return;
-+	}
- 
--	if (recvlen > 0) {
--		icmsghdrp = (struct icmsg_hdr *)&time_txf_buf[
--				sizeof(struct vmbuspipe_hdr)];
-+	if (!recvlen)
-+		return;
- 
--		if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
--			if (vmbus_prep_negotiate_resp(icmsghdrp, time_txf_buf,
--						fw_versions, FW_VER_COUNT,
--						ts_versions, TS_VER_COUNT,
--						NULL, &ts_srv_version)) {
--				pr_info("TimeSync IC version %d.%d\n",
--					ts_srv_version >> 16,
--					ts_srv_version & 0xFFFF);
-+	/* Ensure recvlen is big enough to read header data */
-+	if (recvlen < ICMSG_HDR) {
-+		pr_err_ratelimited("Timesync request received. Packet length too small: %d\n",
-+				   recvlen);
-+		return;
-+	}
-+
-+	icmsghdrp = (struct icmsg_hdr *)&time_txf_buf[sizeof(struct vmbuspipe_hdr)];
-+
-+	if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
-+		if (vmbus_prep_negotiate_resp(icmsghdrp,
-+					time_txf_buf, recvlen,
-+					fw_versions, FW_VER_COUNT,
-+					ts_versions, TS_VER_COUNT,
-+					NULL, &ts_srv_version)) {
-+			pr_info("TimeSync IC version %d.%d\n",
-+				ts_srv_version >> 16,
-+				ts_srv_version & 0xFFFF);
-+		}
-+	} else if (icmsghdrp->icmsgtype == ICMSGTYPE_TIMESYNC) {
-+		if (ts_srv_version > TS_VERSION_3) {
-+			/* Ensure recvlen is big enough to read ictimesync_ref_data */
-+			if (recvlen < ICMSG_HDR + sizeof(struct ictimesync_ref_data)) {
-+				pr_err_ratelimited("Invalid ictimesync ref data. Length too small: %u\n",
-+						   recvlen);
-+				return;
- 			}
-+			refdata = (struct ictimesync_ref_data *)&time_txf_buf[ICMSG_HDR];
-+
-+			adj_guesttime(refdata->parenttime,
-+					refdata->vmreferencetime,
-+					refdata->flags);
- 		} else {
--			if (ts_srv_version > TS_VERSION_3) {
--				refdata = (struct ictimesync_ref_data *)
--					&time_txf_buf[
--					sizeof(struct vmbuspipe_hdr) +
--					sizeof(struct icmsg_hdr)];
--
--				adj_guesttime(refdata->parenttime,
--						refdata->vmreferencetime,
--						refdata->flags);
--			} else {
--				timedatap = (struct ictimesync_data *)
--					&time_txf_buf[
--					sizeof(struct vmbuspipe_hdr) +
--					sizeof(struct icmsg_hdr)];
--				adj_guesttime(timedatap->parenttime,
--					      hv_read_reference_counter(),
--					      timedatap->flags);
-+			/* Ensure recvlen is big enough to read ictimesync_data */
-+			if (recvlen < ICMSG_HDR + sizeof(struct ictimesync_data)) {
-+				pr_err_ratelimited("Invalid ictimesync data. Length too small: %u\n",
-+						   recvlen);
-+				return;
- 			}
-+			timedatap = (struct ictimesync_data *)&time_txf_buf[ICMSG_HDR];
-+
-+			adj_guesttime(timedatap->parenttime,
-+					hv_read_reference_counter(),
-+					timedatap->flags);
- 		}
-+	} else {
-+		icmsghdrp->status = HV_E_FAIL;
-+		pr_err_ratelimited("Timesync request received. Invalid msg type: %d\n",
-+				   icmsghdrp->icmsgtype);
-+	}
- 
--		icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
--			| ICMSGHDRFLAG_RESPONSE;
-+	icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
-+		| ICMSGHDRFLAG_RESPONSE;
- 
--		vmbus_sendpacket(channel, time_txf_buf,
--				recvlen, requestid,
--				VM_PKT_DATA_INBAND, 0);
--	}
-+	vmbus_sendpacket(channel, time_txf_buf,
-+			 recvlen, requestid,
-+			 VM_PKT_DATA_INBAND, 0);
- }
- 
- /*
-@@ -423,18 +462,28 @@ static void heartbeat_onchannelcallback(void *context)
- 
- 	while (1) {
- 
--		vmbus_recvpacket(channel, hbeat_txf_buf,
--				 HV_HYP_PAGE_SIZE, &recvlen, &requestid);
-+		if (vmbus_recvpacket(channel, hbeat_txf_buf, HV_HYP_PAGE_SIZE,
-+				     &recvlen, &requestid)) {
-+			pr_err_ratelimited("Heartbeat request received. Could not read into hbeat txf buf\n");
-+			return;
-+		}
- 
- 		if (!recvlen)
- 			break;
- 
-+		/* Ensure recvlen is big enough to read header data */
-+		if (recvlen < ICMSG_HDR) {
-+			pr_err_ratelimited("Hearbeat request received. Packet length too small: %d\n",
-+					   recvlen);
-+			break;
-+		}
-+
- 		icmsghdrp = (struct icmsg_hdr *)&hbeat_txf_buf[
- 				sizeof(struct vmbuspipe_hdr)];
- 
- 		if (icmsghdrp->icmsgtype == ICMSGTYPE_NEGOTIATE) {
- 			if (vmbus_prep_negotiate_resp(icmsghdrp,
--					hbeat_txf_buf,
-+					hbeat_txf_buf, recvlen,
- 					fw_versions, FW_VER_COUNT,
- 					hb_versions, HB_VER_COUNT,
- 					NULL, &hb_srv_version)) {
-@@ -443,13 +492,23 @@ static void heartbeat_onchannelcallback(void *context)
- 					hb_srv_version >> 16,
- 					hb_srv_version & 0xFFFF);
- 			}
--		} else {
--			heartbeat_msg =
--				(struct heartbeat_msg_data *)&hbeat_txf_buf[
--					sizeof(struct vmbuspipe_hdr) +
--					sizeof(struct icmsg_hdr)];
-+		} else if (icmsghdrp->icmsgtype == ICMSGTYPE_HEARTBEAT) {
-+			/*
-+			 * Ensure recvlen is big enough to read seq_num. Reserved area is not
-+			 * included in the check as the host may not fill it up entirely
-+			 */
-+			if (recvlen < ICMSG_HDR + sizeof(u64)) {
-+				pr_err_ratelimited("Invalid heartbeat msg data. Length too small: %u\n",
-+						   recvlen);
-+				break;
-+			}
-+			heartbeat_msg = (struct heartbeat_msg_data *)&hbeat_txf_buf[ICMSG_HDR];
- 
- 			heartbeat_msg->seq_num += 1;
-+		} else {
-+			icmsghdrp->status = HV_E_FAIL;
-+			pr_err_ratelimited("Heartbeat request received. Invalid msg type: %d\n",
-+					   icmsghdrp->icmsgtype);
- 		}
- 
- 		icmsghdrp->icflags = ICMSGHDRFLAG_TRANSACTION
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index d8194924983d..3661eb2f765b 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -1422,6 +1422,7 @@ void vmbus_free_mmio(resource_size_t start, resource_size_t size);
- #define ICMSGTYPE_SHUTDOWN		3
- #define ICMSGTYPE_TIMESYNC		4
- #define ICMSGTYPE_VSS			5
-+#define ICMSGTYPE_FCOPY			7
- 
- #define ICMSGHDRFLAG_TRANSACTION	1
- #define ICMSGHDRFLAG_REQUEST		2
-@@ -1465,6 +1466,12 @@ struct icmsg_hdr {
- 	u8 reserved[2];
- } __packed;
- 
-+#define IC_VERSION_NEGOTIATION_MAX_VER_COUNT 100
-+#define ICMSG_HDR (sizeof(struct vmbuspipe_hdr) + sizeof(struct icmsg_hdr))
-+#define ICMSG_NEGOTIATE_PKT_SIZE(icframe_vercnt, icmsg_vercnt) \
-+	(ICMSG_HDR + offsetof(struct icmsg_negotiate, icversion_data) + \
-+	 (((icframe_vercnt) + (icmsg_vercnt)) * sizeof(struct ic_version)))
-+
- struct icmsg_negotiate {
- 	u16 icframe_vercnt;
- 	u16 icmsg_vercnt;
-@@ -1520,7 +1527,7 @@ struct hyperv_service_callback {
- };
- 
- #define MAX_SRV_VER	0x7ffffff
--extern bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp, u8 *buf,
-+extern bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp, u8 *buf, u32 buflen,
- 				const int *fw_version, int fw_vercnt,
- 				const int *srv_version, int srv_vercnt,
- 				int *nego_fw_version, int *nego_srv_version);
--- 
-2.25.1
-
+Best regards,
+Tomasz
