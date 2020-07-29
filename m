@@ -2,200 +2,111 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E09C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C423720809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA0F62082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eDRtY4ml"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="d5pNoGKh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgG2ScK (ORCPT
+        id S1727862AbgG2Sce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:32:10 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53266 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726615AbgG2ScJ (ORCPT
+        Wed, 29 Jul 2020 14:32:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgG2Scd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:32:09 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06TIW7nO047837;
-        Wed, 29 Jul 2020 13:32:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596047527;
-        bh=lX3YUGRzuVm8oDeQgN/vjtZzpThzGUcrfuK4gtuamHY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=eDRtY4mlNT6lzwjxe/xdXPvgLf+ko9uiKycWZzY4FLLWy3v32IMdedCas5Bwh3iq6
-         BaYjexrQdAsTKD4jRUBEVsB1UMf6B/1XrFs+fKoIh8ID4JDQY/EzkSTGJS5IrjJMhL
-         olqIPRkLOFbhkYJdBNV9azcFxYdkLD71oJJIXoz0=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06TIW71E044261
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Jul 2020 13:32:07 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
- Jul 2020 13:32:07 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 29 Jul 2020 13:32:06 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06TIW6Zs035973;
-        Wed, 29 Jul 2020 13:32:06 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <sre@kernel.org>, <afd@ti.com>, <pali@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh@kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v6 4/4] power: supply: bq27xxx_battery: Add the BQ28z610 Battery monitor
-Date:   Wed, 29 Jul 2020 13:31:45 -0500
-Message-ID: <20200729183145.6066-4-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200729183145.6066-1-dmurphy@ti.com>
-References: <20200729183145.6066-1-dmurphy@ti.com>
+        Wed, 29 Jul 2020 14:32:33 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF2DC061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:32:33 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id o22so18157295qtt.13
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:32:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=sbuGzfAXEu90/mb1KxvRVFNTEav+wJBHiGDp7KYLn/o=;
+        b=d5pNoGKhhZSJ1U2hnE2QgpyNRXyWdy5CzWssvK8e5m9UCWTFT3DivPdKlbrS8Lhroy
+         Q+Ory2dwx+5FMcg7WGADmy37Sw80SSCn2qGAfb13yHemobrCV+gw8VUpmnCGBjL4n05s
+         t9vW7n0M+ALckESz1KTapB8in/rEyUPPlhWZAQWW9L7UaLdOC/j006FGs35FQyfELq0l
+         sNyJUc3f1oWkgh26+VHo9fdtS3+R0gHjhwfo7g1dxsI9NCuf7/+gW7AmKLSVcVYQVnkv
+         wDCBysP/09LebzKqgezyGw9u5rd3sTnRHKdxfCgJxbKw+AikBNsNeN0ymqK+7U+NzQvO
+         UW5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=sbuGzfAXEu90/mb1KxvRVFNTEav+wJBHiGDp7KYLn/o=;
+        b=OST6jUDnK20TkUKVemvZa08453UHOt4k0ieFbdCIKIW2TenWv8rlIuLss/1Mw3kPsb
+         FxwwCLbAaabd53KlKS/2LuweFf+O86THgyB3xfAIG2VoYxZ3cWS92Ht+qdX03w59YAp8
+         6YvIt4nm5wTH5/Ktbzzy/I7l7SlMcx50NDR1VAlUEJATINSgj1g87V2lu1RjrnfaMo9e
+         vrWC8uvWChZS9WiSGQ0L/VOtuObd3Hf5nZSv9u2ndRMOsPCm4QuW9QPpOSgdxhP7KLGg
+         6u7aCioiBdXziYPC38VPOvReQtnLh0/sW2ke7zY/7uAUUf3KqRsp89g+YMkELFoebgUv
+         aP0A==
+X-Gm-Message-State: AOAM5334BMP1YAJQOE+ThmDa33dmr0qAB4Tec6LCMWrW/Fea7irQVLRo
+        CbuBayb2HkPFAa6khflixDZvYw==
+X-Google-Smtp-Source: ABdhPJzHnA3jlgx2Rkac90wfpWBQn+sE/m+x3vbkFuM/Hnpj8NhLqOoQ2DkMPjs2yAkNTunRkmfKaQ==
+X-Received: by 2002:ac8:478f:: with SMTP id k15mr32939604qtq.287.1596047552340;
+        Wed, 29 Jul 2020 11:32:32 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11e1::10a7? ([2620:10d:c091:480::1:2ed9])
+        by smtp.gmail.com with ESMTPSA id l64sm2118053qkc.21.2020.07.29.11.32.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 11:32:31 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        David Sterba <dsterba@suse.com>
+From:   Josef Bacik <josef@toxicpanda.com>
+Subject: Inverted mount options completely broken (iversion,relatime)
+Message-ID: <0b154b9b-728f-7d57-d4c5-ec25fc9dfdf3@toxicpanda.com>
+Date:   Wed, 29 Jul 2020 14:32:30 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the Texas Instruments BQ28z610 battery monitor.
-The register address map is laid out the same as compared to other
-devices within the file.
+Hello,
 
-The battery status register bits are similar to the bq27z561 but they
-are different compared to other fuel gauge devices within this file.
+Eric reported a problem to me where we were clearing SB_I_VERSION on remount of 
+a btrfs file system.  After digging through I discovered it's because we expect 
+the proper flags that we want to be passed in via the mount() syscall, and 
+because we didn't have "iversion" in our show_options entry the mount binary 
+(form util-linux) wasn't setting MS_I_VERSION for the remount, and thus the VFS 
+was clearing SB_I_VERSION from our s_flags.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/power/supply/bq27xxx_battery.c     | 42 ++++++++++++++++++++++
- drivers/power/supply/bq27xxx_battery_i2c.c |  2 ++
- include/linux/power/bq27xxx_battery.h      |  1 +
- 3 files changed, 45 insertions(+)
+No big deal, I'll fix show_mount.  Except Eric then noticed that mount -o 
+noiversion didn't do anything, we still get iversion set.  That's because btrfs 
+just defaults to having SB_I_VERSION set.  Furthermore -o noiversion doesn't get 
+sent into mount, it's handled by the mount binary itself, and it does this by 
+not having MS_I_VERSION set in the mount flags.
 
-diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-index a05b9a2d112d..a123f6e21f08 100644
---- a/drivers/power/supply/bq27xxx_battery.c
-+++ b/drivers/power/supply/bq27xxx_battery.c
-@@ -44,6 +44,7 @@
-  * https://www.ti.com/product/bq27441-g1
-  * https://www.ti.com/product/bq27621-g1
-  * https://www.ti.com/product/bq27z561
-+ * https://www.ti.com/product/bq28z610
-  */
- 
- #include <linux/device.h>
-@@ -462,6 +463,26 @@ static u8
- 		[BQ27XXX_REG_DCAP] = 0x3c,
- 		[BQ27XXX_REG_AP] = 0x22,
- 		BQ27XXX_DM_REG_ROWS,
-+	},
-+	bq28z610_regs[BQ27XXX_REG_MAX] = {
-+		[BQ27XXX_REG_CTRL] = 0x00,
-+		[BQ27XXX_REG_TEMP] = 0x06,
-+		[BQ27XXX_REG_INT_TEMP] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_VOLT] = 0x08,
-+		[BQ27XXX_REG_AI] = 0x14,
-+		[BQ27XXX_REG_FLAGS] = 0x0a,
-+		[BQ27XXX_REG_TTE] = 0x16,
-+		[BQ27XXX_REG_TTF] = 0x18,
-+		[BQ27XXX_REG_TTES] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_TTECP] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_NAC] = INVALID_REG_ADDR,
-+		[BQ27XXX_REG_FCC] = 0x12,
-+		[BQ27XXX_REG_CYCT] = 0x2a,
-+		[BQ27XXX_REG_AE] = 0x22,
-+		[BQ27XXX_REG_SOC] = 0x2c,
-+		[BQ27XXX_REG_DCAP] = 0x3c,
-+		[BQ27XXX_REG_AP] = 0x22,
-+		BQ27XXX_DM_REG_ROWS,
- 	};
- 
- static enum power_supply_property bq27000_props[] = {
-@@ -717,6 +738,25 @@ static enum power_supply_property bq27z561_props[] = {
- 	POWER_SUPPLY_PROP_MANUFACTURER,
- };
- 
-+static enum power_supply_property bq28z610_props[] = {
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_PRESENT,
-+	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
-+	POWER_SUPPLY_PROP_CAPACITY,
-+	POWER_SUPPLY_PROP_CAPACITY_LEVEL,
-+	POWER_SUPPLY_PROP_TEMP,
-+	POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW,
-+	POWER_SUPPLY_PROP_TIME_TO_FULL_NOW,
-+	POWER_SUPPLY_PROP_TECHNOLOGY,
-+	POWER_SUPPLY_PROP_CHARGE_FULL,
-+	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
-+	POWER_SUPPLY_PROP_CYCLE_COUNT,
-+	POWER_SUPPLY_PROP_POWER_AVG,
-+	POWER_SUPPLY_PROP_HEALTH,
-+	POWER_SUPPLY_PROP_MANUFACTURER,
-+};
-+
- struct bq27xxx_dm_reg {
- 	u8 subclass_id;
- 	u8 offset;
-@@ -813,6 +853,7 @@ static struct bq27xxx_dm_reg bq27621_dm_regs[] = {
- #endif
- 
- #define bq27z561_dm_regs 0
-+#define bq28z610_dm_regs 0
- 
- #define BQ27XXX_O_ZERO	0x00000001
- #define BQ27XXX_O_OTDC	0x00000002 /* has OTC/OTD overtemperature flags */
-@@ -865,6 +906,7 @@ static struct {
- 	[BQ27441]   = BQ27XXX_DATA(bq27441,   0x80008000, BQ27XXX_O_UTOT | BQ27XXX_O_CFGUP | BQ27XXX_O_RAM),
- 	[BQ27621]   = BQ27XXX_DATA(bq27621,   0x80008000, BQ27XXX_O_UTOT | BQ27XXX_O_CFGUP | BQ27XXX_O_RAM),
- 	[BQ27Z561]  = BQ27XXX_DATA(bq27z561,  0         , BQ27Z561_O_BITS),
-+	[BQ28Z610]  = BQ27XXX_DATA(bq28z610,  0         , BQ27Z561_O_BITS),
- };
- 
- static DEFINE_MUTEX(bq27xxx_list_lock);
-diff --git a/drivers/power/supply/bq27xxx_battery_i2c.c b/drivers/power/supply/bq27xxx_battery_i2c.c
-index 15f4e75786ab..ab02456d69e5 100644
---- a/drivers/power/supply/bq27xxx_battery_i2c.c
-+++ b/drivers/power/supply/bq27xxx_battery_i2c.c
-@@ -254,6 +254,7 @@ static const struct i2c_device_id bq27xxx_i2c_id_table[] = {
- 	{ "bq27441", BQ27441 },
- 	{ "bq27621", BQ27621 },
- 	{ "bq27z561", BQ27Z561 },
-+	{ "bq28z610", BQ28Z610 },
- 	{},
- };
- MODULE_DEVICE_TABLE(i2c, bq27xxx_i2c_id_table);
-@@ -288,6 +289,7 @@ static const struct of_device_id bq27xxx_battery_i2c_of_match_table[] = {
- 	{ .compatible = "ti,bq27441" },
- 	{ .compatible = "ti,bq27621" },
- 	{ .compatible = "ti,bq27z561" },
-+	{ .compatible = "ti,bq28z610" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, bq27xxx_battery_i2c_of_match_table);
-diff --git a/include/linux/power/bq27xxx_battery.h b/include/linux/power/bq27xxx_battery.h
-index 1f6ea5d5063d..987d9652aa4e 100644
---- a/include/linux/power/bq27xxx_battery.h
-+++ b/include/linux/power/bq27xxx_battery.h
-@@ -31,6 +31,7 @@ enum bq27xxx_chip {
- 	BQ27441,
- 	BQ27621,
- 	BQ27Z561,
-+	BQ28Z610,
- };
- 
- struct bq27xxx_device_info;
--- 
-2.28.0
+This happens as well for -o relatime, it's the default and so if you do mount -o 
+norelatime it won't do anything, you still get relatime behavior.  The only time 
+this changes is if you do mount -o remount,norelatime.
 
+So my question is, what do we do here?  I know Christoph has the strong opinion 
+that we just don't expose I_VERSION at all, which frankly I'm ok with.  However 
+more what I'm asking is what do we do with these weird inverted flags that we 
+all just kind of ignore on mount?  The current setup is just broken if we want 
+to allow overriding the defaults at mount time.  Are we ok with it just being 
+broken?  Are we ok with things like mount -o noiversion not working because the 
+file system has decided that I_VERSION (or relatime) is the default, and we're 
+going to ignore what the user asks for unless we're remounting?  Thanks,
+
+Josef
