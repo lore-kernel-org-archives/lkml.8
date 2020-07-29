@@ -2,134 +2,94 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7EAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26CBC2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596053804;
-	bh=6GoJNX0QgR66SKXMZ4ipLJtos+YWV5iuv3OF+dtEIP0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DII0V31P+L3cpL9f6odl94Cismq3L/cEJwQmrLks+UA5F4QK49vJlSmR3yAqQRMVT
-	 GMosOoibWY9jUhIK/kvrlDeOEM5/85PotnVJNcIOllf4ZXJGMOtbo2qu4OIedjG/2S
-	 xCBcWLkx8InOZA8YNKQ0i7ZcDER8s6BFLti8rvWw=
+	by mail.kernel.org (Postfix) with ESMTP id B90622082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:16:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YcvEkCx9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgG2UQm (ORCPT
+        id S1726873AbgG2UQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:16:42 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:41033 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgG2UQm (ORCPT
+        Wed, 29 Jul 2020 16:16:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgG2UQu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:16:42 -0400
-Received: by mail-ej1-f67.google.com with SMTP id w9so25622030ejc.8;
-        Wed, 29 Jul 2020 13:16:40 -0700 (PDT)
+        Wed, 29 Jul 2020 16:16:50 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1180C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:16:50 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id q75so17761143iod.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:16:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qq+ysuvSU+V8JQG1DuA+Q8eHlgCH1eO+fRWf5OmQClQ=;
+        b=YcvEkCx9qexk7f+HNawBWOgq3Ozk6TN2CCHAbw23oQ3VzwAf9Q+gVni2+YeXOSo80m
+         wNwNPYLaR+D5PcrJyAE4lrbD2wdX27P0wNO/Y0GesGL7tfLXyFOKSNPWJ8UhME89F2SC
+         WW3HOcWX4qfczElt0ALpYlZcC+WRjvve8dFU5bPSu+SbWSM14nknjDRcYRNi/vH8x6Dv
+         bEX35VZtg4Q56GYYgrkWRr6bk6MAFZugFyJE60UCLZDE5s9p7DC3pgpzDT1vN2TxTAXz
+         VRdn0EwJFjhmR7zFyq9o4uyPUYIjCgcyWccX8a5348RDxrepHllS7xCIzaTGR+DzibhZ
+         D1Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G9J40aLhPUBHarAksyHrJM+WbtR3gRhMvbXXJTyIEsw=;
-        b=k2GVsKVFsPbSoZjpQ3yHGuN2nXG3JuzUeQS7q3rJbgD8wQ3i4YS9KDvXh493xZ1163
-         PCH/5gcPzeFR8WzXsUt6l2320LsIG14JQeSuv3dLC+gdwrZBomBsKhFXVyPc/sdfxJSL
-         jxVpsVBjPuSFkybl+r+EkcU+pPgKfe4Hu9EwkzghJQGdIr7uPwaaBkJuAXOAu9xgcobS
-         FzBsSUyUacvrAsYzhgfS06VdcRIBY1CTNMSelLQNy5sMDBcsbE750/GjICDAIzztoRDy
-         rvITvxUzH7lerEzbP78/kaBtzXszVmFzn7kQdiSA2e+6pLgrJnoC+QqMWC9xGsbBINi8
-         MX/Q==
-X-Gm-Message-State: AOAM531HQspdPQmKdwXRXrtihdzC1rOoTyjQmb6u41EbhI48M8ZFFVaK
-        Z0EvW5gM2LuP/3wUtw/aU/k=
-X-Google-Smtp-Source: ABdhPJz8NSZ1YgCRCp5BY64q7jD+PPCB1uyy1HQKw9M5f39sg32SzCcRfdGo1BmuaDhYo5fGcHeBew==
-X-Received: by 2002:a17:906:78e:: with SMTP id l14mr80328ejc.67.1596053799753;
-        Wed, 29 Jul 2020 13:16:39 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id a23sm2669500eju.68.2020.07.29.13.16.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jul 2020 13:16:39 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 22:16:35 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Simtec Linux Team <linux@simtec.co.uk>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Vincent Sanders <vince@simtec.co.uk>,
-        Will Deacon <will@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-watchdog@vger.kernel.org, patches@opensource.cirrus.com,
-        Sergio Prado <sergio.prado@e-labworks.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Cedric Roux <sed@free.fr>, Lihua Yao <ylhuajnu@outlook.com>
-Subject: Re: [PATCH 1/7] clk: samsung: s3c64xx: Declare s3c64xx_clk_init() in
- shared header
-Message-ID: <20200729201635.GB26917@kozik-lap>
-References: <20200729160942.28867-1-krzk@kernel.org>
- <20200729160942.28867-2-krzk@kernel.org>
- <159605176358.1360974.7715120460121088439@swboyd.mtv.corp.google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qq+ysuvSU+V8JQG1DuA+Q8eHlgCH1eO+fRWf5OmQClQ=;
+        b=pJ4BZ5g+32DGnTAHaHrCEI+lhOLHnSYjXwNEYVdFtJNkFizxjMFdt10bYFhW4xZBp7
+         MpLwaXFo8mogeEQONl+qeef5MhdmccAIGrL/G03QDE3deW6eDEYmv+GsBvI6LinJxR4T
+         9uRl9Il4DO9VAzV1EnwifHEElMO/X125czZ0Y+M34LSmB8hxAVfLJwc+EnY2j8AUJcQt
+         pqqXslgMh6BNLCkr9eb5T21dO8N5Xvp4fNXJ5jj0CQAMvyRlBKu2aDXwpJ6GEeFacDJf
+         Ak40pzRGxx0L8EEmQe0mG85HtvSMtIvXnKhPFNO871QgtlOAu5WIit22zr0HNpm1Cjy3
+         pVwA==
+X-Gm-Message-State: AOAM533cLwCS19RobtJ4FSmzKEzunzwKBG5Qhsq/TlasGpQ6KbyFjeqr
+        qBapvdcbtNwsNx83+k/MlPX4rvNRB4GavYox0naQfY2G
+X-Google-Smtp-Source: ABdhPJy4w7jgd/UAwb5pPY2xqkZRN3ELOqqLs6AJUHt05VUljtTZQfKhOa5aVXvbhgUsVDCOuYt1rMmZ2zibhre8Xok=
+X-Received: by 2002:a6b:b38a:: with SMTP id c132mr17932385iof.75.1596053809764;
+ Wed, 29 Jul 2020 13:16:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <159605176358.1360974.7715120460121088439@swboyd.mtv.corp.google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <fdc7e57d-4fd6-4d49-22e6-b18003034ff5@gmail.com>
+In-Reply-To: <fdc7e57d-4fd6-4d49-22e6-b18003034ff5@gmail.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Wed, 29 Jul 2020 13:16:38 -0700
+Message-ID: <CALMp9eRyyO3d36j6YbcvLEuPLZpByYS8SOCpVithpfqCeKhDUg@mail.gmail.com>
+Subject: Re: [PATCH] perf/x86/svm: Convert 'perf kvm stat report' output
+ lowercase to uppercase
+To:     Haiwei Li <lihaiwei.kernel@gmail.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, acme@redhat.com,
+        "hpa@zytor.com" <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 12:42:43PM -0700, Stephen Boyd wrote:
-> Quoting Krzysztof Kozlowski (2020-07-29 09:09:36)
-> > diff --git a/include/linux/clk/samsung.h b/include/linux/clk/samsung.h
-> > new file mode 100644
-> > index 000000000000..b6b253c46c22
-> > --- /dev/null
-> > +++ b/include/linux/clk/samsung.h
-> > @@ -0,0 +1,21 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (c) 2020 Krzysztof Kozlowski <krzk@kernel.org>
-> > + */
-> > +
-> > +#ifndef __LINUX_CLK_SAMSUNG_H_
-> > +#define __LINUX_CLK_SAMSUNG_H_
-> > +
-> > +#ifdef CONFIG_ARCH_S3C64XX
-> > +void __init s3c64xx_clk_init(struct device_node *np, unsigned long xtal_f,
-> 
-> Don't use __init in header files. It doesn't do anything.
-> 
-> > +                            unsigned long xusbxti_f, bool s3c6400,
-> > +                            void __iomem *base);
-> > +#else
-> > +static inline void __init s3c64xx_clk_init(struct device_node *np,
-> 
-> Forward declare struct device_node;
-> 
-> > +                                          unsigned long xtal_f,
-> > +                                          unsigned long xusbxti_f,
-> > +                                          bool s3c6400,
-> > +                                          void __iomem *base) { }
-> 
-> Include <linux/compiler.h> (or compiler_types.h) for __iomem define
-> please.
+On Tue, Jul 28, 2020 at 11:24 PM Haiwei Li <lihaiwei.kernel@gmail.com> wrote:
+>
+> From: Haiwei Li <lihaiwei@tencent.com>
+>
+> The reason output of 'perf kvm stat report --event=vmexit' is uppercase
+> on VMX and lowercase on SVM.
+>
+> To be consistent with VMX, convert lowercase to uppercase.
+>
+> Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
 
-Thanks for the feedback. I'll send v2.
-
-Best regards,
-Krzysztof
-
+Please don't do this. It breaks an existing ABI.
