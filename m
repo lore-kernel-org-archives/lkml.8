@@ -2,178 +2,127 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E10C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9005C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8912074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:54:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=eclypsium.com header.i=@eclypsium.com header.b="Zvip8zar"
+	by mail.kernel.org (Postfix) with ESMTP id A73D32074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgG2Uys (ORCPT
+        id S1726918AbgG2Uz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:54:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgG2Uyr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:54:47 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75BF2C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:54:47 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id x69so23688261qkb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:54:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eclypsium.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hML/G2Vc4+8j8itR9nKQsmnhixEhsDERowGsOaYy7Gw=;
-        b=Zvip8zarCHkiOAp40mMHVMaLvnPMf3ZQI2kSo9fjzG0D6nM7fysyjZo3oR16GmU5un
-         RZJgAoIIftLEUrNHVTF5d0lcuWp9PmRHSF3BhGGu49F/B7bFuFDHer7uqebnWZZFa3Fx
-         ImE6syx7IxfsoVqZFf3KE2Y2ZOVMFUPq/qg/Qr9gfRk4irvzzWLIKi2tVewrQsPEdZRU
-         b7JOXqr/VFRFAD8UjkJ6aUCSZWimOZhK9HJsrNnkF9fgcDXyegTccsVKvnXdv9NOYyfQ
-         ivnNne6r436/TAQ9T6N0GFYlXffps/RnZu6Py4vMLefN7S89NM15w3rCHeUH2y6nq22u
-         n+Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hML/G2Vc4+8j8itR9nKQsmnhixEhsDERowGsOaYy7Gw=;
-        b=KdGAjjkfC9kXYBSrTGHnkXRJ7/Bn/ASRkBXM++O3HjEwPOjfjleUBb2qCdUjljHvIX
-         4OXmt1COvJld81d3lCvqu44nJIZCS36Uns2UwwY+ZpMShpcLCi7BuUGxJzdR9r7Uf58l
-         9NH0WsRHPsB0bFAvr7saGodmIKOCAo/OecKnbqZ0G/eVut+Bhv6XoHSMSdOfDmXqMxaj
-         O6UJ/4KlVp8W1Jb5rCHfgApDQA6dPd/6auxAVQLaJtoYPCnLyH+734EsKUru13bfLKdU
-         9ESz7CXMD1wQcSE13L7ozvEt7FVTHgNgDJdEOWzH7TKfT54bkMAnxcB/99sk7aodLcYr
-         eFig==
-X-Gm-Message-State: AOAM530nOIY2mvxkRWRmqiBssyo9WMIeW4+MkCxJPZHTpW5ShdxEAuOE
-        078LysoyROwbg3QKCkzwhc/pywtNKCXRHNqa7KWHliM3
-X-Google-Smtp-Source: ABdhPJziT1y1KwgPcmp+p6p/09SIbNmExj8/wOsyvDR2EqdYDYLBrsq7yFVHctr2qgO+0kbNSt238S1a8b5CibuBZ3s=
-X-Received: by 2002:ae9:eb81:: with SMTP id b123mr35072208qkg.288.1596056086506;
- Wed, 29 Jul 2020 13:54:46 -0700 (PDT)
+        Wed, 29 Jul 2020 16:55:27 -0400
+Received: from mga01.intel.com ([192.55.52.88]:12727 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgG2Uz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 16:55:26 -0400
+IronPort-SDR: BCC29Ox9ECEanjRvhMD+lhLPar9UyTKfVnH0vzkMifuTkjsByjWlPdnz8jYPabwL8eCcgATERx
+ rb75R4P6Aa7Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="169620987"
+X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
+   d="scan'208";a="169620987"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 13:55:26 -0700
+IronPort-SDR: 0DKM30f/id2JQ/CzHqYbno4kUOprMvG1Qm70P/dUa79Jylsb1npgZ7A6/qw2aMjACkNgSg4bLv
+ J2FwDP+m5iDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
+   d="scan'208";a="304347308"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 29 Jul 2020 13:55:26 -0700
+Date:   Wed, 29 Jul 2020 14:02:15 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        "Jonathan Corbet" <corbet@lwn.net>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v6 1/6] docs: IOMMU user API
+Message-ID: <20200729140215.0f8c4aca@jacob-builder>
+In-Reply-To: <MWHPR11MB1645BA0C8436C3280DBDC5468C700@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <1595525140-23899-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1595525140-23899-2-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200728131950.2aff140d@x1.home>
+        <MWHPR11MB1645BA0C8436C3280DBDC5468C700@MWHPR11MB1645.namprd11.prod.outlook.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200724212853.11601-1-daniel.gutson@eclypsium.com>
- <20200725055649.GA1047853@kroah.com> <CAFmMkTE_dT9+WJYyb19uQ_HmgJWZSARBy6PveheQJk++NuGbkQ@mail.gmail.com>
- <20200726071723.GB441916@kroah.com> <CAFmMkTFzGfFDrJrdgHztzLK2K-zBWy6T2Tv+G4-rrbVpbahkgg@mail.gmail.com>
- <CAK8P3a1nA7K15Cxz84Q8Grw3tKfgkUmsfURcytJEWb_0Wjqm5w@mail.gmail.com> <CAFmMkTExBY3V_Ghej7Bzjatg+vFtWq3UZmKzjAiEoR9EqnFN9Q@mail.gmail.com>
-In-Reply-To: <CAFmMkTExBY3V_Ghej7Bzjatg+vFtWq3UZmKzjAiEoR9EqnFN9Q@mail.gmail.com>
-From:   Daniel Gutson <daniel@eclypsium.com>
-Date:   Wed, 29 Jul 2020 17:54:35 -0300
-Message-ID: <CAFmMkTEO7VNKJeYz2uoHsS-yN_aY8UuiQ2GcCq9NyAD5481ZGA@mail.gmail.com>
-Subject: Re: [PATCH] Module argument to control whether intel-spi-pci attempts
- to turn the SPI flash chip writeable
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alex Bazhaniuk <alex@eclypsium.com>,
-        Richard Hughes <hughsient@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:31 PM Daniel Gutson <daniel@eclypsium.com> wrote=
-:
->
-> On Mon, Jul 27, 2020 at 12:15 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Mon, Jul 27, 2020 at 5:05 PM Daniel Gutson <daniel@eclypsium.com> wr=
-ote:
-> > > On Sun, Jul 26, 2020 at 4:17 AM Greg Kroah-Hartman <gregkh@linuxfound=
-ation.org> wrote:
-> > >>
-> > >> On Sat, Jul 25, 2020 at 02:20:03PM -0300, Daniel Gutson wrote:
-> > >> > El s=C3=A1b., 25 jul. 2020 2:56 a. m., Greg Kroah-Hartman <
-> > >> > gregkh@linuxfoundation.org> escribi=C3=B3:
-> > >> >
-> > >> >
-> > >> > 1) I just did the same that intel-spi.c does.
-> > >>
-> > >> No need to copy bad examples :)
-> > >
-> > >
-> > > Didn't know it was a bad example. What's is the current modern mechan=
-ism that replaces initialization-time configuration?
-> >
-> > I'd say you'd generally want this to be a per-instance setting, which
-> > could be a sysfs attribute of the physical device, or an ioctl for an
-> > existing user space abstraction.
->
-> But still, they are not equivalent. The initial configuration remains
-> constant for the rest of the life of the driver, whereas the
-> sysfs attribute is set after the initialization and can be re-set over
-> time. I'm not asking module parameters "to come back" if
-> they are now considered obsolete, I'm just trying to understand.
->
-> >
-> > In the changelog, you should also explain what this is used for. Do
-> > you actually want to write to a device that is marked read-only, or
-> > are you just trying to make the interface more consistent between the
-> > two drivers?
->
-> The device can either be locked or unlocked. If it is unlocked, it can
-> be set writable depending on the module
-> argument in intel-spi, or straight writable in intel-spi-pci. Which is
-> dangerous.
-> I wanted to make, as you say, the interface consistent.
-> Exposing an interface to the user (via a sysfs attribute) to try to
-> make the driver writable is definitively a bad idea.
-> I'd rather do nothing (no module arg) rather than open that
-> here-be-dragons door.
+On Wed, 29 Jul 2020 01:18:04 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-ping.
-This is a real existing problem that I'm trying to address.
-There's currently no way to prevent the kernel to try to turn
-the SPI flash chip writable for the device IDs handled by
-intel-spi-pci. And allowing userspace to switch it between
-writable/non-writable is not an option.
-What other mechanism can I use other than the module parameter,
-so
- - not accessible through user space
- - ideally set once, ideally at initialization time
+> > From: Alex Williamson <alex.williamson@redhat.com>
+> > Sent: Wednesday, July 29, 2020 3:20 AM
+> >   
+> [...]
+> > > +
+> > > +For example, IOTLB invalidations should always succeed. There is
+> > > no +architectural way to report back to the vIOMMU if the UAPI
+> > > data is +incompatible. If that happens, in order to guarantee
+> > > IOMMU iosolation,  
+> > 
+> > isolation
+> >   
+> > > +we have to resort to not giving completion status in vIOMMU.
+> > > This may +result in VM hang.
+> > > +
+> > > +For this reason the following IOMMU UAPIs cannot fail without
+> > > +catastrophic effect:
+> > > +
+> > > +1. Free PASID
+> > > +2. Unbind guest PASID
+> > > +3. Unbind guest PASID table (SMMU)
+> > > +4. Cache invalidate  
+> > 
+> > I'm not entirely sure what we're trying to assert here.  Clearly
+> > cache invalidation can fail and patch 5/6 goes on to add over a
+> > dozen checks of the user provided data that return an -errno.  Any
+> > user ioctl can fail if the user botches the parameters.  So are we
+> > just trying to explain the feature checking that should allow the
+> > user to know supported combinations and if they adhere to them,
+> > these should not fail?  It's not quite worded to that effect.
+> > Thanks, 
+> 
+> I guess the above wording is messed by what a UAPI should
+> behave and whether the vIOMMU reports associated errors.
+> UAPI can always fail, as you pointed out. vIOMMU may not
+> have a matching error code though, e.g. on Intel VT-d there is no
+> error reporting mechanism for cache invalidation. However,
+> it is not wise to assert UAPI behavior according to vIOMMU
+> definition. An error is an error. vIOMMU should just react to
+> UAPI errors according to its architecture definition (e.g. ignore,
+> forward to guest, hang, etc.). From this matter I feel above
+> section could better be removed.
+> 
+Yes, I agreed, the scope is not drawn clearly. This section is kind of
+the relic of a previous version where responsibility of feature
+checking lies with IOMMU UAPI instead of VFIO.
 
-Thanks,
+How about just briefly mention that upfront feature checking is
+encouraged to avoid complex and catastrophic error at runtime?
 
-    Daniel.
+I will remove the rest.
 
+> Thanks
+> Kevin
 
->
-> >
-> >      Arnd
->
->
->
-> --
-> Daniel Gutson
-> Argentina Site Director
-> Enginieering Director
-> Eclypsium
->
-> Below The Surface: Get the latest threat research and insights on
-> firmware and supply chain threats from the research team at Eclypsium.
-> https://eclypsium.com/research/#threatreport
-
-
-
---=20
-Daniel Gutson
-Argentina Site Director
-Enginieering Director
-Eclypsium
-
-Below The Surface: Get the latest threat research and insights on
-firmware and supply chain threats from the research team at Eclypsium.
-https://eclypsium.com/research/#threatreport
+[Jacob Pan]
