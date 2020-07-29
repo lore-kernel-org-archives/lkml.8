@@ -2,96 +2,125 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_40,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3408EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E203EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F21382082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:44:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=dynamicaims-com.20150623.gappssmtp.com header.i=@dynamicaims-com.20150623.gappssmtp.com header.b="ovlAKkHo"
+	by mail.kernel.org (Postfix) with ESMTP id C354420809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgG2QoB (ORCPT
+        id S1726900AbgG2QoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 12:44:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgG2QoB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 12:44:01 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B62C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 09:44:01 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id h12so3172732pgf.7
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 09:44:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dynamicaims-com.20150623.gappssmtp.com; s=20150623;
-        h=to:subject:from:message-id:disposition-notification-to:date
-         :user-agent:mime-version:content-transfer-encoding:content-language;
-        bh=iw9YBEqn6SiuMz3RoRL2TK68UdSA9OieFntlL99NIlQ=;
-        b=ovlAKkHof3Umse9Y2jHw4bx+CyxnINV7PMCEbHpAZQKDf06U2zIe9yMW+svaK90Mau
-         HCUzs1GlSiZZex1Mhud6Q5FyDbfW5Ws+HbIfXrWzs/4trxrGyrWO3/fxxN40ELXpK+j8
-         OxUSvWso8BziQ3SDWZ0EuOSCUgwAaNq6mfwcAT9HPfCE6Qy3MHcXjCmj1elMvgGYGYT1
-         o08mpqi8lgUzDg1hhJ/F2hD7Lexl14HQuKUwiSSA4mBGM/51dmN6WLTrEdpxEEWi/nTW
-         IF3dQvs2fUfzTPjTlSXDcENMHF4coL5jSDnWPRHhkQtvzC4tfqMF4OOXou7Gjg2YxdlD
-         YHzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:subject:from:message-id
-         :disposition-notification-to:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=iw9YBEqn6SiuMz3RoRL2TK68UdSA9OieFntlL99NIlQ=;
-        b=HhrQhBv/MjyIPSq4Ff1haNJnkBUW24L6ZDPKOOth1a99a5vbgxgaKjYwnMp0aGf/4g
-         ml03IkW203+cxK10kODI8DVjOAPn8F6Di0O1xBknwc+yqcLAgfc446biguqcEd4b7Uyt
-         UuyXFUGYOGD30D9yu/qa81Nkd5Eg5YY4apk9IXXUXeTDVAC/1DC++ZJ9Acmf8V6sLRgK
-         QVIx5oFYgT+7EZsdhB++lJA0OPEDnXxBfJ7uMZUiHP5FOWw/PjYV98Nk6Ng8dBKC1OHy
-         D1SxFAnQVc9sHr6iniWo5NWFRXA1j4FWqhZyGRwfEP9eBD1J8WEs9B8dn1w0jFOteK9V
-         pQ6A==
-X-Gm-Message-State: AOAM530mqKJoRRRUP8bX8sdVC7y1uLuk6LOaaxDtFnWDHkHkYcriW82A
-        VQgswHkozu5JESQwrRkYMFruyBKp5SQ=
-X-Google-Smtp-Source: ABdhPJwN+UdZMIw6vMEnILNn60MfPEb+v3CHCZvPkmTki/5KAKZj08tqgp7NKMNMkNAtCT7bHtSz/Q==
-X-Received: by 2002:a63:225d:: with SMTP id t29mr24492437pgm.374.1596041040091;
-        Wed, 29 Jul 2020 09:44:00 -0700 (PDT)
-Received: from [192.168.0.3] ([103.16.71.223])
-        by smtp.gmail.com with ESMTPSA id b82sm3040051pfb.215.2020.07.29.09.43.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Jul 2020 09:43:59 -0700 (PDT)
-To:     linux-kernel@vger.kernel.org
-Subject: Wine List
-From:   Meggan Berg <megganb@dynamicaims.com>
-Message-ID: <1272faca-4495-06ff-df4a-233980a7d51b@dynamicaims.com>
-Date:   Wed, 29 Jul 2020 11:34:13 -0400
-User-Agent: Mozilla/5.0 (Windows NT 6.3; rv:52.0) Gecko/20100101
- Thunderbird/52.4.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Wed, 29 Jul 2020 12:44:25 -0400
+Received: from comms.puri.sm ([159.203.221.185]:54404 "EHLO comms.puri.sm"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726496AbgG2QoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 12:44:25 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id B78D1E044E;
+        Wed, 29 Jul 2020 09:43:54 -0700 (PDT)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id TegbL7tiphgE; Wed, 29 Jul 2020 09:43:53 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 18:43:48 +0200
+In-Reply-To: <1596037482.4356.37.camel@HansenPartnership.com>
+References: <20200706164135.GE704149@rowland.harvard.edu> <d0ed766b-88b0-5ad5-9c10-a4c3b2f994e3@puri.sm> <20200728200243.GA1511887@rowland.harvard.edu> <f3958758-afce-8add-1692-2a3bbcc49f73@puri.sm> <20200729143213.GC1530967@rowland.harvard.edu> <1596033995.4356.15.camel@linux.ibm.com> <1596034432.4356.19.camel@HansenPartnership.com> <d9bb92e9-23fa-306f-c7f2-71a81ab28811@puri.sm> <1596037482.4356.37.camel@HansenPartnership.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Alan Stern <stern@rowland.harvard.edu>
+CC:     Bart Van Assche <bvanassche@acm.org>,
+        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+Message-ID: <A1653792-B7E5-46A9-835B-7FA85FCD0378@puri.sm>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hello,
 
-Would you be interested in acquiring an email list of "Wine Enthusiasts List" from USA?
+Am 29=2E Juli 2020 17:44:42 MESZ schrieb James Bottomley <James=2EBottomle=
+y@HansenPartnership=2Ecom>:
+>On Wed, 2020-07-29 at 17:40 +0200, Martin Kepplinger wrote:
+>> On 29=2E07=2E20 16:53, James Bottomley wrote:
+>> > On Wed, 2020-07-29 at 07:46 -0700, James Bottomley wrote:
+>> > > On Wed, 2020-07-29 at 10:32 -0400, Alan Stern wrote:
+>[=2E=2E=2E]
+>> > > > This error report comes from the SCSI layer, not the block
+>> > > > layer=2E
+>> > >=20
+>> > > That sense code means "NOT READY TO READY CHANGE, MEDIUM MAY HAVE
+>> > > CHANGED" so it sounds like it something we should be
+>> > > ignoring=2E  Usually this signals a problem, like you changed the
+>> > > medium manually (ejected the CD)=2E  But in this case you can tell
+>> > > us to expect this by setting
+>> > >=20
+>> > > sdev->expecting_cc_ua
+>> > >=20
+>> > > And we'll retry=2E  I think you need to set this on all resumed
+>> > > devices=2E
+>> >=20
+>> > Actually, it's not quite that easy, we filter out this ASC/ASCQ
+>> > combination from the check because we should never ignore medium
+>> > might have changed events on running devices=2E  We could ignore it
+>> > if we had a flag to say the power has been yanked (perhaps an
+>> > additional sdev flag you set on resume) but we would still miss the
+>> > case where you really had powered off the drive and then changed
+>> > the media =2E=2E=2E if you can regard this as the user's problem, the=
+n we
+>> > might have a solution=2E
+>> >=20
+>> > James
+>> > =20
+>>=20
+>> oh I see what you mean now, thanks for the ellaboration=2E
+>>=20
+>> if I do the following change, things all look normal and runtime pm
+>> works=2E I'm not 100% sure if just setting expecting_cc_ua in resume()
+>> is "correct" but that looks like it is what you're talking about:
+>>=20
+>> (note that this is of course with the one block layer diff applied
+>> that Alan posted a few emails back)
+>>=20
+>>=20
+>> --- a/drivers/scsi/scsi_error=2Ec
+>> +++ b/drivers/scsi/scsi_error=2Ec
+>> @@ -554,16 +554,8 @@ int scsi_check_sense(struct scsi_cmnd *scmd)
+>>                  * so that we can deal with it there=2E
+>>                  */
+>>                 if (scmd->device->expecting_cc_ua) {
+>> -                       /*
+>> -                        * Because some device does not queue unit
+>> -                        * attentions correctly, we carefully check
+>> -                        * additional sense code and qualifier so as
+>> -                        * not to squash media change unit attention=2E
+>> -                        */
+>> -                       if (sshdr=2Easc !=3D 0x28 || sshdr=2Eascq !=3D =
+0x00)
+>> {
+>> -                               scmd->device->expecting_cc_ua =3D 0;
+>> -                               return NEEDS_RETRY;
+>> -                       }
+>> +                       scmd->device->expecting_cc_ua =3D 0;
+>> +                       return NEEDS_RETRY;
+>
+>Well, yes, but you can't do this because it would lose us media change
+>events in the non-suspend/resume case which we really don't want=2E=20
+>That's why I was suggesting a new flag=2E
+>
+>James
 
-We also have data for Beer Enthusiasts List, Liquor Enthusiasts List, Beverage Enthusiasts List and many more.
+also if I set expecting_cc_ua in resume() only, like I did?
 
-Each record in the list contains Contact Name (First, Middle and Last Name), Mailing Address, List type and Opt-in email address.
-
-All the contacts are opt-in verified, 100% permission based and can be used for unlimited multi-channel marketing.
-
-Please let me know your thoughts towards procuring the Wine Enthusiasts List.
-
-Best Regards,
-Meggan Berg
-Research Analyst
-
-We respect your privacy, if you do not wish to receive any further emails from our end, please reply with a subject "Remove".
-
+--=20
+Martin Kepplinger
+xmpp: martink@jabber=2Eat
+Sent from mobile=2E
