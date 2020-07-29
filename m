@@ -2,29 +2,26 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34923C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D46E20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C68720809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgG2NWw (ORCPT
+        id S1727781AbgG2NWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:22:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbgG2NWr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 09:22:51 -0400
+Received: from 8bytes.org ([81.169.241.247]:33806 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726353AbgG2NWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Jul 2020 09:22:47 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33655C061794;
-        Wed, 29 Jul 2020 06:22:47 -0700 (PDT)
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 0062B3EC; Wed, 29 Jul 2020 15:22:44 +0200 (CEST)
+        id 08A37E4; Wed, 29 Jul 2020 15:22:45 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -32,51 +29,119 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/4] KVM: SVM: SEV-ES groundwork
-Date:   Wed, 29 Jul 2020 15:22:30 +0200
-Message-Id: <20200729132234.2346-1-joro@8bytes.org>
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 1/4] KVM: SVM: nested: Don't allocate VMCB structures on stack
+Date:   Wed, 29 Jul 2020 15:22:31 +0200
+Message-Id: <20200729132234.2346-2-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200729132234.2346-1-joro@8bytes.org>
+References: <20200729132234.2346-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
+From: Joerg Roedel <jroedel@suse.de>
 
-here are some groundwork patches for the upcoming SEV-ES support in the
-Linux kernel. They are part of both the client patch-set and of the KVM
-hypervisor patches (under development).
+Do not allocate a vmcb_control_area and a vmcb_save_area on the stack,
+as these structures will become larger with future extenstions of
+SVM and thus the svm_set_nested_state() function will become a too large
+stack frame.
 
-Patch 1 necesary to fix a compile warning about a stack-frame getting
-too large. The other 3 patches are currently posted as part of the
-SEV-ES client patch-set.
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/kvm/svm/nested.c | 44 ++++++++++++++++++++++++++-------------
+ 1 file changed, 30 insertions(+), 14 deletions(-)
 
-It would be great if you could consider them for v5.9, so that the
-client and the hypervisor patch-sets can be developed more independently
-of each other.
-
-Please let me know what you think.
-
-Regards,
-
-	Joerg
-
-Borislav Petkov (1):
-  KVM: SVM: Use __packed shorthand
-
-Joerg Roedel (2):
-  KVM: SVM: nested: Don't allocate VMCB structures on stack
-  KVM: SVM: Add GHCB Accessor functions
-
-Tom Lendacky (1):
-  KVM: SVM: Add GHCB definitions
-
- arch/x86/include/asm/svm.h | 118 ++++++++++++++++++++++++++++++++++---
- arch/x86/kvm/svm/nested.c  |  44 +++++++++-----
- arch/x86/kvm/svm/svm.c     |   2 +
- 3 files changed, 143 insertions(+), 21 deletions(-)
-
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index 61378a3c2ce4..f3c3c4e1ca7f 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -1061,8 +1061,9 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+ 	struct vmcb *hsave = svm->nested.hsave;
+ 	struct vmcb __user *user_vmcb = (struct vmcb __user *)
+ 		&user_kvm_nested_state->data.svm[0];
+-	struct vmcb_control_area ctl;
+-	struct vmcb_save_area save;
++	struct vmcb_control_area *ctl;
++	struct vmcb_save_area *save;
++	int ret;
+ 	u32 cr0;
+ 
+ 	if (kvm_state->format != KVM_STATE_NESTED_FORMAT_SVM)
+@@ -1096,13 +1097,22 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+ 		return -EINVAL;
+ 	if (kvm_state->size < sizeof(*kvm_state) + KVM_STATE_NESTED_SVM_VMCB_SIZE)
+ 		return -EINVAL;
+-	if (copy_from_user(&ctl, &user_vmcb->control, sizeof(ctl)))
+-		return -EFAULT;
+-	if (copy_from_user(&save, &user_vmcb->save, sizeof(save)))
+-		return -EFAULT;
+ 
+-	if (!nested_vmcb_check_controls(&ctl))
+-		return -EINVAL;
++	ret  = -ENOMEM;
++	ctl  = kzalloc(sizeof(*ctl),  GFP_KERNEL);
++	save = kzalloc(sizeof(*save), GFP_KERNEL);
++	if (!ctl || !save)
++		goto out_free;
++
++	ret = -EFAULT;
++	if (copy_from_user(ctl, &user_vmcb->control, sizeof(ctl)))
++		goto out_free;
++	if (copy_from_user(save, &user_vmcb->save, sizeof(save)))
++		goto out_free;
++
++	ret = -EINVAL;
++	if (!nested_vmcb_check_controls(ctl))
++		goto out_free;
+ 
+ 	/*
+ 	 * Processor state contains L2 state.  Check that it is
+@@ -1110,15 +1120,15 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+ 	 */
+ 	cr0 = kvm_read_cr0(vcpu);
+         if (((cr0 & X86_CR0_CD) == 0) && (cr0 & X86_CR0_NW))
+-                return -EINVAL;
++                goto out_free;
+ 
+ 	/*
+ 	 * Validate host state saved from before VMRUN (see
+ 	 * nested_svm_check_permissions).
+ 	 * TODO: validate reserved bits for all saved state.
+ 	 */
+-	if (!(save.cr0 & X86_CR0_PG))
+-		return -EINVAL;
++	if (!(save->cr0 & X86_CR0_PG))
++		goto out_free;
+ 
+ 	/*
+ 	 * All checks done, we can enter guest mode.  L1 control fields
+@@ -1127,15 +1137,21 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+ 	 * contains saved L1 state.
+ 	 */
+ 	copy_vmcb_control_area(&hsave->control, &svm->vmcb->control);
+-	hsave->save = save;
++	hsave->save = *save;
+ 
+ 	svm->nested.vmcb = kvm_state->hdr.svm.vmcb_pa;
+-	load_nested_vmcb_control(svm, &ctl);
++	load_nested_vmcb_control(svm, ctl);
+ 	nested_prepare_vmcb_control(svm);
+ 
+ out_set_gif:
+ 	svm_set_gif(svm, !!(kvm_state->flags & KVM_STATE_NESTED_GIF_SET));
+-	return 0;
++
++	ret = 0;
++out_free:
++	kfree(save);
++	kfree(ctl);
++
++	return ret;
+ }
+ 
+ struct kvm_x86_nested_ops svm_nested_ops = {
 -- 
 2.17.1
 
