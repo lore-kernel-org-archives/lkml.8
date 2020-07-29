@@ -2,111 +2,248 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 181CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B61C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCAA72075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E91BF2075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:11:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="coWKfw7k"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="QQyoFB/3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbgG2TKT (ORCPT
+        id S1726757AbgG2TL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 15:10:19 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:53204 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2TKT (ORCPT
+        Wed, 29 Jul 2020 15:11:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726581AbgG2TL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 15:10:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ytNmU6XECJ6mse7dyEPBYBvTEidvGF6L8NfDouGCEKo=; b=coWKfw7kgDX6kPpKypL29C8i6c
-        2UjCxfqsiR6FV8nDg6idbi7pN84McLwfQFl6SPR6ihkO7AGoiosPTcetEGznhcvc7eB+yP/VZU9TW
-        gDRGwiioVibCBct9ai45bsHWxT77Bsx4fBZ5ZYKZmwzJva1pOffp1X2wY0WrX2tNzaQDHqDVLY8be
-        fILaR3F8/UFrkDNddHzsIf3dtDF863P+5iIpKBABTygGcYhu1+5ZcRceDSEET3LIeqWs1u+nl9t6j
-        cR4J8t1hSdW3dxBV1Y0d3TzaI5m5x7TH4LsV8ghmc8BxNYdzR31VwpAvHqo9mXHmV3SXXIZdYA0/W
-        4NQloHhw==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1k0rSz-0007XN-DQ; Wed, 29 Jul 2020 13:10:18 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1k0rSt-0001B4-12; Wed, 29 Jul 2020 13:10:11 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 29 Jul 2020 13:10:09 -0600
-Message-Id: <20200729191009.4485-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 29 Jul 2020 15:11:58 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB3B0C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 12:11:57 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id l6so23322596qkc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 12:11:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JiXGvEaxlR+R/poUy+KkKDbPSSxw+vYE0tU7qSg7Gr0=;
+        b=QQyoFB/3QZEIbqjLrh11jmrIQZShit6LKFxmT1o2Ns8Njgxj/67t76WMxdNauZLpS4
+         xggeFCt7js2asoG0lTI31libhtwx/Lf2xwN4/IrW7bnpfpxZd5bhcYk4HzKyIOeIiorP
+         8/zPd7XdHYxn8xGkUSF4VZBxeKK8Sn5ZR2a9eS19DPoml2a8U4MV22tXnE6MWjKbyjBu
+         FlGRUBXIKokZJcw+PnvLDfFUTnNTffEzcRlyUu3NSnYDaNYHhZ91WTjvs0q0ZJwfWLFW
+         w9tgtFmu70K9611GmIQrGq2lAfz20yktcmYJEql5EpU25w+vk/V5UpzcRAuem45Do2qW
+         qXMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JiXGvEaxlR+R/poUy+KkKDbPSSxw+vYE0tU7qSg7Gr0=;
+        b=VT1kJ1tRv5xI4invr9uwok+Kue9wAkHhDX3xKP+r+vPOvW05ZCsKGFNzOyDf8oaKO4
+         QMhIJ7YK70JykGsQ/F+04rQqBccxdgLewdZFpu7jcBUlmu8+Tou3EEXKO8CR4rW2x+mh
+         hve+FK5iV93j80ccb6GFUoiEaaNbiMdRJa37q0E55hsPfE0qe+gDvUKrubYYETGKWbuA
+         DazlmVykjE8AJvv9WXyiu6IC9ksp5VnwejHN0JDPRXXK+KhFj6VSs0rHUSnb0xMXkwBL
+         Ptcte0Trd2iWDJDlVCWLqV8D0YPRwst3yTgIUHR2/VIxH+5wSps0Bn6sY+o6tj//k3cY
+         eyCg==
+X-Gm-Message-State: AOAM5315hNREumVp3IwYIrYZ9Ncrxyq7soHyjdNNio33i0R5qo81XQxD
+        aNf1z3TxqKUOEcdoh94RHuUqKA==
+X-Google-Smtp-Source: ABdhPJzdBKqmAa7A60uajE8zyLjbuhxiZgjk+/Vh30Ar+K7BeZ3r90QOcK/43nsamnzbaFjsmAZ5NA==
+X-Received: by 2002:a05:620a:4d9:: with SMTP id 25mr29737348qks.411.1596049917086;
+        Wed, 29 Jul 2020 12:11:57 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id o187sm2270967qkd.112.2020.07.29.12.11.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 12:11:56 -0700 (PDT)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     kunit-dev@googlegroups.com
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        brendanhiggins@google.com, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, fkostenzer@live.at,
+        andriy.shevchenko@linux.intel.com, geert@linux-m68k.org,
+        paul.gortmaker@windriver.com, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org
+Subject: [PATCH v2] lib: kunit: Convert test_sort to KUnit test
+Date:   Wed, 29 Jul 2020 16:11:51 -0300
+Message-Id: <20200729191151.476368-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH] nvmet-passthru: Reject commands with non-sgl flags set
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Any command with a non-SGL flag set (like fuse flags) should be
-rejected.
+This adds the conversion of the test_sort.c to KUnit test.
 
-Fixes: c1fef73f793b ("nvmet: add passthru code to process commands")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Please apply this commit first (linux-kselftest/kunit-fixes):
+3f37d14b8a3152441f36b6bc74000996679f0998 kunit: kunit_config: Fix parsing of CONFIG options with space
+
+Code Style Documentation: [0]
+
+Fix these warnings Reported-by lkp@intel.com
+
+WARNING: modpost: vmlinux.o(.data+0x4fc70): Section mismatch in reference from the variable sort_test_cases to the variable .init.text:sort_test
+   The variable sort_test_cases references
+   the variable __init sort_test
+   If the reference is valid then annotate the
+   variable with or __refdata (see linux/init.h) or name the variable
+
+WARNING: modpost: lib/sort_kunit.o(.data+0x11c): Section mismatch in reference from the variable sort_test_cases to the function .init.text:sort_test()
+   The variable sort_test_cases references
+   the function __init sort_test()
+
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+Reported-by: kernel test robot <lkp@intel.com>
+Link: [0] https://lore.kernel.org/linux-kselftest/20200620054944.167330-1-davidgow@google.com/T/#u
 ---
+v2:
+    * Add Kunit Code Style reference in commit message;
+    * Fix lkp@intel.com warning report;
+---
+ lib/Kconfig.debug                 | 26 +++++++++++++++++---------
+ lib/Makefile                      |  2 +-
+ lib/{test_sort.c => sort_kunit.c} | 31 +++++++++++++++----------------
+ 3 files changed, 33 insertions(+), 26 deletions(-)
+ rename lib/{test_sort.c => sort_kunit.c} (55%)
 
-Note: this patch may be squashed with the patch noted in the fixes
-tag, currently in nvme-5.9.
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 9ad9210d70a1..1fe19e78d7ca 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1874,15 +1874,6 @@ config TEST_MIN_HEAP
 
- drivers/nvme/target/passthru.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ 	  If unsure, say N.
 
-diff --git a/drivers/nvme/target/passthru.c b/drivers/nvme/target/passthru.c
-index 89d91dc999a6..f69c3ac82e58 100644
---- a/drivers/nvme/target/passthru.c
-+++ b/drivers/nvme/target/passthru.c
-@@ -326,6 +326,10 @@ static u16 nvmet_setup_passthru_command(struct nvmet_req *req)
+-config TEST_SORT
+-	tristate "Array-based sort test"
+-	depends on DEBUG_KERNEL || m
+-	help
+-	  This option enables the self-test function of 'sort()' at boot,
+-	  or at module load time.
+-
+-	  If unsure, say N.
+-
+ config KPROBES_SANITY_TEST
+ 	bool "Kprobes sanity tests"
+ 	depends on DEBUG_KERNEL
+@@ -2185,6 +2176,23 @@ config LINEAR_RANGES_TEST
 
- u16 nvmet_parse_passthru_io_cmd(struct nvmet_req *req)
- {
-+	/* Reject any commands with non-sgl flags set (ie. fused commands) */
-+	if (req->cmd->common.flags & ~NVME_CMD_SGL_ALL)
-+		return NVME_SC_INVALID_FIELD;
+ 	  If unsure, say N.
+
++config SORT_KUNIT
++	tristate "KUnit test for Array-based sort"
++	depends on DEBUG_KERNEL || m
++	help
++	  This option enables the KUnit function of 'sort()' at boot,
++	  or at module load time.
 +
- 	switch (req->cmd->common.opcode) {
- 	case nvme_cmd_resv_register:
- 	case nvme_cmd_resv_report:
-@@ -396,6 +400,10 @@ static u16 nvmet_passthru_get_set_features(struct nvmet_req *req)
-
- u16 nvmet_parse_passthru_admin_cmd(struct nvmet_req *req)
- {
-+	/* Reject any commands with non-sgl flags set (ie. fused commands) */
-+	if (req->cmd->common.flags & ~NVME_CMD_SGL_ALL)
-+		return NVME_SC_INVALID_FIELD;
++	  KUnit tests run during boot and output the results to the debug log
++	  in TAP format (http://testanything.org/). Only useful for kernel devs
++	  running the KUnit test harness, and not intended for inclusion into a
++	  production build.
 +
- 	/*
- 	 * Passthru all vendor specific commands
- 	 */
++	  For more information on KUnit and unit tests in general please refer
++	  to the KUnit documentation in Documentation/dev-tools/kunit/.
++
++	  If unsure, say N.
++
+ config TEST_UDELAY
+ 	tristate "udelay test driver"
+ 	help
+diff --git a/lib/Makefile b/lib/Makefile
+index b1c42c10073b..c22bb13b0a08 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -77,7 +77,6 @@ obj-$(CONFIG_TEST_LKM) += test_module.o
+ obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
+ obj-$(CONFIG_TEST_OVERFLOW) += test_overflow.o
+ obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
+-obj-$(CONFIG_TEST_SORT) += test_sort.o
+ obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
+@@ -318,3 +317,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
+ # KUnit tests
+ obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+ obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
++obj-$(CONFIG_SORT_KUNIT) += sort_kunit.o
+diff --git a/lib/test_sort.c b/lib/sort_kunit.c
+similarity index 55%
+rename from lib/test_sort.c
+rename to lib/sort_kunit.c
+index 52edbe10f2e5..602a234f1e7d 100644
+--- a/lib/test_sort.c
++++ b/lib/sort_kunit.c
+@@ -1,7 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/sort.h>
+-#include <linux/slab.h>
+-#include <linux/module.h>
++#include <kunit/test.h>
 
-base-commit: b6cec06d19d90db5dbcc50034fb33983f6259b8b
+ /* a simple boot-time regression test */
+
+@@ -12,13 +11,12 @@ static int __init cmpint(const void *a, const void *b)
+ 	return *(int *)a - *(int *)b;
+ }
+
+-static int __init test_sort_init(void)
++static void __init sort_test(struct kunit *test)
+ {
+-	int *a, i, r = 1, err = -ENOMEM;
++	int *a, i, r = 1;
+
+ 	a = kmalloc_array(TEST_LEN, sizeof(*a), GFP_KERNEL);
+-	if (!a)
+-		return err;
++	KUNIT_ASSERT_FALSE_MSG(test, a == NULL, "kmalloc_array failed");
+
+ 	for (i = 0; i < TEST_LEN; i++) {
+ 		r = (r * 725861) % 6599;
+@@ -27,24 +25,25 @@ static int __init test_sort_init(void)
+
+ 	sort(a, TEST_LEN, sizeof(*a), cmpint, NULL);
+
+-	err = -EINVAL;
+ 	for (i = 0; i < TEST_LEN-1; i++)
+ 		if (a[i] > a[i+1]) {
+-			pr_err("test has failed\n");
++			KUNIT_FAIL(test, "test has failed");
+ 			goto exit;
+ 		}
+-	err = 0;
+-	pr_info("test passed\n");
+ exit:
+ 	kfree(a);
+-	return err;
+ }
+
+-static void __exit test_sort_exit(void)
+-{
+-}
++static struct kunit_case __refdata sort_test_cases[] = {
++	KUNIT_CASE(sort_test),
++	{}
++};
++
++static struct kunit_suite sort_test_suite = {
++	.name = "sort",
++	.test_cases = sort_test_cases,
++};
+
+-module_init(test_sort_init);
+-module_exit(test_sort_exit);
++kunit_test_suites(&sort_test_suite);
+
+ MODULE_LICENSE("GPL");
+
+base-commit: d43c7fb05765152d4d4a39a8ef957c4ea14d8847
 --
-2.20.1
+2.26.2
+
