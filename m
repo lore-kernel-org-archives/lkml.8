@@ -2,92 +2,136 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C13C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FA3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8C642075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45422074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:29:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QD2LhtSL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgG2X2L (ORCPT
+        id S1728028AbgG2X3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 19:28:11 -0400
-Received: from mga05.intel.com ([192.55.52.43]:31754 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726718AbgG2X2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 19:28:10 -0400
-IronPort-SDR: INjKOM/+yw7RBJgVKmxjxv1O/yz16A7RkrwIeODznbGGkaXlIxJ+BKnhTy43/np2N9N83E+Qzp
- 3MvaYLM4kgIQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="236379224"
-X-IronPort-AV: E=Sophos;i="5.75,412,1589266800"; 
-   d="scan'208";a="236379224"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 16:28:09 -0700
-IronPort-SDR: 6IXRQWPsYnycLnkAm/UyYMMR5UZE3qBPgzTNyH6mvZ9S59ktFDmD4Pala+4/KnlmVTTrjlYyVL
- CX3Jm5sa3jMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,412,1589266800"; 
-   d="scan'208";a="394804237"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Jul 2020 16:28:08 -0700
-Date:   Wed, 29 Jul 2020 16:28:08 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Shanbhogue, Vedvyas" <vedvyas.shanbhogue@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>, H Peter Anvin <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Li, Xiaoyao" <xiaoyao.li@intel.com>, x86 <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] x86/bus_lock: Enable bus lock detection
-Message-ID: <20200729232808.GP27751@linux.intel.com>
-References: <1595021700-68460-1-git-send-email-fenghua.yu@intel.com>
- <20200729030232.GE5583@linux.intel.com>
- <e23b04a2adc54a5dbca48271987de822@intel.com>
- <20200729184614.GI27751@linux.intel.com>
- <20200729194259.GA318576@otcwcpicx6.sc.intel.com>
- <20200729200033.GJ27751@linux.intel.com>
- <20200729203557.GA318595@otcwcpicx6.sc.intel.com>
- <20200729203905.GN27751@linux.intel.com>
- <20200729220714.GA318659@otcwcpicx6.sc.intel.com>
+        Wed, 29 Jul 2020 19:29:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbgG2X3e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 19:29:34 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B689C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:29:34 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id t6so6787687qvw.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:29:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ag+H1hGpAomnJAeq4yPJoXLabOM0ywnHRdghtWviE98=;
+        b=QD2LhtSLWQP2TNjnoS6mqe5UA59jgN6HCy0aixdV7r2I3Q8LEf8OrJM9/XFxaYNCcw
+         uY2t0zTQv3j7VlE0kUPrSVjp+11jncgubttjbEX4ea9KW03tLTBubx4v3oNnKVf+itvm
+         9hRts8LGnfKWgqhOtqyOgmuWhSeaQP2Z278L0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ag+H1hGpAomnJAeq4yPJoXLabOM0ywnHRdghtWviE98=;
+        b=csWzZCvIjsSArkf439wmg7+2zrtt5ymcodemqLsHJkqYccutsK1wRge/9AH8290q9o
+         LqTb3siBZ+Bk83rQzjPykeHTQwW+/NOb1JmZOtuEIiGa0oFH7WtGmAJMX0X923TfYhMk
+         9G37wNrnEIkg1p9H/Qcf9lK9oLQwyDGknFMnx8o2EOPCGyhpCPv44gS88wVUEUJTat+/
+         yRCsYQUJMxqyAWPhUTamhs7ymESsm80KxsRgVbfmcYlE6jTfSsPRzCC4DGV32y9KD6g9
+         /hFoDVbKQqHaiT/XjxEKC3ZVDnutY6zlKlw2UJ6zw3ZD4q7u63urs25w3skXEN2HqvOZ
+         HXPQ==
+X-Gm-Message-State: AOAM532wOq+qa1BVHygyny6s4ekR4kDJPc7IJOdaNR3YUVEzN1GWVb9p
+        J6MH5pWbgKZniSZQb82U8GIb4PxRAM8=
+X-Google-Smtp-Source: ABdhPJxKrvzEMkOYwhft91xehzBr9T8QMIfj9gVtbTFPF/D+LKC94rHHNrn8oQfUvct3Ev2fjWkPKg==
+X-Received: by 2002:a0c:b665:: with SMTP id q37mr317388qvf.75.1596065371619;
+        Wed, 29 Jul 2020 16:29:31 -0700 (PDT)
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com. [209.85.222.169])
+        by smtp.gmail.com with ESMTPSA id z126sm1741802qkc.58.2020.07.29.16.29.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 16:29:30 -0700 (PDT)
+Received: by mail-qk1-f169.google.com with SMTP id x69so24049685qkb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:29:29 -0700 (PDT)
+X-Received: by 2002:a05:620a:5f7:: with SMTP id z23mr20316631qkg.206.1596065368695;
+ Wed, 29 Jul 2020 16:29:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729220714.GA318659@otcwcpicx6.sc.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200726220101.29059-1-linux@roeck-us.net> <20200726220101.29059-7-linux@roeck-us.net>
+ <20200729222150.GA970863@google.com> <ae5aeae1-4dfc-0fd7-3392-bf1ca3540866@roeck-us.net>
+In-Reply-To: <ae5aeae1-4dfc-0fd7-3392-bf1ca3540866@roeck-us.net>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Wed, 29 Jul 2020 16:29:16 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXNSiuXEUmKhM8KvySK2OrW62yO1ZhR4Eigtx57CG33i4A@mail.gmail.com>
+Message-ID: <CA+ASDXNSiuXEUmKhM8KvySK2OrW62yO1ZhR4Eigtx57CG33i4A@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] platform/chrome: cros_ec_proto: Convert EC error
+ codes to Linux error codes
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        linux-iio@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-input@vger.kernel.org, linux-pwm <linux-pwm@vger.kernel.org>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 10:07:14PM +0000, Fenghua Yu wrote:
-> Hi, Sean,
-> 
-> On Wed, Jul 29, 2020 at 01:39:05PM -0700, Sean Christopherson wrote:
-> > On Wed, Jul 29, 2020 at 08:35:57PM +0000, Fenghua Yu wrote:
-> > > If sld=fatal and bld=ratelimit (both sld and bld are enabled in hw),
-> > > a split lock always generates #AC and kills the app and bld will never have
-> > > a chance to trigger #DB for split lock. So effectively the combination makes
-> > > the kernel to take two different actions after detecting a bus lock: if the
-> > > bus lock comes from a split lock, fatal (sld); if the bus lock comes from
-> > > lock to non-WB memory, ratelimit (bld). Seems this is not a useful combination
-> > > and is not what the user really wants to do because the user wants ratelimit
-> > > for BLD, right?
-> > 
-> > I understood all off that.  And as I user I want to run sld=fatal and
-> > bld=ratelimit to provide maximum protection, i.e. disallow split locks at
-> > all times, and ratelimit the crud SLD #AC can't catch.
-> 
-> Then this will expand the current usages and do need two options. Let me work
-> on adding a new "bus_lock_detect=" option as you suggested.
+On Wed, Jul 29, 2020 at 4:22 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> On 7/29/20 3:21 PM, Brian Norris wrote:
+> > On Sun, Jul 26, 2020 at 03:01:01PM -0700, Guenter Roeck wrote:
+> >> --- a/drivers/platform/chrome/cros_ec_proto.c
+> >> +++ b/drivers/platform/chrome/cros_ec_proto.c
 
-I'd wait for feedback from others before spending too much effort rewriting
-everything, I'm just one person with an opinion.
+> > ^^ Maybe we want to double check 'ret != 0'? Or maybe
+> >
+> >                       ret = cros_ec_error_map[result];
+> >                       if (!ret) {
+>
+> 'ret' won't ever be 0 here. Above:
+>                                                         && cros_ec_error_map[result]
+>
+> and below:
+>
+>                 else
+>                         ret = -EPROTO;
+
+Ah, I'm reading too quickly. You're correct, sorry.
+
+> >                               ret = -EPROTO;
+> >                               dev_err(..., "Unexpected EC result code %d\n", result);
+> >                       }
+> >
+> > ? Could even be WARN_ON(), since this would be an actionable programming
+> > error, not exactly an external factor. Or maybe I'm being paranoid, and
+> > future programmers are perfect.
+> >
+> I think, if anything, we might consider adding the message below (result >=
+> ARRAY_SIZE(cros_ec_error_map) is just as bad). Not sure myself. I am
+> open to adding it if people think it would be useful/desirable.
+
+No, my primary motivation was that I thought the logic left room for
+error if there were holes. I was mistaken on that point. Secondarily,
+it was also potentially useful to point out when we fell into those
+holes. I'm not sure logging the warning is that important. Generally,
+we only care about a handful of result codes, and as long as the rest
+don't end up as "success", I think we're in OK shape.
+
+Sorry for the noise. Here's my tag (which given my misreading so far,
+should probably have a heavy discount on its value):
+
+Reviewed-by: Brian Norris <briannorris@chromium.org>
