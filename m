@@ -2,126 +2,151 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C94C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21BE4207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED7220809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:42:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="YeEmJpW2"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="EYN7iWWE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LyKuQZ/7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgG2Oml (ORCPT
+        id S1726787AbgG2Om5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:42:41 -0400
-Received: from mail-eopbgr40057.outbound.protection.outlook.com ([40.107.4.57]:3650
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726385AbgG2Oml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:42:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kcM1oyabSWWgnJv5Bkzh1upSRJzXc6iSYbtZNE1yhMoxJ5mKhPdOrlPYhY4wn+vKs0fztiEkVsIqaT05PwNEFO+PPFA6iKGLP7Xfnem2zxIdvL2kXXNTmAYaAutW8TEb7yGa101E49gw3Ifw3Mz10kouUJv1T8MqB7gLP61JE2xudGBi1Bn6uCozNw3zW5+EMmtE67wCBmD3RVVJzblSdkIjPKf+m5Xkmhg0zDbX+5T2VpGunRHsHjZeiqCFBQiswFZgut4PvXLMbT2eJcw1iwLVt9l/LnLkCLSm/AgzGzb7hjF5fOFh7p8dmWxLVZ0lQisrhJFqD3EzOT3jchR4rg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NylM8yj2Im829xhMW13CdpLgBFNptlxCAFlvaAjnNZs=;
- b=dCCr7Lk2iPaG0ishkT7Q/2oLgZGWjJc4hhu3V8sGk2yvY4Z2/57qTDjf3a9NlQ2BTCTwnLQXT81f+Izi50T28uDPDrfM8BEkgPH9PdCVRz5fgCRdIJKDfshsRF/udckHcLrZrIHr9BQEBN1x4ohOdhajnzSbZipcOQUckYqzgqYi/vXaGlihy0DNCOuoj4tSXdza8Vgk2eWzMSuwLiAngUxjy0s17Q1dDsae/kv9xXJu6I+5cLgWFoTjEMMhj6u8LvjxwIifCcrvc68IPIzmnFEfvNswo9dQN9ti2TVcWO9Wr7+apFHl6QdAL/CUyVwlFTi7hOi/abFQ/g2GbXXMuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NylM8yj2Im829xhMW13CdpLgBFNptlxCAFlvaAjnNZs=;
- b=YeEmJpW2Q4IeuzUVPoY0jeqv6T6ehAuvLWKRuFUhybvOecdSvOwm+GrwY6tF/bGF63R+i1BU0XWAiCMcqVh3MVxTovyRNQEaKSXpiIErAAueVgyT5TVclDg3ejbSAxLgHzIVf308TmagAiwUgWjGJwfGCFiUEZzkCYhI7WNvZ/s=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=mellanox.com;
-Received: from AM0PR05MB4290.eurprd05.prod.outlook.com (2603:10a6:208:63::16)
- by AM0PR05MB4132.eurprd05.prod.outlook.com (2603:10a6:208:61::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Wed, 29 Jul
- 2020 14:42:37 +0000
-Received: from AM0PR05MB4290.eurprd05.prod.outlook.com
- ([fe80::21b3:2006:95aa:7a1f]) by AM0PR05MB4290.eurprd05.prod.outlook.com
- ([fe80::21b3:2006:95aa:7a1f%3]) with mapi id 15.20.3216.034; Wed, 29 Jul 2020
- 14:42:37 +0000
-Subject: Re: [PATCH net-next RFC 09/13] devlink: Add enable_remote_dev_reset
- generic parameter
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
- <1595847753-2234-10-git-send-email-moshe@mellanox.com>
- <20200727175935.0785102a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Moshe Shemesh <moshe@mellanox.com>
-Message-ID: <5baf2825-a550-f68f-f76e-3a8688aa6ae6@mellanox.com>
-Date:   Wed, 29 Jul 2020 17:42:12 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200727175935.0785102a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR02CA0029.eurprd02.prod.outlook.com
- (2603:10a6:208:3e::42) To AM0PR05MB4290.eurprd05.prod.outlook.com
- (2603:10a6:208:63::16)
+        Wed, 29 Jul 2020 10:42:57 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:51919 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726385AbgG2Om4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 10:42:56 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 6A25A5C010E;
+        Wed, 29 Jul 2020 10:42:55 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 29 Jul 2020 10:42:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=GzwVm6BSp1ZpDRDfO3rdNYnD6Uv
+        13RpFnX4V+Vax2sQ=; b=EYN7iWWEksJ77iqIIeKYYbvHG81CngqUXgg3mE536K2
+        VPPUvgFbqWXWi5CP9T75H7YVimk9w7RoHk1QYI3y6JPMbhpYU8q/oJXXkObPPRfS
+        50LRisXUN9kDWPi/+D5mxray0jCmRozF+b16goF9hdqjryt9mM/wC7a7LYAK/aNU
+        PKw1c7Rw8Aiv9pVx6Ul2Ctp+HAyrJBEAGWTWmkNnULLLYRqQAvszYw9k309Jkqhi
+        /sOHd16SCbLQ7YrRqnDyV4dE+SNsBmMCJrmRBtkeZTeNVpd0l9YtOZEBaZMoafEA
+        OroAZyKsV6XMSefybgRfQwKmlE6ey+e8udp9ZIQtVuA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=GzwVm6
+        BSp1ZpDRDfO3rdNYnD6Uv13RpFnX4V+Vax2sQ=; b=LyKuQZ/7iYq0YDjnQKy+36
+        8fN88UQprKwp1IxLhrluFXHy4bfISn8IIGFIb0DKmchN2aGHbZvRW2nfdHhqShCG
+        11oXYUxq7WCc1On1RKhYHrYnIwW4LSyE6lYWGuSz4oUvFhri9Etie2DdxhvG4Vnh
+        FB1jJJ68Bxb44YLsZOYfJKPr0UpRXXVs4U0kYG159RLjOmi+N/bgf924ppRoMYod
+        n1DyHxvOWHBceItDnMypktJhGKlLdoH02qArYKJY/kSSFEMH70XRGUECZfS4NR9J
+        LaR8hn8UjmI55kMzLaHnUY6olaO1alM5vS1g+82D9+Y98tZ7Tf3gl/p1vaRAneKw
+        ==
+X-ME-Sender: <xms:7YohX4ewiCVAOFMx0l3ZS65cHcBZGaUAvRRYw_1V1qquBtlrJfLJig>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrieeggdektdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
+    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:7YohX6OPNuAsPXjyPdjNMDGyDSR8oaiRw1kORJ9pvx4RyrjOoCTn0Q>
+    <xmx:7YohX5jy6zc7bhZ9wnBcE3fW7kAqJ2jl83RrJJyTDLy7t8DN3DkGzw>
+    <xmx:7YohX99GboQKJT7nVsiJsvfMK7O8xdCWFFXx6gihboxqYaY4y4BN8Q>
+    <xmx:74ohX4hFr-Ez06vsH64PR9G77XZlo7yKidvmk6pDZ4esocs2x0BBKQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1E63C30600B9;
+        Wed, 29 Jul 2020 10:42:53 -0400 (EDT)
+Date:   Wed, 29 Jul 2020 16:42:51 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Subject: Re: [PATCH v4 29/78] drm/vc4: crtc: Add a delay after disabling the
+ PixelValve output
+Message-ID: <20200729144251.us6a2pgkjjmm53ov@gilmour.lan>
+References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+ <a1f22aadc60a2f32022831a6348c8bbd6e1954c3.1594230107.git-series.maxime@cerno.tech>
+ <CAPY8ntBLWrfagZ5-kQz+5Mkw4_KaaTP63_L3D4owJAfA5kFpzw@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.20.10.2] (2.53.25.164) by AM0PR02CA0029.eurprd02.prod.outlook.com (2603:10a6:208:3e::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Wed, 29 Jul 2020 14:42:27 +0000
-X-Originating-IP: [2.53.25.164]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e8ed780f-09c0-4303-10b7-08d833cda375
-X-MS-TrafficTypeDiagnostic: AM0PR05MB4132:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR05MB413248BF906FC274FE5411A9D9700@AM0PR05MB4132.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: v43pRata8uWE6WUlWl8HLFD67PXWh9E/3UwdII2/f7d18Ng6gJlKqBUWKUUo+oYv9vX87jclojL9F1x601586un+vbH29iGNfGPTGSFzZbSC4bOmLeE18f+8kuatFgi8E+KmIGvSYYS2BBAvS06IX25jEaz8k+CPtiZo7VLhI/ex2RqXS9P7eVEN8cUQ1YE22QS4Xnrkq13AeFlnQnn9hLgjYbsiKV83ABv7RLy87jZPplGaajv7I/MfaoHxqoOAbkxn76dkt707O9cpeyNCkR+ZpxTjhmRKI6pzzsaVjFP6vQpdD+ipK+FdgoaJCT2SXjwWPa7nls9x4+TShalj50hgzSm0YSlXP9/UQYJtldVwwFGqyEXSWk2TVmPLJrcewQaO0Wge7d35ZnflExnPlw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB4290.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(396003)(366004)(39860400002)(8936002)(6666004)(316002)(2906002)(53546011)(8676002)(478600001)(6486002)(16576012)(36756003)(52116002)(4326008)(31686004)(31696002)(6916009)(86362001)(956004)(66556008)(66476007)(66946007)(4744005)(16526019)(83380400001)(186003)(54906003)(26005)(5660300002)(2616005)(41533002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: FQHt+8j6OK1D8P1hP9VvT6KO7rnHrE7x0eJM4s/ZY82/G4fRO1x3tU6CfY71gafa3uTgR5XYuTFwvPpBUtNfbcoqJR5QEy3KM8hs0RYbjzV8dgukQ/XiAOHeUWr7i0n5EnuaAm1gf8HQnB0meZyDpknv8lAwVwq/G2C77pTlkzLRzPLzk3w4hhDEZrfOKXMslZsdtzXoVnrA/kIEI30fyLEuzS4vC35eU/+2s+UGiyCXkWuLI5WbHCJ4zjYDoHlvZg5CyIio8yw1GHK6L/uHAcVG2X+GiIlcOBmrUsh/TEEGB7gT/dM7M2/7ukd+VPkP85f/i/YCoIKnbeMr80s6e0q4cOnE8TZ88Vl3EYy+Ua4ttxb0SFTcuHc7oa3mSiFXscvjPy8Z6E3Y48CT8GoLKH55DlftQW9u99aK3osPPiFbNP5eZD+r/m25lVVP/8xXGuvOSh0Yi15sAHrRf4iZOQEpgtXrVhYRR4s2k/TjvyM=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8ed780f-09c0-4303-10b7-08d833cda375
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR05MB4290.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2020 14:42:37.8084
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: opVhvuDpiVt5aoO2QNjp4mFoAM6b7Cb0fAAxaRIuhRgX+siK6lUUnmEBTvh1LKEQRudDxxkn9iUK19tvjspZ6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4132
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7egmvjdmvf73mwty"
+Content-Disposition: inline
+In-Reply-To: <CAPY8ntBLWrfagZ5-kQz+5Mkw4_KaaTP63_L3D4owJAfA5kFpzw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 7/28/2020 3:59 AM, Jakub Kicinski wrote:
-> On Mon, 27 Jul 2020 14:02:29 +0300 Moshe Shemesh wrote:
->> The enable_remote_dev_reset devlink param flags that the host admin
->> allows device resets that can be initiated by other hosts. This
->> parameter is useful for setups where a device is shared by different
->> hosts, such as multi-host setup. Once the user set this parameter to
->> false, the driver should NACK any attempt to reset the device while the
->> driver is loaded.
->>
->> Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-> There needs to be a devlink event generated when reset is triggered
-> (remotely or not).
->
-> You're also missing failure reasons. Users need to know if the reset
-> request was clearly nacked by some host, not supported, etc. vs
-> unexpected failure.
+--7egmvjdmvf73mwty
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
-I will fix and send extack message to the user accordingly.
+On Wed, Jul 29, 2020 at 03:09:21PM +0100, Dave Stevenson wrote:
+> On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > In order to avoid pixels getting stuck in the (unflushable) FIFO between
+> > the HVS and the PV, we need to add some delay after disabling the PV ou=
+tput
+> > and before disabling the HDMI controller. 20ms seems to be good enough =
+so
+> > let's use that.
+> >
+> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> > ---
+> >  drivers/gpu/drm/vc4/vc4_crtc.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_c=
+rtc.c
+> > index d0b326e1df0a..7b178d67187f 100644
+> > --- a/drivers/gpu/drm/vc4/vc4_crtc.c
+> > +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+> > @@ -403,6 +403,8 @@ static void vc4_crtc_atomic_disable(struct drm_crtc=
+ *crtc,
+> >         ret =3D wait_for(!(CRTC_READ(PV_V_CONTROL) & PV_VCONTROL_VIDEN)=
+, 1);
+> >         WARN_ONCE(ret, "Timeout waiting for !PV_VCONTROL_VIDEN\n");
+> >
+> > +       mdelay(20);
+>=20
+> mdelay for 20ms seems a touch unfriendly as it's a busy wait. Can we
+> not msleep instead?
 
+Since the timing was fairly critical, sleeping didn't seem like a good
+solution since there's definitely some chance you overshoot and end up
+with a higher time than the one you targeted.
+
+Maxime
+
+--7egmvjdmvf73mwty
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXyGK6wAKCRDj7w1vZxhR
+xW7BAQDwt5j9Pshu1GKCULxSDv9PS+5o32//+Xr9V03eudzzWgD/ez5A4HPtG6s1
+iaSko1HSa8F3EhSBN2c4qShUyYpkhAI=
+=fvZ0
+-----END PGP SIGNATURE-----
+
+--7egmvjdmvf73mwty--
