@@ -2,48 +2,104 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD8FC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38D0E2075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5F02075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:08:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R3pBUmaq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgG2RGo (ORCPT
+        id S1726983AbgG2RIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:06:44 -0400
-Received: from verein.lst.de ([213.95.11.211]:52991 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726365AbgG2RGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 13:06:44 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 27EC368AFE; Wed, 29 Jul 2020 19:06:43 +0200 (CEST)
-Date:   Wed, 29 Jul 2020 19:06:42 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/7] modules: return licensing information from
- find_symbol
-Message-ID: <20200729170642.GB2279@lst.de>
-References: <20200729062711.13016-1-hch@lst.de> <20200729062711.13016-7-hch@lst.de> <20200729164759.GA17594@linux-8ccs>
+        Wed, 29 Jul 2020 13:08:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgG2RIJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 13:08:09 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D188C061794;
+        Wed, 29 Jul 2020 10:08:09 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f5so25852477ljj.10;
+        Wed, 29 Jul 2020 10:08:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Kdm+mgqvwV7CVf+Pvs1UK+aKOAgvVAj+fT+AGl9gU/o=;
+        b=R3pBUmaqToAvUXZH5tAeJ79vR2bK59XOrW1Pa/E6R1a4Wh7fwhrJ5ZwNnG4J4svnaO
+         o5o/tb/6pZ+H8jUY3rLNE/hGK2hKFu4P282EQGgk0U0UuUyIZSxdijncXnxgRx+J28hM
+         JWiUL6fnheSuk/8ZLzTDgui69PyMDaVxQM31gxngUPALVcpGxWMbstWCVulOhLOnPPa+
+         EiiL9At+Pe6MtwLIyGrs6zPBG61Pq6keRFTjUmnXMwMwceNoQKfTdqYZT7IeuXvixuVo
+         qqGZ/w6aPuOhE3R+bjeIP1fD2tYao3K8Lw9S786/4pytTN1bGM+2XYY1EKJudfhZWVVc
+         i8rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Kdm+mgqvwV7CVf+Pvs1UK+aKOAgvVAj+fT+AGl9gU/o=;
+        b=JHYtaU617K4oJHN37V79e6m+BQZu7A84cGXxrVQ23GsPidHsXSplFazq/fR7YGi4K0
+         C2cBZwvcfsqBj6ET2gTzXHLQezuq4MLP+rQ5WED/Wqk748D8/2+jF2hEEItPNdHquxHM
+         Pbh62vJPpuMMhRKLQGKAsDnDfhN2MAf5wnXvTsdVicr8PnYnBSUDDoO9VBsbFunXebzF
+         TLNaZIyWhA9gr63XMYHxIxjaOsqjD5vgzeC15XFPCu78Pi8iyfunnxlhvHcorl2VPWAo
+         5hrvXByNxuCXWXdIjLb/qYchw6IgGP7ULF8DBhjdaFxZlDgOsNLiKoE5TqExjIcNPwpm
+         O6HQ==
+X-Gm-Message-State: AOAM532nJtZbU06wbnvOJM3tvO/jsq+sSdbTvDbFf3Nia8EnlD8QBWhX
+        ud5gQGKOCw6Er1Fdx2tF1pxefKlS
+X-Google-Smtp-Source: ABdhPJxZZPDDdtZSLDx1sPcvKxSlR6GIhIb8gtqrr7AXluJlgMFp6LEauw/Lo1ppkp1hv0BmrPW3Cw==
+X-Received: by 2002:a2e:9a91:: with SMTP id p17mr1664078lji.378.1596042487460;
+        Wed, 29 Jul 2020 10:08:07 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
+        by smtp.googlemail.com with ESMTPSA id z25sm498374lji.33.2020.07.29.10.08.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 10:08:06 -0700 (PDT)
+Subject: Re: [RFC PATCH v5 12/14] gpu: host1x: mipi: Keep MIPI clock enabled
+ till calibration is done
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
+ <1595883452-17343-13-git-send-email-skomatineni@nvidia.com>
+ <b21e3227-d0d8-5b4a-ae69-aa29551a22c3@gmail.com>
+ <69903c67-8e5f-11c2-45ec-c76b97634aba@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d291d306-55d4-2264-dc05-0e47f0dfef20@gmail.com>
+Date:   Wed, 29 Jul 2020 20:08:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729164759.GA17594@linux-8ccs>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <69903c67-8e5f-11c2-45ec-c76b97634aba@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 06:48:00PM +0200, Jessica Yu wrote:
-> Just a small nit. Most of module.c uses license rather than licence -
-> could we unify the spelling to remain consistent? Sigh, American vs.
-> British English.. :)
+28.07.2020 19:04, Sowjanya Komatineni пишет:
+...
+>>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
+>>> +{
+>> Doesn't MIPI_CAL need to be reset here?
+> No need to reset MIPI CAL
 
-Sure, I can fix that up.
+Could you please explain why. There is a calibration state-machine that
+apparently needs to be returned into initial state, does it return by
+itself?
+
+TRM says that MIPI block needs to be reset before of starting
+calibration process. The reset is completely missing in the driver, I
+assume it needs to be corrected with another patch.
