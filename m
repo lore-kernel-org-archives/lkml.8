@@ -2,116 +2,218 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02697C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE5CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEC6420658
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408FB20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:03:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aM1RFh0n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgG2UBr (ORCPT
+        id S1726787AbgG2UDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:01:47 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:60099 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgG2UBq (ORCPT
+        Wed, 29 Jul 2020 16:03:47 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47080 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726476AbgG2UDq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:01:46 -0400
-Received: from mail-qv1-f45.google.com ([209.85.219.45]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M27ix-1k2o4n3dMn-002TvV; Wed, 29 Jul 2020 22:01:45 +0200
-Received: by mail-qv1-f45.google.com with SMTP id t6so6541682qvw.1;
-        Wed, 29 Jul 2020 13:01:44 -0700 (PDT)
-X-Gm-Message-State: AOAM532aeUg+92QPOwCYMfTp2hqcolJ7rsGt6aQu8w/CQyUkGBfiteA/
-        wePMQjV6OcpKkjLPbcHGW55lmJBdvNHrDpspJN0=
-X-Google-Smtp-Source: ABdhPJy0Ua6F8cJWKsPP2p9baaRfve0Dq+caOpEYZQuW5KpGIU4VwtaO5Yvv8AbCmTFZHyZTlC3sodaIaAmZei/ujVY=
-X-Received: by 2002:ad4:450e:: with SMTP id k14mr3013292qvu.211.1596052903435;
- Wed, 29 Jul 2020 13:01:43 -0700 (PDT)
+        Wed, 29 Jul 2020 16:03:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596053024;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QeIeIW3OOISCAV7Iy3NjwK504xkdQFp8POlsXJR8oE4=;
+        b=aM1RFh0nPeyd2FxsuDwVGhexi6kvACrETboa1EcZKFibOa/TC1+PekdzYmpHsI/rCiV8v1
+        W8mN9XZL8OPoXObQFBdbU7Pxshqg6m0z2nRThgfEpsGu7LUSop4f6ws5r+wYJfNLl657mF
+        lvEjt9FAumvPXZQtVNowxuYhI+rFcqg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-251-2W7ts5LJMy63kXFMDtbztA-1; Wed, 29 Jul 2020 16:03:40 -0400
+X-MC-Unique: 2W7ts5LJMy63kXFMDtbztA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5D00F800479;
+        Wed, 29 Jul 2020 20:03:38 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D8FB78525;
+        Wed, 29 Jul 2020 20:03:37 +0000 (UTC)
+Date:   Wed, 29 Jul 2020 14:03:36 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 2/4] iommu: Add iommu_aux_at(de)tach_group()
+Message-ID: <20200729140336.09d2bfe7@x1.home>
+In-Reply-To: <435a2014-c2e8-06b9-3c9a-4afbf6607ffe@linux.intel.com>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+        <20200714055703.5510-3-baolu.lu@linux.intel.com>
+        <20200714093909.1ab93c9e@jacob-builder>
+        <b5b22e01-4a51-8dfe-9ba4-aeca783740f1@linux.intel.com>
+        <20200715090114.50a459d4@jacob-builder>
+        <435a2014-c2e8-06b9-3c9a-4afbf6607ffe@linux.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20200729160942.28867-1-krzk@kernel.org>
-In-Reply-To: <20200729160942.28867-1-krzk@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 29 Jul 2020 22:01:26 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a38VC5UD+1HHRFWnafM7ZLMc34Ay23FUCjjgiz46SCV=A@mail.gmail.com>
-Message-ID: <CAK8P3a38VC5UD+1HHRFWnafM7ZLMc34Ay23FUCjjgiz46SCV=A@mail.gmail.com>
-Subject: Re: [PATCH 0/7] ARM: samsung: Cleanup of various S3C bits
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Kukjin Kim <kgene@kernel.org>,
-        Vincent Sanders <vince@simtec.co.uk>,
-        Simtec Linux Team <linux@simtec.co.uk>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        patches@opensource.cirrus.com,
-        linux-clk <linux-clk@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Sergio Prado <sergio.prado@e-labworks.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Cedric Roux <sed@free.fr>, Lihua Yao <ylhuajnu@outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Q8A7xviGqc7Fth6WK20wIRqSW7CFaj23ClHH9Hs3328Q502L4qu
- 8Ygrz3T6QN2Mi6qOyEh2QodvgrqhOX5YoN8QXW9nenBsW85gWWwm0nNnE52I6tmS2LsAyAe
- XG2DSr2tmzebrlTy8D+EBGQVIynWUG4Zgl0gZ6WzzOh5KenTv2R4u9qznuyaiUsrJbLu5P2
- BErqnU8o1MBGlml/5DI4A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PJkfMKESGco=:wppo13eJj9pHLnh4I61X5y
- mHS5aPCWr9C8kt6qvrmEQlq/hhUl0JntuIRl4ooGTKFuTYeFQbBJWEpBRnxVX4AuCrtYxfuTt
- qaUieAG+L2Lh8eOO46mGL51oME3a/Pt3cYq3S4ClGHdewhKF4jjDM/yCrMXHWSL7GW43AgFZ4
- hG9dQ/2fSzKU6+uI71ILcEySFtKXBu0bkrvriAZNmTHK3GBBaB+0XelHJNqM8pvnztorppTnw
- 0dhOO1mEDODMYARlcs3xrkDUonRphgTg6brzfqjFY4UeIfa6in9JnB8C6klm27Jkhgl1zFxkH
- sPbbB8kT0k8i4liJWdlNDBZfW+y6J3VQiOgccZjFRTMMUbVVVNfPD638EoF7nNXHNaAOZzHda
- GBwvDXiF0fba23BfBQaA6OtkbEUVTWtw66TgrMpc6QohFO+cbBYqc7K5/CLP4OO5c3DjE1AGT
- xr6rg2ANTr99ExHHbaMnpO+hH6H1qLYItwLHtU5U8RLuC2fLCfde6P652ohLwrA8+hLN2JzRl
- KLIl+qt9pXYfh3Hu8wTbVzLERGeVEWWf5Gdrtfji5w/pL2tEi48xEzb5ZZL06GTbDGTeg+5jc
- Aaefa5mu6FDDHBp0iPRrsUV//W4F8Qv+5fQ8nAfacEmDom38fw7CWaa5TQ0m6ireWXhqwBSTF
- x62Hue/weQn9q9xcjJMcXhQ9iYHsexsRSGdF8dar9onYy03J2z8mxMf3JcC6UZw62Cu0T5SdQ
- UJlF2rSzo1FB5i12XR9FCmfvqL2vGlWu3bWNl/QO5Bpl9vR5+vy2GAheydCO3RnHoKC+6UZgu
- +ZfOpCRTSrBEz4BRpDMzF+x3IHta5ATPzPlj/Qu6//tqmUDc2Hx8IJzVHwC/j9kegC7CcLzKN
- w2qbdry6GCcM8hYnAMz/q9dNgEge/uAgdqf+ltVaSCy+hZUrX90hOGOcFXePcFcs/U6AYpRU8
- 8PymUBLLXFrG/QLIl854GkUpGv4qgIRtA9AG0MIKYx4PhXMvMlZYv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 6:11 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Hi,
->
-> I tried to cleanup few warnings in S3C machine code which lead to
-> finding some bigger issues.
->
-> Patches touch mostly the ARM Samsung machine code except patch #1 (clk)
-> and #5 (watchdog).  They are independent from each other, except
-> some conflicting lines.
->
-> The last three patches would welcome some testing... as I did not
-> perform such (lack of S3C hardware).
+On Thu, 16 Jul 2020 09:07:46 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-I have an older series that I mean to repost. Please have a look at
-the s3c-multiplatform branch of
-git://git.kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git
+> Hi Jacob,
+> 
+> On 7/16/20 12:01 AM, Jacob Pan wrote:
+> > On Wed, 15 Jul 2020 08:47:36 +0800
+> > Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> >   
+> >> Hi Jacob,
+> >>
+> >> On 7/15/20 12:39 AM, Jacob Pan wrote:  
+> >>> On Tue, 14 Jul 2020 13:57:01 +0800
+> >>> Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+> >>>      
+> >>>> This adds two new aux-domain APIs for a use case like vfio/mdev
+> >>>> where sub-devices derived from an aux-domain capable device are
+> >>>> created and put in an iommu_group.
+> >>>>
+> >>>> /**
+> >>>>    * iommu_aux_attach_group - attach an aux-domain to an iommu_group
+> >>>> which
+> >>>>    *                          contains sub-devices (for example
+> >>>> mdevs) derived
+> >>>>    *                          from @dev.
+> >>>>    * @domain: an aux-domain;
+> >>>>    * @group:  an iommu_group which contains sub-devices derived from
+> >>>> @dev;
+> >>>>    * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+> >>>>    *
+> >>>>    * Returns 0 on success, or an error value.
+> >>>>    */
+> >>>> int iommu_aux_attach_group(struct iommu_domain *domain,
+> >>>>                              struct iommu_group *group,
+> >>>>                              struct device *dev)
+> >>>>
+> >>>> /**
+> >>>>    * iommu_aux_detach_group - detach an aux-domain from an
+> >>>> iommu_group *
+> >>>>    * @domain: an aux-domain;
+> >>>>    * @group:  an iommu_group which contains sub-devices derived from
+> >>>> @dev;
+> >>>>    * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+> >>>>    *
+> >>>>    * @domain must have been attached to @group via
+> >>>> iommu_aux_attach_group(). */
+> >>>> void iommu_aux_detach_group(struct iommu_domain *domain,
+> >>>>                               struct iommu_group *group,
+> >>>>                               struct device *dev)
+> >>>>
+> >>>> It also adds a flag in the iommu_group data structure to identify
+> >>>> an iommu_group with aux-domain attached from those normal ones.
+> >>>>
+> >>>> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
+> >>>> ---
+> >>>>    drivers/iommu/iommu.c | 58
+> >>>> +++++++++++++++++++++++++++++++++++++++++++ include/linux/iommu.h |
+> >>>> 17 +++++++++++++ 2 files changed, 75 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> >>>> index e1fdd3531d65..cad5a19ebf22 100644
+> >>>> --- a/drivers/iommu/iommu.c
+> >>>> +++ b/drivers/iommu/iommu.c
+> >>>> @@ -45,6 +45,7 @@ struct iommu_group {
+> >>>>    	struct iommu_domain *default_domain;
+> >>>>    	struct iommu_domain *domain;
+> >>>>    	struct list_head entry;
+> >>>> +	unsigned int aux_domain_attached:1;
+> >>>>    };
+> >>>>    
+> >>>>    struct group_device {
+> >>>> @@ -2759,6 +2760,63 @@ int iommu_aux_get_pasid(struct iommu_domain
+> >>>> *domain, struct device *dev) }
+> >>>>    EXPORT_SYMBOL_GPL(iommu_aux_get_pasid);
+> >>>>    
+> >>>> +/**
+> >>>> + * iommu_aux_attach_group - attach an aux-domain to an iommu_group
+> >>>> which
+> >>>> + *                          contains sub-devices (for example
+> >>>> mdevs) derived
+> >>>> + *                          from @dev.
+> >>>> + * @domain: an aux-domain;
+> >>>> + * @group:  an iommu_group which contains sub-devices derived from
+> >>>> @dev;
+> >>>> + * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+> >>>> + *
+> >>>> + * Returns 0 on success, or an error value.
+> >>>> + */
+> >>>> +int iommu_aux_attach_group(struct iommu_domain *domain,
+> >>>> +			   struct iommu_group *group, struct
+> >>>> device *dev) +{
+> >>>> +	int ret = -EBUSY;
+> >>>> +
+> >>>> +	mutex_lock(&group->mutex);
+> >>>> +	if (group->domain)
+> >>>> +		goto out_unlock;
+> >>>> +  
+> >>> Perhaps I missed something but are we assuming only one mdev per
+> >>> mdev group? That seems to change the logic where vfio does:
+> >>> iommu_group_for_each_dev()
+> >>> 	iommu_aux_attach_device()
+> >>>      
+> >>
+> >> It has been changed in PATCH 4/4:
+> >>
+> >> static int vfio_iommu_attach_group(struct vfio_domain *domain,
+> >>                                      struct vfio_group *group)
+> >> {
+> >>           if (group->mdev_group)
+> >>                   return iommu_aux_attach_group(domain->domain,
+> >>                                                 group->iommu_group,
+> >>                                                 group->iommu_device);
+> >>           else
+> >>                   return iommu_attach_group(domain->domain,
+> >> group->iommu_group);
+> >> }
+> >>
+> >> So, for both normal domain and aux-domain, we use the same concept:
+> >> attach a domain to a group.
+> >>  
+> > I get that, but don't you have to attach all the devices within the  
+> 
+> This iommu_group includes only mediated devices derived from an
+> IOMMU_DEV_FEAT_AUX-capable device. Different from iommu_attach_group(),
+> iommu_aux_attach_group() doesn't need to attach the domain to each
+> device in group, instead it only needs to attach the domain to the
+> physical device where the mdev's were created from.
+> 
+> > group? Here you see the group already has a domain and exit.  
+> 
+> If the (group->domain) has been set, that means a domain has already
+> attached to the group, so it returns -EBUSY.
 
-The patches in there need to be rebased on a newer kernel, which
-should be easy, but they will conflict with your work. If there is
-anything in there you can easily pick up into your series, please
-do so.
+I agree with Jacob, singleton groups should not be built into the IOMMU
+API, we're not building an interface just for mdevs or current
+limitations of mdevs.  This also means that setting a flag on the group
+and passing a device that's assumed to be common for all devices within
+the group, don't really make sense here.  Thanks,
 
-       Arnd
+Alex
+
