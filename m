@@ -4,164 +4,218 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E43C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579DEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4392070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37719206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:53:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgG2Dwu (ORCPT
+        id S1726913AbgG2Dxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 23:52:50 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8293 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726245AbgG2Dwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 23:52:50 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 91D23F86D743C368A85F;
-        Wed, 29 Jul 2020 11:52:46 +0800 (CST)
-Received: from [127.0.0.1] (10.174.176.220) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 29 Jul 2020
- 11:52:40 +0800
-Subject: Re: [PATCH v10 4/5] arm64: kdump: fix kdump broken with ZONE_DMA
- reintroduced
-To:     Catalin Marinas <catalin.marinas@arm.com>
-References: <20200703035816.31289-1-chenzhou10@huawei.com>
- <20200703035816.31289-5-chenzhou10@huawei.com> <20200727173014.GL13938@gaia>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <dyoung@redhat.com>,
-        <bhe@redhat.com>, <will@kernel.org>, <james.morse@arm.com>,
-        <robh+dt@kernel.org>, <arnd@arndb.de>,
-        <John.P.donnelly@oracle.com>, <prabhakar.pkin@gmail.com>,
-        <nsaenzjulienne@suse.de>, <corbet@lwn.net>, <bhsharma@redhat.com>,
-        <horms@verge.net.au>, <guohanjun@huawei.com>,
-        <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>
-From:   chenzhou <chenzhou10@huawei.com>
-Message-ID: <dd40f6ee-d5bd-1798-e7d6-1fb8ae91dc8b@huawei.com>
-Date:   Wed, 29 Jul 2020 11:52:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Tue, 28 Jul 2020 23:53:44 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:47672 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726385AbgG2Dxn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 23:53:43 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U46lWws_1595994817;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U46lWws_1595994817)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 29 Jul 2020 11:53:37 +0800
+Subject: Re: [PATCH v17 13/21] mm/lru: introduce TestClearPageLRU
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1595681998-19193-14-git-send-email-alex.shi@linux.alibaba.com>
+Message-ID: <9b906469-38fb-8a4e-9a47-d617c7669579@linux.alibaba.com>
+Date:   Wed, 29 Jul 2020 11:53:23 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200727173014.GL13938@gaia>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <1595681998-19193-14-git-send-email-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=gbk
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.176.220]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi  Catalin,
+rewrite the commit log.
 
+From 9310c359b0049e3cc9827b771dc583d504bbf022 Mon Sep 17 00:00:00 2001
+From: Alex Shi <alex.shi@linux.alibaba.com>
+Date: Sat, 25 Apr 2020 12:03:30 +0800
+Subject: [PATCH v17 13/23] mm/lru: introduce TestClearPageLRU
 
-On 2020/7/28 1:30, Catalin Marinas wrote:
-> On Fri, Jul 03, 2020 at 11:58:15AM +0800, Chen Zhou wrote:
->> commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32")
->> broken the arm64 kdump. If the memory reserved for crash dump kernel
->> falled in ZONE_DMA32, the devices in crash dump kernel need to use
->> ZONE_DMA will alloc fail.
->>
->> This patch addressed the above issue based on "reserving crashkernel
->> above 4G". Originally, we reserve low memory below 4G, and now just need
->> to adjust memory limit to arm64_dma_phys_limit in reserve_crashkernel_low
->> if ZONE_DMA is enabled. That is, if there are devices need to use ZONE_DMA
->> in crash dump kernel, it is a good choice to use parameters
->> "crashkernel=X crashkernel=Y,low".
->>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> ---
->>  kernel/crash_core.c | 7 ++++++-
->>  1 file changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
->> index a7580d291c37..e8ecbbc761a3 100644
->> --- a/kernel/crash_core.c
->> +++ b/kernel/crash_core.c
->> @@ -320,6 +320,7 @@ int __init reserve_crashkernel_low(void)
->>  	unsigned long long base, low_base = 0, low_size = 0;
->>  	unsigned long total_low_mem;
->>  	int ret;
->> +	phys_addr_t crash_max = 1ULL << 32;
->>  
->>  	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
->>  
->> @@ -352,7 +353,11 @@ int __init reserve_crashkernel_low(void)
->>  			return 0;
->>  	}
->>  
->> -	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
->> +#ifdef CONFIG_ARM64
->> +	if (IS_ENABLED(CONFIG_ZONE_DMA))
->> +		crash_max = arm64_dma_phys_limit;
->> +#endif
->> +	low_base = memblock_find_in_range(0, crash_max, low_size, CRASH_ALIGN);
->>  	if (!low_base) {
->>  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
->>  		       (unsigned long)(low_size >> 20));
-> Given the number of #ifdefs we end up with in this function, I think
-> it's better to simply copy to the code to arch/arm64 and tailor it
-> accordingly.
->
-> Anyway, there are two series solving slightly different issues with
-> kdump reservations:
->
-> 1. This series which relaxes the crashkernel= allocation to go anywhere
->    in the accessible space while having a dedicated crashkernel=X,low
->    option for ZONE_DMA.
->
-> 2. Bhupesh's series [1] forcing crashkernel=X allocations only from
->    ZONE_DMA.
->
-> For RPi4 support, we limited ZONE_DMA allocations to the 1st GB.
-> Existing crashkernel= uses may no longer work, depending on where the
-> allocation falls. Option (2) above is a quick fix assuming that the
-> crashkernel reservation is small enough. What's a typical crashkernel
-> option here? That series is probably more prone to reservation failures.
->
-> Option (1), i.e. this series, doesn't solve the problem raised by
-> Bhupesh unless one uses the crashkernel=X,low argument. It can actually
-> make it worse even for ZONE_DMA32 since the allocation can go above 4G
-> (assuming that we change the ZONE_DMA configuration to only limit it to
-> 1GB on RPi4).
->
-> I'm more inclined to keep the crashkernel= behaviour to ZONE_DMA
-> allocations. If this is too small for typical kdump, we can look into
-> expanding ZONE_DMA to 4G on non-RPi4 hardware (we had patches on the
-> list). In addition, if Chen thinks allocations above 4G are still needed
-> or if RPi4 needs a sufficiently large crashkernel=, I'd rather have a
-> ",high" option to explicitly require such access.
-Thanks for your reply and exhaustive explanation.
+Currently lru_lock still guards both lru list and page's lru bit, that's
+ok. but if we want to use specific lruvec lock on the page, we need to
+pin down the page's lruvec/memcg during locking. Just taking lruvec
+lock first may be undermined by the page's memcg charge/migration. To
+fix this problem, we could clear the lru bit out of locking and use
+it as pin down action to block the page isolation in memcg changing.
 
-In our ARM servers, we need to to reserve a large chunk for kdump(512M or 1G),
-there is no enough low memory. So we proposed this patch series
-"support reserving crashkernel above 4G on arm64 kdump" In April 2019.
+So now a standard steps of page isolation is following:
+	1, get_page(); 	       #pin the page avoid to be free
+	2, TestClearPageLRU(); #block other isolation like memcg change
+	3, spin_lock on lru_lock; #serialize lru list access
+	4, delete page from lru list;
+The step 2 could be optimzed/replaced in scenarios which page is
+unlikely be accessed or be moved between memcgs.
 
-I introduce parameters "crashkernel=X,[high,low]" as x86_64 does in earlier versions.
-Suggested by James, to simplify, we call reserve_crashkernel_low() at the beginning of
-reserve_crashkernel() and then relax the arm64_dma32_phys_limit if reserve_crashkernel_low()
-allocated something.
-That is, just the parameter "crashkernel=X,low" is ok and i deleted "crashkernel=X,high".
+This patch start with the first part: TestClearPageLRU, which combines
+PageLRU check and ClearPageLRU into a macro func TestClearPageLRU. This
+function will be used as page isolation precondition to prevent other
+isolations some where else. Then there are may !PageLRU page on lru
+list, need to remove BUG() checking accordingly.
 
-After the ZONE_DMA introduced in December 2019, the issue occurred as you said above.
-In fact, we didn't have RPi4 machine. Originally, i suggested to fix this based on this patch series
-and used the dedicated option.
+There 2 rules for lru bit now:
+1, the lru bit still indicate if a page on lru list, just in some
+   temporary moment(isolating), the page may have no lru bit when
+   it's on lru list.  but the page still must be on lru list when the
+   lru bit set.
+2, have to remove lru bit before delete it from lru list.
 
-According to your clarify, for typical kdump, there are other solutions. In this case,
-"keep the crashkernel= behaviour to ZONE_DMA allocations" looks much better.
+Hugh Dickins pointed that when a page is in free path and no one is
+possible to take it, non atomic lru bit clearing is better, like in
+__page_cache_release and release_pages.
+And no need get_page() before lru bit clear in isolate_lru_page,
+since it '(1) Must be called with an elevated refcount on the page'.
 
-How about like this:
-1. For ZONE_DMA issue, use Bhupesh's solution, keep the crashkernel= behaviour to ZONE_DMA allocations.
-2. For this patch series, make the reserve_crashkernel_low() to ZONE_DMA allocations.
+As Andrew Morton mentioned this change would dirty cacheline for page
+isn't on LRU. But the lost would be acceptable with Rong Chen
+<rong.a.chen@intel.com> report:
+https://lkml.org/lkml/2020/3/4/173
 
-Thanks,
-Chen Zhou
-> [1] http://lists.infradead.org/pipermail/kexec/2020-July/020777.html
->
+Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: cgroups@vger.kernel.org
+Cc: linux-mm@kvack.org
+---
+ include/linux/page-flags.h |  1 +
+ mm/mlock.c                 |  3 +--
+ mm/swap.c                  |  6 ++----
+ mm/vmscan.c                | 18 +++++++-----------
+ 4 files changed, 11 insertions(+), 17 deletions(-)
 
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 6be1aa559b1e..9554ed1387dc 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -326,6 +326,7 @@ static inline void page_init_poison(struct page *page, size_t size)
+ PAGEFLAG(Dirty, dirty, PF_HEAD) TESTSCFLAG(Dirty, dirty, PF_HEAD)
+ 	__CLEARPAGEFLAG(Dirty, dirty, PF_HEAD)
+ PAGEFLAG(LRU, lru, PF_HEAD) __CLEARPAGEFLAG(LRU, lru, PF_HEAD)
++	TESTCLEARFLAG(LRU, lru, PF_HEAD)
+ PAGEFLAG(Active, active, PF_HEAD) __CLEARPAGEFLAG(Active, active, PF_HEAD)
+ 	TESTCLEARFLAG(Active, active, PF_HEAD)
+ PAGEFLAG(Workingset, workingset, PF_HEAD)
+diff --git a/mm/mlock.c b/mm/mlock.c
+index f8736136fad7..228ba5a8e0a5 100644
+--- a/mm/mlock.c
++++ b/mm/mlock.c
+@@ -108,13 +108,12 @@ void mlock_vma_page(struct page *page)
+  */
+ static bool __munlock_isolate_lru_page(struct page *page, bool getpage)
+ {
+-	if (PageLRU(page)) {
++	if (TestClearPageLRU(page)) {
+ 		struct lruvec *lruvec;
+ 
+ 		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+ 		if (getpage)
+ 			get_page(page);
+-		ClearPageLRU(page);
+ 		del_page_from_lru_list(page, lruvec, page_lru(page));
+ 		return true;
+ 	}
+diff --git a/mm/swap.c b/mm/swap.c
+index f645965fde0e..5092fe9c8c47 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -83,10 +83,9 @@ static void __page_cache_release(struct page *page)
+ 		struct lruvec *lruvec;
+ 		unsigned long flags;
+ 
++		__ClearPageLRU(page);
+ 		spin_lock_irqsave(&pgdat->lru_lock, flags);
+ 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+-		VM_BUG_ON_PAGE(!PageLRU(page), page);
+-		__ClearPageLRU(page);
+ 		del_page_from_lru_list(page, lruvec, page_off_lru(page));
+ 		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+ 	}
+@@ -878,9 +877,8 @@ void release_pages(struct page **pages, int nr)
+ 				spin_lock_irqsave(&locked_pgdat->lru_lock, flags);
+ 			}
+ 
+-			lruvec = mem_cgroup_page_lruvec(page, locked_pgdat);
+-			VM_BUG_ON_PAGE(!PageLRU(page), page);
+ 			__ClearPageLRU(page);
++			lruvec = mem_cgroup_page_lruvec(page, locked_pgdat);
+ 			del_page_from_lru_list(page, lruvec, page_off_lru(page));
+ 		}
+ 
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index c1c4259b4de5..4183ae6b54b5 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1671,8 +1671,6 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+ 		page = lru_to_page(src);
+ 		prefetchw_prev_lru_page(page, src, flags);
+ 
+-		VM_BUG_ON_PAGE(!PageLRU(page), page);
+-
+ 		nr_pages = compound_nr(page);
+ 		total_scan += nr_pages;
+ 
+@@ -1769,21 +1767,19 @@ int isolate_lru_page(struct page *page)
+ 	VM_BUG_ON_PAGE(!page_count(page), page);
+ 	WARN_RATELIMIT(PageTail(page), "trying to isolate tail page");
+ 
+-	if (PageLRU(page)) {
++	if (TestClearPageLRU(page)) {
+ 		pg_data_t *pgdat = page_pgdat(page);
+ 		struct lruvec *lruvec;
++		int lru = page_lru(page);
+ 
+-		spin_lock_irq(&pgdat->lru_lock);
++		get_page(page);
+ 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+-		if (PageLRU(page)) {
+-			int lru = page_lru(page);
+-			get_page(page);
+-			ClearPageLRU(page);
+-			del_page_from_lru_list(page, lruvec, lru);
+-			ret = 0;
+-		}
++		spin_lock_irq(&pgdat->lru_lock);
++		del_page_from_lru_list(page, lruvec, lru);
+ 		spin_unlock_irq(&pgdat->lru_lock);
++		ret = 0;
+ 	}
++
+ 	return ret;
+ }
+ 
+-- 
+1.8.3.1
 
