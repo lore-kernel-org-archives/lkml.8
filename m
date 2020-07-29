@@ -2,110 +2,79 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E209AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE32C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC44822B49
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:57:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lMHcgfnN"
+	by mail.kernel.org (Postfix) with ESMTP id E9B982075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:59:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbgG2I5n (ORCPT
+        id S1728028AbgG2I7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:57:43 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10477 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgG2I5m (ORCPT
+        Wed, 29 Jul 2020 04:59:06 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:55551 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgG2I7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:57:42 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2139d90000>; Wed, 29 Jul 2020 01:56:57 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 29 Jul 2020 01:57:42 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 29 Jul 2020 01:57:42 -0700
-Received: from [10.26.73.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jul
- 2020 08:57:39 +0000
-Subject: Re: [PATCH 4.19 00/86] 4.19.135-rc3 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200728153252.881727078@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <cf885605-8098-f2fd-262e-4502562d67da@nvidia.com>
-Date:   Wed, 29 Jul 2020 09:57:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 04:59:06 -0400
+Received: by mail-il1-f198.google.com with SMTP id i78so10970035ill.22
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:59:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=gFBRlRWNk92oL6Fz7e42YwVu/c/ZEOEHHkd5Zj/UqNY=;
+        b=n1mIxVNiWkjKUstD0bhdznYwFcdAadz+1Ux0/gEVNY6AX2jyMhmljNeIkslcNrzGTX
+         U7itDKUlmshK9d9Za+WVJppvCJy2frN/W691EPWTzLVzbj//CS4iWo75StD80wBJs1CK
+         uxkzOxLro8vHl/yiE5GpXoa+ST1irvokY2ir24oyp+nR0x/V4zQWM1jOhub+PS3Lr68N
+         NBDrYIovLaFj5NYKr0GjV2VjkHqkJkTPag/kMtuOdnSNGez0QF9hcq51j4mnUHcrkKmI
+         Loz4Ax4gKbvrqPuHS0jSqSPtcBtrZSdLFhPWZx2qobKOCv97uNgtkHyPCovClMoW9wYc
+         RlhQ==
+X-Gm-Message-State: AOAM531UMWH1+MO8DfXrC/9GFUMBRbv3hVoo2BquApyfKTsvKE/a42H9
+        ORhfAOjutWmRxAVAZes3eTEBFp4T/R3o069VqD7F699FnGBa
+X-Google-Smtp-Source: ABdhPJyvyX5E1smDObksgtmqLLMrzGTwPv5XpW2cLAchMk5lOO3bPvgvMcHEpqBPYAXEd1vldHGiYB5nuAwSxaE5cK9yKPxGFxaw
 MIME-Version: 1.0
-In-Reply-To: <20200728153252.881727078@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596013017; bh=JJLqlzgBg8nj1X/LEsu7CWCCMx1921nCF/43NBs2DIo=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=lMHcgfnNXbqve59jb3S2EyxJ/LDZjJIhmHy9CvCvsylQR+fIHrSWBbg0aIVxLOJA8
-         FTjNnKTBYNelJIUBtLOHYwd1nayMlLFEEY8KaFDX4o1uzyS2Vx1gbjDtoeYheaTwsx
-         Riuc9S4oK7uFNg9Q/FaKV/M42lEajEADyINoiqdzBQr3U4+5ekvCUEoP9dQRclFT4O
-         uMfyuMboArC2LrHWxzlO+UcbzZh/iKRw6Gp5mzqgZM9+gdRfjKdj9kjkoFdRWGWAYJ
-         yb03OX3vj4Z04YlaQMTTtNTGf7B7KneQBHf0Rx5iPisO5Tp+NDaXbFi3agihEBehrS
-         loolU1YmF1Thg==
+X-Received: by 2002:a92:48dd:: with SMTP id j90mr27158851ilg.75.1596013145206;
+ Wed, 29 Jul 2020 01:59:05 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 01:59:05 -0700
+In-Reply-To: <00000000000099052605aafb5923@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000093b5dc05ab90c468@google.com>
+Subject: Re: general protection fault in vsock_poll
+From:   syzbot <syzbot+a61bac2fcc1a7c6623fe@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, decui@microsoft.com, jhansen@vmware.com,
+        kuba@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, sgarzare@redhat.com, stefanha@redhat.com,
+        syzkaller-bugs@googlegroups.com,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot has bisected this issue to:
 
-On 28/07/2020 16:51, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.135 release.
-> There are 86 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 30 Jul 2020 15:32:32 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.135-rc3.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+commit 408624af4c89989117bb2c6517bd50b7708a2fcd
+Author: Stefano Garzarella <sgarzare@redhat.com>
+Date:   Tue Dec 10 10:43:06 2019 +0000
 
+    vsock: use local transport when it is loaded
 
-All tests are passing for Tegra ...
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17e6489b100000
+start commit:   92ed3019 Linux 5.8-rc7
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1416489b100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1016489b100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=84f076779e989e69
+dashboard link: https://syzkaller.appspot.com/bug?extid=a61bac2fcc1a7c6623fe
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15930b64900000
 
-Test results for stable-v4.19:
-    11 builds:	11 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
+Reported-by: syzbot+a61bac2fcc1a7c6623fe@syzkaller.appspotmail.com
+Fixes: 408624af4c89 ("vsock: use local transport when it is loaded")
 
-Linux version:	4.19.135-rc3-ga2eeabffd1f3
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
