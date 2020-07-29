@@ -2,150 +2,238 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C96C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA0CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C164D2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595999382;
-	bh=eYb5MXNDios1YM3ylYsZfmcDeaiH+jiIZ1lgRFwy64s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xt7iwWLWAjM6mnBvEw7LTiZN78k54W0raQXIy298LfTpgqJVYptvrdEVeq73ldsHi
-	 m5VtbTMTAG77LBJjRmSycQFB9O9ayluDLROQeIpXUFIbnoKIoHu0+M5L8iAPVO16tR
-	 Wxo/aoXrOoihQXWV20pnZjEsxrV04u5wuZvMtoUA=
+	by mail.kernel.org (Postfix) with ESMTP id BF1582074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:13:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vTKy6WPi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgG2FJl (ORCPT
+        id S1726353AbgG2FNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 01:09:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45732 "EHLO mail.kernel.org"
+        Wed, 29 Jul 2020 01:13:24 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:54977 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgG2FJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 01:09:40 -0400
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726054AbgG2FNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 01:13:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595999602; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=gLvzUmKqa6vpHgv/HtG/L/kfLngxdkrX1U5fAVcPL7Q=; b=vTKy6WPiNmU0/X1LZ4I11OA8FaQLVSit3jHIuK/vPhbmlUyp/se5dwdDxvBwmFLzcNCKCcsu
+ 8RMilUpuW26hXx1RWbbLYjetgWxUO2KPi1y9LrUY9GRKER0sFC3QOyNBEgE5nmRv5qnqLiRj
+ aY9xTij2/G1+TONFSCAjS8pHkJc=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f21057249176bd382237bcc (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 05:13:22
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E1E45C43395; Wed, 29 Jul 2020 05:13:21 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B677E21744
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 05:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595999380;
-        bh=eYb5MXNDios1YM3ylYsZfmcDeaiH+jiIZ1lgRFwy64s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GAwiXcoNz08y7TTbyLlCoUYpO5MeI+RNkj6Z/fJ/FknMkcrDelYDcCyRdSMznPhBk
-         1NMp1Qiq0B6/53VJfm2dmBzzTxgiRDJdqtC9dmMNp7Uejt+Y7Y9kF9GbTpSLjFNT8D
-         RKD3FO1mRp/u2PP+0LAaMMO+flgn1PDTrIs+qSnk=
-Received: by mail-wr1-f48.google.com with SMTP id r12so20250235wrj.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 22:09:39 -0700 (PDT)
-X-Gm-Message-State: AOAM532Y0d/O5GsMAK7aRiBHJymSotd0Sg/1zBK2sXw5DJ6360K2kTme
-        GKcwsUFOiT6F+8JO3KPwBQZJFVhriCWatMJfkLsl3Q==
-X-Google-Smtp-Source: ABdhPJz3aIycVjIWLwxfa+Ybs9B0c7EMDmh+T49YplX2TrmTysv3u0GyE6F8KnCgryujrGj2Iq+HoVPwcHz0agFDKC4=
-X-Received: by 2002:a5d:5273:: with SMTP id l19mr27308359wrc.257.1595999378162;
- Tue, 28 Jul 2020 22:09:38 -0700 (PDT)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 26F36C433C6;
+        Wed, 29 Jul 2020 05:13:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 26F36C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     coresight@lists.linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv3] coresight: etm4x: Fix etm4_count race by moving cpuhp callbacks to init
+Date:   Wed, 29 Jul 2020 10:43:10 +0530
+Message-Id: <20200729051310.18436-1-saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200728202229.1195682-1-krisman@collabora.com>
- <20200728202229.1195682-3-krisman@collabora.com> <CALCETrV_HJCrDLCKLrqNbLiOsoEcC9M7zn-v_hcVMvDgnWW8yw@mail.gmail.com>
- <878sf3j5cl.fsf@collabora.com>
-In-Reply-To: <878sf3j5cl.fsf@collabora.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 28 Jul 2020 22:09:26 -0700
-X-Gmail-Original-Message-ID: <CALCETrUVQw4EUyEFQ4xdWBrxVKJtNmrZurGccXtn8i9nNAYufg@mail.gmail.com>
-Message-ID: <CALCETrUVQw4EUyEFQ4xdWBrxVKJtNmrZurGccXtn8i9nNAYufg@mail.gmail.com>
-Subject: Re: [PATCH 2/6] arch: x86: Wrap TIF_IA32 checks
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 9:46 PM Gabriel Krisman Bertazi
-<krisman@collabora.com> wrote:
->
-> Andy Lutomirski <luto@kernel.org> writes:
->
-> > On Tue, Jul 28, 2020 at 1:22 PM Gabriel Krisman Bertazi
-> > <krisman@collabora.com> wrote:
-> >>
-> >> In preparation to remove TIF_IA32, add wrapper that check the process
-> >> has IA32 ABI without using the flag directly.
-> >
-> > Thank you for doing this, but let's please do it right.  There is,
-> > fundamentally, no such thing as a "process with IA32 ABI".
->
-> Hi Andy,
->
-> Thanks a lot for your review.
->
-> As you can see, I'm learning my way here. Can you clarify "there is no
-> such a thing as a 'process with IA32 ABI'"?  I'm not sure if I confused
-> the terminology or if (more worrisome for me) I got the concepts wrong.
->
-> My understanding is that TIF_IA32 marks a thread that is running under
-> the 32-bit compat mode, which would be running a 32-bit process (as in
-> compiled with -m32, for instance), while TIF_X32 marks a process running
-> under the X32 ABI.  Each process would have only one of these
-> "personalities". This is what I meant by a process with IA32 ABI (which
-> is wrong in any case).  Is there more to it, or is the problem the
-> terminology I used?
+etm4_count keeps track of number of ETMv4 registered and on some systems,
+a race is observed on etm4_count variable which can lead to multiple calls
+to cpuhp_setup_state_nocalls_cpuslocked(). This function internally calls
+cpuhp_store_callbacks() which prevents multiple registrations of callbacks
+for a given state and due to this race, it returns -EBUSY leading to ETM
+probe failures like below.
 
-There's more to it.
+ coresight-etm4x: probe of 7040000.etm failed with error -16
 
-On sane architectures like Linux on ARM64, a process can be 32-bit or
-64-bit.  If you are a 64-bit ARM process, you run in 64-bit mode,
-period.  Anything other than execve() that lets you become 32-bit is a
-bug.
+This race can easily be triggered with async probe by setting probe type
+as PROBE_PREFER_ASYNCHRONOUS and with ETM power management property
+"arm,coresight-loses-context-with-cpu".
 
-Linux on x86 is nutty, though.  (IIRC Sparc is too.)  In particular,
-it's entirely legal for a Linux program to switch between 32-bit and
-64-bit mode all by itself.  This can be done with LJMP, LRET, IRET, or
-a few other hacks.  It can also be done using any of the sigreturn
-syscalls.  (SYSENTER comes to mind, but anyone who uses SYSENTER to
-switch modes is *nuts*.)  Certain evil people named Andy Lutomirski
-write kernel selftests that switch modes using sigreturn just to abuse
-the kernel.  But some real programs do this too.  For example, I think
-that CRIU restores 32-bit programs by starting out as a 64-bit
-program, restoring everything, and then switching to 32-bit mode.
-Keep in mind that most of these mode-switching tricks do not enter the
-kernel at all.
+Prevent this race by moving cpuhp callbacks to etm driver init since the
+cpuhp callbacks doesn't have to depend on the etm4_count and can be once
+setup during driver init. Similarly we move cpu_pm notifier registration
+to driver init and completely remove etm4_count usage. Also now we can
+use non cpuslocked version of cpuhp callbacks with this movement.
 
-The upshot is that kernel does not actually know what the running
-program's ABI is.  For all the kernel knows, a process uses the
-Linux/psABI 64-bit ABI, the ia32 ABI, the x32 ABI, the Windows 32-bit
-ABI, the Windows 64-bit ABI, and some gnarly ABI from DOS or OS/2, all
-in the same process.
+Fixes: 9b6a3f3633a5 ("coresight: etmv4: Fix CPU power management setup in probe() function")
+Fixes: 58eb457be028 ("hwtracing/coresight-etm4x: Convert to hotplug state machine")
+Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
 
-So we really shouldn't be trying to keep track of what we think the
-user program should be doing, and instead we should pay attention to
-what the user program actually did in its interactions with the
-kernel.  If we want to know whether a user task is running in 64-bit
-mode right now, we can use user_64bit_mode(regs).  (And keep in mind
-that syscalls like rt_sigreturn() and anything that gets ptraced can
-*change* the outcome of user_64bit_mode(regs) mid-syscall.)  If we're
-delivering a signal, we instead want to know the ABI of the signal's
-handler, so we use is_ia32_frame(ksig) and is_x32_frame(ksig).  If we
-want to know whether mmap() should return values above 2^32-1, we
-currently use some hackery, but we really ought to be looking at
-whether the call was 64-bit mmap() or compat mmap().  (I had some
-really half-baked patches to fix this at one point, but the core code
-was a real mess and I didn't finish it.)  If we still supported MPX in
-the kernel, we'd have a real mess, because MPX malfunctions if user
-programs switch bitness on us.  Good riddance!
+Changes in v3:
+ * Minor cleanups from v2 and change to device_initcall (Stephen Boyd)
+ * Move to non cpuslocked cpuhp callbacks and rename to etm_pm_setup() (Mike Leach) 
 
->
-> I don't have any comments on the other things you mentioned, except that
-> I need to go through them and better understand your suggestions.  Would
-> you prefer me to rework this patch series with what you suggested or is
-> this something you want to take over and do yourself?  Both ways are
-> fine by me.
+Changes in v2:
+ * Rearrange cpuhp callbacks and move them to driver init (Suzuki K Poulose)
 
-Please rework it :)  I have seriously limited bandwidth right now.
+---
+ drivers/hwtracing/coresight/coresight-etm4x.c | 65 +++++++++----------
+ 1 file changed, 31 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index 6d7d2169bfb2..fddfd93b9a7b 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -48,8 +48,6 @@ module_param(pm_save_enable, int, 0444);
+ MODULE_PARM_DESC(pm_save_enable,
+ 	"Save/restore state on power down: 1 = never, 2 = self-hosted");
+ 
+-/* The number of ETMv4 currently registered */
+-static int etm4_count;
+ static struct etmv4_drvdata *etmdrvdata[NR_CPUS];
+ static void etm4_set_default_config(struct etmv4_config *config);
+ static int etm4_set_event_filters(struct etmv4_drvdata *drvdata,
+@@ -1398,28 +1396,25 @@ static struct notifier_block etm4_cpu_pm_nb = {
+ 	.notifier_call = etm4_cpu_pm_notify,
+ };
+ 
+-/* Setup PM. Called with cpus locked. Deals with error conditions and counts */
+-static int etm4_pm_setup_cpuslocked(void)
++/* Setup PM. Deals with error conditions and counts */
++static int __init etm4_pm_setup(void)
+ {
+ 	int ret;
+ 
+-	if (etm4_count++)
+-		return 0;
+-
+ 	ret = cpu_pm_register_notifier(&etm4_cpu_pm_nb);
+ 	if (ret)
+-		goto reduce_count;
++		return ret;
+ 
+-	ret = cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ARM_CORESIGHT_STARTING,
+-						   "arm/coresight4:starting",
+-						   etm4_starting_cpu, etm4_dying_cpu);
++	ret = cpuhp_setup_state_nocalls(CPUHP_AP_ARM_CORESIGHT_STARTING,
++					"arm/coresight4:starting",
++					etm4_starting_cpu, etm4_dying_cpu);
+ 
+ 	if (ret)
+ 		goto unregister_notifier;
+ 
+-	ret = cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ONLINE_DYN,
+-						   "arm/coresight4:online",
+-						   etm4_online_cpu, NULL);
++	ret = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
++					"arm/coresight4:online",
++					etm4_online_cpu, NULL);
+ 
+ 	/* HP dyn state ID returned in ret on success */
+ 	if (ret > 0) {
+@@ -1428,21 +1423,15 @@ static int etm4_pm_setup_cpuslocked(void)
+ 	}
+ 
+ 	/* failed dyn state - remove others */
+-	cpuhp_remove_state_nocalls_cpuslocked(CPUHP_AP_ARM_CORESIGHT_STARTING);
++	cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_STARTING);
+ 
+ unregister_notifier:
+ 	cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
+-
+-reduce_count:
+-	--etm4_count;
+ 	return ret;
+ }
+ 
+-static void etm4_pm_clear(void)
++static void __init etm4_pm_clear(void)
+ {
+-	if (--etm4_count != 0)
+-		return;
+-
+ 	cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
+ 	cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_STARTING);
+ 	if (hp_online) {
+@@ -1498,22 +1487,12 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
+ 	if (!desc.name)
+ 		return -ENOMEM;
+ 
+-	cpus_read_lock();
+ 	etmdrvdata[drvdata->cpu] = drvdata;
+ 
+ 	if (smp_call_function_single(drvdata->cpu,
+ 				etm4_init_arch_data,  drvdata, 1))
+ 		dev_err(dev, "ETM arch init failed\n");
+ 
+-	ret = etm4_pm_setup_cpuslocked();
+-	cpus_read_unlock();
+-
+-	/* etm4_pm_setup_cpuslocked() does its own cleanup - exit on error */
+-	if (ret) {
+-		etmdrvdata[drvdata->cpu] = NULL;
+-		return ret;
+-	}
+-
+ 	if (etm4_arch_supported(drvdata->arch) == false) {
+ 		ret = -EINVAL;
+ 		goto err_arch_supported;
+@@ -1560,7 +1539,6 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
+ 
+ err_arch_supported:
+ 	etmdrvdata[drvdata->cpu] = NULL;
+-	etm4_pm_clear();
+ 	return ret;
+ }
+ 
+@@ -1598,4 +1576,23 @@ static struct amba_driver etm4x_driver = {
+ 	.probe		= etm4_probe,
+ 	.id_table	= etm4_ids,
+ };
+-builtin_amba_driver(etm4x_driver);
++
++static int __init etm4x_init(void)
++{
++	int ret;
++
++	ret = etm4_pm_setup();
++
++	/* etm4_pm_setup() does its own cleanup - exit on error */
++	if (ret)
++		return ret;
++
++	ret = amba_driver_register(&etm4x_driver);
++	if (ret) {
++		pr_err("Error registering etm4x driver\n");
++		etm4_pm_clear();
++	}
++
++	return ret;
++}
++device_initcall(etm4x_init);
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
