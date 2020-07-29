@@ -2,149 +2,170 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB94C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD68E2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:43:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ixT2Au1O"
+	by mail.kernel.org (Postfix) with ESMTP id 7C65020838
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgG2Inb (ORCPT
+        id S1727923AbgG2IoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:43:31 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:60579 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727794AbgG2Inb (ORCPT
+        Wed, 29 Jul 2020 04:44:18 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:53211 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727849AbgG2IoR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:43:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596012210; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=cIxFU1Sf6NzJjHO4VHHHl57xTd4T7Fn4JzLrmk5w8xk=;
- b=ixT2Au1O31fiI5G2+e91XLqSC2TQPf4F9PwfG4bob8O36/oCp89Iu2x06kGqidkm8N/2Eqag
- 4IQODi/3hNG7efSYIN2VfBpa8BJrz0RvRRpQYD0EUy5yOXIUd1zilOFYSKxgr6D4LNmIOHmw
- kKq3LEgujZWeFfKbIYPA+9mGCQw=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5f2136b135f3e3d31631d45d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 08:43:29
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 28C60C433A0; Wed, 29 Jul 2020 08:43:29 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 988A4C433CA;
-        Wed, 29 Jul 2020 08:43:27 +0000 (UTC)
+        Wed, 29 Jul 2020 04:44:17 -0400
+Received: by mail-il1-f198.google.com with SMTP id o17so16122281ilt.19
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:44:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=anzIlk8uQ2cLlHxDMSgByVSFr/B869Yekt2qxwnA7oA=;
+        b=nlXVqo9TamVtCgMLVTQ3/ZGS78uQknt7MJeKY2h1DGk6DMbT66/VNA42tGu+Zd8CaI
+         WSlhrIAVJgXOa6Ejm8LE81/xpb/yQowSPPU0BCdGYpvVhQocmUX2KS9Zzd5DNH98DZ9Z
+         VkQ42kkzEAp7I60V1aAwPffMCRy9jjH4cjQ0cU+WYQVO3kQxyMoFxJti3XsPrzqt3MOi
+         F/C3h8h2lQoqCpcG/QyQOsaBm+s6Nhet4fU4qlfjH8SeK0hmQepfhbjy0O4llG/jDZ+r
+         04jk+c5Owxpn24lyEH+rckJO+mdPnmQei1S/JPV+vzSiK46pRbtk4dfK0B7MiQVirbzC
+         4ujw==
+X-Gm-Message-State: AOAM531Lggiiq0KEzZD1Yb3LHEQxWrxg70uc+BWHnRnq6WJFTWygXf7I
+        TbqeW90HGGgCYKYLzcebKaH6BBbqKrbQFbf2fFCLxqHcOduf
+X-Google-Smtp-Source: ABdhPJynPK1t3lnNnbdq5kkpeHB0FMH/dDa47bfj7obpIa0e2iQNibVSj4ceL7COUZmWH8C/vgRU0zC11syELo0U3gGpVxB4WM7Z
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 29 Jul 2020 16:43:27 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        bvanassche@acm.org, beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
-        chaotian.jing@mediatek.com, cc.chou@mediatek.com
-Subject: Re: [PATCH v2] scsi: ufs: Fix possible infinite loop in ufshcd_hold
-In-Reply-To: <20200729024037.23105-1-stanley.chu@mediatek.com>
-References: <20200729024037.23105-1-stanley.chu@mediatek.com>
-Message-ID: <bfbb48b06fa3464da0cbd2aee8a32649@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-Received: by 2002:a6b:9242:: with SMTP id u63mr30892261iod.92.1596012255787;
+ Wed, 29 Jul 2020 01:44:15 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 01:44:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000903d5805ab908fc4@google.com>
+Subject: INFO: rcu detected stall in smp_call_function
+From:   syzbot <syzbot+cb3b69ae80afd6535b0e@syzkaller.appspotmail.com>
+To:     fweisbec@gmail.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanley,
+Hello,
 
-On 2020-07-29 10:40, Stanley Chu wrote:
-> In ufshcd_suspend(), after clk-gating is suspended and link is set
-> as Hibern8 state, ufshcd_hold() is still possibly invoked before
-> ufshcd_suspend() returns. For example, MediaTek's suspend vops may
-> issue UIC commands which would call ufshcd_hold() during the command
-> issuing flow.
-> 
-> Now if UFSHCD_CAP_HIBERN8_WITH_CLK_GATING capability is enabled,
-> then ufshcd_hold() may enter infinite loops because there is no
-> clk-ungating work scheduled or pending. In this case, ufshcd_hold()
-> shall just bypass, and keep the link as Hibern8 state.
-> 
+syzbot found the following issue on:
 
-The infinite loop is expected as ufshcd_hold is called again after
-link is put to hibern8 state, so in QCOM's code, we never do this.
-The cap UFSHCD_CAP_HIBERN8_WITH_CLK_GATING means UIC link state
-must not be HIBERN8 after ufshcd_hold(async=false) returns.
+HEAD commit:    6ba1b005 Merge tag 'asm-generic-fixes-5.8' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14da5522900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=812bbfcb6ae2cd60
+dashboard link: https://syzkaller.appspot.com/bug?extid=cb3b69ae80afd6535b0e
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
-Instead of bailing out from that loop, which makes the logic of
-ufshcd_hold and clk gating even more complex, how about removing
-ufshcd_hold/release from ufshcd_send_uic_cmd()? I think they are
-redundant and we should never send DME cmds if clocks/powers are
-not ready. I mean callers should make sure they are ready to send
-DME cmds (and only callers know when), but not leave that job to
-ufshcd_send_uic_cmd(). It is convenient to remove ufshcd_hold/
-release from ufshcd_send_uic_cmd() as there are not many places
-sending DME cmds without holding the clocks, ufs_bsg.c is one.
-And I have tested my idea on my setup, it worked well for me.
-Another benefit is that it also allows us to use DME cmds
-in clk gating/ungating contexts if we need to in the future.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Please let me know your idea, thanks.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cb3b69ae80afd6535b0e@syzkaller.appspotmail.com
 
-Can Guo.
+rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+rcu: 	Tasks blocked on level-0 rcu_node (CPUs 0-1):
+------------[ cut here ]------------
+IRQs not enabled as expected
+WARNING: CPU: 0 PID: 32297 at kernel/sched/core.c:2701 try_invoke_on_locked_down_task+0x18b/0x320 kernel/sched/core.c:2701
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 32297 Comm: syz-executor.2 Not tainted 5.8.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1f0/0x31e lib/dump_stack.c:118
+ panic+0x264/0x7a0 kernel/panic.c:231
+ __warn+0x227/0x250 kernel/panic.c:600
+ report_bug+0x1b1/0x2e0 lib/bug.c:198
+ handle_bug+0x42/0x80 arch/x86/kernel/traps.c:235
+ exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:255
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:540
+RIP: 0010:try_invoke_on_locked_down_task+0x18b/0x320 kernel/sched/core.c:2701
+Code: 48 89 df e8 f7 35 09 00 4c 89 f7 e8 df b5 cf 06 e9 b5 00 00 00 c6 05 34 82 38 08 01 48 c7 c7 8c d7 07 89 31 c0 e8 a5 a9 f5 ff <0f> 0b e9 15 ff ff ff 48 c7 c1 30 71 8d 89 80 e1 07 80 c1 03 38 c1
+RSP: 0018:ffffc90000007c50 EFLAGS: 00010046
+RAX: 1aaa08be6903c500 RBX: ffff888085d16ac8 RCX: ffff888085d16240
+RDX: 0000000000010004 RSI: 0000000000010004 RDI: 0000000000000000
+RBP: ffff888085d16b0c R08: ffffffff815dd389 R09: ffffed1015d041c3
+R10: ffffed1015d041c3 R11: 0000000000000000 R12: 0000000000000000
+R13: ffff8880a8bac140 R14: ffff8880a8bac4c0 R15: dffffc0000000000
+ rcu_print_task_stall kernel/rcu/tree_stall.h:269 [inline]
+ print_other_cpu_stall kernel/rcu/tree_stall.h:477 [inline]
+ check_cpu_stall kernel/rcu/tree_stall.h:636 [inline]
+ rcu_pending kernel/rcu/tree.c:3489 [inline]
+ rcu_sched_clock_irq+0x12ec/0x1eb0 kernel/rcu/tree.c:2504
+ update_process_times+0x12c/0x180 kernel/time/timer.c:1737
+ tick_sched_handle kernel/time/tick-sched.c:176 [inline]
+ tick_sched_timer+0x254/0x410 kernel/time/tick-sched.c:1320
+ __run_hrtimer kernel/time/hrtimer.c:1520 [inline]
+ __hrtimer_run_queues+0x42d/0x930 kernel/time/hrtimer.c:1584
+ hrtimer_interrupt+0x373/0xd60 kernel/time/hrtimer.c:1646
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1080 [inline]
+ __sysvec_apic_timer_interrupt+0xf0/0x260 arch/x86/kernel/apic/apic.c:1097
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ sysvec_apic_timer_interrupt+0xb9/0x130 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:585
+RIP: 0010:csd_lock_wait kernel/smp.c:108 [inline]
+RIP: 0010:smp_call_function_single+0x307/0x450 kernel/smp.c:382
+Code: e6 01 31 ff e8 6a 05 0b 00 41 83 e5 01 75 14 e8 4f 01 0b 00 eb 45 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 f3 90 42 0f b6 04 23 <84> c0 75 0d 41 f6 07 01 74 22 e8 2a 01 0b 00 eb e8 44 89 f9 80 e1
+RSP: 0018:ffffc90006d5faa0 EFLAGS: 00000293
+RAX: 0000000000000000 RBX: 1ffff92000dabf59 RCX: ffff888085d16240
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: ffffc90006d5fb28 R08: ffffffff816990e6 R09: ffffed1015d26d11
+R10: ffffed1015d26d11 R11: 0000000000000000 R12: dffffc0000000000
+R13: 0000000000000001 R14: 0000000000000000 R15: ffffc90006d5fac8
+ smp_call_function_many kernel/smp.c:577 [inline]
+ smp_call_function kernel/smp.c:599 [inline]
+ on_each_cpu+0x4d/0x1f0 kernel/smp.c:699
+ text_poke_sync arch/x86/kernel/alternative.c:996 [inline]
+ text_poke_bp_batch+0x1df/0x640 arch/x86/kernel/alternative.c:1174
+ text_poke_flush arch/x86/kernel/alternative.c:1296 [inline]
+ text_poke_finish+0x16/0x30 arch/x86/kernel/alternative.c:1303
+ arch_jump_label_transform_apply+0x13/0x20 arch/x86/kernel/jump_label.c:126
+ __static_key_slow_dec_cpuslocked kernel/jump_label.c:248 [inline]
+ __static_key_slow_dec+0x109/0x140 kernel/jump_label.c:255
+ tracepoint_remove_func kernel/tracepoint.c:285 [inline]
+ tracepoint_probe_unregister+0x48a/0x540 kernel/tracepoint.c:355
+ trace_event_reg+0x215/0x250 kernel/trace/trace_events.c:308
+ perf_trace_event_unreg+0xb1/0x1d0 kernel/trace/trace_event_perf.c:162
+ perf_trace_destroy+0x93/0xb0 kernel/trace/trace_event_perf.c:243
+ _free_event+0xc08/0x1120 kernel/events/core.c:4795
+ put_event kernel/events/core.c:4889 [inline]
+ perf_event_release_kernel+0xbd7/0xc90 kernel/events/core.c:5004
+ perf_release+0x37/0x40 kernel/events/core.c:5014
+ __fput+0x2f0/0x750 fs/file_table.c:281
+ task_work_run+0x137/0x1c0 kernel/task_work.c:135
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop arch/x86/entry/common.c:239 [inline]
+ __prepare_exit_to_usermode+0x14c/0x1e0 arch/x86/entry/common.c:269
+ do_syscall_64+0x7f/0xe0 arch/x86/entry/common.c:393
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x415ee1
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffcaab40390 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000415ee1
+RDX: 0000000000000000 RSI: 0000000000001c3c RDI: 0000000000000004
+RBP: 0000000000000001 R08: 00000000ad6d3c3b R09: 00000000ad6d3c3f
+R10: 00007ffcaab40480 R11: 0000000000000293 R12: 000000000078c900
+R13: 000000000078c900 R14: ffffffffffffffff R15: 000000000078bfac
+Shutting down cpus with NMI
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
-> 
-> ---
-> 
-> Changes since v1:
-> - Fix return value: Use unique bool variable to get the result of
-> flush_work(). Thcan prevent incorrect returned value, i.e., rc, if
-> flush_work() returns true
-> - Fix commit message
-> 
-> ---
->  drivers/scsi/ufs/ufshcd.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 577cc0d7487f..acba2271c5d3 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -1561,6 +1561,7 @@ static void ufshcd_ungate_work(struct work_struct 
-> *work)
->  int ufshcd_hold(struct ufs_hba *hba, bool async)
->  {
->  	int rc = 0;
-> +	bool flush_result;
->  	unsigned long flags;
-> 
->  	if (!ufshcd_is_clkgating_allowed(hba))
-> @@ -1592,7 +1593,9 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
->  				break;
->  			}
->  			spin_unlock_irqrestore(hba->host->host_lock, flags);
-> -			flush_work(&hba->clk_gating.ungate_work);
-> +			flush_result = flush_work(&hba->clk_gating.ungate_work);
-> +			if (hba->clk_gating.is_suspended && !flush_result)
-> +				goto out;
->  			spin_lock_irqsave(hba->host->host_lock, flags);
->  			goto start;
->  		}
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
