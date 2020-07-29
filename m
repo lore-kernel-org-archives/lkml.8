@@ -2,106 +2,144 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 518E3C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E9BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 381E22173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0319F2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:18:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="cq1fhAjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgG2OSD (ORCPT
+        id S1726976AbgG2OSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:18:03 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:59325 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgG2OSC (ORCPT
+        Wed, 29 Jul 2020 10:18:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbgG2OSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:18:02 -0400
-Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MiIhU-1kfugA3JI6-00fOI2; Wed, 29 Jul 2020 16:18:00 +0200
-Received: by mail-qk1-f178.google.com with SMTP id l23so22352992qkk.0;
-        Wed, 29 Jul 2020 07:18:00 -0700 (PDT)
-X-Gm-Message-State: AOAM532nSyBZKOZO5vyqFRwB4VwyPUxDWG+xjvaGYwolLyFpQD65IiEm
-        RQ0IaqQVBky7zqw+6EWI5nUh+TOtl57tvmBzwtk=
-X-Google-Smtp-Source: ABdhPJxsIJU5w4wLy+KR4GpV+X6sB3XcHYwhz0oY1jKqcaeEHvFG8yEhQ7ab2ImVNFG+l/dUTfvri4ILyFs7skCNozA=
-X-Received: by 2002:a37:9004:: with SMTP id s4mr32780216qkd.286.1596032279538;
- Wed, 29 Jul 2020 07:17:59 -0700 (PDT)
+        Wed, 29 Jul 2020 10:18:05 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F8F9C061794;
+        Wed, 29 Jul 2020 07:18:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WCplLGbnmstGGGcwlSbpv1UAL8U4BtQOondsYh8OQRY=; b=cq1fhAjUIfhR5Za1W4qwDm0lw
+        Fpub0UNYP8MIHFyezfaHDgCB9Q1l9Jn9hpzWD9AqsluLNwEH+Pm4A1IMG/L+bqIBxIQGaN/oPsrSm
+        gkbj1Ztyjmo5jDmwfWsfLokTqDGSTMcpxyLjhvfC9Oj9F6/SC9idqweSRYRfoyqOgCjC+oc1UrodZ
+        fkItLkUDv/F3i5QA6xtE0Y8tQDIgroY9iYlWnGJ2TWoRnfPvW0vyoN7SXD3WV5ROJvpdoVzrmiCA0
+        I+YncW/AmeYVEIqlKcWLNIXfe8I9WoycgFWzisgkIlWMUBtYR65lNwugyvL0PaO1uIEZtoxNP+ixv
+        RmeD/DESQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45708)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1k0muA-0005VQ-G7; Wed, 29 Jul 2020 15:18:02 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1k0muA-0005kW-2U; Wed, 29 Jul 2020 15:18:02 +0100
+Date:   Wed, 29 Jul 2020 15:18:02 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] ARM: l2c: update prefetch bits in L2X0_AUX_CTRL
+ using DT value
+Message-ID: <20200729141801.GB1551@shell.armlinux.org.uk>
+References: <860eb8a1eed879e55daf960c96acdac514cbda93.1596028601.git.guillaume.tucker@collabora.com>
+ <79a628daef56c2d542e379f550de21da4fe3c901.1596028601.git.guillaume.tucker@collabora.com>
 MIME-Version: 1.0
-References: <20200728100321.1691745-1-daniel@0x0f.com> <20200728100321.1691745-2-daniel@0x0f.com>
- <20200728191842.GB2778962@bogus> <CAFr9PXkwpNAhQvOJFqLUm-uWoaH=nsNiq_y+OgTf8Z60i4RhRw@mail.gmail.com>
- <CAK8P3a0-rZq_aJxWY2+009C91igzC4nHG7XJFwXkbB8bJBertA@mail.gmail.com> <CAFr9PXnuMCjhzYQWGBiw3ayDD36qrUc433DsSphyF5+tqetnNg@mail.gmail.com>
-In-Reply-To: <CAFr9PXnuMCjhzYQWGBiw3ayDD36qrUc433DsSphyF5+tqetnNg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 29 Jul 2020 16:17:43 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0iA_VQ42H6jKKTsO7Nw5NSHrvT_h2Gj9JrtJDYtYRHFQ@mail.gmail.com>
-Message-ID: <CAK8P3a0iA_VQ42H6jKKTsO7Nw5NSHrvT_h2Gj9JrtJDYtYRHFQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: arm: mstar: Add binding details for mstar,pmsleep
-To:     Daniel Palmer <daniel@0x0f.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Rob Herring <robh@kernel.org>, SoC Team <soc@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:tuuxp+D+4sNZzIwWgJ3bIOFSpLlfV8j/1+kZxXWNqgEE9D67ILh
- G3uj+GmTw/cyr82sxAQ3c1VCCvoMbXBpWjWcvIVosXw96gJXPesSHnPrC9YIvJcffHwlb6B
- i5VOxXUCVaRl/2T19Axi1p+ehAocRDoCpCEePBSWQ0K27g83auQPQHBbR1vxN+kj7KGHzE7
- 15iE7zg4xqd5P3lgtBXSw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1eIEBqndKoc=:Lf6w8JfrEZjICTEUvsJl1L
- 8ySjr4orIZwvOhvdMRDGBwqS6Y6qua/cx8nqI9kxPW6qsajqItNnkCfreTuwoJVAhBrkaXlcE
- BLMZpJyhbY2vO3Nf4ho1A+y34Eosd2oPvo/3OaG0pGxaXrHMyIs7SJLfHm4W0wrVP2DoppzBD
- hyQVhUGSh8hbX0D+ObGUiVxtAKYU77NGQ9bCdZfth7fdYA35DmVhcfF2/bZLqsXU/4oTL6tCO
- dbz8CxxL9tWAK2BgTpK4L7XpwL/hBDibDNHBAl3WN4Y3QPTf0jflBjkewWnNrNHESdwNYNxiF
- X/gPtLz9JYiIQ5VFTJ+M1YPRnHT9OYZzSw7KAjDTdO8GafaRJ2j2tiHaYs8JPAxQori5cbP+U
- 8MVO/Z2S3eLjZNtfACEri7lSbeBEBQvPhDWUiqo3awCMPbDta3rPyKjjOBBxTKBOySm3DX63v
- xPGbn9ESUHZcAXqTOLXEjhbZ4VQ1wlQqshn6Y7Xf9mBtzsjT77pAFALfBB5Ovi/JYPn/ZBAWi
- 953gaKejaaTC5yHSaHtg/aYabWFjactSNqCIRBhgWppLUCXhkAsF2+rnbesDBMHnpIgCH3j04
- D3Sv+wZU8bo+sALlulusFXB4wbmF23Ex+HMBXWE6PudeqFmWO2m9vLB4TxfKomCjD+UAD7w7i
- oOQuF5sQLSrN1KUgX4y8XR/vWwohW0GZC+7TbqwwQ5r4f2Kq+pvK56EMhjmRN10CUFoL9cW1U
- K5PyFlhiHClxXKftT4AsgLNySHvq5PHjHIqtrIELsyyUqf0IJvN7CdR1a5BWd5+if5lGJHFvf
- K1dIiq0cmOgWiIHhRJj28mpMYzcjDjgGBdeDQsJNxQJJm1LhVlyhpNjPzT2QRbE7x4C08J/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <79a628daef56c2d542e379f550de21da4fe3c901.1596028601.git.guillaume.tucker@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 2:34 PM Daniel Palmer <daniel@0x0f.com> wrote:
->
-> On Wed, 29 Jul 2020 at 21:14, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > Does calling it "mstar,pmsleepv7" make more sense? I'm not sure what
-> > > to call it really.
-> >
-> > Use the name of the oldest chip you know that supports it in there,
-> > such as "mstar,msc313-pmsleep" if this one is specific to msc313.
->
-> That makes sense. I think the original patch got merged to soc/arm/newsoc.
-> Should I recreate the series or create a new patch to do the corrections?
+On Wed, Jul 29, 2020 at 02:47:32PM +0100, Guillaume Tucker wrote:
+> The L310_PREFETCH_CTRL register bits 28 and 29 to enable data and
+> instruction prefetch respectively can also be accessed via the
+> L2X0_AUX_CTRL register.  They appear to be actually wired together in
+> hardware between the registers.  Changing them in the prefetch
+> register only will get undone when restoring the aux control register
+> later on.  For this reason, set these bits in both registers during
+> initialisation according to the DT attributes.
 
-Please send an incremental patch.
+How will that happen?
 
-> Slightly off topic but I'm working on the series for the interrupt controller
-> and I've just renamed it from mstar,msc313e-intc to mstar,v7intc.
-> I originally called it msc313e because I only knew of that chip but the
-> same controller is present at the same place in all of the chips so far.
-> I guess I should probably rename it to mstar,msc313-intc to keep with
-> the first chip it appeared in pattern?
+We write the auxiliary control register before the prefetch control
+register, so the prefetch control register will take precedence.  See
+l2c310_configure() - l2c_configure() writes the auxiliary control
+register, and the function writes the prefetch control register later.
 
-Yes, correct. If you have multiple chips using this controller, use the
-name of the oldest chip as the generic identifier and then add a more
-specific one for each the later chips that also use it, so the driver is
-able to tell the difference if it ever needs to, something like:
+I think the real issue is that Exynos has been modifying the prefetch
+settings via its machine .aux_mask / .aux_val configuration, and the
+opposite is actually true: the prefetch control register values will
+overwrite the attempt to modify the auxiliary control values set through
+the machine .aux_mask/.aux_val.
 
-(on msc313)
-compatible = "mstar,msc313-intc";
+> 
+> Fixes: ec3bd0e68a67 ("ARM: 8391/1: l2c: add options to overwrite prefetching behavior")
+> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+> ---
+>  arch/arm/mm/cache-l2x0.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+> index 12c26eb88afb..43d91bfd2360 100644
+> --- a/arch/arm/mm/cache-l2x0.c
+> +++ b/arch/arm/mm/cache-l2x0.c
+> @@ -1249,20 +1249,28 @@ static void __init l2c310_of_parse(const struct device_node *np,
+>  
+>  	ret = of_property_read_u32(np, "prefetch-data", &val);
+>  	if (ret == 0) {
+> -		if (val)
+> +		if (val) {
+>  			prefetch |= L310_PREFETCH_CTRL_DATA_PREFETCH;
+> -		else
+> +			*aux_val |= L310_PREFETCH_CTRL_DATA_PREFETCH;
+> +		} else {
+>  			prefetch &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
+> +			*aux_val &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
+> +		}
+> +		*aux_mask &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
+>  	} else if (ret != -EINVAL) {
+>  		pr_err("L2C-310 OF prefetch-data property value is missing\n");
+>  	}
+>  
+>  	ret = of_property_read_u32(np, "prefetch-instr", &val);
+>  	if (ret == 0) {
+> -		if (val)
+> +		if (val) {
+>  			prefetch |= L310_PREFETCH_CTRL_INSTR_PREFETCH;
+> -		else
+> +			*aux_val |= L310_PREFETCH_CTRL_INSTR_PREFETCH;
+> +		} else {
+>  			prefetch &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
+> +			*aux_val &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
+> +		}
+> +		*aux_mask &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
+>  	} else if (ret != -EINVAL) {
+>  		pr_err("L2C-310 OF prefetch-instr property value is missing\n");
+>  	}
+> -- 
+> 2.20.1
+> 
+> 
 
-(on msc314)
-compatible = "mstar,msc314-intc", "mstar,msc313-intc";
-
-(on msc315)
-compatible = "mstar,msc315-intc", "mstar,msc313-intc";
-
-   Arnd
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
