@@ -2,67 +2,196 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBBAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55B692076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:26:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595985983;
-	bh=lM1qoyC9U2MvHLoqOZySr1gdzsZp4g88KX7WlYp4ZDE=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=W091A70/No4cN1prsbHrlqO3E2MpGuYN5JjJXLUYqYC7MncY296V/3AuHgjfzhy/L
-	 XPM4q8knAEjdfMGNvcncEZey3U8pnxmRLi2zUI89dz89OQqEzrxbdjMNqSfUYKsaj1
-	 cU+bcU0v+AHQnepW60/ZkvTqdx2epSB/mWTs1sJA=
+	by mail.kernel.org (Postfix) with ESMTP id 43DA92083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:27:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHRjbV6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730367AbgG2B0W (ORCPT
+        id S1730423AbgG2B12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 21:26:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728364AbgG2B0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 21:26:21 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 424712076E;
-        Wed, 29 Jul 2020 01:26:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595985981;
-        bh=lM1qoyC9U2MvHLoqOZySr1gdzsZp4g88KX7WlYp4ZDE=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=WSs68bzC4ZcGQRzgEOs9B27CLhm6J8YTcQu1Mrw//bzRF9VHR/rTz3eC+AQjj/KwJ
-         RbhEJEq2iEAecXRYivAp/sxSNdTtFGwcnGfvFNWycPQf1xl/B/VSon8oOszaoEWpD3
-         atceaCSGrhBFbgHHRT1JC7K1c7XQGp5qF4kQZDB8=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 28 Jul 2020 21:27:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728364AbgG2B12 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 21:27:28 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AC4FC061794;
+        Tue, 28 Jul 2020 18:27:28 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id z3so7741364ilh.3;
+        Tue, 28 Jul 2020 18:27:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2AUZodZwJRXZg+Nk/lyRu0Z8bQTh1DNt0my27QVLRIE=;
+        b=XHRjbV6gcKKyZ7t3CuLSBJocHqKHPIjZvwsV5DIOeWQ3ngzNTNUwZds7roo63C+ktS
+         PYjB9YztN1uSR96wxcGWPo1IILBKAU5yRYVFlNQDGdHc2tGGryZ1aw2A2CqY3ImZRZ8b
+         fFXnrmGZXe4j3aKu72ikXjiSJP3h8qOTow4eoPJSjHRCIoEeSK34SNbyP9xoHzYblJ4D
+         /ddlrdx2vPMg61m6jpgsBVm+VSFyH268r0bOLg01yfs79F5AMif/9ZbBKB1LuINmz0Ww
+         hSnm5Wi1q6pzSQQViTsBhrcvlPW2F4cLnRLSJ8w9NOxr2BX8ltTmT4V6IWqg5l3JYSKi
+         TlOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2AUZodZwJRXZg+Nk/lyRu0Z8bQTh1DNt0my27QVLRIE=;
+        b=AyK6Lx9D22DzAKEsgt8yyxSyyaJUGgHrmc8J6ZH3esp0cBnDp6VEm0odQ5IZ3eLE/Q
+         RIBGjRUZuas0q8OITajyYY07PhsxiqvNLNpDF6A6iQvipVTe9ZAUGNrEik0mX+QvhluC
+         c7A5xVgInvYGrH2zE5x/PiciweIxiVf22ByJq5eNyLUko4f9fM7Afn7wg7njk26m1mbn
+         tJ5mwHs+r30Z7h7wHQu/c8OJtATxBwMCsGDKIHQkwwMUYBwR3DPZ2IiLYEV7r04EuV1b
+         d/fZnkmy/fER4Enn9chngJ4U6OJ2c9/Sb4SqHm2CkD9JDQq54DQjEVGlKu/uBdCUI0Ju
+         /erA==
+X-Gm-Message-State: AOAM531PCUO8/mgS7K0DvWc7RC6Kc8RW+kzVKttclvS2s0tzKXUQHKq9
+        fuiRiUF8UiJ1uowo8dqk/DmVAuxRTAYMUulWapY=
+X-Google-Smtp-Source: ABdhPJzU2TqKKvvLiczoQEejJGBneHlgzlG75S5cGxU8lcNMuyxASx3GJcMFcrnosy3ANydW2zPH1K0CAzaXM8sp00s=
+X-Received: by 2002:a05:6e02:1212:: with SMTP id a18mr28736892ilq.97.1595986047223;
+ Tue, 28 Jul 2020 18:27:27 -0700 (PDT)
 MIME-Version: 1.0
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1595681998-19193-18-git-send-email-alex.shi@linux.alibaba.com>
+ <CAKgT0UdaW4Rf43yULhQBuP07vQgmoPbaWHGKv1Z7fEPP6jH83w@mail.gmail.com>
+ <ccd01046-451c-463d-7c5d-9c32794f4b1e@linux.alibaba.com> <CAKgT0UdrQpa9OSusi=TZoj4RgC63-BNiF1GmeTG=rS47r7rGvQ@mail.gmail.com>
+ <09aeced7-cc36-0c9a-d40b-451db9dc54cc@linux.alibaba.com>
+In-Reply-To: <09aeced7-cc36-0c9a-d40b-451db9dc54cc@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 28 Jul 2020 18:27:16 -0700
+Message-ID: <CAKgT0UfCv9u3UaJnzh7CYu_nCggV8yesZNu4oxMGn4+mJYiFUw@mail.gmail.com>
+Subject: Re: [PATCH v17 17/21] mm/lru: replace pgdat lru_lock with lruvec lock
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200728082857.10829-5-akshu.agrawal@amd.com>
-References: <20200728082857.10829-1-akshu.agrawal@amd.com> <20200728082857.10829-5-akshu.agrawal@amd.com>
-Subject: Re: [v3 4/4] clk: x86: Support RV architecture
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     rafael@kernel.org, Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     akshu.agrawal@amd.com
-Date:   Tue, 28 Jul 2020 18:26:20 -0700
-Message-ID: <159598598019.1360974.14904311637963668990@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Akshu Agrawal (2020-07-28 01:28:56)
-> There is minor difference between previous family of SoC and
-> the current one. Which is the there is only 48Mh fixed clk.
-> There is no mux and no option to select another freq as there in previous.
->=20
-> Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
-> ---
+On Tue, Jul 28, 2020 at 6:00 PM Alex Shi <alex.shi@linux.alibaba.com> wrote=
+:
+>
+>
+>
+> =E5=9C=A8 2020/7/28 =E4=B8=8B=E5=8D=8810:54, Alexander Duyck =E5=86=99=E9=
+=81=93:
+> > On Tue, Jul 28, 2020 at 4:20 AM Alex Shi <alex.shi@linux.alibaba.com> w=
+rote:
+> >>
+> >>
+> >>
+> >> =E5=9C=A8 2020/7/28 =E4=B8=8A=E5=8D=887:34, Alexander Duyck =E5=86=99=
+=E9=81=93:
+> >>>> @@ -1876,6 +1876,12 @@ static unsigned noinline_for_stack move_pages=
+_to_lru(struct lruvec *lruvec,
+> >>>>                  *                                        list_add(&=
+page->lru,)
+> >>>>                  *     list_add(&page->lru,) //corrupt
+> >>>>                  */
+> >>>> +               new_lruvec =3D mem_cgroup_page_lruvec(page, page_pgd=
+at(page));
+> >>>> +               if (new_lruvec !=3D lruvec) {
+> >>>> +                       if (lruvec)
+> >>>> +                               spin_unlock_irq(&lruvec->lru_lock);
+> >>>> +                       lruvec =3D lock_page_lruvec_irq(page);
+> >>>> +               }
+> >>>>                 SetPageLRU(page);
+> >>>>
+> >>>>                 if (unlikely(put_page_testzero(page))) {
+> >>> I was going through the code of the entire patch set and I noticed
+> >>> these changes in move_pages_to_lru. What is the reason for adding the
+> >>> new_lruvec logic? My understanding is that we are moving the pages to
+> >>> the lruvec provided are we not?If so why do we need to add code to ge=
+t
+> >>> a new lruvec? The code itself seems to stand out from the rest of the
+> >>> patch as it is introducing new code instead of replacing existing
+> >>> locking code, and it doesn't match up with the description of what
+> >>> this function is supposed to do since it changes the lruvec.
+> >>
+> >> this new_lruvec is the replacement of removed line, as following code:
+> >>>> -               lruvec =3D mem_cgroup_page_lruvec(page, pgdat);
+> >> This recheck is for the page move the root memcg, otherwise it cause t=
+he bug:
+> >
+> > Okay, now I see where the issue is. You moved this code so now it has
+> > a different effect than it did before. You are relocking things before
+> > you needed to. Don't forget that when you came into this function you
+> > already had the lock. In addition the patch is broken as it currently
+> > stands as you aren't using similar logic in the code just above this
+> > addition if you encounter an evictable page. As a result this is
+> > really difficult to review as there are subtle bugs here.
+>
+> Why you think its a bug? the relock only happens if locked lruvec is diff=
+erent.
+> and unlock the old one.
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+The section I am talking about with the bug is this section here:
+       while (!list_empty(list)) {
++               struct lruvec *new_lruvec =3D NULL;
++
+                page =3D lru_to_page(list);
+                VM_BUG_ON_PAGE(PageLRU(page), page);
+                list_del(&page->lru);
+                if (unlikely(!page_evictable(page))) {
+-                       spin_unlock_irq(&pgdat->lru_lock);
++                       spin_unlock_irq(&lruvec->lru_lock);
+                        putback_lru_page(page);
+-                       spin_lock_irq(&pgdat->lru_lock);
++                       spin_lock_irq(&lruvec->lru_lock);
+                        continue;
+                }
+
+Basically it probably is not advisable to be retaking the
+lruvec->lru_lock directly as the lruvec may have changed so it
+wouldn't be correct for the next page. It would make more sense to be
+using your API and calling unlock_page_lruvec_irq and
+lock_page_lruvec_irq instead of using the lock directly.
+
+> >
+> > I suppose the correct fix is to get rid of this line, but  it should
+> > be placed everywhere the original function was calling
+> > spin_lock_irq().
+> >
+> > In addition I would consider changing the arguments/documentation for
+> > move_pages_to_lru. You aren't moving the pages to lruvec, so there is
+> > probably no need to pass that as an argument. Instead I would pass
+> > pgdat since that isn't going to be moving and is the only thing you
+> > actually derive based on the original lruvec.
+>
+> yes, The comments should be changed with the line was introduced from lon=
+g ago. :)
+> Anyway, I am wondering if it worth a v18 version resend?
+
+So I have been looking over the function itself and I wonder if it
+isn't worth looking at rewriting this to optimize the locking behavior
+to minimize the number of times we have to take the LRU lock. I have
+some code I am working on that I plan to submit as an RFC in the next
+day or so after I can get it smoke tested. The basic idea would be to
+defer returning the evictiable pages or freeing the compound pages
+until after we have processed the pages that can be moved while still
+holding the lock. I would think it should reduce the lock contention
+significantly while improving the throughput.
