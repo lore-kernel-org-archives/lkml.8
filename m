@@ -2,118 +2,97 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCABC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD7C0206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AFE82076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L8btYvGd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K7wKjCul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730962AbgG2CER (ORCPT
+        id S1730909AbgG2CH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 22:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728401AbgG2CEQ (ORCPT
+        Tue, 28 Jul 2020 22:07:27 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:32000 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728401AbgG2CH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 22:04:16 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD28C0619D2;
-        Tue, 28 Jul 2020 19:04:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=ptZ4CaB+9ZPFK7eW316fU2oYVkH0yzLQ4pZT4nFsjOA=; b=L8btYvGdt15/+hqPaBMVifuHFP
-        mj1IC0WwS/5cB699Ff1misVVzWwylEgRgEeikp3o/HEiq+IyuXdd6WoWiXKDbcNet35tUEacF9F+9
-        mTYW32EXz7eJ/JSPU2++z/q2bQfBo5prJ2CKpSn404aT0xYiDT1cZoVI4cZ1GREvWMq8SK5FNhqgv
-        Lx/3DW/HMBwZBVDr0Rr7vmXvNb+UYGm6DsZZr5TKt+r2yhEvRq/kp4Jmg8cTkHauBvfjZeKgZL2CG
-        SCwjA23ZuC+u/AqV2hlZ4HIYdHMxBYe7VnBlWw0ukpM+T48gLB8uyjhAHWYmM98XD1fqBBbKRt2bI
-        LjM9hGDQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0bS1-0001A0-Q2; Wed, 29 Jul 2020 02:04:14 +0000
-Subject: Re: mmotm 2020-07-27-18-18 uploaded (mm/page_alloc.c)
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
-References: <20200728011914.S-8vAYUK0%akpm@linux-foundation.org>
- <ae87385b-f830-dbdf-ebc7-1afb82a7fed0@infradead.org>
- <20200728145553.2a69fa2080de01922b3a74e0@linux-foundation.org>
- <048cef07-ad4b-8788-94a4-e144de731ab6@infradead.org>
- <20200728184419.4b137162844987c9199542bb@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <bdd0b49f-2cdd-02e1-3c91-d96b4f806490@infradead.org>
-Date:   Tue, 28 Jul 2020 19:04:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 22:07:27 -0400
+X-Greylist: delayed 303 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Jul 2020 22:07:26 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595988444;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DeolwL/8SdMeyvaIjqFbfDjnFfnpKQhKODlzhWE0ad4=;
+        b=K7wKjCuldFiHSEJy65oR/auF1xx3bLnbGXzhw7DR1GCYwDtKJ4B2UwbzrWiDnIV7RVpXVw
+        N7R9ATz7K5e8l5Cu1Lg4TUpvYZsKMA94quWEGntauf6snXYx5Q6t/pasIR1kNZ8T7nopZH
+        zyhnkueof4qcSJmKOfoHKrX7+t/dmS0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-315-5cxjp49uMeyN4-6Az-5SbA-1; Tue, 28 Jul 2020 22:01:17 -0400
+X-MC-Unique: 5cxjp49uMeyN4-6Az-5SbA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78F8D1DE2;
+        Wed, 29 Jul 2020 02:01:16 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 986A38A169;
+        Wed, 29 Jul 2020 02:01:09 +0000 (UTC)
+Date:   Tue, 28 Jul 2020 22:01:06 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Eric Paris <eparis@parisplace.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V3fix ghak120] audit: initialize context values in case
+ of mandatory events
+Message-ID: <20200729020106.x5tfijvnxdmujtbj@madcap2.tricolour.ca>
+References: <e3e9c9da9115fd233c5a7895dbb4a698a365b1b0.1595884394.git.rgb@redhat.com>
+ <CAHC9VhSx23JiN6GprskxdEcs9uftJOp03Svh7YJbQLOV91AMiQ@mail.gmail.com>
+ <20200728162722.djvy3qyclj57wsfn@madcap2.tricolour.ca>
+ <CAHC9VhSDoi8QS3c6Wmx6agmmphja60cS3+aTKVx76xvdkxJ0DQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200728184419.4b137162844987c9199542bb@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhSDoi8QS3c6Wmx6agmmphja60cS3+aTKVx76xvdkxJ0DQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/20 6:44 PM, Andrew Morton wrote:
-> On Tue, 28 Jul 2020 15:39:21 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
+On 2020-07-28 14:47, Paul Moore wrote:
+> On Tue, Jul 28, 2020 at 12:27 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > I know you like only really minimal fixes this late, but this seemed
+> > pretty minimal to me...
 > 
->> On 7/28/20 2:55 PM, Andrew Morton wrote:
->>> On Tue, 28 Jul 2020 05:33:58 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
->>>
->>>> On 7/27/20 6:19 PM, Andrew Morton wrote:
->>>>> The mm-of-the-moment snapshot 2020-07-27-18-18 has been uploaded to
->>>>>
->>>>>    http://www.ozlabs.org/~akpm/mmotm/
->>
->>
->>>> on x86_64:
->>>>
->>>> ../mm/page_alloc.c:8355:48: warning: ‘struct compact_control’ declared inside parameter list will not be visible outside of this definition or declaration
->>>>  static int __alloc_contig_migrate_range(struct compact_control *cc,
->>>>                                                 ^~~~~~~~~~~~~~~
->>>
->>> As is usually the case with your reports, I can't figure out how to
->>> reproduce it.  I copy then .config, run `make oldconfig' (need to hit
->>> enter a zillion times because the .config is whacky) then the build
->>> succeeds.  What's the secret?
->>
->> I was not aware that there was a problem. cp .config and make oldconfig
->> should be sufficient -- and I don't understand why you would need to hit
->> enter many times.
->>
->> I repeated this on my system without having to answer any oldconfig prompts
->> and still got build errors.
->>
->> There is no secret that I know of, but it would be good to get to the
->> bottom of this problem.
-> 
-> Well the first thing I hit was
-> 
-> Support for big SMP systems with more than 8 CPUs (X86_BIGSMP) [N/y/?] (NEW) 
-> 
-> and your .config doesn't mention that.
+> Minimal is a one (two?) line NULL check in audit_log_name(), this
+> patch is not that.
 
-It's an x86_32 symbol and my config was for x86_64.
+I didn't try and test that since I'm not sure that would have worked
+because there appeared to be a low non-NULL value in it.  brauer1's trace had
+0x60 and mine had 0xd0.  Or am I missing something obvious?
 
+The patch provided the information rather than ignoring the problem
+(which maybe should have been caught by WARN_ONCE?).
 
-> make mrproper
-> cp ~/config-randy .config
-> make oldconfig
+> paul moore
 
-make ARCH=x86_64 oldconfig
+- RGB
 
-HTH.
--- 
-~Randy
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
