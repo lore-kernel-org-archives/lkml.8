@@ -2,134 +2,118 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE445C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2943C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDDB2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:46:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pf7nKXdG"
+	by mail.kernel.org (Postfix) with ESMTP id D4ACF20809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:46:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596044804;
+	bh=iJfOY4V7h8b/jAUwAz2HmUOfqngO6/3LFQgTni0vyUs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=c03Rv+ZqtpLVmv5c6T+n42IbyS1YvNvuwadWCXDMktJW3R3cbcLiGptJET1zZRKcp
+	 Bc+1ijGU0UL/pVPVyw7gXozVxI0610irr7vELB0HPI1Ric4YBuHGR1C+23JcV7q5wL
+	 gzAWhPXNFgxmFcssn+ZQ3knaZGDG4X8NDytbw1wI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgG2RqS (ORCPT
+        id S1727085AbgG2Rqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:46:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgG2RqR (ORCPT
+        Wed, 29 Jul 2020 13:46:43 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:32170 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgG2Rqn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 13:46:17 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01D45C061794;
-        Wed, 29 Jul 2020 10:46:17 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id j8so13080844ioe.9;
-        Wed, 29 Jul 2020 10:46:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vL2EiXbptWkb+CeJ1aIsaGaoV70y1mT289hYeI0vTkg=;
-        b=Pf7nKXdGqrVr1RkAz85fBJsu445+W+MUqnKlS7wvsWqPMO452kHEujmP81SJ2ac2bL
-         GWC1J1h8oaCzKyxX7XK0ItTcmK31ixIteOA0BSX4uj+twuZdQpmi3po/ANKyEIYDbmn8
-         EMdDl5xm6ZzEU/zfhm66lMzsaVChyR/LeQVY4PLxaz5HhQ7faPp8RLNd1F/bgLCB0qyH
-         vH8NwBOTEycRR1UyELKB0AC7Pif05craVIlH+T4owJgFn7exkibt5z8R/Wu0eXaXC1D6
-         8Ca2pERhmJdQ8UandVs4rt3pFeYa37PMpCkubj+L/ssLWtvhmzGKkpxEF4iPtQBqG6NQ
-         9tmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vL2EiXbptWkb+CeJ1aIsaGaoV70y1mT289hYeI0vTkg=;
-        b=Hfc50umP6M2KOEXdA3I9Jt//rhhqT3yvzKAu+wsefjskTMGQ6H3Yth+7FL21OScfI4
-         olWHCUhAWe8q4rwtLe8UU2v3UuRrXdrct+QD54Sk2fuQr/6BWU0Bf2sOb1eieYsBH61W
-         ha025ViNO7CxhUU+fzOz0QRl5NIUqJAls+/KLdK1xcfDf7QI+r9mR+Zvadq+HGlQH4jo
-         2yylyEAnu5Q9gmRmvP+lxiF3YJ0Jbn41FYpeSXVgtAl92D2bxf0klL/maTYATwN3pKrJ
-         6YwTrcMbRreCqIH6PhhEWhGsT6t/LhRs44VMWj1DUXy28hZmdPn1cxVdAlAcPRgJXl+G
-         j1qQ==
-X-Gm-Message-State: AOAM5334VF8fXvR6kyA0iM6pN0xVpPF0Ws7L9TeE1KTR2dySeoPstrsp
-        Ev1SSe/T46F6wjJuXgmuDIL1wN6/68LZHj4q4vc=
-X-Google-Smtp-Source: ABdhPJwZMsvcOsBvVWQSB6Ahydqr7L806TY0co61XGVRpo8vp0muMNJkqI8HcDgdalYRhv7rGELQFoCQfN7UP/aoQDc=
-X-Received: by 2002:a02:ccd7:: with SMTP id k23mr24083657jaq.73.1596044776435;
- Wed, 29 Jul 2020 10:46:16 -0700 (PDT)
+        Wed, 29 Jul 2020 13:46:43 -0400
+Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 06THkLYL020666;
+        Thu, 30 Jul 2020 02:46:21 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 06THkLYL020666
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1596044781;
+        bh=80NhEGhFnmq+LfOA+LEcAhYXbr9MxvJGqlh6jZrySBk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Yu+P3IsdxyXhfbKXHNFyUz3t3xywcMI5rvCA4aI0RoxoeFRMF9nRec3Hk6IDZo7p6
+         iYzc1twLphxG9fEL4CLi01f3cx0mGLlKY1VyZWJkYGPBgCo5LG/ayrQsS9W3+NOBJr
+         i1TaHSC0fDlfTgJfwYfPnCzK0mShf1W+xfqV3l9I4XzqJKF4mbd2Op51AnkFk1cXjY
+         dIe9cmQ1by5PS3TrbdvvpduAM36p/ZaJhL24HSEb8uzE/n8eCz0tm6ydwi67YiYxpR
+         2J5s6Rp8kgkBMai7KEzjyFd50cJgDlRtrv5+9HM2AvWZvPpo3FzQtETipX6zwXgb/X
+         tsRgZOjbSCOBA==
+X-Nifty-SrcIP: [126.25.67.101]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Revert "kconfig: qconf: Change title for the item window"
+Date:   Thu, 30 Jul 2020 02:46:17 +0900
+Message-Id: <20200729174617.169319-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200729160942.28867-1-krzk@kernel.org> <20200729160942.28867-3-krzk@kernel.org>
-In-Reply-To: <20200729160942.28867-3-krzk@kernel.org>
-From:   Tomasz Figa <tomasz.figa@gmail.com>
-Date:   Wed, 29 Jul 2020 19:46:04 +0200
-Message-ID: <CA+Ln22EMWTRu4j-6b5Oj63Yvo+GYa_cB2+QU-h-woQ5G1K5DJw@mail.gmail.com>
-Subject: Re: [PATCH 2/7] ARM: s3c64xx: Include header to fix -Wmissing-prototypes
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Kukjin Kim <kgene@kernel.org>,
-        Vincent Sanders <vince@simtec.co.uk>,
-        Simtec Linux Team <linux@simtec.co.uk>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        patches@opensource.cirrus.com,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org,
-        Sergio Prado <sergio.prado@e-labworks.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Cedric Roux <sed@free.fr>, Lihua Yao <ylhuajnu@outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=E5=B9=B47=E6=9C=8829=E6=97=A5(=E6=B0=B4) 18:11 Krzysztof Kozlowski <kr=
-zk@kernel.org>:
->
-> Include the spi-s3c64xx.h header to fix W=3D1 build warning:
->
->     arch/arm/mach-s3c64xx/setup-spi.c:11:5: warning:
->         no previous prototype for 's3c64xx_spi0_cfg_gpio' [-Wmissing-prot=
-otypes]
->        11 | int s3c64xx_spi0_cfg_gpio(void)
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/mach-s3c64xx/setup-spi.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/mach-s3c64xx/setup-spi.c b/arch/arm/mach-s3c64xx/se=
-tup-spi.c
-> index 39dfae1f46e7..03c9d296bb0f 100644
-> --- a/arch/arm/mach-s3c64xx/setup-spi.c
-> +++ b/arch/arm/mach-s3c64xx/setup-spi.c
-> @@ -4,6 +4,7 @@
->  //             http://www.samsung.com/
->
->  #include <linux/gpio.h>
-> +#include <linux/platform_data/spi-s3c64xx.h>
->  #include <plat/gpio-cfg.h>
->  #include <mach/gpio-samsung.h>
->
-> --
-> 2.17.1
->
+This reverts commit 5752ff07fd90d764d96e3c586cc95c09598abfdd.
 
-Reviewed-by: Tomasz Figa <tomasz.figa@gmail.com>
+It added pointless dead code to ConfigList:ConfigList().
 
-Best regards,
-Tomasz
+The constructor of ConfigList has the initializer, mode(singleMode).
+
+    if (mode == symbolMode)
+           setHeaderLabels(QStringList() << "Item" << "Name" << "N" << "M" << "Y" << "Value");
+    else
+           setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
+
+... always takes the else part.
+
+The change to ConfigList::updateSelection() is strange too.
+When you click the split view icon for the first time, the titles in
+both windows show "Option". After you click something in the right
+window, the title suddenly changes to "Item".
+
+ConfigList::updateSelection() is not the right place to do this,
+at least. It was not a good idea, I think.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ scripts/kconfig/qconf.cc | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
+
+diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+index 1c61c768b99e..dfd0b5863a9b 100644
+--- a/scripts/kconfig/qconf.cc
++++ b/scripts/kconfig/qconf.cc
+@@ -308,10 +308,7 @@ ConfigList::ConfigList(ConfigView* p, const char *name)
+ 	setVerticalScrollMode(ScrollPerPixel);
+ 	setHorizontalScrollMode(ScrollPerPixel);
+ 
+-	if (mode == symbolMode)
+-		setHeaderLabels(QStringList() << "Item" << "Name" << "N" << "M" << "Y" << "Value");
+-	else
+-		setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
++	setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
+ 
+ 	connect(this, SIGNAL(itemSelectionChanged(void)),
+ 		SLOT(updateSelection(void)));
+@@ -392,11 +389,6 @@ void ConfigList::updateSelection(void)
+ 	struct menu *menu;
+ 	enum prop_type type;
+ 
+-	if (mode == symbolMode)
+-		setHeaderLabels(QStringList() << "Item" << "Name" << "N" << "M" << "Y" << "Value");
+-	else
+-		setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
+-
+ 	if (selectedItems().count() == 0)
+ 		return;
+ 
+-- 
+2.25.1
+
