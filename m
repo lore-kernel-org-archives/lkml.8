@@ -4,128 +4,151 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A01C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC75420809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E4412075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596048884;
-	bh=zFBRJidD33JrSWfE/vO6FUHZfJQaVyBLHNmxTMcCR+w=;
+	s=default; t=1596049018;
+	bh=zKuG9edr9ZuoqV9vdfHR9gScIkImg6Mh4XHfpPxIoRI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0M0FiMw64OIAyZLWD7kQvSpxW2hovtcCF6VfKVtwBwHHZWi9CJYiP7CZPCqbOGYiT
-	 mTRX9QBZUOGWWCvHHIizJbpjLEkofERJh/2IN1Hc/UoAStXF4HgqOmoqrkkWxIoTgi
-	 ooFtuIF/mmIkiJq5if6yfqWoNSbqn7N9Bba2/K3M=
+	b=er+xSFDjQdnjkpY06v0YGHoadvMcL3zLV4jQ2SSad3+Ge9eED0nxG0SOIwuDqrsVk
+	 y53Z/AGybzwITupB30cZ+IccnR86UzC6e8OcF1cle1AU6S1Z3j9MVhHTyWd84g5aJE
+	 CnbF/2CIap7Zj20hz6F97LxSfBLzJn/vg6o/PmSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgG2Sym (ORCPT
+        id S1726862AbgG2S45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:54:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726365AbgG2Sym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:54:42 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A00512075D;
-        Wed, 29 Jul 2020 18:54:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596048881;
-        bh=zFBRJidD33JrSWfE/vO6FUHZfJQaVyBLHNmxTMcCR+w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PXdf8TPvoqKgwUP3eDPDXfYNVmMwQnCyWXg9w356HFunVON0fr0sYi02gbFeIJg04
-         pk1cS6IYpqQHeO6WVoMB90Rgxx0jyvuw42ZLJr0XzP0rbJ5LEuQ72uELggcnBZ0gj1
-         vK3N7lkajFi5hL+IJvBp7dexMla/MwpVX4jE2wh8=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D056F40E59; Wed, 29 Jul 2020 15:54:39 -0300 (-03)
-Date:   Wed, 29 Jul 2020 15:54:39 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 2/5] perf record: Prevent override of
- attr->sample_period for libpfm4 events
-Message-ID: <20200729185439.GC433799@kernel.org>
-References: <20200728085734.609930-1-irogers@google.com>
- <20200728085734.609930-3-irogers@google.com>
+        Wed, 29 Jul 2020 14:56:57 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37431 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgG2S45 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 14:56:57 -0400
+Received: by mail-io1-f67.google.com with SMTP id w12so12050716iom.4;
+        Wed, 29 Jul 2020 11:56:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wWYpUB0B5F9DakDE/d7Jt/iFxH1JFsvV3Y7Iu2yZvWw=;
+        b=ot8aRS0MpEOywUs0MODSEAVSQPP8yeUijxbRMDFNASNKi7kwfL5AS/9+g7tKLhIIvV
+         l1YijZ4Ynd5HXInsB0oCM8PHX11GsWWovYigcF6KyXBvBv37FwBg9s6WBgqIaHSPAsZ4
+         AX0ARKGlJ/w3qH0mFwX0Nygr2dN/vVtH4iAYCHbN0Mclgi7hp2odtWhyVsrdl4wRJUsL
+         tg5jb0sqb7obIarT6/lrysXk93F2UIjXb0S/KIQHbi1viZSjtmE7Tgzayq8jeVeAQ3qR
+         hhX90Kne2Xo/znfvgF3Nf2n52mU/cEC6a1VplnYTumtJ+7tNQIhbOmtXPg3czawNRbTe
+         myqg==
+X-Gm-Message-State: AOAM531OKFD9yrHBcl0pKCkt+3cRZQvq2IZ2lGSZSXN8KiSTsQtyeqtf
+        8oUMZQFKPfdPysOTFj0GNQ==
+X-Google-Smtp-Source: ABdhPJy+3LMGUtVhao+r3gcbViMO39JZQ6pzxxMomQHJNwDvtPPaHxlrii3qwNXAfdIXjxfkmPp9Gw==
+X-Received: by 2002:a6b:b211:: with SMTP id b17mr17640659iof.29.1596049016119;
+        Wed, 29 Jul 2020 11:56:56 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id u6sm1576835ilk.13.2020.07.29.11.56.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 11:56:55 -0700 (PDT)
+Received: (nullmailer pid 593935 invoked by uid 1000);
+        Wed, 29 Jul 2020 18:56:54 -0000
+Date:   Wed, 29 Jul 2020 12:56:54 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        amurray@thegoodpenguin.co.uk, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH 1/2] PCI: dwc: Add support to handle prefetchable memory
+ separately
+Message-ID: <20200729185654.GA585891@bogus>
+References: <20200602100940.10575-1-vidyas@nvidia.com>
+ <20200602100940.10575-2-vidyas@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200728085734.609930-3-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200602100940.10575-2-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jul 28, 2020 at 01:57:31AM -0700, Ian Rogers escreveu:
-> From: Stephane Eranian <eranian@google.com>
+On Tue, Jun 02, 2020 at 03:39:39PM +0530, Vidya Sagar wrote:
+> Add required structure members to struct pcie_port to handle prefetchable
+> memory aperture separately from non-prefetchable memory aperture so that
+> any dependency on the order of their appearance in the 'ranges' property
+> of the respective PCIe device tree node can be removed.
 > 
-> Before:
-> $ perf record -c 10000 --pfm-events=cycles:period=77777
-> 
-> Would yield a cycles event with period=10000, instead of 77777.
-
-I tried the equivalent without libpfm and it works:
-
-  $ perf record -c 10000 -e cycles/period=20000/ sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.024 MB perf.data (23 samples) ]
-  $ perf evlist -v
-  cycles/period=20000/u: size: 120, { sample_period, sample_freq }: 20000, sample_type: IP|TID|TIME, read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, enable_on_exec: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-  $
- 
-> This was due to an ordering issue between libpfm4 parsing
-> the event string and perf record initializing the event.
- 
-> This patch fixes the problem by preventing override for
-> events with attr->sample_period != 0 by the time
-> perf_evsel__config() is invoked. This seems to have been the
-> intent of the author.
-> 
-> Signed-off-by: Stephane Eranian <eranian@google.com>
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->  tools/perf/util/evsel.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  .../pci/controller/dwc/pcie-designware-host.c | 26 ++++++++++++-------
+>  drivers/pci/controller/dwc/pcie-designware.h  |  4 +++
+>  2 files changed, 21 insertions(+), 9 deletions(-)
 > 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 811f538f7d77..8afc24e2ec52 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -976,8 +976,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
->  	 * We default some events to have a default interval. But keep
->  	 * it a weak assumption overridable by the user.
->  	 */
-> -	if (!attr->sample_period || (opts->user_freq != UINT_MAX ||
-> -				     opts->user_interval != ULLONG_MAX)) {
-> +	if (!attr->sample_period) {
->  		if (opts->freq) {
->  			attr->freq		= 1;
->  			attr->sample_freq	= opts->freq;
-> -- 
-> 2.28.0.163.g6104cc2f0b6-goog
-> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 42fbfe2a1b8f..6f06d6bd9f00 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -363,13 +363,23 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  			pp->io_base = pci_pio_to_address(pp->io->start);
+>  			break;
+>  		case IORESOURCE_MEM:
+> -			pp->mem = win->res;
+> -			pp->mem->name = "MEM";
+> -			mem_size = resource_size(pp->mem);
+> -			if (upper_32_bits(mem_size))
+> -				dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
+> -			pp->mem_size = mem_size;
+> -			pp->mem_bus_addr = pp->mem->start - win->offset;
+> +			if (win->res->flags & IORESOURCE_PREFETCH) {
+> +				pp->prefetch = win->res;
+> +				pp->prefetch->name = "PREFETCH";
+> +				pp->prefetch_base = pp->prefetch->start;
+> +				pp->prefetch_size = resource_size(pp->prefetch);
+> +				pp->perfetch_bus_addr = pp->prefetch->start -
+> +							win->offset;
+> +			} else {
+> +				pp->mem = win->res;
+> +				pp->mem->name = "MEM";
+> +				pp->mem_base = pp->mem->start;
+> +				mem_size = resource_size(pp->mem);
+> +				if (upper_32_bits(mem_size))
+> +					dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
+> +				pp->mem_size = mem_size;
+> +				pp->mem_bus_addr = pp->mem->start - win->offset;
+> +			}
+>  			break;
+>  		case 0:
+>  			pp->cfg = win->res;
+> @@ -394,8 +404,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  		}
+>  	}
+>  
+> -	pp->mem_base = pp->mem->start;
+> -
+>  	if (!pp->va_cfg0_base) {
+>  		pp->va_cfg0_base = devm_pci_remap_cfgspace(dev,
+>  					pp->cfg0_base, pp->cfg0_size);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 656e00f8fbeb..c87c1b2a1177 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -186,9 +186,13 @@ struct pcie_port {
+>  	u64			mem_base;
+>  	phys_addr_t		mem_bus_addr;
+>  	u32			mem_size;
+> +	u64			prefetch_base;
+> +	phys_addr_t		perfetch_bus_addr;
+> +	u64			prefetch_size;
 
--- 
+There's no reason to store these for all eternity as they are used in 
+one place and already stored as resources in bridge->windows.
 
-- Arnaldo
+I have a patch series removing most of this that I will post in a few 
+days. There's a WIP branch, pci-dw-config-access, in my kernel.org 
+tree. Mostly you just need the bridge ptr which is isn't currently 
+saved in pcie_port.
+
+Rob
