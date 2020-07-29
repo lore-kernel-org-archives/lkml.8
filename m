@@ -2,147 +2,225 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEC5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3006207F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:59:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596041981;
-	bh=crrIbsFPAeg/uDmn1xaqGi5GLnaItxGMCDzVYTWGaOw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HrWBFia+EMtUopendxBOYhLASk0vHabPZtUHUq0sEFq+7EiRCZyB1oLTot4OsQVYA
-	 YtciQmBd8R0tdRUVoaDikj/PawpjY9ZeKyzemk2cWoNeixaCoEqiMSbz+JJdTgZpxK
-	 59N88EAh1F72jl2A1bTSV4kfR+GjRmgcj8cOf8mU=
+	by mail.kernel.org (Postfix) with ESMTP id 959902075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:02:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGqeuLKO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgG2Q7k (ORCPT
+        id S1726772AbgG2RCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 12:59:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32826 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbgG2Q7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 12:59:40 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 530F02075F;
-        Wed, 29 Jul 2020 16:59:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596041979;
-        bh=crrIbsFPAeg/uDmn1xaqGi5GLnaItxGMCDzVYTWGaOw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TrBKJ+2ct2wSEBci01nnKlcB/LLkbiQMjc75ofEwvttNh5QwB/wRsg3SOiEig226s
-         tAXspfSry7MbMWd5vFFWhReJrNb5rzyLD2G2G3RKcxJnhBcUM8APB4SbvRVMrRImMX
-         RhNs/lqnOTU79s2afAmJohsxXOfcf6/Ynl8j6MSA=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k0pQX-00Fztd-IY; Wed, 29 Jul 2020 17:59:37 +0100
+        Wed, 29 Jul 2020 13:02:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgG2RCr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 13:02:47 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE9D8C061794;
+        Wed, 29 Jul 2020 10:02:47 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id l12so3489821pgt.13;
+        Wed, 29 Jul 2020 10:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xtqCPAZNxab7obAfm7++LTbvH7dNhg0P0KIRGD5EzeI=;
+        b=aGqeuLKOzgNcfhya9sQK3coK1kl3GVMYKFr3x1SV5UCfe2X0O1AdN+tnxf+TeFg/o3
+         iqW3kB4RJ5diJhHYeBcfy8SjrXvEGi1ZaplHoEFYp3e3r5Tbmfm+9Wp+MRcYd5JaPnyG
+         S6iTXsgMH4xENZcjLPRikafGXw3xj6uTtqHEB7nWQc4JO3xsfk50GlSJfM71Y2bIodVK
+         MjwSwKmoMRWsfEJPkcbAowlXzD3dUPjL1oaIh1rHFPyznOsO+atvXcseaSs1CCEEoQA7
+         JWz7H9S7Wxtmd0lsQyOtiFlcDogOd9rv2KeCd01vQIUoAisWh4NUcqrEIZ18jmTiBEO2
+         r3bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xtqCPAZNxab7obAfm7++LTbvH7dNhg0P0KIRGD5EzeI=;
+        b=Vgl7i20Xf5AJVyV7vuWA7drPb375EMG6hrSHvTC4QF3M0zdnGPPB3W/11LcbEoBHfH
+         4TNrwuJPR9HXfgQskLNBHC+c10Z/qInYxQOKglZdT6V34hpbAF8HbUp7iTNVxMAVVFtC
+         baM24JjJPR3Wle1VutkcesKmbj6pDOotW/XqZ+rpdaHczdo8D2JNHC/Ah5VZntx+P/L/
+         T+i37sduHHsqjIBVUSkymRZ3elaY8ZYQQvERAakxn+SV9qtY8CyCXyY7WwqtS2uYLvPO
+         Q22HOIpRARsNtc3+WhalknDpb8QJjUXpxT3MEZOxBzSakQPLJKTP32QYcixLHxFc+kg3
+         n4+Q==
+X-Gm-Message-State: AOAM532aUjWwc2vBOiJOk6JW6wvGrZBXXbRKdIblE76SJ4kplEXEBRAN
+        yCN1rPXAqBOcClw4JM4AICU=
+X-Google-Smtp-Source: ABdhPJzULaOVQ0tOHf7TxVqsmf9UR8ysNODjrXMfRJJtpEZ0uM9i9DYpEFzw/2aHDHyHlfcNVuYGig==
+X-Received: by 2002:a63:fc1f:: with SMTP id j31mr30573226pgi.104.1596042167176;
+        Wed, 29 Jul 2020 10:02:47 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b128sm2876722pfg.114.2020.07.29.10.02.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Jul 2020 10:02:46 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 10:02:45 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Vincent Sanders <vince@simtec.co.uk>,
+        Simtec Linux Team <linux@simtec.co.uk>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        patches@opensource.cirrus.com, linux-clk@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        Sergio Prado <sergio.prado@e-labworks.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Cedric Roux <sed@free.fr>, Lihua Yao <ylhuajnu@outlook.com>
+Subject: Re: [PATCH 5/7] ARM: samsung: Kill useless HAVE_S3C2410_WATCHDOG
+Message-ID: <20200729170245.GA177035@roeck-us.net>
+References: <20200729160942.28867-1-krzk@kernel.org>
+ <20200729160942.28867-6-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 29 Jul 2020 17:59:37 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     Hulk Robot <hulkci@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] irqchip/imx-intmux: Fix irqdata regs save in
- imx_intmux_runtime_suspend()
-In-Reply-To: <20200729155849.33919-1-weiyongjun1@huawei.com>
-References: <20200729155849.33919-1-weiyongjun1@huawei.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <46666de74c4b03142524f514ea64ddad@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: weiyongjun1@huawei.com, hulkci@huawei.com, tglx@linutronix.de, jason@lakedaemon.net, shawnguo@kernel.org, s.hauer@pengutronix.de, qiangqing.zhang@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729160942.28867-6-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-29 16:58, Wei Yongjun wrote:
-> Gcc report warning as follows:
+On Wed, Jul 29, 2020 at 06:09:40PM +0200, Krzysztof Kozlowski wrote:
+> A separate Kconfig option HAVE_S3C2410_WATCHDOG for Samsung SoCs does
+> not have sense, because:
+> 1. All ARMv7 and ARMv8 Samsung SoCs have watchdog,
+> 2. All architecture Kconfigs were selecting it (if WATCHDOG framework is
+>    chosen),
+> 3. HAVE_S3C2410_WATCHDOG is doing nothing except being a dependency of
+>    actual Samsung SoC watchdog driver, which is enabled manually by
+>    specific defconfigs.
 > 
-> drivers/irqchip/irq-imx-intmux.c:316:29: warning:
->  variable 'irqchip_data' set but not used [-Wunused-but-set-variable]
->   316 |  struct intmux_irqchip_data irqchip_data;
->       |                             ^~~~~~~~~~~~
+> HAVE_S3C2410_WATCHDOG can be safely removed.
 > 
-> irqdata regs is stored to this variable on the stack in
-> imx_intmux_runtime_suspend(), which means a nop. this commit
-> fix to save regs to the right place.
-> 
-> Fixes: bb403111e017 ("irqchip/imx-intmux: Implement intmux runtime
-> power management")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+
+That is not really correct. HAVE_S3C2410_WATCHDOG is used to ensure
+that users can only enable S3C2410_WATCHDOG if the watchdog actually
+exists in a system. With this change, it can be enabled for all
+architectures and platforms.
+
+NACK.
+
+Guenter
+
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  drivers/irqchip/irq-imx-intmux.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  arch/arm/Kconfig              | 1 -
+>  arch/arm/mach-exynos/Kconfig  | 1 -
+>  arch/arm/mach-s3c64xx/Kconfig | 2 --
+>  arch/arm/mach-s5pv210/Kconfig | 1 -
+>  arch/arm64/Kconfig.platforms  | 1 -
+>  drivers/watchdog/Kconfig      | 8 --------
+>  6 files changed, 14 deletions(-)
 > 
-> diff --git a/drivers/irqchip/irq-imx-intmux.c 
-> b/drivers/irqchip/irq-imx-intmux.c
-> index 4c9e40d193d6..e35b7b09c3ab 100644
-> --- a/drivers/irqchip/irq-imx-intmux.c
-> +++ b/drivers/irqchip/irq-imx-intmux.c
-> @@ -313,12 +313,12 @@ static int imx_intmux_remove(struct 
-> platform_device *pdev)
->  static int imx_intmux_runtime_suspend(struct device *dev)
->  {
->  	struct intmux_data *data = dev_get_drvdata(dev);
-> -	struct intmux_irqchip_data irqchip_data;
-> +	struct intmux_irqchip_data *irqchip_data;
->  	int i;
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 7564f293f107..fe95777af653 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -504,7 +504,6 @@ config ARCH_S3C24XX
+>  	select GPIOLIB
+>  	select GENERIC_IRQ_MULTI_HANDLER
+>  	select HAVE_S3C2410_I2C if I2C
+> -	select HAVE_S3C2410_WATCHDOG if WATCHDOG
+>  	select HAVE_S3C_RTC if RTC_CLASS
+>  	select NEED_MACH_IO_H
+>  	select SAMSUNG_ATAGS
+> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+> index f185cd3d4c62..d2d249706ebb 100644
+> --- a/arch/arm/mach-exynos/Kconfig
+> +++ b/arch/arm/mach-exynos/Kconfig
+> @@ -24,7 +24,6 @@ menuconfig ARCH_EXYNOS
+>  	select HAVE_ARM_ARCH_TIMER if ARCH_EXYNOS5
+>  	select HAVE_ARM_SCU if SMP
+>  	select HAVE_S3C2410_I2C if I2C
+> -	select HAVE_S3C2410_WATCHDOG if WATCHDOG
+>  	select HAVE_S3C_RTC if RTC_CLASS
+>  	select PINCTRL
+>  	select PINCTRL_EXYNOS
+> diff --git a/arch/arm/mach-s3c64xx/Kconfig b/arch/arm/mach-s3c64xx/Kconfig
+> index ac3e3563487f..e208c2b48853 100644
+> --- a/arch/arm/mach-s3c64xx/Kconfig
+> +++ b/arch/arm/mach-s3c64xx/Kconfig
+> @@ -13,7 +13,6 @@ menuconfig ARCH_S3C64XX
+>  	select GPIO_SAMSUNG if ATAGS
+>  	select GPIOLIB
+>  	select HAVE_S3C2410_I2C if I2C
+> -	select HAVE_S3C2410_WATCHDOG if WATCHDOG
+>  	select HAVE_TCM
+>  	select PLAT_SAMSUNG
+>  	select PM_GENERIC_DOMAINS if PM
+> @@ -165,7 +164,6 @@ config MACH_SMDK6410
+>  	bool "SMDK6410"
+>  	depends on ATAGS
+>  	select CPU_S3C6410
+> -	select HAVE_S3C2410_WATCHDOG if WATCHDOG
+>  	select S3C64XX_SETUP_FB_24BPP
+>  	select S3C64XX_SETUP_I2C1
+>  	select S3C64XX_SETUP_IDE
+> diff --git a/arch/arm/mach-s5pv210/Kconfig b/arch/arm/mach-s5pv210/Kconfig
+> index 03984a791879..b3db1191e437 100644
+> --- a/arch/arm/mach-s5pv210/Kconfig
+> +++ b/arch/arm/mach-s5pv210/Kconfig
+> @@ -14,7 +14,6 @@ config ARCH_S5PV210
+>  	select COMMON_CLK_SAMSUNG
+>  	select GPIOLIB
+>  	select HAVE_S3C2410_I2C if I2C
+> -	select HAVE_S3C2410_WATCHDOG if WATCHDOG
+>  	select HAVE_S3C_RTC if RTC_CLASS
+>  	select PINCTRL
+>  	select PINCTRL_EXYNOS
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index cd58f8495c45..d235b27cf372 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -80,7 +80,6 @@ config ARCH_EXYNOS
+>  	select EXYNOS_CHIPID
+>  	select EXYNOS_PM_DOMAINS if PM_GENERIC_DOMAINS
+>  	select EXYNOS_PMU
+> -	select HAVE_S3C2410_WATCHDOG if WATCHDOG
+>  	select HAVE_S3C_RTC if RTC_CLASS
+>  	select PINCTRL
+>  	select PINCTRL_EXYNOS
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 4f4687c46d38..ae86ea135d2b 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -478,16 +478,8 @@ config IXP4XX_WATCHDOG
+>  
+>  	  Say N if you are unsure.
+>  
+> -config HAVE_S3C2410_WATCHDOG
+> -	bool
+> -	help
+> -	  This will include watchdog timer support for Samsung SoCs. If
+> -	  you want to include watchdog support for any machine, kindly
+> -	  select this in the respective mach-XXXX/Kconfig file.
+> -
+>  config S3C2410_WATCHDOG
+>  	tristate "S3C2410 Watchdog"
+> -	depends on HAVE_S3C2410_WATCHDOG || COMPILE_TEST
+>  	select WATCHDOG_CORE
+>  	select MFD_SYSCON if ARCH_EXYNOS
+>  	help
+> -- 
+> 2.17.1
 > 
->  	for (i = 0; i < data->channum; i++) {
-> -		irqchip_data = data->irqchip_data[i];
-> -		irqchip_data.saved_reg = readl_relaxed(data->regs + CHANIER(i));
-> +		irqchip_data = &data->irqchip_data[i];
-> +		irqchip_data->saved_reg = readl_relaxed(data->regs + CHANIER(i));
->  	}
-> 
->  	clk_disable_unprepare(data->ipg_clk);
-> @@ -329,7 +329,7 @@ static int imx_intmux_runtime_suspend(struct device 
-> *dev)
->  static int imx_intmux_runtime_resume(struct device *dev)
->  {
->  	struct intmux_data *data = dev_get_drvdata(dev);
-> -	struct intmux_irqchip_data irqchip_data;
-> +	struct intmux_irqchip_data *irqchip_data;
->  	int ret, i;
-> 
->  	ret = clk_prepare_enable(data->ipg_clk);
-> @@ -339,8 +339,8 @@ static int imx_intmux_runtime_resume(struct device 
-> *dev)
->  	}
-> 
->  	for (i = 0; i < data->channum; i++) {
-> -		irqchip_data = data->irqchip_data[i];
-> -		writel_relaxed(irqchip_data.saved_reg, data->regs + CHANIER(i));
-> +		irqchip_data = &data->irqchip_data[i];
-> +		writel_relaxed(irqchip_data->saved_reg, data->regs + CHANIER(i));
->  	}
-> 
->  	return 0;
-
-Amazing. Thanks for fixing this.
-
-Johakim: I guess this was never tested, was it?
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
