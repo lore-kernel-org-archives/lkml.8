@@ -2,124 +2,248 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED80C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 958CF2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFCE6207F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:04:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ntixGgpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgG2FEG (ORCPT
+        id S1726756AbgG2FET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 01:04:06 -0400
-Received: from mta01.start.ca ([162.250.196.97]:37316 "EHLO mta01.start.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbgG2FEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 01:04:06 -0400
-Received: from mta01.start.ca (localhost [127.0.0.1])
-        by mta01.start.ca (Postfix) with ESMTP id AFC8541E7E;
-        Wed, 29 Jul 2020 01:04:03 -0400 (EDT)
-Received: from localhost (dhcp-24-53-240-163.cable.user.start.ca [24.53.240.163])
-        by mta01.start.ca (Postfix) with ESMTPS id 747A141E12;
-        Wed, 29 Jul 2020 01:04:03 -0400 (EDT)
-Date:   Wed, 29 Jul 2020 01:04:03 -0400
-From:   Nick Bowler <nbowler@draconx.ca>
-To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     James Jones <jajones@nvidia.com>, Ben Skeggs <bskeggs@redhat.com>
-Subject: PROBLEM: 5.8-rc7 no video output with nouveau on NV36 (regression)
-Message-ID: <20200729050403.jwbgdmvmc3ajdnem@atlas.draconx.ca>
+        Wed, 29 Jul 2020 01:04:19 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:22659 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726054AbgG2FES (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 01:04:18 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595999057; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=uy1CHEEp/QDUXfLSRvgW4cSL35sMtji9dnF2rf/Lqn0=;
+ b=ntixGgpVMDqYczOzvyXKQAUtGbJaf/cz9sS3A+YDKlMjwYUZ/W123kF7TaiL4I0J937wYegg
+ j4Bkc454yOZpMopPmTlJAF7Ksn2BG6iNJCrb2eMXO+CgcgFxBaFSKpN2W5eQzxSf8/Bq1YFa
+ aNLaOUBX14Fazr/tDVENBUoRNCk=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
+ 5f210340fcbecb3df1c197f9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 05:04:00
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CB8D1C43395; Wed, 29 Jul 2020 05:03:59 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B2026C433C6;
+        Wed, 29 Jul 2020 05:03:58 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Jul 2020 10:33:58 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-msm@vger.kernel.org,
+        Coresight ML <coresight@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCHv2] coresight: etm4x: Fix etm4_count race by moving cpuhp
+ callbacks to init
+In-Reply-To: <CAJ9a7VjQCEJ80+7AZnZ-Mv5-EUzOZHnnYr2HeFpm7aktYt5fHA@mail.gmail.com>
+References: <20200728075102.30807-1-saiprakash.ranjan@codeaurora.org>
+ <CAJ9a7VjQCEJ80+7AZnZ-Mv5-EUzOZHnnYr2HeFpm7aktYt5fHA@mail.gmail.com>
+Message-ID: <08767949db1c9e142d29e8d3ab16bd1f@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Mike,
 
-After installing Linux 5.8-rc7 I seem to get no video output on my
-NV36 card once the nouveau module is loaded.  The display (connected
-to the digital output) simply reports "No Signal".
+On 2020-07-29 01:46, Mike Leach wrote:
+> Hi Sai,
+> 
+> On Tue, 28 Jul 2020 at 08:51, Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> etm4_count keeps track of number of ETMv4 registered and on some 
+>> systems,
+>> a race is observed on etm4_count variable which can lead to multiple 
+>> calls
+>> to cpuhp_setup_state_nocalls_cpuslocked(). This function internally 
+>> calls
+>> cpuhp_store_callbacks() which prevents multiple registrations of 
+>> callbacks
+>> for a given state and due to this race, it returns -EBUSY leading to 
+>> ETM
+>> probe failures like below.
+>> 
+>>  coresight-etm4x: probe of 7040000.etm failed with error -16
+>> 
+>> This race can easily be triggered with async probe by setting probe 
+>> type
+>> as PROBE_PREFER_ASYNCHRONOUS and with ETM power management property
+>> "arm,coresight-loses-context-with-cpu".
+>> 
+>> Prevent this race by moving cpuhp callbacks to etm driver init since 
+>> the
+>> cpuhp callbacks doesn't have to depend on the etm4_count and can be 
+>> once
+>> setup during driver init. Similarly we move cpu_pm notifier 
+>> registration
+>> to driver init and completely remove etm4_count usage.
+>> 
+>> Fixes: 9b6a3f3633a5 ("coresight: etmv4: Fix CPU power management setup 
+>> in probe() function")
+>> Fixes: 58eb457be028 ("hwtracing/coresight-etm4x: Convert to hotplug 
+>> state machine")
+>> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>> 
+>> Changes in v2:
+>>  * Rearrange cpuhp callbacks and move them to driver init (Suzuki K 
+>> Poulose)
+>> 
+>> ---
+>>  drivers/hwtracing/coresight/coresight-etm4x.c | 51 
+>> ++++++++++---------
+>>  1 file changed, 27 insertions(+), 24 deletions(-)
+>> 
+>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c 
+>> b/drivers/hwtracing/coresight/coresight-etm4x.c
+>> index 6d7d2169bfb2..adb71987a1e3 100644
+>> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+>> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+>> @@ -48,8 +48,6 @@ module_param(pm_save_enable, int, 0444);
+>>  MODULE_PARM_DESC(pm_save_enable,
+>>         "Save/restore state on power down: 1 = never, 2 = 
+>> self-hosted");
+>> 
+>> -/* The number of ETMv4 currently registered */
+>> -static int etm4_count;
+>>  static struct etmv4_drvdata *etmdrvdata[NR_CPUS];
+>>  static void etm4_set_default_config(struct etmv4_config *config);
+>>  static int etm4_set_event_filters(struct etmv4_drvdata *drvdata,
+>> @@ -1403,12 +1401,9 @@ static int etm4_pm_setup_cpuslocked(void)
+>>  {
+> 
+> consider renaming this to etm4_pm_setup() and handing any cpu locking
+> inside the function.
+> In the circumstances - as part of the driver init rather than probe it
+> may be sufficient to call the cpuhp_setup functions without the
+> _cpuslocked suffix and allow the calls to lock the cpus as they are
+> made.
+> i.e. cpuhp_setup_state_nocalls_cpuslocked() => 
+> cpuhp_setup_state_nocalls()
 
-I bisected to the following commit, and reverting this commit on
-top of 5.8-rc7 appears to correct the issue.
+Sure, will make this change.
 
-  fa4f4c213f5f7807360c41f2501a3031a9940f3a is the first bad commit
-  commit fa4f4c213f5f7807360c41f2501a3031a9940f3a
-  Author: James Jones <jajones@nvidia.com>
-  Date:   Mon Feb 10 15:15:55 2020 -0800
-  
-      drm/nouveau/kms: Support NVIDIA format modifiers
-      
-      Allow setting the block layout of a nouveau FB
-      object using DRM format modifiers.  When
-      specified, the format modifier block layout and
-      kind overrides the GEM buffer's implicit layout
-      and kind.  The specified format modifier is
-      validated against the list of modifiers supported
-      by the target display hardware.
-      
-      v2: Used Tesla family instead of NV50 chipset compare
-      v4: Do not cache kind, tile_mode in nouveau_framebuffer
-      v5: Resolved against nouveau_framebuffer cleanup
-      
-      Signed-off-by: James Jones <jajones@nvidia.com>
-      Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-  
-   drivers/gpu/drm/nouveau/dispnv50/wndw.c   | 20 ++++---
-   drivers/gpu/drm/nouveau/nouveau_display.c | 89 ++++++++++++++++++++++++++++++-
-   drivers/gpu/drm/nouveau/nouveau_display.h |  4 ++
-   3 files changed, 104 insertions(+), 9 deletions(-)
+> 
+>>         int ret;
+>> 
+>> -       if (etm4_count++)
+>> -               return 0;
+>> -
+>>         ret = cpu_pm_register_notifier(&etm4_cpu_pm_nb);
+>>         if (ret)
+>> -               goto reduce_count;
+>> +               return ret;
+>> 
+>>         ret = 
+>> cpuhp_setup_state_nocalls_cpuslocked(CPUHP_AP_ARM_CORESIGHT_STARTING,
+>>                                                    
+>> "arm/coresight4:starting",
+>> @@ -1432,17 +1427,11 @@ static int etm4_pm_setup_cpuslocked(void)
+>> 
+>>  unregister_notifier:
+>>         cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
+>> -
+>> -reduce_count:
+>> -       --etm4_count;
+>>         return ret;
+>>  }
+>> 
+>>  static void etm4_pm_clear(void)
+>>  {
+>> -       if (--etm4_count != 0)
+>> -               return;
+>> -
+>>         cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
+>>         cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_STARTING);
+>>         if (hp_online) {
+>> @@ -1498,22 +1487,12 @@ static int etm4_probe(struct amba_device 
+>> *adev, const struct amba_id *id)
+>>         if (!desc.name)
+>>                 return -ENOMEM;
+>> 
+>> -       cpus_read_lock();
+>>         etmdrvdata[drvdata->cpu] = drvdata;
+>> 
+>>         if (smp_call_function_single(drvdata->cpu,
+>>                                 etm4_init_arch_data,  drvdata, 1))
+>>                 dev_err(dev, "ETM arch init failed\n");
+>> 
+>> -       ret = etm4_pm_setup_cpuslocked();
+>> -       cpus_read_unlock();
+>> -
+>> -       /* etm4_pm_setup_cpuslocked() does its own cleanup - exit on 
+>> error */
+>> -       if (ret) {
+>> -               etmdrvdata[drvdata->cpu] = NULL;
+>> -               return ret;
+>> -       }
+>> -
+>>         if (etm4_arch_supported(drvdata->arch) == false) {
+>>                 ret = -EINVAL;
+>>                 goto err_arch_supported;
+>> @@ -1560,7 +1539,6 @@ static int etm4_probe(struct amba_device *adev, 
+>> const struct amba_id *id)
+>> 
+>>  err_arch_supported:
+>>         etmdrvdata[drvdata->cpu] = NULL;
+>> -       etm4_pm_clear();
+>>         return ret;
+>>  }
+>> 
+>> @@ -1598,4 +1576,29 @@ static struct amba_driver etm4x_driver = {
+>>         .probe          = etm4_probe,
+>>         .id_table       = etm4_ids,
+>>  };
+>> -builtin_amba_driver(etm4x_driver);
+>> +
+>> +static int __init etm4x_init(void)
+>> +{
+>> +       int ret;
+>> +
+>> +       cpus_read_lock();
+>> +       ret = etm4_pm_setup_cpuslocked();
+>> +       cpus_read_unlock();
+> 
+> See my comment above about rename and use of cpus_read_lock
+> 
 
-The dmesg output from loading the driver is identical except several
-lines are missing in the non-working case, which I have marked with
-"XXX" below:
+Yes, thanks for the review Mike.
 
-      [  168.222926] PCI Interrupt Link [LNKE] enabled at IRQ 16
-      [  168.223199] nouveau 0000:01:00.0: vgaarb: deactivate vga console
-      [  168.224379] Console: switching to colour dummy device 80x25
-      [  168.224612] nouveau 0000:01:00.0: NVIDIA NV36 (436200a1)
-      [  168.324779] nouveau 0000:01:00.0: bios: version 04.36.20.21.00
-      [  168.325646] agpgart-amd64 0000:00:00.0: AGP 3.0 bridge
-      [  168.325657] agpgart: modprobe tried to set rate=x12. Setting to AGP3 x8 mode.
-      [  168.325662] agpgart-amd64 0000:00:00.0: putting AGP V3 device into 8x mode
-      [  168.325679] nouveau 0000:01:00.0: putting AGP V3 device into 8x mode
-      [  168.325908] agpgart-amd64 0000:00:00.0: AGP 3.0 bridge
-      [  168.325914] agpgart: modprobe tried to set rate=x12. Setting to AGP3 x8 mode.
-      [  168.325918] agpgart-amd64 0000:00:00.0: putting AGP V3 device into 8x mode
-      [  168.325933] nouveau 0000:01:00.0: putting AGP V3 device into 8x mode
-      [  168.325990] nouveau 0000:01:00.0: tmr: unknown input clock freq
-      [  168.326732] nouveau 0000:01:00.0: fb: 256 MiB DDR1
-      [  168.328174] [TTM] Zone  kernel: Available graphics memory: 1022540 KiB
-      [  168.328175] [TTM] Initializing pool allocator
-      [  168.328181] [TTM] Initializing DMA pool allocator
-      [  168.328200] nouveau 0000:01:00.0: DRM: VRAM: 255 MiB
-      [  168.328201] nouveau 0000:01:00.0: DRM: GART: 128 MiB
-      [  168.328204] nouveau 0000:01:00.0: DRM: BMP version 5.40
-      [  168.328208] nouveau 0000:01:00.0: DRM: DCB version 2.2
-      [  168.328210] nouveau 0000:01:00.0: DRM: DCB outp 00: 01000300 00009c40
-      [  168.328214] nouveau 0000:01:00.0: DRM: DCB outp 01: 02010310 00009c40
-      [  168.328215] nouveau 0000:01:00.0: DRM: DCB outp 02: 04000302 00000000
-      [  168.328217] nouveau 0000:01:00.0: DRM: DCB outp 03: 02020321 00000303
-      [  168.328495] nouveau 0000:01:00.0: DRM: Loading NV17 power sequencing microcode
-      [  168.329691] nouveau 0000:01:00.0: DRM: MM: using M2MF for buffer copies
-      [  168.330258] nouveau 0000:01:00.0: DRM: Saving VGA fonts
-      [  168.389460] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-      [  168.391250] nouveau 0000:01:00.0: DRM: Setting dpms mode 3 on TV encoder (output 3)
-  XXX [  168.487647] nouveau 0000:01:00.0: DRM: allocated 1920x1080 fb: 0x9000, bo 00000000ff426de1
-  XXX [  168.491835] fbcon: nouveaudrmfb (fb0) is primary device
-  XXX [  168.608512] nouveau 0000:01:00.0: DRM: 0xE4FB: Parsing digital output script table
-  XXX [  168.662451] Console: switching to colour frame buffer device 240x67
-  XXX [  168.755987] nouveau 0000:01:00.0: fb0: nouveaudrmfb frame buffer device
-      [  168.763736] [drm] Initialized nouveau 1.3.1 20120801 for 0000:01:00.0 on minor 0
+Thanks,
+Sai
 
-Let me know if you need any more info.
-
-Cheers,
-  Nick
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
