@@ -2,133 +2,94 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F0AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BB9C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83EC320838
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62BCA207F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:03:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NS8yLb9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgG2ICY convert rfc822-to-8bit (ORCPT
+        id S1727955AbgG2IDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:02:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgG2ICX (ORCPT
+        Wed, 29 Jul 2020 04:03:00 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:8782 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726797AbgG2IDA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:02:23 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1596C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:02:22 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k0h2X-00086y-8P; Wed, 29 Jul 2020 10:02:17 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k0h2W-0001cy-D3; Wed, 29 Jul 2020 10:02:16 +0200
-Message-ID: <d259a74ca9e425f9b39ebbf47b0decb6be0beed5.camel@pengutronix.de>
-Subject: Re: [PATCH 1/2] reset-controller: ti: adjust the reset assert and
- deassert interface
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Crystal Guo <crystal.guo@mediatek.com>, robh+dt@kernel.org
-Cc:     srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, seiya.wang@mediatek.com
-Date:   Wed, 29 Jul 2020 10:02:16 +0200
-In-Reply-To: <ba0d1e29-3ba3-5379-d03e-1ccec21c2ffa@gmail.com>
-References: <1596008357-11213-1-git-send-email-crystal.guo@mediatek.com>
-         <1596008357-11213-2-git-send-email-crystal.guo@mediatek.com>
-         <ba0d1e29-3ba3-5379-d03e-1ccec21c2ffa@gmail.com>
+        Wed, 29 Jul 2020 04:03:00 -0400
+X-UUID: fc4db75c07b146e58e1087cc745a45f9-20200729
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=teICIrkV7sOQV3jPEavLyrRW/vZEh5lh1RgTjnP7gJE=;
+        b=NS8yLb9s0Hs5bWKTdVCbzC3ZjyxNZ66JXyMBObdxZPpo0RyJhJ9FRp1tIWcNDf2n+mnhmkRlWZUpseFAjKCMb5E6M9BOLpL/gozawbdXirXlTG55ABNPZFcJqLXTI+Thql5hw4EURws1/qFqIFakwOzxG3vd9UDpA2mdNqD5rsU=;
+X-UUID: fc4db75c07b146e58e1087cc745a45f9-20200729
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1080694864; Wed, 29 Jul 2020 16:02:57 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 29 Jul 2020 16:02:54 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 29 Jul 2020 16:02:55 +0800
+Message-ID: <1596009775.12468.6.camel@mtksdaap41>
+Subject: Re: [PATCH v3 1/3] arm64: dts: Add Mediatek SoC MT8192 and
+ evaluation board dts and Makefile
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Seiya Wang <seiya.wang@mediatek.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <devicetree@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-serial@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Wed, 29 Jul 2020 16:02:55 +0800
+In-Reply-To: <20200729013100.19539-2-seiya.wang@mediatek.com>
+References: <20200729013100.19539-1-seiya.wang@mediatek.com>
+         <20200729013100.19539-2-seiya.wang@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-TM-SNTS-SMTP: 5B75A061824025819F6C2CAD15E5F4863A2B7D6837702194A55A34624A6820D12000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Crystal, Matthias,
+SGksIFNlaXlhOg0KDQpPbiBXZWQsIDIwMjAtMDctMjkgYXQgMDk6MzAgKzA4MDAsIFNlaXlhIFdh
+bmcgd3JvdGU6DQo+IEFkZCBiYXNpYyBjaGlwIHN1cHBvcnQgZm9yIE1lZGlhdGVrIE1UODE5Mg0K
+PiANCj4gU2lnbmVkLW9mZi1ieTogU2VpeWEgV2FuZyA8c2VpeWEud2FuZ0BtZWRpYXRlay5jb20+
+DQo+IC0tLQ0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9NYWtlZmlsZSAgICAgICB8
+ICAgMSArDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE5Mi1ldmIuZHRzIHwg
+IDI5ICsrDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE5Mi5kdHNpICAgIHwg
+NjcxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gIDMgZmlsZXMgY2hhbmdlZCwgNzAx
+IGluc2VydGlvbnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRz
+L21lZGlhdGVrL210ODE5Mi1ldmIuZHRzDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02
+NC9ib290L2R0cy9tZWRpYXRlay9tdDgxOTIuZHRzaQ0KPiANCg0KW3NuaXBdDQoNCj4gKw0KPiAr
+CQl3YXRjaGRvZzogd2F0Y2hkb2dAMTAwMDcwMDAgew0KPiArCQkJY29tcGF0aWJsZSA9ICJtZWRp
+YXRlayxtdDY1ODktd2R0IjsNCg0KQWNjb3JkaW5nIHRvIFsxXSBhbmQgWzJdLCBjb21wYXRpYmxl
+IHN0cmluZyBmb3IgbXQ4MTkyIHdhdGNoIGRvZyBzaG91bGQNCmJlICJtZWRpYXRlayxtdDY4NzMt
+d2R0IiwibWVkaWF0ZWssbXQ4MTkyLXdkdCIuDQoNCg0KWzFdDQpodHRwczovL2Nocm9taXVtLXJl
+dmlldy5nb29nbGVzb3VyY2UuY29tL2MvY2hyb21pdW1vcy90aGlyZF9wYXJ0eS9rZXJuZWwvKy8y
+Mjg3MDkwLzEyDQpbMl0NCmh0dHBzOi8vY2hyb21pdW0tcmV2aWV3Lmdvb2dsZXNvdXJjZS5jb20v
+Yy9jaHJvbWl1bW9zL3RoaXJkX3BhcnR5L2tlcm5lbC8rLzIxMzE1OTgvMTgNCg0KPiArCQkJcmVn
+ID0gPDAgMHgxMDAwNzAwMCAwIDB4MTAwPjsNCj4gKwkJCSNyZXNldC1jZWxscyA9IDwxPjsNCj4g
+KwkJfTsNCj4gKw0KDQpbc25pcF0NCg0KPiArDQo+ICsJCW1tc3lzOiBtbXN5c0AxNDAwMDAwMCB7
+DQo+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE5Mi1tbXN5cyIsICJzeXNjb24iOw0K
+DQpZb3Ugc2hvdWxkIGRlZmluZSAibWVkaWF0ZWssbXQ4MTkyLW1tc3lzIiBmaXJzdCwgdGhlbiB5
+b3UgY291bGQgdXNlIGl0DQppbiB0aGlzIHBhdGNoLg0KDQpSZWdhcmRzLA0KQ0sNCg0KPiArCQkJ
+cmVnID0gPDAgMHgxNDAwMDAwMCAwIDB4MTAwMD47DQo+ICsJCQkjY2xvY2stY2VsbHMgPSA8MT47
+DQo+ICsJCX07DQo+ICsNCg0K
 
-On Wed, 2020-07-29 at 09:48 +0200, Matthias Brugger wrote:
-> 
-> On 29/07/2020 09:39, Crystal Guo wrote:
-> > Add ti_syscon_reset() to integrate assert and deassert together,
-> > and change return value of the reset assert and deassert interface
-> > from regmap_update_bits to regmap_write_bits.
-> > 
-> > when clear bit is already 1, regmap_update_bits can not write 1 to it again.
-> > Some IC has the feature that, when set bit is 1, the clear bit change
-> > to 1 together. It will truly clear bit to 0 by write 1 to the clear bit
-> > 
-> > Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
-> > ---
-> >   drivers/reset/reset-ti-syscon.c | 13 +++++++++++--
-> >   1 file changed, 11 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/reset/reset-ti-syscon.c b/drivers/reset/reset-ti-syscon.c
-> > index a2635c2..5a8ec8f 100644
-> > --- a/drivers/reset/reset-ti-syscon.c
-> > +++ b/drivers/reset/reset-ti-syscon.c
-> > @@ -89,7 +89,7 @@ static int ti_syscon_reset_assert(struct reset_controller_dev *rcdev,
-> >   	mask = BIT(control->assert_bit);
-> >   	value = (control->flags & ASSERT_SET) ? mask : 0x0;
-> >   
-> > -	return regmap_update_bits(data->regmap, control->assert_offset, mask, value);
-> > +	return regmap_write_bits(data->regmap, control->assert_offset, mask, value);
-> 
-> Nack, this will break the driver for the other devices.
-
-I don't think this will break the driver for existing hardware.
-regmap_write_bits() is the same as regmap_update_bits(), it just forces
-the write in case the read already happens to return the correct value.
-Of course it would be good to check that this actually works.
-
-> The kernel has to work not just for your SoC but for all devices of all 
-> architectures. You can't just hack something up, that will work on your specific 
-> SoC.
-> 
-> Regards,
-> Matthias
-> 
-> >   }
-> >   
-> >   /**
-> > @@ -120,7 +120,7 @@ static int ti_syscon_reset_deassert(struct reset_controller_dev *rcdev,
-> >   	mask = BIT(control->deassert_bit);
-> >   	value = (control->flags & DEASSERT_SET) ? mask : 0x0;
-> >   
-> > -	return regmap_update_bits(data->regmap, control->deassert_offset, mask, value);
-> > +	return regmap_write_bits(data->regmap, control->deassert_offset, mask, value);
-> >   }
-> >   
-> >   /**
-> > @@ -158,10 +158,19 @@ static int ti_syscon_reset_status(struct reset_controller_dev *rcdev,
-> >   		!(control->flags & STATUS_SET);
-> >   }
-> >   
-> > +static int ti_syscon_reset(struct reset_controller_dev *rcdev,
-> > +			   unsigned long id)
-> > +{
-> > +	ti_syscon_reset_assert(rcdev, id);
-> > +
-> > +	return ti_syscon_reset_deassert(rcdev, id);
-> > +}
-> > +
-
-I'm unsure about this one, though. This is an incompatible change. At
-the very least this would have to be optional depending on compatible.
-
-regards
-Philipp
