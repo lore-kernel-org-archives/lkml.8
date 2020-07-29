@@ -2,150 +2,85 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DBBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96EB8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2C81206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:38:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K4lttHq2"
+	by mail.kernel.org (Postfix) with ESMTP id 701CB206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgG2NiB (ORCPT
+        id S1727113AbgG2Nj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:38:01 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42816 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726496AbgG2NiB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 09:38:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596029879;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=DOXSjF+eq5ZVw1CXX2lEh2VQ/pA+DU53Mrk3FRb60nI=;
-        b=K4lttHq2G868jGqtZmU4K6V+4Jcrk2SNJ7Q1Kk9+pFYlJ3tpirXCrVsE7/oMJGm1wdj0Bq
-        va7Slu6yGKjaAHVLFHF1eBGoor9BmoqAgztupWcKXcsEkBTV9sEWuX+lM/+J6270LD3Lq2
-        N6AaEqpQgN6BcynKJPpqHs8mvI1h8u4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-108-6Tn0NpQkOoeqzxnBhHOXPQ-1; Wed, 29 Jul 2020 09:37:55 -0400
-X-MC-Unique: 6Tn0NpQkOoeqzxnBhHOXPQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D926879EC1;
-        Wed, 29 Jul 2020 13:37:52 +0000 (UTC)
-Received: from rules.brq.redhat.com (unknown [10.40.208.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 411956932E;
-        Wed, 29 Jul 2020 13:37:49 +0000 (UTC)
-From:   Vladis Dronov <vdronov@redhat.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Vladis Dronov <vdronov@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc: fix function annotations to avoid section mismatch warnings with gcc-10
-Date:   Wed, 29 Jul 2020 15:37:41 +0200
-Message-Id: <20200729133741.62789-1-vdronov@redhat.com>
+        Wed, 29 Jul 2020 09:39:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:51864 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726365AbgG2Nj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 09:39:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 694621FB;
+        Wed, 29 Jul 2020 06:39:58 -0700 (PDT)
+Received: from [192.168.1.84] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 59E5C3F66E;
+        Wed, 29 Jul 2020 06:39:56 -0700 (PDT)
+Subject: Re: [patch V5 00/15] entry, x86, kvm: Generic entry/exit
+ functionality for host and guest
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <20200722215954.464281930@linutronix.de>
+ <878sf8tz51.fsf@nanos.tec.linutronix.de>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <e0edb228-b7e1-09ae-c41a-b5f4cbf37347@arm.com>
+Date:   Wed, 29 Jul 2020 14:39:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <878sf8tz51.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain warnings are emitted for powerpc code when building with a gcc-10
-toolset:
+On 24/07/2020 21:51, Thomas Gleixner wrote:
+> Thomas Gleixner <tglx@linutronix.de> writes:
+>> This is the 5th version of generic entry/exit functionality for host and
+>> guest.
+> 
+> I've merged the pile in two steps. Patch 1-5, i.e. the generic code is
+> here:
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core/entry
+> 
+> and merged this branch and patch 6-15 into
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
+> 
+> core/entry is immutable and any updates, changes go on top. It's meant
+> as a base for other architecture developers who want to fiddle with that
+> without having to get the x86 mess as well.
 
-    WARNING: modpost: vmlinux.o(.text.unlikely+0x377c): Section mismatch in
-    reference from the function remove_pmd_table() to the function
-    .meminit.text:split_kernel_mapping()
-    The function remove_pmd_table() references
-    the function __meminit split_kernel_mapping().
-    This is often because remove_pmd_table lacks a __meminit
-    annotation or the annotation of split_kernel_mapping is wrong.
+Hi Thomas,
 
-Add the appropriate __init and __meminit annotations to make modpost not
-complain. In all the cases there are just a single callsite from another
-__init or __meminit function:
+Just FYI: I'm going to take a look at arm64 support for this. I know 
+Mark previously posted[1] a series moving much of the code to C, so 
+hopefully I can build on that and make use of the generic code.
 
-__meminit remove_pagetable() -> remove_pud_table() -> remove_pmd_table()
-__init prom_init() -> setup_secure_guest()
-__init xive_spapr_init() -> xive_spapr_disabled()
+Thanks,
 
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
----
- arch/powerpc/kernel/prom_init.c          | 4 ++--
- arch/powerpc/mm/book3s64/radix_pgtable.c | 4 ++--
- arch/powerpc/sysdev/xive/spapr.c         | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+Steve
 
-diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
-index 90c604d00b7d..f6ca7f450361 100644
---- a/arch/powerpc/kernel/prom_init.c
-+++ b/arch/powerpc/kernel/prom_init.c
-@@ -3262,7 +3262,7 @@ static int enter_secure_mode(unsigned long kbase, unsigned long fdt)
- /*
-  * Call the Ultravisor to transfer us to secure memory if we have an ESM blob.
-  */
--static void setup_secure_guest(unsigned long kbase, unsigned long fdt)
-+static void __init setup_secure_guest(unsigned long kbase, unsigned long fdt)
- {
- 	int ret;
- 
-@@ -3292,7 +3292,7 @@ static void setup_secure_guest(unsigned long kbase, unsigned long fdt)
- 	}
- }
- #else
--static void setup_secure_guest(unsigned long kbase, unsigned long fdt)
-+static void __init setup_secure_guest(unsigned long kbase, unsigned long fdt)
- {
- }
- #endif /* CONFIG_PPC_SVM */
-diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
-index bb00e0cba119..b868c07110e3 100644
---- a/arch/powerpc/mm/book3s64/radix_pgtable.c
-+++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
-@@ -800,7 +800,7 @@ static void __meminit split_kernel_mapping(unsigned long addr, unsigned long end
- 	pte_clear(&init_mm, addr, pte);
- }
- 
--static void remove_pmd_table(pmd_t *pmd_start, unsigned long addr,
-+static void __meminit remove_pmd_table(pmd_t *pmd_start, unsigned long addr,
- 			     unsigned long end)
- {
- 	unsigned long next;
-@@ -825,7 +825,7 @@ static void remove_pmd_table(pmd_t *pmd_start, unsigned long addr,
- 	}
- }
- 
--static void remove_pud_table(pud_t *pud_start, unsigned long addr,
-+static void __meminit remove_pud_table(pud_t *pud_start, unsigned long addr,
- 			     unsigned long end)
- {
- 	unsigned long next;
-diff --git a/arch/powerpc/sysdev/xive/spapr.c b/arch/powerpc/sysdev/xive/spapr.c
-index f0551a2be9df..1e3674d7ea7b 100644
---- a/arch/powerpc/sysdev/xive/spapr.c
-+++ b/arch/powerpc/sysdev/xive/spapr.c
-@@ -768,7 +768,7 @@ static const u8 *get_vec5_feature(unsigned int index)
- 	return vec5 + index;
- }
- 
--static bool xive_spapr_disabled(void)
-+static bool __init xive_spapr_disabled(void)
- {
- 	const u8 *vec5_xive;
- 
--- 
-2.26.2
-
+[1] https://lore.kernel.org/r/20200108185634.1163-1-mark.rutland@arm.com
