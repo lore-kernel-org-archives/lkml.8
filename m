@@ -2,184 +2,241 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9514CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C88C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62AD82075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E27DC2075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:11:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QIBt/1oo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ogl5axki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgG2SLA (ORCPT
+        id S1727833AbgG2SLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:11:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37588 "EHLO
+        Wed, 29 Jul 2020 14:11:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbgG2SK7 (ORCPT
+        with ESMTP id S1726509AbgG2SLc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:10:59 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C685C0619D2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:10:59 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id q13so5655204vsn.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:10:59 -0700 (PDT)
+        Wed, 29 Jul 2020 14:11:32 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49074C061794;
+        Wed, 29 Jul 2020 11:11:32 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id s15so3158805pgc.8;
+        Wed, 29 Jul 2020 11:11:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uCoModElWAnbMRvPO3YU9XQVQgftZ0hKK53c1cAKSbs=;
-        b=QIBt/1ooWx13u1wuOLTIXdWssccajDzsKyxD32hHiHwZrVsqw/Iw9vLsv8+Z8E4gEy
-         iEiguY8ka10wGb70eyABHcDiVLisSk0H3fV6NvNFulhN68llC5a9dvZPNtFPxwp3L5Ad
-         AC9vJlcYBsOaBTsD4WtfRj2yMEjviNinT33WI=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yAh8owI2oyYhWMiiYjqiiKpF84ZnFMNUd5g3cqXC4rI=;
+        b=ogl5axkiIz3HPEN20QlCfE/JGHFxAnZNXwOU9qkakFUBeM/QyrUEusIaXCWY3XzuCm
+         wsZHbKEicdMrABMsVEVP2Z9ZXPLTX7dySW1UqQQjwTjrPn0j6LsdZDh7maylM+nbs9vg
+         SDjmWEQ6O4eAJdN9rHReKpZ9CUycOzVTIvRgurj4QCbdj70/9MT4kt6i8+t2qql17Cng
+         BRyAR7PN3YxCWEzrCkQM5VlYqy/VfE16AeoqMDm0rLVacf0xgddOVQXWNMINGqtslnni
+         JwHxbc9+xgOpzOLuKL/yjJ6/E7NBKwiXDWpFEjo9Ss0UpbJgfyIDgPSFDZzWQxNXSEUg
+         Phnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uCoModElWAnbMRvPO3YU9XQVQgftZ0hKK53c1cAKSbs=;
-        b=Yhv8Vle7H+mufCNuxmkfsJPbeqdxttSaOimJAHSlhHau5FsUcNXPmewGCF5OEQyhRi
-         aTfqfSiOV2i9owPnBH7+Pm+c0A4UbDKbQlOtfK71QpjIsdKFNyDlfKUfKUW1zr10Rtks
-         nzhN5EYHQB1H0FMCnccycCj7f1xko4ibUdGzUFbrE5PnEk0CRM679cdxAbr9LbX+rbi5
-         z3I19UUO23dm1mIZUhMu6wL+wHkWr98F9dMguQeRY0KDvEOcFy3DZ/0+FtxJ2v+XQkUn
-         qbGRy8GfwK9rQfvzAtQ/3AFr/2pH3WQljut89kGf4L3Jwf9AdFTiB+CmTdjgxU2YCmWb
-         aPmg==
-X-Gm-Message-State: AOAM5317t+7L+8m/CjbfFvQnDaASM3Wk7frkXM0LWlZ6TN77y7MoNssv
-        Jfp6s7S4/N+OKFektGHeKZvPJJfusbc=
-X-Google-Smtp-Source: ABdhPJwzdlviQw2OuWWakITASYnD2/cruzIX4ZnbEnm8Fh1b7MKyXkBIGyd5IHtgBkuzUHm7qmHcnw==
-X-Received: by 2002:a67:69c1:: with SMTP id e184mr26370537vsc.119.1596046257943;
-        Wed, 29 Jul 2020 11:10:57 -0700 (PDT)
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com. [209.85.221.174])
-        by smtp.gmail.com with ESMTPSA id s126sm368322vka.32.2020.07.29.11.10.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 11:10:56 -0700 (PDT)
-Received: by mail-vk1-f174.google.com with SMTP id s81so586174vkb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:10:56 -0700 (PDT)
-X-Received: by 2002:a1f:9f17:: with SMTP id i23mr23539610vke.65.1596046256240;
- Wed, 29 Jul 2020 11:10:56 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yAh8owI2oyYhWMiiYjqiiKpF84ZnFMNUd5g3cqXC4rI=;
+        b=CbQd1WYoGcEl7yTFVMgCTuR/1gkVR5Nmipi/ty/Xl1/xgSSG3/0fD6EuwDac/tyz1K
+         W6Y7jJnFgPL0IjC3BNExoLYTWLZz6/bbzSZp/UIY7nfTgDOgUBSCKzgOsmUKY9zonXce
+         FhwriGg1eIaVLMlmM/hxuTYWa/oL3Uck4fmiAAv0TPtp9I6nH8llz68HYLGU0fsnLfUo
+         mgvILPD2sAAf0+smdhLLjBTNGIJUM9SWnDeQi9sqh9y74v27MikI/4Tf0tyGTJO/cr8t
+         8cZT7SqjS0JjZyNX96pavGCGPTqES/7sVdzpbq/iem/fOIUPAgYf3Aw035p2YbEnS7xl
+         StPg==
+X-Gm-Message-State: AOAM530L14Hq4uGSpIA/AmH1TX7oNxBoP531ZRDRYGsu7ybh6Wei7qe1
+        HZ8heFF0HbqXfHzRxDf4gVc=
+X-Google-Smtp-Source: ABdhPJzvtgmTo0z3FZ3NyMDyA2YjIhB1CeoA4/NV96oGLrmTpE/VmRO4iR3Pp4UIEOLiq3vWT+UqGw==
+X-Received: by 2002:a63:5619:: with SMTP id k25mr30129698pgb.139.1596046291556;
+        Wed, 29 Jul 2020 11:11:31 -0700 (PDT)
+Received: from blackclown ([103.88.82.91])
+        by smtp.gmail.com with ESMTPSA id x9sm3321612pfq.11.2020.07.29.11.11.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Jul 2020 11:11:30 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 23:41:18 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        don.brace@microsemi.com, esc.storagedev@microsemi.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@linux-kernel.org
+Subject: [PATCH 5/7] scsi: hpsa: Remove pci-dma-compat wrapper APIs.
+Message-ID: <37154a4efe82a58b9bad143608dd9fd37a2c94e5.1596045683.git.usuraj35@gmail.com>
+References: <cover.1596045683.git.usuraj35@gmail.com>
 MIME-Version: 1.0
-References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
- <1595503612-2901-5-git-send-email-rnayak@codeaurora.org> <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
- <654e0fcb-ae4d-c151-fa8a-4d029fc823fb@codeaurora.org> <20200724162825.GH9185@codeaurora.org>
- <159589714088.1360974.13205114501389777927@swboyd.mtv.corp.google.com>
- <20200728165212.GA32586@codeaurora.org> <159596590401.1360974.283437162250734878@swboyd.mtv.corp.google.com>
- <20200728201133.GB32586@codeaurora.org>
-In-Reply-To: <20200728201133.GB32586@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 29 Jul 2020 11:10:44 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XB8jqq+WGHL4czvZ96kPMpAB5wkkN9tx4++o=a2i4DXQ@mail.gmail.com>
-Message-ID: <CAD=FV=XB8jqq+WGHL4czvZ96kPMpAB5wkkN9tx4++o=a2i4DXQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
- power-domains for venus
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
+Content-Disposition: inline
+In-Reply-To: <cover.1596045683.git.usuraj35@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Tue, Jul 28, 2020 at 1:11 PM Lina Iyer <ilina@codeaurora.org> wrote:
->
-> On Tue, Jul 28 2020 at 13:51 -0600, Stephen Boyd wrote:
-> >Quoting Lina Iyer (2020-07-28 09:52:12)
-> >> On Mon, Jul 27 2020 at 18:45 -0600, Stephen Boyd wrote:
-> >> >Quoting Lina Iyer (2020-07-24 09:28:25)
-> >> >> On Fri, Jul 24 2020 at 03:03 -0600, Rajendra Nayak wrote:
-> >> >> >Hi Maulik/Lina,
-> >> >> >
-> >> >> >On 7/23/2020 11:36 PM, Stanimir Varbanov wrote:
-> >> >> >>Hi Rajendra,
-> >> >> >>
-> >> >> >>After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
-> >> >> >>below messages on db845:
-> >> >> >>
-> >> >> >>qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
-> >> >> >>current OPP for freq 533000097 (-34)
-> >> >> >>
-> >> >> >>^^^ This one is new.
-> >> >> >>
-> >> >> >>qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
-> >> >> >>
-> >> >> >>^^^ and this message is annoying, can we make it pr_debug in rpmh?
-> >> >> >
-> >> >> How annoyingly often do you see this message?
-> >> >> Usually, this is an indication of bad system state either on remote
-> >> >> processors in the SoC or in Linux itself. On a smooth sailing build you
-> >> >> should not see this 'warning'.
-> >> >>
-> >> >> >Would you be fine with moving this message to a pr_debug? Its currently
-> >> >> >a pr_info_ratelimited()
-> >> >> I would rather not, moving this out of sight will mask a lot serious
-> >> >> issues that otherwise bring attention to the developers.
-> >> >>
-> >> >
-> >> >I removed this warning message in my patch posted to the list[1]. If
-> >> >it's a serious problem then I suppose a timeout is more appropriate, on
-> >> >the order of several seconds or so and then a pr_warn() and bail out of
-> >> >the async call with an error.
-> >> >
-> >> The warning used to capture issues that happen within a second and it
-> >> helps capture system related issues. Timing out after many seconds
-> >> overlooks the system issues that generally tend to resolve itself, but
-> >> nevertheless need to be investigated.
-> >>
-> >
-> >Is it correct to read "system related issues" as performance problems
-> >where the thread is spinning forever trying to send a message and it
-> >can't? So the problem is mostly that it's an unbounded amount of time
-> >before the message is sent to rpmh and this printk helps identify those
-> >situations where that is happening?
-> >
-> Yes, but mostly a short period of time like when other processors are in
-> the middle of a restart or resource states changes have taken unusual
-> amounts of time. The system will generally recover from this without
-> crashing in this case. User action is investigation of the situation
-> leading to these messages.
+--YiEDa0DAkWCtVeE4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-While I do agree that seeing the "TCS Busy, retrying RPMH message
-send" message printed a lot was usually a sign that something was
-wrong in the system (possibly someone was spamming RPMh when they
-shouldn't be), it still feels like we need to remove it.
-Specifically, the prints would also sometimes come up in normal usage
-and always sounded a bit scary.  These types of prints always confuse
-people and lead to log pollution where it's super hard to figure out
-which of the various things in a log are "expected" and which ones are
-relevant to whatever issue you're debugging.
+The legacy API wrappers in include/linux/pci-dma-compat.h
+should go away as it creates unnecessary midlayering
+for include/linux/dma-mapping.h APIs.
+Instead use dma-mapping.h APIs directly.
 
-Presumably we could either change that from a "info" level to "dbg"
-level.  ...or we could find some other thing to check for that's a
-better signal of problems.
+The patch has been generated with the coccinelle script below.
+Compile tested.
+
+@@@@
+- PCI_DMA_BIDIRECTIONAL
++ DMA_BIDIRECTIONAL
+
+@@@@
+- PCI_DMA_TODEVICE
++ DMA_TO_DEVICE
+
+@@@@
+- PCI_DMA_FROMDEVICE
++ DMA_FROM_DEVICE
+
+@@@@
+- PCI_DMA_NONE
++ DMA_NONE
+
+@@ expression E1, E2, E3; @@
+- pci_alloc_consistent(E1, E2, E3)
++ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
+
+@@ expression E1, E2, E3; @@
+- pci_zalloc_consistent(E1, E2, E3)
++ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_free_consistent(E1, E2, E3, E4)
++ dma_free_coherent(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_map_single(E1, E2, E3, E4)
++ dma_map_single(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_unmap_single(E1, E2, E3, E4)
++ dma_unmap_single(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4, E5; @@
+- pci_map_page(E1, E2, E3, E4, E5)
++ dma_map_page(&E1->dev, E2, E3, E4, E5)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_unmap_page(E1, E2, E3, E4)
++ dma_unmap_page(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_map_sg(E1, E2, E3, E4)
++ dma_map_sg(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_unmap_sg(E1, E2, E3, E4)
++ dma_unmap_sg(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_single_for_cpu(E1, E2, E3, E4)
++ dma_sync_single_for_cpu(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_single_for_device(E1, E2, E3, E4)
++ dma_sync_single_for_device(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_sg_for_cpu(E1, E2, E3, E4)
++ dma_sync_sg_for_cpu(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2, E3, E4; @@
+- pci_dma_sync_sg_for_device(E1, E2, E3, E4)
++ dma_sync_sg_for_device(&E1->dev, E2, E3, E4)
+
+@@ expression E1, E2; @@
+- pci_dma_mapping_error(E1, E2)
++ dma_mapping_error(&E1->dev, E2)
+
+@@ expression E1, E2; @@
+- pci_set_consistent_dma_mask(E1, E2)
++ dma_set_coherent_mask(&E1->dev, E2)
+
+@@ expression E1, E2; @@
+- pci_set_dma_mask(E1, E2)
++ dma_set_mask(&E1->dev, E2)
+
+Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
+---
+ drivers/scsi/hpsa.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 90c36d75bf92..6be850de6f62 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -9328,10 +9328,10 @@ static int hpsa_enter_performant_mode(struct ctlr_i=
+nfo *h, u32 trans_support)
+ static void hpsa_free_ioaccel1_cmd_and_bft(struct ctlr_info *h)
+ {
+ 	if (h->ioaccel_cmd_pool) {
+-		pci_free_consistent(h->pdev,
+-			h->nr_cmds * sizeof(*h->ioaccel_cmd_pool),
+-			h->ioaccel_cmd_pool,
+-			h->ioaccel_cmd_pool_dhandle);
++		dma_free_coherent(&h->pdev->dev,
++				  h->nr_cmds * sizeof(*h->ioaccel_cmd_pool),
++				  h->ioaccel_cmd_pool,
++				  h->ioaccel_cmd_pool_dhandle);
+ 		h->ioaccel_cmd_pool =3D NULL;
+ 		h->ioaccel_cmd_pool_dhandle =3D 0;
+ 	}
+@@ -9381,10 +9381,10 @@ static void hpsa_free_ioaccel2_cmd_and_bft(struct c=
+tlr_info *h)
+ 	hpsa_free_ioaccel2_sg_chain_blocks(h);
+=20
+ 	if (h->ioaccel2_cmd_pool) {
+-		pci_free_consistent(h->pdev,
+-			h->nr_cmds * sizeof(*h->ioaccel2_cmd_pool),
+-			h->ioaccel2_cmd_pool,
+-			h->ioaccel2_cmd_pool_dhandle);
++		dma_free_coherent(&h->pdev->dev,
++				  h->nr_cmds * sizeof(*h->ioaccel2_cmd_pool),
++				  h->ioaccel2_cmd_pool,
++				  h->ioaccel2_cmd_pool_dhandle);
+ 		h->ioaccel2_cmd_pool =3D NULL;
+ 		h->ioaccel2_cmd_pool_dhandle =3D 0;
+ 	}
+--=20
+2.17.1
 
 
-> >Otherwise as you say above it's a bad system state where the rpmh
-> >processor has gotten into a bad state like a crash? Can we recover from
-> >that? Or is the only recovery a reboot of the system? Does the rpmh
-> >processor reboot the system if it crashes?
-> We cannot recover from such a state. The remote processor will reboot if
-> it detects a failure at it's end. If the system entered a bad state, it
-> is possible that RPMH requests start timing out in Linux and remote
-> processor may not detect it. Hence, the timeout in rpmh_write() API. The
-> advised course of action is a restart as there is no way to recover from
-> this state.
->
-> --Lina
->
->
+--YiEDa0DAkWCtVeE4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8hu8UACgkQ+gRsbIfe
+747WJQ//WJ543pOY2T9drubHzvRC4T95JyVGnSvtgZVBA7fLNXr/xdz9q9r94msv
+zo2zBctKZcnqx7KeI1TC1WkjRzcMADaugp47O+LI4KoteMPxvQm11fJ4MUNNavDy
+CNZhwSGCbybKyFWmsv2l42BDXzOTvX08ghN4db3XI0h64dyjXmli0M3CL/1R1fv9
+wWoT3lCvrr0PIoNy0cTtdsqMK6WELvN6nc3H7+Kwb3fbqrKd2aruYtOi3ScWF1i0
+rH1H/tOtRS/PPRRNvjFaj4i2zyVzaknG5WPIm7DhmlKUmNpNFjSdz0EhDuQOR5M3
+WQBxy7z7jvJQ+aktiL+O3mA9Q2LfD/i7nK3FV+x3QjAlpIVM2HZr/nwD9KScLjxS
+MWOILO0g8GO/lEr95EBTG18l1JAVRFQir1CJaqx1EDmBTJU8lFvVAfdeiVOjTRum
+koTU9JuJoCWgy/ZtwBHvX2cU1nrP+xURpN+H8ri75DSNdzEytRqVeZNf7CJP8T6w
+cou2rtx+cFjaRnz86KH/DBK2EfsQ6lqBSyYNESJYAsfuLpNghPq6DCBst07LFrfU
+ljMtlbbSub39BGr1a6aIJnStLoi3hAw/0QbJMI8+4ySJ8W7krLwWzLqiTH+Mlfpr
+mwdYEDOY20LrX8647FN9VZ1SWmxhBLXt37uXOzMELhGPbgSw4BU=
+=g1Ai
+-----END PGP SIGNATURE-----
+
+--YiEDa0DAkWCtVeE4--
