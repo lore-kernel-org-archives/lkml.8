@@ -3,108 +3,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D70EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE50C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3F5620786
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD2DA20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:37:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ki7SYqvP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N++YDTwv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgG2FhE (ORCPT
+        id S1726858AbgG2FhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 01:37:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34404 "EHLO
+        Wed, 29 Jul 2020 01:37:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgG2FhD (ORCPT
+        with ESMTP id S1726287AbgG2FhK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 01:37:03 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B825C0619D2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 22:37:02 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id 1so6789408vsl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 22:37:02 -0700 (PDT)
+        Wed, 29 Jul 2020 01:37:10 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C88F0C061794;
+        Tue, 28 Jul 2020 22:37:10 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id a65so7501268otc.8;
+        Tue, 28 Jul 2020 22:37:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OhJGf0UOhBnAaBM4uo+RC5KnIOLIwVjqf9Yxhm4B4Us=;
-        b=Ki7SYqvPryyMJ98JQEvZxaCYHLlVDrak2Lq67YCyNV/y0dYOx+svgog4yoDdTaoIIZ
-         9jecpy4jsbqv9HdOGPlYVyWNBU+BRkVbRxLt8m5QJZ9jc0KqewG6rDpKFuy71txYkg61
-         rikZ4RkT3QJ+4J5A1p0QN+zIqwkzoviZlkzGtEiRMnHjdfKbTuaXjuASsgl92Pvtb9dO
-         14SnZHFAjp+CdYxcIW5BqQJS3wSKw1snvEfZxM+9t9unij+pzXPTUt6I0RMvtEuT77aC
-         2T/UbZ9KS0n4mMp/HyXYl/Z8cWD+CWJeIF39bKzJSHJkrAGjJd8hG8L0UV1xcrtrjOVs
-         fcFA==
+        bh=zuXA/WN2nlx83H9srxCo19LElvlaPaco/SoR1kFJVg0=;
+        b=N++YDTwvJnJ4s9r+Jtio+v9Lqd0ElZdY+lozS2sh8rD0mRAl5vOSOdIa5XksrJNCX2
+         Ok4Ezdg+kt4V6qADIsrcgGbDTKgpp6q5ywl/O+oX+QZ7/eEufWO2NrU+jeC34ifuovcv
+         tHybsNBp9rQVu/R1nrBFcD8Y/qihGNGJvU2zQosLLaGwmridAZ+VY4E/5n7H5lLhGunZ
+         Qn3GQDrhxsvtkNn4PV4CfecXXw0oqDZ9LwMn965d/xWHPpQ3WSrP9mjUwxVQGMRxHi6s
+         Wc05RPcQNj1GjgL7gh9q3CuGrHtQrA8xt/DpQxHF7h0yH4qcp55qNBqL6k04cgiMu/nu
+         ICVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OhJGf0UOhBnAaBM4uo+RC5KnIOLIwVjqf9Yxhm4B4Us=;
-        b=ToZWubxxkSQ98ZkzAJbGPIS5eG3iOTU+Y3b+EdsL3pgRelbHXzy12PY21bW8Dct0W0
-         Ap22OigRyQ9Qa52p4KxT885Vyr/rtSAtbU96e1lwDl+zGFpwk8Oixj4Jqhyy0LKAAAvH
-         Kt/l3kktSyc7pKKH6AUfD445B0zfEuyRqLSFjIgxNYz7mZ1QXFWfNsYeXHRwclV1reks
-         BxUxhwSxvfioUEotByXYbM9VlhVW6aYBPSk8SFugOuyoqPQhC18eIyt4iFIMZKb3VtRb
-         emyzkuuXk/uhydh3K4QefXgRARXmPDHU01CMCxwfIKj8pEqCaRSTR85u645tCT9EYc7l
-         Temw==
-X-Gm-Message-State: AOAM533omf+SrNG/5NyVR56KZtDuHjJeVaRyzSUrPomACB6UqgqLsoex
-        x/Cs0q/BSlv1D4vsw/yOR6rspU/ShUWnSuI5MMjrRLpEj/E=
-X-Google-Smtp-Source: ABdhPJx5wTVPEqRv93P4gv7a7CPfrjA9CKuqGTm844eGicIZHFMXAnDx/9+9p28axSdgxz4xHiMexC0Syfhu6AvCYdI=
-X-Received: by 2002:a67:6b05:: with SMTP id g5mr22267118vsc.9.1596001021135;
- Tue, 28 Jul 2020 22:37:01 -0700 (PDT)
+        bh=zuXA/WN2nlx83H9srxCo19LElvlaPaco/SoR1kFJVg0=;
+        b=IlIxhbHFtJIm8JvOxe1Un17CxAn56Ov9u8YHWjVvWXHTVaFl1mVtVFgm3FB2Q5Mpwi
+         m2jgICsQeVBZzXVUVOp3kjNO6y87kDwV6JYq1SvHazc0AhO8xiG91i7P5Ym7upP0+7OI
+         saGJnZnJyyqs0ohjdJ/NiWR2Oh/2cfsElN6x27jWNVY56ADaFnA6dIjBJcoO5L4gxd5l
+         hEQnjBaTfBb3u76j+ykUcBEvY/HgmGwD11M4FWY5Ldw1IctQWNlv+dq5vc6wHKZ+a2Rt
+         JdQ9XQhsG/8WX59KTv78iHblBL1c/B557KWkSrCVo9npXSbHKKT0dSrrMaPkDAt5iIlj
+         ptHw==
+X-Gm-Message-State: AOAM532HG7hKdM8TNeqCOlwuTovJAIrTcS6LkZBpuSnow3j8m9BANquB
+        O0s2DcfX11dXWLd79VXCMGdFRuwJLyAXTVJG4AY=
+X-Google-Smtp-Source: ABdhPJwXzoU/5XehKtvMsRaxuN/8/3yEG7bdRXxBKM15dtcQ6WOP64UKEj+QhDgL5ElWpRzZHNDVFLuaKyXy9fTHL2A=
+X-Received: by 2002:a05:6830:4c8:: with SMTP id s8mr26530231otd.368.1596001030180;
+ Tue, 28 Jul 2020 22:37:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200727231033.26512-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20200727231033.26512-1-daniel.lezcano@linaro.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Wed, 29 Jul 2020 11:06:50 +0530
-Message-ID: <CAHLCerO=KPUR-2qEuFpNV9UUV_O7GoXY-EPhyefOFfL_jZ_0gA@mail.gmail.com>
-Subject: Re: [PATCH] thermal: core: Add thermal zone enable/disable notification
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
+References: <20200728182610.2538-1-dhiraj.sharma0024@gmail.com>
+In-Reply-To: <20200728182610.2538-1-dhiraj.sharma0024@gmail.com>
+From:   Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
+Date:   Wed, 29 Jul 2020 11:06:56 +0530
+Message-ID: <CAPRy4h2Kzqj449PYPjPFmd7neKLR4TTZY8wq51AWqDrTFEFGJA@mail.gmail.com>
+Subject: Re: [PATCH] staging: qlge: qlge_dbg: removed comment repition
+To:     manishc@marvell.com, Greg KH <gregkh@linuxfoundation.org>
+Cc:     netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 4:40 AM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> Now the calls to enable/disable a thermal zone are centralized in a
-> call to a function, we can add in these the corresponding netlink
-> notifications.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Hello,
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+ I know that I should ask for reviews etc after a week but the change
+is for my eudyptula task and until it doesn't get merged little
+penguin will not pass the task for me so please look at it.
 
+
+Thank You
+Dhiraj Sharma
+
+On Tue, Jul 28, 2020 at 11:56 PM Dhiraj Sharma
+<dhiraj.sharma0024@gmail.com> wrote:
+>
+> Inside function ql_get_dump comment statement had a repition of word
+> "to" which I removed and checkpatch.pl ouputs zero error or warnings
+> now.
+>
+> Signed-off-by: Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
 > ---
->  drivers/thermal/thermal_core.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  drivers/staging/qlge/qlge_dbg.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> index 9748fbb9a3a1..72bf159bcecc 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -509,6 +509,11 @@ static int thermal_zone_device_set_mode(struct thermal_zone_device *tz,
->
->         thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
->
-> +       if (mode == THERMAL_DEVICE_ENABLED)
-> +               thermal_notify_tz_enable(tz->id);
-> +       else
-> +               thermal_notify_tz_disable(tz->id);
-> +
->         return ret;
->  }
->
+> diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+> index 985a6c341294..a55bf0b3e9dc 100644
+> --- a/drivers/staging/qlge/qlge_dbg.c
+> +++ b/drivers/staging/qlge/qlge_dbg.c
+> @@ -1298,7 +1298,7 @@ void ql_get_dump(struct ql_adapter *qdev, void *buff)
+>          * If the dump has already been taken and is stored
+>          * in our internal buffer and if force dump is set then
+>          * just start the spool to dump it to the log file
+> -        * and also, take a snapshot of the general regs to
+> +        * and also, take a snapshot of the general regs
+>          * to the user's buffer or else take complete dump
+>          * to the user's buffer if force is not set.
+>          */
 > --
 > 2.17.1
 >
