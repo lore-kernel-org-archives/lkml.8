@@ -2,103 +2,165 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C43C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB5F5207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC4D20672
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:49:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R6CueL81"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AQT6zBSO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731186AbgG2Cm7 (ORCPT
+        id S1731080AbgG2CtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 22:42:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731010AbgG2Cm7 (ORCPT
+        Tue, 28 Jul 2020 22:49:18 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:41377 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730407AbgG2CtS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 22:42:59 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B870C061794;
-        Tue, 28 Jul 2020 19:42:59 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b79so20860757qkg.9;
-        Tue, 28 Jul 2020 19:42:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=26B7ruboEZL9ViEc74xT+oYS0yXOvUNjGMHs22DUHpE=;
-        b=R6CueL81HUzXERp64SqHhwnEOaz9n1NDGfKHJdHYoKE9Cs7asgo2jl0RXfuj9dWkCI
-         XCRhDZjk0RMcN9cDedfAUuJKmZ/JI26xUpzmpFExU5GRa5XUWFkzGDgjQdRLV3CmoxQv
-         9dnbd5zDkEaQVtNVG3Q2uIzfY3OBsi4guYMux8YjOYjhVogBSZDM8kemSa5Y06z0GV+C
-         MPNhS2oeaiT8SJbtFlQIRH5tSBNqyUTEMN4TsjhxFZxzyIzsG9RFMENfr1YgQqMwrpm0
-         55Fg1cKeeBvi4tyRZRqYKNV+0qkR4xuDov92OotiIvIv5yTUfd2Xc2V/iqc2mcmudWbn
-         V/lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=26B7ruboEZL9ViEc74xT+oYS0yXOvUNjGMHs22DUHpE=;
-        b=Y8JdbC0WZlfZJV3I4Qa1hCmUqlOPDYiZGVrnbwUzcKrpuppThXmRp9JhLPxTnfbFJ/
-         IWlIxePZw4Xi1C1Dgz8aMAOkB7Uwsbi6RCpCRH6+eCcYWC7AE+n3BbAJhUFlNndAzSmu
-         ve6nbrLy7p6urwh8QRZif/sTGnzkCEACNdYBkkBmbeWrshGtKvJ0hZ773l5vVD32X4gE
-         PbBKTd0nh9sSf6XWG50XYo2+L+qywDdSZa4XMFtmMf68YciDPf43UTu3lLqbFwwvogQS
-         pwjJVSTpWg530jGv5EgDBv1YyGtF/sBLNJR7GRegf14eZheNtfx9+kE29SECr37TV73d
-         tIHg==
-X-Gm-Message-State: AOAM530xXhqct4Cigd7QlZqjPzWq27kuRf6gLDftxRqjSXyIyKUowREN
-        jlhRgBB5SB/FFgBFjTTHqPI=
-X-Google-Smtp-Source: ABdhPJw0JGXZeJjRX5ajOzoxy3K2EXwr07Hgv6Yc3xZzaaW8Ls8IOOEwixKY/sDHE9DfFDI18JaOsQ==
-X-Received: by 2002:a37:517:: with SMTP id 23mr31542167qkf.63.1595990578321;
-        Tue, 28 Jul 2020 19:42:58 -0700 (PDT)
-Received: from smtp.gmail.com ([2804:d57:1705:d900:6bd8:2f2e:b0:82e5])
-        by smtp.gmail.com with ESMTPSA id z67sm462452qkb.27.2020.07.28.19.42.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 19:42:58 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 23:42:53 -0300
-From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To:     brendanhiggins@google.com, felixguoxiuping@gmail.com
-Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kunit: tool: adjust parse regex
-Message-ID: <3f437939521cea1157b6803acd312e1a04399474.1595990061.git.marcelo.schmitt1@gmail.com>
+        Tue, 28 Jul 2020 22:49:18 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595990957; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=s59Yw3fasEaqZROVI4pIOg10UgBffG1K/Zo2DcvLBPw=; b=AQT6zBSOgl7I7bzv/7bDW4eTpZj3Xskw7TsUiK/49MFyjoz4q1ANVmdFNCH7O/ramSFS+lV+
+ S2qOtpdZ1xsSD2X9nPsgIA1a4ON9Um7eLsf43hLzP4Frf3uDBrQyDvUHxBlZi/I6bl7yHd+6
+ hdBa0Vo+fx+oslSshiSnRoFPEzw=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f20e3a8a61bb9e3f5144c68 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 02:49:12
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AF642C433CB; Wed, 29 Jul 2020 02:49:11 +0000 (UTC)
+Received: from [192.168.0.101] (unknown [49.204.127.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AE9CBC433C6;
+        Wed, 29 Jul 2020 02:49:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AE9CBC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH V2] dt-bindings: pci: convert QCOM pci bindings to YAML
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1595776013-12877-1-git-send-email-sivaprak@qti.qualcomm.com>
+ <CAL_Jsq+-rwG73mEkYmMQcnxHoBpbFMWHKDvzUK=6-fMAo77-9w@mail.gmail.com>
+ <CAL_JsqJU81U5CNSia3Lrzwb2VpPy3YMK=tJfXgU49TuGn1eRyQ@mail.gmail.com>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <fcb3df88-18bd-add1-5329-92af92948048@codeaurora.org>
+Date:   Wed, 29 Jul 2020 08:19:06 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <CAL_JsqJU81U5CNSia3Lrzwb2VpPy3YMK=tJfXgU49TuGn1eRyQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kunit config subcommand terminates with error if .config has a
-configuration assigned with a string, for instance:
+Hi Rob,
 
-CONFIG_CC_VERSION_TEXT="gcc (distro package version) ..."
+On 7/28/2020 9:24 PM, Rob Herring wrote:
+> On Tue, Jul 28, 2020 at 9:27 AM Rob Herring <robh+dt@kernel.org> wrote:
+>> On Sun, Jul 26, 2020 at 9:07 AM Sivaprakash Murugesan
+>> <sivaprak@qti.qualcomm.com> wrote:
+>>> From: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>>
+>>> Convert QCOM pci bindings to YAML schema
+>>>
+>>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>> ---
+>>> [v2]
+>>>    - Referenced pci-bus.yaml
+>>>    - removed duplicate properties already referenced by pci-bus.yaml
+>>>    - Addressed comments from Rob
+>>>   .../devicetree/bindings/pci/qcom,pcie.txt          | 330 ---------------
+>>>   .../devicetree/bindings/pci/qcom,pcie.yaml         | 447 +++++++++++++++++++++
+>>>   2 files changed, 447 insertions(+), 330 deletions(-)
+>>>   delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>>>   create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>>
+>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>>> new file mode 100644
+>>> index 000000000000..ddb84f49ac1c
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>>> @@ -0,0 +1,447 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>> +
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: "http://devicetree.org/schemas/pci/qcom,pcie.yaml#"
+>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>>> +
+>>> +title: Qualcomm PCI express root complex
+>>> +
+>>> +maintainers:
+>>> +  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>> +
+>>> +description:
+>>> +  QCOM PCIe controller uses Designware IP with Qualcomm specific hardware
+>>> +  wrappers.
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - qcom,pcie-apq8064
+>>> +      - qcom,pcie-apq8084
+>>> +      - qcom,pcie-ipq4019
+>>> +      - qcom,pcie-ipq8064
+>>> +      - qcom,pcie-ipq8074
+>>> +      - qcom,pcie-msm8996
+>>> +      - qcom,pcie-qcs404
+>>> +      - qcom,pcie-sdm845
+>>> +
+>>> +  reg:
+>>> +    description: Register ranges as listed in the reg-names property
+>> Can drop this.
+>>
+>>> +    maxItems: 4
+>>> +
+>>> +  reg-names:
+>>> +    items:
+>>> +      - const: dbi
+>>> +      - const: elbi
+>>> +      - const: parf
+>>> +      - const: config
+>>> +
+>>> +  ranges:
+>>> +    maxItems: 2
+>>> +
+>>> +  interrupts:
+>>> +    items:
+>>> +      - description: MSI interrupts
+>>> +
+>>> +  interrupt-names:
+>>> +    const: msi
+>>> +
+>>> +  "#interrupt-cells":
+>> In pci-bus.yaml, so you can drop.
 
-This patch adjusts the parse regex to consider such string assignments.
+I am getting the below error if I remove #interrupt-cells alone.
 
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
----
- tools/testing/kunit/kunit_config.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+properties: '#interrupt-cells' is a dependency of 'interrupt-map'
 
-diff --git a/tools/testing/kunit/kunit_config.py b/tools/testing/kunit/kunit_config.py
-index e75063d603b5..8e55693fe812 100644
---- a/tools/testing/kunit/kunit_config.py
-+++ b/tools/testing/kunit/kunit_config.py
-@@ -10,7 +10,7 @@ import collections
- import re
- 
- CONFIG_IS_NOT_SET_PATTERN = r'^# CONFIG_(\w+) is not set$'
--CONFIG_PATTERN = r'^CONFIG_(\w+)=(\S+)$'
-+CONFIG_PATTERN = r'^CONFIG_(\w+)=((\S+)|(".*"))$'
- 
- KconfigEntryBase = collections.namedtuple('KconfigEntry', ['name', 'value'])
- 
--- 
-2.27.0
+interrupt-map is also documented in pci-bus.yaml hence dropping that as 
+well.
+
 
