@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B31C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2FEC207F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83636207F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:37:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OP9Jakpx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HzOzn234"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgG2VhZ (ORCPT
+        id S1727902AbgG2Vh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 17:37:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24195 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727867AbgG2VhW (ORCPT
+        Wed, 29 Jul 2020 17:37:27 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28169 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727873AbgG2VhW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Jul 2020 17:37:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596058641;
+        s=mimecast20190719; t=1596058642;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Ni+bhhrvnhO+vPSmEBRMLPrBAn7VL14+CgNJhQOWM7U=;
-        b=OP9JakpxZR3xjCQhaU/82CzA8phKSleWe3gzsddoxyL5NM5ScjN8p3sSXocY7QkYgRSqP7
-        ygNRfCQkCKw/GRuh8k50f2d+5S7XTlJzV4Y6FG/P997OeZrA4y+X+RiRLTNbg0pJr9/D/J
-        PtMlkexJRqjGQ5rVLRJRGCIieU0m83I=
+        bh=PrUnfRcbB8TeX4xq00PXZWnFqDspEOmAntW7u0EIgTs=;
+        b=HzOzn234xBuczfnEfRJoJjh7TOdrNEpLV74BxFzQZpL8OJ6OsgB6TtOJRoXQ+p+AXOzyYQ
+        GlkGlk+l5TyZN+mMq0S55MLpztDD0B6iaOMU8HchI9O3HlGcMXWZ2Ubjn0jzxRvJq5iVTc
+        jsZKD7pO9Lnd/ZfZnBoQoNOAAOQDYw0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-34-W7gAal89OdORW5FgRep-Dg-1; Wed, 29 Jul 2020 17:37:19 -0400
-X-MC-Unique: W7gAal89OdORW5FgRep-Dg-1
+ us-mta-377-czHsmebpMZmpc-6H9BMHLA-1; Wed, 29 Jul 2020 17:37:18 -0400
+X-MC-Unique: czHsmebpMZmpc-6H9BMHLA-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 47FC391270;
-        Wed, 29 Jul 2020 21:37:18 +0000 (UTC)
-Received: from Ruby.redhat.com (ovpn-119-146.rdu2.redhat.com [10.10.119.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6CA6D619B5;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0AE0B801E6A;
         Wed, 29 Jul 2020 21:37:17 +0000 (UTC)
+Received: from Ruby.redhat.com (ovpn-119-146.rdu2.redhat.com [10.10.119.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 046D161176;
+        Wed, 29 Jul 2020 21:37:15 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     nouveau@lists.freedesktop.org
-Cc:     stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 7/9] drm/nouveau/kms: Invert conditionals in nouveau_display_acpi_ntfy()
-Date:   Wed, 29 Jul 2020 17:37:01 -0400
-Message-Id: <20200729213703.119137-8-lyude@redhat.com>
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA
+        GEFORCE/QUADRO GPUS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 6/9] drm/nouveau/kms: Use pm_runtime_put_autosuspend() in hpd_work
+Date:   Wed, 29 Jul 2020 17:37:00 -0400
+Message-Id: <20200729213703.119137-7-lyude@redhat.com>
 In-Reply-To: <20200729213703.119137-1-lyude@redhat.com>
 References: <20200729213703.119137-1-lyude@redhat.com>
 MIME-Version: 1.0
@@ -64,83 +64,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No functional changes here, just a drive-by cleanup.
+Again, we don't have any need to suspend the device synchronously here,
+and doing so could in theory lead to a deadlock (although it's unlikely
+since we've called pm_runtime_mark_last_busy() before-hand).
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
-[cc'd to stable since the next fix needs this patch to apply]
-Fixes: 79e765ad665d ("drm/nouveau/drm/nouveau: Prevent handling ACPI HPD events too early")
-Cc: stable@vger.kernel.org
-Cc: Ben Skeggs <bskeggs@redhat.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
-Cc: <stable@vger.kernel.org> # v4.19+
 ---
- drivers/gpu/drm/nouveau/nouveau_display.c | 50 +++++++++++------------
- 1 file changed, 24 insertions(+), 26 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_display.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/nouveau/nouveau_display.c b/drivers/gpu/drm/nouveau/nouveau_display.c
-index cdc5a2200f95e..96c9e7f550537 100644
+index 63c58f12458c9..cdc5a2200f95e 100644
 --- a/drivers/gpu/drm/nouveau/nouveau_display.c
 +++ b/drivers/gpu/drm/nouveau/nouveau_display.c
-@@ -457,34 +457,32 @@ nouveau_display_acpi_ntfy(struct notifier_block *nb, unsigned long val,
- 	struct acpi_bus_event *info = data;
- 	int ret;
+@@ -444,7 +444,7 @@ nouveau_display_hpd_work(struct work_struct *work)
+ 	drm_helper_hpd_irq_event(drm->dev);
  
--	if (!strcmp(info->device_class, ACPI_VIDEO_CLASS)) {
--		if (info->type == ACPI_VIDEO_NOTIFY_PROBE) {
--			ret = pm_runtime_get(drm->dev->dev);
--			if (ret == 1 || ret == -EACCES) {
--				/* If the GPU is already awake, or in a state
--				 * where we can't wake it up, it can handle
--				 * it's own hotplug events.
--				 */
--				pm_runtime_put_autosuspend(drm->dev->dev);
--			} else if (ret == 0) {
--				/* This may be the only indication we receive
--				 * of a connector hotplug on a runtime
--				 * suspended GPU, schedule hpd_work to check.
--				 */
--				NV_DEBUG(drm, "ACPI requested connector reprobe\n");
--				schedule_work(&drm->hpd_work);
--				pm_runtime_put_noidle(drm->dev->dev);
--			} else {
--				NV_WARN(drm, "Dropped ACPI reprobe event due to RPM error: %d\n",
--					ret);
--			}
--
--			/* acpi-video should not generate keypresses for this */
--			return NOTIFY_BAD;
--		}
-+	if (strcmp(info->device_class, ACPI_VIDEO_CLASS) ||
-+	    info->type != ACPI_VIDEO_NOTIFY_PROBE)
-+		return NOTIFY_DONE;
-+
-+	ret = pm_runtime_get(drm->dev->dev);
-+	if (ret == 1 || ret == -EACCES) {
-+		/* If the GPU is already awake, or in a state
-+		 * where we can't wake it up, it can handle
-+		 * it's own hotplug events.
-+		 */
-+		pm_runtime_put_autosuspend(drm->dev->dev);
-+	} else if (ret == 0) {
-+		/* This may be the only indication we receive
-+		 * of a connector hotplug on a runtime
-+		 * suspended GPU, schedule hpd_work to check.
-+		 */
-+		NV_DEBUG(drm, "ACPI requested connector reprobe\n");
-+		schedule_work(&drm->hpd_work);
-+		pm_runtime_put_noidle(drm->dev->dev);
-+	} else {
-+		NV_WARN(drm, "Dropped ACPI reprobe event due to RPM error: %d\n",
-+			ret);
- 	}
- 
--	return NOTIFY_DONE;
-+	/* acpi-video should not generate keypresses for this */
-+	return NOTIFY_BAD;
+ 	pm_runtime_mark_last_busy(drm->dev->dev);
+-	pm_runtime_put_sync(drm->dev->dev);
++	pm_runtime_put_autosuspend(drm->dev->dev);
  }
- #endif
  
+ #ifdef CONFIG_ACPI
 -- 
 2.26.2
 
