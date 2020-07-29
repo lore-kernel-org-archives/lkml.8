@@ -2,306 +2,168 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C8CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B12F920809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2CCB20809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:17:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="VHI0dodz"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RSYD1so/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgG2OQ6 (ORCPT
+        id S1726873AbgG2ORd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:16:58 -0400
-Received: from mail-vi1eur05on2086.outbound.protection.outlook.com ([40.107.21.86]:16992
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        Wed, 29 Jul 2020 10:17:33 -0400
+Received: from mail-eopbgr130040.outbound.protection.outlook.com ([40.107.13.40]:48191
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726724AbgG2OQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:16:57 -0400
+        id S1726581AbgG2ORc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 10:17:32 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T2IldgaxqaU/c8wYzyiQ71I8YqaI9HgZPMWJOOE/tWk9UGsxe97stSdPEUGfnmIGI4IIWnlyn4RMuS2Gghq0GpTqZQC3I29oSK1BmGndrOwlVg56+C/sK3ddPJw8n7210DpVfgzn3pgyMFrnIY7MWavgopW/nVEFpygdrK7iN6pepfnNk2MCL2iPAkx69rKzhjsvkRgLXFRElSih+Z2qfQdz7+R9wmOfnFOT0v65nkeuNG9bCECdeUi4uXXXN8gJlDV4wn2qjoaZv0ZbxuoBgFjhXq24LA88rtxYYZ8TYpMutBfSxV75tZeKwPhYAQlMspL6aI1AfqADvPDVZxoPlg==
+ b=PeH90YbPlSt7ypRJ1veRKj16XcrGh3qr9aYxW54getdcELCuo6IKjqJOxpdfjlF4A+/l/PbrTawtjecZe/Pzq3scLo2Y42Fo0/XMZqJU3ZQsHa4ATUpxCMWVlW0fMOxF6uhj6wBKVw3rNAg/zJIJPeAvQx6/fGJTxrg3Jx2lXpy5g6qdo6A2mkiLHhKfCVAEH3UgM1M9GQWgyDYhHGfwP7iNjh4ZTuzHmAFOWdm9OgBy36HhFvRW5AasOj1U1M3X0Fny/nZ1m3SLTM/PsI5nB0KabulbKG05nFm3HP/kmEvWSP0/qysmYkT9jHcW7DA7SRbDXaYXFblYWIfJNZbBqA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TTE7i1AKpZhGwvF+1nUCg33oOPKPVZ/n5osNQtEYpsw=;
- b=mkra15juEZGYzEFK0Dr/Vm4OIQucyg1xAoOD9JatkQ+9IqXa3/LEie44j6MfT41Rbc2yVI1fpjdDuX8feiQideO6xVoLUrTyU88+ntxmezZhzt19g7DBKc+r7tRgDNV159jUf5afWohqd0+O5Ta7pG1w9RUwXyTM0vgM5AvLIHiQ/yPpykcLfNR9O5uCaTblwUtSjE7v6J2IR8LZY06LHelLKXI6KwHaWq/VVbei5hk7mTJfGB06QT7aaZDFdYBxHDQqcrcL4fqFDRrqRjDXBp947sZh8SNCv3IqhiiFSAxwNlN6yTZkHN3rXyNDxdo340ZW/8lT4MAuOWFr4pkyJg==
+ bh=+zYvzCCJZJ11GKm/tLngDyensMDogiHTwj6aKXcLyrc=;
+ b=M8OsS0s5AF35eceeWLpbDTqbHU9zAHD9VbDBUQ3xM4T6oeRFy+jySMQlzjAlPs8RifdwTSXgVapRl9QugsnsImQjfV/9xlifw+wC1vDI9cMYGL4H66eaq8bXphVrkOZVbFKBJytUbcukpvvta/bkAye9F48ndRNbNqDTofONDQ2LC42OoyiL934PBSvOUnEO+N2K2jB38/kdOQco0w2Ccc7YIlUq0WQQmnBPFwRyyjGy4WY9eE9lokNb3DVbwliv5rq7vQUzqAU1G0f5yD3cUWaXW+iyXVpirJCtt9+kRISIK+vu+Kld3zzr/yqs+Il5lqhZ+tQQ+ljCsYVNkabc6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TTE7i1AKpZhGwvF+1nUCg33oOPKPVZ/n5osNQtEYpsw=;
- b=VHI0dodzQnLVAx2YEKDfgQJsIo3NJtPdH4ztYa7I3QXneuxEHwP5jc5Il7O89tFDJ5qV7Sza/2aSqzDEDczPivkz3tf6waopTjYOxhyOBFzcGAtDlDl5wdCdQhIJaps6eVD9rXso3vPevdmgKgivhqh/WdNDM3wVDzyTV0gZ0Bg=
-Authentication-Results: sigxcpu.org; dkim=none (message not signed)
- header.d=none;sigxcpu.org; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- (2603:10a6:803:22::27) by VI1PR04MB4478.eurprd04.prod.outlook.com
- (2603:10a6:803:67::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Wed, 29 Jul
- 2020 14:16:51 +0000
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::5c87:6dce:840d:d4c8]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::5c87:6dce:840d:d4c8%7]) with mapi id 15.20.3216.034; Wed, 29 Jul 2020
- 14:16:51 +0000
-Date:   Wed, 29 Jul 2020 17:16:47 +0300
-From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        lukas@mntmn.com, Robert Chiras <robert.chiras@nxp.com>
-Subject: Re: [PATCH v8 0/5] Add support for iMX8MQ Display Controller
- Subsystem
-Message-ID: <20200729141647.mf6xjrd2wmixasse@fsr-ub1864-141>
-References: <20200724090736.12228-1-laurentiu.palcu@oss.nxp.com>
- <20200729135948.GB266947@bogon.m.sigxcpu.org>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200729135948.GB266947@bogon.m.sigxcpu.org>
-User-Agent: NeoMutt/20171215
-X-ClientProxiedBy: AM4PR05CA0028.eurprd05.prod.outlook.com (2603:10a6:205::41)
- To VI1PR0402MB3902.eurprd04.prod.outlook.com (2603:10a6:803:22::27)
+ bh=+zYvzCCJZJ11GKm/tLngDyensMDogiHTwj6aKXcLyrc=;
+ b=RSYD1so/Kmi7yvddzTAIxbk2RlaysMhSe35il6sXy/xhKGEaZVRKMND22FOFmTHosxGQjg0lkzpvQ8lf4YplNREXQNAsxcEMFaBnz+iGgWPFZ+jal3JsETz98DsgZqRRTdWCQMamNfIWR8JaC+n0qZyZ/GKDKQCbhdpAkPCYqZk=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB8PR04MB5658.eurprd04.prod.outlook.com (2603:10a6:10:b2::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Wed, 29 Jul
+ 2020 14:17:27 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::49f8:20ce:cf20:80b3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::49f8:20ce:cf20:80b3%6]) with mapi id 15.20.3216.034; Wed, 29 Jul 2020
+ 14:17:27 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2 1/2] watchdog: imx7ulp: Strictly follow the sequence
+ for wdog operations
+Thread-Topic: [PATCH V2 1/2] watchdog: imx7ulp: Strictly follow the sequence
+ for wdog operations
+Thread-Index: AQHWZU9toVNXTyNlR0yNnyvd1DR7Makd8woAgAAEoFCAAKKOAIAAAOIg
+Date:   Wed, 29 Jul 2020 14:17:26 +0000
+Message-ID: <DB3PR0402MB3916A03896012BC96A861882F5700@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1595989227-24700-1-git-send-email-Anson.Huang@nxp.com>
+ <00587a78-8069-4fbd-7e02-b774d541f75a@roeck-us.net>
+ <DB3PR0402MB3916C412DE1E83A2D40B2341F5700@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <6ac07203-a966-f985-52ae-b3dd264b3786@roeck-us.net>
+In-Reply-To: <6ac07203-a966-f985-52ae-b3dd264b3786@roeck-us.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: roeck-us.net; dkim=none (message not signed)
+ header.d=none;roeck-us.net; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [183.192.23.221]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0c0aaad0-3ffc-451c-05b0-08d833ca1f1a
+x-ms-traffictypediagnostic: DB8PR04MB5658:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB565894CBED09C80427E9F36AF5700@DB8PR04MB5658.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nAa4eGBU7FY9YmvGqfPvgDspPC1ke4tIyIv7C2X2zZb/zG5cjpEZo6+9rWGOtonTIkELD+PyQRib/40n/arPaUGh8VDYktXTzsjpKK4AtrEvL+0HvYwu8I0bQXxuFYfubIWYkm2EyKjlUzPB9bvJHGnN8YuA/3c274L8M+mN99BoMHJFbpdcU3Y2z4pPBJuHvAe7DpvJ5b/PM0uQzS8eRW5cqE3Icb9IY3mnDa/wY8xhAmmX4YSMRfy+vpYUKwPDHeNFjG2TsalCXomVhuIuXhqg5B/8OobAzpDFol6erUWikv/VnU8QkIACuChvlEE6zKNDdEyOlN0Xh1oRcWdCOw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(136003)(346002)(376002)(366004)(478600001)(33656002)(83380400001)(9686003)(2906002)(8936002)(4326008)(8676002)(55016002)(44832011)(71200400001)(5660300002)(6506007)(52536014)(316002)(7696005)(66446008)(64756008)(66556008)(66476007)(76116006)(66946007)(110136005)(53546011)(26005)(186003)(86362001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 2K761aIKklb7DUObwnSSDAQGOWguZUudbS7PCXeWxkR8fJW/lvDCBp6rX3BruN7TA+TpOXO2wMLoRBQoXa3QxAyf7A4AD4aagfNNFHwq3gZXEoSSI+9sQFX65b3ZlWrUg0ksiV7UYepUJub3dnv+KYQC1L9HXamnJcjsj5qD/JhFabvNTGMq14xbx0kZqDMZj2jAXbUjVmFtVJ/SRpk53Mbd1v0sXJedcesjFYy3OI83BaOHriRu1hVPtGDfGJ5jA35ZTH10CLmmSsRGWosrMkUfpRwrsc1O6Ikda4Am+Q6OqNLfX1ta2wfV+Y2YcCPVdF7bX634lvUWX4FE20hLrTiyFiVRCMcu1Et1EFlt6jo3Z72l48hWAhNVWesH/0rgbAuTvgpPiYAi4XF8n838qQ+twmxFXfqdUuvi7NUiOc1rB4hzDp7pMJafOyY2UolfwcbyJ4FtrQrfhSzFpogFi/n4kC5jJbyWdVe2LFHaO4W0kLM6PE4rnvlx1va9PAZ+HH6mwGGP6wbLow5d49RQ8REJfik2g9vNzptWvWoxoJaVxfNtCe2z81UdBrxtSKV9nAz1/jeXO2fm4SAaEIiUyd3JpxQsEp3gqtSd8x4kOKtPadk7FPRgfrHPJ/vCvoQsTArOI0fOVv0Sfbyl3SqcTg==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-141 (83.217.231.2) by AM4PR05CA0028.eurprd05.prod.outlook.com (2603:10a6:205::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17 via Frontend Transport; Wed, 29 Jul 2020 14:16:49 +0000
-X-Originating-IP: [83.217.231.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a495f731-2bcd-40e7-2a50-08d833ca0975
-X-MS-TrafficTypeDiagnostic: VI1PR04MB4478:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB4478D32840C22BB959F5C71ABE700@VI1PR04MB4478.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oqoPK6TbUfPGx1woIQLk0Ntnoa8Ib8FxH3VWkXpKc25K45AblbvKiFYuxDDtpOIRc6p6a8EOuOCiK6xOJSRrAcCA9+Actb47MnQzBGr/KgOWlf5DnI32y+gyxcQefVxlsx8XWl+97Jnv0LzH3fszDnE0KVP3dYeCheS2oic9yfQ6ysOBOKhe92zQE6q/VT+E918IfDuRRNeDs09Nzd56teFOFbAnOJ80z3pMQ4eX+IHhAaks2De2/eFVAjXopZhjZ62epWe7JGl0LpGFJVwBXqtxe66BsPSb2Hr0vy8VWpTGVpDlKmOamZfKs6Ce4IEvUSqOedyKyN+x3VIvNVKglb4XNpr5eDRp9fXUxAkD7jaZVivJgGLa7BsI+cLvj8JJy3zPEPWs0SrK+aqWzwUNpoHHSDuD6pC/eTZrq1wkb3g=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(366004)(346002)(396003)(136003)(44832011)(86362001)(6916009)(5660300002)(4326008)(956004)(54906003)(83380400001)(186003)(9686003)(26005)(66574015)(66556008)(66476007)(1076003)(16526019)(55016002)(66946007)(316002)(478600001)(8936002)(6496006)(966005)(2906002)(8676002)(52116002)(33716001)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: IHLCJp1S5keHVt5vak+UUNjZHZe8C6RLIzEBHci2cBvkuRRRzHNKhPixXHlTe2Mqzde+jSz+EDQGOMQZ0AAMIUMuTm8h02V19XtBdp4yLLTGJpUahcN1PUAHwXdktvAYH3Cj7+yl8rC0Y1iub3rl7XjEQ7DvIL/8h+fmffnvq/86SpXnIGauqqAe56x4FKI7ww2L4dPfO+97oHO/LFBexgIGEbAzplmIKLwfVCnXnzQmReVxFLVUQFjnueqlTzkRauEgTqP73KLvj8MR6T5P8NbXWOPcMouBdkjzJQq8wwMGFprVB7p67N10cfIa0wgi09DLU3wMfrigcQAFKXEbvFkidzE6MTjvhyM++AuQeN0/26VONOtvSxBNRJlHR7qdkFFip469rAlmOqFOeBSE3Ee7G6ftMOfMkQeREbgAph7kX7ddrc0D8XVBl3LRIXqoSkeOS6xiPxac9m9B4F7NOgU4vVF4T2shfppnL/FhYW8=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a495f731-2bcd-40e7-2a50-08d833ca0975
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
+X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2020 14:16:50.9718
+X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c0aaad0-3ffc-451c-05b0-08d833ca1f1a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2020 14:17:26.9715
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wYc4oymzzeX2CfEDBdua7M0JES8hP+RWlEyhrgQaAHAJJVEDlIvQJVLaB1xNi7aeeob5VbLWsJDwEKKLPBwkFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4478
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FdiBKDQw5I96BOwHE2hPzjPUIFl89a3DguZ2kyo2v9iHK3R9hS3WbeK+5yBE+mUiDUsHUyDOd3wD4grFQ/3Osw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5658
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guido,
-
-On Wed, Jul 29, 2020 at 03:59:48PM +0200, Guido Günther wrote:
-> Hi,
-> On Fri, Jul 24, 2020 at 12:07:29PM +0300, Laurentiu Palcu wrote:
-> > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > 
-> > Hi,
-> > 
-> > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
-> > includes only graphics plane support (no video planes), no HDR10 capabilities,
-> > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
-> > 
-> > Support for the rest of the features will be added incrementally, in subsequent
-> > patches.
-> > 
-> > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
-> > MIPI-DSI driver (with a couple of patches on top, to make it work
-> > correctly with DCSS).
-> 
-> While i could run earlier versions of this  series with NWL I'm seeing
-> only a brief image that then turns black (backlight still on) with this current version and
-> the board hangs soon after.(for reference using mxsfb works nicely with
-> the very same DT on next-20200727). If I do a drm.debug=0x3f i can see
-> that display output stops around:
-> 
-> [   15.394473] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=22, diff=1, hw=0 hw_last=0
-> [   15.397575] device: 'input1': device_add
-> [   15.444658] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=23, diff=1, hw=0 hw_last=0
-> [   15.465946] PM: Adding info for No Bus:input1
-> [   15.494842] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=24, diff=1, hw=0 hw_last=0
-> [   15.511694] input: gpio-keys as /devices/platform/gpio-keys/input/input1
-> [   15.545025] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=25, diff=1, hw=0 hw_last=0
-> [   15.557869] device: 'event1': device_add
-> [   15.595209] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=26, diff=1, hw=0 hw_last=0
-> [   15.605363] PM: Adding info for No Bus:event1
-> [   15.645394] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=27, diff=1, hw=0 hw_last=0
-> [   19.427039] imx-dcss 32e00000.display-controller: [drm:vblank_disable_fn] disabling vblank on crtc 0
-> [   19.436135] device: 'wakeup6': device_add
-> [   19.448202] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=28, diff=0, hw=0 hw_last=0
-> 
-> (and there's no further logging from drm from there on).
-> 
-> Would any the above mentioned patches do anything in that area?
-
-The NWL driver is missing at least one fix that is needed for DCSS to
-work nicely with it. One thing that needs fixed is the polarity. I added
-a patch for that in our tree... :/
-
-Currently, in NWL upstream, we have
-
-adjusted_mode->flags |= (DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC);
-adjusted_mode->flags &= ~(DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC);
-
-However DCSS works with:
-
-adjusted->flags &= ~(DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC);
-adjusted->flags |= (DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC);
-
-I CCed Robert. He'll work on upstreaming these NWL changes in the following
-period of time.
-
-Thanks,
-laurentiu
-
-> 
-> Cheers,
->  -- Guido
-> 
-> > 
-> > Thanks,
-> > Laurentiu
-> > 
-> > Changes in v8:
-> >  * Removed 'select RESET_CONTROLLER" from Kconfig as Philipp pointed
-> >    out. SRC is not used in DCSS driver;
-> >  * Nothing else changed;
-> > 
-> > Changes in v7:
-> >  * Added a patch to initialize the connector using the drm_bridge_connector
-> >    API as Sam suggested. Tested it using NWL_DSI and ADV7535 with
-> >    Guido's patch [1] applied and one fix for ADV [2]. Also, some extra
-> >    patches for ADV and NWL were needed, from our downstream tree, which
-> >    will be upstreamed soon by their author;
-> >  * Rest of the patches are untouched;
-> > 
-> > [1] https://lists.freedesktop.org/archives/dri-devel/2020-July/273025.html
-> > [2] https://lists.freedesktop.org/archives/dri-devel/2020-July/273132.html
-> > 
-> > Changes in v6:
-> >  * Addressed Rob's comment and added "additionalProperties: false" at
-> >    the end of the bindings' properties. However, this change surfaced
-> >    an issue with the assigned-clock* properties not being documented in
-> >    the properties section. Added the descriptions and the bindings patch
-> >    will need another review;
-> >  * Added an entry for DCSS driver in the MAINTAINERS file;
-> >  * Removed the component framework patch altogether;
-> > 
-> > Changes in v5:
-> >  * Rebased to latest;
-> >  * Took out component framework support and made it a separate patch so
-> >    that people can still test with HDP driver, which makes use of it.
-> >    But the idea is to get rid of it once HDP driver's next versions
-> >    will remove component framework as well;
-> >  * Slight improvement to modesetting: avoid cutting off the pixel clock
-> >    if the new mode and the old one are equal. Also, in this case, is
-> >    not necessary to wait for DTG to shut off. This would allow to switch
-> >    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
-> >    from DCSS point of view);
-> >  * Do not fire off CTXLD when going to suspend, unless it still has
-> >    entries that need to be committed to DCSS;
-> >  * Addressed Rob's comments on bindings;
-> > 
-> > Changes in v4:
-> >  * Addressed Lucas and Philipp's comments:
-> >    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
-> >    * Removed usage of devm_ functions since I'm already doing all the
-> >      clean-up in the submodules_deinit();
-> >    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
-> >    * Removed en_completion variable from dcss_crtc since this was
-> >      introduced mainly to avoid vblank timeout warnings which were fixed
-> >      by arming the vblank event in flush() instead of begin();
-> >    * Removed clks_on and irq_enabled flags since all the calls to
-> >      enabling/disabling clocks and interrupts were balanced;
-> >    * Removed the custom atomic_commit callback and used the DRM core
-> >      helper and, in the process, got rid of a workqueue that wasn't
-> >      necessary anymore;
-> >    * Fixed some minor DT binding issues flagged by Philipp;
-> >    * Some other minor changes suggested by Lucas;
-> >  * Removed YUV formats from the supported formats as these cannot work
-> >    without the HDR10 module CSCs and LUTs. Will add them back when I
-> >    will add support for video planes;
-> > 
-> > Changes in v3:
-> >  * rebased to latest linux-next and made it compile as drmP.h was
-> >    removed;
-> >  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
-> >  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
-> >  * fixed a a spurious hang reported by Lukas Hartmann and encountered
-> >    by me several times;
-> >  * mask DPR and DTG interrupts by default, as they may come enabled from
-> >    U-boot;
-> > 
-> > Changes in v2:
-> >  * Removed '0x' in node's unit-address both in DT and yaml;
-> >  * Made the address region size lowercase, to be consistent;
-> >  * Removed some left-over references to P010;
-> >  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
-> >    issues reported by kbuild for other architectures;
-> > 
-> > 
-> > Laurentiu Palcu (5):
-> >   drm/imx: compile imx directory by default
-> >   drm/imx: Add initial support for DCSS on iMX8MQ
-> >   drm/imx/dcss: use drm_bridge_connector API
-> >   MAINTAINERS: Add entry for i.MX 8MQ DCSS driver
-> >   dt-bindings: display: imx: add bindings for DCSS
-> > 
-> >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 104 +++
-> >  MAINTAINERS                                   |   8 +
-> >  drivers/gpu/drm/Makefile                      |   2 +-
-> >  drivers/gpu/drm/imx/Kconfig                   |   2 +
-> >  drivers/gpu/drm/imx/Makefile                  |   1 +
-> >  drivers/gpu/drm/imx/dcss/Kconfig              |   8 +
-> >  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
-> >  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
-> >  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
-> >  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 325 +++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
-> >  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 138 +++
-> >  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 198 +++++
-> >  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  44 +
-> >  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
-> >  20 files changed, 4107 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
-> > 
-> > -- 
-> > 2.23.0
-> > 
+SGksIEd1ZW50ZXINCg0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjIgMS8yXSB3YXRjaGRvZzog
+aW14N3VscDogU3RyaWN0bHkgZm9sbG93IHRoZSBzZXF1ZW5jZQ0KPiBmb3Igd2RvZyBvcGVyYXRp
+b25zDQo+IA0KPiBPbiA3LzI4LzIwIDk6NTAgUE0sIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+IEhp
+LCBHdWVudGVyDQo+ID4NCj4gPg0KPiA+PiBTdWJqZWN0OiBSZTogW1BBVENIIFYyIDEvMl0gd2F0
+Y2hkb2c6IGlteDd1bHA6IFN0cmljdGx5IGZvbGxvdyB0aGUNCj4gPj4gc2VxdWVuY2UgZm9yIHdk
+b2cgb3BlcmF0aW9ucw0KPiA+Pg0KPiA+PiBPbiA3LzI4LzIwIDc6MjAgUE0sIEFuc29uIEh1YW5n
+IHdyb3RlOg0KPiA+Pj4gQWNjb3JkaW5nIHRvIHJlZmVyZW5jZSBtYW51YWwsIHRoZSBpLk1YN1VM
+UCBXRE9HJ3Mgb3BlcmF0aW9ucyBzaG91bGQNCj4gPj4+IGZvbGxvdyBiZWxvdyBzZXF1ZW5jZToN
+Cj4gPj4+DQo+ID4+PiAxLiBkaXNhYmxlIGdsb2JhbCBpbnRlcnJ1cHRzOw0KPiA+Pj4gMi4gdW5s
+b2NrIHRoZSB3ZG9nIGFuZCB3YWl0IHVubG9jayBiaXQgc2V0OyAzLiByZWNvbmZpZ3VyZSB0aGUg
+d2RvZw0KPiA+Pj4gYW5kIHdhaXQgZm9yIHJlY29uZmlndXJhdGlvbiBiaXQgc2V0OyA0LiBlbmFi
+ZWwgZ2xvYmFsIGludGVycnVwdHMuDQo+ID4+Pg0KPiA+Pj4gU3RyaWN0bHkgZm9sbG93IHRoZSBy
+ZWNvbW1lbmRlZCBzZXF1ZW5jZSBjYW4gbWFrZSBpdCBtb3JlIHJvYnVzdC4NCj4gPj4+DQo+ID4+
+PiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPj4+
+IC0tLQ0KPiA+Pj4gQ2hhbmdlcyBzaW5jZSBWMToNCj4gPj4+IAktIHVzZSByZWFkbF9wb2xsX3Rp
+bWVvdXRfYXRvbWljKCkgaW5zdGVhZCBvZiB1c2xlZXBfcmFuZ2VzKCkgc2luY2UNCj4gPj4+IElS
+USBpcw0KPiA+PiBkaXNhYmxlZC4NCj4gPj4+IC0tLQ0KPiA+Pj4gIGRyaXZlcnMvd2F0Y2hkb2cv
+aW14N3VscF93ZHQuYyB8IDI5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4+PiAg
+MSBmaWxlIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKykNCj4gPj4+DQo+ID4+PiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy93YXRjaGRvZy9pbXg3dWxwX3dkdC5jDQo+ID4+PiBiL2RyaXZlcnMvd2F0Y2hk
+b2cvaW14N3VscF93ZHQuYyBpbmRleCA3OTkzYzhjLi43ZDJiMTJlIDEwMDY0NA0KPiA+Pj4gLS0t
+IGEvZHJpdmVycy93YXRjaGRvZy9pbXg3dWxwX3dkdC5jDQo+ID4+PiArKysgYi9kcml2ZXJzL3dh
+dGNoZG9nL2lteDd1bHBfd2R0LmMNCj4gPj4+IEBAIC01LDYgKzUsNyBAQA0KPiA+Pj4NCj4gPj4+
+ICAjaW5jbHVkZSA8bGludXgvY2xrLmg+DQo+ID4+PiAgI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQo+
+ID4+PiArI2luY2x1ZGUgPGxpbnV4L2lvcG9sbC5oPg0KPiA+Pj4gICNpbmNsdWRlIDxsaW51eC9r
+ZXJuZWwuaD4NCj4gPj4+ICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4+PiAgI2luY2x1
+ZGUgPGxpbnV4L29mLmg+DQo+ID4+PiBAQCAtMzYsNiArMzcsNyBAQA0KPiA+Pj4gICNkZWZpbmUg
+REVGQVVMVF9USU1FT1VUCTYwDQo+ID4+PiAgI2RlZmluZSBNQVhfVElNRU9VVAkxMjgNCj4gPj4+
+ICAjZGVmaW5lIFdET0dfQ0xPQ0tfUkFURQkxMDAwDQo+ID4+PiArI2RlZmluZSBXRE9HX1dBSVRf
+VElNRU9VVAkxMDAwMA0KPiA+Pj4NCj4gPj4+ICBzdGF0aWMgYm9vbCBub3dheW91dCA9IFdBVENI
+RE9HX05PV0FZT1VUOw0KPiA+PiBtb2R1bGVfcGFyYW0obm93YXlvdXQsDQo+ID4+PiBib29sLCAw
+MDAwKTsgQEAgLTQ4LDE3ICs1MCwzMSBAQCBzdHJ1Y3QgaW14N3VscF93ZHRfZGV2aWNlIHsNCj4g
+Pj4+ICAJc3RydWN0IGNsayAqY2xrOw0KPiA+Pj4gIH07DQo+ID4+Pg0KPiA+Pj4gK3N0YXRpYyBp
+bmxpbmUgdm9pZCBpbXg3dWxwX3dkdF93YWl0KHZvaWQgX19pb21lbSAqYmFzZSwgdTMyIG1hc2sp
+IHsNCj4gPj4+ICsJdTMyIHZhbCA9IHJlYWRsKGJhc2UgKyBXRE9HX0NTKTsNCj4gPj4+ICsNCj4g
+Pj4+ICsJaWYgKCEodmFsICYgbWFzaykpDQo+ID4+PiArCQlXQVJOX09OKHJlYWRsX3BvbGxfdGlt
+ZW91dF9hdG9taWMoYmFzZSArIFdET0dfQ1MsIHZhbCwNCj4gPj4+ICsJCQkJCQkgIHZhbCAmIG1h
+c2ssIDAsDQo+ID4+PiArCQkJCQkJICBXRE9HX1dBSVRfVElNRU9VVCkpOw0KPiA+Pg0KPiA+PiBJ
+IGFtIG5vdCBhIGZyaWVuZCBvZiBXQVJOX09OLCBlc3BlY2lhbGx5IGluIHNpdHVhdGlvbnMgbGlr
+ZSB0aGlzLg0KPiA+PiBQbGVhc2UgZXhwbGFpbiB3aHkgdGhpcyBpcyBuZWVkZWQsIGFuZCB3aHkg
+YSByZXR1cm4gb2YgLUVUSU1FRE9VVCBpcw0KPiA+PiBub3QgZmVhc2libGUuDQo+ID4NCj4gPiBP
+SywgSSB3aWxsIHVzZSByZXR1cm4gdmFsdWUgb2YgLUVUSU1FT1VUIGFuZCBoYW5kbGUgaXQgaW4g
+dGhlIGNhbGxlci4NCj4gPg0KPiA+Pg0KPiA+PiBBbHNvLCBJIGRvIG5vdCBiZWxpZXZlIHRoYXQg
+YSAxMCBtaWxsaS1zZWNvbmQgdGltZW91dCBpcyB3YXJyYW50ZWQuDQo+ID4+IFRoaXMgd2lsbCBu
+ZWVkIHRvIGJlIGJhY2tlZCB1cCBieSB0aGUgZGF0YXNoZWV0Lg0KPiA+Pg0KPiA+DQo+ID4gVGhl
+cmUgaXMgbm8gc3VjaCBpbmZvIHByb3ZpZGVkIGluIHJlZmVyZW5jZSBtYW51YWwgb3IgZGF0YXNo
+ZWV0LCBidXQgSQ0KPiA+IGp1c3QgZGlkIGFuIGV4cGVyaW1lbnQsIHRoZSB1bmxvY2sgd2luZG93
+IGlzIG9wZW4gaW4gbGVzcyB0aGFuIDF1cw0KPiA+IGFmdGVyIHNlbmRpbmcgdW5sb2NrIGNvbW1h
+bmQsIGFuZCBPTkxZIGxhc3QgZm9yIE9OTFkgMn4zIHVzIHRoZW4NCj4gPiBjbG9zZSwgdGhlIHJl
+Y29uZmlndXJhdGlvbiBzdGF0dXMgYml0IHdpbGwgYmUgc2V0IGluIGxlc3MgdGhhbiAxdXMgYWZ0
+ZXIgcmVnaXN0ZXINCj4gd3JpdGUuIFNvIHdoYXQgZG8geW91IHJlY29tbWVuZCBmb3IgdGhpcyB0
+aW1lb3V0IHZhbHVlPyAxMDBtUyBmb3Igc2FmZT8NCj4gPg0KPiANCj4gVGhhdCB3b3VsZCBiZSBl
+dmVuIHdvcnNlLiBZb3Ugc2F5IHlvdXJzZWxmIHRoYXQgdGhlIHdpbmRvdyBpcyBvbmx5IG9wZW4g
+Zm9yIGENCj4gZmV3IG1pY3Jvc2Vjb25kcy4gTm93IHlvdSBhcmUgc3VnZ2VzdGluZyB0byBob2xk
+IHRoZSBlbnRpcmUgc3lzdGVtIGhvc3RhZ2UNCj4gZm9yIHVwIHRvDQo+IDEwMCBtUyBpZiB0aGUg
+Y29kZSBtaXNzZXMgdGhhdCB3aW5kb3cgZm9yIHNvbWUgcmVhc29uLiBCYXNlZCBvbiB3aGF0IHlv
+dQ0KPiBzYWlkLA0KPiAxMDAgdVMgbWlnaHQgYmUgYmFyZWx5IGFjY2VwdGFibGUuIDEwLTIwIHVT
+IHdvdWxkIGJlIHJlYXNvbmFibGUuIEJ1dCBub3QNCj4gMTAwIG1TLg0KDQpPSywgSSB3aWxsIHVz
+ZSAyMHVzLg0KDQpUaGFua3MsDQpBbnNvbg0KDQoNCg==
