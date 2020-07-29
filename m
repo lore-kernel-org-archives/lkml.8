@@ -2,126 +2,114 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B866FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B2BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 949302074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A8E2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:19:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bIdFvI3/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrzqBECN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgG2KSq (ORCPT
+        id S1726756AbgG2KTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 06:18:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49338 "EHLO
+        Wed, 29 Jul 2020 06:19:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgG2KSp (ORCPT
+        with ESMTP id S1726336AbgG2KS7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 06:18:45 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F49FC061794;
-        Wed, 29 Jul 2020 03:18:45 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f1so20530570wro.2;
-        Wed, 29 Jul 2020 03:18:45 -0700 (PDT)
+        Wed, 29 Jul 2020 06:18:59 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89832C061794;
+        Wed, 29 Jul 2020 03:18:58 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id e22so1824848pjt.3;
+        Wed, 29 Jul 2020 03:18:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=L+8hZ3DUqeSgXJLLu1cI0x5JkwDrCOyHENvm/ECikNc=;
-        b=bIdFvI3/b8pv4BIyHsFtohM1EZp7ZiWGwuY25r0zJSXFAfX9+sd5ktN+PbRNZDbqlV
-         zRzoLtSlknW5G4ti5ZRIywZWxbhkff5gJSsFZgfpNT6NN6Xipbo8mNa63fWGVtdwWe/4
-         OpJGFH4susK10dQS6o3d40MIExTwIPmnfKyZtNNAIwRfuLaLluuJ++DYQToe4lqGulPo
-         ItRdwZeTv/4AbPPpZPwojxn37JkFcbE59xemrKMVMQ6WL7Vxo1ft7Svp9S/x6lHX1mLs
-         psxI/L8x+LyZcR6Wr5hK0BQn7X2nDQ9zESvULQ7XE+gJA/vMonbnWzDz91SCuPUWA/LV
-         IOeg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=b4/21bXCudODfIY795t0rfeU7nBNchzrSSbcv04ppHA=;
+        b=mrzqBECNYxJ7HgA62RBVbpwWRQUzqC6n9dMdDRaJkvrW9MtnP7bQ12a5YTj5Dpb47B
+         oWVhfQ19xVeA/NijTmRyy6OrqFd7tWyEuxuwQ4rYUo8B3TuX6Ib93+/cBeSZTtB2m2b+
+         mTzEQ4WH61JPeYzNB52dhyOlk1Bf/QSz+jAEUTFIsYWNHcES+pmJVcgJa5xNVF23XwL+
+         jHW6A5MwIenK6b9+aBjz78pMePBdJkUlO1ReBAJE3OFfHjp0c8sDvPeGvND2on/f67Up
+         lxey/ZcEFLtvoH8LPgQRYb3QorLMiFZo2b9ahI7Xav6Ofg0nKnCkxyr2AUZ2aGXRxEvK
+         Gy2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=L+8hZ3DUqeSgXJLLu1cI0x5JkwDrCOyHENvm/ECikNc=;
-        b=DqNkP67puBWEHqJfqYy1lCcd08JF+JmczkfrYFE8cvqFaTxvQ++xqvcRadSamxicbf
-         clpc1O2TmFWZfnmTMFYIbu8ruZZfnkv2ZlOYvT35rZH+BRR7H5bjkgO5EdNC1/JJn9Jd
-         0LKPcgEiZJay1pVsKq8g6DJQ1pEV9LC5XbxYazoJZJ+RGb55HiQhizQ4DueNuAUauqB6
-         9qQmt1TDVEpvd4MqQcPjsU3c0KdMbazuNwTSoqUE0O8ODKZGf0byoQXwPJpIBjokM0nn
-         +4qmA9WYV57ohr0n8CdhpJHIl8/vmaS5vhm2rheMipLU7k35c6ACmjXlJuPY/mxAGt36
-         2PMQ==
-X-Gm-Message-State: AOAM532KUy94BRYm7cfDKHOJbq/sf8RVmcgYfqZbj13RHoR/5BG4QPi5
-        y/7qzO3UzpsDebrKwO+RJyUNRpFdxBo=
-X-Google-Smtp-Source: ABdhPJyVVOF7Ria9gxZG0U9j3Vr6Dep9PAZVLWiHJbAHm04ETXwhwhaGwQN1UKqYu3/SAS/3h3B7qg==
-X-Received: by 2002:a5d:6702:: with SMTP id o2mr28315989wru.364.1596017923835;
-        Wed, 29 Jul 2020 03:18:43 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id z12sm4182465wrp.20.2020.07.29.03.18.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 03:18:43 -0700 (PDT)
-Subject: Re: [v2,1/3] dt-binding: mediatek: mt8192: update mtk-wdt document
-To:     Crystal Guo <crystal.guo@mediatek.com>, linux@roeck-us.net,
-        robh+dt@kernel.org
-Cc:     srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, seiya.wang@mediatek.com,
-        erin.lo@mediatek.com
-References: <1596016922-13184-1-git-send-email-crystal.guo@mediatek.com>
- <1596016922-13184-2-git-send-email-crystal.guo@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <c6ea8852-0381-0924-185e-083ea167f8fa@gmail.com>
-Date:   Wed, 29 Jul 2020 12:18:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=b4/21bXCudODfIY795t0rfeU7nBNchzrSSbcv04ppHA=;
+        b=DLCdS/jv62h3/dBCUYwivMaIX5U5x8l9ZCjB7X20Tn14+iRkL8MMTmcuHePZhpfTXf
+         a9Ua2WV14gAoziQThhLZDSoT4CJiQpyL2uwBKVR7E5wRcK6SVVK0k+aFRdQjd5PTt9iw
+         SZS686kbRz5vOaKnB3+EXvpjCOyu4+3RCjv4pO/GWLj8tIHpLdLdSVNsJPsjmoSAlZLC
+         fltrYer8XmqN/kLtp+o6/d7YAW8Ujg8seozyLsvP5zeFKdB48afFbHXvvua47Bcxjk94
+         ithZo0SmQwLOe99jkWqfifnGhf0pG9DTGkHQdbLTDQFMEAYlXfWzCFYB9JCb24FWK6gR
+         PAKA==
+X-Gm-Message-State: AOAM530XpB2kOEEiD+Qxtb72WLfJvkoh2Agp1G0Wu2TinSyD5rhYJP1a
+        KKRy5H4ZuO+GgfUSItXObyQ=
+X-Google-Smtp-Source: ABdhPJw33dMoDVdSQ9nMnOoTWSXV4jmIgUS6olXEqFCUVr9ezYF9SmQWFQ/Qz0pl0lXb+VUZD0FMjQ==
+X-Received: by 2002:a17:90b:4c51:: with SMTP id np17mr8719522pjb.91.1596017937931;
+        Wed, 29 Jul 2020 03:18:57 -0700 (PDT)
+Received: from gmail.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id e124sm1713290pfe.176.2020.07.29.03.18.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 03:18:57 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 15:47:30 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kevin Curtis <kevin.curtis@farsite.co.uk>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v1] farsync: use generic power management
+Message-ID: <20200729101730.GA215923@gmail.com>
+References: <20200728042809.91436-1-vaibhavgupta40@gmail.com>
+ <20200728200413.GA1857901@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <1596016922-13184-2-git-send-email-crystal.guo@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200728200413.GA1857901@bjorn-Precision-5520>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 29/07/2020 12:02, Crystal Guo wrote:
-> update mtk-wdt document for MT8192 platform
-
-
-should be two patches. one fixing the compatibles and second adding new board.
-
+On Tue, Jul 28, 2020 at 03:04:13PM -0500, Bjorn Helgaas wrote:
+> On Tue, Jul 28, 2020 at 09:58:10AM +0530, Vaibhav Gupta wrote:
+> > The .suspend() and .resume() callbacks are not defined for this driver.
+> > Still, their power management structure follows the legacy framework. To
+> > bring it under the generic framework, simply remove the binding of
+> > callbacks from "struct pci_driver".
 > 
-> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
-> ---
->   Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
+> FWIW, this commit log is slightly misleading because .suspend and
+> .resume are NULL by default, so this patch actually is a complete
+> no-op as far as code generation is concerned.
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> index 4dd36bd..e36ba60 100644
-> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> @@ -4,14 +4,15 @@ Required properties:
->   
->   - compatible should contain:
->   	"mediatek,mt2701-wdt", "mediatek,mt6589-wdt": for MT2701
-> -	"mediatek,mt2712-wdt", "mediatek,mt6589-wdt": for MT2712
-> +	"mediatek,mt2712-wdt": for MT2712
->   	"mediatek,mt6589-wdt": for MT6589
->   	"mediatek,mt6797-wdt", "mediatek,mt6589-wdt": for MT6797
->   	"mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
->   	"mediatek,mt7623-wdt", "mediatek,mt6589-wdt": for MT7623
->   	"mediatek,mt7629-wdt", "mediatek,mt6589-wdt": for MT7629
-> -	"mediatek,mt8183-wdt", "mediatek,mt6589-wdt": for MT8183
-> +	"mediatek,mt8183-wdt": for MT8183
-
-We will need to update the DTSI in a seperate patch as well.
-
->   	"mediatek,mt8516-wdt", "mediatek,mt6589-wdt": for MT8516
-> +	"mediatek,mt8192-wdt": for MT8192
->   
->   - reg : Specifies base physical address and size of the registers.
->   
+> This change is worthwhile because it simplifies the code a little, but
+> it doesn't convert the driver from legacy to generic power management.
+> This driver doesn't supply a .pm structure, so it doesn't seem to do
+> *any* power management.
 > 
+Agreed. Actually, as their presence only causes PCI core to call
+pci_legacy_suspend/resume() for them, I thought that after removing the binding
+from "struct pci_driver", this driver qualifies to be grouped under genric
+framework, so used "use generic power management" for the heading.
+
+I should have written "remove legacy bindning".
+
+But David has applied the patch, should I send a v2 or fix to update message?
+
+Thanks
+Vaibhav Gupta
+> > Change code indentation from space to tab in "struct pci_driver".
+> > 
