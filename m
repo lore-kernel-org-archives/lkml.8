@@ -2,185 +2,91 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EBDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C97C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1AB206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A1F206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgG2WHN (ORCPT
+        id S1727883AbgG2WHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 18:07:13 -0400
-Received: from mga07.intel.com ([134.134.136.100]:56214 "EHLO mga07.intel.com"
+        Wed, 29 Jul 2020 18:07:16 -0400
+Received: from mga02.intel.com ([134.134.136.20]:21934 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgG2WHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 18:07:13 -0400
-IronPort-SDR: 6wCsUYW4D+KQDPN/nc8EoC8uZuUsgOePZg8PBAlzYtJKCyWu3R0Vlgnnm+hhc3k6+pGQibo8fQ
- 18J0/ZJ5/73A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="215992564"
+        id S1726628AbgG2WHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 18:07:15 -0400
+IronPort-SDR: 8fpMMl/Ic870kAW6sFiHdtf3VzsEJ2Wsfo6B40IWq8DrcSlo/Php+ZWeqg6Z3gjiYz3F1yZuZ9
+ lY5KntjafGfw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="139511045"
 X-IronPort-AV: E=Sophos;i="5.75,412,1589266800"; 
-   d="scan'208";a="215992564"
+   d="scan'208";a="139511045"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 15:07:11 -0700
-IronPort-SDR: l7uLFWhAyNIIaNuytBhKLQL2Fl0tUcKcY08CMTa8QXzAWxluOxBFLnCEd0e4027kn0ef/jFqX9
- Qr7kS2sgjH/Q==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 15:07:14 -0700
+IronPort-SDR: sWuxLoWojkxjsr4BOfxDQrzxADpJPxark3spRp2R6u6StfOBIgnrH2GmW9peBdrAju1I4SeHzj
+ 3fv01O4nRsHg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,412,1589266800"; 
-   d="scan'208";a="304362819"
-Received: from lkp-server02.sh.intel.com (HELO 1bde1f275adc) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 29 Jul 2020 15:07:09 -0700
-Received: from kbuild by 1bde1f275adc with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k0uE9-0000Em-5M; Wed, 29 Jul 2020 22:07:09 +0000
-Date:   Thu, 30 Jul 2020 06:07:05 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:sched/fifo] BUILD REGRESSION
- 4fd5750af02ab7bba7c58a073060cc1da8a69173
-Message-ID: <5f21f309.rWbpyDU6e2WAKOrB%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="313183177"
+Received: from otcwcpicx6.sc.intel.com ([172.25.55.29])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Jul 2020 15:07:14 -0700
+Date:   Wed, 29 Jul 2020 22:07:14 +0000
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Shanbhogue, Vedvyas" <vedvyas.shanbhogue@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>, H Peter Anvin <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Li, Xiaoyao" <xiaoyao.li@intel.com>, x86 <x86@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] x86/bus_lock: Enable bus lock detection
+Message-ID: <20200729220714.GA318659@otcwcpicx6.sc.intel.com>
+References: <1595021700-68460-1-git-send-email-fenghua.yu@intel.com>
+ <20200729030232.GE5583@linux.intel.com>
+ <e23b04a2adc54a5dbca48271987de822@intel.com>
+ <20200729184614.GI27751@linux.intel.com>
+ <20200729194259.GA318576@otcwcpicx6.sc.intel.com>
+ <20200729200033.GJ27751@linux.intel.com>
+ <20200729203557.GA318595@otcwcpicx6.sc.intel.com>
+ <20200729203905.GN27751@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200729203905.GN27751@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  sched/fifo
-branch HEAD: 4fd5750af02ab7bba7c58a073060cc1da8a69173  sched,tracing: Convert to sched_set_fifo()
+Hi, Sean,
 
-Error/Warning in current branch:
+On Wed, Jul 29, 2020 at 01:39:05PM -0700, Sean Christopherson wrote:
+> On Wed, Jul 29, 2020 at 08:35:57PM +0000, Fenghua Yu wrote:
+> > If sld=fatal and bld=ratelimit (both sld and bld are enabled in hw),
+> > a split lock always generates #AC and kills the app and bld will never have
+> > a chance to trigger #DB for split lock. So effectively the combination makes
+> > the kernel to take two different actions after detecting a bus lock: if the
+> > bus lock comes from a split lock, fatal (sld); if the bus lock comes from
+> > lock to non-WB memory, ratelimit (bld). Seems this is not a useful combination
+> > and is not what the user really wants to do because the user wants ratelimit
+> > for BLD, right?
+> 
+> I understood all off that.  And as I user I want to run sld=fatal and
+> bld=ratelimit to provide maximum protection, i.e. disallow split locks at
+> all times, and ratelimit the crud SLD #AC can't catch.
 
-drivers/pinctrl/core.c:1356: error: Cannot parse struct or union!
+Then this will expand the current usages and do need two options. Let me work
+on adding a new "bus_lock_detect=" option as you suggested.
 
-Error/Warning ids grouped by kconfigs:
+Thanks.
 
-recent_errors
-|-- alpha-allmodconfig
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- alpha-allyesconfig
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- alpha-randconfig-r002-20200729
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- arc-allyesconfig
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- arc-randconfig-r005-20200729
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- arc-randconfig-r021-20200728
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- c6x-allyesconfig
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- ia64-allmodconfig
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- ia64-randconfig-r035-20200729
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- mips-allmodconfig
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- mips-allyesconfig
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- nds32-allyesconfig
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- nios2-allyesconfig
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- nios2-randconfig-r031-20200729
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- parisc-allyesconfig
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- parisc-randconfig-c004-20200729
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- s390-allyesconfig
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- sh-allmodconfig
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- sparc-allyesconfig
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- sparc-randconfig-r025-20200728
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-|-- sparc64-randconfig-r001-20200729
-|   `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-`-- xtensa-allyesconfig
-    `-- drivers-pinctrl-core.c:error:Cannot-parse-struct-or-union
-
-elapsed time: 721m
-
-configs tested: 66
-configs skipped: 1
-
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a003-20200729
-i386                 randconfig-a004-20200729
-i386                 randconfig-a005-20200729
-i386                 randconfig-a002-20200729
-i386                 randconfig-a006-20200729
-i386                 randconfig-a001-20200729
-i386                 randconfig-a016-20200729
-i386                 randconfig-a012-20200729
-i386                 randconfig-a013-20200729
-i386                 randconfig-a014-20200729
-i386                 randconfig-a011-20200729
-i386                 randconfig-a015-20200729
-x86_64               randconfig-a004-20200729
-x86_64               randconfig-a005-20200729
-x86_64               randconfig-a002-20200729
-x86_64               randconfig-a006-20200729
-x86_64               randconfig-a003-20200729
-x86_64               randconfig-a001-20200729
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-Fenghua
