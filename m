@@ -2,117 +2,193 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4674C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFBBC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B91AB20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:05:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D87XQE4I"
+	by mail.kernel.org (Postfix) with ESMTP id 81BBE2083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgG2QFc (ORCPT
+        id S1726846AbgG2QHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 12:05:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgG2QFc (ORCPT
+        Wed, 29 Jul 2020 12:07:07 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:53362 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbgG2QHH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 12:05:32 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B802C061794;
-        Wed, 29 Jul 2020 09:05:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=VgRSKXlVkUA+wItQ1Yesqt0DqERY9tDDk1U1v1+rmjc=; b=D87XQE4IvPC76f/jdR58xUN6a1
-        qNh7BPED4JT4BPDwbs70qaTy6+FVuym0TEs3Vw4wuM3DjblfQcPyM48whmcanyIkRoI5Vex7omssr
-        mS51Y030Hs5AGlMkxgnoNwQG/D+3E80YmbqDane5JAry1c3ygOOMVaDA5C0yNhd8+Cy/5glMNZkgT
-        4VBYxn1Ux/qUr8PlV6aM/LTmbWQUlIfB70YFEapz4MpOzfuRVeJB2tIpUz0EQ5cOE/1JF6OD6GVlo
-        hZTLSP3uRdXQGxF7+qcOYpLebCttTL6AWb46IblzSgsc/ZbzRdsLr6uI1HTOgURX0khGxBdDjtnIz
-        HI9DnOPA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0oa9-0006wD-Hg; Wed, 29 Jul 2020 16:05:29 +0000
-Subject: Re: linux-next: Tree for Jul 29 (drivers/crypto/sa2ul.c)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, Keerthy <j-keerthy@ti.com>
-References: <20200729222201.0d1ec18a@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <14aed575-cd6a-ff64-d040-323c2847df93@infradead.org>
-Date:   Wed, 29 Jul 2020 09:05:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 12:07:07 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9EA898030866;
+        Wed, 29 Jul 2020 16:07:01 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id vcQPxmkk7SoN; Wed, 29 Jul 2020 19:07:00 +0300 (MSK)
+Date:   Wed, 29 Jul 2020 19:06:59 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+Message-ID: <20200729160659.jcz7nl6qvd7lami2@mobilestation>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+ <20200723100317.GJ3703480@smile.fi.intel.com>
+ <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+ <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com>
+ <20200729125837.b27ncvd2eeixstba@mobilestation>
+ <CAHp75VfekW-aQhyCQJhzqJ+jSvmzJ-Otdh0jwoLt662CopwyTQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200729222201.0d1ec18a@canb.auug.org.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfekW-aQhyCQJhzqJ+jSvmzJ-Otdh0jwoLt662CopwyTQ@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/20 5:22 AM, Stephen Rothwell wrote:
-> Hi all,
+On Wed, Jul 29, 2020 at 06:10:24PM +0300, Andy Shevchenko wrote:
+> On Wed, Jul 29, 2020 at 3:58 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> > On Mon, Jul 27, 2020 at 12:22:28AM +0200, Linus Walleij wrote:
 > 
-> Changes since 20200728:
+> ...
+> 
+> > Sorry for a delay with a response to this issue. I had to give it a more thorough
+> > thought since the problem is a bit more complex than it seemed originally. As I
+> > see it now It might be wrong to implement the cases 2) and 3), but 1) is more
+> > appropriate.
+> >
+> > First of all we need to note that GPIOlib framework provides the next parameters
+> > to describe the IRQ-chip:
+> > gc->irq.num_parents - number of parental IRQ numbers.
+> > gc->irq.parents[] - array of parental IRQ numbers.
+> > *gc->irq.valid_mask - a mask of IRQ/GPIO lines describing a valid IRQ.
+> > *gc->irq.map - mapping of hw IRQ/GPIO ID -> parental IRQ numbers.
+> >
+> > Using that set we can handle any case of linear and sparse parental IRQs. Here
+> > is how it can be implemented in the framework of DW APB GPIO controller.
+> >
+> > DW APB GPIO can be synthesized with two configs:
+> > 1) Combined IRQ line (GPIO_INTR_IO == True),
+> > 2) Multiple interrupt signals for each GPIO (GPIO_INTR_IO == False).
+> >
+> > Obviously the former case is trivial:
+> >
+> >      IRQ_combined
+> >     ______^________
+> >    /_ _ _ _ _ ___ _\
+> >    |_|_|_|_|_|...|_| - GPIOs
+> >
+> > In that case
+> > gc->irq.num_parents = 1;
+> > gc->irq.parents[0] = IRQ_combined;
+> > *gc->irq.valid_mask = GENMASK(ngpio - 1, 0); // This is done by the GPIOlib core itself.
+> >
+> > The later one (when multiple interrupt signals are involved) can be a bit more
+> > complicated. It can be also split up into two cases:
+> > 2a) One-on-one GPIO-IRQ mapping.
+> > 2b) Sparse GPIO-IRQ mapping.
+> >
+> > It's straightforward to implement 2a):
+> >
+> >    i1i2i3i4i5 ... iN
+> >     _ _ _ _ _ ___ _
+> >    |_|_|_|_|_|...|_| - GPIOs
+> >
+
+> > In that case
+> > gc->irq.num_parents = ngpio;
+> > gc->irq.parents[] = {i1, i2, i3, i4, i5, ... iN};
+> > gc->irq.map = {i1, i2, i3, i4, i5, ... iN};
+> > *gc->irq.valid_mask = GENMASK(ngpio - 1, 0);
+> >
+> 
+> This case puzzles me. Why is it not NULL and 0 and actually you handle
+> everything as a nested case?
+
+The code provided above is a sketch. Don't consider it literally. In reality
+of course valid_mask will be not NULL, memory for which will be allocated by
+the GPIOlib itself. The mask will be initialized by means of the
+gc->irq.init_valid_mask() callback.
+
+> 
+> > The complication starts when we get to implementing 2b):
+> >
+> >    i1 xi3i4 x ... iN
+> >     _ _ _ _ _ ___ _
+> >    |_|_|_|_|_|...|_| - GPIOs
+> 
+> So does this.
+> 
+> Valid mask will define exactly GPIOs that are IRQs. So, we will handle
+> only nested IRQs which are valid.
+
+Right.
+
+> 
+> > In order to cover this case we need to answer on two question.
+> > Firstly how to get such platform config? I am not sure about ACPI, but
+> > aside from straightforward platform_data-based setup such configuration
+> > can be reached by setting up the "interrupts-extended" DT-property with
+> > zeroed phandle.
+> >
+> > Ok, since it's possible to meet such platform config, we need to think
+> > how to handle it and here is the second question. How to describe such
+> > case in the framework of GPIOlib-IRQchip?
+> >
+> > So from my side it was wrong to set the sparse IRQs array to
+> > gc->irq.parents. Instead I should have scanned the sparse IRQs array,
+> > calculated the number of non-empty parental IRQs, created an array of linear
+> > (non-sparse) IRQs, initialized *gc->irq.valid_mask in accordance with the
+> > sparse parental IRQs array. In other words it was wrong to assume, that
+> > each gc->irq.parents entry corresponds to the IRQ/GPIO line. The gc->irq.parents
+> > array just describes the parental IRQs and nothing else.
+> >
+> > Shortly speaking here is how the GPIOlib IRQchip parameters should be
+> > initialized in this case:
+> > gc->irq.num_parents - number of valid parental IRQs.
+> > gc->irq.parents - non-sparse, linear array of valid IRQs.
+> > *gc->irq.valid_mask - mask initialized by means of the gc->irq.init_valid_mask()
+> > callback, which indicates valid IRQ/GPIO IDs.
+> > *gc->irq.map - sparse array of parental IRQ numbers (which I mistakenly tried to
+> > pass through the gc->irq.parents pointer).
+> >
+> > After that GPIOlib IRQchip should work just fine without need to be patched
+> > in order to check whether the passed parental IRQs are valid or not.
+> >
+> > Please correct me if I am wrong in some aspects of the solution described above.
+> > I'll send a fix of the problem shortly.
 > 
 
-on i386:
+> Maybe I'm missing something, but looks like you are solving the issue
+> which is not so complex / doesn't exist.
 
-ld: drivers/crypto/sa2ul.o: in function `sa_sha_digest':
-sa2ul.c:(.text+0x1faf): undefined reference to `sha512_zero_message_hash'
+As I see it now the problem was to provide a suitable config for GPIO-lib IRQ-chip
+so one would correctly perceive our DW APB GPIO-IRQ setup with single/sparse/linear
+IRQs. My point in the message before was to explain how that problem could be solved
+without patching GPIO-lib or IRQ-chip implementations. I shared my thoughts to make
+sure the suggested solution is correct, to make sure I didn't miss something in
+my considerations.
 
+-Sergey
 
-sa2ul.c uses sha512_zero_message_hash, sha1_zero_message_hash,
-and sha256_zero_message_hash, but it does not 'select' any of the
-Kconfig symbols that cause those hashes to be present.
-
-Should it select the needed Kconfig symbols or should it use
-#ifdef blocks as needed?
-
-like so:
-
-
-static int zero_message_process(struct ahash_request *req)
-{
-	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
-	int sa_digest_size = crypto_ahash_digestsize(tfm);
-
-	switch (sa_digest_size) {
-#ifdef CONFIG_CRYPTO_SHA1
-	case SHA1_DIGEST_SIZE:
-		memcpy(req->result, sha1_zero_message_hash, sa_digest_size);
-		break;
-#endif
-#ifdef CONFIG_CRYPTO_SHA256
-	case SHA256_DIGEST_SIZE:
-		memcpy(req->result, sha256_zero_message_hash, sa_digest_size);
-		break;
-#endif
-#ifdef CONFIG_CRYPTO_SHA512
-	case SHA512_DIGEST_SIZE:
-		memcpy(req->result, sha512_zero_message_hash, sa_digest_size);
-		break;
-#endif
-	default:
-		return -EINVAL;
-	}
-
-	return 0;
-}
-
-
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
