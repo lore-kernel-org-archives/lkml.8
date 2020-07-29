@@ -2,120 +2,107 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0512C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF7420809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE88206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:33:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F4+6Si+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgG2JdH (ORCPT
+        id S1728091AbgG2Jdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:33:07 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2997 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726536AbgG2JdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:33:07 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 69CD65530AF83CA3DC8E;
-        Wed, 29 Jul 2020 17:33:04 +0800 (CST)
-Received: from dggeme761-chm.china.huawei.com (10.3.19.107) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Wed, 29 Jul 2020 17:33:03 +0800
-Received: from dggeme759-chm.china.huawei.com (10.3.19.105) by
- dggeme761-chm.china.huawei.com (10.3.19.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Wed, 29 Jul 2020 17:33:04 +0800
-Received: from dggeme759-chm.china.huawei.com ([10.7.64.73]) by
- dggeme759-chm.china.huawei.com ([10.7.64.73]) with mapi id 15.01.1913.007;
- Wed, 29 Jul 2020 17:33:03 +0800
-From:   "tiantao (H)" <tiantao6@hisilicon.com>
-To:     Thomas Zimmermann <tzimmermann@suse.de>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "kraxel@redhat.com" <kraxel@redhat.com>,
-        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "xinliang.liu@linaro.org" <xinliang.liu@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Linuxarm <linuxarm@huawei.com>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjNdIGRybS9oaXNpbGljb246IEZpeGVkIHRoZSB3?=
- =?utf-8?Q?arning:_Assignment_of_0/1_to_bool_variable?=
-Thread-Topic: [PATCH v3] drm/hisilicon: Fixed the warning: Assignment of 0/1
- to bool variable
-Thread-Index: AQHWZYMn+f7W3RNSC0mml/fqdJgmo6keSxtA
-Date:   Wed, 29 Jul 2020 09:33:03 +0000
-Message-ID: <c3f00286e3dd4146bcae5da6b69226c5@hisilicon.com>
-References: <1595940907-17874-1-git-send-email-tiantao6@hisilicon.com>
- <e8035faa-8f0f-4269-ef20-24408baa6f7a@suse.de>
-In-Reply-To: <e8035faa-8f0f-4269-ef20-24408baa6f7a@suse.de>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.57.60.129]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 29 Jul 2020 05:33:54 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:51771 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726536AbgG2Jdx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 05:33:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596015232;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NcytAw49Ogv+T6nX8O+DUO/ud353HRXDgEw6dxPF2is=;
+        b=F4+6Si+XQDWskJTMdGhm3TRK8ydUqS0364w9mXolDuM6CVG/8CP+et2QEZqQ0lq/BgsI0E
+        fMpvC0MueoZdryp3edvaOjA9x/yPeO0RSOOJybdheVpPbOGz4/i584QQBh59rBBXl8VYsu
+        sgYk8m1xbAiPSTc3PkvuPyU6cE2kVvU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-474-IqC2wmCtN_6Xj1-G6eL3FQ-1; Wed, 29 Jul 2020 05:33:33 -0400
+X-MC-Unique: IqC2wmCtN_6Xj1-G6eL3FQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5207980183C;
+        Wed, 29 Jul 2020 09:33:32 +0000 (UTC)
+Received: from [10.72.13.120] (ovpn-13-120.pek2.redhat.com [10.72.13.120])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F0F6512FE;
+        Wed, 29 Jul 2020 09:33:05 +0000 (UTC)
+Subject: Re: [PATCH] virtio_balloon: fix up endian-ness for free cmd id
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Liang Li <liang.z.li@intel.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        virtualization@lists.linux-foundation.org,
+        Alexander Duyck <alexander.duyck@gmail.com>
+References: <20200727160310.102494-1-mst@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <0dceaf8c-de35-93d6-f81b-67c2fdebf5ef@redhat.com>
+Date:   Wed, 29 Jul 2020 17:33:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200727160310.102494-1-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgVGhvbWFzOg0KDQoJVGhhbmsgeW91IHZlcnkgbXVjaCAuDQoNCkJlc3QNCg0KLS0tLS3pgq7k
-u7bljp/ku7YtLS0tLQ0K5Y+R5Lu25Lq6OiBUaG9tYXMgWmltbWVybWFubiBbbWFpbHRvOnR6aW1t
-ZXJtYW5uQHN1c2UuZGVdIA0K5Y+R6YCB5pe26Ze0OiAyMDIw5bm0N+aciDI55pelIDE2OjM1DQrm
-lLbku7bkuro6IHRpYW50YW8gKEgpIDx0aWFudGFvNkBoaXNpbGljb24uY29tPjsgYWlybGllZEBs
-aW51eC5pZTsgZGFuaWVsQGZmd2xsLmNoOyBrcmF4ZWxAcmVkaGF0LmNvbTsgYWxleGFuZGVyLmRl
-dWNoZXJAYW1kLmNvbTsgdGdseEBsaW51dHJvbml4LmRlOyBkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnOyB4aW5saWFuZy5saXVAbGluYXJvLm9yZzsgbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZw0K5oqE6YCBOiBMaW51eGFybSA8bGludXhhcm1AaHVhd2VpLmNvbT4NCuS4u+mimDog
-UmU6IFtQQVRDSCB2M10gZHJtL2hpc2lsaWNvbjogRml4ZWQgdGhlIHdhcm5pbmc6IEFzc2lnbm1l
-bnQgb2YgMC8xIHRvIGJvb2wgdmFyaWFibGUNCg0KDQoNCkFtIDI4LjA3LjIwIHVtIDE0OjU1IHNj
-aHJpZWIgVGlhbiBUYW86DQo+IGZpeGVkIHRoZSBmb2xsb3dpbmcgd2FybmluZzoNCj4gaGlibWNf
-ZHJtX2Rydi5jOjI5NjoxLTE4OldBUk5JTkc6IEFzc2lnbm1lbnQgb2YgMC8xIHRvIGJvb2wgdmFy
-aWFibGUuDQo+IGhpYm1jX2RybV9kcnYuYzozMDE6Mi0xOTogV0FSTklORzogQXNzaWdubWVudCBv
-ZiAwLzEgdG8gYm9vbCB2YXJpYWJsZS4NCj4gDQo+IHYyOg0KPiB1c2luZyB0aGUgcGNpX2Rldi5t
-c2lfZW5hYmxlZCBpbnN0ZWFkIG9mIHByaXYtPm1zaV9lbmFibGVkLg0KPiANCj4gdjM6DQo+IGp1
-c3QgY2FsbCBwY2lfZW5hYmxlX21zaSgpIGFuZCBwY2lfZGlzYWJsZV9tc2koKSwgaXQncyBubyBu
-ZWVkIHRvIHNldCANCj4gZGV2LT5wZGV2LT5tc2lfZW5hYmxlZCBhZ2Fpbi4NCj4gDQo+IFNpZ25l
-ZC1vZmYtYnk6IFRpYW4gVGFvIDx0aWFudGFvNkBoaXNpbGljb24uY29tPg0KDQpUaGFua3MuIEFk
-ZGVkIHRvIGRybS1taXNjLW5leHQNCg0KQmVzdCByZWdhcmRzDQpUaG9tYXMNCg0KPiAtLS0NCj4g
-IGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlibWMvaGlibWNfZHJtX2Rydi5jIHwgNSArLS0t
-LSAgDQo+IGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlibWMvaGlibWNfZHJtX2Rydi5oIHwg
-MSAtDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCA1IGRlbGV0aW9ucygtKQ0K
-PiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlibWMvaGlibWNf
-ZHJtX2Rydi5jIA0KPiBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlibWMvaGlibWNfZHJt
-X2Rydi5jDQo+IGluZGV4IDI0OWMyOTguLmI4ZDgzOWEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9oaXNpbGljb24vaGlibWMvaGlibWNfZHJtX2Rydi5jDQo+ICsrKyBiL2RyaXZlcnMv
-Z3B1L2RybS9oaXNpbGljb24vaGlibWMvaGlibWNfZHJtX2Rydi5jDQo+IEBAIC0yNTQsOSArMjU0
-LDggQEAgc3RhdGljIGludCBoaWJtY191bmxvYWQoc3RydWN0IGRybV9kZXZpY2UgKmRldikNCj4g
-IA0KPiAgCWlmIChkZXYtPmlycV9lbmFibGVkKQ0KPiAgCQlkcm1faXJxX3VuaW5zdGFsbChkZXYp
-Ow0KPiAtCWlmIChwcml2LT5tc2lfZW5hYmxlZCkNCj4gLQkJcGNpX2Rpc2FibGVfbXNpKGRldi0+
-cGRldik7DQo+ICANCj4gKwlwY2lfZGlzYWJsZV9tc2koZGV2LT5wZGV2KTsNCj4gIAloaWJtY19r
-bXNfZmluaShwcml2KTsNCj4gIAloaWJtY19tbV9maW5pKHByaXYpOw0KPiAgCWRldi0+ZGV2X3By
-aXZhdGUgPSBOVUxMOw0KPiBAQCAtMjk0LDEyICsyOTMsMTAgQEAgc3RhdGljIGludCBoaWJtY19s
-b2FkKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYpDQo+ICAJCWdvdG8gZXJyOw0KPiAgCX0NCj4gIA0K
-PiAtCXByaXYtPm1zaV9lbmFibGVkID0gMDsNCj4gIAlyZXQgPSBwY2lfZW5hYmxlX21zaShkZXYt
-PnBkZXYpOw0KPiAgCWlmIChyZXQpIHsNCj4gIAkJRFJNX1dBUk4oImVuYWJsaW5nIE1TSSBmYWls
-ZWQ6ICVkXG4iLCByZXQpOw0KPiAgCX0gZWxzZSB7DQo+IC0JCXByaXYtPm1zaV9lbmFibGVkID0g
-MTsNCj4gIAkJcmV0ID0gZHJtX2lycV9pbnN0YWxsKGRldiwgZGV2LT5wZGV2LT5pcnEpOw0KPiAg
-CQlpZiAocmV0KQ0KPiAgCQkJRFJNX1dBUk4oImluc3RhbGwgaXJxIGZhaWxlZDogJWRcbiIsIHJl
-dCk7IGRpZmYgLS1naXQgDQo+IGEvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaWJtYy9oaWJt
-Y19kcm1fZHJ2LmggDQo+IGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaWJtYy9oaWJtY19k
-cm1fZHJ2LmgNCj4gaW5kZXggNjA5NzY4Ny4uYTY4Mzc2MyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
-cy9ncHUvZHJtL2hpc2lsaWNvbi9oaWJtYy9oaWJtY19kcm1fZHJ2LmgNCj4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL2hpc2lsaWNvbi9oaWJtYy9oaWJtY19kcm1fZHJ2LmgNCj4gQEAgLTI1LDcgKzI1
-LDYgQEAgc3RydWN0IGhpYm1jX2RybV9wcml2YXRlIHsNCj4gIAl2b2lkIF9faW9tZW0gICAqZmJf
-bWFwOw0KPiAgCXVuc2lnbmVkIGxvbmcgIGZiX2Jhc2U7DQo+ICAJdW5zaWduZWQgbG9uZyAgZmJf
-c2l6ZTsNCj4gLQlib29sIG1zaV9lbmFibGVkOw0KPiAgDQo+ICAJLyogZHJtICovDQo+ICAJc3Ry
-dWN0IGRybV9kZXZpY2UgICpkZXY7DQo+IA0KDQotLQ0KVGhvbWFzIFppbW1lcm1hbm4NCkdyYXBo
-aWNzIERyaXZlciBEZXZlbG9wZXINClNVU0UgU29mdHdhcmUgU29sdXRpb25zIEdlcm1hbnkgR21i
-SA0KTWF4ZmVsZHN0ci4gNSwgOTA0MDkgTsO8cm5iZXJnLCBHZXJtYW55DQooSFJCIDM2ODA5LCBB
-RyBOw7xybmJlcmcpDQpHZXNjaMOkZnRzZsO8aHJlcjogRmVsaXggSW1lbmTDtnJmZmVyDQoNCg==
+
+On 2020/7/28 上午12:03, Michael S. Tsirkin wrote:
+> free cmd id is read using virtio endian, spec says all fields
+> in balloon are LE. Fix it up.
+>
+> Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>   drivers/virtio/virtio_balloon.c | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index 774deb65a9bb..798ec304fe3e 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -578,10 +578,14 @@ static int init_vqs(struct virtio_balloon *vb)
+>   static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
+>   {
+>   	if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
+> -			       &vb->config_read_bitmap))
+> +			       &vb->config_read_bitmap)) {
+>   		virtio_cread(vb->vdev, struct virtio_balloon_config,
+>   			     free_page_hint_cmd_id,
+>   			     &vb->cmd_id_received_cache);
+> +		/* Legacy balloon config space is LE, unlike all other devices. */
+> +		if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
+> +			vb->cmd_id_received_cache = le32_to_cpu((__force __le32)vb->cmd_id_received_cache);
+> +	}
+>   
+>   	return vb->cmd_id_received_cache;
+>   }
+
+
+Acked-by: Jason Wang <jasowang@redhat.com>
+
+
