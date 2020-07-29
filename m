@@ -2,420 +2,132 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE6A2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7385D2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:17:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="GawHAPcg"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F0/twXqv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgG2XMv (ORCPT
+        id S1728064AbgG2XRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 19:12:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55828 "EHLO
+        Wed, 29 Jul 2020 19:17:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727982AbgG2XMv (ORCPT
+        with ESMTP id S1728016AbgG2XRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 19:12:51 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C481BC0619D2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:12:50 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id z10so1998941ooi.10
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:12:50 -0700 (PDT)
+        Wed, 29 Jul 2020 19:17:50 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9EE7C0619D4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:17:50 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id l2so7597624pff.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:17:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P/nd9tM8rYHFN0NCEDP11WGkobB1fifAmhtKencMeuo=;
-        b=GawHAPcgpPKq57vgDTPneu2i83LgxKzfE0z8Ag8NbBIdU/bvo9M3DKE75ATmWwjFEz
-         1FF+qmKMvykMQPw/HuaERdagDdENCGbJaifU/IF7CIkaizkIGXptmDHCn4b7bP0s6Q3Y
-         UDgv4HzyEH1pDPL82dwZV3YaAJ2GwGqeyKXeA9g5UZCZRSzRMtSBF1FlBmW6DiMrD1eu
-         s0d3BwB3JDSI879dspy1y6LwKBttq6ypdvdMfKmzSJIsQNoF9m2OzJ7oNbZAwWd3l+Eb
-         RKvAgPdMyz5Z2cibd15MUFyWpzg598dqbjHWTgdbyXtMr+cYj+TxqeYRSjZOpxOp8giH
-         Z7JQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R9HgHOXqVNgKdIpZbWbUHoQKwYNiPIQ6hR37SC3F4W0=;
+        b=F0/twXqvlLuXWYfAcB2/sK2KH7Vo0KM8YEPTPxzUM+c2KUAX7hft542jNg7au6To8O
+         8PuIdaDMGVV5WZp/uxoUnbVtdsAVB/RUeKN8N5AUFaYRbM5lwNU1YrcS1zzoGccQpTVY
+         MZ40lheu2dCFtdbdnR6bI6mqIJPN7Cj2Gfroc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P/nd9tM8rYHFN0NCEDP11WGkobB1fifAmhtKencMeuo=;
-        b=hVZLVnOe56FRl1inKElvYOyYl4fkg/994yiB0nUbwXnuwahdiZwD2Exi2B8isx7yC+
-         xAagzhi9Bwot0VdZonOlIT91Yvk75sjjxIA7wgMtGuMi1/bvShjHADIp+1wUtf961ITu
-         KB/+V5mbyr4xVbtDMHnpspGPEsrIi5oPYDZzwlupuiAXqp22iJnuIOU0ZsaSNmHjA8Ve
-         nL1SQw2yHy8f/y6P8dq502+SqUV5f8/AnkIY/wBYPGcubv07hMB3V+go1MujZS8aye7T
-         z0LowsFtRS1Nx1rhOi5bkByhyKmZLydjetu+/UkjKMwVD7BIrYTq1Hj6ztYCnU3FcZoh
-         X4qA==
-X-Gm-Message-State: AOAM531cpzCUZKPNCk4o82IvWnt0/t0w8KDaiwVaz/yQjnYMge9T1vnR
-        YrzYSwsfLMylF4ME1jIIwZoMlybGwbS9i0YCY8yJfg==
-X-Google-Smtp-Source: ABdhPJx0+6BR1wUdTEPFCDwfyKVk+EbJguNyZ04EYzhCER5Og/8PO5S6m0bgdE2nv8gK0FQjlLiqcL0I9M/kEYiap0U=
-X-Received: by 2002:a4a:a80d:: with SMTP id o13mr192511oom.12.1596064370014;
- Wed, 29 Jul 2020 16:12:50 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R9HgHOXqVNgKdIpZbWbUHoQKwYNiPIQ6hR37SC3F4W0=;
+        b=ri4UBjs20zkJCrUCnz8f76EhGkGTHKi/swQvv57IX3YyI8mIfeisbbtCunyIqWSe4M
+         0R9QM+543lijXOvc9DoRTy9wVk4qY08BfPlMl+5ZGHXfIannUTENTrHl88uB+rq1u/a5
+         xmAZye2H8hsQ+GHC2U6NcqOwBafqQzY62Ra/w7ZtBD+mnnBcUC+EAPIjN/IhNJkV7nx/
+         CdR9YoIqVwt51gnMTLol6ihoE/WY9Ap1XadCVBc+UNLU+bHIsXWI7pFyL9cfcXGvyEWj
+         TfcGG5Z1qdyWcDZL5pvyN1jXCoB3+oN7XbNmrKYbWw/zBOLQ8zsSgo9bVReyr93fVT7F
+         kixQ==
+X-Gm-Message-State: AOAM531E2vdi8zCrKWZHPZMI2ednaQvYMo8vDUdeGqQvdQUlfMhxtwdd
+        dGJzikANLWn+JJeB9x6sMrNJwA==
+X-Google-Smtp-Source: ABdhPJxHKfvbjFH/RI2aP1uExJ+na8MkvlhpokW2aSYM8Li6Xk9CijHIwGwIwEeK6WqpBK5kymCzJQ==
+X-Received: by 2002:aa7:93a6:: with SMTP id x6mr377357pff.37.1596064670156;
+        Wed, 29 Jul 2020 16:17:50 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:7220:84ff:fe09:2b94])
+        by smtp.gmail.com with ESMTPSA id x18sm3538093pfc.93.2020.07.29.16.17.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 16:17:49 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     marcel@holtmann.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-bluetooth@vger.kernel.org, Alex Lu <alex_lu@realsil.com.cn>,
+        linux-pm@vger.kernel.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Revert "Bluetooth: btusb: Disable runtime suspend on Realtek devices"
+Date:   Wed, 29 Jul 2020 16:17:43 -0700
+Message-Id: <20200729161740.1.Ib03d0827c8e48fc3df887fec698f79fa335c9274@changeid>
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
 MIME-Version: 1.0
-References: <20200729201146.537433-1-vitor@massaru.org> <CAP-5=fWCMPyBYqn4p+_=Ra5_sXqUbr4h_OCuYS4iY-6fsnevvA@mail.gmail.com>
-In-Reply-To: <CAP-5=fWCMPyBYqn4p+_=Ra5_sXqUbr4h_OCuYS4iY-6fsnevvA@mail.gmail.com>
-From:   Vitor Massaru Iha <dev@massaru.org>
-Date:   Wed, 29 Jul 2020 20:12:38 -0300
-Message-ID: <CAHjpo1FUSsg5HSKaPkHMde46tSzeyu94KRLd6WhFwRNXuv0GjQ@mail.gmail.com>
-Subject: Re: [PATCH] lib: kunit: add test_min_heap test conversion to KUnit
-To:     Ian Rogers <irogers@google.com>
-Cc:     Vitor Massaru Iha <vitor@massaru.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        linux-kselftest@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ian,
+This reverts commit 7ecacafc240638148567742cca41aa7144b4fe1e.
 
-On Wed, Jul 29, 2020 at 7:57 PM 'Ian Rogers' via KUnit Development
-<kunit-dev@googlegroups.com> wrote:
->
-> On Wed, Jul 29, 2020 at 1:11 PM Vitor Massaru Iha <vitor@massaru.org> wrote:
-> >
-> > This adds the conversion of the runtime tests of test_min_heap,
-> > from `lib/test_min_heap.c` to KUnit tests.
-> >
-> > Please apply this commit first (linux-kselftest/kunit-fixes):
-> > 3f37d14b8a3152441f36b6bc74000996679f0998 kunit: kunit_config: Fix parsing of CONFIG options with space
->
-> Thanks for this, I'm a fan of testing frameworks :-)
->
-> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> > ---
-> >  lib/Kconfig.debug                         |  29 ++++--
-> >  lib/Makefile                              |   2 +-
-> >  lib/{test_min_heap.c => min_heap_kunit.c} | 117 ++++++++++++----------
-> >  3 files changed, 83 insertions(+), 65 deletions(-)
-> >  rename lib/{test_min_heap.c => min_heap_kunit.c} (60%)
-> >
-> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > index 9ad9210d70a1..46674fc4972c 100644
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -1864,16 +1864,6 @@ config TEST_LIST_SORT
-> >
-> >           If unsure, say N.
-> >
-> > -config TEST_MIN_HEAP
-> > -       tristate "Min heap test"
-> > -       depends on DEBUG_KERNEL || m
-> > -       help
-> > -         Enable this to turn on min heap function tests. This test is
-> > -         executed only once during system boot (so affects only boot time),
-> > -         or at module load time.
-> > -
-> > -         If unsure, say N.
-> > -
-> >  config TEST_SORT
-> >         tristate "Array-based sort test"
-> >         depends on DEBUG_KERNEL || m
-> > @@ -2185,6 +2175,25 @@ config LINEAR_RANGES_TEST
-> >
-> >           If unsure, say N.
-> >
-> > +config MIN_HEAP_KUNIT
-> > +        tristate "KUnit test for Min heap"
-> > +        depends on KUNIT
-> > +        depends on DEBUG_KERNEL || m
-> > +        help
-> > +          Enable this to turn on min heap function tests. This test is
-> > +          executed only once during system boot (so affects only boot time),
-> > +          or at module load time.
-> > +
-> > +          KUnit tests run during boot and output the results to the debug log
-> > +          in TAP format (http://testanything.org/). Only useful for kernel devs
-> > +          running the KUnit test harness, and not intended for inclusion into a
-> > +          production build.
-> > +
-> > +          For more information on KUnit and unit tests in general please refer
-> > +          to the KUnit documentation in Documentation/dev-tools/kunit/.
-> > +
-> > +          If unsure, say N.
-> > +
->
-> It's a shame we need a config option for this. Could we have one
-> option to cover all basic library tests?
+Testing this change on a board with RTL8822CE, I found that enabling
+autosuspend has no effect on the stability of the system. The board
+continued working after autosuspend, suspend and reboot.
 
-Sure, I think so.
+The original commit makes it impossible to enable autosuspend on working
+systems so it should be reverted. Disabling autosuspend should be done
+via module param or udev in userspace instead.
 
->
-> >  config TEST_UDELAY
-> >         tristate "udelay test driver"
-> >         help
-> > diff --git a/lib/Makefile b/lib/Makefile
-> > index b1c42c10073b..748f57063160 100644
-> > --- a/lib/Makefile
-> > +++ b/lib/Makefile
-> > @@ -72,7 +72,6 @@ CFLAGS_test_ubsan.o += $(call cc-disable-warning, vla)
-> >  UBSAN_SANITIZE_test_ubsan.o := y
-> >  obj-$(CONFIG_TEST_KSTRTOX) += test-kstrtox.o
-> >  obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
-> > -obj-$(CONFIG_TEST_MIN_HEAP) += test_min_heap.o
-> >  obj-$(CONFIG_TEST_LKM) += test_module.o
-> >  obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
-> >  obj-$(CONFIG_TEST_OVERFLOW) += test_overflow.o
-> > @@ -318,3 +317,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
-> >  # KUnit tests
-> >  obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
-> >  obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
-> > +obj-$(CONFIG_MIN_HEAP_KUNIT) += min_heap_kunit.o
-> > diff --git a/lib/test_min_heap.c b/lib/min_heap_kunit.c
-> > similarity index 60%
-> > rename from lib/test_min_heap.c
-> > rename to lib/min_heap_kunit.c
-> > index d19c8080fd4d..398db1c63146 100644
-> > --- a/lib/test_min_heap.c
-> > +++ b/lib/min_heap_kunit.c
-> > @@ -7,9 +7,8 @@
-> >
-> >  #include <linux/log2.h>
-> >  #include <linux/min_heap.h>
-> > -#include <linux/module.h>
-> > -#include <linux/printk.h>
-> >  #include <linux/random.h>
-> > +#include <kunit/test.h>
-> >
-> >  static __init bool less_than(const void *lhs, const void *rhs)
-> >  {
-> > @@ -29,37 +28,34 @@ static __init void swap_ints(void *lhs, void *rhs)
-> >         *(int *)rhs = temp;
-> >  }
-> >
-> > -static __init int pop_verify_heap(bool min_heap,
-> > +static __init void pop_verify_heap(struct kunit *context,
-> > +                               bool min_heap,
-> >                                 struct min_heap *heap,
-> >                                 const struct min_heap_callbacks *funcs)
-> >  {
-> >         int *values = heap->data;
-> > -       int err = 0;
-> >         int last;
-> >
-> >         last = values[0];
-> >         min_heap_pop(heap, funcs);
-> >         while (heap->nr > 0) {
-> >                 if (min_heap) {
-> > -                       if (last > values[0]) {
-> > -                               pr_err("error: expected %d <= %d\n", last,
-> > -                                       values[0]);
-> > -                               err++;
-> > -                       }
-> > +                       KUNIT_EXPECT_FALSE_MSG(context,
-> > +                                              last > values[0],
-> > +                                              "expected %d <= %d\n",
-> > +                                              last, values[0]);
->
-> I'm not familiar with kunit, is there a reason not to prefer:
-> KUNIT_EXPECT_LT(context, last, values[0]);
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+---
+We have a few Chromebooks using the RTL 8822CE part over USB and they
+are running without problems with autosuspend enabled. While bringing up
+a new board, I found some power regressions that I was able to narrow
+down to this change so I'm requesting a revert.
 
-Nope. I will fix this and the other one that you pointed down below.
+I tested this on Hp Chromebook 14a (running 4.14 kernel and 5.4 kernel)
+with this revert:
+* Enabled autosuspend, used it normally with a HID device
+* Suspended the Chromebook and verified it worked normally on resume
+* Rebooted the Chromebook and verified Bluetooth was working on next
+  boot
 
-Thanks!
+I didn't see the issue that was originally reported with this fix. For
+the original reporter, if you're still seeing this issue, there are
+other ways to disable autosuspend for your device:
+* set module param: enable_autosuspend=0
+* change your kconfig so BT_HCIBTUSB_AUTOSUSPEND=n
+* use a udev rule to disable autosuspend for specific vid:pid
 
->
-> >                 } else {
-> > -                       if (last < values[0]) {
-> > -                               pr_err("error: expected %d >= %d\n", last,
-> > -                                       values[0]);
-> > -                               err++;
-> > -                       }
-> > +                       KUNIT_EXPECT_FALSE_MSG(context,
-> > +                                              last < values[0],
-> > +                                              "expected %d >= %d\n",
-> > +                                              last, values[0]);
->
-> Similarly KUNIT_EXPECT_GT.
->
-> Thanks,
-> Ian
->
-> >                 }
-> >                 last = values[0];
-> >                 min_heap_pop(heap, funcs);
-> >         }
-> > -       return err;
-> >  }
-> >
-> > -static __init int test_heapify_all(bool min_heap)
-> > +static __init void test_heapify_all(struct kunit *context, bool min_heap)
-> >  {
-> >         int values[] = { 3, 1, 2, 4, 0x8000000, 0x7FFFFFF, 0,
-> >                          -3, -1, -2, -4, 0x8000000, 0x7FFFFFF };
-> > @@ -73,12 +69,11 @@ static __init int test_heapify_all(bool min_heap)
-> >                 .less = min_heap ? less_than : greater_than,
-> >                 .swp = swap_ints,
-> >         };
-> > -       int i, err;
-> > +       int i;
-> >
-> >         /* Test with known set of values. */
-> >         min_heapify_all(&heap, &funcs);
-> > -       err = pop_verify_heap(min_heap, &heap, &funcs);
-> > -
-> > +       pop_verify_heap(context, min_heap, &heap, &funcs);
-> >
-> >         /* Test with randomly generated values. */
-> >         heap.nr = ARRAY_SIZE(values);
-> > @@ -86,12 +81,10 @@ static __init int test_heapify_all(bool min_heap)
-> >                 values[i] = get_random_int();
-> >
-> >         min_heapify_all(&heap, &funcs);
-> > -       err += pop_verify_heap(min_heap, &heap, &funcs);
-> > -
-> > -       return err;
-> > +       pop_verify_heap(context, min_heap, &heap, &funcs);
-> >  }
-> >
-> > -static __init int test_heap_push(bool min_heap)
-> > +static __init void test_heap_push(struct kunit *context, bool min_heap)
-> >  {
-> >         const int data[] = { 3, 1, 2, 4, 0x80000000, 0x7FFFFFFF, 0,
-> >                              -3, -1, -2, -4, 0x80000000, 0x7FFFFFFF };
-> > @@ -106,25 +99,22 @@ static __init int test_heap_push(bool min_heap)
-> >                 .less = min_heap ? less_than : greater_than,
-> >                 .swp = swap_ints,
-> >         };
-> > -       int i, temp, err;
-> > +       int i, temp;
-> >
-> >         /* Test with known set of values copied from data. */
-> >         for (i = 0; i < ARRAY_SIZE(data); i++)
-> >                 min_heap_push(&heap, &data[i], &funcs);
-> > -
-> > -       err = pop_verify_heap(min_heap, &heap, &funcs);
-> > +       pop_verify_heap(context, min_heap, &heap, &funcs);
-> >
-> >         /* Test with randomly generated values. */
-> >         while (heap.nr < heap.size) {
-> >                 temp = get_random_int();
-> >                 min_heap_push(&heap, &temp, &funcs);
-> >         }
-> > -       err += pop_verify_heap(min_heap, &heap, &funcs);
-> > -
-> > -       return err;
-> > +       pop_verify_heap(context, min_heap, &heap, &funcs);
-> >  }
-> >
-> > -static __init int test_heap_pop_push(bool min_heap)
-> > +static __init void test_heap_pop_push(struct kunit *context, bool min_heap)
-> >  {
-> >         const int data[] = { 3, 1, 2, 4, 0x80000000, 0x7FFFFFFF, 0,
-> >                              -3, -1, -2, -4, 0x80000000, 0x7FFFFFFF };
-> > @@ -139,7 +129,7 @@ static __init int test_heap_pop_push(bool min_heap)
-> >                 .less = min_heap ? less_than : greater_than,
-> >                 .swp = swap_ints,
-> >         };
-> > -       int i, temp, err;
-> > +       int i, temp;
-> >
-> >         /* Fill values with data to pop and replace. */
-> >         temp = min_heap ? 0x80000000 : 0x7FFFFFFF;
-> > @@ -149,8 +139,7 @@ static __init int test_heap_pop_push(bool min_heap)
-> >         /* Test with known set of values copied from data. */
-> >         for (i = 0; i < ARRAY_SIZE(data); i++)
-> >                 min_heap_pop_push(&heap, &data[i], &funcs);
-> > -
-> > -       err = pop_verify_heap(min_heap, &heap, &funcs);
-> > +       pop_verify_heap(context, min_heap, &heap, &funcs);
-> >
-> >         heap.nr = 0;
-> >         for (i = 0; i < ARRAY_SIZE(data); i++)
-> > @@ -161,34 +150,54 @@ static __init int test_heap_pop_push(bool min_heap)
-> >                 temp = get_random_int();
-> >                 min_heap_pop_push(&heap, &temp, &funcs);
-> >         }
-> > -       err += pop_verify_heap(min_heap, &heap, &funcs);
-> > +       pop_verify_heap(context, min_heap, &heap, &funcs);
-> > +}
-> >
-> > -       return err;
-> > +static void __init test_heapify_all_true(struct kunit *context)
-> > +{
-> > +       test_heapify_all(context, true);
-> >  }
-> >
-> > -static int __init test_min_heap_init(void)
-> > +static void __init test_heapify_all_false(struct kunit *context)
-> >  {
-> > -       int err = 0;
-> > -
-> > -       err += test_heapify_all(true);
-> > -       err += test_heapify_all(false);
-> > -       err += test_heap_push(true);
-> > -       err += test_heap_push(false);
-> > -       err += test_heap_pop_push(true);
-> > -       err += test_heap_pop_push(false);
-> > -       if (err) {
-> > -               pr_err("test failed with %d errors\n", err);
-> > -               return -EINVAL;
-> > -       }
-> > -       pr_info("test passed\n");
-> > -       return 0;
-> > +       test_heapify_all(context, true);
-> > +}
-> > +
-> > +static void __init test_heap_push_true(struct kunit *context)
-> > +{
-> > +       test_heap_push(context, true);
-> > +}
-> > +
-> > +static void __init test_heap_push_false(struct kunit *context)
-> > +{
-> > +       test_heap_push(context, false);
-> >  }
-> > -module_init(test_min_heap_init);
-> >
-> > -static void __exit test_min_heap_exit(void)
-> > +static void __init test_heap_pop_push_true(struct kunit *context)
-> >  {
-> > -       /* do nothing */
-> > +       test_heap_pop_push(context, true);
-> >  }
-> > -module_exit(test_min_heap_exit);
-> > +
-> > +static void __init test_heap_pop_push_false(struct kunit *context)
-> > +{
-> > +       test_heap_pop_push(context, false);
-> > +}
-> > +
-> > +static struct kunit_case __refdata min_heap_test_cases[] = {
-> > +       KUNIT_CASE(test_heapify_all_true),
-> > +       KUNIT_CASE(test_heapify_all_false),
-> > +       KUNIT_CASE(test_heap_push_true),
-> > +       KUNIT_CASE(test_heap_push_false),
-> > +       KUNIT_CASE(test_heap_pop_push_true),
-> > +       KUNIT_CASE(test_heap_pop_push_false),
-> > +       {}
-> > +};
-> > +
-> > +static struct kunit_suite min_heap_test_suite = {
-> > +       .name = "min-heap",
-> > +       .test_cases = min_heap_test_cases,
-> > +};
-> > +
-> > +kunit_test_suites(&min_heap_test_suite);
-> >
-> >  MODULE_LICENSE("GPL");
-> >
-> > base-commit: d43c7fb05765152d4d4a39a8ef957c4ea14d8847
-> > --
-> > 2.26.2
-> >
->
-> --
-> You received this message because you are subscribed to the Google Groups "KUnit Development" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kunit-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kunit-dev/CAP-5%3DfWCMPyBYqn4p%2B_%3DRa5_sXqUbr4h_OCuYS4iY-6fsnevvA%40mail.gmail.com.
+Keeping this change in the kernel makes it impossible to enable
+autosuspend so it should be reverted.
+
+ drivers/bluetooth/btusb.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 1f51494f581812..8d2608ddfd0875 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -4086,10 +4086,6 @@ static int btusb_probe(struct usb_interface *intf,
+ 			set_bit(BTUSB_USE_ALT1_FOR_WBS, &data->flags);
+ 		else
+ 			bt_dev_err(hdev, "Device does not support ALT setting 1");
+-
+-		err = usb_autopm_get_interface(intf);
+-		if (err < 0)
+-			goto out_free_dev;
+ 	}
+ 
+ 	if (!reset)
+-- 
+2.28.0.rc0.142.g3c755180ce-goog
+
