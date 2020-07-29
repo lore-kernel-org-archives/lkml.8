@@ -2,120 +2,160 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D690BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F07C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE9E82074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C062074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:35:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y+/zYiBG"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FsXHO1+D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgG2Xct (ORCPT
+        id S1728019AbgG2XfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 19:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbgG2Xct (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 19:32:49 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22573C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:32:49 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id 74so5693140pfx.13
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:32:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=2e8RCHR7zK7mYDiJHIGb9P5RdtY7eXETdj3bdIaDpFg=;
-        b=Y+/zYiBG7yMH/+zZtdcZc8UNqZQCaiJqXOM/7Ca/i9kg7Hrs3+s40fsGgMEBvIMQrf
-         GaS7whhngR/dRIRLunl1B1JB1KAjc+sL7s2Frxx47H6ps6B2dnp9uTHXnWWBtVYT+IPL
-         VcRu4VxfagbTG7nKFBB4+Rdt82IcUrF5IUINpoaJqvQW7RW1/OAlEM87X8Chc0+eQpv9
-         X/IxFSihmb0tyufAMxSxpLycnqASvWxM9MvYefrOVlrVqAoD4NMw8S+OetrDTQJiRigB
-         6eViD66WmlPn4L3pCIhYL59sgMfsTIO8j2I79666hKZPMbmfkn5ZHveqvPCiFS8dzfqS
-         D4ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=2e8RCHR7zK7mYDiJHIGb9P5RdtY7eXETdj3bdIaDpFg=;
-        b=A2TQMtTaG4kM96KAOh0KWQb78HNC5SgHyxuMyYRsI5Osopt2pgaIRsHn0mScnuVyyt
-         55vyZ0lJ7iQJwqIIKChZqDURYkk27ab4nLpwE4TcTRCAnXhw8aFZUUoZzsGYKuAKna0C
-         hIfqe7jaD1gkXFO8z/xXpHKRuqxFv6/VKplb+x+f3J/t5O1L39b3NWhCLx2JfdwTNMZl
-         nGDjJdL1N3GZH9VPpWzWGPqnsnY5WPkhmnKxvtitMneyzuTeT55uUOyxTXEW4lWAXL+w
-         aHkkMb/dO6NiCpMINQmwiq/qFt3FMiLXHNYkFIR/c5rQ21HjQHh07I390XYkulbK37nE
-         6k+g==
-X-Gm-Message-State: AOAM531m/1pyJ56VeLFqM6TWztETjzBpBYb4sVoOvRSFQ2CommbykfXv
-        SQwpWVGOER14qOj9ZUWUKfExlQ==
-X-Google-Smtp-Source: ABdhPJy/+vWWiGWHOB9uKSOFg6qQ7W03EDCKFGbHDvKIeGqlzNlldtrXmcI7KwfCyD0c9QWtxZuvRw==
-X-Received: by 2002:a63:e50a:: with SMTP id r10mr30978179pgh.285.1596065568352;
-        Wed, 29 Jul 2020 16:32:48 -0700 (PDT)
-Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id l62sm3386842pjb.7.2020.07.29.16.32.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 16:32:47 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 16:32:46 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>
-cc:     "cl@linux.com" <cl@linux.com>,
-        "penberg@kernel.org" <penberg@kernel.org>,
-        "iamjoonsoo.kim@lge.com" <iamjoonsoo.kim@lge.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?Q?Re=3A_=E5=9B=9E=E5=A4=8D=3A_=5BPATCH=5D_mm=2Fslab=2Ec=3A?=
- =?UTF-8?Q?_add_node_spinlock_protect_in_=5F=5Fcache=5Ffree=5F?=
- =?UTF-8?Q?alien?=
-In-Reply-To: <BYAPR11MB2632BEC45DC867E80F841B82FF700@BYAPR11MB2632.namprd11.prod.outlook.com>
-Message-ID: <alpine.DEB.2.23.453.2007291631040.3120473@chino.kir.corp.google.com>
-References: <20200728095551.30634-1-qiang.zhang@windriver.com>,<alpine.DEB.2.23.453.2007281238580.2664959@chino.kir.corp.google.com> <BYAPR11MB2632BEC45DC867E80F841B82FF700@BYAPR11MB2632.namprd11.prod.outlook.com>
-User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
+        Wed, 29 Jul 2020 19:35:05 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:51911 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726876AbgG2XfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 19:35:04 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BH8z96Wy2z9sR4;
+        Thu, 30 Jul 2020 09:35:01 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596065702;
+        bh=ndcwEaucb4vCdDAXRw1ne6kVv2n1hBIl3IfbJ5rJC8g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FsXHO1+D7htEoKBHw4W0kOquovx7MLiT0mEdg8Y0KrHzJvBojP7ptzJF87hSamzP0
+         LpZ/yxx/u2Ax/OLYDTFSlnzepkDsO1uZttZ5Gr3RE6fj8YwMZggs4Y3lkrwDxbWEwk
+         gvLvVYN9OvlHwrFVFjNmUp5cu3/mf6NHSjAAd+K4GmQIYPn8L3HPjQ/qWbPYfStrIb
+         jJfrTd6bOZ1VJhyhXX6kAwsoFi5FaMA0qWQ12ISZnjhnX0ffn+ChoLIPxEQSBCjZuP
+         A8NtK92lebZvfchHPL4Cx9UJOT9Mez574SUeNs3RMWyfSnJty/BK4zFU1O/r/cHwyq
+         d+g0lMXkde19A==
+Date:   Thu, 30 Jul 2020 09:35:00 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     James Morris <jmorris@namei.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the security tree
+Message-ID: <20200730093500.334c56cb@canb.auug.org.au>
+In-Reply-To: <20200713120419.33cf7a87@canb.auug.org.au>
+References: <20200708140034.546298ff@canb.auug.org.au>
+        <20200713120419.33cf7a87@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; boundary="Sig_/pRcpjNCa9fHwRuWJfEekUaG";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jul 2020, Zhang, Qiang wrote:
+--Sig_/pRcpjNCa9fHwRuWJfEekUaG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > From: Zhang Qiang <qiang.zhang@windriver.com>
+Hi all,
+
+On Mon, 13 Jul 2020 12:04:19 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> On Wed, 8 Jul 2020 14:00:34 +1000 Stephen Rothwell <sfr@canb.auug.org.au>=
+ wrote:
 > >
-> > We should add node spinlock protect "n->alien" which may be
-> > assigned to NULL in cpuup_canceled func. cause address access
-> > exception.
-> >
-> 
-> >Hi, do you have an example NULL pointer dereference where you have hit
-> >this?
-> 
+> > After merging the security tree, today's linux-next build (powerpc
+> > ppc64_defconfig) failed like this:
+> >=20
+> > fs/anon_inodes.c: In function 'anon_inode_make_secure_inode':
+> > fs/anon_inodes.c:70:10: error: implicit declaration of function 'securi=
+ty_inode_init_security_anon'; did you mean 'security_inode_init_security'? =
+[-Werror=3Dimplicit-function-declaration]
+> >    70 |  error =3D security_inode_init_security_anon(
+> >       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >       |          security_inode_init_security
+> >=20
+> > Caused by commit
+> >=20
+> >   2749d3f84a70 ("Add a new LSM-supporting anonymous inode interface")
+> >=20
+> > # CONFIG_SECURITY is not set
+> >=20
+> > Also, the explicit include of linux/security.h is missing ...
+> >=20
+> > I have added the following patch for today.
+> >=20
+> > From b2bae25c9b715e06f7e802ec7b51cfbfec046e6c Mon Sep 17 00:00:00 2001
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Wed, 8 Jul 2020 13:43:01 +1000
+> > Subject: [PATCH] fix up for "Add a new LSM-supporting anonymous inode i=
+nterface"
+> >=20
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  fs/anon_inodes.c         | 1 +
+> >  include/linux/security.h | 7 +++++++
+> >  2 files changed, 8 insertions(+)
+> >=20
+> > diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
+> > index f87f221167cf..25d92c64411e 100644
+> > --- a/fs/anon_inodes.c
+> > +++ b/fs/anon_inodes.c
+> > @@ -21,6 +21,7 @@
+> >  #include <linux/magic.h>
+> >  #include <linux/anon_inodes.h>
+> >  #include <linux/pseudo_fs.h>
+> > +#include <linux/security.h>
+> > =20
+> >  #include <linux/uaccess.h>
+> > =20
+> > diff --git a/include/linux/security.h b/include/linux/security.h
+> > index 95c133a8f8bb..7c6b3dcf4721 100644
+> > --- a/include/linux/security.h
+> > +++ b/include/linux/security.h
+> > @@ -735,6 +735,13 @@ static inline int security_inode_init_security(str=
+uct inode *inode,
+> >  	return 0;
+> >  }
+> > =20
+> > +static inline int security_inode_init_security_anon(struct inode *inod=
+e,
+> > +						    const struct qstr *name,
+> > +						    const struct inode *context_inode)
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> >  static inline int security_old_inode_init_security(struct inode *inode,
+> >  						   struct inode *dir,
+> >  						   const struct qstr *qstr, =20
+>=20
+> I am still applying the above patch ...
 
-If you have a NULL pointer dereference or a GPF that occurred because of 
-this, it would be helpful to provide as rationale.
+The merge window is coming up fast ... is anything happening about this
+failure?
+--=20
+Cheers,
+Stephen Rothwell
 
-> >This rather looks like something to fix up in cpuup_canceled() since it's
-> >currently manipulating the alien cache for the canceled cpu's node.
-> 
-> yes , it is fix up in cpuup_canceled  it's
-> currently manipulating the alien cache for the canceled cpu's node which  may be the same as the node being operated on in the __cache_free_alien func.
-> 
-> void cpuup_canceled
-> {
->         n = get_node(cachep, node);
->         spin_lock_irq(&n->list_lock);
->         ...
->         n->alien = NULL;
->         spin_unlock_irq(&n->list_lock);
->          ....
-> }
-> 
+--Sig_/pRcpjNCa9fHwRuWJfEekUaG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Right, so the idea is that this should be fixed in cpuup_canceled() 
-instead -- why would we invaliate the entire node's alien cache because a 
-single cpu failed to come online?
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8iB6QACgkQAVBC80lX
+0GzbZwgAkghEOIqkc38lNpR+3G5zGuPqdm+/87RV6a8h0Tx4qepWoDDftp5GfM/B
+tajGT9dBDA0viLU+zOxjI+sLRPMmVKkI0Yc8y92/JPyGRYllQGaqJ4S7MQIHQIjE
+u+zh/38Yz5HsrCnaJ0JjEahG6n60svVkMywMzoM/Qc8GX3QU2a6WAWVJjp0/c36n
+0MKoti9Mm9uNUBjpV4m4gBzfBzcb6cSR2E4qGb5ghjvCNXNcmOy7hW/PFEOuvDM3
+Mc4WJeMBoFKAu5rU6ijqJl/7ZPq95V+pJqxRrRxQPqUsbNFnEUJOHzDMCvhthfQk
+W7xwwSpHvGpsAsQQOZGkDgynz1ZDAw==
+=pAvy
+-----END PGP SIGNATURE-----
+
+--Sig_/pRcpjNCa9fHwRuWJfEekUaG--
