@@ -2,94 +2,113 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BB9C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B9AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62BCA207F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF252250E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:05:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NS8yLb9s"
+	dkim=pass (2048-bit key) header.d=students-iitmandi-ac-in.20150623.gappssmtp.com header.i=@students-iitmandi-ac-in.20150623.gappssmtp.com header.b="DTrz2FM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgG2IDA (ORCPT
+        id S1727877AbgG2IFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:03:00 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:8782 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726797AbgG2IDA (ORCPT
+        Wed, 29 Jul 2020 04:05:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgG2IFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:03:00 -0400
-X-UUID: fc4db75c07b146e58e1087cc745a45f9-20200729
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=teICIrkV7sOQV3jPEavLyrRW/vZEh5lh1RgTjnP7gJE=;
-        b=NS8yLb9s0Hs5bWKTdVCbzC3ZjyxNZ66JXyMBObdxZPpo0RyJhJ9FRp1tIWcNDf2n+mnhmkRlWZUpseFAjKCMb5E6M9BOLpL/gozawbdXirXlTG55ABNPZFcJqLXTI+Thql5hw4EURws1/qFqIFakwOzxG3vd9UDpA2mdNqD5rsU=;
-X-UUID: fc4db75c07b146e58e1087cc745a45f9-20200729
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1080694864; Wed, 29 Jul 2020 16:02:57 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 29 Jul 2020 16:02:54 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 29 Jul 2020 16:02:55 +0800
-Message-ID: <1596009775.12468.6.camel@mtksdaap41>
-Subject: Re: [PATCH v3 1/3] arm64: dts: Add Mediatek SoC MT8192 and
- evaluation board dts and Makefile
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Seiya Wang <seiya.wang@mediatek.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <devicetree@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-serial@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Wed, 29 Jul 2020 16:02:55 +0800
-In-Reply-To: <20200729013100.19539-2-seiya.wang@mediatek.com>
-References: <20200729013100.19539-1-seiya.wang@mediatek.com>
-         <20200729013100.19539-2-seiya.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 29 Jul 2020 04:05:44 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D40FC061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:05:44 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t10so6134104plz.10
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:05:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=students-iitmandi-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=W8J9alNt9j182Qo6m9IaWrfQJWEuKo3Ae7Fy1SBu7uw=;
+        b=DTrz2FM1MLC8vGx39HW6Jry1xeb06rXJcHKnWh+HuCeMvKJ9oq5Vj4RrlidvaGX++A
+         CQMgWwfIo31vSimiVcxkVJITMaIN0XU4JXi4jmbwP2V2bnlE1aSMxGyPB4TVGu3jmz4W
+         zIyi0kLyPirkkU4SiR6KUMrZk1L0zn3+ciByG4fqqHGFONIbBiiXQ+20D71vihyoNfK+
+         uioMps8mu8Qjn//jPrxkCphrELaxfnbsQvYmrst9tD06SDyfOs+ym9ur5u3fN0BzEzYu
+         IOadSSCCdz+CjFhpRTXTCIGWO2820zzu+w3pthYtJ++F74jxIvf9Xa75Wefq31v+RqVz
+         94Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=W8J9alNt9j182Qo6m9IaWrfQJWEuKo3Ae7Fy1SBu7uw=;
+        b=VPWBvKJ00gz45S9sClhQ5sTFVSHpCsBDSoZUfKEhijnhH9L2KcdFMTnq9y6y8dmVBB
+         S8omMkt2TxDM/YIiQGm19L//YV2Q+wTSEoeM7ga9gsHjxhIsD2cCiTZbZJZxryrQIHeO
+         ybeqVM/kBm6n1sG/J3I8717kkVZKP0IdsgND1BLR2E3x6B2R2MTHyz1lpWGOyTltHMB3
+         VV0VIJG9VMtj6EUCRllhS5/appewuf65A/sTwhXAL/MvRVIJJ8imz2JfxZ9+m2IT9djY
+         SONZFgq1twc1elEZiNwb/VCVfAEZdfOas048bKOrj7r14FXUeoy7UWqTluqcGlxWHlMg
+         dMng==
+X-Gm-Message-State: AOAM533aTztqc5eefT6Ki51En9Y5HPE1wTUv6Mwrj2b9EToWwIIkP0zT
+        zs4wHp941ggF+3YeyVtjgy0y8g==
+X-Google-Smtp-Source: ABdhPJzp5tMn3uZPlfTXXh5uqofStWTTKRqKNv7x0hK6omQGXyLlQH5Pv7C20nQSSpcXNjFC/1qC4w==
+X-Received: by 2002:a17:90a:1a83:: with SMTP id p3mr7912459pjp.113.1596009943908;
+        Wed, 29 Jul 2020 01:05:43 -0700 (PDT)
+Received: from devil-VirtualBox.www.tendawifi.com ([103.198.174.215])
+        by smtp.gmail.com with ESMTPSA id a3sm1399383pgd.73.2020.07.29.01.05.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 01:05:43 -0700 (PDT)
+From:   Ankit Baluni <b18007@students.iitmandi.ac.in>
+To:     mchehab@kernel.org, gregkh@linuxfoundation.org,
+        sakari.ailus@linux.intel.com
+Cc:     linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, b18007@students.iitmandi.ac.in
+Subject: [PATCH v2] Staging: media: atomisp: Fixed a brace coding sytle issue
+Date:   Wed, 29 Jul 2020 13:35:16 +0530
+Message-Id: <20200729080516.2830-1-b18007@students.iitmandi.ac.in>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200728021518.19639-1-b18007@students.iitmandi.ac.in>
+References: <20200728021518.19639-1-b18007@students.iitmandi.ac.in>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 5B75A061824025819F6C2CAD15E5F4863A2B7D6837702194A55A34624A6820D12000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFNlaXlhOg0KDQpPbiBXZWQsIDIwMjAtMDctMjkgYXQgMDk6MzAgKzA4MDAsIFNlaXlhIFdh
-bmcgd3JvdGU6DQo+IEFkZCBiYXNpYyBjaGlwIHN1cHBvcnQgZm9yIE1lZGlhdGVrIE1UODE5Mg0K
-PiANCj4gU2lnbmVkLW9mZi1ieTogU2VpeWEgV2FuZyA8c2VpeWEud2FuZ0BtZWRpYXRlay5jb20+
-DQo+IC0tLQ0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9NYWtlZmlsZSAgICAgICB8
-ICAgMSArDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE5Mi1ldmIuZHRzIHwg
-IDI5ICsrDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE5Mi5kdHNpICAgIHwg
-NjcxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gIDMgZmlsZXMgY2hhbmdlZCwgNzAx
-IGluc2VydGlvbnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRz
-L21lZGlhdGVrL210ODE5Mi1ldmIuZHRzDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02
-NC9ib290L2R0cy9tZWRpYXRlay9tdDgxOTIuZHRzaQ0KPiANCg0KW3NuaXBdDQoNCj4gKw0KPiAr
-CQl3YXRjaGRvZzogd2F0Y2hkb2dAMTAwMDcwMDAgew0KPiArCQkJY29tcGF0aWJsZSA9ICJtZWRp
-YXRlayxtdDY1ODktd2R0IjsNCg0KQWNjb3JkaW5nIHRvIFsxXSBhbmQgWzJdLCBjb21wYXRpYmxl
-IHN0cmluZyBmb3IgbXQ4MTkyIHdhdGNoIGRvZyBzaG91bGQNCmJlICJtZWRpYXRlayxtdDY4NzMt
-d2R0IiwibWVkaWF0ZWssbXQ4MTkyLXdkdCIuDQoNCg0KWzFdDQpodHRwczovL2Nocm9taXVtLXJl
-dmlldy5nb29nbGVzb3VyY2UuY29tL2MvY2hyb21pdW1vcy90aGlyZF9wYXJ0eS9rZXJuZWwvKy8y
-Mjg3MDkwLzEyDQpbMl0NCmh0dHBzOi8vY2hyb21pdW0tcmV2aWV3Lmdvb2dsZXNvdXJjZS5jb20v
-Yy9jaHJvbWl1bW9zL3RoaXJkX3BhcnR5L2tlcm5lbC8rLzIxMzE1OTgvMTgNCg0KPiArCQkJcmVn
-ID0gPDAgMHgxMDAwNzAwMCAwIDB4MTAwPjsNCj4gKwkJCSNyZXNldC1jZWxscyA9IDwxPjsNCj4g
-KwkJfTsNCj4gKw0KDQpbc25pcF0NCg0KPiArDQo+ICsJCW1tc3lzOiBtbXN5c0AxNDAwMDAwMCB7
-DQo+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE5Mi1tbXN5cyIsICJzeXNjb24iOw0K
-DQpZb3Ugc2hvdWxkIGRlZmluZSAibWVkaWF0ZWssbXQ4MTkyLW1tc3lzIiBmaXJzdCwgdGhlbiB5
-b3UgY291bGQgdXNlIGl0DQppbiB0aGlzIHBhdGNoLg0KDQpSZWdhcmRzLA0KQ0sNCg0KPiArCQkJ
-cmVnID0gPDAgMHgxNDAwMDAwMCAwIDB4MTAwMD47DQo+ICsJCQkjY2xvY2stY2VsbHMgPSA8MT47
-DQo+ICsJCX07DQo+ICsNCg0K
+Removed braces in 'if else' condition as it only consists of 
+one line each and according to coding style rules , in this case 
+the braces are not required.
+
+Signed-off-by: Ankit Baluni <b18007@students.iitmandi.ac.in>
+---
+Change in -v2:
+	-Removed space before ':' in subject line.
+	-Added space before '<' in 'From' and 'Signed-off-by' line.
+	-Added detailed description.
+
+ drivers/staging/media/atomisp/pci/atomisp_ioctl.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
+index f8d616f08b51..701de098cb29 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
+@@ -1828,11 +1828,10 @@ static int atomisp_streamon(struct file *file, void *fh,
+ 			dev_err(isp->dev, "master slave sensor stream on failed!\n");
+ 			goto out;
+ 		}
+-		if (!IS_ISP2401) {
++		if (!IS_ISP2401)
+ 			__wdt_on_master_slave_sensor(isp, wdt_duration);
+-		} else {
++		else
+ 			__wdt_on_master_slave_sensor_pipe(pipe, wdt_duration, true);
+-		}
+ 		goto start_delay_wq;
+ 	} else if (asd->depth_mode->val && (atomisp_streaming_count(isp) <
+ 					    ATOMISP_DEPTH_SENSOR_STREAMON_COUNT)) {
+-- 
+2.25.1
 
