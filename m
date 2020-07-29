@@ -2,217 +2,147 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C26FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0162070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:13:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CwCvU6Ku"
+	by mail.kernel.org (Postfix) with ESMTP id 549ED2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgG2ON3 (ORCPT
+        id S1726927AbgG2ONc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:13:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbgG2ON1 (ORCPT
+        Wed, 29 Jul 2020 10:13:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25944 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726449AbgG2ON2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:13:27 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B644BC061794;
-        Wed, 29 Jul 2020 07:13:27 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id f193so2590081pfa.12;
-        Wed, 29 Jul 2020 07:13:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nV4YN/dLjAONm1QhoydYK1B7TYuCyvgjOkW8X9Cld4U=;
-        b=CwCvU6Ku4GnfZWPNKQSggQSI4YicRXI1EKfMK8i7IWCl30EZtwO1BERFAZnICfrC88
-         k1RnXx3qWYJkFNJy4TlpcBbBn2xqDE5mo16g6dRK3MwmF8ct4IxwqiWHjyPe1K34DsB0
-         IOSOvEkYpmGMSm4EVJorM7zA5lZ+UU6dxuI8d8LM/NA0hMXddmK9SAL9qTDwYAjsfba6
-         t+McJ8eg1rTuLFGAwZgOjQ3DMhd2IOdDPFcmrsWAfgI3izy/xbDzEzF+povJEJI0+GTE
-         R6PneTMBtSpJkBQ5KYIOsD6DOa6iyl2a39HOVK9DQHdR3ze2xVpfWRU5TuNTg3XSziCE
-         jOKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=nV4YN/dLjAONm1QhoydYK1B7TYuCyvgjOkW8X9Cld4U=;
-        b=SaqvQ+1ebeVi1Qu5vZjYdz+UaucbeD8ChH2Icj5NxFwJ4xIxQMaTIYmBeHDKMmCzwh
-         ZZb6gMVOUAQ71D1k1J0RbpKNk121qJ6o/yNwsa8ZIVzp13IcmHduh/ysIXsbINd6UVUO
-         CeWgVREwGVk4qo6FgyQioXX2oX7klItawNYtAExKWurfZSsqHqvqZskMgAFyOrzzOkI8
-         rDBgkWO10dR9ICFc6YG321mXF6J2a8SI3+wKMPk4Tl/Ddq1KEDD0AeM9XL7T37Qc7ZHL
-         Oir7kdwpX+o7V6M3eWbji0D9um6aeWfC/6SoYzApYxgywJZbjTPI3wN3EXwt+ocdoGOg
-         IpFg==
-X-Gm-Message-State: AOAM533o3E6NKEU1DspRVawp1aFjBSecjCtzo7FB8MioXgKVPzMsCym5
-        Kcb4Bx3zL0+oMk8N23uOZhM=
-X-Google-Smtp-Source: ABdhPJyCXzGK2Ao7mMyI2xq1z7/3bkUGawYV7avLV9LlngyLeELVBBfzNrXEP/n7exC1Ppgfg692/A==
-X-Received: by 2002:aa7:83c9:: with SMTP id j9mr18263798pfn.151.1596032007218;
-        Wed, 29 Jul 2020 07:13:27 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c132sm2635965pfb.112.2020.07.29.07.13.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 07:13:26 -0700 (PDT)
-Subject: Re: [PATCH V2 1/2] watchdog: imx7ulp: Strictly follow the sequence
- for wdog operations
-To:     Anson Huang <anson.huang@nxp.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        Wed, 29 Jul 2020 10:13:28 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06TE25Et133130;
+        Wed, 29 Jul 2020 10:13:13 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32jg248neb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jul 2020 10:13:13 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06TE2IcL134462;
+        Wed, 29 Jul 2020 10:13:12 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32jg248nd0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jul 2020 10:13:12 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06TE54n7014351;
+        Wed, 29 Jul 2020 14:13:10 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma05fra.de.ibm.com with ESMTP id 32gcqk34qk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jul 2020 14:13:10 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06TEBgMf62128482
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Jul 2020 14:11:42 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD224AE061;
+        Wed, 29 Jul 2020 14:13:07 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B073AE056;
+        Wed, 29 Jul 2020 14:12:57 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.204.160])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 29 Jul 2020 14:12:57 +0000 (GMT)
+Date:   Wed, 29 Jul 2020 17:12:54 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Justin He <Justin.He@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steve Capper <Steve.Capper@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Anshuman Khandual <Anshuman.Khandual@arm.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-References: <1595989227-24700-1-git-send-email-Anson.Huang@nxp.com>
- <00587a78-8069-4fbd-7e02-b774d541f75a@roeck-us.net>
- <DB3PR0402MB3916C412DE1E83A2D40B2341F5700@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <6ac07203-a966-f985-52ae-b3dd264b3786@roeck-us.net>
-Date:   Wed, 29 Jul 2020 07:13:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Ira Weiny <ira.weiny@intel.com>, Kaly Xin <Kaly.Xin@arm.com>
+Subject: Re: [RFC PATCH 0/6] decrease unnecessary gap due to pmem kmem
+ alignment
+Message-ID: <20200729141254.GE3672596@linux.ibm.com>
+References: <20200729033424.2629-1-justin.he@arm.com>
+ <D1981D47-61F1-42E9-A426-6FEF0EC310C8@redhat.com>
+ <AM6PR08MB40690714A2E77A7128B2B2ADF7700@AM6PR08MB4069.eurprd08.prod.outlook.com>
+ <20200729093150.GC3672596@linux.ibm.com>
+ <e128f304-7d1d-c1eb-2def-fee7d105424f@redhat.com>
+ <20200729130025.GD3672596@linux.ibm.com>
+ <170d7861-4df8-ecaf-dbdd-9e9a4a832f8f@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <DB3PR0402MB3916C412DE1E83A2D40B2341F5700@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170d7861-4df8-ecaf-dbdd-9e9a4a832f8f@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-29_07:2020-07-29,2020-07-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
+ mlxlogscore=550 phishscore=0 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 spamscore=0 adultscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007290091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/20 9:50 PM, Anson Huang wrote:
-> Hi, Guenter
+On Wed, Jul 29, 2020 at 03:03:04PM +0200, David Hildenbrand wrote:
+> On 29.07.20 15:00, Mike Rapoport wrote:
+> > On Wed, Jul 29, 2020 at 11:35:20AM +0200, David Hildenbrand wrote:
+> >>>  
+> >>> There is still large gap with ARM64_64K_PAGES, though.
+> >>>
+> >>> As for SPARSEMEM without VMEMMAP, are there actual benefits to use it?
+> >>
+> >> I was asking myself the same question a while ago and didn't really find
+> >> a compelling one.
+> > 
+> > Memory overhead for VMEMMAP is larger, especially for arm64 that knows
+> > how to free empty parts of the memory map with "classic" SPARSEMEM.
 > 
+> You mean the hole punching within section memmap? (which is why their
+> pfn_valid() implementation is special)
+
+Yes, arm (both 32 and 64) do this. And for smaller systems with a few
+memory banks this is very reasonable to trade slight (if any) slowdown
+in pfn_valid() for several megs of memory.
+ 
+> (I do wonder why that shouldn't work with VMEMMAP, or is it simply not
+> implemented?)
+ 
+It's not implemented. There was a patch [1] recently to implement this. 
+
+[1] https://lore.kernel.org/lkml/20200721073203.107862-1-liwei213@huawei.com/
+
+> -- 
+> Thanks,
 > 
->> Subject: Re: [PATCH V2 1/2] watchdog: imx7ulp: Strictly follow the sequence
->> for wdog operations
->>
->> On 7/28/20 7:20 PM, Anson Huang wrote:
->>> According to reference manual, the i.MX7ULP WDOG's operations should
->>> follow below sequence:
->>>
->>> 1. disable global interrupts;
->>> 2. unlock the wdog and wait unlock bit set; 3. reconfigure the wdog
->>> and wait for reconfiguration bit set; 4. enabel global interrupts.
->>>
->>> Strictly follow the recommended sequence can make it more robust.
->>>
->>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
->>> ---
->>> Changes since V1:
->>> 	- use readl_poll_timeout_atomic() instead of usleep_ranges() since IRQ is
->> disabled.
->>> ---
->>>  drivers/watchdog/imx7ulp_wdt.c | 29 +++++++++++++++++++++++++++++
->>>  1 file changed, 29 insertions(+)
->>>
->>> diff --git a/drivers/watchdog/imx7ulp_wdt.c
->>> b/drivers/watchdog/imx7ulp_wdt.c index 7993c8c..7d2b12e 100644
->>> --- a/drivers/watchdog/imx7ulp_wdt.c
->>> +++ b/drivers/watchdog/imx7ulp_wdt.c
->>> @@ -5,6 +5,7 @@
->>>
->>>  #include <linux/clk.h>
->>>  #include <linux/io.h>
->>> +#include <linux/iopoll.h>
->>>  #include <linux/kernel.h>
->>>  #include <linux/module.h>
->>>  #include <linux/of.h>
->>> @@ -36,6 +37,7 @@
->>>  #define DEFAULT_TIMEOUT	60
->>>  #define MAX_TIMEOUT	128
->>>  #define WDOG_CLOCK_RATE	1000
->>> +#define WDOG_WAIT_TIMEOUT	10000
->>>
->>>  static bool nowayout = WATCHDOG_NOWAYOUT;
->> module_param(nowayout,
->>> bool, 0000); @@ -48,17 +50,31 @@ struct imx7ulp_wdt_device {
->>>  	struct clk *clk;
->>>  };
->>>
->>> +static inline void imx7ulp_wdt_wait(void __iomem *base, u32 mask) {
->>> +	u32 val = readl(base + WDOG_CS);
->>> +
->>> +	if (!(val & mask))
->>> +		WARN_ON(readl_poll_timeout_atomic(base + WDOG_CS, val,
->>> +						  val & mask, 0,
->>> +						  WDOG_WAIT_TIMEOUT));
->>
->> I am not a friend of WARN_ON, especially in situations like this.
->> Please explain why this is needed, and why a return of -ETIMEDOUT is not
->> feasible.
-> 
-> OK, I will use return value of -ETIMEOUT and handle it in the caller.
-> 
->>
->> Also, I do not believe that a 10 milli-second timeout is warranted.
->> This will need to be backed up by the datasheet.
->>
-> 
-> There is no such info provided in reference manual or datasheet, but I just did
-> an experiment, the unlock window is open in less than 1us after sending unlock command,
-> and ONLY last for ONLY 2~3 us then close, the reconfiguration status bit will be set in less than
-> 1us after register write. So what do you recommend for this timeout value? 100mS for safe?
+> David / dhildenb
 > 
 
-That would be even worse. You say yourself that the window is only open for a few
-microseconds. Now you are suggesting to hold the entire system hostage for up to
-100 mS if the code misses that window for some reason. Based on what you said,
-100 uS might be barely acceptable. 10-20 uS would be reasonable. But not 100 mS.
-
-Guenter
+-- 
+Sincerely yours,
+Mike.
