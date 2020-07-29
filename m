@@ -2,99 +2,130 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF76C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94EB420829
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4381D2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:42:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="nE2NBVpN"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oJJX9Bga"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgG2MkB (ORCPT
+        id S1726773AbgG2MmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:40:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgG2MkA (ORCPT
+        Wed, 29 Jul 2020 08:42:14 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39308 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgG2MmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:40:00 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 694FBC0619D2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 05:39:59 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id b2so165379qvp.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 05:39:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=spmyQP3L/yNiXY42BwMCA8cPT1EWwAdeGPZrcULFkt4=;
-        b=nE2NBVpNVJeONO7+Dlq5cIwm+uHzUci3Za0sSd+X3HYlADyCM+AUV/yTIyl5wQ8OO4
-         X0sOmPVqaxoHwBd1gXMX5hpn8o3zBr96GPYkLA08eFL7rlVemiUKJ4xW+EbZMW+dDJEc
-         pYB97TfCJn5I3ZlPgRyEJTGIk4rnO6W2hkgZE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=spmyQP3L/yNiXY42BwMCA8cPT1EWwAdeGPZrcULFkt4=;
-        b=bRJb7Q9eZJzljCkHV21FiZrQgCJ1UQwEdK8c+MSfspjpVkKAddg4pexbE67KAP8P9T
-         6Z9fynd8lroNoVY1nnNWA1Tqw1tMlWeE8SJ5qy8KbAfs8Fo1RqJmgFfU1JNLr4LqG+sr
-         G0CeUdtiYAq3SJmsdoTVSaLyEtvSNpGu9AVEG1r0wtQ7adR86EPXaqU2QEj2G5gznCCQ
-         jgodyq394+0Ib5CyZFzY+xliVpiiq55XgfbFeiz22F4NUubTFbtu/IC2cvssbRudDz8r
-         P8vp8x6fzVLfhEI7TVh2zEuTHFi5biCaPin3Z5hl5IvaZst3gM4TLrGAy2ZryvOusddV
-         ozZA==
-X-Gm-Message-State: AOAM530/Sb0gewwxYotgQ1kVGvV4BL1tJUdqf0vmRcyrwbB+qRUjkCdp
-        KjVumEqkdVxo2F6QHBjMAvX4gA==
-X-Google-Smtp-Source: ABdhPJyCCHXXwDumfa6ncclTkZxwczJdk2K85nLzunPVAs6lxIo0hcpkWdN/ELYIxGWAjHbT9QJX8w==
-X-Received: by 2002:a0c:8224:: with SMTP id h33mr19165728qva.52.1596026398412;
-        Wed, 29 Jul 2020 05:39:58 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id d198sm1436718qke.129.2020.07.29.05.39.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 05:39:57 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 08:39:57 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: Re: [PATCH RFC] rcu/segcblist: Add counters to segcblist
- datastructure
-Message-ID: <20200729123957.GC225345@google.com>
-References: <20200719034210.2382053-1-joel@joelfernandes.org>
- <20200720142923.mrudcweyttlmnhqp@linux-p48b>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720142923.mrudcweyttlmnhqp@linux-p48b>
+        Wed, 29 Jul 2020 08:42:13 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06TCWqkK187880;
+        Wed, 29 Jul 2020 12:42:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id; s=corp-2020-01-29;
+ bh=6Ty70P6NDFFXbdmIqQczjAdFy4h294/O1eoC6bSM5aI=;
+ b=oJJX9BgaH/8/U+SKDvAZjnzCGP0pEziBN2nLs19NW7bnxUj/8Efu0wrF86PfWh7TU9lA
+ bT09iQHT+Zqj7LZGGhV6nPro5QLNRu1fePDvGk2udk0JjplYzO8eSKXiZbOSX8Id/8y9
+ og1WEkIH/wkaqjr31ESn2+AJ6wAbisdXPxH2MiVZa2GicaXCTcX6S27u7zMyDXTMMqUq
+ BFmwBS/Ygd+jol8o6ctgIaHZBXzHtXBG9C5sAcPVwKY7IPKt0VMUzI/2V6/rrYYsJ+lz
+ 5OKMVGEnG4zbReLp4GB6J+8qUMLqfwXWTt5rrirmtmMSFohqOD7uQQGne1X41eFodmao sw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 32hu1jdbt9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 29 Jul 2020 12:42:04 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06TCWlsu073432;
+        Wed, 29 Jul 2020 12:40:04 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 32hu5vpq4d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Jul 2020 12:40:03 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06TCe299021178;
+        Wed, 29 Jul 2020 12:40:02 GMT
+Received: from dhcp-10-152-34-21.usdhcp.oraclecorp.com.com (/10.152.34.21)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 Jul 2020 05:40:02 -0700
+From:   George Kennedy <george.kennedy@oracle.com>
+To:     george.kennedy@oracle.com, gregkh@linuxfoundation.org,
+        jslaby@suse.com, ebiggers@google.com, linux-kernel@vger.kernel.org,
+        dan.carpenter@oracle.com, dhaval.giani@oracle.com
+Subject: [PATCH 1/1] vt_ioctl: prevent VT_RESIZEX font height change from causing potential out-of-bounds access
+Date:   Wed, 29 Jul 2020 08:39:41 -0400
+Message-Id: <1596026381-5013-1-git-send-email-george.kennedy@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9696 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
+ mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007290082
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9696 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 spamscore=0 suspectscore=4 bulkscore=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007290082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 07:29:23AM -0700, Davidlohr Bueso wrote:
-> On Sat, 18 Jul 2020, Joel Fernandes (Google) wrote:
-> 
-> > +/* Move from's segment length to to's segment. */
-> > +static void rcu_segcblist_move_seglen(struct rcu_segcblist *rsclp, int from, int to)
-> > +{
-> > +	long len = rcu_segcblist_get_seglen(rsclp, from);
-> > +
-> > +	if (!len || from == to)
-> > +		return;
-> 
-> Nit: You probably wanna do the parameter sanity checks before the
-> atomic_read.
+Add a VT_RESIZEX check to ensure that changing the font height will not
+cause a potential out-of-bounds access. The candidate font height contained
+in "v_clin", though below the max, could still result in accesses beyond
+the allocated font data size.
 
-Ok, I'll do that next revision. Thank you.
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+Reported-by: syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
+---
+ drivers/tty/vt/vt_ioctl.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
- - Joel
+diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
+index daf61c2..6185f1a 100644
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -342,6 +342,9 @@ static void vt_disallocate_all(void)
+ 	}
+ }
+ 
++/* from fbcon.c */
++#define FNTSIZE(fd) (((int *)(fd))[-2])
++#define FNTCHARCNT(fd) (((int *)(fd))[-3])
+ 
+ /*
+  * We handle the console-specific ioctl's here.  We allow the
+@@ -895,8 +898,23 @@ int vt_ioctl(struct tty_struct *tty,
+ 			if (vcp) {
+ 				if (v.v_vlin)
+ 					vcp->vc_scan_lines = v.v_vlin;
+-				if (v.v_clin)
++				if (v.v_clin) {
++					int width, pitch, size;
++
++					width = (vcp->vc_font.width > 8) ? 8 : vcp->vc_font.width;
++					pitch = (width + 7) >> 3;
++
++					pitch = (pitch) ? pitch : 1;
++
++					/* font size = height * pitch * charcount */
++					size = v.v_clin * pitch * FNTCHARCNT(vcp->vc_font.data);
++
++					if (size > FNTSIZE(vcp->vc_font.data)) {
++						console_unlock();
++						return -EINVAL;
++					}
+ 					vcp->vc_font.height = v.v_clin;
++				}
+ 				vcp->vc_resize_user = 1;
+ 				vc_resize(vcp, v.v_cols, v.v_rows);
+ 			}
+-- 
+1.8.3.1
 
