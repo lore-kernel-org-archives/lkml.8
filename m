@@ -2,90 +2,142 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC84C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA8C20809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:11:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596057082;
-	bh=wtkGbGxbhVZMyldtal6tTzTwU0JwVbA3bYw42/D3B8I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BuMAZ6K2xJoWqo9GtKzfVtbe1L8TNF+2uWqUqvU8T9MqLxNBCaN+APte6b8LcFEF2
-	 YclHGrKUlRnmVHTHlZU9dZAuWJ0b78QoaKJSHjq7AlmYJUeaa0pZNeaCr2pisIHHLL
-	 O/lg9DBNjk2gpAK4q1JtjBZBKIMO/ht9BpFwSKow=
+	by mail.kernel.org (Postfix) with ESMTP id 3E506206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:13:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="E5oF6wmD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgG2VLV (ORCPT
+        id S1727070AbgG2VM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 17:11:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgG2VLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 17:11:20 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D029206D4;
-        Wed, 29 Jul 2020 21:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596057080;
-        bh=wtkGbGxbhVZMyldtal6tTzTwU0JwVbA3bYw42/D3B8I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IxVF08G0I8v/o0Qu3gUdv6gJSfvIvBLA3zqx8cMQucC6nnMhAgqv8IFFjeGeJgq4y
-         R3vZ/DLYdqK31OoAunLXz75rJ7psxqvFeuV/0EdbEZADWZRGpPHeqUUsIZPyepbdpC
-         Rvo/wAzq2GBCsVn05D94K9gnFUSwbJ0F56uaqSc0=
-Date:   Wed, 29 Jul 2020 14:11:17 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Moshe Shemesh <moshe@mellanox.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next RFC 02/13] devlink: Add reload levels data to
- dev get
-Message-ID: <20200729141117.0425ad12@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <448bab04-80d7-b3b1-5619-1b93ad7517d8@mellanox.com>
-References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
-        <1595847753-2234-3-git-send-email-moshe@mellanox.com>
-        <20200727175842.42d35ee3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <448bab04-80d7-b3b1-5619-1b93ad7517d8@mellanox.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 29 Jul 2020 17:12:59 -0400
+Received: from mail.efficios.com ([167.114.26.124]:33320 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgG2VM6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 17:12:58 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id E8A602A579A;
+        Wed, 29 Jul 2020 17:12:56 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ZwQr0TonsNU0; Wed, 29 Jul 2020 17:12:56 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id A2F892A5E0B;
+        Wed, 29 Jul 2020 17:12:56 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com A2F892A5E0B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1596057176;
+        bh=gt3bVhTf4NH8xJJdNbMFxQ+mzNS6Qgctt02qgftClfg=;
+        h=From:To:Date:Message-Id;
+        b=E5oF6wmDEW195Nnbqp/abwNLagRdwGAU1SkSaoXelIsW/W/EIFwG8YVNT7Cudnn0w
+         r99cd7VtNDhrzddUtYO4IPG//mPqOogs19kwO/ctXT7Kb6hkwI6AX5PGFT9ol8MYEL
+         ay2wK8ZLXMN9vO5EUNm8HQyH94k4LsN5mBLDLJBtcfXqR6jM771J6vZcGwmslRM0JC
+         tzpH6/HgTFd62W014nSoyy4ccgKUZZY8KH8o3fLPnh9sAxhI7W5swBJ8xrcPcDcdD1
+         AgeI2ICz1Yldx1OxrUguvrWRXaER6LU3zVKri9HbxRsf9qE1YsWt1nQmgX8FZxxFFQ
+         zhcqRBwXRKkBg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id v4D23FbX4-eV; Wed, 29 Jul 2020 17:12:56 -0400 (EDT)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id 560292A5C33;
+        Wed, 29 Jul 2020 17:12:56 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     David Ahern <dsa@cumulusnetworks.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: [RFC PATCH 3/3] ipv6/icmp: l3mdev: Perform icmp error route lookup on source device routing table
+Date:   Wed, 29 Jul 2020 17:12:48 -0400
+Message-Id: <20200729211248.10146-3-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200729211248.10146-1-mathieu.desnoyers@efficios.com>
+References: <20200729211248.10146-1-mathieu.desnoyers@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jul 2020 17:37:41 +0300 Moshe Shemesh wrote:
-> > The fact that the driver supports fw_live_patch, does not necessarily
-> > mean that the currently running FW can be live upgraded to the
-> > currently flashed one, right?  
-> 
-> That's correct, though the feature is supported, the firmware gap may 
-> not be suitable for live_patch.
-> 
-> The user will be noted accordingly by extack message.
+As per RFC4443, the destination address field for ICMPv6 error messages
+is copied from the source address field of the invoking packet.
 
-That's kinda late, because use may have paid the cost of migrating the
-workload or otherwise taking precautions - and if live reset fails all
-this work is wasted.
+In configurations with Virtual Routing and Forwarding tables, looking up
+which routing table to use for sending ICMPv6 error messages is
+currently done by using the destination net_device.
 
-While the device most likely knows upfront whether it can be live reset
-or not, otherwise I don't see how it could reject the reset reliably.
+If the source and destination interfaces are within separate VRFs, or
+one in the global routing table and the other in a VRF, looking up the
+source address of the invoking packet in the destination interface's
+routing table will fail if the destination interface's routing table
+contains no route to the invoking packet's source address.
 
-> > This interface does not appear to be optimal for the purpose.
-> >
-> > Again, documentation of what can be lost (in terms of configuration and
-> > features) upon upgrade is missing.  
-> 
-> I will clarify in documentation. On live_patch nothing should be lost or 
-> re-initialized, that's the "live" thing.
+One observable effect of this issue is that traceroute6 does not work in
+the following cases:
 
-Okay, so FW upgrade cannot be allowed when it'd mean the device gets
-de-featured? Also no link loss, correct? What's the expected length of
-traffic interruption (order of magnitude)?
+- Route leaking between global routing table and VRF
+- Route leaking between VRFs
+
+Preferably use the source device routing table when sending ICMPv6 error
+messages. If no source device is set, fall-back on the destination
+device routing table.
+
+Link: https://tools.ietf.org/html/rfc4443
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: David Ahern <dsa@cumulusnetworks.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+---
+ net/ipv6/icmp.c       | 15 +++++++++++++--
+ net/ipv6/ip6_output.c |  2 --
+ 2 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/net/ipv6/icmp.c b/net/ipv6/icmp.c
+index 9df8737ae0d3..beee93065688 100644
+--- a/net/ipv6/icmp.c
++++ b/net/ipv6/icmp.c
+@@ -501,8 +501,19 @@ static void icmp6_send(struct sk_buff *skb, u8 type, u8 code, __u32 info,
+ 	if (__ipv6_addr_needs_scope_id(addr_type)) {
+ 		iif = icmp6_iif(skb);
+ 	} else {
+-		dst = skb_dst(skb);
+-		iif = l3mdev_master_ifindex(dst ? dst->dev : skb->dev);
++		struct net_device *route_lookup_dev = NULL;
++
++		/*
++		 * The device used for looking up which routing table to use is
++		 * preferably the source whenever it is set, which should
++		 * ensure the icmp error can be sent to the source host, else
++		 * fallback on the destination device.
++		 */
++		if (skb->dev)
++			route_lookup_dev = skb->dev;
++		else if (skb_dst(skb))
++			route_lookup_dev = skb_dst(skb)->dev;
++		iif = l3mdev_master_ifindex(route_lookup_dev);
+ 	}
+ 
+ 	/*
+diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
+index 8a8c2d0cfcc8..00243d7d276c 100644
+--- a/net/ipv6/ip6_output.c
++++ b/net/ipv6/ip6_output.c
+@@ -468,8 +468,6 @@ int ip6_forward(struct sk_buff *skb)
+ 	 *	check and decrement ttl
+ 	 */
+ 	if (hdr->hop_limit <= 1) {
+-		/* Force OUTPUT device used as source address */
+-		skb->dev = dst->dev;
+ 		icmpv6_send(skb, ICMPV6_TIME_EXCEED, ICMPV6_EXC_HOPLIMIT, 0);
+ 		__IP6_INC_STATS(net, idev, IPSTATS_MIB_INHDRERRORS);
+ 
+-- 
+2.17.1
+
