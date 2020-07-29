@@ -2,294 +2,239 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 918DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5CFC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 623B92067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537192067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:22:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jAulbE9w"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GsZ8rjPL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgG2XVt (ORCPT
+        id S1728148AbgG2XWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 19:21:49 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33794 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgG2XVt (ORCPT
+        Wed, 29 Jul 2020 19:22:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728043AbgG2XWI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 19:21:49 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06TNI0w0128400;
-        Wed, 29 Jul 2020 23:20:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=AXHfiWBfwUl5RiVyhrg4un1176389Fyp4Hvlp+JwnTM=;
- b=jAulbE9wUWgqyPU2vm5acwpQkkFeEHFK5Xfn92m8am8BaFKlRxWlZdffgep8ero4TEek
- aZ3kHO3UmwFi7MfgnFMFXMz351ZFeKr2bCHgX+5hbQiS7dS2BWpLWA1ph93I/iidrKbL
- LzjqE9poQCZdW5nDLXaAcgDKtgQo3WYw9D/QLqKJ4KVC3RavUnXzqLHMgqe0wERPauG9
- fWFZuOA+mpFDgQysAnBarf/0Lz2xHOUjc0oOz+Ibq/TxtdqllbYIgbAmjM6OmYykjp1J
- 112tBr1O58Duylcc7g1q88v4IX4hzKQovD8+848iU3WhrZE+QuskEGjm9VYprtVKIt6V JA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 32hu1jrmpv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Jul 2020 23:20:53 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06TNIVCd186500;
-        Wed, 29 Jul 2020 23:20:52 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 32hu5y9ajn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jul 2020 23:20:52 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06TNKZXP020959;
-        Wed, 29 Jul 2020 23:20:35 GMT
-Received: from [10.154.178.52] (/10.154.178.52)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 Jul 2020 16:20:35 -0700
-Subject: Re: [RFC PATCH 3/5] mm: introduce VM_EXEC_KEEP
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
-        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
-        gerg@linux-m68k.org, ktkhai@virtuozzo.com,
-        christian.brauner@ubuntu.com, peterz@infradead.org,
-        esyr@redhat.com, jgg@ziepe.ca, christian@kellner.me,
-        areber@redhat.com, cyphar@cyphar.com, steven.sistare@oracle.com
-References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
- <1595869887-23307-4-git-send-email-anthony.yznaga@oracle.com>
- <20200729135211.zodforvnv2xvdchm@box>
-From:   Anthony Yznaga <anthony.yznaga@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <a997e973-da91-ce41-1d51-cb1310a8e728@oracle.com>
-Date:   Wed, 29 Jul 2020 16:20:32 -0700
+        Wed, 29 Jul 2020 19:22:08 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96C70C061794;
+        Wed, 29 Jul 2020 16:22:08 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id o1so12770735plk.1;
+        Wed, 29 Jul 2020 16:22:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dYdPpgoeWUX12WEZRA5uofSu8jyLZ45WRjobjopXACQ=;
+        b=GsZ8rjPLeO518JYxeY5JaABnuRqY6ZcUKxPrhfUSOB6L9fK3nMQLLY4U8I6e5/yzPr
+         xInOccydDe4wZY+G4gjl32UjueOqfX+rutjgNg3xjX/1AKNzXJD9eTfxJQ6bjHwcXj6g
+         UnA2/EtGdlGuO642XZbpDkdIOLwVT9NyQE5ASRG5VOo6TcxN9uHpPP2/cKGJTWnAFkzw
+         hyjwmE0gS75ik0+6QqPSa0jtx6d5On6OFeHe1lA8A383tiPm0RhLlERfmtb03+2ytIEE
+         RZo/mmhcwPzFlfTuL0rmGHaVirgYuYMr5ORPfAU5gVuFUXu7PAH/3GiDG8kLuspa3013
+         UbvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=dYdPpgoeWUX12WEZRA5uofSu8jyLZ45WRjobjopXACQ=;
+        b=iZj8JUwgp60+/L8vtW+fngIZcZlalW3Rtm0h6A47ZHAeEeWoaJZZQTq0HNGcAiGuvX
+         c1osukNYbkus33YT5Nald5vnlglINB/BEzCjd7VNo8AOE7700Izj3+MYG+q5yn0i890D
+         1whTn8s5h48Ww610SZrIXK1M9J3mKRijZNv3quOQ3TjfSQHV1wW2tL4SfXDg2RLGJoU6
+         /0WwammlulR2ZQPUPPc4t7y6C68OAlvZ4J5GCAwH2H7PYL1LHUuUbTZ5IGSgvSpigZdF
+         5y9gLTXD9g+hcldXzUzS9t8JA8J7vveI4avlVE9jJsVyseh5arCgxrtnDftuT4/EjijR
+         o9/A==
+X-Gm-Message-State: AOAM531GKQ/rbywD31hArKvkM5+uCS13qCQoeisWk17cQQ8yFLgg9mFv
+        QabcQxJCfpZlp3BafTbMy4U=
+X-Google-Smtp-Source: ABdhPJzMOzMbm5s6FvIAb74n6YtTT7uElMIMyHKqG8V3pDsBexBEYsgzc9d3v0fz5ykFb4afhYW7Cw==
+X-Received: by 2002:a17:90a:7c04:: with SMTP id v4mr154252pjf.191.1596064928142;
+        Wed, 29 Jul 2020 16:22:08 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o10sm3246501pjo.55.2020.07.29.16.22.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 16:22:07 -0700 (PDT)
+Subject: Re: [PATCH v3 6/6] platform/chrome: cros_ec_proto: Convert EC error
+ codes to Linux error codes
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>
+References: <20200726220101.29059-1-linux@roeck-us.net>
+ <20200726220101.29059-7-linux@roeck-us.net>
+ <20200729222150.GA970863@google.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <ae5aeae1-4dfc-0fd7-3392-bf1ca3540866@roeck-us.net>
+Date:   Wed, 29 Jul 2020 16:22:04 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200729135211.zodforvnv2xvdchm@box>
+In-Reply-To: <20200729222150.GA970863@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9697 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 adultscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007290158
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9697 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 mlxlogscore=999
- malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
- suspectscore=2 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007290158
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/29/20 6:52 AM, Kirill A. Shutemov wrote:
-> On Mon, Jul 27, 2020 at 10:11:25AM -0700, Anthony Yznaga wrote:
->> A vma with the VM_EXEC_KEEP flag is preserved across exec.  For anonymous
->> vmas only.  For safety, overlap with fixed address VMAs created in the new
->> mm during exec (e.g. the stack and elf load segments) is not permitted and
->> will cause the exec to fail.
->> (We are studying how to guarantee there are no conflicts. Comments welcome.)
+On 7/29/20 3:21 PM, Brian Norris wrote:
+> Hi Guenter,
+> 
+> On Sun, Jul 26, 2020 at 03:01:01PM -0700, Guenter Roeck wrote:
+>> v3: Use -ENOPROTOOPT for EC_RES_INVALID_VERSION
+>>     Implement function to convert error codes
+>> v2: No change
 >>
->> Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
->> Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
->> ---
->>  arch/x86/Kconfig   |  1 +
->>  fs/exec.c          | 20 ++++++++++++++++++++
->>  include/linux/mm.h |  5 +++++
->>  kernel/fork.c      |  2 +-
->>  mm/mmap.c          | 47 +++++++++++++++++++++++++++++++++++++++++++++++
->>  5 files changed, 74 insertions(+), 1 deletion(-)
+>>  drivers/platform/chrome/cros_ec_proto.c | 52 ++++++++++++++++++++-----
+>>  1 file changed, 42 insertions(+), 10 deletions(-)
 >>
->> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->> index 883da0abf779..fc36eb2f45c0 100644
->> --- a/arch/x86/Kconfig
->> +++ b/arch/x86/Kconfig
->> @@ -30,6 +30,7 @@ config X86_64
->>  	select MODULES_USE_ELF_RELA
->>  	select NEED_DMA_MAP_STATE
->>  	select SWIOTLB
->> +	select ARCH_USES_HIGH_VMA_FLAGS
+>> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+>> index e5bbec979a2a..a081b8245682 100644
+>> --- a/drivers/platform/chrome/cros_ec_proto.c
+>> +++ b/drivers/platform/chrome/cros_ec_proto.c
+>> @@ -15,6 +15,43 @@
 >>  
->>  config FORCE_DYNAMIC_FTRACE
->>  	def_bool y
->> diff --git a/fs/exec.c b/fs/exec.c
->> index 262112e5f9f8..1de09c4eef00 100644
->> --- a/fs/exec.c
->> +++ b/fs/exec.c
->> @@ -1069,6 +1069,20 @@ ssize_t read_code(struct file *file, unsigned long addr, loff_t pos, size_t len)
->>  EXPORT_SYMBOL(read_code);
->>  #endif
+>>  #define EC_COMMAND_RETRIES	50
 >>  
->> +static int vma_dup_some(struct mm_struct *old_mm, struct mm_struct *new_mm)
+>> +static const int cros_ec_error_map[] = {
+>> +	[EC_RES_INVALID_COMMAND] = -EOPNOTSUPP,
+>> +	[EC_RES_ERROR] = -EIO,
+>> +	[EC_RES_INVALID_PARAM] = -EINVAL,
+>> +	[EC_RES_ACCESS_DENIED] = -EACCES,
+>> +	[EC_RES_INVALID_RESPONSE] = -EPROTO,
+>> +	[EC_RES_INVALID_VERSION] = -ENOPROTOOPT,
+>> +	[EC_RES_INVALID_CHECKSUM] = -EBADMSG,
+>> +	[EC_RES_IN_PROGRESS] = -EINPROGRESS,
+>> +	[EC_RES_UNAVAILABLE] = -ENODATA,
+>> +	[EC_RES_TIMEOUT] = -ETIMEDOUT,
+>> +	[EC_RES_OVERFLOW] = -EOVERFLOW,
+>> +	[EC_RES_INVALID_HEADER] = -EBADR,
+>> +	[EC_RES_REQUEST_TRUNCATED] = -EBADR,
+>> +	[EC_RES_RESPONSE_TOO_BIG] = -EFBIG,
+>> +	[EC_RES_BUS_ERROR] = -EFAULT,
+>> +	[EC_RES_BUSY] = -EBUSY,
+>> +	[EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
+>> +	[EC_RES_INVALID_HEADER_CRC] = -EBADMSG,
+>> +	[EC_RES_INVALID_DATA_CRC] = -EBADMSG,
+>> +	[EC_RES_DUP_UNAVAILABLE] = -ENODATA,
+>> +};
+> 
+> Sorry I didn't pay attention to this earlier, but is there any
+> programmatic way to ensure that we don't have unexpected holes here? If
+> we do (e.g., we add new error codes, but they aren't contiguous for
+> whatever reasons), then those will get treated as "success" with your
+> current patch.
+> 
+> I say "unexpected" hole, because EC_RES_SUCCESS (0) is an expected hole.
+> 
+>> +
+>> +static int cros_ec_map_error(uint32_t result)
 >> +{
->> +	struct vm_area_struct *vma;
->> +	int ret;
+>> +	int ret = 0;
 >> +
->> +	for (vma = old_mm->mmap; vma; vma = vma->vm_next)
->> +		if (vma->vm_flags & VM_EXEC_KEEP) {
->> +			ret = vma_dup(vma, new_mm);
->> +			if (ret)
->> +				return ret;
->> +		}
->> +	return 0;
->> +}
->> +
->>  /*
->>   * Maps the mm_struct mm into the current task struct.
->>   * On success, this function returns with the mutex
->> @@ -1104,6 +1118,12 @@ static int exec_mmap(struct mm_struct *mm)
->>  			mutex_unlock(&tsk->signal->exec_update_mutex);
->>  			return -EINTR;
->>  		}
->> +		ret = vma_dup_some(old_mm, mm);
->> +		if (ret) {
->> +			mmap_read_unlock(old_mm);
->> +			mutex_unlock(&tsk->signal->exec_update_mutex);
->> +			return ret;
->> +		}
->>  	}
->>  
->>  	task_lock(tsk);
->> diff --git a/include/linux/mm.h b/include/linux/mm.h
->> index dc7b87310c10..1c538ba77f33 100644
->> --- a/include/linux/mm.h
->> +++ b/include/linux/mm.h
->> @@ -295,11 +295,15 @@ int overcommit_kbytes_handler(struct ctl_table *, int, void *, size_t *,
->>  #define VM_HIGH_ARCH_BIT_2	34	/* bit only usable on 64-bit architectures */
->>  #define VM_HIGH_ARCH_BIT_3	35	/* bit only usable on 64-bit architectures */
->>  #define VM_HIGH_ARCH_BIT_4	36	/* bit only usable on 64-bit architectures */
->> +#define VM_HIGH_ARCH_BIT_5	37	/* bit only usable on 64-bit architectures */
->>  #define VM_HIGH_ARCH_0	BIT(VM_HIGH_ARCH_BIT_0)
->>  #define VM_HIGH_ARCH_1	BIT(VM_HIGH_ARCH_BIT_1)
->>  #define VM_HIGH_ARCH_2	BIT(VM_HIGH_ARCH_BIT_2)
->>  #define VM_HIGH_ARCH_3	BIT(VM_HIGH_ARCH_BIT_3)
->>  #define VM_HIGH_ARCH_4	BIT(VM_HIGH_ARCH_BIT_4)
->> +#define VM_EXEC_KEEP	BIT(VM_HIGH_ARCH_BIT_5)	/* preserve VMA across exec */
->> +#else
->> +#define VM_EXEC_KEEP	VM_NONE
->>  #endif /* CONFIG_ARCH_USES_HIGH_VMA_FLAGS */
->>  
->>  #ifdef CONFIG_ARCH_HAS_PKEYS
->> @@ -2534,6 +2538,7 @@ extern struct vm_area_struct *copy_vma(struct vm_area_struct **,
->>  	unsigned long addr, unsigned long len, pgoff_t pgoff,
->>  	bool *need_rmap_locks);
->>  extern void exit_mmap(struct mm_struct *);
->> +extern int vma_dup(struct vm_area_struct *vma, struct mm_struct *mm);
->>  
->>  static inline int check_data_rlimit(unsigned long rlim,
->>  				    unsigned long new,
->> diff --git a/kernel/fork.c b/kernel/fork.c
->> index efc5493203ae..15ead613714f 100644
->> --- a/kernel/fork.c
->> +++ b/kernel/fork.c
->> @@ -564,7 +564,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
->>  			tmp->anon_vma = NULL;
->>  		} else if (anon_vma_fork(tmp, mpnt))
->>  			goto fail_nomem_anon_vma_fork;
->> -		tmp->vm_flags &= ~(VM_LOCKED | VM_LOCKONFAULT);
->> +		tmp->vm_flags &= ~(VM_LOCKED | VM_LOCKONFAULT | VM_EXEC_KEEP);
->>  		file = tmp->vm_file;
->>  		if (file) {
->>  			struct inode *inode = file_inode(file);
->> diff --git a/mm/mmap.c b/mm/mmap.c
->> index 59a4682ebf3f..be2ff53743c3 100644
->> --- a/mm/mmap.c
->> +++ b/mm/mmap.c
->> @@ -3279,6 +3279,53 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
->>  	return NULL;
->>  }
->>  
->> +int vma_dup(struct vm_area_struct *old_vma, struct mm_struct *mm)
->> +{
->> +	unsigned long npages;
->> +	struct mm_struct *old_mm = old_vma->vm_mm;
->> +	struct vm_area_struct *vma;
->> +	int ret = -ENOMEM;
->> +
->> +	if (WARN_ON(old_vma->vm_file || old_vma->vm_ops))
->> +		return -EINVAL;
->> +
->> +	vma = find_vma(mm, old_vma->vm_start);
->> +	if (vma && vma->vm_start < old_vma->vm_end)
->> +		return -EEXIST;
->> +
->> +	npages = vma_pages(old_vma);
->> +	mm->total_vm += npages;
-> Why only total_vm? Where's exec_vm/stack_vm/data_vm?
-That was oversight.  Will be fixed in the next version.
+>> +	if (result != EC_RES_SUCCESS) {
+>> +		if (result < ARRAY_SIZE(cros_ec_error_map) && cros_ec_error_map[result])
+>> +			ret = cros_ec_error_map[result];
+> 
+> ^^ Maybe we want to double check 'ret != 0'? Or maybe
+> 
+> 			ret = cros_ec_error_map[result];
+> 			if (!ret) {
 
->
->> +
->> +	vma = vm_area_dup(old_vma);
->> +	if (!vma)
->> +		goto fail_nomem;
->> +
->> +	ret = vma_dup_policy(old_vma, vma);
->> +	if (ret)
->> +		goto fail_nomem_policy;
->> +
->> +	vma->vm_mm = mm;
->> +	ret = anon_vma_fork(vma, old_vma);
->> +	if (ret)
->> +		goto fail_nomem_anon_vma_fork;
-> Looks like a duplication of code form dup_mmap().
-> Any chance to get in one place?
-I looked at that, but dup_mmap() is dissimilar enough with
-the additional fork-specific code in dup_mmap() that I think
-readability would suffer.
+'ret' won't ever be 0 here. Above:
+							&& cros_ec_error_map[result]
 
->
->> +	vma->vm_flags &= ~(VM_LOCKED|VM_UFFD_MISSING|VM_UFFD_WP|VM_EXEC_KEEP);
->> +	vma->vm_next = vma->vm_prev = NULL;
-> No need. vm_area_dup() takes care of it.
-Will fix.
+and below:
 
->
->> +	vma->vm_userfaultfd_ctx = NULL_VM_UFFD_CTX;
-> Semantics of VM_EXEC_KEEP vs userfaultfd() deserves a detailed explanation.
-> I feel these flags has to be mutually exclusive.
-Yes, will document this better.
-I think it's okay to mark userfaultfd-enabled memory for preservation
-as long as it is understood that memory would need to re-registered
-with userfaultfd() after exec and restore, if desired.  Unless there's
-a particular issue you see with this?
+		else
+			ret = -EPROTO;
+
+> 				ret = -EPROTO;
+> 				dev_err(..., "Unexpected EC result code %d\n", result);
+> 			}
+> 
+> ? Could even be WARN_ON(), since this would be an actionable programming
+> error, not exactly an external factor. Or maybe I'm being paranoid, and
+> future programmers are perfect.
+> 
+I think, if anything, we might consider adding the message below (result >=
+ARRAY_SIZE(cros_ec_error_map) is just as bad). Not sure myself. I am
+open to adding it if people think it would be useful/desirable.
 
 Thanks,
-Anthony
+Guenter
 
->
->> +	if (is_vm_hugetlb_page(vma))
->> +		reset_vma_resv_huge_pages(vma);
->> +	__insert_vm_struct(mm, vma);
->> +	ret = copy_page_range(mm, old_mm, old_vma);
->> +	return ret;
+> Otherwise:
+> 
+> Reviewed-by: Brian Norris <briannorris@chromium.org>
+> 
+>> +		else
+>> +			ret = -EPROTO;
+>> +	}
 >> +
->> +fail_nomem_anon_vma_fork:
->> +	mpol_put(vma_policy(vma));
->> +fail_nomem_policy:
->> +	vm_area_free(vma);
->> +fail_nomem:
->> +	return -ENOMEM;
+>> +	return ret;
 >> +}
 >> +
->>  /*
->>   * Return true if the calling process may expand its vm space by the passed
->>   * number of pages
->> -- 
->> 1.8.3.1
->>
->>
+>>  static int prepare_packet(struct cros_ec_device *ec_dev,
+>>  			  struct cros_ec_command *msg)
+>>  {
 
