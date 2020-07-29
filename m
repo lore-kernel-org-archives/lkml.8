@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 866FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 638AA2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64E812070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595992610;
-	bh=JIkLh/gH1jnXP1CN9e4bmsKKFoBMaEmSLkbtry1KPTo=;
+	s=default; t=1595992740;
+	bh=Ohpr+GqDnJEOLdgLCpq4Gz/ax0rPukQmUk2OhLp6S8E=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=FNM/AeTaerd/XZadaSTAZeqgusikbFwhaqUR+nP7sbIjsncoXNI70Oz/dmXC59a0+
-	 COFJ0+cxmWZyUQU/gQqieaq5AalRHXIlaMpCGcBurypGoLK7S/PBUHodOOE/cGWBp8
-	 8FVSjDAn3to7rtTqztuJD+/Ec21k3AAyC7VUiNcE=
+	b=PxqP49L1fGAzvZmyz8GGlqaJaQ4O7/uSuiUfUSRDO8UpKcLaWC2yOPbGMPCoEoHEl
+	 FC/wmnGZgIrl8IFwXq5N02njsbvjdSfo3x6ox7wSaDRkcD56rx/uv/ORfHYJuZV2fY
+	 JaOltiegL+0KhASZfumk8F1RhmYEAA5CnmkOWmII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgG2DQt (ORCPT
+        id S1726711AbgG2DS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 23:16:49 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:63692 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgG2DQs (ORCPT
+        Tue, 28 Jul 2020 23:18:59 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:54949 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbgG2DS7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 23:16:48 -0400
+        Tue, 28 Jul 2020 23:18:59 -0400
 Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 06T3Fi04000857;
-        Wed, 29 Jul 2020 12:15:44 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 06T3Fi04000857
+        by conuserg-09.nifty.com with ESMTP id 06T3Idoj022954;
+        Wed, 29 Jul 2020 12:18:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 06T3Idoj022954
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1595992544;
-        bh=Ez4pjpjvvIf+iOFLJFngv++ZRsHADJifki9W/RGZoc4=;
+        s=dec2015msa; t=1595992720;
+        bh=R9y5zPXSYlxpJC3uaZU9/XIf/pq603Add2HzPoAewpI=;
         h=From:To:Cc:Subject:Date:From;
-        b=f8pOiQdRUX+cSusv4eK2PG62/n0Xu+xTyUHSrNAnrnXNo2v/GNZtz+J3k8kpIKpgX
-         nhrhcN2p41k92GNLtnpCFdYvAZNIksDandTnSM3Ltxjp3wKhUb5H1LXZCD0+j6MoXl
-         98D2T8L6j8HSj6Un1yZpsIPJgn1h0W76a+GhdH+ZQhU1ENQuMfQ0IdxH7/vinlxpxC
-         n/hqLFEeWnXysyYLxyUc/R+MxQ3qAmXyj0aX4peZ+nlbX/RZGtWS+CJ1A6jk2ofMS0
-         kDgRHmKmT9QYbJwIOD5N5JUi8gzRvdlhzA+HwCkfeqRehhPaLIKUnDFgmrQH3f5ddW
-         zMB8Prlyi+LBQ==
+        b=i14gl6ihxmctLPcBS4tyt+p7/WdzTb7gdQqoN4CjRKEYy99nijfWflLwkrfcRD2X1
+         G+4j3pu55azA3t8ph7wLBywO2Dcd/pvzLC/irFfQiYNAjJoSpoXuAsA/1/znT+EggF
+         SsHJlTseZxGrnRfsRyVFA4JFJuwtKhZKjr8i7cl+02FSh5Kg6ztLyiSk7if7oiFHmt
+         ZcpFm8PCyIrC+Yl3W0Ez7oO4/mZ5dYqC1nI/a7oL5Sutn73HLRGTIJf6dEioLKzJ0W
+         zg5qNBqEvagB3zmpiiP/6cLTHwdaHDzhOQDDnGpUDvyRhvdwtFD8tPfF9fdyOkt2Q1
+         h8qG/yBCGD29Q==
 X-Nifty-SrcIP: [126.25.67.101]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Emese Revfy <re.emese@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] kbuild: move shared library build rules to scripts/gcc-plugins/Makefile
-Date:   Wed, 29 Jul 2020 12:15:36 +0900
-Message-Id: <20200729031537.37926-1-masahiroy@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kconfig: add 'static' to some file-local data
+Date:   Wed, 29 Jul 2020 12:18:37 +0900
+Message-Id: <20200729031838.38238-1-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -61,198 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The shared library build rules are currently implemented in
-scripts/Makefile.host, but actually GCC-plugin is the only user of
-them. Hence, they do not need to be treewide available.
+Fix some warnings from sparce like follows:
 
-Move all the relevant build rules to scripts/gcc-plugins/Makefile.
-
-I also optimized the build steps so *.so is directly built from .c
-because every upstream plugin is compiled from a single source file.
-
-I am still keeping the infrastructure to build a plugin from multiple
-files because Kees suggested to do so in my previous attempt.
-(https://lkml.org/lkml/2019/1/11/1107)
-
-If the plugin, foo.so, is compiled from two files foo.c and foo2.c,
-then you can do like follows:
-
-  foo-objs := foo.o foo2.o
-
-Single-file plugins do not need the *-objs notation.
+  warning: symbol '...' was not declared. Should it be static?
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/Makefile.build       |  4 +--
- scripts/Makefile.clean       |  3 +-
- scripts/Makefile.host        | 30 ++----------------
- scripts/gcc-plugins/Makefile | 61 +++++++++++++++++++++++++++++-------
- 4 files changed, 55 insertions(+), 43 deletions(-)
+ scripts/kconfig/lexer.l  |  2 +-
+ scripts/kconfig/symbol.c | 14 ++++++++++----
+ 2 files changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 2e8810b7e5ed..d41c1cd453b9 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -45,8 +45,8 @@ include $(kbuild-file)
+diff --git a/scripts/kconfig/lexer.l b/scripts/kconfig/lexer.l
+index 6354c905b006..98daac3bc829 100644
+--- a/scripts/kconfig/lexer.l
++++ b/scripts/kconfig/lexer.l
+@@ -36,7 +36,7 @@ struct buffer {
+ 	YY_BUFFER_STATE state;
+ };
  
- include scripts/Makefile.lib
+-struct buffer *current_buf;
++static struct buffer *current_buf;
  
--# Do not include host rules unless needed
--ifneq ($(hostprogs)$(hostcxxlibs-y)$(hostcxxlibs-m),)
-+# Do not include hostprogs rules unless needed
-+ifneq ($(hostprogs),)
- include scripts/Makefile.host
- endif
+ static int last_ts, first_ts;
  
-diff --git a/scripts/Makefile.clean b/scripts/Makefile.clean
-index e2c76122319d..3cdf31218198 100644
---- a/scripts/Makefile.clean
-+++ b/scripts/Makefile.clean
-@@ -29,8 +29,7 @@ subdir-ymn	:= $(addprefix $(obj)/,$(subdir-ymn))
- 
- __clean-files	:= $(extra-y) $(extra-m) $(extra-)       \
- 		   $(always) $(always-y) $(always-m) $(always-) $(targets) $(clean-files)   \
--		   $(hostprogs) $(hostprogs-y) $(hostprogs-m) $(hostprogs-) $(userprogs) \
--		   $(hostcxxlibs-y) $(hostcxxlibs-m)
-+		   $(hostprogs) $(hostprogs-y) $(hostprogs-m) $(hostprogs-) $(userprogs)
- 
- __clean-files   := $(filter-out $(no-clean-files), $(__clean-files))
- 
-diff --git a/scripts/Makefile.host b/scripts/Makefile.host
-index c8a4a033dc3e..687ca3f309e9 100644
---- a/scripts/Makefile.host
-+++ b/scripts/Makefile.host
-@@ -39,7 +39,6 @@ $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
- # They are linked as C++ code to the executable qconf
- 
- __hostprogs := $(sort $(hostprogs))
--host-cxxshlib := $(sort $(hostcxxlibs-y) $(hostcxxlibs-m))
- 
- # C code
- # Executables compiled from a single .c file
-@@ -61,16 +60,11 @@ host-cxxmulti	:= $(foreach m,$(__hostprogs),$(if $($(m)-cxxobjs),$(m)))
- # C++ Object (.o) files compiled from .cc files
- host-cxxobjs	:= $(sort $(foreach m,$(host-cxxmulti),$($(m)-cxxobjs)))
- 
--# Object (.o) files used by the shared libaries
--host-cxxshobjs	:= $(sort $(foreach m,$(host-cxxshlib),$($(m:.so=-objs))))
--
- host-csingle	:= $(addprefix $(obj)/,$(host-csingle))
- host-cmulti	:= $(addprefix $(obj)/,$(host-cmulti))
- host-cobjs	:= $(addprefix $(obj)/,$(host-cobjs))
- host-cxxmulti	:= $(addprefix $(obj)/,$(host-cxxmulti))
- host-cxxobjs	:= $(addprefix $(obj)/,$(host-cxxobjs))
--host-cxxshlib	:= $(addprefix $(obj)/,$(host-cxxshlib))
--host-cxxshobjs	:= $(addprefix $(obj)/,$(host-cxxshobjs))
- 
- #####
- # Handle options to gcc. Support building with separate output directory
-@@ -136,25 +130,5 @@ quiet_cmd_host-cxxobjs	= HOSTCXX $@
- $(host-cxxobjs): $(obj)/%.o: $(src)/%.cc FORCE
- 	$(call if_changed_dep,host-cxxobjs)
- 
--# Compile .c file, create position independent .o file
--# Note that plugin capable gcc versions can be either C or C++ based
--# therefore plugin source files have to be compilable in both C and C++ mode.
--# This is why a C++ compiler is invoked on a .c file.
--# host-cxxshobjs -> .o
--quiet_cmd_host-cxxshobjs	= HOSTCXX -fPIC $@
--      cmd_host-cxxshobjs	= $(HOSTCXX) $(hostcxx_flags) -fPIC -c -o $@ $<
--$(host-cxxshobjs): $(obj)/%.o: $(src)/%.c FORCE
--	$(call if_changed_dep,host-cxxshobjs)
--
--# Link a shared library, based on position independent .o files
--# *.o -> .so shared library (host-cxxshlib)
--quiet_cmd_host-cxxshlib	= HOSTLLD -shared $@
--      cmd_host-cxxshlib	= $(HOSTCXX) $(KBUILD_HOSTLDFLAGS) -shared -o $@ \
--			  $(addprefix $(obj)/, $($(target-stem)-objs)) \
--			  $(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(target-stem).so)
--$(host-cxxshlib): FORCE
--	$(call if_changed,host-cxxshlib)
--$(call multi_depend, $(host-cxxshlib), .so, -objs)
--
--targets += $(host-csingle)  $(host-cmulti) $(host-cobjs)\
--	   $(host-cxxmulti) $(host-cxxobjs) $(host-cxxshlib) $(host-cxxshobjs)
-+targets += $(host-csingle) $(host-cmulti) $(host-cobjs) \
-+	   $(host-cxxmulti) $(host-cxxobjs)
-diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
-index 4014ba7e2fbd..d66949bfeba4 100644
---- a/scripts/gcc-plugins/Makefile
-+++ b/scripts/gcc-plugins/Makefile
-@@ -1,22 +1,61 @@
- # SPDX-License-Identifier: GPL-2.0
--GCC_PLUGINS_DIR := $(shell $(CC) -print-file-name=plugin)
- 
--HOST_EXTRACXXFLAGS += -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=gnu++98 -fno-rtti
--HOST_EXTRACXXFLAGS += -fno-exceptions -fasynchronous-unwind-tables -ggdb
--HOST_EXTRACXXFLAGS += -Wno-narrowing -Wno-unused-variable -Wno-c++11-compat
--HOST_EXTRACXXFLAGS += -Wno-format-diag
--
--$(obj)/randomize_layout_plugin.o: $(objtree)/$(obj)/randomize_layout_seed.h
-+$(obj)/randomize_layout_plugin.so: $(objtree)/$(obj)/randomize_layout_seed.h
- quiet_cmd_create_randomize_layout_seed = GENSEED $@
- cmd_create_randomize_layout_seed = \
-   $(CONFIG_SHELL) $(srctree)/$(src)/gen-random-seed.sh $@ $(objtree)/include/generated/randomize_layout_hash.h
- $(objtree)/$(obj)/randomize_layout_seed.h: FORCE
- 	$(call if_changed,create_randomize_layout_seed)
--targets = randomize_layout_seed.h randomize_layout_hash.h
-+targets += randomize_layout_seed.h randomize_layout_hash.h
+diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
+index 9363e37b8870..ffa3ec65cc90 100644
+--- a/scripts/kconfig/symbol.c
++++ b/scripts/kconfig/symbol.c
+@@ -15,15 +15,21 @@ struct symbol symbol_yes = {
+ 	.name = "y",
+ 	.curr = { "y", yes },
+ 	.flags = SYMBOL_CONST|SYMBOL_VALID,
+-}, symbol_mod = {
++};
 +
-+# Build rules for plugins
-+#
-+# No extra code is needed for single-file plugins.
-+# For multi-file plugins, use *-objs syntax to list the objects.
-+#
-+# If the plugin foo.so is compiled from foo.c and foo2.c, you can do:
-+#
-+# foo-objs := foo.o foo2.o
++struct symbol symbol_mod = {
+ 	.name = "m",
+ 	.curr = { "m", mod },
+ 	.flags = SYMBOL_CONST|SYMBOL_VALID,
+-}, symbol_no = {
++};
 +
-+always-y += $(GCC_PLUGIN)
++struct symbol symbol_no = {
+ 	.name = "n",
+ 	.curr = { "n", no },
+ 	.flags = SYMBOL_CONST|SYMBOL_VALID,
+-}, symbol_empty = {
++};
++
++static struct symbol symbol_empty = {
+ 	.name = "",
+ 	.curr = { "", no },
+ 	.flags = SYMBOL_VALID,
+@@ -31,7 +37,7 @@ struct symbol symbol_yes = {
  
--hostcxxlibs-y := $(GCC_PLUGIN)
--always-y := $(hostcxxlibs-y)
-+GCC_PLUGINS_DIR = $(shell $(CC) -print-file-name=plugin)
+ struct symbol *sym_defconfig_list;
+ struct symbol *modules_sym;
+-tristate modules_val;
++static tristate modules_val;
  
--$(foreach p,$(hostcxxlibs-y:%.so=%),$(eval $(p)-objs := $(p).o))
-+plugin_cxxflags	= -Wp,-MMD,$(depfile) $(KBUILD_HOSTCXXFLAGS) -fPIC \
-+		   -I $(GCC_PLUGINS_DIR)/include -I $(obj) -std=gnu++98 \
-+		   -fno-rtti -fno-exceptions -fasynchronous-unwind-tables \
-+		   -ggdb -Wno-narrowing -Wno-unused-variable -Wno-c++11-compat \
-+		   -Wno-format-diag
- 
-+plugin_ldflags	= -shared
-+
-+plugin-single	:= $(foreach m, $(GCC_PLUGIN), $(if $($(m:%.so=%-objs)),,$(m)))
-+plugin-multi	:= $(filter-out $(plugin-single), $(GCC_PLUGIN))
-+plugin-objs	:= $(sort $(foreach m, $(plugin-multi), $($(m:%.so=%-objs))))
-+
-+targets += $(plugin-single) $(plugin-multi) $(plugin-objs)
- clean-files += *.so
-+
-+plugin-single	:= $(addprefix $(obj)/, $(plugin-single))
-+plugin-multi	:= $(addprefix $(obj)/, $(plugin-multi))
-+plugin-objs	:= $(addprefix $(obj)/, $(plugin-objs))
-+
-+quiet_cmd_plugin_cxx_so_c = HOSTCXX $@
-+      cmd_plugin_cxx_so_c = $(HOSTCXX) $(plugin_cxxflags) $(plugin_ldflags) -o $@ $<
-+
-+$(plugin-single): $(obj)/%.so: $(src)/%.c FORCE
-+	$(call if_changed_dep,plugin_cxx_so_c)
-+
-+quiet_cmd_plugin_ld_so_o = HOSTLD  $@
-+      cmd_plugin_ld_so_o = $(HOSTCXX) $(plugin_ldflags) -o $@ \
-+			   $(addprefix $(obj)/, $($(target-stem)-objs))
-+
-+$(plugin-multi): FORCE
-+	$(call if_changed,plugin_ld_so_o)
-+$(foreach m, $(notdir $(plugin-multi)), $(eval $(obj)/$m: $(addprefix $(obj)/, $($(m:%.so=%-objs)))))
-+
-+quiet_cmd_plugin_cxx_o_c = HOSTCXX $@
-+      cmd_plugin_cxx_o_c = $(HOSTCXX) $(plugin_cxxflags) -c -o $@ $<
-+
-+$(plugin-objs): $(obj)/%.o: $(src)/%.c FORCE
-+	$(call if_changed_dep,plugin_cxx_o_c)
+ enum symbol_type sym_get_type(struct symbol *sym)
+ {
 -- 
 2.25.1
 
