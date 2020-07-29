@@ -2,91 +2,166 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D713C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2782EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 019CF22B49
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF98206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:31:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B6ID/6nh"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="G3pcezfi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgG2V2e (ORCPT
+        id S1727076AbgG2Vbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 17:28:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2V2e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 17:28:34 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBCADC061794;
-        Wed, 29 Jul 2020 14:28:33 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u185so13755341pfu.1;
-        Wed, 29 Jul 2020 14:28:33 -0700 (PDT)
+        Wed, 29 Jul 2020 17:31:34 -0400
+Received: from mail-eopbgr770050.outbound.protection.outlook.com ([40.107.77.50]:38726
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726365AbgG2Vbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 17:31:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PEE6MCgNatdk7baZnlvCx/8lZL6Nw/0dnWImsFmmhRciYfAHhmg5Jkuw0+82sKi/EhIluasJhAwls50N4YGQcpINVA5vS1ib+SSVCaMrnV4qJCr5HPlaS6csBNJzZ/TDz3tUdc+w2cAvFlu6RrtFfMb3z6EkZbC4Wc9cTTn+ob3T17trPFLoC6yrNU7Po/0yYNHBKkNMx0ELY03stuFTA7oETouU62pGmMELWWbAQl9uPqTu/mSo02M3xo7H8hIn8y0Ba9jF5HlM+qYA7P7yAJD3qm+BlOcvAK4VRfGx5+Lz1ex0T+tQe2hXEh/e+a8MZ2dRH+A0exeiPki/qOpdig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JylNYsEy0+76bXeB9tohxrQodealJBhLizIK9MARats=;
+ b=KzQHqYCfNMasKAqfC9/Dma6j32sgib4ZdSJ2vfZAs0c/K9v2SQCG5LIJikaeKlcUpaDmhPXcVtySxgydne+8JOvKDt+mLI4JbiQvWOmuukoUJREWnEnAhNfzMVJmD2J1Hl54SQ9xx4pKao6ANeQZ3jlTtZqf8+wdZ4Dcs/xeJRGai5s2v913+BMxwPlOEfbp8LBjpps03iEQdjJJfuEKZiuy4R/RB523OFr6tv7gLb0z53uzpT40KUITlNegh86/z1KRgfIUDcKocxe4NdhzDXk5ZiurFZuYW+9pHpfBlQqMyPFHrnAgclJ3FvOfjvEFXuFxpn+NSoHgkR64TahmTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hI/UDvzDKwJxsEwkWoyUq5HDwLFa3gCvalT8b4tfo+A=;
-        b=B6ID/6nhaoNkNEFEeURwR5BuNj8Qg0WgMuALePZQL7c6lRbAuoYQqQ9ql4hICselAG
-         4ltQUG7F1t6IkfD+NaZYvepg+7aK3Am3neCcQiSYlvUTWjfOEU31oEB89uzWAjWEDAa/
-         y81K+8QR7Qb35KWJ1TfsJWIferT7z3dV4Z/d4PQJCQn4SFWFjILcIbzo9/EYYyYJmhGy
-         8VcjaOumCapnmcwgS2FFRZor6+PmXdDGVlALRPRw1bzP3aHqfYKuWcz0ZZ6w4PACjhfZ
-         rrZjReaG4DMo4YnZbXhxe8BdcnC9AMiu9iZNxxX0DhdAU2IbnYyIteru0Gcy/90ri4tg
-         iTiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hI/UDvzDKwJxsEwkWoyUq5HDwLFa3gCvalT8b4tfo+A=;
-        b=HCNhkKJMOES+FId7eo1/nHZOgtasAVZxOipVkVIsciE+2e+FUwUUGGZ29mMOQRCHJX
-         ZtflH5BchTTcdA9ClVHPA7vW6n/8BlYzpwMjrcEWh7HqYd8Hxv5LPreGu5DdLVxSHGOC
-         AeUPPGP10RmwpM5hbsRuNlomMJ9AuEOTaPyZB+njKwmhaCDkA+dNxeo10s936GxFy3rB
-         9AcZWlCmuY+WtHud1u9lY2J71p7F+gRpFtIUoX+Fvp53QM5cgACmWC7fktcKkcqrDwQB
-         KyfJLW5rX1J+XFz35vNU8HWT7bpv5PYAOku43XFeFZTem8JRBNhHVXZYM9jN3JSX2D9X
-         Mqkg==
-X-Gm-Message-State: AOAM531ErgE3T1R6Ir5J/ahcSLTWq/381ECrOVCdQD4tzN8WW+KV/Qp7
-        16TvWf0bIt/M8JlrwRMq51h8eg6b
-X-Google-Smtp-Source: ABdhPJxRdhyvP1sq/AERRxp442XYXHIylVvaWRHbUhKDK6UERUdYZgsQtdrzCuBzOKxOcrsae//Qcg==
-X-Received: by 2002:a63:3441:: with SMTP id b62mr9972897pga.25.1596058113382;
-        Wed, 29 Jul 2020 14:28:33 -0700 (PDT)
-Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id t19sm3187499pgg.19.2020.07.29.14.28.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 14:28:32 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 14:28:30 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     min.li.xe@renesas.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] ptp: ptp_clockmatrix: update to support 4.8.7
- firmware
-Message-ID: <20200729212830.GA12513@hoboy>
-References: <1595966430-8603-1-git-send-email-min.li.xe@renesas.com>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JylNYsEy0+76bXeB9tohxrQodealJBhLizIK9MARats=;
+ b=G3pcezfiVkM+PEPq+0W+HKSdY7cFTc9v3WA4pogqEmHktIEVTfT6ISu07rWLFHUtJb4vwR55i4MJcC+3paRi+tRkEuWnfC/+l6BwouNtl6AbCFotavaOybQsPVqK1P3mzmIZmPBNKthSUdiyOORtnvKWipyEpdn8t4AT6scbB5Q=
+Authentication-Results: linutronix.de; dkim=none (message not signed)
+ header.d=none;linutronix.de; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
+ by SA0PR12MB4352.namprd12.prod.outlook.com (2603:10b6:806:9c::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Wed, 29 Jul
+ 2020 21:31:29 +0000
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::691c:c75:7cc2:7f2c]) by SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::691c:c75:7cc2:7f2c%6]) with mapi id 15.20.3216.033; Wed, 29 Jul 2020
+ 21:31:29 +0000
+Subject: RE: [PATCH v3 04/11] KVM: SVM: Modify intercept_exceptions to generic
+ intercepts
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm list <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <159597929496.12744.14654593948763926416.stgit@bmoger-ubuntu>
+ <159597949343.12744.9555364824745485311.stgit@bmoger-ubuntu>
+ <CALMp9eTO-Det6u3Fa2Lrzkgw7SRj=Jbf2kJ1YuokZRmCEpj=EA@mail.gmail.com>
+From:   Babu Moger <babu.moger@amd.com>
+Message-ID: <e23cfddd-e910-09a5-bdb0-6fcc14f59209@amd.com>
+Date:   Wed, 29 Jul 2020 16:31:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <CALMp9eTO-Det6u3Fa2Lrzkgw7SRj=Jbf2kJ1YuokZRmCEpj=EA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR01CA0029.prod.exchangelabs.com (2603:10b6:805:b6::42)
+ To SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595966430-8603-1-git-send-email-min.li.xe@renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.236.31.79] (165.204.77.1) by SN6PR01CA0029.prod.exchangelabs.com (2603:10b6:805:b6::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17 via Frontend Transport; Wed, 29 Jul 2020 21:31:28 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 59cf47a9-d706-4633-ac26-08d83406c162
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4352:
+X-Microsoft-Antispam-PRVS: <SA0PR12MB43523C6461E7D9F73858A9B095700@SA0PR12MB4352.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: S9kWI9KdCl53nkxkFMDWWX/GNQq9fU9K/+KDSagsj2zXr5ssh1yz+xjelz8WiVlAyGd3yZlCh1lhZvpnN2EBhMY3iTRXyplfg8h1LM6pMVMECBvm4U5+wuHtN7VkWokqTE0xIW9NBSZK/2bJg3abx5JgeL1WGshB2mEnliYW8lqkvYH3J6crgK6MeDFQXSIbDftsYIRzxEjfS+682xOTIe/a+Sc6dwHhNrqihvyaRK6+4mzLm1N2zQ7C1f0LyELuePSATuAtwuEHvdCb/6+GMd5a9bqLgJS31CWzbvmKCMN/uWfjIPOc3xNp2A5BmSd80tXTLCkcN3d2eVPQdJ/4BQUEyIK9VANd2n/s2b/htd3HfoOttKE/MsmMNeXsMQezbKAIdbAbKVZhrhMSF3gk9w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(39860400002)(346002)(396003)(136003)(6916009)(26005)(52116002)(66946007)(83380400001)(8676002)(2906002)(186003)(16526019)(54906003)(6486002)(31686004)(31696002)(956004)(478600001)(4326008)(5660300002)(86362001)(2616005)(8936002)(44832011)(66476007)(66556008)(7416002)(36756003)(53546011)(16576012)(316002)(41533002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 1VdxXxcRXDPM07wKstZeE0cjQoKhHTn3F/1woYFKPwRSaKX3tHIdwlSZCxq54VmmKuo9/LCQnbqdyaEnliW6PqfRYr6HcGrPLW048n2LmrXTG/QrtbOHUVVzHpvIavOYmoYYQTrLDhd3b+9mKzjp9RvVPl7jHmG1XPhPxLw8dcDJspETR5nxBba9VnDnO0RhxmqCTYfF8gPmnLE+JwN4xXiau62TrcJouhZOzOSZ75dLzhpU6p6kqM27Ff9xyl8YSgC0ZLhadr+RM7wHJhsbk0wLqVUeCayi9EQaxbp+iAHJYkNWCD75v+jJ2aeOlYmv7lejVMZBLyk1PHgrhGYOwI4dhvcsDe/WHXggD24U/YDNlTmDv0jOU21lH5bONf2nO4Cvv3hDSlDsc3haDSfAcGJc8BH9xSGRL+e19HAislcL8b2igvBYiutf1vSiTzTeVSbBXbz5YWFI0FTx6ob8qZfZWUlV8BPpiZMs4RVaBhOS+iFj/xuz2UJaIfDR5bJ1XAD71pT2HZ8rmGkOepLdJKZcpoWx5YuNfbrlc0WwRho9cK8ww+sygybCshgnO6o4YiX4cXE+1YOII51v3Cd4vqaY7hTyGjcmL40jZMtLg2QnnQdesKnmnq/kxWTq2jXWf++6epxj38P+7u7vn6VYJA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59cf47a9-d706-4633-ac26-08d83406c162
+X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2560.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2020 21:31:29.3161
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zcUYSxLGXmXAUv66DSWOSKGiFnDp9K9O4WVXHLhNS1ux/rY5gNsCFXciKaQDP+gP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4352
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 04:00:30PM -0400, min.li.xe@renesas.com wrote:
-> From: Min Li <min.li.xe@renesas.com>
-> 
-> With 4.8.7 firmware, adjtime can change delta instead of absolute time,
-> which greately increases snap accuracy. PPS alignment doesn't have to
-> be set for every single TOD change. Other minor changes includes:
-> adding more debug logs, increasing snap accuracy for pre 4.8.7 firmware
-> and supporting new tcs2bin format.
-> 
-> Signed-off-by: Min Li <min.li.xe@renesas.com>
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+
+> -----Original Message-----
+> From: Jim Mattson <jmattson@google.com>
+> Sent: Wednesday, July 29, 2020 3:48 PM
+> To: Moger, Babu <Babu.Moger@amd.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>; Vitaly Kuznetsov
+> <vkuznets@redhat.com>; Wanpeng Li <wanpengli@tencent.com>; Sean
+> Christopherson <sean.j.christopherson@intel.com>; kvm list
+> <kvm@vger.kernel.org>; Joerg Roedel <joro@8bytes.org>; the arch/x86
+> maintainers <x86@kernel.org>; LKML <linux-kernel@vger.kernel.org>; Ingo
+> Molnar <mingo@redhat.com>; Borislav Petkov <bp@alien8.de>; H . Peter Anvin
+> <hpa@zytor.com>; Thomas Gleixner <tglx@linutronix.de>
+> Subject: Re: [PATCH v3 04/11] KVM: SVM: Modify intercept_exceptions to
+> generic intercepts
+> 
+> On Tue, Jul 28, 2020 at 4:38 PM Babu Moger <babu.moger@amd.com> wrote:
+> >
+> > Modify intercept_exceptions to generic intercepts in vmcb_control_area.
+> > Use the generic __set_intercept, __clr_intercept and __is_intercept to
+> > set the intercept_exceptions bits.
+> >
+> > Signed-off-by: Babu Moger <babu.moger@amd.com>
+> > ---
+> 
+> > @@ -52,6 +54,25 @@ enum {
+> >         INTERCEPT_DR5_WRITE,
+> >         INTERCEPT_DR6_WRITE,
+> >         INTERCEPT_DR7_WRITE,
+> > +       /* Byte offset 008h (Vector 2) */
+> > +       INTERCEPT_DE_VECTOR = 64 + DE_VECTOR,
+> > +       INTERCEPT_DB_VECTOR,
+> > +       INTERCEPT_BP_VECTOR = 64 + BP_VECTOR,
+> > +       INTERCEPT_OF_VECTOR,
+> > +       INTERCEPT_BR_VECTOR,
+> > +       INTERCEPT_UD_VECTOR,
+> > +       INTERCEPT_NM_VECTOR,
+> > +       INTERCEPT_DF_VECTOR,
+> > +       INTERCEPT_TS_VECTOR = 64 + TS_VECTOR,
+> > +       INTERCEPT_NP_VECTOR,
+> > +       INTERCEPT_SS_VECTOR,
+> > +       INTERCEPT_GP_VECTOR,
+> > +       INTERCEPT_PF_VECTOR,
+> > +       INTERCEPT_MF_VECTOR = 64 + MF_VECTOR,
+> > +       INTERCEPT_AC_VECTOR,
+> > +       INTERCEPT_MC_VECTOR,
+> > +       INTERCEPT_XM_VECTOR,
+> > +       INTERCEPT_VE_VECTOR,
+> >  };
+> 
+> I think it's demanding a lot of the reader to know where there are and are not
+> gaps in the allocated hardware exception vectors. Perhaps all of the above
+> enumeration definitions could have initializers? Either way...
+
+Sure. Will add all the initializers here. Thanks
+
+> 
+> Reviewed-by: Jim Mattson <jmattson@google.com>
