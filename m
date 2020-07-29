@@ -2,102 +2,125 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A310C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09AD4206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C35B206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:49:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="exdMY4zA"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="nfg4/SC0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgG2JqH (ORCPT
+        id S1726645AbgG2Jt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:46:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgG2JqG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:46:06 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19905C061794;
-        Wed, 29 Jul 2020 02:46:06 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id y11so7575667qvl.4;
-        Wed, 29 Jul 2020 02:46:06 -0700 (PDT)
+        Wed, 29 Jul 2020 05:49:26 -0400
+Received: from mail-mw2nam12on2081.outbound.protection.outlook.com ([40.107.244.81]:49728
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726208AbgG2JtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 05:49:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kHWG10Z4s+BVam3Whv62ePmi01RSf2pSn1+35Jf3wum8FHetgo3whp7z8Zp2Vxbi0/9lFN/Ur8yD+04/k2w2gCX1970t0ka3ToA2R/hKrKymQL/OZ6zQdH/NHT2ttzeU3uxO53ejHfkC9hFNgMpvPksO5KKMU888ombVgobaYZU4J9+qS5PHN91ecQPUJP0e6O9lUTrJiN/He61RlMjn/yNaLwtYZ2bMHnkrHEOfXx9Tib2FpcAB6nqHMgcPoU6qYDHLxikord14S7uwQOI1MDius35z2IwOxOPHkwUvKRXKet+b/iY+POjb13PZuey17+72al/C0x6yasSIWbks+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y1oODdtWTygAw/5Leu5j//YE2hVfcwPnWGb1ogFhWpQ=;
+ b=TWwaKHYuSG3vphngAHM0mfykPq5hwezOIJ/T5mTPKevMq422skbGPybafXo4evbNeFnjeUPZWg7nmlPAoGE4n7D/6tjASYDH48rIBh047CYKzPPzPo5vgx4uSxY4GX/rCXpPa1DIa4D5lpuM1eAM1gpLQ29GiHNogRTV2fXHojsdyHGsSQljUg2sGO5JlBHYurOOcuXi1zzDAtGXT28TQs9g62P0swMhmXonMeMPx84FQU2o0ZBdBwXlSVf8PUgIeHx7haLlPulbAVU1G0KcvOQQThED/EoJ/wPvV/4vMmwt6cIEMUJgk7QJ254ttb5+ntgg69drLvSAEjnOwlBYhw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qKqsPY+0Cr+gMXTjgMZqIkPYuBQVt0J989rAmnFgmeU=;
-        b=exdMY4zALaxlGmXURUoiL4WbHOj/tNkzH0Kx4srdUzkOqbr3CT19pZFQkU2LdAMebo
-         7rCDri0qfWSXkeEAs7m/zfUD9Xmi5dd8uHpKLlL0Msk4rSk+HcQz2eygACEcYa8XIO6p
-         1HtUVDavfa/4dFho4htY+pTGJgwqdrMliIILol9FWMlICuSI9gAopyGXGQNWABScT5dZ
-         WTx5e/JOToAMvj9xej5K+J93URQYNzEF8Z1vtCfONKCq40WzXwPiOfyuhWhWyTBH7pv7
-         SdsOz+t94s+MuPGEs/w30Plpxb+McqrZHne+GLkXFKtBCKpV+wbXr+wZ8//fIHhGg4ux
-         XrVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qKqsPY+0Cr+gMXTjgMZqIkPYuBQVt0J989rAmnFgmeU=;
-        b=Q80uku5nBAsgH8WJG5OKrKhjrYxmI/dK12YnkcJYR7NkDfN6ajPiUiwEXmDUvq+tTq
-         wKKfMbawvaKW2/wVUuREko5hXvxqmctKr1kIfTSXe89AvFe1B7t2SbnGI4HcX4s2YSf1
-         ZRNhQD/sXMpsrIAjPOfp820vf8clrimRfsLBDpSlm+EVacyyN0s0TFzY9sorOVjnJCBH
-         4b7LDj4R/ShgQ0TYQo8WhJkJDki6H6GF5lzSOdBrUo4RzhZgyv0A7UAgys033Z7avzIw
-         qMj1ILtji+u2Klf/xtMbIMkodaZAL+Rmjz51/zOpK6KCf/krVJGYTtKspkOaVrru8i3T
-         noxQ==
-X-Gm-Message-State: AOAM532V32yOF5OB+rnP9Wup2V4qu9ihnB75xPbU2QVThzX1JaLwdSvG
-        Cy+uSRaSx83maDfuyMfgDUDsmGM=
-X-Google-Smtp-Source: ABdhPJz+gwQhzTK7TSgsm4aDXkBGBvswsQhlOnR4n29OVW7eRUNdrmqXogHXIenVoNs6xjdhNdG3Nw==
-X-Received: by 2002:ad4:4645:: with SMTP id y5mr32679485qvv.163.1596015964876;
-        Wed, 29 Jul 2020 02:46:04 -0700 (PDT)
-Received: from PWN (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
-        by smtp.gmail.com with ESMTPSA id c70sm902307qke.109.2020.07.29.02.46.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 02:46:04 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 05:46:02 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH] block/floppy: Prevent
- kernel-infoleak in raw_cmd_copyout()
-Message-ID: <20200729094602.GA6026@PWN>
-References: <20200728141946.426245-1-yepeilin.cs@gmail.com>
- <f80acf0f-3e7e-89c5-a00e-d5a89553f0b4@linux.com>
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y1oODdtWTygAw/5Leu5j//YE2hVfcwPnWGb1ogFhWpQ=;
+ b=nfg4/SC0dIngfuXhxxboTKtla1XT+r1Bw5JVuUqGvTLQjgxUGAc23K0Ky726Z0FpT/ziMAU1wul5JwyGXLty1PbEMQBn6LHOj1D5G43AP4UiTHu9sWxtWECqQd6wWkRG6DDp/CFKs44dQrK6LL6U/f+0X90IJddvgpJNPheynJw=
+Authentication-Results: bootlin.com; dkim=none (message not signed)
+ header.d=none;bootlin.com; dmarc=none action=none header.from=synaptics.com;
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
+ by BYAPR03MB3638.namprd03.prod.outlook.com (2603:10b6:a02:ab::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Wed, 29 Jul
+ 2020 09:49:24 +0000
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::b5cc:ca6b:3c25:a99c]) by BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::b5cc:ca6b:3c25:a99c%4]) with mapi id 15.20.3216.033; Wed, 29 Jul 2020
+ 09:49:23 +0000
+Date:   Wed, 29 Jul 2020 17:49:09 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2] net: mvneta: fix comment about
+ phylink_speed_down
+Message-ID: <20200729174909.276590fb@xhacker.debian>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYAPR01CA0122.jpnprd01.prod.outlook.com
+ (2603:1096:404:2d::14) To BYAPR03MB3573.namprd03.prod.outlook.com
+ (2603:10b6:a02:ae::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f80acf0f-3e7e-89c5-a00e-d5a89553f0b4@linux.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0122.jpnprd01.prod.outlook.com (2603:1096:404:2d::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Wed, 29 Jul 2020 09:49:21 +0000
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6607b31f-fde6-44fe-62fa-08d833a4ac73
+X-MS-TrafficTypeDiagnostic: BYAPR03MB3638:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB3638BC3CFD1B1AFEF3347994ED700@BYAPR03MB3638.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1824;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xt7/u2bktzQiX8Ivbgi7JfHq5BIigToCeRBrm5yayejqSOaUKWZOf6sXci20IAydc6l/oWxZSMsPbFwCtlBgzTMklyas+j8XHNmkz2fgz6UFbC45kDAtfFx143jMUHuZ0bYfHAW9xThID5FiGi2kyQ10LBbgCxwMUqU5eUpnY44p97OP9VT/HGbspepIrRL7I/krDxwgLuGAen/IsvXzVharojX6lenqF+Bk2xoqeVAP+GF38HmUySvRmR6ZuW68ds/rTGYW1z/C/AnBsALBeihU5wQap56ZvqrFOukSx56YzTNS0Xf2omxhWiuik7no
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39850400004)(396003)(366004)(136003)(346002)(376002)(316002)(110136005)(8936002)(6506007)(2906002)(16526019)(26005)(4326008)(8676002)(186003)(55016002)(9686003)(52116002)(478600001)(7696005)(5660300002)(83380400001)(6666004)(956004)(66476007)(66946007)(4744005)(1076003)(86362001)(66556008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: TjlDyGewUkdNQnu77QpvRid5d9P1Znm5JT+bl8gyViR7tGzniUV0ZMm4K790tRoMjn84LJ419q5PPyTr/4vn5kc6XSFbX4og+TDctPmsoTRRO16Fnx+nTFoUViAJIJG7pKwGcA6b31hN3UJJIw/KXf6Tnm+MJWP31bCmYscNGB5/VQU6qDgiLogNDBX6p5TH4CJiVRWXqu7wrXF/hzycqNCRVqFbyJL1JHcWDLK3k1dU6Z0/3g26I7jGDqclBUd2VpnK2ar6Pma4fWLqsudi2s0rm4b67Z7UgopztvyX/+MS+vuZbTACl9crtPzU9/axHQMnmSOotPUArOUlgvYiVG8snta9C1B+bIyTlWO4XizDhXHWRpLOSrcJAgVPcOTBu8AVs/U/e4PB8EUbv+eB4YdWXgBdCsPVk6Xd0Bqex6XZ36zLM9rrYGRQStjw0A+atypU/1djXaKtLi154JroazpCa62RAqFIy4F8TaJKkP4=
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6607b31f-fde6-44fe-62fa-08d833a4ac73
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3573.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2020 09:49:23.6579
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4L69hHgESqWbrmVLv2oQNu8M31CuaVw0MmtkoCtTWQMzrJQNch8BkqrNJy0br82Q7xk5qcX2qWmJKGQh+z7RTg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3638
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 12:18:42PM +0300, Denis Efremov wrote:
-> 
-> 
-> On 7/28/20 5:19 PM, Peilin Ye wrote:
-> > raw_cmd_copyout() is potentially copying uninitialized kernel stack memory
-> > since it is initializing `cmd` by assignment, which may cause the compiler
-> > to leave uninitialized holes in this structure. Fix it by using memcpy()
-> > instead.
-> > 
-> > Cc: stable@vger.kernel.org
-> > Fixes: 2145e15e0557 ("floppy: don't write kernel-only members to FDRAWCMD ioctl output")
-> 
-> Nitpick, I would say this fix is not related to commit 2145e15e0557.
+mvneta has switched to phylink, so the comment should look
+like "We may have called phylink_speed_down before".
 
-I see, I will send a v2 soon. Thank you for reviewing the patch!
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+Since v1:
+  - drop patch2 which tries to avoid link flapping when changing mtu
+    I need more time on the change mtu refactoring.
 
-Peilin Ye
+ drivers/net/ethernet/marvell/mvneta.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+index 2c9277e73cef..c9b6b0f85bb0 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -3637,7 +3637,7 @@ static void mvneta_start_dev(struct mvneta_port *pp)
+ 
+ 	phylink_start(pp->phylink);
+ 
+-	/* We may have called phy_speed_down before */
++	/* We may have called phylink_speed_down before */
+ 	phylink_speed_up(pp->phylink);
+ 
+ 	netif_tx_start_all_queues(pp->dev);
+-- 
+2.28.0.rc0
+
