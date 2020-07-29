@@ -2,123 +2,95 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEF9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCE3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B57D220809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0768C20809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:34:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="fnf7yXZz"
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="PlHqBHQ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgG2Mdz (ORCPT
+        id S1726840AbgG2MeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:33:55 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.73]:48464 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726054AbgG2Mdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:33:55 -0400
+        Wed, 29 Jul 2020 08:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgG2MeW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 08:34:22 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE30AC061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 05:34:21 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a14so21503014wra.5
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 05:34:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fudan.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
-        Message-ID:MIME-Version:Content-Type:Content-Disposition; bh=ckL
-        fjXtDlNzfBaiEh1n2WcNgMFoH6IBrBoFHbV5jBXk=; b=fnf7yXZz1XG1VNx8A0G
-        P4HxGvbRGReDWbincy2f3kynybLSC3IMgsbUHPjD/qfWHFxTL31NniB634/rzCCi
-        oEJjjyakdrtR8A+77LWS4LFdp2MkciXGICA9ZFGcnRgzXTrEQ4fTEc52rD+0BW3L
-        HPTtyfYhnRNJbCvS7krRiVQc=
-Received: from xin-virtual-machine (unknown [111.192.143.50])
-        by app2 (Coremail) with SMTP id XQUFCgDHzbmebCFfDJqTAg--.8049S3;
-        Wed, 29 Jul 2020 20:33:35 +0800 (CST)
-Date:   Wed, 29 Jul 2020 20:33:34 +0800
-From:   Xin Xiong <xiongx18@fudan.edu.cn>
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Cc:     Xin Xiong <xiongx18@fudan.edu.cn>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>, yuanxzhang@fudan.edu.cn
-Subject: [PATCH] net/mlx5e: fix bpf_prog refcnt leaks in mlx5e_alloc_rq
-Message-ID: <20200729123334.GA6766@xin-virtual-machine>
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YIO25dsj9y1sacwjOVQU2qxiT1NxKYb20Ra0eQDCssQ=;
+        b=PlHqBHQ7oPTLAJXglbhBvrn0PuYZROIprcr6B/QbHZeFjyu7qu6UMil8qyc9i1KFRX
+         4Sn9y/qO05dOHTSuiEl4Kng8D/B7ichVSg+xyl9FvseMe6+FOeD+am00t9LREIG8DJZ4
+         g6rXerPW2bSYqNJdz/IRkaFLmlYQlJOZ+MjIA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YIO25dsj9y1sacwjOVQU2qxiT1NxKYb20Ra0eQDCssQ=;
+        b=Wx2utGLvf8aW2PrAcM1jivAHDeoKmI1cPo1DQ0xpE2h5k5QOJNyPsB0FL5EPNvHmSM
+         P5JfdB5BxizJlFalJCR2nPF21chYzpv+pIvz5GbCVE128EZCDQjIVWsP7FcVokyiMPFM
+         lZ1tYXDcwFkkiLHHYRpb6MktkzURMNnmwAEEFrjLxwsl8G8X/3mMTChbUo4c3d86o5JX
+         F6y/6PrGdYebkLGMlPCyVYDRnAhhq3l9peH7/pGYl5RRfkhlw/9Rf5ZKwA2LHNoXPX77
+         rkV7to1ruVKtSc7aUXUI20RwPszJBFuMs3pbkHjXhBpsFJPc/tewKRpvdbU9QeVPB1Vv
+         2oPw==
+X-Gm-Message-State: AOAM531w2hZR1wc86uOSjzRH6J9szpPE7HG31CeaSQLXGUTYKbacTvEo
+        RnGZJC+6ban3qDfIT+GUXOiPv3mPmuI60wbpMdF3NB7P
+X-Google-Smtp-Source: ABdhPJyQMzNtPjGIIXmXxDEeBBrskdO6q0ASFwn9TWVeoCeE/LyRiv4udOWG4lbzVXrsNEOujM1yAvCF/TlRit9CwN4=
+X-Received: by 2002:adf:f186:: with SMTP id h6mr30102581wro.144.1596026060446;
+ Wed, 29 Jul 2020 05:34:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-CM-TRANSID: XQUFCgDHzbmebCFfDJqTAg--.8049S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7AF1DCFy8JF1rJw1rGr45KFg_yoW8WF4Upr
-        47X3sFyrZ5ta4UJw4DAaykXa4rKan0vF1kWr1avayfZr4DAan5Ar9Ygry7uF1UGFy8Gw12
-        qws2kws8AFn5C3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v
-        4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK67AK6ryUMxAIw28IcxkI7VAKI48JMx
-        C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-        wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-        vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
-        0xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-        v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUewIDDUUUU
-X-CM-SenderInfo: arytiiqsuqiimz6i3vldqovvfxof0/
+References: <20200728100321.1691745-1-daniel@0x0f.com> <20200728100321.1691745-2-daniel@0x0f.com>
+ <20200728191842.GB2778962@bogus> <CAFr9PXkwpNAhQvOJFqLUm-uWoaH=nsNiq_y+OgTf8Z60i4RhRw@mail.gmail.com>
+ <CAK8P3a0-rZq_aJxWY2+009C91igzC4nHG7XJFwXkbB8bJBertA@mail.gmail.com>
+In-Reply-To: <CAK8P3a0-rZq_aJxWY2+009C91igzC4nHG7XJFwXkbB8bJBertA@mail.gmail.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Wed, 29 Jul 2020 21:34:24 +0900
+Message-ID: <CAFr9PXnuMCjhzYQWGBiw3ayDD36qrUc433DsSphyF5+tqetnNg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: arm: mstar: Add binding details for mstar,pmsleep
+To:     Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, SoC Team <soc@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function invokes bpf_prog_inc(), which increases the refcount of a
-bpf_prog object "rq->xdp_prog" if the object isn't NULL.
+Hi Arnd,
 
-The refcount leak issues take place in two error handling paths. When
-mlx5_wq_ll_create() or mlx5_wq_cyc_create() fails, the function simply
-returns the error code and forgets to drop the refcount increased
-earlier, causing a refcount leak of "rq->xdp_prog".
+On Wed, 29 Jul 2020 at 21:14, Arnd Bergmann <arnd@arndb.de> wrote:
+> > Does calling it "mstar,pmsleepv7" make more sense? I'm not sure what
+> > to call it really.
+>
+> Use the name of the oldest chip you know that supports it in there,
+> such as "mstar,msc313-pmsleep" if this one is specific to msc313.
 
-Fix this issue by jumping to the error handling path err_rq_wq_destroy
-when either function fails.
+That makes sense. I think the original patch got merged to soc/arm/newsoc.
+Should I recreate the series or create a new patch to do the corrections?
 
-Signed-off-by: Xin Xiong <xiongx18@fudan.edu.cn>
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Slightly off topic but I'm working on the series for the interrupt controller
+and I've just renamed it from mstar,msc313e-intc to mstar,v7intc.
+I originally called it msc313e because I only knew of that chip but the
+same controller is present at the same place in all of the chips so far.
+I guess I should probably rename it to mstar,msc313-intc to keep with
+the first chip it appeared in pattern?
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index a836a02a2116..8e1b1ab416d8 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -419,7 +419,7 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
- 		err = mlx5_wq_ll_create(mdev, &rqp->wq, rqc_wq, &rq->mpwqe.wq,
- 					&rq->wq_ctrl);
- 		if (err)
--			return err;
-+			goto err_rq_wq_destroy;
- 
- 		rq->mpwqe.wq.db = &rq->mpwqe.wq.db[MLX5_RCV_DBR];
- 
-@@ -470,7 +470,7 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
- 		err = mlx5_wq_cyc_create(mdev, &rqp->wq, rqc_wq, &rq->wqe.wq,
- 					 &rq->wq_ctrl);
- 		if (err)
--			return err;
-+			goto err_rq_wq_destroy;
- 
- 		rq->wqe.wq.db = &rq->wqe.wq.db[MLX5_RCV_DBR];
- 
--- 
-2.25.1
+Thanks,
 
+Daniel
