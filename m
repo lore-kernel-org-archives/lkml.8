@@ -2,144 +2,124 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E4BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B500207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C052083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:45:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="L/xA8fPm";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="HWYHAw9U"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="XaVnRFyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgG2Por (ORCPT
+        id S1727094AbgG2PpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:44:47 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:34838 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726502AbgG2Poq (ORCPT
+        Wed, 29 Jul 2020 11:45:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbgG2PpQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:44:46 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 445AA8EE207;
-        Wed, 29 Jul 2020 08:44:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1596037485;
-        bh=3mOIs2ifi3nTeb9BjuImOqvUaL8Iv8D1+iiZHrYapUU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=L/xA8fPmwryXUcwkoKaOIQykeQbgLmTup47RtrHu81/zNaG3Gzl3YCEKFJKIWgMPU
-         plCnLaFu9XP/zUHUXkDMaiP0II3pfZwrFrNwNXzIaaY5ZzCw/ukXTmdzifYIknFJAU
-         dfjlMLRzlnLURsr4OgwvkEjo3cvteL/jM5M8JGgQ=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id cEySqEXtdr8Z; Wed, 29 Jul 2020 08:44:45 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 4208A8EE100;
-        Wed, 29 Jul 2020 08:44:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1596037484;
-        bh=3mOIs2ifi3nTeb9BjuImOqvUaL8Iv8D1+iiZHrYapUU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=HWYHAw9UfcsTXYRSYP02AUyh84X9B2lk92U19rYJJcvEukkbWDiL1zNgeWI9opm/l
-         ST5q3a++TE8UqtAMoABHEitYaniGY/dHm6bFSDC0p19sMiu/FG2uQA3XR4azFz/fhq
-         fMIthf9k1Vz8hb4UNcO/mZIayMq9nR8IG7dKj38Q=
-Message-ID: <1596037482.4356.37.camel@HansenPartnership.com>
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Alan Stern <stern@rowland.harvard.edu>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-Date:   Wed, 29 Jul 2020 08:44:42 -0700
-In-Reply-To: <d9bb92e9-23fa-306f-c7f2-71a81ab28811@puri.sm>
-References: <20200706164135.GE704149@rowland.harvard.edu>
-         <d0ed766b-88b0-5ad5-9c10-a4c3b2f994e3@puri.sm>
-         <20200728200243.GA1511887@rowland.harvard.edu>
-         <f3958758-afce-8add-1692-2a3bbcc49f73@puri.sm>
-         <20200729143213.GC1530967@rowland.harvard.edu>
-         <1596033995.4356.15.camel@linux.ibm.com>
-         <1596034432.4356.19.camel@HansenPartnership.com>
-         <d9bb92e9-23fa-306f-c7f2-71a81ab28811@puri.sm>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 29 Jul 2020 11:45:16 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A7CFC0619D4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 08:45:16 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 3so3449477wmi.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 08:45:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=odKL8nfgi2JfYFNsaHMY4SKWdmff32MEW/xIQyAYpOU=;
+        b=XaVnRFyyLv/CDI3rNrvt+N1NR94GoD23fiy/1/aev0VHbn3oeX9+0gLViXcHzcPViC
+         mwlIFOWJmaj7nZtyvHYwX0VYgYAWhYlilB06hqnszYmsJEMA/ptUEBCYejYVctWNmLvG
+         DaXtxBbRu5szTpoi/tqJKw0GDefnpfkG2ef3NB7uRsoJKp358/WBuGwCaFgmhWSEt1Xb
+         TdyN1A3/uSX2bqsM9cPHzZ0isZY56UvuXLD7Dfz5VjSyrzzma3a0D2RYNurND6ap+y6s
+         vdzrI/4KXtoIAm5gIupf2DJq9ssRajx8xEWOiGD5gNisR6FFXhdyhHxyuvBdWbPxj3Rl
+         LPjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=odKL8nfgi2JfYFNsaHMY4SKWdmff32MEW/xIQyAYpOU=;
+        b=cMH96YgPuG8t252ryKIaO/yyg2mZHroUoV6Jk8/Fbbjz8CBEFCFOQctWdbiABswuzR
+         /iktOC9gKbZ+wASYdCHb6e6hz/XTqRPYXuGMJVbBCt6Zx4/FYkN12+ZXMK3RnHztgXF+
+         XA0TDnbFOuH1tjag4NOYW62USb/b7fbVf4WITqaWnn/e54HN5+msUqrtlGW81d4Yb53G
+         7pvbIlWd81sD+U6ofr4sw2I9gDKoydQ0OuKktnVO5p6DKjvt1t403+7rZiISLoXN+E0I
+         N1Ox2AyS02TPIjOjpnnD5Kvn6Sn+1eNrX/ntzgz8/2zjJszUWEStfNC3k5mLmQmF/MQY
+         QLtw==
+X-Gm-Message-State: AOAM532yV7si/Clz1UT5NF9Fh+gdvaJ0BlOyZvhfyBcL3logHRLP+FX5
+        hrucZNydMAU55RPWYs5HfM5VpA==
+X-Google-Smtp-Source: ABdhPJwJufUM+fr/ccstncgAq56W2HRh9FWgpXsZ5IRILScKbhvt1s8lTYaYBt7VHezKJF6mEIM+8w==
+X-Received: by 2002:a7b:c057:: with SMTP id u23mr8667635wmc.167.1596037515187;
+        Wed, 29 Jul 2020 08:45:15 -0700 (PDT)
+Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id k10sm5950967wrm.74.2020.07.29.08.45.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 08:45:14 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 2/4] ASoC: meson: axg-tdmin: fix g12a skew
+Date:   Wed, 29 Jul 2020 17:44:54 +0200
+Message-Id: <20200729154456.1983396-3-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200729154456.1983396-1-jbrunet@baylibre.com>
+References: <20200729154456.1983396-1-jbrunet@baylibre.com>
+MIME-Version: 1.0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-29 at 17:40 +0200, Martin Kepplinger wrote:
-> On 29.07.20 16:53, James Bottomley wrote:
-> > On Wed, 2020-07-29 at 07:46 -0700, James Bottomley wrote:
-> > > On Wed, 2020-07-29 at 10:32 -0400, Alan Stern wrote:
-[...]
-> > > > This error report comes from the SCSI layer, not the block
-> > > > layer.
-> > > 
-> > > That sense code means "NOT READY TO READY CHANGE, MEDIUM MAY HAVE
-> > > CHANGED" so it sounds like it something we should be
-> > > ignoring.  Usually this signals a problem, like you changed the
-> > > medium manually (ejected the CD).  But in this case you can tell
-> > > us to expect this by setting
-> > > 
-> > > sdev->expecting_cc_ua
-> > > 
-> > > And we'll retry.  I think you need to set this on all resumed
-> > > devices.
-> > 
-> > Actually, it's not quite that easy, we filter out this ASC/ASCQ
-> > combination from the check because we should never ignore medium
-> > might have changed events on running devices.  We could ignore it
-> > if we had a flag to say the power has been yanked (perhaps an
-> > additional sdev flag you set on resume) but we would still miss the
-> > case where you really had powered off the drive and then changed
-> > the media ... if you can regard this as the user's problem, then we
-> > might have a solution.
-> > 
-> > James
-> >  
-> 
-> oh I see what you mean now, thanks for the ellaboration.
-> 
-> if I do the following change, things all look normal and runtime pm
-> works. I'm not 100% sure if just setting expecting_cc_ua in resume()
-> is "correct" but that looks like it is what you're talking about:
-> 
-> (note that this is of course with the one block layer diff applied
-> that Alan posted a few emails back)
-> 
-> 
-> --- a/drivers/scsi/scsi_error.c
-> +++ b/drivers/scsi/scsi_error.c
-> @@ -554,16 +554,8 @@ int scsi_check_sense(struct scsi_cmnd *scmd)
->                  * so that we can deal with it there.
->                  */
->                 if (scmd->device->expecting_cc_ua) {
-> -                       /*
-> -                        * Because some device does not queue unit
-> -                        * attentions correctly, we carefully check
-> -                        * additional sense code and qualifier so as
-> -                        * not to squash media change unit attention.
-> -                        */
-> -                       if (sshdr.asc != 0x28 || sshdr.ascq != 0x00)
-> {
-> -                               scmd->device->expecting_cc_ua = 0;
-> -                               return NEEDS_RETRY;
-> -                       }
-> +                       scmd->device->expecting_cc_ua = 0;
-> +                       return NEEDS_RETRY;
+After carefully checking the result provided by the TDMIN on the g12a and
+sm1 SoC families, the TDMIN skew offset appears to be 3 instead of 2 on the
+axg.
 
-Well, yes, but you can't do this because it would lose us media change
-events in the non-suspend/resume case which we really don't want. 
-That's why I was suggesting a new flag.
+Fixes: f01bc67f58fd ("ASoC: meson: axg-tdm-formatter: rework quirks settings")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ sound/soc/meson/axg-tdmin.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-James
+diff --git a/sound/soc/meson/axg-tdmin.c b/sound/soc/meson/axg-tdmin.c
+index 973d4c02ef8d..3d002b4eb939 100644
+--- a/sound/soc/meson/axg-tdmin.c
++++ b/sound/soc/meson/axg-tdmin.c
+@@ -233,10 +233,26 @@ static const struct axg_tdm_formatter_driver axg_tdmin_drv = {
+ 	},
+ };
+ 
++static const struct axg_tdm_formatter_driver g12a_tdmin_drv = {
++	.component_drv	= &axg_tdmin_component_drv,
++	.regmap_cfg	= &axg_tdmin_regmap_cfg,
++	.ops		= &axg_tdmin_ops,
++	.quirks		= &(const struct axg_tdm_formatter_hw) {
++		.invert_sclk	= false,
++		.skew_offset	= 3,
++	},
++};
++
+ static const struct of_device_id axg_tdmin_of_match[] = {
+ 	{
+ 		.compatible = "amlogic,axg-tdmin",
+ 		.data = &axg_tdmin_drv,
++	}, {
++		.compatible = "amlogic,g12a-tdmin",
++		.data = &g12a_tdmin_drv,
++	}, {
++		.compatible = "amlogic,sm1-tdmin",
++		.data = &g12a_tdmin_drv,
+ 	}, {}
+ };
+ MODULE_DEVICE_TABLE(of, axg_tdmin_of_match);
+-- 
+2.25.4
 
