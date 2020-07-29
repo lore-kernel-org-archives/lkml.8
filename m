@@ -2,127 +2,82 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126D2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6F5C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF0B520838
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BEAE2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgG2JOS (ORCPT
+        id S1728078AbgG2JR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:14:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:48378 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbgG2JOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:14:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98600101E;
-        Wed, 29 Jul 2020 02:14:17 -0700 (PDT)
-Received: from localhost (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A2E43F718;
-        Wed, 29 Jul 2020 02:14:17 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 10:14:15 +0100
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/7] cpufreq: set invariance scale factor on
- transition end
-Message-ID: <20200729091405.GB12941@arm.com>
-References: <20200722093732.14297-1-ionela.voinescu@arm.com>
- <20200722093732.14297-3-ionela.voinescu@arm.com>
- <CAJZ5v0iiF75+POMF5oX8_NOBiLLqMQSYTTf-X0QoLAPV7fF0-g@mail.gmail.com>
+        Wed, 29 Jul 2020 05:17:56 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8850 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727914AbgG2JRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 05:17:55 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D9CD7C6CDDC368B2FDA7;
+        Wed, 29 Jul 2020 17:17:52 +0800 (CST)
+Received: from huawei.com (10.175.104.57) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 29 Jul 2020
+ 17:17:51 +0800
+From:   Li Heng <liheng40@huawei.com>
+To:     <sathya.prakash@broadcom.com>, <sreekanth.reddy@broadcom.com>,
+        <suganath-prabu.subramani@broadcom.com>
+CC:     <MPT-FusionLinux.pdl@broadcom.com>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] scsi: Remove unneeded cast from memory allocation
+Date:   Wed, 29 Jul 2020 17:19:14 +0800
+Message-ID: <1596014354-59935-1-git-send-email-liheng40@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0iiF75+POMF5oX8_NOBiLLqMQSYTTf-X0QoLAPV7fF0-g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.57]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 27 Jul 2020 at 15:52:41 (+0200), Rafael J. Wysocki wrote:
-> On Wed, Jul 22, 2020 at 11:38 AM Ionela Voinescu
-> <ionela.voinescu@arm.com> wrote:
-> >
-> > While the move of the invariance setter calls (arch_set_freq_scale())
-> > from cpufreq drivers to cpufreq core maintained the previous
-> > functionality for existing drivers that use target_index() and
-> > fast_switch() for frequency switching, it also gives the possibility
-> > of adding support for users of the target() callback, which is exploited
-> > here.
-> >
-> > To be noted that the target() callback has been flagged as deprecated
-> > since:
-> >
-> > commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
-> >
-> > It also doesn't have that many users:
-> >
-> >   cpufreq-nforce2.c:371:2:      .target = nforce2_target,
-> >   cppc_cpufreq.c:416:2:         .target = cppc_cpufreq_set_target,
-> >   gx-suspmod.c:439:2:           .target = cpufreq_gx_target,
-> >   pcc-cpufreq.c:573:2:          .target = pcc_cpufreq_target,
-> >
-> > Similarly to the path taken for target_index() calls in the cpufreq core
-> > during a frequency change, all of the drivers above will mark the end of a
-> > frequency change by a call to cpufreq_freq_transition_end().
-> >
-> > Therefore, cpufreq_freq_transition_end() can be used as the location for
-> > the arch_set_freq_scale() call to potentially inform the scheduler of the
-> > frequency change.
-> >
-> > This change maintains the previous functionality for the drivers that
-> > implement the target_index() callback, while also adding support for the
-> > few drivers that implement the deprecated target() callback.
-> >
-> > Two notes are worthwhile here:
-> >  - In __target_index(), cpufreq_freq_transition_end() is called only for
-> >    drivers that have synchronous notifications enabled. There is only one
-> >    driver that disables them,
-> >
-> >    drivers/cpufreq/powernow-k8.c:1142: .flags = CPUFREQ_ASYNC_NOTIFICATION,
-> >
-> >    which is deprecated.
-> >
-> >  - Despite marking a successful frequency change, many cpufreq drivers
-> >    will populate the new policy->cur with the new requested frequency,
-> >    although this might not be the one granted by the hardware.
-> >
-> >    Therefore, the call to arch_set_freq_scale() is a "best effort" one,
-> >    and it is up to the architecture if the new frequency is used in the
-> >    new frequency scale factor setting or eventually used by the scheduler.
-> >    The architecture is in a better position to decide if it has better
-> >    methods to obtain more accurate information regarding the current
-> >    frequency (for example the use of counters).
-> >
-[..]
+Remove casting the values returned by memory allocation function.
 
-> I would fold this patch into the previous one.
-> 
-> I don't see much reason for it to be separate and it looks like
-> folding it in would cause the previous patch to be simpler.
+Coccinelle emits WARNING:
 
-I kept it separate in this version as a proposal to move the call to
-cpufreq_freq_transition_end() and properly justify it in the commit
-message.
+./drivers/message/fusion/mptfc.c:766:17-30: WARNING: casting value returned by memory allocation function to (FCPortPage0_t *) is useless.
+./drivers/message/fusion/mptfc.c:907:17-30: WARNING: casting value returned by memory allocation function to (FCPortPage1_t *) is useless.
 
-I'll squash it into the previous one, as recommended.
+Signed-off-by: Li Heng <liheng40@huawei.com>
+---
+ drivers/message/fusion/mptfc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
-Ionela.
+diff --git a/drivers/message/fusion/mptfc.c b/drivers/message/fusion/mptfc.c
+index 4314a33..34ca9af 100644
+--- a/drivers/message/fusion/mptfc.c
++++ b/drivers/message/fusion/mptfc.c
+@@ -763,7 +763,7 @@ mptfc_GetFcPortPage0(MPT_ADAPTER *ioc, int portnum)
+ 
+ 	data_sz = hdr.PageLength * 4;
+ 	rc = -ENOMEM;
+-	ppage0_alloc = (FCPortPage0_t *) pci_alloc_consistent(ioc->pcidev, data_sz, &page0_dma);
++	ppage0_alloc = pci_alloc_consistent(ioc->pcidev, data_sz, &page0_dma);
+ 	if (ppage0_alloc) {
+ 
+  try_again:
+@@ -904,7 +904,7 @@ mptfc_GetFcPortPage1(MPT_ADAPTER *ioc, int portnum)
+ 		if (data_sz < sizeof(FCPortPage1_t))
+ 			data_sz = sizeof(FCPortPage1_t);
+ 
+-		page1_alloc = (FCPortPage1_t *) pci_alloc_consistent(ioc->pcidev,
++		page1_alloc = pci_alloc_consistent(ioc->pcidev,
+ 						data_sz,
+ 						&page1_dma);
+ 		if (!page1_alloc)
+-- 
+2.7.4
+
