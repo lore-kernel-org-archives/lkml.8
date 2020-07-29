@@ -2,118 +2,116 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72616C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02697C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5271920658
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC6420658
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:01:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgG2UAf (ORCPT
+        id S1726821AbgG2UBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:00:35 -0400
-Received: from mga05.intel.com ([192.55.52.43]:11104 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgG2UAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:00:34 -0400
-IronPort-SDR: HSyCi0ApK43FaJoyEu4DyFhi4qP7cvQYh0kuMm5wlsPI1ioGyNLZLIeUZNq426YPInjHLZ2gh2
- yLSFZ1RqF5Xg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="236355402"
-X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
-   d="scan'208";a="236355402"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 13:00:34 -0700
-IronPort-SDR: c5pCVcZ5j2g/cSL1l/HYgX8CAz4uicvS1sIoXCU5M0cDOny4XTNMkLskYbfy/bB5rWb2zSE9qt
- sIN/HCk5R20A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
-   d="scan'208";a="322663584"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Jul 2020 13:00:33 -0700
-Date:   Wed, 29 Jul 2020 13:00:33 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Shanbhogue, Vedvyas" <vedvyas.shanbhogue@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>, H Peter Anvin <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Li, Xiaoyao" <xiaoyao.li@intel.com>, x86 <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] x86/bus_lock: Enable bus lock detection
-Message-ID: <20200729200033.GJ27751@linux.intel.com>
-References: <1595021700-68460-1-git-send-email-fenghua.yu@intel.com>
- <20200729030232.GE5583@linux.intel.com>
- <e23b04a2adc54a5dbca48271987de822@intel.com>
- <20200729184614.GI27751@linux.intel.com>
- <20200729194259.GA318576@otcwcpicx6.sc.intel.com>
+        Wed, 29 Jul 2020 16:01:47 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:60099 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgG2UBq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 16:01:46 -0400
+Received: from mail-qv1-f45.google.com ([209.85.219.45]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M27ix-1k2o4n3dMn-002TvV; Wed, 29 Jul 2020 22:01:45 +0200
+Received: by mail-qv1-f45.google.com with SMTP id t6so6541682qvw.1;
+        Wed, 29 Jul 2020 13:01:44 -0700 (PDT)
+X-Gm-Message-State: AOAM532aeUg+92QPOwCYMfTp2hqcolJ7rsGt6aQu8w/CQyUkGBfiteA/
+        wePMQjV6OcpKkjLPbcHGW55lmJBdvNHrDpspJN0=
+X-Google-Smtp-Source: ABdhPJy0Ua6F8cJWKsPP2p9baaRfve0Dq+caOpEYZQuW5KpGIU4VwtaO5Yvv8AbCmTFZHyZTlC3sodaIaAmZei/ujVY=
+X-Received: by 2002:ad4:450e:: with SMTP id k14mr3013292qvu.211.1596052903435;
+ Wed, 29 Jul 2020 13:01:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729194259.GA318576@otcwcpicx6.sc.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200729160942.28867-1-krzk@kernel.org>
+In-Reply-To: <20200729160942.28867-1-krzk@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 29 Jul 2020 22:01:26 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a38VC5UD+1HHRFWnafM7ZLMc34Ay23FUCjjgiz46SCV=A@mail.gmail.com>
+Message-ID: <CAK8P3a38VC5UD+1HHRFWnafM7ZLMc34Ay23FUCjjgiz46SCV=A@mail.gmail.com>
+Subject: Re: [PATCH 0/7] ARM: samsung: Cleanup of various S3C bits
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Vincent Sanders <vince@simtec.co.uk>,
+        Simtec Linux Team <linux@simtec.co.uk>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        patches@opensource.cirrus.com,
+        linux-clk <linux-clk@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Sergio Prado <sergio.prado@e-labworks.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Cedric Roux <sed@free.fr>, Lihua Yao <ylhuajnu@outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Q8A7xviGqc7Fth6WK20wIRqSW7CFaj23ClHH9Hs3328Q502L4qu
+ 8Ygrz3T6QN2Mi6qOyEh2QodvgrqhOX5YoN8QXW9nenBsW85gWWwm0nNnE52I6tmS2LsAyAe
+ XG2DSr2tmzebrlTy8D+EBGQVIynWUG4Zgl0gZ6WzzOh5KenTv2R4u9qznuyaiUsrJbLu5P2
+ BErqnU8o1MBGlml/5DI4A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PJkfMKESGco=:wppo13eJj9pHLnh4I61X5y
+ mHS5aPCWr9C8kt6qvrmEQlq/hhUl0JntuIRl4ooGTKFuTYeFQbBJWEpBRnxVX4AuCrtYxfuTt
+ qaUieAG+L2Lh8eOO46mGL51oME3a/Pt3cYq3S4ClGHdewhKF4jjDM/yCrMXHWSL7GW43AgFZ4
+ hG9dQ/2fSzKU6+uI71ILcEySFtKXBu0bkrvriAZNmTHK3GBBaB+0XelHJNqM8pvnztorppTnw
+ 0dhOO1mEDODMYARlcs3xrkDUonRphgTg6brzfqjFY4UeIfa6in9JnB8C6klm27Jkhgl1zFxkH
+ sPbbB8kT0k8i4liJWdlNDBZfW+y6J3VQiOgccZjFRTMMUbVVVNfPD638EoF7nNXHNaAOZzHda
+ GBwvDXiF0fba23BfBQaA6OtkbEUVTWtw66TgrMpc6QohFO+cbBYqc7K5/CLP4OO5c3DjE1AGT
+ xr6rg2ANTr99ExHHbaMnpO+hH6H1qLYItwLHtU5U8RLuC2fLCfde6P652ohLwrA8+hLN2JzRl
+ KLIl+qt9pXYfh3Hu8wTbVzLERGeVEWWf5Gdrtfji5w/pL2tEi48xEzb5ZZL06GTbDGTeg+5jc
+ Aaefa5mu6FDDHBp0iPRrsUV//W4F8Qv+5fQ8nAfacEmDom38fw7CWaa5TQ0m6ireWXhqwBSTF
+ x62Hue/weQn9q9xcjJMcXhQ9iYHsexsRSGdF8dar9onYy03J2z8mxMf3JcC6UZw62Cu0T5SdQ
+ UJlF2rSzo1FB5i12XR9FCmfvqL2vGlWu3bWNl/QO5Bpl9vR5+vy2GAheydCO3RnHoKC+6UZgu
+ +ZfOpCRTSrBEz4BRpDMzF+x3IHta5ATPzPlj/Qu6//tqmUDc2Hx8IJzVHwC/j9kegC7CcLzKN
+ w2qbdry6GCcM8hYnAMz/q9dNgEge/uAgdqf+ltVaSCy+hZUrX90hOGOcFXePcFcs/U6AYpRU8
+ 8PymUBLLXFrG/QLIl854GkUpGv4qgIRtA9AG0MIKYx4PhXMvMlZYv
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 07:42:59PM +0000, Fenghua Yu wrote:
-> > Smushing the two into a single option is confusing, e.g. from the table
-> > below it's not at all clear what will happen if sld=fatal, both features
-> > are supported, and the kernel generates a split lock.
-> > 
-> > Given that both SLD (per-core, not architectural) and BLD (#DB recursion and
-> > inverted DR6 flag) have warts, it would be very nice to enable/disable them
-> > independently.  The lock to non-WB behavior for BLD may also be problematic,
-> > e.g. maybe it turns out that fixing drivers to avoid locks to non-WB isn't
-> > as straightforward as avoiding split locks.
-> 
-> But the two features are related if both of them are enabled in hardware:
-> If a split lock happens, SLD will generate #AC before instruction execution
-> and BLD will generate #DB after instruction execution.
-> 
-> The software needs to make them exclusive. The same kernel option reflects
-> the relationship and make them exclusive, e.g. "fatal" enables SLD and
-> disables BLD, "warn" does the other way.
+On Wed, Jul 29, 2020 at 6:11 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Hi,
+>
+> I tried to cleanup few warnings in S3C machine code which lead to
+> finding some bigger issues.
+>
+> Patches touch mostly the ARM Samsung machine code except patch #1 (clk)
+> and #5 (watchdog).  They are independent from each other, except
+> some conflicting lines.
+>
+> The last three patches would welcome some testing... as I did not
+> perform such (lack of S3C hardware).
 
-Why do they need to be exclusive?  We've already established that BLD catches
-things that SLD does not.  What's wrong with running sld=fatal and bld=ratelimit
-so that split locks never happen and kill applications, and non-WB locks are
-are ratelimited?
+I have an older series that I mean to repost. Please have a look at
+the s3c-multiplatform branch of
+git://git.kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git
 
-Sure, sld==warn with bld!=off is a bit silly, but the kernel can easily handle
-that particular case.
+The patches in there need to be rebased on a newer kernel, which
+should be easy, but they will conflict with your work. If there is
+anything in there you can easily pick up into your series, please
+do so.
 
-> If using two different kernel options, the user needs to give right options
-> to make both work, e.g. can the user give this combination
-> "split_lock_detect=fatal bus_lock_detect=warn"? What does the combination
-> mean?
-
-Split locks are fatal, non-WB locks are logged but not fatal.
-
-> There could be many combinations of the two options, some of them
-> are meaningful and some of them aren't. Maintaining the combinations is
-> unnecessary complex, right?
-
-Honestly, it seems less complex than deciphering the resulting behavior from
-that table.
-
-  sld=off|warn|fatal
-  bld=off|warn|ratelimit
-
-As above, sld then could become
-
-  if (sld == warn && bld != off) {
-          pr_warn("disabling SLD in favor of BLD\n");
-          sld = off;
-  }
-
-Everything else should simply work.  The necessary refactoring for SLD should
-be minimial as well.
+       Arnd
