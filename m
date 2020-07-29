@@ -2,100 +2,97 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28776C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F12C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C6220829
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8756B207F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596063127;
-	bh=lzsxfpDng3IN/YT0VQwa+MpZyW3DuOOoDwauH2Jinns=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=pS0EEuqDdGBzE7WSDCUn3qUrdZPunM1UKQ27FOqNVPulcd4Aid1CJOk61KLKjzYnP
-	 EykuOPMw/RY0spU4Tr6Oxa41w5P2xZ6XSLuAm78fAOOgM4rT8DBZUibWuqOTzi7YgE
-	 BkKYF27zJMKME1FNaU80aNtGkNCrlSm4pPKAgEUA=
+	s=default; t=1596063226;
+	bh=cEibLL/bXDofHAoCU9s5MewlMnFquDXY+eJhqMB4Jwc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=sXeJM5FlT6GV1gERVM4tYRAN0F+0Qyj5VCmCDONIo8n+ZNV9yU76gsvn1Qvk/wD5r
+	 8iI66V0qHppCWt3Vd3ajC3TIIqp0EspgNMdeNlFA/Y5UydbElGP3J2CAAdhxtLf+t5
+	 iCNwRiF6gLlzbsC5H5mRDlX4Z/Mgfg+aoLRL4Hsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbgG2WwF (ORCPT
+        id S1727992AbgG2Wxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 18:52:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40920 "EHLO mail.kernel.org"
+        Wed, 29 Jul 2020 18:53:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726709AbgG2WwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 18:52:05 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        id S1726876AbgG2Wxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 18:53:44 -0400
+Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3639D207E8;
-        Wed, 29 Jul 2020 22:52:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1121C207E8;
+        Wed, 29 Jul 2020 22:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596063124;
-        bh=lzsxfpDng3IN/YT0VQwa+MpZyW3DuOOoDwauH2Jinns=;
-        h=Date:From:To:Cc:Subject:From;
-        b=IcBxDhJcOO80LxJIeOrnwXy/+Wjv8LOQ9iAG3+DsG5DKFJOkjPgnFLcDXSaAB33hS
-         3m9LlV00zIRuKCOjqDkkNnzJ43RcJ4mciS3bjfXoCAW5MJnA9I8ypFzsT6y511Ihey
-         RrLHk38gytyLIUupLbBwxBSFdPmywNTWOeWlFcXk=
-Date:   Wed, 29 Jul 2020 17:58:03 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] mlxsw: spectrum_cnt: Use flex_array_size() helper in
- memcpy()
-Message-ID: <20200729225803.GA15866@embeddedor>
+        s=default; t=1596063224;
+        bh=cEibLL/bXDofHAoCU9s5MewlMnFquDXY+eJhqMB4Jwc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=gICzHMTZ63HFESjZa4lR45zvcawxtQsOxXbEx9ppm7AwW1lm/JW9Dn4atLwDoelN4
+         8JQySGsIaVR54ca6K1H0thLiBZUnZ6YZFTDPbl4zHE1CjzZHmsRZcPAVm9oS4AnAJh
+         fJbACZFUMFoVraUfXYtCuk6uo3zR6vZ1izZwdyuQ=
+Date:   Wed, 29 Jul 2020 17:53:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Move pci_info() after pci_fixup_device() in
+ pci_setup_device()
+Message-ID: <20200729225341.GA1973599@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1595833615-8049-1-git-send-email-yangtiezhu@loongson.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the flex_array_size() helper to calculate the size of a
-flexible array member within an enclosing structure.
+On Mon, Jul 27, 2020 at 03:06:55PM +0800, Tiezhu Yang wrote:
+> In the current code, we can not see the PCI info after fixup which is
+> correct to reflect the reality, it is better to move pci_info() after
+> pci_fixup_device() in pci_setup_device().
+> 
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-This helper offers defense-in-depth against potential integer
-overflows, while at the same time makes it explicitly clear that
-we are dealing witha flexible array member.
+Applied to pci/enumeration for v5.9, thanks!
 
-Also, remove unnecessary pointer identifier sub_pool.
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/ethernet/mellanox/mlxsw/spectrum_cnt.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_cnt.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_cnt.c
-index 7974982533b5..b65b93a2b9bc 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_cnt.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_cnt.c
-@@ -121,7 +121,6 @@ int mlxsw_sp_counter_pool_init(struct mlxsw_sp *mlxsw_sp)
- {
- 	unsigned int sub_pools_count = ARRAY_SIZE(mlxsw_sp_counter_sub_pools);
- 	struct devlink *devlink = priv_to_devlink(mlxsw_sp->core);
--	struct mlxsw_sp_counter_sub_pool *sub_pool;
- 	struct mlxsw_sp_counter_pool *pool;
- 	unsigned int map_size;
- 	int err;
-@@ -131,9 +130,9 @@ int mlxsw_sp_counter_pool_init(struct mlxsw_sp *mlxsw_sp)
- 	if (!pool)
- 		return -ENOMEM;
- 	mlxsw_sp->counter_pool = pool;
--	memcpy(pool->sub_pools, mlxsw_sp_counter_sub_pools,
--	       sub_pools_count * sizeof(*sub_pool));
- 	pool->sub_pools_count = sub_pools_count;
-+	memcpy(pool->sub_pools, mlxsw_sp_counter_sub_pools,
-+	       flex_array_size(pool, sub_pools, pool->sub_pools_count));
- 	spin_lock_init(&pool->counter_pool_lock);
- 	atomic_set(&pool->active_entries_count, 0);
- 
--- 
-2.27.0
-
+> ---
+>  drivers/pci/probe.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 2f66988..7c046aed 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1802,9 +1802,6 @@ int pci_setup_device(struct pci_dev *dev)
+>  	dev->revision = class & 0xff;
+>  	dev->class = class >> 8;		    /* upper 3 bytes */
+>  
+> -	pci_info(dev, "[%04x:%04x] type %02x class %#08x\n",
+> -		   dev->vendor, dev->device, dev->hdr_type, dev->class);
+> -
+>  	if (pci_early_dump)
+>  		early_dump_pci_device(dev);
+>  
+> @@ -1822,6 +1819,9 @@ int pci_setup_device(struct pci_dev *dev)
+>  	/* Early fixups, before probing the BARs */
+>  	pci_fixup_device(pci_fixup_early, dev);
+>  
+> +	pci_info(dev, "[%04x:%04x] type %02x class %#08x\n",
+> +		 dev->vendor, dev->device, dev->hdr_type, dev->class);
+> +
+>  	/* Device class may be changed after fixup */
+>  	class = dev->class >> 8;
+>  
+> -- 
+> 2.1.0
+> 
