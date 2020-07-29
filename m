@@ -2,128 +2,89 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B9FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B68C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82E582070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6F51206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:05:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lh3i7c+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgG2HCy (ORCPT
+        id S1727115AbgG2HFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:02:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37728 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726314AbgG2HCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:02:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E8C71AB55;
-        Wed, 29 Jul 2020 07:03:02 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     b.zolnierkie@samsung.com
-Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        =?UTF-8?q?=E5=BC=A0=E4=BA=91=E6=B5=B7?= <zhangyunhai@nsfocus.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Kyungtae Kim <kt0755@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <greg@kroah.com>, Solar Designer <solar@openwall.com>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Security Officers <security@kernel.org>,
-        linux-distros@vs.openwall.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org
-Subject: [PATCH] vgacon: fix out of bounds write to the scrollback buffer
-Date:   Wed, 29 Jul 2020 09:02:49 +0200
-Message-Id: <20200729070249.20892-1-jslaby@suse.cz>
-X-Mailer: git-send-email 2.28.0
+        Wed, 29 Jul 2020 03:05:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgG2HFb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 03:05:31 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC49BC061794;
+        Wed, 29 Jul 2020 00:05:30 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id l12so2692575pgt.13;
+        Wed, 29 Jul 2020 00:05:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aqneD3uac2LdOmEkTebU7/iHb0Bb9C+xYvrOoegSBgs=;
+        b=Lh3i7c+OL3d+WLkPoNum5UxxmjDrhR7GDKRz6sULoHyatpZS2MPkG9So13ntBRx7vY
+         Ceyk6+qTG/biB3GeJ1fr+xMwbIN4uXvFksnueRi9RYeLaWN+wdeq+on+DX4NjbbKTfqZ
+         vBbQeTn43whAKfi8uNc4FsePsP8Q0l7xpi9kB2fRfzyYHKP7/VNfmBXFktwyafjt0lqx
+         cLSkpuZAewmbzaJhUhkGHDN6rzOrclI5xZMHEmAdzGmC0iB+knOpFr3FI73kM0KbaXvn
+         /SRU8m1xO/bi525c8tfsyb7nRtEZrLShkV2cqgd58TE8OK+v0ZNZUBcbFeti8CIp87GY
+         sakg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aqneD3uac2LdOmEkTebU7/iHb0Bb9C+xYvrOoegSBgs=;
+        b=WI7oM8aaMij8/mNCzSRuB5Dzp3aKgf3A7CnkMssG5b+/PLYKLtJB+5n+TuDdeYoTaB
+         8vHMaXNg6OqaRI0o1nNilGE6LO+O/zQmtvKOcYpNW2nEIJVG/HscFFhlKlgfsyAI0Afc
+         ST3N1U+jruKTlZvS2uVT8g0aDrExiLeNu6UBXYO66NEl4S1u9vo0XmAJz1gxiygSZ6wc
+         M5wpPhSsZosfu9+awaSJaT9SbLLRzA0+bPpj6/xvGAt04OcgH/3bGRU8ado/1bcrvZvQ
+         I49usvEgWPCnc+2XZCLaUAML/i7ligoW/4hJ6DZypLeeBNugSffdm4blg6SaRk5dDH65
+         7tqQ==
+X-Gm-Message-State: AOAM530oDSGwZ5bkuM0vUEANIwlz9mv9/y8xYJw8JwkBZE872m0I8zWQ
+        8pZ7Af+BSowtftv+ESTuXaqf/m6p+cyLNudo6mo=
+X-Google-Smtp-Source: ABdhPJyk6o8rBmKoUdAMTmnz/y0G9FAdd8Efbgcb4Gh9SbYuQB7jrAq58GKL82gQqlt6ZSrBU6EBHu/xHQRRLV+ACfo=
+X-Received: by 2002:a63:ce41:: with SMTP id r1mr28668169pgi.203.1596006330322;
+ Wed, 29 Jul 2020 00:05:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200729003243.32097-1-b18007@students.iitmandi.ac.in>
+In-Reply-To: <20200729003243.32097-1-b18007@students.iitmandi.ac.in>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 29 Jul 2020 10:05:14 +0300
+Message-ID: <CAHp75VcmMf5dt7mu9N0C=6Rej-WzZ0EpzntHYCQkgNLVZkPbgg@mail.gmail.com>
+Subject: Re: [PATCH] Staging : iio : Fixed a punctuation and a spelling mistake.
+To:     Ankit Baluni <b18007@students.iitmandi.ac.in>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current vgacon's scroll up implementation uses a circural buffer
-in vgacon_scrollback_cur. It always advances tail to prepare it for the
-next write and caps it to zero if the next ->vc_size_row bytes won't fit.
+On Wed, Jul 29, 2020 at 3:34 AM Ankit Baluni
+<b18007@students.iitmandi.ac.in> wrote:
+>
+> Added a missing comma and changed 'it it useful' to 'it is useful'.
 
-But when we change the VT size (e.g. by VT_RESIZE) in the meantime, the new
-line might not fit to the end of the scrollback buffer in the next
-attempt to scroll. This leads to various crashes as
-vgacon_scrollback_update writes out of the buffer:
- BUG: unable to handle page fault for address: ffffc900001752a0
- #PF: supervisor write access in kernel mode
- #PF: error_code(0x0002) - not-present page
- RIP: 0010:mutex_unlock+0x13/0x30
-...
- Call Trace:
-  n_tty_write+0x1a0/0x4d0
-  tty_write+0x1a0/0x2e0
+Please, drop spaces before : in the subject line. In all patches you
+submitted there is such an issue.
 
-Or to KASAN reports:
-BUG: KASAN: slab-out-of-bounds in vgacon_scroll+0x57a/0x8ed
-
-So check whether the line fits in the buffer and wrap if needed. Do it
-before the loop as console_sem is held and ->vc_size_row cannot change
-during the execution of vgacon_scrollback_cur. If it does change, we
-need to ensure it does not change elsewhere, not here.
-
-Also, we do not split the write of a line into chunks as that would
-break the consumers of the buffer. They expect ->cnt, ->tail and ->size
-to be in harmony and advanced by ->vc_size_row.
-
-I found few reports of this in the past, some with patches included,
-some even 2 years old:
-https://lore.kernel.org/lkml/CAEAjamsJnG-=TSOwgRbbb3B9Z-PA63oWmNPoKYWQ=Z=+X49akg@mail.gmail.com/
-https://lore.kernel.org/lkml/1589336932-35508-1-git-send-email-yangyingliang@huawei.com/
-
-This fixes CVE-2020-14331.
-
-Big thanks to guys mentioned in the Reported-and-debugged-by lines below
-who actually found the root cause.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Reported-and-debugged-by: 张云海 <zhangyunhai@nsfocus.com>
-Reported-and-debugged-by: Yang Yingliang <yangyingliang@huawei.com>
-Reported-by: Kyungtae Kim <kt0755@gmail.com>
-Fixes: 15bdab959c9b ([PATCH] vgacon: Add support for soft scrollback)
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Greg KH <greg@kroah.com>
-Cc: Solar Designer <solar@openwall.com>
-Cc: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Cc: Anthony Liguori <aliguori@amazon.com>
-Cc: Security Officers <security@kernel.org>
-Cc: linux-distros@vs.openwall.org
-Cc: Yang Yingliang <yangyingliang@huawei.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-fbdev@vger.kernel.org
----
- drivers/video/console/vgacon.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/video/console/vgacon.c b/drivers/video/console/vgacon.c
-index f0f3d573f848..13194bb246f8 100644
---- a/drivers/video/console/vgacon.c
-+++ b/drivers/video/console/vgacon.c
-@@ -250,6 +250,11 @@ static void vgacon_scrollback_update(struct vc_data *c, int t, int count)
- 
- 	p = (void *) (c->vc_origin + t * c->vc_size_row);
- 
-+	/* vc_size_row might have changed by VT_RESIZE in the meantime */
-+	if ((vgacon_scrollback_cur->tail + c->vc_size_row) >=
-+			vgacon_scrollback_cur->size)
-+		vgacon_scrollback_cur->tail = 0;
-+
- 	while (count--) {
- 		scr_memcpyw(vgacon_scrollback_cur->data +
- 			    vgacon_scrollback_cur->tail,
 -- 
-2.28.0
-
+With Best Regards,
+Andy Shevchenko
