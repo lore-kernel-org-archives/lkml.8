@@ -2,116 +2,110 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B517C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DDDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40098207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BF9207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbgG2Ps1 convert rfc822-to-8bit (ORCPT
+        id S1726968AbgG2PtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:48:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbgG2PsZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:48:25 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1FB3C0619D2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 08:48:24 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k0oJB-0001wi-1O; Wed, 29 Jul 2020 17:47:57 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k0oJ5-0005Bq-Cr; Wed, 29 Jul 2020 17:47:51 +0200
-Message-ID: <0cdecff564215de6711ca04e063fa696a160fad9.camel@pengutronix.de>
-Subject: Re: [PATCH V3 3/3] pci: imx: Select RESET_IMX7 by default
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Rob Herring <robh@kernel.org>, Anson Huang <Anson.Huang@nxp.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        Wed, 29 Jul 2020 11:49:09 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40736 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726365AbgG2PtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 11:49:09 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EEFA4C45F786571383A1;
+        Wed, 29 Jul 2020 23:49:06 +0800 (CST)
+Received: from kernelci-master.huawei.com (10.175.101.6) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 29 Jul 2020 23:49:00 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Hulk Robot <hulkci@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yang-Leo Li <leoyang.li@nxp.com>, Vinod <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Dilip Kota <eswara.kota@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        Joakim Zhang <qiangqing.zhang@nxp.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Date:   Wed, 29 Jul 2020 17:47:51 +0200
-In-Reply-To: <CAL_JsqLXGduym51-Ej8Td4yOyP-UfGP-WCh2xeP_V90Yabm4XA@mail.gmail.com>
-References: <1595254921-26050-1-git-send-email-Anson.Huang@nxp.com>
-         <1595254921-26050-3-git-send-email-Anson.Huang@nxp.com>
-         <CAL_JsqLXGduym51-Ej8Td4yOyP-UfGP-WCh2xeP_V90Yabm4XA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] irqchip/imx-intmux: Fix irqdata regs save in imx_intmux_runtime_suspend()
+Date:   Wed, 29 Jul 2020 23:58:49 +0800
+Message-ID: <20200729155849.33919-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.175.101.6]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-29 at 09:26 -0600, Rob Herring wrote:
-> On Mon, Jul 20, 2020 at 8:26 AM Anson Huang <Anson.Huang@nxp.com> wrote:
-> > i.MX7 reset driver now supports module build and it is no longer
-> > built in by default, so i.MX PCI driver needs to select it explicitly
-> > due to it is NOT supporting loadable module currently.
-> > 
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> > No change.
-> > ---
-> >  drivers/pci/controller/dwc/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > index 044a376..bcf63ce 100644
-> > --- a/drivers/pci/controller/dwc/Kconfig
-> > +++ b/drivers/pci/controller/dwc/Kconfig
-> > @@ -90,6 +90,7 @@ config PCI_EXYNOS
-> > 
-> >  config PCI_IMX6
-> >         bool "Freescale i.MX6/7/8 PCIe controller"
-> > +       select RESET_IMX7
-> 
-> This will break as select will not cause all of RESET_IMX7's
-> dependencies to be met. It also doesn't scale. Are you going to do the
-> same thing for clocks, pinctrl, gpio, etc.?
-> 
-> You should make the PCI driver work as a module.
+Gcc report warning as follows:
 
-Oh, also PCI_IMX6 is used on (surprise) i.MX6, which doesn't need
-RESET_IMX7 at all.
+drivers/irqchip/irq-imx-intmux.c:316:29: warning:
+ variable 'irqchip_data' set but not used [-Wunused-but-set-variable]
+  316 |  struct intmux_irqchip_data irqchip_data;
+      |                             ^~~~~~~~~~~~
 
-How about hiding the RESET_IMX7 option and setting it default y if
-PCI_IMX6 is enabled, as an interim solution?
+irqdata regs is stored to this variable on the stack in
+imx_intmux_runtime_suspend(), which means a nop. this commit
+fix to save regs to the right place.
 
-regards
-Philipp
+Fixes: bb403111e017 ("irqchip/imx-intmux: Implement intmux runtime power management")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ drivers/irqchip/irq-imx-intmux.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/irqchip/irq-imx-intmux.c b/drivers/irqchip/irq-imx-intmux.c
+index 4c9e40d193d6..e35b7b09c3ab 100644
+--- a/drivers/irqchip/irq-imx-intmux.c
++++ b/drivers/irqchip/irq-imx-intmux.c
+@@ -313,12 +313,12 @@ static int imx_intmux_remove(struct platform_device *pdev)
+ static int imx_intmux_runtime_suspend(struct device *dev)
+ {
+ 	struct intmux_data *data = dev_get_drvdata(dev);
+-	struct intmux_irqchip_data irqchip_data;
++	struct intmux_irqchip_data *irqchip_data;
+ 	int i;
+ 
+ 	for (i = 0; i < data->channum; i++) {
+-		irqchip_data = data->irqchip_data[i];
+-		irqchip_data.saved_reg = readl_relaxed(data->regs + CHANIER(i));
++		irqchip_data = &data->irqchip_data[i];
++		irqchip_data->saved_reg = readl_relaxed(data->regs + CHANIER(i));
+ 	}
+ 
+ 	clk_disable_unprepare(data->ipg_clk);
+@@ -329,7 +329,7 @@ static int imx_intmux_runtime_suspend(struct device *dev)
+ static int imx_intmux_runtime_resume(struct device *dev)
+ {
+ 	struct intmux_data *data = dev_get_drvdata(dev);
+-	struct intmux_irqchip_data irqchip_data;
++	struct intmux_irqchip_data *irqchip_data;
+ 	int ret, i;
+ 
+ 	ret = clk_prepare_enable(data->ipg_clk);
+@@ -339,8 +339,8 @@ static int imx_intmux_runtime_resume(struct device *dev)
+ 	}
+ 
+ 	for (i = 0; i < data->channum; i++) {
+-		irqchip_data = data->irqchip_data[i];
+-		writel_relaxed(irqchip_data.saved_reg, data->regs + CHANIER(i));
++		irqchip_data = &data->irqchip_data[i];
++		writel_relaxed(irqchip_data->saved_reg, data->regs + CHANIER(i));
+ 	}
+ 
+ 	return 0;
+
