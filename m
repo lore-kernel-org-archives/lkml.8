@@ -7,224 +7,160 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABDFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED970C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B75092070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D39C42070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:24:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731077AbgG2CYr (ORCPT
+        id S1731111AbgG2CYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 Jul 2020 22:24:49 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:47326 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730901AbgG2CYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Jul 2020 22:24:47 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40162 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731001AbgG2CYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 22:24:46 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 68114B1E453C3116F82C;
-        Wed, 29 Jul 2020 10:24:45 +0800 (CST)
-Received: from huawei.com (10.175.112.208) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Wed, 29 Jul 2020
- 10:24:38 +0800
-From:   Xu Qiang <xuqiang36@huawei.com>
-To:     <rodrigosiqueiramelo@gmail.com>, <hamohammed.sa@gmail.com>,
-        <daniel@ffwll.ch>, <airlied@linux.ie>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <lizefan@huawei.com>, <rui.xiang@huawei.com>
-Subject: [PATCH] drm/vkms: Fix soft lockup.
-Date:   Wed, 29 Jul 2020 02:23:15 +0000
-Message-ID: <20200729022315.18716-1-xuqiang36@huawei.com>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.112.208]
-X-CFilter-Loop: Reflected
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DAA71200100;
+        Wed, 29 Jul 2020 04:24:44 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 90D1E200D82;
+        Wed, 29 Jul 2020 04:24:40 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3B70B402DF;
+        Wed, 29 Jul 2020 04:24:35 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     wim@linux-watchdog.org, linux@roeck-us.net, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/2] watchdog: imx7ulp: Strictly follow the sequence for wdog operations
+Date:   Wed, 29 Jul 2020 10:20:26 +0800
+Message-Id: <1595989227-24700-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A soft deadlock occurs when call hrtimer_cancel in softirq context:
+According to reference manual, the i.MX7ULP WDOG's operations should
+follow below sequence:
 
-	a) The main frequency of the machine is very slow
-	b) output->period_ns is very small, even only 1 ns
+1. disable global interrupts;
+2. unlock the wdog and wait unlock bit set;
+3. reconfigure the wdog and wait for reconfiguration bit set;
+4. enabel global interrupts.
 
-The problem can be solved in the following way: Setting a hrtimer exit flag
-in the vkms_disable_vblank function and checking the flag in the
-vkms_vblank_simulate function. If the flag is set, the hrtimer is not added
-to hrtimer queue again,the hrtimer_cancel function can exit quickly
-without deadlock.
+Strictly follow the recommended sequence can make it more robust.
 
-watchdog: BUG: soft lockup - CPU#2 stuck for 134s! [syz-executor.2:18027]
-Modules linked in:
-CPU: 2 PID: 18027 Comm: syz-executor.2 Tainted: G        W         5.8.0-rc2-csan #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-RIP: 0010:csd_lock_wait kernel/smp.c:108 [inline]
-RIP: 0010:smp_call_function_many_cond+0x40c/0x470 kernel/smp.c:555
-RSP: 0018:ffffc900028d3a88 EFLAGS: 00000297
-RAX: 0000000000000002 RBX: ffff888237cacc80 RCX: ffffffff813240fc
-RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: 0000000000000001 R08: ffff8881f497d000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000100 R12: ffff888237cf6fc0
-R13: 0000000000000003 R14: ffff888237cacc88 R15: 0000000000000001
-FS:  00007fa6314a9700(0000) GS:ffff888237c80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000513c80 CR3: 00000001e3df3002 CR4: 00000000000626e0
-Call Trace:
- smp_call_function_many kernel/smp.c:577 [inline]
- smp_call_function+0x40/0x80 kernel/smp.c:599
- on_each_cpu+0x2a/0xc0 kernel/smp.c:717
- __purge_vmap_area_lazy+0x7c/0xbc0 mm/vmalloc.c:1367
- _vm_unmap_aliases.part.0+0x126/0x180 mm/vmalloc.c:1800
- _vm_unmap_aliases mm/vmalloc.c:1769 [inline]
- vm_unmap_aliases+0x2f/0x40 mm/vmalloc.c:1823
- change_page_attr_set_clr+0x10a/0x4a0 arch/x86/mm/pat/set_memory.c:1732
- change_page_attr_clear arch/x86/mm/pat/set_memory.c:1789 [inline]
- set_memory_ro+0x2b/0x40 arch/x86/mm/pat/set_memory.c:1935
- bpf_jit_binary_lock_ro include/linux/filter.h:815 [inline]
- bpf_int_jit_compile+0x54f/0x663 arch/x86/net/bpf_jit_comp.c:1929
- bpf_prog_select_runtime+0x1cc/0x2c0 kernel/bpf/core.c:1807
- bpf_migrate_filter net/core/filter.c:1264 [inline]
- bpf_prepare_filter net/core/filter.c:1312 [inline]
- bpf_prepare_filter+0x518/0x620 net/core/filter.c:1278
- __get_filter+0x107/0x160 net/core/filter.c:1481
- sk_attach_filter+0x19/0xa0 net/core/filter.c:1496
- sock_setsockopt+0x1208/0x1230 net/core/sock.c:1080
- __sys_setsockopt+0x248/0x270 net/socket.c:2123
- __do_sys_setsockopt net/socket.c:2143 [inline]
- __se_sys_setsockopt net/socket.c:2140 [inline]
- __x64_sys_setsockopt+0x22/0x30 net/socket.c:2140
- do_syscall_64+0x48/0xb0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-Sending NMI from CPU 2 to CPUs 0-1,3-5:
-NMI backtrace for cpu 4 skipped: idling at native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:60
-NMI backtrace for cpu 0 skipped: idling at native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:60
-NMI backtrace for cpu 1
-NMI backtrace for cpu 3
-CPU: 3 PID: 0 Comm: swapper/3 Tainted: G        W         5.8.0-rc2-csan #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-RIP: 0010:preempt_count arch/x86/include/asm/preempt.h:26 [inline]
-RIP: 0010:preempt_count_sub+0xa/0x90 kernel/sched/core.c:3874
-RSP: 0018:ffffc9000012cdd0 EFLAGS: 00000046
-RAX: 0000000000000001 RBX: ffff88822ecb8fb0 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000086 RDI: 0000000000000001
-RBP: ffff888237d5edc0 R08: ffff888236ddc000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffffffff
-R13: 0000000000000086 R14: ffff888237d5edc0 R15: ffffffff85bc6d60
-FS:  0000000000000000(0000) GS:ffff888237cc0000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f35cc47adb8 CR3: 0000000005a23006 CR4: 00000000000626e0
-Call Trace:
- <IRQ>
- __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:161 [inline]
- _raw_spin_unlock_irqrestore+0x2f/0x50 kernel/locking/spinlock.c:191
- unlock_hrtimer_base kernel/time/hrtimer.c:898 [inline]
- hrtimer_try_to_cancel kernel/time/hrtimer.c:1171 [inline]
- hrtimer_try_to_cancel+0xbd/0x1b0 kernel/time/hrtimer.c:1151
- hrtimer_cancel+0x13/0x40 kernel/time/hrtimer.c:1278
- __disable_vblank drivers/gpu/drm/drm_vblank.c:429 [inline]
- drm_vblank_disable_and_save+0x122/0x140 drivers/gpu/drm/drm_vblank.c:470
- vblank_disable_fn+0x96/0xa0 drivers/gpu/drm/drm_vblank.c:487
- call_timer_fn+0x3a/0x230 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0x2b8/0x840 kernel/time/timer.c:1786
- __do_softirq+0x118/0x344 kernel/softirq.c:292
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0x5a/0x70 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:387 [inline]
- __irq_exit_rcu kernel/softirq.c:417 [inline]
- irq_exit_rcu+0xb1/0xd0 kernel/softirq.c:429
- sysvec_apic_timer_interrupt+0x42/0xd0 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:596
-------------[ cut here ]------------
-WARNING: CPU: 5 PID: 8121 at drivers/gpu/drm/vkms/vkms_crtc.c:21 vkms_vblank_simulate+0x19a/0x1b0 drivers/gpu/drm/vkms/vkms_crtc.c:21
-Modules linked in:
-CPU: 5 PID: 8121 Comm: syslog-ng Tainted: G        W         5.8.0-rc2-csan #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-RIP: 0010:vkms_vblank_simulate+0x19a/0x1b0 drivers/gpu/drm/vkms/vkms_crtc.c:21
-RSP: 0018:ffffc90000184ee8 EFLAGS: 00010046
-RAX: ffff88822864a080 RBX: ffff88822ecb8fb0 RCX: ffffffff826cd2b0
-RDX: 0000000080010000 RSI: ffffffff826cd40a RDI: 0000000000000007
-RBP: 00000000001f058d R08: ffff88822864a080 R09: 7fffffffffffffff
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff88822ecb8630
-R13: 0000000000000000 R14: 0000017998a35917 R15: ffff888237d5ed80
-FS:  00007f8dcbde0700(0000) GS:ffff888237d40000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffff600400 CR3: 000000022575f002 CR4: 00000000000626e0
-Call Trace:
- <IRQ>
- __run_hrtimer kernel/time/hrtimer.c:1520 [inline]
- __hrtimer_run_queues+0x14c/0x410 kernel/time/hrtimer.c:1584
- hrtimer_interrupt+0x141/0x2c0 kernel/time/hrtimer.c:1646
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1080 [inline]
- __sysvec_apic_timer_interrupt+0x6e/0x170 arch/x86/kernel/apic/apic.c:1097
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- sysvec_apic_timer_interrupt+0xa9/0xd0 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:596
-RIP: 0010:con_should_update drivers/tty/vt/vt.c:291 [inline]
-RIP: 0010:do_con_write.part.0+0xad6/0xfa0 drivers/tty/vt/vt.c:2790
----[ end trace d6a6c6a9ecb73597 ]---
-NMI backtrace for cpu 5 skipped: idling at native_halt+0xd/0x10 arch/x86/include/asm/irqflags.h:66
-
-Cc: stable@vger.kernel.org
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Xu Qiang <xuqiang36@huawei.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/gpu/drm/vkms/vkms_crtc.c | 5 ++++-
- drivers/gpu/drm/vkms/vkms_drv.h  | 1 +
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Changes since V1:
+	- use readl_poll_timeout_atomic() instead of usleep_ranges() since IRQ is disabled.
+---
+ drivers/watchdog/imx7ulp_wdt.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-index ac85e17428f8..655294f11bb8 100644
---- a/drivers/gpu/drm/vkms/vkms_crtc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-@@ -49,7 +49,7 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
- 			DRM_DEBUG_DRIVER("Composer worker already queued\n");
- 	}
+diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
+index 7993c8c..7d2b12e 100644
+--- a/drivers/watchdog/imx7ulp_wdt.c
++++ b/drivers/watchdog/imx7ulp_wdt.c
+@@ -5,6 +5,7 @@
  
--	return HRTIMER_RESTART;
-+	return output->hrtimer_exit ? HRTIMER_NORESTART : HRTIMER_RESTART;
+ #include <linux/clk.h>
+ #include <linux/io.h>
++#include <linux/iopoll.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+@@ -36,6 +37,7 @@
+ #define DEFAULT_TIMEOUT	60
+ #define MAX_TIMEOUT	128
+ #define WDOG_CLOCK_RATE	1000
++#define WDOG_WAIT_TIMEOUT	10000
+ 
+ static bool nowayout = WATCHDOG_NOWAYOUT;
+ module_param(nowayout, bool, 0000);
+@@ -48,17 +50,31 @@ struct imx7ulp_wdt_device {
+ 	struct clk *clk;
+ };
+ 
++static inline void imx7ulp_wdt_wait(void __iomem *base, u32 mask)
++{
++	u32 val = readl(base + WDOG_CS);
++
++	if (!(val & mask))
++		WARN_ON(readl_poll_timeout_atomic(base + WDOG_CS, val,
++						  val & mask, 0,
++						  WDOG_WAIT_TIMEOUT));
++}
++
+ static void imx7ulp_wdt_enable(struct watchdog_device *wdog, bool enable)
+ {
+ 	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
+ 
+ 	u32 val = readl(wdt->base + WDOG_CS);
+ 
++	local_irq_disable();
+ 	writel(UNLOCK, wdt->base + WDOG_CNT);
++	imx7ulp_wdt_wait(wdt->base, WDOG_CS_ULK);
+ 	if (enable)
+ 		writel(val | WDOG_CS_EN, wdt->base + WDOG_CS);
+ 	else
+ 		writel(val & ~WDOG_CS_EN, wdt->base + WDOG_CS);
++	imx7ulp_wdt_wait(wdt->base, WDOG_CS_RCS);
++	local_irq_enable();
  }
  
- static int vkms_enable_vblank(struct drm_crtc *crtc)
-@@ -66,6 +66,8 @@ static int vkms_enable_vblank(struct drm_crtc *crtc)
- 	out->period_ns = ktime_set(0, vblank->framedur_ns);
- 	hrtimer_start(&out->vblank_hrtimer, out->period_ns, HRTIMER_MODE_REL);
+ static bool imx7ulp_wdt_is_enabled(void __iomem *base)
+@@ -72,7 +88,12 @@ static int imx7ulp_wdt_ping(struct watchdog_device *wdog)
+ {
+ 	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
  
-+	out->hrtimer_exit = false;
-+
++	local_irq_disable();
++	writel(UNLOCK, wdt->base + WDOG_CNT);
++	imx7ulp_wdt_wait(wdt->base, WDOG_CS_ULK);
+ 	writel(REFRESH, wdt->base + WDOG_CNT);
++	imx7ulp_wdt_wait(wdt->base, WDOG_CS_RCS);
++	local_irq_enable();
+ 
  	return 0;
  }
+@@ -98,8 +119,12 @@ static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
+ 	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
+ 	u32 val = WDOG_CLOCK_RATE * timeout;
  
-@@ -73,6 +75,7 @@ static void vkms_disable_vblank(struct drm_crtc *crtc)
++	local_irq_disable();
+ 	writel(UNLOCK, wdt->base + WDOG_CNT);
++	imx7ulp_wdt_wait(wdt->base, WDOG_CS_ULK);
+ 	writel(val, wdt->base + WDOG_TOVAL);
++	imx7ulp_wdt_wait(wdt->base, WDOG_CS_RCS);
++	local_irq_enable();
+ 
+ 	wdog->timeout = timeout;
+ 
+@@ -140,15 +165,19 @@ static void imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
  {
- 	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
+ 	u32 val;
  
-+	out->hrtimer_exit = true;
- 	hrtimer_cancel(&out->vblank_hrtimer);
++	local_irq_disable();
+ 	/* unlock the wdog for reconfiguration */
+ 	writel_relaxed(UNLOCK_SEQ0, base + WDOG_CNT);
+ 	writel_relaxed(UNLOCK_SEQ1, base + WDOG_CNT);
++	imx7ulp_wdt_wait(base, WDOG_CS_ULK);
+ 
+ 	/* set an initial timeout value in TOVAL */
+ 	writel(timeout, base + WDOG_TOVAL);
+ 	/* enable 32bit command sequence and reconfigure */
+ 	val = WDOG_CS_CMD32EN | WDOG_CS_CLK | WDOG_CS_UPDATE;
+ 	writel(val, base + WDOG_CS);
++	imx7ulp_wdt_wait(base, WDOG_CS_RCS);
++	local_irq_enable();
  }
  
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index f4036bb0b9a8..4d4323dc2cfd 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -65,6 +65,7 @@ struct vkms_output {
- 	struct drm_connector connector;
- 	struct hrtimer vblank_hrtimer;
- 	ktime_t period_ns;
-+	bool	hrtimer_exit;
- 	struct drm_pending_vblank_event *event;
- 	/* ordered wq for composer_work */
- 	struct workqueue_struct *composer_workq;
+ static void imx7ulp_wdt_action(void *data)
 -- 
-2.25.0
+2.7.4
 
