@@ -2,141 +2,319 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE99C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E75C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1A122083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0BE820809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgG2Ma4 (ORCPT
+        id S1726994AbgG2MbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:30:56 -0400
-Received: from m9748.mail.qiye.163.com ([220.181.97.48]:64996 "EHLO
-        m9748.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgG2Ma4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:30:56 -0400
-X-Greylist: delayed 509 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Jul 2020 08:30:42 EDT
-Received: from ucloud.cn (wm-8.hmbj.internal [127.0.0.1])
-        by m9748.mail.qiye.163.com (Hmail) with ESMTP id 9F9852012A3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 20:22:11 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AP6AXwDuE2vKkeWl-pKSFKo*.1.1596025331642.Hmail.owen.si@ucloud.cn>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?B?bWlzYWxpZ25lZCB2c3lzY2FsbCB3aGVuIHZzeXNjYWxsPWVtdWxhdGU=?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2015-163.com
-X-Originating-IP: 117.48.120.186
+        Wed, 29 Jul 2020 08:31:14 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:59990 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbgG2MbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 08:31:13 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1k0lEf-0000nN-9t; Wed, 29 Jul 2020 22:31:06 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 29 Jul 2020 22:31:05 +1000
+Date:   Wed, 29 Jul 2020 22:31:05 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Waiman Long <longman@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 1/2] locking/atomic: Move ATOMIC_INIT into linux/types.h
+Message-ID: <20200729123105.GB7047@gondor.apana.org.au>
+References: <20200729210311.425d0e9b@canb.auug.org.au>
+ <20200729114757.GA19388@gondor.apana.org.au>
+ <20200729122807.GA7047@gondor.apana.org.au>
 MIME-Version: 1.0
-Received: from owen.si@ucloud.cn( [117.48.120.186) ] by ajax-webmail ( [127.0.0.1] ) ; Wed, 29 Jul 2020 20:22:11 +0800 (GMT+08:00)
-From:   sibingsong <owen.si@ucloud.cn>
-Date:   Wed, 29 Jul 2020 20:22:11 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZS1VLWVdZKFlBSUI3V1ktWUFJV1kPCR
-        oVCBIfWUFZT05DSxgfHh9DGkpCVkpOQk1LSU5ISEpNTElVGRETFhoSFyQUDg9ZV1kWGg8SFR0UWU
-        FZVUtZBg++
-X-HM-Sender-Digest: e1kMHhlZQQ8JDh5XWRIfHhUPWUFZRzorTTojDD8OPkkNMBAeLBdWCzAo
-        PTAUUVVKVUpOQk1LSU5ISEpCS0tVMxYaEhdVFAweFVUIEjsOGBcUDh9VGBVFWVdZEgtZQVlKSkxV
-        T0NVSklLVUpDTVlXWQgBWUFDSEpLNwY+
-X-HM-Tid: 0a739a85dfc62076kuqy9f9852012a3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729122807.GA7047@gondor.apana.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PCEtLQpfZm9udC1mYWNlCkhlbGxvIGZvbGtzLApXaGVuIEkgcnVuIGEgdnN5c2NhbGwgaW4gbXkg
-YXBwIG9uIGNwdSA2MSBvciAyMSAoYm90aCBhcmUgb24gY29yZSAyMSksIEl0IGNyYXNoZWQgcXVp
-Y2tseS4gRnJvbSB0aGUga2VybmVsIGxvZywgQ1IyID09IGZmZmZmZmZmZmY2MDA1MDAsIGlwID09
-IGZmZmZmZmZmZmY2MDA0MDAsIGFuZCBDUjIgIT0gaXAgdHJpZ2dlcmVkIHRoaXMgYnVnLCBoYXMg
-YW55b25lIGVuY291bnRlcmVkIGl0PwrCoApDUFU6IEludGVsKFIpIFhlb24oUikgR29sZCA2MjQ4
-IENQVSBAIDIuNTBHSHoKS2VybmVsOiA1LjguMC1yYzcgYW5kIDUuNy4xMQpUZXN0IGNvZGUgYW5k
-IGtlcm5lbCBsb2cgYXJlIGFzIGZvbGxvd3M6CsKgCiNjYXQgdGltZS5jCiNpbmNsdWRlIDx0aW1l
-Lmg+CmludCBtYWluKHZvaWQpCnsKwqDCoMKgIGZvciAoOzspIHsKwqDCoMKgwqDCoMKgwqAgdGlt
-ZShOVUxMKTsKwqDCoMKgIH0KwqDCoMKgIHJldHVybiAwOwp9CiMgZ2NjIC0tc3RhdGljIC1vIHRp
-bWUgdGltZS5jICh3aXRoIGdsaWJjIDIuMTIgdGhhdCB1c2UgdnN5c2NhbGwpCiMgdGFza3NldCAt
-YyA2MSAuL3RpbWUKU2VnbWVudGF0aW9uIGZhdWx0IChjb3JlIGR1bXBlZCkKwqAKSnVsIDI5IDE3
-OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogLS0tLS0tLS0tLS0tWyBjdXQgaGVyZSBd
-LS0tLS0tLS0tLS0tCkp1bCAyOSAxNzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IFdB
-Uk5JTkc6IENQVTogNjEgUElEOiAxMzA0NCBhdCBhcmNoL3g4Ni9lbnRyeS92c3lzY2FsbC92c3lz
-Y2FsbF82NC5jOjE1MSBlbXVsYXRlX3ZzeXNjYWxsKzB4MzFlLzB4M2YwCkp1bCAyOSAxNzowNjox
-MyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IE1vZHVsZXMgbGlua2VkIGluOiBtbHg1X2liIGli
-X3V2ZXJicyBpYl9jb3JlIG1seDVfY29yZSBtbHhmdyBwdHAgcHBzX2NvcmUgcGNpX2h5cGVydl9p
-bnRmIG5iZCBlYnRhYmxlX2ZpbHRlciBlYnRhYmxlcyBpcDZ0YWJsZV9maWx0ZXIgaXA2X3RhYmxl
-cyBib25kaW5nIGVzcDZfb2ZmbG9hZCBlc3A2IGVzcDRfb2ZmbG9hZCBlc3A0IGFjdF9nYWN0IGNs
-c19mbG93ZXIgc2NoX2luZ3Jlc3MgaXBfZ3JlIGlwX3R1bm5lbCBncmUgb3BlbnZzd2l0Y2ggbnNo
-IG5mX2Nvbm5jb3VudCBuZl9uYXQgbmZfY29ubnRyYWNrIG5mX2RlZnJhZ19pcHY2IG5mX2RlZnJh
-Z19pcHY0IHNreF9lZGFjIG5maXQgeDg2X3BrZ190ZW1wX3RoZXJtYWwgaW50ZWxfcG93ZXJjbGFt
-cCBpcHRhYmxlX2ZpbHRlciBpVENPX3dkdCBjb3JldGVtcAppVENPX3ZlbmRvcl9zdXBwb3J0IGNy
-Y3QxMGRpZl9wY2xtdWwgY3JjMzJfcGNsbXVsIGdoYXNoX2NsbXVsbmlfaW50ZWwgYWVzbmlfaW50
-ZWwgY3J5cHRvX3NpbWQgY3J5cHRkIGdsdWVfaGVscGVyIHJhcGwgaW50ZWxfY3N0YXRlIHNlcyBl
-bmNsb3N1cmUgbWVpX21lIGxwY19pY2ggaTJjX2k4MDEgcGNzcGtyIHNnIGlucHV0X2xlZHMgam95
-ZGV2IG1mZF9jb3JlIGkyY19zbWJ1cyBtZWkgaW9hdGRtYSBkY2Egd21pIGFjcGlfaXBtaSBpcG1p
-X3NpIGlwbWlfZGV2aW50ZiBpcG1pX21zZ2hhbmRsZXIgYWNwaV9wb3dlcl9tZXRlciBhY3BpX3Bh
-ZCB2aG9zdF9uZXQgdHVuIHZob3N0IG5mc2Qgdmhvc3RfaW90bGIgdGFwIGt2bV9pbnRlbCBhdXRo
-X3JwY2dzcyBrdm0gbmZzX2FjbCBsb2NrZCBncmFjZSBpcnFieXBhc3Mgc3VucnBjIGlwX3RhYmxl
-cyB4ZnMgbGliY3JjMzJjIHNkX21vZCB0MTBfcGkgY3JjMzJjX2ludGVsIGFzdCBpMmNfYWxnb19i
-aXQgZHJtX3ZyYW1faGVscGVyIGRybV9rbXNfaGVscGVyIHN5c2NvcHlhcmVhIHN5c2ZpbGxyZWN0
-IHN5c2ltZ2JsdCBmYl9zeXNfZm9wcyBkcm1fdHRtX2hlbHBlciBzbWFydHBxaSB0dG0KSnVsIDI5
-IDE3OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogc2NzaV90cmFuc3BvcnRfc2FzIGFo
-Y2kgbGliYWhjaSBkcm0gbGliYXRhIFtsYXN0IHVubG9hZGVkOiBtbHhmd10KSnVsIDI5IDE3OjA2
-OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogQ1BVOiA2MSBQSUQ6IDEzMDQ0IENvbW06IHRp
-bWUgS2R1bXA6IGxvYWRlZCBOb3QgdGFpbnRlZCA1LjguMC1yYzcgIzMKSnVsIDI5IDE3OjA2OjEz
-IGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogSGFyZHdhcmUgbmFtZTogSDNDIFI0OTAwIEczL1JT
-MzNNMkM5UywgQklPUyAyLjAwLjM3UDIxIDAzLzEyLzIwMjAKSnVsIDI5IDE3OjA2OjEzIGhiMTAt
-dWhvc3QtMTQ3LTY4IGtlcm5lbDogUklQOiAwMDEwOmVtdWxhdGVfdnN5c2NhbGwrMHgzMWUvMHgz
-ZjAKSnVsIDI5IDE3OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogQ29kZTogNDggODkg
-ZGYgZTggNDQgZmIgMGYgMDAgZTkgNjAgZmUgZmYgZmYgNDggOGIgNmIgNjAgNDggYzcgNDMgNjAg
-MDAgMDAgMDAgMDAgNDggODkgZGYgZTggNWIgYzEgMDggMDAgNDggODkgNmIgNjAgZTkgNDMgZmUg
-ZmYgZmYgPDBmPiAwYiBlOSAyMCBmZCBmZiBmZiA0OCBjNyBjMiBlMCBiNSAwYiA4MiA0OCA4OQpk
-ZSA0OCBjNyBjNyA2ZCBiNApKdWwgMjkgMTc6MDY6MTMgaGIxMC11aG9zdC0xNDctNjgga2VybmVs
-OiBSU1A6IDAwMDA6ZmZmZmM5MDAwZWE1N2ViMCBFRkxBR1M6IDAwMDEwMjg3Ckp1bCAyOSAxNzow
-NjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IFJBWDogMDAwMDAwMDAwMDAwMDAwNCBSQlg6
-IGZmZmZjOTAwMGVhNTdmNTggUkNYOiAwMDAwMDAwMDAwMDAwMDEwCkp1bCAyOSAxNzowNjoxMyBo
-YjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IFJEWDogMDAwMDAwMDAwMDAwMDAwMCBSU0k6IGZmZmZj
-OTAwMGVhNTdmNTggUkRJOiAwMDAwMDAwMDAwMDAwMDEwCkp1bCAyOSAxNzowNjoxMyBoYjEwLXVo
-b3N0LTE0Ny02OCBrZXJuZWw6IFJCUDogZmZmZmZmZmZmZjYwMDUwMCBSMDg6IGZmZmZmZmZmZmY2
-MDAwMDAgUjA5OiAwMDAwMDAwMDAwMDAwMDAwCkp1bCAyOSAxNzowNjoxMyBoYjEwLXVob3N0LTE0
-Ny02OCBrZXJuZWw6IFIxMDogMDAwMDAwMDAwMDAwMDAwMCBSMTE6IDAwMDAwMDAwMDAwMDAwMDAg
-UjEyOiAwMDAwMDAwMDAwMDAwMDE1Ckp1bCAyOSAxNzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBr
-ZXJuZWw6IFIxMzogZmZmZmZmZmZmZjYwMDUwMCBSMTQ6IGZmZmY4OGZmNmM5MGJkMDAgUjE1OiBm
-ZmZmODhmZjdkNzAyYzAwCkp1bCAyOSAxNzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6
-IEZTOsKgIDAwMDAwMDAwMDIzNmQ4NjAoMDAwMCkgR1M6ZmZmZjg4ZmY3Zjk0MDAwMCgwMDAwKSBr
-bmxHUzowMDAwMDAwMDAwMDAwMDAwCkp1bCAyOSAxNzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBr
-ZXJuZWw6IENTOsKgIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMz
-Ckp1bCAyOSAxNzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IENSMjogZmZmZmZmZmZm
-ZjYwMDUwMCBDUjM6IDAwMDAwMDQ1N2RiYWMwMDYgQ1I0OiAwMDAwMDAwMDAwNzYwNmUwCkp1bCAy
-OSAxNzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IERSMDogMDAwMDAwMDAwMDAwMDAw
-MCBEUjE6IDAwMDAwMDAwMDAwMDAwMDAgRFIyOiAwMDAwMDAwMDAwMDAwMDAwCkp1bCAyOSAxNzow
-NjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IERSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6
-IDAwMDAwMDAwZmZmZTBmZjAgRFI3OiAwMDAwMDAwMDAwMDAwNDAwCkp1bCAyOSAxNzowNjoxMyBo
-YjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IFBLUlU6IDU1NTU1NTU0Ckp1bCAyOSAxNzowNjoxMyBo
-YjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IENhbGwgVHJhY2U6Ckp1bCAyOSAxNzowNjoxMyBoYjEw
-LXVob3N0LTE0Ny02OCBrZXJuZWw6IGV4Y19wYWdlX2ZhdWx0KzB4NDIzLzB4NjAwCkp1bCAyOSAx
-NzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6ID8gX19wcmVwYXJlX2V4aXRfdG9fdXNl
-cm1vZGUrMHgxM2IvMHgxNTAKSnVsIDI5IDE3OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5l
-bDogPyBhc21fZXhjX3BhZ2VfZmF1bHQrMHg4LzB4MzAKSnVsIDI5IDE3OjA2OjEzIGhiMTAtdWhv
-c3QtMTQ3LTY4IGtlcm5lbDogYXNtX2V4Y19wYWdlX2ZhdWx0KzB4MWUvMHgzMApKdWwgMjkgMTc6
-MDY6MTMgaGIxMC11aG9zdC0xNDctNjgga2VybmVsOiBSSVA6IDAwMzM6X19pbml0X3NjcmF0Y2hf
-ZW5kKzB4N2I2MDA0MDAvMHhmZmZmZmZmZmZmYTI2MDAwCkp1bCAyOSAxNzowNjoxMyBoYjEwLXVo
-b3N0LTE0Ny02OCBrZXJuZWw6IENvZGU6IEJhZCBSSVAgdmFsdWUuCkp1bCAyOSAxNzowNjoxMyBo
-YjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IFJTUDogMDAyYjowMDAwN2ZmYzlkOTNmNWQ4IEVGTEFH
-UzogMDAwMTAyMDIKSnVsIDI5IDE3OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogUkFY
-OiBmZmZmZmZmZmZmNjAwNDAwIFJCWDogMDAwMDAwMDAwMDQwMGUwMCBSQ1g6IDAwMDAwMDAwMDA0
-MGQ3MTAKSnVsIDI5IDE3OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogUkRYOiAwMDAw
-MDAwMDAwMDAwMDAwIFJTSTogMDAwMDdmZmM5ZDkzZjViMCBSREk6IDAwMDAwMDAwMDAwMDAwMDAK
-SnVsIDI5IDE3OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogUkJQOiAwMDAwN2ZmYzlk
-OTNmNWYwIFIwODogMDAwMDdmZmM5ZDkzZjQxMCBSMDk6IDAwMDAwMDAwMDAwMDAwM2YKSnVsIDI5
-IDE3OjA2OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogUjEwOiAwMDAwMDAwMDAwMDAwMDA4
-IFIxMTogMDAwMDAwMDAwMDAwMDI0NiBSMTI6IDAwMDAwMDAwMDAwMDAwMDAKSnVsIDI5IDE3OjA2
-OjEzIGhiMTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogUjEzOiAwMDAwMDAwMDAwMDAwMDAwIFIxNDog
-MDAwMDAwMDAwMDAwMDAwMCBSMTU6IDAwMDAwMDAwMDAwMDAwMDAKSnVsIDI5IDE3OjA2OjEzIGhi
-MTAtdWhvc3QtMTQ3LTY4IGtlcm5lbDogLS0tWyBlbmQgdHJhY2UgMzU3NjU3MGY3NzNkMTQ0NCBd
-LS0tCkp1bCAyOSAxNzowNjoxMyBoYjEwLXVob3N0LTE0Ny02OCBrZXJuZWw6IHRpbWVbMTMwNDRd
-IG1pc2FsaWduZWQgdnN5c2NhbGwgKGV4cGxvaXQgYXR0ZW1wdCBvciBidWdneSBwcm9ncmFtKSAt
-LSBsb29rIHVwIHRoZSB2c3lzY2FsbCBrZXJuZWwgcGFyYW1ldGVyIGlmIHlvdSBuZWVkIGEgd29y
-a2Fyb3VuZCBpcDpmZmZmZmZmZmZmNjAwNDAwIGNzOjMzIHNwOjdmZmM5ZDkzZjVkOCBheDpmZmZm
-ZmZmZmZmNjAwNDAwIHNpOjdmZmM5ZDkzZjViMCBkaTowCsKgCgrCoA0KDQo=
+This patch moves ATOMIC_INIT from asm/atomic.h into linux/types.h.
+This allows users of atomic_t to use ATOMIC_INIT without having to
+include atomic.h as that way may lead to header loops.
+
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/arch/alpha/include/asm/atomic.h b/arch/alpha/include/asm/atomic.h
+index 2144530d1428..e2093994fd0d 100644
+--- a/arch/alpha/include/asm/atomic.h
++++ b/arch/alpha/include/asm/atomic.h
+@@ -24,7 +24,6 @@
+ #define __atomic_acquire_fence()
+ #define __atomic_post_full_fence()
+ 
+-#define ATOMIC_INIT(i)		{ (i) }
+ #define ATOMIC64_INIT(i)	{ (i) }
+ 
+ #define atomic_read(v)		READ_ONCE((v)->counter)
+diff --git a/arch/arc/include/asm/atomic.h b/arch/arc/include/asm/atomic.h
+index 7298ce84762e..c614857eb209 100644
+--- a/arch/arc/include/asm/atomic.h
++++ b/arch/arc/include/asm/atomic.h
+@@ -14,8 +14,6 @@
+ #include <asm/barrier.h>
+ #include <asm/smp.h>
+ 
+-#define ATOMIC_INIT(i)	{ (i) }
+-
+ #ifndef CONFIG_ARC_PLAT_EZNPS
+ 
+ #define atomic_read(v)  READ_ONCE((v)->counter)
+diff --git a/arch/arm/include/asm/atomic.h b/arch/arm/include/asm/atomic.h
+index 75bb2c543e59..455eb19a5ac1 100644
+--- a/arch/arm/include/asm/atomic.h
++++ b/arch/arm/include/asm/atomic.h
+@@ -15,8 +15,6 @@
+ #include <asm/barrier.h>
+ #include <asm/cmpxchg.h>
+ 
+-#define ATOMIC_INIT(i)	{ (i) }
+-
+ #ifdef __KERNEL__
+ 
+ /*
+diff --git a/arch/arm64/include/asm/atomic.h b/arch/arm64/include/asm/atomic.h
+index a08890da696c..015ddffaf6ca 100644
+--- a/arch/arm64/include/asm/atomic.h
++++ b/arch/arm64/include/asm/atomic.h
+@@ -99,8 +99,6 @@ static inline long arch_atomic64_dec_if_positive(atomic64_t *v)
+ 	return __lse_ll_sc_body(atomic64_dec_if_positive, v);
+ }
+ 
+-#define ATOMIC_INIT(i)	{ (i) }
+-
+ #define arch_atomic_read(v)			__READ_ONCE((v)->counter)
+ #define arch_atomic_set(v, i)			__WRITE_ONCE(((v)->counter), (i))
+ 
+diff --git a/arch/h8300/include/asm/atomic.h b/arch/h8300/include/asm/atomic.h
+index c6b6a06231b2..a990d151f163 100644
+--- a/arch/h8300/include/asm/atomic.h
++++ b/arch/h8300/include/asm/atomic.h
+@@ -12,8 +12,6 @@
+  * resource counting etc..
+  */
+ 
+-#define ATOMIC_INIT(i)	{ (i) }
+-
+ #define atomic_read(v)		READ_ONCE((v)->counter)
+ #define atomic_set(v, i)	WRITE_ONCE(((v)->counter), (i))
+ 
+diff --git a/arch/hexagon/include/asm/atomic.h b/arch/hexagon/include/asm/atomic.h
+index 0231d69c8bf2..4ab895d7111f 100644
+--- a/arch/hexagon/include/asm/atomic.h
++++ b/arch/hexagon/include/asm/atomic.h
+@@ -12,8 +12,6 @@
+ #include <asm/cmpxchg.h>
+ #include <asm/barrier.h>
+ 
+-#define ATOMIC_INIT(i)		{ (i) }
+-
+ /*  Normal writes in our arch don't clear lock reservations  */
+ 
+ static inline void atomic_set(atomic_t *v, int new)
+diff --git a/arch/ia64/include/asm/atomic.h b/arch/ia64/include/asm/atomic.h
+index 50440f3ddc43..f267d956458f 100644
+--- a/arch/ia64/include/asm/atomic.h
++++ b/arch/ia64/include/asm/atomic.h
+@@ -19,7 +19,6 @@
+ #include <asm/barrier.h>
+ 
+ 
+-#define ATOMIC_INIT(i)		{ (i) }
+ #define ATOMIC64_INIT(i)	{ (i) }
+ 
+ #define atomic_read(v)		READ_ONCE((v)->counter)
+diff --git a/arch/m68k/include/asm/atomic.h b/arch/m68k/include/asm/atomic.h
+index 47228b0d4163..756c5cc58f94 100644
+--- a/arch/m68k/include/asm/atomic.h
++++ b/arch/m68k/include/asm/atomic.h
+@@ -16,8 +16,6 @@
+  * We do not have SMP m68k systems, so we don't have to deal with that.
+  */
+ 
+-#define ATOMIC_INIT(i)	{ (i) }
+-
+ #define atomic_read(v)		READ_ONCE((v)->counter)
+ #define atomic_set(v, i)	WRITE_ONCE(((v)->counter), (i))
+ 
+diff --git a/arch/mips/include/asm/atomic.h b/arch/mips/include/asm/atomic.h
+index e5ac88392d1f..f904084fcb1f 100644
+--- a/arch/mips/include/asm/atomic.h
++++ b/arch/mips/include/asm/atomic.h
+@@ -45,7 +45,6 @@ static __always_inline type pfx##_xchg(pfx##_t *v, type n)		\
+ 	return xchg(&v->counter, n);					\
+ }
+ 
+-#define ATOMIC_INIT(i)		{ (i) }
+ ATOMIC_OPS(atomic, int)
+ 
+ #ifdef CONFIG_64BIT
+diff --git a/arch/parisc/include/asm/atomic.h b/arch/parisc/include/asm/atomic.h
+index 118953d41763..f960e2f32b1b 100644
+--- a/arch/parisc/include/asm/atomic.h
++++ b/arch/parisc/include/asm/atomic.h
+@@ -136,8 +136,6 @@ ATOMIC_OPS(xor, ^=)
+ #undef ATOMIC_OP_RETURN
+ #undef ATOMIC_OP
+ 
+-#define ATOMIC_INIT(i)	{ (i) }
+-
+ #ifdef CONFIG_64BIT
+ 
+ #define ATOMIC64_INIT(i) { (i) }
+diff --git a/arch/powerpc/include/asm/atomic.h b/arch/powerpc/include/asm/atomic.h
+index f6a3d145ffb7..8a55eb8cc97b 100644
+--- a/arch/powerpc/include/asm/atomic.h
++++ b/arch/powerpc/include/asm/atomic.h
+@@ -11,8 +11,6 @@
+ #include <asm/cmpxchg.h>
+ #include <asm/barrier.h>
+ 
+-#define ATOMIC_INIT(i)		{ (i) }
+-
+ /*
+  * Since *_return_relaxed and {cmp}xchg_relaxed are implemented with
+  * a "bne-" instruction at the end, so an isync is enough as a acquire barrier
+diff --git a/arch/riscv/include/asm/atomic.h b/arch/riscv/include/asm/atomic.h
+index 96f95c9ebd97..400a8c8b6de7 100644
+--- a/arch/riscv/include/asm/atomic.h
++++ b/arch/riscv/include/asm/atomic.h
+@@ -19,8 +19,6 @@
+ #include <asm/cmpxchg.h>
+ #include <asm/barrier.h>
+ 
+-#define ATOMIC_INIT(i)	{ (i) }
+-
+ #define __atomic_acquire_fence()					\
+ 	__asm__ __volatile__(RISCV_ACQUIRE_BARRIER "" ::: "memory")
+ 
+diff --git a/arch/s390/include/asm/atomic.h b/arch/s390/include/asm/atomic.h
+index 491ad53a0d4e..cae473a7b6f7 100644
+--- a/arch/s390/include/asm/atomic.h
++++ b/arch/s390/include/asm/atomic.h
+@@ -15,8 +15,6 @@
+ #include <asm/barrier.h>
+ #include <asm/cmpxchg.h>
+ 
+-#define ATOMIC_INIT(i)  { (i) }
+-
+ static inline int atomic_read(const atomic_t *v)
+ {
+ 	int c;
+diff --git a/arch/sh/include/asm/atomic.h b/arch/sh/include/asm/atomic.h
+index f37b95a80232..7c2a8a703b9a 100644
+--- a/arch/sh/include/asm/atomic.h
++++ b/arch/sh/include/asm/atomic.h
+@@ -19,8 +19,6 @@
+ #include <asm/cmpxchg.h>
+ #include <asm/barrier.h>
+ 
+-#define ATOMIC_INIT(i)	{ (i) }
+-
+ #define atomic_read(v)		READ_ONCE((v)->counter)
+ #define atomic_set(v,i)		WRITE_ONCE((v)->counter, (i))
+ 
+diff --git a/arch/sparc/include/asm/atomic_32.h b/arch/sparc/include/asm/atomic_32.h
+index 94c930f0bc62..efad5532f169 100644
+--- a/arch/sparc/include/asm/atomic_32.h
++++ b/arch/sparc/include/asm/atomic_32.h
+@@ -18,8 +18,6 @@
+ #include <asm/barrier.h>
+ #include <asm-generic/atomic64.h>
+ 
+-#define ATOMIC_INIT(i)  { (i) }
+-
+ int atomic_add_return(int, atomic_t *);
+ int atomic_fetch_add(int, atomic_t *);
+ int atomic_fetch_and(int, atomic_t *);
+diff --git a/arch/sparc/include/asm/atomic_64.h b/arch/sparc/include/asm/atomic_64.h
+index b60448397d4f..6b235d3d1d9d 100644
+--- a/arch/sparc/include/asm/atomic_64.h
++++ b/arch/sparc/include/asm/atomic_64.h
+@@ -12,7 +12,6 @@
+ #include <asm/cmpxchg.h>
+ #include <asm/barrier.h>
+ 
+-#define ATOMIC_INIT(i)		{ (i) }
+ #define ATOMIC64_INIT(i)	{ (i) }
+ 
+ #define atomic_read(v)		READ_ONCE((v)->counter)
+diff --git a/arch/x86/include/asm/atomic.h b/arch/x86/include/asm/atomic.h
+index bf35e476a776..b6cac6e9bb70 100644
+--- a/arch/x86/include/asm/atomic.h
++++ b/arch/x86/include/asm/atomic.h
+@@ -14,8 +14,6 @@
+  * resource counting etc..
+  */
+ 
+-#define ATOMIC_INIT(i)	{ (i) }
+-
+ /**
+  * arch_atomic_read - read atomic variable
+  * @v: pointer of type atomic_t
+diff --git a/arch/xtensa/include/asm/atomic.h b/arch/xtensa/include/asm/atomic.h
+index 3e7c6134ed32..744c2f463845 100644
+--- a/arch/xtensa/include/asm/atomic.h
++++ b/arch/xtensa/include/asm/atomic.h
+@@ -19,8 +19,6 @@
+ #include <asm/cmpxchg.h>
+ #include <asm/barrier.h>
+ 
+-#define ATOMIC_INIT(i)	{ (i) }
+-
+ /*
+  * This Xtensa implementation assumes that the right mechanism
+  * for exclusion is for locking interrupts to level EXCM_LEVEL.
+diff --git a/include/asm-generic/atomic.h b/include/asm-generic/atomic.h
+index 286867f593d2..11f96f40f4a7 100644
+--- a/include/asm-generic/atomic.h
++++ b/include/asm-generic/atomic.h
+@@ -159,8 +159,6 @@ ATOMIC_OP(xor, ^)
+  * resource counting etc..
+  */
+ 
+-#define ATOMIC_INIT(i)	{ (i) }
+-
+ /**
+  * atomic_read - read atomic variable
+  * @v: pointer of type atomic_t
+diff --git a/include/linux/types.h b/include/linux/types.h
+index d3021c879179..a147977602b5 100644
+--- a/include/linux/types.h
++++ b/include/linux/types.h
+@@ -167,6 +167,8 @@ typedef struct {
+ 	int counter;
+ } atomic_t;
+ 
++#define ATOMIC_INIT(i) { (i) }
++
+ #ifdef CONFIG_64BIT
+ typedef struct {
+ 	s64 counter;
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
