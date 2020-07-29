@@ -2,121 +2,157 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2497CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B23E2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32752070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:31:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FDduC6LR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgG2Fav (ORCPT
+        id S1726872AbgG2Fb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 01:30:51 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:51150 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgG2Fau (ORCPT
+        Wed, 29 Jul 2020 01:31:58 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:40814 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726560AbgG2Fb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 01:30:50 -0400
-Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06T5UUEP052197;
-        Wed, 29 Jul 2020 14:30:30 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp);
- Wed, 29 Jul 2020 14:30:30 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp)
-Received: from localhost.localdomain (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06T5UOZI052019
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 29 Jul 2020 14:30:30 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
-Subject: [PATCH] vt: Handle recursion in vc_do_resize().
-Date:   Wed, 29 Jul 2020 14:30:20 +0900
-Message-Id: <1596000620-4075-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 29 Jul 2020 01:31:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596000717; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=msx+gBK9mgOBcKEpu5rUP0WumjhIp0LNn0i9vsL3Tdc=;
+ b=FDduC6LRPX2Ym+fMP3+GbhH7U8TfaAZ+6GXVdbiisHIgIcJB9bG+Z6H95K/rbEojY9eF+FpM
+ 1ahp/C0ur1mVTjWJA22R5qNv1thrPjhPATwsM1dlKY0Jfyat2hLg1CBitGh0b93IYiSagw8T
+ AQ4+0XNa3VuFLRBp+///2u6Tm0c=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f2109befcbecb3df1cb1155 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 05:31:42
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 57325C433A0; Wed, 29 Jul 2020 05:31:41 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A649C433C6;
+        Wed, 29 Jul 2020 05:31:40 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Jul 2020 13:31:40 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
+        beanhuo@micron.com, asutoshd@codeaurora.org,
+        matthias.bgg@gmail.com, bvanassche@acm.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
+        chaotian.jing@mediatek.com, cc.chou@mediatek.com
+Subject: Re: [PATCH v1 1/2] scsi: ufs: Introduce device quirk
+ "DELAY_AFTER_LPM"
+In-Reply-To: <20200729051840.31318-2-stanley.chu@mediatek.com>
+References: <20200729051840.31318-1-stanley.chu@mediatek.com>
+ <20200729051840.31318-2-stanley.chu@mediatek.com>
+Message-ID: <b859b49f4b5e85b81a24735a53f5aa4e@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot is reporting OOB read bug in vc_do_resize() [1] caused by memcpy()
-based on outdated old_{rows,row_size} values, for resize_screen() can
-recurse into vc_do_resize() which changes vc->vc_{cols,rows} that outdates
-old_{rows,row_size} values which were read before calling resize_screen().
+Hi Stanley,
 
-Minimal fix might be to read vc->vc_{rows,size_row} after resize_screen().
-A different fix might be to forbid recursive vc_do_resize() request.
-I can't tell which fix is the better.
+On 2020-07-29 13:18, Stanley Chu wrote:
+> Some UFS devices require delay after VCC power rail is turned-off.
+> Introduce a device quirk "DELAY_AFTER_LPM" to add 5ms delays after
+> VCC power-off during suspend flow.
+> 
 
-But since I guess that new_cols == vc->vc_cols && new_rows == vc->vc_rows
-check could become true after returning from resize_screen(), and I assume
-that not calling clear_selection() when resize_screen() will return error
-is harmless, let's redo the check by moving resize_screen() earlier.
+Just curious, I can understand if you want to add some delays before
+turnning off VCC/VCCQ/VCCQ2, but what is the delay AFTER turnning
+them off for? I mean the power has been cut by host from PMIC, how
+can the delay benefit the UFS device?
 
-[1] https://syzkaller.appspot.com/bug?id=c70c88cfd16dcf6e1d3c7f0ab8648b3144b5b25e
+Thanks,
 
-Reported-by: syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
- drivers/tty/vt/vt.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+Can Guo.
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 42d8c67..952a067 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -1217,7 +1217,24 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
- 
- 	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
- 		return 0;
-+	if (new_screen_size > KMALLOC_MAX_SIZE || !new_screen_size)
-+		return -EINVAL;
- 
-+	/*
-+	 * Since fbcon_resize() from resize_screen() can recurse into
-+	 * this function via fb_set_var(), handle recursion now.
-+	 */
-+	err = resize_screen(vc, new_cols, new_rows, user);
-+	if (err)
-+		return err;
-+	/* Reload values in case recursion changed vc->vc_{cols,rows}. */
-+	new_cols = (cols ? cols : vc->vc_cols);
-+	new_rows = (lines ? lines : vc->vc_rows);
-+	new_row_size = new_cols << 1;
-+	new_screen_size = new_row_size * new_rows;
-+
-+	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
-+		return 0;
- 	if (new_screen_size > KMALLOC_MAX_SIZE || !new_screen_size)
- 		return -EINVAL;
- 	newscreen = kzalloc(new_screen_size, GFP_USER);
-@@ -1238,13 +1255,6 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
- 	old_rows = vc->vc_rows;
- 	old_row_size = vc->vc_size_row;
- 
--	err = resize_screen(vc, new_cols, new_rows, user);
--	if (err) {
--		kfree(newscreen);
--		vc_uniscr_free(new_uniscr);
--		return err;
--	}
--
- 	vc->vc_rows = new_rows;
- 	vc->vc_cols = new_cols;
- 	vc->vc_size_row = new_row_size;
--- 
-1.8.3.1
-
+> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> Signed-off-by: Peter Wang <peter.wang@mediatek.com>
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+>  drivers/scsi/ufs/ufs_quirks.h |  7 +++++++
+>  drivers/scsi/ufs/ufshcd.c     | 11 +++++++++++
+>  2 files changed, 18 insertions(+)
+> 
+> diff --git a/drivers/scsi/ufs/ufs_quirks.h 
+> b/drivers/scsi/ufs/ufs_quirks.h
+> index 2a0041493e30..07f559ac5883 100644
+> --- a/drivers/scsi/ufs/ufs_quirks.h
+> +++ b/drivers/scsi/ufs/ufs_quirks.h
+> @@ -109,4 +109,11 @@ struct ufs_dev_fix {
+>   */
+>  #define UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES (1 << 10)
+> 
+> +/*
+> + * Some UFS devices require delay after VCC power rail is turned-off.
+> + * Enable this quirk to introduce 5ms delays after VCC power-off 
+> during
+> + * suspend flow.
+> + */
+> +#define UFS_DEVICE_QUIRK_DELAY_AFTER_LPM        (1 << 11)
+> +
+>  #endif /* UFS_QUIRKS_H_ */
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index acba2271c5d3..63f4e2f75aa1 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -8111,6 +8111,8 @@ static int ufshcd_link_state_transition(struct
+> ufs_hba *hba,
+> 
+>  static void ufshcd_vreg_set_lpm(struct ufs_hba *hba)
+>  {
+> +	bool vcc_off = false;
+> +
+>  	/*
+>  	 * It seems some UFS devices may keep drawing more than sleep current
+>  	 * (atleast for 500us) from UFS rails (especially from VCCQ rail).
+> @@ -8139,13 +8141,22 @@ static void ufshcd_vreg_set_lpm(struct ufs_hba 
+> *hba)
+>  	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba) &&
+>  	    !hba->dev_info.is_lu_power_on_wp) {
+>  		ufshcd_setup_vreg(hba, false);
+> +		vcc_off = true;
+>  	} else if (!ufshcd_is_ufs_dev_active(hba)) {
+>  		ufshcd_toggle_vreg(hba->dev, hba->vreg_info.vcc, false);
+> +		vcc_off = true;
+>  		if (!ufshcd_is_link_active(hba)) {
+>  			ufshcd_config_vreg_lpm(hba, hba->vreg_info.vccq);
+>  			ufshcd_config_vreg_lpm(hba, hba->vreg_info.vccq2);
+>  		}
+>  	}
+> +
+> +	/*
+> +	 * Some UFS devices require delay after VCC power rail is turned-off.
+> +	 */
+> +	if (vcc_off && hba->vreg_info.vcc &&
+> +		hba->dev_quirks & UFS_DEVICE_QUIRK_DELAY_AFTER_LPM)
+> +		usleep_range(5000, 5100);
+>  }
+> 
+>  static int ufshcd_vreg_set_hpm(struct ufs_hba *hba)
