@@ -2,109 +2,85 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69913C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 397322075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:12:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YzLwV/DQ"
+	by mail.kernel.org (Postfix) with ESMTP id BE8932083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596060752;
+	bh=uuWR9RWRb4B0cH6RJkoUD/WtjpUMu5kNVDOG1H0bw2A=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=vxMiHtCTxCTSj+nbxBxAuaBQsV3yuXXFlfzK9guWCx8mvvOnAbgoGDyMcvWYlso3/
+	 SnJi8JVIj8JuleQPhvEo9DnAAclqIRmZZit1FICSuBCjy6daVSm3TzLC6tmlS+0PXf
+	 jeKg2UNCjKYiay9LlVQxCrrfyz0noqRrkxOg0YLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgG2WMG (ORCPT
+        id S1727877AbgG2WMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 18:12:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2WMG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 18:12:06 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CE4FC061794;
-        Wed, 29 Jul 2020 15:12:06 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 29 Jul 2020 18:12:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727852AbgG2WMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 18:12:31 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BH77S29d9z9sRN;
-        Thu, 30 Jul 2020 08:12:04 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596060724;
-        bh=7fKYQ0GIqxzYhLE+SptIOOonvGCwgJtP9mTrebtsbFg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YzLwV/DQrswjnJrEmhEd9FZ3LC6MZ/o3ygDPWEMzD/wctw57v1FHVykDnqfTJnN92
-         MyYlUUQh7l51cj1wB383LnOiwae7sOaYpyxz81Awxcme1DZJcYLmBoogapSXcXg7Ge
-         CipeOfVlUh1GMxWblWI4c8DwvKAemXn4k8k5J6INFPOketMGx4PcL8tBtiZwmLCCBQ
-         SqwxTWxFmp+K0H7bqxtgMG2uRrIU6dZgzxPgI3rI/+B22mH7xOmsxFRTJ+VACQMDoQ
-         CIVfoApjIXTCY6lDfM2VjylgOOY+5encRSaaGYBPnKAlr+WXx6xTVgw3SNhyNSoluk
-         aMe5ED6aWp4GA==
-Date:   Thu, 30 Jul 2020 08:12:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: linux-next: Fixes tag needs some work in the block tree
-Message-ID: <20200730081203.5358cbc3@canb.auug.org.au>
-In-Reply-To: <20200730080849.70cfeeb6@canb.auug.org.au>
-References: <20200730080849.70cfeeb6@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 62A212075D;
+        Wed, 29 Jul 2020 22:12:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596060750;
+        bh=uuWR9RWRb4B0cH6RJkoUD/WtjpUMu5kNVDOG1H0bw2A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ja3dDLHmzZ18TqbJR1kw1hok45YfyoAI24ku9snZTjIk8Jn3IFFUt3ts6co3e8EV/
+         0Cq710zV2Hds7hx3wXtFxzEVHGmGyDaZt9iRhRiKZRpWCNAqZ/v+RZMYal8A18ufxO
+         b2BU4E8xuNogYO8vdvOpEYRYLYNgiYnQqUQa+55s=
+Date:   Wed, 29 Jul 2020 17:18:29 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] ALSA: vmaster: Use flex_array_size() helper in memcpy()
+Message-ID: <20200729221829.GA10623@embeddedor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/5XaBg/+=/CdN4mC/oQz0gL_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/5XaBg/+=/CdN4mC/oQz0gL_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Make use of the flex_array_size() helper to calculate the size of a
+flexible array member within an enclosing structure.
 
-Hi all,
+This helper offers defense-in-depth against potential integer overflows
+and makes it explicitly clear that we are dealing with a flexible array
+member.
 
-[Just adding cc's]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ sound/core/vmaster.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On Thu, 30 Jul 2020 08:08:49 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> In commit
->=20
->   64d452b3560b ("nvme-loop: set ctrl state connecting after init")
->=20
-> Fixes tag
->=20
->   Fixes: aa63fa6776a7 ("nvme-fabrics: allow to queue requests for live qu=
-eues")
->=20
-> has these problem(s):
->=20
->   - Target SHA1 does not exist
->=20
-> I can't easily find what commit is meant :-(
+diff --git a/sound/core/vmaster.c b/sound/core/vmaster.c
+index ab36f9898711..21ce4082cb5f 100644
+--- a/sound/core/vmaster.c
++++ b/sound/core/vmaster.c
+@@ -262,7 +262,8 @@ int _snd_ctl_add_follower(struct snd_kcontrol *master,
+ 		return -ENOMEM;
+ 	srec->kctl = follower;
+ 	srec->follower = *follower;
+-	memcpy(srec->follower.vd, follower->vd, follower->count * sizeof(*follower->vd));
++	memcpy(srec->follower.vd, follower->vd, flex_array_size(srec, follower.vd,
++								srec->follower.count));
+ 	srec->master = master_link;
+ 	srec->flags = flags;
+ 
+-- 
+2.27.0
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/5XaBg/+=/CdN4mC/oQz0gL_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8h9DMACgkQAVBC80lX
-0Gx5BQf/YkFOmshd3g2Qni1RSqUeR4GPf2E4ieAb9IoaXvdLnFD1ba5csTdFotre
-AjU3rqkvwk0A9o/CvNr32nHte01TCDIaKLyzbN/5kRlw3ZrVTpSRNVR9ClE5xjd4
-Vv7z/9esSFFN2VW3RvJHspoO3GcCH30zPYRN3R4gKalrsG1OnViLCdyIY1UHPkFc
-SWoQG0gKEmCqmuJm3B6uhNydggLRaqfNBr99QpGNKe0ttxc0G69X1xo1TLUyBrHt
-KeSLZDG9ibBeu9gkZ8upy+f1GgmZxacFVzdbNheffMx6gPHCjtvMTBDiEkCDsAB9
-0CRyyeROKNEO6GpwM541FhXg7GLLKw==
-=9Acc
------END PGP SIGNATURE-----
-
---Sig_/5XaBg/+=/CdN4mC/oQz0gL_--
