@@ -2,135 +2,196 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F41BC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3712AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E45FA2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA972068F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:21:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CWQeaknt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n8so8KYJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgG2TUJ (ORCPT
+        id S1726859AbgG2TVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 15:20:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48312 "EHLO
+        Wed, 29 Jul 2020 15:21:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbgG2TUI (ORCPT
+        with ESMTP id S1726581AbgG2TVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 15:20:08 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80022C0619D5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 12:20:08 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id r11so5575648pfl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 12:20:08 -0700 (PDT)
+        Wed, 29 Jul 2020 15:21:19 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11934C0619D2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 12:21:19 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id h7so23339006qkk.7
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 12:21:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HGXcQxniYOJ/L+/BbSJHGqRZ1csrAGecCIYczpmNch4=;
-        b=CWQeakntD3r4UHVDonF0RsCdeZ+R7/FiH6YY8MnpigA19viBWrwaAmlWRUzimnUFkF
-         yyAufnaYCoPsh35cHMstxZE/NVB+enOaPdFZu5HTb8cy1x6VnmFZ/JMOliwgoNmXeZOK
-         L27U5zsKI6cBxWAnJUBYMRFGwRxTh72dDC/z8o0HoIpB1L+7HLPEznLyI9Z7M1QNuUpN
-         QeTsz7Mh4Quj5r+4bE+L81UR0FwjDbKvv6tpA/GGBfMIumWqzvTrEhRlNvGpJ4wwGD7I
-         dbiuC5v1uZBgGdjZMphJmcD7sF4jmo1V5BIxX0JO1OHT9xJ6qWabr3SbuV9eAm/BfDRr
-         nU9Q==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=xf8y6+QE7u4z9tDYoWpKfnyILr6WJGhsLpbcNKIkelU=;
+        b=n8so8KYJL7JTmU4FRh9v0OQdg1omhOYvRSE92qmDvKlITdi/LJg3OMvlrRg7KCISxw
+         GDiEDm6vbZDm4z7zCnQ9gOZen6GBUgOVlhajnAsr/bMFrhTaaNfLHX6ukTqQc3u9ykaz
+         vpfHcgO1dQPjfiB4BBf0JmXcZAONXwPrRp/fHP/7yMRdFvHzaxud620vIIfCJkM31y/u
+         L9Vuw+e+5PV9CF1QdpRziQUdRphSv2XcZkdlItKQQib8zHIYmj31ZVVNPDcL7HUx1bYa
+         D4ZPuZTk8pwt0T18C2F5ftoc4JBv5FbT7S2naq/vJtjg8z0HqS+SFgPElReYcxMN1Ewn
+         bkOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HGXcQxniYOJ/L+/BbSJHGqRZ1csrAGecCIYczpmNch4=;
-        b=uNQJv1Il7enAZr4PU1XhATlYfjWD64c++lOcUZnZlcoaXLF+/r2znpJFVeNnjSRSOi
-         DMbLiWQtHOhG9fXYHKpRgpS3WlXJB4/HJmgZg4vaYFav9DqPBFhzPrRDLYjyb2769JMi
-         2agCeJnY4kCZfiM5iYRuWoWSYR8pAPmjm8qRK0vxwEXQmcjV713w98MQJElEkZfV1htS
-         5Feue/zcvjFe4V5d5o+c7XM6niQJ1twvPrMxtz8pfMZyV1eimZv2JCmkYkl++B7zpK7M
-         zRnzlkSiJz3uvYBQwgCSuwO3M1ZYVea8NVsXOoDkewnKqWsa1yw0oNVQhnYzO6QyaA9s
-         mgOg==
-X-Gm-Message-State: AOAM533bPwjPvnScaRZAAXYTOYbph6+dobzC3queRe5JH3++eZolTzJO
-        Y5C24BhWnUBW9AjlfzbRMkNTkg==
-X-Google-Smtp-Source: ABdhPJwoUuUGN1m8e0bLII+ZzoMSh6x28a7Fj+eVz1nRdWqgeRnvvc9OdaVEmSRBTmlIVHbzgSRN/g==
-X-Received: by 2002:a63:7d16:: with SMTP id y22mr29049887pgc.136.1596050407636;
-        Wed, 29 Jul 2020 12:20:07 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 79sm3207215pfu.86.2020.07.29.12.20.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 12:20:07 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 12:16:38 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Siddharth Gupta <sidgup@codeaurora.org>
-Cc:     agross@kernel.org, ohad@wizery.com, corbet@lwn.net,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, rishabhb@codeaurora.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] remoteproc: core: Register the character device
- interface
-Message-ID: <20200729191638.GF229995@builder.lan>
-References: <1596044401-22083-1-git-send-email-sidgup@codeaurora.org>
- <1596044401-22083-3-git-send-email-sidgup@codeaurora.org>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=xf8y6+QE7u4z9tDYoWpKfnyILr6WJGhsLpbcNKIkelU=;
+        b=fj3MIjEDDXk7bFZWLcTJeH2OB3oFV4eGAQiArDRZhMpT/ZDX5zh0raNyZQyQsG8zt9
+         iiTB1hBAWJR8ZQTV7S4iwLwcOHG9rtaQCe78Qm8PGpQyEKpUBISuEkXAkvQSpdHMWJ2J
+         iO2bpdIrZxW/ZLvRmR9dmdU/tTrIPYxRa3BJBc3IdinUHRViE9KjNeprtbx2LETXeAGL
+         6uQMQSQQufsHUJz6L4vhlFt09S6cK2qZXnbjCLUlDsqQUk2PNQr5WTaw+DFpQj3lt/Hv
+         /y9U/40jEDvPSanPnE8VfEOU8H1RB3lxk5von5YtCXmT1x+7IT5tmSfQBiuDLQkSiwmu
+         w9Sg==
+X-Gm-Message-State: AOAM532as62BgzeuNhGvXUHgE9P/Tvmfck+JDRd/lUNs0FWwEqxv+YFQ
+        Tc2i0G0EvKzhTw5LwqCPKu5shQ==
+X-Google-Smtp-Source: ABdhPJztd8X9PkPqPBt+mePsOqrRf4zvhkmVEscAYT44kSObS9rUvpzOQV1mbjxPBgBiGbWIkNUOYg==
+X-Received: by 2002:a37:b307:: with SMTP id c7mr35592806qkf.307.1596050477865;
+        Wed, 29 Jul 2020 12:21:17 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id s128sm2212336qkd.108.2020.07.29.12.21.12
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Wed, 29 Jul 2020 12:21:16 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 12:21:11 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Pengfei Li <fly@kernel.page>
+cc:     akpm@linux-foundation.org, bmt@zurich.ibm.com, dledford@redhat.com,
+        willy@infradead.org, vbabka@suse.cz,
+        kirill.shutemov@linux.intel.com, jgg@ziepe.ca,
+        alex.williamson@redhat.com, cohuck@redhat.com,
+        daniel.m.jordan@oracle.com, dbueso@suse.de, jglisse@redhat.com,
+        jhubbard@nvidia.com, ldufour@linux.ibm.com,
+        Liam.Howlett@oracle.com, peterz@infradead.org, cl@linux.com,
+        jack@suse.cz, rientjes@google.com, walken@google.com,
+        hughd@google.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 2/2] mm, util: account_locked_vm() does not hold
+ mmap_lock
+In-Reply-To: <20200726080224.205470-2-fly@kernel.page>
+Message-ID: <alpine.LSU.2.11.2007291121280.4649@eggly.anvils>
+References: <20200726080224.205470-1-fly@kernel.page> <20200726080224.205470-2-fly@kernel.page>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596044401-22083-3-git-send-email-sidgup@codeaurora.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 29 Jul 10:40 PDT 2020, Siddharth Gupta wrote:
+On Sun, 26 Jul 2020, Pengfei Li wrote:
 
-> Add the character device during rproc_add. This would create
-> a character device node at /dev/remoteproc<index>. Userspace
-> applications can interact with the remote processor using this
-> interface.
+> Since mm->locked_vm is already an atomic counter, account_locked_vm()
+> does not need to hold mmap_lock.
+
+I am worried that this patch, already added to mmotm, along with its
+1/2 making locked_vm an atomic64, might be rushed into v5.9 with just
+that two-line commit description, and no discussion at all.
+
+locked_vm belongs fundamentally to mm/mlock.c, and the lock to guard
+it is mmap_lock; and mlock() has some complicated stuff to do under
+that lock while it decides how to adjust locked_vm.
+
+It is very easy to convert an unsigned long to an atomic64_t, but
+"atomic read, check limit and do stuff, atomic add" does not give
+the same guarantee as holding the right lock around it all.
+
+(At the very least, __account_locked_vm() in 1/2 should be changed to
+replace its atomic64_add by an atomic64_cmpxchg, to enforce the limit
+that it just checked.  But that will be no more than lipstick on a pig,
+when the right lock that everyone else agrees upon is not being held.)
+
+Now, it can be argued that our locked_vm and pinned_vm maintenance
+is so random and deficient, and too difficult to keep right across
+a sprawl of drivers, that we should just be grateful for those that
+do volunteer to subject themselves to RLIMIT_MEMLOCK limitation,
+and never mind if it's a little racy.
+
+And it may well be that all those who have made considerable efforts
+in the past to improve the situation, have more interesting things to
+devote their time to, and would prefer not to get dragged back here.
+
+But let's at least give this a little more visibility, and hope
+to hear opinions one way or the other from those who care.
+
+Hugh
+
 > 
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+> Signed-off-by: Pengfei Li <fly@kernel.page>
 > ---
->  drivers/remoteproc/remoteproc_core.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  drivers/vfio/vfio_iommu_type1.c |  8 ++------
+>  mm/util.c                       | 15 +++------------
+>  2 files changed, 5 insertions(+), 18 deletions(-)
 > 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 277d3bf..7f90eee 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1986,6 +1986,11 @@ int rproc_add(struct rproc *rproc)
->  	/* create debugfs entries */
->  	rproc_create_debug_dir(rproc);
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 78013be07fe7..53818fce78a6 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -376,12 +376,8 @@ static int vfio_lock_acct(struct vfio_dma *dma, long npage, bool async)
+>  	if (!mm)
+>  		return -ESRCH; /* process exited */
 >  
-> +	/* add char device for this remoteproc */
-> +	ret = rproc_char_device_add(rproc);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	/*
->  	 * Remind ourselves the remote processor has been attached to rather
->  	 * than booted by the remoteproc core.  This is important because the
-> @@ -2262,6 +2267,7 @@ int rproc_del(struct rproc *rproc)
->  	mutex_unlock(&rproc->lock);
+> -	ret = mmap_write_lock_killable(mm);
+> -	if (!ret) {
+> -		ret = __account_locked_vm(mm, abs(npage), npage > 0, dma->task,
+> -					  dma->lock_cap);
+> -		mmap_write_unlock(mm);
+> -	}
+> +	ret = __account_locked_vm(mm, abs(npage), npage > 0,
+> +					dma->task, dma->lock_cap);
 >  
->  	rproc_delete_debug_dir(rproc);
-> +	rproc_char_device_remove(rproc);
+>  	if (async)
+>  		mmput(mm);
+> diff --git a/mm/util.c b/mm/util.c
+> index 473add0dc275..320fdd537aea 100644
+> --- a/mm/util.c
+> +++ b/mm/util.c
+> @@ -424,8 +424,7 @@ void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+>   * @task:        task used to check RLIMIT_MEMLOCK
+>   * @bypass_rlim: %true if checking RLIMIT_MEMLOCK should be skipped
+>   *
+> - * Assumes @task and @mm are valid (i.e. at least one reference on each), and
+> - * that mmap_lock is held as writer.
+> + * Assumes @task and @mm are valid (i.e. at least one reference on each).
+>   *
+>   * Return:
+>   * * 0       on success
+> @@ -437,8 +436,6 @@ int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
+>  	unsigned long locked_vm, limit;
+>  	int ret = 0;
 >  
->  	/* the rproc is downref'ed as soon as it's removed from the klist */
->  	mutex_lock(&rproc_list_mutex);
-> @@ -2430,6 +2436,7 @@ static int __init remoteproc_init(void)
+> -	mmap_assert_write_locked(mm);
+> -
+>  	locked_vm = atomic64_read(&mm->locked_vm);
+>  	if (inc) {
+>  		if (!bypass_rlim) {
+> @@ -476,17 +473,11 @@ EXPORT_SYMBOL_GPL(__account_locked_vm);
+>   */
+>  int account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc)
 >  {
->  	rproc_init_sysfs();
->  	rproc_init_debugfs();
-> +	rproc_init_cdev();
->  	rproc_init_panic();
+> -	int ret;
+> -
+>  	if (pages == 0 || !mm)
+>  		return 0;
 >  
->  	return 0;
+> -	mmap_write_lock(mm);
+> -	ret = __account_locked_vm(mm, pages, inc, current,
+> -				  capable(CAP_IPC_LOCK));
+> -	mmap_write_unlock(mm);
+> -
+> -	return ret;
+> +	return __account_locked_vm(mm, pages, inc,
+> +					current, capable(CAP_IPC_LOCK));
+>  }
+>  EXPORT_SYMBOL_GPL(account_locked_vm);
+>  
 > -- 
-> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+> 2.26.2
