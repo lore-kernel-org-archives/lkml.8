@@ -2,124 +2,148 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29ECDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C06C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06BA220672
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:21:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kNKkuZCS"
+	by mail.kernel.org (Postfix) with ESMTP id D09DB20672
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595993110;
+	bh=73C4hjWJ1i//PJgQIyTg0dr9hGkKSVuAU02bki5N6Tw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lXmTNq3n+v2Sl+gwycjX06Nwa3+AxoPAT5oeyROb6TuXGJMQejptoEGOe2pnwsB/M
+	 rqBDhgwRBGh4Wet7RCQZ9Adl+lxGcnx2AH3MbUlIA3N1o3FbDbaVFFraEyOGfx6iPO
+	 9CyZbmidkVAOG73W5MVjmvz0sUKiS5qWAXvYvHjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgG2DU6 (ORCPT
+        id S1726365AbgG2DZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 23:20:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbgG2DU6 (ORCPT
+        Tue, 28 Jul 2020 23:25:09 -0400
+Received: from condef-08.nifty.com ([202.248.20.73]:25122 "EHLO
+        condef-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbgG2DZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 23:20:58 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AD50C061794;
-        Tue, 28 Jul 2020 20:20:58 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BGf2F2DGWz9sSd;
-        Wed, 29 Jul 2020 13:20:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595992855;
-        bh=FQfpmxCdFZ8cS6nJ/IIH9W5dOQ4bTbHg21bsMtTdKQU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=kNKkuZCSB/1cjnGKIvUbpELOPWY91GQC01onRDI72UXmjECLOx1xHBTC/r0Gt7w+w
-         g+OX4Xf1hzVKS6IsOh92BWB6BBDI7QEJC5n02UGzHfOQmkz67029v4fBCzXK1HN4gS
-         Ck3QppYN8ixBOz5HXwYZREZfPRGeGIoa54EAWoQrlbUnIK2/UZvO2UJ5ARTSqEyJDF
-         vqC1y+JWefdIfcHxRgsJwCYx0tvT5TW0X5qePGNItmvYqmq4Jef9Qz44C87Uqhsku3
-         W2ybIp9w7euAl4hbqdB8b7KERKAmb2kCsojUMkDFEPgwR2pidsxBlaQg2LTVXZ+VJa
-         bHXvwFZacJEeA==
-Date:   Wed, 29 Jul 2020 13:20:50 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul@pwsan.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jacob Keller <jacob.e.keller@intel.com>
-Subject: linux-next: manual merge of the net-next tree with the risc-v tree
-Message-ID: <20200729132050.10527ff1@canb.auug.org.au>
+        Tue, 28 Jul 2020 23:25:09 -0400
+X-Greylist: delayed 376 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Jul 2020 23:25:08 EDT
+Received: from conuserg-11.nifty.com ([10.126.8.74])by condef-08.nifty.com with ESMTP id 06T3GJ8i030079;
+        Wed, 29 Jul 2020 12:16:19 +0900
+Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 06T3Fi05000857;
+        Wed, 29 Jul 2020 12:15:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 06T3Fi05000857
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1595992545;
+        bh=UempUcm31dYx4tjARW5o0hFSDrdGFkdiTyxqMOHP3V8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Odfzr8aX6Tyca6O/rRqMtQdZXr3EPMx6pSPeCEFWrYfjx4IqQciybu5qqI2HAKXpU
+         XD/H9wE4uMyumfoZHg3Kiqp6NYk8+L8TlgOBas5B16hl2OcQCyErBZzzUxthYOYjK+
+         K9MShcztZiwH5AaBPBj/liQMI258Iw2yjIrm8hls7OKggRsiNHtN9X8bklPEP4on4n
+         sR2rxT+x9pKH36vI40ZYxQeu7oTj8AhUlwOEvF5t9kgjNRwf3J6G3auVGSi4EJvUst
+         R5kCNoaOimDjRSqZeGqQonGHcOnEo0f6R4cGzLhBTbXgSWwfjxW29bO/Tw4lVjLGrV
+         YgP7U1UBgSlSg==
+X-Nifty-SrcIP: [126.25.67.101]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] kbuild: sort hostprogs before passing it to ifneq
+Date:   Wed, 29 Jul 2020 12:15:37 +0900
+Message-Id: <20200729031537.37926-2-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200729031537.37926-1-masahiroy@kernel.org>
+References: <20200729031537.37926-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rKGAqN4rJ0Sxexkd60vKQYf";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/rKGAqN4rJ0Sxexkd60vKQYf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The conditional:
 
-Hi all,
+  ifneq ($(hostprogs),)
 
-Today's linux-next merge of the net-next tree got a conflict in:
+... is evaluated to true if $(hostprogs) does not contain any word but
+whitespace characters.
 
-  lib/Kconfig
+  ifneq ($(strip $(hostprogs)),)
 
-between commit:
+... is a safe way to avoid interpreting whitespace as a non-empty value,
+but I'd rather want to use the side-effect of $(sort ...) to do the
+equivalent.
 
-  1a479f783857 ("lib: Add a generic version of devmem_is_allowed()")
+$(sort ...) is used in scripts/Makefile.host in order to drop duplication
+in $(hostprogs). It is also useful to strip excessive spaces.
 
-from the risc-v tree and commit:
+Move $(sort ...) before evaluating the ifneq.
 
-  b8265621f488 ("Add pldmfw library for PLDM firmware update")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-from the net-next tree.
+ scripts/Makefile.build |  5 ++++-
+ scripts/Makefile.host  | 10 ++++------
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index d41c1cd453b9..e0b6b5db11c2 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -45,12 +45,15 @@ include $(kbuild-file)
+ 
+ include scripts/Makefile.lib
+ 
+-# Do not include hostprogs rules unless needed
++# Do not include hostprogs rules unless needed.
++# $(sort ...) is used here to remove duplicated words and excessive spaces.
++hostprogs := $(sort $(hostprogs))
+ ifneq ($(hostprogs),)
+ include scripts/Makefile.host
+ endif
+ 
+ # Do not include userprogs rules unless needed.
++# $(sort ...) is used here to remove duplicated words and excessive spaces.
+ userprogs := $(sort $(userprogs))
+ ifneq ($(userprogs),)
+ include scripts/Makefile.userprogs
+diff --git a/scripts/Makefile.host b/scripts/Makefile.host
+index 687ca3f309e9..278b4d6ac945 100644
+--- a/scripts/Makefile.host
++++ b/scripts/Makefile.host
+@@ -38,24 +38,22 @@ $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
+ # Will compile qconf as a C++ program, and menu as a C program.
+ # They are linked as C++ code to the executable qconf
+ 
+-__hostprogs := $(sort $(hostprogs))
+-
+ # C code
+ # Executables compiled from a single .c file
+-host-csingle	:= $(foreach m,$(__hostprogs), \
++host-csingle	:= $(foreach m,$(hostprogs), \
+ 			$(if $($(m)-objs)$($(m)-cxxobjs),,$(m)))
+ 
+ # C executables linked based on several .o files
+-host-cmulti	:= $(foreach m,$(__hostprogs),\
++host-cmulti	:= $(foreach m,$(hostprogs),\
+ 		   $(if $($(m)-cxxobjs),,$(if $($(m)-objs),$(m))))
+ 
+ # Object (.o) files compiled from .c files
+-host-cobjs	:= $(sort $(foreach m,$(__hostprogs),$($(m)-objs)))
++host-cobjs	:= $(sort $(foreach m,$(hostprogs),$($(m)-objs)))
+ 
+ # C++ code
+ # C++ executables compiled from at least one .cc file
+ # and zero or more .c files
+-host-cxxmulti	:= $(foreach m,$(__hostprogs),$(if $($(m)-cxxobjs),$(m)))
++host-cxxmulti	:= $(foreach m,$(hostprogs),$(if $($(m)-cxxobjs),$(m)))
+ 
+ # C++ Object (.o) files compiled from .cc files
+ host-cxxobjs	:= $(sort $(foreach m,$(host-cxxmulti),$($(m)-cxxobjs)))
+-- 
+2.25.1
 
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc lib/Kconfig
-index 610c16ecbb7c,3ffbca6998e5..000000000000
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@@ -677,5 -677,6 +677,9 @@@ config GENERIC_LIB_CMPDI
-  config GENERIC_LIB_UCMPDI2
-  	bool
- =20
- +config GENERIC_LIB_DEVMEM_IS_ALLOWED
- +	bool
-++
-+ config PLDMFW
-+ 	bool
-+ 	default n
-
---Sig_/rKGAqN4rJ0Sxexkd60vKQYf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8g6xIACgkQAVBC80lX
-0GwumwgAgaM1oRM4ovApS9tbdCpmmk2laMWFWvSV2XbYF4B78o8pUdMRNkFwh/eA
-1KHu//ycq1O56W1APnv4XeQGoH+qdB43aJSddvCerdpEFLrCgkhPdaoq5s9ROkop
-s/hWBVw8oqV1xtYdnK4vg0j6++uhHSpoPYMGqqxi++yP+jih1c3cE3kj+hXEGc8s
-OiLAqUM9g+L0ZQnRahWiqHjNwNhy8ESWdH3LKmOD2inIoYoInF4a6oOUU+H/t/gE
-9YvtqSgRQc3ugmKjeJGmVc5aRhYH47TPwaB2b13TS2ZbXSFsK88IznQIl5tSxZrG
-9Md6SnDc1uXL4yO2fDNG3tlQfW0izg==
-=bvmC
------END PGP SIGNATURE-----
-
---Sig_/rKGAqN4rJ0Sxexkd60vKQYf--
