@@ -2,144 +2,96 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF6EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1D0206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75EFE2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:06:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5dcDswT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hh5+vEIQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgG2SFo (ORCPT
+        id S1726958AbgG2SG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:05:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36750 "EHLO
+        Wed, 29 Jul 2020 14:06:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgG2SFn (ORCPT
+        with ESMTP id S1726385AbgG2SG1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:05:43 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F09A9C061794;
-        Wed, 29 Jul 2020 11:05:42 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id w126so13165633pfw.8;
-        Wed, 29 Jul 2020 11:05:42 -0700 (PDT)
+        Wed, 29 Jul 2020 14:06:27 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96478C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:06:27 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id o22so18091609qtt.13
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:06:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=o4rHFcSX18taIt22ICNbpXYlTpfl8WXy430SyBBEUAM=;
-        b=E5dcDswTV0bghO/zuaUaa+n4pmPDRrS+T8PGxl0a+f0/jTptmvCZU0D771HXDXsIJ3
-         VyRQvKsc0WpS0ECJruR89RbMsdAneUM7D+QpNx+NjZBF7QIwR2ENKBNuuh8atw/Pxscp
-         hHQRJ1/+9WDb75HnKnCtBNU6lmeFrRYPHCE3tRDgijlQVTnkS/MJHnrirfEFiXw3GMhs
-         idt/Y6zTbS2T8stdWNrubVRtimexORKSQtjMJtchUdxHJnHmJDUDIU9y2ogW7pgbr7cV
-         lxFqD7UxsHmVKDSysSEDTjwsiUUVfmqdCSDpUBq3/qpdUPJWZNLVUhOrnYKPbKLirO2Q
-         bpRQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=xJ2kJUaxCqHeFy3eTq7CnXVFURN/g/y8EYUBnKoxbLI=;
+        b=Hh5+vEIQvFG8XKYfsn89W1ELEJAteSfSsR7+QmXXZZUAzVy+xvS+g5+YDaaAxrwJ3a
+         Ss2XCpv7ku+uVEzhYEqB2q0gAvlwBKp5Pbe311njOHtO5UPoO6Mm2kpPHXLTBYCMwgB6
+         05ODjedRN4Wbenc8RzTyzY95fTzbyOdbfmqkWB+/aPn4ARt0yzYImktzJhkK/aAGmbpY
+         764Fg81c3gaPBkwzniuvZW3wcT9iWOSntfe75hQK3+oVNT4qOJOFRptI1kJPN1xhHbji
+         kjTfGb3pTLdyFPdFooF13n+cVrfdNksjASH9Snfkf+BcLMoo6xgg640CAYbDxCA7kvq3
+         VJ0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=o4rHFcSX18taIt22ICNbpXYlTpfl8WXy430SyBBEUAM=;
-        b=eVpoFj9OUa6mJPM8bkkr/vEKBObVsxbIppMptd82AUESo0TDRGbzEn2/GGUwIDE+FO
-         kpcKGkljDZLTVSil5IE0Ghx8PPEZ1RshocVwFCYGuZHQyMhUuh9/H4bZmllCeTXVb1Q/
-         RrCZBAvd2xO4XKfBjaWrAZ0T0vkKFTlvW9WEvJcTAUtWgLOThJlnV5UdKpv9UzcDosWV
-         gq3s5Tk6/qoG3RSIK4mWdpdRH2IFG+T/im9TUuQYG75IYt7PTLNgiXuLv6XN+muCV+rU
-         rLv6k1ePWLhGLf6jX1gkbm75HOf80JJs0reQ/7RCwfVlmkM1VD3IGyAp22Sp2EFfyGWx
-         W2Bw==
-X-Gm-Message-State: AOAM532c1wQJO/eBlvw4Yx33cnQMnoDBMtjn1XId8EgrSzZqH5HrX5rU
-        hEWZTVukepvghC/I8aAsYJc=
-X-Google-Smtp-Source: ABdhPJyP7hgMODXN5GM7qlOwF3ltPEqxc6RD0cHdnqEcvogvzbLG7VXgfylJKoEdbBzKyVlK2oAvqg==
-X-Received: by 2002:a63:db46:: with SMTP id x6mr29413959pgi.265.1596045942478;
-        Wed, 29 Jul 2020 11:05:42 -0700 (PDT)
-Received: from blackclown ([103.88.82.91])
-        by smtp.gmail.com with ESMTPSA id d9sm3089514pgv.45.2020.07.29.11.05.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jul 2020 11:05:41 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 23:35:29 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/7] scsi: Remove pci-dma-compat wrapper APIs.
-Message-ID: <cover.1596045683.git.usuraj35@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=xJ2kJUaxCqHeFy3eTq7CnXVFURN/g/y8EYUBnKoxbLI=;
+        b=pyOUk2bQ676079gTeQy3xx0RdZurSLAJwzJXspDqJkNgkL9UJilVLEwJc/f9NjpyLR
+         2ZZRbUtNVmatdeqiwt6GOXGCrBQKKuuiSouu6/iLFQQ30QganQvam6SGoo17Qm2/H1rD
+         /hDQkdiTMFQZaxykppNjPkpcrbM8h6ktLe7iCCeCbX5qw3bG5V4+SufpR4ZZOGzbyLZR
+         wyzubb/z239bwSWn4Cbo6FclPh8zCEn4n80vP+iIGFucSKSIqFJb6ZXM83ossl1UrFaV
+         iYY7M7vxx8OsiukcBQFEtrexWytrRS7Wu5R0TCSVOu6Gg0hWei867gw8WzgfB0D7qIQC
+         Y23g==
+X-Gm-Message-State: AOAM531YsSOHjgL5vZGRlD50r3VeRBdbOUZbKXsSoKHEOPY85pfdKYhs
+        bnv1CQ8bDxpvddGboSmO6lgE3w==
+X-Google-Smtp-Source: ABdhPJzpXzjLsL1qsC1i0J4pQ18httgmazTojrNMLZPYLUJLN/3VPnlQEBNLgHOre+lHSfpnTekbSA==
+X-Received: by 2002:ac8:44b9:: with SMTP id a25mr28663335qto.356.1596045986434;
+        Wed, 29 Jul 2020 11:06:26 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id c7sm1105575qkd.92.2020.07.29.11.06.23
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Wed, 29 Jul 2020 11:06:25 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 11:06:08 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com
+Subject: Re: [PATCH v17 00/21] per memcg lru lock
+In-Reply-To: <c00ac587-7f69-768a-84ea-53cbf7469ae9@linux.alibaba.com>
+Message-ID: <alpine.LSU.2.11.2007291105570.4649@eggly.anvils>
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com> <49d4f3bf-ccce-3c97-3a4c-f5cefe2d623a@linux.alibaba.com> <c00ac587-7f69-768a-84ea-53cbf7469ae9@linux.alibaba.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 29 Jul 2020, Alex Shi wrote:
+> 
+> Is there any comments or suggestion for this patchset?
+> Any hints will be very appreciated.
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Alex: it is now v5.8-rc7, obviously too late for this patchset to make
+v5.9, so I'm currently concentrated on checking some patches headed for
+v5.9 (and some bugfix patches of my own that I don't get time to send):
+I'll get back to responding on lru_lock in a week or two's time.
 
-Hii Maintainers,
-        This patchset replaces the pci-dma-compat wrappers with their
-dma-mapping counterparts. Thus, removing possible midlayering and
-unnecessary legacy code and API.
-
-Most of the task is fairly trivially scriptable and done with
-coccinelle. But the handling of pci_z/alloc_consistent needed
-some hand modification in replacing the flag GFP_ATOMIC with
-a proper flag depending upon the context.
-
-I would be glad to receive any feedbacks.
-
-Thanks,
-
-Suraj Upadhyay.
-
-Suraj Upadhyay (7):
-  scsi: aacraid: Remove pci-dma-compat wrapper APIs
-  scsi: aic7xxx: Remove pci-dma-compat wrapper APIs.
-  scsi: dc395x: Remove pci-dma-compat wrapper APIs.
-  scsi: mpt3sas: Remove pci-dma-compat wrapper APIs.
-  scsi: hpsa: Remove pci-dma-compat wrapper APIs.
-  scsi: qla2xxx: Remove pci-dma-compat wrapper APIs.
-  scsi: megaraid: Remove pci-dma-compat wrapper APIs
-
- drivers/scsi/aacraid/aachba.c      |   4 +-
- drivers/scsi/aacraid/commctrl.c    |  20 +--
- drivers/scsi/aacraid/commsup.c     |   8 +-
- drivers/scsi/aacraid/linit.c       |   4 +-
- drivers/scsi/aic7xxx/aic79xx_osm.c |   7 +-
- drivers/scsi/dc395x.c              |   6 +-
- drivers/scsi/hpsa.c                |  16 +--
- drivers/scsi/megaraid.c            | 192 +++++++++++++++--------------
- drivers/scsi/mpt3sas/mpt3sas_ctl.c |  10 +-
- drivers/scsi/qla2xxx/qla_os.c      |   4 +-
- 10 files changed, 141 insertions(+), 130 deletions(-)
-
---=20
-2.17.1
-
-
---oyUTqETQ0mS9luUI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8hul8ACgkQ+gRsbIfe
-745yWg/8CeOWFmcv9+wzPrfH02Fq11gXeVjZLQryrC0ks9fqo7DFuGSNZ1KI34Tu
-7paRWyZNFU/LPSd9TmqnTUKDafICDEXSzsAEC14wgDqFojS/VR9F5iY069SabcUO
-AWaFJBZ9Oe3qDQ3cD52vtWm3I2nwGP1njiOjQB3tc3qCEC4aIkEYNXY3S3bfe91X
-8yK+r44sf6CIBNj5HXBqMlNVdrNUThzWGmBDVfwL6GK57rqgVUzCUVic///TbEiS
-2AGk1DSUvzuJ46iqUU6VPodV/OiZlUZKBhdBa7LHGe5GE8jHBtMmWKgOzwTHpUZi
-WOxaYbBuTPGHWzlX/XOdcbqB6t/N28eBMxxFZ4MSv04U0Bpg7A1wH/QJmJnKmHIO
-FxwcRmCjbY8d4mdQeUjQjL4Oefevg4t4dziI1Zk7XwatgNnzL4+8iBYtOxzdEZEI
-YKzw2ncN0cuuB/nxKdoKaCV3L87JbRPYp3JKXh288v16czfOYzlPVkzNduTKvN6i
-j5ZGUg4nb4wtXUxyZ8VU3skGrK+8Pik85Gwt+ZlLlyKMHn101lE4M2izsPM+8lNP
-MNjCwQUk7/W3ZhfePaAxsD0LDkvNRDoFt4FVRDCcyhrHAHbrk1qx/G1ETAv1cmSi
-D6nE89UniN/XjP2SZWWHhatR0LnSbsRxbOKtgvYdflIvogGkMpY=
-=1Cx6
------END PGP SIGNATURE-----
-
---oyUTqETQ0mS9luUI--
+Hugh
