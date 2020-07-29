@@ -3,185 +3,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C723C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA67521883
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596014423;
-	bh=IXylOXD+9k8IIbISD2Hjll8ck1Zg0A5F74F4YbMo4JE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zG8NJfkbcMFIV9GtWkQQDZoef9ljHEdqQAVTx0ymasPH5YlbpYe5y6VNDDGEzZ5Tc
-	 F0LEpJ5EOhnj0Gtx3BwegwRoJNxla281U8ggiyk0N72sRn3R82hK/3qnWU9Tpx539t
-	 L8j2+ZUyXlHKu3yYeBQD4QgqaSg9//pUrd0vdc8g=
+	by mail.kernel.org (Postfix) with ESMTP id 6BCE420663
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:20:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RevM9dPy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgG2JUV convert rfc822-to-8bit (ORCPT
+        id S1728316AbgG2JUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 29 Jul 2020 05:20:21 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48729 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728051AbgG2JUU (ORCPT
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728008AbgG2JUU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Jul 2020 05:20:20 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-493-An_VbBNxMCux66BN3o3jxQ-1; Wed, 29 Jul 2020 05:20:13 -0400
-X-MC-Unique: An_VbBNxMCux66BN3o3jxQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AACA08015F4;
-        Wed, 29 Jul 2020 09:20:10 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.40.193.247])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3FE9369338;
-        Wed, 29 Jul 2020 09:20:06 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Kajol Jain <kjain@linux.ibm.com>, Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paul Clarke <pc@us.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: [PATCH 14/19] perf metric: Add DCache_L2 to metric parse test
-Date:   Wed, 29 Jul 2020 11:19:03 +0200
-Message-Id: <20200729091908.1378911-15-jolsa@kernel.org>
-In-Reply-To: <20200729091908.1378911-1-jolsa@kernel.org>
-References: <20200729091908.1378911-1-jolsa@kernel.org>
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72AAAC061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 02:20:20 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id m22so13930752pgv.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 02:20:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=laWlLvysNkw+EqkUXXWh3qRKnJp9myxjPBYwvjpsBKI=;
+        b=RevM9dPyszfsbo00TAsrrA5RNf/6znzZWEF3bluYJrFli5YQ2K1kR0L/MK5QK7Msxp
+         uX5o143Tp13ao35F2TpjObPOmZnSWvwtGvs3NimBOhGM4ZytcQLt3yyRdCR5AhhBcEgg
+         eMzDvf7XfOL3CqNQY8Vm7t9pqaZoeyDFT+CrU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=laWlLvysNkw+EqkUXXWh3qRKnJp9myxjPBYwvjpsBKI=;
+        b=YZFmo7Q+K+GJ4c9c1dsjXQRLN0AvHj/D1nF5CyRszz9sRtZNfhqeQOtwGILIHJBaiY
+         fLnLksKOqsILCFJgzd2gon+Y5FCuPx0xLYM4kpnWiuLw0ge9v7kSmJ8tHU0K1OmR/skS
+         VD8ZPl/TmyvrRu2jtTSMH3+ycFxZ2NoaUdvsFgK/xLknNPOr0ONI02xsPGfCbOEQVrex
+         TrYo3gt98WwUojyOTZ6xiDweQScLSYrPm7foT/h8VwhbqQ71BSCXgheuroi+Z8q4whhT
+         eP0bhhyiWS2OPgWm+4RAiYDuR/0y0crMwxbD+tEEzvxii7lgkRbZGlwCCqapLrcUo42y
+         cUCA==
+X-Gm-Message-State: AOAM532lXPmiWDbIzWa1iyWY6nl4un8WtHDNEjDdxQCX+7obnNJvXip1
+        Go5u3anPCGR/wxyCxb7sc735Bw==
+X-Google-Smtp-Source: ABdhPJx9/lhEja1H2gezD9OyVNkzKTD4MosXtyG0cjUNZuaSWJgrv5Sj6Z9PzF0YYChW1FJeoNBA5Q==
+X-Received: by 2002:aa7:93c3:: with SMTP id y3mr28318781pff.206.1596014419908;
+        Wed, 29 Jul 2020 02:20:19 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id p1sm1568332pjp.10.2020.07.29.02.20.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 02:20:19 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: kernel.org
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200728230520.2011240-1-campello@chromium.org>
+References: <20200728151258.1222876-1-campello@chromium.org> <20200728230520.2011240-1-campello@chromium.org>
+Subject: Re: [PATCH v2 00/14] sx9310 iio driver updates
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org
+To:     Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 29 Jul 2020 02:20:17 -0700
+Message-ID: <159601441795.1360974.13003926832878715423@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding test that compute DCache_L2 metrics with other related metrics in it.
+Quoting Daniel Campello (2020-07-28 16:05:06)
+> The first patch resends the DT binding for the driver that was merged in
+> v5.8-rc1 with a small change to update for proper regulators. The second
+> through the eleventh patch fixes several issues dropped from v8 to v9
+> when the initial patch was merged. The twelveth patch fixes a few
+> printks that are missing newlines and should be totally non-trivial to
+> apply. The thirteenth patch drops channel_users because it's unused. The
+> final patch adds support to enable the svdd and vdd supplies so that
+> this driver can work on a board where the svdd supply isn't enabled at
+> boot and needs to be turned on before this driver starts to communicate
+> with the chip.
+>=20
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
-Acked-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paul Clarke <pc@us.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20200719181320.785305-15-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Can you add this patch onto the end?
+
+----8<----
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH] iio: sx9310: Use irq trigger flags from firmware
+
+We shouldn't need to set default irq trigger flags here as the firmware
+should have properly indicated the trigger type, i.e. level low, in the
+DT or ACPI tables.
+
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- tools/perf/tests/parse-metric.c | 71 +++++++++++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+ drivers/iio/proximity/sx9310.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-index 28f33893338b..aa4d5a9f09a8 100644
---- a/tools/perf/tests/parse-metric.c
-+++ b/tools/perf/tests/parse-metric.c
-@@ -36,6 +36,27 @@ static struct pmu_event pme_test[] = {
- 	.metric_expr	= "(dcache_miss_cpi + icache_miss_cycles)",
- 	.metric_name	= "cache_miss_cycles",
- },
-+{
-+	.metric_expr	= "l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit",
-+	.metric_name	= "DCache_L2_All_Hits",
-+},
-+{
-+	.metric_expr	= "max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + "
-+			  "l2_rqsts.pf_miss + l2_rqsts.rfo_miss",
-+	.metric_name	= "DCache_L2_All_Miss",
-+},
-+{
-+	.metric_expr	= "dcache_l2_all_hits + dcache_l2_all_miss",
-+	.metric_name	= "DCache_L2_All",
-+},
-+{
-+	.metric_expr	= "d_ratio(dcache_l2_all_hits, dcache_l2_all)",
-+	.metric_name	= "DCache_L2_Hits",
-+},
-+{
-+	.metric_expr	= "d_ratio(dcache_l2_all_miss, dcache_l2_all)",
-+	.metric_name	= "DCache_L2_Misses",
-+},
- };
- 
- static struct pmu_events_map map = {
-@@ -194,10 +215,60 @@ static int test_cache_miss_cycles(void)
- 	return 0;
- }
- 
-+
-+/*
-+ * DCache_L2_All_Hits = l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hi
-+ * DCache_L2_All_Miss = max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) +
-+ *                      l2_rqsts.pf_miss + l2_rqsts.rfo_miss
-+ * DCache_L2_All      = dcache_l2_all_hits + dcache_l2_all_miss
-+ * DCache_L2_Hits     = d_ratio(dcache_l2_all_hits, dcache_l2_all)
-+ * DCache_L2_Misses   = d_ratio(dcache_l2_all_miss, dcache_l2_all)
-+ *
-+ * l2_rqsts.demand_data_rd_hit = 100
-+ * l2_rqsts.pf_hit             = 200
-+ * l2_rqsts.rfo_hi             = 300
-+ * l2_rqsts.all_demand_data_rd = 400
-+ * l2_rqsts.pf_miss            = 500
-+ * l2_rqsts.rfo_miss           = 600
-+ *
-+ * DCache_L2_All_Hits = 600
-+ * DCache_L2_All_Miss = MAX(400 - 100, 0) + 500 + 600 = 1400
-+ * DCache_L2_All      = 600 + 1400  = 2000
-+ * DCache_L2_Hits     = 600 / 2000  = 0.3
-+ * DCache_L2_Misses   = 1400 / 2000 = 0.7
-+ */
-+static int test_dcache_l2(void)
-+{
-+	double ratio;
-+	struct value vals[] = {
-+		{ .event = "l2_rqsts.demand_data_rd_hit", .val = 100 },
-+		{ .event = "l2_rqsts.pf_hit",             .val = 200 },
-+		{ .event = "l2_rqsts.rfo_hit",            .val = 300 },
-+		{ .event = "l2_rqsts.all_demand_data_rd", .val = 400 },
-+		{ .event = "l2_rqsts.pf_miss",            .val = 500 },
-+		{ .event = "l2_rqsts.rfo_miss",           .val = 600 },
-+		{ 0 },
-+	};
-+
-+	TEST_ASSERT_VAL("failed to compute metric",
-+			compute_metric("DCache_L2_Hits", vals, &ratio) == 0);
-+
-+	TEST_ASSERT_VAL("DCache_L2_Hits failed, wrong ratio",
-+			ratio == 0.3);
-+
-+	TEST_ASSERT_VAL("failed to compute metric",
-+			compute_metric("DCache_L2_Misses", vals, &ratio) == 0);
-+
-+	TEST_ASSERT_VAL("DCache_L2_Misses failed, wrong ratio",
-+			ratio == 0.7);
-+	return 0;
-+}
-+
- int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unused)
- {
- 	TEST_ASSERT_VAL("IPC failed", test_ipc() == 0);
- 	TEST_ASSERT_VAL("frontend failed", test_frontend() == 0);
- 	TEST_ASSERT_VAL("cache_miss_cycles failed", test_cache_miss_cycles() == 0);
-+	TEST_ASSERT_VAL("DCache_L2 failed", test_dcache_l2() == 0);
- 	return 0;
- }
--- 
-2.25.4
-
+diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+index 24a2360b6314..2106b9141928 100644
+--- a/drivers/iio/proximity/sx9310.c
++++ b/drivers/iio/proximity/sx9310.c
+@@ -945,7 +945,7 @@ static int sx9310_probe(struct i2c_client *client)
+ 		ret =3D devm_request_threaded_irq(dev, client->irq,
+ 						sx9310_irq_handler,
+ 						sx9310_irq_thread_handler,
+-						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
++						IRQF_ONESHOT,
+ 						"sx9310_event", indio_dev);
+ 		if (ret)
+ 			return ret;
+--=20
+Sent by a computer, using git, on the internet
