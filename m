@@ -2,102 +2,145 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BCFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1F3206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 676D3206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:26:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Ht1Tea7i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgG2KXb (ORCPT
+        id S1726560AbgG2K0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 06:23:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:49190 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbgG2KXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 06:23:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9253530E;
-        Wed, 29 Jul 2020 03:23:30 -0700 (PDT)
-Received: from [192.168.178.2] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28B623F718;
-        Wed, 29 Jul 2020 03:23:28 -0700 (PDT)
-Subject: Re: [tip:sched/fifo 44/45] ERROR: modpost: "sched_setscheduler"
- undefined!
-To:     Qais Yousef <qais.yousef@arm.com>, peterz@infradead.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, sfr@canb.auug.org.au
-References: <202006192249.AYnVBGCH%lkp@intel.com>
- <20200709124505.GT597537@hirez.programming.kicks-ass.net>
- <20200709115818.36a956a4@oasis.local.home>
- <20200720214918.GM5523@worktop.programming.kicks-ass.net>
- <20200720181943.7d8efc65@oasis.local.home>
- <20200721083643.GG119549@hirez.programming.kicks-ass.net>
- <20200721101357.xoa6x4xtzkqoltfk@e107158-lin>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <4a0da149-5051-8204-6f34-da4d6e42a78a@arm.com>
-Date:   Wed, 29 Jul 2020 12:23:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 06:26:22 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:42699 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726336AbgG2K0V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 06:26:21 -0400
+X-UUID: 680459401b4f419e828516d7b472f464-20200729
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=MPTSG+n/0Vm1h1PIQ5D8rTUTLY8/JFmBqw35qwYcLvU=;
+        b=Ht1Tea7iLahWge2y/SdW44LdMcFc2GkR+fD57eB8qiyI290WFNy4nA0YuJBAEVjA2mmBPUgAHGQAvhQPx2F+hPVI88vBrtqK5BYGwVOTZe+dy3QLMIudlr1LZqM7EwqAhGCoBj0jBejJQIUSS+l3TQIjxXkevz63ForIRltypes=;
+X-UUID: 680459401b4f419e828516d7b472f464-20200729
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 946186892; Wed, 29 Jul 2020 18:26:16 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 29 Jul 2020 18:26:12 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 29 Jul 2020 18:26:13 +0800
+Message-ID: <1596018374.17247.41.camel@mtkswgap22>
+Subject: Re: [PATCH v2] scsi: ufs: Fix possible infinite loop in ufshcd_hold
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Can Guo <cang@codeaurora.org>
+CC:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <bvanassche@acm.org>, <beanhuo@micron.com>,
+        <asutoshd@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
+        <cc.chou@mediatek.com>
+Date:   Wed, 29 Jul 2020 18:26:14 +0800
+In-Reply-To: <bfbb48b06fa3464da0cbd2aee8a32649@codeaurora.org>
+References: <20200729024037.23105-1-stanley.chu@mediatek.com>
+         <bfbb48b06fa3464da0cbd2aee8a32649@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <20200721101357.xoa6x4xtzkqoltfk@e107158-lin>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 5E697B60209E19EE040B75CE5B8A822265815B3269B1B7FDF6F122FDED418EC42000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/07/2020 12:13, Qais Yousef wrote:
-> On 07/21/20 10:36, peterz@infradead.org wrote:
->> On Mon, Jul 20, 2020 at 06:19:43PM -0400, Steven Rostedt wrote:
->>> On Mon, 20 Jul 2020 23:49:18 +0200
->>> Peter Zijlstra <peterz@infradead.org> wrote:
->>>
->>>> Steve, would this work for you, or would you prefer renaming the
->>>> parameters as well?
->>>>
->>>
->>> Yeah, that's fine. You don't have any sched_fifo_high() ?
->>
->> Thanks! and no.
->>
->> I'll go write a Changelog and add it to tip/sched/fifo, so that
->> hopefully, sfr can stop complaining about this build fail ;-)
->>
->> I've even argued we should rename fifo_low() to something else, but
->> failed to come up with a sensible name. The intended case is for when
->> you want something above normal but don't particularly care about RT at
->> all.
->>
->> The thing is, once you start adding priorities, even low,med,high, we're
->> back to where we were. And the whole argument is that the kernel cannot
->> set priorities in any sensible fashion.
-> 
-> Agreed. I am worried about in-kernel users setting random uclamp values too.
+SGkgQ2FuLA0KDQpPbiBXZWQsIDIwMjAtMDctMjkgYXQgMTY6NDMgKzA4MDAsIENhbiBHdW8gd3Jv
+dGU6DQo+IEhpIFN0YW5sZXksDQo+IA0KPiBPbiAyMDIwLTA3LTI5IDEwOjQwLCBTdGFubGV5IENo
+dSB3cm90ZToNCj4gPiBJbiB1ZnNoY2Rfc3VzcGVuZCgpLCBhZnRlciBjbGstZ2F0aW5nIGlzIHN1
+c3BlbmRlZCBhbmQgbGluayBpcyBzZXQNCj4gPiBhcyBIaWJlcm44IHN0YXRlLCB1ZnNoY2RfaG9s
+ZCgpIGlzIHN0aWxsIHBvc3NpYmx5IGludm9rZWQgYmVmb3JlDQo+ID4gdWZzaGNkX3N1c3BlbmQo
+KSByZXR1cm5zLiBGb3IgZXhhbXBsZSwgTWVkaWFUZWsncyBzdXNwZW5kIHZvcHMgbWF5DQo+ID4g
+aXNzdWUgVUlDIGNvbW1hbmRzIHdoaWNoIHdvdWxkIGNhbGwgdWZzaGNkX2hvbGQoKSBkdXJpbmcg
+dGhlIGNvbW1hbmQNCj4gPiBpc3N1aW5nIGZsb3cuDQo+ID4gDQo+ID4gTm93IGlmIFVGU0hDRF9D
+QVBfSElCRVJOOF9XSVRIX0NMS19HQVRJTkcgY2FwYWJpbGl0eSBpcyBlbmFibGVkLA0KPiA+IHRo
+ZW4gdWZzaGNkX2hvbGQoKSBtYXkgZW50ZXIgaW5maW5pdGUgbG9vcHMgYmVjYXVzZSB0aGVyZSBp
+cyBubw0KPiA+IGNsay11bmdhdGluZyB3b3JrIHNjaGVkdWxlZCBvciBwZW5kaW5nLiBJbiB0aGlz
+IGNhc2UsIHVmc2hjZF9ob2xkKCkNCj4gPiBzaGFsbCBqdXN0IGJ5cGFzcywgYW5kIGtlZXAgdGhl
+IGxpbmsgYXMgSGliZXJuOCBzdGF0ZS4NCj4gPiANCj4gDQo+IFRoZSBpbmZpbml0ZSBsb29wIGlz
+IGV4cGVjdGVkIGFzIHVmc2hjZF9ob2xkIGlzIGNhbGxlZCBhZ2FpbiBhZnRlcg0KPiBsaW5rIGlz
+IHB1dCB0byBoaWJlcm44IHN0YXRlLCBzbyBpbiBRQ09NJ3MgY29kZSwgd2UgbmV2ZXIgZG8gdGhp
+cy4NCg0KU2FkbHkgTWVkaWFUZWsgaGF2ZSB0byBkbyB0aGlzIHRvIG1ha2Ugb3VyIFVuaVBybyB0
+byBlbnRlciBsb3ctcG93ZXINCm1vZGUuDQoNCj4gVGhlIGNhcCBVRlNIQ0RfQ0FQX0hJQkVSTjhf
+V0lUSF9DTEtfR0FUSU5HIG1lYW5zIFVJQyBsaW5rIHN0YXRlDQo+IG11c3Qgbm90IGJlIEhJQkVS
+TjggYWZ0ZXIgdWZzaGNkX2hvbGQoYXN5bmM9ZmFsc2UpIHJldHVybnMuDQoNCklmIGRyaXZlciBp
+cyBub3QgaW4gUE0gc2NlbmFyaW9zLCBlLmcuLCBzdXNwZW5kZWQsIGFib3ZlIHN0YXRlbWVudCBz
+aGFsbA0KYmUgYWx3YXlzIGZvbGxvd2VkLiBCdXQgdHdvIG9idmlvdXMgdmlvbGF0aW9ucyBhcmUg
+ZXhpc3RlZCwNCg0KMS4gSW4gdWZzaGNkX3N1c3BlbmQoKSwgbGluayBpcyBzZXQgYXMgSElCRVJO
+OCBiZWhpbmQgdWZzaGNkX2hvbGQoKQ0KMi4gSW4gdWZzaGNkX3Jlc3VtZSgpLCBsaW5rIGlzIHNl
+dCBiYWNrIGFzIEFjdGl2ZSBiZWZvcmUNCnVmc2hjZF9yZWxlYXNlKCkgaXMgaW52b2tlZCANCg0K
+U28gYXMgbXkgdW5kZXJzdGFuZGluZywgc3BlY2lhbCBjb25kaXRpb25zIGFyZSBhbGxvd2VkIGlu
+IFBNIHNjZW5hcmlvcywNCmFuZCB0aGlzIGlzIHdoeSAiaGJhLT5jbGtfZ2F0aW5nLmlzX3N1c3Bl
+bmRlZCIgaXMgaW50cm9kdWNlZC4gQnkgdGhpcw0KdGhvdWdodCwgSSB1c2VkICJoYmEtPmNsa19n
+YXRpbmcuaXNfc3VzcGVuZGVkIiBpbiB0aGlzIHBhdGNoIGFzIHRoZQ0KbWFuZGF0b3J5IGNvbmRp
+dGlvbiB0byBhbGxvdyB1ZnNoY2RfaG9sZCgpIHVzYWdlIGluIHZlbmRvciBzdXNwZW5kIGFuZA0K
+cmVzdW1lIGNhbGxiYWNrcy4NCg0KDQo+IEluc3RlYWQgb2YgYmFpbGluZyBvdXQgZnJvbSB0aGF0
+IGxvb3AsIHdoaWNoIG1ha2VzIHRoZSBsb2dpYyBvZg0KPiB1ZnNoY2RfaG9sZCBhbmQgY2xrIGdh
+dGluZyBldmVuIG1vcmUgY29tcGxleCwgaG93IGFib3V0IHJlbW92aW5nDQo+IHVmc2hjZF9ob2xk
+L3JlbGVhc2UgZnJvbSB1ZnNoY2Rfc2VuZF91aWNfY21kKCk/IEkgdGhpbmsgdGhleSBhcmUNCj4g
+cmVkdW5kYW50IGFuZCB3ZSBzaG91bGQgbmV2ZXIgc2VuZCBETUUgY21kcyBpZiBjbG9ja3MvcG93
+ZXJzIGFyZQ0KPiBub3QgcmVhZHkuIEkgbWVhbiBjYWxsZXJzIHNob3VsZCBtYWtlIHN1cmUgdGhl
+eSBhcmUgcmVhZHkgdG8gc2VuZA0KPiBETUUgY21kcyAoYW5kIG9ubHkgY2FsbGVycyBrbm93IHdo
+ZW4pLCBidXQgbm90IGxlYXZlIHRoYXQgam9iIHRvDQo+IHVmc2hjZF9zZW5kX3VpY19jbWQoKS4g
+SXQgaXMgY29udmVuaWVudCB0byByZW1vdmUgdWZzaGNkX2hvbGQvDQo+IHJlbGVhc2UgZnJvbSB1
+ZnNoY2Rfc2VuZF91aWNfY21kKCkgYXMgdGhlcmUgYXJlIG5vdCBtYW55IHBsYWNlcw0KPiBzZW5k
+aW5nIERNRSBjbWRzIHdpdGhvdXQgaG9sZGluZyB0aGUgY2xvY2tzLCB1ZnNfYnNnLmMgaXMgb25l
+Lg0KPiBBbmQgSSBoYXZlIHRlc3RlZCBteSBpZGVhIG9uIG15IHNldHVwLCBpdCB3b3JrZWQgd2Vs
+bCBmb3IgbWUuDQo+IEFub3RoZXIgYmVuZWZpdCBpcyB0aGF0IGl0IGFsc28gYWxsb3dzIHVzIHRv
+IHVzZSBETUUgY21kcw0KPiBpbiBjbGsgZ2F0aW5nL3VuZ2F0aW5nIGNvbnRleHRzIGlmIHdlIG5l
+ZWQgdG8gaW4gdGhlIGZ1dHVyZS4NCj4gDQoNCkJyaWxsaWFudCBpZGVhISBCdXQgdGhpcyBtYXkg
+bm90IHNvbHZlIHByb2JsZW1zIGlmIHZlbmRvciBjYWxsYmFja3MgbmVlZA0KbW9yZSB0aGFuIFVJ
+QyBjb21tYW5kcyBpbiB0aGUgZnV0dXJlLg0KDQpUaGlzIHNpbXBsZSBwYXRjaCBjb3VsZCBtYWtl
+IGFsbCB2ZW5kb3Igb3BlcmF0aW9ucyBvbiBVRlNIQ0kgaW4gUE0NCmNhbGxiYWNrcyBwb3NzaWJs
+ZSB3aXRoIFVGU0hDRF9DQVBfSElCRVJOOF9XSVRIX0NMS19HQVRJTkcgZW5hYmxlZCwgYW5kDQph
+Z2FpbiwgaXQgYWxsb3dzIHRob3NlIG9wZXJhdGlvbnMgaW4gUE0gc2NlbmFyaW9zIG9ubHkuDQoN
+Cj4gUGxlYXNlIGxldCBtZSBrbm93IHlvdXIgaWRlYSwgdGhhbmtzLg0KPiANCj4gQ2FuIEd1by4N
+Cg0KVGhhbmtzLA0KU3RhbmxleSBDaHUNCg0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBTdGFubGV5
+IENodSA8c3RhbmxleS5jaHVAbWVkaWF0ZWsuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuZHkg
+VGVuZyA8YW5keS50ZW5nQG1lZGlhdGVrLmNvbT4NCj4gPiANCj4gPiAtLS0NCj4gPiANCj4gPiBD
+aGFuZ2VzIHNpbmNlIHYxOg0KPiA+IC0gRml4IHJldHVybiB2YWx1ZTogVXNlIHVuaXF1ZSBib29s
+IHZhcmlhYmxlIHRvIGdldCB0aGUgcmVzdWx0IG9mDQo+ID4gZmx1c2hfd29yaygpLiBUaGNhbiBw
+cmV2ZW50IGluY29ycmVjdCByZXR1cm5lZCB2YWx1ZSwgaS5lLiwgcmMsIGlmDQo+ID4gZmx1c2hf
+d29yaygpIHJldHVybnMgdHJ1ZQ0KPiA+IC0gRml4IGNvbW1pdCBtZXNzYWdlDQo+ID4gDQo+ID4g
+LS0tDQo+ID4gIGRyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMgfCA1ICsrKystDQo+ID4gIDEgZmls
+ZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPiANCj4gPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZz
+aGNkLmMNCj4gPiBpbmRleCA1NzdjYzBkNzQ4N2YuLmFjYmEyMjcxYzVkMyAxMDA2NDQNCj4gPiAt
+LS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQo+ID4gKysrIGIvZHJpdmVycy9zY3NpL3Vm
+cy91ZnNoY2QuYw0KPiA+IEBAIC0xNTYxLDYgKzE1NjEsNyBAQCBzdGF0aWMgdm9pZCB1ZnNoY2Rf
+dW5nYXRlX3dvcmsoc3RydWN0IHdvcmtfc3RydWN0IA0KPiA+ICp3b3JrKQ0KPiA+ICBpbnQgdWZz
+aGNkX2hvbGQoc3RydWN0IHVmc19oYmEgKmhiYSwgYm9vbCBhc3luYykNCj4gPiAgew0KPiA+ICAJ
+aW50IHJjID0gMDsNCj4gPiArCWJvb2wgZmx1c2hfcmVzdWx0Ow0KPiA+ICAJdW5zaWduZWQgbG9u
+ZyBmbGFnczsNCj4gPiANCj4gPiAgCWlmICghdWZzaGNkX2lzX2Nsa2dhdGluZ19hbGxvd2VkKGhi
+YSkpDQo+ID4gQEAgLTE1OTIsNyArMTU5Myw5IEBAIGludCB1ZnNoY2RfaG9sZChzdHJ1Y3QgdWZz
+X2hiYSAqaGJhLCBib29sIGFzeW5jKQ0KPiA+ICAJCQkJYnJlYWs7DQo+ID4gIAkJCX0NCj4gPiAg
+CQkJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZShoYmEtPmhvc3QtPmhvc3RfbG9jaywgZmxhZ3MpOw0K
+PiA+IC0JCQlmbHVzaF93b3JrKCZoYmEtPmNsa19nYXRpbmcudW5nYXRlX3dvcmspOw0KPiA+ICsJ
+CQlmbHVzaF9yZXN1bHQgPSBmbHVzaF93b3JrKCZoYmEtPmNsa19nYXRpbmcudW5nYXRlX3dvcmsp
+Ow0KPiA+ICsJCQlpZiAoaGJhLT5jbGtfZ2F0aW5nLmlzX3N1c3BlbmRlZCAmJiAhZmx1c2hfcmVz
+dWx0KQ0KPiA+ICsJCQkJZ290byBvdXQ7DQo+ID4gIAkJCXNwaW5fbG9ja19pcnFzYXZlKGhiYS0+
+aG9zdC0+aG9zdF9sb2NrLCBmbGFncyk7DQo+ID4gIAkJCWdvdG8gc3RhcnQ7DQo+ID4gIAkJfQ0K
+DQo=
 
-Do we really have to restrict in-kernel user?
-
-And avoiding module uclamp abuse is covered by 616d91b68cd5 ("sched:
-Remove sched_setscheduler*() EXPORTs").
-
-> This series should do most of the work but there are more pieces needed on-top.
-> 
-> From what I see we still need to move the sched_setscheduler() from
-> include/linux/sched.h to kernel/sched/sched.h. And sched_setattr() too. The
-> latter has a single user in kernel/trace/trace_selftest.c to create a deadline
-> task. I think that can be easily wrapped with a similar sched_set_dl()
-> function and exported instead.
-
-But DL does not have the same issue like the FIFO/RR when it comes to
-resource management.
-Not sure if we have to restrict in-kernel user.
-
-[...]
