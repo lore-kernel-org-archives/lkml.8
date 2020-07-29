@@ -2,112 +2,133 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F0AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFE7E207F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:59:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=inbox.ru header.i=@inbox.ru header.b="mZf+zAvK";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=inbox.ru header.i=@inbox.ru header.b="mZf+zAvK"
+	by mail.kernel.org (Postfix) with ESMTP id 83EC320838
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgG2H7z (ORCPT
+        id S1727796AbgG2ICY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:59:55 -0400
-Received: from fallback13.mail.ru ([94.100.179.30]:58808 "EHLO
-        fallback13.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbgG2H7x (ORCPT
+        Wed, 29 Jul 2020 04:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgG2ICX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:59:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail;
-        h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From; bh=3fa8RFKjs5/eLABjYBvhcRWbXI9ViB/wI2i1z+xTyGY=;
-        b=mZf+zAvKB8KeTCda+dX91NAKUZT4kFyHHrPScRngvBXBdbSRJC3DbsxHYtoLdCdpNeSuWpsf8pCEqVu+uSUqCrP7Jk0NvK9GregV9tJOCbhcVHjPdfDwf313Tidqrnvu1Maq0m/k1iF9R1+euEOQ30oTwZhc5juxWD00rCPGxW8=;
-Received: from [10.161.25.37] (port=33762 helo=smtp60.i.mail.ru)
-        by fallback13.m.smailru.net with esmtp (envelope-from <fido_max@inbox.ru>)
-        id 1k0h08-0000xU-P8; Wed, 29 Jul 2020 10:59:49 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail;
-        h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From; bh=3fa8RFKjs5/eLABjYBvhcRWbXI9ViB/wI2i1z+xTyGY=;
-        b=mZf+zAvKB8KeTCda+dX91NAKUZT4kFyHHrPScRngvBXBdbSRJC3DbsxHYtoLdCdpNeSuWpsf8pCEqVu+uSUqCrP7Jk0NvK9GregV9tJOCbhcVHjPdfDwf313Tidqrnvu1Maq0m/k1iF9R1+euEOQ30oTwZhc5juxWD00rCPGxW8=;
-Received: by smtp60.i.mail.ru with esmtpa (envelope-from <fido_max@inbox.ru>)
-        id 1k0gzz-0006Kh-6v; Wed, 29 Jul 2020 10:59:39 +0300
-From:   Maxim Kochetkov <fido_max@inbox.ru>
-Cc:     bigunclemax@gmail.com, Maxim Kochetkov <fido_max@inbox.ru>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: adc: ti-ads1015: fix conversion when CONFIG_PM is not set
-Date:   Wed, 29 Jul 2020 10:59:07 +0300
-Message-Id: <20200729075908.10463-1-fido_max@inbox.ru>
-X-Mailer: git-send-email 2.27.0
+        Wed, 29 Jul 2020 04:02:23 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1596C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:02:22 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k0h2X-00086y-8P; Wed, 29 Jul 2020 10:02:17 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k0h2W-0001cy-D3; Wed, 29 Jul 2020 10:02:16 +0200
+Message-ID: <d259a74ca9e425f9b39ebbf47b0decb6be0beed5.camel@pengutronix.de>
+Subject: Re: [PATCH 1/2] reset-controller: ti: adjust the reset assert and
+ deassert interface
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Crystal Guo <crystal.guo@mediatek.com>, robh+dt@kernel.org
+Cc:     srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, seiya.wang@mediatek.com
+Date:   Wed, 29 Jul 2020 10:02:16 +0200
+In-Reply-To: <ba0d1e29-3ba3-5379-d03e-1ccec21c2ffa@gmail.com>
+References: <1596008357-11213-1-git-send-email-crystal.guo@mediatek.com>
+         <1596008357-11213-2-git-send-email-crystal.guo@mediatek.com>
+         <ba0d1e29-3ba3-5379-d03e-1ccec21c2ffa@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-7564579A: 646B95376F6C166E
-X-77F55803: 4F1203BC0FB41BD90521F83352E4771D993A5AF778ACCB6BD626CC7DA16DF88C182A05F53808504029DC496DEEEB89501932489FB8A54D596D0B58E080D7C80BF2A5A0F2AACCC7CB
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7978947DCA0D4215FEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006371895637A5F0B45FF8638F802B75D45FF5571747095F342E8C7A0BC55FA0FE5FC1ECBB32B1B289FC7BA662DC30B7A2373D3D44096FD8F85F2389733CBF5DBD5E913377AFFFEAFD269176DF2183F8FC7C0A3E989B1926288338941B15DA834481FCF19DD082D7633A0E7DDDDC251EA7DABA471835C12D1D977725E5C173C3A84C3CF36E64A7E3F8E58117882F4460429728AD0CFFFB425014E09623437467D3AE276E601842F6C81A19E625A9149C048EE7B96B19DC4093321F206494F22AA87D6D8FC6C240DEA76429449624AB7ADAF37B2D370F7B14D4BC40A6AB1C7CE11FEE3FD04FE2AD1523FDB9735652A29929C6CC4224003CC8364767A15B7713DBEF166A7F4EDE966BC389F9E8FC8737B5C2249BDB2DFE734BD6C7C089D37D7C0E48F6CCF19DD082D7633A0E7DDDDC251EA7DABAAAE862A0553A39223F8577A6DFFEA7CE31A2885C41F97C443847C11F186F3C5E7DDDDC251EA7DABCC89B49CDF41148FA8EF81845B15A4842623479134186CDE6BA297DBC24807EABDAD6C7F3747799A
-X-C8649E89: EBB7AE862102F8157F69ED8697A74C3F65EFCD698A4D0A16881DBFC9FC99910044CD825B82ED7068
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojbl0bm2lVv3IuJKNyOiYHdg==
-X-Mailru-Sender: 11C2EC085EDE56FA9C10FA2967F5AB24BD2D83D0D925C654C403DFFB4822EE44AC90A8F9D9BFD8A8EE9242D420CFEBFD3DDE9B364B0DF2891A624F84B2C74EDA4239CF2AF0A6D4F80DA7A0AF5A3A8387
-X-Mras: Ok
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B43A7801844A72E373BDE407F6AFEC0A433A29991C6D1240E4049FFFDB7839CE9EB969E7E82AF4D4E2A040CA83889AFC6C6916E1F39D14DC337D1E73DB6B2E3940
-X-7FA49CB5: 0D63561A33F958A560901FAB13B8EA56A8927752ED17BC0FED3ADAC3660D3CA88941B15DA834481FA18204E546F3947C0A6B3CD6EB70C818117882F4460429724CE54428C33FAD30A8DF7F3B2552694A4A5EC4583E1CDF108941B15DA834481F8AA50765F7900637F924B32C592EA89F389733CBF5DBD5E9B5C8C57E37DE458BB4E76B3161857BFDD32BA5DBAC0009BE9E8FC8737B5C22496CA36251E56197FE76E601842F6C81A12EF20D2F80756B5FDA63EEEA5E5E9D65089D37D7C0E48F6CA18204E546F3947C29C2079CDE5AC98057739F23D657EF2BC8A9BA7A39EFB7666BA297DBC24807EA089D37D7C0E48F6C8AA50765F7900637AD0424077D726551EFF80C71ABB335746BA297DBC24807EA27F269C8F02392CD20465B3A5AADEC6827F269C8F02392CD5571747095F342E88FB05168BE4CE3AF
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojbl0bm2lVv3L3S8xTD+SNEQ==
-X-Mailru-MI: 800
-X-Mailru-Sender: A5480F10D64C9005631A4012884FA1630C4A2E81BE2FD80F9A84FF1F07161318E1934491450442A6C099ADC76E806A99D50E20E2BC48EF5A30D242760C51EA9CEAB4BC95F72C04283CDA0F3B3F5B9367
-X-Mras: Ok
-To:     unlisted-recipients:; (no To-header on input)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To stop conversion ads1015_set_power_state function use unimplemented
-function pm_runtime_put_autosuspend if CONFIG_PM is not set.
-If CONFIG_PM is disabled, there is no need to start/stop conversion.
-Fix it by adding return 0 function variant if CONFIG_PM is not set.
+Hi Crystal, Matthias,
 
-Signed-off-by: Maxim Kochetkov <fido_max@inbox.ru>
----
- drivers/iio/adc/ti-ads1015.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On Wed, 2020-07-29 at 09:48 +0200, Matthias Brugger wrote:
+> 
+> On 29/07/2020 09:39, Crystal Guo wrote:
+> > Add ti_syscon_reset() to integrate assert and deassert together,
+> > and change return value of the reset assert and deassert interface
+> > from regmap_update_bits to regmap_write_bits.
+> > 
+> > when clear bit is already 1, regmap_update_bits can not write 1 to it again.
+> > Some IC has the feature that, when set bit is 1, the clear bit change
+> > to 1 together. It will truly clear bit to 0 by write 1 to the clear bit
+> > 
+> > Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
+> > ---
+> >   drivers/reset/reset-ti-syscon.c | 13 +++++++++++--
+> >   1 file changed, 11 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/reset/reset-ti-syscon.c b/drivers/reset/reset-ti-syscon.c
+> > index a2635c2..5a8ec8f 100644
+> > --- a/drivers/reset/reset-ti-syscon.c
+> > +++ b/drivers/reset/reset-ti-syscon.c
+> > @@ -89,7 +89,7 @@ static int ti_syscon_reset_assert(struct reset_controller_dev *rcdev,
+> >   	mask = BIT(control->assert_bit);
+> >   	value = (control->flags & ASSERT_SET) ? mask : 0x0;
+> >   
+> > -	return regmap_update_bits(data->regmap, control->assert_offset, mask, value);
+> > +	return regmap_write_bits(data->regmap, control->assert_offset, mask, value);
+> 
+> Nack, this will break the driver for the other devices.
 
-diff --git a/drivers/iio/adc/ti-ads1015.c b/drivers/iio/adc/ti-ads1015.c
-index 5ea4f45d6bad..64fe3b2a6ec6 100644
---- a/drivers/iio/adc/ti-ads1015.c
-+++ b/drivers/iio/adc/ti-ads1015.c
-@@ -316,6 +316,7 @@ static const struct iio_chan_spec ads1115_channels[] = {
- 	IIO_CHAN_SOFT_TIMESTAMP(ADS1015_TIMESTAMP),
- };
- 
-+#ifdef CONFIG_PM
- static int ads1015_set_power_state(struct ads1015_data *data, bool on)
- {
- 	int ret;
-@@ -333,6 +334,15 @@ static int ads1015_set_power_state(struct ads1015_data *data, bool on)
- 	return ret < 0 ? ret : 0;
- }
- 
-+#else /* !CONFIG_PM */
-+
-+static int ads1015_set_power_state(struct ads1015_data *data, bool on)
-+{
-+	return 0;
-+}
-+
-+#endif /* !CONFIG_PM */
-+
- static
- int ads1015_get_adc_result(struct ads1015_data *data, int chan, int *val)
- {
--- 
-2.27.0
+I don't think this will break the driver for existing hardware.
+regmap_write_bits() is the same as regmap_update_bits(), it just forces
+the write in case the read already happens to return the correct value.
+Of course it would be good to check that this actually works.
 
+> The kernel has to work not just for your SoC but for all devices of all 
+> architectures. You can't just hack something up, that will work on your specific 
+> SoC.
+> 
+> Regards,
+> Matthias
+> 
+> >   }
+> >   
+> >   /**
+> > @@ -120,7 +120,7 @@ static int ti_syscon_reset_deassert(struct reset_controller_dev *rcdev,
+> >   	mask = BIT(control->deassert_bit);
+> >   	value = (control->flags & DEASSERT_SET) ? mask : 0x0;
+> >   
+> > -	return regmap_update_bits(data->regmap, control->deassert_offset, mask, value);
+> > +	return regmap_write_bits(data->regmap, control->deassert_offset, mask, value);
+> >   }
+> >   
+> >   /**
+> > @@ -158,10 +158,19 @@ static int ti_syscon_reset_status(struct reset_controller_dev *rcdev,
+> >   		!(control->flags & STATUS_SET);
+> >   }
+> >   
+> > +static int ti_syscon_reset(struct reset_controller_dev *rcdev,
+> > +			   unsigned long id)
+> > +{
+> > +	ti_syscon_reset_assert(rcdev, id);
+> > +
+> > +	return ti_syscon_reset_deassert(rcdev, id);
+> > +}
+> > +
+
+I'm unsure about this one, though. This is an incompatible change. At
+the very least this would have to be optional depending on compatible.
+
+regards
+Philipp
