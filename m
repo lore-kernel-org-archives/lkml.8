@@ -2,73 +2,64 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9640C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DC5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA0542083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:14:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lU9aW1zQ"
+	by mail.kernel.org (Postfix) with ESMTP id 3400320829
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:14:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596035693;
+	bh=nKNEQKTvIoBzcmYITZ+D9Tf7NnPmwUDUufW9bzlqp5M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xNXIVUUYEmEKS767Xxc9fiZStUkMVWsEp8RcpHlEEfxVNWZfpDs+7L/m7dqyDB1AB
+	 HbXefjKmjlZ6goW5j4RfnDaY2vJT2iR0SQjX7vH6lFw6am5FQ2lyZW720Else95IXo
+	 lAMzTDNN4MPhE3uKlKjQqEnXrkS+u5R62AR9DAz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgG2POC (ORCPT
+        id S1726821AbgG2POw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:14:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbgG2POB (ORCPT
+        Wed, 29 Jul 2020 11:14:52 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:29214 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgG2POv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:14:01 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8AFC061794;
-        Wed, 29 Jul 2020 08:14:01 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id c10so537979pjn.1;
-        Wed, 29 Jul 2020 08:14:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uTiBwXbJ/NNgJMQGMIY8FxAJr7nGPTOl3ItEnVx+egg=;
-        b=lU9aW1zQB2JvPFxKWebURugB6JMTmheNYXpi4oSgi+iWb7P6NXSesvfW2GV74FvmNZ
-         61Lq6UAxEgFgGGZke2HbAiBwrmy/J9OYahuobaIXWV7hxzj1hukW1k12Uc7FOEQ+YjN3
-         qXvhBH+SfBWXvi3GKZDxT+Zweb/WX1cn9S3jxEmJvCZnvTWqgr1MtTcAJS0gdzAy2MYZ
-         GxNwxKeoInCJETaUfTemth95M3EyxhFyx5GTbcSutbCm0vV64Vywy/+nHO00UOGjBhiB
-         2f3Lnedu2UMzXb0ytjyFGpEYEAq7TVnoAJPReP4Z6Ny2fhykJRJVEdKXnt9K8ZE8QjMb
-         IOTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uTiBwXbJ/NNgJMQGMIY8FxAJr7nGPTOl3ItEnVx+egg=;
-        b=Fi33CrYdGsE3kVHVdyQOI/D1SP6kAzwsyIeJPZ+RJaodc9VVpJ9ghIv5YXONidPMCb
-         kb6S2E4j2zt5ROLAH5/EGfhOvLCL730XvS7D/mlBrVjraJSh/XTePwGf6MHkSEDPfmpV
-         laBPgfBShJVtxDijJdyn/ed9vD1sBOjJweejOdgEyk5mI+kUBU0+Ue/qcsFhGJgR6Ynm
-         biUhQsC8XhclQ6AZ7B6+5ri68hbMqMeO507+M0wHk18E27QQ5HPA0I0DQrStyBtikPzi
-         olk0nSlhf+K5nFpwqqJwsm0U+W4k3S+NEILtaEnrVfUIJ+Gh/u5QinbKTdaVLSLh9TbH
-         Wefg==
-X-Gm-Message-State: AOAM532sqJFdQcl7T1MfsUBFW/OKgbRUqw9N8Nv/MpIvWhnVbSJypR4p
-        FyQMehx+cSGxDfYzezgoGwCYsBF1LIS2iVi3Icu4nDru42s=
-X-Google-Smtp-Source: ABdhPJxAwR2uw6M4ZO71A974LNQoSM/gUFMLZ3l/bZyau+lndlozCjIpYqC7GMkpaDXUzvHdsZDGseJSqaJXfcLd4rc=
-X-Received: by 2002:a17:90a:390f:: with SMTP id y15mr2723618pjb.181.1596035640864;
- Wed, 29 Jul 2020 08:14:00 -0700 (PDT)
+        Wed, 29 Jul 2020 11:14:51 -0400
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 06TFEDHc030372;
+        Thu, 30 Jul 2020 00:14:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 06TFEDHc030372
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1596035654;
+        bh=K/lBXbWR+x3txyjbotv/nZAEEMUAZKchfnFj0DToDWk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=uvIaubtEdgqQhZN5q3je9HyiqlDhgFOwhJAXmAorB38dYKVyuf3iaU/4QIQekt/ou
+         q2s7aKQmNuFezqPlFZdXU1JmjILyBT5HH6dWcKBIEbOHRVl92uthyb/1gx6LSULxEf
+         d5BaDB86rifemvBOgKQX5hfXkEGRSS02NQ0msW7LBBvAuBDIz4FwrzvQBKoXdbEdRG
+         qyWwL0/Gg597sCbwgEPAhc7xENBYiptI1+381Tw7+Rg8xnlBqyFHjynfPkPI3lR5P4
+         gpJauwPT7iZF6PkRLC2xSjXf3LXHtsW9x2shvSFq5cBmLqW9/im4Mase5tWr3U7i1B
+         tRfM+NK8I3T9Q==
+X-Nifty-SrcIP: [209.85.222.52]
+Received: by mail-ua1-f52.google.com with SMTP id p27so3477359uaa.12;
+        Wed, 29 Jul 2020 08:14:14 -0700 (PDT)
+X-Gm-Message-State: AOAM532OJ/T+3gtbxaA7HjHnBpn1DNBKfPT8rU7ckCByo2Nbf+O7ejts
+        SOp57ysObCGe928NkAr9DZnkPGYLyFmRue7l5Pw=
+X-Google-Smtp-Source: ABdhPJyCO5ocIjSjCCCrBg/b+UNbHdAmrpbxBUNLui4XBSWgs2nOELlaJBu55/dPeNbkp8CEnFdZM5xW9ytKZxMTdfg=
+X-Received: by 2002:ab0:2390:: with SMTP id b16mr6263692uan.25.1596035652852;
+ Wed, 29 Jul 2020 08:14:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200729135636.9220-1-cengiz@kernel.wtf>
-In-Reply-To: <20200729135636.9220-1-cengiz@kernel.wtf>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 29 Jul 2020 18:13:44 +0300
-Message-ID: <CAHp75VfM3OapAkYJ-sN-MG2yuGDqaqDjc6p0gXT9cHYgnH+5LQ@mail.gmail.com>
-Subject: Re: [PATCH] staging: atomisp: move null check to earlier point
-To:     Cengiz Can <cengiz@kernel.wtf>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+References: <DB7PR08MB380100FDD4D1B11062FA57819C690@DB7PR08MB3801.eurprd08.prod.outlook.com>
+ <CAK7LNAQm87ykKi=OfToZRy2JtNt0OX3n6kXpNxNW5W7HREh4NA@mail.gmail.com> <DB7PR08MB38014590A0A929CF017546E89C700@DB7PR08MB3801.eurprd08.prod.outlook.com>
+In-Reply-To: <DB7PR08MB38014590A0A929CF017546E89C700@DB7PR08MB3801.eurprd08.prod.outlook.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 30 Jul 2020 00:13:35 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATO-z+S_jH_g9J1WFvzG1vqtODdK5vrav6xOV341yGX9g@mail.gmail.com>
+Message-ID: <CAK7LNATO-z+S_jH_g9J1WFvzG1vqtODdK5vrav6xOV341yGX9g@mail.gmail.com>
+Subject: Re: linux-5.8-rc4/scripts/kconfig/qconf.cc: 2 * bad delete ?
+To:     David Binderman <dcb314@hotmail.com>
+Cc:     "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,62 +67,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 5:00 PM Cengiz Can <cengiz@kernel.wtf> wrote:
+On Wed, Jul 29, 2020 at 3:28 PM David Binderman <dcb314@hotmail.com> wrote:
 >
-> `find_gmin_subdev` function that returns a pointer to `struct
-> gmin_subdev` can return NULL.
+> Hello there,
 >
-> In `gmin_v2p8_ctrl` there's a call to this function but the possibility
-> of a NULL was not checked before its being dereferenced. ie:
+> >Will you send a patch, or shall I do it?
 >
-> ```
-> /* Acquired here --------v */
-> struct gmin_subdev *gs = find_gmin_subdev(subdev);
-> int ret;
-> int value;
+> Option 2 please. I gave up doing kernel patches a long time ago.
+
+OK, I will send a patch.
+
+
+> >Could you please teach me how to reproduce them?
 >
-> /*  v------Dereferenced here */
-> if (gs->v2p8_gpio >= 0) {
->         pr_info("atomisp_gmin_platform: 2.8v power on GPIO %d\n",
->                 gs->v2p8_gpio);
->         ret = gpio_request(gs->v2p8_gpio, "camera_v2p8");
->         if (!ret)
->                 ret = gpio_direction_output(gs->v2p8_gpio, 0);
->         if (ret)
->                 pr_err("V2P8 GPIO initialization failed\n");
-> }
-> ```
+> --language=c++ looks like a good candidate for a fix.
 >
-> I have moved the NULL check before deref point.
-
-"Move the NULL check..."
-See Submitting Patches documentation how to avoid "This patch", "I", "we", etc.
-
-> diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-> index 0df46a1af5f0..8e9c5016f299 100644
-> --- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-> +++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-> @@ -871,6 +871,11 @@ static int gmin_v2p8_ctrl(struct v4l2_subdev *subdev, int on)
->         int ret;
->         int value;
+> Regards
 >
-> +       if (!gs) {
-> +               pr_err("Unable to find gmin subdevice\n");
+> David Binderman
+>
 
-> +               return -EINVAL;
+--language=c++ made no difference, but
+I figured out why cppcheck did not work for me.
 
-And here is a change of semantics...
 
-> +       }
+If scripts/kconfig/qconf.moc is remaining,
+cppcheck does not work.
 
-...
 
-> -       if (!gs || gs->v2p8_on == on)
-> +       if (gs->v2p8_on == on)
->                 return 0;
+After I deleted it, cppcheck worked for me.
 
-...compared to above.
+
+masahiro@oscar:~/workspace/linux$ make build_xconfig
+  HOSTCC  scripts/basic/fixdep
+  HOSTCC  scripts/kconfig/images.o
+  HOSTCC  scripts/kconfig/confdata.o
+  HOSTCC  scripts/kconfig/expr.o
+  LEX     scripts/kconfig/lexer.lex.c
+  YACC    scripts/kconfig/parser.tab.[ch]
+  HOSTCC  scripts/kconfig/lexer.lex.o
+  HOSTCC  scripts/kconfig/parser.tab.o
+  HOSTCC  scripts/kconfig/preprocess.o
+  HOSTCC  scripts/kconfig/symbol.o
+  HOSTCC  scripts/kconfig/util.o
+  UPD     scripts/kconfig/qconf-cfg
+  MOC     scripts/kconfig/qconf.moc
+  HOSTCXX scripts/kconfig/qconf.o
+  HOSTLD  scripts/kconfig/qconf
+masahiro@oscar:~/workspace/linux$ cppcheck  scripts/kconfig/qconf.cc
+Checking scripts/kconfig/qconf.cc ...
+masahiro@oscar:~/workspace/linux$ rm -f scripts/kconfig/qconf.moc
+masahiro@oscar:~/workspace/linux$ cppcheck  scripts/kconfig/qconf.cc
+Checking scripts/kconfig/qconf.cc ...
+scripts/kconfig/qconf.cc:1242:10: error: Mismatching allocation and
+deallocation: data [mismatchAllocDealloc]
+  delete data;
+         ^
+scripts/kconfig/qconf.cc:1236:15: note: Mismatching allocation and
+deallocation: data
+ char *data = new char[count + 1];
+              ^
+scripts/kconfig/qconf.cc:1242:10: note: Mismatching allocation and
+deallocation: data
+  delete data;
+         ^
+scripts/kconfig/qconf.cc:1255:10: error: Mismatching allocation and
+deallocation: data [mismatchAllocDealloc]
+  delete data;
+         ^
+scripts/kconfig/qconf.cc:1236:15: note: Mismatching allocation and
+deallocation: data
+ char *data = new char[count + 1];
+              ^
+scripts/kconfig/qconf.cc:1255:10: note: Mismatching allocation and
+deallocation: data
+  delete data;
+         ^
+
+
+
+
+
+
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Best Regards
+Masahiro Yamada
