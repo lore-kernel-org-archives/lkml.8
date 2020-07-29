@@ -2,85 +2,70 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B16C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D8BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3CD420809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:05:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFNVnEBG"
+	by mail.kernel.org (Postfix) with ESMTP id 27ABF20809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596024346;
+	bh=hIAez5LHosIyjz9fqsXYQe2NA7DmHfGd756pQ/7U0fk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rwZet5lYR4L0ZtFw+LYsWhcRogc6SkaB3RnVJlAfdic4lUN3pqXYK3KG5oxkI2gWD
+	 auz9ZLpkKCFafRbu8JpUpLLHDpyH0FBxbReddHTIOpn1cEo4ahxtaSmTSecXazegpB
+	 It39LGfdOVVD2FX++e+6+MKzYJyLc+JfdEyt5iOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgG2MFe (ORCPT
+        id S1726802AbgG2MFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:05:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgG2MFe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:05:34 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33C2C061794;
-        Wed, 29 Jul 2020 05:05:33 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id o18so24045203eje.7;
-        Wed, 29 Jul 2020 05:05:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aXIt4Mo1PgFXWOsZfX3ouR5GPUAW+dMmhSUWqpQyOGI=;
-        b=nFNVnEBGH0cRd+8OujTalxexYKT9IDGLV+35DrquF2+E8/gVwiSbKOKAR+imJ5F34c
-         oZZ3X2mkmLZ/p9IASC7p1CcRac5xbPA47OVhZK0wtF4eE5Obpfj53A/FLXa11qn9Qqxh
-         AJdwh9yTM4A8S8TW4cPsf3CyazmLrpQYwZlqSEoLRSI+I/NI44FcKhrMC8YuZodL38dY
-         7LJWMavJQr3ofklvIKOUN69UIShyfBScLTotWlPPiti2hMjGffphQECuuo+cqZn7k+XX
-         cTsoZXezbU8yQXHfx8ZI/7z85mvHFDeFtdTZ9V1pb1wveFq6QJlkR8KvibwvAH5bLPQV
-         McbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aXIt4Mo1PgFXWOsZfX3ouR5GPUAW+dMmhSUWqpQyOGI=;
-        b=MQW8DsKn72m4SxVh+tF1Smazq1G7YU8feXfUvRyY/8O0H27iXDEmxIY4KWraTTVLjI
-         O7HT4U3q/z0CsfCokgC6zrL94TlChn23FkZuQcDviP91mEo3QW83GYdK8/8whfPRMnLw
-         RG9QwrPS8B8l94f1QuqskJ70KI29wsouYNH7puUxTJTF2Z3jsTu8HeSlHDqdpslSi+XK
-         jNSR0fKOLo1psfUXy13ZEAKB2TiFoI5BRgeGHwWkMjI0f4rXfnOSIGoUYFAOOo04S6R5
-         svs3kCZGVmBr+F8ZhI4OsphBPOUbO/eJ64vjQHgdcRcdJV1Raz7aKIXj90SdOspX2lFO
-         /1XQ==
-X-Gm-Message-State: AOAM532Pv6ob8m6Hz4CwVpRPdF1Y7g2FtmV7VQTLChcmWax3wZMScJug
-        DjD3x+OdsMqb6jmCzBL4pxiShStR1QtvMZkcaQY=
-X-Google-Smtp-Source: ABdhPJxDUZiAt21H/R28NZeZw1fPj51R6TGTfqIkYxZ8uBaYjAdiI0ZkUIeUMU9zi983V9myZE0BxnakEWXi2ot5YmA=
-X-Received: by 2002:a17:906:c143:: with SMTP id dp3mr454824ejc.504.1596024331419;
- Wed, 29 Jul 2020 05:05:31 -0700 (PDT)
+        Wed, 29 Jul 2020 08:05:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726341AbgG2MFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 08:05:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96E6920809;
+        Wed, 29 Jul 2020 12:05:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596024343;
+        bh=hIAez5LHosIyjz9fqsXYQe2NA7DmHfGd756pQ/7U0fk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0jpZeO7uOdMKIFglTnomMkb7HObX66tgRG484NQVGkr4ebcor/vjnR12OGIACBpb2
+         wSe9kC/eJSfywnoob0NjovpgnEV5vUCqqcDI0fhmb2Qnv9Bho20Szds6fYGKkj8ZRS
+         ZPAMClCECRF83q3OWKwAGMCg8QUu50TXQaM9kIE8=
+Date:   Wed, 29 Jul 2020 14:05:33 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Samuel Thibault <samuel.thibault@ens-lyon.org>
+Cc:     linux-kernel@vger.kernel.org, speakup@linux-speakup.org
+Subject: Re: [PATCHv2] staging/speakup: Move out of staging
+Message-ID: <20200729120533.GA2883831@kroah.com>
+References: <20200729003531.907370-1-samuel.thibault@ens-lyon.org>
 MIME-Version: 1.0
-References: <20200729120057.35079-1-konradybcio@gmail.com> <20200729120057.35079-10-konradybcio@gmail.com>
-In-Reply-To: <20200729120057.35079-10-konradybcio@gmail.com>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Wed, 29 Jul 2020 14:04:55 +0200
-Message-ID: <CAMS8qEWr3ote5QmXxYDPvDNc_uhhNfPj4ehB4FQxs1HNsgtCYg@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] clk: qcom: gcc-msm8994: Fix up the driver and
- modernize it
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     lauren.kelly@msn.com, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729003531.907370-1-samuel.thibault@ens-lyon.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wouldn't be myself if I didn't forget that
+On Wed, Jul 29, 2020 at 02:35:31AM +0200, Samuel Thibault wrote:
+> The nasty TODO items are done.
+> 
+> Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
 
-Fixes: aec89f78cf01 (clk: qcom: Add support for msm8994 global clock controller)
+Now applied, thanks for all of the work so far.
 
-Konrad
+I will be glad to merge patches for this subsystem to Linus if you want
+me to collect them.  If so, feel free to forward them on to me, or send
+me a pull request.
+
+thanks,
+
+greg k-h
