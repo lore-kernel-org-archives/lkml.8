@@ -2,194 +2,172 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF94C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A65A220829
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:10:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4YYgVGE"
+	by mail.kernel.org (Postfix) with ESMTP id 4FCC320829
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:12:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgG2PKm (ORCPT
+        id S1726884AbgG2PMT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2PKm (ORCPT
+        Wed, 29 Jul 2020 11:12:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48700 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726054AbgG2PMS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:10:42 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C339C061794;
-        Wed, 29 Jul 2020 08:10:42 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k4so11906444pld.12;
-        Wed, 29 Jul 2020 08:10:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QOtZ7EqjDCXsIq7hoMDqDlNiXk9wOFEEwluDG54GFaU=;
-        b=T4YYgVGE8s9en8SUnnk2Ec6jLd9R6hndr87rhw5uCVARunyaEwiAaLWgCcXvzmKYpj
-         GMgwe68UGm/ylwPl+pbPg6m9PTv7Fq+wflCiQ0BqjnzljmAGkn5m6Duo7XlVBZqzlfbO
-         DtOm2qpu0DPUsjvgBQ7Xlloej+VpYZd4hi/dYrnTL/CVd1MKW9R//lYIy1CjlZL03n4F
-         8gywEoMXKhro3seRxx2mWGlL/rinca34S6aqFtl37xPjuqV6N/AurOMINO4x8ytVRuB6
-         IO0Alq5GG0bvxeJo4gfOLmR5e9dMj38nzSNQ9bMMZoszQp7jjffshHspvH7uyMkI5CQ/
-         lM1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QOtZ7EqjDCXsIq7hoMDqDlNiXk9wOFEEwluDG54GFaU=;
-        b=MgNyD9ZdByRkQshz5ggOc0c9/QFaof6Vze71+cz4EbI+CJ9re/VhJLs3PHiK3223KO
-         IQJCo/KTJrErqJ6cvuJZikCsziRUXRaUn8V7OpwWmR7IY8ygk1zbOaXjM4s9IINCwZzj
-         /kcZ7Fr8+YOJ+LfzRAqxZ5bXhFbXhOf8ArouWf1kWkFXDGdDrMMUawdpS9Pz49ARdk2z
-         F96MAD109kEVF9DjLGmVObCQ79tKVwhopGIVps+LEqrGApuqu8pCndLrkjq6tRv8dr6/
-         sJKCdrtRZkPKroG7axw1kV2T2NCnQfyvHabYkS7UqdFN6jBW2ycI8HiVFeHwbffr82xq
-         m9WQ==
-X-Gm-Message-State: AOAM532DUxPdOXrL0PRMyd4t8uyCnArU/vpHIVybA00kK6985Le2EzNT
-        dGuX4uQ7KeC2WH3dcotX+j07FvpeXFdFOdCAoTI1wCFPzuY=
-X-Google-Smtp-Source: ABdhPJxTRrOX6fcgELQcqEzCUB3WuHTlcisuPDgGxh2QlnetAenE1lnRK3pXzKMrUEfjrONaKC6Qi+qQ4j/qWHEpXl8=
-X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr10487618pjp.228.1596035441419;
- Wed, 29 Jul 2020 08:10:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
- <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
- <20200723100317.GJ3703480@smile.fi.intel.com> <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
- <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com> <20200729125837.b27ncvd2eeixstba@mobilestation>
-In-Reply-To: <20200729125837.b27ncvd2eeixstba@mobilestation>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 29 Jul 2020 18:10:24 +0300
-Message-ID: <CAHp75VfekW-aQhyCQJhzqJ+jSvmzJ-Otdh0jwoLt662CopwyTQ@mail.gmail.com>
-Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 29 Jul 2020 11:12:18 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06TEjuAP092815;
+        Wed, 29 Jul 2020 11:11:41 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32k9quma4s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jul 2020 11:11:41 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06TEkdNv095864;
+        Wed, 29 Jul 2020 11:11:40 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32k9quma3n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jul 2020 11:11:40 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06TF57dH000488;
+        Wed, 29 Jul 2020 15:11:38 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03fra.de.ibm.com with ESMTP id 32gcr0k5um-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jul 2020 15:11:38 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06TFBZN832309758
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Jul 2020 15:11:35 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AFCE34C040;
+        Wed, 29 Jul 2020 15:11:35 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AD7AE4C058;
+        Wed, 29 Jul 2020 15:11:29 +0000 (GMT)
+Received: from [9.85.87.197] (unknown [9.85.87.197])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 29 Jul 2020 15:11:29 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [PATCH v2 1/5] perf record: Set PERF_RECORD_PERIOD if attr->freq
+ is set.
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20200728160309.GC374564@kernel.org>
+Date:   Wed, 29 Jul 2020 20:41:27 +0530
+Cc:     Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        David Sharp <dhsharp@google.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <C534B006-3EF4-4DAB-B3D8-2944257000AC@linux.vnet.ibm.com>
+References: <20200728085734.609930-1-irogers@google.com>
+ <20200728085734.609930-2-irogers@google.com> <20200728154347.GB1319041@krava>
+ <20200728160309.GC374564@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-29_10:2020-07-29,2020-07-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ phishscore=0 clxscore=1015 bulkscore=0 impostorscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007290099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 3:58 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
-> On Mon, Jul 27, 2020 at 12:22:28AM +0200, Linus Walleij wrote:
 
-...
 
-> Sorry for a delay with a response to this issue. I had to give it a more thorough
-> thought since the problem is a bit more complex than it seemed originally. As I
-> see it now It might be wrong to implement the cases 2) and 3), but 1) is more
-> appropriate.
->
-> First of all we need to note that GPIOlib framework provides the next parameters
-> to describe the IRQ-chip:
-> gc->irq.num_parents - number of parental IRQ numbers.
-> gc->irq.parents[] - array of parental IRQ numbers.
-> *gc->irq.valid_mask - a mask of IRQ/GPIO lines describing a valid IRQ.
-> *gc->irq.map - mapping of hw IRQ/GPIO ID -> parental IRQ numbers.
->
-> Using that set we can handle any case of linear and sparse parental IRQs. Here
-> is how it can be implemented in the framework of DW APB GPIO controller.
->
-> DW APB GPIO can be synthesized with two configs:
-> 1) Combined IRQ line (GPIO_INTR_IO == True),
-> 2) Multiple interrupt signals for each GPIO (GPIO_INTR_IO == False).
->
-> Obviously the former case is trivial:
->
->      IRQ_combined
->     ______^________
->    /_ _ _ _ _ ___ _\
->    |_|_|_|_|_|...|_| - GPIOs
->
-> In that case
-> gc->irq.num_parents = 1;
-> gc->irq.parents[0] = IRQ_combined;
-> *gc->irq.valid_mask = GENMASK(ngpio - 1, 0); // This is done by the GPIOlib core itself.
->
-> The later one (when multiple interrupt signals are involved) can be a bit more
-> complicated. It can be also split up into two cases:
-> 2a) One-on-one GPIO-IRQ mapping.
-> 2b) Sparse GPIO-IRQ mapping.
->
-> It's straightforward to implement 2a):
->
->    i1i2i3i4i5 ... iN
->     _ _ _ _ _ ___ _
->    |_|_|_|_|_|...|_| - GPIOs
->
-> In that case
-> gc->irq.num_parents = ngpio;
-> gc->irq.parents[] = {i1, i2, i3, i4, i5, ... iN};
-> gc->irq.map = {i1, i2, i3, i4, i5, ... iN};
-> *gc->irq.valid_mask = GENMASK(ngpio - 1, 0);
->
+> On 28-Jul-2020, at 9:33 PM, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> 
+> Em Tue, Jul 28, 2020 at 05:43:47PM +0200, Jiri Olsa escreveu:
+>> On Tue, Jul 28, 2020 at 01:57:30AM -0700, Ian Rogers wrote:
+>>> From: David Sharp <dhsharp@google.com>
+>>> 
+>>> evsel__config() would only set PERF_RECORD_PERIOD if it set attr->freq
+>>> from perf record options. When it is set by libpfm events, it would not
+>>> get set. This changes evsel__config to see if attr->freq is set outside of
+>>> whether or not it changes attr->freq itself.
+>>> 
+>>> Signed-off-by: David Sharp <dhsharp@google.com>
+>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>> 
+>> Acked-by: Jiri Olsa <jolsa@redhat.com>
+> 
+> So, somebody else complained that its not PERF_RECORD_PERIOD (there is
+> no such thing) that is being set, its PERF_SAMPLE_PERIOD.
 
-This case puzzles me. Why is it not NULL and 0 and actually you handle
-everything as a nested case?
+Hi Arnaldo
 
-> The complication starts when we get to implementing 2b):
->
->    i1 xi3i4 x ... iN
->     _ _ _ _ _ ___ _
->    |_|_|_|_|_|...|_| - GPIOs
+Thanks for adding in that correction.
 
-So does this.
+Athira
+> 
+> Since you acked it I merged it now, with that correction,
+> 
+> - Arnaldo
+> 
+>> thanks,
+>> jirka
+>> 
+>>> ---
+>>> tools/perf/util/evsel.c | 7 ++++++-
+>>> 1 file changed, 6 insertions(+), 1 deletion(-)
+>>> 
+>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>>> index ef802f6d40c1..811f538f7d77 100644
+>>> --- a/tools/perf/util/evsel.c
+>>> +++ b/tools/perf/util/evsel.c
+>>> @@ -979,13 +979,18 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+>>> 	if (!attr->sample_period || (opts->user_freq != UINT_MAX ||
+>>> 				     opts->user_interval != ULLONG_MAX)) {
+>>> 		if (opts->freq) {
+>>> -			evsel__set_sample_bit(evsel, PERIOD);
+>>> 			attr->freq		= 1;
+>>> 			attr->sample_freq	= opts->freq;
+>>> 		} else {
+>>> 			attr->sample_period = opts->default_interval;
+>>> 		}
+>>> 	}
+>>> +	/*
+>>> +	 * If attr->freq was set (here or earlier), ask for period
+>>> +	 * to be sampled.
+>>> +	 */
+>>> +	if (attr->freq)
+>>> +		evsel__set_sample_bit(evsel, PERIOD);
+>>> 
+>>> 	if (opts->no_samples)
+>>> 		attr->sample_freq = 0;
+>>> -- 
+>>> 2.28.0.163.g6104cc2f0b6-goog
+>>> 
+>> 
+> 
+> -- 
+> 
+> - Arnaldo
 
-Valid mask will define exactly GPIOs that are IRQs. So, we will handle
-only nested IRQs which are valid.
-
-> In order to cover this case we need to answer on two question.
-> Firstly how to get such platform config? I am not sure about ACPI, but
-> aside from straightforward platform_data-based setup such configuration
-> can be reached by setting up the "interrupts-extended" DT-property with
-> zeroed phandle.
->
-> Ok, since it's possible to meet such platform config, we need to think
-> how to handle it and here is the second question. How to describe such
-> case in the framework of GPIOlib-IRQchip?
->
-> So from my side it was wrong to set the sparse IRQs array to
-> gc->irq.parents. Instead I should have scanned the sparse IRQs array,
-> calculated the number of non-empty parental IRQs, created an array of linear
-> (non-sparse) IRQs, initialized *gc->irq.valid_mask in accordance with the
-> sparse parental IRQs array. In other words it was wrong to assume, that
-> each gc->irq.parents entry corresponds to the IRQ/GPIO line. The gc->irq.parents
-> array just describes the parental IRQs and nothing else.
->
-> Shortly speaking here is how the GPIOlib IRQchip parameters should be
-> initialized in this case:
-> gc->irq.num_parents - number of valid parental IRQs.
-> gc->irq.parents - non-sparse, linear array of valid IRQs.
-> *gc->irq.valid_mask - mask initialized by means of the gc->irq.init_valid_mask()
-> callback, which indicates valid IRQ/GPIO IDs.
-> *gc->irq.map - sparse array of parental IRQ numbers (which I mistakenly tried to
-> pass through the gc->irq.parents pointer).
->
-> After that GPIOlib IRQchip should work just fine without need to be patched
-> in order to check whether the passed parental IRQs are valid or not.
->
-> Please correct me if I am wrong in some aspects of the solution described above.
-> I'll send a fix of the problem shortly.
-
-Maybe I'm missing something, but looks like you are solving the issue
-which is not so complex / doesn't exist.
-
--- 
-With Best Regards,
-Andy Shevchenko
