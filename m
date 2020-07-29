@@ -2,130 +2,296 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71315C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD53C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 478512075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:51:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596045105;
-	bh=B8emZY3q2/WUpiB2hTscZV1YZLKD3nR3u/zwjnJyuiQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
-	b=f6PoppFaWNSZuXHRs021ZjFY8ck+J2F4G5ySzWv4wkrjRvabyB8Izl/P3gg/G5spg
-	 95OdvsqCSjxrPBv2CfaH6BlZLMJAPdFXlGhDo4Vr8LQKUJsMntys1HBtcEexKGU55C
-	 l/GVrpP8+wgiD+l9H1Xrn+lRJBz7MWfIQvBmzrHY=
+	by mail.kernel.org (Postfix) with ESMTP id 950BC20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:52:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BbAS+8cK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgG2Rvo (ORCPT
+        id S1726862AbgG2RwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:51:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34568 "EHLO
+        Wed, 29 Jul 2020 13:52:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgG2Rvn (ORCPT
+        with ESMTP id S1726385AbgG2RwN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 13:51:43 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F4B0C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 10:51:43 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id d2so7887170lfj.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 10:51:43 -0700 (PDT)
+        Wed, 29 Jul 2020 13:52:13 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7CA8C061794;
+        Wed, 29 Jul 2020 10:52:13 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id v6so10213540iow.11;
+        Wed, 29 Jul 2020 10:52:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=M8EEzQgedASRzziAlVDiAKTIfPr1kKdI9aJL7xZj35I=;
-        b=Avfq4sQKVEg2XPwPbiU8kQbX0afWtDg8GvOGJu3topccu/yIq0pEIwM3DYccHYnHQD
-         zz2PpmdVhy3VPbgBuLXyv4eVyZ+O3SEEwjm7dJLAPEv2bYc/ITzzys9gCaaRZM5w1S9y
-         O8oQ/aZAjl4SzMP46wY/xkHoH3L+BzhCNNL90=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VBlR6JvMKpFF4I6cEiozKbbb6b38RhwCuKSXFCxjOBY=;
+        b=BbAS+8cKgeQXImpsn8VUTIj5E9jS7pOeOZZuJs7yJcBS3WYt4zxTCXJncgw9qrRlKZ
+         JSEao8c1IRX7/KzDmjLH1TZkcv9XjoBA5hZNqnzhpmh7J1fbNQB9iaZY+vuk6kaVu2o1
+         D6w18a83AFD7Qea2KzU0Z4CfRQrwxMEAoxO0pU+iGD7Khq+imB/4kFtt+Cro8gVrfer6
+         PxXgXA/ElnRARXP39gBsugGIMwsIUcmfeTxCqavE0tWKC+RTdTO07VvLaWAj2brGnxTh
+         mbGLFtEii9t0scIc1deLu+4xGFiwO86SGDUVoq68nY9E9bPs+NOmcwbuhimgb8dROhlP
+         or8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=M8EEzQgedASRzziAlVDiAKTIfPr1kKdI9aJL7xZj35I=;
-        b=oK21ab6Bb0mQxkcJn+O7PgX8zzGdPrSv9RF5ThQP6Gt+hYM27IlZ83S8oaz9OhaOyQ
-         i6S9zbhcTT8jd7A+/4uR7Wv7C2qUTGHONrVU2mob+WL5it0gvDL5Z0myHUO7VwAiseU0
-         QGGT0RXkTCG1B0ODUNw0jxugo3CgnDlTYJBEfHbCeXpuRUvjMee+kbgAWq3oYL3TvyOr
-         F/kKuNwXPltKY16QiktJaEBRJV6vZ6Y53uZa8otPL9DM+kQjBYzVwAvNtZhGryuHr2bd
-         909C1/OhgJBX/kSO4cQk9blfHUSHLhJfusSTqZJ/TSdyUmeJYWyQHURNoA/dDu/98SjZ
-         lnjA==
-X-Gm-Message-State: AOAM532mRgnbJ2ihiFRTqK0ZZbATUOc0wahKYgNeo9oqAKMZplckdSoF
-        GWiyfNWoJeU1jD/ciR4ObEG6iTdVN3Y=
-X-Google-Smtp-Source: ABdhPJzBNdGolOtWTHXT8RiRVgcTa2qCVyaNWWhRHVLogYH3aZqrkF3/+nJXmecogFUw3YKLkWwh8A==
-X-Received: by 2002:a19:8295:: with SMTP id e143mr17387445lfd.95.1596045101219;
-        Wed, 29 Jul 2020 10:51:41 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id h26sm516083ljb.78.2020.07.29.10.51.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 10:51:40 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id q6so26001271ljp.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 10:51:40 -0700 (PDT)
-X-Received: by 2002:a2e:991:: with SMTP id 139mr14828926ljj.314.1596045099867;
- Wed, 29 Jul 2020 10:51:39 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=VBlR6JvMKpFF4I6cEiozKbbb6b38RhwCuKSXFCxjOBY=;
+        b=NmLxsBf9E3s3S8rZI08/9VRNfFj6zyREjLt49uLg+KBTSImqL8gXWScO3vUZIqfdAE
+         AAVHSSfm6sINMkV10evEDIZ444ktIVtxfjZUdjePjJ2SVs8sxwCYyXoHWWKocnvd4KmB
+         OBj/Tv4pNK0AGGcTmQRNDRyMLqKv2UaSByWNQjU1KgTWFdJrfb5Eelpl7Jh2EuoKf02U
+         qVYI2QsnEMSsKwm/YEUAI+aazsnWapPVEJHs88m/h3FzimM3f1uCMPAG5E/mUmloEulD
+         2Dwg36YX+ZUWW65a3cwk7Dt5OL3WFkzyb08z/xkwGNo9UV2eYanGgHafyQZQZy/HL9NG
+         2j9w==
+X-Gm-Message-State: AOAM532W8XqFIETg4v5bRedsBMZh5UMDVHFzImA7jXD33aXBHyJRAaPT
+        u+kZW7FTKq44GLyB8CcU44xUCUwlfqREAhEb1cY=
+X-Google-Smtp-Source: ABdhPJy8ptUMPnNeTVvk544sb5TR8r+665OH7AZPqT7XUIQPGpVqzSqTZzmSG8WdDR+0ut5GmJTS9yod0augP8gi5tw=
+X-Received: by 2002:a02:c842:: with SMTP id r2mr39394965jao.87.1596045133015;
+ Wed, 29 Jul 2020 10:52:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200708131751.334457-1-lionel.g.landwerlin@intel.com>
- <20200708131751.334457-3-lionel.g.landwerlin@intel.com> <CAKMK7uFkMKiwyTFMRASk5L=1NdFqeuKfCh_FHRLg4FxzHpXpfw@mail.gmail.com>
-In-Reply-To: <CAKMK7uFkMKiwyTFMRASk5L=1NdFqeuKfCh_FHRLg4FxzHpXpfw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 29 Jul 2020 10:51:23 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjD-6phO85fvLMt7rvk5ZwaJ1Q5Zor4urYps6C8vG_Txg@mail.gmail.com>
-Message-ID: <CAHk-=wjD-6phO85fvLMt7rvk5ZwaJ1Q5Zor4urYps6C8vG_Txg@mail.gmail.com>
-Subject: Re: [Intel-gfx] [PATCH v12 2/3] drm/i915: add syncobj timeline support
-To:     Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com> <1595681998-19193-19-git-send-email-alex.shi@linux.alibaba.com>
+In-Reply-To: <1595681998-19193-19-git-send-email-alex.shi@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 29 Jul 2020 10:52:01 -0700
+Message-ID: <CAKgT0UdFDcz=CQ+6mzcjh-apwy3UyPqAuOozvYr+2PSCNQrENA@mail.gmail.com>
+Subject: Re: [PATCH v17 18/21] mm/lru: introduce the relock_page_lruvec function
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 5:24 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+On Sat, Jul 25, 2020 at 6:00 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
 >
-> Do we have a access_ok_array or so? Instead of duplicating overflow checks
-> everywhere and getting it all wrong ...
+> Use this new function to replace repeated same code, no func change.
+>
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: cgroups@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> ---
+>  include/linux/memcontrol.h | 40 ++++++++++++++++++++++++++++++++++++++++
+>  mm/mlock.c                 |  9 +--------
+>  mm/swap.c                  | 33 +++++++--------------------------
+>  mm/vmscan.c                |  8 +-------
+>  4 files changed, 49 insertions(+), 41 deletions(-)
+>
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index 258901021c6c..6e670f991b42 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -1313,6 +1313,46 @@ static inline void unlock_page_lruvec_irqrestore(struct lruvec *lruvec,
+>         spin_unlock_irqrestore(&lruvec->lru_lock, flags);
+>  }
+>
+> +/* Don't lock again iff page's lruvec locked */
+> +static inline struct lruvec *relock_page_lruvec_irq(struct page *page,
+> +               struct lruvec *locked_lruvec)
+> +{
+> +       struct pglist_data *pgdat = page_pgdat(page);
+> +       bool locked;
+> +
+> +       rcu_read_lock();
+> +       locked = mem_cgroup_page_lruvec(page, pgdat) == locked_lruvec;
+> +       rcu_read_unlock();
+> +
+> +       if (locked)
+> +               return locked_lruvec;
+> +
+> +       if (locked_lruvec)
+> +               unlock_page_lruvec_irq(locked_lruvec);
+> +
+> +       return lock_page_lruvec_irq(page);
+> +}
+> +
+> +/* Don't lock again iff page's lruvec locked */
+> +static inline struct lruvec *relock_page_lruvec_irqsave(struct page *page,
+> +               struct lruvec *locked_lruvec, unsigned long *flags)
+> +{
+> +       struct pglist_data *pgdat = page_pgdat(page);
+> +       bool locked;
+> +
+> +       rcu_read_lock();
+> +       locked = mem_cgroup_page_lruvec(page, pgdat) == locked_lruvec;
+> +       rcu_read_unlock();
+> +
+> +       if (locked)
+> +               return locked_lruvec;
+> +
+> +       if (locked_lruvec)
+> +               unlock_page_lruvec_irqrestore(locked_lruvec, *flags);
+> +
+> +       return lock_page_lruvec_irqsave(page, flags);
+> +}
+> +
 
-I really really think you should get away from access_ok() entirely.
+So looking these over they seem to be pretty inefficient for what they
+do. Basically in worst case (locked_lruvec == NULL) you end up calling
+mem_cgoup_page_lruvec and all the rcu_read_lock/unlock a couple times
+for a single page. It might make more sense to structure this like:
+if (locked_lruvec) {
+    if (lruvec_holds_page_lru_lock(page, locked_lruvec))
+        return locked_lruvec;
 
-Please just get rid of it, and use "copy_from_user()" instead.
+    unlock_page_lruvec_irqrestore(locked_lruvec, *flags);
+}
+return lock_page_lruvec_irqsave(page, flags);
 
-Seriously.
+The other piece that has me scratching my head is that I wonder if we
+couldn't do this without needing the rcu_read_lock. For example, what
+if we were to compare the page mem_cgroup pointer to the memcg back
+pointer stored in the mem_cgroup_per_node? It seems like ordering
+things this way would significantly reduce the overhead due to the
+pointer chasing to see if the page is in the locked lruvec or not.
 
-access_ok() is completely wrong, because
-
- (a) it doesn't actually protect from any fault returns, it only doe
-sthe high-level check of "is the pointer even ok".
-
-So you can't say "ok, I did access_ok(), so I don't have to check the
-return value", and you're actually making the source code more
-complicated, and only introducing the possibility of bugs.
-
-Overflow is just _one_ such bug. Missing the access_ok() entirely
-because it was in some caller but not another is another common bug.
-
- (b) it no longer even makes the code faster.
-
-It never really did for the the copy_to/from_user() case _anyway_, it
-was always for the "I will now do several get/put_user() accesses and
-I only want to do the range check once".
-
-And that has simply not been true for the last few CPU generations -
-because the cost isn't in the range check any more. Now allk the real
-costs are about CLAC/STAC. The range check takes two cycles and
-schedules well (so it's generally not even visible). The CLAC/STAC
-takes 30+ cycles, and stalls the pipeline.
-
->Similar I guess for copy_from/to_user_array.
-
-No. I refuse to add complexity onto the garbage that is access_ok().
-
-Just remove it. It's not helping. People who think it's helping
-haven't actually looked at profiles, or are working with hardware that
-is no longer relevant.
-
-                Linus
+>  #ifdef CONFIG_CGROUP_WRITEBACK
+>
+>  struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb);
+> diff --git a/mm/mlock.c b/mm/mlock.c
+> index 5d40d259a931..bc2fb3bfbe7a 100644
+> --- a/mm/mlock.c
+> +++ b/mm/mlock.c
+> @@ -303,17 +303,10 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
+>         /* Phase 1: page isolation */
+>         for (i = 0; i < nr; i++) {
+>                 struct page *page = pvec->pages[i];
+> -               struct lruvec *new_lruvec;
+>
+>                 /* block memcg change in mem_cgroup_move_account */
+>                 lock_page_memcg(page);
+> -               new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+> -               if (new_lruvec != lruvec) {
+> -                       if (lruvec)
+> -                               unlock_page_lruvec_irq(lruvec);
+> -                       lruvec = lock_page_lruvec_irq(page);
+> -               }
+> -
+> +               lruvec = relock_page_lruvec_irq(page, lruvec);
+>                 if (TestClearPageMlocked(page)) {
+>                         /*
+>                          * We already have pin from follow_page_mask()
+> diff --git a/mm/swap.c b/mm/swap.c
+> index 09edac441eb6..6d9c7288f7de 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -209,19 +209,12 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
+>
+>         for (i = 0; i < pagevec_count(pvec); i++) {
+>                 struct page *page = pvec->pages[i];
+> -               struct lruvec *new_lruvec;
+>
+>                 /* block memcg migration during page moving between lru */
+>                 if (!TestClearPageLRU(page))
+>                         continue;
+>
+> -               new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+> -               if (lruvec != new_lruvec) {
+> -                       if (lruvec)
+> -                               unlock_page_lruvec_irqrestore(lruvec, flags);
+> -                       lruvec = lock_page_lruvec_irqsave(page, &flags);
+> -               }
+> -
+> +               lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
+>                 (*move_fn)(page, lruvec);
+>
+>                 SetPageLRU(page);
+> @@ -864,17 +857,12 @@ void release_pages(struct page **pages, int nr)
+>                 }
+>
+>                 if (PageLRU(page)) {
+> -                       struct lruvec *new_lruvec;
+> -
+> -                       new_lruvec = mem_cgroup_page_lruvec(page,
+> -                                                       page_pgdat(page));
+> -                       if (new_lruvec != lruvec) {
+> -                               if (lruvec)
+> -                                       unlock_page_lruvec_irqrestore(lruvec,
+> -                                                                       flags);
+> +                       struct lruvec *prev_lruvec = lruvec;
+> +
+> +                       lruvec = relock_page_lruvec_irqsave(page, lruvec,
+> +                                                                       &flags);
+> +                       if (prev_lruvec != lruvec)
+>                                 lock_batch = 0;
+> -                               lruvec = lock_page_lruvec_irqsave(page, &flags);
+> -                       }
+>
+>                         __ClearPageLRU(page);
+>                         del_page_from_lru_list(page, lruvec, page_off_lru(page));
+> @@ -980,15 +968,8 @@ void __pagevec_lru_add(struct pagevec *pvec)
+>
+>         for (i = 0; i < pagevec_count(pvec); i++) {
+>                 struct page *page = pvec->pages[i];
+> -               struct lruvec *new_lruvec;
+> -
+> -               new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+> -               if (lruvec != new_lruvec) {
+> -                       if (lruvec)
+> -                               unlock_page_lruvec_irqrestore(lruvec, flags);
+> -                       lruvec = lock_page_lruvec_irqsave(page, &flags);
+> -               }
+>
+> +               lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
+>                 __pagevec_lru_add_fn(page, lruvec);
+>         }
+>         if (lruvec)
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 168c1659e430..bdb53a678e7e 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -4292,15 +4292,9 @@ void check_move_unevictable_pages(struct pagevec *pvec)
+>
+>         for (i = 0; i < pvec->nr; i++) {
+>                 struct page *page = pvec->pages[i];
+> -               struct lruvec *new_lruvec;
+>
+>                 pgscanned++;
+> -               new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+> -               if (lruvec != new_lruvec) {
+> -                       if (lruvec)
+> -                               unlock_page_lruvec_irq(lruvec);
+> -                       lruvec = lock_page_lruvec_irq(page);
+> -               }
+> +               lruvec = relock_page_lruvec_irq(page, lruvec);
+>
+>                 if (!PageLRU(page) || !PageUnevictable(page))
+>                         continue;
+> --
+> 1.8.3.1
+>
