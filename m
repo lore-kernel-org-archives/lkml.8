@@ -2,133 +2,418 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05084C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D80C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D79B620658
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9FD020658
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:06:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PFwyu5yV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgG2UEW (ORCPT
+        id S1726790AbgG2UGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:04:22 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:39799 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgG2UEW (ORCPT
+        Wed, 29 Jul 2020 16:06:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33723 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726628AbgG2UGQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:04:22 -0400
-Received: by mail-il1-f199.google.com with SMTP id i66so8981850ile.6
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:04:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=9ELpaWYTQuDDVWi9r+nQFpE4UEigiAPgZolmhMlqcc0=;
-        b=CverRH3ufAQq9DD+etvHPw+WXvn0El8AlgL7PeAHTrcEYUdb0cZMlNcHbb0v/bu4a/
-         YOzARGmyph4X1fQ2Rqet6Ry0a42AhVI96RPU13upEeergVWxGa1H4QmSvrNvahYSioNr
-         pf4JqJI/F1mxbA544tDogWN0XcCFvWV7hluS9rDncrv+Q02mUXEiQXPKHc8ackfo3PBy
-         991R6LoAyYs9crmnsBChO/7obPGH92ys9UOTcI8U+28cgdnDjzdv6QfxsFcIQXKmWPJj
-         JuHHEwCA9cVfzxazX7wHftYpOeh6KD8CHtU/NSlLOOwUkxNqnx1farnKu15g36PnfHlT
-         2TuQ==
-X-Gm-Message-State: AOAM532qhxCQBXd8z7BD/EWl4RsH2yCR6ycHBL5uaY3UwdjOeOXeNyjc
-        4uOogqGw5WWqq4bBvaBSt965iRjk44wANQ9I6gDrcNCq2WR4
-X-Google-Smtp-Source: ABdhPJysL7TJsm+E3XdoV4Sa+36Gfnnyww9VQA9atn99N1sIxMXlnW77gf+oW+SBTg+yz4QHTthIxDcvq0DJur69RdbGX3t1RWuC
+        Wed, 29 Jul 2020 16:06:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596053174;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1Nf+cVZW6NVZ94AMcR1q0fdpvnEsNWz1jczE5rVu2vk=;
+        b=PFwyu5yVKEVCQBTjGnVJTVUeN0GGWcxE6ou2dmjok0jaj5Sat8iOZtYTjJOyG79Ci96J5u
+        aDl0vJLLGMb5+OaIVb0tVKEASidWe03D4qvJ1ZE7D923QZhl0Rz4COxeCaoLD4y5G7qWM7
+        fynF4p6TtJ0XqbEt0IsMny8foAGbHxk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-477-yJSSxf_fNfaDtsjm96lLEg-1; Wed, 29 Jul 2020 16:06:05 -0400
+X-MC-Unique: yJSSxf_fNfaDtsjm96lLEg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A9248017FB;
+        Wed, 29 Jul 2020 20:06:03 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4A2E65D9E8;
+        Wed, 29 Jul 2020 20:05:48 +0000 (UTC)
+Date:   Wed, 29 Jul 2020 16:05:45 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, Ondrej Mosnacek <omosnace@redhat.com>,
+        dhowells@redhat.com, simo@redhat.com,
+        Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Subject: Re: [PATCH ghak90 V9 02/13] audit: add container id
+Message-ID: <20200729200545.5apwc7fashwsnglj@madcap2.tricolour.ca>
+References: <cover.1593198710.git.rgb@redhat.com>
+ <e5a1ab6955c565743372b392a93f7d1ac98478a2.1593198710.git.rgb@redhat.com>
+ <CAHC9VhSgcOS79spSuFDMukw2TnLZfBh2p4BWGfoV_CGUS8b77w@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:9892:: with SMTP id a18mr33750922ill.60.1596053061267;
- Wed, 29 Jul 2020 13:04:21 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 13:04:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c276c005ab9a0fb1@google.com>
-Subject: kernel BUG at mm/internal.h:LINE! (2)
-From:   syzbot <syzbot+f62749569eab36774dc5@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhSgcOS79spSuFDMukw2TnLZfBh2p4BWGfoV_CGUS8b77w@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 2020-07-05 11:09, Paul Moore wrote:
+> On Sat, Jun 27, 2020 at 9:22 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >
+> > Implement the proc fs write to set the audit container identifier of a
+> > process, emitting an AUDIT_CONTAINER_OP record to document the event.
+> >
+> > This is a write from the container orchestrator task to a proc entry of
+> > the form /proc/PID/audit_containerid where PID is the process ID of the
+> > newly created task that is to become the first task in a container, or
+> > an additional task added to a container.
+> >
+> > The write expects up to a u64 value (unset: 18446744073709551615).
+> >
+> > The writer must have capability CAP_AUDIT_CONTROL.
+> >
+> > This will produce a record such as this:
+> >   type=CONTAINER_OP msg=audit(2018-06-06 12:39:29.636:26949) : op=set opid=2209 contid=123456 old-contid=18446744073709551615
+> >
+> > The "op" field indicates an initial set.  The "opid" field is the
+> > object's PID, the process being "contained".  New and old audit
+> > container identifier values are given in the "contid" fields.
+> >
+> > It is not permitted to unset the audit container identifier.
+> > A child inherits its parent's audit container identifier.
+> >
+> > Store the audit container identifier in a refcounted kernel object that
+> > is added to the master list of audit container identifiers.  This will
+> > allow multiple container orchestrators/engines to work on the same
+> > machine without danger of inadvertantly re-using an existing identifier.
+> > It will also allow an orchestrator to inject a process into an existing
+> > container by checking if the original container owner is the one
+> > injecting the task.  A hash table list is used to optimize searches.
+> >
+> > Please see the github audit kernel issue for the main feature:
+> >   https://github.com/linux-audit/audit-kernel/issues/90
+> > Please see the github audit userspace issue for supporting additions:
+> >   https://github.com/linux-audit/audit-userspace/issues/51
+> > Please see the github audit testsuiite issue for the test case:
+> >   https://github.com/linux-audit/audit-testsuite/issues/64
+> > Please see the github audit wiki for the feature overview:
+> >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> >
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > Acked-by: Serge Hallyn <serge@hallyn.com>
+> > Acked-by: Steve Grubb <sgrubb@redhat.com>
+> > Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > ---
+> >  fs/proc/base.c             |  36 +++++++++++
+> >  include/linux/audit.h      |  33 ++++++++++
+> >  include/uapi/linux/audit.h |   2 +
+> >  kernel/audit.c             | 148 +++++++++++++++++++++++++++++++++++++++++++++
+> >  kernel/audit.h             |   8 +++
+> >  5 files changed, 227 insertions(+)
+> 
+> ...
+> 
+> > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > index c2150415f9df..2800d4f1a2a8 100644
+> > --- a/include/linux/audit.h
+> > +++ b/include/linux/audit.h
+> > @@ -692,6 +715,16 @@ static inline bool audit_loginuid_set(struct task_struct *tsk)
+> >         return uid_valid(audit_get_loginuid(tsk));
+> >  }
+> >
+> > +static inline bool audit_contid_valid(u64 contid)
+> > +{
+> > +       return contid != AUDIT_CID_UNSET;
+> > +}
+> > +
+> > +static inline bool audit_contid_set(struct task_struct *tsk)
+> > +{
+> > +       return audit_contid_valid(audit_get_contid(tsk));
+> > +}
+> 
+> This is quasi-nitpicky, but it seems like audit_contid_valid() and
+> audit_contid_set() should be moved to kernel/audit.h if possible
+> (possibly even kernel/audit.c).  Maybe I'll see something later in the
+> patchset, but right now I'm struggling to think of why anyone outside
+> of audit would need to call these functions.
 
-syzbot found the following issue on:
+This was historical made moot by the conversion to contobj.  I moved
+them to kernel/audit.c and then just went with an open coded test once
+and even just looking at the existance of a contobj.
 
-HEAD commit:    68845a55 Merge branch 'akpm' into master (patches from And..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17c86c54900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f87a5e4232fdb267
-dashboard link: https://syzkaller.appspot.com/bug?extid=f62749569eab36774dc5
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index 5d8147a29291..6d387793f702 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > @@ -138,6 +138,13 @@ struct auditd_connection {
+> >
+> >  /* Hash for inode-based rules */
+> >  struct list_head audit_inode_hash[AUDIT_INODE_BUCKETS];
+> > +/* Hash for contid object lists */
+> > +struct list_head audit_contid_hash[AUDIT_CONTID_BUCKETS];
+> > +/* Lock all additions and deletions to the contid hash lists, assignment
+> > + * of container objects to tasks.  There should be no need for
+> > + * interaction with tasklist_lock
+> > + */
+> > +static DEFINE_SPINLOCK(audit_contobj_list_lock);
+> >
+> >  static struct kmem_cache *audit_buffer_cache;
+> >
+> > @@ -212,6 +219,33 @@ void __init audit_task_init(void)
+> >                                              0, SLAB_PANIC, NULL);
+> >  }
+> >
+> > +/* rcu_read_lock must be held by caller unless new */
+> > +static struct audit_contobj *_audit_contobj_hold(struct audit_contobj *cont)
+> > +{
+> > +       if (cont)
+> > +               refcount_inc(&cont->refcount);
+> > +       return cont;
+> > +}
+> > +
+> > +static struct audit_contobj *_audit_contobj_get(struct task_struct *tsk)
+> > +{
+> > +       if (!tsk->audit)
+> > +               return NULL;
+> > +       return _audit_contobj_hold(tsk->audit->cont);
+> > +}
+> > +
+> > +/* rcu_read_lock must be held by caller */
+> > +static void _audit_contobj_put(struct audit_contobj *cont)
+> > +{
+> > +       if (!cont)
+> > +               return;
+> > +       if (refcount_dec_and_test(&cont->refcount)) {
+> > +               put_task_struct(cont->owner);
+> > +               list_del_rcu(&cont->list);
+> 
+> You should check your locking; I'm used to seeing exclusive locks
+> (e.g. the spinlock) around list adds/removes, it just reads/traversals
+> that can be done with just the RCU lock held.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Ok, I've redone the locking yet again.  I knew this on one level but
+that didn't translate consistently to code...
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f62749569eab36774dc5@syzkaller.appspotmail.com
+> > +               kfree_rcu(cont, rcu);
+> > +       }
+> > +}
+> 
+> Another nitpick, but it might be nice to have similar arguments to the
+> _get() and _put() functions, e.g. struct audit_contobj, but that is
+> some serious bikeshedding (basically rename _hold() to _get() and
+> rename _hold to audit_task_contid_hold() or similar).
 
-vma ffff888000153210 start 0007700000077000 end 0000000000077000
-next 0007700000000000 prev 0000000007070707 mm 0007700000000000
-prot 77700000077000 anon_vma 0000000000000000 vm_ops ffffffff885cecc0
-pgoff 0 file ffff88809e09a7c0 private_data 0000000000000000
-flags: 0x0()
-------------[ cut here ]------------
-kernel BUG at mm/internal.h:401!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 1676 Comm: kswapd0 Not tainted 5.8.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:vma_address mm/internal.h:401 [inline]
-RIP: 0010:vma_address mm/internal.h:393 [inline]
-RIP: 0010:rmap_walk_file+0x6a4/0xbf0 mm/rmap.c:1921
-Code: e8 91 20 cc ff 48 83 eb 01 48 89 e8 48 29 d8 48 c1 f8 06 48 01 44 24 18 e9 1a fb ff ff e8 74 20 cc ff 4c 89 e7 e8 95 e3 f9 ff <0f> 0b e8 65 20 cc ff 48 8b 44 24 10 4c 8d 68 78 4c 89 ef e8 b4 8a
-RSP: 0018:ffffc90006987598 EFLAGS: 00010287
-RAX: 000000000000010f RBX: 000770000019e000 RCX: 0000000000000000
-RDX: ffff8880a425e540 RSI: ffffffff815d4eb7 RDI: fffff52000d30e8e
-RBP: ffffea00021eac40 R08: 000000000000010f R09: ffff8880ae6318e7
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff888000153210
-R13: dffffc0000000000 R14: 0007700000077000 R15: 0000000000077000
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000788070 CR3: 000000020b00c000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- rmap_walk+0x105/0x190 mm/rmap.c:1946
- page_referenced+0x417/0x4b0 mm/rmap.c:888
- shrink_active_list+0x3a6/0x1350 mm/vmscan.c:2061
- shrink_list mm/vmscan.c:2167 [inline]
- shrink_lruvec+0x842/0x10f0 mm/vmscan.c:2467
- shrink_node_memcgs mm/vmscan.c:2656 [inline]
- shrink_node+0x4b0/0x1b60 mm/vmscan.c:2770
- kswapd_shrink_node mm/vmscan.c:3517 [inline]
- balance_pgdat+0x72f/0x10d0 mm/vmscan.c:3675
- kswapd+0x5a5/0xe70 mm/vmscan.c:3932
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-Modules linked in:
----[ end trace aecaf7276f5d1d16 ]---
-RIP: 0010:vma_address mm/internal.h:401 [inline]
-RIP: 0010:vma_address mm/internal.h:393 [inline]
-RIP: 0010:rmap_walk_file+0x6a4/0xbf0 mm/rmap.c:1921
-Code: e8 91 20 cc ff 48 83 eb 01 48 89 e8 48 29 d8 48 c1 f8 06 48 01 44 24 18 e9 1a fb ff ff e8 74 20 cc ff 4c 89 e7 e8 95 e3 f9 ff <0f> 0b e8 65 20 cc ff 48 8b 44 24 10 4c 8d 68 78 4c 89 ef e8 b4 8a
-RSP: 0018:ffffc90006987598 EFLAGS: 00010287
-RAX: 000000000000010f RBX: 000770000019e000 RCX: 0000000000000000
-RDX: ffff8880a425e540 RSI: ffffffff815d4eb7 RDI: fffff52000d30e8e
-RBP: ffffea00021eac40 R08: 000000000000010f R09: ffff8880ae6318e7
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff888000153210
-R13: dffffc0000000000 R14: 0007700000077000 R15: 0000000000077000
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000788070 CR3: 000000020b00c000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+I have some idea what you are trying to say, but I think you misspoke.
+Did you mean rename _hold to _get, rename _get to
+audit_task_contobj_hold()?
 
+> >  /**
+> >   * audit_alloc - allocate an audit info block for a task
+> >   * @tsk: task
+> > @@ -232,6 +266,9 @@ int audit_alloc(struct task_struct *tsk)
+> >         }
+> >         info->loginuid = audit_get_loginuid(current);
+> >         info->sessionid = audit_get_sessionid(current);
+> > +       rcu_read_lock();
+> > +       info->cont = _audit_contobj_get(current);
+> > +       rcu_read_unlock();
+> 
+> The RCU locks aren't strictly necessary here, are they?  In fact I
+> suppose we could probably just replace the _get() call with a
+> refcount_set(1) just as we do in audit_set_contid(), yes?
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+I don't understand what you are getting at here.  It needs a *contobj,
+along with bumping up the refcount of the existing contobj.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> >         tsk->audit = info;
+> >
+> >         ret = audit_alloc_syscall(tsk);
+> > @@ -246,6 +283,7 @@ int audit_alloc(struct task_struct *tsk)
+> >  struct audit_task_info init_struct_audit = {
+> >         .loginuid = INVALID_UID,
+> >         .sessionid = AUDIT_SID_UNSET,
+> > +       .cont = NULL,
+> >  #ifdef CONFIG_AUDITSYSCALL
+> >         .ctx = NULL,
+> >  #endif
+> > @@ -262,6 +300,9 @@ void audit_free(struct task_struct *tsk)
+> >         struct audit_task_info *info = tsk->audit;
+> >
+> >         audit_free_syscall(tsk);
+> > +       rcu_read_lock();
+> > +       _audit_contobj_put(tsk->audit->cont);
+> > +       rcu_read_unlock();
+> >         /* Freeing the audit_task_info struct must be performed after
+> >          * audit_log_exit() due to need for loginuid and sessionid.
+> >          */
+> > @@ -1709,6 +1750,9 @@ static int __init audit_init(void)
+> >         for (i = 0; i < AUDIT_INODE_BUCKETS; i++)
+> >                 INIT_LIST_HEAD(&audit_inode_hash[i]);
+> >
+> > +       for (i = 0; i < AUDIT_CONTID_BUCKETS; i++)
+> > +               INIT_LIST_HEAD(&audit_contid_hash[i]);
+> > +
+> >         mutex_init(&audit_cmd_mutex.lock);
+> >         audit_cmd_mutex.owner = NULL;
+> >
+> > @@ -2410,6 +2454,110 @@ int audit_signal_info(int sig, struct task_struct *t)
+> >         return audit_signal_info_syscall(t);
+> >  }
+> >
+> > +/*
+> > + * audit_set_contid - set current task's audit contid
+> > + * @task: target task
+> > + * @contid: contid value
+> > + *
+> > + * Returns 0 on success, -EPERM on permission failure.
+> > + *
+> > + * If the original container owner goes away, no task injection is
+> > + * possible to an existing container.
+> > + *
+> > + * Called (set) from fs/proc/base.c::proc_contid_write().
+> > + */
+> > +int audit_set_contid(struct task_struct *task, u64 contid)
+> > +{
+> > +       int rc = 0;
+> > +       struct audit_buffer *ab;
+> > +       struct audit_contobj *oldcont = NULL;
+> > +
+> > +       task_lock(task);
+> > +       /* Can't set if audit disabled */
+> > +       if (!task->audit) {
+> > +               task_unlock(task);
+> > +               return -ENOPROTOOPT;
+> > +       }
+> 
+> See my question/comment in patch 1/13; this check may not be needed or
+> it may need to be changed to something other than "!task->audit".
+> 
+> > +       read_lock(&tasklist_lock);
+> > +       /* Don't allow the contid to be unset */
+> > +       if (!audit_contid_valid(contid)) {
+> > +               rc = -EINVAL;
+> > +               goto unlock;
+> > +       }
+> > +       /* if we don't have caps, reject */
+> > +       if (!capable(CAP_AUDIT_CONTROL)) {
+> > +               rc = -EPERM;
+> > +               goto unlock;
+> > +       }
+> > +       /* if task has children or is not single-threaded, deny */
+> > +       if (!list_empty(&task->children) ||
+> > +           !(thread_group_leader(task) && thread_group_empty(task))) {
+> > +               rc = -EBUSY;
+> > +               goto unlock;
+> > +       }
+> > +       /* if contid is already set, deny */
+> > +       if (audit_contid_set(task))
+> > +               rc = -EEXIST;
+> > +unlock:
+> 
+> Can we move the "unlock" target to the end of the function where it
+> just handles the unlocking and returns an error, including the
+> AUDIT_CONTAINER_OP record if necessary?  From what I can see we only
+> jump to "unlock" in case of error where we are not going to set the
+> audit container ID, yet the "unlock" target is placed in a misleading
+> location in the middle of the function.  It may be that everything
+> works correctly, but I would argue this is a bad practice that
+> increases the likelihood of buggy behavior in future code changes.
+> 
+> If you can't find way to arrange the code nicely, just duplicate the
+> "tasklist_lock" unlock operation in the error handlers before jumping
+> down to the end of the function.  It isn't perfect, but I believe it
+> will be a lot less fragile than the current approach.
+
+I think it makes most sense to convert it back to an else if ladder that
+will simplify things a bit and make if flow a bit better.
+
+> > +       read_unlock(&tasklist_lock);
+> > +       rcu_read_lock();
+> > +       oldcont = _audit_contobj_get(task);
+> > +       if (!rc) {
+> > +               struct audit_contobj *cont = NULL, *newcont = NULL;
+> > +               int h = audit_hash_contid(contid);
+> > +
+> > +               spin_lock(&audit_contobj_list_lock);
+> > +               list_for_each_entry_rcu(cont, &audit_contid_hash[h], list)
+> > +                       if (cont->id == contid) {
+> > +                               /* task injection to existing container */
+> > +                               if (current == cont->owner) {
+> > +                                       _audit_contobj_hold(cont);
+> > +                                       newcont = cont;
+> > +                               } else {
+> > +                                       rc = -ENOTUNIQ;
+> > +                                       spin_unlock(&audit_contobj_list_lock);
+> > +                                       goto conterror;
+> > +                               }
+> > +                               break;
+> > +                       }
+> > +               if (!newcont) {
+> > +                       newcont = kmalloc(sizeof(*newcont), GFP_ATOMIC);
+> > +                       if (newcont) {
+> > +                               INIT_LIST_HEAD(&newcont->list);
+> > +                               newcont->id = contid;
+> > +                               newcont->owner = get_task_struct(current);
+> > +                               refcount_set(&newcont->refcount, 1);
+> > +                               list_add_rcu(&newcont->list,
+> > +                                            &audit_contid_hash[h]);
+> > +                       } else {
+> > +                               rc = -ENOMEM;
+> > +                               spin_unlock(&audit_contobj_list_lock);
+> > +                               goto conterror;
+> > +                       }
+> > +               }
+> > +               spin_unlock(&audit_contobj_list_lock);
+> > +               task->audit->cont = newcont;
+> > +               _audit_contobj_put(oldcont);
+> > +       }
+> > +conterror:
+> > +       task_unlock(task);
+> > +
+> > +       if (!audit_enabled)
+> > +               return rc;
+> > +
+> > +       ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_CONTAINER_OP);
+> > +       if (!ab)
+> > +               return rc;
+> > +
+> > +       audit_log_format(ab,
+> > +                        "op=set opid=%d contid=%llu old-contid=%llu",
+> > +                        task_tgid_nr(task), contid, oldcont ? oldcont->id : -1);
+> > +       _audit_contobj_put(oldcont);
+> > +       rcu_read_unlock();
+> > +       audit_log_end(ab);
+> > +       return rc;
+> > +}
+> 
+> --
+> paul moore
+> www.paul-moore.com
+> 
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
