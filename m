@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0459C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E28C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85AFD20672
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAEFC20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:47:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730851AbgG2Brk (ORCPT
+        id S1730670AbgG2Brc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 21:47:40 -0400
-Received: from mga18.intel.com ([134.134.136.126]:61124 "EHLO mga18.intel.com"
+        Tue, 28 Jul 2020 21:47:32 -0400
+Received: from mga03.intel.com ([134.134.136.65]:30261 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730346AbgG2Brk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 21:47:40 -0400
-IronPort-SDR: gSUs/BI8/XyiPEXQIA5uC0n12rKwsTftw7IVmFpFudcHTpL4+bUPnRaKAXGoS1bM0ko05wsQ/P
- 5QsNnejxtG3w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="138873338"
+        id S1730346AbgG2Brb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 21:47:31 -0400
+IronPort-SDR: D/XYOS2B35gEdIqen0AFylxLApDPeP+fz01l/hzY3VgJk22o+LgHMyrAbTaZ4K7dzeOeldejBh
+ GOwnXXsmw3yA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="151326225"
 X-IronPort-AV: E=Sophos;i="5.75,408,1589266800"; 
-   d="scan'208";a="138873338"
+   d="scan'208";a="151326225"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 18:47:39 -0700
-IronPort-SDR: qPFk3bN16eqZMmuY0ssfQDxdAEbD+L9RQSFfCQZf2g0qQeaxJeKPjKPa0UPLW9bO7uetYLas5A
- ILJxS1MYnvFg==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 18:47:29 -0700
+IronPort-SDR: buweFr5FXr4/wTlV5YC7qLAkiGV9FFRoWmrr2Zj2m8xiK0wIq4Jp90yg5jDZ3MfVW3CESDyZyn
+ 9NEDaro4wMXQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,408,1589266800"; 
-   d="scan'208";a="434533637"
+   d="scan'208";a="364702365"
 Received: from lkp-server01.sh.intel.com (HELO d27eb53fc52b) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 28 Jul 2020 18:47:38 -0700
+  by orsmga001.jf.intel.com with ESMTP; 28 Jul 2020 18:47:28 -0700
 Received: from kbuild by d27eb53fc52b with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1k0bBx-0001AC-H6; Wed, 29 Jul 2020 01:47:37 +0000
-Date:   Wed, 29 Jul 2020 09:47:03 +0800
+        id 1k0bBn-0001A6-IU; Wed, 29 Jul 2020 01:47:27 +0000
+Date:   Wed, 29 Jul 2020 09:47:06 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/kaslr] BUILD SUCCESS
- 7f104ea54e69ec45cbc4948cdb7d7f74d46def6d
-Message-ID: <5f20d517.FmG55xQWJ+FnKEjZ%lkp@intel.com>
+Subject: [tip:sched/core] BUILD SUCCESS
+ 21a6ee14a8f277766618ef07154432b46528113e
+Message-ID: <5f20d51a.xjfwIJj4SuCWbefb%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -55,13 +55,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/kaslr
-branch HEAD: 7f104ea54e69ec45cbc4948cdb7d7f74d46def6d  x86/kaslr: Initialize mem_limit to the real maximum address
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  sched/core
+branch HEAD: 21a6ee14a8f277766618ef07154432b46528113e  sched: Remove duplicated tick_nohz_full_enabled() check
 
 elapsed time: 724m
 
-configs tested: 68
-configs skipped: 47
+configs tested: 76
+configs skipped: 3
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -71,9 +71,16 @@ arm64                            allyesconfig
 arm64                               defconfig
 arm                              allyesconfig
 arm                              allmodconfig
-arm                          prima2_defconfig
-arm                      footbridge_defconfig
-mips                        nlm_xlr_defconfig
+arm                            qcom_defconfig
+powerpc                      ep88xc_defconfig
+mips                  decstation_64_defconfig
+xtensa                           alldefconfig
+mips                          ath79_defconfig
+arm                     davinci_all_defconfig
+nios2                            alldefconfig
+arm                         vf610m4_defconfig
+m68k                            mac_defconfig
+sh                          lboxre2_defconfig
 ia64                             allmodconfig
 ia64                                defconfig
 ia64                             allyesconfig
@@ -106,6 +113,7 @@ mips                             allmodconfig
 powerpc                          allyesconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
+powerpc                             defconfig
 i386                 randconfig-a003-20200728
 i386                 randconfig-a004-20200728
 i386                 randconfig-a005-20200728
