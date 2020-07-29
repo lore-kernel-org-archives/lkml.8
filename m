@@ -2,160 +2,304 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F07C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9382BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C062074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EECF2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:35:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FsXHO1+D"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="ijqGfzsd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgG2XfF (ORCPT
+        id S1728072AbgG2XfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 19:35:05 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51911 "EHLO ozlabs.org"
+        Wed, 29 Jul 2020 19:35:24 -0400
+Received: from mga01.intel.com ([192.55.52.88]:28720 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbgG2XfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 19:35:04 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BH8z96Wy2z9sR4;
-        Thu, 30 Jul 2020 09:35:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596065702;
-        bh=ndcwEaucb4vCdDAXRw1ne6kVv2n1hBIl3IfbJ5rJC8g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FsXHO1+D7htEoKBHw4W0kOquovx7MLiT0mEdg8Y0KrHzJvBojP7ptzJF87hSamzP0
-         LpZ/yxx/u2Ax/OLYDTFSlnzepkDsO1uZttZ5Gr3RE6fj8YwMZggs4Y3lkrwDxbWEwk
-         gvLvVYN9OvlHwrFVFjNmUp5cu3/mf6NHSjAAd+K4GmQIYPn8L3HPjQ/qWbPYfStrIb
-         jJfrTd6bOZ1VJhyhXX6kAwsoFi5FaMA0qWQ12ISZnjhnX0ffn+ChoLIPxEQSBCjZuP
-         A8NtK92lebZvfchHPL4Cx9UJOT9Mez574SUeNs3RMWyfSnJty/BK4zFU1O/r/cHwyq
-         d+g0lMXkde19A==
-Date:   Thu, 30 Jul 2020 09:35:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Morris <jmorris@namei.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the security tree
-Message-ID: <20200730093500.334c56cb@canb.auug.org.au>
-In-Reply-To: <20200713120419.33cf7a87@canb.auug.org.au>
-References: <20200708140034.546298ff@canb.auug.org.au>
-        <20200713120419.33cf7a87@canb.auug.org.au>
+        id S1726718AbgG2XfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 19:35:23 -0400
+IronPort-SDR: /397HDHSk5TDii+VoneYERU50ZLWZAKoR2KvPOH1Y3QNhJP1blg43G++cmtKra/UC68k6fpivg
+ LQ1WS8MKU9sw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="169637096"
+X-IronPort-AV: E=Sophos;i="5.75,412,1589266800"; 
+   d="scan'208";a="169637096"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 16:34:42 -0700
+IronPort-SDR: lRByYnKiFa1Bj4mlYYYO388tN5rhxmOO15Pa7uaC4s58pc7idigFd9VOY7Xw6dBh8EvIL/1zho
+ pNbvq9ZHUtqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,412,1589266800"; 
+   d="scan'208";a="320897250"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by orsmga008.jf.intel.com with ESMTP; 29 Jul 2020 16:34:42 -0700
+Received: from orsmsx153.amr.corp.intel.com (10.22.226.247) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 29 Jul 2020 16:34:42 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ ORSMSX153.amr.corp.intel.com (10.22.226.247) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 29 Jul 2020 16:34:41 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.102)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 29 Jul 2020 16:34:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mRXWNlccxBgEYXACFLjap9dIzz578F8Ga4wkBSBkDBSnCbaz+LwjVuxOHqhsjmer8FIPI2F3Pf1vYGn6FFjRLlM0HxPMqMsBEITirW6AWf1mvkdspC/0+yciRIVQcQb4q5q5+XESEunhJ4Rvd4AgUXpW2sHxQPJ9L6FYNS8WAI072KAb0JE2ejGSOm0SRmMn2Qbs02z0JMydbDSTWAqcWdIX8MNpx/XdUL9uiwOW4kqhMWJTxmrQgfBRcylZ3bHPLouRLyyXd4OKBleh6pj0VOynWijMNja3y4OymLZV6tHaNCH849snu5uG6Q9fR6kMrQQqSb+2m8TzJQLpW99VFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E/EmDuC9CR/chjwtQipnBbebgAeAy2qwWaZqH5ofCqU=;
+ b=HISEcmWFW6+zQWrKoK+bQmwZx24uVgf+d63V5o5oF4hZCKLGiQiC6pNid9Uo1mi+eD+leLF2zQFBMplUwuOMdI5NufzGa7rLiRPtsRTsrFaU35V2T50wWaGCeKkBPzVKnfQF1863vCxP2ZK8qgI63/w5lNpUOFKJ+WG6KdwitloZh2lwH/h99Z63a0wUE7vAh2ZsXw7ffpuw2Ee7Fp1mxFy2+g5Qt6nmzw4O2Ety1cbvBSkMJiXnLESOVUeaOyprKRQpz298dwPIjyR/T4ykHVdQUZSkekhFU1ifdJTJfqIERzOk64jr3/V/B9YwsJCHx0WF6g4r/LzFKehX6Kh1mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E/EmDuC9CR/chjwtQipnBbebgAeAy2qwWaZqH5ofCqU=;
+ b=ijqGfzsdUu9JR+UIl1W79uFoYLuMoWbSYPw9yPvD/nzqRI/tNItISUsInE4x1N6/3wW2gWcAMq7AgqBd+K2wLWKHFWpPa0Y0NiCdNwDlQ36+FGbLJ2I50zvM6RYVCQzjQ3zlMTOaSvmOYk0pfn23i27sbCRvBa/CEsgbX/F7WKE=
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
+ by MWHPR11MB0015.namprd11.prod.outlook.com (2603:10b6:301:66::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Wed, 29 Jul
+ 2020 23:34:40 +0000
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::9864:e0cb:af36:6feb]) by MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::9864:e0cb:af36:6feb%5]) with mapi id 15.20.3216.034; Wed, 29 Jul 2020
+ 23:34:40 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>
+CC:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: RE: [PATCH v3 2/4] iommu: Add iommu_aux_at(de)tach_group()
+Thread-Topic: [PATCH v3 2/4] iommu: Add iommu_aux_at(de)tach_group()
+Thread-Index: AQHWWaRQ/iShkhawREexh2T3KuYZVKkHR0+AgACIeACAAP9FAIAAmLMAgBWrqACAADjVQA==
+Date:   Wed, 29 Jul 2020 23:34:40 +0000
+Message-ID: <MWHPR11MB16454283959A365ED7964C488C700@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+        <20200714055703.5510-3-baolu.lu@linux.intel.com>
+        <20200714093909.1ab93c9e@jacob-builder>
+        <b5b22e01-4a51-8dfe-9ba4-aeca783740f1@linux.intel.com>
+        <20200715090114.50a459d4@jacob-builder>
+        <435a2014-c2e8-06b9-3c9a-4afbf6607ffe@linux.intel.com>
+ <20200729140336.09d2bfe7@x1.home>
+In-Reply-To: <20200729140336.09d2bfe7@x1.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.206]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: efc08fbd-7c0a-4a8d-0a54-08d83417f6e8
+x-ms-traffictypediagnostic: MWHPR11MB0015:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB00150735866CA542C9A76F738C700@MWHPR11MB0015.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: txI0HcAQwvXFdOXrWaLqmIwbxA0P7vU3OJGlgxSTJWBsAXDNwSlnYaKQIGV4fcx6/PB46YnNefcdmBFS9QqFGMwMOZYh9swat0ojNoapjR/UoAAQjGwE5F1/4uUM+jYdl+hBe4gkwP15LA39RLOYeK3ri4UY1Q8+2o3EeyP14VoT89E/y6u1JypZRC5xazRQI2UfS4kvzD41C9EApbEkdU425G1WtVcHPawx5Aea9D18k69XIWWgJHXSsoUEOgBWXdIfO0rulGj5eXSKoU2QqApPnDpIWYgUQEn3zBt37x5NyNSxzoyAYWAmBqBdVqhRmwzaPX+qC7lEJ2AC/FoBgA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(366004)(396003)(136003)(53546011)(66946007)(76116006)(64756008)(66476007)(6506007)(8676002)(66446008)(66556008)(5660300002)(478600001)(9686003)(71200400001)(26005)(7696005)(316002)(52536014)(54906003)(55016002)(4326008)(2906002)(186003)(83380400001)(33656002)(8936002)(7416002)(86362001)(110136005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: DPhHZOIW37t5MfsUHlvCQBWvn9XoSMP4/f5JjRwyDrYn0FKdCS2XstAtdKJ9OMzfxFbyoX9/6ZT02q32YcexJ7C5iGF/62Ud0zkDDuooD7XnnIOJ3R4uEBkomi4+Ji3GsyQKTz7nLBzAy4o/N3db12+xvjWKWcq/2RXDCbjqodjdXCZHE60wNrDg6yd+XHozX7sgkmDqzC51Jef/LrcWpPUNRQ05etYUAOVUQq+gvnU+1pWTTnemutk1SFHoiS30URCwQGg7cbb+T0SIjnKGVBNhv9BcAFBB/3R2nVwrZbsO+pdBbx2imvJO4fxiZd+vzrQTxbZ6KWQamZQYroSq2BZ2hLFH0RWxQ7kzh4xYupVW8bxqLTsKkbmjFzloGg8tsKDrsywHYxOW+K2Ljhq3UnJYFhCKdHxW5utTOGHpY+VQfMc5UyXEGhKMDETin1pR6hf5PVWSK12yimeW7lT2Up62kJWiEvL05pO4oT7rnlAA/14WA5FflSN3natHV/kU/7w9JKHQ5PLgBukaa4KAri+kLz1VIaS1+PduDEJaPBl9hhQYcyUFguq5WwXPwETUMUpFvZy7YJpS9OqtQ+bhn3Lll6fgmxo0D3IKkrDhxm3Fgw40WH2u/StIsNZ9BFF2qy5dpsNQJan3lrLjI74JLg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pRcpjNCa9fHwRuWJfEekUaG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: efc08fbd-7c0a-4a8d-0a54-08d83417f6e8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2020 23:34:40.3529
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ctUmX1SXWbzV8/VLAARXOnHpy2R7Y4i4uxbOjxjmUvU7JVl6rupz3F5s04ELB4eBog1Jwsy2q2nPHYeUHrt1rQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB0015
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/pRcpjNCa9fHwRuWJfEekUaG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Mon, 13 Jul 2020 12:04:19 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> On Wed, 8 Jul 2020 14:00:34 +1000 Stephen Rothwell <sfr@canb.auug.org.au>=
- wrote:
-> >
-> > After merging the security tree, today's linux-next build (powerpc
-> > ppc64_defconfig) failed like this:
-> >=20
-> > fs/anon_inodes.c: In function 'anon_inode_make_secure_inode':
-> > fs/anon_inodes.c:70:10: error: implicit declaration of function 'securi=
-ty_inode_init_security_anon'; did you mean 'security_inode_init_security'? =
-[-Werror=3Dimplicit-function-declaration]
-> >    70 |  error =3D security_inode_init_security_anon(
-> >       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >       |          security_inode_init_security
-> >=20
-> > Caused by commit
-> >=20
-> >   2749d3f84a70 ("Add a new LSM-supporting anonymous inode interface")
-> >=20
-> > # CONFIG_SECURITY is not set
-> >=20
-> > Also, the explicit include of linux/security.h is missing ...
-> >=20
-> > I have added the following patch for today.
-> >=20
-> > From b2bae25c9b715e06f7e802ec7b51cfbfec046e6c Mon Sep 17 00:00:00 2001
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Date: Wed, 8 Jul 2020 13:43:01 +1000
-> > Subject: [PATCH] fix up for "Add a new LSM-supporting anonymous inode i=
-nterface"
-> >=20
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > ---
-> >  fs/anon_inodes.c         | 1 +
-> >  include/linux/security.h | 7 +++++++
-> >  2 files changed, 8 insertions(+)
-> >=20
-> > diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
-> > index f87f221167cf..25d92c64411e 100644
-> > --- a/fs/anon_inodes.c
-> > +++ b/fs/anon_inodes.c
-> > @@ -21,6 +21,7 @@
-> >  #include <linux/magic.h>
-> >  #include <linux/anon_inodes.h>
-> >  #include <linux/pseudo_fs.h>
-> > +#include <linux/security.h>
-> > =20
-> >  #include <linux/uaccess.h>
-> > =20
-> > diff --git a/include/linux/security.h b/include/linux/security.h
-> > index 95c133a8f8bb..7c6b3dcf4721 100644
-> > --- a/include/linux/security.h
-> > +++ b/include/linux/security.h
-> > @@ -735,6 +735,13 @@ static inline int security_inode_init_security(str=
-uct inode *inode,
-> >  	return 0;
-> >  }
-> > =20
-> > +static inline int security_inode_init_security_anon(struct inode *inod=
-e,
-> > +						    const struct qstr *name,
-> > +						    const struct inode *context_inode)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> >  static inline int security_old_inode_init_security(struct inode *inode,
-> >  						   struct inode *dir,
-> >  						   const struct qstr *qstr, =20
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Thursday, July 30, 2020 4:04 AM
 >=20
-> I am still applying the above patch ...
+> On Thu, 16 Jul 2020 09:07:46 +0800
+> Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>=20
+> > Hi Jacob,
+> >
+> > On 7/16/20 12:01 AM, Jacob Pan wrote:
+> > > On Wed, 15 Jul 2020 08:47:36 +0800
+> > > Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> > >
+> > >> Hi Jacob,
+> > >>
+> > >> On 7/15/20 12:39 AM, Jacob Pan wrote:
+> > >>> On Tue, 14 Jul 2020 13:57:01 +0800
+> > >>> Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+> > >>>
+> > >>>> This adds two new aux-domain APIs for a use case like vfio/mdev
+> > >>>> where sub-devices derived from an aux-domain capable device are
+> > >>>> created and put in an iommu_group.
+> > >>>>
+> > >>>> /**
+> > >>>>    * iommu_aux_attach_group - attach an aux-domain to an
+> iommu_group
+> > >>>> which
+> > >>>>    *                          contains sub-devices (for example
+> > >>>> mdevs) derived
+> > >>>>    *                          from @dev.
+> > >>>>    * @domain: an aux-domain;
+> > >>>>    * @group:  an iommu_group which contains sub-devices derived
+> from
+> > >>>> @dev;
+> > >>>>    * @dev:    the physical device which supports
+> IOMMU_DEV_FEAT_AUX.
+> > >>>>    *
+> > >>>>    * Returns 0 on success, or an error value.
+> > >>>>    */
+> > >>>> int iommu_aux_attach_group(struct iommu_domain *domain,
+> > >>>>                              struct iommu_group *group,
+> > >>>>                              struct device *dev)
+> > >>>>
+> > >>>> /**
+> > >>>>    * iommu_aux_detach_group - detach an aux-domain from an
+> > >>>> iommu_group *
+> > >>>>    * @domain: an aux-domain;
+> > >>>>    * @group:  an iommu_group which contains sub-devices derived
+> from
+> > >>>> @dev;
+> > >>>>    * @dev:    the physical device which supports
+> IOMMU_DEV_FEAT_AUX.
+> > >>>>    *
+> > >>>>    * @domain must have been attached to @group via
+> > >>>> iommu_aux_attach_group(). */
+> > >>>> void iommu_aux_detach_group(struct iommu_domain *domain,
+> > >>>>                               struct iommu_group *group,
+> > >>>>                               struct device *dev)
+> > >>>>
+> > >>>> It also adds a flag in the iommu_group data structure to identify
+> > >>>> an iommu_group with aux-domain attached from those normal ones.
+> > >>>>
+> > >>>> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
+> > >>>> ---
+> > >>>>    drivers/iommu/iommu.c | 58
+> > >>>> +++++++++++++++++++++++++++++++++++++++++++
+> include/linux/iommu.h |
+> > >>>> 17 +++++++++++++ 2 files changed, 75 insertions(+)
+> > >>>>
+> > >>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> > >>>> index e1fdd3531d65..cad5a19ebf22 100644
+> > >>>> --- a/drivers/iommu/iommu.c
+> > >>>> +++ b/drivers/iommu/iommu.c
+> > >>>> @@ -45,6 +45,7 @@ struct iommu_group {
+> > >>>>    	struct iommu_domain *default_domain;
+> > >>>>    	struct iommu_domain *domain;
+> > >>>>    	struct list_head entry;
+> > >>>> +	unsigned int aux_domain_attached:1;
+> > >>>>    };
+> > >>>>
+> > >>>>    struct group_device {
+> > >>>> @@ -2759,6 +2760,63 @@ int iommu_aux_get_pasid(struct
+> iommu_domain
+> > >>>> *domain, struct device *dev) }
+> > >>>>    EXPORT_SYMBOL_GPL(iommu_aux_get_pasid);
+> > >>>>
+> > >>>> +/**
+> > >>>> + * iommu_aux_attach_group - attach an aux-domain to an
+> iommu_group
+> > >>>> which
+> > >>>> + *                          contains sub-devices (for example
+> > >>>> mdevs) derived
+> > >>>> + *                          from @dev.
+> > >>>> + * @domain: an aux-domain;
+> > >>>> + * @group:  an iommu_group which contains sub-devices derived
+> from
+> > >>>> @dev;
+> > >>>> + * @dev:    the physical device which supports
+> IOMMU_DEV_FEAT_AUX.
+> > >>>> + *
+> > >>>> + * Returns 0 on success, or an error value.
+> > >>>> + */
+> > >>>> +int iommu_aux_attach_group(struct iommu_domain *domain,
+> > >>>> +			   struct iommu_group *group, struct
+> > >>>> device *dev) +{
+> > >>>> +	int ret =3D -EBUSY;
+> > >>>> +
+> > >>>> +	mutex_lock(&group->mutex);
+> > >>>> +	if (group->domain)
+> > >>>> +		goto out_unlock;
+> > >>>> +
+> > >>> Perhaps I missed something but are we assuming only one mdev per
+> > >>> mdev group? That seems to change the logic where vfio does:
+> > >>> iommu_group_for_each_dev()
+> > >>> 	iommu_aux_attach_device()
+> > >>>
+> > >>
+> > >> It has been changed in PATCH 4/4:
+> > >>
+> > >> static int vfio_iommu_attach_group(struct vfio_domain *domain,
+> > >>                                      struct vfio_group *group)
+> > >> {
+> > >>           if (group->mdev_group)
+> > >>                   return iommu_aux_attach_group(domain->domain,
+> > >>                                                 group->iommu_group,
+> > >>                                                 group->iommu_device)=
+;
+> > >>           else
+> > >>                   return iommu_attach_group(domain->domain,
+> > >> group->iommu_group);
+> > >> }
+> > >>
+> > >> So, for both normal domain and aux-domain, we use the same concept:
+> > >> attach a domain to a group.
+> > >>
+> > > I get that, but don't you have to attach all the devices within the
+> >
+> > This iommu_group includes only mediated devices derived from an
+> > IOMMU_DEV_FEAT_AUX-capable device. Different from
+> iommu_attach_group(),
+> > iommu_aux_attach_group() doesn't need to attach the domain to each
+> > device in group, instead it only needs to attach the domain to the
+> > physical device where the mdev's were created from.
+> >
+> > > group? Here you see the group already has a domain and exit.
+> >
+> > If the (group->domain) has been set, that means a domain has already
+> > attached to the group, so it returns -EBUSY.
+>=20
+> I agree with Jacob, singleton groups should not be built into the IOMMU
+> API, we're not building an interface just for mdevs or current
+> limitations of mdevs.  This also means that setting a flag on the group
+> and passing a device that's assumed to be common for all devices within
+> the group, don't really make sense here.  Thanks,
+>=20
+> Alex
 
-The merge window is coming up fast ... is anything happening about this
-failure?
---=20
-Cheers,
-Stephen Rothwell
+Baolu and I discussed about this assumption before. The assumption is
+not based on singleton groups. We do consider multiple mdevs in one
+group. But our feeling at the moment is that all mdevs (or other AUX
+derivatives) in the same group should come from the same parent=20
+device, thus comes with above design. Does it sound a reasonable
+assumption to you?
 
---Sig_/pRcpjNCa9fHwRuWJfEekUaG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8iB6QACgkQAVBC80lX
-0GzbZwgAkghEOIqkc38lNpR+3G5zGuPqdm+/87RV6a8h0Tx4qepWoDDftp5GfM/B
-tajGT9dBDA0viLU+zOxjI+sLRPMmVKkI0Yc8y92/JPyGRYllQGaqJ4S7MQIHQIjE
-u+zh/38Yz5HsrCnaJ0JjEahG6n60svVkMywMzoM/Qc8GX3QU2a6WAWVJjp0/c36n
-0MKoti9Mm9uNUBjpV4m4gBzfBzcb6cSR2E4qGb5ghjvCNXNcmOy7hW/PFEOuvDM3
-Mc4WJeMBoFKAu5rU6ijqJl/7ZPq95V+pJqxRrRxQPqUsbNFnEUJOHzDMCvhthfQk
-W7xwwSpHvGpsAsQQOZGkDgynz1ZDAw==
-=pAvy
------END PGP SIGNATURE-----
-
---Sig_/pRcpjNCa9fHwRuWJfEekUaG--
+Thanks
+Keivn
