@@ -2,125 +2,160 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E203EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04234C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C354420809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C5E20809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:45:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="m0I6KYnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgG2QoZ (ORCPT
+        id S1726962AbgG2QpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 12:44:25 -0400
-Received: from comms.puri.sm ([159.203.221.185]:54404 "EHLO comms.puri.sm"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgG2QoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 12:44:25 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id B78D1E044E;
-        Wed, 29 Jul 2020 09:43:54 -0700 (PDT)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TegbL7tiphgE; Wed, 29 Jul 2020 09:43:53 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 18:43:48 +0200
-In-Reply-To: <1596037482.4356.37.camel@HansenPartnership.com>
-References: <20200706164135.GE704149@rowland.harvard.edu> <d0ed766b-88b0-5ad5-9c10-a4c3b2f994e3@puri.sm> <20200728200243.GA1511887@rowland.harvard.edu> <f3958758-afce-8add-1692-2a3bbcc49f73@puri.sm> <20200729143213.GC1530967@rowland.harvard.edu> <1596033995.4356.15.camel@linux.ibm.com> <1596034432.4356.19.camel@HansenPartnership.com> <d9bb92e9-23fa-306f-c7f2-71a81ab28811@puri.sm> <1596037482.4356.37.camel@HansenPartnership.com>
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-CC:     Bart Van Assche <bvanassche@acm.org>,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-Message-ID: <A1653792-B7E5-46A9-835B-7FA85FCD0378@puri.sm>
+        Wed, 29 Jul 2020 12:45:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgG2QpH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 12:45:07 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345ACC061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 09:45:07 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y206so2927147pfb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 09:45:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pensando.io; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=KCLCj+kEELlmTMD7QDHKj3NKkcBy7s9LRGvrZQnu9z0=;
+        b=m0I6KYnGkAugRlwNdVhYb85cQfxLGhVB4yBW8C5IuKuLvlzgXlfVNykRJuQmpTNzMV
+         PnQrEbRqx5Z30DzWit6Mk+xG3ePIbImu6d4qrvhYxrrxChiax19D/rk2LXVqJ66jrtTa
+         ENUWH4UlGJISFjXOlB8oPPn2giSSG/O0VWMgnQbmyemJ6f90jwnm3IbVpgEMVa6EKyBB
+         5pwTaZP7N1n8gVa4AQyS3jmoNCd5Dq5TKDnVslC/KVkRAT5P9fbdbXfMjc+CQt+x8Ss+
+         Wcq6NB8uwejW6a4jwptntspjsZTj9RWEm59F0fCabuhfQac7FivwBid/1rtaVWz8ZbqM
+         5OZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=KCLCj+kEELlmTMD7QDHKj3NKkcBy7s9LRGvrZQnu9z0=;
+        b=ovMh4L13zf72tBbJiKOp3YMmoQOXI2ngbPrxtNsGo9Nljf7Rqyskvz+niyZfT5sUf4
+         CbVcaLGZi46Acx0jkgTTh/wKTSGwcAxAMAaoE814YP94dgPaFm4yvyYjFBooUxlwK+PB
+         hzhxbSHT56hTmpQDJYO5YpCYqpyxT2X5p2RWR57YnkjXLFTd35sbnTPYRe7AuZ7HRtDc
+         NFLSiuto2cZyEM/bDpskGMOt3at1fXMbkfxw56ZGjWkbfc/mSeekQH/rszzgbmh+LuRo
+         /5e54Srs8YzuJSFBaRREV0eXL44/e1dWvqLGx5/WSN+r6RjkNYDSD0rx5mKLoYMTh/yb
+         OkUA==
+X-Gm-Message-State: AOAM532626vuUEIuomB0DpMvn2N0i+eJXpssccwVhzmd1UkHER9g7uTt
+        OLe3S4zK3u7xl13Z4Kqau8msIFA1B7E=
+X-Google-Smtp-Source: ABdhPJzvwoBEDd2xj1CQKMX7hxC5hIss2Y0UQ8ssG9xZaerGcM/dwWl3hzinDP/xg7FMZJKk/0W7vA==
+X-Received: by 2002:a65:6150:: with SMTP id o16mr29456425pgv.237.1596041106296;
+        Wed, 29 Jul 2020 09:45:06 -0700 (PDT)
+Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
+        by smtp.gmail.com with ESMTPSA id y7sm2830939pfq.69.2020.07.29.09.45.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 09:45:05 -0700 (PDT)
+Subject: Re: drivers/net/ethernet/pensando/ionic/ionic_lif.c:2004:3-9:
+ preceding lock on line 1998 (fwd)
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+References: <alpine.DEB.2.22.394.2007291836240.2459@hadrien>
+From:   Shannon Nelson <snelson@pensando.io>
+Message-ID: <cb1aa251-b3b4-1286-760e-58db5f63f422@pensando.io>
+Date:   Wed, 29 Jul 2020 09:45:04 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.22.394.2007291836240.2459@hadrien>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Am 29=2E Juli 2020 17:44:42 MESZ schrieb James Bottomley <James=2EBottomle=
-y@HansenPartnership=2Ecom>:
->On Wed, 2020-07-29 at 17:40 +0200, Martin Kepplinger wrote:
->> On 29=2E07=2E20 16:53, James Bottomley wrote:
->> > On Wed, 2020-07-29 at 07:46 -0700, James Bottomley wrote:
->> > > On Wed, 2020-07-29 at 10:32 -0400, Alan Stern wrote:
->[=2E=2E=2E]
->> > > > This error report comes from the SCSI layer, not the block
->> > > > layer=2E
->> > >=20
->> > > That sense code means "NOT READY TO READY CHANGE, MEDIUM MAY HAVE
->> > > CHANGED" so it sounds like it something we should be
->> > > ignoring=2E  Usually this signals a problem, like you changed the
->> > > medium manually (ejected the CD)=2E  But in this case you can tell
->> > > us to expect this by setting
->> > >=20
->> > > sdev->expecting_cc_ua
->> > >=20
->> > > And we'll retry=2E  I think you need to set this on all resumed
->> > > devices=2E
->> >=20
->> > Actually, it's not quite that easy, we filter out this ASC/ASCQ
->> > combination from the check because we should never ignore medium
->> > might have changed events on running devices=2E  We could ignore it
->> > if we had a flag to say the power has been yanked (perhaps an
->> > additional sdev flag you set on resume) but we would still miss the
->> > case where you really had powered off the drive and then changed
->> > the media =2E=2E=2E if you can regard this as the user's problem, the=
-n we
->> > might have a solution=2E
->> >=20
->> > James
->> > =20
->>=20
->> oh I see what you mean now, thanks for the ellaboration=2E
->>=20
->> if I do the following change, things all look normal and runtime pm
->> works=2E I'm not 100% sure if just setting expecting_cc_ua in resume()
->> is "correct" but that looks like it is what you're talking about:
->>=20
->> (note that this is of course with the one block layer diff applied
->> that Alan posted a few emails back)
->>=20
->>=20
->> --- a/drivers/scsi/scsi_error=2Ec
->> +++ b/drivers/scsi/scsi_error=2Ec
->> @@ -554,16 +554,8 @@ int scsi_check_sense(struct scsi_cmnd *scmd)
->>                  * so that we can deal with it there=2E
->>                  */
->>                 if (scmd->device->expecting_cc_ua) {
->> -                       /*
->> -                        * Because some device does not queue unit
->> -                        * attentions correctly, we carefully check
->> -                        * additional sense code and qualifier so as
->> -                        * not to squash media change unit attention=2E
->> -                        */
->> -                       if (sshdr=2Easc !=3D 0x28 || sshdr=2Eascq !=3D =
-0x00)
->> {
->> -                               scmd->device->expecting_cc_ua =3D 0;
->> -                               return NEEDS_RETRY;
->> -                       }
->> +                       scmd->device->expecting_cc_ua =3D 0;
->> +                       return NEEDS_RETRY;
+On 7/29/20 9:37 AM, Julia Lawall wrote:
+> Hello,
 >
->Well, yes, but you can't do this because it would lose us media change
->events in the non-suspend/resume case which we really don't want=2E=20
->That's why I was suggesting a new flag=2E
+> It looks like an unlock may be wanted on line 2004.
 >
->James
+> julia
 
-also if I set expecting_cc_ua in resume() only, like I did?
+Thanks for catching that, Julia.  I'll follow up shortly.
 
---=20
-Martin Kepplinger
-xmpp: martink@jabber=2Eat
-Sent from mobile=2E
+sln
+
+>
+> ---------- Forwarded message ----------
+> Date: Thu, 30 Jul 2020 00:08:47 +0800
+> From: kernel test robot <lkp@intel.com>
+> To: kbuild@lists.01.org
+> Cc: lkp@intel.com, Julia Lawall <julia.lawall@lip6.fr>
+> Subject: drivers/net/ethernet/pensando/ionic/ionic_lif.c:2004:3-9: preceding
+>      lock on line 1998
+>
+> CC: kbuild-all@lists.01.org
+> CC: linux-kernel@vger.kernel.org
+> TO: Shannon Nelson <snelson@pensando.io>
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   6ba1b005ffc388c2aeaddae20da29e4810dea298
+> commit: 0925e9db4dc86daf666d9a3d53c7db14ac6d5d00 ionic: use mutex to protect queue operations
+> date:   9 days ago
+> :::::: branch date: 21 hours ago
+> :::::: commit date: 9 days ago
+> config: powerpc-randconfig-c004-20200728 (attached as .config)
+> compiler: powerpc64-linux-gcc (GCC) 9.3.0
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+>
+>
+> coccinelle warnings: (new ones prefixed by >>)
+>
+>>> drivers/net/ethernet/pensando/ionic/ionic_lif.c:2004:3-9: preceding lock on line 1998
+> # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0925e9db4dc86daf666d9a3d53c7db14ac6d5d00
+> git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> git remote update linus
+> git checkout 0925e9db4dc86daf666d9a3d53c7db14ac6d5d00
+> vim +2004 drivers/net/ethernet/pensando/ionic/ionic_lif.c
+>
+> beead698b1736df Shannon Nelson 2019-09-03  1992
+> 086c18f2452d002 Shannon Nelson 2020-07-07  1993  int ionic_reset_queues(struct ionic_lif *lif, ionic_reset_cb cb, void *arg)
+> beead698b1736df Shannon Nelson 2019-09-03  1994  {
+> beead698b1736df Shannon Nelson 2019-09-03  1995  	bool running;
+> beead698b1736df Shannon Nelson 2019-09-03  1996  	int err = 0;
+> beead698b1736df Shannon Nelson 2019-09-03  1997
+> 0925e9db4dc86da Shannon Nelson 2020-07-20 @1998  	mutex_lock(&lif->queue_lock);
+> beead698b1736df Shannon Nelson 2019-09-03  1999  	running = netif_running(lif->netdev);
+> b59eabd23ee53e8 Shannon Nelson 2020-06-18  2000  	if (running) {
+> b59eabd23ee53e8 Shannon Nelson 2020-06-18  2001  		netif_device_detach(lif->netdev);
+> beead698b1736df Shannon Nelson 2019-09-03  2002  		err = ionic_stop(lif->netdev);
+> 086c18f2452d002 Shannon Nelson 2020-07-07  2003  		if (err)
+> 0925e9db4dc86da Shannon Nelson 2020-07-20 @2004  			return err;
+> b59eabd23ee53e8 Shannon Nelson 2020-06-18  2005  	}
+> 086c18f2452d002 Shannon Nelson 2020-07-07  2006
+> 086c18f2452d002 Shannon Nelson 2020-07-07  2007  	if (cb)
+> 086c18f2452d002 Shannon Nelson 2020-07-07  2008  		cb(lif, arg);
+> 086c18f2452d002 Shannon Nelson 2020-07-07  2009
+> 086c18f2452d002 Shannon Nelson 2020-07-07  2010  	if (running) {
+> 086c18f2452d002 Shannon Nelson 2020-07-07  2011  		err = ionic_open(lif->netdev);
+> b59eabd23ee53e8 Shannon Nelson 2020-06-18  2012  		netif_device_attach(lif->netdev);
+> b59eabd23ee53e8 Shannon Nelson 2020-06-18  2013  	}
+> 0925e9db4dc86da Shannon Nelson 2020-07-20  2014  	mutex_unlock(&lif->queue_lock);
+> beead698b1736df Shannon Nelson 2019-09-03  2015
+> beead698b1736df Shannon Nelson 2019-09-03  2016  	return err;
+> beead698b1736df Shannon Nelson 2019-09-03  2017  }
+> beead698b1736df Shannon Nelson 2019-09-03  2018
+>
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
