@@ -2,122 +2,109 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC99C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7508FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF4B92076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4824321744
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:46:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldxAiEUF"
+	dkim=pass (2048-bit key) header.d=students-iitmandi-ac-in.20150623.gappssmtp.com header.i=@students-iitmandi-ac-in.20150623.gappssmtp.com header.b="mUlP7Tu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgG2Hpd (ORCPT
+        id S1727891AbgG2HqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:45:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54096 "EHLO
+        Wed, 29 Jul 2020 03:46:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgG2Hpc (ORCPT
+        with ESMTP id S1726290AbgG2HqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:45:32 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB234C061794;
-        Wed, 29 Jul 2020 00:45:30 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r4so17663866wrx.9;
-        Wed, 29 Jul 2020 00:45:30 -0700 (PDT)
+        Wed, 29 Jul 2020 03:46:11 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A3EC061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 00:46:10 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id i92so1188734pje.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 00:46:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=O+ETSXA6RyFZRpnWcbmn7fgTJlT89iJkYuFlDE0wwHw=;
-        b=ldxAiEUF7m47Z96S6vgEZzfr3N9UpXPqj1PG8UnrxVKo8qRfizI9cjQLMlMP5AS7tj
-         e2txp0GTVY7DIj4OlM9lIISC4YoeY/+0N6/eAWBzEewvqIiCRlBuaVBDZvg4ZthMoO7e
-         CP+tkipdL6V50KMfZmRTbSA1mKr4y79WlC+3aYH/4yd896dfBw3VL3AnWytEm1wa9BdW
-         KXBIdqFLicgjYThAF0GYX2nFIpPI0ST8Gw/IWvVSVpeK/tB7ys4T5K55YNszjvzbOkxC
-         MOKuiM83Do4EwqlM3RbaCXYt1UtTaMKLG3vqPjhfrspupQns4dMeNPVA4wI8HuOyo4ze
-         C2pQ==
+        d=students-iitmandi-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/Kc8o8UqCU991Vni3y/o1KBZOM15r81DSmGMs9PY1+8=;
+        b=mUlP7Tu9eDU7kLyU4EQLPV0YBwq3/iDMfDoNkfp4mDqI6AhWyl9f3bBrXvbvQUzBd4
+         yPX6O9aseFOlKDRrryBXjhogqmYl6lVMsvX8ei01yY78VJ2A7X74T154+EqzRAWoxPVn
+         Js/wpcs25VS1jqgPYaMgO2u0A78P16DviwPms9ni6xfjFF3SfCd0GSQZZ0baBEvT0igi
+         FkH0WQy9KjvoKPBxBt0DkPKGPaHSk9UL2wRvQt4c1zfKs/NKKv2dbBnL4JfA0yG7Y7nl
+         5zUDncrpl9+ucYfGw5o8QIQV90s1Y3GC1gfXyKAQhGgZ9v7O4Os0egHsN5dkgk8K/hn2
+         XF+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=O+ETSXA6RyFZRpnWcbmn7fgTJlT89iJkYuFlDE0wwHw=;
-        b=XgIliVuO4QueqMEIdcX5/s/b1vKBZvbXF9zLIf2eSd1MaozystfkDsz40zV2wS1k7z
-         1IScr+3OLBVdUBeKbocyGRUSxv93F4EoqQwCwFwwsiaDmtjnWByFuRqFdZmAmRP6d+I2
-         uoKEV3OvfkN97gjF2MonnpnSTyXBhelMtxm0pwr0YVtbCLZaREVmpyad98/pi65lWPqC
-         Ary1YdWyG4AV4GKdyn1OCII/f5gRXSlkRriUCGszXrIYJoNrQUGQ1QWvK+imvbU9+X8j
-         Y+3rZJs+UB1T+fndwg7jzNaNRbMZT/9QYXRTPAILoqiy9N6gVlhKRqI3r94PxOVuaHoK
-         ePLw==
-X-Gm-Message-State: AOAM530tYeJTVvKw/8m/8XJiMDXY0U5xGNRV0s/s3mRBSX24tKs+a1wR
-        DMIRkZA3Z94CBevtIzBg8aI=
-X-Google-Smtp-Source: ABdhPJwfFlS5I2dKSqCQPxUR7kjkBgQTVm6GIWd3Aw/T37/KvKHZ0aX3Vj7Y/eIYZFtX/E6njpeFGA==
-X-Received: by 2002:adf:ed88:: with SMTP id c8mr26645654wro.233.1596008729618;
-        Wed, 29 Jul 2020 00:45:29 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id c7sm3540328wrq.58.2020.07.29.00.45.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 00:45:28 -0700 (PDT)
-Subject: Re: [PATCH 2/2] arm64: dts: mt8192: add infracfg_rst node
-To:     Crystal Guo <crystal.guo@mediatek.com>, p.zabel@pengutronix.de,
-        robh+dt@kernel.org
-Cc:     srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, seiya.wang@mediatek.com
-References: <1596008357-11213-1-git-send-email-crystal.guo@mediatek.com>
- <1596008357-11213-3-git-send-email-crystal.guo@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <b81f1936-caf0-e843-9556-14e3024d6d6f@gmail.com>
-Date:   Wed, 29 Jul 2020 09:45:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/Kc8o8UqCU991Vni3y/o1KBZOM15r81DSmGMs9PY1+8=;
+        b=ehzPBzoxWqHDmEmnLdlWX4gjfrUzka28M4TF/IMoOGB2FT5zv9+PBApeXY5ARLUNAc
+         eEF1f0nqp04ERw6glr/NNOXyfxRjD73ag7rkcNGEhwhIHj3e/AsAXT99FZ2DbjToOwvO
+         Q7vU7uuGNONMn076G422IQ/YbnV2mrds6fTy35JSXQcenxQ8CimIMCBwZ6G+lg+Iw2lm
+         7HoHO4zSnyMIHOAlDeFbVcX5ma5yvdaLPqt/S2wfgS5dBRl9vMeIP24GoOhksganRqZr
+         h2F9Fe+mh2kqNHHtWZHbP81+lqHqv5YYBXbxGGNMfuEwU2C2bR2uIDSeLP1tFeNIVWgV
+         5xsw==
+X-Gm-Message-State: AOAM531JX4C3nJtdcwZwyh/7ul3kg7k+PAmRqI050fZHzMUwOJegaB5g
+        QN00/9fkD8QlVqQ4xEQa+xvdOw==
+X-Google-Smtp-Source: ABdhPJzhgxtOqw+ErBlwCNI6JQ8tLNWtINKyN3jyJYByNMZI9Ab/y1MtsQtE3dc2L689tAVXkn2msQ==
+X-Received: by 2002:a17:902:6b49:: with SMTP id g9mr25244131plt.230.1596008769862;
+        Wed, 29 Jul 2020 00:46:09 -0700 (PDT)
+Received: from devil-VirtualBox.www.tendawifi.com ([103.198.174.215])
+        by smtp.gmail.com with ESMTPSA id o16sm1424762pfu.188.2020.07.29.00.45.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 00:46:09 -0700 (PDT)
+From:   Ankit Baluni <b18007@students.iitmandi.ac.in>
+To:     gregkh@linuxfoundation.org, Larry.Finger@lwfinger.net,
+        florian.c.schilhabel@googlemail.com, rohitsarkar5398@gmail.com,
+        mukadr@gmail.com, straube.linux@gmail.com, pterjan@google.com
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Ankit Baluni <b18007@students.iitmandi.ac.in>
+Subject: [PATCH v2] Staging: rtl8712: Fixed a coding sytle issue
+Date:   Wed, 29 Jul 2020 13:15:41 +0530
+Message-Id: <20200729074541.1972-1-b18007@students.iitmandi.ac.in>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200728213231.26626-1-b18007@students.iitmandi.ac.in>
+References: <20200728213231.26626-1-b18007@students.iitmandi.ac.in>
 MIME-Version: 1.0
-In-Reply-To: <1596008357-11213-3-git-send-email-crystal.guo@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Removed braces for a 'if' condition as it contain only single line &
+there is no need for braces for such case according to coding style
+rules.
 
+Signed-off-by: Ankit Baluni <b18007@students.iitmandi.ac.in>
+---
+Change in -v2:
+	-Remove space before ':' in subject .
 
-On 29/07/2020 09:39, Crystal Guo wrote:
-> add infracfg_rst node which is for MT8192 platform
-> 
-> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
-> ---
->   arch/arm64/boot/dts/mediatek/mt8192.dtsi | 10 +++++++++-
->   1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8192.dtsi b/arch/arm64/boot/dts/mediatek/mt8192.dtsi
-> index b16dbbd..adc6239 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8192.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8192.dtsi
-> @@ -217,9 +217,17 @@
->   		};
->   
->   		infracfg: infracfg@10001000 {
-> -			compatible = "mediatek,mt8192-infracfg", "syscon";
-> +			compatible = "mediatek,mt8192-infracfg", "syscon", "simple-mfd";
->   			reg = <0 0x10001000 0 0x1000>;
->   			#clock-cells = <1>;
-> +
-> +			infracfg_rst: reset-controller {
-> +				compatible = "ti,syscon-reset";
-> +				#reset-cells = <1>;
-> +				ti,reset-bits = <
-> +					0x140 15 0x144 15 0 0 (ASSERT_SET | DEASSERT_SET | STATUS_NONE) /* 0: pcie */
+ drivers/staging/rtl8712/rtl871x_ioctl_linux.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-You have Texas Instruments hardware inside infracfg? Are you sure?
+diff --git a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
+index c6f6ccd060bb..df6ae855f3c1 100644
+--- a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
++++ b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
+@@ -238,9 +238,8 @@ static char *translate_scan(struct _adapter *padapter,
+ 	/* parsing HT_CAP_IE */
+ 	p = r8712_get_ie(&pnetwork->network.IEs[12], _HT_CAPABILITY_IE_,
+ 			 &ht_ielen, pnetwork->network.IELength - 12);
+-	if (p && ht_ielen > 0) {
++	if (p && ht_ielen > 0)
+ 		ht_cap = true;
+-	}
+ 	/* Add the protocol name */
+ 	iwe.cmd = SIOCGIWNAME;
+ 	if (r8712_is_cckratesonly_included(pnetwork->network.rates)) {
+-- 
+2.25.1
 
-> +				>;
-> +			};
->   		};
->   
->   		pericfg: pericfg@10003000 {
-> 
