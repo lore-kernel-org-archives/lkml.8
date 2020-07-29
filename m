@@ -2,498 +2,262 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_75_100,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D145C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F36292076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E50C2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:26:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J66knnMa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tXBEG4CK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgG2GYx (ORCPT
+        id S1726957AbgG2G0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 02:24:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41684 "EHLO
+        Wed, 29 Jul 2020 02:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbgG2GYw (ORCPT
+        with ESMTP id S1726290AbgG2G0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 02:24:52 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF9CCC061794;
-        Tue, 28 Jul 2020 23:24:52 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d188so6365812pfd.2;
-        Tue, 28 Jul 2020 23:24:52 -0700 (PDT)
+        Wed, 29 Jul 2020 02:26:08 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDD82C061794;
+        Tue, 28 Jul 2020 23:26:07 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id 185so13551613ljj.7;
+        Tue, 28 Jul 2020 23:26:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=sMFl8A9jPxjNMZOvebjCYmlhRA1mXGyUaqgUwzyXfq0=;
-        b=J66knnMasKtQuXL0XnyYfUftY3b90hkTLSjlUXZrnfi3cAomEhuNTUJ04QBBiPbelO
-         GBVwvatTo/r1aarV30knngJW3xfSocwQFFkY7jlcEEV4xoyIGxXUTRfD2AsbzPpi0rPz
-         VbbaxTZ3AzOIEDKFT2DN/RGAb1A5bbKKeUPh7eDa7mvEPNG09B6aWmoJJeY/GLgTepOE
-         gQ0hX44bo6mae/mhLOoGRwyvtdvOrfztmsdda5RrdFMmnw8Mh12muZNS5Noa77Z5xM8K
-         rXV1vsG0s05hjPTwFkqXFfh80DCVf7r8PHgkjp+AgdYFI45u84Ppyk20Z8DamAnY02Wd
-         J1JQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=U+XZJmBsQyhXVyQ8FDcPDuD2R04wb6fI66keDrm5110=;
+        b=tXBEG4CKUwIwDyBEDaGMsRJujdqQmvgwRsodY5YIG0sjmOjYAymk5tXLSFHRyhWwvY
+         fExfsNA5disLty+xevzHUPdAH+htvnbKqtD+y5L8nkEnpt82VlVvS4OhA0cztPdw8ACZ
+         UGYfW5393+axo2oOpbBHhgKgjLaUAbaMW9M22I43g3Z/1WJi5dXLOfnZfQsQQWzyTnPD
+         X0qDNvppe4Q0YZavyXKNjJODXNz7PiLnWnNrSBO5+9ewviI5/rAvY2btCidpOCC1kiD2
+         a7+qRjc3lmSCrhKhih6x3b/AqOvounU9GW6Xd59h/UPGUdKnSv1AJ2vPT2JETEvngsJU
+         Nt/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=sMFl8A9jPxjNMZOvebjCYmlhRA1mXGyUaqgUwzyXfq0=;
-        b=Nq5vh69DLNvI97HPl8XmqzuowjAXFopaIGB2YdLc40O8uUui2bAvztHIkYSmTs8nXG
-         rQwxx5xeQ2+knRfgy++D1FEj+eZ31EQBTrQJnzdr5pqmIFul+stAQe3osfBcHBZBSPdp
-         5A/8wBaajxRGKks7JD+otYDR/A8uFYYdfONJCt5DZehsGi9OW18G0SbUr3MLV+oD5QMu
-         qZC08EjzTnowI1/JeZbBsmBcHcBIu7H66juzBO1vfGuiFy/9ibpr+2fAyV9GFt+yM6hH
-         sZaUKviEeGQmTL/edg5TZ0c7zqW8t+7EulVODuWxaZK/p3Qyd8hCjNE+uhEwI4rlSCds
-         T4nw==
-X-Gm-Message-State: AOAM532vO531AHdZ5WWnVyQ1HXCCpirfVcpDsaOi3AOEv0Fm/26Flt5T
-        0lb9OepCK8gawUqdQQ4bPK0pMTjp7w==
-X-Google-Smtp-Source: ABdhPJzNBOg0gxTtUNOgmKD3LPQ210Qcu0zYNNCIbxNbYwmbKC2WmetoyLCzCAAygzMobKggZhg2BQ==
-X-Received: by 2002:aa7:95b6:: with SMTP id a22mr4885606pfk.152.1596003891707;
-        Tue, 28 Jul 2020 23:24:51 -0700 (PDT)
-Received: from [127.0.0.1] ([103.7.29.6])
-        by smtp.gmail.com with ESMTPSA id d22sm996502pgm.93.2020.07.28.23.24.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 23:24:51 -0700 (PDT)
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm@vger.kernel.org, "x86@kernel.org" <x86@kernel.org>
-Cc:     acme@redhat.com, "hpa@zytor.com" <hpa@zytor.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "joro@8bytes.org" <joro@8bytes.org>, jmattson@google.com,
-        wanpengli@tencent.com, "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>
-From:   Haiwei Li <lihaiwei.kernel@gmail.com>
-Subject: [PATCH] perf/x86/svm: Convert 'perf kvm stat report' output lowercase
- to uppercase
-Message-ID: <fdc7e57d-4fd6-4d49-22e6-b18003034ff5@gmail.com>
-Date:   Wed, 29 Jul 2020 14:24:39 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=U+XZJmBsQyhXVyQ8FDcPDuD2R04wb6fI66keDrm5110=;
+        b=KuzTSAJUQSRL7cacaSf88psIpA6I1e0wIK2ixpvrGhSNTHGXaixpw6ji9lM0rf5ew5
+         3xF/Mrz8ENgU4asVEX9v5sO4UuaLoEGfzBGu6L9pZ4nzx9fnhwNz4a6O281memiSd0lA
+         jP0VwJeI9qJq3ImiTU4nVKMWUf9uCf7sO5ZodQuoWO/+9cz+yR1vN5pfZyjpeR9kY1pr
+         KDh0i9/BQaSXsvtgKv0S647D0wHUaJd8p+QjFPbLY+cPHindxTuR1Hddkbn3CNSk6J4Z
+         gY/BTOhYjeT2GWVt3vr3IDiG2T3I4cO/T1YKRxf2wkDSljfVxqGLTBZ3nAnaF87vSe39
+         qy3A==
+X-Gm-Message-State: AOAM531iQrvf99jMqRwXfPXrwimuYkREtPN/MxC2anltVrjTVEEJMgci
+        8MvXCmbcKDZryV7EdiI3Bhyl6pu/Z/VAzQ==
+X-Google-Smtp-Source: ABdhPJz2C99yOiyzXgyFbqffrEw9QIj6Et3+olYLAgSn3iVe21iRSx7XdI6WRJwZS0CrHTLLUSLv+Q==
+X-Received: by 2002:a2e:8150:: with SMTP id t16mr14029673ljg.160.1596003966335;
+        Tue, 28 Jul 2020 23:26:06 -0700 (PDT)
+Received: from dmitry-T520 ([185.57.31.227])
+        by smtp.gmail.com with ESMTPSA id x13sm198080ljj.92.2020.07.28.23.26.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 23:26:05 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 16:26:02 +1000
+From:   Dmitry Buzdyk <dima.buzdyk@gmail.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     john.agosta@canonical.com, kevin.lu@canonical.com,
+        ethan.hsieh@canonical.com, 'Jesse Sung' <jesse.sung@canonical.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] uvcvideo: Add mapping for HEVC payloads
+Message-ID: <20200729062602.GA258740@dmitry-T520>
+References: <20200529010547.GA630131@dmitry-T520>
+ <20200607010719.GU7339@pendragon.ideasonboard.com>
+ <20200609045732.GA781356@dmitry-T520>
+ <20200715080010.GA551680@dmitry-T520>
+ <20200727232546.GB26169@dmitry-T520>
+ <20200728001721.GG15448@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728001721.GG15448@pendragon.ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiwei Li <lihaiwei@tencent.com>
+Hi Laurent,
 
-The reason output of 'perf kvm stat report --event=vmexit' is uppercase 
-on VMX and lowercase on SVM.
+On Tue, Jul 28, 2020 at 03:17:21AM +0300, Laurent Pinchart wrote:
+> Hi Dmitry,
+> 
+> Sorry for the late reply.
+> 
+> Mauro, there's a question for your below.
+> 
+> On Tue, Jul 28, 2020 at 09:25:46AM +1000, Dmitry Buzdyk wrote:
+> > Hi Laurent,
+> > 
+> > Had you a chance to review USB descriptors from the device provided
+> > below? Is any additional information needed?
+> > 
+> > On Wed, Jul 15, 2020 at 06:00:10PM +1000, Dmitry Buzdyk wrote:
+> > > On Tue, Jun 09, 2020 at 02:57:36PM +1000, Dmitry Buzdyk wrote:
+> > > Hi Laurent,
+> > > 
+> > > Please see updated information below
+> > > 
+> > >> On Sun, Jun 07, 2020 at 04:07:19AM +0300, Laurent Pinchart wrote:
+> > >>> Hi Dmitry,
+> > >>> 
+> > >>> Thank you for the patch.
+> > >>> 
+> > >>> On Fri, May 29, 2020 at 11:05:47AM +1000, Dmitry Buzdyk wrote:
+> > >>>> Add HEVC GUID and assotiate with HEVC pixel format so that frame
+> > >>>> based format descriptors recognized by the UVC video driver.
+> > >>> 
+> > >>> The patch itself looks OK to me, but could you share a bit more
+> > >>> information about which device(s) implement this ? Are they UVC 1.1
+> > >>> devices ? Could you share their full USB descriptors (retrieved with
+> > >>> 'lsusb -v', running as root if possible) ?
+> > >>
+> > >> This is a UVC1.1 camera device based on Ambarella H22 SOC.
+> 
+> That's interesting. It would be nice to have upstream support for the
+> Ambarella SoCs in the kernel :-)
+> 
+> > >> Please note that device is still in development and yet to get actual
+> > >> VID and PID.
+> > >
+> > > Device got its VID:PID from USB-IF:
+> > > 
+> > > Bus 001 Device 009: ID 3301:1000  
+> > > Device Descriptor:
+> > >   bLength                18
+> > >   bDescriptorType         1
+> > >   bcdUSB               2.00
+> > >   bDeviceClass          239 Miscellaneous Device
+> > >   bDeviceSubClass         2 
+> > >   bDeviceProtocol         1 Interface Association
+> > >   bMaxPacketSize0        64
+> > >   idVendor           0x3301 
+> > >   idProduct          0x1000 
+> > >   bcdDevice            0.10
+> > >   iManufacturer           1 Rhonda
+> > >   iProduct                2 Rhonda Cam
+> > >   iSerial                 3 FMABCLE15000007
+> > >   bNumConfigurations      1
+> 
+> Thank you for the descriptors.
+> 
+> [snip]
+> 
+> > >       VideoControl Interface Descriptor:
+> > >         bLength                 9
+> > >         bDescriptorType        36
+> > >         bDescriptorSubtype      3 (OUTPUT_TERMINAL)
+> > >         bTerminalID            16
+> > >         wTerminalType      0x0101 USB Streaming
+> > >         bAssocTerminal          0
+> > >         bSourceID              10
+> > >         iTerminal               0 
+> > >       VideoControl Interface Descriptor:
+> > >         bLength                 9
+> > >         bDescriptorType        36
+> > >         bDescriptorSubtype      3 (OUTPUT_TERMINAL)
+> > >         bTerminalID            17
+> > >         wTerminalType      0x0101 USB Streaming
+> > >         bAssocTerminal          0
+> > >         bSourceID              10
+> > >         iTerminal               0 
+> 
+> Two output terminals ? Does that mean the device can provide two streams
+> from the same source ?
+Correct. This device encode and stream two indpendent H264 or HEVC video streams.
+Picture for both streams comes from single image sensor, with own ROI applied for each stream.
 
-To be consistent with VMX, convert lowercase to uppercase.
+> 
+> [snip]
+> 
+> 
+> > >       Endpoint Descriptor:
+> > >         bLength                 7
+> > >         bDescriptorType         5
+> > >         bEndpointAddress     0x83  EP 3 IN
+> > >         bmAttributes            2
+> > >           Transfer Type            Bulk
+> > >           Synch Type               None
+> > >           Usage Type               Data
+> > >         wMaxPacketSize     0x0200  1x 512 bytes
+> > >         bInterval               0
+> 
+> This is interesting too, does it provide enough bandwidth for 3000x4000
+> @10fps MJPEG ?
+This video mode has relatively high compression ratio thus total bitrate
+for this mode does not exceed 100Mbps.
 
-Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
----
-  arch/x86/include/uapi/asm/svm.h       | 184 
-+++++++++++++++++-----------------
-  tools/arch/x86/include/uapi/asm/svm.h | 184 
-+++++++++++++++++-----------------
-  2 files changed, 184 insertions(+), 184 deletions(-)
+> 
+> [snip]
+> 
+> > >>> Is there anything else needed to get HEVC capture working, such as
+> > >>> extension unit controls, or is this patch enough ? What userspace
+> > >>> software do you use to capture and decode HEVC (or capture it to disk) ?
+> > >>
+> > >> No other changes to Linux nor extra actions needed to start HEVC capture.
+> > >> We use patched version of FFmpeg to capture, decode and display HEVC
+> > >> stream from camera device. That simple patch also going to be sent to
+> > >> FFmpeg upstream.
+> > >
+> > > Patch for FFmpeg sent to https://patchwork.ffmpeg.org/project/ffmpeg/list/?series=1760
+> > >
+> > >>>> Signed-off-by: Dmitry Buzdyk <dima.buzdyk@gmail.com>
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> and taken in my tree. I'm afraid we're a bit too close to the v5.9 merge
+> window for me to send a pull request now, unless Mauro would be fine
+> with that. Otherwise I'll include it in the pull request for the next
+> release.
+> 
+> > >>>> ---
+> > >>>>  drivers/media/usb/uvc/uvc_driver.c | 5 +++++
+> > >>>>  drivers/media/usb/uvc/uvcvideo.h   | 4 ++++
+> > >>>>  2 files changed, 9 insertions(+)
+> > >>>> 
+> > >>>> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> > >>>> index 431d86e1c94b..825ee3601661 100644
+> > >>>> --- a/drivers/media/usb/uvc/uvc_driver.c
+> > >>>> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> > >>>> @@ -214,6 +214,11 @@ static struct uvc_format_desc uvc_fmts[] = {
+> > >>>>  		.guid		= UVC_GUID_FORMAT_CNF4,
+> > >>>>  		.fcc		= V4L2_PIX_FMT_CNF4,
+> > >>>>  	},
+> > >>>> +	{
+> > >>>> +		.name		= "HEVC",
+> > >>>> +		.guid		= UVC_GUID_FORMAT_HEVC,
+> > >>>> +		.fcc		= V4L2_PIX_FMT_HEVC,
+> > >>>> +	},
+> > >>>>  };
+> > >>>>  
+> > >>>>  /* ------------------------------------------------------------------------
+> > >>>> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> > >>>> index 6ab972c643e3..c7f043121b41 100644
+> > >>>> --- a/drivers/media/usb/uvc/uvcvideo.h
+> > >>>> +++ b/drivers/media/usb/uvc/uvcvideo.h
+> > >>>> @@ -165,6 +165,10 @@
+> > >>>>  	{0x32, 0x00, 0x00, 0x00, 0x02, 0x00, 0x10, 0x00, \
+> > >>>>  	 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71}
+> > >>>>  
+> > >>>> +#define UVC_GUID_FORMAT_HEVC \
+> > >>>> +	{ 'H',  'E',  'V',  'C', 0x00, 0x00, 0x10, 0x00, \
+> > >>>> +	 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71}
+> > >>>> +
+> > >>>>  
+> > >>>>  /* ------------------------------------------------------------------------
+> > >>>>   * Driver specific constants.
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
 
-diff --git a/arch/x86/include/uapi/asm/svm.h 
-b/arch/x86/include/uapi/asm/svm.h
-index 2e8a30f..647b6e2 100644
---- a/arch/x86/include/uapi/asm/svm.h
-+++ b/arch/x86/include/uapi/asm/svm.h
-@@ -83,98 +83,98 @@
-  #define SVM_EXIT_ERR           -1
-
-  #define SVM_EXIT_REASONS \
--	{ SVM_EXIT_READ_CR0,    "read_cr0" }, \
--	{ SVM_EXIT_READ_CR2,    "read_cr2" }, \
--	{ SVM_EXIT_READ_CR3,    "read_cr3" }, \
--	{ SVM_EXIT_READ_CR4,    "read_cr4" }, \
--	{ SVM_EXIT_READ_CR8,    "read_cr8" }, \
--	{ SVM_EXIT_WRITE_CR0,   "write_cr0" }, \
--	{ SVM_EXIT_WRITE_CR2,   "write_cr2" }, \
--	{ SVM_EXIT_WRITE_CR3,   "write_cr3" }, \
--	{ SVM_EXIT_WRITE_CR4,   "write_cr4" }, \
--	{ SVM_EXIT_WRITE_CR8,   "write_cr8" }, \
--	{ SVM_EXIT_READ_DR0,    "read_dr0" }, \
--	{ SVM_EXIT_READ_DR1,    "read_dr1" }, \
--	{ SVM_EXIT_READ_DR2,    "read_dr2" }, \
--	{ SVM_EXIT_READ_DR3,    "read_dr3" }, \
--	{ SVM_EXIT_READ_DR4,    "read_dr4" }, \
--	{ SVM_EXIT_READ_DR5,    "read_dr5" }, \
--	{ SVM_EXIT_READ_DR6,    "read_dr6" }, \
--	{ SVM_EXIT_READ_DR7,    "read_dr7" }, \
--	{ SVM_EXIT_WRITE_DR0,   "write_dr0" }, \
--	{ SVM_EXIT_WRITE_DR1,   "write_dr1" }, \
--	{ SVM_EXIT_WRITE_DR2,   "write_dr2" }, \
--	{ SVM_EXIT_WRITE_DR3,   "write_dr3" }, \
--	{ SVM_EXIT_WRITE_DR4,   "write_dr4" }, \
--	{ SVM_EXIT_WRITE_DR5,   "write_dr5" }, \
--	{ SVM_EXIT_WRITE_DR6,   "write_dr6" }, \
--	{ SVM_EXIT_WRITE_DR7,   "write_dr7" }, \
--	{ SVM_EXIT_EXCP_BASE + DE_VECTOR,       "DE excp" }, \
--	{ SVM_EXIT_EXCP_BASE + DB_VECTOR,       "DB excp" }, \
--	{ SVM_EXIT_EXCP_BASE + BP_VECTOR,       "BP excp" }, \
--	{ SVM_EXIT_EXCP_BASE + OF_VECTOR,       "OF excp" }, \
--	{ SVM_EXIT_EXCP_BASE + BR_VECTOR,       "BR excp" }, \
--	{ SVM_EXIT_EXCP_BASE + UD_VECTOR,       "UD excp" }, \
--	{ SVM_EXIT_EXCP_BASE + NM_VECTOR,       "NM excp" }, \
--	{ SVM_EXIT_EXCP_BASE + DF_VECTOR,       "DF excp" }, \
--	{ SVM_EXIT_EXCP_BASE + TS_VECTOR,       "TS excp" }, \
--	{ SVM_EXIT_EXCP_BASE + NP_VECTOR,       "NP excp" }, \
--	{ SVM_EXIT_EXCP_BASE + SS_VECTOR,       "SS excp" }, \
--	{ SVM_EXIT_EXCP_BASE + GP_VECTOR,       "GP excp" }, \
--	{ SVM_EXIT_EXCP_BASE + PF_VECTOR,       "PF excp" }, \
--	{ SVM_EXIT_EXCP_BASE + MF_VECTOR,       "MF excp" }, \
--	{ SVM_EXIT_EXCP_BASE + AC_VECTOR,       "AC excp" }, \
--	{ SVM_EXIT_EXCP_BASE + MC_VECTOR,       "MC excp" }, \
--	{ SVM_EXIT_EXCP_BASE + XM_VECTOR,       "XF excp" }, \
--	{ SVM_EXIT_INTR,        "interrupt" }, \
--	{ SVM_EXIT_NMI,         "nmi" }, \
--	{ SVM_EXIT_SMI,         "smi" }, \
--	{ SVM_EXIT_INIT,        "init" }, \
--	{ SVM_EXIT_VINTR,       "vintr" }, \
--	{ SVM_EXIT_CR0_SEL_WRITE, "cr0_sel_write" }, \
--	{ SVM_EXIT_IDTR_READ,   "read_idtr" }, \
--	{ SVM_EXIT_GDTR_READ,   "read_gdtr" }, \
--	{ SVM_EXIT_LDTR_READ,   "read_ldtr" }, \
--	{ SVM_EXIT_TR_READ,     "read_rt" }, \
--	{ SVM_EXIT_IDTR_WRITE,  "write_idtr" }, \
--	{ SVM_EXIT_GDTR_WRITE,  "write_gdtr" }, \
--	{ SVM_EXIT_LDTR_WRITE,  "write_ldtr" }, \
--	{ SVM_EXIT_TR_WRITE,    "write_rt" }, \
--	{ SVM_EXIT_RDTSC,       "rdtsc" }, \
--	{ SVM_EXIT_RDPMC,       "rdpmc" }, \
--	{ SVM_EXIT_PUSHF,       "pushf" }, \
--	{ SVM_EXIT_POPF,        "popf" }, \
--	{ SVM_EXIT_CPUID,       "cpuid" }, \
--	{ SVM_EXIT_RSM,         "rsm" }, \
--	{ SVM_EXIT_IRET,        "iret" }, \
--	{ SVM_EXIT_SWINT,       "swint" }, \
--	{ SVM_EXIT_INVD,        "invd" }, \
--	{ SVM_EXIT_PAUSE,       "pause" }, \
--	{ SVM_EXIT_HLT,         "hlt" }, \
--	{ SVM_EXIT_INVLPG,      "invlpg" }, \
--	{ SVM_EXIT_INVLPGA,     "invlpga" }, \
--	{ SVM_EXIT_IOIO,        "io" }, \
--	{ SVM_EXIT_MSR,         "msr" }, \
--	{ SVM_EXIT_TASK_SWITCH, "task_switch" }, \
--	{ SVM_EXIT_FERR_FREEZE, "ferr_freeze" }, \
--	{ SVM_EXIT_SHUTDOWN,    "shutdown" }, \
--	{ SVM_EXIT_VMRUN,       "vmrun" }, \
--	{ SVM_EXIT_VMMCALL,     "hypercall" }, \
--	{ SVM_EXIT_VMLOAD,      "vmload" }, \
--	{ SVM_EXIT_VMSAVE,      "vmsave" }, \
--	{ SVM_EXIT_STGI,        "stgi" }, \
--	{ SVM_EXIT_CLGI,        "clgi" }, \
--	{ SVM_EXIT_SKINIT,      "skinit" }, \
--	{ SVM_EXIT_RDTSCP,      "rdtscp" }, \
--	{ SVM_EXIT_ICEBP,       "icebp" }, \
--	{ SVM_EXIT_WBINVD,      "wbinvd" }, \
--	{ SVM_EXIT_MONITOR,     "monitor" }, \
--	{ SVM_EXIT_MWAIT,       "mwait" }, \
--	{ SVM_EXIT_XSETBV,      "xsetbv" }, \
--	{ SVM_EXIT_NPF,         "npf" }, \
--	{ SVM_EXIT_AVIC_INCOMPLETE_IPI,		"avic_incomplete_ipi" }, \
--	{ SVM_EXIT_AVIC_UNACCELERATED_ACCESS,   "avic_unaccelerated_access" }, \
--	{ SVM_EXIT_ERR,         "invalid_guest_state" }
-+	{ SVM_EXIT_READ_CR0,    "READ_CR0" }, \
-+	{ SVM_EXIT_READ_CR2,    "READ_CR2" }, \
-+	{ SVM_EXIT_READ_CR3,    "READ_CR3" }, \
-+	{ SVM_EXIT_READ_CR4,    "READ_CR4" }, \
-+	{ SVM_EXIT_READ_CR8,    "READ_CR8" }, \
-+	{ SVM_EXIT_WRITE_CR0,   "WRITE_CR0" }, \
-+	{ SVM_EXIT_WRITE_CR2,   "WRITE_CR2" }, \
-+	{ SVM_EXIT_WRITE_CR3,   "WRITE_CR3" }, \
-+	{ SVM_EXIT_WRITE_CR4,   "WRITE_CR4" }, \
-+	{ SVM_EXIT_WRITE_CR8,   "WRITE_CR8" }, \
-+	{ SVM_EXIT_READ_DR0,    "READ_DR0" }, \
-+	{ SVM_EXIT_READ_DR1,    "READ_DR1" }, \
-+	{ SVM_EXIT_READ_DR2,    "READ_DR2" }, \
-+	{ SVM_EXIT_READ_DR3,    "READ_DR3" }, \
-+	{ SVM_EXIT_READ_DR4,    "READ_DR4" }, \
-+	{ SVM_EXIT_READ_DR5,    "READ_DR5" }, \
-+	{ SVM_EXIT_READ_DR6,    "READ_DR6" }, \
-+	{ SVM_EXIT_READ_DR7,    "READ_DR7" }, \
-+	{ SVM_EXIT_WRITE_DR0,   "WRITE_DR0" }, \
-+	{ SVM_EXIT_WRITE_DR1,   "WRITE_DR1" }, \
-+	{ SVM_EXIT_WRITE_DR2,   "WRITE_DR2" }, \
-+	{ SVM_EXIT_WRITE_DR3,   "WRITE_DR3" }, \
-+	{ SVM_EXIT_WRITE_DR4,   "WRITE_DR4" }, \
-+	{ SVM_EXIT_WRITE_DR5,   "WRITE_DR5" }, \
-+	{ SVM_EXIT_WRITE_DR6,   "WRITE_DR6" }, \
-+	{ SVM_EXIT_WRITE_DR7,   "WRITE_DR7" }, \
-+	{ SVM_EXIT_EXCP_BASE + DE_VECTOR,       "DE EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + DB_VECTOR,       "DB EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + BP_VECTOR,       "BP EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + OF_VECTOR,       "OF EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + BR_VECTOR,       "BR EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + UD_VECTOR,       "UD EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + NM_VECTOR,       "NM EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + DF_VECTOR,       "DF EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + TS_VECTOR,       "TS EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + NP_VECTOR,       "NP EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + SS_VECTOR,       "SS EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + GP_VECTOR,       "GP EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + PF_VECTOR,       "PF EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + MF_VECTOR,       "MF EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + AC_VECTOR,       "AC EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + MC_VECTOR,       "MC EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + XM_VECTOR,       "XF EXCP" }, \
-+	{ SVM_EXIT_INTR,        "INTERRUPT" }, \
-+	{ SVM_EXIT_NMI,         "NMI" }, \
-+	{ SVM_EXIT_SMI,         "SMI" }, \
-+	{ SVM_EXIT_INIT,        "INIT" }, \
-+	{ SVM_EXIT_VINTR,       "VINTR" }, \
-+	{ SVM_EXIT_CR0_SEL_WRITE, "CR0_SEL_WRITE" }, \
-+	{ SVM_EXIT_IDTR_READ,   "READ_IDTR" }, \
-+	{ SVM_EXIT_GDTR_READ,   "READ_GDTR" }, \
-+	{ SVM_EXIT_LDTR_READ,   "READ_LDTR" }, \
-+	{ SVM_EXIT_TR_READ,     "READ_RT" }, \
-+	{ SVM_EXIT_IDTR_WRITE,  "WRITE_IDTR" }, \
-+	{ SVM_EXIT_GDTR_WRITE,  "WRITE_GDTR" }, \
-+	{ SVM_EXIT_LDTR_WRITE,  "WRITE_LDTR" }, \
-+	{ SVM_EXIT_TR_WRITE,    "WRITE_RT" }, \
-+	{ SVM_EXIT_RDTSC,       "RDTSC" }, \
-+	{ SVM_EXIT_RDPMC,       "RDPMC" }, \
-+	{ SVM_EXIT_PUSHF,       "PUSHF" }, \
-+	{ SVM_EXIT_POPF,        "POPF" }, \
-+	{ SVM_EXIT_CPUID,       "CPUID" }, \
-+	{ SVM_EXIT_RSM,         "RSM" }, \
-+	{ SVM_EXIT_IRET,        "IRET" }, \
-+	{ SVM_EXIT_SWINT,       "SWINT" }, \
-+	{ SVM_EXIT_INVD,        "INVD" }, \
-+	{ SVM_EXIT_PAUSE,       "PAUSE" }, \
-+	{ SVM_EXIT_HLT,         "HLT" }, \
-+	{ SVM_EXIT_INVLPG,      "INVLPG" }, \
-+	{ SVM_EXIT_INVLPGA,     "INVLPGA" }, \
-+	{ SVM_EXIT_IOIO,        "IO" }, \
-+	{ SVM_EXIT_MSR,         "MSR" }, \
-+	{ SVM_EXIT_TASK_SWITCH, "TASK_SWITCH" }, \
-+	{ SVM_EXIT_FERR_FREEZE, "FERR_FREEZE" }, \
-+	{ SVM_EXIT_SHUTDOWN,    "SHUTDOWN" }, \
-+	{ SVM_EXIT_VMRUN,       "VMRUN" }, \
-+	{ SVM_EXIT_VMMCALL,     "HYPERCALL" }, \
-+	{ SVM_EXIT_VMLOAD,      "VMLOAD" }, \
-+	{ SVM_EXIT_VMSAVE,      "VMSAVE" }, \
-+	{ SVM_EXIT_STGI,        "STGI" }, \
-+	{ SVM_EXIT_CLGI,        "CLGI" }, \
-+	{ SVM_EXIT_SKINIT,      "SKINIT" }, \
-+	{ SVM_EXIT_RDTSCP,      "RDTSCP" }, \
-+	{ SVM_EXIT_ICEBP,       "ICEBP" }, \
-+	{ SVM_EXIT_WBINVD,      "WBINVD" }, \
-+	{ SVM_EXIT_MONITOR,     "MONITOR" }, \
-+	{ SVM_EXIT_MWAIT,       "MWAIT" }, \
-+	{ SVM_EXIT_XSETBV,      "XSETBV" }, \
-+	{ SVM_EXIT_NPF,         "NPF" }, \
-+	{ SVM_EXIT_AVIC_INCOMPLETE_IPI,		"AVIC_INCOMPLETE_IPI" }, \
-+	{ SVM_EXIT_AVIC_UNACCELERATED_ACCESS,   "AVIC_UNACCELERATED_ACCESS" }, \
-+	{ SVM_EXIT_ERR,         "INVALID_GUEST_STATE" }
-
-
-  #endif /* _UAPI__SVM_H */
-diff --git a/tools/arch/x86/include/uapi/asm/svm.h 
-b/tools/arch/x86/include/uapi/asm/svm.h
-index 2e8a30f..647b6e2 100644
---- a/tools/arch/x86/include/uapi/asm/svm.h
-+++ b/tools/arch/x86/include/uapi/asm/svm.h
-@@ -83,98 +83,98 @@
-  #define SVM_EXIT_ERR           -1
-
-  #define SVM_EXIT_REASONS \
--	{ SVM_EXIT_READ_CR0,    "read_cr0" }, \
--	{ SVM_EXIT_READ_CR2,    "read_cr2" }, \
--	{ SVM_EXIT_READ_CR3,    "read_cr3" }, \
--	{ SVM_EXIT_READ_CR4,    "read_cr4" }, \
--	{ SVM_EXIT_READ_CR8,    "read_cr8" }, \
--	{ SVM_EXIT_WRITE_CR0,   "write_cr0" }, \
--	{ SVM_EXIT_WRITE_CR2,   "write_cr2" }, \
--	{ SVM_EXIT_WRITE_CR3,   "write_cr3" }, \
--	{ SVM_EXIT_WRITE_CR4,   "write_cr4" }, \
--	{ SVM_EXIT_WRITE_CR8,   "write_cr8" }, \
--	{ SVM_EXIT_READ_DR0,    "read_dr0" }, \
--	{ SVM_EXIT_READ_DR1,    "read_dr1" }, \
--	{ SVM_EXIT_READ_DR2,    "read_dr2" }, \
--	{ SVM_EXIT_READ_DR3,    "read_dr3" }, \
--	{ SVM_EXIT_READ_DR4,    "read_dr4" }, \
--	{ SVM_EXIT_READ_DR5,    "read_dr5" }, \
--	{ SVM_EXIT_READ_DR6,    "read_dr6" }, \
--	{ SVM_EXIT_READ_DR7,    "read_dr7" }, \
--	{ SVM_EXIT_WRITE_DR0,   "write_dr0" }, \
--	{ SVM_EXIT_WRITE_DR1,   "write_dr1" }, \
--	{ SVM_EXIT_WRITE_DR2,   "write_dr2" }, \
--	{ SVM_EXIT_WRITE_DR3,   "write_dr3" }, \
--	{ SVM_EXIT_WRITE_DR4,   "write_dr4" }, \
--	{ SVM_EXIT_WRITE_DR5,   "write_dr5" }, \
--	{ SVM_EXIT_WRITE_DR6,   "write_dr6" }, \
--	{ SVM_EXIT_WRITE_DR7,   "write_dr7" }, \
--	{ SVM_EXIT_EXCP_BASE + DE_VECTOR,       "DE excp" }, \
--	{ SVM_EXIT_EXCP_BASE + DB_VECTOR,       "DB excp" }, \
--	{ SVM_EXIT_EXCP_BASE + BP_VECTOR,       "BP excp" }, \
--	{ SVM_EXIT_EXCP_BASE + OF_VECTOR,       "OF excp" }, \
--	{ SVM_EXIT_EXCP_BASE + BR_VECTOR,       "BR excp" }, \
--	{ SVM_EXIT_EXCP_BASE + UD_VECTOR,       "UD excp" }, \
--	{ SVM_EXIT_EXCP_BASE + NM_VECTOR,       "NM excp" }, \
--	{ SVM_EXIT_EXCP_BASE + DF_VECTOR,       "DF excp" }, \
--	{ SVM_EXIT_EXCP_BASE + TS_VECTOR,       "TS excp" }, \
--	{ SVM_EXIT_EXCP_BASE + NP_VECTOR,       "NP excp" }, \
--	{ SVM_EXIT_EXCP_BASE + SS_VECTOR,       "SS excp" }, \
--	{ SVM_EXIT_EXCP_BASE + GP_VECTOR,       "GP excp" }, \
--	{ SVM_EXIT_EXCP_BASE + PF_VECTOR,       "PF excp" }, \
--	{ SVM_EXIT_EXCP_BASE + MF_VECTOR,       "MF excp" }, \
--	{ SVM_EXIT_EXCP_BASE + AC_VECTOR,       "AC excp" }, \
--	{ SVM_EXIT_EXCP_BASE + MC_VECTOR,       "MC excp" }, \
--	{ SVM_EXIT_EXCP_BASE + XM_VECTOR,       "XF excp" }, \
--	{ SVM_EXIT_INTR,        "interrupt" }, \
--	{ SVM_EXIT_NMI,         "nmi" }, \
--	{ SVM_EXIT_SMI,         "smi" }, \
--	{ SVM_EXIT_INIT,        "init" }, \
--	{ SVM_EXIT_VINTR,       "vintr" }, \
--	{ SVM_EXIT_CR0_SEL_WRITE, "cr0_sel_write" }, \
--	{ SVM_EXIT_IDTR_READ,   "read_idtr" }, \
--	{ SVM_EXIT_GDTR_READ,   "read_gdtr" }, \
--	{ SVM_EXIT_LDTR_READ,   "read_ldtr" }, \
--	{ SVM_EXIT_TR_READ,     "read_rt" }, \
--	{ SVM_EXIT_IDTR_WRITE,  "write_idtr" }, \
--	{ SVM_EXIT_GDTR_WRITE,  "write_gdtr" }, \
--	{ SVM_EXIT_LDTR_WRITE,  "write_ldtr" }, \
--	{ SVM_EXIT_TR_WRITE,    "write_rt" }, \
--	{ SVM_EXIT_RDTSC,       "rdtsc" }, \
--	{ SVM_EXIT_RDPMC,       "rdpmc" }, \
--	{ SVM_EXIT_PUSHF,       "pushf" }, \
--	{ SVM_EXIT_POPF,        "popf" }, \
--	{ SVM_EXIT_CPUID,       "cpuid" }, \
--	{ SVM_EXIT_RSM,         "rsm" }, \
--	{ SVM_EXIT_IRET,        "iret" }, \
--	{ SVM_EXIT_SWINT,       "swint" }, \
--	{ SVM_EXIT_INVD,        "invd" }, \
--	{ SVM_EXIT_PAUSE,       "pause" }, \
--	{ SVM_EXIT_HLT,         "hlt" }, \
--	{ SVM_EXIT_INVLPG,      "invlpg" }, \
--	{ SVM_EXIT_INVLPGA,     "invlpga" }, \
--	{ SVM_EXIT_IOIO,        "io" }, \
--	{ SVM_EXIT_MSR,         "msr" }, \
--	{ SVM_EXIT_TASK_SWITCH, "task_switch" }, \
--	{ SVM_EXIT_FERR_FREEZE, "ferr_freeze" }, \
--	{ SVM_EXIT_SHUTDOWN,    "shutdown" }, \
--	{ SVM_EXIT_VMRUN,       "vmrun" }, \
--	{ SVM_EXIT_VMMCALL,     "hypercall" }, \
--	{ SVM_EXIT_VMLOAD,      "vmload" }, \
--	{ SVM_EXIT_VMSAVE,      "vmsave" }, \
--	{ SVM_EXIT_STGI,        "stgi" }, \
--	{ SVM_EXIT_CLGI,        "clgi" }, \
--	{ SVM_EXIT_SKINIT,      "skinit" }, \
--	{ SVM_EXIT_RDTSCP,      "rdtscp" }, \
--	{ SVM_EXIT_ICEBP,       "icebp" }, \
--	{ SVM_EXIT_WBINVD,      "wbinvd" }, \
--	{ SVM_EXIT_MONITOR,     "monitor" }, \
--	{ SVM_EXIT_MWAIT,       "mwait" }, \
--	{ SVM_EXIT_XSETBV,      "xsetbv" }, \
--	{ SVM_EXIT_NPF,         "npf" }, \
--	{ SVM_EXIT_AVIC_INCOMPLETE_IPI,		"avic_incomplete_ipi" }, \
--	{ SVM_EXIT_AVIC_UNACCELERATED_ACCESS,   "avic_unaccelerated_access" }, \
--	{ SVM_EXIT_ERR,         "invalid_guest_state" }
-+	{ SVM_EXIT_READ_CR0,    "READ_CR0" }, \
-+	{ SVM_EXIT_READ_CR2,    "READ_CR2" }, \
-+	{ SVM_EXIT_READ_CR3,    "READ_CR3" }, \
-+	{ SVM_EXIT_READ_CR4,    "READ_CR4" }, \
-+	{ SVM_EXIT_READ_CR8,    "READ_CR8" }, \
-+	{ SVM_EXIT_WRITE_CR0,   "WRITE_CR0" }, \
-+	{ SVM_EXIT_WRITE_CR2,   "WRITE_CR2" }, \
-+	{ SVM_EXIT_WRITE_CR3,   "WRITE_CR3" }, \
-+	{ SVM_EXIT_WRITE_CR4,   "WRITE_CR4" }, \
-+	{ SVM_EXIT_WRITE_CR8,   "WRITE_CR8" }, \
-+	{ SVM_EXIT_READ_DR0,    "READ_DR0" }, \
-+	{ SVM_EXIT_READ_DR1,    "READ_DR1" }, \
-+	{ SVM_EXIT_READ_DR2,    "READ_DR2" }, \
-+	{ SVM_EXIT_READ_DR3,    "READ_DR3" }, \
-+	{ SVM_EXIT_READ_DR4,    "READ_DR4" }, \
-+	{ SVM_EXIT_READ_DR5,    "READ_DR5" }, \
-+	{ SVM_EXIT_READ_DR6,    "READ_DR6" }, \
-+	{ SVM_EXIT_READ_DR7,    "READ_DR7" }, \
-+	{ SVM_EXIT_WRITE_DR0,   "WRITE_DR0" }, \
-+	{ SVM_EXIT_WRITE_DR1,   "WRITE_DR1" }, \
-+	{ SVM_EXIT_WRITE_DR2,   "WRITE_DR2" }, \
-+	{ SVM_EXIT_WRITE_DR3,   "WRITE_DR3" }, \
-+	{ SVM_EXIT_WRITE_DR4,   "WRITE_DR4" }, \
-+	{ SVM_EXIT_WRITE_DR5,   "WRITE_DR5" }, \
-+	{ SVM_EXIT_WRITE_DR6,   "WRITE_DR6" }, \
-+	{ SVM_EXIT_WRITE_DR7,   "WRITE_DR7" }, \
-+	{ SVM_EXIT_EXCP_BASE + DE_VECTOR,       "DE EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + DB_VECTOR,       "DB EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + BP_VECTOR,       "BP EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + OF_VECTOR,       "OF EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + BR_VECTOR,       "BR EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + UD_VECTOR,       "UD EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + NM_VECTOR,       "NM EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + DF_VECTOR,       "DF EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + TS_VECTOR,       "TS EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + NP_VECTOR,       "NP EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + SS_VECTOR,       "SS EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + GP_VECTOR,       "GP EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + PF_VECTOR,       "PF EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + MF_VECTOR,       "MF EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + AC_VECTOR,       "AC EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + MC_VECTOR,       "MC EXCP" }, \
-+	{ SVM_EXIT_EXCP_BASE + XM_VECTOR,       "XF EXCP" }, \
-+	{ SVM_EXIT_INTR,        "INTERRUPT" }, \
-+	{ SVM_EXIT_NMI,         "NMI" }, \
-+	{ SVM_EXIT_SMI,         "SMI" }, \
-+	{ SVM_EXIT_INIT,        "INIT" }, \
-+	{ SVM_EXIT_VINTR,       "VINTR" }, \
-+	{ SVM_EXIT_CR0_SEL_WRITE, "CR0_SEL_WRITE" }, \
-+	{ SVM_EXIT_IDTR_READ,   "READ_IDTR" }, \
-+	{ SVM_EXIT_GDTR_READ,   "READ_GDTR" }, \
-+	{ SVM_EXIT_LDTR_READ,   "READ_LDTR" }, \
-+	{ SVM_EXIT_TR_READ,     "READ_RT" }, \
-+	{ SVM_EXIT_IDTR_WRITE,  "WRITE_IDTR" }, \
-+	{ SVM_EXIT_GDTR_WRITE,  "WRITE_GDTR" }, \
-+	{ SVM_EXIT_LDTR_WRITE,  "WRITE_LDTR" }, \
-+	{ SVM_EXIT_TR_WRITE,    "WRITE_RT" }, \
-+	{ SVM_EXIT_RDTSC,       "RDTSC" }, \
-+	{ SVM_EXIT_RDPMC,       "RDPMC" }, \
-+	{ SVM_EXIT_PUSHF,       "PUSHF" }, \
-+	{ SVM_EXIT_POPF,        "POPF" }, \
-+	{ SVM_EXIT_CPUID,       "CPUID" }, \
-+	{ SVM_EXIT_RSM,         "RSM" }, \
-+	{ SVM_EXIT_IRET,        "IRET" }, \
-+	{ SVM_EXIT_SWINT,       "SWINT" }, \
-+	{ SVM_EXIT_INVD,        "INVD" }, \
-+	{ SVM_EXIT_PAUSE,       "PAUSE" }, \
-+	{ SVM_EXIT_HLT,         "HLT" }, \
-+	{ SVM_EXIT_INVLPG,      "INVLPG" }, \
-+	{ SVM_EXIT_INVLPGA,     "INVLPGA" }, \
-+	{ SVM_EXIT_IOIO,        "IO" }, \
-+	{ SVM_EXIT_MSR,         "MSR" }, \
-+	{ SVM_EXIT_TASK_SWITCH, "TASK_SWITCH" }, \
-+	{ SVM_EXIT_FERR_FREEZE, "FERR_FREEZE" }, \
-+	{ SVM_EXIT_SHUTDOWN,    "SHUTDOWN" }, \
-+	{ SVM_EXIT_VMRUN,       "VMRUN" }, \
-+	{ SVM_EXIT_VMMCALL,     "HYPERCALL" }, \
-+	{ SVM_EXIT_VMLOAD,      "VMLOAD" }, \
-+	{ SVM_EXIT_VMSAVE,      "VMSAVE" }, \
-+	{ SVM_EXIT_STGI,        "STGI" }, \
-+	{ SVM_EXIT_CLGI,        "CLGI" }, \
-+	{ SVM_EXIT_SKINIT,      "SKINIT" }, \
-+	{ SVM_EXIT_RDTSCP,      "RDTSCP" }, \
-+	{ SVM_EXIT_ICEBP,       "ICEBP" }, \
-+	{ SVM_EXIT_WBINVD,      "WBINVD" }, \
-+	{ SVM_EXIT_MONITOR,     "MONITOR" }, \
-+	{ SVM_EXIT_MWAIT,       "MWAIT" }, \
-+	{ SVM_EXIT_XSETBV,      "XSETBV" }, \
-+	{ SVM_EXIT_NPF,         "NPF" }, \
-+	{ SVM_EXIT_AVIC_INCOMPLETE_IPI,		"AVIC_INCOMPLETE_IPI" }, \
-+	{ SVM_EXIT_AVIC_UNACCELERATED_ACCESS,   "AVIC_UNACCELERATED_ACCESS" }, \
-+	{ SVM_EXIT_ERR,         "INVALID_GUEST_STATE" }
-
-
-  #endif /* _UAPI__SVM_H */
--- 
-1.8.3.1
-
-
+--
+Dmitry Buzdyk
+Rhonda Software
