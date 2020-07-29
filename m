@@ -2,221 +2,158 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-24.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C23C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 006FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E61E22074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B9022B42
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:40:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="SwH09PYs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mqCQBH9v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgG2Xgy (ORCPT
+        id S1728009AbgG2Xkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 19:36:54 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:22290 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbgG2Xgx (ORCPT
+        Wed, 29 Jul 2020 19:40:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbgG2Xkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 19:36:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596065812; x=1627601812;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vaQcXC9di+Mc2s5KFNyp48HQd4ruw9ElPp3ceNLFrRM=;
-  b=SwH09PYsrvR/wU+kCitloWYsn8qjbgKWU19ELhvbfu8zMuTxFNC7MyWM
-   6K8H5ZO9QtM9msTRFPoMDAnSPwdMdtNEkDw00H7G6HeCYgBD3eVgarslL
-   NhvF+YWIHnf6LcqdMYgErGb33kn0LeswuEOqzZAwesByBVf7nphk3a4xw
-   tbavIXXYTNx1fiZJmdrJGa+w9lMauCZCd4HQ/eAcfh3VlqInoWReZshh1
-   i0C3Tws9J6PKbs1C837fqb9bJuBNpishmhL8ZowqdRLpC4vjtJ8D/iCBw
-   UTrXmBWHiXFB9NAVX/sGQcKBB4AQCrQhT61xfQ3VQ9I2Ipt06s9WnwewW
-   g==;
-IronPort-SDR: RA2wGNs+3wMdncVD5prlKtbgNNl4mnHvjWR8SZ82Q5POG/mLvXMcygWrsSNhVvNHxlr29g6WAG
- mTW96UHloXaezCs4r6F99P8wB5qo1Cu4AaxIY6MQxtOULvwEqyX/YwTUl+GdjdIgr39H/nwR3t
- m7HLD0YikvknI25WtI2Jqs8uVjgbF66rOPBN7O9LdpHEYqlTqmXyEQbhl08dSm9IWrkjJzc4TE
- G0t/qpCnWdh18CiLSLlELUOH2xskrTixTfWjmUFF1XctF6W5cVkz974hOFQJM/4eu410Qr7OvF
- W+Q=
-X-IronPort-AV: E=Sophos;i="5.75,412,1589212800"; 
-   d="scan'208";a="144951782"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 30 Jul 2020 07:36:52 +0800
-IronPort-SDR: mXSfk/sUruE2z0+OO8PWoyGLLGAVwwwpdBiE/5BnZfXUFAxKoxMbXNMA7gCUaGn6ehd95IRbvE
- kcjjUUTBkPqYBSqGrGX6azmai15Ax3J8o=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 16:24:59 -0700
-IronPort-SDR: cAK8YKv/xIcCDLCbQUt9z+oLhL3d8kz5nSiNkpu01AvlXXn7xtw5AUB4sT7uOC4yMr40YkMZMx
- TXsgvfR+HvPg==
-WDCIronportException: Internal
-Received: from jpf009043.ad.shared (HELO jedi-01.hgst.com) ([10.86.58.210])
-  by uls-op-cesaip01.wdc.com with ESMTP; 29 Jul 2020 16:36:52 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>, Anup Patel <anup.patel@wdc.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>, linux-efi@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yash Shah <yash.shah@sifive.com>, Zong Li <zong.li@sifive.com>
-Subject: [RFT PATCH v4 0/9] Add UEFI support for RISC-V
-Date:   Wed, 29 Jul 2020 16:36:26 -0700
-Message-Id: <20200729233635.14406-1-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 29 Jul 2020 19:40:45 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CEFBC061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:40:45 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a9so2908356pjd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:40:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=ehka3Bw+qd9RU1NQVDq9GEs2det9sBZFzS6S/ACMdzA=;
+        b=mqCQBH9vMHhimagKysVjN9pVeYMzrPOTA5ICK+rRv5APsM1O7Hptx0qoD/CSJ1A8Da
+         n4hoN2jH/nJCLkamRiv7OdvcLtd8lqgPZIGkeLgqiPT8RMisVPsLQOXgN9klc1YnP75y
+         dwikCB+pB1/CN52Wm++Hlq2jC5eicp0lpCaRLBo6usz5UXcHSlV1BwOYzmCtFMl0PjOI
+         3M2YNMRfnRNItbbPlUgMs4q38Kdk4fqjb9Iavq5kPuGr2CnzHB/NUyLHpPIZtxE3nuR9
+         LRkr6ApHxjUGcYzeWQCrzG/396tzmLd3Ye4k/bBxNzsDe4l93mGr/IuzGJJR2XEH872F
+         ThRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=ehka3Bw+qd9RU1NQVDq9GEs2det9sBZFzS6S/ACMdzA=;
+        b=Kf1ZA9SQbIGRS+44bLvsA8WMhqixnGBGDYb1zoK4Cvp3mErYVnaGwwFhXxOvmd/eIw
+         HftL25OwslL8CMIL9B1KXycufLLa5suDsdl6h0n7FXVCA3wVuH3/vDOXa8mCfjJLS1Xj
+         nbwo+NgRX4yunI7ipnU09GBXQeOdOcq8/1JNo6GpJzPGkkbeIIHM0sRQEedUEEXUQhol
+         O6TcorqEoKdPZ0iylZmnrWTdYTrA7bUUHMz1fI4B3iPbhbxdqDItpI1cjPiU4hrEmO2A
+         EPmyylO5tUYW21XySTuBK6OsfiezdDP/o/W6i0t1pkyoZN3OJeue+KlBYkQ7RS20PChX
+         /EZg==
+X-Gm-Message-State: AOAM531KDWwgdIvK4Zl2dbFiyPqTOQxzO0zT6p3GD+zuNxkAaEY6qw1w
+        1zN8tsjGpBSFV+Y+zSA5oFSVJw==
+X-Google-Smtp-Source: ABdhPJxJSNtCj/X3Tb+Q37+Ym+uH8rDguC9MqpnlzO9RvztZlOCocJLBoapccfc1XEhib+ITKb8rAg==
+X-Received: by 2002:a17:902:7c8b:: with SMTP id y11mr28788386pll.142.1596066044318;
+        Wed, 29 Jul 2020 16:40:44 -0700 (PDT)
+Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
+        by smtp.gmail.com with ESMTPSA id m190sm2051252pfm.89.2020.07.29.16.40.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 16:40:43 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 16:40:42 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Qianli Zhao <zhaoqianligood@gmail.com>,
+        Roman Gushchin <guro@fb.com>
+cc:     cl@linux.com, penberg@kernel.org, iamjoonsoo.kim@lge.com,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        zhaoqianli@xiaomi.com
+Subject: Re: [PATCH] mm: slab: Avoid the use of one-element array and use
+ struct_size() helper
+In-Reply-To: <1596034214-15010-1-git-send-email-zhaoqianligood@gmail.com>
+Message-ID: <alpine.DEB.2.23.453.2007291640140.3120473@chino.kir.corp.google.com>
+References: <1596034214-15010-1-git-send-email-zhaoqianligood@gmail.com>
+User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="1482994552-2092936226-1596066043=:3120473"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds UEFI support for RISC-V.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Linux kernel: 5.8-rc7 + 1 exception vector setup patch (queued for for-next) 
-U-Boot: v2020.07 
-OpenSBI: master
+--1482994552-2092936226-1596066043=:3120473
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-This series depends on early setup of exeception vector patch
-http://lists.infradead.org/pipermail/linux-riscv/2020-July/001207.html
+On Wed, 29 Jul 2020, Qianli Zhao wrote:
 
-Patch 1-3 are generic riscv feature addition required for UEFI support.
-Patch 4-7 adds the efi stub support for RISC-V which was reviewed few months back.
-https://www.spinics.net/lists/linux-efi/msg19144.html
-Patch 8 just renames arm-init code so that it can be used across different
-architectures. Patch 11 adds the runtime services for RISC-V.
+> From: Qianli Zhao <zhaoqianli@xiaomi.com>
+> 
+> There is a regular need in the kernel to provide a way to declare having a
+> dynamically sized set of trailing elements in a structure. Kernel code should
+> always use “flexible array members”[1] for these cases. The older style of
+> one-element or zero-length arrays should no longer be used[2].
+> 
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+> 
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://github.com/KSPP/linux/issues/21
+> 
+> Signed-off-by: Qianli Zhao <zhaoqianli@xiaomi.com>
+> ---
+>  mm/slab.h        | 2 +-
+>  mm/slab_common.c | 7 ++-----
+>  2 files changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 74f7e09..c12fb65 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -34,7 +34,7 @@ struct kmem_cache {
+>  
+>  struct memcg_cache_array {
+>  	struct rcu_head rcu;
+> -	struct kmem_cache *entries[0];
+> +	struct kmem_cache *entries[];
+>  };
+>  
+>  /*
 
-The working set of patches can also be found in following git repo.
-https://github.com/atishp04/linux/tree/uefi_riscv_5.9_v4
+This is removed in the -mm tree, see 
+https://www.ozlabs.org/~akpm/mmotm/broken-out/mm-memcg-slab-use-a-single-set-of-kmem_caches-for-all-allocations.patch
 
-The patches have been verified on Qemu/HiFive unleashed using bootefi command in
-U-Boot for both RV32 and RV64.
-
-For RV32, maximum allocated memory should be 1G as RISC-V kernel can not map
-beyond 1G of physical memory for RV32.
-
-Runtime services have been verified with fwts. Here is the snippet of the result.
-
-***********************************************************************
-This test run on 16/07/20 at 17:54:53 on host Linux fedora-riscv
-5.8.0-rc5-00015-g5e61441080fd-dirty #938 SMP Thu Jul 16 14:50:11 PDT 2020
-riscv64.
-
-Command: "fwts uefirtvariable".
-Running tests: uefirtvariable.
-
-uefirtvariable: UEFI Runtime service variable interface tests.
-Test 1 of 9: Test UEFI RT service get variable interface.
-SKIPPED: Test 1, Skipping test, SetVariable runtime service is not supported on
-this platform.
-
-Test 2 of 9: Test UEFI RT service get next variable name interface.
-The runtime service GetNextVariableName interface function test.
-SKIPPED: Test 2, Skipping test, SetVariable runtime service is not supported on
-this platform.
-
-...
-
-Test 4 of 9: Test UEFI RT service query variable info interface.
-SKIPPED: Test 4, Not support the QueryVariableInfo UEFI runtime interface:
-cannot test.
-
-ADVICE: Firmware also needs to check if the revision of system table is correct
-or not. Linux kernel returns EFI_UNSUPPORTED as well, if the FirmwareRevision of
-system table is less than EFI_2_00_SYSTEM_TABLE_REVISION.
-
-...
-***********************************************************************
-
-Currently, U-Boot EFI implementation returns EFI_UNSUPPORTED for set_variable
-service. That's why all tests have been skipped but I manually verified that the
-value is returned from U-Boot not kernel :).
-
-EDK2 can boot quite far into Linux with the current series. However, it crashes
-before userspace because of a possible memory corruption by EDK2.
-
-Changes from v3->v4:
-1. Used pgd mapping to avoid copying DT to bss.
-
-Changes from v2->v3:
-1. Fixed few bugs in run time services page table mapping.
-2. Dropped patch 1 as it is already taken into efi-tree.
-3. Sent few generic mmu fixes as a separate series to ease the merge conflicts.
-
-Changes from v1->v2:
-1. Removed patch 1 as it is already taken into efi-tree.
-2. Fixed compilation issues with patch 9.
-3. Moved few function prototype declaration to header file to keep kbuild happy.
-
-Changes from previous version:
-1. Added full ioremap support.
-2. Added efi runtime services support.
-3. Fixes mm issues
-
-Anup Patel (1):
-RISC-V: Move DT mapping outof fixmap
-
-Atish Patra (8):
-RISC-V: Add early ioremap support
-RISC-V: Implement late mapping page table allocation functions
-include: pe.h: Add RISC-V related PE definition
-RISC-V: Add PE/COFF header for EFI stub
-RISC-V: Add EFI stub support.
-efi: Rename arm-init to efi-init common for all arch
-RISC-V: Add EFI runtime services
-RISC-V: Add page table dump support for uefi
-
-arch/riscv/Kconfig                            |  25 +++
-arch/riscv/Makefile                           |   1 +
-arch/riscv/configs/defconfig                  |   1 +
-arch/riscv/include/asm/Kbuild                 |   1 +
-arch/riscv/include/asm/efi.h                  |  56 +++++++
-arch/riscv/include/asm/fixmap.h               |  16 +-
-arch/riscv/include/asm/io.h                   |   1 +
-arch/riscv/include/asm/mmu.h                  |   2 +
-arch/riscv/include/asm/pgtable.h              |   5 +
-arch/riscv/include/asm/sections.h             |  13 ++
-arch/riscv/kernel/Makefile                    |   5 +
-arch/riscv/kernel/efi-header.S                | 104 +++++++++++++
-arch/riscv/kernel/efi.c                       | 105 +++++++++++++
-arch/riscv/kernel/head.S                      |  17 ++-
-arch/riscv/kernel/head.h                      |   2 -
-arch/riscv/kernel/image-vars.h                |  51 +++++++
-arch/riscv/kernel/setup.c                     |  17 ++-
-arch/riscv/kernel/vmlinux.lds.S               |  22 ++-
-arch/riscv/mm/init.c                          |  90 ++++++++---
-arch/riscv/mm/ptdump.c                        |  48 +++++-
-drivers/firmware/efi/Kconfig                  |   3 +-
-drivers/firmware/efi/Makefile                 |   4 +-
-.../firmware/efi/{arm-init.c => efi-init.c}   |   0
-drivers/firmware/efi/libstub/Makefile         |  10 ++
-drivers/firmware/efi/libstub/efi-stub.c       |  11 +-
-drivers/firmware/efi/libstub/riscv-stub.c     | 110 ++++++++++++++
-drivers/firmware/efi/riscv-runtime.c          | 143 ++++++++++++++++++
-include/linux/pe.h                            |   3 +
-28 files changed, 825 insertions(+), 41 deletions(-)
-create mode 100644 arch/riscv/include/asm/efi.h
-create mode 100644 arch/riscv/include/asm/sections.h
-create mode 100644 arch/riscv/kernel/efi-header.S
-create mode 100644 arch/riscv/kernel/efi.c
-create mode 100644 arch/riscv/kernel/image-vars.h
-rename drivers/firmware/efi/{arm-init.c => efi-init.c} (100%)
-create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
-create mode 100644 drivers/firmware/efi/riscv-runtime.c
-
---
-2.24.0
-
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index fe8b684..56f4818 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -166,9 +166,7 @@ static int init_memcg_params(struct kmem_cache *s,
+>  	if (!memcg_nr_cache_ids)
+>  		return 0;
+>  
+> -	arr = kvzalloc(sizeof(struct memcg_cache_array) +
+> -		       memcg_nr_cache_ids * sizeof(void *),
+> -		       GFP_KERNEL);
+> +	arr = kvzalloc(struct_size(arr, entries, memcg_nr_cache_ids), GFP_KERNEL);
+>  	if (!arr)
+>  		return -ENOMEM;
+>  
+> @@ -199,8 +197,7 @@ static int update_memcg_params(struct kmem_cache *s, int new_array_size)
+>  {
+>  	struct memcg_cache_array *old, *new;
+>  
+> -	new = kvzalloc(sizeof(struct memcg_cache_array) +
+> -		       new_array_size * sizeof(void *), GFP_KERNEL);
+> +	new = kvzalloc(struct_size(new, entries, new_array_size), GFP_KERNEL);
+>  	if (!new)
+>  		return -ENOMEM;
+>  
+> -- 
+> 2.7.4
+> 
+> 
+--1482994552-2092936226-1596066043=:3120473--
