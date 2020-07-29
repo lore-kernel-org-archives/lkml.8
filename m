@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B07CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BE3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDC720838
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9506221883
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596014405;
-	bh=5r90F8JZfGpdF2bkCF7czpr1bpYuEIIOZXTUjQJWem0=;
+	s=default; t=1596014408;
+	bh=naH+3SvyetwUSl2cx/iz+lecdN9nDA1x8uuRn50Iww0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Osp6hydjqeglrGDvBqI8xqabU3mdNRH8lhTV+qCJjEFsnyCAc/nxK4blaaGSHTQ9E
-	 IknjkiRxLTh3mz3MHsfIN5BBCKtfP5gk8ktugqhgY+45jtcmBG3CvJIz0xOY4hXfYc
-	 G5qwuvGjGaIC5psBoq+kL5/Kry2is68WMNKNMGmI=
+	b=WfgSTpJB/x0puzMND82ElySjBsN+cHx7HU3qgMPtNT4pY7wmXTej+VjmCvk25lAne
+	 nvLoR107pfMM5m4oQtHYZ7qeU0Cs01PcyodpgzqTdvTKz7zRsPIoLmH50QdKwq1Y5H
+	 zzQbR82K2qFU0uLQFZdBcluxi0sn26ygYb52HmfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgG2JUD convert rfc822-to-8bit (ORCPT
+        id S1728288AbgG2JUH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:20:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55866 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728195AbgG2JUC (ORCPT
+        Wed, 29 Jul 2020 05:20:07 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40726 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728195AbgG2JUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:20:02 -0400
+        Wed, 29 Jul 2020 05:20:06 -0400
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-311-xvuXeaEeOY-viX09FWe1qg-1; Wed, 29 Jul 2020 05:19:54 -0400
-X-MC-Unique: xvuXeaEeOY-viX09FWe1qg-1
+ us-mta-393-H4aIQLXRPBeTA11LrF0Y8Q-1; Wed, 29 Jul 2020 05:19:58 -0400
+X-MC-Unique: H4aIQLXRPBeTA11LrF0Y8Q-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 396898017FB;
-        Wed, 29 Jul 2020 09:19:52 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D0751800D4A;
+        Wed, 29 Jul 2020 09:19:56 +0000 (UTC)
 Received: from krava.redhat.com (unknown [10.40.193.247])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A060B6931E;
-        Wed, 29 Jul 2020 09:19:48 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9A9116932D;
+        Wed, 29 Jul 2020 09:19:52 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Kajol Jain <kjain@linux.ibm.com>, Ian Rogers <irogers@google.com>,
@@ -54,9 +54,9 @@ Cc:     Kajol Jain <kjain@linux.ibm.com>, Ian Rogers <irogers@google.com>,
         lkml <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: [PATCH 10/19] perf metric: Add referenced metrics to hash data
-Date:   Wed, 29 Jul 2020 11:18:59 +0200
-Message-Id: <20200729091908.1378911-11-jolsa@kernel.org>
+Subject: [PATCH 11/19] perf metric: Compute referenced metrics
+Date:   Wed, 29 Jul 2020 11:19:00 +0200
+Message-Id: <20200729091908.1378911-12-jolsa@kernel.org>
 In-Reply-To: <20200729091908.1378911-1-jolsa@kernel.org>
 References: <20200729091908.1378911-1-jolsa@kernel.org>
 MIME-Version: 1.0
@@ -70,11 +70,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding referenced metrics to the parsing context so they can be resolved
-during the metric processing.
+Adding computation (expr__parse call) of referenced metric at
+the point when it needs to be resolved during the parent metric
+computation.
 
-Adding expr__add_ref function to store referenced metrics into parse
-context.
+Once the inner metric is computed, the result is stored and
+used if there's another usage of that metric.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
@@ -87,211 +88,109 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Paul Clarke <pc@us.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20200719181320.785305-11-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20200719181320.785305-12-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/expr.c        | 54 +++++++++++++++++++++++++++++++++++
- tools/perf/util/expr.h        | 13 ++++++++-
- tools/perf/util/stat-shadow.c | 20 +++++++++----
- 3 files changed, 80 insertions(+), 7 deletions(-)
+ tools/perf/util/expr.c | 31 +++++++++++++++++++++++++++++++
+ tools/perf/util/expr.h |  3 +++
+ tools/perf/util/expr.y |  4 ++--
+ 3 files changed, 36 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index f726211f49d4..d3997c2b4a90 100644
+index d3997c2b4a90..a346ca590513 100644
 --- a/tools/perf/util/expr.c
 +++ b/tools/perf/util/expr.c
-@@ -4,10 +4,14 @@
- #include <errno.h>
- #include <stdlib.h>
- #include <string.h>
-+#include "metricgroup.h"
-+#include "debug.h"
- #include "expr.h"
- #include "expr-bison.h"
- #include "expr-flex.h"
- #include <linux/kernel.h>
-+#include <linux/zalloc.h>
-+#include <ctype.h>
+@@ -112,6 +112,7 @@ int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
+ 	 */
+ 	data_ptr->ref.metric_name = ref->metric_name;
+ 	data_ptr->ref.metric_expr = ref->metric_expr;
++	data_ptr->ref.counted = false;
+ 	data_ptr->is_ref = true;
  
- #ifdef PARSER_DEBUG
- extern int expr_debug;
-@@ -63,6 +67,7 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
- 	if (!data_ptr)
- 		return -ENOMEM;
- 	data_ptr->val = val;
-+	data_ptr->is_ref = false;
- 
- 	ret = hashmap__set(&ctx->ids, id, data_ptr,
- 			   (const void **)&old_key, (void **)&old_data);
-@@ -73,6 +78,55 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
- 	return ret;
+ 	ret = hashmap__set(&ctx->ids, name, data_ptr,
+@@ -133,6 +134,34 @@ int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+ 	return hashmap__find(&ctx->ids, id, (void **)data) ? 0 : -1;
  }
  
-+int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
++int expr__resolve_id(struct expr_parse_ctx *ctx, const char *id,
++		     struct expr_id_data **datap)
 +{
-+	struct expr_id_data *data_ptr = NULL, *old_data = NULL;
-+	char *old_key = NULL;
-+	char *name, *p;
-+	int ret;
++	struct expr_id_data *data;
 +
-+	data_ptr = zalloc(sizeof(*data_ptr));
-+	if (!data_ptr)
-+		return -ENOMEM;
-+
-+	name = strdup(ref->metric_name);
-+	if (!name) {
-+		free(data_ptr);
-+		return -ENOMEM;
++	if (expr__get_id(ctx, id, datap) || !*datap) {
++		pr_debug("%s not found\n", id);
++		return -1;
 +	}
 +
-+	/*
-+	 * The jevents tool converts all metric expressions
-+	 * to lowercase, including metric references, hence
-+	 * we need to add lowercase name for metric, so it's
-+	 * properly found.
-+	 */
-+	for (p = name; *p; p++)
-+		*p = tolower(*p);
++	data = *datap;
 +
-+	/*
-+	 * Intentionally passing just const char pointers,
-+	 * originally from 'struct pmu_event' object.
-+	 * We don't need to change them, so there's no
-+	 * need to create our own copy.
-+	 */
-+	data_ptr->ref.metric_name = ref->metric_name;
-+	data_ptr->ref.metric_expr = ref->metric_expr;
-+	data_ptr->is_ref = true;
++	pr_debug2("lookup: is_ref %d, counted %d, val %f: %s\n",
++		  data->is_ref, data->ref.counted, data->val, id);
 +
-+	ret = hashmap__set(&ctx->ids, name, data_ptr,
-+			   (const void **)&old_key, (void **)&old_data);
-+	if (ret)
-+		free(data_ptr);
++	if (data->is_ref && !data->ref.counted) {
++		data->ref.counted = true;
++		pr_debug("processing metric: %s ENTRY\n", id);
++		if (expr__parse(&data->val, ctx, data->ref.metric_expr, 1)) {
++			pr_debug("%s failed to count\n", id);
++			return -1;
++		}
++		pr_debug("processing metric: %s EXIT: %f\n", id, data->val);
++	}
 +
-+	pr_debug2("adding ref metric %s: %s\n",
-+		  ref->metric_name, ref->metric_expr);
-+
-+	free(old_key);
-+	free(old_data);
-+	return ret;
++	return 0;
 +}
 +
- int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
- 		 struct expr_id_data **data)
+ void expr__del_id(struct expr_parse_ctx *ctx, const char *id)
  {
+ 	struct expr_id_data *old_val = NULL;
+@@ -173,6 +202,8 @@ __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
+ 	void *scanner;
+ 	int ret;
+ 
++	pr_debug2("parsing metric: %s\n", expr);
++
+ 	ret = expr_lex_init_extra(&scanner_ctx, &scanner);
+ 	if (ret)
+ 		return ret;
 diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index 2462abd0ac65..81d04ff7f857 100644
+index 81d04ff7f857..9ed208d93418 100644
 --- a/tools/perf/util/expr.h
 +++ b/tools/perf/util/expr.h
-@@ -11,12 +11,22 @@
- #include "util/hashmap.h"
- //#endif
+@@ -23,6 +23,7 @@ struct expr_id_data {
+ 		struct {
+ 			const char *metric_name;
+ 			const char *metric_expr;
++			bool counted;
+ 		} ref;
+ 	};
  
-+struct metric_ref;
-+
- struct expr_parse_ctx {
- 	struct hashmap ids;
- };
- 
- struct expr_id_data {
--	double	val;
-+	union {
-+		double val;
-+		struct {
-+			const char *metric_name;
-+			const char *metric_expr;
-+		} ref;
-+	};
-+
-+	bool is_ref;
- };
- 
- struct expr_scanner_ctx {
-@@ -29,6 +39,7 @@ void expr__ctx_clear(struct expr_parse_ctx *ctx);
- void expr__del_id(struct expr_parse_ctx *ctx, const char *id);
- int expr__add_id(struct expr_parse_ctx *ctx, const char *id);
- int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
-+int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref);
+@@ -42,6 +43,8 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
+ int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref);
  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
  		 struct expr_id_data **data);
++int expr__resolve_id(struct expr_parse_ctx *ctx, const char *id,
++		     struct expr_id_data **datap);
  int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index fc9ac4b4218e..e1ba6c1b916a 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -731,13 +731,14 @@ static void print_smi_cost(struct perf_stat_config *config,
- }
+ 		const char *expr, int runtime);
+ int expr__find_other(const char *expr, const char *one,
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index 0d4f5d324be7..d34b370391c6 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -88,11 +88,11 @@ expr:	  NUMBER
+ 	| ID			{
+ 					struct expr_id_data *data;
  
- static int prepare_metric(struct evsel **metric_events,
-+			  struct metric_ref *metric_refs,
- 			  struct expr_parse_ctx *pctx,
- 			  int cpu,
- 			  struct runtime_stat *st)
- {
- 	double scale;
- 	char *n, *pn;
--	int i;
-+	int i, j, ret;
- 
- 	expr__ctx_init(pctx);
- 	for (i = 0; metric_events[i]; i++) {
-@@ -778,12 +779,19 @@ static int prepare_metric(struct evsel **metric_events,
- 			expr__add_id_val(pctx, n, avg_stats(stats)*scale);
- 	}
- 
-+	for (j = 0; metric_refs && metric_refs[j].metric_name; j++) {
-+		ret = expr__add_ref(pctx, &metric_refs[j]);
-+		if (ret)
-+			return ret;
-+	}
+-					if (expr__get_id(ctx, $1, &data) || !data) {
+-						pr_debug("%s not found\n", $1);
++					if (expr__resolve_id(ctx, $1, &data)) {
+ 						free($1);
+ 						YYABORT;
+ 					}
 +
- 	return i;
- }
- 
- static void generic_metric(struct perf_stat_config *config,
- 			   const char *metric_expr,
- 			   struct evsel **metric_events,
-+			   struct metric_ref *metric_refs,
- 			   char *name,
- 			   const char *metric_name,
- 			   const char *metric_unit,
-@@ -798,7 +806,7 @@ static void generic_metric(struct perf_stat_config *config,
- 	int i;
- 	void *ctxp = out->ctx;
- 
--	i = prepare_metric(metric_events, &pctx, cpu, st);
-+	i = prepare_metric(metric_events, metric_refs, &pctx, cpu, st);
- 	if (i < 0)
- 		return;
- 
-@@ -847,7 +855,7 @@ double test_generic_metric(struct metric_expr *mexp, int cpu, struct runtime_sta
- 	struct expr_parse_ctx pctx;
- 	double ratio;
- 
--	if (prepare_metric(mexp->metric_events, &pctx, cpu, st) < 0)
-+	if (prepare_metric(mexp->metric_events, mexp->metric_refs, &pctx, cpu, st) < 0)
- 		return 0.;
- 
- 	if (expr__parse(&ratio, &pctx, mexp->metric_expr, 1))
-@@ -1064,8 +1072,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 		else
- 			print_metric(config, ctxp, NULL, NULL, name, 0);
- 	} else if (evsel->metric_expr) {
--		generic_metric(config, evsel->metric_expr, evsel->metric_events, evsel->name,
--				evsel->metric_name, NULL, 1, cpu, out, st);
-+		generic_metric(config, evsel->metric_expr, evsel->metric_events, NULL,
-+				evsel->name, evsel->metric_name, NULL, 1, cpu, out, st);
- 	} else if (runtime_stat_n(st, STAT_NSECS, 0, cpu) != 0) {
- 		char unit = 'M';
- 		char unit_buf[10];
-@@ -1093,7 +1101,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 			if (num++ > 0)
- 				out->new_line(config, ctxp);
- 			generic_metric(config, mexp->metric_expr, mexp->metric_events,
--					evsel->name, mexp->metric_name,
-+					mexp->metric_refs, evsel->name, mexp->metric_name,
- 					mexp->metric_unit, mexp->runtime, cpu, out, st);
- 		}
- 	}
+ 					$$ = data->val;
+ 					free($1);
+ 				}
 -- 
 2.25.4
 
