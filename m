@@ -2,112 +2,136 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D93D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AACC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8A252075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:50:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UCQzA7Vj"
+	by mail.kernel.org (Postfix) with ESMTP id EE67220809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:52:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596048737;
+	bh=X2GAMQ3RIXB69rXlNng75zFV3IhgrTburC3Gs/D1yUo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QIupLlJoMZECyxMfVv8+FIgy8qGmnI4FBDcWMKoW3kbhwUEFIc0CVuxyP+edZjvKq
+	 LACTsBUh3sDs8HwX/wHRriEH1++H5AuiRNMCri3sZL0xqUCeImYxf/q13JNgfPLsAa
+	 HVWIjfEip2P0zFEX1Q1/vX0Km+wlByVOGmTFNDaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgG2Sue (ORCPT
+        id S1727091AbgG2SwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:50:34 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39874 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2Sue (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:50:34 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06TIlhar043557;
-        Wed, 29 Jul 2020 18:50:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=5pqUXLI9sT2GfPJj/0gDGYdazPV0/n0K5ZbRuWHt4O0=;
- b=UCQzA7Vj+cN0M1HmyaDgb43umApye7cbjLQO/LseyNWq2WhsCyxY3A5uhngykpNl9myd
- oc4vQakBmZZZ7pAcKELSI1q4DM2vAkZgbIkEVwTwQAMe5nRgn39/FjjKNdLYH2VrUHD0
- v3c5PhGpXo87KQ0wCSkaDSKybz5qhJCld+uG3nZs8zi7AnNpDvxMOmuk+MMllNsU5+tv
- UaIid7SiMtOZ0QP8lvElS8kRWKAD/9QlYJCVSwWQqPbV/eV+twU7HNTPjJIZqqwKHF1i
- r+zTnoAYgk2hHPu8byHG8pjJgKZy41W+Xr3/FE3LygpPHsYdZe69FAQyC5l1V/WDx1Sk Ew== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 32hu1jqdre-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Jul 2020 18:50:27 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06TImokS101027;
-        Wed, 29 Jul 2020 18:50:26 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 32hu5w7533-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jul 2020 18:50:26 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06TIoOrT008547;
-        Wed, 29 Jul 2020 18:50:24 GMT
-Received: from [10.39.233.151] (/10.39.233.151)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 Jul 2020 11:50:24 -0700
-Subject: Re: [PATCH 1/1] vt_ioctl: prevent VT_RESIZEX font height change from
- causing potential out-of-bounds access
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     jslaby@suse.com, ebiggers@google.com, linux-kernel@vger.kernel.org,
-        dan.carpenter@oracle.com, dhaval.giani@oracle.com
-References: <1596026381-5013-1-git-send-email-george.kennedy@oracle.com>
- <20200729125311.GA2912372@kroah.com>
-From:   George Kennedy <george.kennedy@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <2a64913e-517e-5f2d-f96e-6bc10104adbe@oracle.com>
-Date:   Wed, 29 Jul 2020 14:50:22 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 14:52:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50252 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726365AbgG2SwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 14:52:15 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 046D72075D;
+        Wed, 29 Jul 2020 18:52:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596048735;
+        bh=X2GAMQ3RIXB69rXlNng75zFV3IhgrTburC3Gs/D1yUo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0qquShLGWf9uf/R0aFWS6yJCF4oe+DjfWxvCgVH5a4PxSbv6kinVZ2bPUcuDqE2Ef
+         3xmCYVUvr0b5f4uYukyQnmx6lbnT4J0Yz6EnWT7t8uEQkVCPZTiyweyFVyM0P40cyw
+         n0kY0p72PSwig5blFpb/EI4z2cZS7P/bN8V8n3j0=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0661340E57; Wed, 29 Jul 2020 15:52:13 -0300 (-03)
+Date:   Wed, 29 Jul 2020 15:52:12 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+        David Sharp <dhsharp@google.com>
+Subject: Re: [PATCH v2 1/5] perf record: Set PERF_RECORD_PERIOD if attr->freq
+ is set.
+Message-ID: <20200729185212.GB433799@kernel.org>
+References: <20200728085734.609930-1-irogers@google.com>
+ <20200728085734.609930-2-irogers@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200729125311.GA2912372@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9697 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007290127
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9697 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 mlxlogscore=999
- malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
- suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007290127
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728085734.609930-2-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Em Tue, Jul 28, 2020 at 01:57:30AM -0700, Ian Rogers escreveu:
+> From: David Sharp <dhsharp@google.com>
+> 
+> evsel__config() would only set PERF_RECORD_PERIOD if it set attr->freq
 
-I will re-work this patch based on comments from Dan.
+There is no such thing as 'PERF_RECORD_PERIOD', its PERF_SAMPLE_PERIOD,
+also...
 
-Thank you,
-George
+> from perf record options. When it is set by libpfm events, it would not
+> get set. This changes evsel__config to see if attr->freq is set outside of
+> whether or not it changes attr->freq itself.
+> 
+> Signed-off-by: David Sharp <dhsharp@google.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/evsel.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index ef802f6d40c1..811f538f7d77 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -979,13 +979,18 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+>  	if (!attr->sample_period || (opts->user_freq != UINT_MAX ||
+>  				     opts->user_interval != ULLONG_MAX)) {
+>  		if (opts->freq) {
+> -			evsel__set_sample_bit(evsel, PERIOD);
+>  			attr->freq		= 1;
+>  			attr->sample_freq	= opts->freq;
+>  		} else {
+>  			attr->sample_period = opts->default_interval;
+>  		}
+>  	}
+> +	/*
+> +	 * If attr->freq was set (here or earlier), ask for period
+> +	 * to be sampled.
+> +	 */
+> +	if (attr->freq)
+> +		evsel__set_sample_bit(evsel, PERIOD);
 
-On 7/29/2020 8:53 AM, Greg KH wrote:
-> On Wed, Jul 29, 2020 at 08:39:41AM -0400, George Kennedy wrote:
->> Add a VT_RESIZEX check to ensure that changing the font height will not
->> cause a potential out-of-bounds access. The candidate font height contained
->> in "v_clin", though below the max, could still result in accesses beyond
->> the allocated font data size.
->>
->> Signed-off-by: George Kennedy <george.kennedy@oracle.com>
->> Reported-by: syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
-> Did syzbot also test this that it fixes the reported issue?
->
-> What commit does this fix?  Should it go back farther to stable releases
-> too?
->
-> thanks,
->
-> greg k-h
+Why can't the libpfm code set opts?
 
+With this patch we will end up calling evsel__set_sample_bit(evsel,
+PERIOD) twice, which isn't a problem but looks strange.
+
+- Arnaldo
+
+>  
+>  	if (opts->no_samples)
+>  		attr->sample_freq = 0;
+> -- 
+> 2.28.0.163.g6104cc2f0b6-goog
+> 
+
+-- 
+
+- Arnaldo
