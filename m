@@ -2,194 +2,77 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3962C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1CE4206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A1E9206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgG2M6s (ORCPT
+        id S1726951AbgG2M7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:58:48 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:52606 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgG2M6r (ORCPT
+        Wed, 29 Jul 2020 08:59:36 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:53099 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726353AbgG2M7g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:58:47 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id DFBAF8030866;
-        Wed, 29 Jul 2020 12:58:38 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id F5-UpB_0Hej0; Wed, 29 Jul 2020 15:58:38 +0300 (MSK)
-Date:   Wed, 29 Jul 2020 15:58:37 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-Message-ID: <20200729125837.b27ncvd2eeixstba@mobilestation>
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
- <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
- <20200723100317.GJ3703480@smile.fi.intel.com>
- <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
- <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Wed, 29 Jul 2020 08:59:36 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=cambda@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0U49f54P_1596027572;
+Received: from localhost(mailfrom:cambda@linux.alibaba.com fp:SMTPD_---0U49f54P_1596027572)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 29 Jul 2020 20:59:32 +0800
+From:   Cambda Zhu <cambda@linux.alibaba.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org, Cambda Zhu <cambda@linux.alibaba.com>
+Subject: [PATCH] checkpatch: skip macros when finding missing switch/case break
+Date:   Wed, 29 Jul 2020 20:59:11 +0800
+Message-Id: <20200729125911.47318-1-cambda@linux.alibaba.com>
+X-Mailer: git-send-email 2.16.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:22:28AM +0200, Linus Walleij wrote:
-> On Sat, Jul 25, 2020 at 1:03 AM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> 
-> > According to the DW APB GPIO databook it can be configured to provide either a
-> > combined IRQ line or multiple interrupt signals for each GPIO. It's up to
-> > the platform which of those signals are connected to an embedded IRQ
-> > controller. So I guess theoretically the array values can be sparse.
-> >
-> > Anyway now I see it's rather problematic. I didn't forget about the sparse IRQs
-> > array case. I just thought it would work out-of-box. Before getting your comment
-> > and digging deeper into the IRQ subsystem I had thought that it wasn't a problem
-> > passing invalid IRQ numbers to the irq_set_chained_handler_and_data() especially
-> > seeing zero IRQ number was supposed to be considered as invalid. That method shall
-> > just ignore the invalid IRQs since the method irq_to_desc() calling radix_tree_lookup()
-> > will fail to find a descriptor with invalid IRQ value and return NULL. So after
-> > getting a NULL irq_desc the method irq_set_chained_handler_and_data() would
-> > have stopped setting the handler. But turns out it may work only for
-> > CONFIG_SPARSE_IRQ. If that config isn't enabled, then a very first IRQ
-> > descriptor will be returned for zero IRQ number. That descriptor will be
-> > initialized with the passed parent_handler callback, which isn't what we want.
-> 
-> Ouch but different beahviour on the outside of the irqchip API depending
-> on whether IRQs are sparse or not on some particular system seems to
-> be a problem with irqchip reallty, if we wanna get to the bottom of things.
-> (paging Marc)
-> 
-> > So in order to fix the problem we could follow either of the next paths:
-> > 1) Just make sure the passed IRQs array is not sparse for instance by remapping
-> >    it to be linear.
-> > 2) Move "if (gc->irq.parents[i]) irq_set_chained_handler_and_data()" statement to the
-> >    gpiochip_add_irqchip() method.
-> >
-> > What to you think? Linus?
-> 
+The checkpatch.pl only searches 3 previous lines when finding missing
+switch/case break, and macros are treated as normal statements. If the
+cases are surrounded with CONFIG, checkpatch.pl may report false
+warnings. For example:
 
-> What about (3) fixing irqchip?
-> 
-> Else (2), making the code inside gpiolib be careful and skip over
-> invalid IRQs.
+\+#if xxx
+\+	case xxx: {
+\+		...
+\+		break/return/...;
+\+	}
+\+#endif
+\+#if xxx
+\+	case xxx:
+\+		...
+\+#endif
 
-Sorry for a delay with a response to this issue. I had to give it a more thorough
-thought since the problem is a bit more complex than it seemed originally. As I
-see it now It might be wrong to implement the cases 2) and 3), but 1) is more
-appropriate.
+This patch skips lines starting with whitespaces and #, so the counter
+of previous statements won't increase in these cases.
 
-First of all we need to note that GPIOlib framework provides the next parameters
-to describe the IRQ-chip:
-gc->irq.num_parents - number of parental IRQ numbers.
-gc->irq.parents[] - array of parental IRQ numbers.
-*gc->irq.valid_mask - a mask of IRQ/GPIO lines describing a valid IRQ.
-*gc->irq.map - mapping of hw IRQ/GPIO ID -> parental IRQ numbers.
+Signed-off-by: Cambda Zhu <cambda@linux.alibaba.com>
+---
+ scripts/checkpatch.pl | 1 +
+ 1 file changed, 1 insertion(+)
 
-Using that set we can handle any case of linear and sparse parental IRQs. Here
-is how it can be implemented in the framework of DW APB GPIO controller.
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 4c820607540b..2c0a51ac82a7 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -6503,6 +6503,7 @@ sub process {
+ 				next if ($fline =~ /^.(?:\s*(?:case\s+(?:$Ident|$Constant)[\s$;]*|default):[\s$;]*)*$/);
+ 				$has_break = 1 if ($rline =~ /fall[\s_-]*(through|thru)/i);
+ 				next if ($fline =~ /^.[\s$;]*$/);
++				next if ($fline =~ /^.\s*#/);
+ 				$has_statement = 1;
+ 				$count++;
+ 				$has_break = 1 if ($fline =~ /\bswitch\b|\b(?:break\s*;[\s$;]*$|exit\s*\(\b|return\b|goto\b|continue\b)/);
+-- 
+2.16.6
 
-DW APB GPIO can be synthesized with two configs:
-1) Combined IRQ line (GPIO_INTR_IO == True),
-2) Multiple interrupt signals for each GPIO (GPIO_INTR_IO == False).
-
-Obviously the former case is trivial:
-
-     IRQ_combined
-    ______^________
-   /_ _ _ _ _ ___ _\
-   |_|_|_|_|_|...|_| - GPIOs
-
-In that case
-gc->irq.num_parents = 1;
-gc->irq.parents[0] = IRQ_combined;
-*gc->irq.valid_mask = GENMASK(ngpio - 1, 0); // This is done by the GPIOlib core itself.
-
-The later one (when multiple interrupt signals are involved) can be a bit more
-complicated. It can be also split up into two cases:
-2a) One-on-one GPIO-IRQ mapping.
-2b) Sparse GPIO-IRQ mapping.
-
-It's straightforward to implement 2a):
-
-   i1i2i3i4i5 ... iN
-    _ _ _ _ _ ___ _
-   |_|_|_|_|_|...|_| - GPIOs
-
-In that case
-gc->irq.num_parents = ngpio;
-gc->irq.parents[] = {i1, i2, i3, i4, i5, ... iN};
-gc->irq.map = {i1, i2, i3, i4, i5, ... iN};
-*gc->irq.valid_mask = GENMASK(ngpio - 1, 0);
-
-The complication starts when we get to implementing 2b):
-
-   i1 xi3i4 x ... iN
-    _ _ _ _ _ ___ _
-   |_|_|_|_|_|...|_| - GPIOs
-
-In order to cover this case we need to answer on two question.
-Firstly how to get such platform config? I am not sure about ACPI, but
-aside from straightforward platform_data-based setup such configuration
-can be reached by setting up the "interrupts-extended" DT-property with
-zeroed phandle.
-
-Ok, since it's possible to meet such platform config, we need to think
-how to handle it and here is the second question. How to describe such
-case in the framework of GPIOlib-IRQchip?
-
-So from my side it was wrong to set the sparse IRQs array to
-gc->irq.parents. Instead I should have scanned the sparse IRQs array,
-calculated the number of non-empty parental IRQs, created an array of linear
-(non-sparse) IRQs, initialized *gc->irq.valid_mask in accordance with the
-sparse parental IRQs array. In other words it was wrong to assume, that
-each gc->irq.parents entry corresponds to the IRQ/GPIO line. The gc->irq.parents
-array just describes the parental IRQs and nothing else.
-
-Shortly speaking here is how the GPIOlib IRQchip parameters should be
-initialized in this case:
-gc->irq.num_parents - number of valid parental IRQs.
-gc->irq.parents - non-sparse, linear array of valid IRQs.
-*gc->irq.valid_mask - mask initialized by means of the gc->irq.init_valid_mask()
-callback, which indicates valid IRQ/GPIO IDs.
-*gc->irq.map - sparse array of parental IRQ numbers (which I mistakenly tried to
-pass through the gc->irq.parents pointer).
-
-After that GPIOlib IRQchip should work just fine without need to be patched 
-in order to check whether the passed parental IRQs are valid or not.
-
-Please correct me if I am wrong in some aspects of the solution described above.
-I'll send a fix of the problem shortly.
-
--Sergey
-
-> 
-> Yours,
-> Linus Walleij
