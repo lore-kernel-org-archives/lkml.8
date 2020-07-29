@@ -2,123 +2,208 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B505C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9294C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7FFB2250E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A771F2250E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:35:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fnaj/oNA"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Sp0yevnk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgG2JfD (ORCPT
+        id S1728160AbgG2JfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:35:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgG2JfC (ORCPT
+        Wed, 29 Jul 2020 05:35:10 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:8150 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgG2JfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:35:02 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6519C061794;
-        Wed, 29 Jul 2020 02:35:02 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id u10so2065843plr.7;
-        Wed, 29 Jul 2020 02:35:02 -0700 (PDT)
+        Wed, 29 Jul 2020 05:35:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/VC/uuXlxbfidiPavUNDWLqmh29pPpdY7lZrRMtmTSc=;
-        b=Fnaj/oNACCtyQMFYLfrPnYYFEhKCzFNvxIB+REhxwQtfO6HNXrjwHVqcjBE4C5qOY5
-         D4cojmVmzOBAOffao2GprTw330iIZXLBP0QE0bB/ncaXGv2wO6V7Q+ZVUjOXbujTnOyH
-         bvSff2vbnQ6/eZZrlrHwohIPCjfsx2U0M+OhMN6A028p9rbp3YGpDGJcKBwCg12tAvvh
-         z/JlB4L9gJpvs+Ok4X3m7tVKWKbNWmFiPXCsXxZjCrTFoiRXOo4T2RnDPZP0CbWIp9pg
-         orntmTtxxaRQde7TOqshbXt6yleDAxbpthaaEZPTcY5bsuqPzbumF7gaZbrKfAm41Fqb
-         tdgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/VC/uuXlxbfidiPavUNDWLqmh29pPpdY7lZrRMtmTSc=;
-        b=ZB/Ns2VxY7rDFIa1kGuCxglL1m1bwPHSokAThMmeDJWdYuZ/qgvPU0DAnfVct/Hi7u
-         9rE7koYkTBhgxePEHKSr/KKSt+H45OTocar2bAfMVLSk5h6UHsy+/h+2ON3HcRqRZdk5
-         DYdIPPEjpMgmmscqji9l5cSshfBWD2mpsltwJbkso9E3m1D6ePeVdIf8uvYz6xsjzrn/
-         CP4LtUyrlA70/aHYdZLIH/Xge9ffQ4QahZ3fbeuIBFibHYi0JGti06DiXWRwsvq40hUw
-         X7L12iENuaE+lVpugSM5wEv2ZvfEzw6gDav8QmdY24xa7zL4mkNo9x3ORSsUbdrtf0e3
-         ggAQ==
-X-Gm-Message-State: AOAM533/Y4s+rHi+CKlGnoblaUxV2m7UgktWd+MzoYXwbEXbZwgj5wcx
-        H/GgbrFwpuRRnlK2ycNUyD4=
-X-Google-Smtp-Source: ABdhPJzEexquEKUe9twCBLq1d8kcS0mozlBLo29gmEHYFZHa4AzIjwOg61M04XVBKrqC6uNu+MhaBA==
-X-Received: by 2002:a17:90a:1b42:: with SMTP id q60mr8823265pjq.78.1596015302196;
-        Wed, 29 Jul 2020 02:35:02 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id b21sm1677814pfp.172.2020.07.29.02.34.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 02:35:01 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Taiping Lai <taiping.lai@unisoc.com>
-Subject: [PATCH] gpio: sprd: Clear interrupt when setting the type as edge
-Date:   Wed, 29 Jul 2020 17:34:50 +0800
-Message-Id: <20200729093450.28585-1-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1596015309; x=1627551309;
+  h=to:cc:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding:subject;
+  bh=CPmDRa3vuqU1bbMybyLZQXed2NrY1QiIjCcEH2vVDEM=;
+  b=Sp0yevnku/n+yQedw3Xt7zNCXi+x1jJqczQy5zal1aPJfJszI7j5u/wv
+   hP5/Wd0onpiunVHSA/1y4upZfwpqzREZiSUVvL6y06kh3LHSWLYQqJ9TV
+   vDnU9+7PQDvcTO0Tu9qWYI33ijTdk7UC2JLfaA66ja43tgCBEFurd7PXh
+   E=;
+IronPort-SDR: w2DBh91tML0IAP7do9j+bfo0znMxsdkk2qzBipPBtq7ve6zc2+h2HCUWOv6iF0xyqoe3P2heAy
+ 6Nem7+gPmiXw==
+X-IronPort-AV: E=Sophos;i="5.75,409,1589241600"; 
+   d="scan'208";a="44781944"
+Subject: Re: [PATCH] KVM: x86: Deflect unknown MSR accesses to user space
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-821c648d.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 29 Jul 2020 09:35:08 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-821c648d.us-east-1.amazon.com (Postfix) with ESMTPS id 5C5FFA22AD;
+        Wed, 29 Jul 2020 09:35:04 +0000 (UTC)
+Received: from EX13D20UWC002.ant.amazon.com (10.43.162.163) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 29 Jul 2020 09:35:03 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.161.203) by
+ EX13D20UWC002.ant.amazon.com (10.43.162.163) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 29 Jul 2020 09:35:00 +0000
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+CC:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Aaron Lewis <aaronlewis@google.com>
+References: <20200728004446.932-1-graf@amazon.com>
+ <87d04gm4ws.fsf@vitty.brq.redhat.com>
+ <a1f30fc8-09f5-fe2f-39e2-136b881ed15a@amazon.com>
+ <CALMp9eQ3OxhQZYiHPiebX=KyvjWQgxQEO-owjSoxgPKsOMRvjw@mail.gmail.com>
+ <87y2n2log7.fsf@vitty.brq.redhat.com>
+ <173948e8-4c7a-6dc4-de17-99151bc56d91@amazon.com>
+ <87pn8ellp6.fsf@vitty.brq.redhat.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <983a46c5-c5e2-ce12-f1e9-19ed0040f5dc@amazon.com>
+Date:   Wed, 29 Jul 2020 11:34:58 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <87pn8ellp6.fsf@vitty.brq.redhat.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.203]
+X-ClientProxiedBy: EX13D38UWC003.ant.amazon.com (10.43.162.23) To
+ EX13D20UWC002.ant.amazon.com (10.43.162.163)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taiping Lai <taiping.lai@unisoc.com>
 
-The raw interrupt status of GPIO maybe set before the interrupt is enabled,
-which would trigger the interrupt event once enabled it from user side.
-This is the case for edge interrupts only. Adding a clear operation when
-setting interrupt type can avoid that.
 
-Fixes: 9a3821c2bb47 ("gpio: Add GPIO driver for Spreadtrum SC9860 platform")
-Signed-off-by: Taiping Lai <taiping.lai@unisoc.com>
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
- drivers/gpio/gpio-sprd.c | 3 +++
- 1 file changed, 3 insertions(+)
+On 29.07.20 11:22, Vitaly Kuznetsov wrote:
+> CAUTION: This email originated from outside of the organization. Do not c=
+lick links or open attachments unless you can confirm the sender and know t=
+he content is safe.
+> =
 
-diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
-index d7314d39ab65..36ea8a3bd451 100644
---- a/drivers/gpio/gpio-sprd.c
-+++ b/drivers/gpio/gpio-sprd.c
-@@ -149,17 +149,20 @@ static int sprd_gpio_irq_set_type(struct irq_data *data,
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 1);
-+		sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
- 		irq_set_handler_locked(data, handle_edge_irq);
- 		break;
- 	case IRQ_TYPE_EDGE_FALLING:
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 0);
-+		sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
- 		irq_set_handler_locked(data, handle_edge_irq);
- 		break;
- 	case IRQ_TYPE_EDGE_BOTH:
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
- 		sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 1);
-+		sprd_gpio_update(chip, offset, SPRD_GPIO_IC, 1);
- 		irq_set_handler_locked(data, handle_edge_irq);
- 		break;
- 	case IRQ_TYPE_LEVEL_HIGH:
--- 
-2.20.1
+> =
+
+> =
+
+> Alexander Graf <graf@amazon.com> writes:
+> =
+
+>> On 29.07.20 10:23, Vitaly Kuznetsov wrote:
+>>>
+>>>
+>>>
+>>> Jim Mattson <jmattson@google.com> writes:
+>>>
+>>>> On Tue, Jul 28, 2020 at 5:41 AM Alexander Graf <graf@amazon.com> wrote:
+>>>>>
+>>>
+>>> ...
+>>>
+>>>>> While it does feel a bit overengineered, it would solve the problem t=
+hat
+>>>>> we're turning in-KVM handled MSRs into an ABI.
+>>>>
+>>>> It seems unlikely that userspace is going to know what to do with a
+>>>> large number of MSRs. I suspect that a small enumerated list will
+>>>> suffice.
+>>>
+>>> The list can also be 'wildcarded', i.e.
+>>> {
+>>>    u32 index;
+>>>    u32 mask;
+>>>    ...
+>>> }
+>>>
+>>> to make it really short.
+>>
+>> I like the idea of wildcards, but I can't quite wrap my head around how
+>> we would implement ignore_msrs in user space with them?
+>>
+> =
+
+> For that I think we can still deflect all unknown MSR accesses to
+> userspace (when the CAP is enabled of course ) but MSRs which are on the
+> list will *have to be deflected*, i.e. KVM can't handle them internally
+> without consulting with userspace.
+> =
+
+> We can make it tunable through a parameter for CAP enablement if needed.
+
+That would still make the set of MSRs implemented in KVM a de-facto ABI, no?
+
+Another thing that might be worth bringing up here is that we have an =
+
+in-house mechanism to set up a allowlist for KVM handling MSR accesses. =
+
+What if we combine the two?
+
+int kvm_rdmsr(...)
+{
+     switch (msr) {
+     [...]
+     default:
+         return -ENOENT;
+     }
+}
+
+int rdmsr(...) {
+     if (!has_allowlist || msr_read_is_allowed(msr))
+         return kvm_rdmsr();
+
+     return -ENOENT;
+}
+
+int handle_rdmsr(...)
+{
+     switch (rdmsr(msr)) {
+     case 0:
+         return 1;
+     case 1:
+         inject_gp();
+         return 1;
+     case -ENOENT:
+         if (cap_msr_exit) {
+             run->exit_reason =3D MSR;
+             return 0;
+         } else {
+             inject_gp();
+             return 1;
+         }
+     }
+}
+
+That way user space can either say "I don't care what you implement, =
+
+just tell me all the MSRs you could not handle" or it says "I want you =
+
+to handle this exact subset of MSRs, tell me any time there's an out of =
+
+bounds access".
+
+That would give us the best of both worlds, right?
+
+
+Alex
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
 
