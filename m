@@ -2,104 +2,131 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C07C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 227CA2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D0AC2075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:50:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cMUotIed"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fJIzZ43g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgG2IuF (ORCPT
+        id S1727112AbgG2Iuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:50:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgG2IuF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:50:05 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DC78C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:50:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6doAh1qguYtZHcO6gHIS2SyAHj8bF03MyqeLpi3tHN0=; b=cMUotIedINHNHLeg6fxFHwiKm7
-        tzsUup7U4Wi1Je0WNlnlCFmzkGVqRk5kuZjc+YvTMPmhaq4HpnR7iRus2OhNtvt2PeamjLVWFifVH
-        TLGEUwqcwcKTWvNsoHjAU9ZMePEj50IgAx9fx3kfPKMqx4T01Ps0+X5iDbjLe6YhQq+fRUfXnSTv5
-        i8F0WrRNlb8hFg+Pn3Bql0V2v5c2ohZgdGx6DWlAK5VcxDZdZ1xYBauXcijc48gAO2ByE/CiZ/V00
-        RDoPhcvk8Zc/BiJbj2mdAiBdkySQLbceXO/A6jFlqINaHDc+gpcyFjuWPYc8aOyQjS42ZARSEaRJ/
-        om2ejxGQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0hmW-0002KJ-ME; Wed, 29 Jul 2020 08:49:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5C736304B6D;
-        Wed, 29 Jul 2020 10:49:47 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 466D52BD93BFD; Wed, 29 Jul 2020 10:49:47 +0200 (CEST)
-Date:   Wed, 29 Jul 2020 10:49:47 +0200
-From:   peterz@infradead.org
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     "Thomas Gleixner" <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@alien8.de>, "Ingo Molnar" <mingo@redhat.com>,
-        "Tony Luck" <tony.luck@intel.com>, "H Peter Anvin" <hpa@zytor.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        "Ravi V Shankar" <ravi.v.shankar@intel.com>,
-        "Xiaoyao Li " <xiaoyao.li@intel.com>, "x86" <x86@kernel.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] x86/bus_lock: Enable bus lock detection
-Message-ID: <20200729084947.GY119549@hirez.programming.kicks-ass.net>
-References: <1595021700-68460-1-git-send-email-fenghua.yu@intel.com>
+        Wed, 29 Jul 2020 04:50:40 -0400
+Received: from mail-eopbgr30060.outbound.protection.outlook.com ([40.107.3.60]:46250
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726299AbgG2Iui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 04:50:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IpXZlEvscJW35Tt2E0OwUM7h1p1JImpYaQJmSqC9lMunbpZVYRDeeK9oFS5koTitQ+xpL4bq+EWKDc0qxya2SUeeshj8Shiu/uRyKcANqxi03rqJ6hbVXXaELUBcImdtg87r7qfCNpaFvPr3OlF4MW6IJmAHYCMTQwZZjorDz4amvcZQyFMULqELa6g3YjAmqI5S/ouPaLziNhyJgPv1Z25E4kTc/GFJVtMLIp+fIN+3G93kF8OPI9wsNNRXOd37ZpM5gVD97olWocFzdY+yNemUnOvEyL4dI8kMk9VVRAQyfCDucne99QpJAcdaCMAOCkcsoDRN//0nzOzZPKg9KA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FhFejhIxGdZhK17F0ZpEnL62leryHPLWPc7ocY5vRFo=;
+ b=I3QTvqj9kmQZgWNM+a9gVPqYKgNdT+mjB3PtYRiTNYqbdoZd9fItJ3XTWb0ETsdO19ViPuieN73IAlBx6k0N3BeFEVCshs+6mwpE39oz0jiZdp1YOdInzTaKe3TMB3+k8KlYhaCDY1y9I4oVoqt7IC/wai0O6atd3okxngAieAS5tiFbx5afbrsFU3D2hl3fcsDzBLc302zznvZ/0jz4xI5VtOTLr+0bH1tNFJFhSnUt3OrAT0veUcFYds/HaJ7jihkpwdVHAAJrnhvRSGaXsJ52mxcBmpy1DmPzAnw4pzGrbS7mPfXny5c1L3A4OFbUmvkUT80ExWWrW23wdvAlUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FhFejhIxGdZhK17F0ZpEnL62leryHPLWPc7ocY5vRFo=;
+ b=fJIzZ43gV3WEFuLAdwR5Gr65IX261EFDokBZINM6ljnWCEKRbY3bqVWY4kdZfFoENJ3ovjSnrc4/1A5RhhXlf/GPcdMnHm1Ncb6QyEEyfHNSIDUsy8uTJZXa9lMScmTG1xR4/MRyYR5u7aSzegcZyVvAzEFsPvGmAwhDkT/6rFU=
+Received: from VI1PR04MB4062.eurprd04.prod.outlook.com (2603:10a6:803:40::32)
+ by VI1PR0401MB2672.eurprd04.prod.outlook.com (2603:10a6:800:58::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.26; Wed, 29 Jul
+ 2020 08:50:35 +0000
+Received: from VI1PR04MB4062.eurprd04.prod.outlook.com
+ ([fe80::cb8:55e6:977d:605a]) by VI1PR04MB4062.eurprd04.prod.outlook.com
+ ([fe80::cb8:55e6:977d:605a%7]) with mapi id 15.20.3239.017; Wed, 29 Jul 2020
+ 08:50:35 +0000
+From:   Alison Wang <alison.wang@nxp.com>
+To:     Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "paulmck@kernel.org" <paulmck@kernel.org>,
+        "mw@semihalf.com" <mw@semihalf.com>, Leo Li <leoyang.li@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>
+Subject: RE: [EXT] Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task
+ level IRQ time accounting
+Thread-Topic: [EXT] Re: [RFC PATCH] arm64: defconfig: Disable fine-grained
+ task level IRQ time accounting
+Thread-Index: AQHWZVrWlVBnE4g2BE+iW33DuXlKV6kePR2AgAABcIA=
+Date:   Wed, 29 Jul 2020 08:50:34 +0000
+Message-ID: <VI1PR04MB406286E9BF44AAE1339D2174F4700@VI1PR04MB4062.eurprd04.prod.outlook.com>
+References: <20200729033934.22349-1-alison.wang@nxp.com> <877dumbtoi.fsf@kurt>
+In-Reply-To: <877dumbtoi.fsf@kurt>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linutronix.de; dkim=none (message not signed)
+ header.d=none;linutronix.de; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ea59d1ee-6240-4d60-0f4d-08d8339c7571
+x-ms-traffictypediagnostic: VI1PR0401MB2672:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0401MB267262385C24123F7B949302F4700@VI1PR0401MB2672.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: XUI+HXm5m1d36poPiXGykXMFF44X6IBhknKcDH89dD80gg/3kVYjAB1pnizUEPww1J85TxbXgLTa+npe+4VHsjD30ka9357C5AGo/EdfRydePYuwR/DTVbWr962ZjevVbayRP1DEs/vHdFgMTi5PeR31tfkB59gRIhnuE43mtLfJ5c3C+Q34L9lmahWCYN7wXxVsgTF+Bxud7tCmmiAa0knvQeTdeD1lvays5IczaFnfDpnYdUMBeU1+PPiPCV/Oko/IwnEEDUO/iBOvEDVzOBRomN3vgakZHi95qNmI0di+X+BrjJk16XhIWKdA06ZT/SOlHCfIcUc7WX/1R4LfeA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4062.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(346002)(366004)(39860400002)(376002)(5660300002)(478600001)(26005)(8676002)(66476007)(66446008)(66556008)(86362001)(4326008)(66946007)(64756008)(186003)(76116006)(52536014)(7696005)(4744005)(33656002)(6506007)(110136005)(2906002)(44832011)(71200400001)(83380400001)(8936002)(9686003)(55016002)(316002)(54906003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: dQcdqwFFWIxqeZvEKfoALoawctKppvMjC95U6Lh0tSH68HgqRydFTrrIMwqQoQ6F1toDT7ZmLVmm/L48eXqUJxCwlSw19OQUD/WoAQmriA2EdD1GdVKITgbUNva5sFIlxPdMtUfaZYcVyFw3rRQfSndPbqnUn6TqBsl+nTsmCkK6asG80+nc9Y5+EeGfXVhvmin3gwBlrc32wIDuFs7LuuZleMM7MYmHLBxdW9ajvvhvFVz8YfJEnwEI1Mrrgs3Z5o1ruY6jKM9GXQRR3q6fd7dlxLiSY30BgP5KQYed9hHHPDMYrAB1ELVDlobJ/QqLHZbqeDSb5GKxfPkf1zUuTsrEYM+zX/cC+XpGTuKpO2mdU5cl0KqV2J9+kVU6Ua/iNZc01I7iU++o3eAzzrKlAuqynjuFPn+JYu1KBYctSamSSZya5qNoS6SP8T/FVS8v/8SCPSQx+apu9k7fWEmCP3Ei3E7I/aRYV10+C0YXn2I=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595021700-68460-1-git-send-email-fenghua.yu@intel.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4062.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea59d1ee-6240-4d60-0f4d-08d8339c7571
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2020 08:50:35.0434
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ip0hWZqbxQLvRboTnOoBx8Y6qqfYdvfyBPz1SOw6PqZYeOR5LV7vMvD/JmDLUHnCbksBLyYldsBYXIeiyD/U3w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2672
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 02:35:00PM -0700, Fenghua Yu wrote:
+Hi, Kurt,
 
-> #DB for bus lock detect fixes all issues in #AC for split lock detect:
-> 1) It's architectural ... just need to look at one CPUID bit to know it
->    exists
-> 2) The IA32_DEBUGCTL MSR, which reports bus lock in #DB, is per-thread.
->    So each process or guest can have different behavior.
+> On Wed Jul 29 2020, Alison Wang wrote:
+> > In the current arm64 defconfig, CONFIG_IRQ_TIME_ACCOUNTING is enabled
+> > as default. According to my tests on NXP's LayerScape and i.MX
+> > platforms, the system hangs when running the command "stress-ng
+> > --hrtimers 1" with CONFIG_IRQ_TIME_ACCOUNTING enabled. Disabling this
+> > option, the issue disappears. CONFIG_IRQ_TIME_ACCOUNTING causes
+> > serious performance impact when running hrtimer stress test at the same
+> time.
+>=20
+> I think instead of disabling the option for all arm64 devices, it might b=
+e better
+> to analyze the root-cause why the hrtimer test hangs when this option is
+> enabled.
+>=20
+> +Cc hrtimer maintainers: Thomas and Anna-Maria
+>=20
+[Alison] Yes, I agree. I hope others can give me some clues for the root ca=
+use.
 
-And it generates a whole new problem due to #DB being an IST, and
 
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index b038695f36c5..58725567da39 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -812,6 +812,16 @@ static void handle_debug(struct pt_regs *regs, unsigned long dr6, bool user)
->  	if (!user && !dr6)
->  		return;
->  
-> +	/* Handle bus lock. */
-> +	if (!(dr6 & DR_BUS_LOCK)) {
-> +		cond_local_irq_enable(regs);
-> +		if (user)
-> +			handle_user_bus_lock(regs);
-> +		else
-> +			handle_kernel_bus_lock(regs);
-> +		goto out;
-> +	}
-> +
->  	/*
->  	 * If dr6 has no reason to give us about the origin of this trap,
->  	 * then it's very likely the result of an icebp/int01 trap.
-
-we very much rely on #DB never recursing, which we carefully crafted by
-disallowing hardare breakpoints on noinstr code and clearing DR7 early.
-
-But now it can... please keep the pieces.
+Best Regards,
+Alison Wang
