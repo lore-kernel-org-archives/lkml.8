@@ -2,116 +2,175 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E16EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78B40206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:05:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EdIn9HGC"
+	by mail.kernel.org (Postfix) with ESMTP id C97EC20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgG2GFx (ORCPT
+        id S1726888AbgG2GId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 02:05:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbgG2GFw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 02:05:52 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D24AC061794;
-        Tue, 28 Jul 2020 23:05:50 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id a26so7900844otf.1;
-        Tue, 28 Jul 2020 23:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=155Y2WSS72tG/ncO6CfTu7AAxycSUP0sDEk7oKysRWQ=;
-        b=EdIn9HGCHAadTqAOhR6DmfzgEOgv5+th+OM5D23I2fdbWeeE3Ek+QJHXB3tKAH1Plv
-         6nFYEplWL/aI2Pnkunfo0Wlbl62Kd8jrz8lkNkiSuNhn4tJ/PxhjOBEwr0Ce3wngroL2
-         tcSIxdUENeHrG5yLF52wYe3z3ZRX+hYhavCxEFC2dmGJn5BRlk/6Sik9C1/M1PfFqa6o
-         I9/lChHR4mmMis6vkEhR0pLDOyF+OKFLU/8icd2CSxAEMAaFwJ1wnA3pyUCHxkpq6r+T
-         0vb6hVJAYNLwDuoTGHVGn5tuV8qhRHV9KZlpOqScHmlX2xz3DRigMW27VMXuqIbcs8cs
-         NHGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=155Y2WSS72tG/ncO6CfTu7AAxycSUP0sDEk7oKysRWQ=;
-        b=drM5dAJ2eD1Yd7vlzSjoTcz7ON3ttPUOlRkMHHRJgEwq2IwxQizr5yewQgEMV24wS6
-         M1AioaB887QrOQdD3sKToKypwJVFnSBhTNQlLgUl278WEMKBZfvlWMCcNbC6ontJdUtO
-         f9l0F71yQXRvmzZWJp8I44eyuOlETqpQAfNTwvzQprEU/moS5YQvg+KJbdsej/6OHNFw
-         GSX9B28rUOUvlxOlrz/1X6huTL5t/9yK8ho++lb4caWvl38wijzBRbPQoYocgfnEsjTu
-         zxLwj2EKIWTs/FcoG4n97EW0D/gZByuWl2nJgoS/3aE4Y6HVozLpeKXOE/9sWtCezSrg
-         stcw==
-X-Gm-Message-State: AOAM533IO2Hw22Uqkg+D9oDb9/SPWL7+Mgdq7j0Sv5F6iBAKeMhWGBTk
-        aV8UeBB9SSbwHVfJDXJyIWySH/VJP91INQr8LnoCjnBqGVxY0Q==
-X-Google-Smtp-Source: ABdhPJwKvUWGvj+0PNmbhodUFbqPrt41n++j0abnttMdz1LMf2a7SvXkzEwmhcFFMZ1mfLu8i9eImZPLd0tybgkEbHc=
-X-Received: by 2002:a05:6830:4c8:: with SMTP id s8mr26585768otd.368.1596002749683;
- Tue, 28 Jul 2020 23:05:49 -0700 (PDT)
+        Wed, 29 Jul 2020 02:08:33 -0400
+Received: from verein.lst.de ([213.95.11.211]:51057 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726286AbgG2GId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 02:08:33 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 6B3EE68B05; Wed, 29 Jul 2020 08:08:30 +0200 (CEST)
+Date:   Wed, 29 Jul 2020 08:08:30 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     x86@kernel.org, Jan Kara <jack@suse.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: [PATCH 2/4 v2] compat: lift compat_s64 and compat_u64 to
+ <linux/compat.h>
+Message-ID: <20200729060830.GA31624@lst.de>
+References: <20200726160401.311569-1-hch@lst.de> <20200726160401.311569-3-hch@lst.de>
 MIME-Version: 1.0
-References: <20200728182610.2538-1-dhiraj.sharma0024@gmail.com>
- <CAPRy4h2Kzqj449PYPjPFmd7neKLR4TTZY8wq51AWqDrTFEFGJA@mail.gmail.com> <20200729054637.GA437093@kroah.com>
-In-Reply-To: <20200729054637.GA437093@kroah.com>
-From:   Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
-Date:   Wed, 29 Jul 2020 11:35:36 +0530
-Message-ID: <CAPRy4h0KcCXJsg3kHurzvDKpL6mkkUAFCxFBsBaex36fOp7Low@mail.gmail.com>
-Subject: Re: [PATCH] staging: qlge: qlge_dbg: removed comment repition
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     manishc@marvell.com, devel@driverdev.osuosl.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726160401.311569-3-hch@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> A: http://en.wikipedia.org/wiki/Top_post
-> Q: Were do I find info about this thing called top-posting?
-> A: Because it messes up the order in which people normally read text.
-> Q: Why is top-posting such a bad thing?
-> A: Top-posting.
-> Q: What is the most annoying thing in e-mail?
->
-> A: No.
-> Q: Should I include quotations after my reply?
->
-> http://daringfireball.net/2007/07/on_top
->
+lift the compat_s64 and compat_u64 definitions into common code using the
+COMPAT_FOR_U64_ALIGNMENT symbol for the x86 special case.
 
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
 
-I will avoid such things and will do useful stuff.
+Changes since v1: fix a typo
 
->
-> It has been less than 24 hours for a simple comment cleanup patch.
-> Please give maintainers time, they deal with thousands of patches a
-> week.
->
-> Usually, if after 2 weeks, you have not gotten a response, you can
-> resend it.
->
-> >  I know that I should ask for reviews etc after a week but the change
-> > is for my eudyptula task and until it doesn't get merged little
-> > penguin will not pass the task for me so please look at it.
->
-> If you knew that you should wait for at least a week, and yet you did
-> not, that implies that you somehow feel this comment cleanup patch is
-> more important than everyone else, which is a bit rude, don't you think?
->
-> There are no such things as deadlines when it comes to upstream kernel
-> development, sorry.
->
+ arch/arm64/include/asm/compat.h   | 2 --
+ arch/mips/include/asm/compat.h    | 2 --
+ arch/parisc/include/asm/compat.h  | 2 --
+ arch/powerpc/include/asm/compat.h | 2 --
+ arch/s390/include/asm/compat.h    | 2 --
+ arch/sparc/include/asm/compat.h   | 3 +--
+ arch/x86/include/asm/compat.h     | 2 --
+ include/linux/compat.h            | 8 ++++++++
+ 8 files changed, 9 insertions(+), 14 deletions(-)
 
-Alright, I will wait and hope it gets accepted before 1st August or
-else I have patience.
+diff --git a/arch/arm64/include/asm/compat.h b/arch/arm64/include/asm/compat.h
+index 935d2aa231bf06..23a9fb73c04ff8 100644
+--- a/arch/arm64/include/asm/compat.h
++++ b/arch/arm64/include/asm/compat.h
+@@ -35,8 +35,6 @@ typedef s32		compat_nlink_t;
+ typedef u16		compat_ipc_pid_t;
+ typedef u32		compat_caddr_t;
+ typedef __kernel_fsid_t	compat_fsid_t;
+-typedef s64		compat_s64;
+-typedef u64		compat_u64;
+ 
+ struct compat_stat {
+ #ifdef __AARCH64EB__
+diff --git a/arch/mips/include/asm/compat.h b/arch/mips/include/asm/compat.h
+index 255afcdd79c94b..65975712a22dcf 100644
+--- a/arch/mips/include/asm/compat.h
++++ b/arch/mips/include/asm/compat.h
+@@ -26,8 +26,6 @@ typedef s32		compat_caddr_t;
+ typedef struct {
+ 	s32	val[2];
+ } compat_fsid_t;
+-typedef s64		compat_s64;
+-typedef u64		compat_u64;
+ 
+ struct compat_stat {
+ 	compat_dev_t	st_dev;
+diff --git a/arch/parisc/include/asm/compat.h b/arch/parisc/include/asm/compat.h
+index 2f4f66a3bac079..8f33085ff1bd88 100644
+--- a/arch/parisc/include/asm/compat.h
++++ b/arch/parisc/include/asm/compat.h
+@@ -22,8 +22,6 @@ typedef u32	compat_dev_t;
+ typedef u16	compat_nlink_t;
+ typedef u16	compat_ipc_pid_t;
+ typedef u32	compat_caddr_t;
+-typedef s64	compat_s64;
+-typedef u64	compat_u64;
+ 
+ struct compat_stat {
+ 	compat_dev_t		st_dev;	/* dev_t is 32 bits on parisc */
+diff --git a/arch/powerpc/include/asm/compat.h b/arch/powerpc/include/asm/compat.h
+index 3e3cdfaa76c6a5..9191fc29e6ed11 100644
+--- a/arch/powerpc/include/asm/compat.h
++++ b/arch/powerpc/include/asm/compat.h
+@@ -27,8 +27,6 @@ typedef s16		compat_nlink_t;
+ typedef u16		compat_ipc_pid_t;
+ typedef u32		compat_caddr_t;
+ typedef __kernel_fsid_t	compat_fsid_t;
+-typedef s64		compat_s64;
+-typedef u64		compat_u64;
+ 
+ struct compat_stat {
+ 	compat_dev_t	st_dev;
+diff --git a/arch/s390/include/asm/compat.h b/arch/s390/include/asm/compat.h
+index 9547cd5d6cdc21..ea5b9c34b7be5b 100644
+--- a/arch/s390/include/asm/compat.h
++++ b/arch/s390/include/asm/compat.h
+@@ -63,8 +63,6 @@ typedef u16		compat_nlink_t;
+ typedef u16		compat_ipc_pid_t;
+ typedef u32		compat_caddr_t;
+ typedef __kernel_fsid_t	compat_fsid_t;
+-typedef s64		compat_s64;
+-typedef u64		compat_u64;
+ 
+ typedef struct {
+ 	u32 mask;
+diff --git a/arch/sparc/include/asm/compat.h b/arch/sparc/include/asm/compat.h
+index 40a267b3bd5208..b85842cda99fe0 100644
+--- a/arch/sparc/include/asm/compat.h
++++ b/arch/sparc/include/asm/compat.h
+@@ -21,8 +21,7 @@ typedef s16		compat_nlink_t;
+ typedef u16		compat_ipc_pid_t;
+ typedef u32		compat_caddr_t;
+ typedef __kernel_fsid_t	compat_fsid_t;
+-typedef s64		compat_s64;
+-typedef u64		compat_u64;
++
+ struct compat_stat {
+ 	compat_dev_t	st_dev;
+ 	compat_ino_t	st_ino;
+diff --git a/arch/x86/include/asm/compat.h b/arch/x86/include/asm/compat.h
+index d4edf281fff49d..bf547701f41f87 100644
+--- a/arch/x86/include/asm/compat.h
++++ b/arch/x86/include/asm/compat.h
+@@ -27,8 +27,6 @@ typedef u16		compat_nlink_t;
+ typedef u16		compat_ipc_pid_t;
+ typedef u32		compat_caddr_t;
+ typedef __kernel_fsid_t	compat_fsid_t;
+-typedef s64 __attribute__((aligned(4))) compat_s64;
+-typedef u64 __attribute__((aligned(4))) compat_u64;
+ 
+ struct compat_stat {
+ 	compat_dev_t	st_dev;
+diff --git a/include/linux/compat.h b/include/linux/compat.h
+index e90100c0de72e4..ffb641f77bb7af 100644
+--- a/include/linux/compat.h
++++ b/include/linux/compat.h
+@@ -91,6 +91,14 @@
+ 	static inline long __do_compat_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+ #endif /* COMPAT_SYSCALL_DEFINEx */
+ 
++#ifdef CONFIG_COMPAT_FOR_U64_ALIGNMENT
++typedef s64 __attribute__((aligned(4))) compat_s64;
++typedef u64 __attribute__((aligned(4))) compat_u64;
++#else
++typedef s64 compat_s64;
++typedef u64 compat_u64;
++#endif
++
+ #ifdef CONFIG_COMPAT
+ 
+ #ifndef compat_user_stack_pointer
+-- 
+2.27.0
 
-
-Thank You
-Dhiraj Sharma
