@@ -2,160 +2,148 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04234C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4673DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1C5E20809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:45:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="m0I6KYnG"
+	by mail.kernel.org (Postfix) with ESMTP id 2733A20809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596041199;
+	bh=MNvYf6Zn28rLdP7ViMy29aZYD0eAurNF8FmA6PG23JU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T3hyt2kYHKh2/X/7sqAKveqEPhMYyypchOR9QBJNLm2Vyc3e4tbj1BwZBTnQLeNGE
+	 l5etwQBvxQjuBYSGfVeSuKTI0Xt/unMJYdONwkcM76bhMvJgJqX6KhGlnJs5VpZaYD
+	 AyncNQCoqOeoq24oyIYDykHfQcaIeKpirN6yeScQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgG2QpH (ORCPT
+        id S1726980AbgG2Qqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 12:45:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgG2QpH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 12:45:07 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345ACC061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 09:45:07 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id y206so2927147pfb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 09:45:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pensando.io; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=KCLCj+kEELlmTMD7QDHKj3NKkcBy7s9LRGvrZQnu9z0=;
-        b=m0I6KYnGkAugRlwNdVhYb85cQfxLGhVB4yBW8C5IuKuLvlzgXlfVNykRJuQmpTNzMV
-         PnQrEbRqx5Z30DzWit6Mk+xG3ePIbImu6d4qrvhYxrrxChiax19D/rk2LXVqJ66jrtTa
-         ENUWH4UlGJISFjXOlB8oPPn2giSSG/O0VWMgnQbmyemJ6f90jwnm3IbVpgEMVa6EKyBB
-         5pwTaZP7N1n8gVa4AQyS3jmoNCd5Dq5TKDnVslC/KVkRAT5P9fbdbXfMjc+CQt+x8Ss+
-         Wcq6NB8uwejW6a4jwptntspjsZTj9RWEm59F0fCabuhfQac7FivwBid/1rtaVWz8ZbqM
-         5OZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=KCLCj+kEELlmTMD7QDHKj3NKkcBy7s9LRGvrZQnu9z0=;
-        b=ovMh4L13zf72tBbJiKOp3YMmoQOXI2ngbPrxtNsGo9Nljf7Rqyskvz+niyZfT5sUf4
-         CbVcaLGZi46Acx0jkgTTh/wKTSGwcAxAMAaoE814YP94dgPaFm4yvyYjFBooUxlwK+PB
-         hzhxbSHT56hTmpQDJYO5YpCYqpyxT2X5p2RWR57YnkjXLFTd35sbnTPYRe7AuZ7HRtDc
-         NFLSiuto2cZyEM/bDpskGMOt3at1fXMbkfxw56ZGjWkbfc/mSeekQH/rszzgbmh+LuRo
-         /5e54Srs8YzuJSFBaRREV0eXL44/e1dWvqLGx5/WSN+r6RjkNYDSD0rx5mKLoYMTh/yb
-         OkUA==
-X-Gm-Message-State: AOAM532626vuUEIuomB0DpMvn2N0i+eJXpssccwVhzmd1UkHER9g7uTt
-        OLe3S4zK3u7xl13Z4Kqau8msIFA1B7E=
-X-Google-Smtp-Source: ABdhPJzvwoBEDd2xj1CQKMX7hxC5hIss2Y0UQ8ssG9xZaerGcM/dwWl3hzinDP/xg7FMZJKk/0W7vA==
-X-Received: by 2002:a65:6150:: with SMTP id o16mr29456425pgv.237.1596041106296;
-        Wed, 29 Jul 2020 09:45:06 -0700 (PDT)
-Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
-        by smtp.gmail.com with ESMTPSA id y7sm2830939pfq.69.2020.07.29.09.45.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 09:45:05 -0700 (PDT)
-Subject: Re: drivers/net/ethernet/pensando/ionic/ionic_lif.c:2004:3-9:
- preceding lock on line 1998 (fwd)
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
-References: <alpine.DEB.2.22.394.2007291836240.2459@hadrien>
-From:   Shannon Nelson <snelson@pensando.io>
-Message-ID: <cb1aa251-b3b4-1286-760e-58db5f63f422@pensando.io>
-Date:   Wed, 29 Jul 2020 09:45:04 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Wed, 29 Jul 2020 12:46:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58492 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726581AbgG2Qqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 12:46:37 -0400
+Received: from earth.universe (dyndsl-095-033-172-175.ewe-ip-backbone.de [95.33.172.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21C1D20809;
+        Wed, 29 Jul 2020 16:46:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596041197;
+        bh=MNvYf6Zn28rLdP7ViMy29aZYD0eAurNF8FmA6PG23JU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lis10wwiitfP0LyrSXjMssjlm6eWl7WazeT8122FO4ao/JhL0ZMoiwM99GAMwOaoS
+         14i5g80JxD+Z/QzF3SZvVFLQ0gAuZjy5TFNMbU2IWECN2Brdb2+VsKM4LVqfmfYy4F
+         7PRwKpxRMNQYTJvbzRT95aKo+cp44lZIPeLuY2XE=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 7F44F3C0B87; Wed, 29 Jul 2020 18:46:35 +0200 (CEST)
+Date:   Wed, 29 Jul 2020 18:46:35 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Cc:     pali@kernel.org, robh@kernel.org, afd@ti.com, dmurphy@ti.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sspatil@android.com
+Subject: Re: [PATCH v18 2/4] dt-bindings: power: Convert battery.txt to
+ battery.yaml
+Message-ID: <20200729164635.cnjbadpq22tigwlc@earth.universe>
+References: <20200728200814.26501-1-r-rivera-matos@ti.com>
+ <20200728200814.26501-3-r-rivera-matos@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.22.394.2007291836240.2459@hadrien>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pocjiyfjiv2tcf6l"
+Content-Disposition: inline
+In-Reply-To: <20200728200814.26501-3-r-rivera-matos@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/20 9:37 AM, Julia Lawall wrote:
-> Hello,
->
-> It looks like an unlock may be wanted on line 2004.
->
-> julia
 
-Thanks for catching that, Julia.  I'll follow up shortly.
+--pocjiyfjiv2tcf6l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-sln
+Hi Ricardo and Dan,
 
->
-> ---------- Forwarded message ----------
-> Date: Thu, 30 Jul 2020 00:08:47 +0800
-> From: kernel test robot <lkp@intel.com>
-> To: kbuild@lists.01.org
-> Cc: lkp@intel.com, Julia Lawall <julia.lawall@lip6.fr>
-> Subject: drivers/net/ethernet/pensando/ionic/ionic_lif.c:2004:3-9: preceding
->      lock on line 1998
->
-> CC: kbuild-all@lists.01.org
-> CC: linux-kernel@vger.kernel.org
-> TO: Shannon Nelson <snelson@pensando.io>
->
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   6ba1b005ffc388c2aeaddae20da29e4810dea298
-> commit: 0925e9db4dc86daf666d9a3d53c7db14ac6d5d00 ionic: use mutex to protect queue operations
-> date:   9 days ago
-> :::::: branch date: 21 hours ago
-> :::::: commit date: 9 days ago
-> config: powerpc-randconfig-c004-20200728 (attached as .config)
-> compiler: powerpc64-linux-gcc (GCC) 9.3.0
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Julia Lawall <julia.lawall@lip6.fr>
->
->
-> coccinelle warnings: (new ones prefixed by >>)
->
->>> drivers/net/ethernet/pensando/ionic/ionic_lif.c:2004:3-9: preceding lock on line 1998
-> # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0925e9db4dc86daf666d9a3d53c7db14ac6d5d00
-> git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> git remote update linus
-> git checkout 0925e9db4dc86daf666d9a3d53c7db14ac6d5d00
-> vim +2004 drivers/net/ethernet/pensando/ionic/ionic_lif.c
->
-> beead698b1736df Shannon Nelson 2019-09-03  1992
-> 086c18f2452d002 Shannon Nelson 2020-07-07  1993  int ionic_reset_queues(struct ionic_lif *lif, ionic_reset_cb cb, void *arg)
-> beead698b1736df Shannon Nelson 2019-09-03  1994  {
-> beead698b1736df Shannon Nelson 2019-09-03  1995  	bool running;
-> beead698b1736df Shannon Nelson 2019-09-03  1996  	int err = 0;
-> beead698b1736df Shannon Nelson 2019-09-03  1997
-> 0925e9db4dc86da Shannon Nelson 2020-07-20 @1998  	mutex_lock(&lif->queue_lock);
-> beead698b1736df Shannon Nelson 2019-09-03  1999  	running = netif_running(lif->netdev);
-> b59eabd23ee53e8 Shannon Nelson 2020-06-18  2000  	if (running) {
-> b59eabd23ee53e8 Shannon Nelson 2020-06-18  2001  		netif_device_detach(lif->netdev);
-> beead698b1736df Shannon Nelson 2019-09-03  2002  		err = ionic_stop(lif->netdev);
-> 086c18f2452d002 Shannon Nelson 2020-07-07  2003  		if (err)
-> 0925e9db4dc86da Shannon Nelson 2020-07-20 @2004  			return err;
-> b59eabd23ee53e8 Shannon Nelson 2020-06-18  2005  	}
-> 086c18f2452d002 Shannon Nelson 2020-07-07  2006
-> 086c18f2452d002 Shannon Nelson 2020-07-07  2007  	if (cb)
-> 086c18f2452d002 Shannon Nelson 2020-07-07  2008  		cb(lif, arg);
-> 086c18f2452d002 Shannon Nelson 2020-07-07  2009
-> 086c18f2452d002 Shannon Nelson 2020-07-07  2010  	if (running) {
-> 086c18f2452d002 Shannon Nelson 2020-07-07  2011  		err = ionic_open(lif->netdev);
-> b59eabd23ee53e8 Shannon Nelson 2020-06-18  2012  		netif_device_attach(lif->netdev);
-> b59eabd23ee53e8 Shannon Nelson 2020-06-18  2013  	}
-> 0925e9db4dc86da Shannon Nelson 2020-07-20  2014  	mutex_unlock(&lif->queue_lock);
-> beead698b1736df Shannon Nelson 2019-09-03  2015
-> beead698b1736df Shannon Nelson 2019-09-03  2016  	return err;
-> beead698b1736df Shannon Nelson 2019-09-03  2017  }
-> beead698b1736df Shannon Nelson 2019-09-03  2018
->
+On Tue, Jul 28, 2020 at 03:08:12PM -0500, Ricardo Rivera-Matos wrote:
+> From: Dan Murphy <dmurphy@ti.com>
+>=20
+> Convert the battery.txt file to yaml and fix up the examples.
+>=20
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
+I merged this doing some modifcations while applying, so that this
+is not postponed and risking conflicts due to added properties:
+
+
+> [...]
+> +patternProperties:
+> +  '^ocv-capacity-table-[0-100]$':
+> [...]
+
+[0-100] is a valid regex, but counterintuitively only allows 0 and
+1. For example it does not apply for ocv-capacity-table-2.
+
+I used [0-9]+ instead, which is being used by pinctrl.
+
+> +examples:
+> +  - |
+> +    power {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +
+> +      battery: battery {
+> +        compatible =3D "simple-battery";
+> +        over-voltage-threshold-microvolt =3D <4500000>;
+> +        re-charge-voltage-microvolt =3D <250000>;
+> +        voltage-min-design-microvolt =3D <3200000>;
+> +        voltage-max-design-microvolt =3D <4200000>;
+> +        energy-full-design-microwatt-hours =3D <5290000>;
+> +        charge-full-design-microamp-hours =3D <1430000>;
+> +        precharge-current-microamp =3D <256000>;
+> +        precharge-upper-limit-microvolt =3D <2500000>;
+> +        charge-term-current-microamp =3D <128000>;
+> +        constant-charge-current-max-microamp =3D <900000>;
+> +        constant-charge-voltage-max-microvolt =3D <4200000>;
+> +        factory-internal-resistance-micro-ohms =3D <250000>;
+> +        ocv-capacity-celsius =3D <(-10) 10>;
+
+You state, that there is a table for -10 degrees and one for 10
+degrees...
+
+> +        ocv-capacity-table-0 =3D <4185000 100>, <4113000 95>, <4066000 9=
+0>;
+
+=2E.. and then you provide only the table for -10 degrees. I fixed
+this by simply using the previous example (tables for -10, 0 and 10
+degrees) and 3 tables and added a comment above the tables.
+
+-- Sebastian
+
+--pocjiyfjiv2tcf6l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8hp9kACgkQ2O7X88g7
++prgIA//fWkFK0IS/82O/WY4vEVu36fFAWgJ1uOcVLkDRPVz9DO7Q4TIyVY7FOzW
+B7+DuzvHS6/7HFcb89spYKCDPlVtx5dLgjd+wIsrGi2YpeiIIUus3+cKLmiHsi3t
++dHfFYq2Hgg7JFvRhmSi7a9f2tKtOYCeOlCfJ56MOxWVggHnl7v3ytOEiQEyeFN3
+/tE/HdIlXtRleLWXPWIBsR7QRW3TJEk7BRIgyfenwvrJXu27/w8AZoXeiisJaJBW
+VN4ApBkln1RYHzsiwoobo5j9Z2S/pWfl5AaRabOqdwtxbaZ6Tg96+vkb9J4hFNj6
+vXd6DKVOTBhHnQLqbM9pVGpasQoC2d/2v2e5jIRxpjp+5EqYOqTCEeH7SVDznAo+
+t5Kv7lvfozuakPOQHmaigyI27Eg1UJ8iLKBRycnwvnwdzm7tJqtOLq1Wj/50LacY
+/jjCZ3AG75wHzorusn2kKeBWEGRpFqG7iE7AW2z/sN5NREmyuvSVqXJ908VSMoVJ
+VpwRXpfsitMLQhmaKYQXyyeheopOfo69O1CDGk/KwHOtpl3eDatA45Nzn7XhDnsx
+n3HIRRl09R1ZE2p4RBU2p+fHN01CluJK+o0FL9JPfjAMB2lAT64OuPBww7TISl4H
+vQqDBKlRzOsYU57yvNCHfArwDx/fVp4VlTbTHU0lm7CjNreWw+8=
+=d5pW
+-----END PGP SIGNATURE-----
+
+--pocjiyfjiv2tcf6l--
