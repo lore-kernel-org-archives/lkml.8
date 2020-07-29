@@ -2,219 +2,144 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25390C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B861DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE4282082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:28:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O/dNqINI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eB9DEYMI"
+	by mail.kernel.org (Postfix) with ESMTP id A3DFB2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgG2Q2a (ORCPT
+        id S1727055AbgG2Q3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 12:28:30 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43830 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbgG2Q23 (ORCPT
+        Wed, 29 Jul 2020 12:29:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21962 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726581AbgG2Q3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 12:28:29 -0400
-Date:   Wed, 29 Jul 2020 16:28:24 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596040105;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3la9JaCMrV7rKV2iGWV1u2gThhcd3blJgMIGHQC1f7k=;
-        b=O/dNqINIDT0Ij+6w+UycNcEb3VtGBZAbNfKuE49O4qNDGod8uxOtj+MhKLRGCFzV+vVvNB
-        mwj2f/WyRHFfIBFM+fpyJ6vGzhTIrhKHrf3tjGWzeS4qLHIsk3TyTI+7znPE2OcK/IdaIu
-        V3cC9mg+M5RvtJkLtjs/cUsi5bmMnzN9EPCUFbcftjJKfBvPeCDQIAvvzVSfMVc3gq2TqS
-        I92eq67J3bFNONAnRm6dmRjBMsK06QzkCGozjkgKW0DckGvFe+AFzzahV2fTdN6sUKOpuR
-        3Cr52pBce8drKxIiLy6n06LqzU76mENH9UoidoFQCMrMAgKWIJ/sAL3nEZG2Fw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596040105;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3la9JaCMrV7rKV2iGWV1u2gThhcd3blJgMIGHQC1f7k=;
-        b=eB9DEYMIdh4qv3Q2BwChULIKFjbigL6Gxh4rrFHw8ogcdk7EViHaKWXwaV6MYnA2/NynWA
-        OHvsiNO08Rh8EECQ==
-From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] kcsan: Improve IRQ state trace reporting
-Cc:     Marco Elver <elver@google.com>, Ingo Molnar <mingo@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200729110916.3920464-2-elver@google.com>
-References: <20200729110916.3920464-2-elver@google.com>
-MIME-Version: 1.0
-Message-ID: <159604010417.4006.4002892974399715730.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+        Wed, 29 Jul 2020 12:29:50 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06TG3DoH045938;
+        Wed, 29 Jul 2020 12:29:45 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32k72bkbmc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jul 2020 12:29:44 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06TGMpQV031485;
+        Wed, 29 Jul 2020 16:29:43 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 32gcqgn91e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jul 2020 16:29:43 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06TGTel324510758
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Jul 2020 16:29:40 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D26A5A4040;
+        Wed, 29 Jul 2020 16:29:40 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 75176A4051;
+        Wed, 29 Jul 2020 16:29:37 +0000 (GMT)
+Received: from sig-9-65-244-68.ibm.com (unknown [9.65.244.68])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 29 Jul 2020 16:29:37 +0000 (GMT)
+Message-ID: <e5ed8876b9907315c2a906ab248639ea8c6d2cd5.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 12/19] firmware_loader: Use security_post_load_data()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 29 Jul 2020 12:29:36 -0400
+In-Reply-To: <202007281242.B6016AE4B@keescook>
+References: <20200724213640.389191-1-keescook@chromium.org>
+         <20200724213640.389191-13-keescook@chromium.org>
+         <1595847465.4841.63.camel@kernel.org> <202007281242.B6016AE4B@keescook>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-29_10:2020-07-29,2020-07-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 suspectscore=3 impostorscore=0
+ phishscore=0 adultscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007290105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/core branch of tip:
+On Tue, 2020-07-28 at 12:43 -0700, Kees Cook wrote:
+> On Mon, Jul 27, 2020 at 06:57:45AM -0400, Mimi Zohar wrote:
+> > On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
+> > > Now that security_post_load_data() is wired up, use it instead
+> > > of the NULL file argument style of security_post_read_file(),
+> > > and update the security_kernel_load_data() call to indicate that a
+> > > security_kernel_post_load_data() call is expected.
+> > > 
+> > > Wire up the IMA check to match earlier logic. Perhaps a generalized
+> > > change to ima_post_load_data() might look something like this:
+> > > 
+> > >     return process_buffer_measurement(buf, size,
+> > >                                       kernel_load_data_id_str(load_id),
+> > >                                       read_idmap[load_id] ?: FILE_CHECK,
+> > >                                       0, NULL);
+> > > 
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > 
+> > process_measurement() measures, verifies a file signature -  both
+> > signatures stored as an xattr and as an appended buffer signature -
+> > and augments audit records with the file hash. (Support for measuring,
+> > augmenting audit records, and/or verifying fs-verity signatures has
+> > yet to be added.)
+> > 
+> > As explained in my response to 11/19, the file descriptor provides the
+> > file pathname associated with the buffer data.  In addition, IMA
+> > policy rules may be defined in terms of other file descriptor info -
+> > uid, euid, uuid, etc.
+> > 
+> > Recently support was added for measuring the kexec boot command line,
+> > certificates being loaded onto a keyring, and blacklisted file hashes
+> > (limited to appended signatures).  None of these buffers are signed.
+> >  process_buffer_measurement() was added for this reason and as a
+> > result is limited to just measuring the buffer data.
+> > 
+> > Whether process_measurement() or process_buffer_measurement() should
+> > be modified, needs to be determined.  In either case to support the
+> > init_module syscall, would at minimum require the associated file
+> > pathname.
+> 
+> Right -- I don't intend to make changes to the init_module() syscall
+> since it's deprecated, so this hook is more of a "fuller LSM coverage
+> for old syscalls" addition.
+> 
+> IMA can happily continue to ignore it, which is what I have here, but I
+> thought I'd at least show what it *might* look like. Perhaps BPF LSM is
+> a better example.
+> 
+> Does anything need to change for this patch?
 
-Commit-ID:     47490fdd411675707624fdfbf7bcfcd5f6a5e706
-Gitweb:        https://git.kernel.org/tip/47490fdd411675707624fdfbf7bcfcd5f6a5e706
-Author:        Marco Elver <elver@google.com>
-AuthorDate:    Wed, 29 Jul 2020 13:09:16 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 29 Jul 2020 16:30:41 +02:00
+I wasn't aware that init_syscall was deprecated.  From your original comments,
+it sounded like you wanted a new LSM for verifying kernel module signatures, as
+they're currently supported via init_module().
 
-kcsan: Improve IRQ state trace reporting
+I was mistaken.  Without a file descriptor, security_post_load_data() will
+measure the firmware, as Scott confirmed, but won't be able to verify the
+signature, whether he signed it using evmctl or not.
 
-To improve the general usefulness of the IRQ state trace events with
-KCSAN enabled, save and restore the trace information when entering and
-exiting the KCSAN runtime as well as when generating a KCSAN report.
+Mimi
 
-Without this, reporting the IRQ trace events (whether via a KCSAN report
-or outside of KCSAN via a lockdep report) is rather useless due to
-continuously being touched by KCSAN. This is because if KCSAN is
-enabled, every instrumented memory access causes changes to IRQ trace
-events (either by KCSAN disabling/enabling interrupts or taking
-report_lock when generating a report).
 
-Before "lockdep: Prepare for NMI IRQ state tracking", KCSAN avoided
-touching the IRQ trace events via raw_local_irq_save/restore() and
-lockdep_off/on().
-
-Fixes: 248591f5d257 ("kcsan: Make KCSAN compatible with new IRQ state tracking")
-Signed-off-by: Marco Elver <elver@google.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200729110916.3920464-2-elver@google.com
----
- include/linux/sched.h |  4 ++++
- kernel/kcsan/core.c   | 23 +++++++++++++++++++++++
- kernel/kcsan/kcsan.h  |  7 +++++++
- kernel/kcsan/report.c |  3 +++
- 4 files changed, 37 insertions(+)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 26adabe..2ede13a 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1184,8 +1184,12 @@ struct task_struct {
- #ifdef CONFIG_KASAN
- 	unsigned int			kasan_depth;
- #endif
-+
- #ifdef CONFIG_KCSAN
- 	struct kcsan_ctx		kcsan_ctx;
-+#ifdef CONFIG_TRACE_IRQFLAGS
-+	struct irqtrace_events		kcsan_save_irqtrace;
-+#endif
- #endif
- 
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 732623c..0fe0681 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -291,6 +291,20 @@ static inline unsigned int get_delay(void)
- 				0);
- }
- 
-+void kcsan_save_irqtrace(struct task_struct *task)
-+{
-+#ifdef CONFIG_TRACE_IRQFLAGS
-+	task->kcsan_save_irqtrace = task->irqtrace;
-+#endif
-+}
-+
-+void kcsan_restore_irqtrace(struct task_struct *task)
-+{
-+#ifdef CONFIG_TRACE_IRQFLAGS
-+	task->irqtrace = task->kcsan_save_irqtrace;
-+#endif
-+}
-+
- /*
-  * Pull everything together: check_access() below contains the performance
-  * critical operations; the fast-path (including check_access) functions should
-@@ -336,9 +350,11 @@ static noinline void kcsan_found_watchpoint(const volatile void *ptr,
- 	flags = user_access_save();
- 
- 	if (consumed) {
-+		kcsan_save_irqtrace(current);
- 		kcsan_report(ptr, size, type, KCSAN_VALUE_CHANGE_MAYBE,
- 			     KCSAN_REPORT_CONSUMED_WATCHPOINT,
- 			     watchpoint - watchpoints);
-+		kcsan_restore_irqtrace(current);
- 	} else {
- 		/*
- 		 * The other thread may not print any diagnostics, as it has
-@@ -396,6 +412,12 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 		goto out;
- 	}
- 
-+	/*
-+	 * Save and restore the IRQ state trace touched by KCSAN, since KCSAN's
-+	 * runtime is entered for every memory access, and potentially useful
-+	 * information is lost if dirtied by KCSAN.
-+	 */
-+	kcsan_save_irqtrace(current);
- 	if (!kcsan_interrupt_watcher)
- 		local_irq_save(irq_flags);
- 
-@@ -539,6 +561,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- out_unlock:
- 	if (!kcsan_interrupt_watcher)
- 		local_irq_restore(irq_flags);
-+	kcsan_restore_irqtrace(current);
- out:
- 	user_access_restore(ua_flags);
- }
-diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
-index 763d6d0..2948001 100644
---- a/kernel/kcsan/kcsan.h
-+++ b/kernel/kcsan/kcsan.h
-@@ -9,6 +9,7 @@
- #define _KERNEL_KCSAN_KCSAN_H
- 
- #include <linux/kcsan.h>
-+#include <linux/sched.h>
- 
- /* The number of adjacent watchpoints to check. */
- #define KCSAN_CHECK_ADJACENT 1
-@@ -23,6 +24,12 @@ extern unsigned int kcsan_udelay_interrupt;
- extern bool kcsan_enabled;
- 
- /*
-+ * Save/restore IRQ flags state trace dirtied by KCSAN.
-+ */
-+void kcsan_save_irqtrace(struct task_struct *task);
-+void kcsan_restore_irqtrace(struct task_struct *task);
-+
-+/*
-  * Initialize debugfs file.
-  */
- void kcsan_debugfs_init(void);
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index 6b2fb1a..9d07e17 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -308,6 +308,9 @@ static void print_verbose_info(struct task_struct *task)
- 	if (!task)
- 		return;
- 
-+	/* Restore IRQ state trace for printing. */
-+	kcsan_restore_irqtrace(task);
-+
- 	pr_err("\n");
- 	debug_show_held_locks(task);
- 	print_irqtrace_events(task);
