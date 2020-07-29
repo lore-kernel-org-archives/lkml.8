@@ -2,108 +2,163 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C67C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04708C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D147D2065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD4022083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gG3zm+Jf"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="sIOhArGp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgG2Ofm (ORCPT
+        id S1726724AbgG2Oh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:35:42 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58274 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgG2Ofl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:35:41 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06TEVfEO135564;
-        Wed, 29 Jul 2020 14:35:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=rO/cn8lSL/k1UwcwgfqEWwmSiV10mpaOIq5H049wwYI=;
- b=gG3zm+JfQzzuSKqgJ0l4/XFKicqJn0T2rdEKZEjmkrGBNGhMvqhdHRRrp5L0pi4HQsou
- /NiqhMNr3n9TXDPZZfROzPE+r0UM5gJWmggouQ8vAeCyfZaMYtHyFD0E7ekT0u2UeCOG
- Ywt/e9q78IVgEeSPVq0+ARrdgBMHH/eHl0hMdxDFdJJY3pqEKNzRkgw0oEXqrXVE6AYI
- 0TPC/A2fhj2RQSV2S1HUxFy4bN57+y35UNxMJDrIb/YJ4cPCm6lIKlcN4wB6UndlMXfo
- /j9yspUzhBHf+xIW5CpYiE3AeP2RZcN7f+MMsqm8jkLT0r6ad5YL/fJVyKYJeCFgVwd3 kw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 32hu1jdyug-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Jul 2020 14:35:33 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06TESkit099523;
-        Wed, 29 Jul 2020 14:35:33 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 32hu5vuqet-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jul 2020 14:35:33 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06TEZWcc017066;
-        Wed, 29 Jul 2020 14:35:32 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 Jul 2020 07:35:31 -0700
-Date:   Wed, 29 Jul 2020 17:35:22 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 RESEND] usbhid: Fix
- slab-out-of-bounds write in hiddev_ioctl_usage()
-Message-ID: <20200729143522.GB5493@kadam>
-References: <20200718231218.170730-1-yepeilin.cs@gmail.com>
- <20200729113712.8097-1-yepeilin.cs@gmail.com>
+        Wed, 29 Jul 2020 10:37:57 -0400
+Received: from mail-eopbgr140088.outbound.protection.outlook.com ([40.107.14.88]:46222
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726353AbgG2Oh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 10:37:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FQn8aYBKppbXpcHShvOOQnsVFqp6AdGxn21kSky78cdom7jaZU5dlJ1AsCrz1bsLNjloimvwMBy8wGCU9F5S5fGMwtnzndZpAkzdSo4erq8yaXZ2yWKN5bcyFLQVi3h+XZKtLaBu/9Ln9H20rEgP2MPXLwPJrScRDyEorsKSQrEzPSd7aNPsGx+WwQZYrFQNR0n2oq4rR80Tt7VS5AcdJeXZBtaE8Atf7iwR4cTNk695Uan4yxyY3drojnjk/+pYeShPdC15FAuA/SyOBa7ylL25nTKrXucmedLislYy2mYUiO7g7316oXdC7YvmIIRz7J+3i7oB8EJdvDICOPO3wA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B/VBqG3xIlBvcMnjcwZCSkv75AzRBIbsYr3hXlwWpAw=;
+ b=Dh1b9TRst8g2Afjse3c7MJZI5i123sBxMak7SBIEKLcS3vTeiE0UlIUcVcEIHNyZL3KFhPafvUTc4W3jcCICq9tYPRGdZYVSR9ZJ+h8opYr+Dop+YeEEJBZsvMtyuUTiTrkJPWRQSPd38h5qKehDCFJV/MYkRgg8DDPaq9jeQAJHAv4WviQOmoWoLwnpbSgOmPJ7wZsS4JM8iurB/0KO8Ss2cBqOkMeGGLI/k323bJdqICBi3YnioU65dp8GV+w6IPO/OeLXWzBbufO73stn+TwB2knXmDZrEM1HIbdcJcg6TB9MB+Tbn0aTFiWKvFI6Dn+4EdAW6ga9DncUqFLY8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B/VBqG3xIlBvcMnjcwZCSkv75AzRBIbsYr3hXlwWpAw=;
+ b=sIOhArGpH0BOyHJ4UbgaAe60GmxvmNoX/LdtJlyBS1dhzB7vXqdPTHsMtrsQOLgGL8WiYZ/LrhDqOzcADlI1mjmuF9wHKSseYgMuykdavRCkPDjfnL2FmuAIB/fjiD1a5zYDq1y5emXdrWTQTGQh24SqW+qXGacgZtdW4pCvy4A=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=mellanox.com;
+Received: from AM0PR05MB4290.eurprd05.prod.outlook.com (2603:10a6:208:63::16)
+ by AM0PR0502MB3697.eurprd05.prod.outlook.com (2603:10a6:208:1c::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Wed, 29 Jul
+ 2020 14:37:46 +0000
+Received: from AM0PR05MB4290.eurprd05.prod.outlook.com
+ ([fe80::21b3:2006:95aa:7a1f]) by AM0PR05MB4290.eurprd05.prod.outlook.com
+ ([fe80::21b3:2006:95aa:7a1f%3]) with mapi id 15.20.3216.034; Wed, 29 Jul 2020
+ 14:37:46 +0000
+Subject: Re: [PATCH net-next RFC 02/13] devlink: Add reload levels data to dev
+ get
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
+ <1595847753-2234-3-git-send-email-moshe@mellanox.com>
+ <20200727175842.42d35ee3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Moshe Shemesh <moshe@mellanox.com>
+Message-ID: <448bab04-80d7-b3b1-5619-1b93ad7517d8@mellanox.com>
+Date:   Wed, 29 Jul 2020 17:37:41 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200727175842.42d35ee3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: LNXP265CA0088.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:76::28) To AM0PR05MB4290.eurprd05.prod.outlook.com
+ (2603:10a6:208:63::16)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729113712.8097-1-yepeilin.cs@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9696 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007290098
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9696 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxscore=0 impostorscore=0
- phishscore=0 adultscore=0 suspectscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007290098
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.20.10.2] (2.53.25.164) by LNXP265CA0088.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:76::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.34 via Frontend Transport; Wed, 29 Jul 2020 14:37:45 +0000
+X-Originating-IP: [2.53.25.164]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c57c0b6e-c6e9-4015-dc90-08d833ccf5c7
+X-MS-TrafficTypeDiagnostic: AM0PR0502MB3697:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR0502MB36975C09A3285206C15115FED9700@AM0PR0502MB3697.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: haToLY6jQnq2Z+d1+/L+na2seL55TOYjIy3uwspxqIZTFk3D9M7VQ7mKw5R5uCtFuFkQtlq3OXxFdHt/h4HxhaTAmhDOfeuw83+tPkgS63mbXkdgYvG68Q9re2L+ly4ajuwVtoSblJjIGEmbNea+rYRU2YA6ot9pctTfk82bjQNDVuDQj7M2IxwtTvXv5cco1KfJILG4zz+CcPs1u6FrUlt+L/VUDXsv9FSkCJqDL4TK2+7fVLAtD8uj/CTUtZqCnHCh689lQ11cQ4pSUJN0sbnt0JkNeRVdmOMUJ2H5OcuEydjllTdNCzUhEQqxgtAhX+upn9DvMb7rZ4/OJDo7nJB4xN6snwRIp98Yv8x8Mrj2r9/TNoE53zQyBRuVp9pA
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB4290.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(136003)(346002)(376002)(366004)(83380400001)(52116002)(53546011)(31686004)(186003)(26005)(8676002)(16526019)(2616005)(956004)(36756003)(8936002)(86362001)(6486002)(5660300002)(4326008)(6916009)(66476007)(478600001)(66556008)(66946007)(316002)(16576012)(54906003)(6666004)(2906002)(31696002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: +r3PHnD0ijzflSx6Jq+lRfLHDuplJWgalgVWgHsXW5zbCQ8HwvPb8mjEkuP8TPckbyNOLw4vxSLku0ipEarZvJ7DRTPJupbJeyOlJfUDD7EHK8M7Kih/4ALmdpv4B+VCO7E6MLrL0pI9lcOs4Yl4EX6XY6IFP8OksaYkijR/5gp4lKHzcxZrsoa8TVriCM8NO6yBkAZIbcalISsDKnf6SZyjly/LQ0iQtgsssFiFpWAXmMnjYao2rhf1FjrTS/wLaaUMpoIaSDNUPsil9pUCwgrnvg3GQQ1lTYDNe6KqzF9yu6aXfa/aKIe6XA/KYlHHQ6XPRacUcVSgShqQeRhTnE2kFgp9CwKchzR+Smj/omO5if1bvNM3rH2qn1b9logN+rXWmyWC+4lhpi1AeoeC/dyXeO+h+9RQ1n3SSxQOmVRP8Kwz/9MlHOfABhEOrSbtybpg/v/tbVNeUCS7KrDFj1u82OhTZXQesh0f0QAr1dM=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c57c0b6e-c6e9-4015-dc90-08d833ccf5c7
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR05MB4290.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2020 14:37:46.3945
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5V94kyaUEWvB3SZE2Du2AHEcUMsrQu3G3oFCZ7L1Laz5BwNp7SrSbPqeft8Pyg0RYQqjHuBXM1w0tBw0NoekGg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0502MB3697
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 07:37:12AM -0400, Peilin Ye wrote:
-> `uref->usage_index` is not always being properly checked, causing
-> hiddev_ioctl_usage() to go out of bounds under some cases. Fix it.
-> 
-> Reported-by: syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com
-> Link: https://syzkaller.appspot.com/bug?id=f2aebe90b8c56806b050a20b36f51ed6acabe802
-> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> ---
-> Change in v2:
->     - Add the same check for the `HIDIOCGUSAGE` case. (Suggested by
->       Dan Carpenter <dan.carpenter@oracle.com>)
 
-Why are you resending this?
+On 7/28/2020 3:58 AM, Jakub Kicinski wrote:
+> On Mon, 27 Jul 2020 14:02:22 +0300 Moshe Shemesh wrote:
+>> Expose devlink reload supported levels and driver's default level to the
+>> user through devlink dev get command.
+>>
+>> Examples:
+>> $ devlink dev show
+>> pci/0000:82:00.0:
+>>    reload_levels_info:
+>>      default_level driver
+>>      supported_levels:
+>>        driver fw_reset fw_live_patch
+>> pci/0000:82:00.1:
+>>    reload_levels_info:
+>>      default_level driver
+>>      supported_levels:
+>>        driver fw_reset fw_live_patch
+>>
+>> $ devlink dev show -jp
+>> {
+>>      "dev": {
+>>          "pci/0000:82:00.0": {
+>>              "reload_levels_info": {
+>>                  "default_level": "driver",
+>>                  "supported_levels": [ "driver","fw_reset","fw_live_patch" ]
+>>              }
+>>          },
+>>          "pci/0000:82:00.1": {
+>>              "reload_levels_info": {
+>>                  "default_level": "driver",
+>>                  "supported_levels": [ "driver","fw_reset","fw_live_patch" ]
+>>              }
+>>          }
+>>      }
+>> }
+>>
+>> Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+> The fact that the driver supports fw_live_patch, does not necessarily
+> mean that the currently running FW can be live upgraded to the
+> currently flashed one, right?
 
-regards,
-dan carpenter
+
+That's correct, though the feature is supported, the firmware gap may 
+not be suitable for live_patch.
+
+The user will be noted accordingly by extack message.
+
+>
+> This interface does not appear to be optimal for the purpose.
+>
+> Again, documentation of what can be lost (in terms of configuration and
+> features) upon upgrade is missing.
+
+
+I will clarify in documentation. On live_patch nothing should be lost or 
+re-initialized, that's the "live" thing.
 
