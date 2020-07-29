@@ -2,94 +2,149 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DEAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8498AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7797F2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:46:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596001607;
-	bh=pePAJ4Ia9ZHBwn/lH6/j1CE/q64jj5R/LOQFr37raXo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=voP+ef/oKQbE4X/ahm9/mNDDR9cII0Dl6iB1ifjHiGRowAKf6y97EzzJCRBHXOj1p
-	 70uv0fZRczlPJV2cZ9OniQmoTfHmPsLhnwTvWsu9Rl1fxh8MRhgdpvfBfnuN5sIwsM
-	 lgWb2E6gt5oW60913UcvdngY2by8N6bLC1jBZx4o=
+	by mail.kernel.org (Postfix) with ESMTP id 5EE322076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:47:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="juhJkytj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgG2Fqq (ORCPT
+        id S1726884AbgG2Fry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 01:46:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54392 "EHLO mail.kernel.org"
+        Wed, 29 Jul 2020 01:47:54 -0400
+Received: from mx1.riseup.net ([198.252.153.129]:44514 "EHLO mx1.riseup.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbgG2Fqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 01:46:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E05042076E;
-        Wed, 29 Jul 2020 05:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596001605;
-        bh=pePAJ4Ia9ZHBwn/lH6/j1CE/q64jj5R/LOQFr37raXo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r7OIaT4YSgbGCT8Sm9BK18kqONhv+6wxyKCKzRm4k8T1jE+ejTGXOA/TITV+pVVjX
-         T+hfrA3ErOUDIuv1McMGwSesdssOW+zzdhwNrBApfwlbOXlz/Q2c7XgQlI3uDengld
-         mBWgJm7Na/CIqeJG8HHu4JOFzO3RXh7hWbBjpj5I=
-Date:   Wed, 29 Jul 2020 07:46:37 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
-Cc:     manishc@marvell.com, devel@driverdev.osuosl.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: qlge: qlge_dbg: removed comment repition
-Message-ID: <20200729054637.GA437093@kroah.com>
-References: <20200728182610.2538-1-dhiraj.sharma0024@gmail.com>
- <CAPRy4h2Kzqj449PYPjPFmd7neKLR4TTZY8wq51AWqDrTFEFGJA@mail.gmail.com>
+        id S1726208AbgG2Frx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 01:47:53 -0400
+Received: from bell.riseup.net (bell-pn.riseup.net [10.0.1.178])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "*.riseup.net", Issuer "Sectigo RSA Domain Validation Secure Server CA" (not verified))
+        by mx1.riseup.net (Postfix) with ESMTPS id 4BGjHs2H3LzFdxZ;
+        Tue, 28 Jul 2020 22:47:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+        t=1596001673; bh=4XFW4u/+G5HXbt7eUIc8d7Sanex92jlfdr8B53S0Imc=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=juhJkytj+hjPn4ZQHO/oBfnJKs6529z0CVNAeEx8byKPZ2/zSGC5+B3Wlufz3gS8o
+         RDarOIVA8pKMZjdhsAX6qSZw3nxR0k4tBPzU/EcZaDZM2TmkbvRvZLCHYmkRLULdM9
+         IAGOqOZTBUimiw3bhXnbYzdTNIduYeC+Y9CVIfrU=
+X-Riseup-User-ID: F6AB9DE493BA4FFF5239B6317CCD8B7E032182CC6BCC4533F2BFF0E278FFCC3D
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+         by bell.riseup.net (Postfix) with ESMTPSA id 4BGjHs03zPzJmmn;
+        Tue, 28 Jul 2020 22:47:52 -0700 (PDT)
+From:   Francisco Jerez <currojerez@riseup.net>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: intel_pstate: Fix EPP setting via sysfs in active mode
+In-Reply-To: <11585512.O9o76ZdvQC@kreacher>
+References: <11585512.O9o76ZdvQC@kreacher>
+Date:   Tue, 28 Jul 2020 22:47:52 -0700
+Message-ID: <87r1sug9dj.fsf@riseup.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPRy4h2Kzqj449PYPjPFmd7neKLR4TTZY8wq51AWqDrTFEFGJA@mail.gmail.com>
+Content-Type: multipart/signed; boundary="==-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A: http://en.wikipedia.org/wiki/Top_post
-Q: Were do I find info about this thing called top-posting?
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-A: Top-posting.
-Q: What is the most annoying thing in e-mail?
+--==-=-=
+Content-Type: multipart/mixed; boundary="=-=-="
 
-A: No.
-Q: Should I include quotations after my reply?
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-http://daringfireball.net/2007/07/on_top
+"Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
 
-On Wed, Jul 29, 2020 at 11:06:56AM +0530, Dhiraj Sharma wrote:
-> Hello,
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Because intel_pstate_set_energy_pref_index() reads and writes the
+> MSR_HWP_REQUEST register without using the cached value of it used by
+> intel_pstate_hwp_boost_up() and intel_pstate_hwp_boost_down(), those
+> functions may overwrite the value written by it and so the EPP value
+> set via sysfs may be lost.
+>
+> To avoid that, make intel_pstate_set_energy_pref_index() take the
+> cached value of MSR_HWP_REQUEST just like the other two routines
+> mentioned above and update it with the new EPP value coming from
+> user space in addition to updating the MSR.
+>
+> Note that the MSR itself still needs to be updated too in case
+> hwp_boost is unset or the boosting mechanism is not active at the
+> EPP change time.
+>
+> Fixes: e0efd5be63e8 ("cpufreq: intel_pstate: Add HWP boost utility and sc=
+hed util hooks")
+> Reported-by: Francisco Jerez <currojerez@riseup.net>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-<snip>
+Reviewed-by: Francisco Jerez <currojerez@riseup.net>
 
-It has been less than 24 hours for a simple comment cleanup patch.
-Please give maintainers time, they deal with thousands of patches a
-week.
+> ---
+>
+> This patch is on top of https://patchwork.kernel.org/patch/11689347/
+>
+> ---
+>  drivers/cpufreq/intel_pstate.c |   17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+>
+> Index: linux-pm/drivers/cpufreq/intel_pstate.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-pm.orig/drivers/cpufreq/intel_pstate.c
+> +++ linux-pm/drivers/cpufreq/intel_pstate.c
+> @@ -653,11 +653,12 @@ static int intel_pstate_set_energy_pref_
+>  		epp =3D cpu_data->epp_default;
+>=20=20
+>  	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+> -		u64 value;
+> -
+> -		ret =3D rdmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, &value);
+> -		if (ret)
+> -			return ret;
+> +		/*
+> +		 * Use the cached HWP Request MSR value, because the register
+> +		 * itself may be updated by intel_pstate_hwp_boost_up() or
+> +		 * intel_pstate_hwp_boost_down() at any time.
+> +		 */
+> +		u64 value =3D READ_ONCE(cpu_data->hwp_req_cached);
+>=20=20
+>  		value &=3D ~GENMASK_ULL(31, 24);
+>=20=20
+> @@ -667,6 +668,12 @@ static int intel_pstate_set_energy_pref_
+>  			epp =3D epp_values[pref_index - 1];
+>=20=20
+>  		value |=3D (u64)epp << 24;
+> +		/*
+> +		 * The only other updater of hwp_req_cached in the active mode,
+> +		 * intel_pstate_hwp_set(), is called under the same lock as this
+> +		 * function, so it cannot run in parallel with the update below.
+> +		 */
+> +		WRITE_ONCE(cpu_data->hwp_req_cached, value);
+>  		ret =3D wrmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, value);
+>  	} else {
+>  		if (epp =3D=3D -EINVAL)
 
-Usually, if after 2 weeks, you have not gotten a response, you can
-resend it.
+--=-=-=--
 
->  I know that I should ask for reviews etc after a week but the change
-> is for my eudyptula task and until it doesn't get merged little
-> penguin will not pass the task for me so please look at it.
+--==-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If you knew that you should wait for at least a week, and yet you did
-not, that implies that you somehow feel this comment cleanup patch is
-more important than everyone else, which is a bit rude, don't you think?
+-----BEGIN PGP SIGNATURE-----
 
-There are no such things as deadlines when it comes to upstream kernel
-development, sorry.
-
-greg k-h
+iHUEAREIAB0WIQST8OekYz69PM20/4aDmTidfVK/WwUCXyENiAAKCRCDmTidfVK/
+W2UeAP9fOoZ4v0COIC0iKbSqKUb36eboq2WI18E8Z+qS5CwVnwD5Aayo3jkIrJTv
+A09h7Eetf/QEkKWAk18YKfODZGjoH0E=
+=MqNe
+-----END PGP SIGNATURE-----
+--==-=-=--
