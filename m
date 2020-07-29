@@ -2,126 +2,143 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AFBC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7FFA20FC3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796BF2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:47:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nZidFjyl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DIdFres5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgG2XrQ (ORCPT
+        id S1728144AbgG2Xru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 19:47:16 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17762 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgG2XrQ (ORCPT
+        Wed, 29 Jul 2020 19:47:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728010AbgG2Xrt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 19:47:16 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f220a270001>; Wed, 29 Jul 2020 16:45:43 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 29 Jul 2020 16:47:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 29 Jul 2020 16:47:15 -0700
-Received: from [10.2.160.194] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jul
- 2020 23:47:15 +0000
-Subject: Re: [RFC PATCH v5 12/14] gpu: host1x: mipi: Keep MIPI clock enabled
- till calibration is done
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>
-References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
- <1595883452-17343-13-git-send-email-skomatineni@nvidia.com>
- <b21e3227-d0d8-5b4a-ae69-aa29551a22c3@gmail.com>
- <69903c67-8e5f-11c2-45ec-c76b97634aba@nvidia.com>
- <d291d306-55d4-2264-dc05-0e47f0dfef20@gmail.com>
- <b5fcc292-8ce3-2833-491f-5aefbe0196eb@nvidia.com>
- <48977b6b-ef7e-1bdf-e3e0-2903032aa225@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <b159e69a-32fa-7bcb-3c95-aaaba250f85b@nvidia.com>
-Date:   Wed, 29 Jul 2020 16:54:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 19:47:49 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1244FC0619D2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:47:49 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f1so22626782wro.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 16:47:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8Yb8JOoh+LSsOfdrY/X9ZAwRyZ4kLPnC6nnWUaDd9tc=;
+        b=DIdFres5Tl0wvrFB+fV7XnLJIh0s3Mx7Nf0HnayGSLVRNXGZ7hGXtBGliczuymiZ1z
+         Iw3nDLtxttfnafX/ne+/ag+iZfQVnWEayVP6KNkMEn2DSmInHFdDr5dihgquTWd22rfp
+         wg5yuDm5f6fXU6cCAW097RA7NxPfimeOKMImel28VeoArOsaHebtEo5+7kPgB+qJCttJ
+         nfYJdF8AZCBMo4NL+F1Tm4EFeF67dSpW3ygCenqbgjqYcO3nglgoDX7FR9fB04aK26tT
+         wkmb7g5mSF8m7Qs3zIzS8UHXGu+zjrtULZZTq7Qe4ww1dyZBsqJZqyaKk4LwogcBgjus
+         sA/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8Yb8JOoh+LSsOfdrY/X9ZAwRyZ4kLPnC6nnWUaDd9tc=;
+        b=J9Y2DfcCdfmEN92jgv+bjluiX3fXm+9/KlPnLMbSBHKzbuMF9D/qA+wrIfwuO3L47Q
+         oFcF9aMHXNlGx+0Tn3XaOATxe1wpRx1fmGsCjLyzifBSw7lKqiiN2CLPr95oUOWdX6ac
+         BGfwQbV0irVhKvnIWDK2neMEsOF+wUfSbyR6FstNDuhZkqGBwXkYalhQgf8dTcsREGkz
+         ILgxa2277paLhYCqpXXD66XN39IQnTWcxwUkVUAvuVLxrpgbHATTJaGPLWxgJI0wEvKp
+         aTQ9qjV1QEUnqgPQ1Rh1pbcbmrwJ1ph/te7DcJ5Jy2liFna7cHUoEMT9GPcmOSCEJAQ1
+         JQxg==
+X-Gm-Message-State: AOAM532WiayizT3Xz9NsA3mXaMROUjiFY/z1xRZRqKfTk4aaqg2ONl93
+        MAah8n8qePrSQn2LEVRFkH3Evwp90SF/Nh7sx81oiA==
+X-Google-Smtp-Source: ABdhPJzYAo02NOPiYYCLKzjRcaDGeIZSfaiMglLqS2wtsgbBUCbIXJACEL6jUL7zCrH7G+ngDj4YEPUeaSOWSQUkLrk=
+X-Received: by 2002:adf:fe0c:: with SMTP id n12mr89894wrr.48.1596066467544;
+ Wed, 29 Jul 2020 16:47:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <48977b6b-ef7e-1bdf-e3e0-2903032aa225@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596066343; bh=jkquNxFBqS8hVnPmBZJsuDSNBn3Suh8XQ+xGK361k5o=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=nZidFjyln3FDOHPIAZoW2cQ3z2Y49e8sJ0EoeDeLK+Rzor9DOkb80EFFse5yyRHGz
-         IVHak2QfzzE3JISDKGmY0ezm7P+89D/4yYlLM3Th6GeB3SUmaSmgd3XyBPey68swlD
-         QXD5vT+bARD+6Vydp1qVsF+QcMglenAN41ZaI+l0m8U58YwW2yGaQUsGXLdaHfbPqY
-         P6QwAbHE0MJg0wbkajDyR7AnFev/LO8FBdpKj+ZbDX9Qeoy0iv9y1g6NqSEW4dgw1m
-         uVYXTLha+Kx6fhGXgzJRn5BstJy2c9D4LWJqMPWNCE61yHuEEEUHkQbIGbAjoId7vs
-         wNaWih2F2lbNg==
+References: <20200724100706.48330-1-bobo.shaobowang@huawei.com>
+In-Reply-To: <20200724100706.48330-1-bobo.shaobowang@huawei.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 29 Jul 2020 16:47:36 -0700
+Message-ID: <CAP-5=fX9YUucA-3QMxO_jV954104UPNg04=_JGstuLekNJHzJw@mail.gmail.com>
+Subject: Re: [PATCH -next] tools build: Check return value of fwrite_unlocked
+ in jvmti_agent.c
+To:     Wang ShaoBo <bobo.shaobowang@huawei.com>
+Cc:     cj.chengjian@huawei.com, Li Bin <huawei.libin@huawei.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 24, 2020 at 3:07 AM Wang ShaoBo <bobo.shaobowang@huawei.com> wrote:
+>
+> Function jvmti_write_code called by compiled_method_load_cb may return
+> error in using fwrite_unlocked, this failure should be captured and
+> warned.
+>
+> Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+> ---
+>  tools/perf/jvmti/jvmti_agent.c | 23 +++++++++++++++--------
+>  1 file changed, 15 insertions(+), 8 deletions(-)
+>
+> diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
+> index 88108598d6e9..a1fe6aa16b6d 100644
+> --- a/tools/perf/jvmti/jvmti_agent.c
+> +++ b/tools/perf/jvmti/jvmti_agent.c
+> @@ -363,7 +363,7 @@ jvmti_write_code(void *agent, char const *sym,
+>         struct jr_code_load rec;
+>         size_t sym_len;
+>         FILE *fp = agent;
+> -       int ret = -1;
+> +       int ret;
+>
+>         /* don't care about 0 length function, no samples */
+>         if (size == 0)
+> @@ -401,16 +401,23 @@ jvmti_write_code(void *agent, char const *sym,
+>         rec.code_index = code_generation++;
+>
+>         ret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
+> -       fwrite_unlocked(sym, sym_len, 1, fp);
+> +       if (ret)
+> +               goto error;
 
-On 7/29/20 4:42 PM, Dmitry Osipenko wrote:
-> 29.07.2020 20:55, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 7/29/20 10:08 AM, Dmitry Osipenko wrote:
->>> 28.07.2020 19:04, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>>>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device=
-)
->>>>>> +{
->>>>> Doesn't MIPI_CAL need to be reset here?
->>>> No need to reset MIPI CAL
->>> Could you please explain why. There is a calibration state-machine that
->>> apparently needs to be returned into initial state, does it return by
->>> itself?
->>>
->>> TRM says that MIPI block needs to be reset before of starting
->>> calibration process. The reset is completely missing in the driver, I
->>> assume it needs to be corrected with another patch.
->> TRM documented incorrectly. There is no need to reset MIPI_CAL.
->>
->> MIPI CAL is FSM and it does not hang and done bit is to indicate if
->> results are applied to pads or not.
->>
->> If we don't see done bit set meaning, MIPI CAL did not see LP-11 and
->> results are not applied to pads.
-> But how to stop calibration from triggering on LP-11 once it has been
-> enabled? The reset should be needed since there is no other way to reset
-> the calibration state.
+Sorry, it seems I lost a reply to this. Won't ret here be the number
+of items written and not an error code? Consequently all writes will
+immediately goto error?
 
-Its a finite state machine that goes thru fixed steps of sequence codes=20
-internally and holds results in registers.
+Thanks,
+Ian
 
-When it sees LP-11 results are applied to pads.
-
-If it does not see LP-11, next start will again trigger calibrating with=20
-finite sequence codes.
-
-As per HW designers, we don't have to do any reverts when done bit is=20
-not set.
-
->> Also while multiple streams can happen in parallel and we can't reset
->> MIPI CAL as other CSI channel streams (using other pads) may also be
->> going thru calibration process in parallel depending and also DSI pads
->> also are calibrated thru same MIPI CAL controller.
-> Perhaps this should be the case for a shared reset control API usage.
+> +       ret = fwrite_unlocked(sym, sym_len, 1, fp);
+> +       if (ret)
+> +               goto error;
+>
+> -       if (code)
+> -               fwrite_unlocked(code, size, 1, fp);
+> +       if (code) {
+> +               ret = fwrite_unlocked(code, size, 1, fp);
+> +               if (ret)
+> +                       goto error;
+> +       }
+>
+>         funlockfile(fp);
+> -
+> -       ret = 0;
+> -
+> -       return ret;
+> +       return 0;
+> +error:
+> +       funlockfile(fp);
+> +       return -1;
+>  }
+>
+>  int
+> --
+> 2.17.1
+>
