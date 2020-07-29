@@ -4,63 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1322CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEE0E2250E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 445D42084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596059109;
-	bh=GiRSxXtKJEXQSm7FN4IpGktEM7esCYePh8QY4ItoVjk=;
+	s=default; t=1596059113;
+	bh=IvltQxPcmxATCkw4biU9TkRTnUWnbuoEgY6PwQ0dIjE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=anGJipx9xzx1cY16yc78TMdVvBvleMKT3kyG1usd9BvLgZFV9HB+cH/pzYSmpvAXp
-	 /Vtl+lvU+xVZVsfoe0yyt9ZFDwjKIpJs/6lIGg9sRRB1zHU7p9skRbNpUR9mHZbn0S
-	 84VqSskLhiagBkFa6vzbZQGP5x2UlLJIN5HBrhJY=
+	b=SCqQ1xKKTgJTFItB7wfgXrUjBw49bzN5YW9D20T0mI7zoQGzNsEwxUBySXqpSbmDh
+	 vKsjBy+onApIV2uAa8EGmxmpZTjXnf/qVuh74a5yHpbURsoszxefQJWITaQsPo6D3O
+	 k6UUKaEKe9pak0sZLjhG8WhZ975TiYYRCmGxZ8u4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgG2VpI (ORCPT
+        id S1727888AbgG2VpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 17:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43986 "EHLO mail.kernel.org"
+        Wed, 29 Jul 2020 17:45:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727078AbgG2VpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 17:45:06 -0400
-Subject: Re: [GIT PULL] Audit fixes for v5.8 (#1)
+        id S1726476AbgG2VpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 17:45:04 -0400
+Subject: Re: [git pull] drm fixes for 5.8-rc8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596059106;
-        bh=GiRSxXtKJEXQSm7FN4IpGktEM7esCYePh8QY4ItoVjk=;
+        s=default; t=1596059104;
+        bh=IvltQxPcmxATCkw4biU9TkRTnUWnbuoEgY6PwQ0dIjE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=IxpLyBm9mgq9iqT3HSclMDP+UAu3oq5n8sXx4gM7nVTKjPfi+8TUs6eGpYhETA0M4
-         AZyyFQiZYlQwoPbaT51XoADXu2BTWP8GcHaHKmGRLLojWqkqT/H52myVHajJyd128u
-         yXNT3mIn5whHFyoN6iizLybMGgUctxrvuNSjTp/k=
+        b=n+G9T9PAQfCTJezhqXG2b+6pFMgNP8jY39uNhA/pkOVjWGxi8PyuwlNes7xfFSOFO
+         Sq1p2NNJWCR+u5SnpE/iDKZCelQVe/9OaympGpCsAKGmtEc4eJXg+TPwp8bqTYPZ8z
+         ZlAjJvoQlxEDjVjlCCGu5lTXhE4YwWkhPUTRz1Lw=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAHC9VhQSq87=vk63=Wr-0mdOZ3ExAKG3s6_9AMS=n_s8zGjhBQ@mail.gmail.com>
-References: <CAHC9VhQSq87=vk63=Wr-0mdOZ3ExAKG3s6_9AMS=n_s8zGjhBQ@mail.gmail.com>
+In-Reply-To: <CAPM=9tzCWbg3CUSeywiHxQ-fCE1FAGGdOt5Qm+sjsLQLBSExyw@mail.gmail.com>
+References: <CAPM=9tzCWbg3CUSeywiHxQ-fCE1FAGGdOt5Qm+sjsLQLBSExyw@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAHC9VhQSq87=vk63=Wr-0mdOZ3ExAKG3s6_9AMS=n_s8zGjhBQ@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git
- tags/audit-pr-20200729
-X-PR-Tracked-Commit-Id: 8ac68dc455d9d18241d44b96800d73229029ed34
+X-PR-Tracked-Message-Id: <CAPM=9tzCWbg3CUSeywiHxQ-fCE1FAGGdOt5Qm+sjsLQLBSExyw@mail.gmail.com>
+X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
+ tags/drm-fixes-2020-07-29
+X-PR-Tracked-Commit-Id: a4a2739beb8933a19281bca077fdb852598803ed
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d3590ebf6f91350192737dd1d1b219c05277f067
-Message-Id: <159605910640.4880.5720016071008602002.pr-tracker-bot@kernel.org>
-Date:   Wed, 29 Jul 2020 21:45:06 +0000
-To:     Paul Moore <paul@paul-moore.com>
+X-PR-Merge-Commit-Id: c2f3850df7f95537e79c561f7be49df2e4ad8060
+Message-Id: <159605910453.4880.16477590993967546458.pr-tracker-bot@kernel.org>
+Date:   Wed, 29 Jul 2020 21:45:04 +0000
+To:     Dave Airlie <airlied@gmail.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 29 Jul 2020 10:54:14 -0400:
+The pull request you sent on Wed, 29 Jul 2020 14:44:16 +1000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git tags/audit-pr-20200729
+> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-07-29
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d3590ebf6f91350192737dd1d1b219c05277f067
+https://git.kernel.org/torvalds/c/c2f3850df7f95537e79c561f7be49df2e4ad8060
 
 Thank you!
 
