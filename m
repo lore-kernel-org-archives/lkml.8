@@ -2,164 +2,135 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D5FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9601EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 492AC206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74228206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:17:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="OyPRLcFD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="txrhL6aq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgG2HRP (ORCPT
+        id S1727918AbgG2HRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:17:15 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:18796 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgG2HRN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:17:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1596007027;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=sdhs3yS8aMc4aowa6IxLuB0eXJ97dxSTuJg2++WqobQ=;
-        b=OyPRLcFDNnoth0RGD+/DE6IPhruJ8IST7NNMkmwxOc7CoTrXtBrGFE6CSoK4Q/y4wc
-        QFiXbYnXOxLUpIbIHqbOhb/Ktg5syXF8C9Cb1k2fpWWQH7FpqjZtK52zSXIhD9YW16Bb
-        +4zOHa00RlgTQP9uxwGQNU6tWIVUNZmqsidm34+mhIOFfEQvV1+01zURmstiK7YEszl4
-        pcFp+wZBQjUnCk5y75g9DUWD4lxeXnzfrjLNPLxY50xknQogjgvCnhSu4lbheiGV66bV
-        OWkD86Oe5Rfx+60We1s/BMxyNgtZ8IMwFJ8VAe8V51UjWS3j8yjLcLS17F8tr8O4OxHX
-        dxmg==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDbLvSf24qr"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id y0546bw6T7FgBYj
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 29 Jul 2020 09:15:42 +0200 (CEST)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v31 00/12] /dev/random - a new approach with full SP800-90B
-Date:   Wed, 29 Jul 2020 09:15:42 +0200
-Message-ID: <2739109.8hzESeGDPO@tauon.chronox.de>
-In-Reply-To: <20200728204044.GD1012@bug>
-References: <2050754.Mh6RI2rZIc@positron.chronox.de> <20200728204044.GD1012@bug>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Wed, 29 Jul 2020 03:17:20 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:18317 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727902AbgG2HRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 03:17:19 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596007038; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=RliZByYxzLz5y1Rz5nCF+AhM3YGfRNYBxdxpZBc+zj4=; b=txrhL6aq6vUKIKEF63RVRgdwoxqHfSfMEKcbhJhlOyqXT4bboJ3B9pD3LsO79Ls69WGth3vQ
+ +Gm5mbijWIGijgVHDWrcMeLweWR4qzjD5DJGBZ9ZZXhIDzT5RUzmmCfOLabwNYVJN7nARQzM
+ jz2PrGDhiCQWrl8/lo0zmLdS220=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
+ 5f21227efcbecb3df1efd6ad (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 07:17:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 73A29C433CA; Wed, 29 Jul 2020 07:17:17 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9D2A8C433AF;
+        Wed, 29 Jul 2020 07:17:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9D2A8C433AF
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v5 4/5] arm64: dts: sdm845: Add OPP tables and power-domains for venus
+Date:   Wed, 29 Jul 2020 12:46:44 +0530
+Message-Id: <1596007005-30425-5-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596007005-30425-1-git-send-email-rnayak@codeaurora.org>
+References: <1596007005-30425-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 28. Juli 2020, 22:40:44 CEST schrieb Pavel Machek:
+Add the OPP tables in order to be able to vote on the performance state of
+a power-domain.
 
-Hi Pavel,
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 40 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 38 insertions(+), 2 deletions(-)
 
-> Hi!
-> 
-> > The following patch set provides a different approach to /dev/random which
-> > is called Linux Random Number Generator (LRNG) to collect entropy within
-> > the Linux kernel. The main improvements compared to the existing
-> > /dev/random is to provide sufficient entropy during boot time as well as
-> > in virtual environments and when using SSDs. A secondary design goal is
-> > to limit the impact of the entropy collection on massive parallel systems
-> > and also allow the use accelerated cryptographic primitives. Also, all
-> > steps of the entropic data processing are testable.
-> 
-> That sounds good.. maybe too good. Where does LRNG get the entropy? That is
-> the part that should be carefully documented..
-> 
-> 									Pavel
-
-The entire description of the LRNG is given in [1].
-
-[1] section 2.1 outlines the general architecture specifying that there are 
-currently 3 noise sources. Per default, the interrupt-based noise source is 
-the main source.
-
-Section 2.4 outlines the details of the interrupt noise source handling. The 
-key now is unlike the existing implementation that there is no separate block/
-HID noise collection because they are "just" derivatives of the interrupt 
-noise source which would imply that noise events are double credited with 
-entropy. This allows for a massively higher valuation of the entropy rate that 
-exists in interrupt events.
-
-To support the design, a large scale noise source analysis is performed in 
-chapter 3 [1]. Specifically sections 3.2.3 and 3.2.4 provide quantitative 
-statements which are further analyzed in subsequent sections. This includes 
-reboot tests as well as runtime tests.
-
-[1] appendix C performs these measurements on other CPU architectures, 
-including very small environments which could be expected to have too little 
-entropy (specifically the first listed ARM system mentioned there and the MIPS 
-system are older embedded devices that yet show sufficient entropy). Also, the 
-entropy available in virtual environments is shown in appendix C.
-
-The tools perform the aforementioned measurements are provided with the 
-enabling of CONFIG_LRNG_RAW_ENTROPY supported by [2]. This allows everybody to 
-re-perform the analysis on the system of his choice.
-
-Also, the entire entropy assessment of the LRNG is supported by the entropy 
-analysis of the existing implementation in [3]. Specifically section 6.1 shows 
-that the existing implementation has much more entropy available in the 
-interrupt events than it credits. Yet, due to the design of the existing 
-implementation with the fast pool (for which we have no assessment how much 
-entropy is lost by it) and the fact of double counting of entropy with HID/
-block devices, the massive underestimation of existing entropy with the 
-existing /dev/random implementation is warranted.
-
-Lastly, [4] performs the entropy assessment of the existing /dev/random 
-implementation in virtualized environments showing that still sufficient 
-entropy is available in interrupt events supporting the approach taken in the 
-LRNG. Writing the assessment of [4] was the initial trigger point for me to 
-start the LRNG implementation.
-
-The second noise source that, however, is credited much less entropy is 
-documented in [5] including its entropy assessment.
-
-[1] https://chronox.de/lrng/doc/lrng.pdf
-
-[2] https://chronox.de/lrng/lrng-tests-20200415.tar.xz
-
-[3] https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/Studies/
-LinuxRNG/LinuxRNG_EN.pdf?__blob=publicationFile
-
-[4] https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Publikationen/Studien/
-ZufallinVMS/Randomness-in-VMs.pdf?__blob=publicationFile
-
-[5] https://chronox.de/jent/doc/CPU-Jitter-NPTRNG.pdf
-
-Ciao
-Stephan
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 2884577..86457d9b 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -3639,8 +3639,10 @@
+ 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+ 			power-domains = <&videocc VENUS_GDSC>,
+ 					<&videocc VCODEC0_GDSC>,
+-					<&videocc VCODEC1_GDSC>;
+-			power-domain-names = "venus", "vcodec0", "vcodec1";
++					<&videocc VCODEC1_GDSC>,
++					<&rpmhpd SDM845_CX>;
++			power-domain-names = "venus", "vcodec0", "vcodec1", "cx";
++			operating-points-v2 = <&venus_opp_table>;
+ 			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+ 				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+ 				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+@@ -3662,6 +3664,40 @@
+ 			video-core1 {
+ 				compatible = "venus-encoder";
+ 			};
++
++			venus_opp_table: venus-opp-table {
++				compatible = "operating-points-v2";
++
++				opp-100000000 {
++					opp-hz = /bits/ 64 <100000000>;
++					required-opps = <&rpmhpd_opp_min_svs>;
++				};
++
++				opp-200000000 {
++					opp-hz = /bits/ 64 <200000000>;
++					required-opps = <&rpmhpd_opp_low_svs>;
++				};
++
++				opp-320000000 {
++					opp-hz = /bits/ 64 <320000000>;
++					required-opps = <&rpmhpd_opp_svs>;
++				};
++
++				opp-380000000 {
++					opp-hz = /bits/ 64 <380000000>;
++					required-opps = <&rpmhpd_opp_svs_l1>;
++				};
++
++				opp-444000000 {
++					opp-hz = /bits/ 64 <444000000>;
++					required-opps = <&rpmhpd_opp_nom>;
++				};
++
++				opp-533000097 {
++					opp-hz = /bits/ 64 <533000097>;
++					required-opps = <&rpmhpd_opp_turbo>;
++				};
++			};
+ 		};
+ 
+ 		videocc: clock-controller@ab00000 {
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
