@@ -2,156 +2,107 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA70C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1472084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 693D22076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:40:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MqLsZu9Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgG2Ijl (ORCPT
+        id S1727816AbgG2IkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:39:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34132 "EHLO
+        Wed, 29 Jul 2020 04:40:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgG2Ijk (ORCPT
+        with ESMTP id S1726476AbgG2IkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:39:40 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 966DCC061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:39:40 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k0hcg-0004vI-85; Wed, 29 Jul 2020 10:39:38 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k0hce-0006kb-TI; Wed, 29 Jul 2020 10:39:36 +0200
-Date:   Wed, 29 Jul 2020 10:39:36 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     robh+dt@kernel.org, frowand.list@gmail.com
-Cc:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] arm: dts: imx7: add QSPI
-Message-ID: <20200729083936.p5t66bf5envimgur@pengutronix.de>
-References: <20200729071106.8213-1-matthias.schiffer@ew.tq-group.com>
- <33fbac338c9d9accda37837eb1338003b28cafee.camel@ew.tq-group.com>
- <20200729075841.2fiudq2ypcbvlymx@pengutronix.de>
+        Wed, 29 Jul 2020 04:40:11 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07208C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:40:11 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b6so20780737wrs.11
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YJUVSZqIXAUcxRK135uPMY26TWenUYdXUZWwq11zSBY=;
+        b=MqLsZu9YbOlKS6mFOepKH+8KAfFJ/mtQQ0W+tGHPTucR2LdBY1Q2npnk0CTYTUS82h
+         v9DXVj08hSt0kgyjKdoOiFBiDeVm3mN0e0cH5SF2aXtwwKbqUGuWParVuF+FOIY6B9gu
+         nKIxdcOP6Qlhvc8mKlcrghAM9VRsEDDMlPJbPBRZYj7C0flFcABs9hdykujWP/lbuoDA
+         lfMZx4bKXqnfr1p7MTXunNw5H7vnkDZX9KMEyp+HYWB9k7PyO/yV1VClXzcCBBG3M0Yj
+         WIMP2O9oXMJ4hwdq2iOJPGyCsPgyKU9TDPYTjek/WVV1BVvvemro+FkmjnfDBs26YF4I
+         PyYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YJUVSZqIXAUcxRK135uPMY26TWenUYdXUZWwq11zSBY=;
+        b=KthcIB06w4NHgNjEx6e3hRvgfUsd/gjfq6tYY5E3Ch+gyoo0rCWcgSOlscVrC6FFr9
+         DeRM3vUWivJgJt976w9c9t/hu3vGEv0qVX4KPVvRF+85a5HEK15GU4F5iUZmKZtjpdsP
+         IRiPTpQ5QfPutQ6YH3MfN031S/X070InYcomh5BeJPUqRXl4mbcH+UG1yPLlBJEnNi6T
+         WbhNnVnMmt7mGtvTaIvNlwwHI0HQkNSfJ9jHeNI9eur+eXJHXLp0S7Ps8wY5JE9RT6Ch
+         vRIIF+ygeNAYRtT+8zy1wmdzfh51praHElmgerrWPNDpuxh6W8CvJMFASG0vWVETVKJ3
+         dH7g==
+X-Gm-Message-State: AOAM5313zhT8zVNbRdl/2cjKupXv7NKz0aXbUUu9UMTXh7IgqsGDXQ1c
+        dCx4SG+An8oQeKc8WJFTiwn5M8GdGmAmiQ==
+X-Google-Smtp-Source: ABdhPJw5yvp3nWT258bEQHmRZ9EmQ9SNB++YPU6N3KfBaR1N4H9HAOwkeizVkcJsFE7XH06WG/cGTA==
+X-Received: by 2002:adf:fd41:: with SMTP id h1mr30692686wrs.124.1596012009544;
+        Wed, 29 Jul 2020 01:40:09 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:812d:95b8:6384:6e20? ([2a01:e34:ed2f:f020:812d:95b8:6384:6e20])
+        by smtp.googlemail.com with ESMTPSA id x9sm3752135wmk.45.2020.07.29.01.40.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 01:40:08 -0700 (PDT)
+Subject: Re: [PATCH] thermal: core: Add thermal zone enable/disable
+ notification
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+References: <20200727231033.26512-1-daniel.lezcano@linaro.org>
+ <CAHLCerO=KPUR-2qEuFpNV9UUV_O7GoXY-EPhyefOFfL_jZ_0gA@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <90f14da8-a197-08cb-cf55-5c88fa8eed58@linaro.org>
+Date:   Wed, 29 Jul 2020 10:40:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729075841.2fiudq2ypcbvlymx@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:37:01 up 256 days, 23:55, 239 users,  load average: 0.07, 0.09,
- 0.09
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <CAHLCerO=KPUR-2qEuFpNV9UUV_O7GoXY-EPhyefOFfL_jZ_0gA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added Rob and Frank.
+On 29/07/2020 07:36, Amit Kucheria wrote:
+> On Tue, Jul 28, 2020 at 4:40 AM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+>>
+>> Now the calls to enable/disable a thermal zone are centralized in a
+>> call to a function, we can add in these the corresponding netlink
+>> notifications.
+>>
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> 
+> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-Maybe they can explain us this behaviour.
+I've applied the changes, thanks for the review.
 
-On 20-07-29 09:58, Marco Felsch wrote:
-> Hi Matthias,
-> 
-> On 20-07-29 09:14, Matthias Schiffer wrote:
-> > On Wed, 2020-07-29 at 09:11 +0200, Matthias Schiffer wrote:
-> > > In preparation for an update of the TQ-Systems TQMa7x/MBa7x DTS, add
-> > > the
-> > > QSPI controller to imx7s.dtsi.
-> > > 
-> > > Based-on-patch-by: Han Xu <han.xu@nxp.com>
-> > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> > > ---
-> > > 
-> > > v2:
-> > > - renamed node and label
-> > > - reordered properties
-> > > (as suggested by Marco Felsch)
-> > 
-> > Ugh, I neglected to check for compile warnings after adjusting the node
-> > name. This now gives the following warning:
-> > 
-> > arch/arm/boot/dts/imx7s.dtsi:1165.24-1176.6: Warning (spi_bus_bridge): 
-> > /soc/bus@30800000/qspi@30bb0000: node name for SPI buses should be
-> > 'spi'
-> > 
-> > So I guess this should be called spi@ after all?
-> 
-> Unfortunately yes, this would cause a longer discussion but it still
-> seems wrong to me.
-> 
-> Regards,
->   Marco
-> 
-> > > 
-> > > 
-> > >  arch/arm/boot/dts/imx7s.dtsi | 13 +++++++++++++
-> > >  1 file changed, 13 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/imx7s.dtsi
-> > > b/arch/arm/boot/dts/imx7s.dtsi
-> > > index 1cfaf410aa43..22e4c38223bd 100644
-> > > --- a/arch/arm/boot/dts/imx7s.dtsi
-> > > +++ b/arch/arm/boot/dts/imx7s.dtsi
-> > > @@ -1162,6 +1162,19 @@
-> > >  				status = "disabled";
-> > >  			};
-> > >  
-> > > +			qspi: qspi@30bb0000 {
-> > > +				compatible = "fsl,imx7d-qspi";
-> > > +				reg = <0x30bb0000 0x10000>, <0x60000000
-> > > 0x10000000>;
-> > > +				reg-names = "QuadSPI", "QuadSPI-
-> > > memory";
-> > > +				#address-cells = <1>;
-> > > +				#size-cells = <0>;
-> > > +				interrupts = <GIC_SPI 107
-> > > IRQ_TYPE_LEVEL_HIGH>;
-> > > +				clocks = <&clks IMX7D_QSPI_ROOT_CLK>,
-> > > +					<&clks IMX7D_QSPI_ROOT_CLK>;
-> > > +				clock-names = "qspi_en", "qspi";
-> > > +				status = "disabled";
-> > > +			};
-> > > +
-> > >  			sdma: sdma@30bd0000 {
-> > >  				compatible = "fsl,imx7d-sdma",
-> > > "fsl,imx35-sdma";
-> > >  				reg = <0x30bd0000 0x10000>;
-> > 
-> > 
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> 
-> 
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
