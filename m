@@ -4,140 +4,456 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95ECDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B32DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 756A72076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7CF2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595988928;
-	bh=amZwJ/+9o4xEOWoXapzupFWaU/HGBNDgOHcSg5Q0a6Q=;
+	s=default; t=1595989345;
+	bh=k5qS863fFeAFImz8qQ72STBgwqwjrT2VdEQppPTBzkU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ySfYayXdD5Yo+HV+U5x7PnGbVmC3tGIfUQ+PFp878GvefQBIX3leVLxNY+Uo/COU7
-	 lN83HmZjQsFCOer0w/Ar3034zbNQ5JAtyx8BTromeSPBG4quocwZQRIkXC5z1KmZ5z
-	 13ZOvvuAiGCKJzrZZk6Dkos+NDRUAbkl4b+WqBew=
+	b=uxkq+2+vMse+rzXrysQM2J7TsmMiyE8LRAx2vul5KYRmBbq0M+P72ikWliME1Liti
+	 ZtCydrpps2YdzijoH7J5hJNqbmrsmOf2ImkPMXdj4CTpQsW4jF/me+NBab4yGH5nii
+	 CyKlcyVg3TkOoZaYQZ1C7oO0qZOMYn+CdoYBQwYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731049AbgG2CP1 (ORCPT
+        id S1731036AbgG2CWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 22:15:27 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:39871 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728401AbgG2CP0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 22:15:26 -0400
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 06T2F6UI016692;
-        Wed, 29 Jul 2020 11:15:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 06T2F6UI016692
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1595988907;
-        bh=Qkn+kiJdhteGcggEnh5A4hePD7ExGuNIIh74wMoDJJU=;
+        Tue, 28 Jul 2020 22:22:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36966 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730901AbgG2CWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 22:22:22 -0400
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3CC52070B;
+        Wed, 29 Jul 2020 02:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595989340;
+        bh=k5qS863fFeAFImz8qQ72STBgwqwjrT2VdEQppPTBzkU=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=umve6b0p6HKToioLtP4Ziv+K/KzsD3boGM9ulTtcboyoMyJHaON5gLb5ObRIUow0F
-         o+qfyy6mVaJ+wbsg1u7+sCXM4GBrcHyGZYFeX6ceuwqMQPP8bZc5c1jsgZI0eQTyRg
-         YUu56A2L4EOAnnVU92vWDt+/Wv5E+drhUELngqddl/3WndB6zG1xCsg80UzUT+/Cbe
-         qdbsxDjLFx+eAwr8m1lhtwg4tyd4CIgRAfPztSJSunxLM9AQpesD/qmRbcYx8hVrdn
-         LZYabkaeEhp9sjUa+xtjZh1kBsOK1U7NnYy2nXBcP031DaFpzl9aZFXJFWXT0n+DAm
-         istxPBXYR1iFA==
-X-Nifty-SrcIP: [209.85.217.52]
-Received: by mail-vs1-f52.google.com with SMTP id k7so11294661vso.2;
-        Tue, 28 Jul 2020 19:15:07 -0700 (PDT)
-X-Gm-Message-State: AOAM531lLNpZ7Pz4Kz1RjZ+Vep1p7CD/J3ThCUTghxbS6Rgn33qLuC0/
-        8gjqeUIToPI3HU42YUEHdMg9Dlhhx0T7xwFSowA=
-X-Google-Smtp-Source: ABdhPJxHS/wdsjCJ01OGRsbq6xgw9iJxUiIoq5iqy8Ryces8bJ+zBV7WGCZ5ZFIDG281wY0aBfri71iy4As6H59X2ZQ=
-X-Received: by 2002:a67:de09:: with SMTP id q9mr22428084vsk.179.1595988906252;
- Tue, 28 Jul 2020 19:15:06 -0700 (PDT)
+        b=UD2/SrXnSaE/nhR8QzLzln/M1nBs3BDKwAM2N1IFATWjIZxRnjcMdLqtNvkQlCTZS
+         OpydQCu0X+xprkrVevu6lL5QpcKnCTCEdNu2rnqrOAfQBAeHnVH78g4LouybBmztXT
+         wyapIPA8QyLf3cXBqKsKQZ5NzNHK93PhcTbNgDKM=
+Received: by mail-ed1-f53.google.com with SMTP id m20so6774722eds.2;
+        Tue, 28 Jul 2020 19:22:19 -0700 (PDT)
+X-Gm-Message-State: AOAM532TgPSo80PBX8j0YyyBld2SnOR5BwjQeRWyJu8ilqXVBGyPDuEs
+        Q8LnFey8/DVz2U4Y3NQeFA9FIYBL1fGM8RwO2w==
+X-Google-Smtp-Source: ABdhPJydhzr6C/k9YnK7AjZNwvP8zWehqaiYPIACf3wyURav0IRtuOo10iWWbsTTEwW5OauoJYKz5teZYxl1XRqcP/k=
+X-Received: by 2002:a50:e617:: with SMTP id y23mr28961939edm.47.1595989338240;
+ Tue, 28 Jul 2020 19:22:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <DB7PR08MB380100FDD4D1B11062FA57819C690@DB7PR08MB3801.eurprd08.prod.outlook.com>
-In-Reply-To: <DB7PR08MB380100FDD4D1B11062FA57819C690@DB7PR08MB3801.eurprd08.prod.outlook.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 29 Jul 2020 11:14:29 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQm87ykKi=OfToZRy2JtNt0OX3n6kXpNxNW5W7HREh4NA@mail.gmail.com>
-Message-ID: <CAK7LNAQm87ykKi=OfToZRy2JtNt0OX3n6kXpNxNW5W7HREh4NA@mail.gmail.com>
-Subject: Re: linux-5.8-rc4/scripts/kconfig/qconf.cc: 2 * bad delete ?
-To:     David Binderman <dcb314@hotmail.com>
-Cc:     "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1595303971-8793-1-git-send-email-neal.liu@mediatek.com>
+ <1595303971-8793-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
+ <1595389756.20193.12.camel@mtkswgap22> <CAAOTY_9k7rM=Pf43DwJR_bkQvxVtpWYTjVoNSZLVE2N0Y_DBmA@mail.gmail.com>
+ <1595484707.26237.12.camel@mtkswgap22> <CAAOTY__V3zwux7UP7p4SUbreGrPBbwRqi=E1WVsA58tYNmri1A@mail.gmail.com>
+ <1595573719.24412.9.camel@mtkswgap22> <CAAOTY__KYH4G3E+c=zoOk==hPJHsAd5u4Q0oj4adKstaoOciMg@mail.gmail.com>
+ <1595819152.7630.13.camel@mtkswgap22> <CAAOTY_8j4rxxqOD0-gf-=sJPhiLu9KE4zF467v7g2EBrTFJUeQ@mail.gmail.com>
+ <1595908325.1388.8.camel@mtkswgap22> <CAAOTY_-POOCU0mG3qcV8=3UF4Qr5rq1RVAeFtnRvLgAxaof32g@mail.gmail.com>
+ <1595988652.9265.8.camel@mtkswgap22>
+In-Reply-To: <1595988652.9265.8.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Wed, 29 Jul 2020 10:22:06 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_82nN8U34-LW8RTqTLEH2MwTg+B5KMHjha3=sbOXPdWSw@mail.gmail.com>
+Message-ID: <CAAOTY_82nN8U34-LW8RTqTLEH2MwTg+B5KMHjha3=sbOXPdWSw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] soc: mediatek: add mtk-devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 6:22 PM David Binderman <dcb314@hotmail.com> wrote:
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8829=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8810:10=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> Hello there,
+> Hi Chun-Kuang,
 >
-> linux-5.8-rc4/scripts/kconfig/qconf.cc:1242:10: error: Mismatching allocation and deallocation: data [mismatchAllocDealloc]
-> linux-5.8-rc4/scripts/kconfig/qconf.cc:1255:10: error: Mismatching allocation and deallocation: data [mismatchAllocDealloc]
+> On Tue, 2020-07-28 at 23:35 +0800, Chun-Kuang Hu wrote:
+> > Hi, Neal:
+> >
+> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8828=E6=
+=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=8811:52=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > >
+> > > Hi Chun-Kuang,
+> > >
+> > > On Mon, 2020-07-27 at 22:47 +0800, Chun-Kuang Hu wrote:
+> > > > Hi, Neal:
+> > > >
+> > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=882=
+7=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8A=E5=8D=8811:06=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > > > >
+> > > > > Hi Chun-Kuang,
+> > > > >
+> > > > > On Fri, 2020-07-24 at 23:55 +0800, Chun-Kuang Hu wrote:
+> > > > > > Hi, Neal:
+> > > > > >
+> > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=
+=8824=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=882:55=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> > > > > > >
+> > > > > > > Hi Chun-Kuang,
+> > > > > > >
+> > > > > > > On Fri, 2020-07-24 at 00:32 +0800, Chun-Kuang Hu wrote:
+> > > > > > > > Hi, Neal:
+> > > > > > > >
+> > > > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=
+=E6=9C=8823=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=882:11=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+> > > > > > > > >
+> > > > > > > > > Hi Chun-Kuang,
+> > > > > > > > >
+> > > > > > > > > On Wed, 2020-07-22 at 22:25 +0800, Chun-Kuang Hu wrote:
+> > > > > > > > > > Hi, Neal:
+> > > > > > > > > >
+> > > > > > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=
+=B47=E6=9C=8822=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8811:49=E5=AF=
+=AB=E9=81=93=EF=BC=9A
+> > > > > > > > > > >
+> > > > > > > > > > > Hi Chun-Kuang,
+> > > > > > > > > > >
+> > > > > > > > > > > On Wed, 2020-07-22 at 07:21 +0800, Chun-Kuang Hu wrot=
+e:
+> > > > > > > > > > > > Hi, Neal:
+> > > > > > > > > > > >
+> > > > > > > > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=
+=B9=B47=E6=9C=8821=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8812:00=E5=
+=AF=AB=E9=81=93=EF=BC=9A
+> > > > > > > > > > > > >
+> > > > > > > > > > > >
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +/*
+> > > > > > > > > > > > > + * mtk_devapc_dump_vio_dbg - get the violation i=
+ndex and dump the full violation
+> > > > > > > > > > > > > + *                           debug information.
+> > > > > > > > > > > > > + */
+> > > > > > > > > > > > > +static bool mtk_devapc_dump_vio_dbg(struct mtk_d=
+evapc_context *ctx, u32 vio_idx)
+> > > > > > > > > > > > > +{
+> > > > > > > > > > > > > +       u32 shift_bit;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       if (check_vio_mask(ctx, vio_idx))
+> > > > > > > > > > > > > +               return false;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       if (!check_vio_status(ctx, vio_idx))
+> > > > > > > > > > > > > +               return false;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       shift_bit =3D get_shift_group(ctx, vio_id=
+x);
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       if (sync_vio_dbg(ctx, shift_bit))
+> > > > > > > > > > > > > +               return false;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       devapc_extract_vio_dbg(ctx);
+> > > > > > > > > > > >
+> > > > > > > > > > > > I think get_shift_group(), sync_vio_dbg(), and
+> > > > > > > > > > > > devapc_extract_vio_dbg() should be moved out of vio=
+_idx for-loop (the
+> > > > > > > > > > > > loop in devapc_violation_irq()) because these three=
+ function is not
+> > > > > > > > > > > > related to vio_idx.
+> > > > > > > > > > > > Another question: when multiple vio_idx violation o=
+ccur, vio_addr is
+> > > > > > > > > > > > related to which one vio_idx? The latest happened o=
+ne?
+> > > > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > Actually, it's related to vio_idx. But we don't use i=
+t directly on these
+> > > > > > > > > > > function. I think below snip code might be better way=
+ to understand it.
+> > > > > > > > > > >
+> > > > > > > > > > > for (...)
+> > > > > > > > > > > {
+> > > > > > > > > > >         check_vio_mask()
+> > > > > > > > > > >         check_vio_status()
+> > > > > > > > > > >
+> > > > > > > > > > >         // if get vio_idx, mask it temporarily
+> > > > > > > > > > >         mask_module_irq(true)
+> > > > > > > > > > >         clear_vio_status()
+> > > > > > > > > > >
+> > > > > > > > > > >         // dump violation info
+> > > > > > > > > > >         get_shift_group()
+> > > > > > > > > > >         sync_vio_dbg()
+> > > > > > > > > > >         devapc_extract_vio_dbg()
+> > > > > > > > > > >
+> > > > > > > > > > >         // unmask
+> > > > > > > > > > >         mask_module_irq(false)
+> > > > > > > > > > > }
+> > > > > > > > > >
+> > > > > > > > > > This snip code does not explain any thing. I could rewr=
+ite this code as:
+> > > > > > > > > >
+> > > > > > > > > > for (...)
+> > > > > > > > > > {
+> > > > > > > > > >     check_vio_mask()
+> > > > > > > > > >     check_vio_status()
+> > > > > > > > > >
+> > > > > > > > > >     // if get vio_idx, mask it temporarily
+> > > > > > > > > >     mask_module_irq(true)
+> > > > > > > > > >     clear_vio_status()
+> > > > > > > > > >     // unmask
+> > > > > > > > > >     mask_module_irq(false)
+> > > > > > > > > > }
+> > > > > > > > > >
+> > > > > > > > > > // dump violation info
+> > > > > > > > > > get_shift_group()
+> > > > > > > > > > sync_vio_dbg()
+> > > > > > > > > > devapc_extract_vio_dbg()
+> > > > > > > > > >
+> > > > > > > > > > And my version is identical with your version, isn't it=
+?
+> > > > > > > > >
+> > > > > > > > > Sorry, I did not explain it clearly. Let's me try again.
+> > > > > > > > > The reason why I put "dump violation info" between mask &=
+ unmask context
+> > > > > > > > > is because it has to stop interrupt first before dump vio=
+lation info,
+> > > > > > > > > and then unmask it to prepare next violation.
+> > > > > > > > > These sequence guarantee that if multiple violation is tr=
+iggered, we
+> > > > > > > > > still have information to debug.
+> > > > > > > > > If the code sequence in your version and multiple violati=
+on is
+> > > > > > > > > triggered, there might be no any information but keeps en=
+tering ISR.
+> > > > > > > > > Finally, system might be abnormal and watchdog timeout.
+> > > > > > > > > In this case, we still don't have any information to debu=
+g.
+> > > > > > > >
+> > > > > > > > I still don't understand why no information to debug. For e=
+xample when
+> > > > > > > > vio_idx 5, 10, 15 has violation,
+> > > > > > > > You would mask vio_idx 5 to get information, but vio_idx 10=
+, 15 does
+> > > > > > > > not mask yet.
+> > > > > > > > In your words, when vio_idx 10, 15 not mask, you would not =
+get any
+> > > > > > > > debug information when you process vio_idx 5.
+> > > > > > > >
+> > > > > > > > In my version, I would clear all status, why keeps entering=
+ ISR?
+> > > > > > >
+> > > > > > > Think about this case, if someone tries to dump "AAA" module'=
+s register.
+> > > > > > > It would keep read reg base, base+0x4, base+0x8, ...
+> > > > > > > All these registers are in the same slave, which would be sam=
+e vio_idx.
+> > > > > > > (Take vio_idx 5 as example)
+> > > > > > > In this case, vio_idx 5 will keep triggering interrupt. If yo=
+u did not
+> > > > > > > do "dump violation info" between mask & unmask, you cannot ge=
+t any
+> > > > > > > violation info until the last interrupt being handled.
+> > > > > > > Normally, system will crash before last interrupt coming.
+> > > > > >
+> > > > > > You have said that first vio_addr would be kept until it's 'han=
+dled'.
+> > > > > > So the first vio_addr reg_base would be kept even though other
+> > > > > > violation happen. And I could handle (clear status and dump inf=
+o) it
+> > > > > > then vio_addr would next violation's address. I'm confused with=
+ your
+> > > > > > statement. If AAA is dumping register of vio_idx 5, BBB is dump=
+ing
+> > > > > > register of vio_idx 10, CCC is dumping register of vio_idx 15, =
+I think
+> > > > > > you should mask all vio_idx not only one. So the code would be
+> > > > > >
+> > > > > > for all vio_idx {
+> > > > > >     mask_module_irq(true)
+> > > > > > }
+> > > > > >
+> > > > > > devapc_extract_vio_dbg()
+> > > > > >
+> > > > > > for all vio_idx {
+> > > > > >     clear_vio_status()
+> > > > > >     mask_module_irq(false)
+> > > > > > }
+> > > > > >
+> > > > >
+> > > > > I'm also consider this solution and I think it's much better to
+> > > > > understand hardware behavior.
+> > > > >
+> > > > > devapc_dump_vio_dbg()
+> > > > > {
+> > > > >         while(1) {
+> > > > >                 // might have multiple shift_bit raised
+> > > > >                 shift_bit =3D get_shift_group()
+> > > > >                 if (shift_bit >=3D 0 && shift bit <=3D 31)
+> > > > >                         sync_vio_dbg(shift_bit)
+> > > > >                         extract_vio_dbg()
+> > > >
+> > > > According to your statement, when multiple violation occur, only th=
+e
+> > > > first one is kept, others are dropped. I think we just need to dump
+> > > > debug info once.
+> > > >
+> > > > Because only one violation information would be kept, why not only =
+one
+> > > > group (equal to no group)?
+> > > >
+> > > > Regards,
+> > > > Chun-Kuang.
+> > >
+> > > Let's me give you an example of devapc design.
+> > > vio_idx: 0, 1, 2 -> group 0 (shift_bit: 0)
+> > > vio_idx: 3, 4, 5 -> group 1 (shift_bit: 1)
+> > > ...
+> > >
+> > > Each group violation will keep one violation (the first one). If vio_=
+idx
+> > > 0 is triggered first, vio_idx 1 is triggered next, then group 0 will
+> > > just keep vio_idx 0 violation info.
+> > > If vio_idx 2 is triggered first, vio_idx 3 is triggered next, then gr=
+oup
+> > > 0 will keep vio_idx 2 violation info, group 1 will keep vio_idx 3's.
+> > >
+> > > We have to scan all groups and dump everything we have.
+> > > Thanks !
+> > >
+> >
+> > Could we let all vio_idx be group 0 so that we could just sync one
+> > group? It's bad to spend too much time in irq handler.
+> > When we set pd_vio_shift_sel_reg, it seems we could set multiple group
+> > together, couldn't it?
+> >
+> > Regards,
+> > Chun-Kuang.
+> >
 >
-> new [] needs delete [].
+> No, Which group vio_idx belongs to is determined by hardware. Software
+> cannot change its group.
+> There is very low possibility that multiple groups has violation at the
+> same time, so it would not spend much time to handle it.
+> It also cannot shift multiple groups at the same time since there is
+> only one vio_info(rw, vio_addr, master_id, ...) exist at a time.
+> devapc_extract_vio_dbg() function is doing this step.
 >
-> Regards
+
+So this flow is OK for me. Would you please add comment for this
+information so that we could understand how hardware work.
+
+Regards,
+Chun-Kuang.
+
+> Thanks !
 >
-> David Binderman
-
-
-Thanks for the report, and sorry for the delay.
-
-Will you send a patch, or shall I do it?
-
-
-BTW, I guess those error messages are from cppcheck.
-
-
-Could you please teach me how to reproduce them?
-
-
-I ran cppcheck against qconf.cc
-but no success to check it.
-
-
-
-
-masahiro@oscar:~/ref/linux$ cppcheck  scripts/kconfig/qconf.cc
-Checking scripts/kconfig/qconf.cc ...
-masahiro@oscar:~/ref/linux$ cppcheck --enable=all scripts/kconfig/qconf.cc
-Checking scripts/kconfig/qconf.cc ...
-scripts/kconfig/qconf.cc:0:0: information: This file is not analyzed.
-Cppcheck failed to extract a valid configuration. Use -v for more
-details. [noValidConfiguration]
-
-^
-nofile:0:0: information: Cppcheck cannot find all the include files
-(use --check-config for details) [missingIncludeSystem]
-
-masahiro@oscar:~/ref/linux$ cppcheck -v --enable=all scripts/kconfig/qconf.cc
-Checking scripts/kconfig/qconf.cc ...
-Defines:
-Undefines:
-Includes:
-Platform:Native
-scripts/kconfig/qconf.cc:0:0: information: This file is not analyzed.
-Cppcheck failed to extract a valid configuration. The tested
-configurations have these preprocessor errors:
-'' : [scripts/kconfig/qconf.moc:12] #error "The header file 'qconf.h'
-doesn't include <QObject>."
-Q_MOC_OUTPUT_REVISION : [scripts/kconfig/qconf.moc:14] #error "This
-file was generated using the moc from 5.12.8. It"
-[noValidConfiguration]
-
-^
-nofile:0:0: information: Cppcheck cannot find all the include files.
-Cppcheck can check the code without the include files found. But the
-results will probably be more accurate if all the include files are
-found. Please check your project's include directories and add all of
-them as include directories for Cppcheck. To see what files Cppcheck
-cannot find use --check-config. [missingIncludeSystem]
-
-
-
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+> > > >
+> > > > >                 else
+> > > > >                         break
+> > > > >         }
+> > > > > }
+> > > > >
+> > > > > devapc_violation_irq()
+> > > > > {
+> > > > >         for all vio_idx {
+> > > > >                 mask_module_irq(true)
+> > > > >         }
+> > > > >
+> > > > >         devapc_dump_vio_dbg()
+> > > > >
+> > > > >         for all vio_idx {
+> > > > >                 clear_vio_status()
+> > > > >                 mask_module_irq(false)
+> > > > >         }
+> > > > > }
+> > > > >
+> > > > > Is it more clear for this control flow?
+> > > > > Thanks !
+> > > > >
+> > > > > > >
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > About your question, vio_addr would be the first one.
+> > > > > > > > > >
+> > > > > > > > > > So other vio_addr would be dropped? Or hardware would k=
+eep all
+> > > > > > > > > > vio_addr and you have some way to get all vio_addr?
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > In this case, hardware will drop other violation info and=
+ keep the first
+> > > > > > > > > one until it been handled.
+> > > > > > > >
+> > > > > > > > Does 'handled' mean status is cleared?
+> > > > > > >
+> > > > > > > "handled" means clear status and dump violation info.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > Regards,
+> > > > > > > > Chun-Kuang.
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       return true;
+> > > > > > > > > > > > > +}
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +/*
+> > > > > > > > > > > > > + * devapc_violation_irq - the devapc Interrupt S=
+ervice Routine (ISR) will dump
+> > > > > > > > > > > > > + *                        violation information =
+including which master violates
+> > > > > > > > > > > > > + *                        access slave.
+> > > > > > > > > > > > > + */
+> > > > > > > > > > > > > +static irqreturn_t devapc_violation_irq(int irq_=
+number,
+> > > > > > > > > > > > > +                                       struct mt=
+k_devapc_context *ctx)
+> > > > > > > > > > > > > +{
+> > > > > > > > > > > > > +       u32 vio_idx;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       for (vio_idx =3D 0; vio_idx < ctx->vio_id=
+x_num; vio_idx++) {
+> > > > > > > > > > > > > +               if (!mtk_devapc_dump_vio_dbg(ctx,=
+ vio_idx))
+> > > > > > > > > > > > > +                       continue;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +               /* Ensure that violation info are=
+ written before
+> > > > > > > > > > > > > +                * further operations
+> > > > > > > > > > > > > +                */
+> > > > > > > > > > > > > +               smp_mb();
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +               /*
+> > > > > > > > > > > > > +                * Mask slave's irq before cleari=
+ng vio status.
+> > > > > > > > > > > > > +                * Must do it to avoid nested int=
+errupt and prevent
+> > > > > > > > > > > > > +                * unexpected behavior.
+> > > > > > > > > > > > > +                */
+> > > > > > > > > > > > > +               mask_module_irq(ctx, vio_idx, tru=
+e);
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +               clear_vio_status(ctx, vio_idx);
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +               mask_module_irq(ctx, vio_idx, fal=
+se);
+> > > > > > > > > > > > > +       }
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       return IRQ_HANDLED;
+> > > > > > > > > > > > > +}
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +/*
+> > > > > > >
+> > > > >
+> > >
+>
