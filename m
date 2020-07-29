@@ -2,219 +2,194 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21253C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2519C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F18752083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB99206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:02:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4BtqCav8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DOKFv728"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgG2NBu (ORCPT
+        id S1727020AbgG2NCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:01:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21056 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726353AbgG2NBt (ORCPT
+        Wed, 29 Jul 2020 09:02:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbgG2NCX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 09:01:49 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06TCZaTh124587;
-        Wed, 29 Jul 2020 09:00:39 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32hsqgumyj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 09:00:39 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06TCbQ1q136668;
-        Wed, 29 Jul 2020 09:00:38 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32hsqgumwg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 09:00:38 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06TD0an3022946;
-        Wed, 29 Jul 2020 13:00:36 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma02fra.de.ibm.com with ESMTP id 32gcq0u44y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 13:00:36 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06TD0XDB59572686
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jul 2020 13:00:33 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36118AE099;
-        Wed, 29 Jul 2020 13:00:32 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 18FC5AE06E;
-        Wed, 29 Jul 2020 13:00:28 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.204.160])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 29 Jul 2020 13:00:27 +0000 (GMT)
-Date:   Wed, 29 Jul 2020 16:00:25 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Justin He <Justin.He@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Anshuman Khandual <Anshuman.Khandual@arm.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Ira Weiny <ira.weiny@intel.com>, Kaly Xin <Kaly.Xin@arm.com>
-Subject: Re: [RFC PATCH 0/6] decrease unnecessary gap due to pmem kmem
- alignment
-Message-ID: <20200729130025.GD3672596@linux.ibm.com>
-References: <20200729033424.2629-1-justin.he@arm.com>
- <D1981D47-61F1-42E9-A426-6FEF0EC310C8@redhat.com>
- <AM6PR08MB40690714A2E77A7128B2B2ADF7700@AM6PR08MB4069.eurprd08.prod.outlook.com>
- <20200729093150.GC3672596@linux.ibm.com>
- <e128f304-7d1d-c1eb-2def-fee7d105424f@redhat.com>
+        Wed, 29 Jul 2020 09:02:23 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C315EC061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 06:02:22 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596027741;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ISg0/WArn12noaQmrr46IGgWshWP/iaAXMHUeAAHF4U=;
+        b=4BtqCav83IxKHOF5OuHBXDNPxXmA1MKiNVJZFKGS73HUdSYrUsax3Jm8GPZ6nuA7PnH/w9
+        G7GFrNWL48jeSLOfIqeZhKPMwNsJTUvabXeCQwMWTFHRpXzSxpUnw/iFF1j+gAycS6vnki
+        xGhW+xOK2CrzZqEjgGLgV9B53LGg4Hk7GPN8DPUSssg44bbvXidTNzDmCLoRbtGmh/nvEL
+        iPl3HEtwo5oF2mw8umxFlA6q8I0R1LP7qHz80aZV1NnGf2F6HPDTHHubq93JOcWCLp2kXb
+        nrlcUUy4uJ1k4vK2SiEbsChPmryUXmhZI3vhvXZb2pfKAAdxLBFVIVF6pCmsWQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596027741;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ISg0/WArn12noaQmrr46IGgWshWP/iaAXMHUeAAHF4U=;
+        b=DOKFv728My1t2n9oT14oCmpA1rDI1NsmD92tbTt0Mhfw6esQlSSTu64E0pDmCqVbe+bT57
+        brxZA12YUaUnRzDQ==
+To:     Freddy Hsin <freddy.hsin@mediatek.com>,
+        linux-mediatek@lists.infradead.or,
+        linux-arm-kernel@lists.infradead.org,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "Ben Dooks \(Codethink\)" <ben.dooks@codethink.co.uk>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        linux-kernel@vger.kernel.org, chang-an.chen@mediatek.com,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        wsd_upstream@mediatek.com, kuohong.wang@mediatek.com,
+        stanley.chu@mediatek.com, Freddy Hsin <freddy.hsin@mediatek.com>
+Subject: Re: [PATCH v1 2/2] timer: mt6873: porting Mediatek timer driver to loadable module
+In-Reply-To: <1595931377-21627-3-git-send-email-freddy.hsin@mediatek.com>
+References: <1595931377-21627-1-git-send-email-freddy.hsin@mediatek.com> <1595931377-21627-3-git-send-email-freddy.hsin@mediatek.com>
+Date:   Wed, 29 Jul 2020 15:02:20 +0200
+Message-ID: <87mu3ia2zn.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e128f304-7d1d-c1eb-2def-fee7d105424f@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-29_07:2020-07-29,2020-07-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=5 malwarescore=0
- priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=532 adultscore=0 clxscore=1015 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007290082
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 11:35:20AM +0200, David Hildenbrand wrote:
-> On 29.07.20 11:31, Mike Rapoport wrote:
-> > Hi Justin,
-> > 
-> > On Wed, Jul 29, 2020 at 08:27:58AM +0000, Justin He wrote:
-> >> Hi David
-> >>>>
-> >>>> Without this series, if qemu creates a 4G bytes nvdimm device, we can
-> >>> only
-> >>>> use 2G bytes for dax pmem(kmem) in the worst case.
-> >>>> e.g.
-> >>>> 240000000-33fdfffff : Persistent Memory
-> >>>> We can only use the memblock between [240000000, 2ffffffff] due to the
-> >>> hard
-> >>>> limitation. It wastes too much memory space.
-> >>>>
-> >>>> Decreasing the SECTION_SIZE_BITS on arm64 might be an alternative, but
-> >>> there
-> >>>> are too many concerns from other constraints, e.g. PAGE_SIZE, hugetlb,
-> >>>> SPARSEMEM_VMEMMAP, page bits in struct page ...
-> >>>>
-> >>>> Beside decreasing the SECTION_SIZE_BITS, we can also relax the kmem
-> >>> alignment
-> >>>> with memory_block_size_bytes().
-> >>>>
-> >>>> Tested on arm64 guest and x86 guest, qemu creates a 4G pmem device. dax
-> >>> pmem
-> >>>> can be used as ram with smaller gap. Also the kmem hotplug add/remove
-> >>> are both
-> >>>> tested on arm64/x86 guest.
-> >>>>
-> >>>
-> >>> Hi,
-> >>>
-> >>> I am not convinced this use case is worth such hacks (that’s what it is)
-> >>> for now. On real machines pmem is big - your example (losing 50% is
-> >>> extreme).
-> >>>
-> >>> I would much rather want to see the section size on arm64 reduced. I
-> >>> remember there were patches and that at least with a base page size of 4k
-> >>> it can be reduced drastically (64k base pages are more problematic due to
-> >>> the ridiculous THP size of 512M). But could be a section size of 512 is
-> >>> possible on all configs right now.
-> >>
-> >> Yes, I once investigated how to reduce section size on arm64 thoughtfully:
-> >> There are many constraints for reducing SECTION_SIZE_BITS
-> >> 1. Given page->flags bits is limited, SECTION_SIZE_BITS can't be reduced too
-> >>    much.
-> >> 2. Once CONFIG_SPARSEMEM_VMEMMAP is enabled, section id will not be counted
-> >>    into page->flags.
-> >> 3. MAX_ORDER depends on SECTION_SIZE_BITS 
-> >>  - 3.1 mmzone.h
-> >> #if (MAX_ORDER - 1 + PAGE_SHIFT) > SECTION_SIZE_BITS
-> >> #error Allocator MAX_ORDER exceeds SECTION_SIZE
-> >> #endif
-> >>  - 3.2 hugepage_init()
-> >> MAYBE_BUILD_BUG_ON(HPAGE_PMD_ORDER >= MAX_ORDER);
-> >>
-> >> Hence when ARM64_4K_PAGES && CONFIG_SPARSEMEM_VMEMMAP are enabled,
-> >> SECTION_SIZE_BITS can be reduced to 27.
-> >> But when ARM64_64K_PAGES, given 3.2, MAX_ORDER > 29-16 = 13.
-> >> Given 3.1 SECTION_SIZE_BITS >= MAX_ORDER+15 > 28. So SECTION_SIZE_BITS can not
-> >> be reduced to 27.
-> >>
-> >> In one word, if we considered to reduce SECTION_SIZE_BITS on arm64, the Kconfig
-> >> might be very complicated,e.g. we still need to consider the case for
-> >> ARM64_16K_PAGES.
-> > 
-> > It is not necessary to pollute Kconfig with that.
-> > arch/arm64/include/asm/sparesemem.h can have something like
-> > 
-> > #ifdef CONFIG_ARM64_64K_PAGES
-> > #define SPARSE_SECTION_SIZE 29
-> > #elif defined(CONFIG_ARM16K_PAGES)
-> > #define SPARSE_SECTION_SIZE 28
-> > #elif defined(CONFIG_ARM4K_PAGES)
-> > #define SPARSE_SECTION_SIZE 27
-> > #else
-> > #error
-> > #endif
-> 
-> ack
-> 
-> >  
-> > There is still large gap with ARM64_64K_PAGES, though.
-> > 
-> > As for SPARSEMEM without VMEMMAP, are there actual benefits to use it?
-> 
-> I was asking myself the same question a while ago and didn't really find
-> a compelling one.
+Freddy,
 
-Memory overhead for VMEMMAP is larger, especially for arm64 that knows
-how to free empty parts of the memory map with "classic" SPARSEMEM.
- 
-> I think it's always enabled as default (SPARSEMEM_VMEMMAP_ENABLE) and
-> would require config tweaks to even disable it.
+Freddy Hsin <freddy.hsin@mediatek.com> writes:
 
-Nope, it's right there in menuconfig,
+again, please be more careful with subject lines. git log $FILE will
+give you a hint. 
 
-"Memory Management options" -> "Sparse Memory virtual memmap"
+> porting Mediatek timer driver to loadable module
 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
-> 
+Repeating the sentence in the subject line is not giving any
+information. Also changelogs want to tell the WHY and not the WHAT. This
+also lacks any information why this is actually safe when booting such a
+system w/o this particular driver built in. What is early boot - up to
+module load - using as clocksource and timer?
 
--- 
-Sincerely yours,
-Mike.
+> diff --git a/drivers/clocksource/mmio.c b/drivers/clocksource/mmio.c
+> index 9de7515..5504569 100644
+> --- a/drivers/clocksource/mmio.c
+> +++ b/drivers/clocksource/mmio.c
+> @@ -21,6 +21,7 @@ u64 clocksource_mmio_readl_up(struct clocksource *c)
+>  {
+>  	return (u64)readl_relaxed(to_mmio_clksrc(c)->reg);
+>  }
+> +EXPORT_SYMBOL(clocksource_mmio_readl_up);
+
+Again EXPORT_SYMBOL_GPL() and this wants to be a seperate patch. It has
+absolutely no business with the mediatek timer changes. 
+  
+>  u64 clocksource_mmio_readl_down(struct clocksource *c)
+>  {
+> @@ -46,7 +47,7 @@ u64 clocksource_mmio_readw_down(struct clocksource *c)
+>   * @bits:	Number of valid bits
+>   * @read:	One of clocksource_mmio_read*() above
+>   */
+> -int __init clocksource_mmio_init(void __iomem *base, const char *name,
+> +int clocksource_mmio_init(void __iomem *base, const char *name,
+>
+>  	unsigned long hz, int rating, unsigned bits,
+>  	u64 (*read)(struct clocksource *))
+>  {
+> @@ -68,3 +69,4 @@ int __init clocksource_mmio_init(void __iomem *base, const char *name,
+>  
+>  	return clocksource_register_hz(&cs->clksrc, hz);
+>  }
+> +EXPORT_SYMBOL(clocksource_mmio_init);
+
+See above.
+
+> diff --git a/drivers/clocksource/timer-mediatek.c b/drivers/clocksource/timer-mediatek.c
+> index 9318edc..5c89b6b 100644
+> --- a/drivers/clocksource/timer-mediatek.c
+> +++ b/drivers/clocksource/timer-mediatek.c
+> @@ -13,6 +13,9 @@
+>  #include <linux/clocksource.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irqreturn.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+>  #include <linux/sched_clock.h>
+>  #include <linux/slab.h>
+>  #include "timer-of.h"
+> @@ -309,5 +312,41 @@ static int __init mtk_gpt_init(struct device_node *node)
+>  
+>  	return 0;
+>  }
+> +
+> +#ifdef MODULE
+> +static int mtk_timer_probe(struct platform_device *pdev)
+> +{
+> +	int (*timer_init)(struct device_node *node);
+> +	struct device_node *np = pdev->dev.of_node;
+> +
+> +	timer_init = of_device_get_match_data(&pdev->dev);
+> +	return timer_init(np);
+> +}
+> +
+> +static const struct of_device_id mtk_timer_match_table[] = {
+> +	{
+> +		.compatible = "mediatek,mt6577-timer",
+> +		.data = mtk_gpt_init,
+> +	},
+> +	{
+> +		.compatible = "mediatek,mt6765-timer",
+> +		.data = mtk_syst_init,
+> +	},
+> +	{}
+> +};
+> +
+> +static struct platform_driver mtk_timer_driver = {
+> +	.probe = mtk_timer_probe,
+> +	.driver = {
+> +		.name = "mtk-timer",
+> +		.of_match_table = mtk_timer_match_table,
+> +	},
+> +};
+> +MODULE_DESCRIPTION("MEDIATEK Module timer driver");
+> +MODULE_LICENSE("GPL v2");
+> +
+> +module_platform_driver(mtk_timer_driver);
+> +#else
+>  TIMER_OF_DECLARE(mtk_mt6577, "mediatek,mt6577-timer", mtk_gpt_init);
+>  TIMER_OF_DECLARE(mtk_mt6765, "mediatek,mt6765-timer", mtk_syst_init);
+> +#endif
+
+Sorry no. This is not going to happen.
+
+The above probe, match table and platform driver structs plus the module*
+thingies are going to be repeated in every single driver which is going
+to support module build. Tons of boilerplate copied over and over
+again.
+
+We had exactly the same before TIMER_OF_DECLARE() came around, so pretty
+please this want's to be some smart macro which handles all of this
+automatically.
+
+Thanks,
+
+        tglx
+
+
