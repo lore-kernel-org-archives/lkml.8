@@ -2,126 +2,471 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2505BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08A6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 046CC207F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1CFE20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHIjsZuI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NvT8VXou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgG2SID (ORCPT
+        id S1727784AbgG2SIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:08:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37110 "EHLO
+        Wed, 29 Jul 2020 14:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbgG2SID (ORCPT
+        with ESMTP id S1726533AbgG2SIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:08:03 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08912C061794;
-        Wed, 29 Jul 2020 11:08:03 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id t23so2534824ljc.3;
-        Wed, 29 Jul 2020 11:08:02 -0700 (PDT)
+        Wed, 29 Jul 2020 14:08:50 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D40AC0619D4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:08:50 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k71so2263527pje.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:08:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rP5EEJynL4vgrWif7lHCElf13y97LueeJ9XmjRFRzS0=;
-        b=EHIjsZuIB3TgAX8r22RZWI/8jR1FJnzWSlLGYPXpB+kD8YvVZV8aze0sZ/Mi0CfV/U
-         UAbiD9oRa9su9lvZI+vgs9vtebyHkewkpGA9V6w6V0viYqr8TkoPVw91aIqccFNNNsvq
-         eReEsCq6wV4/eNP0zks13qdCs0azKEuKAQL3kluP8SaJwaxjuz8XrheyxQnAbrbmBjGF
-         oq9mWeTJCWu8Z+0LhNmSfeXFD2E8sN+vChyvX6TQKQO9X3/PO9sFIojBK9yRpkWEqL4b
-         buQrjMJySHkHtstvBgAmwD8vjShSs03rdauPB0TXzTWCUnrwSLqgDzrsfDlXuvs9bnyU
-         9m6g==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yHo9JWZzUyjBazerQ4BEANBUtQtdpP9atcQMB9aajac=;
+        b=NvT8VXoujTZ0Hj5eqlf9jwL52OCMFhndos/nuWgslFO5jsHrdJ+euSuji8sSq6MGTE
+         9bdxX24HOJgiw32VpiFb2Ogi9cTWzFi89Yja1P46LAEVVsmBkg4ipNrzaLwk5f+SLIG+
+         3Gek5p342VvarO/kZVcuTzVDF6NRDxs355NlU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rP5EEJynL4vgrWif7lHCElf13y97LueeJ9XmjRFRzS0=;
-        b=ptNfz55lVYC4Eak+ksR7iyxC0mV4IZMmFxGqyHUFPD62eJ/UG8LQmqlJZ1YUCUUIFe
-         yEsFNPNfCXohr1wUH9l9roHB+6jq7xBmrDZJi0kLqLSuO8Yx/1I0sUby3ZHwG5ICWKeb
-         WeIId+8BZcco8feIydUkLgRveWtV2/MXmgq0K/+A7SggBpJVZuh4vz6z8QOMK6P1iqrq
-         vZ6jfXV1Wt9mT8qC0ZvPhmn7MgxuxYs6/Dty76c9MFujFDpWadm+4t/tzlUL4lubHOx6
-         ubddUIOltazWd1+sq1SopR9Oq7aONpTM46E0Ujn1hy778JaIrZYafR4k6ARRahD0iyl6
-         xcDQ==
-X-Gm-Message-State: AOAM533ZrRebqSrN3Xh4+bMuGEDNpxDyFBzUOyjFnPjFgid48Ns8/Acy
-        36sXFYmXD7s0YxoB6FnT5nvCINLEdd8=
-X-Google-Smtp-Source: ABdhPJxcfwFKEXxoYle9H02FAwEpkRJE3h4+zoXeAqWpIEyYOxLKpX2yOdVWUTis4U5IW3fPT30rgQ==
-X-Received: by 2002:a2e:9cc2:: with SMTP id g2mr13926210ljj.442.1596046081288;
-        Wed, 29 Jul 2020 11:08:01 -0700 (PDT)
-Received: from wasted.omprussia.ru ([2a00:1fa0:609:47e:1634:9053:a274:2373])
-        by smtp.gmail.com with ESMTPSA id e14sm520837ljj.120.2020.07.29.11.08.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 11:08:00 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] usb: xhci: define IDs for various ASMedia host
- controllers
-To:     Forest Crossman <cyrozap@gmail.com>, linux-usb@vger.kernel.org
-Cc:     mathias.nyman@intel.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-References: <20200727090629.169701-1-cyrozap@gmail.com>
- <20200728042408.180529-1-cyrozap@gmail.com>
- <20200728042408.180529-2-cyrozap@gmail.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Message-ID: <3dbfff9a-e64e-e11f-c032-2bbbb7359c97@gmail.com>
-Date:   Wed, 29 Jul 2020 21:08:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yHo9JWZzUyjBazerQ4BEANBUtQtdpP9atcQMB9aajac=;
+        b=uVqAGDN8YxBq/6Aobi5b0cU4piDZ8X32/GgGtjc9UEsqnk5J0zU9u3trwS4MMAlRDi
+         Uk2ENDcJujPbi783ePukGGMFAjfINJguMzK/YS77sdcKoVDSm7X8sHNAAcg2GJoycm++
+         AzYa1XJ+nopjrjnOI/XX/qCi+psYGX7EP00TGEPOo5zcbOVF369Ns+V1UX/TcqjQYc6l
+         PJbMZCNrTasJk9zY8pw92ObQivogpVr4PaB2Mk07814dWllHdlLZYenf0LX+gOrkCCIt
+         35/l5PQ84lOcAYpk6ch7FTX3HkDkVsTuSuvRicJi0Cpe3Crx9ECo1oLIX/Wr3BGI/ZHw
+         jmAQ==
+X-Gm-Message-State: AOAM530sz46WkN3ZvWEHOOzEweBCbBtxOaMYoSeiyGDeLjtRyZkdCPAw
+        e0ewC7PjEFDnUsVeG0RHJXtktw==
+X-Google-Smtp-Source: ABdhPJxCXFyAXbDqIabQ4k/mW+HoDdIBwjXl7/WETODepWvJ4iIAmA3BDJKmHWMB5w2xD1QIrM5OFg==
+X-Received: by 2002:a17:90a:d583:: with SMTP id v3mr10867142pju.33.1596046129542;
+        Wed, 29 Jul 2020 11:08:49 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b25sm454550pft.134.2020.07.29.11.08.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 11:08:48 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Takashi Iwai <tiwai@suse.de>, Jessica Yu <jeyu@kernel.org>,
+        SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 17/17] test_firmware: Test partial read support
+Date:   Wed, 29 Jul 2020 10:58:45 -0700
+Message-Id: <20200729175845.1745471-18-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200729175845.1745471-1-keescook@chromium.org>
+References: <20200729175845.1745471-1-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200728042408.180529-2-cyrozap@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+From: Scott Branden <scott.branden@broadcom.com>
 
-On 7/28/20 7:24 AM, Forest Crossman wrote:
+Add additional hooks to test_firmware to pass in support
+for partial file read using request_firmware_into_buf():
 
-> Not all ASMedia host controllers have a device ID that matches its part
-> number. #define some of these IDs to make it clearer at a glance which
-> chips require what quirks.
-> 
-> Signed-off-by: Forest Crossman <cyrozap@gmail.com>
-> ---
->  drivers/usb/host/xhci-pci.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> index 9234c82e70e4..baa5af88ca67 100644
-> --- a/drivers/usb/host/xhci-pci.c
-> +++ b/drivers/usb/host/xhci-pci.c
-[...]
-> @@ -260,13 +262,13 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
->  		xhci->quirks |= XHCI_LPM_SUPPORT;
->  
->  	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
-> -			pdev->device == 0x1042)
-> +		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042_XHCI)
+	buf_size: size of buffer to request firmware into
+	partial: indicates that a partial file request is being made
+	file_offset: to indicate offset into file to request
 
-   You shouldn't have un-indented it, blends with the branch below.
-   The 80-column line length limit is history now. :-)
+Also update firmware selftests to use the new partial read test API.
 
->  		xhci->quirks |= XHCI_BROKEN_STREAMS;
->  	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
-> -			pdev->device == 0x1142)
-> +		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
->  		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
->  	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
-> -			pdev->device == 0x2142)
-> +		pdev->device == PCI_DEVICE_ID_ASMEDIA_2142_XHCI)
->  		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
->  
->  	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Co-developed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ lib/test_firmware.c                           | 154 ++++++++++++++++--
+ .../selftests/firmware/fw_filesystem.sh       |  91 +++++++++++
+ 2 files changed, 233 insertions(+), 12 deletions(-)
 
-MBR, Sergei
+diff --git a/lib/test_firmware.c b/lib/test_firmware.c
+index 62af792e151c..387acb94eeea 100644
+--- a/lib/test_firmware.c
++++ b/lib/test_firmware.c
+@@ -50,6 +50,9 @@ struct test_batched_req {
+  * @name: the name of the firmware file to look for
+  * @into_buf: when the into_buf is used if this is true
+  *	request_firmware_into_buf() will be used instead.
++ * @buf_size: size of buf to allocate when into_buf is true
++ * @file_offset: file offset to request when calling request_firmware_into_buf
++ * @partial: partial read opt when calling request_firmware_into_buf
+  * @sync_direct: when the sync trigger is used if this is true
+  *	request_firmware_direct() will be used instead.
+  * @send_uevent: whether or not to send a uevent for async requests
+@@ -89,6 +92,9 @@ struct test_batched_req {
+ struct test_config {
+ 	char *name;
+ 	bool into_buf;
++	size_t buf_size;
++	size_t file_offset;
++	bool partial;
+ 	bool sync_direct;
+ 	bool send_uevent;
+ 	u8 num_requests;
+@@ -183,6 +189,9 @@ static int __test_firmware_config_init(void)
+ 	test_fw_config->num_requests = TEST_FIRMWARE_NUM_REQS;
+ 	test_fw_config->send_uevent = true;
+ 	test_fw_config->into_buf = false;
++	test_fw_config->buf_size = TEST_FIRMWARE_BUF_SIZE;
++	test_fw_config->file_offset = 0;
++	test_fw_config->partial = false;
+ 	test_fw_config->sync_direct = false;
+ 	test_fw_config->req_firmware = request_firmware;
+ 	test_fw_config->test_result = 0;
+@@ -236,28 +245,35 @@ static ssize_t config_show(struct device *dev,
+ 			dev_name(dev));
+ 
+ 	if (test_fw_config->name)
+-		len += scnprintf(buf+len, PAGE_SIZE - len,
++		len += scnprintf(buf + len, PAGE_SIZE - len,
+ 				"name:\t%s\n",
+ 				test_fw_config->name);
+ 	else
+-		len += scnprintf(buf+len, PAGE_SIZE - len,
++		len += scnprintf(buf + len, PAGE_SIZE - len,
+ 				"name:\tEMTPY\n");
+ 
+-	len += scnprintf(buf+len, PAGE_SIZE - len,
++	len += scnprintf(buf + len, PAGE_SIZE - len,
+ 			"num_requests:\t%u\n", test_fw_config->num_requests);
+ 
+-	len += scnprintf(buf+len, PAGE_SIZE - len,
++	len += scnprintf(buf + len, PAGE_SIZE - len,
+ 			"send_uevent:\t\t%s\n",
+ 			test_fw_config->send_uevent ?
+ 			"FW_ACTION_HOTPLUG" :
+ 			"FW_ACTION_NOHOTPLUG");
+-	len += scnprintf(buf+len, PAGE_SIZE - len,
++	len += scnprintf(buf + len, PAGE_SIZE - len,
+ 			"into_buf:\t\t%s\n",
+ 			test_fw_config->into_buf ? "true" : "false");
+-	len += scnprintf(buf+len, PAGE_SIZE - len,
++	len += scnprintf(buf + len, PAGE_SIZE - len,
++			"buf_size:\t%zu\n", test_fw_config->buf_size);
++	len += scnprintf(buf + len, PAGE_SIZE - len,
++			"file_offset:\t%zu\n", test_fw_config->file_offset);
++	len += scnprintf(buf + len, PAGE_SIZE - len,
++			"partial:\t\t%s\n",
++			test_fw_config->partial ? "true" : "false");
++	len += scnprintf(buf + len, PAGE_SIZE - len,
+ 			"sync_direct:\t\t%s\n",
+ 			test_fw_config->sync_direct ? "true" : "false");
+-	len += scnprintf(buf+len, PAGE_SIZE - len,
++	len += scnprintf(buf + len, PAGE_SIZE - len,
+ 			"read_fw_idx:\t%u\n", test_fw_config->read_fw_idx);
+ 
+ 	mutex_unlock(&test_fw_mutex);
+@@ -315,6 +331,30 @@ static ssize_t test_dev_config_show_bool(char *buf, bool val)
+ 	return snprintf(buf, PAGE_SIZE, "%d\n", val);
+ }
+ 
++static int test_dev_config_update_size_t(const char *buf,
++					 size_t size,
++					 size_t *cfg)
++{
++	int ret;
++	long new;
++
++	ret = kstrtol(buf, 10, &new);
++	if (ret)
++		return ret;
++
++	mutex_lock(&test_fw_mutex);
++	*(size_t *)cfg = new;
++	mutex_unlock(&test_fw_mutex);
++
++	/* Always return full write size even if we didn't consume all */
++	return size;
++}
++
++static ssize_t test_dev_config_show_size_t(char *buf, size_t val)
++{
++	return snprintf(buf, PAGE_SIZE, "%zu\n", val);
++}
++
+ static ssize_t test_dev_config_show_int(char *buf, int val)
+ {
+ 	return snprintf(buf, PAGE_SIZE, "%d\n", val);
+@@ -400,6 +440,83 @@ static ssize_t config_into_buf_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RW(config_into_buf);
+ 
++static ssize_t config_buf_size_store(struct device *dev,
++				     struct device_attribute *attr,
++				     const char *buf, size_t count)
++{
++	int rc;
++
++	mutex_lock(&test_fw_mutex);
++	if (test_fw_config->reqs) {
++		pr_err("Must call release_all_firmware prior to changing config\n");
++		rc = -EINVAL;
++		mutex_unlock(&test_fw_mutex);
++		goto out;
++	}
++	mutex_unlock(&test_fw_mutex);
++
++	rc = test_dev_config_update_size_t(buf, count,
++					   &test_fw_config->buf_size);
++
++out:
++	return rc;
++}
++
++static ssize_t config_buf_size_show(struct device *dev,
++				    struct device_attribute *attr,
++				    char *buf)
++{
++	return test_dev_config_show_size_t(buf, test_fw_config->buf_size);
++}
++static DEVICE_ATTR_RW(config_buf_size);
++
++static ssize_t config_file_offset_store(struct device *dev,
++					struct device_attribute *attr,
++					const char *buf, size_t count)
++{
++	int rc;
++
++	mutex_lock(&test_fw_mutex);
++	if (test_fw_config->reqs) {
++		pr_err("Must call release_all_firmware prior to changing config\n");
++		rc = -EINVAL;
++		mutex_unlock(&test_fw_mutex);
++		goto out;
++	}
++	mutex_unlock(&test_fw_mutex);
++
++	rc = test_dev_config_update_size_t(buf, count,
++					   &test_fw_config->file_offset);
++
++out:
++	return rc;
++}
++
++static ssize_t config_file_offset_show(struct device *dev,
++				       struct device_attribute *attr,
++				       char *buf)
++{
++	return test_dev_config_show_size_t(buf, test_fw_config->file_offset);
++}
++static DEVICE_ATTR_RW(config_file_offset);
++
++static ssize_t config_partial_store(struct device *dev,
++				    struct device_attribute *attr,
++				    const char *buf, size_t count)
++{
++	return test_dev_config_update_bool(buf,
++					   count,
++					   &test_fw_config->partial);
++}
++
++static ssize_t config_partial_show(struct device *dev,
++				   struct device_attribute *attr,
++				   char *buf)
++{
++	return test_dev_config_show_bool(buf, test_fw_config->partial);
++}
++static DEVICE_ATTR_RW(config_partial);
++
+ static ssize_t config_sync_direct_store(struct device *dev,
+ 					struct device_attribute *attr,
+ 					const char *buf, size_t count)
+@@ -655,11 +772,21 @@ static int test_fw_run_batch_request(void *data)
+ 		if (!test_buf)
+ 			return -ENOSPC;
+ 
+-		req->rc = request_firmware_into_buf(&req->fw,
+-						    req->name,
+-						    req->dev,
+-						    test_buf,
+-						    TEST_FIRMWARE_BUF_SIZE);
++		if (test_fw_config->partial)
++			req->rc = request_partial_firmware_into_buf
++						(&req->fw,
++						 req->name,
++						 req->dev,
++						 test_buf,
++						 test_fw_config->buf_size,
++						 test_fw_config->file_offset);
++		else
++			req->rc = request_firmware_into_buf
++						(&req->fw,
++						 req->name,
++						 req->dev,
++						 test_buf,
++						 test_fw_config->buf_size);
+ 		if (!req->fw)
+ 			kfree(test_buf);
+ 	} else {
+@@ -932,6 +1059,9 @@ static struct attribute *test_dev_attrs[] = {
+ 	TEST_FW_DEV_ATTR(config_name),
+ 	TEST_FW_DEV_ATTR(config_num_requests),
+ 	TEST_FW_DEV_ATTR(config_into_buf),
++	TEST_FW_DEV_ATTR(config_buf_size),
++	TEST_FW_DEV_ATTR(config_file_offset),
++	TEST_FW_DEV_ATTR(config_partial),
+ 	TEST_FW_DEV_ATTR(config_sync_direct),
+ 	TEST_FW_DEV_ATTR(config_send_uevent),
+ 	TEST_FW_DEV_ATTR(config_read_fw_idx),
+diff --git a/tools/testing/selftests/firmware/fw_filesystem.sh b/tools/testing/selftests/firmware/fw_filesystem.sh
+index fcc281373b4d..c2a2a100114b 100755
+--- a/tools/testing/selftests/firmware/fw_filesystem.sh
++++ b/tools/testing/selftests/firmware/fw_filesystem.sh
+@@ -149,6 +149,26 @@ config_unset_into_buf()
+ 	echo 0 >  $DIR/config_into_buf
+ }
+ 
++config_set_buf_size()
++{
++	echo $1 >  $DIR/config_buf_size
++}
++
++config_set_file_offset()
++{
++	echo $1 >  $DIR/config_file_offset
++}
++
++config_set_partial()
++{
++	echo 1 >  $DIR/config_partial
++}
++
++config_unset_partial()
++{
++	echo 0 >  $DIR/config_partial
++}
++
+ config_set_sync_direct()
+ {
+ 	echo 1 >  $DIR/config_sync_direct
+@@ -207,6 +227,35 @@ read_firmwares()
+ 	done
+ }
+ 
++read_partial_firmwares()
++{
++	if [ "$(cat $DIR/config_into_buf)" == "1" ]; then
++		fwfile="${FW_INTO_BUF}"
++	else
++		fwfile="${FW}"
++	fi
++
++	if [ "$1" = "xzonly" ]; then
++		fwfile="${fwfile}-orig"
++	fi
++
++	# Strip fwfile down to match partial offset and length
++	partial_data="$(cat $fwfile)"
++	partial_data="${partial_data:$2:$3}"
++
++	for i in $(seq 0 3); do
++		config_set_read_fw_idx $i
++
++		read_firmware="$(cat $DIR/read_firmware)"
++
++		# Verify the contents are what we expect.
++		if [ $read_firmware != $partial_data ]; then
++			echo "request #$i: partial firmware was not loaded" >&2
++			exit 1
++		fi
++	done
++}
++
+ read_firmwares_expect_nofile()
+ {
+ 	for i in $(seq 0 3); do
+@@ -242,6 +291,21 @@ test_batched_request_firmware_into_buf_nofile()
+ 	echo "OK"
+ }
+ 
++test_request_partial_firmware_into_buf_nofile()
++{
++	echo -n "Test request_partial_firmware_into_buf() off=$1 size=$2 nofile: "
++	config_reset
++	config_set_name nope-test-firmware.bin
++	config_set_into_buf
++	config_set_partial
++	config_set_buf_size $2
++	config_set_file_offset $1
++	config_trigger_sync
++	read_firmwares_expect_nofile
++	release_all_firmware
++	echo "OK"
++}
++
+ test_batched_request_firmware_direct_nofile()
+ {
+ 	echo -n "Batched request_firmware_direct() nofile try #$1: "
+@@ -356,6 +420,21 @@ test_request_firmware_nowait_custom()
+ 	echo "OK"
+ }
+ 
++test_request_partial_firmware_into_buf()
++{
++	echo -n "Test request_partial_firmware_into_buf() off=$1 size=$2: "
++	config_reset
++	config_set_name $TEST_FIRMWARE_INTO_BUF_FILENAME
++	config_set_into_buf
++	config_set_partial
++	config_set_buf_size $2
++	config_set_file_offset $1
++	config_trigger_sync
++	read_partial_firmwares normal $1 $2
++	release_all_firmware
++	echo "OK"
++}
++
+ # Only continue if batched request triggers are present on the
+ # test-firmware driver
+ test_config_present
+@@ -383,6 +462,12 @@ for i in $(seq 1 5); do
+ 	test_request_firmware_nowait_custom $i normal
+ done
+ 
++# Partial loads cannot use fallback, so do not repeat tests.
++test_request_partial_firmware_into_buf 0 10
++test_request_partial_firmware_into_buf 0 5
++test_request_partial_firmware_into_buf 1 6
++test_request_partial_firmware_into_buf 2 10
++
+ # Test for file not found, errors are expected, the failure would be
+ # a hung task, which would require a hard reset.
+ echo
+@@ -407,6 +492,12 @@ for i in $(seq 1 5); do
+ 	test_request_firmware_nowait_custom_nofile $i
+ done
+ 
++# Partial loads cannot use fallback, so do not repeat tests.
++test_request_partial_firmware_into_buf_nofile 0 10
++test_request_partial_firmware_into_buf_nofile 0 5
++test_request_partial_firmware_into_buf_nofile 1 6
++test_request_partial_firmware_into_buf_nofile 2 10
++
+ test "$HAS_FW_LOADER_COMPRESS" != "yes" && exit 0
+ 
+ # test with both files present
+-- 
+2.25.1
+
