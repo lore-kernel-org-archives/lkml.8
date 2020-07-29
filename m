@@ -2,107 +2,118 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B79C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22909C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23282207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72332074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:30:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NNfs3ifh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UD1LiPjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgG2L10 (ORCPT
+        id S1726588AbgG2Lan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 07:27:26 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57065 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbgG2L1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 07:27:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BGrqb1j6jz9sRK;
-        Wed, 29 Jul 2020 21:27:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596022043;
-        bh=3B1l9zsxDWHUUR26XQYf02znLLnavQzwvvwX89Hy1rc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=NNfs3ifhLeqzO8x99kAQO0VXMYlyV1DmDUm5+wk0NzTwPx7k/FB1ctwECY+eswCj2
-         t/aNGzL7o75rnrbQVSjvt54Fl7Xm2KFbhDWngcpzehBOFifAgOr1evu4zhkItlYPJn
-         mDnGC8rJwJnDNawRr5yydtPQtfgv1cTEkrcUVzMtIKdEvl6XvjjtBFbgQ9FHl4o3Di
-         5LNfRj3dyArcwPZzMgOOY1ITfp2a+4e0OrNl69ECFdNmOc3y+37dWf5wQrJnJ61etf
-         aRHr8HxvX20hCDWSkjrQiFV0Op514bWKsySbsaEyFzk5AOUCOh8N7Dsfr+RS9DgnNG
-         VYw7YrC4Uxu7w==
-Date:   Wed, 29 Jul 2020 21:27:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brian Vazquez <brianvv@google.com>
-Subject: linux-next: build failure after merge of the net-next tree
-Message-ID: <20200729212721.1ee4eef8@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/w/x_VlSZc+ml8x648uLVh5w";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Wed, 29 Jul 2020 07:30:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbgG2Lan (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 07:30:43 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24122C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 04:30:43 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id l63so14088739pge.12
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 04:30:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=f8WSDQJ1BMFeePb0L/BbIVNSSbVdawZX1MtFDgOVN90=;
+        b=UD1LiPjUprO9x0biTukgBu4L89Xtt8vucwleufAjo3eAK8BqgUAxrSdWGDxdRqJ3xy
+         2rjWIpI0q5PNAWBBYafaIzuItmCHzLmSKKFgSCzqz67qXKasP0sTbKD+IgRBD+tY/B6T
+         /FxIcwZ+smecLpLUdWitl/bI2V0wSwWV2DzBZLO1UvE/6niARbeOEwrrZlFtJKwg7g9V
+         k8tSqjyIRktetsSEjLlu2Bfmg1f1e+aM0UpPsbxYNleGvnxcnAI9+p1EoPiHFlQUTAdE
+         oMK2GDVJwdkPdrULYDIyiq5TaNLdifwmirI7HKp3N3zhmj5jSKzxl6a+NwHPxSKBN60z
+         L98g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=f8WSDQJ1BMFeePb0L/BbIVNSSbVdawZX1MtFDgOVN90=;
+        b=Sy/SitopAzMF0L+Dxv9O1fZJXld4MGdJuIhJbETJWHYbolXMXRKIyHbeCVeJnDi+Va
+         MjfYptZJwGC74EMv3T58M/Sbhhtd1Hp5JGsZPaoglxxyxzSInrfTPZ8tlfNgcSwNoK6C
+         WZe2yfbBbbpDRKw2ccolnnMfFGtninU5qz9E7roLlwJ5jF0kYWqTNA/yncDVKTgjSsqL
+         otURh8UueweOwjnKECkPbpjaetJUzp/8HcqfkkRexN/yjceDdBa26v71DvZu2FUN2kLc
+         nWM1lySw62hWKOkMZhhrS7O9Mwu+P+EPYJa2TuUYZJ/6gpDDoVL39MAcHG2wTdJlSI4b
+         Ia4A==
+X-Gm-Message-State: AOAM532WpsD3NZPryqoK5KNHcEvNIXvUBlfGb000+MqhrQa1z4nM/KvM
+        rcKFJN7qxAq0RWY/4A4eXl8F1LaTd6Q=
+X-Google-Smtp-Source: ABdhPJw8cyGblmxnIej+bzuHmE4HaMNlmnpVyZFWAmTOGTWxugumWrL+e6/hTvLo+eljwIDkGS7DfQ==
+X-Received: by 2002:a63:a1f:: with SMTP id 31mr28236844pgk.328.1596022242617;
+        Wed, 29 Jul 2020 04:30:42 -0700 (PDT)
+Received: from bj03382pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id n24sm1968487pfa.125.2020.07.29.04.30.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Jul 2020 04:30:42 -0700 (PDT)
+From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
+X-Google-Original-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+To:     chunyan.zhang@unisoc.com,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] trace : use kvmalloc instead of kmalloc
+Date:   Wed, 29 Jul 2020 19:30:32 +0800
+Message-Id: <1596022232-14076-1-git-send-email-zhaoyang.huang@unisoc.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/w/x_VlSZc+ml8x648uLVh5w
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+High order memory stuff within trace could introduce OOM, use kvmalloc instead.
 
-Hi all,
+traced_probes invoked oom-killer: gfp_mask=0x140c0c0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO), nodemask=(null),  order=2, oom_score_adj=-1
 
-After merging the net-next tree, today's linux-next build (i386 defconfig)
-failed like this:
+traced_probes cpuset=system-background mems_allowed=0
+CPU: 3 PID: 588 Comm: traced_probes Tainted: G        W  O    4.14.181 #1
+Hardware name: Generic DT based system
+(unwind_backtrace) from [<c010d824>] (show_stack+0x20/0x24)
+(show_stack) from [<c0b2e174>] (dump_stack+0xa8/0xec)
+(dump_stack) from [<c027d584>] (dump_header+0x9c/0x220)
+(dump_header) from [<c027cfe4>] (oom_kill_process+0xc0/0x5c4)
+(oom_kill_process) from [<c027cb94>] (out_of_memory+0x220/0x310)
+(out_of_memory) from [<c02816bc>] (__alloc_pages_nodemask+0xff8/0x13a4)
+(__alloc_pages_nodemask) from [<c02a6a1c>] (kmalloc_order+0x30/0x48)
+(kmalloc_order) from [<c02a6a64>] (kmalloc_order_trace+0x30/0x118)
+(kmalloc_order_trace) from [<c0223d7c>] (tracing_buffers_open+0x50/0xfc)
+(tracing_buffers_open) from [<c02e6f58>] (do_dentry_open+0x278/0x34c)
+(do_dentry_open) from [<c02e70d0>] (vfs_open+0x50/0x70)
+(vfs_open) from [<c02f7c24>] (path_openat+0x5fc/0x169c)
+(path_openat) from [<c02f75c4>] (do_filp_open+0x94/0xf8)
+(do_filp_open) from [<c02e7650>] (do_sys_open+0x168/0x26c)
+(do_sys_open) from [<c02e77bc>] (SyS_openat+0x34/0x38)
+(SyS_openat) from [<c0108bc0>] (ret_fast_syscall+0x0/0x28)
 
-x86_64-linux-gnu-ld: net/core/fib_rules.o: in function `fib_rules_lookup':
-fib_rules.c:(.text+0x5c6): undefined reference to `fib6_rule_match'
-x86_64-linux-gnu-ld: fib_rules.c:(.text+0x5d8): undefined reference to `fib=
-6_rule_match'
-x86_64-linux-gnu-ld: fib_rules.c:(.text+0x64d): undefined reference to `fib=
-6_rule_action'
-x86_64-linux-gnu-ld: fib_rules.c:(.text+0x662): undefined reference to `fib=
-6_rule_action'
-x86_64-linux-gnu-ld: fib_rules.c:(.text+0x67a): undefined reference to `fib=
-6_rule_suppress'
-x86_64-linux-gnu-ld: fib_rules.c:(.text+0x68d): undefined reference to `fib=
-6_rule_suppress'
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+---
+ kernel/trace/trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Caused by commit
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index ca1ee65..d4eb7ea 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6891,7 +6891,7 @@ static int tracing_buffers_open(struct inode *inode, struct file *filp)
+ 	if (trace_array_get(tr) < 0)
+ 		return -ENODEV;
+ 
+-	info = kzalloc(sizeof(*info), GFP_KERNEL);
++	info = kvmalloc(sizeof(*info), GFP_KERNEL);
+ 	if (!info) {
+ 		trace_array_put(tr);
+ 		return -ENOMEM;
+-- 
+1.9.1
 
-  b9aaec8f0be5 ("fib: use indirect call wrappers in the most common fib_rul=
-es_ops")
-
-# CONFIG_IPV6_MULTIPLE_TABLES is not set
-
-I have reverted that commit for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/w/x_VlSZc+ml8x648uLVh5w
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8hXRkACgkQAVBC80lX
-0Gwl4wf/a7UQAOA7rptHNQF+m0JcGAIWdcRBnTPxuMhF7/scEaGuBmLDeHvp6xU7
-Noe09vWdXZmm0nszSz56b1FUg7VBMMw71UeY4Dbm9FdR6cwA1mqlSjNza75d1txp
-Kl+8x4OEPTHf8CNr614LQxBE+ZaEzpGlx4Fp9wQKxvWQ/t/Mnc+fsm0BB2tmuJ47
-ubn7/l6mCCAdp569m7lWF0gliY8GwGTGYcBOF6ib9/j/sNVnwyw5EdCnNfVaSrwI
-C5YYEg28M8VwSwz9mA8nkJ/CrbafsY7f+6mhMPRJjm5PSTS/6bfzMU2xQRY8SHS5
-GVB4TOHGqEkkH1Y1bPLCxR8vXuRqgQ==
-=qzAe
------END PGP SIGNATURE-----
-
---Sig_/w/x_VlSZc+ml8x648uLVh5w--
