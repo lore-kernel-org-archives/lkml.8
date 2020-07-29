@@ -2,133 +2,104 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CA5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A93E82065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 227CA2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 08:50:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cMUotIed"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbgG2Ipd (ORCPT
+        id S1726993AbgG2IuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 04:45:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19810 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727054AbgG2Ipc (ORCPT
+        Wed, 29 Jul 2020 04:50:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgG2IuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:45:32 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06T8WR1Q053522;
-        Wed, 29 Jul 2020 04:45:30 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32jpw40reg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 04:45:29 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06T8TnkI026980;
-        Wed, 29 Jul 2020 08:45:28 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03ams.nl.ibm.com with ESMTP id 32gcpx4u4c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 08:45:27 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06T8i0xC55640444
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jul 2020 08:44:00 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36A6A11C05C;
-        Wed, 29 Jul 2020 08:45:25 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E610911C050;
-        Wed, 29 Jul 2020 08:45:23 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.33.112])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 29 Jul 2020 08:45:23 +0000 (GMT)
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-To:     linux-nvdimm@lists.01.org
-Cc:     linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: [RFC 1/1] pmem: Add cond_resched() in bio_for_each_segment loop in pmem_make_request
-Date:   Wed, 29 Jul 2020 14:15:18 +0530
-Message-Id: <0d96e2481f292de2cda8828b03d5121004308759.1596011292.git.riteshh@linux.ibm.com>
-X-Mailer: git-send-email 2.25.4
+        Wed, 29 Jul 2020 04:50:05 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DC78C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 01:50:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6doAh1qguYtZHcO6gHIS2SyAHj8bF03MyqeLpi3tHN0=; b=cMUotIedINHNHLeg6fxFHwiKm7
+        tzsUup7U4Wi1Je0WNlnlCFmzkGVqRk5kuZjc+YvTMPmhaq4HpnR7iRus2OhNtvt2PeamjLVWFifVH
+        TLGEUwqcwcKTWvNsoHjAU9ZMePEj50IgAx9fx3kfPKMqx4T01Ps0+X5iDbjLe6YhQq+fRUfXnSTv5
+        i8F0WrRNlb8hFg+Pn3Bql0V2v5c2ohZgdGx6DWlAK5VcxDZdZ1xYBauXcijc48gAO2ByE/CiZ/V00
+        RDoPhcvk8Zc/BiJbj2mdAiBdkySQLbceXO/A6jFlqINaHDc+gpcyFjuWPYc8aOyQjS42ZARSEaRJ/
+        om2ejxGQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0hmW-0002KJ-ME; Wed, 29 Jul 2020 08:49:49 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5C736304B6D;
+        Wed, 29 Jul 2020 10:49:47 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 466D52BD93BFD; Wed, 29 Jul 2020 10:49:47 +0200 (CEST)
+Date:   Wed, 29 Jul 2020 10:49:47 +0200
+From:   peterz@infradead.org
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Borislav Petkov" <bp@alien8.de>, "Ingo Molnar" <mingo@redhat.com>,
+        "Tony Luck" <tony.luck@intel.com>, "H Peter Anvin" <hpa@zytor.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>,
+        "Xiaoyao Li " <xiaoyao.li@intel.com>, "x86" <x86@kernel.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] x86/bus_lock: Enable bus lock detection
+Message-ID: <20200729084947.GY119549@hirez.programming.kicks-ass.net>
+References: <1595021700-68460-1-git-send-email-fenghua.yu@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-29_03:2020-07-28,2020-07-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- adultscore=0 lowpriorityscore=0 priorityscore=1501 mlxlogscore=842
- malwarescore=0 spamscore=0 impostorscore=0 suspectscore=1 clxscore=1011
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007290055
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595021700-68460-1-git-send-email-fenghua.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For systems which do not have CONFIG_PREEMPT set and
-if there is a heavy multi-threaded load/store operation happening
-on pmem + sometimes along with device latencies, softlockup warnings like
-this could trigger. This was seen on Power where pagesize is 64K.
+On Fri, Jul 17, 2020 at 02:35:00PM -0700, Fenghua Yu wrote:
 
-To avoid softlockup, this patch adds a cond_resched() in this path.
+> #DB for bus lock detect fixes all issues in #AC for split lock detect:
+> 1) It's architectural ... just need to look at one CPUID bit to know it
+>    exists
+> 2) The IA32_DEBUGCTL MSR, which reports bus lock in #DB, is per-thread.
+>    So each process or guest can have different behavior.
 
-<...>
-watchdog: BUG: soft lockup - CPU#31 stuck for 22s!
-<...>
-CPU: 31 PID: 15627 <..> 5.3.18-20
-<...>
-NIP memcpy_power7+0x43c/0x7e0
-LR memcpy_flushcache+0x28/0xa0
+And it generates a whole new problem due to #DB being an IST, and
 
-Call Trace:
-memcpy_power7+0x274/0x7e0 (unreliable)
-memcpy_flushcache+0x28/0xa0
-write_pmem+0xa0/0x100 [nd_pmem]
-pmem_do_bvec+0x1f0/0x420 [nd_pmem]
-pmem_make_request+0x14c/0x370 [nd_pmem]
-generic_make_request+0x164/0x400
-submit_bio+0x134/0x2e0
-submit_bio_wait+0x70/0xc0
-blkdev_issue_zeroout+0xf4/0x2a0
-xfs_zero_extent+0x90/0xc0 [xfs]
-xfs_bmapi_convert_unwritten+0x198/0x230 [xfs]
-xfs_bmapi_write+0x284/0x630 [xfs]
-xfs_iomap_write_direct+0x1f0/0x3e0 [xfs]
-xfs_file_iomap_begin+0x344/0x690 [xfs]
-dax_iomap_pmd_fault+0x488/0xc10
-__xfs_filemap_fault+0x26c/0x2b0 [xfs]
-__handle_mm_fault+0x794/0x1af0
-handle_mm_fault+0x12c/0x220
-__do_page_fault+0x290/0xe40
-do_page_fault+0x38/0xc0
-handle_page_fault+0x10/0x30
+> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> index b038695f36c5..58725567da39 100644
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -812,6 +812,16 @@ static void handle_debug(struct pt_regs *regs, unsigned long dr6, bool user)
+>  	if (!user && !dr6)
+>  		return;
+>  
+> +	/* Handle bus lock. */
+> +	if (!(dr6 & DR_BUS_LOCK)) {
+> +		cond_local_irq_enable(regs);
+> +		if (user)
+> +			handle_user_bus_lock(regs);
+> +		else
+> +			handle_kernel_bus_lock(regs);
+> +		goto out;
+> +	}
+> +
+>  	/*
+>  	 * If dr6 has no reason to give us about the origin of this trap,
+>  	 * then it's very likely the result of an icebp/int01 trap.
 
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
----
- drivers/nvdimm/pmem.c | 1 +
- 1 file changed, 1 insertion(+)
+we very much rely on #DB never recursing, which we carefully crafted by
+disallowing hardare breakpoints on noinstr code and clearing DR7 early.
 
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index 2df6994acf83..fcf7af13897e 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -214,6 +214,7 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
- 			bio->bi_status = rc;
- 			break;
- 		}
-+		cond_resched();
- 	}
- 	if (do_acct)
- 		nd_iostat_end(bio, start);
--- 
-2.25.4
-
+But now it can... please keep the pieces.
