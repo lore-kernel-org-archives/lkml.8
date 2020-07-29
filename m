@@ -2,103 +2,143 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88710C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4971522B42
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:53:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596034405;
-	bh=fp2UmJ60nahw5GDWRN0Aw65GthA1YO0B+AQzyViir4U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=amf1XXIG5u5z/oTV4KOP5DrMdX8W6+SpjHFbR37sjcj662DXRGRBrubiWhsfbo8PO
-	 d2vapyxOlqzhzAuvOQnUt6pWQPueJfi1awW7K7fvydKkPgGrh6jyRIJ/uKgsdWhxFF
-	 lAIqTd9uziHazUnpVjjrPKQy82DOH0fbKPOf83nU=
+	by mail.kernel.org (Postfix) with ESMTP id 6C8E420FC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgG2OxW (ORCPT
+        id S1726989AbgG2OxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:53:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34370 "EHLO mail.kernel.org"
+        Wed, 29 Jul 2020 10:53:18 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:59120 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726909AbgG2OxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:53:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A29121744;
-        Wed, 29 Jul 2020 14:53:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596034399;
-        bh=fp2UmJ60nahw5GDWRN0Aw65GthA1YO0B+AQzyViir4U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UBUvVV1R89Ln+j78ufGotq8p+n7KvD1YVJ6LxenHh/ilGpPs6Yb/uV+v+mTZ424aG
-         KnA2dbpF0QwLxV/NYoYPAjeU0uaOI0lbYVQB7MO43C4c0yEkbBuypsETuRVcG1PMsB
-         8y8MscqKKOtrXTt1lKOBxzm507dEdnSfuCz5d3hk=
-Date:   Wed, 29 Jul 2020 16:53:09 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Badhri Jagan Sridharan <badhri@google.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usb: typec: tcpm: Migrate workqueue to RT priority
- for processing events
-Message-ID: <20200729145309.GA3490882@kroah.com>
-References: <20200724020551.2737376-1-badhri@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200724020551.2737376-1-badhri@google.com>
+        id S1726909AbgG2OxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 10:53:17 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A5FF1A01FA;
+        Wed, 29 Jul 2020 16:53:15 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A06891A0DFF;
+        Wed, 29 Jul 2020 16:53:08 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DC0824031F;
+        Wed, 29 Jul 2020 16:52:55 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        aisheng.dong@nxp.com, arnd@arndb.de, peng.fan@nxp.com,
+        abel.vesa@nxp.com, fugang.duan@nxp.com, daniel.baluta@nxp.com,
+        yuehaibing@huawei.com, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V7 6/6] clk: imx8qxp: Support building i.MX8QXP clock driver as module
+Date:   Wed, 29 Jul 2020 22:48:37 +0800
+Message-Id: <1596034117-24246-7-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596034117-24246-1-git-send-email-Anson.Huang@nxp.com>
+References: <1596034117-24246-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 07:05:51PM -0700, Badhri Jagan Sridharan wrote:
-> "tReceiverResponse 15 ms Section 6.6.2
-> The receiver of a Message requiring a response Shall respond
-> within tReceiverResponse in order to ensure that the
-> sender’s SenderResponseTimer does not expire."
-> 
-> When the cpu complex is busy running other lower priority
-> work items, TCPM's work queue sometimes does not get scheduled
-> on time to meet the above requirement from the spec.
-> Moving to kthread_work apis to run with real time priority.
-> Just lower than the default threaded irq priority,
-> MAX_USER_RT_PRIO/2 + 1. (Higher number implies lower priority).
-> 
-> Further, as observed in 1ff688209e2e, moving to hrtimers to
-> overcome scheduling latency while scheduling the delayed work.
-> 
-> TCPM has three work streams:
-> 1. tcpm_state_machine
-> 2. vdm_state_machine
-> 3. event_work
-> 
-> tcpm_state_machine and vdm_state_machine both schedule work in
-> future i.e. delayed. Hence each of them have a corresponding
-> hrtimer, tcpm_state_machine_timer & vdm_state_machine_timer.
-> 
-> When work is queued right away kthread_queue_work is used.
-> Else, the relevant timer is programmed and made to queue
-> the kthread_work upon timer expiry.
-> 
-> kthread_create_worker only creates one kthread worker thread,
-> hence single threadedness of workqueue is retained.
-> 
-> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+Change configuration to "tristate", add module author, description and
+license to support building i.MX8QXP clock drivers as module.
 
-This doesn't apply against my usb-next branch at all.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+---
+no change.
+---
+ drivers/clk/imx/Kconfig            | 10 ++++++----
+ drivers/clk/imx/Makefile           |  9 ++++-----
+ drivers/clk/imx/clk-imx8qxp-lpcg.c |  4 ++++
+ drivers/clk/imx/clk-imx8qxp.c      |  4 ++++
+ 4 files changed, 18 insertions(+), 9 deletions(-)
 
-Can you rebase and resend?
+diff --git a/drivers/clk/imx/Kconfig b/drivers/clk/imx/Kconfig
+index 3897712..e7defba 100644
+--- a/drivers/clk/imx/Kconfig
++++ b/drivers/clk/imx/Kconfig
+@@ -5,8 +5,9 @@ config MXC_CLK
+ 	depends on ARCH_MXC || COMPILE_TEST
+ 
+ config MXC_CLK_SCU
+-	bool
+-	depends on IMX_SCU
++	tristate "IMX SCU clock"
++	depends on ARCH_MXC || COMPILE_TEST
++	depends on IMX_SCU && HAVE_ARM_SMCCC
+ 
+ config CLK_IMX1
+ 	def_bool SOC_IMX1
+@@ -97,8 +98,9 @@ config CLK_IMX8MQ
+ 	    Build the driver for i.MX8MQ CCM Clock Driver
+ 
+ config CLK_IMX8QXP
+-	bool "IMX8QXP SCU Clock"
+-	depends on ARCH_MXC && IMX_SCU && ARM64
++	tristate "IMX8QXP SCU Clock"
++	depends on (ARCH_MXC && ARM64) || COMPILE_TEST
++	depends on IMX_SCU && HAVE_ARM_SMCCC
+ 	select MXC_CLK_SCU
+ 	help
+ 	  Build the driver for IMX8QXP SCU based clocks.
+diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
+index 17f5d12..79e53f2 100644
+--- a/drivers/clk/imx/Makefile
++++ b/drivers/clk/imx/Makefile
+@@ -21,15 +21,14 @@ mxc-clk-objs += clk-pll14xx.o
+ mxc-clk-objs += clk-sscg-pll.o
+ obj-$(CONFIG_MXC_CLK) += mxc-clk.o
+ 
+-obj-$(CONFIG_MXC_CLK_SCU) += \
+-	clk-scu.o \
+-	clk-lpcg-scu.o
+-
+ obj-$(CONFIG_CLK_IMX8MM) += clk-imx8mm.o
+ obj-$(CONFIG_CLK_IMX8MN) += clk-imx8mn.o
+ obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o
+ obj-$(CONFIG_CLK_IMX8MQ) += clk-imx8mq.o
+-obj-$(CONFIG_CLK_IMX8QXP) += clk-imx8qxp.o clk-imx8qxp-lpcg.o
++
++obj-$(CONFIG_MXC_CLK_SCU) += clk-imx-scu.o clk-imx-lpcg-scu.o
++clk-imx-scu-$(CONFIG_CLK_IMX8QXP) += clk-scu.o clk-imx8qxp.o
++clk-imx-lpcg-scu-$(CONFIG_CLK_IMX8QXP) += clk-lpcg-scu.o clk-imx8qxp-lpcg.o
+ 
+ obj-$(CONFIG_CLK_IMX1)   += clk-imx1.o
+ obj-$(CONFIG_CLK_IMX21)  += clk-imx21.o
+diff --git a/drivers/clk/imx/clk-imx8qxp-lpcg.c b/drivers/clk/imx/clk-imx8qxp-lpcg.c
+index 04c8ee3..e947a70 100644
+--- a/drivers/clk/imx/clk-imx8qxp-lpcg.c
++++ b/drivers/clk/imx/clk-imx8qxp-lpcg.c
+@@ -232,3 +232,7 @@ static struct platform_driver imx8qxp_lpcg_clk_driver = {
+ };
+ 
+ builtin_platform_driver(imx8qxp_lpcg_clk_driver);
++
++MODULE_AUTHOR("Aisheng Dong <aisheng.dong@nxp.com>");
++MODULE_DESCRIPTION("NXP i.MX8QXP LPCG clock driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/clk/imx/clk-imx8qxp.c b/drivers/clk/imx/clk-imx8qxp.c
+index 5e2903e..d650ca3 100644
+--- a/drivers/clk/imx/clk-imx8qxp.c
++++ b/drivers/clk/imx/clk-imx8qxp.c
+@@ -152,3 +152,7 @@ static struct platform_driver imx8qxp_clk_driver = {
+ 	.probe = imx8qxp_clk_probe,
+ };
+ builtin_platform_driver(imx8qxp_clk_driver);
++
++MODULE_AUTHOR("Aisheng Dong <aisheng.dong@nxp.com>");
++MODULE_DESCRIPTION("NXP i.MX8QXP clock driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
 
-Remember to collect the reviewed-by tags as well when you do so.
-
-thanks,
-
-greg k-h
