@@ -2,78 +2,65 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04944C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6553C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D58462075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DFA2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:51:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgG2TuP convert rfc822-to-8bit (ORCPT
+        id S1726868AbgG2TvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 15:50:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52918 "EHLO
+        Wed, 29 Jul 2020 15:51:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgG2TuP (ORCPT
+        with ESMTP id S1726476AbgG2TvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 15:50:15 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28082C061794;
-        Wed, 29 Jul 2020 12:50:15 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 319AB1275BD75;
-        Wed, 29 Jul 2020 12:33:28 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 12:50:10 -0700 (PDT)
-Message-Id: <20200729.125010.1457267567599420810.davem@davemloft.net>
-To:     ioanaruxandra.stancioi@gmail.com
-Cc:     david.lebrun@uclouvain.be, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, elver@google.com, glider@google.com,
-        stancioi@google.com
-Subject: Re: [PATCH] uapi, seg6_iptunnel: Add missing include in
- seg6_iptunnel.h
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200729104903.3586064-1-ioanaruxandra.stancioi@gmail.com>
-References: <20200729104903.3586064-1-ioanaruxandra.stancioi@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-2
-Content-Transfer-Encoding: 8BIT
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 29 Jul 2020 12:33:28 -0700 (PDT)
+        Wed, 29 Jul 2020 15:51:24 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E0EC061794;
+        Wed, 29 Jul 2020 12:51:23 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0s6f-005Aqt-3F; Wed, 29 Jul 2020 19:51:17 +0000
+Date:   Wed, 29 Jul 2020 20:51:17 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: add file system helpers that take kernel pointers for the init
+ code v4
+Message-ID: <20200729195117.GE951209@ZenIV.linux.org.uk>
+References: <20200728163416.556521-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728163416.556521-1-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ioana-Ruxandra Stancioi <ioanaruxandra.stancioi@gmail.com>
-Date: Wed, 29 Jul 2020 10:49:03 +0000
-
-> From: Ioana-Ruxandra Stãncioi <stancioi@google.com>
+On Tue, Jul 28, 2020 at 06:33:53PM +0200, Christoph Hellwig wrote:
+> Hi Al and Linus,
 > 
-> Include <linux/ipv6.h> in uapi/linux/seg6_iptunnel.h to fix the
-> following linux/seg6_iptunnel.h compilation error:
+> currently a lot of the file system calls in the early in code (and the
+> devtmpfs kthread) rely on the implicit set_fs(KERNEL_DS) during boot.
+> This is one of the few last remaining places we need to deal with to kill
+> off set_fs entirely, so this series adds new helpers that take kernel
+> pointers.  These helpers are in init/ and marked __init and thus will
+> be discarded after bootup.  A few also need to be duplicated in devtmpfs,
+> though unfortunately.
+>
+> The series sits on top of my previous
 > 
->    invalid application of 'sizeof' to incomplete type 'struct ipv6hdr'
->        head = sizeof(struct ipv6hdr);
->                      ^~~~~~
-> 
-> This is to allow including this header in places where <linux/ipv6.h>
-> has not been included but __KERNEL__ is defined. In the kernel the easy
-> workaround is including <linux/ipv6.h>, but the header may also be used
-> by code analysis tools.
-> 
-> Signed-off-by: Ioana-Ruxandra Stãncioi <stancioi@google.com>
+>   "decruft the early init / initrd / initramfs code v2"
 
-This doesn't belong in a UAPI header (it's __KERNEL__ protected after
-all), and it's only called in one place in the kernel, namely
-net/ipv6/net/ipv6/seg6_iptunnel.c)
-
-Just move the helper to that foo.c file, and drop the inline keyword.
-
-Thank you.
+Could you fold the fixes in the parent branch to avoid the bisect hazards?
+As it is, you have e.g. "initd: pass a non-f_pos offset to kernel_read/kernel_write"
+that ought to go into "initrd: switch initrd loading to struct file based APIs"...
