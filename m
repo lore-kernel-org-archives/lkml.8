@@ -2,430 +2,161 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C57DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BCED2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E71C72070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWEFZG0S"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Wv9dy0fA";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="y5jlvtoo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgG2Hc3 (ORCPT
+        id S1727884AbgG2Hcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:32:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgG2Hc2 (ORCPT
+        Wed, 29 Jul 2020 03:32:48 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:58150 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgG2Hcr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:32:28 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC4E5C061794;
-        Wed, 29 Jul 2020 00:32:28 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id r11so4600146pfl.11;
-        Wed, 29 Jul 2020 00:32:28 -0700 (PDT)
+        Wed, 29 Jul 2020 03:32:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1596007966; x=1627543966;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=FEMJ65xFpG/Aay6/plLBkrCC0NjAQp4ZKqX6H+IhJLA=;
+  b=Wv9dy0fAumD8d2zryBAkrGViJyKzPenPd89eTVKk7/pVczIWDReeXW6l
+   qEj27mU3fmTQw8PSDa8/ZjirIyxQNvhbsqai0RK2avGlp8V8usdhHmQTa
+   kCe6+gXBMnsodPFqV9WK8iVKa0NRcwl1QgXMCGOx2b+BdftIwApTZPgiL
+   8wfCGrl6rfs4n4Bmi4GaXOhxs/NU15o89F8aj3fOd/kfAQPhmAUG7ikB9
+   CChD8JZlP0Mp1KENlyuMsHEsHWBT2wbUXdGEazlmFJYS4POI9pLMBR+R8
+   eBHOV+yaENtbztWVuOY0aL0Frb4mIuYT0tKOm4HQqlDvx+3MqEWhqX4NW
+   Q==;
+IronPort-SDR: sDekZEBUpNEFNMQFtpc5PuTF5ZuNLnIcDes1tt25gjNXMKsnqeaxTvB0X16FzIewmVkeihKgan
+ F28lHF4twwePBK5c0Yt7VglgTT+mSW6C8uFJfvVqy7RATJcxEr0UO5Sdz5f6sxZU/ElGfM09I+
+ iEqhmSgNBKqQhiJBogIuB3RODz5V5lXVDMUsjF3dPU8FrwH4xAxDUgoHCMaHUNWD6TB3vEX86d
+ rRsTlpkIuVqLIl86hg/lQiA8+iL50XXH8smRSRyDeVJtseIwXZJilBvT3zqFQsaqH21S4/EXtc
+ 4KM=
+X-IronPort-AV: E=Sophos;i="5.75,409,1589212800"; 
+   d="scan'208";a="143628491"
+Received: from mail-dm6nam10lp2101.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.101])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Jul 2020 15:32:44 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nCUWMNt3GbHziL8oV2vOZXHDguspOUG2TJrAqIUm1pd62HJic/to/4/GXpyBCXpibh69zly0wA8BcYfyNTB2nUwgZUtNAOncmwaSnFjz/Pq/nXIVQDEhd/qZwKPRuB5ZJfqcIHPTq4OOMsLvZszI8gYAaahb/kDUftEfW+XoJT7D+WwA6XJBLEfrhxsB9nLXtlueMNh6750b7VbfgrPkTkdBEMF81RxvQW7A6jHKrDIw2HxP9aTBjI4Q7SIUzlJ0UeALz5yAdkwJQvg74fI5b/CAhG9UlbiH/JwZan+EsfmF4Ak0FRF3skCSjAYNXp45e84ednd0emYTKilT8mSajw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HY3rt1hW8NT26O9DHC/O6rtuIIC0Zb4VLOLAJzp/0P0=;
+ b=WbqnYB++WjNE19GU3nJy2VAbAmTpZqbzZeZKxtPI9nUJEDNXQeLlWeylpvmsKaTyhlGvan6mTa0RShYYuZEXI0+3Xth+jjIKcMwYYZ36XAw4/lDV7pOd5yvgGw5Jrx0FBn16G1nRGqdIKWeSHT06YQhO+SNcPUzyuCCiiMCbqU3Z2FByiQExbDOLakCX5TLjLs0kRwaQUPKVU55CQlHqcaQqTGum/o767/HA+ucNuY0Xm5Kx4u4sMUOwmNzH8jbGqNP3kRMkpE1ovMZGW1X5mvBXvCER7UvpCf6AkJxvVYiRw8v+2WrSmGPUhXZCkeF1ZCRpiMZMA2iMmfpNNturlw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9G4OYs0UCab/dvnPJIUS127vbTkpEm/c/Rhx2fW/Fzo=;
-        b=EWEFZG0SKlG43Swojx3oG/j/sKtp+q79x/C6d8oMFHjTQwYWvd2OkOhEAIMBsDjuaB
-         gWgzTm9UM1CDDoO9sZynLFD79eeavgTZgaWCCchH287Syn7ThY2YeT1ao3vKiLsQindc
-         WX281Mmy8+ku/V/m7DCp1Y9N39kNrOmEXLPvULb1m4r5Fbt5i7X0MfibVcPvX6aQJ1BC
-         xh31vwpYAhpPc3TeBv1BDlavFx7kRPatgL0PfbitSYUK0dJ86RAB6tBEILfFc598OE3M
-         6XmJNP7gajwfc+s7cKPLL1loI4UCeAWEN0m8kdKcWCEgcgiv8AZt29a/+91JOwTC+cIb
-         adGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9G4OYs0UCab/dvnPJIUS127vbTkpEm/c/Rhx2fW/Fzo=;
-        b=cLDGnK1VXNUYad3sdOM6iv30IfAdL17yJKvAp66ToYQfUPrV6XrMnECPl03ohB9OAB
-         558530CWi7GCG5nGnJrvzKXNhWLOhyFG7BrOkr0DKjwbRaGP/3QMEYlpiTzg8eIk633z
-         n/MCDfvHbVuaXJ81B03HDGv+cvUmJHP+RmDTgbXuhTwkakwccEN70WZ1DAvFcckL2j5g
-         J+TYrxPvjTUJHUiRHeCzJfhu3FLbl4AE73ML0rRPsBi4nUKHEijZ14SMkkInzXC0MdM+
-         RWYG5E1hRPbG/deICnGhPxbrrIs2GCGhpv50bi2SjVXFfo02AM6HZbXIygNAbLWy9kcV
-         4MgQ==
-X-Gm-Message-State: AOAM531dgalLvyYJJG6H63vmlQfQq9ereeNra8/vF8xMJWCoeiAVMlVx
-        mgfw2DyxE1nqHPINfuMmBbfDGueN3p5/NmKEe7w=
-X-Google-Smtp-Source: ABdhPJwvHo2cLI9NiL24X4VzQ67G6fdokmJ+2H4uEy1nwgtFtBKA8RNW3aW0Yr3AqYYaqWXcgNFOn92b84KGkFtoXWQ=
-X-Received: by 2002:a62:8ccb:: with SMTP id m194mr28731082pfd.36.1596007948031;
- Wed, 29 Jul 2020 00:32:28 -0700 (PDT)
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HY3rt1hW8NT26O9DHC/O6rtuIIC0Zb4VLOLAJzp/0P0=;
+ b=y5jlvtooi8w76dc0905w23Y5woFXHXGqvn/hK4ytjZ3NlO8jm2yV2V2ThPWyg4ljQ/cdUuLpQ4PBRD1CHkZT0w6W5USpzhtMlppeefir2hKq4NLkQhru9NufYjveRJb2WO4vLQ8QGLHc1OtLezRu9XS0RLqvg6XS02ob7KWY2OQ=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB4959.namprd04.prod.outlook.com (2603:10b6:805:9d::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Wed, 29 Jul
+ 2020 07:32:42 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::1c80:dad0:4a83:2ef2]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::1c80:dad0:4a83:2ef2%4]) with mapi id 15.20.3216.033; Wed, 29 Jul 2020
+ 07:32:42 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>
+CC:     "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
+        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>,
+        "cc.chou@mediatek.com" <cc.chou@mediatek.com>
+Subject: RE: [PATCH v1 0/2] scsi: ufs: Introduce and apply DELAY_AFTER_LPM
+ device quirk
+Thread-Topic: [PATCH v1 0/2] scsi: ufs: Introduce and apply DELAY_AFTER_LPM
+ device quirk
+Thread-Index: AQHWZWe+NII92fdsh0euLymi3XWlT6keKffQ
+Date:   Wed, 29 Jul 2020 07:32:42 +0000
+Message-ID: <SN6PR04MB464010C0B5D07A74CCC65E0DFC700@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200729051840.31318-1-stanley.chu@mediatek.com>
+In-Reply-To: <20200729051840.31318-1-stanley.chu@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: mediatek.com; dkim=none (message not signed)
+ header.d=none;mediatek.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 915e040a-31da-4deb-5166-08d833919455
+x-ms-traffictypediagnostic: SN6PR04MB4959:
+x-microsoft-antispam-prvs: <SN6PR04MB4959E2A28FA5C630F210B4DCFC700@SN6PR04MB4959.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FATQ1zQPgSBm3l53BFYWmiHgwOEkVDmcQRvSpuse8DoJAzMxwSxhX1zhmBaRAyZjukOqW7Vi1XR3tp74oFHF29tzRDNGzSBeXk/0GigfagwsQ+p2tzpEsQobw9GYh5JfgArwGGjTOGuXkGKC5FgfznCMV4v0E13m4IyqFcBRab4jGpKZLP/ZQu6a6h2khbpZRf9IiA6MuGDfn7BpWeLaglXG2nCqTCbRhVh0rONpa0j4W8ECjQgDiIDcuKSVRVgr93Fytp943kFVmtHj/Ktg6jQiWg4TwlD9GSN1jgSX2Z+ybeQFfHzO30+XFnX6irZU7/Js0BM8BRH9m+Uuy+tsOQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(39860400002)(366004)(136003)(346002)(7416002)(33656002)(9686003)(54906003)(55016002)(71200400001)(4326008)(316002)(110136005)(86362001)(7696005)(52536014)(76116006)(2906002)(8676002)(478600001)(6506007)(66556008)(66476007)(66946007)(26005)(186003)(64756008)(66446008)(4744005)(5660300002)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: DU6SYi1e39l07XIBfhytMcG0BEmbVhmv2D5uFhEXfGLrcM2InDx4zPIYx+oMjgC5LDHW+hDiKdF6xURaQ9zVxZlH3i/6XPbjeK86rNZ1IunqJ1yqC5hTxf0oSggK0CXh6rBQrXoe6VokstIbHbOb10cBKYKdiATnGRUtR2mPI5OisggKR9Xwy54RzLOyI2BbkJK8aIccSNTtkzjx2SZmssrFjBUIcseU7HPiPQk/XJAyeCMtHxPApW/j/oh8G1IgDzIeMER/XXyFgpkMR337sJgF4cVDIW8R1QLREE7Un+7J/rHD7EMK5ArWtSOg38mVpqzSLaSbqXjwvGWdZoBwcZmblrNjxwf+v+mlcm1VgUyJS4c2EZ5YbgAuBd3HH2XLF2D9hMUZzNk+wyicvsXEUDeF1N8lbiEfAzmJEFLqShrGbdXi3cDCg+dYDsSE7H4veZd9IzsXEtq4kASj6pjmFarZywh6o6hrEZniOdbhWIn5zj4uc7gkJ48JGIRHY8qnRyugg3slrhPrC+xDlPKv9Lu0+x8myIhiDKpyvWrE64s7/Y/kbq0LDcNqpxFR6+gp1xHvSnlQBrU6pP6Ti5YSihpAWGAtyCyRRfSVzjF/wRELxAPJ8Oy4y0BRU6J/OPS3YrF3mt7kFtMxawBucv9rcA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200729065424.12851-1-Perry_Yuan@Dell.com>
-In-Reply-To: <20200729065424.12851-1-Perry_Yuan@Dell.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 29 Jul 2020 10:32:11 +0300
-Message-ID: <CAHp75VekAQA1EpjEdXWm5W3bFfLExxxHRupaowtawDvbKm+-KA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86:dell-laptop:Add battery charging thresholds
- and charging mode switch.
-To:     Perry Yuan <Perry.Yuan@dell.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR04MB4640.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 915e040a-31da-4deb-5166-08d833919455
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2020 07:32:42.3459
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +ceuiaEfmaQStmnr2W4+Qx/G0R9ECbYsdkxrhU/Mgfy5S0TGiZk/wvM844HpIwSvY0D6K3nTYyKyDmQ/VV34nQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4959
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 9:54 AM Perry Yuan <Perry.Yuan@dell.com> wrote:
->
-> From: perry_yuan <perry_yuan@dell.com>
-
-Fix your name, please. Or do you have it spelled in the official
-documents like above?
-
-> The patch control battery charging thresholds when system is under custom
-> charging mode through smbios API and driver`s sys attributes.It also set the
-> percentage bounds for custom charge.
-> Start value must lie in the range [50, 95],End value must lie in the range
-> [55, 100],END must be at least (START + 5).
->
-> The patch also add the battery charging modes switch support.User can switch
-> the battery charging mode through the new sysfs entry.
-
-The commit message needs rewording. I would recommend reading [1] and [2].
-
-[1]: https://www.kernel.org/doc/html/latest/process/submitting-patches.html
-(section 2)
-[2]: https://chris.beams.io/posts/git-commit/
-
-> Primary battery charging modes valid choices are:
-> ['primarily_ac', 'adaptive', 'custom', 'standard', 'express']
-
-This and documentation are different (at least in terms of case).
-
-Looks like this is something that should be agreed upon on the format
-and gets supported by Power Supply framework in the first place,
-
->  Documentation/ABI/testing/sysfs-class-power |  23 ++
-
-In any case it should be a separate patch. It has nothing to do with
-Dell, on contrary it's a certain device which relies on generic
-attributes.
-
-...
-
->  #include <linux/debugfs.h>
->  #include <linux/seq_file.h>
-
->  #include <acpi/video.h>
-> +#include <acpi/battery.h>
-
-Keep it ordered.
-
-> +#include <linux/string.h>
-
-And this is a generic one, should be in generic headers block.
-
->  #include "dell-rbtn.h"
->  #include "dell-smbios.h"
-
-...
-
-> +static int dell_battery_get(int *start, int *end)
-> +{
-> +       struct calling_interface_buffer buffer;
-> +       struct calling_interface_token *token;
-> +       int ret;
-> +
-
-> +       if (start) {
-> +               token = dell_smbios_find_token(BATTERY_CUSTOM_CHARGE_START);
-> +               if (!token)
-> +                       return -ENODEV;
-> +               dell_fill_request(&buffer, token->location, 0, 0, 0);
-> +               ret = dell_send_request(&buffer,
-> +                                       CLASS_TOKEN_READ, SELECT_TOKEN_STD);
-> +               *start = buffer.output[1];
-> +       }
-
-(1)
-
-> +       if (end) {
-> +               token = dell_smbios_find_token(BATTERY_CUSTOM_CHARGE_END);
-> +               if (!token)
-> +                       return -ENODEV;
-> +               dell_fill_request(&buffer, token->location, 0, 0, 0);
-> +               ret = dell_send_request(&buffer,
-> +                                       CLASS_TOKEN_READ, SELECT_TOKEN_STD);
-> +               if (ret)
-> +                       return -EIO;
-> +               *end = buffer.output[1];
-> +       }
-
-(2)
-
-(1) and (2) look like twins. Care to provide a helper to simplify?
-
-> +       return 0;
-> +}
-
-...
-
-> +       ret = dell_send_request(&buffer,
-> +                               CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
-> +       if (ret)
-
-> +               return -EIO;
-
-Why shadowing error code?
-
-...
-
-> +       ret = dell_send_request(&buffer,
-> +                               CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
-> +       if (ret)
-> +               return -EIO;
-
-Ditto.
-
-> +       return ret;
-
-And here perhaps simple 'return dell_send_request();'?
-
-...
-
-> +       switch (mode) {
-> +       case BAT_STANDARD_MODE:
-> +               token = dell_smbios_find_token(BAT_STANDARD_MODE_TOKEN);
-
-> +               if (!token)
-> +                       return -ENODEV;
-
-> +               break;
-> +       case BAT_EXPRESS_MODE:
-> +               token = dell_smbios_find_token(BAT_EXPRESS_MODE_TOKEN);
-
-> +               if (!token)
-> +                       return -ENODEV;
-
-> +               break;
-> +       case BAT_PRIMARILY_AC_MODE:
-> +               token = dell_smbios_find_token(BAT_PRIMARILY_AC_MODE_TOKEN);
-
-> +               if (!token)
-> +                       return -ENODEV;
-
-> +               break;
-> +       case BAT_CUSTOM_MODE:
-> +               token = dell_smbios_find_token(BAT_CUSTOM_MODE_TOKEN);
-
-> +               if (!token)
-> +                       return -ENODEV;
-
-> +               break;
-> +       case BAT_ADAPTIVE_MODE:
-> +               token = dell_smbios_find_token(BAT_ADAPTIVE_MODE_TOKEN);
-
-> +               if (!token)
-> +                       return -ENODEV;
-
-Five times the same lines. Please deduplicate them. One is enough.
-
-> +               break;
-> +       default:
-
-> +               pr_warn("unspported charging mode!\n");
-
-When you have a device use dev_*() to print messages.
-
-> +               return -EINVAL;
-> +       }
-
-...
-
-> +       ret = dell_send_request(&buffer, CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
-> +       if (ret)
-> +               return -EIO;
-> +
-> +       return ret;
-
-return dell_send_request(...);
-
-...
-
-> +       ret = dell_send_request(&buffer, CLASS_TOKEN_READ, SELECT_TOKEN_STD);
-> +       if (ret)
-> +               return -EIO;
-
-Do not shadow error codes.
-
-> +       if (ret == 0)
-
-What is the point?
-
-> +               *mode = buffer.output[1];
-
-> +       return ret;
-
-Any difference to return 0; ?
-
-...
-
-> +static ssize_t charge_control_charging_mode_show(struct device *dev,
-> +               struct device_attribute *attr,
-> +               char *buf)
-> +{
-> +       enum battery_charging_mode mode;
-> +       char *s = buf;
-> +
-> +       for (mode = BAT_STANDARD_MODE; mode < BAT_MAX_MODE; mode++) {
-> +               if (battery_state[mode]) {
-> +                       if (mode == bat_chg_current)
-> +                               s += sprintf(s, "[%s] ", battery_state[mode]);
-> +                       else
-> +                               s += sprintf(s, "%s ", battery_state[mode]);
-
-You have to control buffer boundaries.
-
-> +               }
-> +       }
-
-> +       if (s != buf)
-
-if (s == buf)
-  return 0;
-
-> +               /* convert the last space to a newline */
-> +               *(s-1) = '\n';
-> +       return (s - buf);
-> +}
-
-...
-
-> +static ssize_t charge_control_charging_mode_store(struct device *dev,
-> +               struct device_attribute *attr,
-> +               const char *buf, size_t size)
-> +{
-> +       int err;
-> +       enum battery_charging_mode mode;
-> +       char *p;
-> +       int len;
-> +       const char *label;
-
-> +       p = memchr(buf, '\n', size);
-> +       len = p ? p - buf : size;
-> +
-> +       for (mode = BAT_STANDARD_MODE; mode < BAT_MAX_MODE; mode++) {
-> +               label = battery_state[mode];
-> +               if (label && len == strlen(label) &&
-> +                       !strncmp(buf, label, len)) {
-> +                       bat_chg_current = mode;
-> +                       break;
-> +               }
-> +       }
-
-sysfs_match_string()
-
-> +       if (mode > BAT_NONE_MODE && mode < BAT_MAX_MODE)
-> +               err = battery_charging_mode_set(mode);
-> +       else
-> +               err = -EINVAL;
-> +
-> +       return err ? err : size;
-> +}
-
-...
-
-> +static ssize_t charge_control_thresholds_store(struct device *dev,
-> +               struct device_attribute *attr,
-> +               const char *buf, size_t size)
-> +{
-> +       int err, start, end;
-
-> +       if (sscanf(buf, "%d %d", &start, &end) != 2)
-> +               return -EINVAL;
-
-It's bad. The rule of thumb is one node per one property.
-On top of that sscanf() is not good, it doesn't check for overflow,
-use one of kstrto*().
-
-> +       err = dell_battery_set(start, end);
-> +       if (err)
-> +               return err;
-> +
-> +       return size;
-> +}
-
-...
-
-> +static int dell_battery_add(struct power_supply *battery)
-> +{
-> +       device_create_file(&battery->dev,
-> +               &dev_attr_charge_control_start_threshold);
-> +       device_create_file(&battery->dev,
-> +               &dev_attr_charge_control_end_threshold);
-> +       device_create_file(&battery->dev,
-> +               &dev_attr_charge_control_charging_mode);
-
-Can it be an attribute group?
-
-> +}
-
-...
-
-> +static struct acpi_battery_hook dell_battery_hook = {
-> +       .add_battery = dell_battery_add,
-> +       .remove_battery = dell_battery_remove,
-> +       .name = "Dell Battery Extension"
-
-Missed comma.
-
-> +};
-
-...
-
-> +static void dell_battery_setup(struct device *dev)
-> +{
-> +       enum battery_charging_mode current_mode = BAT_NONE_MODE;
-> +
-> +       battery_charging_mode_get(&current_mode);
-> +       if (current_mode) {
-> +               bat_chg_current = current_mode;
-
-> +               pr_debug("battery is present\n");
-> +       } else {
-> +               pr_debug("battery is not present\n");
-> +       }
-
-Why not dev_dbg()? Why do we have these messages at all?
-
-> +       battery_hook_register(&dell_battery_hook);
-
-> +       device_create_file(dev, &dev_attr_charge_control_thresholds);
-
-Hmm...
-
-> +}
-> +
-> +static void dell_battery_exit(struct device *dev)
-> +{
-> +       if (bat_chg_current != BAT_NONE_MODE) {
-> +               battery_hook_unregister(&dell_battery_hook);
-> +               device_remove_file(dev, &dev_attr_charge_control_thresholds);
-> +       }
-> +}
-
-...
-
-> +/*Battery Charging Modes */
-
-Indentation issues.
-Same for many other comments in this change.
-
-
---
-With Best Regards,
-Andy Shevchenko
+Looks fine.
+Thanks,
+Avri
+
+=20
+>=20
+> Hi,
+> This patchset introduces and applies DELAY_AFTER_LPM device quirk in
+> MediaTek platforms.
+>=20
+> Stanley Chu (2):
+>   scsi: ufs: Introduce device quirk "DELAY_AFTER_LPM"
+>   scsi: ufs-mediatek: Apply DELAY_AFTER_LPM quirk to Micron devices
+>=20
+>  drivers/scsi/ufs/ufs-mediatek.c |  2 ++
+>  drivers/scsi/ufs/ufs_quirks.h   |  7 +++++++
+>  drivers/scsi/ufs/ufshcd.c       | 11 +++++++++++
+>  3 files changed, 20 insertions(+)
+>=20
+> --
+> 2.18.0
