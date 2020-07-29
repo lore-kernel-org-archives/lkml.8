@@ -7,62 +7,54 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5ED5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA22C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C523A208A9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB3C22CF6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:35:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RFNMBsMg";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ns2JRnNb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EPvgIDG4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E+EEEr90"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbgG2OfN (ORCPT
+        id S1728095AbgG2OfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:35:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60230 "EHLO
+        Wed, 29 Jul 2020 10:35:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgG2Od3 (ORCPT
+        with ESMTP id S1726899AbgG2Od2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:33:29 -0400
+        Wed, 29 Jul 2020 10:33:28 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AAB8C0619D2;
-        Wed, 29 Jul 2020 07:33:29 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 14:33:27 -0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B455C061794;
+        Wed, 29 Jul 2020 07:33:28 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 14:33:26 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020; t=1596033207;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iojurnLlFuOH+G6spO2lXW1oO32Pn7dx0k9FOweQP24=;
-        b=RFNMBsMgSNWftxKHxtKzicwxze/lCTBt2rwN9h+WZMVVanbelzc6NkMLGMMqT+U4GWYo3q
-        jpX9yjDXnLEFFbqYDXWjb7Qnht5wBuACskHzoT+cZSb5VJtaHYn6EC14D3QEnOkeryDYcy
-        Y0pmne+Q1N4O00gWYrIlBfDnVGGzSiDouJPve2CtW/Y11YvzXrVcaCijUmPOICC8j+ogPj
-        DJKEVeAtVRmbh+mRRe5i8FHUkpaLkOqrorr+K/10ZopWm8wL1yDhHIrpnVOmMcd/P1yJgh
-        q8yTBd702sTzQiqBVsdbeRQSH3XrBmef+FodBaE3alaC8sUR9N5TP+8Raj/ZbQ==
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=W+LO8S02e6ATM8Kauoun2lP4TdXfzKA5Qwi6t91T4tU=;
+        b=EPvgIDG4UlYhD8bu+eiOJM27Mp8RojPjb2dZpt9kiV6Yw8rL4At2PkFe8pXS8QtxRI7NtZ
+        k7AU0lcW4JpnJ4jflb08wqzM0ZbnZGbfuImCo5UL6RT2GV00dV5eN0JrFHymZjhPrMZQMg
+        vJV1LaR86mztM+jKBDYJDe9rTLAfTVe/zqlVXlHaQEaeRenRtUz+Nzh5dqhnWjfZXKdhSW
+        9KHS5KJUnB/2flHjwNc0CQYT6GNXZYC3r1oYo8hGA2pHzfTVndjGlEusXjdQ6Xh4/NBter
+        lnWxdLORAaF1beZ8DBtVvkfvyZDo/graNLAZLR0Mmx9kYDFZXEAZvdhBQT3FyA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020e; t=1596033207;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iojurnLlFuOH+G6spO2lXW1oO32Pn7dx0k9FOweQP24=;
-        b=Ns2JRnNb9x3BkWBgTZNVz/SfeVHbK+jnglJRdshDjCwYpv7JRBOktjwsWHRgRk7swjoNca
-        e+6ZsZ77nhKq/JAg==
-From:   "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=W+LO8S02e6ATM8Kauoun2lP4TdXfzKA5Qwi6t91T4tU=;
+        b=E+EEEr90NSHOfp30P0TO1comVPOuJKjv1bvZ5Ll+gggUgPzIDBx9a5K61cQThjU+x1aJPu
+        PdMj7ngp6uK+0jBQ==
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] hrtimer: Use sequence counter with associated raw
- spinlock
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+Subject: [tip: locking/core] seqlock: s/__SEQ_LOCKDEP/__SEQ_LOCK/g
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200720155530.1173732-25-a.darwish@linutronix.de>
-References: <20200720155530.1173732-25-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <159603320717.4006.4556629002081823174.tip-bot2@tip-bot2>
+Message-ID: <159603320649.4006.16915985526825590187.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -74,77 +66,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     af5a06b582ec3d7b0160b4faaa65f73d8dcf989f
-Gitweb:        https://git.kernel.org/tip/af5a06b582ec3d7b0160b4faaa65f73d8dcf989f
-Author:        Ahmed S. Darwish <a.darwish@linutronix.de>
-AuthorDate:    Mon, 20 Jul 2020 17:55:30 +02:00
+Commit-ID:     e55687fe5c1e4849e5559a0a49199c9ca3fff36e
+Gitweb:        https://git.kernel.org/tip/e55687fe5c1e4849e5559a0a49199c9ca3fff36e
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Thu, 23 Jul 2020 11:56:22 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Wed, 29 Jul 2020 16:14:29 +02:00
 
-hrtimer: Use sequence counter with associated raw spinlock
+seqlock: s/__SEQ_LOCKDEP/__SEQ_LOCK/g
 
-A sequence counter write side critical section must be protected by some
-form of locking to serialize writers. A plain seqcount_t does not
-contain the information of which lock must be held when entering a write
-side critical section.
+__SEQ_LOCKDEP() is an expression gate for the
+seqcount_LOCKNAME_t::lock member. Rename it to be about the member,
+not the gate condition.
 
-Use the new seqcount_raw_spinlock_t data type, which allows to associate
-a raw spinlock with the sequence counter. This enables lockdep to verify
-that the raw spinlock used for writer serialization is held when the
-write side critical section is entered.
+Later (PREEMPT_RT) patches will make the member available for !LOCKDEP
+configs.
 
-If lockdep is disabled this lock association is compiled out and has
-neither storage size nor runtime overhead.
-
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200720155530.1173732-25-a.darwish@linutronix.de
 ---
- include/linux/hrtimer.h |  2 +-
- kernel/time/hrtimer.c   | 13 ++++++++++---
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ include/linux/seqlock.h | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-index 15c8ac3..25993b8 100644
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -159,7 +159,7 @@ struct hrtimer_clock_base {
- 	struct hrtimer_cpu_base	*cpu_base;
- 	unsigned int		index;
- 	clockid_t		clockid;
--	seqcount_t		seq;
-+	seqcount_raw_spinlock_t	seq;
- 	struct hrtimer		*running;
- 	struct timerqueue_head	active;
- 	ktime_t			(*get_time)(void);
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index d89da1c..c403851 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -135,7 +135,11 @@ static const int hrtimer_clock_to_base_table[MAX_CLOCKS] = {
-  * timer->base->cpu_base
+diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+index b487299..c689aba 100644
+--- a/include/linux/seqlock.h
++++ b/include/linux/seqlock.h
+@@ -133,20 +133,20 @@ static inline void seqcount_lockdep_reader_access(const seqcount_t *s)
   */
- static struct hrtimer_cpu_base migration_cpu_base = {
--	.clock_base = { { .cpu_base = &migration_cpu_base, }, },
-+	.clock_base = { {
-+		.cpu_base = &migration_cpu_base,
-+		.seq      = SEQCNT_RAW_SPINLOCK_ZERO(migration_cpu_base.seq,
-+						     &migration_cpu_base.lock),
-+	}, },
- };
  
- #define migration_base	migration_cpu_base.clock_base[0]
-@@ -1998,8 +2002,11 @@ int hrtimers_prepare_cpu(unsigned int cpu)
- 	int i;
+ #ifdef CONFIG_LOCKDEP
+-#define __SEQ_LOCKDEP(expr)	expr
++#define __SEQ_LOCK(expr)	expr
+ #else
+-#define __SEQ_LOCKDEP(expr)
++#define __SEQ_LOCK(expr)
+ #endif
  
- 	for (i = 0; i < HRTIMER_MAX_CLOCK_BASES; i++) {
--		cpu_base->clock_base[i].cpu_base = cpu_base;
--		timerqueue_init_head(&cpu_base->clock_base[i].active);
-+		struct hrtimer_clock_base *clock_b = &cpu_base->clock_base[i];
-+
-+		clock_b->cpu_base = cpu_base;
-+		seqcount_raw_spinlock_init(&clock_b->seq, &cpu_base->lock);
-+		timerqueue_init_head(&clock_b->active);
- 	}
+ #define SEQCOUNT_LOCKTYPE_ZERO(seq_name, assoc_lock) {			\
+ 	.seqcount		= SEQCNT_ZERO(seq_name.seqcount),	\
+-	__SEQ_LOCKDEP(.lock	= (assoc_lock))				\
++	__SEQ_LOCK(.lock	= (assoc_lock))				\
+ }
  
- 	cpu_base->cpu = cpu;
+ #define seqcount_locktype_init(s, assoc_lock)				\
+ do {									\
+ 	seqcount_init(&(s)->seqcount);					\
+-	__SEQ_LOCKDEP((s)->lock = (assoc_lock));			\
++	__SEQ_LOCK((s)->lock = (assoc_lock));				\
+ } while (0)
+ 
+ /**
+@@ -161,7 +161,7 @@ do {									\
+  */
+ typedef struct seqcount_spinlock {
+ 	seqcount_t	seqcount;
+-	__SEQ_LOCKDEP(spinlock_t	*lock);
++	__SEQ_LOCK(spinlock_t	*lock);
+ } seqcount_spinlock_t;
+ 
+ /**
+@@ -192,7 +192,7 @@ typedef struct seqcount_spinlock {
+  */
+ typedef struct seqcount_raw_spinlock {
+ 	seqcount_t      seqcount;
+-	__SEQ_LOCKDEP(raw_spinlock_t	*lock);
++	__SEQ_LOCK(raw_spinlock_t	*lock);
+ } seqcount_raw_spinlock_t;
+ 
+ /**
+@@ -223,7 +223,7 @@ typedef struct seqcount_raw_spinlock {
+  */
+ typedef struct seqcount_rwlock {
+ 	seqcount_t      seqcount;
+-	__SEQ_LOCKDEP(rwlock_t		*lock);
++	__SEQ_LOCK(rwlock_t		*lock);
+ } seqcount_rwlock_t;
+ 
+ /**
+@@ -257,7 +257,7 @@ typedef struct seqcount_rwlock {
+  */
+ typedef struct seqcount_mutex {
+ 	seqcount_t      seqcount;
+-	__SEQ_LOCKDEP(struct mutex	*lock);
++	__SEQ_LOCK(struct mutex	*lock);
+ } seqcount_mutex_t;
+ 
+ /**
+@@ -291,7 +291,7 @@ typedef struct seqcount_mutex {
+  */
+ typedef struct seqcount_ww_mutex {
+ 	seqcount_t      seqcount;
+-	__SEQ_LOCKDEP(struct ww_mutex	*lock);
++	__SEQ_LOCK(struct ww_mutex	*lock);
+ } seqcount_ww_mutex_t;
+ 
+ /**
+@@ -329,7 +329,7 @@ __seqcount_##locktype##_preemptible(seqcount_##locktype##_t *s)		\
+ static inline void							\
+ __seqcount_##locktype##_assert(seqcount_##locktype##_t *s)		\
+ {									\
+-	__SEQ_LOCKDEP(lockdep_assert_held(lockmember));			\
++	__SEQ_LOCK(lockdep_assert_held(lockmember));			\
+ }
+ 
+ /*
