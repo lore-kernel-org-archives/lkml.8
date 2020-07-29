@@ -2,338 +2,257 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8662C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84140207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:16:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="bt6/UAJ0"
+	by mail.kernel.org (Postfix) with ESMTP id 638AA2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595992610;
+	bh=JIkLh/gH1jnXP1CN9e4bmsKKFoBMaEmSLkbtry1KPTo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=FNM/AeTaerd/XZadaSTAZeqgusikbFwhaqUR+nP7sbIjsncoXNI70Oz/dmXC59a0+
+	 COFJ0+cxmWZyUQU/gQqieaq5AalRHXIlaMpCGcBurypGoLK7S/PBUHodOOE/cGWBp8
+	 8FVSjDAn3to7rtTqztuJD+/Ec21k3AAyC7VUiNcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgG2DQg (ORCPT
+        id S1726664AbgG2DQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 23:16:36 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:34619 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726047AbgG2DPk (ORCPT
+        Tue, 28 Jul 2020 23:16:49 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:63692 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbgG2DQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 23:15:40 -0400
-X-UUID: ef7c589bffa44a91952ebe0c0fbf4d5e-20200729
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=gxnyGEjtd3ZwDEJ8oeskMKClMVsIiXr3URSMOGukv18=;
-        b=bt6/UAJ0DQypIn/41LaVc8XEvwlrSKafwo1BxDEwC9U1eiXn+LlZlgtLzJ09jln8xlZqvTcn7Ec6PHjUhQagENxbNuR8FJSMxIpRvBDJhBzyjQf36ar6ObMQAv15+Gqpk33AVvabhQ0QH7YZcqxCFBsONq9wpqAwT6xlGVAQeF8=;
-X-UUID: ef7c589bffa44a91952ebe0c0fbf4d5e-20200729
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1323224562; Wed, 29 Jul 2020 11:15:30 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 29 Jul 2020 11:15:29 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 29 Jul 2020 11:15:25 +0800
-Message-ID: <1595992529.6575.0.camel@mtkswgap22>
-Subject: Re: [PATCH v3 2/2] soc: mediatek: add mtk-devapc driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Wed, 29 Jul 2020 11:15:29 +0800
-In-Reply-To: <CAAOTY_82nN8U34-LW8RTqTLEH2MwTg+B5KMHjha3=sbOXPdWSw@mail.gmail.com>
-References: <1595303971-8793-1-git-send-email-neal.liu@mediatek.com>
-         <1595303971-8793-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
-         <1595389756.20193.12.camel@mtkswgap22>
-         <CAAOTY_9k7rM=Pf43DwJR_bkQvxVtpWYTjVoNSZLVE2N0Y_DBmA@mail.gmail.com>
-         <1595484707.26237.12.camel@mtkswgap22>
-         <CAAOTY__V3zwux7UP7p4SUbreGrPBbwRqi=E1WVsA58tYNmri1A@mail.gmail.com>
-         <1595573719.24412.9.camel@mtkswgap22>
-         <CAAOTY__KYH4G3E+c=zoOk==hPJHsAd5u4Q0oj4adKstaoOciMg@mail.gmail.com>
-         <1595819152.7630.13.camel@mtkswgap22>
-         <CAAOTY_8j4rxxqOD0-gf-=sJPhiLu9KE4zF467v7g2EBrTFJUeQ@mail.gmail.com>
-         <1595908325.1388.8.camel@mtkswgap22>
-         <CAAOTY_-POOCU0mG3qcV8=3UF4Qr5rq1RVAeFtnRvLgAxaof32g@mail.gmail.com>
-         <1595988652.9265.8.camel@mtkswgap22>
-         <CAAOTY_82nN8U34-LW8RTqTLEH2MwTg+B5KMHjha3=sbOXPdWSw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 28 Jul 2020 23:16:48 -0400
+Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 06T3Fi04000857;
+        Wed, 29 Jul 2020 12:15:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 06T3Fi04000857
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1595992544;
+        bh=Ez4pjpjvvIf+iOFLJFngv++ZRsHADJifki9W/RGZoc4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=f8pOiQdRUX+cSusv4eK2PG62/n0Xu+xTyUHSrNAnrnXNo2v/GNZtz+J3k8kpIKpgX
+         nhrhcN2p41k92GNLtnpCFdYvAZNIksDandTnSM3Ltxjp3wKhUb5H1LXZCD0+j6MoXl
+         98D2T8L6j8HSj6Un1yZpsIPJgn1h0W76a+GhdH+ZQhU1ENQuMfQ0IdxH7/vinlxpxC
+         n/hqLFEeWnXysyYLxyUc/R+MxQ3qAmXyj0aX4peZ+nlbX/RZGtWS+CJ1A6jk2ofMS0
+         kDgRHmKmT9QYbJwIOD5N5JUi8gzRvdlhzA+HwCkfeqRehhPaLIKUnDFgmrQH3f5ddW
+         zMB8Prlyi+LBQ==
+X-Nifty-SrcIP: [126.25.67.101]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Emese Revfy <re.emese@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] kbuild: move shared library build rules to scripts/gcc-plugins/Makefile
+Date:   Wed, 29 Jul 2020 12:15:36 +0900
+Message-Id: <20200729031537.37926-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA3LTI5IGF0IDEwOjIyICswODAwLCBDaHVuLUt1YW5nIEh1IHdyb3RlOg0K
-PiBOZWFsIExpdSA8bmVhbC5saXVAbWVkaWF0ZWsuY29tPiDmlrwgMjAyMOW5tDfmnIgyOeaXpSDp
-gLHkuIkg5LiK5Y2IMTA6MTDlr6vpgZPvvJoNCj4gPg0KPiA+IEhpIENodW4tS3VhbmcsDQo+ID4N
-Cj4gPiBPbiBUdWUsIDIwMjAtMDctMjggYXQgMjM6MzUgKzA4MDAsIENodW4tS3VhbmcgSHUgd3Jv
-dGU6DQo+ID4gPiBIaSwgTmVhbDoNCj4gPiA+DQo+ID4gPiBOZWFsIExpdSA8bmVhbC5saXVAbWVk
-aWF0ZWsuY29tPiDmlrwgMjAyMOW5tDfmnIgyOOaXpSDpgLHkuowg5LiK5Y2IMTE6NTLlr6vpgZPv
-vJoNCj4gPiA+ID4NCj4gPiA+ID4gSGkgQ2h1bi1LdWFuZywNCj4gPiA+ID4NCj4gPiA+ID4gT24g
-TW9uLCAyMDIwLTA3LTI3IGF0IDIyOjQ3ICswODAwLCBDaHVuLUt1YW5nIEh1IHdyb3RlOg0KPiA+
-ID4gPiA+IEhpLCBOZWFsOg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gTmVhbCBMaXUgPG5lYWwubGl1
-QG1lZGlhdGVrLmNvbT4g5pa8IDIwMjDlubQ35pyIMjfml6Ug6YCx5LiAIOS4iuWNiDExOjA25a+r
-6YGT77yaDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gSGkgQ2h1bi1LdWFuZywNCj4gPiA+ID4g
-PiA+DQo+ID4gPiA+ID4gPiBPbiBGcmksIDIwMjAtMDctMjQgYXQgMjM6NTUgKzA4MDAsIENodW4t
-S3VhbmcgSHUgd3JvdGU6DQo+ID4gPiA+ID4gPiA+IEhpLCBOZWFsOg0KPiA+ID4gPiA+ID4gPg0K
-PiA+ID4gPiA+ID4gPiBOZWFsIExpdSA8bmVhbC5saXVAbWVkaWF0ZWsuY29tPiDmlrwgMjAyMOW5
-tDfmnIgyNOaXpSDpgLHkupQg5LiL5Y2IMjo1NeWvq+mBk++8mg0KPiA+ID4gPiA+ID4gPiA+DQo+
-ID4gPiA+ID4gPiA+ID4gSGkgQ2h1bi1LdWFuZywNCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+
-ID4gPiA+IE9uIEZyaSwgMjAyMC0wNy0yNCBhdCAwMDozMiArMDgwMCwgQ2h1bi1LdWFuZyBIdSB3
-cm90ZToNCj4gPiA+ID4gPiA+ID4gPiA+IEhpLCBOZWFsOg0KPiA+ID4gPiA+ID4gPiA+ID4NCj4g
-PiA+ID4gPiA+ID4gPiA+IE5lYWwgTGl1IDxuZWFsLmxpdUBtZWRpYXRlay5jb20+IOaWvCAyMDIw
-5bm0N+aciDIz5pelIOmAseWbmyDkuIvljYgyOjEx5a+r6YGT77yaDQo+ID4gPiA+ID4gPiA+ID4g
-PiA+DQo+ID4gPiA+ID4gPiA+ID4gPiA+IEhpIENodW4tS3VhbmcsDQo+ID4gPiA+ID4gPiA+ID4g
-PiA+DQo+ID4gPiA+ID4gPiA+ID4gPiA+IE9uIFdlZCwgMjAyMC0wNy0yMiBhdCAyMjoyNSArMDgw
-MCwgQ2h1bi1LdWFuZyBIdSB3cm90ZToNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiBIaSwgTmVhbDoN
-Cj4gPiA+ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+IE5lYWwgTGl1IDxu
-ZWFsLmxpdUBtZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0N+aciDIy5pelIOmAseS4iSDkuIrljYgx
-MTo0OeWvq+mBk++8mg0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+
-ID4gPiA+IEhpIENodW4tS3VhbmcsDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4gT24gV2VkLCAyMDIwLTA3LTIyIGF0IDA3OjIxICswODAwLCBDaHVuLUt1
-YW5nIEh1IHdyb3RlOg0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiBIaSwgTmVhbDoNCj4gPiA+
-ID4gPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gTmVhbCBMaXUg
-PG5lYWwubGl1QG1lZGlhdGVrLmNvbT4g5pa8IDIwMjDlubQ35pyIMjHml6Ug6YCx5LqMIOS4i+WN
-iDEyOjAw5a+r6YGT77yaDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4g
-PiA+ID4gPiA+ID4gPiA+ID4gKy8qDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAqIG10
-a19kZXZhcGNfZHVtcF92aW9fZGJnIC0gZ2V0IHRoZSB2aW9sYXRpb24gaW5kZXggYW5kIGR1bXAg
-dGhlIGZ1bGwgdmlvbGF0aW9uDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAqICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgZGVidWcgaW5mb3JtYXRpb24uDQo+ID4gPiA+ID4gPiA+ID4g
-PiA+ID4gPiA+ID4gKyAqLw0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICtzdGF0aWMgYm9v
-bCBtdGtfZGV2YXBjX2R1bXBfdmlvX2RiZyhzdHJ1Y3QgbXRrX2RldmFwY19jb250ZXh0ICpjdHgs
-IHUzMiB2aW9faWR4KQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICt7DQo+ID4gPiA+ID4g
-PiA+ID4gPiA+ID4gPiA+ID4gKyAgICAgICB1MzIgc2hpZnRfYml0Ow0KPiA+ID4gPiA+ID4gPiA+
-ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArICAgICAgIGlmIChj
-aGVja192aW9fbWFzayhjdHgsIHZpb19pZHgpKQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+
-ICsgICAgICAgICAgICAgICByZXR1cm4gZmFsc2U7DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+
-ID4gKw0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgaWYgKCFjaGVja192aW9f
-c3RhdHVzKGN0eCwgdmlvX2lkeCkpDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAgICAg
-ICAgICAgICAgIHJldHVybiBmYWxzZTsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArDQo+
-ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAgICAgICBzaGlmdF9iaXQgPSBnZXRfc2hpZnRf
-Z3JvdXAoY3R4LCB2aW9faWR4KTsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArDQo+ID4g
-PiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAgICAgICBpZiAoc3luY192aW9fZGJnKGN0eCwgc2hp
-ZnRfYml0KSkNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgcmV0
-dXJuIGZhbHNlOw0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4g
-PiA+ID4gPiA+ID4gPiArICAgICAgIGRldmFwY19leHRyYWN0X3Zpb19kYmcoY3R4KTsNCj4gPiA+
-ID4gPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gSSB0aGluayBn
-ZXRfc2hpZnRfZ3JvdXAoKSwgc3luY192aW9fZGJnKCksIGFuZA0KPiA+ID4gPiA+ID4gPiA+ID4g
-PiA+ID4gPiBkZXZhcGNfZXh0cmFjdF92aW9fZGJnKCkgc2hvdWxkIGJlIG1vdmVkIG91dCBvZiB2
-aW9faWR4IGZvci1sb29wICh0aGUNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gbG9vcCBpbiBk
-ZXZhcGNfdmlvbGF0aW9uX2lycSgpKSBiZWNhdXNlIHRoZXNlIHRocmVlIGZ1bmN0aW9uIGlzIG5v
-dA0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiByZWxhdGVkIHRvIHZpb19pZHguDQo+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4gPiA+IEFub3RoZXIgcXVlc3Rpb246IHdoZW4gbXVsdGlwbGUgdmlvX2lk
-eCB2aW9sYXRpb24gb2NjdXIsIHZpb19hZGRyIGlzDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+
-IHJlbGF0ZWQgdG8gd2hpY2ggb25lIHZpb19pZHg/IFRoZSBsYXRlc3QgaGFwcGVuZWQgb25lPw0K
-PiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+
-ID4gPiA+ID4gPiA+ID4gPiA+IEFjdHVhbGx5LCBpdCdzIHJlbGF0ZWQgdG8gdmlvX2lkeC4gQnV0
-IHdlIGRvbid0IHVzZSBpdCBkaXJlY3RseSBvbiB0aGVzZQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+
-ID4gZnVuY3Rpb24uIEkgdGhpbmsgYmVsb3cgc25pcCBjb2RlIG1pZ2h0IGJlIGJldHRlciB3YXkg
-dG8gdW5kZXJzdGFuZCBpdC4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+
-ID4gPiA+ID4gPiBmb3IgKC4uLikNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+IHsNCj4gPiA+ID4g
-PiA+ID4gPiA+ID4gPiA+ICAgICAgICAgY2hlY2tfdmlvX21hc2soKQ0KPiA+ID4gPiA+ID4gPiA+
-ID4gPiA+ID4gICAgICAgICBjaGVja192aW9fc3RhdHVzKCkNCj4gPiA+ID4gPiA+ID4gPiA+ID4g
-PiA+DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiAgICAgICAgIC8vIGlmIGdldCB2aW9faWR4LCBt
-YXNrIGl0IHRlbXBvcmFyaWx5DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiAgICAgICAgIG1hc2tf
-bW9kdWxlX2lycSh0cnVlKQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gICAgICAgICBjbGVhcl92
-aW9fc3RhdHVzKCkNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gPiA+
-ID4gPiAgICAgICAgIC8vIGR1bXAgdmlvbGF0aW9uIGluZm8NCj4gPiA+ID4gPiA+ID4gPiA+ID4g
-PiA+ICAgICAgICAgZ2V0X3NoaWZ0X2dyb3VwKCkNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICAg
-ICAgICAgc3luY192aW9fZGJnKCkNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICAgICAgICAgZGV2
-YXBjX2V4dHJhY3RfdmlvX2RiZygpDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4gICAgICAgICAvLyB1bm1hc2sNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+
-ICAgICAgICAgbWFza19tb2R1bGVfaXJxKGZhbHNlKQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4g
-fQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gVGhpcyBzbmlw
-IGNvZGUgZG9lcyBub3QgZXhwbGFpbiBhbnkgdGhpbmcuIEkgY291bGQgcmV3cml0ZSB0aGlzIGNv
-ZGUgYXM6DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiBmb3Ig
-KC4uLikNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiB7DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gICAg
-IGNoZWNrX3Zpb19tYXNrKCkNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiAgICAgY2hlY2tfdmlvX3N0
-YXR1cygpDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiAgICAg
-Ly8gaWYgZ2V0IHZpb19pZHgsIG1hc2sgaXQgdGVtcG9yYXJpbHkNCj4gPiA+ID4gPiA+ID4gPiA+
-ID4gPiAgICAgbWFza19tb2R1bGVfaXJxKHRydWUpDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gICAg
-IGNsZWFyX3Zpb19zdGF0dXMoKQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICAgICAvLyB1bm1hc2sN
-Cj4gPiA+ID4gPiA+ID4gPiA+ID4gPiAgICAgbWFza19tb2R1bGVfaXJxKGZhbHNlKQ0KPiA+ID4g
-PiA+ID4gPiA+ID4gPiA+IH0NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+
-ID4gPiA+IC8vIGR1bXAgdmlvbGF0aW9uIGluZm8NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiBnZXRf
-c2hpZnRfZ3JvdXAoKQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+IHN5bmNfdmlvX2RiZygpDQo+ID4g
-PiA+ID4gPiA+ID4gPiA+ID4gZGV2YXBjX2V4dHJhY3RfdmlvX2RiZygpDQo+ID4gPiA+ID4gPiA+
-ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiBBbmQgbXkgdmVyc2lvbiBpcyBpZGVudGlj
-YWwgd2l0aCB5b3VyIHZlcnNpb24sIGlzbid0IGl0Pw0KPiA+ID4gPiA+ID4gPiA+ID4gPg0KPiA+
-ID4gPiA+ID4gPiA+ID4gPiBTb3JyeSwgSSBkaWQgbm90IGV4cGxhaW4gaXQgY2xlYXJseS4gTGV0
-J3MgbWUgdHJ5IGFnYWluLg0KPiA+ID4gPiA+ID4gPiA+ID4gPiBUaGUgcmVhc29uIHdoeSBJIHB1
-dCAiZHVtcCB2aW9sYXRpb24gaW5mbyIgYmV0d2VlbiBtYXNrICYgdW5tYXNrIGNvbnRleHQNCj4g
-PiA+ID4gPiA+ID4gPiA+ID4gaXMgYmVjYXVzZSBpdCBoYXMgdG8gc3RvcCBpbnRlcnJ1cHQgZmly
-c3QgYmVmb3JlIGR1bXAgdmlvbGF0aW9uIGluZm8sDQo+ID4gPiA+ID4gPiA+ID4gPiA+IGFuZCB0
-aGVuIHVubWFzayBpdCB0byBwcmVwYXJlIG5leHQgdmlvbGF0aW9uLg0KPiA+ID4gPiA+ID4gPiA+
-ID4gPiBUaGVzZSBzZXF1ZW5jZSBndWFyYW50ZWUgdGhhdCBpZiBtdWx0aXBsZSB2aW9sYXRpb24g
-aXMgdHJpZ2dlcmVkLCB3ZQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiBzdGlsbCBoYXZlIGluZm9ybWF0
-aW9uIHRvIGRlYnVnLg0KPiA+ID4gPiA+ID4gPiA+ID4gPiBJZiB0aGUgY29kZSBzZXF1ZW5jZSBp
-biB5b3VyIHZlcnNpb24gYW5kIG11bHRpcGxlIHZpb2xhdGlvbiBpcw0KPiA+ID4gPiA+ID4gPiA+
-ID4gPiB0cmlnZ2VyZWQsIHRoZXJlIG1pZ2h0IGJlIG5vIGFueSBpbmZvcm1hdGlvbiBidXQga2Vl
-cHMgZW50ZXJpbmcgSVNSLg0KPiA+ID4gPiA+ID4gPiA+ID4gPiBGaW5hbGx5LCBzeXN0ZW0gbWln
-aHQgYmUgYWJub3JtYWwgYW5kIHdhdGNoZG9nIHRpbWVvdXQuDQo+ID4gPiA+ID4gPiA+ID4gPiA+
-IEluIHRoaXMgY2FzZSwgd2Ugc3RpbGwgZG9uJ3QgaGF2ZSBhbnkgaW5mb3JtYXRpb24gdG8gZGVi
-dWcuDQo+ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ID4gSSBzdGlsbCBkb24ndCB1
-bmRlcnN0YW5kIHdoeSBubyBpbmZvcm1hdGlvbiB0byBkZWJ1Zy4gRm9yIGV4YW1wbGUgd2hlbg0K
-PiA+ID4gPiA+ID4gPiA+ID4gdmlvX2lkeCA1LCAxMCwgMTUgaGFzIHZpb2xhdGlvbiwNCj4gPiA+
-ID4gPiA+ID4gPiA+IFlvdSB3b3VsZCBtYXNrIHZpb19pZHggNSB0byBnZXQgaW5mb3JtYXRpb24s
-IGJ1dCB2aW9faWR4IDEwLCAxNSBkb2VzDQo+ID4gPiA+ID4gPiA+ID4gPiBub3QgbWFzayB5ZXQu
-DQo+ID4gPiA+ID4gPiA+ID4gPiBJbiB5b3VyIHdvcmRzLCB3aGVuIHZpb19pZHggMTAsIDE1IG5v
-dCBtYXNrLCB5b3Ugd291bGQgbm90IGdldCBhbnkNCj4gPiA+ID4gPiA+ID4gPiA+IGRlYnVnIGlu
-Zm9ybWF0aW9uIHdoZW4geW91IHByb2Nlc3MgdmlvX2lkeCA1Lg0KPiA+ID4gPiA+ID4gPiA+ID4N
-Cj4gPiA+ID4gPiA+ID4gPiA+IEluIG15IHZlcnNpb24sIEkgd291bGQgY2xlYXIgYWxsIHN0YXR1
-cywgd2h5IGtlZXBzIGVudGVyaW5nIElTUj8NCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
-PiA+IFRoaW5rIGFib3V0IHRoaXMgY2FzZSwgaWYgc29tZW9uZSB0cmllcyB0byBkdW1wICJBQUEi
-IG1vZHVsZSdzIHJlZ2lzdGVyLg0KPiA+ID4gPiA+ID4gPiA+IEl0IHdvdWxkIGtlZXAgcmVhZCBy
-ZWcgYmFzZSwgYmFzZSsweDQsIGJhc2UrMHg4LCAuLi4NCj4gPiA+ID4gPiA+ID4gPiBBbGwgdGhl
-c2UgcmVnaXN0ZXJzIGFyZSBpbiB0aGUgc2FtZSBzbGF2ZSwgd2hpY2ggd291bGQgYmUgc2FtZSB2
-aW9faWR4Lg0KPiA+ID4gPiA+ID4gPiA+IChUYWtlIHZpb19pZHggNSBhcyBleGFtcGxlKQ0KPiA+
-ID4gPiA+ID4gPiA+IEluIHRoaXMgY2FzZSwgdmlvX2lkeCA1IHdpbGwga2VlcCB0cmlnZ2VyaW5n
-IGludGVycnVwdC4gSWYgeW91IGRpZCBub3QNCj4gPiA+ID4gPiA+ID4gPiBkbyAiZHVtcCB2aW9s
-YXRpb24gaW5mbyIgYmV0d2VlbiBtYXNrICYgdW5tYXNrLCB5b3UgY2Fubm90IGdldCBhbnkNCj4g
-PiA+ID4gPiA+ID4gPiB2aW9sYXRpb24gaW5mbyB1bnRpbCB0aGUgbGFzdCBpbnRlcnJ1cHQgYmVp
-bmcgaGFuZGxlZC4NCj4gPiA+ID4gPiA+ID4gPiBOb3JtYWxseSwgc3lzdGVtIHdpbGwgY3Jhc2gg
-YmVmb3JlIGxhc3QgaW50ZXJydXB0IGNvbWluZy4NCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+
-ID4gWW91IGhhdmUgc2FpZCB0aGF0IGZpcnN0IHZpb19hZGRyIHdvdWxkIGJlIGtlcHQgdW50aWwg
-aXQncyAnaGFuZGxlZCcuDQo+ID4gPiA+ID4gPiA+IFNvIHRoZSBmaXJzdCB2aW9fYWRkciByZWdf
-YmFzZSB3b3VsZCBiZSBrZXB0IGV2ZW4gdGhvdWdoIG90aGVyDQo+ID4gPiA+ID4gPiA+IHZpb2xh
-dGlvbiBoYXBwZW4uIEFuZCBJIGNvdWxkIGhhbmRsZSAoY2xlYXIgc3RhdHVzIGFuZCBkdW1wIGlu
-Zm8pIGl0DQo+ID4gPiA+ID4gPiA+IHRoZW4gdmlvX2FkZHIgd291bGQgbmV4dCB2aW9sYXRpb24n
-cyBhZGRyZXNzLiBJJ20gY29uZnVzZWQgd2l0aCB5b3VyDQo+ID4gPiA+ID4gPiA+IHN0YXRlbWVu
-dC4gSWYgQUFBIGlzIGR1bXBpbmcgcmVnaXN0ZXIgb2YgdmlvX2lkeCA1LCBCQkIgaXMgZHVtcGlu
-Zw0KPiA+ID4gPiA+ID4gPiByZWdpc3RlciBvZiB2aW9faWR4IDEwLCBDQ0MgaXMgZHVtcGluZyBy
-ZWdpc3RlciBvZiB2aW9faWR4IDE1LCBJIHRoaW5rDQo+ID4gPiA+ID4gPiA+IHlvdSBzaG91bGQg
-bWFzayBhbGwgdmlvX2lkeCBub3Qgb25seSBvbmUuIFNvIHRoZSBjb2RlIHdvdWxkIGJlDQo+ID4g
-PiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+IGZvciBhbGwgdmlvX2lkeCB7DQo+ID4gPiA+ID4gPiA+
-ICAgICBtYXNrX21vZHVsZV9pcnEodHJ1ZSkNCj4gPiA+ID4gPiA+ID4gfQ0KPiA+ID4gPiA+ID4g
-Pg0KPiA+ID4gPiA+ID4gPiBkZXZhcGNfZXh0cmFjdF92aW9fZGJnKCkNCj4gPiA+ID4gPiA+ID4N
-Cj4gPiA+ID4gPiA+ID4gZm9yIGFsbCB2aW9faWR4IHsNCj4gPiA+ID4gPiA+ID4gICAgIGNsZWFy
-X3Zpb19zdGF0dXMoKQ0KPiA+ID4gPiA+ID4gPiAgICAgbWFza19tb2R1bGVfaXJxKGZhbHNlKQ0K
-PiA+ID4gPiA+ID4gPiB9DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
-SSdtIGFsc28gY29uc2lkZXIgdGhpcyBzb2x1dGlvbiBhbmQgSSB0aGluayBpdCdzIG11Y2ggYmV0
-dGVyIHRvDQo+ID4gPiA+ID4gPiB1bmRlcnN0YW5kIGhhcmR3YXJlIGJlaGF2aW9yLg0KPiA+ID4g
-PiA+ID4NCj4gPiA+ID4gPiA+IGRldmFwY19kdW1wX3Zpb19kYmcoKQ0KPiA+ID4gPiA+ID4gew0K
-PiA+ID4gPiA+ID4gICAgICAgICB3aGlsZSgxKSB7DQo+ID4gPiA+ID4gPiAgICAgICAgICAgICAg
-ICAgLy8gbWlnaHQgaGF2ZSBtdWx0aXBsZSBzaGlmdF9iaXQgcmFpc2VkDQo+ID4gPiA+ID4gPiAg
-ICAgICAgICAgICAgICAgc2hpZnRfYml0ID0gZ2V0X3NoaWZ0X2dyb3VwKCkNCj4gPiA+ID4gPiA+
-ICAgICAgICAgICAgICAgICBpZiAoc2hpZnRfYml0ID49IDAgJiYgc2hpZnQgYml0IDw9IDMxKQ0K
-PiA+ID4gPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgc3luY192aW9fZGJnKHNoaWZ0X2Jp
-dCkNCj4gPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGV4dHJhY3RfdmlvX2RiZygp
-DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBBY2NvcmRpbmcgdG8geW91ciBzdGF0ZW1lbnQsIHdoZW4g
-bXVsdGlwbGUgdmlvbGF0aW9uIG9jY3VyLCBvbmx5IHRoZQ0KPiA+ID4gPiA+IGZpcnN0IG9uZSBp
-cyBrZXB0LCBvdGhlcnMgYXJlIGRyb3BwZWQuIEkgdGhpbmsgd2UganVzdCBuZWVkIHRvIGR1bXAN
-Cj4gPiA+ID4gPiBkZWJ1ZyBpbmZvIG9uY2UuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBCZWNhdXNl
-IG9ubHkgb25lIHZpb2xhdGlvbiBpbmZvcm1hdGlvbiB3b3VsZCBiZSBrZXB0LCB3aHkgbm90IG9u
-bHkgb25lDQo+ID4gPiA+ID4gZ3JvdXAgKGVxdWFsIHRvIG5vIGdyb3VwKT8NCj4gPiA+ID4gPg0K
-PiA+ID4gPiA+IFJlZ2FyZHMsDQo+ID4gPiA+ID4gQ2h1bi1LdWFuZy4NCj4gPiA+ID4NCj4gPiA+
-ID4gTGV0J3MgbWUgZ2l2ZSB5b3UgYW4gZXhhbXBsZSBvZiBkZXZhcGMgZGVzaWduLg0KPiA+ID4g
-PiB2aW9faWR4OiAwLCAxLCAyIC0+IGdyb3VwIDAgKHNoaWZ0X2JpdDogMCkNCj4gPiA+ID4gdmlv
-X2lkeDogMywgNCwgNSAtPiBncm91cCAxIChzaGlmdF9iaXQ6IDEpDQo+ID4gPiA+IC4uLg0KPiA+
-ID4gPg0KPiA+ID4gPiBFYWNoIGdyb3VwIHZpb2xhdGlvbiB3aWxsIGtlZXAgb25lIHZpb2xhdGlv
-biAodGhlIGZpcnN0IG9uZSkuIElmIHZpb19pZHgNCj4gPiA+ID4gMCBpcyB0cmlnZ2VyZWQgZmly
-c3QsIHZpb19pZHggMSBpcyB0cmlnZ2VyZWQgbmV4dCwgdGhlbiBncm91cCAwIHdpbGwNCj4gPiA+
-ID4ganVzdCBrZWVwIHZpb19pZHggMCB2aW9sYXRpb24gaW5mby4NCj4gPiA+ID4gSWYgdmlvX2lk
-eCAyIGlzIHRyaWdnZXJlZCBmaXJzdCwgdmlvX2lkeCAzIGlzIHRyaWdnZXJlZCBuZXh0LCB0aGVu
-IGdyb3VwDQo+ID4gPiA+IDAgd2lsbCBrZWVwIHZpb19pZHggMiB2aW9sYXRpb24gaW5mbywgZ3Jv
-dXAgMSB3aWxsIGtlZXAgdmlvX2lkeCAzJ3MuDQo+ID4gPiA+DQo+ID4gPiA+IFdlIGhhdmUgdG8g
-c2NhbiBhbGwgZ3JvdXBzIGFuZCBkdW1wIGV2ZXJ5dGhpbmcgd2UgaGF2ZS4NCj4gPiA+ID4gVGhh
-bmtzICENCj4gPiA+ID4NCj4gPiA+DQo+ID4gPiBDb3VsZCB3ZSBsZXQgYWxsIHZpb19pZHggYmUg
-Z3JvdXAgMCBzbyB0aGF0IHdlIGNvdWxkIGp1c3Qgc3luYyBvbmUNCj4gPiA+IGdyb3VwPyBJdCdz
-IGJhZCB0byBzcGVuZCB0b28gbXVjaCB0aW1lIGluIGlycSBoYW5kbGVyLg0KPiA+ID4gV2hlbiB3
-ZSBzZXQgcGRfdmlvX3NoaWZ0X3NlbF9yZWcsIGl0IHNlZW1zIHdlIGNvdWxkIHNldCBtdWx0aXBs
-ZSBncm91cA0KPiA+ID4gdG9nZXRoZXIsIGNvdWxkbid0IGl0Pw0KPiA+ID4NCj4gPiA+IFJlZ2Fy
-ZHMsDQo+ID4gPiBDaHVuLUt1YW5nLg0KPiA+ID4NCj4gPg0KPiA+IE5vLCBXaGljaCBncm91cCB2
-aW9faWR4IGJlbG9uZ3MgdG8gaXMgZGV0ZXJtaW5lZCBieSBoYXJkd2FyZS4gU29mdHdhcmUNCj4g
-PiBjYW5ub3QgY2hhbmdlIGl0cyBncm91cC4NCj4gPiBUaGVyZSBpcyB2ZXJ5IGxvdyBwb3NzaWJp
-bGl0eSB0aGF0IG11bHRpcGxlIGdyb3VwcyBoYXMgdmlvbGF0aW9uIGF0IHRoZQ0KPiA+IHNhbWUg
-dGltZSwgc28gaXQgd291bGQgbm90IHNwZW5kIG11Y2ggdGltZSB0byBoYW5kbGUgaXQuDQo+ID4g
-SXQgYWxzbyBjYW5ub3Qgc2hpZnQgbXVsdGlwbGUgZ3JvdXBzIGF0IHRoZSBzYW1lIHRpbWUgc2lu
-Y2UgdGhlcmUgaXMNCj4gPiBvbmx5IG9uZSB2aW9faW5mbyhydywgdmlvX2FkZHIsIG1hc3Rlcl9p
-ZCwgLi4uKSBleGlzdCBhdCBhIHRpbWUuDQo+ID4gZGV2YXBjX2V4dHJhY3RfdmlvX2RiZygpIGZ1
-bmN0aW9uIGlzIGRvaW5nIHRoaXMgc3RlcC4NCj4gPg0KPiANCj4gU28gdGhpcyBmbG93IGlzIE9L
-IGZvciBtZS4gV291bGQgeW91IHBsZWFzZSBhZGQgY29tbWVudCBmb3IgdGhpcw0KPiBpbmZvcm1h
-dGlvbiBzbyB0aGF0IHdlIGNvdWxkIHVuZGVyc3RhbmQgaG93IGhhcmR3YXJlIHdvcmsuDQo+IA0K
-PiBSZWdhcmRzLA0KPiBDaHVuLUt1YW5nLg0KPiANCg0KT2theSwgSSdsbCBhZGQgaXQgaW4gbmV4
-dCBwYXRjaC4gVGhhbmtzICENCg0KPiA+IFRoYW5rcyAhDQo+ID4NCj4gPiA+ID4gPg0KPiA+ID4g
-PiA+ID4gICAgICAgICAgICAgICAgIGVsc2UNCj4gPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAg
-ICAgICAgIGJyZWFrDQo+ID4gPiA+ID4gPiAgICAgICAgIH0NCj4gPiA+ID4gPiA+IH0NCj4gPiA+
-ID4gPiA+DQo+ID4gPiA+ID4gPiBkZXZhcGNfdmlvbGF0aW9uX2lycSgpDQo+ID4gPiA+ID4gPiB7
-DQo+ID4gPiA+ID4gPiAgICAgICAgIGZvciBhbGwgdmlvX2lkeCB7DQo+ID4gPiA+ID4gPiAgICAg
-ICAgICAgICAgICAgbWFza19tb2R1bGVfaXJxKHRydWUpDQo+ID4gPiA+ID4gPiAgICAgICAgIH0N
-Cj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAgICAgICAgIGRldmFwY19kdW1wX3Zpb19kYmcoKQ0K
-PiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICAgICAgICAgZm9yIGFsbCB2aW9faWR4IHsNCj4gPiA+
-ID4gPiA+ICAgICAgICAgICAgICAgICBjbGVhcl92aW9fc3RhdHVzKCkNCj4gPiA+ID4gPiA+ICAg
-ICAgICAgICAgICAgICBtYXNrX21vZHVsZV9pcnEoZmFsc2UpDQo+ID4gPiA+ID4gPiAgICAgICAg
-IH0NCj4gPiA+ID4gPiA+IH0NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBJcyBpdCBtb3JlIGNs
-ZWFyIGZvciB0aGlzIGNvbnRyb2wgZmxvdz8NCj4gPiA+ID4gPiA+IFRoYW5rcyAhDQo+ID4gPiA+
-ID4gPg0KPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+
-ID4gPg0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPg0KPiA+
-ID4gPiA+ID4gPiA+ID4gPiA+ID4gQWJvdXQgeW91ciBxdWVzdGlvbiwgdmlvX2FkZHIgd291bGQg
-YmUgdGhlIGZpcnN0IG9uZS4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+
-ID4gPiA+IFNvIG90aGVyIHZpb19hZGRyIHdvdWxkIGJlIGRyb3BwZWQ/IE9yIGhhcmR3YXJlIHdv
-dWxkIGtlZXAgYWxsDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gdmlvX2FkZHIgYW5kIHlvdSBoYXZl
-IHNvbWUgd2F5IHRvIGdldCBhbGwgdmlvX2FkZHI/DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4NCj4g
-PiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gSW4gdGhpcyBjYXNlLCBoYXJk
-d2FyZSB3aWxsIGRyb3Agb3RoZXIgdmlvbGF0aW9uIGluZm8gYW5kIGtlZXAgdGhlIGZpcnN0DQo+
-ID4gPiA+ID4gPiA+ID4gPiA+IG9uZSB1bnRpbCBpdCBiZWVuIGhhbmRsZWQuDQo+ID4gPiA+ID4g
-PiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ID4gRG9lcyAnaGFuZGxlZCcgbWVhbiBzdGF0dXMgaXMg
-Y2xlYXJlZD8NCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ICJoYW5kbGVkIiBtZWFu
-cyBjbGVhciBzdGF0dXMgYW5kIGR1bXAgdmlvbGF0aW9uIGluZm8uDQo+ID4gPiA+ID4gPiA+ID4N
-Cj4gPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gPiBSZWdhcmRzLA0KPiA+ID4gPiA+
-ID4gPiA+ID4gQ2h1bi1LdWFuZy4NCj4gPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4g
-PiA+DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+
-ICsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArICAgICAgIHJldHVybiB0cnVlOw0KPiA+
-ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4g
-Kw0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsvKg0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+
-ID4gPiA+ICsgKiBkZXZhcGNfdmlvbGF0aW9uX2lycSAtIHRoZSBkZXZhcGMgSW50ZXJydXB0IFNl
-cnZpY2UgUm91dGluZSAoSVNSKSB3aWxsIGR1bXANCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4g
-PiArICogICAgICAgICAgICAgICAgICAgICAgICB2aW9sYXRpb24gaW5mb3JtYXRpb24gaW5jbHVk
-aW5nIHdoaWNoIG1hc3RlciB2aW9sYXRlcw0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsg
-KiAgICAgICAgICAgICAgICAgICAgICAgIGFjY2VzcyBzbGF2ZS4NCj4gPiA+ID4gPiA+ID4gPiA+
-ID4gPiA+ID4gPiArICovDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gK3N0YXRpYyBpcnFy
-ZXR1cm5fdCBkZXZhcGNfdmlvbGF0aW9uX2lycShpbnQgaXJxX251bWJlciwNCj4gPiA+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-c3RydWN0IG10a19kZXZhcGNfY29udGV4dCAqY3R4KQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4g
-PiA+ICt7DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAgICAgICB1MzIgdmlvX2lkeDsN
-Cj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+
-ID4gKyAgICAgICBmb3IgKHZpb19pZHggPSAwOyB2aW9faWR4IDwgY3R4LT52aW9faWR4X251bTsg
-dmlvX2lkeCsrKSB7DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAg
-IGlmICghbXRrX2RldmFwY19kdW1wX3Zpb19kYmcoY3R4LCB2aW9faWR4KSkNCj4gPiA+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBjb250aW51ZTsNCj4gPiA+
-ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAg
-ICAgICAgICAgICAgIC8qIEVuc3VyZSB0aGF0IHZpb2xhdGlvbiBpbmZvIGFyZSB3cml0dGVuIGJl
-Zm9yZQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgKiBmdXJ0
-aGVyIG9wZXJhdGlvbnMNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAg
-ICAgICovDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIHNtcF9t
-YigpOw0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gPiA+ID4g
-PiA+ID4gPiArICAgICAgICAgICAgICAgLyoNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiAr
-ICAgICAgICAgICAgICAgICogTWFzayBzbGF2ZSdzIGlycSBiZWZvcmUgY2xlYXJpbmcgdmlvIHN0
-YXR1cy4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICogTXVz
-dCBkbyBpdCB0byBhdm9pZCBuZXN0ZWQgaW50ZXJydXB0IGFuZCBwcmV2ZW50DQo+ID4gPiA+ID4g
-PiA+ID4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAqIHVuZXhwZWN0ZWQgYmVoYXZpb3Iu
-DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAqLw0KPiA+ID4g
-PiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICBtYXNrX21vZHVsZV9pcnEoY3R4
-LCB2aW9faWR4LCB0cnVlKTsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIGNsZWFyX3Zpb19zdGF0dXMoY3R4
-LCB2aW9faWR4KTsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIG1hc2tfbW9kdWxlX2lycShjdHgsIHZpb19p
-ZHgsIGZhbHNlKTsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArICAgICAgIH0NCj4gPiA+
-ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAg
-ICAgICByZXR1cm4gSVJRX0hBTkRMRUQ7DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gK30N
-Cj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+
-ID4gKy8qDQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+DQo+ID4NCg0K
+The shared library build rules are currently implemented in
+scripts/Makefile.host, but actually GCC-plugin is the only user of
+them. Hence, they do not need to be treewide available.
+
+Move all the relevant build rules to scripts/gcc-plugins/Makefile.
+
+I also optimized the build steps so *.so is directly built from .c
+because every upstream plugin is compiled from a single source file.
+
+I am still keeping the infrastructure to build a plugin from multiple
+files because Kees suggested to do so in my previous attempt.
+(https://lkml.org/lkml/2019/1/11/1107)
+
+If the plugin, foo.so, is compiled from two files foo.c and foo2.c,
+then you can do like follows:
+
+  foo-objs := foo.o foo2.o
+
+Single-file plugins do not need the *-objs notation.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ scripts/Makefile.build       |  4 +--
+ scripts/Makefile.clean       |  3 +-
+ scripts/Makefile.host        | 30 ++----------------
+ scripts/gcc-plugins/Makefile | 61 +++++++++++++++++++++++++++++-------
+ 4 files changed, 55 insertions(+), 43 deletions(-)
+
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 2e8810b7e5ed..d41c1cd453b9 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -45,8 +45,8 @@ include $(kbuild-file)
+ 
+ include scripts/Makefile.lib
+ 
+-# Do not include host rules unless needed
+-ifneq ($(hostprogs)$(hostcxxlibs-y)$(hostcxxlibs-m),)
++# Do not include hostprogs rules unless needed
++ifneq ($(hostprogs),)
+ include scripts/Makefile.host
+ endif
+ 
+diff --git a/scripts/Makefile.clean b/scripts/Makefile.clean
+index e2c76122319d..3cdf31218198 100644
+--- a/scripts/Makefile.clean
++++ b/scripts/Makefile.clean
+@@ -29,8 +29,7 @@ subdir-ymn	:= $(addprefix $(obj)/,$(subdir-ymn))
+ 
+ __clean-files	:= $(extra-y) $(extra-m) $(extra-)       \
+ 		   $(always) $(always-y) $(always-m) $(always-) $(targets) $(clean-files)   \
+-		   $(hostprogs) $(hostprogs-y) $(hostprogs-m) $(hostprogs-) $(userprogs) \
+-		   $(hostcxxlibs-y) $(hostcxxlibs-m)
++		   $(hostprogs) $(hostprogs-y) $(hostprogs-m) $(hostprogs-) $(userprogs)
+ 
+ __clean-files   := $(filter-out $(no-clean-files), $(__clean-files))
+ 
+diff --git a/scripts/Makefile.host b/scripts/Makefile.host
+index c8a4a033dc3e..687ca3f309e9 100644
+--- a/scripts/Makefile.host
++++ b/scripts/Makefile.host
+@@ -39,7 +39,6 @@ $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
+ # They are linked as C++ code to the executable qconf
+ 
+ __hostprogs := $(sort $(hostprogs))
+-host-cxxshlib := $(sort $(hostcxxlibs-y) $(hostcxxlibs-m))
+ 
+ # C code
+ # Executables compiled from a single .c file
+@@ -61,16 +60,11 @@ host-cxxmulti	:= $(foreach m,$(__hostprogs),$(if $($(m)-cxxobjs),$(m)))
+ # C++ Object (.o) files compiled from .cc files
+ host-cxxobjs	:= $(sort $(foreach m,$(host-cxxmulti),$($(m)-cxxobjs)))
+ 
+-# Object (.o) files used by the shared libaries
+-host-cxxshobjs	:= $(sort $(foreach m,$(host-cxxshlib),$($(m:.so=-objs))))
+-
+ host-csingle	:= $(addprefix $(obj)/,$(host-csingle))
+ host-cmulti	:= $(addprefix $(obj)/,$(host-cmulti))
+ host-cobjs	:= $(addprefix $(obj)/,$(host-cobjs))
+ host-cxxmulti	:= $(addprefix $(obj)/,$(host-cxxmulti))
+ host-cxxobjs	:= $(addprefix $(obj)/,$(host-cxxobjs))
+-host-cxxshlib	:= $(addprefix $(obj)/,$(host-cxxshlib))
+-host-cxxshobjs	:= $(addprefix $(obj)/,$(host-cxxshobjs))
+ 
+ #####
+ # Handle options to gcc. Support building with separate output directory
+@@ -136,25 +130,5 @@ quiet_cmd_host-cxxobjs	= HOSTCXX $@
+ $(host-cxxobjs): $(obj)/%.o: $(src)/%.cc FORCE
+ 	$(call if_changed_dep,host-cxxobjs)
+ 
+-# Compile .c file, create position independent .o file
+-# Note that plugin capable gcc versions can be either C or C++ based
+-# therefore plugin source files have to be compilable in both C and C++ mode.
+-# This is why a C++ compiler is invoked on a .c file.
+-# host-cxxshobjs -> .o
+-quiet_cmd_host-cxxshobjs	= HOSTCXX -fPIC $@
+-      cmd_host-cxxshobjs	= $(HOSTCXX) $(hostcxx_flags) -fPIC -c -o $@ $<
+-$(host-cxxshobjs): $(obj)/%.o: $(src)/%.c FORCE
+-	$(call if_changed_dep,host-cxxshobjs)
+-
+-# Link a shared library, based on position independent .o files
+-# *.o -> .so shared library (host-cxxshlib)
+-quiet_cmd_host-cxxshlib	= HOSTLLD -shared $@
+-      cmd_host-cxxshlib	= $(HOSTCXX) $(KBUILD_HOSTLDFLAGS) -shared -o $@ \
+-			  $(addprefix $(obj)/, $($(target-stem)-objs)) \
+-			  $(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(target-stem).so)
+-$(host-cxxshlib): FORCE
+-	$(call if_changed,host-cxxshlib)
+-$(call multi_depend, $(host-cxxshlib), .so, -objs)
+-
+-targets += $(host-csingle)  $(host-cmulti) $(host-cobjs)\
+-	   $(host-cxxmulti) $(host-cxxobjs) $(host-cxxshlib) $(host-cxxshobjs)
++targets += $(host-csingle) $(host-cmulti) $(host-cobjs) \
++	   $(host-cxxmulti) $(host-cxxobjs)
+diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
+index 4014ba7e2fbd..d66949bfeba4 100644
+--- a/scripts/gcc-plugins/Makefile
++++ b/scripts/gcc-plugins/Makefile
+@@ -1,22 +1,61 @@
+ # SPDX-License-Identifier: GPL-2.0
+-GCC_PLUGINS_DIR := $(shell $(CC) -print-file-name=plugin)
+ 
+-HOST_EXTRACXXFLAGS += -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=gnu++98 -fno-rtti
+-HOST_EXTRACXXFLAGS += -fno-exceptions -fasynchronous-unwind-tables -ggdb
+-HOST_EXTRACXXFLAGS += -Wno-narrowing -Wno-unused-variable -Wno-c++11-compat
+-HOST_EXTRACXXFLAGS += -Wno-format-diag
+-
+-$(obj)/randomize_layout_plugin.o: $(objtree)/$(obj)/randomize_layout_seed.h
++$(obj)/randomize_layout_plugin.so: $(objtree)/$(obj)/randomize_layout_seed.h
+ quiet_cmd_create_randomize_layout_seed = GENSEED $@
+ cmd_create_randomize_layout_seed = \
+   $(CONFIG_SHELL) $(srctree)/$(src)/gen-random-seed.sh $@ $(objtree)/include/generated/randomize_layout_hash.h
+ $(objtree)/$(obj)/randomize_layout_seed.h: FORCE
+ 	$(call if_changed,create_randomize_layout_seed)
+-targets = randomize_layout_seed.h randomize_layout_hash.h
++targets += randomize_layout_seed.h randomize_layout_hash.h
++
++# Build rules for plugins
++#
++# No extra code is needed for single-file plugins.
++# For multi-file plugins, use *-objs syntax to list the objects.
++#
++# If the plugin foo.so is compiled from foo.c and foo2.c, you can do:
++#
++# foo-objs := foo.o foo2.o
++
++always-y += $(GCC_PLUGIN)
+ 
+-hostcxxlibs-y := $(GCC_PLUGIN)
+-always-y := $(hostcxxlibs-y)
++GCC_PLUGINS_DIR = $(shell $(CC) -print-file-name=plugin)
+ 
+-$(foreach p,$(hostcxxlibs-y:%.so=%),$(eval $(p)-objs := $(p).o))
++plugin_cxxflags	= -Wp,-MMD,$(depfile) $(KBUILD_HOSTCXXFLAGS) -fPIC \
++		   -I $(GCC_PLUGINS_DIR)/include -I $(obj) -std=gnu++98 \
++		   -fno-rtti -fno-exceptions -fasynchronous-unwind-tables \
++		   -ggdb -Wno-narrowing -Wno-unused-variable -Wno-c++11-compat \
++		   -Wno-format-diag
+ 
++plugin_ldflags	= -shared
++
++plugin-single	:= $(foreach m, $(GCC_PLUGIN), $(if $($(m:%.so=%-objs)),,$(m)))
++plugin-multi	:= $(filter-out $(plugin-single), $(GCC_PLUGIN))
++plugin-objs	:= $(sort $(foreach m, $(plugin-multi), $($(m:%.so=%-objs))))
++
++targets += $(plugin-single) $(plugin-multi) $(plugin-objs)
+ clean-files += *.so
++
++plugin-single	:= $(addprefix $(obj)/, $(plugin-single))
++plugin-multi	:= $(addprefix $(obj)/, $(plugin-multi))
++plugin-objs	:= $(addprefix $(obj)/, $(plugin-objs))
++
++quiet_cmd_plugin_cxx_so_c = HOSTCXX $@
++      cmd_plugin_cxx_so_c = $(HOSTCXX) $(plugin_cxxflags) $(plugin_ldflags) -o $@ $<
++
++$(plugin-single): $(obj)/%.so: $(src)/%.c FORCE
++	$(call if_changed_dep,plugin_cxx_so_c)
++
++quiet_cmd_plugin_ld_so_o = HOSTLD  $@
++      cmd_plugin_ld_so_o = $(HOSTCXX) $(plugin_ldflags) -o $@ \
++			   $(addprefix $(obj)/, $($(target-stem)-objs))
++
++$(plugin-multi): FORCE
++	$(call if_changed,plugin_ld_so_o)
++$(foreach m, $(notdir $(plugin-multi)), $(eval $(obj)/$m: $(addprefix $(obj)/, $($(m:%.so=%-objs)))))
++
++quiet_cmd_plugin_cxx_o_c = HOSTCXX $@
++      cmd_plugin_cxx_o_c = $(HOSTCXX) $(plugin_cxxflags) -c -o $@ $<
++
++$(plugin-objs): $(obj)/%.o: $(src)/%.c FORCE
++	$(call if_changed_dep,plugin_cxx_o_c)
+-- 
+2.25.1
 
