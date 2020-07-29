@@ -2,116 +2,82 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043ADC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8887B206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD7AE206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:39:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Uaia+u2y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgG2UjH (ORCPT
+        id S1727044AbgG2UjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:39:07 -0400
-Received: from mga03.intel.com ([134.134.136.65]:21659 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgG2UjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:39:06 -0400
-IronPort-SDR: p6U9T9kG69l6Y3+r/Bhm4j1ik+TNN4NPlkPGA74B10cP+XmIsEAgYi/EepG3r0a9YH6QFnKoID
- n/lREAYTpGKA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="151475459"
-X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
-   d="scan'208";a="151475459"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 13:39:06 -0700
-IronPort-SDR: 5bj+HJhB3g6OZan9Ybk8bv1rZ1uEMY3gM6zY+I/QWBh05HaHXFTiKSD2OD5oayFhMGelAS5Ff+
- QYnBIteO5eEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,411,1589266800"; 
-   d="scan'208";a="394768547"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Jul 2020 13:39:05 -0700
-Date:   Wed, 29 Jul 2020 13:39:05 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Shanbhogue, Vedvyas" <vedvyas.shanbhogue@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>, H Peter Anvin <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Li, Xiaoyao" <xiaoyao.li@intel.com>, x86 <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] x86/bus_lock: Enable bus lock detection
-Message-ID: <20200729203905.GN27751@linux.intel.com>
-References: <1595021700-68460-1-git-send-email-fenghua.yu@intel.com>
- <20200729030232.GE5583@linux.intel.com>
- <e23b04a2adc54a5dbca48271987de822@intel.com>
- <20200729184614.GI27751@linux.intel.com>
- <20200729194259.GA318576@otcwcpicx6.sc.intel.com>
- <20200729200033.GJ27751@linux.intel.com>
- <20200729203557.GA318595@otcwcpicx6.sc.intel.com>
+        Wed, 29 Jul 2020 16:39:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60468 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbgG2UjT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 16:39:19 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87631C061794;
+        Wed, 29 Jul 2020 13:39:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5Qs3p6P4FMzOMl5aW3FKm/tj+DXE8Wr/ANqUkYSmnxo=; b=Uaia+u2ySpbc2h1Ps6QsIoNc4p
+        jSX+q1S6Vuha5uj+6BOSmzBjVaLlLpVyA4bKQfJyjhtt+LOVevmfaCrMIjB5lOmwXfGsuQAoKbmZH
+        5sGGvNXTp/raCi/HqwvMSfcn2rG/NPsoV482CScDRYydGZ8Dfqk/QFg+7FLfrY78GhPpH9e3mlacA
+        X0Qbf3j1EzEP8zTY7EmVZ6uxsHYkigr4enOa1pITW8HB3zk1X4OiLfPB5CucQfIqmoEBL+V92zpO/
+        CZZ2VsrRocPPhFROKYJekMt+zw4QHnFCH8E7+EregovfsE+um4XCVi07pWZn+RYlSImNThJySzJEw
+        RJGyNquA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0sr2-0007I0-GB; Wed, 29 Jul 2020 20:39:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CFD8D304D28;
+        Wed, 29 Jul 2020 22:39:08 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B6947200D4162; Wed, 29 Jul 2020 22:39:08 +0200 (CEST)
+Date:   Wed, 29 Jul 2020 22:39:08 +0200
+From:   peterz@infradead.org
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, irogers@google.com,
+        mingo@kernel.org
+Subject: Re: [PATCH] lib: kunit: add test_min_heap test conversion to KUnit
+Message-ID: <20200729203908.GD2655@hirez.programming.kicks-ass.net>
+References: <20200729201146.537433-1-vitor@massaru.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200729203557.GA318595@otcwcpicx6.sc.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200729201146.537433-1-vitor@massaru.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 08:35:57PM +0000, Fenghua Yu wrote:
-> Hi, Sean,
+On Wed, Jul 29, 2020 at 05:11:46PM -0300, Vitor Massaru Iha wrote:
+> This adds the conversion of the runtime tests of test_min_heap,
+> from `lib/test_min_heap.c` to KUnit tests.
 > 
-> On Wed, Jul 29, 2020 at 01:00:33PM -0700, Sean Christopherson wrote:
-> > On Wed, Jul 29, 2020 at 07:42:59PM +0000, Fenghua Yu wrote:
-> > > > Smushing the two into a single option is confusing, e.g. from the table
-> > > > below it's not at all clear what will happen if sld=fatal, both features
-> > > > are supported, and the kernel generates a split lock.
-> > > > 
-> > > > Given that both SLD (per-core, not architectural) and BLD (#DB recursion and
-> > > > inverted DR6 flag) have warts, it would be very nice to enable/disable them
-> > > > independently.  The lock to non-WB behavior for BLD may also be problematic,
-> > > > e.g. maybe it turns out that fixing drivers to avoid locks to non-WB isn't
-> > > > as straightforward as avoiding split locks.
-> > > 
-> > > But the two features are related if both of them are enabled in hardware:
-> > > If a split lock happens, SLD will generate #AC before instruction execution
-> > > and BLD will generate #DB after instruction execution.
-> > > 
-> > > The software needs to make them exclusive. The same kernel option reflects
-> > > the relationship and make them exclusive, e.g. "fatal" enables SLD and
-> > > disables BLD, "warn" does the other way.
-> > 
-> > Why do they need to be exclusive?  We've already established that BLD catches
-> > things that SLD does not.  What's wrong with running sld=fatal and bld=ratelimit
-> > so that split locks never happen and kill applications, and non-WB locks are
-> > are ratelimited?
+> Please apply this commit first (linux-kselftest/kunit-fixes):
+> 3f37d14b8a3152441f36b6bc74000996679f0998 kunit: kunit_config: Fix parsing of CONFIG options with space
 > 
-> Sorry if I didn't explain bus lock and split lock detections clearly before.
-> 
-> There are two causes of bus locks:
-> 1. a locked access across cache line boundary: this is split lock.
-> 2. a locked access to non-WB memory.
-> 
-> BLD detects both causes and SLD only detects the first one, i.e. BLD can detect
-> both split lock AND lock to non-WB memory.
-> 
-> If sld=fatal and bld=ratelimit (both sld and bld are enabled in hw),
-> a split lock always generates #AC and kills the app and bld will never have
-> a chance to trigger #DB for split lock. So effectively the combination makes
-> the kernel to take two different actions after detecting a bus lock: if the
-> bus lock comes from a split lock, fatal (sld); if the bus lock comes from
-> lock to non-WB memory, ratelimit (bld). Seems this is not a useful combination
-> and is not what the user really wants to do because the user wants ratelimit
-> for BLD, right?
+> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> ---
+>  lib/Kconfig.debug                         |  29 ++++--
+>  lib/Makefile                              |   2 +-
+>  lib/{test_min_heap.c => min_heap_kunit.c} | 117 ++++++++++++----------
+>  3 files changed, 83 insertions(+), 65 deletions(-)
+>  rename lib/{test_min_heap.c => min_heap_kunit.c} (60%)
 
-I understood all off that.  And as I user I want to run sld=fatal and
-bld=ratelimit to provide maximum protection, i.e. disallow split locks at
-all times, and ratelimit the crud SLD #AC can't catch.
+So where's the win? What's KUnit, why should I care and more lines.
