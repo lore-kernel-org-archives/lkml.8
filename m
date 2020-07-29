@@ -2,97 +2,105 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F12C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8756B207F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:53:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596063226;
-	bh=cEibLL/bXDofHAoCU9s5MewlMnFquDXY+eJhqMB4Jwc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=sXeJM5FlT6GV1gERVM4tYRAN0F+0Qyj5VCmCDONIo8n+ZNV9yU76gsvn1Qvk/wD5r
-	 8iI66V0qHppCWt3Vd3ajC3TIIqp0EspgNMdeNlFA/Y5UydbElGP3J2CAAdhxtLf+t5
-	 iCNwRiF6gLlzbsC5H5mRDlX4Z/Mgfg+aoLRL4Hsw=
+	by mail.kernel.org (Postfix) with ESMTP id A8804207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 22:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgG2Wxp (ORCPT
+        id S1728004AbgG2WyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 18:53:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbgG2Wxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 18:53:44 -0400
-Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1121C207E8;
-        Wed, 29 Jul 2020 22:53:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596063224;
-        bh=cEibLL/bXDofHAoCU9s5MewlMnFquDXY+eJhqMB4Jwc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gICzHMTZ63HFESjZa4lR45zvcawxtQsOxXbEx9ppm7AwW1lm/JW9Dn4atLwDoelN4
-         8JQySGsIaVR54ca6K1H0thLiBZUnZ6YZFTDPbl4zHE1CjzZHmsRZcPAVm9oS4AnAJh
-         fJbACZFUMFoVraUfXYtCuk6uo3zR6vZ1izZwdyuQ=
-Date:   Wed, 29 Jul 2020 17:53:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Move pci_info() after pci_fixup_device() in
- pci_setup_device()
-Message-ID: <20200729225341.GA1973599@bjorn-Precision-5520>
+        Wed, 29 Jul 2020 18:54:11 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:44352 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgG2WyL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 18:54:11 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 9071C1C0C13; Thu, 30 Jul 2020 00:54:09 +0200 (CEST)
+Date:   Thu, 30 Jul 2020 00:54:09 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     kernel list <linux-kernel@vger.kernel.org>, tony@atomide.com,
+        merlijn@wizzup.org, martin_rysavy@centrum.cz,
+        maemo-leste@lists.dyne.org
+Subject: Re: [maemo-leste] Modem on Droid 4 (mdm6600) in recent mainline
+Message-ID: <20200729225409.wqboxq77ryvmmxhe@duo.ucw.cz>
+References: <20200729220803.GA553@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="6myjq22emsku76i4"
 Content-Disposition: inline
-In-Reply-To: <1595833615-8049-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <20200729220803.GA553@amd>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 03:06:55PM +0800, Tiezhu Yang wrote:
-> In the current code, we can not see the PCI info after fixup which is
-> correct to reflect the reality, it is better to move pci_info() after
-> pci_fixup_device() in pci_setup_device().
-> 
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-Applied to pci/enumeration for v5.9, thanks!
+--6myjq22emsku76i4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ---
->  drivers/pci/probe.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 2f66988..7c046aed 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1802,9 +1802,6 @@ int pci_setup_device(struct pci_dev *dev)
->  	dev->revision = class & 0xff;
->  	dev->class = class >> 8;		    /* upper 3 bytes */
->  
-> -	pci_info(dev, "[%04x:%04x] type %02x class %#08x\n",
-> -		   dev->vendor, dev->device, dev->hdr_type, dev->class);
-> -
->  	if (pci_early_dump)
->  		early_dump_pci_device(dev);
->  
-> @@ -1822,6 +1819,9 @@ int pci_setup_device(struct pci_dev *dev)
->  	/* Early fixups, before probing the BARs */
->  	pci_fixup_device(pci_fixup_early, dev);
->  
-> +	pci_info(dev, "[%04x:%04x] type %02x class %#08x\n",
-> +		 dev->vendor, dev->device, dev->hdr_type, dev->class);
-> +
->  	/* Device class may be changed after fixup */
->  	class = dev->class >> 8;
->  
-> -- 
-> 2.1.0
-> 
+Hi!
+
+> There's something very wrong with /dev/ttyUSB4 in recent kernels:
+> unsolicited incoming data from the modem are getting lost; I believe
+> it means also SMS notifications, but it is very easy to reproduce with
+> incoming call notifications.
+>=20
+> They just don't come.
+>=20
+> But if you keep pasting "AT" into minicom, they actually do.
+>=20
+> Of course... that means that trying to debug ofono is ... "interesting".
+>=20
+> I tried playing with
+> /sys/bus/platform/drivers/phy-mapphone-mdm6600/usb-phy\@1/power/control
+> files and timeouts, but could not get it to work.
+>=20
+> Any idea what could be wrong there?
+>=20
+> Is there easy way to disable power management for testing?
+
+I tried this... and it did not fix the problem :-(.
+
+									Pavel
+
+diff --git a/drivers/phy/motorola/phy-mapphone-mdm6600.c b/drivers/phy/moto=
+rola/phy-mapphone-mdm6600.c
+index 94a34cf75eb3..7ddf5aa35105 100644
+--- a/drivers/phy/motorola/phy-mapphone-mdm6600.c
++++ b/drivers/phy/motorola/phy-mapphone-mdm6600.c
+@@ -21,7 +21,7 @@
+ #define PHY_MDM6600_PHY_DELAY_MS	4000	/* PHY enable 2.2s to 3.5s */
+ #define PHY_MDM6600_ENABLED_DELAY_MS	8000	/* 8s more total for MDM6600 */
+ #define PHY_MDM6600_WAKE_KICK_MS	600	/* time on after GPIO toggle */
+-#define MDM6600_MODEM_IDLE_DELAY_MS	1000	/* modem after USB suspend */
++#define MDM6600_MODEM_IDLE_DELAY_MS	100000000	/* modem after USB suspend */
+ #define MDM6600_MODEM_WAKE_DELAY_MS	200	/* modem response after idle */
+=20
+ enum phy_mdm6600_ctrl_lines {
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--6myjq22emsku76i4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXyH+EQAKCRAw5/Bqldv6
+8qk2AJ9JggBntoRtGpJeDOf8Ym6s468QawCfV+5wKcPO0hpIPY/1CL6AFH9rdFo=
+=v0CY
+-----END PGP SIGNATURE-----
+
+--6myjq22emsku76i4--
