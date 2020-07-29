@@ -2,130 +2,107 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44839C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 227F6206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:55:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VY6IUoYj"
+	by mail.kernel.org (Postfix) with ESMTP id 3DCB5206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgG2GzJ (ORCPT
+        id S1727088AbgG2Gz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 02:55:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgG2GzH (ORCPT
+        Wed, 29 Jul 2020 02:55:27 -0400
+Received: from 4.mo179.mail-out.ovh.net ([46.105.36.149]:42408 "EHLO
+        4.mo179.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgG2Gz0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 02:55:07 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CA52C061794;
-        Tue, 28 Jul 2020 23:55:06 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id e22so1583097pjt.3;
-        Tue, 28 Jul 2020 23:55:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U92rYb0+TwGY8zlPAefy1rRg023bgbGHmt6DlPysSbE=;
-        b=VY6IUoYjKXKRjRWH0ph58QPyVXNjhf1ZrmDeymuKLS34LOaCvII7jQi/p9QBtzpRDf
-         I1oZFIZsAkiUmiVX9antZvETncgRdreGJNXoyyTrAWkMh/eJt8SMA5rcJfVZzyWK2IvL
-         jC5TZ+hRNbYfJ8H1EKaliqMMn/v6/Kvs2dFcTAq298FW7f3BYyr0WszmoUL7htFkxDtm
-         qK5if0Zzf9fVJmWaFjIga89to7YQpmFVvQukJJ+7g4nU4bFg0gbB9eh3s62n+UxOukDY
-         7zOcRlxkC79KIv9n9kuW9gRHMsr07KieZeiEmnR03aYYcaAlT1ro7Wt7a84EmljQhY1B
-         2/Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U92rYb0+TwGY8zlPAefy1rRg023bgbGHmt6DlPysSbE=;
-        b=Foaac5k8T8dTncH7bajZb36TWW8Y3Zs+u9/fHZLO9zzhcCXpOvxI6L4844g6YvETVj
-         PmEv9GHYzoBRTzM76ot7NV/MJrta0BpG5zkJJ1wbCxBT5kEL0ospfXKzUX39j7TJ+2jX
-         a9m4CTuVq32LUfC3Y5OM2h8OPVfXur4bdOecdqupRal52wcZ+51gjJsZ2pqof9E2q2H6
-         vkSj4mHwTcarhp1DolWTKzpL63VgzBgLsSYyU0DxaQRmuTmZ+EGsn14BnA2l3TvRdepB
-         G0ewL9mN0X9hykJdnmjcBhXbIF3GjZjHJzmMlZd9MSum7+fpmMFBgRkldhnmrSvdY89v
-         EA6g==
-X-Gm-Message-State: AOAM532/lG/HkjxOzeiLbNFn1agHqmSs7qpwCpfEQID+gPO5mGKsD12v
-        JcKGPVC2J4ThpeURfRaF7Zg7WsNadPyN3wgVKfc=
-X-Google-Smtp-Source: ABdhPJxlzMpzxpTX2nZWp7zuUifsx3/qC2nScve7EvSpqfgAtH56PXOrZv3AreiCKdsRuYfWKzRL4h5c52N8VIIhzX8=
-X-Received: by 2002:a17:90a:390f:: with SMTP id y15mr817996pjb.181.1596005705069;
- Tue, 28 Jul 2020 23:55:05 -0700 (PDT)
+        Wed, 29 Jul 2020 02:55:26 -0400
+Received: from player711.ha.ovh.net (unknown [10.108.42.75])
+        by mo179.mail-out.ovh.net (Postfix) with ESMTP id 694B4173B78
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 08:38:32 +0200 (CEST)
+Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
+        (Authenticated sender: groug@kaod.org)
+        by player711.ha.ovh.net (Postfix) with ESMTPSA id AB08514A1AD8F;
+        Wed, 29 Jul 2020 06:38:23 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-105G006896df29f-f4f3-493b-ab9a-d0c6f23d8bcf,
+                    A40F6FE0CFFE28C23AB4AFBB3D5D665E11D39731) smtp.auth=groug@kaod.org
+Date:   Wed, 29 Jul 2020 08:38:22 +0200
+From:   Greg Kurz <groug@kaod.org>
+To:     Dominique Martinet <asmadeus@codewreck.org>
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        v9fs-developer@lists.sourceforge.net,
+        Latchesar Ionkov <lucho@ionkov.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [V9fs-developer] [PATCH kernel] 9p/trans_fd: Check file mode at
+ opening
+Message-ID: <20200729083822.66e165ed@bahia.lan>
+In-Reply-To: <20200729061449.GA19682@nautica>
+References: <20200728124129.130856-1-aik@ozlabs.ru>
+        <20200728194235.52660c08@bahia.lan>
+        <20200729061449.GA19682@nautica>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200728151258.1222876-1-campello@chromium.org>
- <20200728230520.2011240-1-campello@chromium.org> <20200728170317.v2.4.I9bf713a86d6076b44441ef5f534f9c240271699a@changeid>
-In-Reply-To: <20200728170317.v2.4.I9bf713a86d6076b44441ef5f534f9c240271699a@changeid>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 29 Jul 2020 09:54:48 +0300
-Message-ID: <CAHp75VdYnXsB2KKkJZg-JRoSEkLz91BQwxaYR1uFMbbzU=M_WQ@mail.gmail.com>
-Subject: Re: [PATCH v2 04/14] iio: sx9310: Remove acpi and of table macros
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 1830713248816142592
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrieefgddutdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtgfesthejredtredtvdenucfhrhhomhepifhrvghgucfmuhhriicuoehgrhhouhhgsehkrghougdrohhrgheqnecuggftrfgrthhtvghrnhepveehieetvdettdfhiefhueetheekheejgfdtvddthfffuefgueduvefgveeijeegnecuffhomhgrihhnpehophgvnhhgrhhouhhprdhorhhgnecukfhppedtrddtrddtrddtpdekvddrvdehfedrvddtkedrvdegkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejuddurdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepghhrohhugheskhgrohgurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 2:05 AM Daniel Campello <campello@chromium.org> wrote:
->
-> Avoids unused warnings due to acpi/of table macros.
+On Wed, 29 Jul 2020 08:14:49 +0200
+Dominique Martinet <asmadeus@codewreck.org> wrote:
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Greg Kurz wrote on Tue, Jul 28, 2020:
+> > > The "fd" transport layer uses 2 file descriptors passed externally
+> > > and calls kernel_write()/kernel_read() on these. If files were opened
+> > > without FMODE_WRITE/FMODE_READ, WARN_ON_ONCE() will fire.
+> 
+> There already is a fix in linux-next as a39c46067c84 ("net/9p: validate
+> fds in p9_fd_open")
+> 
+> > > This adds file mode checking in p9_fd_open; this returns -EBADF to
+> > > preserve the original behavior.
+> > 
+> > So this would cause open() to fail with EBADF, which might look a bit
 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> ---
->
-> Changes in v2:
->  - Added #include <linux/mod_devicetable.h>
->
->  drivers/iio/proximity/sx9310.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> index 108d82ba81146e..04b646ae8a1009 100644
-> --- a/drivers/iio/proximity/sx9310.c
-> +++ b/drivers/iio/proximity/sx9310.c
-> @@ -15,8 +15,8 @@
->  #include <linux/i2c.h>
->  #include <linux/irq.h>
->  #include <linux/kernel.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/module.h>
-> -#include <linux/of.h>
->  #include <linux/pm.h>
->  #include <linux/regmap.h>
->  #include <linux/slab.h>
-> @@ -1051,8 +1051,8 @@ MODULE_DEVICE_TABLE(i2c, sx9310_id);
->  static struct i2c_driver sx9310_driver = {
->         .driver = {
->                 .name   = "sx9310",
-> -               .acpi_match_table = ACPI_PTR(sx9310_acpi_match),
-> -               .of_match_table = of_match_ptr(sx9310_of_match),
-> +               .acpi_match_table = sx9310_acpi_match,
-> +               .of_match_table = sx9310_of_match,
->                 .pm = &sx9310_pm_ops,
->         },
->         .probe          = sx9310_probe,
-> --
-> 2.28.0.163.g6104cc2f0b6-goog
->
+Oops... this seems to rather end up in mount(). :)
 
+> > weird to userspace since it didn't pass an fd... Is this to have a
+> > different error than -EIO that is returned when either rfd or wfd
+> > doesn't point to an open file descriptor ? If yes, why do we care ?
+> 
+> FWIW the solution taken just returns EIO as it would if an invalid fd
+> was given, but since it did pass an fd EBADF actually makes sense to me?
+> 
 
--- 
-With Best Regards,
-Andy Shevchenko
+POSIX says:
+
+https://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html
+
+[EBADF]
+Bad file descriptor. A file descriptor argument is out of range, refers to
+no open file, or a read (write) request is made to a file that is only open
+for writing (reading).
+
+It seems that EBADF would be appropriate for both the existing and the
+new error path.
+
+> However to the second question I'm not sure I care :)
+> 
+> > > Found by syzkaller.
+> 
+> I'm starting to understand where David comment came from the other day,
+> I guess it's still time to change my mind and submit to linus now I've
+> had time to test it...
+> 
+
