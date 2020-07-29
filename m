@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1395DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A38C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCF3820838
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF30420838
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596014368;
-	bh=0hfC4riIbbfjyYx5ZFA9y19DUbcarADpjn7K4IQqJzs=;
+	s=default; t=1596014370;
+	bh=vgbuCFb86I1Gr/IqR22TL4kLJv/8hKkugE3POvIkShA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hU9QLG3Owjms8JC1jkbpVuaxZ/GL93Zwl7Y47mG8AHVZVh4FGFmgS9pjZqwj992Gr
-	 BXCJpqFsIsbQukgv8UBVl7H03dvtfPkEd1pJ6wU/muPq1oLNqVB99Dh7SgozJ8J3gA
-	 QI/8Wg59BjNjksMmA6upyZR5oPsqJOWaHnzXtOyo=
+	b=e/5Aecw0+n8SbyfeVVJ2Wt3AIxvgim/xBKkBjKAha6l61qKdj+/MKLDuQAuqBofQJ
+	 z9y0gdxrPhcrCQH0ezGnio+h3Tio5IwYMxLvq1d5b3zY6aDr1/KBSTh6M6swegds5r
+	 bkFhbrYnaWOeqDj3mPXoEVyvQ0ypcbIvZAsFHo1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgG2JT1 convert rfc822-to-8bit (ORCPT
+        id S1728185AbgG2JT3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:19:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38212 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727849AbgG2JT0 (ORCPT
+        Wed, 29 Jul 2020 05:19:29 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47057 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728160AbgG2JT2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:19:26 -0400
+        Wed, 29 Jul 2020 05:19:28 -0400
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-355-_i_0zQmKPDGK0A3VtAeeLg-1; Wed, 29 Jul 2020 05:19:19 -0400
-X-MC-Unique: _i_0zQmKPDGK0A3VtAeeLg-1
+ us-mta-361-2hhu4faLMIOcG8UNfWh9Rg-1; Wed, 29 Jul 2020 05:19:23 -0400
+X-MC-Unique: 2hhu4faLMIOcG8UNfWh9Rg-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3BEEF59;
-        Wed, 29 Jul 2020 09:19:17 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DA0BC1005510;
+        Wed, 29 Jul 2020 09:19:20 +0000 (UTC)
 Received: from krava.redhat.com (unknown [10.40.193.247])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E47D6931E;
-        Wed, 29 Jul 2020 09:19:13 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AB4C56931E;
+        Wed, 29 Jul 2020 09:19:17 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ian Rogers <irogers@google.com>,
+Cc:     Kajol Jain <kjain@linux.ibm.com>, Ian Rogers <irogers@google.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
         John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
         Michael Petlan <mpetlan@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Paul Clarke <pc@us.ibm.com>,
@@ -56,9 +54,9 @@ Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
         lkml <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: [PATCH 01/19] perf metric: Fix memory leak in expr__add_id function
-Date:   Wed, 29 Jul 2020 11:18:50 +0200
-Message-Id: <20200729091908.1378911-2-jolsa@kernel.org>
+Subject: [PATCH 02/19] perf metric: Add expr__add_id function
+Date:   Wed, 29 Jul 2020 11:18:51 +0200
+Message-Id: <20200729091908.1378911-3-jolsa@kernel.org>
 In-Reply-To: <20200729091908.1378911-1-jolsa@kernel.org>
 References: <20200729091908.1378911-1-jolsa@kernel.org>
 MIME-Version: 1.0
@@ -72,40 +70,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnaldo found that we don't release value data in case the hashmap__set
-fails. Releasing it in case of an error.
+Add the expr__add_id() function to data for ID with zero value, which is
+used when scanning the expression for IDs.
 
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
 Acked-by: Ian Rogers <irogers@google.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: John Garry <john.garry@huawei.com>
-Cc: Kajol Jain <kjain@linux.ibm.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Paul Clarke <pc@us.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20200719181320.785305-2-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20200719181320.785305-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/expr.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/expr.c | 31 +++++++++++++++++++++++++------
+ tools/perf/util/expr.h |  1 +
+ tools/perf/util/expr.y |  2 +-
+ 3 files changed, 27 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index 5d05f9765ed8..578a173d4873 100644
+index 578a173d4873..9228f60e2a20 100644
 --- a/tools/perf/util/expr.c
 +++ b/tools/perf/util/expr.c
-@@ -47,6 +47,8 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
- 	}
- 	ret = hashmap__set(&ctx->ids, id, data_ptr,
- 			   (const void **)&old_key, (void **)&old_data);
+@@ -32,6 +32,26 @@ static bool key_equal(const void *key1, const void *key2,
+ 	return !strcmp((const char *)key1, (const char *)key2);
+ }
+ 
++/* Caller must make sure id is allocated */
++int expr__add_id(struct expr_parse_ctx *ctx, const char *id)
++{
++	struct expr_id_data *data_ptr = NULL, *old_data = NULL;
++	char *old_key = NULL;
++	int ret;
++
++	data_ptr = malloc(sizeof(*data_ptr));
++	if (!data_ptr)
++		return -ENOMEM;
++
++	ret = hashmap__set(&ctx->ids, id, data_ptr,
++			   (const void **)&old_key, (void **)&old_data);
 +	if (ret)
 +		free(data_ptr);
- 	free(old_key);
- 	free(old_data);
- 	return ret;
++	free(old_key);
++	free(old_data);
++	return ret;
++}
++
+ /* Caller must make sure id is allocated */
+ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
+ {
+@@ -39,12 +59,11 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
+ 	char *old_key = NULL;
+ 	int ret;
+ 
+-	if (val != 0.0) {
+-		data_ptr = malloc(sizeof(*data_ptr));
+-		if (!data_ptr)
+-			return -ENOMEM;
+-		data_ptr->val = val;
+-	}
++	data_ptr = malloc(sizeof(*data_ptr));
++	if (!data_ptr)
++		return -ENOMEM;
++	data_ptr->val = val;
++
+ 	ret = hashmap__set(&ctx->ids, id, data_ptr,
+ 			   (const void **)&old_key, (void **)&old_data);
+ 	if (ret)
+diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+index 21fe5bd85718..ac32cda42006 100644
+--- a/tools/perf/util/expr.h
++++ b/tools/perf/util/expr.h
+@@ -26,6 +26,7 @@ struct expr_scanner_ctx {
+ 
+ void expr__ctx_init(struct expr_parse_ctx *ctx);
+ void expr__ctx_clear(struct expr_parse_ctx *ctx);
++int expr__add_id(struct expr_parse_ctx *ctx, const char *id);
+ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
+ int expr__get_id(struct expr_parse_ctx *ctx, const char *id, double *val_ptr);
+ int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index b2b3420ea6ec..8befe4a46f87 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -69,7 +69,7 @@ all_other: all_other other
+ 
+ other: ID
+ {
+-	expr__add_id_val(ctx, $1, 0.0);
++	expr__add_id(ctx, $1);
+ }
+ |
+ MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
 -- 
 2.25.4
 
