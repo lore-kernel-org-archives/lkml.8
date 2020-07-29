@@ -2,91 +2,128 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48ECBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4477EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27B8320809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:01:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596034871;
-	bh=ESM/C4n2/9SZm7+Qrh9WZ3Nyo1d10BOHwjAtSu+wytc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R1u/JT7RHmsElR7VLUo4DmErvbGHla0d9BAsDtNpSgZHgUHCX7Ma4rADC2Y7vNklG
-	 lPkDhfoIToHzV9skEMN5nw4mtj70lrPu0YyKWkfO2s7xqANqf6cKF9Y3yGvd6aNHiT
-	 IZwIyeXtF8VTpBvBToGMn4DG9036aww0pPzYxobI=
+	by mail.kernel.org (Postfix) with ESMTP id 05FAC207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:02:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="orYEuU8o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgG2PBK (ORCPT
+        id S1726709AbgG2PCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:01:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgG2PBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:01:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF74E207E8;
-        Wed, 29 Jul 2020 15:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596034869;
-        bh=ESM/C4n2/9SZm7+Qrh9WZ3Nyo1d10BOHwjAtSu+wytc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ikyk9lb/olM7+v7ejcklpKjX1TxtamqCPeSAIp0xtA7IAEt7QEM0UDxkzNNNzosw5
-         MCyBjrZyd2YJiyUU+L9hfpqZs5ckGC9TZlWwHF+E19ZIUB6GkdXNlCNzYrpWoB2/7e
-         dLVnnd5jKRn8M2XhUaGgKUY4DCLzQD3Mik1d2VL0=
-Date:   Wed, 29 Jul 2020 17:01:00 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v5 1/1] power: Emit changed uevent on
- wakeup_sysfs_add/remove
-Message-ID: <20200729150100.GA3508555@kroah.com>
-References: <20200707172845.4177903-1-abhishekpandit@chromium.org>
- <20200707102823.v5.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
- <20200723183235.GA3445384@kroah.com>
- <CAJZ5v0jXcfO3YiMgkc7u=qqZy+jyT=RGagF3yAFnAhiJfyfcuQ@mail.gmail.com>
+        Wed, 29 Jul 2020 11:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgG2PCY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 11:02:24 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 055D0C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 08:02:24 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r12so21908987wrj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 08:02:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WGOW+4ED6By0KB5WrYSp9CvcqoKzYJSfhBgGcHuafBg=;
+        b=orYEuU8o/GDPhYnOGzfx57QASwqpEIZoDm/xxfftrzRdtI0uqeCC4iHYKn7NFYTV4f
+         KeJmDJjL+Rc2grMpL+jqLp4JEoXEcUBt/yYr+8KjrB/As0pJRdj9NkxcpJCh1QgA21/r
+         0CzGdw+Uf5iqy8NIQapkdVjptLD8AWiaVxdc9F17evrdOWcSRSrnf7Lb1byyXwV2op26
+         ecAwye9TLPD7MWudrrHQvAkNOCM7AJWXZ+r12RUpT0slzlQqHjJkOeYZnefZQX4kv/5c
+         lLQWxOHM//odrJUMYt/FIBv1r6qGijXMx23gd1nSetLSZOZbrfPi8Rkk67b+lqzB5NV1
+         7cww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WGOW+4ED6By0KB5WrYSp9CvcqoKzYJSfhBgGcHuafBg=;
+        b=OaiGGhrAqNXJRwrFzxKhid+cEYlGLJCqSloYPpdQ/YpZr0dMZ0ZOuIN5vw5WLvoMmJ
+         hrDEh65MrXtgZJGpEUYi1KavSd3q/oSXPc/RVNafx/N0iQJ9xJGzUM8zCygo6AEXSjQQ
+         bmkpQJnxH28PMv0XSrSS8e0CkadoPDmLmDqhFMdwXj6s6I+TcFjzqJWi+SKZeTSDRvHM
+         oN3uJ9aMSpdDalqbegRp68ld89dzTXoqPUIT6M2mB66mKwnbhgT/iRQVKiIvbuv/huNa
+         MyH/0ET0ioi9cbhWspHXKW+4Ky7XvVH8IUJXBL/gOMre+txhFRjBfeo5cQTpCwPbQNns
+         cJxg==
+X-Gm-Message-State: AOAM533I2hGVk1nISiXK++J664RuV7jk7+ADdz2wBRv+M0jwdbFobamE
+        gpKs0k9SjrNOCqoRmtbob081vLzxTJ6ZUV6mJ1QP6Q==
+X-Google-Smtp-Source: ABdhPJwAhGfe4OeCtpo2EckPieAyN/CBzAB0X9eafg6qiHj37yAK2qTcWVp20qGk1/k6Ulm7rTvD+Z1zdSQwb2lqJ9k=
+X-Received: by 2002:adf:fdce:: with SMTP id i14mr24624163wrs.273.1596034942775;
+ Wed, 29 Jul 2020 08:02:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jXcfO3YiMgkc7u=qqZy+jyT=RGagF3yAFnAhiJfyfcuQ@mail.gmail.com>
+References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+ <8af06b31c58ec9745ce13c2aca4e532d6ca340e0.1594230107.git-series.maxime@cerno.tech>
+In-Reply-To: <8af06b31c58ec9745ce13c2aca4e532d6ca340e0.1594230107.git-series.maxime@cerno.tech>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Wed, 29 Jul 2020 16:02:06 +0100
+Message-ID: <CAPY8ntBpGsak=s8tOmmDA-2kE5mp6+TrqyK3930Ypm7Q9gcUJw@mail.gmail.com>
+Subject: Re: [PATCH v4 13/78] drm/vc4: kms: Convert to for_each_new_crtc_state
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 03:38:02PM +0200, Rafael J. Wysocki wrote:
-> On Thu, Jul 23, 2020 at 8:32 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Jul 07, 2020 at 10:28:44AM -0700, Abhishek Pandit-Subedi wrote:
-> > > Udev rules that depend on the power/wakeup attribute don't get triggered
-> > > correctly if device_set_wakeup_capable is called after the device is
-> > > created. This can happen for several reasons (driver sets wakeup after
-> > > device is created, wakeup is changed on parent device, etc) and it seems
-> > > reasonable to emit a changed event when adding or removing attributes on
-> > > the device.
-> > >
-> > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> >
-> > Rafael, any objection to this?  Do you want me to take it through my
-> > tree, or are you going to take it through yours?  Either is fine for me.
-> 
-> It's already there in my tree with the R-by tag from you.
+Hi Maxime
 
-{sigh}  Sorry for the noise.
+On Wed, 8 Jul 2020 at 18:42, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> The vc4 atomic commit loop has an handrolled loop that is basically
+> identical to for_each_new_crtc_state, let's convert it to that helper.
+>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  drivers/gpu/drm/vc4/vc4_kms.c |  9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/vc4/vc4_kms.c b/drivers/gpu/drm/vc4/vc4_kms.c
+> index 210cc2408087..717673b18132 100644
+> --- a/drivers/gpu/drm/vc4/vc4_kms.c
+> +++ b/drivers/gpu/drm/vc4/vc4_kms.c
+> @@ -152,14 +152,13 @@ vc4_atomic_complete_commit(struct drm_atomic_state *state)
+>         struct drm_device *dev = state->dev;
+>         struct vc4_dev *vc4 = to_vc4_dev(dev);
+>         struct vc4_hvs *hvs = vc4->hvs;
+> -       struct vc4_crtc *vc4_crtc;
+> +       struct drm_crtc_state *new_crtc_state;
+> +       struct drm_crtc *crtc;
+>         int i;
+>
+> -       for (i = 0; i < dev->mode_config.num_crtc; i++) {
+> -               if (!state->crtcs[i].ptr || !state->crtcs[i].commit)
+> -                       continue;
+> +       for_each_new_crtc_in_state(state, crtc, new_crtc_state, i) {
+> +               struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
 
-greg k-h
+for_each_new_crtc_in_state doesn't check !state->crtcs[i].commit as
+the hand rolled loop did. Sorry, this is my lack of knowledge, but
+does that actually make any real difference?
+
+I see nothing wrong in calling vc4_hvs_mask_underrun multiple times
+anyway, so it's most likely going to be harmless anyway, but wanted to
+query it.
+
+  Dave
+
+>
+> -               vc4_crtc = to_vc4_crtc(state->crtcs[i].ptr);
+>                 vc4_hvs_mask_underrun(dev, vc4_crtc->channel);
+>         }
+>
+> --
+> git-series 0.9.1
