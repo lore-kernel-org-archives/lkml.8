@@ -2,152 +2,102 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 275D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1072D20809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:15:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="oZLhWnp/";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="GWJ86P6r"
+	by mail.kernel.org (Postfix) with ESMTP id 1068A20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:16:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgG2NPP (ORCPT
+        id S1727038AbgG2NQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:15:15 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:10894 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726391AbgG2NPO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 09:15:14 -0400
-Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06TD9DL4009008;
-        Wed, 29 Jul 2020 09:15:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=VPzqII41ZacM99I23RlDA8wKL3aOHiKh7LOJIzRciwQ=;
- b=oZLhWnp//YZ28EQJyTcmejbHrFdHXJN6uejKkcBbSedweYBqq0yoK6PgBSkjtSnrwLzv
- Ha43yCDiORHqhqB67gDIql/8ZK3qNoxHCPIVale8rngD9f1EMMmQjyrTMnjz+PiTbbpl
- QnytPhJODMD4HCcOCZaIl417p9Ciy1VL0Upn6dEDzQf2fEUTep7JDB0KDP6KsfyYFYrT
- P98XzIHIUFZvp8wsZj77X+PvdPDo6gLkq0fWZkFccz2M1aTIAWEj1bd1DUwbsp8e8+/9
- k/9JsT9cJWSzSX1f4N51VBzu4FHbRrcG4OVoTYl7f2gA7BPdRyiwnwPCmfUS5XTUOh4V 1Q== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 32juprjgdg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 09:15:01 -0400
-Received: from pps.filterd (m0090351.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06TD7cjU008185;
-        Wed, 29 Jul 2020 09:15:00 -0400
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2049.outbound.protection.outlook.com [104.47.66.49])
-        by mx0b-00154901.pphosted.com with ESMTP id 32k9h90f8m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jul 2020 09:15:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oOI90Y82VJ4qJhtOccehmKe9Wp1dWrG4WmX5/RhheWsRatWKm5+XGO9kJmNXVDLtg9dv7aJLt/l6wLw6qdZRmxxVL8Re0J5EFcgJA8L0Qkn8eB4pEF+t+OvysPtfVhSs3/SdJwa34HrJNLyr2+2m8B4QiMuLAJ3FqPY+o6Uiakl6yXlhhHpxOHJoekz5IMFgF3fjrpcheEle+3DiRKIWN9qJCaYC3EAYBrA9G0Hp6DGed7kihf41HJXXKQ72JiU3HYTOVcVfo3I0rupkjHM0HCwMXJzwXyTVWDmFlDma/+q+JeJQAZ/cx0lagso3ev0DfLQX8wHZquIlbhc4hIItQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VPzqII41ZacM99I23RlDA8wKL3aOHiKh7LOJIzRciwQ=;
- b=O3Z6PSSBxM6heYKesyOGvOodJjL9GrCjJHalvLSMUtDIVM6EHEGvQ7tVm5ISE8CFElpneRTLRqj7AHrSTyxTPB4XhvPx4ERvZIPUUovOxMaq+9TrxYSaNP3rTcRd1k016GSGqrk/UCXlzkK7Qf+QFSoE+bymVoodM6m69kpmANQqFjQ+c1vNjsYsVDCHbqL3JTK1HHSLNcmThvKv86phmAv8RbnyM9X7hKEmgLQbZMJb//AKj5gr6hqRUszGjlIBJ+04h22UZTgZEofJZHbp3mcFlS9uuTv9nVyvnELaSZkkV/ycBwv7gi4kDG80SlR0F54+dKou3POk9LQRNLO5lA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
- s=selector1-Dell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VPzqII41ZacM99I23RlDA8wKL3aOHiKh7LOJIzRciwQ=;
- b=GWJ86P6r1TuB6eY6FDHzAM8xiAzJA855xFP2zxaLxB50t/MIErzxJzBubhR39VmLksqIpeFXwn4JzBYWBzLhCM8b9K/DjKcBkFT5VgjN1w1btvISb96c+/bQgMERbyu4GEephQ9TRTEL9+/2+ijRoQjb8usTdCYtZg0yfb7dwFA=
-Received: from DM6PR19MB2636.namprd19.prod.outlook.com (2603:10b6:5:15f::15)
- by DM6PR19MB3145.namprd19.prod.outlook.com (2603:10b6:5:19d::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Wed, 29 Jul
- 2020 13:14:58 +0000
-Received: from DM6PR19MB2636.namprd19.prod.outlook.com
- ([fe80::f1c7:5bf4:a3b:ff40]) by DM6PR19MB2636.namprd19.prod.outlook.com
- ([fe80::f1c7:5bf4:a3b:ff40%6]) with mapi id 15.20.3195.033; Wed, 29 Jul 2020
- 13:14:58 +0000
-From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
-To:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        "Yuan, Perry" <Perry.Yuan@dell.com>
-CC:     "sre@kernel.org" <sre@kernel.org>,
-        "pali@kernel.org" <pali@kernel.org>,
-        "dvhart@infradead.org" <dvhart@infradead.org>,
-        "andy@infradead.org" <andy@infradead.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86:dell-laptop:Add battery charging thresholds
- and charging mode switch.
-Thread-Topic: [PATCH] platform/x86:dell-laptop:Add battery charging thresholds
- and charging mode switch.
-Thread-Index: AQHWZXUdOYKvo1LGAUWLXWRX1rhPb6keKKMAgABge60=
-Date:   Wed, 29 Jul 2020 13:14:58 +0000
-Message-ID: <DM6PR19MB2636C2298994F284C62924CEFA700@DM6PR19MB2636.namprd19.prod.outlook.com>
-References: <20200729065424.12851-1-Perry_Yuan@Dell.com>,<20200729072756.46skroedpbo3fjyn@srcf.ucam.org>
-In-Reply-To: <20200729072756.46skroedpbo3fjyn@srcf.ucam.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: srcf.ucam.org; dkim=none (message not signed)
- header.d=none;srcf.ucam.org; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [76.251.167.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 25f80945-ca2a-4cb5-6b2a-08d833c164ff
-x-ms-traffictypediagnostic: DM6PR19MB3145:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR19MB31453A7A7F76413FE807A03CFA700@DM6PR19MB3145.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: enrV/RE1+t5zyBlizCf+FP9dbCSPamhnuu26Pmjs5JM5DvnceP3FJe7mRA5zN0p6T8oEaJkDwHOwdHyIqBnEmz3yiTFa6SQhKVo/YHLq+LaJZZUvNZq+aDP71e0s6NqnqPtn9+BPxFQZagqzGtKMttAXoxgMaez5vDVwbzEiON2ijk2fYVEhNBFbUD8ZAUoGK+oOlgvH+gh/SLAc8XWG+ez/K7VNJnuS/Vg5MBjVAvCqWhVptv2p0Zc3sLDdAtoMDXiV/9c2+SfwZdO+MR2n5LaobWbBgVPF+NwtcHtXhLNvedr3bo5KsCCtK5FN6+/BO+5rXWhyWhEmJDDCHmrzDA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR19MB2636.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(366004)(396003)(346002)(376002)(39860400002)(6506007)(7696005)(186003)(66556008)(66446008)(66476007)(26005)(4326008)(2906002)(5660300002)(76116006)(64756008)(86362001)(66946007)(6636002)(8936002)(71200400001)(8676002)(33656002)(110136005)(52536014)(55016002)(54906003)(9686003)(786003)(316002)(478600001)(4744005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: zsLZt8XZuqIhJWPV9vIA0sNzOmbRg9l4pIyFj4L7g3auiO3xDTB4gpxoI0jzoRHKam+xft5UTzSH3yl+WQXQ7I7maJ73Q8zp9UUHizPgMf+gH6V0gsJR35ZrLW4U0zCLNzTTYbFYPCnJQ3qpP/7mJRyLvktVapMXKlbR+s7tQsYJ6bkpZhyhcg3F4H3HOAOF5Dzup1Jxq/yPHCNKkIFVsno1nSueNWhg1d4aBXBeriF8cuIuKM6T0lQh99QTcvb12GveAwAsyqG2l9weGMjgENw+Vjy3Y6yDEk/OyjOFoEbv0r/d8pVXktK5V/m5boSyWzUSv0sDz32Xfs+v7KWk83jy5dqF+KKZ0BVTeAA7S9Pwo6aWMFCRXjn8+l//V/Pp6x7e2Uc0mz7BBkXXWCvOkAC+ZtcP8zto1MAwV6W05Gs3XQiKCzEjabfpdbEPOqP+IsQzHsorOg/wq6ZsaB4N51A/1phFTnrCDCbmbshNY+5WhLH4rKfYRSE2QoNDLg9+
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR19MB2636.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25f80945-ca2a-4cb5-6b2a-08d833c164ff
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2020 13:14:58.7281
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rxECYiZ884fx2W1AzBUu0OSYnZNewLGm53cqTcHko3gnENtbSLVUUH6VuQcRhaKHjiJrysJaWl4HQ5DpE6Awwum6b5n35rua7KtE2FwRZEQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR19MB3145
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-29_07:2020-07-29,2020-07-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- clxscore=1011 mlxscore=0 bulkscore=0 phishscore=0 adultscore=0
- mlxlogscore=818 lowpriorityscore=0 impostorscore=0 priorityscore=1501
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007290087
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
- phishscore=0 malwarescore=0 spamscore=0 bulkscore=0 mlxscore=0
- mlxlogscore=898 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007290087
+        Wed, 29 Jul 2020 09:16:15 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:43564 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726353AbgG2NQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 09:16:14 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn92LdiFfMBgCAA--.1012S2;
+        Wed, 29 Jul 2020 21:15:57 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>
+Cc:     "Tobin C. Harding" <me@tobin.cc>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v2] Documentation/bpf: Use valid and new links in index.rst
+Date:   Wed, 29 Jul 2020 21:15:55 +0800
+Message-Id: <1596028555-32028-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxn92LdiFfMBgCAA--.1012S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZryxZryDur1UAw4kCFWruFg_yoW8Gw4DpF
+        45WF1fKrn8tF43Xw4kGF47Cr15KayfJF4Uua4UJw1Fvrn8Xa409F1S9rs0q3W2krWFvFW5
+        ZFyfKF90qrn7u3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvmb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkI
+        wI1lc2xSY4AK67AK6ry8MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI
+        8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
+        xVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
+        8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2
+        z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+        UI43ZEXa7IU5XvttUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The values here seem very Dell specific, but this is going into a =0A=
-> generic sysfs path. Really stuff here should be as vendor independent as =
-=0A=
-> possible. If these values don't correspond to a wider industry =0A=
-> specification it probably makes sense to make this something Dell =0A=
-> specific.=0A=
-=0A=
-Worth pointing out that for wilco-ec they use this path:=0A=
-Documentation/ABI/testing/sysfs-class-power-wilco=0A=
-=0A=
-So that could be something good to model off for v2.=
+There exists an error "404 Not Found" when I click the html link of
+"Documentation/networking/filter.rst" in the BPF documentation [1],
+fix it.
+
+Additionally, use the new links about "BPF and XDP Reference Guide"
+and "bpf(2)" to avoid redirects.
+
+[1] https://www.kernel.org/doc/html/latest/bpf/
+
+Fixes: d9b9170a2653 ("docs: bpf: Rename README.rst to index.rst")
+Fixes: cb3f0d56e153 ("docs: networking: convert filter.txt to ReST")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+
+v2:
+  - Fix a typo "clik" to "click" in the commit message, sorry for that
+
+ Documentation/bpf/index.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/bpf/index.rst b/Documentation/bpf/index.rst
+index 26f4bb3..1b901b4 100644
+--- a/Documentation/bpf/index.rst
++++ b/Documentation/bpf/index.rst
+@@ -68,7 +68,7 @@ Testing and debugging BPF
+ 
+ 
+ .. Links:
+-.. _Documentation/networking/filter.rst: ../networking/filter.txt
++.. _Documentation/networking/filter.rst: ../networking/filter.html
+ .. _man-pages: https://www.kernel.org/doc/man-pages/
+-.. _bpf(2): http://man7.org/linux/man-pages/man2/bpf.2.html
+-.. _BPF and XDP Reference Guide: http://cilium.readthedocs.io/en/latest/bpf/
++.. _bpf(2): https://man7.org/linux/man-pages/man2/bpf.2.html
++.. _BPF and XDP Reference Guide: https://docs.cilium.io/en/latest/bpf/
+-- 
+2.1.0
+
