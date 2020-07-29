@@ -2,162 +2,110 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CC2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC9CC2075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74F22075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:20:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+BE/qSt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgG2SP5 (ORCPT
+        id S1726628AbgG2SU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:15:57 -0400
-Received: from smtp.infotech.no ([82.134.31.41]:40318 "EHLO smtp.infotech.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726365AbgG2SP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:15:57 -0400
-X-Greylist: delayed 340 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Jul 2020 14:15:56 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by smtp.infotech.no (Postfix) with ESMTP id B4EC320418F;
-        Wed, 29 Jul 2020 20:10:14 +0200 (CEST)
-X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
-Received: from smtp.infotech.no ([127.0.0.1])
-        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id DvU0RtaqVit3; Wed, 29 Jul 2020 20:10:07 +0200 (CEST)
-Received: from [192.168.48.23] (host-45-78-251-166.dyn.295.ca [45.78.251.166])
-        by smtp.infotech.no (Postfix) with ESMTPA id 67F42204158;
-        Wed, 29 Jul 2020 20:10:06 +0200 (CEST)
-Reply-To: dgilbert@interlog.com
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     Bart Van Assche <bvanassche@acm.org>, jejb@linux.ibm.com,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-References: <20200706164135.GE704149@rowland.harvard.edu>
- <d0ed766b-88b0-5ad5-9c10-a4c3b2f994e3@puri.sm>
- <20200728200243.GA1511887@rowland.harvard.edu>
- <f3958758-afce-8add-1692-2a3bbcc49f73@puri.sm>
- <20200729143213.GC1530967@rowland.harvard.edu>
-From:   Douglas Gilbert <dgilbert@interlog.com>
-Message-ID: <31f1ec62-7047-a34b-fdcb-5ea2a2104292@interlog.com>
-Date:   Wed, 29 Jul 2020 14:10:04 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 14:20:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgG2SU6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 14:20:58 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B755C061794;
+        Wed, 29 Jul 2020 11:20:58 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id t6so14735083pgq.1;
+        Wed, 29 Jul 2020 11:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vW72lIZ0Ccf+1grxPMJ95F8SyVI6+iUmEWNA1w/0dLs=;
+        b=s+BE/qStaHWIG5Lq5Y8zKNrw2CHzDJisjuMWjl7Jp2ZmBoytg+ahIkiBYOmXtyXY7s
+         XoE/N5Zvs0niauYyCQZfJPftkEoq1Xp3yNg0PnibxPb6SpRSTJ2/5y43BE2q/3vbH4KA
+         AZgthmBrlvV7x24id0rD7zv+8+qfeJfjBuMSrT6tluvl0doKeALfRCXlUuvJEdPYOJ/d
+         O35IHEkBZ11T13L+/M8hUiYcoeWP6oLshYIsSZwI74SfwtPPUcEDMCW5GeiGNb6BlT5e
+         WOLf1LeBT2GBiGVLm/L4PbUVs9fGUwCPCSNPDinhdaIJQDm6sLVD2M77d9iw6vAoj5IA
+         BSgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vW72lIZ0Ccf+1grxPMJ95F8SyVI6+iUmEWNA1w/0dLs=;
+        b=gH8FUkj06wHf6SBMAYl8jBNPG8+7dokqMP11jR8oouYA6LAdH9+zkfBXD+FfDk9wzS
+         hWuOJPT+3gO7JwPSvW1lgqAOP0wamX2p5Dgg+q000i5HEZ7Hy5PTsPVlIyeXeloy/ZCU
+         eC6GQD/s3+99kDwP2PJwSJPii/s8/2yN9BGDLjR0JW9NKRaqMsmbUWFc0qpMgzrPtWyh
+         eQVoRMt72304u2/5fIIGqnszq8AB3GwBJg94pABjH/RIvSeQQ4hwmkHAyZcjogGSFQQF
+         e1eD3HziRPc/r//sssYBnjXS+KTr8+PLNSjqLriiJr47ZfGDij6aNg4TM92wVPzZYH3X
+         6GKg==
+X-Gm-Message-State: AOAM532q3MBkv4aTIp0t3Qz961o01ZaD8uRiF5Rv3AT+rYvO51krYpQv
+        zRBW7rW3r2evzFTtrC8d4dU=
+X-Google-Smtp-Source: ABdhPJz9XT+Ab8Fqr2MXSwVPubmuHel1dafk38mq1W+T2oWCQaE/h4Q/4T+plIc0bnRUVLyh8TQYmA==
+X-Received: by 2002:a63:fe42:: with SMTP id x2mr31003316pgj.207.1596046856188;
+        Wed, 29 Jul 2020 11:20:56 -0700 (PDT)
+Received: from blackclown ([103.88.82.91])
+        by smtp.gmail.com with ESMTPSA id t1sm3166365pgq.66.2020.07.29.11.20.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Jul 2020 11:20:55 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 23:50:42 +0530
+From:   Suraj Upadhyay <usuraj35@gmail.com>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
+        shivasharan.srikanteshwara@broadcom.com, jejb@linux.ibm.com,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 1/2] scsi: megaraid: Remove pci-dma-compat wrapper
+ APIs.
+Message-ID: <20200729182042.GA17008@blackclown>
+References: <20200727140826.GE14759@blackclown>
+ <yq1h7tr80ij.fsf@ca-mkp.ca.oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200729143213.GC1530967@rowland.harvard.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq1h7tr80ij.fsf@ca-mkp.ca.oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-29 10:32 a.m., Alan Stern wrote:
-> On Wed, Jul 29, 2020 at 04:12:22PM +0200, Martin Kepplinger wrote:
->> On 28.07.20 22:02, Alan Stern wrote:
->>> On Tue, Jul 28, 2020 at 09:02:44AM +0200, Martin Kepplinger wrote:
->>>> Hi Alan,
->>>>
->>>> Any API cleanup is of course welcome. I just wanted to remind you that
->>>> the underlying problem: broken block device runtime pm. Your initial
->>>> proposed fix "almost" did it and mounting works but during file access,
->>>> it still just looks like a runtime_resume is missing somewhere.
->>>
->>> Well, I have tested that proposed fix several times, and on my system
->>> it's working perfectly.  When I stop accessing a drive it autosuspends,
->>> and when I access it again it gets resumed and works -- as you would
->>> expect.
->>
->> that's weird. when I mount, everything looks good, "sda1". But as soon
->> as I cd to the mountpoint and do "ls" (on another SD card "ls" works but
->> actual file reading leads to the exact same errors), I get:
->>
->> [   77.474632] sd 0:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result:
->> hostbyte=0x00 driverbyte=0x08 cmd_age=0s
->> [   77.474647] sd 0:0:0:0: [sda] tag#0 Sense Key : 0x6 [current]
->> [   77.474655] sd 0:0:0:0: [sda] tag#0 ASC=0x28 ASCQ=0x0
->> [   77.474667] sd 0:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 60
->> 40 00 00 01 00
+On Tue, Jul 28, 2020 at 11:40:12PM -0400, Martin K. Petersen wrote:
 > 
-> This error report comes from the SCSI layer, not the block layer.
+> Hello Suraj!
+> 
+> > The legacy API wrappers in include/linux/pci-dma-compat.h
+> > should go away as it creates unnecessary midlayering
+> > for include/linux/dma-mapping.h APIs, instead use dma-mapping.h
+> > APIs directly.
+> 
+> Instead of all these individual patches, please submit a combined patch
+> series for the changes under SCSI.
+> 
+> Each patch should fix a single driver. Please don't mix changes to
+> completely different drivers such as hpsa and dc395x in a single
+> commit. And please don't split semantically identical changes to the
+> same driver into multiple commits (megaraid [2/2]).
+> 
+> Thank you!
+> 
+Hii Martin,
+	Thanks for your response.
+I sent a patch series for the above changes.
 
-SCSI's first 11 byte command! I'm guessing the first byte is being
-repeated and it's actually:
-     28 00 00 00 60 40 00 00 01 00  [READ(10)]
+Thanks,
 
-That should be fixed. It should be something like: "...CDB in hex: 28 00 ...".
-
-Doug Gilbert
-
->> [   77.474678] blk_update_request: I/O error, dev sda, sector 24640 op
->> 0x0:(READ) flags 0x80700 phys_seg 1 prio class 0
->> [   77.485836] sd 0:0:0:0: [sda] tag#0 device offline or changed
->> [   77.491628] blk_update_request: I/O error, dev sda, sector 24641 op
->> 0x0:(READ) flags 0x80700 phys_seg 1 prio class 0
->> [   77.502275] sd 0:0:0:0: [sda] tag#0 device offline or changed
->> [   77.508051] blk_update_request: I/O error, dev sda, sector 24642 op
->> 0x0:(READ) flags 0x80700 phys_seg 1 prio class 0
->> [   77.518651] sd 0:0:0:0: [sda] tag#0 device offline or changed
->> (...)
->> [   77.947653] sd 0:0:0:0: [sda] tag#0 device offline or changed
->> [   77.953434] FAT-fs (sda1): Directory bread(block 16448) failed
->> [   77.959333] sd 0:0:0:0: [sda] tag#0 device offline or changed
->> [   77.965118] FAT-fs (sda1): Directory bread(block 16449) failed
->> [   77.971014] sd 0:0:0:0: [sda] tag#0 device offline or changed
->> [   77.976802] FAT-fs (sda1): Directory bread(block 16450) failed
->> [   77.982698] sd 0:0:0:0: [sda] tag#0 device offline or changed
->> (...)
->> [   78.384929] FAT-fs (sda1): Filesystem has been set read-only
->> [  103.070973] sd 0:0:0:0: [sda] tag#0 device offline or changed
->> [  103.076751] print_req_error: 118 callbacks suppressed
->> [  103.076760] blk_update_request: I/O error, dev sda, sector 9748 op
->> 0x1:(WRITE) flags 0x100000 phys_seg 1 prio class 0
->> [  103.087428] Buffer I/O error on dev sda1, logical block 1556, lost
->> async page write
->> [  103.095309] sd 0:0:0:0: [sda] tag#0 device offline or changed
->> [  103.101123] blk_update_request: I/O error, dev sda, sector 17162 op
->> 0x1:(WRITE) flags 0x100000 phys_seg 1 prio class 0
->> [  103.111883] Buffer I/O error on dev sda1, logical block 8970, lost
->> async page write
-> 
-> I can't tell why you're getting that error.  In one of my tests the
-> device returned the same kind of error status (Sense Key = 6, ASC =
-> 0x28) but the operation was then retried successfully.  Perhaps the
-> problem lies in the device you are testing.
-> 
->>>> As we need to have that working at some point, I might look into it, but
->>>> someone who has experience in the block layer can surely do it more
->>>> efficiently.
->>>
->>> I suspect that any problems you still face are caused by something else.
->>>
->>
->> I then formatted sda1 to ext2 (on the runtime suspend system testing
->> your patch) and that seems to have worked!
->>
->> Again accessing the mountpoint then yield the very same "device offline
->> or changed" errors.
->>
->> What kind of device are you testing? You should be easily able to
->> reproduce this using an "sd" device.
-> 
-> I tested two devices: a SanDisk Cruzer USB flash drive and a
-> g-mass-storage gadget running under dummy-hcd.  They each showed up as
-> /dev/sdb on my system.
-> 
-> I haven't tried testing with an SD card.  If you have any specific
-> sequence of commands you would like me to run, let me know.
-> 
->> The problems must lie in the different other drivers we use I guess.
-> 
-> Or the devices.  Have you tried testing with a USB flash drive?
-> 
-> Alan Stern
-> 
-
+Suraj Upadhyay
+> -- 
+> Martin K. Petersen	Oracle Linux Engineering
