@@ -2,118 +2,105 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A56DC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 124D620809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:06:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596056785;
-	bh=ueGCrlTHZf0CRfYXBT+w5ROCnO+gC3NkQFou1ASiPJM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Nf+mABtm0BdGlh4ia4A3FOSN3+/nbKQ53xByWjWoaScGloX3VEyz5plIjzFLQbaw2
-	 JLvdwjvrDM0HGSZUG2i719ALtNCvHKtQYIyOsQNxiCbyQnP/kRgbVbQr+aHW3PP9h5
-	 C8AaJigY6J1S1v6TdcCKugNVollYihrypug5f974=
+	by mail.kernel.org (Postfix) with ESMTP id 43CD6206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 21:06:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B0M2Rleh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgG2VGX (ORCPT
+        id S1726631AbgG2VGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 17:06:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgG2VGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 17:06:22 -0400
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D29DE2250E;
-        Wed, 29 Jul 2020 21:06:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596056782;
-        bh=ueGCrlTHZf0CRfYXBT+w5ROCnO+gC3NkQFou1ASiPJM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wnUfZOe1z1bdSDJ03r/muyQ9yir2kK2heQ2UD/DcT1KesUm3lII2Kipm76COhjCG+
-         Zf2AA8WGuUGbs+jGZRAsGfWusJTMCb+nCY0gvjdRjgtY3fISl7SMuy+ezhbu5jH3PU
-         vS1oSSRGq77BR8P2XYCzVlHAZOqRBMNdXqf3qrOc=
-Received: by mail-lf1-f50.google.com with SMTP id b30so13791211lfj.12;
-        Wed, 29 Jul 2020 14:06:21 -0700 (PDT)
-X-Gm-Message-State: AOAM531d6hrV+htt8ZIxnGWs+ULBbzLDD2DL1xFJFEXjafFNMDdY7pld
-        8fCSIKdaVsF2e+UtN988PLQXrMov0Ufxrms0rqo=
-X-Google-Smtp-Source: ABdhPJxyF5POFFPO8i7lMsfFqs9+19XH7Zn+S8Z+XDeZm1y50XRsaVlCP1fr66fhMHfEa4N3Q+fffiPjA55ITMZRyMI=
-X-Received: by 2002:a19:ec12:: with SMTP id b18mr56556lfa.52.1596056780070;
- Wed, 29 Jul 2020 14:06:20 -0700 (PDT)
+        Wed, 29 Jul 2020 17:06:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgG2VGe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 17:06:34 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16AF1C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 14:06:34 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id e64so26020383iof.12
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 14:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PYXSUMqBNAfekuMZ1II61jWQ+xQzFVAYx97TvpVd0jI=;
+        b=B0M2Rleh5A8unRB3YwRgb+tjnGZ4gDCtk6RwC2OUBr1YrPpnKGAVgjv3iD2coO3zEG
+         wJywzxnfdtSHlMZbt1el03j75eCIgiy0t3niS4XdBYt+IPVxgeryIV26sAnbBb2ie8ed
+         UC4NWxmjIYy4lLysz0TpsFVD6MAdDepPg9DkPizx4N0df4RVfWMk70I17ysRhbPFGyYB
+         RZtAY3fSm9ZbaspEEUqJxpDhm8toh0lJx5FtomdhnR4jNmOQgG9l2q1BOBET0sHJrzf/
+         wYV+26Xl/ohLIL9dW88838MKGzA/j4SEQN5Qm/kpHXzXionu7yWS34UkzLPnsG8HMIr1
+         R3sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PYXSUMqBNAfekuMZ1II61jWQ+xQzFVAYx97TvpVd0jI=;
+        b=Y3PHWgI0Jbo0xawb0009vxf/6jbQphE2VCcTac4HBiRrh12jNwEdBT2W92vml3u7UU
+         o/cxOcR0tmQZndHNxBmltBGzY3LlUgB/0LYIBMnpQittB0GR0pCfE5/aOVQX8Wi+sR3M
+         KwTmF+KIOWlJm4qr/t6A+sLLNZ0+ys7kNGvfmJ84u2oTMcdH/nBEL2fhqSii9SFafeeT
+         d4fbeZ+fz3Xu9s7z2CNCGvATuscTIboMK2KvBlZAmYmNTICpwSBaIf5/GTrC9QMLBsDB
+         MtGQIv1T2so7YioCAPe2sep9jc1bp92Le9UFXg9eqJsH0PUxYCyRJGkjcJzMh6M3Mlyo
+         hlgA==
+X-Gm-Message-State: AOAM531I05Qj+u70tIzIB6zPPfP0g1eXzIdU6jjer9obQkRiLESIpt+Z
+        WnY9KAVh3Z3uj6rQ4uo6FtJvDfi68Obud5esh9Ee6Q==
+X-Google-Smtp-Source: ABdhPJz89qZcoF741PgVTVzeNOR8THiBkq7r/07KbMhPhKErgfdp89Y987XC9GEz5UtVzCaiwYbkBjxQ0irN/VWCLl8=
+X-Received: by 2002:a02:bb82:: with SMTP id g2mr49494jan.54.1596056793308;
+ Wed, 29 Jul 2020 14:06:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <1596028555-32028-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1596028555-32028-1-git-send-email-yangtiezhu@loongson.cn>
-From:   Song Liu <song@kernel.org>
-Date:   Wed, 29 Jul 2020 14:06:09 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5CYF+iiXL8mcLTerFxhUG2i1sTB8+qoFnZRT3K0XXb4w@mail.gmail.com>
-Message-ID: <CAPhsuW5CYF+iiXL8mcLTerFxhUG2i1sTB8+qoFnZRT3K0XXb4w@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2] Documentation/bpf: Use valid and new links in index.rst
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "Tobin C. Harding" <me@tobin.cc>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <159597929496.12744.14654593948763926416.stgit@bmoger-ubuntu> <159597949971.12744.1782012822260431973.stgit@bmoger-ubuntu>
+In-Reply-To: <159597949971.12744.1782012822260431973.stgit@bmoger-ubuntu>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Wed, 29 Jul 2020 14:06:21 -0700
+Message-ID: <CALMp9eSY4YshSLEThV1KDRmrXG_pcs68OwrgC4cDe4smaVe8Cg@mail.gmail.com>
+Subject: Re: [PATCH v3 05/11] KVM: SVM: Modify 64 bit intercept field to two
+ 32 bit vectors
+To:     Babu Moger <babu.moger@amd.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm list <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 6:17 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+On Tue, Jul 28, 2020 at 4:38 PM Babu Moger <babu.moger@amd.com> wrote:
 >
-> There exists an error "404 Not Found" when I click the html link of
-> "Documentation/networking/filter.rst" in the BPF documentation [1],
-> fix it.
+> Convert all the intercepts to one array of 32 bit vectors in
+> vmcb_control_area. This makes it easy for future intercept vector
+> additions.  Also update trace functions.
 >
-> Additionally, use the new links about "BPF and XDP Reference Guide"
-> and "bpf(2)" to avoid redirects.
->
-> [1] https://www.kernel.org/doc/html/latest/bpf/
->
-> Fixes: d9b9170a2653 ("docs: bpf: Rename README.rst to index.rst")
-> Fixes: cb3f0d56e153 ("docs: networking: convert filter.txt to ReST")
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
 > ---
->
-> v2:
->   - Fix a typo "clik" to "click" in the commit message, sorry for that
->
->  Documentation/bpf/index.rst | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/bpf/index.rst b/Documentation/bpf/index.rst
-> index 26f4bb3..1b901b4 100644
-> --- a/Documentation/bpf/index.rst
-> +++ b/Documentation/bpf/index.rst
-> @@ -68,7 +68,7 @@ Testing and debugging BPF
->
->
->  .. Links:
-> -.. _Documentation/networking/filter.rst: ../networking/filter.txt
-> +.. _Documentation/networking/filter.rst: ../networking/filter.html
 
-This should be filter.rst, no?
-
->  .. _man-pages: https://www.kernel.org/doc/man-pages/
-> -.. _bpf(2): http://man7.org/linux/man-pages/man2/bpf.2.html
-> -.. _BPF and XDP Reference Guide: http://cilium.readthedocs.io/en/latest/bpf/
-> +.. _bpf(2): https://man7.org/linux/man-pages/man2/bpf.2.html
-> +.. _BPF and XDP Reference Guide: https://docs.cilium.io/en/latest/bpf/
-> --
-> 2.1.0
+> @@ -128,8 +129,7 @@ enum {
 >
+>  struct __attribute__ ((__packed__)) vmcb_control_area {
+>         u32 intercepts[MAX_VECTORS];
+> -       u64 intercept;
+> -       u8 reserved_1[40];
+> +       u8 reserved_1[60 - (MAX_VECTORS * 4)];
+
+Perhaps this could be simplified to 'u32 reserved_1[15 - MAX_VECTORS];'
+
+>         u16 pause_filter_thresh;
+>         u16 pause_filter_count;
+>         u64 iopm_base_pa;
+
+Reviewed-by: Jim Mattson <jmattson@google.com>
