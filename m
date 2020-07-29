@@ -2,117 +2,130 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68938C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A01C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 424142075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:52:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uNJ3sx5o"
+	by mail.kernel.org (Postfix) with ESMTP id EC75420809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596048884;
+	bh=zFBRJidD33JrSWfE/vO6FUHZfJQaVyBLHNmxTMcCR+w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0M0FiMw64OIAyZLWD7kQvSpxW2hovtcCF6VfKVtwBwHHZWi9CJYiP7CZPCqbOGYiT
+	 mTRX9QBZUOGWWCvHHIizJbpjLEkofERJh/2IN1Hc/UoAStXF4HgqOmoqrkkWxIoTgi
+	 ooFtuIF/mmIkiJq5if6yfqWoNSbqn7N9Bba2/K3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgG2Swm (ORCPT
+        id S1727815AbgG2Sym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:52:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2Swl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:52:41 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BBBDC061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:52:41 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mt12so2346448pjb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 11:52:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=JKan5hWVyx9npp6/yhxgLJA7QZFKpXwZ3cmeNfakJnw=;
-        b=uNJ3sx5oPSmxdVuR4J+Z4O3oRyDH5k1dzSM5TlRIzxR48j05T7oce55cr1GlEotctq
-         XsuilZWDDtWwUhObPmA2MdLr6QjkZz+vSx3oG4fVFP8eMR0SgRyyX6LJ+2QhF3hTWlHh
-         unukN5f0UmGzImFMhVKs6fU+ul3bPKS+/+lJPXC9Ypwf4X7SXdlArmfJwWZsUmSMyZmn
-         fAXrn6Rh20SdlG9rHVDguqgJ3SDm2GRtb5s7THSwsbB0Ce55uOkqjR0z1eGrs9U8MU8D
-         /gQCpFMFl2PvUhvwdo2h2+jJ1ACK4+mnVE4f1m+F2OqKnwgpU5dfdpTszUMOhNR0xRcd
-         4v9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JKan5hWVyx9npp6/yhxgLJA7QZFKpXwZ3cmeNfakJnw=;
-        b=bMhhvcSgRtArSxN6n28grFnoUvtVqnbkNENptlQBD0purydzF2gkuiS5tVrk0g7EPl
-         tvdy4lBG6+D4wRPaH9p+ZkRvL3nRmKBvKXQe7o443D+thnvjMW7KHg64/zmj81A6m+6q
-         lAtMVhgEN3d/qn9lThXbYXL73xI3sQoodYmMabKPO1jPqAOppis+5KqDZgDT1rfk7O3W
-         j1WJ0Q166jokqmEU5ckAOOEPnBOmbQ1aAx2uxvNCEgsl4K6uij1stWgLAtGE2vZ3WkuH
-         MTVfu15kVxGmQuHJDKCUcZZKjv2T0zoyIX4coYgbxj8BgvpDqFOqy6Jet661cFfVSFWD
-         +7zQ==
-X-Gm-Message-State: AOAM533mryXkrP4m4AmiLC3nzvtvxPedPedSgLPjZW9qQ87zpr1B3ZeC
-        EsUADrRi8GnffnxLg6nR+vY=
-X-Google-Smtp-Source: ABdhPJzz/nH8yWtky4qFCUB7fSvVpdYp4LKXR24ZmuUK7RU0XMJU6h4LNQN7N6xzaNFVMT5CNVg35w==
-X-Received: by 2002:a17:90a:71c1:: with SMTP id m1mr3588850pjs.163.1596048760906;
-        Wed, 29 Jul 2020 11:52:40 -0700 (PDT)
-Received: from jordon-HP-15-Notebook-PC.domain.name ([122.179.38.221])
-        by smtp.gmail.com with ESMTPSA id v128sm1043784pfc.14.2020.07.29.11.52.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Jul 2020 11:52:40 -0700 (PDT)
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     jgg@ziepe.ca, dan.j.williams@intel.com, gregkh@linuxfoundation.org,
-        mchehab+samsung@kernel.org, linux-kernel@vger.kernel.org,
-        dan.carpenter@oracle.com, Souptick Joarder <jrdr.linux@gmail.com>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v2] drivers/virt/fsl_hypervisor: Correcting error handling path
-Date:   Thu, 30 Jul 2020 00:31:09 +0530
-Message-Id: <1596049269-14950-1-git-send-email-jrdr.linux@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 29 Jul 2020 14:54:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726365AbgG2Sym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 14:54:42 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A00512075D;
+        Wed, 29 Jul 2020 18:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596048881;
+        bh=zFBRJidD33JrSWfE/vO6FUHZfJQaVyBLHNmxTMcCR+w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PXdf8TPvoqKgwUP3eDPDXfYNVmMwQnCyWXg9w356HFunVON0fr0sYi02gbFeIJg04
+         pk1cS6IYpqQHeO6WVoMB90Rgxx0jyvuw42ZLJr0XzP0rbJ5LEuQ72uELggcnBZ0gj1
+         vK3N7lkajFi5hL+IJvBp7dexMla/MwpVX4jE2wh8=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D056F40E59; Wed, 29 Jul 2020 15:54:39 -0300 (-03)
+Date:   Wed, 29 Jul 2020 15:54:39 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 2/5] perf record: Prevent override of
+ attr->sample_period for libpfm4 events
+Message-ID: <20200729185439.GC433799@kernel.org>
+References: <20200728085734.609930-1-irogers@google.com>
+ <20200728085734.609930-3-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728085734.609930-3-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First, when memory allocation for sg_list_unaligned failed, there
-is no point of calling put_pages() as we haven't pinned any pages.
+Em Tue, Jul 28, 2020 at 01:57:31AM -0700, Ian Rogers escreveu:
+> From: Stephane Eranian <eranian@google.com>
+> 
+> Before:
+> $ perf record -c 10000 --pfm-events=cycles:period=77777
+> 
+> Would yield a cycles event with period=10000, instead of 77777.
 
-Second, if get_user_pages_fast() failed we should unpinned num_pinned
-pages, no point of checking till num_pages.
+I tried the equivalent without libpfm and it works:
 
-This will address both.
-
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
----
-v2:
-	Added review tag.
-
- drivers/virt/fsl_hypervisor.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/virt/fsl_hypervisor.c b/drivers/virt/fsl_hypervisor.c
-index 1b0b11b..ea344d7 100644
---- a/drivers/virt/fsl_hypervisor.c
-+++ b/drivers/virt/fsl_hypervisor.c
-@@ -157,7 +157,7 @@ static long ioctl_memcpy(struct fsl_hv_ioctl_memcpy __user *p)
+  $ perf record -c 10000 -e cycles/period=20000/ sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.024 MB perf.data (23 samples) ]
+  $ perf evlist -v
+  cycles/period=20000/u: size: 120, { sample_period, sample_freq }: 20000, sample_type: IP|TID|TIME, read_format: ID, disabled: 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, enable_on_exec: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
+  $
  
- 	unsigned int i;
- 	long ret = 0;
--	int num_pinned; /* return value from get_user_pages() */
-+	int num_pinned = 0; /* return value from get_user_pages() */
- 	phys_addr_t remote_paddr; /* The next address in the remote buffer */
- 	uint32_t count; /* The number of bytes left to copy */
+> This was due to an ordering issue between libpfm4 parsing
+> the event string and perf record initializing the event.
  
-@@ -293,7 +293,7 @@ static long ioctl_memcpy(struct fsl_hv_ioctl_memcpy __user *p)
- 
- exit:
- 	if (pages) {
--		for (i = 0; i < num_pages; i++)
-+		for (i = 0; i < num_pinned; i++)
- 			if (pages[i])
- 				put_page(pages[i]);
- 	}
+> This patch fixes the problem by preventing override for
+> events with attr->sample_period != 0 by the time
+> perf_evsel__config() is invoked. This seems to have been the
+> intent of the author.
+> 
+> Signed-off-by: Stephane Eranian <eranian@google.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/evsel.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 811f538f7d77..8afc24e2ec52 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -976,8 +976,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+>  	 * We default some events to have a default interval. But keep
+>  	 * it a weak assumption overridable by the user.
+>  	 */
+> -	if (!attr->sample_period || (opts->user_freq != UINT_MAX ||
+> -				     opts->user_interval != ULLONG_MAX)) {
+> +	if (!attr->sample_period) {
+>  		if (opts->freq) {
+>  			attr->freq		= 1;
+>  			attr->sample_freq	= opts->freq;
+> -- 
+> 2.28.0.163.g6104cc2f0b6-goog
+> 
+
 -- 
-1.9.1
 
+- Arnaldo
