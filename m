@@ -2,45 +2,82 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2637C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B23C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA04A206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2D5B206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgG2GdI (ORCPT
+        id S1727063AbgG2GdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 02:33:08 -0400
-Received: from verein.lst.de ([213.95.11.211]:51169 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726367AbgG2GdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 02:33:08 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id E242268B05; Wed, 29 Jul 2020 08:33:05 +0200 (CEST)
-Date:   Wed, 29 Jul 2020 08:33:05 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: linux-next: build failure after merge of the vfs tree
-Message-ID: <20200729063305.GA32038@lst.de>
-References: <20200729115645.3fe3beec@canb.auug.org.au>
+        Wed, 29 Jul 2020 02:33:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgG2GdX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 02:33:23 -0400
+Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0EF0C061794;
+        Tue, 28 Jul 2020 23:33:22 -0700 (PDT)
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id C9EDDC01F; Wed, 29 Jul 2020 08:33:21 +0200 (CEST)
+Date:   Wed, 29 Jul 2020 08:33:06 +0200
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     netdev@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] 9p update for 5.8
+Message-ID: <20200729063306.GA19549@nautica>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200729115645.3fe3beec@canb.auug.org.au>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks,
+Sorry for the late request, I took some time to fix my test setup and to
+be convinced these two patches are worth sending now and not wait until
+the next merge window.
 
-I've sent out a fixed version.
+(the "weird" -2 at the end of the tag is because I had already used
+9p-for-5.8 for the original -rc1 pull)
+
+
+The following changes since commit 11ba468877bb23f28956a35e896356252d63c983:
+
+  Linux 5.8-rc5 (2020-07-12 16:34:50 -0700)
+
+are available in the Git repository at:
+
+  https://github.com/martinetd/linux tags/9p-for-5.8-2
+
+for you to fetch changes up to 74d6a5d5662975aed7f25952f62efbb6f6dadd29:
+
+  9p/trans_fd: Fix concurrency del of req_list in
+  p9_fd_cancelled/p9_read_work (2020-07-19 14:58:47 +0200)
+
+----------------------------------------------------------------
+A couple of syzcaller fixes for 5.8
+
+the first one in particular has been quite noisy ("broke" in -rc5)
+so this would be worth landing even this late even if users likely
+won't see a difference
+
+----------------------------------------------------------------
+Christoph Hellwig (1):
+      net/9p: validate fds in p9_fd_open
+
+Wang Hai (1):
+      9p/trans_fd: Fix concurrency del of req_list in p9_fd_cancelled/p9_read_work
+
+ net/9p/trans_fd.c | 39 ++++++++++++++++++++++++++++++---------
+ 1 file changed, 30 insertions(+), 9 deletions(-)
+-- 
+Dominique
