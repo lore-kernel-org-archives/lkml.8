@@ -2,127 +2,95 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D2DC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E88C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 322E7207F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:54:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlUH8kBa"
+	by mail.kernel.org (Postfix) with ESMTP id 0D6BE2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgG2HyE (ORCPT
+        id S1727845AbgG2Hz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:54:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55390 "EHLO
+        Wed, 29 Jul 2020 03:55:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgG2HyD (ORCPT
+        with ESMTP id S1726290AbgG2Hz0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:54:03 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE679C061794;
-        Wed, 29 Jul 2020 00:54:02 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 9so1802487wmj.5;
-        Wed, 29 Jul 2020 00:54:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=/AF3ziGdsv+yHT1fe3PUelS/2zrWYP4f9GP8YSs/IPc=;
-        b=MlUH8kBaFu79dJ7zTA7AxHX5vZnH3atVoFmXTrsQVk0XGmsKLFztoB8RZ+7l9NxADa
-         heVEVjCRrLpA09FB0tMRmlYRxowPetxVox4fUGfZlhrkAWkhm5XbMuQR/wR4mC99k+g9
-         gFlPUjreBiXvEg0CpWWx3HKClpA7t1wc1xde5lfEYfBQGgoSl+5QdqvsXm6bZ/8xqP0t
-         wuw4MIhFh7v1oBZaAATh83lNhwaaRouCuYSFSUOsI89temx6LA2/4iMgieU5TMqAMf9N
-         lRmg4rK+i0Ak753bQsVyCR1z76g1RZK7xAnLuGr5TD/feaWW7SY+keMpaAmcuFQyRJQT
-         AKUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/AF3ziGdsv+yHT1fe3PUelS/2zrWYP4f9GP8YSs/IPc=;
-        b=GENtcOLyOu9m2H9M1TRovl290K/0WFtAhFuDaqyMOlja9KD7e80wVxeySiwagiktA3
-         gc20Ja7hb5pmhFPs7giPP1F1zMUyVcZwiZqISN/qInPz3rXbyLfhGDAAhr2OIfbYaD/u
-         UsKGwqL1Slj/cWA2bGgMhEyKP8moqJqgHcz1fldeTxty0oJmWAT50KYKuJcri4EORtZn
-         E5+vcQ8UHiOEZd04VvTzO0roiodrBDQGu1vvsZZflhfgfOwnRCDjpaacUJUZb/wGp/3K
-         hAmb+cNsn5aSbZh4C7vEdD/n2rJGu/uA6dWuhKzKsx2R2DPvdVlGR1X6ux/qCJshOjKG
-         BdYg==
-X-Gm-Message-State: AOAM533NyosjHjJS+HYl1ExwqpvLW07WCrQ/OewglFRGQwMC4ipVOJZA
-        YeaH6V6KKW88w43AVAqVM7JsM5p2bmY=
-X-Google-Smtp-Source: ABdhPJxamnrbfIgoOPs5700FsQ5inek8s3ZEJ1uxRNAQLfIqnK+Jz1/HzqUtD7rdjPAG/HH75zH4Gg==
-X-Received: by 2002:a1c:5f41:: with SMTP id t62mr7199927wmb.53.1596009241124;
-        Wed, 29 Jul 2020 00:54:01 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id t13sm3207810wru.65.2020.07.29.00.54.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 00:54:00 -0700 (PDT)
-Subject: Re: [PATCH 1/2] soc: mediatek: mtk-infracfg: Fix kerneldoc
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20200729074415.28393-1-krzk@kernel.org>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <92ac7165-765e-da75-4c0b-3b232521b5e9@gmail.com>
-Date:   Wed, 29 Jul 2020 09:53:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 29 Jul 2020 03:55:26 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 402A9C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 00:55:26 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k0gvj-0007OG-1C; Wed, 29 Jul 2020 09:55:15 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k0gvh-00055i-Ur; Wed, 29 Jul 2020 09:55:13 +0200
+Date:   Wed, 29 Jul 2020 09:55:13 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>,
+        Robin Gong <yibin.gong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Adam Ford <aford173@gmail.com>, linux-input@vger.kernel.org,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
+Subject: Re: [PATCH v3 3/3] Input: snvs_pwrkey - only IRQ_HANDLED for our own
+ events
+Message-ID: <20200729075513.ckjnhfv3dxuesvsi@pengutronix.de>
+References: <20200723074314.3304-1-horia.geanta@nxp.com>
+ <20200723074314.3304-4-horia.geanta@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200729074415.28393-1-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200723074314.3304-4-horia.geanta@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:41:32 up 256 days, 23:00, 248 users,  load average: 0.19, 0.11,
+ 0.09
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-
-On 29/07/2020 09:44, Krzysztof Kozlowski wrote:
-> Fix W=1 compile warnings (invalid kerneldoc):
+On 20-07-23 10:43, Horia Geantă wrote:
+> From: André Draszik <git@andred.net>
 > 
->      drivers/soc/mediatek/mtk-infracfg.c:34: warning: Function parameter or member 'infracfg' not described in 'mtk_infracfg_set_bus_protection'
->      drivers/soc/mediatek/mtk-infracfg.c:34: warning: Excess function parameter 'regmap' description in 'mtk_infracfg_set_bus_protection'
+> The snvs_pwrkey shares the SNVS LPSR status register with the snvs_rtc.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> This driver here should only return IRQ_HANDLED if the status register
+> indicates that the event we're handling in the irq handler was genuinely
+> intended for this driver. Otheriwse the interrupt subsystem will
+> assume the interrupt was handled successfully even though it wasn't
+> at all.
 
-Queued for v5.9-next/soc
+After checking the RM and the imx6qdl.dtsi I'm not very sure that this
+is right since the snvs-powerkey has a seperate irq-line. So we can be
+sure that this irq is for us. If this is the case we don't need to check
+the SNVS_LPSR_REG instead we only need to clear it.
 
-Thanks
-Matthias
-
-> ---
->   drivers/soc/mediatek/mtk-infracfg.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-infracfg.c b/drivers/soc/mediatek/mtk-infracfg.c
-> index 341c7ac250e3..4a123796aad3 100644
-> --- a/drivers/soc/mediatek/mtk-infracfg.c
-> +++ b/drivers/soc/mediatek/mtk-infracfg.c
-> @@ -19,7 +19,7 @@
->   
->   /**
->    * mtk_infracfg_set_bus_protection - enable bus protection
-> - * @regmap: The infracfg regmap
-> + * @infracfg: The infracfg regmap
->    * @mask: The mask containing the protection bits to be enabled.
->    * @reg_update: The boolean flag determines to set the protection bits
->    *              by regmap_update_bits with enable register(PROTECTEN) or
-> @@ -50,7 +50,7 @@ int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
->   
->   /**
->    * mtk_infracfg_clear_bus_protection - disable bus protection
-> - * @regmap: The infracfg regmap
-> + * @infracfg: The infracfg regmap
->    * @mask: The mask containing the protection bits to be disabled.
->    * @reg_update: The boolean flag determines to clear the protection bits
->    *              by regmap_update_bits with enable register(PROTECTEN) or
-> 
+Regards,
+  Marco
