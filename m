@@ -4,151 +4,161 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4412075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93F620809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596049018;
-	bh=zKuG9edr9ZuoqV9vdfHR9gScIkImg6Mh4XHfpPxIoRI=;
+	s=default; t=1596049091;
+	bh=Ly9QFQV2PQXXgMS/azzOUT/yG2ADq6EwyCow2scRvBg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=er+xSFDjQdnjkpY06v0YGHoadvMcL3zLV4jQ2SSad3+Ge9eED0nxG0SOIwuDqrsVk
-	 y53Z/AGybzwITupB30cZ+IccnR86UzC6e8OcF1cle1AU6S1Z3j9MVhHTyWd84g5aJE
-	 CnbF/2CIap7Zj20hz6F97LxSfBLzJn/vg6o/PmSM=
+	b=2g9kiBOMJ0Ae3xjDRWyChc8Q/BJoeAAN4xEI+7eyjKkUS3irfPa6wGjkTrrNedlCB
+	 qoQ2h4SPM/dyT4aLMuzRdWhfOaDX2JIcmjryjuwQ4oyvJ2k07a5NAVm/nFbfvVLmJb
+	 IEYpo51EJzo+0THVmWWqJ5uKg9cfbULPOfFTRJPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgG2S45 (ORCPT
+        id S1727098AbgG2S6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:56:57 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37431 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgG2S45 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:56:57 -0400
-Received: by mail-io1-f67.google.com with SMTP id w12so12050716iom.4;
-        Wed, 29 Jul 2020 11:56:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wWYpUB0B5F9DakDE/d7Jt/iFxH1JFsvV3Y7Iu2yZvWw=;
-        b=ot8aRS0MpEOywUs0MODSEAVSQPP8yeUijxbRMDFNASNKi7kwfL5AS/9+g7tKLhIIvV
-         l1YijZ4Ynd5HXInsB0oCM8PHX11GsWWovYigcF6KyXBvBv37FwBg9s6WBgqIaHSPAsZ4
-         AX0ARKGlJ/w3qH0mFwX0Nygr2dN/vVtH4iAYCHbN0Mclgi7hp2odtWhyVsrdl4wRJUsL
-         tg5jb0sqb7obIarT6/lrysXk93F2UIjXb0S/KIQHbi1viZSjtmE7Tgzayq8jeVeAQ3qR
-         hhX90Kne2Xo/znfvgF3Nf2n52mU/cEC6a1VplnYTumtJ+7tNQIhbOmtXPg3czawNRbTe
-         myqg==
-X-Gm-Message-State: AOAM531OKFD9yrHBcl0pKCkt+3cRZQvq2IZ2lGSZSXN8KiSTsQtyeqtf
-        8oUMZQFKPfdPysOTFj0GNQ==
-X-Google-Smtp-Source: ABdhPJy+3LMGUtVhao+r3gcbViMO39JZQ6pzxxMomQHJNwDvtPPaHxlrii3qwNXAfdIXjxfkmPp9Gw==
-X-Received: by 2002:a6b:b211:: with SMTP id b17mr17640659iof.29.1596049016119;
-        Wed, 29 Jul 2020 11:56:56 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u6sm1576835ilk.13.2020.07.29.11.56.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 11:56:55 -0700 (PDT)
-Received: (nullmailer pid 593935 invoked by uid 1000);
-        Wed, 29 Jul 2020 18:56:54 -0000
-Date:   Wed, 29 Jul 2020 12:56:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        amurray@thegoodpenguin.co.uk, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH 1/2] PCI: dwc: Add support to handle prefetchable memory
- separately
-Message-ID: <20200729185654.GA585891@bogus>
-References: <20200602100940.10575-1-vidyas@nvidia.com>
- <20200602100940.10575-2-vidyas@nvidia.com>
+        Wed, 29 Jul 2020 14:58:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726365AbgG2S6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 14:58:10 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0D402075D;
+        Wed, 29 Jul 2020 18:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596049090;
+        bh=Ly9QFQV2PQXXgMS/azzOUT/yG2ADq6EwyCow2scRvBg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2U/DqMj/VatFQrcdaquXiqVEVRllaRSKTZIpjooW3Umxtp7mqsk+A9HGFXYpdErtk
+         XWL+HYrRDXtnSfCE+TnbrPfmai0E2jTledFm0efWbJvQYyhAaOY5AJrvppJRJuScwL
+         9WH4VuoPf+9T2emZgSDaGqb4gCP3r2eo1cXwboas=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 049CB40E69; Wed, 29 Jul 2020 15:58:08 -0300 (-03)
+Date:   Wed, 29 Jul 2020 15:58:07 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 4/5] perf record: Don't clear event's period if set by
+ a term
+Message-ID: <20200729185807.GD433799@kernel.org>
+References: <20200728085734.609930-1-irogers@google.com>
+ <20200728085734.609930-5-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200602100940.10575-2-vidyas@nvidia.com>
+In-Reply-To: <20200728085734.609930-5-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 03:39:39PM +0530, Vidya Sagar wrote:
-> Add required structure members to struct pcie_port to handle prefetchable
-> memory aperture separately from non-prefetchable memory aperture so that
-> any dependency on the order of their appearance in the 'ranges' property
-> of the respective PCIe device tree node can be removed.
+Em Tue, Jul 28, 2020 at 01:57:33AM -0700, Ian Rogers escreveu:
+> If events in a group explicitly set a frequency or period with leader
+> sampling, don't disable the samples on those events.
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Prior to 5.8:
+> perf record -e '{cycles/period=12345000/,instructions/period=6789000/}:S'
+> would clear the attributes then apply the config terms. In commit
+> 5f34278867b7 leader sampling configuration was moved to after applying the
+> config terms, in the example, making the instructions' event have its period
+> cleared.
+> This change makes it so that sampling is only disabled if configuration
+> terms aren't present.
+
+Adrian, can you take a look at this one?
+
+- Arnaldo
+ 
+> Fixes: 5f34278867b7 ("perf evlist: Move leader-sampling configuration")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  .../pci/controller/dwc/pcie-designware-host.c | 26 ++++++++++++-------
->  drivers/pci/controller/dwc/pcie-designware.h  |  4 +++
->  2 files changed, 21 insertions(+), 9 deletions(-)
+>  tools/perf/util/record.c | 28 ++++++++++++++++++++--------
+>  1 file changed, 20 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 42fbfe2a1b8f..6f06d6bd9f00 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -363,13 +363,23 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  			pp->io_base = pci_pio_to_address(pp->io->start);
->  			break;
->  		case IORESOURCE_MEM:
-> -			pp->mem = win->res;
-> -			pp->mem->name = "MEM";
-> -			mem_size = resource_size(pp->mem);
-> -			if (upper_32_bits(mem_size))
-> -				dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
-> -			pp->mem_size = mem_size;
-> -			pp->mem_bus_addr = pp->mem->start - win->offset;
-> +			if (win->res->flags & IORESOURCE_PREFETCH) {
-> +				pp->prefetch = win->res;
-> +				pp->prefetch->name = "PREFETCH";
-> +				pp->prefetch_base = pp->prefetch->start;
-> +				pp->prefetch_size = resource_size(pp->prefetch);
-> +				pp->perfetch_bus_addr = pp->prefetch->start -
-> +							win->offset;
-> +			} else {
-> +				pp->mem = win->res;
-> +				pp->mem->name = "MEM";
-> +				pp->mem_base = pp->mem->start;
-> +				mem_size = resource_size(pp->mem);
-> +				if (upper_32_bits(mem_size))
-> +					dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
-> +				pp->mem_size = mem_size;
-> +				pp->mem_bus_addr = pp->mem->start - win->offset;
-> +			}
->  			break;
->  		case 0:
->  			pp->cfg = win->res;
-> @@ -394,8 +404,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  		}
->  	}
+> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+> index a4cc11592f6b..01d1c6c613f7 100644
+> --- a/tools/perf/util/record.c
+> +++ b/tools/perf/util/record.c
+> @@ -2,6 +2,7 @@
+>  #include "debug.h"
+>  #include "evlist.h"
+>  #include "evsel.h"
+> +#include "evsel_config.h"
+>  #include "parse-events.h"
+>  #include <errno.h>
+>  #include <limits.h>
+> @@ -38,6 +39,9 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
+>  	struct perf_event_attr *attr = &evsel->core.attr;
+>  	struct evsel *leader = evsel->leader;
+>  	struct evsel *read_sampler;
+> +	struct evsel_config_term *term;
+> +	struct list_head *config_terms = &evsel->config_terms;
+> +	int term_types, freq_mask;
 >  
-> -	pp->mem_base = pp->mem->start;
-> -
->  	if (!pp->va_cfg0_base) {
->  		pp->va_cfg0_base = devm_pci_remap_cfgspace(dev,
->  					pp->cfg0_base, pp->cfg0_size);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 656e00f8fbeb..c87c1b2a1177 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -186,9 +186,13 @@ struct pcie_port {
->  	u64			mem_base;
->  	phys_addr_t		mem_bus_addr;
->  	u32			mem_size;
-> +	u64			prefetch_base;
-> +	phys_addr_t		perfetch_bus_addr;
-> +	u64			prefetch_size;
+>  	if (!leader->sample_read)
+>  		return;
+> @@ -47,16 +51,24 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
+>  	if (evsel == read_sampler)
+>  		return;
+>  
+> +	/* Determine the evsel's config term types. */
+> +	term_types = 0;
+> +	list_for_each_entry(term, config_terms, list) {
+> +		term_types |= 1 << term->type;
+> +	}
+>  	/*
+> -	 * Disable sampling for all group members other than the leader in
+> -	 * case the leader 'leads' the sampling, except when the leader is an
+> -	 * AUX area event, in which case the 2nd event in the group is the one
+> -	 * that 'leads' the sampling.
+> +	 * Disable sampling for all group members except those with explicit
+> +	 * config terms or the leader. In the case of an AUX area event, the 2nd
+> +	 * event in the group is the one that 'leads' the sampling.
+>  	 */
+> -	attr->freq           = 0;
+> -	attr->sample_freq    = 0;
+> -	attr->sample_period  = 0;
+> -	attr->write_backward = 0;
+> +	freq_mask = (1 << EVSEL__CONFIG_TERM_FREQ) | (1 << EVSEL__CONFIG_TERM_PERIOD);
+> +	if ((term_types & freq_mask) == 0) {
+> +		attr->freq           = 0;
+> +		attr->sample_freq    = 0;
+> +		attr->sample_period  = 0;
+> +	}
+> +	if ((term_types & (1 << EVSEL__CONFIG_TERM_OVERWRITE)) == 0)
+> +		attr->write_backward = 0;
+>  
+>  	/*
+>  	 * We don't get a sample for slave events, we make them when delivering
+> -- 
+> 2.28.0.163.g6104cc2f0b6-goog
+> 
 
-There's no reason to store these for all eternity as they are used in 
-one place and already stored as resources in bridge->windows.
+-- 
 
-I have a patch series removing most of this that I will post in a few 
-days. There's a WIP branch, pci-dw-config-access, in my kernel.org 
-tree. Mostly you just need the bridge ptr which is isn't currently 
-saved in pcie_port.
-
-Rob
+- Arnaldo
