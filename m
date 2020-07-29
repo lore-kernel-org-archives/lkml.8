@@ -2,118 +2,228 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D964CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8D97208A9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54C720FC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:59:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgG2N6t (ORCPT
+        id S1726913AbgG2N7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:58:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:52160 "EHLO foss.arm.com"
+        Wed, 29 Jul 2020 09:59:54 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:44266 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgG2N6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 09:58:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7721430E;
-        Wed, 29 Jul 2020 06:58:48 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5E4F93F66E;
-        Wed, 29 Jul 2020 06:58:46 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Russell King <linux@armlinux.org.uk>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Quentin Perret <qperret@google.com>
-Subject: [PATCH] arm, arm64: Fix selection of CONFIG_SCHED_THERMAL_PRESSURE
-Date:   Wed, 29 Jul 2020 14:57:18 +0100
-Message-Id: <20200729135718.1871-1-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.27.0
+        id S1726496AbgG2N7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 09:59:54 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id A17DEFB03;
+        Wed, 29 Jul 2020 15:59:51 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id q9qcjMHXwteG; Wed, 29 Jul 2020 15:59:49 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 8633245341; Wed, 29 Jul 2020 15:59:48 +0200 (CEST)
+Date:   Wed, 29 Jul 2020 15:59:48 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        lukas@mntmn.com
+Subject: Re: [PATCH v8 0/5] Add support for iMX8MQ Display Controller
+ Subsystem
+Message-ID: <20200729135948.GB266947@bogon.m.sigxcpu.org>
+References: <20200724090736.12228-1-laurentiu.palcu@oss.nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724090736.12228-1-laurentiu.palcu@oss.nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian reported that the current setup forgoes the Kconfig dependencies and
-results in warnings such as:
+Hi,
+On Fri, Jul 24, 2020 at 12:07:29PM +0300, Laurentiu Palcu wrote:
+> From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> 
+> Hi,
+> 
+> This patchset adds initial DCSS support for iMX8MQ chip. Initial support
+> includes only graphics plane support (no video planes), no HDR10 capabilities,
+> no graphics decompression (only linear, tiled and super-tiled buffers allowed).
+> 
+> Support for the rest of the features will be added incrementally, in subsequent
+> patches.
+> 
+> The patchset was tested with both HDP driver (in the downstream tree) and the upstream
+> MIPI-DSI driver (with a couple of patches on top, to make it work
+> correctly with DCSS).
 
-  WARNING: unmet direct dependencies detected for SCHED_THERMAL_PRESSURE
-    Depends on [n]: SMP [=y] && CPU_FREQ_THERMAL [=n]
-    Selected by [y]:
-    - ARM64 [=y]
+While i could run earlier versions of this  series with NWL I'm seeing
+only a brief image that then turns black (backlight still on) with this current version and
+the board hangs soon after.(for reference using mxsfb works nicely with
+the very same DT on next-20200727). If I do a drm.debug=0x3f i can see
+that display output stops around:
 
-Revert commit
+[   15.394473] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=22, diff=1, hw=0 hw_last=0
+[   15.397575] device: 'input1': device_add
+[   15.444658] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=23, diff=1, hw=0 hw_last=0
+[   15.465946] PM: Adding info for No Bus:input1
+[   15.494842] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=24, diff=1, hw=0 hw_last=0
+[   15.511694] input: gpio-keys as /devices/platform/gpio-keys/input/input1
+[   15.545025] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=25, diff=1, hw=0 hw_last=0
+[   15.557869] device: 'event1': device_add
+[   15.595209] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=26, diff=1, hw=0 hw_last=0
+[   15.605363] PM: Adding info for No Bus:event1
+[   15.645394] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=27, diff=1, hw=0 hw_last=0
+[   19.427039] imx-dcss 32e00000.display-controller: [drm:vblank_disable_fn] disabling vblank on crtc 0
+[   19.436135] device: 'wakeup6': device_add
+[   19.448202] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=28, diff=0, hw=0 hw_last=0
 
-  e17ae7fea871 ("arm, arm64: Select CONFIG_SCHED_THERMAL_PRESSURE")
+(and there's no further logging from drm from there on).
 
-and re-implement it by making the option default to 'y' for arm64 and arm,
-which respects Kconfig dependencies (i.e. will remain 'n' if
-CPU_FREQ_THERMAL=n).
+Would any the above mentioned patches do anything in that area?
 
-Fixes: e17ae7fea871 ("arm, arm64: Select CONFIG_SCHED_THERMAL_PRESSURE")
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
----
- arch/arm/Kconfig   | 1 -
- arch/arm64/Kconfig | 1 -
- init/Kconfig       | 2 ++
- 3 files changed, 2 insertions(+), 2 deletions(-)
+Cheers,
+ -- Guido
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 6cd0f9f086f6..809e8047d669 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -47,7 +47,6 @@ config ARM
- 	select EDAC_ATOMIC_SCRUB
- 	select GENERIC_ALLOCATOR
- 	select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
--	select SCHED_THERMAL_PRESSURE if ARM_CPU_TOPOLOGY
- 	select GENERIC_ATOMIC64 if CPU_V7M || CPU_V6 || !CPU_32v6K || !AEABI
- 	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
- 	select GENERIC_CPU_AUTOPROBE
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 2d4abbc9f8d0..baffe8b66da2 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -192,7 +192,6 @@ config ARM64
- 	select PCI_SYSCALL if PCI
- 	select POWER_RESET
- 	select POWER_SUPPLY
--	select SCHED_THERMAL_PRESSURE
- 	select SPARSE_IRQ
- 	select SWIOTLB
- 	select SYSCTL_EXCEPTION_TRACE
-diff --git a/init/Kconfig b/init/Kconfig
-index 37b089f87804..f2244892d7a8 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -493,6 +493,8 @@ config HAVE_SCHED_AVG_IRQ
- 
- config SCHED_THERMAL_PRESSURE
- 	bool
-+	default y if ARM && ARM_CPU_TOPOLOGY
-+	default y if ARM64
- 	depends on SMP
- 	depends on CPU_FREQ_THERMAL
- 	help
--- 
-2.27.0
-
+> 
+> Thanks,
+> Laurentiu
+> 
+> Changes in v8:
+>  * Removed 'select RESET_CONTROLLER" from Kconfig as Philipp pointed
+>    out. SRC is not used in DCSS driver;
+>  * Nothing else changed;
+> 
+> Changes in v7:
+>  * Added a patch to initialize the connector using the drm_bridge_connector
+>    API as Sam suggested. Tested it using NWL_DSI and ADV7535 with
+>    Guido's patch [1] applied and one fix for ADV [2]. Also, some extra
+>    patches for ADV and NWL were needed, from our downstream tree, which
+>    will be upstreamed soon by their author;
+>  * Rest of the patches are untouched;
+> 
+> [1] https://lists.freedesktop.org/archives/dri-devel/2020-July/273025.html
+> [2] https://lists.freedesktop.org/archives/dri-devel/2020-July/273132.html
+> 
+> Changes in v6:
+>  * Addressed Rob's comment and added "additionalProperties: false" at
+>    the end of the bindings' properties. However, this change surfaced
+>    an issue with the assigned-clock* properties not being documented in
+>    the properties section. Added the descriptions and the bindings patch
+>    will need another review;
+>  * Added an entry for DCSS driver in the MAINTAINERS file;
+>  * Removed the component framework patch altogether;
+> 
+> Changes in v5:
+>  * Rebased to latest;
+>  * Took out component framework support and made it a separate patch so
+>    that people can still test with HDP driver, which makes use of it.
+>    But the idea is to get rid of it once HDP driver's next versions
+>    will remove component framework as well;
+>  * Slight improvement to modesetting: avoid cutting off the pixel clock
+>    if the new mode and the old one are equal. Also, in this case, is
+>    not necessary to wait for DTG to shut off. This would allow to switch
+>    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
+>    from DCSS point of view);
+>  * Do not fire off CTXLD when going to suspend, unless it still has
+>    entries that need to be committed to DCSS;
+>  * Addressed Rob's comments on bindings;
+> 
+> Changes in v4:
+>  * Addressed Lucas and Philipp's comments:
+>    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
+>    * Removed usage of devm_ functions since I'm already doing all the
+>      clean-up in the submodules_deinit();
+>    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
+>    * Removed en_completion variable from dcss_crtc since this was
+>      introduced mainly to avoid vblank timeout warnings which were fixed
+>      by arming the vblank event in flush() instead of begin();
+>    * Removed clks_on and irq_enabled flags since all the calls to
+>      enabling/disabling clocks and interrupts were balanced;
+>    * Removed the custom atomic_commit callback and used the DRM core
+>      helper and, in the process, got rid of a workqueue that wasn't
+>      necessary anymore;
+>    * Fixed some minor DT binding issues flagged by Philipp;
+>    * Some other minor changes suggested by Lucas;
+>  * Removed YUV formats from the supported formats as these cannot work
+>    without the HDR10 module CSCs and LUTs. Will add them back when I
+>    will add support for video planes;
+> 
+> Changes in v3:
+>  * rebased to latest linux-next and made it compile as drmP.h was
+>    removed;
+>  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
+>  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
+>  * fixed a a spurious hang reported by Lukas Hartmann and encountered
+>    by me several times;
+>  * mask DPR and DTG interrupts by default, as they may come enabled from
+>    U-boot;
+> 
+> Changes in v2:
+>  * Removed '0x' in node's unit-address both in DT and yaml;
+>  * Made the address region size lowercase, to be consistent;
+>  * Removed some left-over references to P010;
+>  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
+>    issues reported by kbuild for other architectures;
+> 
+> 
+> Laurentiu Palcu (5):
+>   drm/imx: compile imx directory by default
+>   drm/imx: Add initial support for DCSS on iMX8MQ
+>   drm/imx/dcss: use drm_bridge_connector API
+>   MAINTAINERS: Add entry for i.MX 8MQ DCSS driver
+>   dt-bindings: display: imx: add bindings for DCSS
+> 
+>  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 104 +++
+>  MAINTAINERS                                   |   8 +
+>  drivers/gpu/drm/Makefile                      |   2 +-
+>  drivers/gpu/drm/imx/Kconfig                   |   2 +
+>  drivers/gpu/drm/imx/Makefile                  |   1 +
+>  drivers/gpu/drm/imx/dcss/Kconfig              |   8 +
+>  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
+>  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
+>  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
+>  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 325 +++++++
+>  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
+>  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 138 +++
+>  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 198 +++++
+>  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  44 +
+>  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
+>  20 files changed, 4107 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+>  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
+>  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
+> 
+> -- 
+> 2.23.0
+> 
