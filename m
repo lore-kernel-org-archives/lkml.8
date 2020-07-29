@@ -2,123 +2,165 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A031C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBAAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E340822BEA
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:13:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596039205;
-	bh=Dr2f1rnIAwAbgJYQlSq8HsSXozp4VHgRlAMcB3TsJwI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rGW84Nr89Q2us0FymFPue5kEkCxzpc5LZeWOa/wmG2urPtRd8m5O8TYtjuMMaTVuu
-	 Uc3jMbM7VjyJnCJkXa1Rx+gEcEY4XZ3HMjynlnNuLd0ozBNk7s3v4l8t73IE+zEIhb
-	 +j595CXLbSsCfNUsXWQvzutcc60Xe/gNIqFy8Hgg=
+	by mail.kernel.org (Postfix) with ESMTP id 6C55D20FC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 16:14:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MXmCIhSd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgG2QNX (ORCPT
+        id S1726918AbgG2QOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 12:13:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726341AbgG2QNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 12:13:23 -0400
-Received: from linux-8ccs (p57a236d4.dip0.t-ipconnect.de [87.162.54.212])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 29 Jul 2020 12:14:41 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36085 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726842AbgG2QOl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 12:14:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596039279;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=3k92cWppZywz4Cm1W2kY4fFAjV7efmP+gBOMZ9g7ffg=;
+        b=MXmCIhSdthcBdTz0dq5LEMKaVPxj99WjZtReN8XmkGH8W5bR1+FFjgqevWDBIpQRVk9+1e
+        3LL0uZIZHZn50oT7Rejun89yNZFK7k4MTzQcIr0wyla3EyvjVYG9ZB7aYc2h5eKnP2BJxd
+        51HfXRL26fKbQquBMPQPVEhlqnhWWsw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-267-cD-5U2aqNdq6c_jToWzBdQ-1; Wed, 29 Jul 2020 12:14:31 -0400
+X-MC-Unique: cD-5U2aqNdq6c_jToWzBdQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5FA920FC3;
-        Wed, 29 Jul 2020 16:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596039202;
-        bh=Dr2f1rnIAwAbgJYQlSq8HsSXozp4VHgRlAMcB3TsJwI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VbFyGvQaGLh/SJN5nvdnlpgMswUCpssnC9Nl7UBme2OYXtALrCxRXizttfSXu0hB/
-         o/qDT0CWgK2s5/EKiaxIsxqNpPFYUsgZb1dMsgY4B4uivr3KQfMr54qT33UYvdO/uH
-         lRY6C1kcYcdHG4PvvkTlrguh+GS7BLCg6RendzIw=
-Date:   Wed, 29 Jul 2020 18:13:18 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH 2/7] modules: mark find_symbol static
-Message-ID: <20200729161318.GA30898@linux-8ccs>
-References: <20200729062711.13016-1-hch@lst.de>
- <20200729062711.13016-3-hch@lst.de>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 342DA1005504;
+        Wed, 29 Jul 2020 16:14:29 +0000 (UTC)
+Received: from [10.36.112.120] (ovpn-112-120.ams2.redhat.com [10.36.112.120])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AA2B95DE47;
+        Wed, 29 Jul 2020 16:14:23 +0000 (UTC)
+Subject: Re: mmotm 2020-07-27-18-18 uploaded (mm/page_alloc.c)
+From:   David Hildenbrand <david@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Randy Dunlap <rdunlap@infradead.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, Jason Wang <jasowang@redhat.com>
+References: <20200728011914.S-8vAYUK0%akpm@linux-foundation.org>
+ <ae87385b-f830-dbdf-ebc7-1afb82a7fed0@infradead.org>
+ <20200728145553.2a69fa2080de01922b3a74e0@linux-foundation.org>
+ <20200729082053.6c2fb654@canb.auug.org.au>
+ <20200728153143.c94d5af061b20db609511bf3@linux-foundation.org>
+ <20200729101807-mutt-send-email-mst@kernel.org>
+ <e7173f3b-6e30-03ce-74ef-291236917da3@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <8271d9b6-431a-c8da-8591-4023ab6c8963@redhat.com>
+Date:   Wed, 29 Jul 2020 18:14:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200729062711.13016-3-hch@lst.de>
-X-OS:   Linux linux-8ccs 5.5.0-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e7173f3b-6e30-03ce-74ef-291236917da3@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Christoph Hellwig [29/07/20 08:27 +0200]:
->find_symbol is only used in module.c.
->
->Signed-off-by: Christoph Hellwig <hch@lst.de>
+On 29.07.20 16:38, David Hildenbrand wrote:
+> On 29.07.20 16:18, Michael S. Tsirkin wrote:
+>> On Tue, Jul 28, 2020 at 03:31:43PM -0700, Andrew Morton wrote:
+>>> On Wed, 29 Jul 2020 08:20:53 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>>
+>>>> Hi Andrew,
+>>>>
+>>>> On Tue, 28 Jul 2020 14:55:53 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
+>>>>> config CONTIG_ALLOC
+>>>>>         def_bool (MEMORY_ISOLATION && COMPACTION) || CMA
+>>>>>
+>>>>> says this is an improper combination.  And `make oldconfig' fixes it up.
+>>>>>
+>>>>> What's happening here?
+>>>>
+>>>> CONFIG_VIRTIO_MEM selects CONFIG_CONTIG_ALLOC ...
+>>>
+>>> Argh, select strikes again.
+>>>
+>>> So I guess VIRTIO_MEM should also select COMPACTION?
+>>
+>> +Cc the maintainer.
+>>
+> 
+> We had select CONFIG_CONTIG_ALLOC before and that seemed to be wrong. I
+> was told select might be the wrong approach.
+> 
+> We want memory isolation and contig_alloc with virtio-mem (which depends
+> on memory hot(un)plug). What would be the right way to achieve this?
+> 
 
-CCing the livepatching ML, as this may or may not impact its users.
+Okay, I think I am confused. I thought we had that already fixed. @mst
+what happened to
 
-AFAIK, the out-of-tree kpatch module had used find_symbol() in the
-past, I am not sure what its current status is. I suspect all of its
-functionality has been migrated to upstream livepatch already.
+https://lkml.kernel.org/r/d03c88ea-200d-54ab-d7f3-f3e5b7a0a9dd@redhat.com
 
->---
-> include/linux/module.h | 11 -----------
-> kernel/module.c        |  3 +--
-> 2 files changed, 1 insertion(+), 13 deletions(-)
->
->diff --git a/include/linux/module.h b/include/linux/module.h
->index f1fdbeef2153a8..90bdc362be3681 100644
->--- a/include/linux/module.h
->+++ b/include/linux/module.h
->@@ -590,17 +590,6 @@ struct symsearch {
-> 	bool unused;
-> };
->
->-/*
->- * Search for an exported symbol by name.
->- *
->- * Must be called with module_mutex held or preemption disabled.
->- */
->-const struct kernel_symbol *find_symbol(const char *name,
->-					struct module **owner,
->-					const s32 **crc,
->-					bool gplok,
->-					bool warn);
->-
-> /*
->  * Walk the exported symbol table
->  *
->diff --git a/kernel/module.c b/kernel/module.c
->index 17d64dae756c80..84da96a6d8241c 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -585,7 +585,7 @@ static bool find_exported_symbol_in_section(const struct symsearch *syms,
->
-> /* Find an exported symbol and return it, along with, (optional) crc and
->  * (optional) module which owns it.  Needs preempt disabled or module_mutex. */
->-const struct kernel_symbol *find_symbol(const char *name,
->+static const struct kernel_symbol *find_symbol(const char *name,
-> 					struct module **owner,
-> 					const s32 **crc,
-> 					bool gplok,
->@@ -608,7 +608,6 @@ const struct kernel_symbol *find_symbol(const char *name,
-> 	pr_debug("Failed to find symbol %s\n", name);
-> 	return NULL;
-> }
->-EXPORT_SYMBOL_GPL(find_symbol);
->
-> /*
->  * Search for module by name: must hold module_mutex (or preempt disabled
->-- 
->2.27.0
->
+That patch is almost a month old, can you pick it, I already acked it.
+
+-- 
+Thanks,
+
+David / dhildenb
+
