@@ -2,130 +2,112 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF76C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B074C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4381D2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:42:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oJJX9Bga"
+	by mail.kernel.org (Postfix) with ESMTP id 563AF2083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:42:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596026553;
+	bh=mlZ/EsaMb/ND17rYj369D7zDyCStn7kc/8QnXsr1+ks=;
+	h=Subject:To:References:Cc:From:Date:In-Reply-To:List-ID:From;
+	b=yHGQwLm132nyWu54oSZq/TwUFpT9oFcQE5COHXn0dfXpuv8TpvmF7wsEb01+kw6bb
+	 sENv3aSRjoRkt6sFSV9Jzo1FvorQ5ExGcFfbwnM2yRpaQEuoG3Q5mMlyG163iNC6L0
+	 tf1i0Qxd3eSdZW35SzWD0THQaSwAMj0mYCaWqxig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgG2MmO (ORCPT
+        id S1726819AbgG2Mmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:42:14 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39308 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgG2MmN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:42:13 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06TCWqkK187880;
-        Wed, 29 Jul 2020 12:42:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id; s=corp-2020-01-29;
- bh=6Ty70P6NDFFXbdmIqQczjAdFy4h294/O1eoC6bSM5aI=;
- b=oJJX9BgaH/8/U+SKDvAZjnzCGP0pEziBN2nLs19NW7bnxUj/8Efu0wrF86PfWh7TU9lA
- bT09iQHT+Zqj7LZGGhV6nPro5QLNRu1fePDvGk2udk0JjplYzO8eSKXiZbOSX8Id/8y9
- og1WEkIH/wkaqjr31ESn2+AJ6wAbisdXPxH2MiVZa2GicaXCTcX6S27u7zMyDXTMMqUq
- BFmwBS/Ygd+jol8o6ctgIaHZBXzHtXBG9C5sAcPVwKY7IPKt0VMUzI/2V6/rrYYsJ+lz
- 5OKMVGEnG4zbReLp4GB6J+8qUMLqfwXWTt5rrirmtmMSFohqOD7uQQGne1X41eFodmao sw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 32hu1jdbt9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Jul 2020 12:42:04 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06TCWlsu073432;
-        Wed, 29 Jul 2020 12:40:04 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 32hu5vpq4d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jul 2020 12:40:03 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06TCe299021178;
-        Wed, 29 Jul 2020 12:40:02 GMT
-Received: from dhcp-10-152-34-21.usdhcp.oraclecorp.com.com (/10.152.34.21)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 Jul 2020 05:40:02 -0700
-From:   George Kennedy <george.kennedy@oracle.com>
-To:     george.kennedy@oracle.com, gregkh@linuxfoundation.org,
-        jslaby@suse.com, ebiggers@google.com, linux-kernel@vger.kernel.org,
-        dan.carpenter@oracle.com, dhaval.giani@oracle.com
-Subject: [PATCH 1/1] vt_ioctl: prevent VT_RESIZEX font height change from causing potential out-of-bounds access
-Date:   Wed, 29 Jul 2020 08:39:41 -0400
-Message-Id: <1596026381-5013-1-git-send-email-george.kennedy@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9696 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
- mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007290082
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9696 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
- malwarescore=0 spamscore=0 suspectscore=4 bulkscore=0 priorityscore=1501
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007290082
+        Wed, 29 Jul 2020 08:42:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbgG2Mmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 08:42:31 -0400
+Received: from [192.168.0.108] (unknown [49.65.247.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D2142083B;
+        Wed, 29 Jul 2020 12:42:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596026551;
+        bh=mlZ/EsaMb/ND17rYj369D7zDyCStn7kc/8QnXsr1+ks=;
+        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
+        b=si9k9B1A5fSTY0airfSOHiXA74mNbarCYSzoFBGKhbT3Zt1iYPV0PvKsIYd6nfZja
+         xxoDG+wWK/5289wsgOpBuhPGjKRMeLE95J80+c0eZnBZiRBLB1KqwawcAV+sLtRxb0
+         9gNR61RG39J1bpB63DDA7lPsipwIkQX7qEGXXoAw=
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix deadlock between quota writes and
+ checkpoint
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+References: <20200729070244.584518-1-jaegeuk@kernel.org>
+Cc:     Daeho Jeong <daehojeong@google.com>
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <054f161c-05db-73b7-3d83-be7addcd6015@kernel.org>
+Date:   Wed, 29 Jul 2020 20:42:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200729070244.584518-1-jaegeuk@kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a VT_RESIZEX check to ensure that changing the font height will not
-cause a potential out-of-bounds access. The candidate font height contained
-in "v_clin", though below the max, could still result in accesses beyond
-the allocated font data size.
+On 2020-7-29 15:02, Jaegeuk Kim wrote:
+> f2fs_write_data_pages(quota_mapping)
+>  __f2fs_write_data_pages             f2fs_write_checkpoint
+>   * blk_start_plug(&plug);
+>   * add bio in write_io[DATA]
+>                                       - block_operations
+>                                       - skip syncing quota by
+>                                                 >DEFAULT_RETRY_QUOTA_FLUSH_COUNT
+>                                       - down_write(&sbi->node_write);
+>   - f2fs_write_single_data_page
 
-Signed-off-by: George Kennedy <george.kennedy@oracle.com>
-Reported-by: syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
----
- drivers/tty/vt/vt_ioctl.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+After commit 79963d967b49 ("f2fs: shrink node_write lock coverage"),
+node_write lock was moved to f2fs_write_single_data_page() and
+f2fs_write_compressed_pages().
 
-diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
-index daf61c2..6185f1a 100644
---- a/drivers/tty/vt/vt_ioctl.c
-+++ b/drivers/tty/vt/vt_ioctl.c
-@@ -342,6 +342,9 @@ static void vt_disallocate_all(void)
- 	}
- }
- 
-+/* from fbcon.c */
-+#define FNTSIZE(fd) (((int *)(fd))[-2])
-+#define FNTCHARCNT(fd) (((int *)(fd))[-3])
- 
- /*
-  * We handle the console-specific ioctl's here.  We allow the
-@@ -895,8 +898,23 @@ int vt_ioctl(struct tty_struct *tty,
- 			if (vcp) {
- 				if (v.v_vlin)
- 					vcp->vc_scan_lines = v.v_vlin;
--				if (v.v_clin)
-+				if (v.v_clin) {
-+					int width, pitch, size;
-+
-+					width = (vcp->vc_font.width > 8) ? 8 : vcp->vc_font.width;
-+					pitch = (width + 7) >> 3;
-+
-+					pitch = (pitch) ? pitch : 1;
-+
-+					/* font size = height * pitch * charcount */
-+					size = v.v_clin * pitch * FNTCHARCNT(vcp->vc_font.data);
-+
-+					if (size > FNTSIZE(vcp->vc_font.data)) {
-+						console_unlock();
-+						return -EINVAL;
-+					}
- 					vcp->vc_font.height = v.v_clin;
-+				}
- 				vcp->vc_resize_user = 1;
- 				vc_resize(vcp, v.v_cols, v.v_rows);
- 			}
--- 
-1.8.3.1
+So it needs to update the callstack.
 
+- down_write(node_write)
+
+Otherwise it looks good to me.
+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+
+Thanks,
+
+>     - f2fs_do_write_data_page
+>       - f2fs_outplace_write_data
+>         - do_write_page
+>            - f2fs_allocate_data_block
+>             - down_write(node_write)
+>                                       - f2fs_wait_on_all_pages(F2FS_WB_CP_DATA);
+>
+> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> ---
+>  fs/f2fs/checkpoint.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> index 8c782d3f324f0..99c8061da55b9 100644
+> --- a/fs/f2fs/checkpoint.c
+> +++ b/fs/f2fs/checkpoint.c
+> @@ -1269,6 +1269,8 @@ void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
+>  		if (type == F2FS_DIRTY_META)
+>  			f2fs_sync_meta_pages(sbi, META, LONG_MAX,
+>  							FS_CP_META_IO);
+> +		else if (type == F2FS_WB_CP_DATA)
+> +			f2fs_submit_merged_write(sbi, DATA);
+>  		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
+>  	}
+>  	finish_wait(&sbi->cp_wait, &wait);
+>
