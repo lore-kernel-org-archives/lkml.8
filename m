@@ -2,98 +2,152 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3584C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 834BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A63802068F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67EA62075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:29:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="vbKl+EIC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WnCObVLf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgG2T2v (ORCPT
+        id S1726832AbgG2T3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 15:28:51 -0400
-Received: from vern.gendns.com ([98.142.107.122]:38636 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726365AbgG2T2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 15:28:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5SF0hS7MkjQG4xi6yfTw/jT+y1owMkznxqXdW5rNR2k=; b=vbKl+EIC0kzrXinDsh/59cXAl4
-        YimkBAX2zxmID/NFwzUOLOxnaNLnLIA9z2jcu0tZJl30l0SHZ3J2gZVK9fKFG0VHoFf7k95UCf8FF
-        1gESSNMTIrDicWkGdc3CJpfc6siwX6V+hBZlbOC74qwiNoMiDrD0dj9AIBgOvQ7KCFrP6GNe35dxR
-        yDGfkFW5KJwRFhKJPIO4qSy421F7quO45Wfqpxo25tU0FZxAKYZEoHa4ghbZT5KyF+WbGzhXyjjRt
-        ZNKcWWEtNSP96nRv/LESXfrJ1pnuY5uX4Z6jlw/RNtmQ4hbVTT4uvH9w/HBmK6gX5h+1sCj5vaDwU
-        chZQfrZA==;
-Received: from [2600:1700:4830:165f::19e] (port=43762)
-        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <david@lechnology.com>)
-        id 1k0rkq-0004vP-Os; Wed, 29 Jul 2020 15:28:44 -0400
-Subject: Re: [PATCH v4 5/5] irqchip/irq-pruss-intc: Add support for ICSSG INTC
- on K3 SoCs
-To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
-        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        s-anna@ti.com
-Cc:     robh+dt@kernel.org, lee.jones@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        wmills@ti.com, praneeth@ti.com
-References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1595927918-19845-6-git-send-email-grzegorz.jaszczyk@linaro.org>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <015909fa-794c-c938-d944-897985475d20@lechnology.com>
-Date:   Wed, 29 Jul 2020 14:28:42 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 15:29:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbgG2T3R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 15:29:17 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA4E1C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 12:29:16 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id f9so2619297pju.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 12:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aZ7p8EHZoo9qycQIMdaotqoaYgynEROIC8oqOG/GaZw=;
+        b=WnCObVLfySyy64FqXSDnFEPTLWePeLYaV3rMTrGP8oNEtPK8uVOFrqq+JZZr6vFcCj
+         J0QfWpvXvSxxSqnBFTV2kwnIWZMMP/KOs67z18Rg0Cl4VOC2599SlvC4ge1v6lSfRyM8
+         JfEK0x4VAMrf3fdLv8kO7hey4mAP0OrjR/h4o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aZ7p8EHZoo9qycQIMdaotqoaYgynEROIC8oqOG/GaZw=;
+        b=gq78noNlivQqeBA54z3FRGIEtLpeT17Qft4LE2lBCVvDwWalXOOx6WbMkOl5/30QXn
+         lkVxtflnIRge6Dq2ziUqvT0RYi6yAbRGUnFXmU/e7Y0HtEIDIE0YreSVwAL0ExgUHjmy
+         +AMF9GTUKF1fhyPB8XmEAqzEZI8dW3vqWJk0SdOSFGvy6qZmDFpJ9XI93uFPJl/L8pip
+         GdPISFLDSzzDLXhxlTgBNxdOR5aJXrw+ABK/1RUfrmOLVqPCYvgPptgdD8v/ZNJ7oUsO
+         Co7/uMbOktrca+GCe2BgSW3MZKcx3+Tc8tMBOrGveU8lRoOLBpEbmEHNSrSFckoaNKlw
+         FhXw==
+X-Gm-Message-State: AOAM531ANvJrmJI60jI4BoS3NlEscTpf7DbxwJXBTNjr61GsQhi8ev3X
+        wozCXKps2NG591dQQZC4Jqx/aA==
+X-Google-Smtp-Source: ABdhPJzMm2ohUDy3567nRC6m9AWAnaFLKW9xzNh1RJB/hsAX7IuSLOHL/1u0Hu1YWe6v9RMCQABQEA==
+X-Received: by 2002:a17:90a:8904:: with SMTP id u4mr21221pjn.87.1596050956268;
+        Wed, 29 Jul 2020 12:29:16 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y19sm3178918pfn.77.2020.07.29.12.29.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 12:29:15 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 12:29:14 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     peterz@infradead.org
+Cc:     David Howells <dhowells@redhat.com>,
+        Xiaoming Ni <nixiaoming@huawei.com>,
+        David Windsor <dwindsor@gmail.com>,
+        Hans Liljestrand <ishkamiel@gmail.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Paul Moore <paul@paul-moore.com>, edumazet@google.com,
+        paulmck@kernel.org, shakeelb@google.com,
+        James Morris <jamorris@linux.microsoft.com>,
+        alex.huangjianhui@huawei.com, dylix.dailei@huawei.com,
+        chenzefeng2@huawei.com, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>
+Subject: Re: [RFC][PATCH] locking/refcount: Provide __refcount API to obtain
+ the old value
+Message-ID: <202007291228.5DFF9315@keescook>
+References: <20200721195132.GJ10769@hirez.programming.kicks-ass.net>
+ <202006142054.C00B3E9C9@keescook>
+ <20200612183450.4189588-1-keescook@chromium.org>
+ <7be4d56b-0406-099b-e505-02e074c5173e@huawei.com>
+ <544539.1595328664@warthog.procyon.org.uk>
+ <202007211144.A68C31D@keescook>
+ <3211866.1595933798@warthog.procyon.org.uk>
+ <20200729111120.GA2638@hirez.programming.kicks-ass.net>
+ <20200729113731.GA2678@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <1595927918-19845-6-git-send-email-grzegorz.jaszczyk@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729113731.GA2678@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/20 4:18 AM, Grzegorz Jaszczyk wrote:
-> From: Suman Anna <s-anna@ti.com>
+On Wed, Jul 29, 2020 at 01:37:31PM +0200, peterz@infradead.org wrote:
+> On Wed, Jul 29, 2020 at 01:11:20PM +0200, peterz@infradead.org wrote:
 > 
-> The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS IP,
-> commonly called ICSSG. The PRUSS INTC present within the ICSSG supports
-> more System Events (160 vs 64), more Interrupt Channels and Host Interrupts
-> (20 vs 10) compared to the previous generation PRUSS INTC instances. The
-> first 2 and the last 10 of these host interrupt lines are used by the
-> PRU and other auxiliary cores and sub-modules within the ICSSG, with 8
-> host interrupts connected to MPU. The host interrupts 5, 6, 7 are also
-> connected to the other ICSSG instances within the SoC and can be
-> partitioned as per system integration through the board dts files.
+> > Subject: locking/refcount: Provide __refcount API to obtain the old value
+> > From: Peter Zijlstra <peterz@infradead.org>
+> > Date: Wed Jul 29 13:00:57 CEST 2020
+> > 
+> > David requested means to obtain the old/previous value from the
+> > refcount API for tracing purposes.
+> > 
+> > Duplicate (most of) the API as __refcount*() with an additional
+> > 'int *' argument into which, if !NULL, the old value will be stored.
+> > 
+> > Requested-by: David Howells <dhowells@redhat.com>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> >  include/linux/refcount.h |   65 +++++++++++++++++++++++++++++++++++++++++------
+> >  1 file changed, 57 insertions(+), 8 deletions(-)
+> > 
+> > --- a/include/linux/refcount.h
+> > +++ b/include/linux/refcount.h
+> > @@ -165,7 +165,7 @@ static inline unsigned int refcount_read
+> >   *
+> >   * Return: false if the passed refcount is 0, true otherwise
+> >   */
+> > -static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
+> > +static inline __must_check bool __refcount_add_not_zero(int i, refcount_t *r, int *oldp)
+> >  {
+> >  	int old = refcount_read(r);
+> >  
+> > @@ -174,12 +174,20 @@ static inline __must_check bool refcount
+> >  			break;
+> >  	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &old, old + i));
+> >  
+> > +	if (oldp)
+> > +		*oldp = old;
+> > +
+> >  	if (unlikely(old < 0 || old + i < 0))
+> >  		refcount_warn_saturate(r, REFCOUNT_ADD_NOT_ZERO_OVF);
+> >  
+> >  	return old;
+> >  }
+> >  
+> > +static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
+> > +{
+> > +	return __refcount_add_not_zero(i, r, NULL);
+> > +}
 > 
-> Enhance the PRUSS INTC driver to add support for this ICSSG INTC
-> instance.
+> so, I could also emulate C++'s
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-> ---
+> bool refcount_add_not_zero(int i, refcount_t *r, int *oldp = NULL)
+> 
+> style by going to town on this with a bunch of CPP magic, but I don't
+> think that'll actually make things clearer.
 
-There is not much left in this patch. Might as well squash this into
-"irqchip/irq-pruss-intc: Add a PRUSS irqchip driver for PRUSS interrupts".
+Erg. No, I like the __-version better -- it looks more like other kernel
+APIs.
+
+-- 
+Kees Cook
