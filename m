@@ -2,121 +2,127 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9629DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC3EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73F3C2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B732074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 23:42:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bb9N3Cc1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hw5bzSCG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbgG2Xlv (ORCPT
+        id S1728109AbgG2XmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 19:41:51 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40904 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbgG2Xlv (ORCPT
+        Wed, 29 Jul 2020 19:42:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728057AbgG2XmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 19:41:51 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06TNfln7011481;
-        Wed, 29 Jul 2020 18:41:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596066107;
-        bh=mKQILzQaWWB+D7WiScwwL5rhE5YnH3vAA0/W5ZSEf1E=;
-        h=From:To:CC:Subject:Date;
-        b=Bb9N3Cc10xLHpFsFprsrnS59aESVCx1AiFqux3hyhdU4khkddrhN0i/UDI6NFgobv
-         YoRC2k37Q7YjTJfj9jcqT+G+7KlM8n5c/mlKi0fxcrFGR71/OTMJP1mdpILAMMnqNu
-         8k6yQawC4s2O+SAfVBvFG3uxGNBjtx83qMiv4OtI=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06TNflW6123165
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Jul 2020 18:41:47 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
- Jul 2020 18:41:47 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 29 Jul 2020 18:41:47 -0500
-Received: from a0230074-Latitude-E7470.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06TNfaIF119367;
-        Wed, 29 Jul 2020 18:41:39 -0500
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>,
-        <faiz_abbas@ti.com>
-Subject: [PATCH] mmc: sdhci_am654: Add workaround for card detect debounce timer
-Date:   Thu, 30 Jul 2020 05:11:30 +0530
-Message-ID: <20200729234130.25056-1-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 29 Jul 2020 19:42:17 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F2BBC061794;
+        Wed, 29 Jul 2020 16:42:17 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id q6so26913814ljp.4;
+        Wed, 29 Jul 2020 16:42:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cL2JbRcE84h2qOJ9vLmukrsnsm1WHbQr6e0UJNvxVQ8=;
+        b=Hw5bzSCGuATwPt9i7H48mIAiyWGoJbDEZaqHcG2vxIF4HpH7FXB8gDRaT8JQpYmki1
+         tBNoT4uUTteMVlP7jJGrF8i2Bj9Zz57K1BVrMZP6IQK2k2CjKGtOLmzFps3z+Xp1FTkL
+         c1skc6+4LaTU6b2VquBJJl201uG7AK3XXzt2X115UlqZTmssD6RyQqxipva5PZ9y0vXE
+         A9/CDFUJ07ys1JzXXgys1RZH+ox6KNfo1O9cfiCUV225ikSNUWn3lb/cbHcv9t3n3j/2
+         VtmXzcqYd1MrnCTrsLHRkCxFy9G60Ec84jm2KYXR26ZARSf8qANsy8Rvi96A163OmM6E
+         WrCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cL2JbRcE84h2qOJ9vLmukrsnsm1WHbQr6e0UJNvxVQ8=;
+        b=s6P6T4Lz0oslOueSewQUP8OSZ2p86g4hQweo33srR9VqeQCv5USqDn2ZAu7zF1dh2d
+         x6rDXP7PK1rutWs7hIOdl8hV/z3v/i6DXK8esJnuJt4pK7ChWrOTWdN2HFgtBJ15LhSc
+         AapVW8x8bGAsr4NVVQBSzF3NA2rVN6oWiYdOpHu7Y3e0ZZYHKkn+wjeqKlpEMVEri2vJ
+         889Aeb39AOQ9uCr9SjUZk2C35b/JBLN1p/KKaNYRkbOJw1sT6+OItV/GpHO+3k0KhbZC
+         sLoFwxwohGAQIXXqeuBZV/V9mPVzb32zCn9Zu/O5O0a78IXbmUSGP/8wJvR8uk7eg5Zw
+         rHqg==
+X-Gm-Message-State: AOAM5301gdoLbq0Wl617/JhXPvwUHWrCpizrqZGWvdfeQPo8woaWf/Av
+        H5AD39hoDAs68YfXyhJY9DVaVoSh
+X-Google-Smtp-Source: ABdhPJyTScdeMMtRUvJkfnoJ7SDC2kYuGF7oePiRrOQNL7i3VhpW7YvR0Mn+59qMcpvQAA94eAT7KQ==
+X-Received: by 2002:a2e:9d53:: with SMTP id y19mr144090ljj.2.1596066135805;
+        Wed, 29 Jul 2020 16:42:15 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
+        by smtp.googlemail.com with ESMTPSA id b18sm934122lfp.36.2020.07.29.16.42.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 16:42:15 -0700 (PDT)
+Subject: Re: [RFC PATCH v5 12/14] gpu: host1x: mipi: Keep MIPI clock enabled
+ till calibration is done
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
+ <1595883452-17343-13-git-send-email-skomatineni@nvidia.com>
+ <b21e3227-d0d8-5b4a-ae69-aa29551a22c3@gmail.com>
+ <69903c67-8e5f-11c2-45ec-c76b97634aba@nvidia.com>
+ <d291d306-55d4-2264-dc05-0e47f0dfef20@gmail.com>
+ <b5fcc292-8ce3-2833-491f-5aefbe0196eb@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <48977b6b-ef7e-1bdf-e3e0-2903032aa225@gmail.com>
+Date:   Thu, 30 Jul 2020 02:42:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <b5fcc292-8ce3-2833-491f-5aefbe0196eb@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a one time delay because of a card detect debounce timer in the
-controller IP. This timer runs as soon as power is applied to the module
-regardless of whether a card is present or not and any writes to
-SDHCI_POWER_ON will return 0 before it expires. This timeout has been
-measured to be about 1 second in am654x and j721e.
+29.07.2020 20:55, Sowjanya Komatineni пишет:
+> 
+> On 7/29/20 10:08 AM, Dmitry Osipenko wrote:
+>> 28.07.2020 19:04, Sowjanya Komatineni пишет:
+>> ...
+>>>>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
+>>>>> +{
+>>>> Doesn't MIPI_CAL need to be reset here?
+>>> No need to reset MIPI CAL
+>> Could you please explain why. There is a calibration state-machine that
+>> apparently needs to be returned into initial state, does it return by
+>> itself?
+>>
+>> TRM says that MIPI block needs to be reset before of starting
+>> calibration process. The reset is completely missing in the driver, I
+>> assume it needs to be corrected with another patch.
+> 
+> TRM documented incorrectly. There is no need to reset MIPI_CAL.
+> 
+> MIPI CAL is FSM and it does not hang and done bit is to indicate if
+> results are applied to pads or not.
+> 
+> If we don't see done bit set meaning, MIPI CAL did not see LP-11 and
+> results are not applied to pads.
 
-Write-and-read-back in a loop on SDHCI_POWER_ON for a maximum of
-1.5 seconds to make sure that the controller actually powers on.
+But how to stop calibration from triggering on LP-11 once it has been
+enabled? The reset should be needed since there is no other way to reset
+the calibration state.
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- drivers/mmc/host/sdhci_am654.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+> Also while multiple streams can happen in parallel and we can't reset
+> MIPI CAL as other CSI channel streams (using other pads) may also be
+> going thru calibration process in parallel depending and also DSI pads
+> also are calibrated thru same MIPI CAL controller.
 
-diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-index 1718b9e8af63..55cff9de2f3e 100644
---- a/drivers/mmc/host/sdhci_am654.c
-+++ b/drivers/mmc/host/sdhci_am654.c
-@@ -272,6 +272,7 @@ static void sdhci_j721e_4bit_set_clock(struct sdhci_host *host,
- 	sdhci_set_clock(host, clock);
- }
- 
-+#define MAX_POWER_ON_TIMEOUT	1500 /* ms */
- static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
- {
- 	unsigned char timing = host->mmc->ios.timing;
-@@ -291,6 +292,26 @@ static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
- 	}
- 
- 	writeb(val, host->ioaddr + reg);
-+	if (reg == SDHCI_POWER_CONTROL && (val & SDHCI_POWER_ON)) {
-+		/*
-+		 * Power on will not happen until the card detect debounce
-+		 * timer expires. Wait at least 1.5 seconds for the power on
-+		 * bit to be set
-+		 */
-+		ktime_t timeout = ktime_add_ms(ktime_get(),
-+					       MAX_POWER_ON_TIMEOUT);
-+		do {
-+			if (ktime_compare(ktime_get(), timeout) > 0) {
-+				dev_warn(mmc_dev(host->mmc),
-+					 "Power on failed\n");
-+
-+				return;
-+			}
-+
-+			writeb(val, host->ioaddr + reg);
-+			usleep_range(1000, 10000);
-+		} while (!(readb(host->ioaddr + reg) & SDHCI_POWER_ON));
-+	}
- }
- 
- static int sdhci_am654_execute_tuning(struct mmc_host *mmc, u32 opcode)
--- 
-2.17.1
-
+Perhaps this should be the case for a shared reset control API usage.
