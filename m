@@ -2,144 +2,98 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D0FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F953C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 183C120809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SuYvuX0I"
+	by mail.kernel.org (Postfix) with ESMTP id 2DD3A2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgG2NJR (ORCPT
+        id S1727054AbgG2NJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:09:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgG2NJQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 09:09:16 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2BF4C0619D2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 06:09:15 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a14so21610524wra.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 06:09:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bQfdEuMEXU5Gdcf8kVbSvuqtuSTWo+SqwETHH/EjJfI=;
-        b=SuYvuX0IPCTcXEtfXXG68mvZ/p9xhMQDFcgCiKY5yIg+y5OlPUVAKNNF/hZG3sh3vd
-         ZDdsoF8isKHtF4VEfba4yNQYQMAtk9f+UY5bxgNBI3qfW90yE+oA+GxIM9yphD/FePN8
-         xFVCMDJEUC8uFud+QApNIx/qBkckMBeFrDLWoRMZEzJ/5WkLD99JdhJq8FzeM6AoedTV
-         fQm8kgKpF7MOOsyRhndcJawlJ2yb0REhjSCq42rQQ3wPZne8LlWoAnoiRALslALMr+Lk
-         qiyOVL9ksB7T9NpJmNAw0dQtJnbBO0j4F3jPIxxSi/ftEUsAsvItJR3LzpOjV55145c+
-         /5+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bQfdEuMEXU5Gdcf8kVbSvuqtuSTWo+SqwETHH/EjJfI=;
-        b=C588M2aF3nOqQzCHwiJGhdVohnWpuylnSP/2Cl95jCCbDG+yUXaA6oemVkXc6GlVfY
-         bT5pBJhcIRjqWLJamyVYZivxEsuz3Np8Tgkrc+G4STDSkIHojTDS4lCgvJ8+duK7WowC
-         aMdxdnblyUi5QK8axH+HPM7/HmqwvfKM4id4ngAD34TwWwwlUq6uXamtGyJw+NQbMqKI
-         iM65BF79dcWi1aBkWcNpXZtphNtYNR4HhRKFnil4bje6D057y4XTWYFHqyCf6UHP1lqI
-         PXdvpGGLV/NNJ5Eh2MdN/fXJ9URfTFBQKUSCXEatmrGzWwf/RhbdWT99xlaanvp9jlKi
-         OOSw==
-X-Gm-Message-State: AOAM531dDhc9HSxEx+9xAAa1JOItJ+Hz+uNUYvzEu7jeIRF3yw8jnnGg
-        OIfWFktYPastBFG4LFH33LIJwA==
-X-Google-Smtp-Source: ABdhPJxSAMPSjI0FLvCE+74bREfrHAh6dkek8xiGTxb62T9e8tMQouxd50GMLeyj296EW8A60fEAVQ==
-X-Received: by 2002:a5d:56c9:: with SMTP id m9mr14678893wrw.311.1596028154475;
-        Wed, 29 Jul 2020 06:09:14 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:f693:9fff:fef4:a7ef])
-        by smtp.gmail.com with ESMTPSA id v8sm4017619wmb.24.2020.07.29.06.09.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 06:09:13 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 14:09:10 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>, Qian Cai <cai@lca.pw>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v2 2/3] sched: Cleanup SCHED_THERMAL_PRESSURE kconfig
- entry
-Message-ID: <20200729130910.GA1075614@google.com>
-References: <20200712165917.9168-1-valentin.schneider@arm.com>
- <20200712165917.9168-3-valentin.schneider@arm.com>
- <20200727141825.GA4174@lca.pw>
- <16f8c1d4-778b-3ab8-f328-bae80f3973b4@arm.com>
- <jhjpn8fiphi.mognet@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <jhjpn8fiphi.mognet@arm.com>
+        Wed, 29 Jul 2020 09:09:36 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:42620 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726476AbgG2NJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 09:09:36 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxP97xdCFf0hcCAA--.2S2;
+        Wed, 29 Jul 2020 21:09:05 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>
+Cc:     "Tobin C. Harding" <me@tobin.cc>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next] Documentation/bpf: Use valid and new links in index.rst
+Date:   Wed, 29 Jul 2020 21:09:04 +0800
+Message-Id: <1596028144-31374-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9DxP97xdCFf0hcCAA--.2S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7trW3ZF13Wr4UXr4Dtr1UZFb_yoW8GrWkpF
+        15WF1Sgrn8tF43Xws7GF47Cr1YgayfGF4Uua1UJw1Fqrn8Xa4v9F1S9rs0q3WUtrWFvFWr
+        ZFyfKr90qrn7u3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvvb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkI
+        wI1lc2xSY4AK67AK6ry8MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI
+        8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
+        xVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
+        8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E
+        87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+        IFyTuYvjxUyOVyDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 28 Jul 2020 at 17:16:57 (+0100), Valentin Schneider wrote:
-> We could change the arch Kconfig into
-> 
->   select SCHED_THERMAL_PRESSURE if CPU_FREQ_THERMAL
-> 
-> but that seems redundant; this dependency is already expressed in
-> SCHED_THERMAL_PRESSURE's definition. Is there a proper pattern to select
-> some Kconfig option only if all of its dependencies are met?
+There exists an error "404 Not Found" when I clik the html link of
+"Documentation/networking/filter.rst" in the BPF documentation [1],
+fix it.
 
-How about something like this (totally untested):
+Additionally, use the new links about "BPF and XDP Reference Guide"
+and "bpf(2)" to avoid redirects.
 
----8<---
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 939c4d6bbc2e..2ac74904a3ce 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -46,7 +46,6 @@ config ARM
- 	select EDAC_ATOMIC_SCRUB
- 	select GENERIC_ALLOCATOR
- 	select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
--	select SCHED_THERMAL_PRESSURE if ARM_CPU_TOPOLOGY
- 	select GENERIC_ATOMIC64 if CPU_V7M || CPU_V6 || !CPU_32v6K || !AEABI
- 	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
- 	select GENERIC_CPU_AUTOPROBE
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index c403e6f5db86..66dc41fd49f2 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -192,7 +192,6 @@ config ARM64
- 	select PCI_SYSCALL if PCI
- 	select POWER_RESET
- 	select POWER_SUPPLY
--	select SCHED_THERMAL_PRESSURE
- 	select SPARSE_IRQ
- 	select SWIOTLB
- 	select SYSCTL_EXCEPTION_TRACE
-diff --git a/init/Kconfig b/init/Kconfig
-index 0a97d85568b2..c2e1f3ac527e 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -493,6 +493,7 @@ config HAVE_SCHED_AVG_IRQ
+[1] https://www.kernel.org/doc/html/latest/bpf/
+
+Fixes: d9b9170a2653 ("docs: bpf: Rename README.rst to index.rst")
+Fixes: cb3f0d56e153 ("docs: networking: convert filter.txt to ReST")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ Documentation/bpf/index.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/bpf/index.rst b/Documentation/bpf/index.rst
+index 26f4bb3..1b901b4 100644
+--- a/Documentation/bpf/index.rst
++++ b/Documentation/bpf/index.rst
+@@ -68,7 +68,7 @@ Testing and debugging BPF
  
- config SCHED_THERMAL_PRESSURE
- 	bool
-+	default y if ARM64 || ARM_CPU_TOPOLOGY
- 	depends on SMP
- 	depends on CPU_FREQ_THERMAL
- 	help
---->8---
+ 
+ .. Links:
+-.. _Documentation/networking/filter.rst: ../networking/filter.txt
++.. _Documentation/networking/filter.rst: ../networking/filter.html
+ .. _man-pages: https://www.kernel.org/doc/man-pages/
+-.. _bpf(2): http://man7.org/linux/man-pages/man2/bpf.2.html
+-.. _BPF and XDP Reference Guide: http://cilium.readthedocs.io/en/latest/bpf/
++.. _bpf(2): https://man7.org/linux/man-pages/man2/bpf.2.html
++.. _BPF and XDP Reference Guide: https://docs.cilium.io/en/latest/bpf/
+-- 
+2.1.0
 
-Thanks,
-Quentin
