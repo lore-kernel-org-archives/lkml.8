@@ -2,89 +2,202 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B68C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3A8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6F51206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A4A7206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:06:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lh3i7c+O"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cso8UQKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgG2HFb (ORCPT
+        id S1727814AbgG2HGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:05:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47982 "EHLO
+        Wed, 29 Jul 2020 03:06:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgG2HFb (ORCPT
+        with ESMTP id S1726548AbgG2HGG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:05:31 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC49BC061794;
-        Wed, 29 Jul 2020 00:05:30 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l12so2692575pgt.13;
-        Wed, 29 Jul 2020 00:05:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aqneD3uac2LdOmEkTebU7/iHb0Bb9C+xYvrOoegSBgs=;
-        b=Lh3i7c+OL3d+WLkPoNum5UxxmjDrhR7GDKRz6sULoHyatpZS2MPkG9So13ntBRx7vY
-         Ceyk6+qTG/biB3GeJ1fr+xMwbIN4uXvFksnueRi9RYeLaWN+wdeq+on+DX4NjbbKTfqZ
-         vBbQeTn43whAKfi8uNc4FsePsP8Q0l7xpi9kB2fRfzyYHKP7/VNfmBXFktwyafjt0lqx
-         cLSkpuZAewmbzaJhUhkGHDN6rzOrclI5xZMHEmAdzGmC0iB+knOpFr3FI73kM0KbaXvn
-         /SRU8m1xO/bi525c8tfsyb7nRtEZrLShkV2cqgd58TE8OK+v0ZNZUBcbFeti8CIp87GY
-         sakg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aqneD3uac2LdOmEkTebU7/iHb0Bb9C+xYvrOoegSBgs=;
-        b=WI7oM8aaMij8/mNCzSRuB5Dzp3aKgf3A7CnkMssG5b+/PLYKLtJB+5n+TuDdeYoTaB
-         8vHMaXNg6OqaRI0o1nNilGE6LO+O/zQmtvKOcYpNW2nEIJVG/HscFFhlKlgfsyAI0Afc
-         ST3N1U+jruKTlZvS2uVT8g0aDrExiLeNu6UBXYO66NEl4S1u9vo0XmAJz1gxiygSZ6wc
-         M5wpPhSsZosfu9+awaSJaT9SbLLRzA0+bPpj6/xvGAt04OcgH/3bGRU8ado/1bcrvZvQ
-         I49usvEgWPCnc+2XZCLaUAML/i7ligoW/4hJ6DZypLeeBNugSffdm4blg6SaRk5dDH65
-         7tqQ==
-X-Gm-Message-State: AOAM530oDSGwZ5bkuM0vUEANIwlz9mv9/y8xYJw8JwkBZE872m0I8zWQ
-        8pZ7Af+BSowtftv+ESTuXaqf/m6p+cyLNudo6mo=
-X-Google-Smtp-Source: ABdhPJyk6o8rBmKoUdAMTmnz/y0G9FAdd8Efbgcb4Gh9SbYuQB7jrAq58GKL82gQqlt6ZSrBU6EBHu/xHQRRLV+ACfo=
-X-Received: by 2002:a63:ce41:: with SMTP id r1mr28668169pgi.203.1596006330322;
- Wed, 29 Jul 2020 00:05:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200729003243.32097-1-b18007@students.iitmandi.ac.in>
-In-Reply-To: <20200729003243.32097-1-b18007@students.iitmandi.ac.in>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 29 Jul 2020 10:05:14 +0300
-Message-ID: <CAHp75VcmMf5dt7mu9N0C=6Rej-WzZ0EpzntHYCQkgNLVZkPbgg@mail.gmail.com>
-Subject: Re: [PATCH] Staging : iio : Fixed a punctuation and a spelling mistake.
-To:     Ankit Baluni <b18007@students.iitmandi.ac.in>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Wed, 29 Jul 2020 03:06:06 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 786E7C061794;
+        Wed, 29 Jul 2020 00:06:06 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BGl245FFpz9sSd;
+        Wed, 29 Jul 2020 17:06:04 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596006365;
+        bh=SfAf+m4iEwdrS7l7HGsDBbqAFb+OtlgvWiqP1GSnX9s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cso8UQKES9SKN7dIUje/dvNkXft+78lNG+EuNRoEx1tEvYsKcO0+fjOeLXb9h0t2e
+         ra9a6k9P6xbCBYekb/kGpUexaanNzUmPorO18lePP0/1aUIM7P6oWkF0tiozs/t0a4
+         xeXoApjBreRBFEcgxABFSzOtRhqgWUP0rHk5GzkIMOLDwP/EefsxwYiprcPAohc0o5
+         RBDUYkM45CYGOChDcsNRCua+ekjs2MILuuQXUposnEf4vfMSkxwlqv459bKwj1soxM
+         TyXYJUC9pNHUnuG/86HsMsyM++SvQlrNBlPgGNsgOG0D+EzeIdDkWhBBsezp4lOaxS
+         aXNHknnclKSjw==
+Date:   Wed, 29 Jul 2020 17:06:03 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: linux-next: build failure after merge of the kvm tree
+Message-ID: <20200729170603.526fa60f@canb.auug.org.au>
+In-Reply-To: <20200717155701.2d7caebb@canb.auug.org.au>
+References: <20200717155701.2d7caebb@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/CjF1.yBgWInn=gJ7WvN56Vb";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 3:34 AM Ankit Baluni
-<b18007@students.iitmandi.ac.in> wrote:
+--Sig_/CjF1.yBgWInn=gJ7WvN56Vb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Fri, 17 Jul 2020 15:57:01 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
 >
-> Added a missing comma and changed 'it it useful' to 'it is useful'.
+> After merging the kvm tree, today's linux-next build (x86_64 allmodconfig)
+> failed like this:
+>=20
+> arch/x86/kernel/kvm.c: In function '__sysvec_kvm_asyncpf_interrupt':
+> arch/x86/kernel/kvm.c:275:13: error: implicit declaration of function 'id=
+tentry_enter_cond_rcu'; did you mean 'idtentry_enter_nmi'? [-Werror=3Dimpli=
+cit-function-declaration]
+>   275 |  rcu_exit =3D idtentry_enter_cond_rcu(regs);
+>       |             ^~~~~~~~~~~~~~~~~~~~~~~
+>       |             idtentry_enter_nmi
+> arch/x86/kernel/kvm.c:286:2: error: implicit declaration of function 'idt=
+entry_exit_cond_rcu'; did you mean 'idtentry_exit_nmi'? [-Werror=3Dimplicit=
+-function-declaration]
+>   286 |  idtentry_exit_cond_rcu(regs, rcu_exit);
+>       |  ^~~~~~~~~~~~~~~~~~~~~~
+>       |  idtentry_exit_nmi
+>=20
+> Caused by commit
+>=20
+>   b037b09b9058 ("x86/entry: Rename idtentry_enter/exit_cond_rcu() to idte=
+ntry_enter/exit()")
+>=20
+> from the tip tree interacting with commit
+>=20
+>   26d05b368a5c ("Merge branch 'kvm-async-pf-int' into HEAD")
+>=20
+> from the kvm tree.
+>=20
+> I have applied the following merge fix patch.
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Fri, 17 Jul 2020 15:51:27 +1000
+> Subject: [PATCH] fix up for idtentry_{enter,exit}_cond_rcu() renaming
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  arch/x86/kernel/kvm.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index cebd96687194..91dd322f768d 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -270,9 +270,9 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_kvm_asyncpf_interrupt)
+>  {
+>  	struct pt_regs *old_regs =3D set_irq_regs(regs);
+>  	u32 token;
+> -	bool rcu_exit;
+> +	idtentry_state_t state;
+> =20
+> -	rcu_exit =3D idtentry_enter_cond_rcu(regs);
+> +	state =3D idtentry_enter(regs);
+> =20
+>  	inc_irq_stat(irq_hv_callback_count);
+> =20
+> @@ -283,7 +283,7 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_kvm_asyncpf_interrupt)
+>  		wrmsrl(MSR_KVM_ASYNC_PF_ACK, 1);
+>  	}
+> =20
+> -	idtentry_exit_cond_rcu(regs, rcu_exit);
+> +	idtentry_exit(regs, state);
+>  	set_irq_regs(old_regs);
+>  }
+> =20
 
-Please, drop spaces before : in the subject line. In all patches you
-submitted there is such an issue.
+Now due to commits
 
--- 
-With Best Regards,
-Andy Shevchenko
+  bdcd178ada90 ("x86/entry: Use generic interrupt entry/exit code")
+  a27a0a55495c ("x86/entry: Cleanup idtentry_enter/exit")
+
+The above patch now looks like this:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 17 Jul 2020 15:51:27 +1000
+Subject: [PATCH] fix up for idtentry_{enter,exit}_cond_rcu() renaming
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ arch/x86/kernel/kvm.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index cebd96687194..91dd322f768d 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -270,9 +270,9 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_kvm_asyncpf_interrupt)
+ {
+ 	struct pt_regs *old_regs =3D set_irq_regs(regs);
+ 	u32 token;
+-	bool rcu_exit;
++	irqentry_state_t state;
+=20
+-	rcu_exit =3D idtentry_enter_cond_rcu(regs);
++	state =3D irqentry_enter(regs);
+=20
+ 	inc_irq_stat(irq_hv_callback_count);
+=20
+@@ -283,7 +283,7 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_kvm_asyncpf_interrupt)
+ 		wrmsrl(MSR_KVM_ASYNC_PF_ACK, 1);
+ 	}
+=20
+-	idtentry_exit_cond_rcu(regs, rcu_exit);
++	irqentry_exit(regs, state);
+ 	set_irq_regs(old_regs);
+ }
+=20
+--=20
+2.27.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CjF1.yBgWInn=gJ7WvN56Vb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8hH9wACgkQAVBC80lX
+0GxSAQf/RhZ9DUKnhCWXxI04X9vcCW1QYyRRvONerN9mMkLIkJj8G0XJ/DdxlV7b
+IvhoAJPU2k9tX5JrqRRhTQEd7tdtBHJMnoOQJxjkzzK+0SriS3x33V41nz0sMpI1
+ZUi79Si9CLngYt4IfkzI7cL7IPk8zXzMjpiihSqvPQZtrgimvw58uD4KlqtQLdq+
+CQTCEg8C3Ctw4IHy9wa65UgjfaeEP6Z2iHSnWu/YFOp2V7aWpnPD8CEtQG/l9RVP
+aCYzhfkQlkiZ3vlW4Q1xf3MoAu5Louk137Xc3/Ma9wxhGLOFxPExCF2XVAvdmJUu
+QMZeuSrHIXEs2I1vqEP9mCuSnKnIKg==
+=cTfq
+-----END PGP SIGNATURE-----
+
+--Sig_/CjF1.yBgWInn=gJ7WvN56Vb--
