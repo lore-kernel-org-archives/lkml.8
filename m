@@ -2,66 +2,66 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71395C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0142DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56B49207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D087120672
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 11:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgG2LjL (ORCPT
+        id S1726971AbgG2Ljg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 07:39:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23990 "EHLO
+        Wed, 29 Jul 2020 07:39:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55936 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726858AbgG2LjJ (ORCPT
+        by vger.kernel.org with ESMTP id S1726751AbgG2Ljg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 07:39:09 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06TBWiuw131703;
-        Wed, 29 Jul 2020 07:38:57 -0400
+        Wed, 29 Jul 2020 07:39:36 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06TBZRin102237;
+        Wed, 29 Jul 2020 07:39:29 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32jp1mq05d-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32k2sb926u-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 07:38:57 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06TBXSHI134334;
-        Wed, 29 Jul 2020 07:38:57 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32jp1mq04m-1
+        Wed, 29 Jul 2020 07:39:29 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06TBa8mI103953;
+        Wed, 29 Jul 2020 07:39:29 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32k2sb925f-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 07:38:56 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06TBWup2022392;
-        Wed, 29 Jul 2020 11:38:54 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06fra.de.ibm.com with ESMTP id 32jgvps2sd-1
+        Wed, 29 Jul 2020 07:39:29 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06TBaZ26011343;
+        Wed, 29 Jul 2020 11:39:26 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 32gcqgmyxa-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jul 2020 11:38:54 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06TBco0458458270
+        Wed, 29 Jul 2020 11:39:26 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06TBdOaE55640250
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jul 2020 11:38:50 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B919E4C04A;
-        Wed, 29 Jul 2020 11:38:50 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1017F4C046;
-        Wed, 29 Jul 2020 11:38:47 +0000 (GMT)
+        Wed, 29 Jul 2020 11:39:24 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E4AF2A4057;
+        Wed, 29 Jul 2020 11:39:23 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 86A88A4040;
+        Wed, 29 Jul 2020 11:39:20 +0000 (GMT)
 Received: from [192.168.0.8] (unknown [9.79.217.86])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 29 Jul 2020 11:38:46 +0000 (GMT)
-Subject: [PATCH v6 00/11] ppc64: enable kdump support for kexec_file_load
- syscall
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 29 Jul 2020 11:39:20 +0000 (GMT)
+Subject: [PATCH v6 01/11] kexec_file: allow archs to handle special regions
+ while locating memory hole
 From:   Hari Bathini <hbathini@linux.ibm.com>
 To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Dave Young <dyoung@redhat.com>, Pingfan Liu <piliu@redhat.com>,
+Cc:     kernel test robot <lkp@intel.com>, Pingfan Liu <piliu@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        kernel test robot <lkp@intel.com>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
         Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
         Sourabh Jain <sourabhjain@linux.ibm.com>,
         Vivek Goyal <vgoyal@redhat.com>,
@@ -77,8 +77,10 @@ Cc:     Dave Young <dyoung@redhat.com>, Pingfan Liu <piliu@redhat.com>,
         Mimi Zohar <zohar@linux.ibm.com>,
         Nayna Jain <nayna@linux.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>
-Date:   Wed, 29 Jul 2020 17:08:44 +0530
-Message-ID: <159602259854.575379.16910915605574571585.stgit@hbathini>
+Date:   Wed, 29 Jul 2020 17:09:19 +0530
+Message-ID: <159602273603.575379.17665852963340380839.stgit@hbathini>
+In-Reply-To: <159602259854.575379.16910915605574571585.stgit@hbathini>
+References: <159602259854.575379.16910915605574571585.stgit@hbathini>
 User-Agent: StGit/0.21
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -86,152 +88,139 @@ Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-29_04:2020-07-29,2020-07-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- priorityscore=1501 phishscore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 suspectscore=0 lowpriorityscore=0 mlxscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007290071
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ adultscore=0 malwarescore=0 clxscore=1015 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007290075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry! There was a gateway issue on my system while posting v5, due to
-which some patches did not make it through. Resending...
+Some architectures may have special memory regions, within the given
+memory range, which can't be used for the buffer in a kexec segment.
+Implement weak arch_kexec_locate_mem_hole() definition which arch code
+may override, to take care of special regions, while trying to locate
+a memory hole.
 
-This patch series enables kdump support for kexec_file_load system
-call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
-code but heavily modified for kernel consumption.
+Also, add the missing declarations for arch overridable functions and
+and drop the __weak descriptors in the declarations to avoid non-weak
+definitions from becoming weak.
 
-The first patch adds a weak arch_kexec_locate_mem_hole() function to
-override locate memory hole logic suiting arch needs. There are some
-special regions in ppc64 which should be avoided while loading buffer
-& there are multiple callers to kexec_add_buffer making it complicated
-to maintain range sanity and using generic lookup at the same time.
-
-The second patch marks ppc64 specific code within arch/powerpc/kexec
-and arch/powerpc/purgatory to make the subsequent code changes easy
-to understand.
-
-The next patch adds helper function to setup different memory ranges
-needed for loading kdump kernel, booting into it and exporting the
-crashing kernel's elfcore.
-
-The fourth patch overrides arch_kexec_locate_mem_hole() function to
-locate memory hole for kdump segments by accounting for the special
-memory regions, referred to as excluded memory ranges, and sets
-kbuf->mem when a suitable memory region is found.
-
-The fifth patch moves walk_drmem_lmbs() out of .init section with
-a few changes to reuse it for setting up kdump kernel's usable memory
-ranges. The next patch uses walk_drmem_lmbs() to look up the LMBs
-and set linux,drconf-usable-memory & linux,usable-memory properties
-in order to restrict kdump kernel's memory usage.
-
-The next patch setups up backup region as a kexec segment while
-loading kdump kernel and teaches purgatory to copy data from source
-to destination.
-
-Patch 09 builds the elfcore header for the running kernel & passes
-the info to kdump kernel via "elfcorehdr=" parameter to export as
-/proc/vmcore file. The next patch sets up the memory reserve map
-for the kexec kernel and also claims kdump support for kdump as
-all the necessary changes are added.
-
-The next patch fixes a lookup issue for `kexec -l -s` case when
-memory is reserved for crashkernel.
-
-The last patch updates purgatory to setup r8 & r9 with opal base
-and opal entry addresses respectively to aid kernels built with
-CONFIG_PPC_EARLY_DEBUG_OPAL enabled.
-
-Tested the changes successfully on P8, P9 lpars, couple of OpenPOWER
-boxes, one with secureboot enabled, KVM guest and a simulator.
+Reported-by: kernel test robot <lkp@intel.com>
+[lkp: In v1, arch_kimage_file_post_load_cleanup() declaration was missing]
+Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+Tested-by: Pingfan Liu <piliu@redhat.com>
+Acked-by: Dave Young <dyoung@redhat.com>
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+---
 
 v5 -> v6:
-* Fixed reference count leak in add_tce_mem_ranges() function and also
-  updated error handling in reading tce table base & sizes.
-* Instead of trying to reinvent the wheel with get_node_path() &
-  get_node_path_size() functions, used %pOF format as suggested by mpe.
-* Moved patch 07/11 to end of the series for mpe to take a call on
-  whether to have it or not.
+* Unchanged.
 
 v4 -> v5:
-* Dropped patches 07/12 & 08/12 and updated purgatory to do everything
-  in assembly.
-* Added a new patch (which was part of patch 08/12 in v4) to update
-  r8 & r9 registers with opal base & opal entry addresses as it is
-  expected on kernels built with CONFIG_PPC_EARLY_DEBUG_OPAL enabled.
-* Fixed kexec load issue on KVM guest.
+* Unchanged.
 
 v3 -> v4:
-* Updated get_node_path() function to be iterative instead of a recursive one.
-* Added comment explaining why low memory is added to kdump kernel's usable
-  memory ranges though it doesn't fall in crashkernel region.
-* Fixed stack_buf to be quadword aligned in accordance with ABI.
-* Added missing of_node_put() in setup_purgatory_ppc64().
-* Added a FIXME tag to indicate issue in adding opal/rtas regions to
-  core image.
+* Unchanged. Added Reviewed-by tag from Thiago.
 
 v2 -> v3:
-* Fixed TOC pointer calculation for purgatory by using section info
-  that has relocations applied.
-* Fixed arch_kexec_locate_mem_hole() function to fallback to generic
-  kexec_locate_mem_hole() lookup if exclude ranges list is empty.
-* Dropped check for backup_start in trampoline_64.S as purgatory()
-  function takes care of it anyway.
+* Unchanged. Added Acked-by & Tested-by tags from Dave & Pingfan.
 
 v1 -> v2:
 * Introduced arch_kexec_locate_mem_hole() for override and dropped
   weak arch_kexec_add_buffer().
-* Addressed warnings reported by lkp.
-* Added patch to address kexec load issue when memory is reserved
-  for crashkernel.
-* Used the appropriate license header for the new files added.
-* Added an option to merge ranges to minimize reallocations while
-  adding memory ranges.
-* Dropped within_crashkernel parameter for add_opal_mem_range() &
-  add_rtas_mem_range() functions as it is not really needed.
-
----
-
-Hari Bathini (11):
-      kexec_file: allow archs to handle special regions while locating memory hole
-      powerpc/kexec_file: mark PPC64 specific code
-      powerpc/kexec_file: add helper functions for getting memory ranges
-      ppc64/kexec_file: avoid stomping memory used by special regions
-      powerpc/drmem: make lmb walk a bit more flexible
-      ppc64/kexec_file: restrict memory usage of kdump kernel
-      ppc64/kexec_file: setup backup region for kdump kernel
-      ppc64/kexec_file: prepare elfcore header for crashing kernel
-      ppc64/kexec_file: add appropriate regions for memory reserve map
-      ppc64/kexec_file: fix kexec load failure with lack of memory hole
-      ppc64/kexec_file: enable early kernel's OPAL calls
+* Dropped __weak identifier for arch overridable functions.
+* Fixed the missing declaration for arch_kimage_file_post_load_cleanup()
+  reported by lkp. lkp report for reference:
+    - https://lore.kernel.org/patchwork/patch/1264418/
 
 
- arch/powerpc/include/asm/crashdump-ppc64.h |   19 
- arch/powerpc/include/asm/drmem.h           |    9 
- arch/powerpc/include/asm/kexec.h           |   29 +
- arch/powerpc/include/asm/kexec_ranges.h    |   25 +
- arch/powerpc/kernel/prom.c                 |   13 
- arch/powerpc/kexec/Makefile                |    2 
- arch/powerpc/kexec/elf_64.c                |   36 +
- arch/powerpc/kexec/file_load.c             |   60 +-
- arch/powerpc/kexec/file_load_64.c          | 1119 ++++++++++++++++++++++++++++
- arch/powerpc/kexec/ranges.c                |  412 ++++++++++
- arch/powerpc/mm/drmem.c                    |   87 +-
- arch/powerpc/mm/numa.c                     |   13 
- arch/powerpc/purgatory/Makefile            |    4 
- arch/powerpc/purgatory/trampoline.S        |  117 ---
- arch/powerpc/purgatory/trampoline_64.S     |  163 ++++
- include/linux/kexec.h                      |   29 -
- kernel/kexec_file.c                        |   16 
- 17 files changed, 1958 insertions(+), 195 deletions(-)
- create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
- create mode 100644 arch/powerpc/include/asm/kexec_ranges.h
- create mode 100644 arch/powerpc/kexec/file_load_64.c
- create mode 100644 arch/powerpc/kexec/ranges.c
- delete mode 100644 arch/powerpc/purgatory/trampoline.S
- create mode 100644 arch/powerpc/purgatory/trampoline_64.S
+ include/linux/kexec.h |   29 ++++++++++++++++++-----------
+ kernel/kexec_file.c   |   16 ++++++++++++++--
+ 2 files changed, 32 insertions(+), 13 deletions(-)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index ea67910ae6b7..9e93bef52968 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -183,17 +183,24 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+ 				   bool get_value);
+ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
+ 
+-int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+-					 unsigned long buf_len);
+-void * __weak arch_kexec_kernel_image_load(struct kimage *image);
+-int __weak arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+-					    Elf_Shdr *section,
+-					    const Elf_Shdr *relsec,
+-					    const Elf_Shdr *symtab);
+-int __weak arch_kexec_apply_relocations(struct purgatory_info *pi,
+-					Elf_Shdr *section,
+-					const Elf_Shdr *relsec,
+-					const Elf_Shdr *symtab);
++/* Architectures may override the below functions */
++int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
++				  unsigned long buf_len);
++void *arch_kexec_kernel_image_load(struct kimage *image);
++int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
++				     Elf_Shdr *section,
++				     const Elf_Shdr *relsec,
++				     const Elf_Shdr *symtab);
++int arch_kexec_apply_relocations(struct purgatory_info *pi,
++				 Elf_Shdr *section,
++				 const Elf_Shdr *relsec,
++				 const Elf_Shdr *symtab);
++int arch_kimage_file_post_load_cleanup(struct kimage *image);
++#ifdef CONFIG_KEXEC_SIG
++int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
++				 unsigned long buf_len);
++#endif
++int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+ 
+ extern int kexec_add_buffer(struct kexec_buf *kbuf);
+ int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 09cc78df53c6..e89912d33a27 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -635,6 +635,19 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+ 	return ret == 1 ? 0 : -EADDRNOTAVAIL;
+ }
+ 
++/**
++ * arch_kexec_locate_mem_hole - Find free memory to place the segments.
++ * @kbuf:                       Parameters for the memory search.
++ *
++ * On success, kbuf->mem will have the start address of the memory region found.
++ *
++ * Return: 0 on success, negative errno on error.
++ */
++int __weak arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
++{
++	return kexec_locate_mem_hole(kbuf);
++}
++
+ /**
+  * kexec_add_buffer - place a buffer in a kexec segment
+  * @kbuf:	Buffer contents and memory parameters.
+@@ -647,7 +660,6 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+  */
+ int kexec_add_buffer(struct kexec_buf *kbuf)
+ {
+-
+ 	struct kexec_segment *ksegment;
+ 	int ret;
+ 
+@@ -675,7 +687,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
+ 
+ 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+-	ret = kexec_locate_mem_hole(kbuf);
++	ret = arch_kexec_locate_mem_hole(kbuf);
+ 	if (ret)
+ 		return ret;
+ 
 
 
