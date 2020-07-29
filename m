@@ -2,120 +2,112 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF5EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B40A1206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD327206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 10:02:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rb8/dupy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTGn5BBR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgG2J7f (ORCPT
+        id S1726711AbgG2KCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:59:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46408 "EHLO
+        Wed, 29 Jul 2020 06:02:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgG2J7e (ORCPT
+        with ESMTP id S1726208AbgG2KB7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:59:34 -0400
+        Wed, 29 Jul 2020 06:01:59 -0400
 Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D061CC061794;
-        Wed, 29 Jul 2020 02:59:34 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id a9so1647357pjd.3;
-        Wed, 29 Jul 2020 02:59:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0979C061794;
+        Wed, 29 Jul 2020 03:01:59 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id c6so1651447pje.1;
+        Wed, 29 Jul 2020 03:01:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=T0Z6YHYdP/kQD0cMS+cNQldOhqY6T8q1pjXPvT/YgO4=;
-        b=rb8/dupyCMFbBH4YZJuE/RPbByMpGQ5LAydsXv+QjPXvhSZxULUuuRV8XlGBj1j99K
-         XFszBCZ2K4ch/ddu2OZLiYmUBUeRhRcbu8a3Yu8TAZA5bE2F4mG5ltCYhNeoIFUJ61ru
-         dbWRev/5xq+8WUIhLulvMFFuSBNToV5Vr8YCCTuPFgOHfGo0l95lBrQH2s6enGdm98ab
-         YadDobj5jWlZYvQI61D7RjMi1YuDBExT4iDSKpotJY0g8mdjfoffFRt437s530RMwJx9
-         8Y+G0QWfDnEINXow8ElKpN8xnB5aVnJhiz6hciPST9mC0ScqccExXerDwCKuLEIQd1Wi
-         BzPQ==
+        h=subject:cc:references:to:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dhqS/TVn+QryUKiM9kjYSdz+2PsU5CHJr52Pd8ZYJLU=;
+        b=jTGn5BBRGJieUMUNIYAc34bvJJ5Z19vAtcH5jNHg8608wPX+lXlJu5e8EVnw2RJM8C
+         tkbzoqVGwMS0V6qbqDpzlFXytGQc8Yt4wG7xR5jxtxD4nvvXO+6P4hLOfbXXS6GdKPIC
+         +EKaZejqDXEsuk0yVDsME6T0E/iC6awjr/EETG6YVXHJCHOk+jycp3we2epVk4ik0Pev
+         UYHcLsF4TvuLL08VWzLRZzdyn1Ey/GRVYLrmO68b5Z7SKphnyxmdqupMSsc89IV2PO6N
+         Zanpk1whq9sbH11u4+DAF93rGN7v2atRJweIvDZ2YIntbMLFUwOWosH0tbHh3ztHZiuE
+         vMKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:cc:references:to:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=T0Z6YHYdP/kQD0cMS+cNQldOhqY6T8q1pjXPvT/YgO4=;
-        b=eygxYyQgE0rASdBxf8KnqlqVstsmp/NuXP/HkjRa8zEUH2NCB0P3zorEdtFDzOZBVw
-         +RKfOCz9SsGgKil5foI9Qgv812lXlU7pYSYBnZQVTTxPtQgBVN2QrLjIYpH1Pb+I50yT
-         sEPMHONAa2iMIRZNvCQAK44rGZLKY2vkGoCAwhl/jYEl9BtSIz1ZtHkzZgGoCKCq2snx
-         SNL3S+B9cSA98J1Opcfjfc5jFWnQHFU9LZKTPZBLYG6HBYw/az2KSy1EtuN/1+FcmFj6
-         rjIEfMT9d/AyGzAGN+2UVhypMh5o76WSeerE5ypRCdENeE5DbR9Sdj+sxkZoRQIRJZFN
-         Rv1w==
-X-Gm-Message-State: AOAM533zwv7L9L+s2kb9GuacWAAeATXqd3NSgOoURYfrQ4vMfZRaL4kd
-        8ZT60Jw7vkFc+0STQmDDslc=
-X-Google-Smtp-Source: ABdhPJwlUgeMIQUydEFbTDZ99rxEoaivKlj3ebAXEwUBoUc6lmxEGQaE2R4Y9pOgdMTLv9N/en648Q==
-X-Received: by 2002:a17:902:7b92:: with SMTP id w18mr27533925pll.258.1596016773345;
-        Wed, 29 Jul 2020 02:59:33 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id i128sm1815776pfe.74.2020.07.29.02.59.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 02:59:32 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Daniele Venzano <venza@brownhat.org>,
-        Samuel Chessman <chessman@tux.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v1 0/3] net: ethernet: use generic power management
-Date:   Wed, 29 Jul 2020 15:26:57 +0530
-Message-Id: <20200729095700.193150-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        bh=dhqS/TVn+QryUKiM9kjYSdz+2PsU5CHJr52Pd8ZYJLU=;
+        b=R8OfEYrL9vXXCSBLflD7Ww+UoTgPzNf/WQglKYrEOfZVqzCGxKJsXB3IaGBul7Dh9+
+         Wg/+rli8bot7UQlmJ7xBWkgdpqXqI0eAHQ/HJQwTUm04lPUhFEGDCF0byUln0bb1+MAF
+         QqMivJqvPERz0Mp0QdgQO73hrLEqPFClQrjMPsp4xTZLKRvLJ9WPhlnUChjTUmn5InSP
+         ZxO6hstDwcDe0neH8P264L1FBZw4kbDuhBLycqFljQPvCrbHS5LVyiSdOwPrkUMDPwrI
+         Uzezh/YFtvxKe/ikzPbElXcc9qAXQOlkOT7bM68HnT786vl09id20Vb7X9Ycq82nV+Lx
+         RdHg==
+X-Gm-Message-State: AOAM5312bJgMZA8b/2gD+e6MxUlWS3fzj1xf99pWzp0KI4oYyTS1uwl3
+        zc3abZ7jXk6gLf3qcrUl3nhSlp5x6QQ=
+X-Google-Smtp-Source: ABdhPJyz+O2zYB03eEDr+E6YXyvetH6FE51ND1NxpfVQ3sUGC2nxxxM6JOuebrri1jMzFdwF3k5D0A==
+X-Received: by 2002:a17:902:ee54:: with SMTP id 20mr27271592plo.197.1596016918944;
+        Wed, 29 Jul 2020 03:01:58 -0700 (PDT)
+Received: from ?IPv6:2404:7a87:83e0:f800:ccae:99d9:bebb:d2c4? ([2404:7a87:83e0:f800:ccae:99d9:bebb:d2c4])
+        by smtp.gmail.com with ESMTPSA id f15sm1797383pfk.58.2020.07.29.03.01.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2020 03:01:58 -0700 (PDT)
+Subject: Re: [PATCH v2] exfat: integrates dir-entry getting and validation
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200715012249.16378-1-kohada.t2@gmail.com>
+To:     Sungjong Seo <sj1557.seo@samsung.com>
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+Message-ID: <3959d0a7-8457-e722-88ce-8ad28423c12f@gmail.com>
+Date:   Wed, 29 Jul 2020 19:01:56 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200715012249.16378-1-kohada.t2@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux Kernel Mentee: Remove Legacy Power Management.
+On 2020/07/15 10:22, Tetsuhiro Kohada wrote:
+> Add validation for num, bh and type on getting dir-entry.
+> ('file' and 'stream-ext' dir-entries are pre-validated to ensure success)
+> Renamed exfat_get_dentry_cached() to exfat_get_validated_dentry() due to
+> a change in functionality.
+> 
+> Integrate type-validation with simplified.
+> This will also recognize a dir-entry set that contains 'benign secondary'
+> dir-entries.
+> 
+> And, rename TYPE_EXTEND to TYPE_NAME.
+> 
+> Suggested-by: Sungjong Seo <sj1557.seo@samsung.com>
+> Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+> ---
+> Changes in v2
+>   - Change verification order
+>   - Verification loop start with index 2
 
-The purpose of this patch series is to upgrade power management in net ethernet
-drivers. This has been done by upgrading .suspend() and .resume() callbacks.
+Ping.
+Is there anything I should do?
 
-The upgrade makes sure that the involvement of PCI Core does not change the
-order of operations executed in a driver. Thus, does not change its behavior.
 
-In general, drivers with legacy PM, .suspend() and .resume() make use of PCI
-helper functions like pci_enable/disable_device_mem(), pci_set_power_state(),
-pci_save/restore_state(), pci_enable/disable_device(), etc. to complete
-their job.
-
-The conversion requires the removal of those function calls, change the
-callbacks' definition accordingly and make use of dev_pm_ops structure.
-
-All patches are compile-tested only.
-
-Test tools:
-    - Compiler: gcc (GCC) 10.1.0
-    - allmodconfig build: make -j$(nproc) W=1 all
-
-Vaibhav Gupta (3):
-  sc92031: use generic power management
-  sis900: use generic power management
-  tlan: use generic power management
-
- drivers/net/ethernet/silan/sc92031.c | 26 ++++++++---------------
- drivers/net/ethernet/sis/sis900.c    | 23 +++++++--------------
- drivers/net/ethernet/ti/tlan.c       | 31 ++++++----------------------
- 3 files changed, 22 insertions(+), 58 deletions(-)
-
--- 
-2.27.0
-
+BR
+---
+Tetsuhiro Kohada <kohada.t2@gmail.com>
