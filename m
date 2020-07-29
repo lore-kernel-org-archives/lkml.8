@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1436C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98AD02083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C53205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgG2MT5 (ORCPT
+        id S1727005AbgG2MUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:19:57 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:42694 "EHLO honk.sigxcpu.org"
+        Wed, 29 Jul 2020 08:20:03 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:42666 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbgG2MT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:19:56 -0400
+        id S1726054AbgG2MTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 08:19:55 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 0BFCCFB04;
-        Wed, 29 Jul 2020 14:19:54 +0200 (CEST)
+        by honk.sigxcpu.org (Postfix) with ESMTP id 27F2BFB03;
+        Wed, 29 Jul 2020 14:19:52 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id T0h_Ee_CknW1; Wed, 29 Jul 2020 14:19:50 +0200 (CEST)
+        with ESMTP id RZjvs2Cf-Tsv; Wed, 29 Jul 2020 14:19:48 +0200 (CEST)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 7E9BD45345; Wed, 29 Jul 2020 14:19:45 +0200 (CEST)
+        id 8C04045347; Wed, 29 Jul 2020 14:19:45 +0200 (CEST)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
@@ -53,9 +53,9 @@ To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Michael Walle <michael@walle.cc>,
         Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/3] arm64: dts: imx8mq-librem5-devkit: Enable the LCD panel
-Date:   Wed, 29 Jul 2020 14:19:44 +0200
-Message-Id: <b12158087838bf8e78f06024fa65da8d94f5d185.1596025057.git.agx@sigxcpu.org>
+Subject: [PATCH v1 3/3] arm64: defconfig: Enable imx8mq-librem5-devkit display stack
+Date:   Wed, 29 Jul 2020 14:19:45 +0200
+Message-Id: <a98acb7a0ed2ee6af78ba08354740d69b63b8c53.1596025057.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1596025057.git.agx@sigxcpu.org>
 References: <cover.1596025057.git.agx@sigxcpu.org>
@@ -67,58 +67,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable LCD panel output by adding nodes for the NWL DSI host controller,
-the Rocktech panel and the eLCDIF display controller.
+Enable the panel, NWL DSI host controller and dphy. This
+also needs the reset controller.
 
 Signed-off-by: Guido Günther <agx@sigxcpu.org>
 ---
- .../dts/freescale/imx8mq-librem5-devkit.dts   | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/arm64/configs/defconfig | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index e7b5c595ceed..48e22e93a7a7 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -830,6 +830,39 @@ MX8MQ_IOMUXC_NAND_DATA03_GPIO3_IO9	0x19 /* WWAN_RESET */
- 	};
- };
- 
-+&lcdif {
-+	status = "okay";
-+};
-+
-+&mipi_dsi {
-+	status = "okay";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	panel@0 {
-+		compatible = "rocktech,jh057n00900";
-+		reg = <0>;
-+		backlight = <&backlight_dsi>;
-+		reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
-+		iovcc-supply = <&reg_1v8_p>;
-+		vcc-supply = <&reg_2v8_p>;
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&mipi_dsi_out>;
-+			};
-+		};
-+	};
-+
-+	ports {
-+		port@1 {
-+			reg = <1>;
-+			mipi_dsi_out: endpoint {
-+				remote-endpoint = <&panel_in>;
-+			};
-+		};
-+	};
-+};
-+
- &pgc_gpu {
- 	power-supply = <&buck3_reg>;
- };
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index e0f33826819f..608019f6408d 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -640,10 +640,12 @@ CONFIG_DRM_MSM=m
+ CONFIG_DRM_TEGRA=m
+ CONFIG_DRM_PANEL_LVDS=m
+ CONFIG_DRM_PANEL_SIMPLE=m
+-CONFIG_DRM_SIMPLE_BRIDGE=m
++CONFIG_DRM_PANEL_SITRONIX_ST7703=m
+ CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
+ CONFIG_DRM_DISPLAY_CONNECTOR=m
++CONFIG_DRM_NWL_MIPI_DSI=m
+ CONFIG_DRM_SII902X=m
++CONFIG_DRM_SIMPLE_BRIDGE=m
+ CONFIG_DRM_THINE_THC63LVD1024=m
+ CONFIG_DRM_TI_SN65DSI86=m
+ CONFIG_DRM_I2C_ADV7511=m
+@@ -937,11 +939,13 @@ CONFIG_PWM_SAMSUNG=y
+ CONFIG_PWM_SUN4I=m
+ CONFIG_PWM_TEGRA=m
+ CONFIG_QCOM_PDC=y
++CONFIG_RESET_IMX7=y
+ CONFIG_RESET_QCOM_AOSS=y
+ CONFIG_RESET_QCOM_PDC=m
+ CONFIG_RESET_TI_SCI=y
+ CONFIG_PHY_XGENE=y
+ CONFIG_PHY_SUN4I_USB=y
++CONFIG_PHY_MIXEL_MIPI_DPHY=m
+ CONFIG_PHY_HI6220_USB=y
+ CONFIG_PHY_HISTB_COMBPHY=y
+ CONFIG_PHY_HISI_INNO_USB2=y
 -- 
 2.26.2
 
