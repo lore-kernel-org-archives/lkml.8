@@ -2,222 +2,244 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49159C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3EF20809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 177042075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:55:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="PNhYMuFT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgG2RxT (ORCPT
+        id S1726664AbgG2RzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:53:19 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:56218 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbgG2RxS (ORCPT
+        Wed, 29 Jul 2020 13:55:12 -0400
+Received: from gateway24.websitewelcome.com ([192.185.50.93]:20893 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726336AbgG2RzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 13:53:18 -0400
-Received: from 89-64-89-103.dynamic.chello.pl (89.64.89.103) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id a89a326552f6a4de; Wed, 29 Jul 2020 19:52:45 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Francisco Jerez <currojerez@riseup.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Doug Smythies <dsmythies@telus.net>
-Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-Date:   Wed, 29 Jul 2020 19:52:44 +0200
-Message-ID: <4159348.LxVl7G3d3V@kreacher>
-In-Reply-To: <87v9i6g9gf.fsf@riseup.net>
-References: <3955470.QvD6XneCf3@kreacher> <2440238.9qpzlEPeD7@kreacher> <87v9i6g9gf.fsf@riseup.net>
+        Wed, 29 Jul 2020 13:55:12 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 3B63D611C
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 12:55:06 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 0qIEkF9VtSxZV0qIEkl5GM; Wed, 29 Jul 2020 12:55:06 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=g/ocoqM5pkGRwSR1GarrpOt3G28eyY8xAguAVH+6ebk=; b=PNhYMuFT0FrlsY1N4Z8cuMN1Pn
+        kuN+r4K+cllJ1KeHH3Tpay2pojd+aKe+GKzz9Xq/LcI2ieagX7STrYhFG4Nrz11WPlwLh5F6r82A1
+        0Zhu2o1hw7ya3S3NWaszcM2iY5Cnm6ut/1lwKy8Qd7u1H6ttUfH/8SwP9HKpo5huS5V9Fei9IHQyy
+        +x4SiJsHdc8tDiMh735Bz3viIBSJN+FAty0hfGrIXFvoIWCRCZ7Uh3FgFufJDCrIwuIZSM1kcxotr
+        i3qNcN8ay+gw6EYnY3foaGFcV5472zxjxmjdVGdAVDu7WREyCryXkXPEL04WToA3BOgB9EFja/fnl
+        32zi8+vg==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:44700 helo=[192.168.15.2])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1k0qID-003vpn-Sf; Wed, 29 Jul 2020 12:55:05 -0500
+To:     Tomas Winkler <tomas.winkler@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Ramalingam C <ramalingam.c@intel.com>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>
+References: <20200729173204.3251582-1-tomas.winkler@intel.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ AP7RWS474w==
+Subject: Re: [char-misc-next] mei: hdcp: fix mei_hdcp_verify_mprime() input
+ paramter
+Message-ID: <66c9950c-ef54-423e-467f-38a9f7afb384@embeddedor.com>
+Date:   Wed, 29 Jul 2020 13:01:05 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200729173204.3251582-1-tomas.winkler@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1k0qID-003vpn-Sf
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.2]) [187.162.31.110]:44700
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, July 29, 2020 7:46:08 AM CEST Francisco Jerez wrote:
+
+
+On 7/29/20 12:32, Tomas Winkler wrote:
+> wired_cmd_repeater_auth_stream_req_in has a variable
+> length array at the end. we use struct_size() overflow
+> macro to determine the size for the allocation and sending
+> size.
 > 
-> --==-=-=
-> Content-Type: multipart/mixed; boundary="=-=-="
+> Fixes: c56967d674e3 (mei: hdcp: Replace one-element array with flexible-array member)
+
+This also fixes:
+
+commit 0a1af1b5c18d ("misc/mei/hdcp: Verify M_prime")
+
+which introduced a potential stack overflow back in Feb 2019, hence it should be
+fixed in -stable, too.
+
+So, either both commit c56967d674e3 (mei: hdcp: Replace one-element array with flexible-array member)
+and this patch should be ported to -stable in order to fix a potential
+stack overflow due to commit 0a1af1b5c18d ("misc/mei/hdcp: Verify M_prime"),
+or a separate fix that doesn't touch the one-element array streams[1] in struct
+wired_cmd_repeater_auth_stream_req_in, but addresses the stack overflow should
+be crafted and applied to -stable.
+
+I can write that fix up for -stable if you want to go in that direction. Just let
+me know.
+
+> Cc: Ramalingam C <ramalingam.c@intel.com>
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+> ---
+>  drivers/misc/mei/hdcp/mei_hdcp.c | 38 ++++++++++++++++++--------------
+>  1 file changed, 22 insertions(+), 16 deletions(-)
 > 
-> --=-=-=
-> Content-Type: text/plain; charset=utf-8
-> Content-Disposition: inline
-> Content-Transfer-Encoding: quoted-printable
+> diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c b/drivers/misc/mei/hdcp/mei_hdcp.c
+> index d1d3e025ca0e..0e8f12e38494 100644
+> --- a/drivers/misc/mei/hdcp/mei_hdcp.c
+> +++ b/drivers/misc/mei/hdcp/mei_hdcp.c
+> @@ -546,38 +546,44 @@ static int mei_hdcp_verify_mprime(struct device *dev,
+>  				  struct hdcp_port_data *data,
+>  				  struct hdcp2_rep_stream_ready *stream_ready)
+>  {
+> -	struct wired_cmd_repeater_auth_stream_req_in
+> -					verify_mprime_in = { { 0 } };
+> +	struct wired_cmd_repeater_auth_stream_req_in *verify_mprime_in;
+>  	struct wired_cmd_repeater_auth_stream_req_out
+>  					verify_mprime_out = { { 0 } };
+>  	struct mei_cl_device *cldev;
+>  	ssize_t byte;
+> +	size_t cmd_size;
+>  
+>  	if (!dev || !stream_ready || !data)
+>  		return -EINVAL;
+>  
+>  	cldev = to_mei_cl_device(dev);
+>  
+> -	verify_mprime_in.header.api_version = HDCP_API_VERSION;
+> -	verify_mprime_in.header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
+> -	verify_mprime_in.header.status = ME_HDCP_STATUS_SUCCESS;
+> -	verify_mprime_in.header.buffer_len =
+> +	cmd_size = struct_size(verify_mprime_in, streams, data->k);
+> +	if (cmd_size == SIZE_MAX)
+> +		return -EINVAL;
+> +
+> +	verify_mprime_in = kzalloc(cmd_size, GFP_KERNEL);
+> +
+> +	verify_mprime_in->header.api_version = HDCP_API_VERSION;
+> +	verify_mprime_in->header.command_id = WIRED_REPEATER_AUTH_STREAM_REQ;
+> +	verify_mprime_in->header.status = ME_HDCP_STATUS_SUCCESS;
+> +	verify_mprime_in->header.buffer_len =
+>  			WIRED_CMD_BUF_LEN_REPEATER_AUTH_STREAM_REQ_MIN_IN;
+>  
+> -	verify_mprime_in.port.integrated_port_type = data->port_type;
+> -	verify_mprime_in.port.physical_port = (u8)data->fw_ddi;
+> -	verify_mprime_in.port.attached_transcoder = (u8)data->fw_tc;
+> +	verify_mprime_in->port.integrated_port_type = data->port_type;
+> +	verify_mprime_in->port.physical_port = (u8)data->fw_ddi;
+> +	verify_mprime_in->port.attached_transcoder = (u8)data->fw_tc;
+> +
+> +	memcpy(verify_mprime_in->m_prime, stream_ready->m_prime, HDCP_2_2_MPRIME_LEN);
+> +	drm_hdcp_cpu_to_be24(verify_mprime_in->seq_num_m, data->seq_num_m);
+>  
+> -	memcpy(verify_mprime_in.m_prime, stream_ready->m_prime,
+> -	       HDCP_2_2_MPRIME_LEN);
+> -	drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data->seq_num_m);
+> -	memcpy(verify_mprime_in.streams, data->streams,
+> +	memcpy(verify_mprime_in->streams, data->streams,
+>  	       array_size(data->k, sizeof(*data->streams)));
+
+Please, use flex_array_size() instead of array_size() here, like this:
+
+memcpy(verify_mprime_in->streams, data->streams,
+       flex_array_size(verify_mprime_in, streams, data->k));
+
+
+Thanks
+--
+Gustavo
+
+>  
+> -	verify_mprime_in.k = cpu_to_be16(data->k);
+> +	verify_mprime_in->k = cpu_to_be16(data->k);
+>  
+> -	byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in,
+> -			      sizeof(verify_mprime_in));
+> +	byte = mei_cldev_send(cldev, (u8 *)&verify_mprime_in, cmd_size);
+> +	kfree(verify_mprime_in);
+>  	if (byte < 0) {
+>  		dev_dbg(dev, "mei_cldev_send failed. %zd\n", byte);
+>  		return byte;
 > 
-> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
-> 
-> > On Tuesday, July 28, 2020 4:32:22 AM CEST Francisco Jerez wrote:
-> >>
-> >> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
-> >>=20
-> >> > On Tuesday, July 21, 2020 1:20:14 AM CEST Francisco Jerez wrote:
-> >> >
-> >> > [cut]
-> >> >
-> >> >> >
-> >> >> > However, in the active mode the only updater of hwp_req_cached is
-> >> >> > intel_pstate_hwp_set() and this patch doesn't introduce any
-> >> >> > differences in behavior in that case.
-> >> >> >
-> >> >>=3D20
-> >> >> intel_pstate_hwp_set() is the only updater, but there are other
-> >> >> consumers that can get out of sync with the HWP request value written=
->  by
-> >> >> intel_pstate_set_energy_pref_index().  intel_pstate_hwp_boost_up() se=
-> ems
-> >> >> like the most concerning example I named earlier.
-> >> >>=3D20
-> >> >> >> > So there may be a short time window after the
-> >> >> >> > intel_pstate_set_energy_pref_index() invocation in which the new=
->  EPP
-> >> >> >> > value may not be in effect, but in general there is no guarantee=
->  th=3D
-> >> at
-> >> >> >> > the new EPP will take effect immediately after updating the MSR
-> >> >> >> > anyway, so that race doesn't matter.
-> >> >> >> >
-> >> >> >> > That said, that race is avoidable, but I was thinking that tryin=
-> g to
-> >> >> >> > avoid it might not be worth it.  Now I see a better way to avoid=
->  it,
-> >> >> >> > though, so I'm going to update the patch to that end.
-> >> >> >> >
-> >> >> >> >> Seems like a bug to me.
-> >> >> >> >
-> >> >> >> > It is racy, but not every race is a bug.
-> >> >> >> >
-> >> >> >>
-> >> >> >> Still seems like there is a bug in intel_pstate_set_energy_pref_in=
-> dex=3D
-> >> ()
-> >> >> >> AFAICT.
-> >> >> >
-> >> >> > If there is a bug, then what exactly is it, from the users' perspec=
-> tiv=3D
-> >> e?
-> >> >> >
-> >> >>=3D20
-> >> >> It can be reproduced easily as follows:
-> >> >>=3D20
-> >> >> | echo 1 > /sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost
-> >> >> | for p in /sys/devices/system/cpu/cpufreq/policy*/energy_performance=
-> _pr=3D
-> >> eference; do echo performance > $p; done
-> >> >
-> >> > Is this the active mode or the passive mode with the $subject patch ap=
-> pli=3D
-> >> ed?
-> >> >
-> >> > If the former, the issue is there regardless of the patch, so it needs=
->  to=3D
-> >>  be
-> >> > fixed.
-> >> >
-> >> > If the latter, there should be no effect of hwp_dynamic_boost (which w=
-> as
-> >> > overlooked by me).
-> >> >
-> >>=20
-> >> This seems to be a problem in active mode only, so yeah the bug exists
-> >> regardless of your patch, but the fix is likely to allow you to simplify
-> >> this series slightly if it allows you to take full advantage of
-> >> hwp_req_cached and drop the additional EPP cache.
-> >
-> > The additional EPP cache is there to avoid synchronizing the scheduler
-> > context directly with a random process running on another CPU and doing
-> > things that may take time.
-> >
-> > The difference between the active mode and the passive mode in this respe=
-> ct
-> > is that in the latter case hwp_req_cached generally needs to be updated f=
-> rom
-> > the scheduler context, whereas in the former case it does not.
-> >
-> 
-> Hm, that's unfortunate.  Though I'd be surprised to see any appreciable
-> performance penalty from synchronizing with a sysfs handler that should
-> hardly ever be called.  Anyway thanks for the fix.
-
-No problem.
-
-> > [cut]
-> >
-> >> >> No, I explicitly dismissed that in my previous reply.
-> >> >
-> >> > But at the same time you seem to agree that without the non-CPU compon=
-> ent
-> >> > (or thermal pressure) the existing CPU performance scaling would be
-> >> > sufficient.
-> >> >
-> >>=20
-> >> Yes, but not necessarily in order to allow the non-CPU component to draw
-> >> more power as you said above, but also because the existence of a
-> >> bottleneck in a non-CPU component gives us an opportunity to improve the
-> >> energy efficiency of the CPU, regardless of whether that allows the
-> >> workload to run faster.
-> >
-> > But why would the bottleneck be there otherwise?
-> >
-> 
-> Because some resource of the system (e.g. memory bandwidth, GPU fill
-> rate) may be close to 100% utilized, causing a bottleneck for reasons
-> unrelated to its energy usage.
-
-Well, not quite.  Or at least in that case the performance cannot be improved
-by limiting the CPU frequency below the frequency looked for by scaling
-governors, AFAICS.
-
-Scaling governors generally look for the maximum frequency at which there is no
-CPU idle time in the workload.  At that frequency the CPU time required by the
-workload to achieve the maximum performance is equal to the total CPU time
-available to it.  I till refer to that frequency as the maximum effective
-frequency (MEF) of the workload.
-
-By definition, running at frequencies above the MEF does not improve
-performance, but it causes CPU idle time to appear.  OTOH running at
-frequencies below the MEF increases the CPU time required by the workload
-to achieve the maximum performance, so effectively the workload does
-not get enough CPU time for the performance to be maximum, so it is lower
-than at the MEF.
-
-Of course, the MEF is well-defined as long as the processor does not share
-the power budget with another component that is also used by the workload
-(say, a GPU).  Without the sharing of a power budget, the MEF can be determined
-by looking at the CPU idle time (or CPU busy time, or CPU load, whichever is
-the most convenient) alone, because it already depends on the speed of any
-memory etc accessed by the workload and slowing down the processor doesn't
-improve the performance (because the other components don't run any faster
-as a result of that).
-
-However, if the processor is sharing the power budget with a GPU (say), it
-is not enough to look at the CPU idle time to determine the MEF, because
-slowing down the processor generally causes the GPU to get more power which
-allows it to run faster and CPUs can do more work, because they spend less
-time waiting for the GPU, so the CPU time available to the workload effectively
-increases and it can achieve the maximum performance at a lower frequency.
-So there is "effective MEF" depending on the relative performance balance
-between the processor and the GPU and on what "fraction" of the workload
-runs on the GPU.
-
-This means that the power budget sharing is essential here and the "if the
-energy-efficiency of the processor is improved, the other components get
-more power as a bonus" argument is not really valid.
-
-The frequency of the processor gets limited in order for the other components
-to get more power, which then allows the processor to do more work in the
-same time at the same frequency, so it becomes more energy-efficient.
-
-
-
