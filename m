@@ -2,172 +2,104 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A70CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 699AE2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE642075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 17:50:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRkWoHYw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KAP1c9zw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgG2RtQ (ORCPT
+        id S1727076AbgG2RuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:49:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34180 "EHLO
+        Wed, 29 Jul 2020 13:50:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgG2RtP (ORCPT
+        with ESMTP id S1726336AbgG2RuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 13:49:15 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22755C061794;
-        Wed, 29 Jul 2020 10:49:15 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id s21so20161833ilk.5;
-        Wed, 29 Jul 2020 10:49:15 -0700 (PDT)
+        Wed, 29 Jul 2020 13:50:16 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3673FC061794;
+        Wed, 29 Jul 2020 10:50:16 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e8so14642319pgc.5;
+        Wed, 29 Jul 2020 10:50:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ycpaC4HDS5mWn3wrZmk78uipQQWS0G3LEzZ0F3Dgd/U=;
-        b=RRkWoHYwzXDFpUWYKFbsbzM3WXIDK7iWfjPNTsozoCQfOYxT7sbXZhXSzYdKGwwB0H
-         KpaST50MGkKYzAFhpwY4qgurIay8CcPHtQn8ABhCznnMp2vv289WbzaCMlyYHJT3NTeS
-         Go9xud04+Q3Y/zDYQfL/TddYRe9boA1FNbQkCXEXHijXE/+x6lEs0Jwt0BG2XAZCz/lH
-         2rHM326tBGOGKMVLUqgpGfLtEnoxMFTIdsKHTEQ3/1kZVFHHMYvNG3yP03qecvJyJ25W
-         HBH1kiPZAP4BnYRBqBTU8mBqelSqsXd8BJjb+eEzvJl2M2zlsGl885slmt9In/+WHJyb
-         14YA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=53jL1gCIZPJ/fUs+rrvedrXgW51WiC52+XUIhgRgdC4=;
+        b=KAP1c9zwOHZJT007ketCdNEM3axHvVyg3WtUW02b7Ff7jujo1BmmQ4wg3RlBUvfcQK
+         MFiscEKEDRiPm5cHq3p0rIKUU9WVRytEKAStmrVKTwenh1FM3NvGIJu3pibZmiJUGYN4
+         LHcPL6qeAjUG/wMjkyTiAHPbg69vDZhQJIXTGoYbtfXnx0mPyoGzShmee2UPhQYebGGv
+         hKbjBDJhXdSPws9eHnQSwsQSkYfB8PJvsBwYoK4Oi/dkjkKqOuixzUx3LC7Uo3G/+juI
+         UdbFwrxHgFubtRL70cFPHEYjArtcjT+lQN4fhTxxAHpX1SHTj23iiQv9BVHH/62NqqF7
+         Uj1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ycpaC4HDS5mWn3wrZmk78uipQQWS0G3LEzZ0F3Dgd/U=;
-        b=ZuRXbasZ5H9moMDXVWacCx/5Z4igQvIgt01rDgxTxCIESZSmVw1KAGYQ+Jk2j6frfh
-         UP3CcvjfTtfh/GzjJyPPbBf+EAwx0AQnG8rqhtgrJRtD9pXMJvFjX7Kw17bgI0Api4a1
-         +Invk9ZN3Q9spOgDJDLQlBZ5OGyn7KNDvWL8qtSBNAmnGOLA0LuNhTxI/8sijolczbeP
-         XrzJNbmMW70tM3NqYC+73gd1OCG/+z+PNE0EFeXU5g1IE8FAJpDDftNQRfg3VnfXyvnx
-         X7NPyCZXvPz5/XaaWFAzK0hNPiVJh8WnATjpgK3PzPajCv2H9pN+1UBIH9j+7NnFThPy
-         0q6Q==
-X-Gm-Message-State: AOAM530dRmsA82WdlbwKbPXCe5QaP3zUIYp4S8YqC8nQ5eskxrFYdBYg
-        9CrgnAwxL7TD59o5+y9zeGVSePx32zFGpFIBhHs=
-X-Google-Smtp-Source: ABdhPJwWoVUeS4X9JOjdrnx4Ap+phImEIiTzRGwLP5R7zQh4ra0gphXJu3YCyKiDLAJgGFxYKrDoA1WvmtLqwKPS00Y=
-X-Received: by 2002:a05:6e02:e10:: with SMTP id a16mr16254401ilk.204.1596044954472;
- Wed, 29 Jul 2020 10:49:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=53jL1gCIZPJ/fUs+rrvedrXgW51WiC52+XUIhgRgdC4=;
+        b=kDCBsaS1jR8EmtwFqPUlCav5oAFUuo7459f8a7l5VRSOaW6OMErMnHCq3K4BKjd38z
+         6z/OftvQ6ha4owShoOMk2q7PnQmk3TECqoxuOtzDTI4LlTfRbG4+h33xsypCP8w5nOhj
+         zRM+kFwz6lUik5yVZsdRLQ7fVmjfLA4sPTKgzFwyKAq1x2uX0guQrRRjjY4q/2ezIHyQ
+         c5qfC9c2DLCcL3JdNe8n8BuG8ARsamlk45gKB5IRM8nyMq03MapVhF4qEN8u98ioXBqT
+         y9uNaFOPgf/gJ4HjfG8TuMfjqwOOa3qwXEg7zaBn4pEhp1uXzDN3Ek1BjpHZgghM3C+3
+         aiEA==
+X-Gm-Message-State: AOAM531oWSeFwCzjdm3dyTKxkwTC4wMu55slzBYI1iYKLI60wsX6RKAA
+        kFwMG0hx61g3veyEK0CcUxE=
+X-Google-Smtp-Source: ABdhPJxBMJ6Y/cuQz2xzSY6RfEwMgrehyKQdChtrXWsY4fXTK+U9CwOlHGUJeBwQ8ac+/a+CmK7+Gw==
+X-Received: by 2002:a62:2e45:: with SMTP id u66mr6559748pfu.121.1596045015723;
+        Wed, 29 Jul 2020 10:50:15 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id z4sm3046126pfb.55.2020.07.29.10.50.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 10:50:14 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 02:50:12 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH 0/2] locking/qspinlock: Break qspinlock_types.h header
+ loop
+Message-ID: <20200729175012.GE1160@jagdpanzerIV.localdomain>
+References: <20200729210311.425d0e9b@canb.auug.org.au>
+ <20200729114757.GA19388@gondor.apana.org.au>
+ <20200729122807.GA7047@gondor.apana.org.au>
 MIME-Version: 1.0
-References: <20200729160942.28867-1-krzk@kernel.org> <20200729160942.28867-4-krzk@kernel.org>
-In-Reply-To: <20200729160942.28867-4-krzk@kernel.org>
-From:   Tomasz Figa <tomasz.figa@gmail.com>
-Date:   Wed, 29 Jul 2020 19:49:02 +0200
-Message-ID: <CA+Ln22HWNSwVWARKL2NeUVx1y5yqHe0SGPZ1hcqBW88awySfPA@mail.gmail.com>
-Subject: Re: [PATCH 3/7] ARM: s3c: Remove plat-samsung/.../samsung-time.h
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Kukjin Kim <kgene@kernel.org>,
-        Vincent Sanders <vince@simtec.co.uk>,
-        Simtec Linux Team <linux@simtec.co.uk>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        patches@opensource.cirrus.com,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org,
-        Sergio Prado <sergio.prado@e-labworks.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Cedric Roux <sed@free.fr>, Lihua Yao <ylhuajnu@outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729122807.GA7047@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=E5=B9=B47=E6=9C=8829=E6=97=A5(=E6=B0=B4) 18:11 Krzysztof Kozlowski <kr=
-zk@kernel.org>:
->
-> Remove the arch/arm/plat-samsung/include/plat/samsung-time.h header and
-> move the contents to common.h headers in mach-s3c24xx and mach-s3c64xx.
-> The definition of declared functions is already in common.c in mach
-> directories, so it is logically to put declaration next to them.
->
-> This is also one step further towards removal of plat-samsung directory
-> and it fixes W=3D1 build warnings:
->
->     arch/arm/mach-s3c64xx/common.c:174:13: warning:
->         no previous prototype for 'samsung_set_timer_source' [-Wmissing-p=
-rototypes]
->       174 | void __init samsung_set_timer_source(unsigned int event, unsi=
-gned int source)
->
->     arch/arm/mach-s3c64xx/common.c:180:13: warning:
->         no previous prototype for 'samsung_timer_init' [-Wmissing-prototy=
-pes]
->       180 | void __init samsung_timer_init(void)
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/mach-s3c24xx/common.h                | 12 +++++++++
->  arch/arm/mach-s3c24xx/mach-amlm5900.c         |  2 --
->  arch/arm/mach-s3c24xx/mach-anubis.c           |  1 -
->  arch/arm/mach-s3c24xx/mach-at2440evb.c        |  1 -
->  arch/arm/mach-s3c24xx/mach-bast.c             |  1 -
->  arch/arm/mach-s3c24xx/mach-gta02.c            |  1 -
->  arch/arm/mach-s3c24xx/mach-h1940.c            |  1 -
->  arch/arm/mach-s3c24xx/mach-jive.c             |  1 -
->  arch/arm/mach-s3c24xx/mach-mini2440.c         |  1 -
->  arch/arm/mach-s3c24xx/mach-n30.c              |  1 -
->  arch/arm/mach-s3c24xx/mach-nexcoder.c         |  1 -
->  arch/arm/mach-s3c24xx/mach-osiris.c           |  1 -
->  arch/arm/mach-s3c24xx/mach-otom.c             |  1 -
->  arch/arm/mach-s3c24xx/mach-qt2410.c           |  1 -
->  arch/arm/mach-s3c24xx/mach-rx1950.c           |  1 -
->  arch/arm/mach-s3c24xx/mach-rx3715.c           |  1 -
->  arch/arm/mach-s3c24xx/mach-smdk2410.c         |  1 -
->  arch/arm/mach-s3c24xx/mach-smdk2413.c         |  1 -
->  arch/arm/mach-s3c24xx/mach-smdk2416.c         |  1 -
->  arch/arm/mach-s3c24xx/mach-smdk2440.c         |  1 -
->  arch/arm/mach-s3c24xx/mach-smdk2443.c         |  1 -
->  arch/arm/mach-s3c24xx/mach-tct_hammer.c       |  1 -
->  arch/arm/mach-s3c24xx/mach-vr1000.c           |  1 -
->  arch/arm/mach-s3c24xx/mach-vstms.c            |  1 -
->  arch/arm/mach-s3c64xx/common.h                | 13 ++++++++++
->  arch/arm/mach-s3c64xx/mach-anw6410.c          |  1 -
->  arch/arm/mach-s3c64xx/mach-crag6410.c         |  1 -
->  arch/arm/mach-s3c64xx/mach-hmt.c              |  1 -
->  arch/arm/mach-s3c64xx/mach-mini6410.c         |  1 -
->  arch/arm/mach-s3c64xx/mach-ncp.c              |  1 -
->  arch/arm/mach-s3c64xx/mach-real6410.c         |  1 -
->  arch/arm/mach-s3c64xx/mach-smartq.c           |  1 -
->  arch/arm/mach-s3c64xx/mach-smartq5.c          |  1 -
->  arch/arm/mach-s3c64xx/mach-smartq7.c          |  1 -
->  arch/arm/mach-s3c64xx/mach-smdk6400.c         |  1 -
->  arch/arm/mach-s3c64xx/mach-smdk6410.c         |  1 -
->  .../plat-samsung/include/plat/samsung-time.h  | 26 -------------------
->  37 files changed, 25 insertions(+), 61 deletions(-)
->  delete mode 100644 arch/arm/plat-samsung/include/plat/samsung-time.h
->
+On (20/07/29 22:28), Herbert Xu wrote:
+> This miniseries breaks a header loop involving qspinlock_types.h.
+> The issue is that qspinlock_types.h includes atomic.h, which then
+> eventually includes kernel.h which could lead back to the original
+> file via spinlock_types.h.
+> 
+> The first patch moves ATOMIC_INIT into linux/types.h while the second
+> patch actuallys breaks the loop by no longer including atomic.h
+> in qspinlock_types.h.
 
-For the s3c64xx bits:
+Thanks for staying on this.
 
-Reviewed-by: Tomasz Figa <tomasz.figa@gmail.com>
+I pulled locking/header, run some cross-compilation tests locally
+(powerpc, arm, arm64, x86) and pushed printk/for-next. Let's see.
 
-I suppose the next step would be renaming those functions to s3c24xx_*
-and s3c64xx_* to avoid naming collisions?
-
-Best regards,
-Tomasz
+	-ss
