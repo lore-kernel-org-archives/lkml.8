@@ -2,138 +2,96 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8494EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 857DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA74206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C005206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 09:12:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pmZEnPWo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hpVGUku4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgG2JJi (ORCPT
+        id S1727910AbgG2JL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 05:09:38 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:48659 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgG2JJh (ORCPT
+        Wed, 29 Jul 2020 05:11:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726737AbgG2JL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 05:09:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1596013777; x=1627549777;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=SciFhlKfOyQgoHR3W2u7HoyEVe3pSryfx/QBiBfKds8=;
-  b=pmZEnPWomMJY0KtcEhkzCIU6S1wsBHtwU2FcLwE5RL/dyAmflqLrGZpj
-   buZtwtLWD+uDJLdYDd1ac6JtjEiCJk0Eck+6RQ88IkdtdHoAO0lENHIRP
-   XADF7GesljeYckuvCb62xv+3jD8zNjj3nSTjYS8w81txPOi6IWjs+EKAc
-   M=;
-IronPort-SDR: iGhMXsEFZ7rmehllBU/6DXbQhQ9ceJjM/OTGQL0+l9iOw433CMybv2oqS2CGcWtQPX5PXSPwfO
- aV5zYwDbdVxA==
-X-IronPort-AV: E=Sophos;i="5.75,409,1589241600"; 
-   d="scan'208";a="44709903"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 29 Jul 2020 09:09:35 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id 4DA8628392C;
-        Wed, 29 Jul 2020 09:09:31 +0000 (UTC)
-Received: from EX13D20UWC002.ant.amazon.com (10.43.162.163) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 29 Jul 2020 09:09:31 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.162.109) by
- EX13D20UWC002.ant.amazon.com (10.43.162.163) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 29 Jul 2020 09:09:28 +0000
-Subject: Re: [PATCH] KVM: x86: Deflect unknown MSR accesses to user space
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-CC:     Paolo Bonzini <pbonzini@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Aaron Lewis <aaronlewis@google.com>
-References: <20200728004446.932-1-graf@amazon.com>
- <87d04gm4ws.fsf@vitty.brq.redhat.com>
- <a1f30fc8-09f5-fe2f-39e2-136b881ed15a@amazon.com>
- <CALMp9eQ3OxhQZYiHPiebX=KyvjWQgxQEO-owjSoxgPKsOMRvjw@mail.gmail.com>
- <87y2n2log7.fsf@vitty.brq.redhat.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <173948e8-4c7a-6dc4-de17-99151bc56d91@amazon.com>
-Date:   Wed, 29 Jul 2020 11:09:26 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Wed, 29 Jul 2020 05:11:58 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83AA8C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 02:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=J0SIyyCqtngJmxWOxvkn9MOwqoIdVm/BuYE3QogVzc8=; b=hpVGUku45zWWGcg3Prx2nBUfqb
+        wC7X8NqIK6c6gnNIbhOYj17a2dqHkheORFnbppCmKyIBj/YKeSpuQyiisJqs50YqU3dAyGOIems4V
+        LHIXzMKWl6aFtCjwT1NrwYz2JAmdz/FS2XpPJ9NKiP6AYrQ0T8NUz3aPFAuadCNZrl8sQJeEO7yhY
+        NfBCwK4vvGWkub3aVF14dJdSw2TasQjmhM1EshBuXO9ZWJ9ca87kAYesGvw6kMeMFjDCJpWLuJ0ou
+        gI+D78lyyCVpDihtztlVMkpTsBqbMuluBhHYDHfhaxQ9ZuYYFF6G7+MVd3xjGvcRthS7+WBZEnMcz
+        B8FIoJoA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0i7u-0003PP-J3; Wed, 29 Jul 2020 09:11:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3265F300238;
+        Wed, 29 Jul 2020 11:11:54 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1D9B22B804951; Wed, 29 Jul 2020 11:11:54 +0200 (CEST)
+Date:   Wed, 29 Jul 2020 11:11:54 +0200
+From:   peterz@infradead.org
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel@collabora.com
+Subject: Re: [PATCH 2/6] arch: x86: Wrap TIF_IA32 checks
+Message-ID: <20200729091154.GB119549@hirez.programming.kicks-ass.net>
+References: <20200728202229.1195682-1-krisman@collabora.com>
+ <20200728202229.1195682-3-krisman@collabora.com>
+ <CALCETrV_HJCrDLCKLrqNbLiOsoEcC9M7zn-v_hcVMvDgnWW8yw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87y2n2log7.fsf@vitty.brq.redhat.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.109]
-X-ClientProxiedBy: EX13D03UWC003.ant.amazon.com (10.43.162.79) To
- EX13D20UWC002.ant.amazon.com (10.43.162.163)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrV_HJCrDLCKLrqNbLiOsoEcC9M7zn-v_hcVMvDgnWW8yw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 28, 2020 at 08:43:27PM -0700, Andy Lutomirski wrote:
+> On Tue, Jul 28, 2020 at 1:22 PM Gabriel Krisman Bertazi
 
+> > diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+> > index dc43cc124e09..27d1cc1f3d05 100644
+> > --- a/arch/x86/events/intel/ds.c
+> > +++ b/arch/x86/events/intel/ds.c
+> > @@ -1261,7 +1261,7 @@ static int intel_pmu_pebs_fixup_ip(struct pt_regs *regs)
+> >                 old_to = to;
+> >
+> >  #ifdef CONFIG_X86_64
+> > -               is_64bit = kernel_ip(to) || !test_thread_flag(TIF_IA32);
+> > +               is_64bit = kernel_ip(to) || !TASK_IA32(current);
+> 
+> PeterZ, does PEBS not give us a CPL?  Is it really just IP?
+> 
+> Anyway, this should probably be:
+> 
+> is_64bit = kernel_ip(to) || user_64bit_mode(regs) || !user_mode(regs);
 
-On 29.07.20 10:23, Vitaly Kuznetsov wrote:
-> =
+Correct, PEBS doesn't have the segment registers and we get to guess :/
+Look at the various pebs_record_* structures in
+arch/x86/events/intel/ds.c.
 
-> =
-
-> =
-
-> Jim Mattson <jmattson@google.com> writes:
-> =
-
->> On Tue, Jul 28, 2020 at 5:41 AM Alexander Graf <graf@amazon.com> wrote:
->>>
-> =
-
-> ...
-> =
-
->>> While it does feel a bit overengineered, it would solve the problem that
->>> we're turning in-KVM handled MSRs into an ABI.
->>
->> It seems unlikely that userspace is going to know what to do with a
->> large number of MSRs. I suspect that a small enumerated list will
->> suffice.
-> =
-
-> The list can also be 'wildcarded', i.e.
-> {
->   u32 index;
->   u32 mask;
->   ...
-> }
-> =
-
-> to make it really short.
-
-I like the idea of wildcards, but I can't quite wrap my head around how =
-
-we would implement ignore_msrs in user space with them?
-
-
-Alex
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+That said, in fixup_ip() we're guaranteed to be in the same process, so
+unless the task does really funny things like switch mode between
+triggering the assist and getting the PMI, we ought to be able to trust
+regs.
