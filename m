@@ -4,81 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E86C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D16822075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39392074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 03:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgG2Dos (ORCPT
+        id S1726871AbgG2Dq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 23:44:48 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:52800 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726245AbgG2Dos (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 23:44:48 -0400
-X-IronPort-AV: E=Sophos;i="5.75,408,1589212800"; 
-   d="scan'208";a="97041138"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 29 Jul 2020 11:44:42 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id 0B1834CE38CB;
-        Wed, 29 Jul 2020 11:44:38 +0800 (CST)
-Received: from G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.205) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 29 Jul 2020 11:44:37 +0800
-Received: from localhost.localdomain (10.167.225.206) by
- G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1497.2 via Frontend Transport; Wed, 29 Jul 2020 11:44:37 +0800
-From:   Hao Li <lihao2018.fnst@cn.fujitsu.com>
-To:     <viro@zeniv.linux.org.uk>
-CC:     <dan.j.williams@intel.com>, <willy@infradead.org>, <jack@suse.cz>,
-        <linux-fsdevel@vger.kernel.org>, <linux-nvdimm@lists.01.org>,
-        <linux-kernel@vger.kernel.org>, <lihao2018.fnst@cn.fujitsu.com>
-Subject: [PATCH] dax: Fix wrong error-number passed into xas_set_err()
-Date:   Wed, 29 Jul 2020 11:44:36 +0800
-Message-ID: <20200729034436.24267-1-lihao2018.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 0B1834CE38CB.A1DB9
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: lihao2018.fnst@cn.fujitsu.com
+        Tue, 28 Jul 2020 23:46:26 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:36562 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726245AbgG2Dq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 23:46:26 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1183A200E2A;
+        Wed, 29 Jul 2020 05:46:25 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F1494200E1C;
+        Wed, 29 Jul 2020 05:46:20 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 014644031D;
+        Wed, 29 Jul 2020 05:46:14 +0200 (CEST)
+From:   Alison Wang <alison.wang@nxp.com>
+To:     catalin.marinas@arm.com, will@kernel.org,
+        kurt.kanzenbach@linutronix.de, paulmck@kernel.org, mw@semihalf.com,
+        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     alison.wang@nxp.com
+Subject: [RFC PATCH] arm64: defconfig: Disable fine-grained task level IRQ time accounting
+Date:   Wed, 29 Jul 2020 11:39:34 +0800
+Message-Id: <20200729033934.22349-1-alison.wang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The error-number passed into xas_set_err() should be negative. Otherwise,
-the xas_error() will return 0, and grab_mapping_entry() will return the
-found entry instead of a SIGBUS error when the entry is not a value.
-And then, the subsequent code path would be wrong.
+In the current arm64 defconfig, CONFIG_IRQ_TIME_ACCOUNTING is enabled as
+default. According to my tests on NXP's LayerScape and i.MX platforms,
+the system hangs when running the command "stress-ng --hrtimers 1" with
+CONFIG_IRQ_TIME_ACCOUNTING enabled. Disabling this option, the issue
+disappears. CONFIG_IRQ_TIME_ACCOUNTING causes serious performance impact
+when running hrtimer stress test at the same time.
 
-Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
+Signed-off-by: Alison Wang <alison.wang@nxp.com>
 ---
- fs/dax.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/configs/defconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index 11b16729b86f..acac675fe7a6 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -488,7 +488,7 @@ static void *grab_mapping_entry(struct xa_state *xas,
- 		if (dax_is_conflict(entry))
- 			goto fallback;
- 		if (!xa_is_value(entry)) {
--			xas_set_err(xas, EIO);
-+			xas_set_err(xas, -EIO);
- 			goto out_unlock;
- 		}
- 
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index e0f33826819f..ff1c11d8b10b 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -4,7 +4,6 @@ CONFIG_AUDIT=y
+ CONFIG_NO_HZ_IDLE=y
+ CONFIG_HIGH_RES_TIMERS=y
+ CONFIG_PREEMPT=y
+-CONFIG_IRQ_TIME_ACCOUNTING=y
+ CONFIG_BSD_PROCESS_ACCT=y
+ CONFIG_BSD_PROCESS_ACCT_V3=y
+ CONFIG_TASK_XACCT=y
 -- 
-2.28.0
-
-
+2.17.1
 
