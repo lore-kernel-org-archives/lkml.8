@@ -2,99 +2,88 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDBEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B84AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBB9205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9AF2205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:18:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NrlJIt3z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IWZv7P3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgG2MRm (ORCPT
+        id S1726929AbgG2MSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:17:42 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:56038 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgG2MRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:17:41 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EBC0D1A112B;
-        Wed, 29 Jul 2020 14:17:38 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DF5681A112A;
-        Wed, 29 Jul 2020 14:17:38 +0200 (CEST)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id CA5732032B;
-        Wed, 29 Jul 2020 14:17:38 +0200 (CEST)
-Date:   Wed, 29 Jul 2020 15:17:38 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Fugang Duan <fugang.duan@nxp.com>
-Cc:     NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 17/17] arm64: dts: imx8mp: Add hdmi_blk_ctrl node
-Message-ID: <20200729121738.rzhtjjyej3nfu3vh@fsr-ub1664-175>
-References: <1596024483-21482-1-git-send-email-abel.vesa@nxp.com>
- <1596024483-21482-18-git-send-email-abel.vesa@nxp.com>
+        Wed, 29 Jul 2020 08:18:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41764 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgG2MSY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 08:18:24 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596025102;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ly5lKlt5+T8rjsxUijX+AknXGpRtZhyO/+W9xI8yMEs=;
+        b=NrlJIt3zQ4aIa5wj65OpStrRFgZ5MSXz6spZIAKfO1kOjA9cXNBgP2bQW54pLpkCrCwvIb
+        UggMJU1I06R0lCphDduHZWs7fjdN9tW6mx69Y3wFRsK9QMfQJ5gOspgJPTNpuN+eMaxCyB
+        N6wE4NyBf8jk80309EsKGumgG6nmIXYgOL4bI+naj2pHY4Kiu3OHDFz/ZCjbSAdSHWz3Lh
+        IfTXldmzK6EFUKRniALL0q8K3pdWszisJfzdQlgjC7Uka/Uq6ZHoZOEUVbI4eZWIW4wbyZ
+        5OenmVSN3Kn48CnT506PbQyZwEKjBwHNnWnpFWdAwGJUgbbI0zyPj3mnk1EEZA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596025102;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ly5lKlt5+T8rjsxUijX+AknXGpRtZhyO/+W9xI8yMEs=;
+        b=IWZv7P3FRyXOaZUh/YYV0zCmYLJzVjlqQZR8JHuVqqKiihPN/iUlTmP03IWU7z3fPY95NV
+        LZAG0I0FiRvbiKAA==
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: [patch V4 04/15] entry: Provide generic interrupt entry/exit code
+In-Reply-To: <CALCETrUBQa=L_Chd=RAPDEihvUWC_9KoHG00zYsGOwiYg87naQ@mail.gmail.com>
+References: <20200721105706.030914876@linutronix.de> <20200721110808.671110583@linutronix.de> <CALCETrUBQa=L_Chd=RAPDEihvUWC_9KoHG00zYsGOwiYg87naQ@mail.gmail.com>
+Date:   Wed, 29 Jul 2020 14:18:22 +0200
+Message-ID: <87sgdaa50x.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596024483-21482-18-git-send-email-abel.vesa@nxp.com>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-07-29 15:08:03, Abel Vesa wrote:
-> Some of the features of the hdmi_ctrl will be used by some
-> different drivers in a way those drivers will know best, so adding the
-> syscon compatible we allow those to do just that. Only the resets
-> and the clocks are registered bit the clk-blk-ctrl driver.
-> 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> index 172c548..5a76c4d 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> @@ -751,6 +751,15 @@
->  				#clock-cells = <1>;
->  				#reset-cells = <1>;
->  			};
-> +
-> +			hdmi_blk_ctrl: hdmi-blk-ctrl@32fc0000 {
-> +				compatible = "fsl,imx8mp-hdmi-blk-ctrl", "syscon";
-> +				reg = <0x32fc0000 0x1000>;
-> +				power-domains = <&hdmimix_pd>;
+Andy Lutomirski <luto@kernel.org> writes:
+> On Tue, Jul 21, 2020 at 4:08 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>
+>> From: Thomas Gleixner <tglx@linutronix.de>
+>>
+>> Like the syscall entry/exit code interrupt/exception entry after the real
+>> low level ASM bits should not be different accross architectures.
+>>
+>> Provide a generic version based on the x86 code.
+>
+> I don't like the name.  Sure, idtentry is ugly and x86-specific, but
+> irq gives the wrong impression.  This is an entry path suitable for
+> any entry that is guaranteed not to hit during entry/exit handling.
+> Syscalls, page faults, etc are not "irqs".
 
-I forget to remove the power-domains property.
+Yeah, it's exceptions and interrupts, but I did not come up with a
+better name so far.
 
-Will remove in the next version.
+Thanks,
 
-> +
-> +				#clock-cells = <1>;
-> +				#reset-cells = <1>;
-> +			};
->  		};
->  
->  		aips5: bus@30c00000 {
-> -- 
-> 2.7.4
-> 
+        tglx
