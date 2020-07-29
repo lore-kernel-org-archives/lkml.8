@@ -2,107 +2,75 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCB5206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4C12076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:56:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596005770;
+	bh=kh1VsqAFdvoIwnbd4u/yWyXxzaqDdZRI3AOfNdCIOHQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UCKS/pnm4EBynkK0EZn2SDJMVm+mMBFmqRffcziD5NKi0E7nuI473LC4vgklDI+yt
+	 PEJieN4THCvemAKhTIyKpmDnWeQknjzMHZSY/w02jVpws5dOMxB2AbtMIRQxQQzgCD
+	 YXF+gsePHrgDPTKfvZZ5BXuzbr/sQeGi9wQXYgXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgG2Gz1 (ORCPT
+        id S1727771AbgG2G4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 02:55:27 -0400
-Received: from 4.mo179.mail-out.ovh.net ([46.105.36.149]:42408 "EHLO
-        4.mo179.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgG2Gz0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 02:55:26 -0400
-Received: from player711.ha.ovh.net (unknown [10.108.42.75])
-        by mo179.mail-out.ovh.net (Postfix) with ESMTP id 694B4173B78
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 08:38:32 +0200 (CEST)
-Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
-        (Authenticated sender: groug@kaod.org)
-        by player711.ha.ovh.net (Postfix) with ESMTPSA id AB08514A1AD8F;
-        Wed, 29 Jul 2020 06:38:23 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-105G006896df29f-f4f3-493b-ab9a-d0c6f23d8bcf,
-                    A40F6FE0CFFE28C23AB4AFBB3D5D665E11D39731) smtp.auth=groug@kaod.org
-Date:   Wed, 29 Jul 2020 08:38:22 +0200
-From:   Greg Kurz <groug@kaod.org>
-To:     Dominique Martinet <asmadeus@codewreck.org>
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        v9fs-developer@lists.sourceforge.net,
-        Latchesar Ionkov <lucho@ionkov.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [V9fs-developer] [PATCH kernel] 9p/trans_fd: Check file mode at
- opening
-Message-ID: <20200729083822.66e165ed@bahia.lan>
-In-Reply-To: <20200729061449.GA19682@nautica>
-References: <20200728124129.130856-1-aik@ozlabs.ru>
-        <20200728194235.52660c08@bahia.lan>
-        <20200729061449.GA19682@nautica>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 29 Jul 2020 02:56:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726290AbgG2G4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 02:56:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32DB2206D4;
+        Wed, 29 Jul 2020 06:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596005768;
+        bh=kh1VsqAFdvoIwnbd4u/yWyXxzaqDdZRI3AOfNdCIOHQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=n0IdOqB0Ooku1vMr/HKKyRhQ3ee8JHb5Z6P4C9RSaaGMySgLJZt2AgdNQ86rjZmB8
+         G4SQA2maX0uyxZahCHG4JjpZPnETYxzXqrZ2qdUE9zYXbff0wZWf8VBTLCEcr8cZYo
+         lPYR7TPH/lBD8ZakK0Los4OCwY2LJ44wnwQ2qat4=
+Date:   Wed, 29 Jul 2020 08:55:59 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jessica Yu <jeyu@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 7/7] modules: inherit TAINT_PROPRIETARY_MODULE
+Message-ID: <20200729065559.GA476238@kroah.com>
+References: <20200729062711.13016-1-hch@lst.de>
+ <20200729062711.13016-8-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 1830713248816142592
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrieefgddutdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtgfesthejredtredtvdenucfhrhhomhepifhrvghgucfmuhhriicuoehgrhhouhhgsehkrghougdrohhrgheqnecuggftrfgrthhtvghrnhepveehieetvdettdfhiefhueetheekheejgfdtvddthfffuefgueduvefgveeijeegnecuffhomhgrihhnpehophgvnhhgrhhouhhprdhorhhgnecukfhppedtrddtrddtrddtpdekvddrvdehfedrvddtkedrvdegkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejuddurdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepghhrohhugheskhgrohgurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729062711.13016-8-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jul 2020 08:14:49 +0200
-Dominique Martinet <asmadeus@codewreck.org> wrote:
+On Wed, Jul 29, 2020 at 08:27:11AM +0200, Christoph Hellwig wrote:
+> If a TAINT_PROPRIETARY_MODULE exports symbol, inherit the tain flag
 
-> Greg Kurz wrote on Tue, Jul 28, 2020:
-> > > The "fd" transport layer uses 2 file descriptors passed externally
-> > > and calls kernel_write()/kernel_read() on these. If files were opened
-> > > without FMODE_WRITE/FMODE_READ, WARN_ON_ONCE() will fire.
+s/tain/taint/
+
+> for all modules importing these symbols, and don't allow loading
+> symbols from TAINT_PROPRIETARY_MODULE modules if the module previously
+> imported gplonly symbols.  Add a anti-circumvention devices so people
+> don't accidentally get themselves into trouble this way.
 > 
-> There already is a fix in linux-next as a39c46067c84 ("net/9p: validate
-> fds in p9_fd_open")
-> 
-> > > This adds file mode checking in p9_fd_open; this returns -EBADF to
-> > > preserve the original behavior.
-> > 
-> > So this would cause open() to fail with EBADF, which might look a bit
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Oops... this seems to rather end up in mount(). :)
+Ah, the proven-to-be-illegal "GPL Condom" defense :)
 
-> > weird to userspace since it didn't pass an fd... Is this to have a
-> > different error than -EIO that is returned when either rfd or wfd
-> > doesn't point to an open file descriptor ? If yes, why do we care ?
-> 
-> FWIW the solution taken just returns EIO as it would if an invalid fd
-> was given, but since it did pass an fd EBADF actually makes sense to me?
-> 
+Nice, work, thanks for doing this:
 
-POSIX says:
-
-https://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html
-
-[EBADF]
-Bad file descriptor. A file descriptor argument is out of range, refers to
-no open file, or a read (write) request is made to a file that is only open
-for writing (reading).
-
-It seems that EBADF would be appropriate for both the existing and the
-new error path.
-
-> However to the second question I'm not sure I care :)
-> 
-> > > Found by syzkaller.
-> 
-> I'm starting to understand where David comment came from the other day,
-> I guess it's still time to change my mind and submit to linus now I've
-> had time to test it...
-> 
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
