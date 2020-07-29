@@ -2,88 +2,53 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B84AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69128C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9AF2205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:18:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NrlJIt3z";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IWZv7P3F"
+	by mail.kernel.org (Postfix) with ESMTP id 4E7A4205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:18:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgG2MSY (ORCPT
+        id S1726933AbgG2MS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:18:24 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41764 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgG2MSY (ORCPT
+        Wed, 29 Jul 2020 08:18:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726449AbgG2MS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:18:24 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596025102;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ly5lKlt5+T8rjsxUijX+AknXGpRtZhyO/+W9xI8yMEs=;
-        b=NrlJIt3zQ4aIa5wj65OpStrRFgZ5MSXz6spZIAKfO1kOjA9cXNBgP2bQW54pLpkCrCwvIb
-        UggMJU1I06R0lCphDduHZWs7fjdN9tW6mx69Y3wFRsK9QMfQJ5gOspgJPTNpuN+eMaxCyB
-        N6wE4NyBf8jk80309EsKGumgG6nmIXYgOL4bI+naj2pHY4Kiu3OHDFz/ZCjbSAdSHWz3Lh
-        IfTXldmzK6EFUKRniALL0q8K3pdWszisJfzdQlgjC7Uka/Uq6ZHoZOEUVbI4eZWIW4wbyZ
-        5OenmVSN3Kn48CnT506PbQyZwEKjBwHNnWnpFWdAwGJUgbbI0zyPj3mnk1EEZA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596025102;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ly5lKlt5+T8rjsxUijX+AknXGpRtZhyO/+W9xI8yMEs=;
-        b=IWZv7P3FRyXOaZUh/YYV0zCmYLJzVjlqQZR8JHuVqqKiihPN/iUlTmP03IWU7z3fPY95NV
-        LZAG0I0FiRvbiKAA==
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [patch V4 04/15] entry: Provide generic interrupt entry/exit code
-In-Reply-To: <CALCETrUBQa=L_Chd=RAPDEihvUWC_9KoHG00zYsGOwiYg87naQ@mail.gmail.com>
-References: <20200721105706.030914876@linutronix.de> <20200721110808.671110583@linutronix.de> <CALCETrUBQa=L_Chd=RAPDEihvUWC_9KoHG00zYsGOwiYg87naQ@mail.gmail.com>
-Date:   Wed, 29 Jul 2020 14:18:22 +0200
-Message-ID: <87sgdaa50x.fsf@nanos.tec.linutronix.de>
+        Wed, 29 Jul 2020 08:18:56 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C19D4C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 05:18:56 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 6EBC13EC; Wed, 29 Jul 2020 14:18:55 +0200 (CEST)
+Date:   Wed, 29 Jul 2020 14:18:53 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        robin.murphy@arm.com, kernel-team@android.com
+Subject: Re: [GIT PULL] iommu/arm-smmu: Move driver files into their own
+ subdir
+Message-ID: <20200729121853.GB23653@8bytes.org>
+References: <20200727120510.GA20662@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727120510.GA20662@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
-> On Tue, Jul 21, 2020 at 4:08 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->> From: Thomas Gleixner <tglx@linutronix.de>
->>
->> Like the syscall entry/exit code interrupt/exception entry after the real
->> low level ASM bits should not be different accross architectures.
->>
->> Provide a generic version based on the x86 code.
->
-> I don't like the name.  Sure, idtentry is ugly and x86-specific, but
-> irq gives the wrong impression.  This is an entry path suitable for
-> any entry that is guaranteed not to hit during entry/exit handling.
-> Syscalls, page faults, etc are not "irqs".
+On Mon, Jul 27, 2020 at 01:05:11PM +0100, Will Deacon wrote:
+> As requested in [1], here is a second Arm SMMU pull request for 5.9, moving
+> the driver files into their own subdirectory to avoid cluttering
+> drivers/iommu/.
 
-Yeah, it's exceptions and interrupts, but I did not come up with a
-better name so far.
+Pulled, thanks a lot, Will.
 
-Thanks,
-
-        tglx
