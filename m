@@ -2,184 +2,150 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B067C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC2C2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3852070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:26:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="IZlhPDfY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgG2HXT (ORCPT
+        id S1727815AbgG2H0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:23:19 -0400
-Received: from mga04.intel.com ([192.55.52.120]:23959 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727112AbgG2HXS (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:23:18 -0400
-IronPort-SDR: p5+omKWVjITymiqCHJ1piW63LXyJ+Lpbbk+9s7vHNKnTuk0JINccEmu1Bh2xH85RKUU64rRJXl
- g4D3gTxsPJoQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="148829886"
-X-IronPort-AV: E=Sophos;i="5.75,409,1589266800"; 
-   d="scan'208";a="148829886"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 00:23:16 -0700
-IronPort-SDR: GynbTJcHPsM4btdfc36s/y1JeLAoJOMRZnFrmbJM9Eq8ZwK1IUndL3PhS0Sr2E45mHEkap/iE5
- 86+1nLLUNx+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,409,1589266800"; 
-   d="scan'208";a="320666570"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
-  by orsmga008.jf.intel.com with ESMTP; 29 Jul 2020 00:23:13 -0700
-Subject: Re: [PATCH v2] perf evsel: Don't set
- sample_regs_intr/sample_regs_user for dummy event
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-To:     Jiri Olsa <jolsa@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com, irogers@google.com
-References: <20200720010013.18238-1-yao.jin@linux.intel.com>
- <20200720091748.GH760733@krava>
- <af1da971-5c60-4c17-e5d9-01430c928592@linux.intel.com>
- <20200722110810.GD981884@krava>
- <6f732f7f-7c5a-726f-5b09-2c6761f3b534@linux.intel.com>
-Message-ID: <dc2c18fa-85d3-84b7-8eff-53c9d1e61ce5@linux.intel.com>
-Date:   Wed, 29 Jul 2020 15:23:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 03:26:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgG2H0K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 03:26:10 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF371C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 00:26:08 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id k4so19945268oik.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 00:26:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dDmmebkXIz4CjLiFs9kSGs/6GlucFeZ7qPJxtjmG4sA=;
+        b=IZlhPDfY6bld0s6GMWo7mrYppG162jxfqsGG5h60rx90fVE1Q/X7tVUH2nzrp4yk1Z
+         riMb3hViLjhGc25J41okCk+gUPWr2KPAQK0YbOtlwvH8dVlNu0DrKz98jRbJeqOyfdc5
+         V6gyhGAvxs+tO64kWF8AH+le5f+EnYvb3dsXQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dDmmebkXIz4CjLiFs9kSGs/6GlucFeZ7qPJxtjmG4sA=;
+        b=N99lusYBWqUsGQ/SbRJs9+hWrBSb1iabgk3Z5B0xSQeDPC2/3fPcRzJ2hSaRMBooHf
+         rDsti5FGNw3oK0QasPS1mob4NlYzkfm/YsDoRey2zjc2kZPMSTr6noX4/NmnkKfYtXt4
+         mlVPJETgFHAr2vkiAfzHCw9XRhYOlJUjjl/vRT7nXcCtKQTtpck9G1URwpd/YS77Qm9d
+         jKWPXw2DiuJP8HnlRhl8q9oTE/qZZ9fzIc5FettmTCR9b4vN5oImRWjQNbp17wN7xc60
+         30N6OTBYTNj88AQ74MbF4M2fGxNeScU/OAAZibQTcXZmE9gO+DHaSmIuzxP+r5tYv/xY
+         bkLg==
+X-Gm-Message-State: AOAM533lCN745MqiNOBDRQzE+EvN0dSOZcFFqHPKRJhmzzB8QlxSzMoW
+        Q8ARi/iQyEK03qSE39U/jExx0a5A7pLS5Earqot1uA==
+X-Google-Smtp-Source: ABdhPJyeoc7J2ZuPX6yN1xkaadXh+SXP0p+C+fIAhj+NB33LrYWtHdKkCD1jXJiQnKbwCMIwIq63lFM2VlygcOWgyII=
+X-Received: by 2002:aca:da03:: with SMTP id r3mr6666859oig.14.1596007568182;
+ Wed, 29 Jul 2020 00:26:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6f732f7f-7c5a-726f-5b09-2c6761f3b534@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200725063429.172139-1-weiyongjun1@huawei.com>
+ <20200728220205.GJ6419@phenom.ffwll.local> <20200728223543.GU13753@pendragon.ideasonboard.com>
+ <20200729002944.GA11598@xilinx.com>
+In-Reply-To: <20200729002944.GA11598@xilinx.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 29 Jul 2020 09:25:57 +0200
+Message-ID: <CAKMK7uEKRrfHzmZ2mh++bQTmNeBuhpKsz2K2b83oM0SXBMOGFg@mail.gmail.com>
+Subject: Re: [PATCH -next] drm: xlnx: Fix typo in parameter description
+To:     Hyun Kwon <hyun.kwon@xilinx.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Michal Simek <michals@xilinx.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+On Wed, Jul 29, 2020 at 2:33 AM Hyun Kwon <hyun.kwon@xilinx.com> wrote:
+>
+> Hello,
+>
+> On Tue, Jul 28, 2020 at 03:35:43PM -0700, Laurent Pinchart wrote:
+> > On Wed, Jul 29, 2020 at 12:02:05AM +0200, daniel@ffwll.ch wrote:
+> > > Hi Hyun Kwon,
+> > >
+> > > Are you all sorted with drm-misc commit rights so you can push the 3
+> > > (maybe there's more) xlnx fixup patches to drm-misc-next-fixes?
+> >
+> > Thanks Daniel for bringing this up.
+> >
+> > Hyun, would that work for you ?
+> >
+>
+> Should I commit small fixups directly to,
+> https://cgit.freedesktop.org/drm/drm-misc/log/?h=drm-misc-next-fixes?
 
-Could you help to check if following condition will break PT?
+Well these patches right now need to go there, but that's not always
+the case. We have a flowchart for that now:
 
-"(opts->sample_intr_regs && !evsel->no_aux_samples && !evsel__is_dummy_event(evsel))"
+https://drm.pages.freedesktop.org/maintainer-tools/committer-drm-misc.html#where-do-i-apply-my-patch
 
-Thanks
-Jin Yao
+> I received the account for drm-misc a couple years ago, and was able to access
+> back then. But now someting has changed, and I can't access at the moment. I'll
+> need some time to fix my setup. Maybe some help would be appreciated to speed
+> up. I may ping you offline if you don't mind.
 
-On 7/23/2020 9:01 AM, Jin, Yao wrote:
-> Hi Jiri, Adrian,
-> 
-> On 7/22/2020 7:08 PM, Jiri Olsa wrote:
->> On Wed, Jul 22, 2020 at 01:00:03PM +0800, Jin, Yao wrote:
->>
->> SNIP
->>
->>>>>
->>>>> If we use -IXMM0, the attr>sample_regs_intr will be set with
->>>>> PERF_REG_EXTENDED_MASK bit.
->>>>>
->>>>> It doesn't make sense to set attr->sample_regs_intr for a
->>>>> software dummy event.
->>>>>
->>>>> This patch adds dummy event checking before setting
->>>>> attr->sample_regs_intr and attr->sample_regs_user.
->>>>>
->>>>> After:
->>>>>     # ./perf record -e cycles:p -IXMM0 -a -- sleep 1
->>>>>     [ perf record: Woken up 1 times to write data ]
->>>>>     [ perf record: Captured and wrote 0.413 MB perf.data (45 samples) ]
->>>>>
->>>>>    v2:
->>>>>    ---
->>>>>    Rebase to perf/core
->>>>>
->>>>> Fixes: 0a892c1c9472 ("perf record: Add dummy event during system wide synthesis")
->>>>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->>>>> ---
->>>>>    tools/perf/util/evsel.c | 6 ++++--
->>>>>    1 file changed, 4 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->>>>> index 9aa51a65593d..11794d3b7879 100644
->>>>> --- a/tools/perf/util/evsel.c
->>>>> +++ b/tools/perf/util/evsel.c
->>>>> @@ -1014,12 +1014,14 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
->>>>>        if (callchain && callchain->enabled && !evsel->no_aux_samples)
->>>>>            evsel__config_callchain(evsel, opts, callchain);
->>>>> -    if (opts->sample_intr_regs && !evsel->no_aux_samples) {
->>>>> +    if (opts->sample_intr_regs && !evsel->no_aux_samples &&
->>>>> +        !evsel__is_dummy_event(evsel)) {
->>>>
->>>> hum, I thought it'd look something like this:
->>>>
->>>>     if (opts->sample_intr_regs && (!evsel->no_aux_samples || !evsel__is_dummy_event(evsel))
->>>>
->>>> but I'm not sure how no_aux_samples flag works exactly.. so it might be
->>>> correct.. just making sure ;-)
->>>>
->>>> cc-ing Adrian
->>>>
->>>> jirka
->>>>
->>>>
->>>
->>> no_aux_samples is set to false by default and it's only set to true by pt, right?
->>>
->>> So most of the time, !evsel->no_aux_samples is always true.
->>>
->>> if (opts->sample_intr_regs && (!evsel->no_aux_samples || !evsel__is_dummy_event(evsel)) {
->>>     attr->sample_regs_intr = opts->sample_intr_regs;
->>>     evsel__set_sample_bit(evsel, REGS_INTR);
->>> }
->>>
->>> So even if the evsel is dummy event, the condition check is true. :(
->>>
->>> Or maybe I misunderstand anything?
->>
->> I was just curious, because I did not follow the no_aux_samples
->> usage in detail.. so how about a case where:
->>
->>     evsel->no_aux_samples == true and evsel__is_dummy_event(evsel) = false
->>
->> then the original condition will be false for non dummy event
->>
->>    (opts->sample_intr_regs && !evsel->no_aux_samples && !evsel__is_dummy_event(evsel))
->>
->> is that ok?
->>
-> 
-> I searched the perf source and found the no_aux_samples was only set to true in intel-pt.c. So I 
-> assume for the non-pt usage, the no_aux_samples is always false.
-> 
-> For non-pt usage,
-> (opts->sample_intr_regs && !evsel->no_aux_samples && !evsel__is_dummy_event(evsel)) is equal to
-> (opts->sample_intr_regs && !evsel__is_dummy_event(evsel))
-> 
-> For pt usage, we need to consider the case that evsel__is_dummy_event(evsel) is true or false.
-> 
-> If evsel__is_dummy_event(evsel) is true:
-> (opts->sample_intr_regs && !evsel->no_aux_samples && !evsel__is_dummy_event(evsel)) is false.
-> It's expected.
-> 
-> If evsel__is_dummy_event(evsel) is false:
-> (opts->sample_intr_regs && !evsel->no_aux_samples && !evsel__is_dummy_event(evsel)) is equal to
-> (opts->sample_intr_regs && !evsel->no_aux_samples)
-> That's the current code logic.
-> 
-> So I think the condition "(opts->sample_intr_regs && !evsel->no_aux_samples && 
-> !evsel__is_dummy_event(evsel))" looks reasonable.
-> 
-> Adrian, please correct me if I'm wrong here.
-> 
-> Thanks
-> Jin Yao
-> 
->> jirka
->>
+Sure, happy to help out.
+-Daniel
+
+>
+> Thanks,
+> -hyun
+>
+> > > On Sat, Jul 25, 2020 at 06:34:29AM +0000, Wei Yongjun wrote:
+> > > > Fix typo in parameter description.
+> > > >
+> > > > Fixes: d76271d22694 ("drm: xlnx: DRM/KMS driver for Xilinx ZynqMP DisplayPort Subsystem")
+> > > > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > > > Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> > > > ---
+> > > >  drivers/gpu/drm/xlnx/zynqmp_dp.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> > > > index 821f7a71e182..3d53638ab15e 100644
+> > > > --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> > > > +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> > > > @@ -44,7 +44,7 @@ MODULE_PARM_DESC(aux_timeout_ms, "DP aux timeout value in msec (default: 50)");
+> > > >   */
+> > > >  static uint zynqmp_dp_power_on_delay_ms = 4;
+> > > >  module_param_named(power_on_delay_ms, zynqmp_dp_power_on_delay_ms, uint, 0444);
+> > > > -MODULE_PARM_DESC(aux_timeout_ms, "DP power on delay in msec (default: 4)");
+> > > > +MODULE_PARM_DESC(power_on_delay_ms, "DP power on delay in msec (default: 4)");
+> > > >
+> > > >  /* Link configuration registers */
+> > > >  #define ZYNQMP_DP_LINK_BW_SET0x0
+> >
+> > --
+> > Regards,
+> >
+> > Laurent Pinchart
+
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
