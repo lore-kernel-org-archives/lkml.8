@@ -2,175 +2,269 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF6AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C152C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1982082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7553D20809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 18:32:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="p/hh03xu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NBZenCfT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgG2Sb4 (ORCPT
+        id S1727807AbgG2ScA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 14:31:56 -0400
-Received: from mail-bn7nam10on2080.outbound.protection.outlook.com ([40.107.92.80]:49889
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726903AbgG2Sby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 14:31:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GKfO+sCBs9188YCvTE7ueSHYUrEcxsOoJFePg8NFqPugKL33eRUbEfIMIn4VjZBi0uNakjKr32PnZvo/RFHYSnr00VjjaXsbMz+9oeQVVkcHrrTT6GKaKq2Am5Dpda+8gQfCOIonU1cBdHSqjGBJ+1uDiG5fKm0zw89qlKVJ8qUQ+Wc1CU8Vf+EX5Z58bQtMBbrBXl9cI0TjVRYceWhhbJAer8c2P8vz/pFh3U9MmqntlqCh+RVB5jhCqh22sJ6AJWikdk59bT5p3vyDFJVjYYGcem+CyjSuTSOgftbZjCHlUgeXFXH/KnmyjQ+7+00OEIS+PMenAj5RNbDTNsOmwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uLJDomD59gSHa53q5/tU8juk0K1hLg4GyA5BCnn9tnY=;
- b=ldtlD1bddwHme9ioixwusmNT29Yr/AsChL+gU/dpU0BMgaWBlj4ApyhHOJ/xXgxG4R/8EId7OwOoQj6vKwFgwMFSyjNCGnEUxrvJCpVGr3iD/4qHWNA7CzVZxusRPyWcZ0opSnDtQnOv05gGyBJA7clmBCM7z7bxsZgJ0KDloHVDGlEO6zsrLcUwQKUtCNB5WzWzOhHVCcgc2/jly8RuLanroej2wVsQMd671L2P8WXv23YbCn/oPMTEZKH13AvgnmK9ESsq0uLrBYxWvoNFcAzVdPa+Mp54eZa3h/6N3K4xxp5L1BH4+J9gH5/9TIsMzPlnUF2mmoi5JrgLPrxmuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=canonical.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uLJDomD59gSHa53q5/tU8juk0K1hLg4GyA5BCnn9tnY=;
- b=p/hh03xuKtZ7zkFfL2l241aVNkEH48Ny577OQNOqhCuWpReVy5MAChamqoIiB6gu/c++398r8HuFq0xJ8SJ48ErHBvXAHAkjelJA9y3zgacyijAV+fxPh7HHKw7Hg277WPTET1sztS3aaN0NjPcnnDzbQoSNWnQvpfYiZYnhzKE=
-Received: from CY4PR18CA0042.namprd18.prod.outlook.com (2603:10b6:903:9a::28)
- by BN6PR02MB2276.namprd02.prod.outlook.com (2603:10b6:404:2c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Wed, 29 Jul
- 2020 18:31:51 +0000
-Received: from CY1NAM02FT025.eop-nam02.prod.protection.outlook.com
- (2603:10b6:903:9a:cafe::6f) by CY4PR18CA0042.outlook.office365.com
- (2603:10b6:903:9a::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend
- Transport; Wed, 29 Jul 2020 18:31:51 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; canonical.com; dkim=none (message not signed)
- header.d=none;canonical.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT025.mail.protection.outlook.com (10.152.75.148) with Microsoft SMTP
- Server id 15.20.3216.10 via Frontend Transport; Wed, 29 Jul 2020 18:31:51
- +0000
-Received: from [149.199.38.66] (port=53299 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <hyun.kwon@xilinx.com>)
-        id 1k0qpo-0008L3-3e; Wed, 29 Jul 2020 11:29:48 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <hyun.kwon@xilinx.com>)
-        id 1k0qrm-0003jb-SO; Wed, 29 Jul 2020 11:31:50 -0700
-Received: from [172.19.2.244] (helo=xsjhyunkubuntu)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <hyun.kwon@xilinx.com>)
-        id 1k0qrg-0003jK-PP; Wed, 29 Jul 2020 11:31:44 -0700
-Received: by xsjhyunkubuntu (Postfix, from userid 13638)
-        id 8C13D2C238C; Wed, 29 Jul 2020 11:27:53 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 11:27:53 -0700
-From:   Hyun Kwon <hyun.kwon@xilinx.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Michal Simek <michals@xilinx.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] drm: xln: fix spelling mistake "failes" -> "failed"
-Message-ID: <20200729182753.GA29219@xilinx.com>
-References: <20200724111258.14762-1-colin.king@canonical.com>
- <20200728223739.GV13753@pendragon.ideasonboard.com>
+        Wed, 29 Jul 2020 14:32:00 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36706 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbgG2Sb6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 14:31:58 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06TIVukj124902;
+        Wed, 29 Jul 2020 13:31:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596047516;
+        bh=y1iSsLun5D7LlKgpca2k9aBlfGQ8Zn/nCnvBysNfNDE=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=NBZenCfTwxy9LNU+wuKjFDenlhWjWgfcpnIA0XVYdl6FfzTiv2w0FkfYYibrgk/qp
+         a5eYD9rcVPs8HrDoHUOOyYGqe+rTOcewWGq4Fml9pMYtBQwhGZF4coRWbEEID4Ev3S
+         GZxCEZnoJd8mH9eMxMNm9qD6niroBjLV5k+Cer6w=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06TIVuku049424
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 29 Jul 2020 13:31:56 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
+ Jul 2020 13:31:56 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 29 Jul 2020 13:31:56 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06TIVuJP098482;
+        Wed, 29 Jul 2020 13:31:56 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <sre@kernel.org>, <afd@ti.com>, <pali@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh@kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v6 2/4] power: supply: bq27xxx_battery: Add the BQ27Z561 Battery monitor
+Date:   Wed, 29 Jul 2020 13:31:43 -0500
+Message-ID: <20200729183145.6066-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200729183145.6066-1-dmurphy@ti.com>
+References: <20200729183145.6066-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728223739.GV13753@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 11f68cb8-c621-4cee-cd0c-08d833eda92a
-X-MS-TrafficTypeDiagnostic: BN6PR02MB2276:
-X-Microsoft-Antispam-PRVS: <BN6PR02MB2276CAE4E26F659FCBCCE3D2D6700@BN6PR02MB2276.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:2043;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bkaVjfSXo5zYT2DGLhWmM/IMlLXTuRbcXWoYzXSJGRIJ0qv9H+wacQcmNY5+dMMQYrVe5Y7ZMMLU+I2dkYKpxsi7daKjQ3ba1+WwICpCVDRpuaMiyprVc2bDfAQGh8PNtqG4fIymcZSNVm8iwrcK8gsN3AUP4VFB5wni5hTLlCWUaSScFfUk/X3zuOtgxEacdevFkGoZDw/sZ5dAs9qKaNTIzcVzWdIE+kLySz22kMLcHxWPPhkJF5KditmN8CXcthQSOZ1udFN687m/5N5+wBnj7siL/P9ARLYo54NL5THhts/c13M+EuzMhrs92R0cpuK0iwCoIpOrvZJd9XNRNfTvfVmZQQ1WymjwMMWXArAKSp3DZHbTqZwdbBUwUShd09dGVxawWYRqjS1/qZ4E6w==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(396003)(346002)(376002)(46966005)(83380400001)(316002)(81166007)(47076004)(356005)(336012)(82740400003)(42186006)(54906003)(82310400002)(6266002)(2616005)(6916009)(5660300002)(44832011)(4326008)(8936002)(26005)(33656002)(186003)(8676002)(1076003)(70206006)(70586007)(426003)(478600001)(36756003)(2906002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2020 18:31:51.1235
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11f68cb8-c621-4cee-cd0c-08d833eda92a
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT025.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2276
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin,
+Add the Texas Instruments BQ27Z561 battery monitor.  The register address
+map is laid out the same as compared to other devices within the file.
+The battery status register has differing bits to determine if the
+battery is full, discharging or dead.
 
-Thanks for the patch.
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/power/supply/bq27xxx_battery.c     | 68 +++++++++++++++++++++-
+ drivers/power/supply/bq27xxx_battery_i2c.c |  2 +
+ include/linux/power/bq27xxx_battery.h      |  1 +
+ 3 files changed, 70 insertions(+), 1 deletion(-)
 
-On Tue, Jul 28, 2020 at 03:37:39PM -0700, Laurent Pinchart wrote:
-> Hi Colin,
-> 
-> Thank you for the patch.
-> 
-> On Fri, Jul 24, 2020 at 12:12:58PM +0100, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> > 
-> > There is a spelling mistake in a dev_dbg messages. Fix it.
-> 
-> There is a spelling mistake in the commit message, s/xln/xlnx/ ;-)
-> 
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
+diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+index acaafed037be..a05b9a2d112d 100644
+--- a/drivers/power/supply/bq27xxx_battery.c
++++ b/drivers/power/supply/bq27xxx_battery.c
+@@ -43,6 +43,7 @@
+  * https://www.ti.com/product/bq27411-g1
+  * https://www.ti.com/product/bq27441-g1
+  * https://www.ti.com/product/bq27621-g1
++ * https://www.ti.com/product/bq27z561
+  */
+ 
+ #include <linux/device.h>
+@@ -79,6 +80,11 @@
+ #define BQ27000_FLAG_FC		BIT(5)
+ #define BQ27000_FLAG_CHGS	BIT(7) /* Charge state flag */
+ 
++/* BQ27Z561 has different layout for Flags register */
++#define BQ27Z561_FLAG_FDC	BIT(4) /* Battery fully discharged */
++#define BQ27Z561_FLAG_FC		BIT(5) /* Battery fully charged */
++#define BQ27Z561_FLAG_DIS_CH	BIT(6) /* Battery is discharging */
++
+ /* control register params */
+ #define BQ27XXX_SEALED			0x20
+ #define BQ27XXX_SET_CFGUPDATE		0x13
+@@ -431,12 +437,32 @@ static u8
+ 		[BQ27XXX_REG_DCAP] = 0x3c,
+ 		[BQ27XXX_REG_AP] = 0x18,
+ 		BQ27XXX_DM_REG_ROWS,
+-	};
++	},
+ #define bq27411_regs bq27421_regs
+ #define bq27425_regs bq27421_regs
+ #define bq27426_regs bq27421_regs
+ #define bq27441_regs bq27421_regs
+ #define bq27621_regs bq27421_regs
++	bq27z561_regs[BQ27XXX_REG_MAX] = {
++		[BQ27XXX_REG_CTRL] = 0x00,
++		[BQ27XXX_REG_TEMP] = 0x06,
++		[BQ27XXX_REG_INT_TEMP] = INVALID_REG_ADDR,
++		[BQ27XXX_REG_VOLT] = 0x08,
++		[BQ27XXX_REG_AI] = 0x14,
++		[BQ27XXX_REG_FLAGS] = 0x0a,
++		[BQ27XXX_REG_TTE] = 0x16,
++		[BQ27XXX_REG_TTF] = 0x18,
++		[BQ27XXX_REG_TTES] = INVALID_REG_ADDR,
++		[BQ27XXX_REG_TTECP] = INVALID_REG_ADDR,
++		[BQ27XXX_REG_NAC] = INVALID_REG_ADDR,
++		[BQ27XXX_REG_FCC] = 0x12,
++		[BQ27XXX_REG_CYCT] = 0x2a,
++		[BQ27XXX_REG_AE] = 0x22,
++		[BQ27XXX_REG_SOC] = 0x2c,
++		[BQ27XXX_REG_DCAP] = 0x3c,
++		[BQ27XXX_REG_AP] = 0x22,
++		BQ27XXX_DM_REG_ROWS,
++	};
+ 
+ static enum power_supply_property bq27000_props[] = {
+ 	POWER_SUPPLY_PROP_STATUS,
+@@ -672,6 +698,25 @@ static enum power_supply_property bq27421_props[] = {
+ #define bq27441_props bq27421_props
+ #define bq27621_props bq27421_props
+ 
++static enum power_supply_property bq27z561_props[] = {
++	POWER_SUPPLY_PROP_STATUS,
++	POWER_SUPPLY_PROP_PRESENT,
++	POWER_SUPPLY_PROP_VOLTAGE_NOW,
++	POWER_SUPPLY_PROP_CURRENT_NOW,
++	POWER_SUPPLY_PROP_CAPACITY,
++	POWER_SUPPLY_PROP_CAPACITY_LEVEL,
++	POWER_SUPPLY_PROP_TEMP,
++	POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW,
++	POWER_SUPPLY_PROP_TIME_TO_FULL_NOW,
++	POWER_SUPPLY_PROP_TECHNOLOGY,
++	POWER_SUPPLY_PROP_CHARGE_FULL,
++	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
++	POWER_SUPPLY_PROP_CYCLE_COUNT,
++	POWER_SUPPLY_PROP_POWER_AVG,
++	POWER_SUPPLY_PROP_HEALTH,
++	POWER_SUPPLY_PROP_MANUFACTURER,
++};
++
+ struct bq27xxx_dm_reg {
+ 	u8 subclass_id;
+ 	u8 offset;
+@@ -767,11 +812,14 @@ static struct bq27xxx_dm_reg bq27621_dm_regs[] = {
+ #define bq27621_dm_regs 0
+ #endif
+ 
++#define bq27z561_dm_regs 0
++
+ #define BQ27XXX_O_ZERO	0x00000001
+ #define BQ27XXX_O_OTDC	0x00000002 /* has OTC/OTD overtemperature flags */
+ #define BQ27XXX_O_UTOT  0x00000004 /* has OT overtemperature flag */
+ #define BQ27XXX_O_CFGUP	0x00000008
+ #define BQ27XXX_O_RAM	0x00000010
++#define BQ27Z561_O_BITS	0x00000020
+ 
+ #define BQ27XXX_DATA(ref, key, opt) {		\
+ 	.opts = (opt),				\
+@@ -816,6 +864,7 @@ static struct {
+ 	[BQ27426]   = BQ27XXX_DATA(bq27426,   0x80008000, BQ27XXX_O_UTOT | BQ27XXX_O_CFGUP | BQ27XXX_O_RAM),
+ 	[BQ27441]   = BQ27XXX_DATA(bq27441,   0x80008000, BQ27XXX_O_UTOT | BQ27XXX_O_CFGUP | BQ27XXX_O_RAM),
+ 	[BQ27621]   = BQ27XXX_DATA(bq27621,   0x80008000, BQ27XXX_O_UTOT | BQ27XXX_O_CFGUP | BQ27XXX_O_RAM),
++	[BQ27Z561]  = BQ27XXX_DATA(bq27z561,  0         , BQ27Z561_O_BITS),
+ };
+ 
+ static DEFINE_MUTEX(bq27xxx_list_lock);
+@@ -1551,6 +1600,8 @@ static bool bq27xxx_battery_dead(struct bq27xxx_device_info *di, u16 flags)
+ {
+ 	if (di->opts & BQ27XXX_O_ZERO)
+ 		return flags & (BQ27000_FLAG_EDV1 | BQ27000_FLAG_EDVF);
++	else if (di->opts & BQ27Z561_O_BITS)
++		return flags & BQ27Z561_FLAG_FDC;
+ 	else
+ 		return flags & (BQ27XXX_FLAG_SOC1 | BQ27XXX_FLAG_SOCF);
+ }
+@@ -1595,6 +1646,7 @@ void bq27xxx_battery_update(struct bq27xxx_device_info *di)
+ 				cache.time_to_empty_avg = bq27xxx_battery_read_time(di, BQ27XXX_REG_TTECP);
+ 			if (di->regs[BQ27XXX_REG_TTF] != INVALID_REG_ADDR)
+ 				cache.time_to_full = bq27xxx_battery_read_time(di, BQ27XXX_REG_TTF);
++
+ 			cache.charge_full = bq27xxx_battery_read_fcc(di);
+ 			cache.capacity = bq27xxx_battery_read_soc(di);
+ 			if (di->regs[BQ27XXX_REG_AE] != INVALID_REG_ADDR)
+@@ -1682,6 +1734,13 @@ static int bq27xxx_battery_status(struct bq27xxx_device_info *di,
+ 			status = POWER_SUPPLY_STATUS_NOT_CHARGING;
+ 		else
+ 			status = POWER_SUPPLY_STATUS_DISCHARGING;
++	} else if (di->opts & BQ27Z561_O_BITS) {
++		if (di->cache.flags & BQ27Z561_FLAG_FC)
++			status = POWER_SUPPLY_STATUS_FULL;
++		else if (di->cache.flags & BQ27Z561_FLAG_DIS_CH)
++			status = POWER_SUPPLY_STATUS_DISCHARGING;
++		else
++			status = POWER_SUPPLY_STATUS_CHARGING;
+ 	} else {
+ 		if (di->cache.flags & BQ27XXX_FLAG_FC)
+ 			status = POWER_SUPPLY_STATUS_FULL;
+@@ -1710,6 +1769,13 @@ static int bq27xxx_battery_capacity_level(struct bq27xxx_device_info *di,
+ 			level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+ 		else
+ 			level = POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
++	} else if (di->opts & BQ27Z561_O_BITS) {
++		if (di->cache.flags & BQ27Z561_FLAG_FC)
++			level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
++		else if (di->cache.flags & BQ27Z561_FLAG_FDC)
++			level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
++		else
++			level = POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
+ 	} else {
+ 		if (di->cache.flags & BQ27XXX_FLAG_FC)
+ 			level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
+diff --git a/drivers/power/supply/bq27xxx_battery_i2c.c b/drivers/power/supply/bq27xxx_battery_i2c.c
+index 8e114a7abfc9..15f4e75786ab 100644
+--- a/drivers/power/supply/bq27xxx_battery_i2c.c
++++ b/drivers/power/supply/bq27xxx_battery_i2c.c
+@@ -253,6 +253,7 @@ static const struct i2c_device_id bq27xxx_i2c_id_table[] = {
+ 	{ "bq27426", BQ27426 },
+ 	{ "bq27441", BQ27441 },
+ 	{ "bq27621", BQ27621 },
++	{ "bq27z561", BQ27Z561 },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(i2c, bq27xxx_i2c_id_table);
+@@ -286,6 +287,7 @@ static const struct of_device_id bq27xxx_battery_i2c_of_match_table[] = {
+ 	{ .compatible = "ti,bq27426" },
+ 	{ .compatible = "ti,bq27441" },
+ 	{ .compatible = "ti,bq27621" },
++	{ .compatible = "ti,bq27z561" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, bq27xxx_battery_i2c_of_match_table);
+diff --git a/include/linux/power/bq27xxx_battery.h b/include/linux/power/bq27xxx_battery.h
+index 507c5e214c42..1f6ea5d5063d 100644
+--- a/include/linux/power/bq27xxx_battery.h
++++ b/include/linux/power/bq27xxx_battery.h
+@@ -30,6 +30,7 @@ enum bq27xxx_chip {
+ 	BQ27426,
+ 	BQ27441,
+ 	BQ27621,
++	BQ27Z561,
+ };
+ 
+ struct bq27xxx_device_info;
+-- 
+2.28.0
 
-Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
-
-I'll fix the commit message and commit this change to drm-misc-next-fixes soon.
-
-Thanks,
--hyun
-
-> > ---
-> >  drivers/gpu/drm/xlnx/zynqmp_dp.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> > index 821f7a71e182..0e1c818746eb 100644
-> > --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> > +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> > @@ -1308,7 +1308,7 @@ zynqmp_dp_connector_detect(struct drm_connector *connector, bool force)
-> >  		ret = drm_dp_dpcd_read(&dp->aux, 0x0, dp->dpcd,
-> >  				       sizeof(dp->dpcd));
-> >  		if (ret < 0) {
-> > -			dev_dbg(dp->dev, "DPCD read failes");
-> > +			dev_dbg(dp->dev, "DPCD read failed");
-> >  			goto disconnected;
-> >  		}
-> >  
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
