@@ -2,157 +2,109 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2497CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D70EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F32752070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3F5620786
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:37:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FDduC6LR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ki7SYqvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgG2Fb6 (ORCPT
+        id S1726605AbgG2FhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 01:31:58 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:40814 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726560AbgG2Fb5 (ORCPT
+        Wed, 29 Jul 2020 01:37:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgG2FhD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 01:31:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596000717; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=msx+gBK9mgOBcKEpu5rUP0WumjhIp0LNn0i9vsL3Tdc=;
- b=FDduC6LRPX2Ym+fMP3+GbhH7U8TfaAZ+6GXVdbiisHIgIcJB9bG+Z6H95K/rbEojY9eF+FpM
- 1ahp/C0ur1mVTjWJA22R5qNv1thrPjhPATwsM1dlKY0Jfyat2hLg1CBitGh0b93IYiSagw8T
- AQ4+0XNa3VuFLRBp+///2u6Tm0c=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f2109befcbecb3df1cb1155 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 05:31:42
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 57325C433A0; Wed, 29 Jul 2020 05:31:41 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A649C433C6;
-        Wed, 29 Jul 2020 05:31:40 +0000 (UTC)
+        Wed, 29 Jul 2020 01:37:03 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B825C0619D2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 22:37:02 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id 1so6789408vsl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 22:37:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OhJGf0UOhBnAaBM4uo+RC5KnIOLIwVjqf9Yxhm4B4Us=;
+        b=Ki7SYqvPryyMJ98JQEvZxaCYHLlVDrak2Lq67YCyNV/y0dYOx+svgog4yoDdTaoIIZ
+         9jecpy4jsbqv9HdOGPlYVyWNBU+BRkVbRxLt8m5QJZ9jc0KqewG6rDpKFuy71txYkg61
+         rikZ4RkT3QJ+4J5A1p0QN+zIqwkzoviZlkzGtEiRMnHjdfKbTuaXjuASsgl92Pvtb9dO
+         14SnZHFAjp+CdYxcIW5BqQJS3wSKw1snvEfZxM+9t9unij+pzXPTUt6I0RMvtEuT77aC
+         2T/UbZ9KS0n4mMp/HyXYl/Z8cWD+CWJeIF39bKzJSHJkrAGjJd8hG8L0UV1xcrtrjOVs
+         fcFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OhJGf0UOhBnAaBM4uo+RC5KnIOLIwVjqf9Yxhm4B4Us=;
+        b=ToZWubxxkSQ98ZkzAJbGPIS5eG3iOTU+Y3b+EdsL3pgRelbHXzy12PY21bW8Dct0W0
+         Ap22OigRyQ9Qa52p4KxT885Vyr/rtSAtbU96e1lwDl+zGFpwk8Oixj4Jqhyy0LKAAAvH
+         Kt/l3kktSyc7pKKH6AUfD445B0zfEuyRqLSFjIgxNYz7mZ1QXFWfNsYeXHRwclV1reks
+         BxUxhwSxvfioUEotByXYbM9VlhVW6aYBPSk8SFugOuyoqPQhC18eIyt4iFIMZKb3VtRb
+         emyzkuuXk/uhydh3K4QefXgRARXmPDHU01CMCxwfIKj8pEqCaRSTR85u645tCT9EYc7l
+         Temw==
+X-Gm-Message-State: AOAM533omf+SrNG/5NyVR56KZtDuHjJeVaRyzSUrPomACB6UqgqLsoex
+        x/Cs0q/BSlv1D4vsw/yOR6rspU/ShUWnSuI5MMjrRLpEj/E=
+X-Google-Smtp-Source: ABdhPJx5wTVPEqRv93P4gv7a7CPfrjA9CKuqGTm844eGicIZHFMXAnDx/9+9p28axSdgxz4xHiMexC0Syfhu6AvCYdI=
+X-Received: by 2002:a67:6b05:: with SMTP id g5mr22267118vsc.9.1596001021135;
+ Tue, 28 Jul 2020 22:37:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 29 Jul 2020 13:31:40 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, bvanassche@acm.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
-        chaotian.jing@mediatek.com, cc.chou@mediatek.com
-Subject: Re: [PATCH v1 1/2] scsi: ufs: Introduce device quirk
- "DELAY_AFTER_LPM"
-In-Reply-To: <20200729051840.31318-2-stanley.chu@mediatek.com>
-References: <20200729051840.31318-1-stanley.chu@mediatek.com>
- <20200729051840.31318-2-stanley.chu@mediatek.com>
-Message-ID: <b859b49f4b5e85b81a24735a53f5aa4e@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200727231033.26512-1-daniel.lezcano@linaro.org>
+In-Reply-To: <20200727231033.26512-1-daniel.lezcano@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Wed, 29 Jul 2020 11:06:50 +0530
+Message-ID: <CAHLCerO=KPUR-2qEuFpNV9UUV_O7GoXY-EPhyefOFfL_jZ_0gA@mail.gmail.com>
+Subject: Re: [PATCH] thermal: core: Add thermal zone enable/disable notification
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanley,
+On Tue, Jul 28, 2020 at 4:40 AM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> Now the calls to enable/disable a thermal zone are centralized in a
+> call to a function, we can add in these the corresponding netlink
+> notifications.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-On 2020-07-29 13:18, Stanley Chu wrote:
-> Some UFS devices require delay after VCC power rail is turned-off.
-> Introduce a device quirk "DELAY_AFTER_LPM" to add 5ms delays after
-> VCC power-off during suspend flow.
-> 
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-Just curious, I can understand if you want to add some delays before
-turnning off VCC/VCCQ/VCCQ2, but what is the delay AFTER turnning
-them off for? I mean the power has been cut by host from PMIC, how
-can the delay benefit the UFS device?
-
-Thanks,
-
-Can Guo.
-
-> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
-> Signed-off-by: Peter Wang <peter.wang@mediatek.com>
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
 > ---
->  drivers/scsi/ufs/ufs_quirks.h |  7 +++++++
->  drivers/scsi/ufs/ufshcd.c     | 11 +++++++++++
->  2 files changed, 18 insertions(+)
-> 
-> diff --git a/drivers/scsi/ufs/ufs_quirks.h 
-> b/drivers/scsi/ufs/ufs_quirks.h
-> index 2a0041493e30..07f559ac5883 100644
-> --- a/drivers/scsi/ufs/ufs_quirks.h
-> +++ b/drivers/scsi/ufs/ufs_quirks.h
-> @@ -109,4 +109,11 @@ struct ufs_dev_fix {
->   */
->  #define UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES (1 << 10)
-> 
-> +/*
-> + * Some UFS devices require delay after VCC power rail is turned-off.
-> + * Enable this quirk to introduce 5ms delays after VCC power-off 
-> during
-> + * suspend flow.
-> + */
-> +#define UFS_DEVICE_QUIRK_DELAY_AFTER_LPM        (1 << 11)
+>  drivers/thermal/thermal_core.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index 9748fbb9a3a1..72bf159bcecc 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -509,6 +509,11 @@ static int thermal_zone_device_set_mode(struct thermal_zone_device *tz,
+>
+>         thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
+>
+> +       if (mode == THERMAL_DEVICE_ENABLED)
+> +               thermal_notify_tz_enable(tz->id);
+> +       else
+> +               thermal_notify_tz_disable(tz->id);
 > +
->  #endif /* UFS_QUIRKS_H_ */
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index acba2271c5d3..63f4e2f75aa1 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -8111,6 +8111,8 @@ static int ufshcd_link_state_transition(struct
-> ufs_hba *hba,
-> 
->  static void ufshcd_vreg_set_lpm(struct ufs_hba *hba)
->  {
-> +	bool vcc_off = false;
-> +
->  	/*
->  	 * It seems some UFS devices may keep drawing more than sleep current
->  	 * (atleast for 500us) from UFS rails (especially from VCCQ rail).
-> @@ -8139,13 +8141,22 @@ static void ufshcd_vreg_set_lpm(struct ufs_hba 
-> *hba)
->  	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba) &&
->  	    !hba->dev_info.is_lu_power_on_wp) {
->  		ufshcd_setup_vreg(hba, false);
-> +		vcc_off = true;
->  	} else if (!ufshcd_is_ufs_dev_active(hba)) {
->  		ufshcd_toggle_vreg(hba->dev, hba->vreg_info.vcc, false);
-> +		vcc_off = true;
->  		if (!ufshcd_is_link_active(hba)) {
->  			ufshcd_config_vreg_lpm(hba, hba->vreg_info.vccq);
->  			ufshcd_config_vreg_lpm(hba, hba->vreg_info.vccq2);
->  		}
->  	}
-> +
-> +	/*
-> +	 * Some UFS devices require delay after VCC power rail is turned-off.
-> +	 */
-> +	if (vcc_off && hba->vreg_info.vcc &&
-> +		hba->dev_quirks & UFS_DEVICE_QUIRK_DELAY_AFTER_LPM)
-> +		usleep_range(5000, 5100);
+>         return ret;
 >  }
-> 
->  static int ufshcd_vreg_set_hpm(struct ufs_hba *hba)
+>
+> --
+> 2.17.1
+>
