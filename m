@@ -2,127 +2,104 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E87FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA0820809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E4E2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:08:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CghxhkW8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mve4bl2G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgG2OGp (ORCPT
+        id S1726994AbgG2OIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:06:45 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26919 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726353AbgG2OGo (ORCPT
+        Wed, 29 Jul 2020 10:08:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58008 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726353AbgG2OIU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:06:44 -0400
+        Wed, 29 Jul 2020 10:08:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596031603;
+        s=mimecast20190719; t=1596031699;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=B+s1aLKBFRPjnluxTliPaIDMyp/xACsXQZl8tcf5fJM=;
-        b=CghxhkW8cKC/rHEzeALW0GJ3wjQf/9Fbqm2wYaQiID3udd0efAgDSNVjYp3aNBhA98agmP
-        5LunPFghk25/QzjpNToMpDoqlIZ62xVUXWz8+nAgTekowdxdkAEONkdv8BJYsPym090Ebi
-        kSag19UjdoJiVgwvkClCeFMOT/CdG14=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-89-e9Ns98V6MoS9qE0FM6HyeA-1; Wed, 29 Jul 2020 10:06:41 -0400
-X-MC-Unique: e9Ns98V6MoS9qE0FM6HyeA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D7DE6988A;
-        Wed, 29 Jul 2020 14:06:34 +0000 (UTC)
-Received: from localhost (ovpn-12-32.pek2.redhat.com [10.72.12.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A100E71924;
-        Wed, 29 Jul 2020 14:06:33 +0000 (UTC)
-Date:   Wed, 29 Jul 2020 22:06:31 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH v1 4/6] mm/page_isolation: cleanup
- set_migratetype_isolate()
-Message-ID: <20200729140631.GH14854@MiWiFi-R3L-srv>
-References: <20200630142639.22770-1-david@redhat.com>
- <20200630142639.22770-5-david@redhat.com>
+        bh=tSDnY3FzGhTn/u6Pww0mdVOV9X0S2Fmn3lliAT+Fx3Y=;
+        b=Mve4bl2GFbwDvP7Jg5gLLLaba0zovwdyHA8l+v5YQu5Q0IdNcyZg+M0hVfxglPqNWbZn9b
+        uAEPK2zB9TFZ35n8gWYmEFzYNhDRN+QICSRpibSxknzsgf++EFp4joBITj+l+knBDdZtrB
+        rWgbpAOGfoQekostSJ2lyJqGG6EGLJc=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-24-RkHD3W68MHCCGsWEhuXi7A-1; Wed, 29 Jul 2020 10:08:17 -0400
+X-MC-Unique: RkHD3W68MHCCGsWEhuXi7A-1
+Received: by mail-wm1-f70.google.com with SMTP id h13so621331wmb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 07:08:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tSDnY3FzGhTn/u6Pww0mdVOV9X0S2Fmn3lliAT+Fx3Y=;
+        b=UqjmOw0b6NXGeSNXIn6wyMBSmzOlvktw//ZP6Dfy/Hcy9UVNbn87+X1w2nTwKfc/CN
+         3p1S1U1Poywh5xk/QwVRN+WvsY/Omh/f8K7oGVqYt/XAOqlXIUyc9oy+R/H6wJF83otm
+         aUOprVa1Z+03+Cnzhs/fdHgj6BxhdyAmxVCTqq7s0uUxsbfhqa0slFXRKqSfCJnCwms1
+         0M3iXk9Bwq7WsJoJaKgRTmg8I37pUzNS3FaYmj9QrvVAHEpGvydgq4NYSrJp5rT6WlNL
+         51hq9nXWEiecytXQWb4hbKJ+IJBhkPGN8/kCAKaD+a6jbq+xoZ2EYb5Dv9q6GOyHs0lX
+         Foqw==
+X-Gm-Message-State: AOAM531nKm8BhnHUrUnf9gfVJW204UbcNWV5CfCHW2G1zx7waCFEyC1k
+        o0b6Z4ckEIM/c9nOnNNZpXtOftWb4Hsz0BfKBmIt0n1zcpc6wgHHVq04K63MJFb8unnhQJADzpv
+        XZI5tWZwIK4eCGfZcWMwSx1ky
+X-Received: by 2002:a7b:cf2f:: with SMTP id m15mr6450730wmg.69.1596031696040;
+        Wed, 29 Jul 2020 07:08:16 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyZx2GDeOT4xiXXkyJbtLRy1H/T+pPmI/LpfhQCdBFqN5vPspeNyXF/MgS2kwoyjVW/b1BjZA==
+X-Received: by 2002:a7b:cf2f:: with SMTP id m15mr6450724wmg.69.1596031695863;
+        Wed, 29 Jul 2020 07:08:15 -0700 (PDT)
+Received: from redhat.com (bzq-79-179-105-63.red.bezeqint.net. [79.179.105.63])
+        by smtp.gmail.com with ESMTPSA id y2sm5487847wmg.25.2020.07.29.07.08.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 07:08:15 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 10:08:12 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the vhost tree
+Message-ID: <20200729100754-mutt-send-email-mst@kernel.org>
+References: <20200728181132.55476e07@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630142639.22770-5-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200728181132.55476e07@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/30/20 at 04:26pm, David Hildenbrand wrote:
-> Let's clean it up a bit, simplifying error handling and getting rid of
-> the label.
+On Tue, Jul 28, 2020 at 06:11:32PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/page_isolation.c | 18 +++++++-----------
->  1 file changed, 7 insertions(+), 11 deletions(-)
+> After merging the vhost tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
 > 
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index 02a01bff6b219..5f869bef23fa4 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -17,12 +17,9 @@
->  
->  static int set_migratetype_isolate(struct page *page, int migratetype, int isol_flags)
->  {
-> -	struct page *unmovable = NULL;
-> -	struct zone *zone;
-> +	struct zone *zone = page_zone(page);
-> +	struct page *unmovable;
->  	unsigned long flags;
-> -	int ret = -EBUSY;
-> -
-> -	zone = page_zone(page);
->  
->  	spin_lock_irqsave(&zone->lock, flags);
->  
-> @@ -51,21 +48,20 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
->  									NULL);
->  
->  		__mod_zone_freepage_state(zone, -nr_pages, mt);
-> -		ret = 0;
-> +		spin_unlock_irqrestore(&zone->lock, flags);
-> +		drain_all_pages(zone);
-> +		return 0;
->  	}
->  
-> -out:
->  	spin_unlock_irqrestore(&zone->lock, flags);
-> -	if (!ret) {
-> -		drain_all_pages(zone);
-> -	} else if ((isol_flags & REPORT_FAILURE) && unmovable)
-> +	if (isol_flags & REPORT_FAILURE)
->  		/*
->  		 * printk() with zone->lock held will likely trigger a
->  		 * lockdep splat, so defer it here.
->  		 */
->  		dump_page(unmovable, "unmovable page");
->  
-> -	return ret;
-> +	return -EBUSY;
+> In file included from drivers/virtio/virtio_vdpa.c:17:
+> include/linux/vdpa.h:43:21: error: expected ':', ',', ';', '}' or '__attribute__' before '.' token
+>    43 |  bool features_valid.
+>       |                     ^
+> 
+> Caused by commit
+> 
+>   fee8fe6bd8cc ("vdpa: make sure set_features in invoked for legacy")
+> 
+> I have used the vhost tree from next-20200727 for today.
 
-Reviewed-by: Baoquan He <bhe@redhat.com>
+Sorry by bad, pushed to a wrong tag.
+
+
+> -- 
+> Cheers,
+> Stephen Rothwell
+
 
