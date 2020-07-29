@@ -2,111 +2,282 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE50C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB97C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD2DA20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7EA2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 05:46:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N++YDTwv"
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="sWc08l6k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgG2FhL (ORCPT
+        id S1726497AbgG2FqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 01:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgG2FhK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 01:37:10 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C88F0C061794;
-        Tue, 28 Jul 2020 22:37:10 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id a65so7501268otc.8;
-        Tue, 28 Jul 2020 22:37:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zuXA/WN2nlx83H9srxCo19LElvlaPaco/SoR1kFJVg0=;
-        b=N++YDTwvJnJ4s9r+Jtio+v9Lqd0ElZdY+lozS2sh8rD0mRAl5vOSOdIa5XksrJNCX2
-         Ok4Ezdg+kt4V6qADIsrcgGbDTKgpp6q5ywl/O+oX+QZ7/eEufWO2NrU+jeC34ifuovcv
-         tHybsNBp9rQVu/R1nrBFcD8Y/qihGNGJvU2zQosLLaGwmridAZ+VY4E/5n7H5lLhGunZ
-         Qn3GQDrhxsvtkNn4PV4CfecXXw0oqDZ9LwMn965d/xWHPpQ3WSrP9mjUwxVQGMRxHi6s
-         Wc05RPcQNj1GjgL7gh9q3CuGrHtQrA8xt/DpQxHF7h0yH4qcp55qNBqL6k04cgiMu/nu
-         ICVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zuXA/WN2nlx83H9srxCo19LElvlaPaco/SoR1kFJVg0=;
-        b=IlIxhbHFtJIm8JvOxe1Un17CxAn56Ov9u8YHWjVvWXHTVaFl1mVtVFgm3FB2Q5Mpwi
-         m2jgICsQeVBZzXVUVOp3kjNO6y87kDwV6JYq1SvHazc0AhO8xiG91i7P5Ym7upP0+7OI
-         saGJnZnJyyqs0ohjdJ/NiWR2Oh/2cfsElN6x27jWNVY56ADaFnA6dIjBJcoO5L4gxd5l
-         hEQnjBaTfBb3u76j+ykUcBEvY/HgmGwD11M4FWY5Ldw1IctQWNlv+dq5vc6wHKZ+a2Rt
-         JdQ9XQhsG/8WX59KTv78iHblBL1c/B557KWkSrCVo9npXSbHKKT0dSrrMaPkDAt5iIlj
-         ptHw==
-X-Gm-Message-State: AOAM532HG7hKdM8TNeqCOlwuTovJAIrTcS6LkZBpuSnow3j8m9BANquB
-        O0s2DcfX11dXWLd79VXCMGdFRuwJLyAXTVJG4AY=
-X-Google-Smtp-Source: ABdhPJwXzoU/5XehKtvMsRaxuN/8/3yEG7bdRXxBKM15dtcQ6WOP64UKEj+QhDgL5ElWpRzZHNDVFLuaKyXy9fTHL2A=
-X-Received: by 2002:a05:6830:4c8:: with SMTP id s8mr26530231otd.368.1596001030180;
- Tue, 28 Jul 2020 22:37:10 -0700 (PDT)
+        Wed, 29 Jul 2020 01:46:13 -0400
+Received: from mx1.riseup.net ([198.252.153.129]:44108 "EHLO mx1.riseup.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726286AbgG2FqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 01:46:13 -0400
+Received: from bell.riseup.net (bell-pn.riseup.net [10.0.1.178])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "*.riseup.net", Issuer "Sectigo RSA Domain Validation Secure Server CA" (not verified))
+        by mx1.riseup.net (Postfix) with ESMTPS id 4BGjFw3HP2zFdxH;
+        Tue, 28 Jul 2020 22:46:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+        t=1596001572; bh=9yzh9iwy3im0s4hjRtrLqdUhdhTIl9Lv1iM4f2Q/dV4=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=sWc08l6k8PNU/YDEbEJ0DQsyZUeU0vRcmpSTmR76X66uuDOxVt8orZjI079KKQi73
+         uNnpyqlPuEYndOaH+3gYiDiwI/ufeyqvNjeR+V60pDo28EyhdGAzF6+isAt7jqEY4h
+         V3AXuXBk4LjB/0+FMibpbTJuT0HMClIebKRSbuww=
+X-Riseup-User-ID: 176B80C0579BEB7E7E18DD0534432018D6C4D568D5E175B7868611CF71FEBB80
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+         by bell.riseup.net (Postfix) with ESMTPSA id 4BGjFv4FN8zJmps;
+        Tue, 28 Jul 2020 22:46:11 -0700 (PDT)
+From:   Francisco Jerez <currojerez@riseup.net>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Documentation <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Doug Smythies <dsmythies@telus.net>
+Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
+In-Reply-To: <2440238.9qpzlEPeD7@kreacher>
+References: <3955470.QvD6XneCf3@kreacher> <1818916.Mrn9nftLre@kreacher> <878sf4gyix.fsf@riseup.net> <2440238.9qpzlEPeD7@kreacher>
+Date:   Tue, 28 Jul 2020 22:46:08 -0700
+Message-ID: <87v9i6g9gf.fsf@riseup.net>
 MIME-Version: 1.0
-References: <20200728182610.2538-1-dhiraj.sharma0024@gmail.com>
-In-Reply-To: <20200728182610.2538-1-dhiraj.sharma0024@gmail.com>
-From:   Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
-Date:   Wed, 29 Jul 2020 11:06:56 +0530
-Message-ID: <CAPRy4h2Kzqj449PYPjPFmd7neKLR4TTZY8wq51AWqDrTFEFGJA@mail.gmail.com>
-Subject: Re: [PATCH] staging: qlge: qlge_dbg: removed comment repition
-To:     manishc@marvell.com, Greg KH <gregkh@linuxfoundation.org>
-Cc:     netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="==-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+--==-=-=
+Content-Type: multipart/mixed; boundary="=-=-="
 
- I know that I should ask for reviews etc after a week but the change
-is for my eudyptula task and until it doesn't get merged little
-penguin will not pass the task for me so please look at it.
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+"Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
 
-Thank You
-Dhiraj Sharma
+> On Tuesday, July 28, 2020 4:32:22 AM CEST Francisco Jerez wrote:
+>>
+>> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
+>>=20
+>> > On Tuesday, July 21, 2020 1:20:14 AM CEST Francisco Jerez wrote:
+>> >
+>> > [cut]
+>> >
+>> >> >
+>> >> > However, in the active mode the only updater of hwp_req_cached is
+>> >> > intel_pstate_hwp_set() and this patch doesn't introduce any
+>> >> > differences in behavior in that case.
+>> >> >
+>> >>=3D20
+>> >> intel_pstate_hwp_set() is the only updater, but there are other
+>> >> consumers that can get out of sync with the HWP request value written=
+ by
+>> >> intel_pstate_set_energy_pref_index().  intel_pstate_hwp_boost_up() se=
+ems
+>> >> like the most concerning example I named earlier.
+>> >>=3D20
+>> >> >> > So there may be a short time window after the
+>> >> >> > intel_pstate_set_energy_pref_index() invocation in which the new=
+ EPP
+>> >> >> > value may not be in effect, but in general there is no guarantee=
+ th=3D
+>> at
+>> >> >> > the new EPP will take effect immediately after updating the MSR
+>> >> >> > anyway, so that race doesn't matter.
+>> >> >> >
+>> >> >> > That said, that race is avoidable, but I was thinking that tryin=
+g to
+>> >> >> > avoid it might not be worth it.  Now I see a better way to avoid=
+ it,
+>> >> >> > though, so I'm going to update the patch to that end.
+>> >> >> >
+>> >> >> >> Seems like a bug to me.
+>> >> >> >
+>> >> >> > It is racy, but not every race is a bug.
+>> >> >> >
+>> >> >>
+>> >> >> Still seems like there is a bug in intel_pstate_set_energy_pref_in=
+dex=3D
+>> ()
+>> >> >> AFAICT.
+>> >> >
+>> >> > If there is a bug, then what exactly is it, from the users' perspec=
+tiv=3D
+>> e?
+>> >> >
+>> >>=3D20
+>> >> It can be reproduced easily as follows:
+>> >>=3D20
+>> >> | echo 1 > /sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost
+>> >> | for p in /sys/devices/system/cpu/cpufreq/policy*/energy_performance=
+_pr=3D
+>> eference; do echo performance > $p; done
+>> >
+>> > Is this the active mode or the passive mode with the $subject patch ap=
+pli=3D
+>> ed?
+>> >
+>> > If the former, the issue is there regardless of the patch, so it needs=
+ to=3D
+>>  be
+>> > fixed.
+>> >
+>> > If the latter, there should be no effect of hwp_dynamic_boost (which w=
+as
+>> > overlooked by me).
+>> >
+>>=20
+>> This seems to be a problem in active mode only, so yeah the bug exists
+>> regardless of your patch, but the fix is likely to allow you to simplify
+>> this series slightly if it allows you to take full advantage of
+>> hwp_req_cached and drop the additional EPP cache.
+>
+> The additional EPP cache is there to avoid synchronizing the scheduler
+> context directly with a random process running on another CPU and doing
+> things that may take time.
+>
+> The difference between the active mode and the passive mode in this respe=
+ct
+> is that in the latter case hwp_req_cached generally needs to be updated f=
+rom
+> the scheduler context, whereas in the former case it does not.
+>
 
-On Tue, Jul 28, 2020 at 11:56 PM Dhiraj Sharma
-<dhiraj.sharma0024@gmail.com> wrote:
+Hm, that's unfortunate.  Though I'd be surprised to see any appreciable
+performance penalty from synchronizing with a sysfs handler that should
+hardly ever be called.  Anyway thanks for the fix.
+
+> [cut]
 >
-> Inside function ql_get_dump comment statement had a repition of word
-> "to" which I removed and checkpatch.pl ouputs zero error or warnings
-> now.
+>> >> No, I explicitly dismissed that in my previous reply.
+>> >
+>> > But at the same time you seem to agree that without the non-CPU compon=
+ent
+>> > (or thermal pressure) the existing CPU performance scaling would be
+>> > sufficient.
+>> >
+>>=20
+>> Yes, but not necessarily in order to allow the non-CPU component to draw
+>> more power as you said above, but also because the existence of a
+>> bottleneck in a non-CPU component gives us an opportunity to improve the
+>> energy efficiency of the CPU, regardless of whether that allows the
+>> workload to run faster.
 >
-> Signed-off-by: Dhiraj Sharma <dhiraj.sharma0024@gmail.com>
-> ---
->  drivers/staging/qlge/qlge_dbg.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> But why would the bottleneck be there otherwise?
 >
-> diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-> index 985a6c341294..a55bf0b3e9dc 100644
-> --- a/drivers/staging/qlge/qlge_dbg.c
-> +++ b/drivers/staging/qlge/qlge_dbg.c
-> @@ -1298,7 +1298,7 @@ void ql_get_dump(struct ql_adapter *qdev, void *buff)
->          * If the dump has already been taken and is stored
->          * in our internal buffer and if force dump is set then
->          * just start the spool to dump it to the log file
-> -        * and also, take a snapshot of the general regs to
-> +        * and also, take a snapshot of the general regs
->          * to the user's buffer or else take complete dump
->          * to the user's buffer if force is not set.
->          */
-> --
-> 2.17.1
+
+Because some resource of the system (e.g. memory bandwidth, GPU fill
+rate) may be close to 100% utilized, causing a bottleneck for reasons
+unrelated to its energy usage.
+
+>> > [cut]
+>> >
+>> >> > Yes, it is, and so I don't quite see the connection between it and =
+my =3D
+>> question.
+>> >> >
+>> >> > Apparently, the unmodified performance scaling governors are not
+>> >> > sufficient, so there must be something beyond the above which allows
+>> >> > you to determine the frequency in question and so I'm asking what t=
+hat
+>> >> > is.
+>> >> >
+>> >>=3D20
+>> >> The underlying heuristic assumption is the same as I outlined above, =
+but
+>> >> in any implementation of such a heuristic there is necessarily a
+>> >> trade-off between responsiveness to short-term fluctuations and
+>> >> long-term energy usage.  This trade-off is a function of the somewhat
+>> >> arbitrary time interval I was referring to as "immediate past" -- A
+>> >> longer time parameter allows the controller to consider a greater
+>> >> portion of the workload's history while computing the response with
+>> >> optimal energy usage, at the cost of increasing its reaction time to
+>> >> discontinuous changes in the behavior of the workload (AKA increased
+>> >> latency).
+>> >
+>> > OK
+>> >
+>> >> One of the key differences between the governor I proposed and the
+>> >> pre-existing ones is that it doesn't attempt to come up with a magic
+>> >> time parameter that works for everybody, because there isn't such a
+>> >> thing, since different devices and applications have latency
+>> >> requirements which often differ by orders of magnitude.
+>> >
+>> > The problem with this approach is that, generally speaking, the kernel
+>> > has a definition of "close past" already, which comes from the PELT
+>> > signal in the scheduler.
+>> >
+>> > That signal is used for more than just CPU performance scaling and the=
+re
+>> > is a reason for that, as the scheduler's decisions generally need to be
+>> > aligned with CPU performance scaling decisions.
+>> >
+>>=20
+>> Yes, I fully agree that in an ideal world the response latency
+>> constraint I was referring to above would be tracked per-scheduling
+>> entity and used as definition of "close past" by PELT too -- Actually I
+>> think I mentioned I was working on a prototype with scheduler-level
+>> tracking of latency constraints, but other folks requested the RFC to be
+>> based on a simpler interface not requiring scheduler surgery to
+>> implement, which is why I came up with the PM QoS-based interface.  I
+>> believe we have discussed exposing this latency constraint as a third
+>> clamp similar to utilization clamps -- I would be fine with such an
+>> interface if you think it's the way to go.
 >
+> I'm not sure yet to be honest.
+>
+>> That said, in most practical cases it should be possible to take close
+>> to full advantage of the response latency information from the schedutil
+>> governor, even if it's provided via PM QoS rather than having
+>> per-scheduling entity granularity -- The time parameter used to control
+>> CPU frequency would just be the most strict among the applications
+>> running in the system, which should prevent performance loss in
+>> applications with a low latency constraint, but might cause us to miss
+>> out some opportunities for energy optimization in a multitasking
+>> environment compared to the full scheduling-based solution.  Doesn't
+>> seem like a deal-breaker to me though and it makes the code
+>> substantially easier to review.
+>
+> I agree on the simplicity side, but the reason why I think that the sched=
+uler
+> needs to be involved ultimately is because it may have a reason to ignore=
+ the
+> bottleneck and go ahead with its decisions anyway.
+
+Yes, definitely.  One of the cases I was considering where it would make
+sense to do that is whenever a process with e.g. realtime priority
+starts executing in a given GPU.  But that can be done regardless of
+whether the latency constraint is tracked through the scheduler or PM
+QoS, similar to the way you handle realtime priority in schedutil right
+now.  The main functional difference between the scheduling and PM QoS
+approach would be the granularity of the latency constraint computation,
+we could always arrange for the same set of processes to be excluded
+from the optimization.
+
+--=-=-=--
+
+--==-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEAREIAB0WIQST8OekYz69PM20/4aDmTidfVK/WwUCXyENIAAKCRCDmTidfVK/
+W4r3AQCR1GaCYtHMVnRojtT4WI0a/7qQHl3mlgNmWX+IaMWMagD/Sam6ewgwwdjF
+UqLNNXEPiHYnmAA3yKo8PmQ5p2D4sSo=
+=57aL
+-----END PGP SIGNATURE-----
+--==-=-=--
