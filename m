@@ -2,281 +2,95 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF764C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81A572075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:56:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VudFFn9I"
+	by mail.kernel.org (Postfix) with ESMTP id 9F4372074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596056231;
+	bh=us69NBFeFCvCXZFBU2qcw5Cmbco3nD42iGG/gPhfYJg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2exuXbyyt47CUUvSr0jPrPyIezwNgeKYItEDdJQ+uQEse55gsNxHfd1qSewNuhv0L
+	 CErsKtaO4HjAGpYE3HjpSzoezI6YVdxGHSZcTDddo35+0kI84P3oQY2+nrKZHpWABF
+	 /YtThhYz6oUgpxMVNw+2RlrO4koTUU6DMQeFuUMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgG2U4s (ORCPT
+        id S1727005AbgG2U5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:56:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgG2U4s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:56:48 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449A0C0619D2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:56:48 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mt12so2598273pjb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:56:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=90mSVVj5S3skG4373m0mLWuJOCRc1yCkz2RoXhQeF5Y=;
-        b=VudFFn9I3paWVLXuRcojwE/SXEoux1fjrNyTljAzwFmlC4xWbDVdaDAvk34TLdvHc8
-         OEbhyqEedGXcr5jvjjpjuFGpv2+lymK+kNg9fQJmoGbLNN5kACqKZCkvKfPy39egPKyp
-         KWKVoeyhLeq5pBDQoyUZIgfECZ2A9CRfzi+i2ZGe0gvH72tqSrbrfkZv8Qp5p0AJMFqB
-         ZvDgZbehi8HR1liORgQuzCKgjjc0Otjs2vRvCz33G3g0poUjOiFLNeFOGHG+EyJ4rukw
-         MzwSomN8GKE88X6GUVWfsthe09iBWSu+97K3dmXxBeBBWQqTfb6PcqwqTMNKi1KUfBfJ
-         bMIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=90mSVVj5S3skG4373m0mLWuJOCRc1yCkz2RoXhQeF5Y=;
-        b=MPNIyUV9aE8J6W6QgGcpt5FnmcSr+ge2siD/huO+2auBQPB0CLjpCvQiSHIiY4lbQy
-         3jY4wQR+KU2eUq+xjuVe3P8GVnPJWEG05lJwhaAi5PGz9dxMgtu9qJUB4XXXW3QvmWCS
-         jkB7dUzaD3KhOI19nCkVdWt3oRdfaECxMVygULuyIau3oo2vjA6xvLfYSphJDz3f+8wa
-         cNZwQ9Ws+1TGOBWnM30un3G2tMNNJ5KVpOM55doO4Gig1XDEUKZ1CmXPRUPZ9L2nRuGX
-         6EflgDRSA9eqdxGDzPh2afe5QAwYtWRFi87EWg50Yd1i2xpypaXNKZ5iLPg6n4IF1hPW
-         o4QQ==
-X-Gm-Message-State: AOAM530bRfc2QuapwQ1Edm7Pw9gR02ycCe+rKha+rOa70XmyNMj3KwER
-        udsRYCDnW5wxDlUTflPCOUhYFg==
-X-Google-Smtp-Source: ABdhPJwSf6Rw50Rz2Hf74uRDyPmfI0JiwHpSfirDdgUXiUSuOWyU+hZvyRYp4AfdbO61dwcXdFBLRA==
-X-Received: by 2002:a17:902:9f82:: with SMTP id g2mr19162076plq.254.1596056207634;
-        Wed, 29 Jul 2020 13:56:47 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b22sm3014939pju.26.2020.07.29.13.56.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 13:56:46 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 13:53:18 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     linux-pm@vger.kernel.org, evgreen@chromium.org,
-        akashast@codeaurora.org, mka@chromium.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] interconnect: Add bulk API helpers
-Message-ID: <20200729205318.GN229995@builder.lan>
-References: <20200729123439.9961-1-georgi.djakov@linaro.org>
+        Wed, 29 Jul 2020 16:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726496AbgG2U5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 16:57:10 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E3852074B;
+        Wed, 29 Jul 2020 20:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596056229;
+        bh=us69NBFeFCvCXZFBU2qcw5Cmbco3nD42iGG/gPhfYJg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fRKYBmIXhYRcCs7Z8k4qgx2Qr879o1vXtYdDcOLrLzLmrmOs8VBHF6IpPoQ8lt5Q3
+         WuPg5+pl741bKVGgyeJJNkG3gfYLoT68JilULQWwAKZMw/XkeTKp4n4AIg6lMp/qTC
+         4qV9aIeKE+PYUvAmPIXobkOlEKLW4YG+q/DB98cg=
+Date:   Wed, 29 Jul 2020 13:57:07 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Moshe Shemesh <moshe@mellanox.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next RFC 09/13] devlink: Add enable_remote_dev_reset
+ generic parameter
+Message-ID: <20200729135707.5fc65fc8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <5baf2825-a550-f68f-f76e-3a8688aa6ae6@mellanox.com>
+References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
+        <1595847753-2234-10-git-send-email-moshe@mellanox.com>
+        <20200727175935.0785102a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <5baf2825-a550-f68f-f76e-3a8688aa6ae6@mellanox.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729123439.9961-1-georgi.djakov@linaro.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 29 Jul 05:34 PDT 2020, Georgi Djakov wrote:
+On Wed, 29 Jul 2020 17:42:12 +0300 Moshe Shemesh wrote:
+> On 7/28/2020 3:59 AM, Jakub Kicinski wrote:
+> > On Mon, 27 Jul 2020 14:02:29 +0300 Moshe Shemesh wrote:  
+> >> The enable_remote_dev_reset devlink param flags that the host admin
+> >> allows device resets that can be initiated by other hosts. This
+> >> parameter is useful for setups where a device is shared by different
+> >> hosts, such as multi-host setup. Once the user set this parameter to
+> >> false, the driver should NACK any attempt to reset the device while the
+> >> driver is loaded.
+> >>
+> >> Signed-off-by: Moshe Shemesh <moshe@mellanox.com>  
+> > There needs to be a devlink event generated when reset is triggered
+> > (remotely or not).
+> >
+> > You're also missing failure reasons. Users need to know if the reset
+> > request was clearly nacked by some host, not supported, etc. vs
+> > unexpected failure.  
+> 
+> I will fix and send extack message to the user accordingly.
 
-> There are drivers which just need to get multiple interconnect paths,
-> request some predefined amounts of bandwidth and then just toggle the
-> paths between enabled/disabled state.
-> 
-> The aim of this patch is simplify the above and to allow drivers to put
-> all the path names and bandwidth data into a single static icc_bulk_data
-> table and call the icc_bulk_* functions on that table in order to scale
-> all the interconnect paths in parallel.
-> 
-> Suggested-by: Evan Green <evgreen@chromium.org>
-> Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+I'd suggest the reason codes to be somewhat standard.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> 
-> v2:
-> * Fix kernel-doc. (Bjorn)
-> * Do not print EPROBE_DEFER errors. (Bjorn)
-> 
-> v1: https://lore.kernel.org/r/20200528162542.30158-1-georgi.djakov@linaro.org/
-> 
->  drivers/interconnect/Makefile |   2 +-
->  drivers/interconnect/bulk.c   | 117 ++++++++++++++++++++++++++++++++++
->  include/linux/interconnect.h  |  22 +++++++
->  3 files changed, 140 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/interconnect/bulk.c
-> 
-> diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefile
-> index 4825c287ca13..d203520b0a56 100644
-> --- a/drivers/interconnect/Makefile
-> +++ b/drivers/interconnect/Makefile
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
->  CFLAGS_core.o				:= -I$(src)
-> -icc-core-objs				:= core.o
-> +icc-core-objs				:= core.o bulk.o
->  
->  obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
->  obj-$(CONFIG_INTERCONNECT_IMX)		+= imx/
-> diff --git a/drivers/interconnect/bulk.c b/drivers/interconnect/bulk.c
-> new file mode 100644
-> index 000000000000..73e2c8d0a412
-> --- /dev/null
-> +++ b/drivers/interconnect/bulk.c
-> @@ -0,0 +1,117 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/interconnect-provider.h>
-> +#include <linux/device.h>
-> +#include <linux/export.h>
-> +
-> +/**
-> + * of_icc_bulk_get() - get interconnect paths
-> + * @dev: the device requesting the path
-> + * @num_paths: the number of icc_bulk_data
-> + * @paths: the table with the paths we want to get
-> + *
-> + * Returns 0 on success or negative errno otherwise.
-> + */
-> +int __must_check of_icc_bulk_get(struct device *dev, int num_paths,
-> +				 struct icc_bulk_data *paths)
-> +{
-> +	int ret, i;
-> +
-> +	for (i = 0; i < num_paths; i++) {
-> +		paths[i].path = of_icc_get(dev, paths[i].name);
-> +		if (IS_ERR(paths[i].path)) {
-> +			ret = PTR_ERR(paths[i].path);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(dev, "of_icc_get() failed on path %s (%d)\n",
-> +					paths[i].name, ret);
-> +			paths[i].path = NULL;
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +err:
-> +	icc_bulk_put(i, paths);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(of_icc_bulk_get);
-> +
-> +/**
-> + * icc_bulk_put() - put a list of interconnect paths
-> + * @num_paths: the number of icc_bulk_data
-> + * @paths: the icc_bulk_data table with the paths being put
-> + */
-> +void icc_bulk_put(int num_paths, struct icc_bulk_data *paths)
-> +{
-> +	while (--num_paths >= 0) {
-> +		icc_put(paths[num_paths].path);
-> +		paths[num_paths].path = NULL;
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(icc_bulk_put);
-> +
-> +/**
-> + * icc_bulk_set() - set bandwidth to a set of paths
-> + * @num_paths: the number of icc_bulk_data
-> + * @paths: the icc_bulk_data table containing the paths and bandwidth
-> + *
-> + * Returns 0 on success or negative errno otherwise.
-> + */
-> +int icc_bulk_set_bw(int num_paths, const struct icc_bulk_data *paths)
-> +{
-> +	int ret = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < num_paths; i++) {
-> +		ret = icc_set_bw(paths[i].path, paths[i].avg_bw, paths[i].peak_bw);
-> +		if (ret) {
-> +			pr_err("icc_set_bw() failed on path %s (%d)\n", paths[i].name, ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(icc_bulk_set_bw);
-> +
-> +/**
-> + * icc_bulk_enable() - enable a previously disabled set of paths
-> + * @num_paths: the number of icc_bulk_data
-> + * @paths: the icc_bulk_data table containing the paths and bandwidth
-> + *
-> + * Returns 0 on success or negative errno otherwise.
-> + */
-> +int icc_bulk_enable(int num_paths, const struct icc_bulk_data *paths)
-> +{
-> +	int ret, i;
-> +
-> +	for (i = 0; i < num_paths; i++) {
-> +		ret = icc_enable(paths[i].path);
-> +		if (ret) {
-> +			pr_err("icc_enable() failed on path %s (%d)\n", paths[i].name, ret);
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +err:
-> +	icc_bulk_disable(i, paths);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(icc_bulk_enable);
-> +
-> +/**
-> + * icc_bulk_disable() - disable a set of interconnect paths
-> + * @num_paths: the number of icc_bulk_data
-> + * @paths: the icc_bulk_data table containing the paths and bandwidth
-> + */
-> +void icc_bulk_disable(int num_paths, const struct icc_bulk_data *paths)
-> +{
-> +	while (--num_paths >= 0)
-> +		icc_disable(paths[num_paths].path);
-> +}
-> +EXPORT_SYMBOL_GPL(icc_bulk_disable);
-> diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-> index 3a63d98613fc..f2dd2fc8d3cd 100644
-> --- a/include/linux/interconnect.h
-> +++ b/include/linux/interconnect.h
-> @@ -23,6 +23,28 @@
->  struct icc_path;
->  struct device;
->  
-> +/**
-> + * struct icc_bulk_data - Data used for bulk icc operations.
-> + *
-> + * @path: reference to the interconnect path (internal use)
-> + * @name: the name from the "interconnect-names" DT property
-> + * @avg_bw: average bandwidth in icc units
-> + * @peak_bw: peak bandwidth in icc units
-> + */
-> +struct icc_bulk_data {
-> +	struct icc_path	*path;
-> +	const char *name;
-> +	u32 avg_bw;
-> +	u32 peak_bw;
-> +};
-> +
-> +int __must_check of_icc_bulk_get(struct device *dev, int num_paths,
-> +				 struct icc_bulk_data *paths);
-> +void icc_bulk_put(int num_paths, struct icc_bulk_data *paths);
-> +int icc_bulk_set_bw(int num_paths, const struct icc_bulk_data *paths);
-> +int icc_bulk_enable(int num_paths, const struct icc_bulk_data *paths);
-> +void icc_bulk_disable(int num_paths, const struct icc_bulk_data *paths);
-> +
->  #if IS_ENABLED(CONFIG_INTERCONNECT)
->  
->  struct icc_path *icc_get(struct device *dev, const int src_id,
+The groups I can think of:
+ - timeout - device did not respond to the reset request
+ - device reject - FW or else has nacked the activation req
+ - host incapable - one of the participating hosts (in MH) is not
+   capable of handling live activation
+ - host denied - one of the participating hosts has NACKed
+ - host timeout - one of the p. hosts did not ack or done the procedure
+   in time (e.g. has not toggled the link)
+ - failed reset - the activation itself had failed
+ - failed reinit - one of p. hosts was not able to cleanly come back up
