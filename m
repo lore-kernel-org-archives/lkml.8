@@ -2,128 +2,94 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4477EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05FAC207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E391F20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 15:05:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="orYEuU8o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSoGmoEw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgG2PCY (ORCPT
+        id S1726707AbgG2PFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:02:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36784 "EHLO
+        Wed, 29 Jul 2020 11:05:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgG2PCY (ORCPT
+        with ESMTP id S1726054AbgG2PFO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:02:24 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 055D0C061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 08:02:24 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r12so21908987wrj.13
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 08:02:23 -0700 (PDT)
+        Wed, 29 Jul 2020 11:05:14 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5642BC061794;
+        Wed, 29 Jul 2020 08:05:14 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id j19so14379133pgm.11;
+        Wed, 29 Jul 2020 08:05:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WGOW+4ED6By0KB5WrYSp9CvcqoKzYJSfhBgGcHuafBg=;
-        b=orYEuU8o/GDPhYnOGzfx57QASwqpEIZoDm/xxfftrzRdtI0uqeCC4iHYKn7NFYTV4f
-         KeJmDJjL+Rc2grMpL+jqLp4JEoXEcUBt/yYr+8KjrB/As0pJRdj9NkxcpJCh1QgA21/r
-         0CzGdw+Uf5iqy8NIQapkdVjptLD8AWiaVxdc9F17evrdOWcSRSrnf7Lb1byyXwV2op26
-         ecAwye9TLPD7MWudrrHQvAkNOCM7AJWXZ+r12RUpT0slzlQqHjJkOeYZnefZQX4kv/5c
-         lLQWxOHM//odrJUMYt/FIBv1r6qGijXMx23gd1nSetLSZOZbrfPi8Rkk67b+lqzB5NV1
-         7cww==
+        bh=q8s238+wm9F1IJhTkTAY/ZokRIu+GY6YpE2anz77tJk=;
+        b=bSoGmoEwHbHmE48riCiV6QggXgEnim/DiTVwmarNrYZTxCW/FmiMvypqSmLZF67CPv
+         vAOusOOzzK12PzJIvEmEASlYDe3gu3bKf4Ua1XqnSuUu2HbTIUG3XYMEK7FyHgtcAEam
+         8cikxlqeM8HHEfFC3FfVZr2bPzl2noCq9knpICVpNlzEtWHaZIlp4zofK3NrCmWPCJU/
+         /8FXJWRggNaazS/1saZlyyUWZDa6Jc7JVmfYSrRqKkBfPIVq4KpnFIwIghNFqaX8WqGU
+         rSlOlSzoMxKhJiX3VWeTSTm7NCABukRQHxkP4njYT9LG0alFmlcK+T4tfN3dmj8LSa/e
+         /r3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WGOW+4ED6By0KB5WrYSp9CvcqoKzYJSfhBgGcHuafBg=;
-        b=OaiGGhrAqNXJRwrFzxKhid+cEYlGLJCqSloYPpdQ/YpZr0dMZ0ZOuIN5vw5WLvoMmJ
-         hrDEh65MrXtgZJGpEUYi1KavSd3q/oSXPc/RVNafx/N0iQJ9xJGzUM8zCygo6AEXSjQQ
-         bmkpQJnxH28PMv0XSrSS8e0CkadoPDmLmDqhFMdwXj6s6I+TcFjzqJWi+SKZeTSDRvHM
-         oN3uJ9aMSpdDalqbegRp68ld89dzTXoqPUIT6M2mB66mKwnbhgT/iRQVKiIvbuv/huNa
-         MyH/0ET0ioi9cbhWspHXKW+4Ky7XvVH8IUJXBL/gOMre+txhFRjBfeo5cQTpCwPbQNns
-         cJxg==
-X-Gm-Message-State: AOAM533I2hGVk1nISiXK++J664RuV7jk7+ADdz2wBRv+M0jwdbFobamE
-        gpKs0k9SjrNOCqoRmtbob081vLzxTJ6ZUV6mJ1QP6Q==
-X-Google-Smtp-Source: ABdhPJwAhGfe4OeCtpo2EckPieAyN/CBzAB0X9eafg6qiHj37yAK2qTcWVp20qGk1/k6Ulm7rTvD+Z1zdSQwb2lqJ9k=
-X-Received: by 2002:adf:fdce:: with SMTP id i14mr24624163wrs.273.1596034942775;
- Wed, 29 Jul 2020 08:02:22 -0700 (PDT)
+        bh=q8s238+wm9F1IJhTkTAY/ZokRIu+GY6YpE2anz77tJk=;
+        b=AOrrWvCdT0s6q0nYOqSoZtgH15lOWuywlnBFi32Mc2V5i9unUxMqfXYX3WW4rHN7s8
+         3cxUA90pjcSNWz/XPOS53AG6aFyT2BPWdlSo5O3djy3UJKkEXuWJ3DyiAKyDX2+HZnPn
+         tVtEnhOCaalCM2P5MN7/ZS4cOwLrObINh5z7tWnEJaa+hV9EmP6bla2GrttvOSYaDvQt
+         hFNJEfl3ICw1Y+xC1nSax4j0SKdjdEgu9HGzhl1XFsVrzrsneZ6Di1xdc/TKTx3+0aIl
+         v2dYvIQz6ak1YMdJbK3RxCXy3x/1hqua7tMMKTtM/zdfLIgPTX3UDDFeataEMQblmAO8
+         dCHQ==
+X-Gm-Message-State: AOAM532HsrJ3DZOvJ9wGcTWShZmNftYQXFNuzUBgCQ661kBXdYfR+48L
+        VWkjFvPyhgmBeYKUBtnWfyrhXrFAc4YlI7avIt0=
+X-Google-Smtp-Source: ABdhPJxzA3WCJcSNjIELiqutAzLN4MeMrJkvVwva6ZP9uUfAPtMI6KwIhG8+fSzawAmQAbLAcl6Mh/bENZ95JSl8Xc4=
+X-Received: by 2002:a63:a05f:: with SMTP id u31mr29096846pgn.4.1596035113790;
+ Wed, 29 Jul 2020 08:05:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <8af06b31c58ec9745ce13c2aca4e532d6ca340e0.1594230107.git-series.maxime@cerno.tech>
-In-Reply-To: <8af06b31c58ec9745ce13c2aca4e532d6ca340e0.1594230107.git-series.maxime@cerno.tech>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Wed, 29 Jul 2020 16:02:06 +0100
-Message-ID: <CAPY8ntBpGsak=s8tOmmDA-2kE5mp6+TrqyK3930Ypm7Q9gcUJw@mail.gmail.com>
-Subject: Re: [PATCH v4 13/78] drm/vc4: kms: Convert to for_each_new_crtc_state
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
+References: <20200729210311.425d0e9b@canb.auug.org.au> <20200729114757.GA19388@gondor.apana.org.au>
+ <20200729122807.GA7047@gondor.apana.org.au> <ed62ba67-0e1d-3fee-8c09-7750d5690be5@redhat.com>
+In-Reply-To: <ed62ba67-0e1d-3fee-8c09-7750d5690be5@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 29 Jul 2020 18:04:57 +0300
+Message-ID: <CAHp75VdbZu008RcxNhMysoqBs2FSPXWv+au_ROJ7FPVd0uOhtg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] locking/qspinlock: Break qspinlock_types.h header loop
+To:     Waiman Long <longman@redhat.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime
+On Wed, Jul 29, 2020 at 4:35 PM Waiman Long <longman@redhat.com> wrote:
+> On 7/29/20 8:28 AM, Herbert Xu wrote:
 
-On Wed, 8 Jul 2020 at 18:42, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> The vc4 atomic commit loop has an handrolled loop that is basically
-> identical to for_each_new_crtc_state, let's convert it to that helper.
->
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  drivers/gpu/drm/vc4/vc4_kms.c |  9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_kms.c b/drivers/gpu/drm/vc4/vc4_kms.c
-> index 210cc2408087..717673b18132 100644
-> --- a/drivers/gpu/drm/vc4/vc4_kms.c
-> +++ b/drivers/gpu/drm/vc4/vc4_kms.c
-> @@ -152,14 +152,13 @@ vc4_atomic_complete_commit(struct drm_atomic_state *state)
->         struct drm_device *dev = state->dev;
->         struct vc4_dev *vc4 = to_vc4_dev(dev);
->         struct vc4_hvs *hvs = vc4->hvs;
-> -       struct vc4_crtc *vc4_crtc;
-> +       struct drm_crtc_state *new_crtc_state;
-> +       struct drm_crtc *crtc;
->         int i;
->
-> -       for (i = 0; i < dev->mode_config.num_crtc; i++) {
-> -               if (!state->crtcs[i].ptr || !state->crtcs[i].commit)
-> -                       continue;
-> +       for_each_new_crtc_in_state(state, crtc, new_crtc_state, i) {
-> +               struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
+...
 
-for_each_new_crtc_in_state doesn't check !state->crtcs[i].commit as
-the hand rolled loop did. Sorry, this is my lack of knowledge, but
-does that actually make any real difference?
+> This patch series looks good to me. I just wonder if we should also move
+> ATOMIC64_INIT() to types.h for symmetry purpose. Anyway,
 
-I see nothing wrong in calling vc4_hvs_mask_underrun multiple times
-anyway, so it's most likely going to be harmless anyway, but wanted to
-query it.
+Same question here.
 
-  Dave
-
->
-> -               vc4_crtc = to_vc4_crtc(state->crtcs[i].ptr);
->                 vc4_hvs_mask_underrun(dev, vc4_crtc->channel);
->         }
->
-> --
-> git-series 0.9.1
+-- 
+With Best Regards,
+Andy Shevchenko
