@@ -2,162 +2,168 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E58B4C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFF8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5FB620672
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:49:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="KOFeHxCK";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="adE0Jopx"
+	by mail.kernel.org (Postfix) with ESMTP id 94BA422D0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 01:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595987462;
+	bh=bZZ5zERLPsJkFYzGQ/kJWYaF35riQDb+P2o0nySVOBk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZuWNLReXbweZYaxSJAGXwcIP8ft5BopEBWlQwEG9OeQ49ZnSg+x8zT0gCV8G8vxIs
+	 MKYbDe06juNsIdZR/6PN+kdzSjEnbbjUanfngSxjFQnbRj6YkYcEGoGkaCdW3ZxXuS
+	 XSPJ5xsUOyPZT6e5JrekzWqsawLdroLO9lvGHFQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730869AbgG2BtH (ORCPT
+        id S1730617AbgG2BvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 21:49:07 -0400
-Received: from relay3.mymailcheap.com ([217.182.119.157]:40261 "EHLO
-        relay3.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730328AbgG2BtG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 21:49:06 -0400
-Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
-        by relay3.mymailcheap.com (Postfix) with ESMTPS id 2755C3ECDF;
-        Wed, 29 Jul 2020 03:49:02 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by filter1.mymailcheap.com (Postfix) with ESMTP id 549192A0F5;
-        Tue, 28 Jul 2020 21:49:01 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1595987341;
-        bh=Y642tKKWgaamRJ0vO0FY457Lm355lqPLigYlI2p5Pcs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KOFeHxCKT1huBJbk/aEC3ze8xmPxhPt/ZCea/xfcAsjLew0gurqP+lL265P8FX98z
-         bc5yg3bDCZZ3f2u/q1PcSYDj7QexS6TpzpQhPcaWD4arSN9Akxdblx6KuyzAogmG3b
-         ZdoJhEeOyIfiS1cjRKuCBIOAMKg7QRsCvNKYJ0tg=
-X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
-Received: from filter1.mymailcheap.com ([127.0.0.1])
-        by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id DjZu8um8qhIu; Tue, 28 Jul 2020 21:49:00 -0400 (EDT)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 28 Jul 2020 21:51:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730328AbgG2BvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 21:51:00 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by filter1.mymailcheap.com (Postfix) with ESMTPS;
-        Tue, 28 Jul 2020 21:49:00 -0400 (EDT)
-Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id 22093418CF;
-        Wed, 29 Jul 2020 01:48:57 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="adE0Jopx";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from [0.0.0.0] (li161-247.members.linode.com [173.230.151.247])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 0FB6041312;
-        Wed, 29 Jul 2020 01:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
-        s=default; t=1595987331;
-        bh=Y642tKKWgaamRJ0vO0FY457Lm355lqPLigYlI2p5Pcs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=adE0JopxLVYe/8QD+JX/Qp5LmqWNVxuheA83vJ/IdxSQrmoda4TQq/Uh1fOLy0CF7
-         xsdMscfHdA1tPstCh3oMsn5Vq7H5u1kOvJ0B6HXTh8j0w4CELFVsBTtk2BoAAlaH8X
-         bQKt0kGjwRof9AsnrCSon9YsbnT3XKmb1U/8pNcg=
-Subject: Re: [PATCH v4 0/5] MIPS: Loongson64: Process ISA Node in DeviceTree
-To:     linux-mips@vger.kernel.org
-Cc:     Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
-        maobibo@loongson.cn, git@xen0n.name
-References: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
- <20200728205245.GC22052@alpha.franken.de>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <0a0847d1-8d9b-8fdb-54cf-e1b07100b1f8@flygoat.com>
-Date:   Wed, 29 Jul 2020 09:48:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.0.1
-MIME-Version: 1.0
-In-Reply-To: <20200728205245.GC22052@alpha.franken.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 22093418CF
-X-Spamd-Result: default: False [-0.10 / 10.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         R_SPF_SOFTFAIL(0.00)[~all];
-         RCPT_COUNT_FIVE(0.00)[5];
-         ML_SERVERS(-3.10)[213.133.102.83];
-         DKIM_TRACE(0.00)[flygoat.com:+];
-         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
-         RCVD_IN_DNSWL_NONE(0.00)[213.133.102.83:from];
-         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1]
-X-Rspamd-Server: mail20.mymailcheap.com
+        by mail.kernel.org (Postfix) with ESMTPSA id 55C0022CAE;
+        Wed, 29 Jul 2020 01:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595987460;
+        bh=bZZ5zERLPsJkFYzGQ/kJWYaF35riQDb+P2o0nySVOBk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ij03ThB7Pz8GFML/S0YQ0lgmlGenEwziXAH32UEUoqUr/a5i6OHjsYxo2H8RX+kbE
+         n8EUKQWQM2jBBQhYphAc4vWSuAeWcv+09MTGlA7RxygjOsin5O75oX1XPbxn5T4L/S
+         2zeR2fILPnMyl1uwskldcBO2GqqUrZABbBazOgLM=
+Date:   Wed, 29 Jul 2020 10:50:54 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Mike Rapoport <rppt@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH v5 5/6] kprobes: Use text_alloc() and text_free()
+Message-Id: <20200729105054.06f74749eb933c08342e6dd6@kernel.org>
+In-Reply-To: <CAMj1kXG9Fr6ym43JN9FLnzk9vdANPFe95LPKaLK6KF8BiRK0NQ@mail.gmail.com>
+References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
+        <20200724050553.1724168-6-jarkko.sakkinen@linux.intel.com>
+        <20200724092746.GD517988@gmail.com>
+        <20200725031648.GG17052@linux.intel.com>
+        <20200726081408.GB2927915@kernel.org>
+        <CAMj1kXHDK5RSbTu3SG1AzbLRJD_FsdAmCnjmf31P=Db6J0ktww@mail.gmail.com>
+        <20200728171715.0800093e2226e3d72b04a3ae@kernel.org>
+        <CAMj1kXGJ_7mUtFHWsLaBj-MSK_VxpBet=wi1Z7frkKRVEgozpQ@mail.gmail.com>
+        <20200728223545.ce4ff78cac73b571a27bb357@kernel.org>
+        <CAMj1kXG9Fr6ym43JN9FLnzk9vdANPFe95LPKaLK6KF8BiRK0NQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 28 Jul 2020 20:51:08 +0300
+Ard Biesheuvel <ardb@kernel.org> wrote:
 
+> On Tue, 28 Jul 2020 at 16:35, Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > On Tue, 28 Jul 2020 13:56:43 +0300
+> > Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > > On Tue, 28 Jul 2020 at 11:17, Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > > > Masami or Peter should correct me if I am wrong, but it seems to me
+> > > > > that the way kprobes uses these pages does not require them to be in
+> > > > > relative branching range of the core kernel on any architecture, given
+> > > > > that they are populated with individual instruction opcodes that are
+> > > > > executed in single step mode, and relative branches are emulated (when
+> > > > > needed)
+> > > >
+> > > > Actually, x86 and arm has the "relative branching range" requirements
+> > > > for the jump optimized kprobes. For the other architectures, I think
+> > > > we don't need it. Only executable text buffer is needed.
+> > > >
+> > >
+> > > Thanks for the explanation. Today, arm64 uses the definition below.
+> > >
+> > > void *alloc_insn_page(void)
+> > > {
+> > >   return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
+> > >     GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
+> > >     NUMA_NO_NODE, __builtin_return_address(0));
+> > > }
+> > >
+> > > Do you think we could use that as the generic implementation if we use
+> > > MODULES_START/_END as the allocation window?
+> >
+> > Yes, but for the generic implementation, we don't need to consider the
+> > relative branching range since we can override it for x86 and arm.
+> > (and that will be almost same as module_alloc() default code)
+> 
+> Indeed. So having kprobes specific macros that default to
+> VMALLOC_START/END but can be overridden would be sufficient.
+> 
+> > BTW, is PAGE_KERNEL_ROX flag available generically?
+> >
+> 
+> Turns out that it is not :-(
 
-ÔÚ 2020/7/29 4:52, Thomas Bogendoerfer Ð´µÀ:
-> On Tue, Jul 28, 2020 at 11:36:54PM +0800, Jiaxun Yang wrote:
->> Hi,
->>
->> This series convert reservation of Loongson64 Logic PIO into DeviceTree based
->> method.
->>
->> It can be used to replace Huacai's
->> "MIPS: Loongson64: Reserve legacy MMIO space according to bridge type".
->>
->> Thanks.
->>
->> v2:
->>    - Address Rob and Huacai's review comments.
->> v3:
->>    - Address Rob, Thomas's review comments.
->> v4:
->>    - Fix typo & grammar issue according to Xuerui's suggestion.
->>
->> Jiaxun Yang (5):
->>    of_address: Add bus type match for pci ranges parser
->>    MIPS: Loongson64: Process ISA Node in DeviceTree
->>    MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
->>    MIPS: Loongson64: DTS: Fix ISA and PCI I/O ranges for RS780E PCH
->>    MIPS: Loongson64: Add ISA node for LS7A PCH
->>
->>   arch/mips/boot/dts/loongson/ls7a-pch.dtsi     |  7 ++
->>   arch/mips/boot/dts/loongson/rs780e-pch.dtsi   |  4 +-
->>   arch/mips/include/asm/io.h                    |  2 -
->>   arch/mips/include/asm/mach-generic/spaces.h   |  4 +
->>   .../mips/include/asm/mach-loongson64/spaces.h |  3 +-
->>   arch/mips/loongson64/init.c                   | 87 +++++++++++++------
->>   drivers/of/address.c                          | 29 ++++---
->>   include/linux/of_address.h                    |  4 +
->>   8 files changed, 97 insertions(+), 43 deletions(-)
-> series applied to mips-next.
+Hmm, in that case, we need to use PAGE_KERNEL_EXEC.
 
-+ Xuerui & Bibo,
+In the result, may it be similar to this? :)
 
-This series should fix the issue that RTC on RS780E chipset failed
-to be probed, please kindly test latest mips-next.
+void * __weak module_alloc(unsigned long size)
+{
+        return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
+                        GFP_KERNEL, PAGE_KERNEL_EXEC, VM_FLUSH_RESET_PERMS,
+                        NUMA_NO_NODE, __builtin_return_address(0));
+}
 
-Thanks!
+The major difference between module_alloc() and kprobe's alloc_page_insn()
+is the alloc_page_insn() makes the page ROX after allocating the pages *ONLY*
+on x86 and arm64.
 
-- Jiaxun
+$ git grep -w alloc_insn_page -- arch
+arch/arm64/kernel/probes/kprobes.c:void *alloc_insn_page(void)
+arch/x86/kernel/kprobes/core.c:void *alloc_insn_page(void)
 
->
-> Thomas.
->
+However since the module_alloc() owns its arch-dependent implementations
+most of major architectures, if we implement independent text_alloc_kprobe(),
+we need to make deadcopies of module_alloc() for each architecture.
+
+$ git grep 'module_alloc(unsigned' arch/
+arch/arm/kernel/module.c:void *module_alloc(unsigned long size)
+arch/arm64/kernel/module.c:void *module_alloc(unsigned long size)
+arch/mips/kernel/module.c:void *module_alloc(unsigned long size)
+arch/nds32/kernel/module.c:void *module_alloc(unsigned long size)
+arch/nios2/kernel/module.c:void *module_alloc(unsigned long size)
+arch/parisc/kernel/module.c:void *module_alloc(unsigned long size)
+arch/riscv/kernel/module.c:void *module_alloc(unsigned long size)
+arch/s390/kernel/module.c:void *module_alloc(unsigned long size)
+arch/sparc/kernel/module.c:void *module_alloc(unsigned long size)
+arch/unicore32/kernel/module.c:void *module_alloc(unsigned long size)
+arch/x86/kernel/module.c:void *module_alloc(unsigned long size)
+
+It seems that some constrains for module_alloc() exists for above
+architectures.
+
+Anyway, for kprobe's text_alloc() requirements are
+- It must be executable for the arch which uses a single-step out-of-line.
+  (and need to be registered to KASAN?)
+- It must be ROX if implemented (currently only for x86 and arm64)
+- It must be in the range of relative branching only for x86 and arm.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
