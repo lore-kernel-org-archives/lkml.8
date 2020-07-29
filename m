@@ -2,180 +2,412 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A09B3C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 00:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04112C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 00:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7938E2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 00:33:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="cNt11VwE"
+	by mail.kernel.org (Postfix) with ESMTP id D06C620663
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 00:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730810AbgG2Adm (ORCPT
+        id S1730853AbgG2Afi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 20:33:42 -0400
-Received: from mail-bn7nam10on2079.outbound.protection.outlook.com ([40.107.92.79]:53889
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730535AbgG2Adl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 20:33:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g+P9LNaSiUm2qdx6IHw75ZEmXUkWjExQmkdxCx6gmvSRCD1wzaR5RPYEK8GP3oFtqV2+jh7U9+KzinM2bj/kfOJhjv68V0uLzhdLLlknago7mJ52JLimDPT289WijPWzWjizHQj1/ZrQWwuq7C2FnQZvHJ7vIIPvJfLeg81RpyqveDapHksLEF5VQJ9RdCUxBpoU+lNvDZRoZ00OOrKyEtD3tG8kBAUi7+qlm4cITNo3jYi0KZmV3mEIM5GzjiTGcU9uh1Fz1pTCOd58dwDool9SMwWDF/kOp757575LnptxE810S0rgwCVMC+O7D9m2IPaWN0p4H1BsuMPIsEQ7RQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3eLKcpw2vLcSBKrsZMhCtXo5PLTtN5lUjA8cMU7RVG0=;
- b=koqV7pk+VAJ34AlDgYoGCLUsxuO8NKmQRqA9ujNt+DveqEYNr+682BiUiyKfpiiWiYNyHa1kqDYCvGKF/68vu62J72lumJ5q96LlbUvyaUa8/52gaVSgY3Ndh+48amr8hoIZGptjzzb+UAjYMOieWbfDjg6IKNJZ4b6ZOrc51clN1K1n8i7bpn9tbRB9X+dXiVDh/GZuKM9+1cMtDlJoixF3jNiaA7BLg28yl/MouRoLc4mtnRSBCElD/kvPD/PrJea38nhSsrmPEixnOw6tjjRCwk+ARBZxH42XNjaydJN/wiqIatvrIOSc9o7XT1NCS1bQsDWTQ93zBT8k3sPmuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=ffwll.ch smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3eLKcpw2vLcSBKrsZMhCtXo5PLTtN5lUjA8cMU7RVG0=;
- b=cNt11VwEL5mSt5KKNqINK6PM0zkFZuQZqfHhvXj7oh4wLeSRPZ+UdN37YyXwr2jEM/oF6TibEJa4gFNgGmgzEod8xw3tfz5seBFFxCcltLo/BE4uqn8ocob4T5twcPDcrsRcBXziJj5LGznd10oLaZRA3wky6YDIHILDnX5VNGs=
-Received: from CY4PR20CA0015.namprd20.prod.outlook.com (2603:10b6:903:98::25)
- by DM6PR02MB5212.namprd02.prod.outlook.com (2603:10b6:5:4a::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Wed, 29 Jul
- 2020 00:33:38 +0000
-Received: from CY1NAM02FT027.eop-nam02.prod.protection.outlook.com
- (2603:10b6:903:98:cafe::15) by CY4PR20CA0015.outlook.office365.com
- (2603:10b6:903:98::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend
- Transport; Wed, 29 Jul 2020 00:33:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; ffwll.ch; dkim=none (message not signed)
- header.d=none;ffwll.ch; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT027.mail.protection.outlook.com (10.152.75.159) with Microsoft SMTP
- Server id 15.20.3216.10 via Frontend Transport; Wed, 29 Jul 2020 00:33:37
- +0000
-Received: from [149.199.38.66] (port=33498 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <hyun.kwon@xilinx.com>)
-        id 1k0a0N-000481-GF; Tue, 28 Jul 2020 17:31:35 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <hyun.kwon@xilinx.com>)
-        id 1k0a2L-00033q-6y; Tue, 28 Jul 2020 17:33:37 -0700
-Received: from [172.19.2.244] (helo=xsjhyunkubuntu)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <hyun.kwon@xilinx.com>)
-        id 1k0a2H-00033H-AR; Tue, 28 Jul 2020 17:33:33 -0700
-Received: by xsjhyunkubuntu (Postfix, from userid 13638)
-        id 3EB3A2C238C; Tue, 28 Jul 2020 17:29:45 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 17:29:45 -0700
-From:   Hyun Kwon <hyun.kwon@xilinx.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Michal Simek <michals@xilinx.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH -next] drm: xlnx: Fix typo in parameter description
-Message-ID: <20200729002944.GA11598@xilinx.com>
-References: <20200725063429.172139-1-weiyongjun1@huawei.com>
- <20200728220205.GJ6419@phenom.ffwll.local>
- <20200728223543.GU13753@pendragon.ideasonboard.com>
+        Tue, 28 Jul 2020 20:35:38 -0400
+Received: from hera.aquilenet.fr ([185.233.100.1]:47060 "EHLO
+        hera.aquilenet.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730767AbgG2Afi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 20:35:38 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by hera.aquilenet.fr (Postfix) with ESMTP id A509667D;
+        Wed, 29 Jul 2020 02:35:36 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at aquilenet.fr
+Received: from hera.aquilenet.fr ([127.0.0.1])
+        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id N8Bb00C0UTv2; Wed, 29 Jul 2020 02:35:35 +0200 (CEST)
+Received: from function (lfbn-bor-1-797-11.w86-234.abo.wanadoo.fr [86.234.239.11])
+        by hera.aquilenet.fr (Postfix) with ESMTPSA id EF4DC2DE;
+        Wed, 29 Jul 2020 02:35:34 +0200 (CEST)
+Received: from samy by function with local (Exim 4.94)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1k0a4D-003o3h-KR; Wed, 29 Jul 2020 02:35:33 +0200
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+Cc:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        speakup@linux-speakup.org
+Subject: [PATCHv2] staging/speakup: Move out of staging
+Date:   Wed, 29 Jul 2020 02:35:31 +0200
+Message-Id: <20200729003531.907370-1-samuel.thibault@ens-lyon.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728223543.GU13753@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a8c9e3d7-04c9-4038-ed04-08d8335708c2
-X-MS-TrafficTypeDiagnostic: DM6PR02MB5212:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB52126C3242E7BA2EA7F5E340D6700@DM6PR02MB5212.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /FOP7y4M7KlCOi5P7l2E4A60FrDMfoZIpdkWEpGirCMir5z7EmbKl08HwC9r+jthQMPWfw89adRqr5y+6SYLJBD14xKpynw5iR97/j5HeofYjJoE358RBpRlQcEp0ZFKFAKls0Q2kB1Zkwx2EV+Wy72G0EVkhAVwrAwbUVYlRuRNoMGJLvnhVprgSOYw1x6s8QDW/u17W3YxtJvAcE9xVMCo9fwvOdaYNuYrG2IEzRypgra/ghWEX/PQrWLGquzNXlBkqvJm1hQqz5k7X2DAdBIKv8vmzrPXOqqVW/ODBk3kWh9Cn4NG/U2l/n/9kvb+V9ospN0OGBiyQOsSnhdjFTa9OGujOT99ycSRUUpwNoSQ4VyA74u20++Ws4cm6+Bv0QopQk2kXgN1U1H5v0iTcS3uwU3Fq8hkDJRA7SjhlDTt2PxGBd49sB5H6wfXnfCo
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(396003)(136003)(376002)(346002)(39850400004)(46966005)(1076003)(5660300002)(6916009)(54906003)(2906002)(70206006)(42186006)(36756003)(83380400001)(966005)(316002)(478600001)(2616005)(33656002)(82310400002)(44832011)(47076004)(4326008)(336012)(82740400003)(6266002)(8936002)(426003)(8676002)(356005)(186003)(70586007)(26005)(81166007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2020 00:33:37.4968
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8c9e3d7-04c9-4038-ed04-08d8335708c2
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT027.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5212
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The nasty TODO items are done.
 
-On Tue, Jul 28, 2020 at 03:35:43PM -0700, Laurent Pinchart wrote:
-> On Wed, Jul 29, 2020 at 12:02:05AM +0200, daniel@ffwll.ch wrote:
-> > Hi Hyun Kwon,
-> >
-> > Are you all sorted with drm-misc commit rights so you can push the 3
-> > (maybe there's more) xlnx fixup patches to drm-misc-next-fixes?
-> 
-> Thanks Daniel for bringing this up.
-> 
-> Hyun, would that work for you ?
-> 
+Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+---
+v2: keep S: line in MAINTAINERS
 
-Should I commit small fixups directly to,
-https://cgit.freedesktop.org/drm/drm-misc/log/?h=drm-misc-next-fixes?
+ .../ABI/stable}/sysfs-driver-speakup          |  0
+ .../admin-guide}/spkguide.txt                 |  0
+ MAINTAINERS                                   | 20 +++++++++----------
+ drivers/accessibility/Kconfig                 |  2 ++
+ drivers/accessibility/Makefile                |  1 +
+ .../speakup/DefaultKeyAssignments             |  0
+ .../speakup/Kconfig                           |  0
+ .../speakup/Makefile                          |  0
+ .../{staging => accessibility}/speakup/TODO   |  0
+ .../speakup/buffers.c                         |  0
+ .../speakup/devsynth.c                        |  0
+ .../speakup/fakekey.c                         |  0
+ .../{staging => accessibility}/speakup/i18n.c |  0
+ .../{staging => accessibility}/speakup/i18n.h |  0
+ .../speakup/keyhelp.c                         |  0
+ .../speakup/kobjects.c                        |  0
+ .../{staging => accessibility}/speakup/main.c |  0
+ .../speakup/selection.c                       |  0
+ .../speakup/serialio.c                        |  0
+ .../speakup/serialio.h                        |  0
+ .../speakup/speakup.h                         |  0
+ .../speakup/speakup_acnt.h                    |  0
+ .../speakup/speakup_acntpc.c                  |  0
+ .../speakup/speakup_acntsa.c                  |  0
+ .../speakup/speakup_apollo.c                  |  0
+ .../speakup/speakup_audptr.c                  |  0
+ .../speakup/speakup_bns.c                     |  0
+ .../speakup/speakup_decext.c                  |  0
+ .../speakup/speakup_decpc.c                   |  0
+ .../speakup/speakup_dectlk.c                  |  0
+ .../speakup/speakup_dtlk.c                    |  0
+ .../speakup/speakup_dtlk.h                    |  0
+ .../speakup/speakup_dummy.c                   |  0
+ .../speakup/speakup_keypc.c                   |  0
+ .../speakup/speakup_ltlk.c                    |  0
+ .../speakup/speakup_soft.c                    |  0
+ .../speakup/speakup_spkout.c                  |  0
+ .../speakup/speakup_txprt.c                   |  0
+ .../speakup/speakupmap.h                      |  0
+ .../speakup/speakupmap.map                    |  0
+ .../speakup/spk_priv.h                        |  0
+ .../speakup/spk_priv_keyinfo.h                |  0
+ .../speakup/spk_ttyio.c                       |  0
+ .../speakup/spk_types.h                       |  0
+ .../speakup/synth.c                           |  0
+ .../speakup/thread.c                          |  0
+ .../speakup/varhandlers.c                     |  0
+ drivers/staging/Kconfig                       |  2 --
+ drivers/staging/Makefile                      |  1 -
+ 49 files changed, 13 insertions(+), 13 deletions(-)
+ rename {drivers/staging/speakup => Documentation/ABI/stable}/sysfs-driver-speakup (100%)
+ rename {drivers/staging/speakup => Documentation/admin-guide}/spkguide.txt (100%)
+ rename drivers/{staging => accessibility}/speakup/DefaultKeyAssignments (100%)
+ rename drivers/{staging => accessibility}/speakup/Kconfig (100%)
+ rename drivers/{staging => accessibility}/speakup/Makefile (100%)
+ rename drivers/{staging => accessibility}/speakup/TODO (100%)
+ rename drivers/{staging => accessibility}/speakup/buffers.c (100%)
+ rename drivers/{staging => accessibility}/speakup/devsynth.c (100%)
+ rename drivers/{staging => accessibility}/speakup/fakekey.c (100%)
+ rename drivers/{staging => accessibility}/speakup/i18n.c (100%)
+ rename drivers/{staging => accessibility}/speakup/i18n.h (100%)
+ rename drivers/{staging => accessibility}/speakup/keyhelp.c (100%)
+ rename drivers/{staging => accessibility}/speakup/kobjects.c (100%)
+ rename drivers/{staging => accessibility}/speakup/main.c (100%)
+ rename drivers/{staging => accessibility}/speakup/selection.c (100%)
+ rename drivers/{staging => accessibility}/speakup/serialio.c (100%)
+ rename drivers/{staging => accessibility}/speakup/serialio.h (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup.h (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_acnt.h (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_acntpc.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_acntsa.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_apollo.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_audptr.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_bns.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_decext.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_decpc.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_dectlk.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_dtlk.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_dtlk.h (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_dummy.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_keypc.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_ltlk.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_soft.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_spkout.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakup_txprt.c (100%)
+ rename drivers/{staging => accessibility}/speakup/speakupmap.h (100%)
+ rename drivers/{staging => accessibility}/speakup/speakupmap.map (100%)
+ rename drivers/{staging => accessibility}/speakup/spk_priv.h (100%)
+ rename drivers/{staging => accessibility}/speakup/spk_priv_keyinfo.h (100%)
+ rename drivers/{staging => accessibility}/speakup/spk_ttyio.c (100%)
+ rename drivers/{staging => accessibility}/speakup/spk_types.h (100%)
+ rename drivers/{staging => accessibility}/speakup/synth.c (100%)
+ rename drivers/{staging => accessibility}/speakup/thread.c (100%)
+ rename drivers/{staging => accessibility}/speakup/varhandlers.c (100%)
 
-I received the account for drm-misc a couple years ago, and was able to access
-back then. But now someting has changed, and I can't access at the moment. I'll
-need some time to fix my setup. Maybe some help would be appreciated to speed
-up. I may ping you offline if you don't mind.
+diff --git a/drivers/staging/speakup/sysfs-driver-speakup b/Documentation/ABI/stable/sysfs-driver-speakup
+similarity index 100%
+rename from drivers/staging/speakup/sysfs-driver-speakup
+rename to Documentation/ABI/stable/sysfs-driver-speakup
+diff --git a/drivers/staging/speakup/spkguide.txt b/Documentation/admin-guide/spkguide.txt
+similarity index 100%
+rename from drivers/staging/speakup/spkguide.txt
+rename to Documentation/admin-guide/spkguide.txt
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f0569cf304ca..23c135ba97d6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16077,6 +16077,16 @@ Q:	https://patchwork.kernel.org/project/linux-sparse/list/
+ B:	https://bugzilla.kernel.org/enter_bug.cgi?component=Sparse&product=Tools
+ F:	include/linux/compiler.h
+ 
++SPEAKUP CONSOLE SPEECH DRIVER
++M:	William Hubbs <w.d.hubbs@gmail.com>
++M:	Chris Brannon <chris@the-brannons.com>
++M:	Kirk Reiser <kirk@reisers.ca>
++M:	Samuel Thibault <samuel.thibault@ens-lyon.org>
++L:	speakup@linux-speakup.org
++S:	Odd Fixes
++W:	http://www.linux-speakup.org/
++F:	drivers/accessibility/speakup/
++
+ SPEAR CLOCK FRAMEWORK SUPPORT
+ M:	Viresh Kumar <vireshk@kernel.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+@@ -16264,16 +16274,6 @@ L:	linux-fbdev@vger.kernel.org
+ S:	Maintained
+ F:	drivers/staging/sm750fb/
+ 
+-STAGING - SPEAKUP CONSOLE SPEECH DRIVER
+-M:	William Hubbs <w.d.hubbs@gmail.com>
+-M:	Chris Brannon <chris@the-brannons.com>
+-M:	Kirk Reiser <kirk@reisers.ca>
+-M:	Samuel Thibault <samuel.thibault@ens-lyon.org>
+-L:	speakup@linux-speakup.org
+-S:	Odd Fixes
+-W:	http://www.linux-speakup.org/
+-F:	drivers/staging/speakup/
+-
+ STAGING - VIA VT665X DRIVERS
+ M:	Forest Bond <forest@alittletooquiet.net>
+ S:	Odd Fixes
+diff --git a/drivers/accessibility/Kconfig b/drivers/accessibility/Kconfig
+index f10c17dc1dee..6b2f79d1f1b8 100644
+--- a/drivers/accessibility/Kconfig
++++ b/drivers/accessibility/Kconfig
+@@ -31,4 +31,6 @@ config A11Y_BRAILLE_CONSOLE
+ 
+ 	  If unsure, say N.
+ 
++source "drivers/accessibility/speakup/Kconfig"
++
+ endif # ACCESSIBILITY
+diff --git a/drivers/accessibility/Makefile b/drivers/accessibility/Makefile
+index e8c182f82c44..833603086530 100644
+--- a/drivers/accessibility/Makefile
++++ b/drivers/accessibility/Makefile
+@@ -1,2 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ obj-y				+= braille/
++obj-$(CONFIG_SPEAKUP)		+= speakup/
+diff --git a/drivers/staging/speakup/DefaultKeyAssignments b/drivers/accessibility/speakup/DefaultKeyAssignments
+similarity index 100%
+rename from drivers/staging/speakup/DefaultKeyAssignments
+rename to drivers/accessibility/speakup/DefaultKeyAssignments
+diff --git a/drivers/staging/speakup/Kconfig b/drivers/accessibility/speakup/Kconfig
+similarity index 100%
+rename from drivers/staging/speakup/Kconfig
+rename to drivers/accessibility/speakup/Kconfig
+diff --git a/drivers/staging/speakup/Makefile b/drivers/accessibility/speakup/Makefile
+similarity index 100%
+rename from drivers/staging/speakup/Makefile
+rename to drivers/accessibility/speakup/Makefile
+diff --git a/drivers/staging/speakup/TODO b/drivers/accessibility/speakup/TODO
+similarity index 100%
+rename from drivers/staging/speakup/TODO
+rename to drivers/accessibility/speakup/TODO
+diff --git a/drivers/staging/speakup/buffers.c b/drivers/accessibility/speakup/buffers.c
+similarity index 100%
+rename from drivers/staging/speakup/buffers.c
+rename to drivers/accessibility/speakup/buffers.c
+diff --git a/drivers/staging/speakup/devsynth.c b/drivers/accessibility/speakup/devsynth.c
+similarity index 100%
+rename from drivers/staging/speakup/devsynth.c
+rename to drivers/accessibility/speakup/devsynth.c
+diff --git a/drivers/staging/speakup/fakekey.c b/drivers/accessibility/speakup/fakekey.c
+similarity index 100%
+rename from drivers/staging/speakup/fakekey.c
+rename to drivers/accessibility/speakup/fakekey.c
+diff --git a/drivers/staging/speakup/i18n.c b/drivers/accessibility/speakup/i18n.c
+similarity index 100%
+rename from drivers/staging/speakup/i18n.c
+rename to drivers/accessibility/speakup/i18n.c
+diff --git a/drivers/staging/speakup/i18n.h b/drivers/accessibility/speakup/i18n.h
+similarity index 100%
+rename from drivers/staging/speakup/i18n.h
+rename to drivers/accessibility/speakup/i18n.h
+diff --git a/drivers/staging/speakup/keyhelp.c b/drivers/accessibility/speakup/keyhelp.c
+similarity index 100%
+rename from drivers/staging/speakup/keyhelp.c
+rename to drivers/accessibility/speakup/keyhelp.c
+diff --git a/drivers/staging/speakup/kobjects.c b/drivers/accessibility/speakup/kobjects.c
+similarity index 100%
+rename from drivers/staging/speakup/kobjects.c
+rename to drivers/accessibility/speakup/kobjects.c
+diff --git a/drivers/staging/speakup/main.c b/drivers/accessibility/speakup/main.c
+similarity index 100%
+rename from drivers/staging/speakup/main.c
+rename to drivers/accessibility/speakup/main.c
+diff --git a/drivers/staging/speakup/selection.c b/drivers/accessibility/speakup/selection.c
+similarity index 100%
+rename from drivers/staging/speakup/selection.c
+rename to drivers/accessibility/speakup/selection.c
+diff --git a/drivers/staging/speakup/serialio.c b/drivers/accessibility/speakup/serialio.c
+similarity index 100%
+rename from drivers/staging/speakup/serialio.c
+rename to drivers/accessibility/speakup/serialio.c
+diff --git a/drivers/staging/speakup/serialio.h b/drivers/accessibility/speakup/serialio.h
+similarity index 100%
+rename from drivers/staging/speakup/serialio.h
+rename to drivers/accessibility/speakup/serialio.h
+diff --git a/drivers/staging/speakup/speakup.h b/drivers/accessibility/speakup/speakup.h
+similarity index 100%
+rename from drivers/staging/speakup/speakup.h
+rename to drivers/accessibility/speakup/speakup.h
+diff --git a/drivers/staging/speakup/speakup_acnt.h b/drivers/accessibility/speakup/speakup_acnt.h
+similarity index 100%
+rename from drivers/staging/speakup/speakup_acnt.h
+rename to drivers/accessibility/speakup/speakup_acnt.h
+diff --git a/drivers/staging/speakup/speakup_acntpc.c b/drivers/accessibility/speakup/speakup_acntpc.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_acntpc.c
+rename to drivers/accessibility/speakup/speakup_acntpc.c
+diff --git a/drivers/staging/speakup/speakup_acntsa.c b/drivers/accessibility/speakup/speakup_acntsa.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_acntsa.c
+rename to drivers/accessibility/speakup/speakup_acntsa.c
+diff --git a/drivers/staging/speakup/speakup_apollo.c b/drivers/accessibility/speakup/speakup_apollo.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_apollo.c
+rename to drivers/accessibility/speakup/speakup_apollo.c
+diff --git a/drivers/staging/speakup/speakup_audptr.c b/drivers/accessibility/speakup/speakup_audptr.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_audptr.c
+rename to drivers/accessibility/speakup/speakup_audptr.c
+diff --git a/drivers/staging/speakup/speakup_bns.c b/drivers/accessibility/speakup/speakup_bns.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_bns.c
+rename to drivers/accessibility/speakup/speakup_bns.c
+diff --git a/drivers/staging/speakup/speakup_decext.c b/drivers/accessibility/speakup/speakup_decext.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_decext.c
+rename to drivers/accessibility/speakup/speakup_decext.c
+diff --git a/drivers/staging/speakup/speakup_decpc.c b/drivers/accessibility/speakup/speakup_decpc.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_decpc.c
+rename to drivers/accessibility/speakup/speakup_decpc.c
+diff --git a/drivers/staging/speakup/speakup_dectlk.c b/drivers/accessibility/speakup/speakup_dectlk.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_dectlk.c
+rename to drivers/accessibility/speakup/speakup_dectlk.c
+diff --git a/drivers/staging/speakup/speakup_dtlk.c b/drivers/accessibility/speakup/speakup_dtlk.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_dtlk.c
+rename to drivers/accessibility/speakup/speakup_dtlk.c
+diff --git a/drivers/staging/speakup/speakup_dtlk.h b/drivers/accessibility/speakup/speakup_dtlk.h
+similarity index 100%
+rename from drivers/staging/speakup/speakup_dtlk.h
+rename to drivers/accessibility/speakup/speakup_dtlk.h
+diff --git a/drivers/staging/speakup/speakup_dummy.c b/drivers/accessibility/speakup/speakup_dummy.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_dummy.c
+rename to drivers/accessibility/speakup/speakup_dummy.c
+diff --git a/drivers/staging/speakup/speakup_keypc.c b/drivers/accessibility/speakup/speakup_keypc.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_keypc.c
+rename to drivers/accessibility/speakup/speakup_keypc.c
+diff --git a/drivers/staging/speakup/speakup_ltlk.c b/drivers/accessibility/speakup/speakup_ltlk.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_ltlk.c
+rename to drivers/accessibility/speakup/speakup_ltlk.c
+diff --git a/drivers/staging/speakup/speakup_soft.c b/drivers/accessibility/speakup/speakup_soft.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_soft.c
+rename to drivers/accessibility/speakup/speakup_soft.c
+diff --git a/drivers/staging/speakup/speakup_spkout.c b/drivers/accessibility/speakup/speakup_spkout.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_spkout.c
+rename to drivers/accessibility/speakup/speakup_spkout.c
+diff --git a/drivers/staging/speakup/speakup_txprt.c b/drivers/accessibility/speakup/speakup_txprt.c
+similarity index 100%
+rename from drivers/staging/speakup/speakup_txprt.c
+rename to drivers/accessibility/speakup/speakup_txprt.c
+diff --git a/drivers/staging/speakup/speakupmap.h b/drivers/accessibility/speakup/speakupmap.h
+similarity index 100%
+rename from drivers/staging/speakup/speakupmap.h
+rename to drivers/accessibility/speakup/speakupmap.h
+diff --git a/drivers/staging/speakup/speakupmap.map b/drivers/accessibility/speakup/speakupmap.map
+similarity index 100%
+rename from drivers/staging/speakup/speakupmap.map
+rename to drivers/accessibility/speakup/speakupmap.map
+diff --git a/drivers/staging/speakup/spk_priv.h b/drivers/accessibility/speakup/spk_priv.h
+similarity index 100%
+rename from drivers/staging/speakup/spk_priv.h
+rename to drivers/accessibility/speakup/spk_priv.h
+diff --git a/drivers/staging/speakup/spk_priv_keyinfo.h b/drivers/accessibility/speakup/spk_priv_keyinfo.h
+similarity index 100%
+rename from drivers/staging/speakup/spk_priv_keyinfo.h
+rename to drivers/accessibility/speakup/spk_priv_keyinfo.h
+diff --git a/drivers/staging/speakup/spk_ttyio.c b/drivers/accessibility/speakup/spk_ttyio.c
+similarity index 100%
+rename from drivers/staging/speakup/spk_ttyio.c
+rename to drivers/accessibility/speakup/spk_ttyio.c
+diff --git a/drivers/staging/speakup/spk_types.h b/drivers/accessibility/speakup/spk_types.h
+similarity index 100%
+rename from drivers/staging/speakup/spk_types.h
+rename to drivers/accessibility/speakup/spk_types.h
+diff --git a/drivers/staging/speakup/synth.c b/drivers/accessibility/speakup/synth.c
+similarity index 100%
+rename from drivers/staging/speakup/synth.c
+rename to drivers/accessibility/speakup/synth.c
+diff --git a/drivers/staging/speakup/thread.c b/drivers/accessibility/speakup/thread.c
+similarity index 100%
+rename from drivers/staging/speakup/thread.c
+rename to drivers/accessibility/speakup/thread.c
+diff --git a/drivers/staging/speakup/varhandlers.c b/drivers/accessibility/speakup/varhandlers.c
+similarity index 100%
+rename from drivers/staging/speakup/varhandlers.c
+rename to drivers/accessibility/speakup/varhandlers.c
+diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
+index 4ec5528f89fa..29375013be53 100644
+--- a/drivers/staging/Kconfig
++++ b/drivers/staging/Kconfig
+@@ -56,8 +56,6 @@ source "drivers/staging/sm750fb/Kconfig"
+ 
+ source "drivers/staging/emxx_udc/Kconfig"
+ 
+-source "drivers/staging/speakup/Kconfig"
+-
+ source "drivers/staging/nvec/Kconfig"
+ 
+ source "drivers/staging/media/Kconfig"
+diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
+index 4d34198151b3..fe35e283f7be 100644
+--- a/drivers/staging/Makefile
++++ b/drivers/staging/Makefile
+@@ -20,7 +20,6 @@ obj-$(CONFIG_VME_BUS)		+= vme/
+ obj-$(CONFIG_IIO)		+= iio/
+ obj-$(CONFIG_FB_SM750)		+= sm750fb/
+ obj-$(CONFIG_USB_EMXX)		+= emxx_udc/
+-obj-$(CONFIG_SPEAKUP)		+= speakup/
+ obj-$(CONFIG_MFD_NVEC)		+= nvec/
+ obj-$(CONFIG_ANDROID)		+= android/
+ obj-$(CONFIG_STAGING_BOARD)	+= board/
+-- 
+2.27.0
 
-Thanks,
--hyun
-
-> > On Sat, Jul 25, 2020 at 06:34:29AM +0000, Wei Yongjun wrote:
-> > > Fix typo in parameter description.
-> > >
-> > > Fixes: d76271d22694 ("drm: xlnx: DRM/KMS driver for Xilinx ZynqMP DisplayPort Subsystem")
-> > > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > > Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> > > ---
-> > >  drivers/gpu/drm/xlnx/zynqmp_dp.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> > > index 821f7a71e182..3d53638ab15e 100644
-> > > --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> > > +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> > > @@ -44,7 +44,7 @@ MODULE_PARM_DESC(aux_timeout_ms, "DP aux timeout value in msec (default: 50)");
-> > >   */
-> > >  static uint zynqmp_dp_power_on_delay_ms = 4;
-> > >  module_param_named(power_on_delay_ms, zynqmp_dp_power_on_delay_ms, uint, 0444);
-> > > -MODULE_PARM_DESC(aux_timeout_ms, "DP power on delay in msec (default: 4)");
-> > > +MODULE_PARM_DESC(power_on_delay_ms, "DP power on delay in msec (default: 4)");
-> > >
-> > >  /* Link configuration registers */
-> > >  #define ZYNQMP_DP_LINK_BW_SET0x0
-> 
-> --
-> Regards,
-> 
-> Laurent Pinchart
