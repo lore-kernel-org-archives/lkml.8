@@ -2,129 +2,85 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD24EC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B16C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB9022173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3CD420809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:05:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jbW0rebB";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i2lq0PT5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFNVnEBG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgG2MCm (ORCPT
+        id S1726710AbgG2MFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:02:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41654 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbgG2MCi (ORCPT
+        Wed, 29 Jul 2020 08:05:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbgG2MFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:02:38 -0400
-Date:   Wed, 29 Jul 2020 12:02:35 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596024155;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ik9bIktF+3Y0ssyu47gm4zZ2Pa9UrhXrt/mdMdRFu/c=;
-        b=jbW0rebBFADqGGrALzofCiIhpkY37RMGcLlmahiKr/BJjeR51iTWO0VV7EYA6y7tQ8oo7Y
-        JfpQsb6zhO+fqFVsfPoconNozbW/wpuwCBAbyc9nxbLxH0mc92UWmKPwDcicOTCLBOgd+7
-        JpYTPJh0hFPz/UYfMTn0plDax6iG4JgYgegpcVLp/SzoFF5Sb1qnYgXpaOY8iQADbAwN1L
-        XtDHJY+ApL1eMF9sIbGq0xjvTV6Pt8KusDfrrwcdeBOK9taNcajp2wXiuazPakFz0rne4v
-        tELE+Q8fsbQZefzSP90P/cnooFvR5za1CEgOb7qnfISJVhzusB5GLjDqTaxQfw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596024155;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ik9bIktF+3Y0ssyu47gm4zZ2Pa9UrhXrt/mdMdRFu/c=;
-        b=i2lq0PT5bm7ZdCHC7pdAWEmqO8gM4BaaFNPUyjAnPFIcKcEeADi9LzAqtpuRDzlSdq/Fhz
-        X570J5QlBRLVgaBw==
-From:   "tip-bot2 for Qais Yousef" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/uclamp: Fix a deadlock when enabling uclamp
- static key
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200716110347.19553-4-qais.yousef@arm.com>
-References: <20200716110347.19553-4-qais.yousef@arm.com>
+        Wed, 29 Jul 2020 08:05:34 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33C2C061794;
+        Wed, 29 Jul 2020 05:05:33 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id o18so24045203eje.7;
+        Wed, 29 Jul 2020 05:05:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aXIt4Mo1PgFXWOsZfX3ouR5GPUAW+dMmhSUWqpQyOGI=;
+        b=nFNVnEBGH0cRd+8OujTalxexYKT9IDGLV+35DrquF2+E8/gVwiSbKOKAR+imJ5F34c
+         oZZ3X2mkmLZ/p9IASC7p1CcRac5xbPA47OVhZK0wtF4eE5Obpfj53A/FLXa11qn9Qqxh
+         AJdwh9yTM4A8S8TW4cPsf3CyazmLrpQYwZlqSEoLRSI+I/NI44FcKhrMC8YuZodL38dY
+         7LJWMavJQr3ofklvIKOUN69UIShyfBScLTotWlPPiti2hMjGffphQECuuo+cqZn7k+XX
+         cTsoZXezbU8yQXHfx8ZI/7z85mvHFDeFtdTZ9V1pb1wveFq6QJlkR8KvibwvAH5bLPQV
+         McbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aXIt4Mo1PgFXWOsZfX3ouR5GPUAW+dMmhSUWqpQyOGI=;
+        b=MQW8DsKn72m4SxVh+tF1Smazq1G7YU8feXfUvRyY/8O0H27iXDEmxIY4KWraTTVLjI
+         O7HT4U3q/z0CsfCokgC6zrL94TlChn23FkZuQcDviP91mEo3QW83GYdK8/8whfPRMnLw
+         RG9QwrPS8B8l94f1QuqskJ70KI29wsouYNH7puUxTJTF2Z3jsTu8HeSlHDqdpslSi+XK
+         jNSR0fKOLo1psfUXy13ZEAKB2TiFoI5BRgeGHwWkMjI0f4rXfnOSIGoUYFAOOo04S6R5
+         svs3kCZGVmBr+F8ZhI4OsphBPOUbO/eJ64vjQHgdcRcdJV1Raz7aKIXj90SdOspX2lFO
+         /1XQ==
+X-Gm-Message-State: AOAM532Pv6ob8m6Hz4CwVpRPdF1Y7g2FtmV7VQTLChcmWax3wZMScJug
+        DjD3x+OdsMqb6jmCzBL4pxiShStR1QtvMZkcaQY=
+X-Google-Smtp-Source: ABdhPJxDUZiAt21H/R28NZeZw1fPj51R6TGTfqIkYxZ8uBaYjAdiI0ZkUIeUMU9zi983V9myZE0BxnakEWXi2ot5YmA=
+X-Received: by 2002:a17:906:c143:: with SMTP id dp3mr454824ejc.504.1596024331419;
+ Wed, 29 Jul 2020 05:05:31 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <159602415518.4006.7694548797042272636.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20200729120057.35079-1-konradybcio@gmail.com> <20200729120057.35079-10-konradybcio@gmail.com>
+In-Reply-To: <20200729120057.35079-10-konradybcio@gmail.com>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Wed, 29 Jul 2020 14:04:55 +0200
+Message-ID: <CAMS8qEWr3ote5QmXxYDPvDNc_uhhNfPj4ehB4FQxs1HNsgtCYg@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] clk: qcom: gcc-msm8994: Fix up the driver and
+ modernize it
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     lauren.kelly@msn.com, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+Wouldn't be myself if I didn't forget that
 
-Commit-ID:     e65855a52b479f98674998cb23b21ef5a8144b04
-Gitweb:        https://git.kernel.org/tip/e65855a52b479f98674998cb23b21ef5a8144b04
-Author:        Qais Yousef <qais.yousef@arm.com>
-AuthorDate:    Thu, 16 Jul 2020 12:03:47 +01:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 29 Jul 2020 13:51:47 +02:00
+Fixes: aec89f78cf01 (clk: qcom: Add support for msm8994 global clock controller)
 
-sched/uclamp: Fix a deadlock when enabling uclamp static key
-
-The following splat was caught when setting uclamp value of a task:
-
-  BUG: sleeping function called from invalid context at ./include/linux/percpu-rwsem.h:49
-
-   cpus_read_lock+0x68/0x130
-   static_key_enable+0x1c/0x38
-   __sched_setscheduler+0x900/0xad8
-
-Fix by ensuring we enable the key outside of the critical section in
-__sched_setscheduler()
-
-Fixes: 46609ce22703 ("sched/uclamp: Protect uclamp fast path code with static key")
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200716110347.19553-4-qais.yousef@arm.com
----
- kernel/sched/core.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 6782534..e44d83f 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1346,6 +1346,15 @@ static int uclamp_validate(struct task_struct *p,
- 	if (upper_bound > SCHED_CAPACITY_SCALE)
- 		return -EINVAL;
- 
-+	/*
-+	 * We have valid uclamp attributes; make sure uclamp is enabled.
-+	 *
-+	 * We need to do that here, because enabling static branches is a
-+	 * blocking operation which obviously cannot be done while holding
-+	 * scheduler locks.
-+	 */
-+	static_branch_enable(&sched_uclamp_used);
-+
- 	return 0;
- }
- 
-@@ -1376,8 +1385,6 @@ static void __setscheduler_uclamp(struct task_struct *p,
- 	if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
- 		return;
- 
--	static_branch_enable(&sched_uclamp_used);
--
- 	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN) {
- 		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
- 			      attr->sched_util_min, true);
+Konrad
