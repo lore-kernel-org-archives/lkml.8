@@ -2,235 +2,112 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 316C8C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239CCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7062065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 050BF2075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596050736;
-	bh=3OhFxQx609IH8cb01dyUUQVVDn693vwGyKyQHVz30aw=;
+	s=default; t=1596050844;
+	bh=cVknys6W6Z5keIX/5AC6X889ldEK6JEC+prcZXLCGsQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PdTFGc+KtkAKF6IVE/zVq7tBjwoqN3VmTyMnhFg9Pv8x8HWRIrdqB8m8wV2kFvA/N
-	 woqbJG3Xm0fjF30dIuesEVH8ZJ4rmQZhN2CploBKaqt5pd81FQ65BifV1TewSKw/6o
-	 aZ65DFpc3eFXGUgW3dPdjsIk/arwPkKGipWrYOrE=
+	b=QJ1oJyrI3N62y0UMxrd2p+rjMKVpf1TTkhGn2yQTZ9mGUJEwb0HkizeEoP6fDGhiR
+	 MfDfFFp5imwlOvrbrd2obheZs+q7hOZDqjQ34RxH8ljam/zYPQldELKcsRvgtyp5pz
+	 6JA5h+gtW4k0HHnKbr74Dk8dG7XZluYl2DyS/CwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgG2TZf convert rfc822-to-8bit (ORCPT
+        id S1726718AbgG2T1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 15:25:35 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:42221 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2TZe (ORCPT
+        Wed, 29 Jul 2020 15:27:22 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45903 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgG2T1W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 15:25:34 -0400
-Received: by mail-ej1-f66.google.com with SMTP id g19so11703585ejc.9;
-        Wed, 29 Jul 2020 12:25:31 -0700 (PDT)
+        Wed, 29 Jul 2020 15:27:22 -0400
+Received: by mail-ed1-f65.google.com with SMTP id di22so11066729edb.12;
+        Wed, 29 Jul 2020 12:27:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=CmAQyQEsBUyJQN6hEUiDapNhkNDUo7y7bkwW8nuWOU8=;
-        b=bj6Qx+zN4IGanHJK5xzQUgipmJfi5H11FyVrQLWMpPZ+DPZhj2hFwcNT/GSsI2jG8S
-         FbB+FgteJUeMdSUaG5VW2dkz9nC/WRRSp7BXnvq9cq5398Qi5A0EcR9GKxsal4//Jlai
-         zs4xD4neLXzcluc2rELwnaB/cXuFEmIbePbGp2KgWGSVAbTL5ZBEf77Re3CGX7oXAjn8
-         IC7rlPc/TNS5fKsk38IJlvDKqoF6Tjuxej7DnLlDLkFhIau4HxD+znzBgQDasRl1oRyd
-         6iJxOv5zObHgmHLwL5eAeuT97OQT8e6Qd1EtM59SKnJOHEmDQ+40j0rmxkrgJ6VwaBFv
-         X21w==
-X-Gm-Message-State: AOAM533RuGHWKbFmmWOQS526VaquQjpVX54B0qgjBmjQqlF5VNYjDF9B
-        alCfNhR7mtTaLfkzz9cYx58=
-X-Google-Smtp-Source: ABdhPJwt7up6V3K0cn4gBLX1DJbgxEvaRU0wmBfm55EGTCBcmZQF20hrqkbhzb0vbUqglSjhMpBhhg==
-X-Received: by 2002:a17:906:ca11:: with SMTP id jt17mr13004151ejb.148.1596050731072;
-        Wed, 29 Jul 2020 12:25:31 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SqzkB1yMtwTwe0QIggl9r67QOv8/59iTGPFZ5uluyfk=;
+        b=V6gXlCgw8OYT3T8WZTMOlwE4ElpCGj9XiQN1hXTjf6Nq62ZTZwsSolnaqYDcisqeUt
+         V1dWoWA5WyB5UtF36mLijt16mygMPV7saHjzfRFJvdJ+0v51uPIL3QBAJH0SY4QK1Oa8
+         brgpOA8VHlM3TTjk54V2NnRd2tUBTNTxO9pq77VhTw2RUQ9eI4swcd+KD+761R7dh/m4
+         p18Amr7LeouXZu/4Gta1Doltpe9WhzhmPOqi+gZ1sAsGlbMazhgaNrYJcN3Bw5/3eCHj
+         8+Mugk6sUFt0HBwVMiPYq7PRxKVLlezelSbcuyz29AwMjnzWDvdsvjtVZy9iGklsxiWa
+         v84Q==
+X-Gm-Message-State: AOAM533lr+juw8xmO2N6B9X7V0dGEaQWWpYIOw1OwnvG3oRSo8WnDwt5
+        1Td3AraM5T908mShvz4aqUzYWJqgevQ=
+X-Google-Smtp-Source: ABdhPJxObnVIyDyOgqaH4yWPwEYKAEvkNYKHKyCvuebyOPXp7LV+HEj+KEmaBw3MKXw6vmabtZS16g==
+X-Received: by 2002:aa7:c697:: with SMTP id n23mr52240edq.50.1596050839891;
+        Wed, 29 Jul 2020 12:27:19 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id m12sm1579672edv.94.2020.07.29.12.25.28
+        by smtp.googlemail.com with ESMTPSA id x16sm2680404edr.52.2020.07.29.12.27.18
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jul 2020 12:25:30 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 21:25:27 +0200
+        Wed, 29 Jul 2020 12:27:19 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 21:27:17 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tomasz Figa <tomasz.figa@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Kukjin Kim <kgene@kernel.org>,
-        Vincent Sanders <vince@simtec.co.uk>,
-        Simtec Linux Team <linux@simtec.co.uk>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:SAMSUNG SOC CLOCK DRIVERS" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        patches@opensource.cirrus.com,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org,
-        Sergio Prado <sergio.prado@e-labworks.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Cedric Roux <sed@free.fr>, Lihua Yao <ylhuajnu@outlook.com>
-Subject: Re: [PATCH 6/7] ARM: s3c64xx: Switch to generic watchdog driver reset
-Message-ID: <20200729192527.GA7351@kozik-lap>
-References: <20200729160942.28867-1-krzk@kernel.org>
- <20200729160942.28867-7-krzk@kernel.org>
- <CA+Ln22F_PaEMNyEg4XSR0PXHTa+3dQyEvzgtnRNHMu61uZytQg@mail.gmail.com>
- <20200729191544.GB5822@kozik-lap>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Fix kerneldoc of pci_vc_do_save_buffer()
+Message-ID: <20200729192717.GA7457@kozik-lap>
+References: <20200729062620.4168-1-krzk@kernel.org>
+ <20200729192416.GA1952120@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200729191544.GB5822@kozik-lap>
+In-Reply-To: <20200729192416.GA1952120@bjorn-Precision-5520>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 09:15:44PM +0200, Krzysztof Kozlowski wrote:
-> On Wed, Jul 29, 2020 at 07:33:33PM +0200, Tomasz Figa wrote:
-> > Hi Krzysztof,
+On Wed, Jul 29, 2020 at 02:24:16PM -0500, Bjorn Helgaas wrote:
+> On Wed, Jul 29, 2020 at 08:26:20AM +0200, Krzysztof Kozlowski wrote:
+> > Fix W=1 compile warnings (invalid kerneldoc):
 > > 
-> > 2020年7月29日(水) 18:11 Krzysztof Kozlowski <krzk@kernel.org>:
-> > >
-> > > Similarly to commit f6361c6b3880 ("ARM: S3C24XX: remove separate restart
-> > > code"), the platform watchdog reset code can be removed in favor of
-> > > a generic watchdog driver which already handles reset.
-> > >
-> > > This allows removal of a bunch of machine code and fixes also W=1
-> > > compile warnings:
-> > >
-> > >     arch/arm/plat-samsung/watchdog-reset.c:29:6: warning: no previous prototype for 'samsung_wdt_reset' [-Wmissing-prototypes]
-> > >        29 | void samsung_wdt_reset(void)
-> > >           |      ^~~~~~~~~~~~~~~~~
-> > >     arch/arm/plat-samsung/watchdog-reset.c:69:13: warning: no previous prototype for 'samsung_wdt_reset_of_init' [-Wmissing-prototypes]
-> > >        69 | void __init samsung_wdt_reset_of_init(void)
-> > >           |             ^~~~~~~~~~~~~~~~~~~~~~~~~
-> > >     arch/arm/plat-samsung/watchdog-reset.c:89:13: warning: no previous prototype for 'samsung_wdt_reset_init' [-Wmissing-prototypes]
-> > >        89 | void __init samsung_wdt_reset_init(void __iomem *base)
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > ---
-> > >  arch/arm/mach-s3c64xx/Kconfig           |  3 +-
-> > >  arch/arm/mach-s3c64xx/common.c          | 15 +---
-> > >  arch/arm/mach-s3c64xx/common.h          |  2 -
-> > >  arch/arm/mach-s3c64xx/mach-anw6410.c    |  1 -
-> > >  arch/arm/mach-s3c64xx/mach-crag6410.c   |  1 -
-> > >  arch/arm/mach-s3c64xx/mach-hmt.c        |  1 -
-> > >  arch/arm/mach-s3c64xx/mach-mini6410.c   |  1 -
-> > >  arch/arm/mach-s3c64xx/mach-ncp.c        |  1 -
-> > >  arch/arm/mach-s3c64xx/mach-real6410.c   |  1 -
-> > >  arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c | 17 -----
-> > >  arch/arm/mach-s3c64xx/mach-smartq5.c    |  1 -
-> > >  arch/arm/mach-s3c64xx/mach-smartq7.c    |  1 -
-> > >  arch/arm/mach-s3c64xx/mach-smdk6400.c   |  1 -
-> > >  arch/arm/mach-s3c64xx/mach-smdk6410.c   |  1 -
-> > >  arch/arm/mach-s3c64xx/watchdog-reset.h  | 16 -----
-> > >  arch/arm/plat-samsung/Kconfig           |  6 --
-> > >  arch/arm/plat-samsung/Makefile          |  1 -
-> > >  arch/arm/plat-samsung/watchdog-reset.c  | 93 -------------------------
-> > >  18 files changed, 5 insertions(+), 158 deletions(-)
-> > >  delete mode 100644 arch/arm/mach-s3c64xx/watchdog-reset.h
-> > >  delete mode 100644 arch/arm/plat-samsung/watchdog-reset.c
-> > >
+> >     drivers/pci/vc.c:188: warning: Excess function parameter 'name' description in 'pci_vc_do_save_buffer'
 > > 
-> > Thanks for the patch! Please see my comments inline.
-> > 
-> > > diff --git a/arch/arm/mach-s3c64xx/Kconfig b/arch/arm/mach-s3c64xx/Kconfig
-> > > index e208c2b48853..f3fcb570edf5 100644
-> > > --- a/arch/arm/mach-s3c64xx/Kconfig
-> > > +++ b/arch/arm/mach-s3c64xx/Kconfig
-> > > @@ -18,9 +18,10 @@ menuconfig ARCH_S3C64XX
-> > >         select PM_GENERIC_DOMAINS if PM
-> > >         select S3C_DEV_NAND if ATAGS
-> > >         select S3C_GPIO_TRACK if ATAGS
-> > > +       select S3C2410_WATCHDOG
-> > >         select SAMSUNG_ATAGS if ATAGS
-> > >         select SAMSUNG_WAKEMASK if PM
-> > > -       select SAMSUNG_WDT_RESET
-> > > +       select WATCHDOG
-> > >         help
-> > >           Samsung S3C64XX series based systems
-> > >
-> > > diff --git a/arch/arm/mach-s3c64xx/common.c b/arch/arm/mach-s3c64xx/common.c
-> > > index a655bf0c7802..42e96d196f61 100644
-> > > --- a/arch/arm/mach-s3c64xx/common.c
-> > > +++ b/arch/arm/mach-s3c64xx/common.c
-> > > @@ -50,7 +50,6 @@
-> > >
-> > >  #include "common.h"
-> > >  #include "irq-uart.h"
-> > > -#include "watchdog-reset.h"
-> > >
-> > >  /* External clock frequency */
-> > >  static unsigned long xtal_f __ro_after_init = 12000000;
-> > > @@ -232,10 +231,11 @@ void __init s3c64xx_init_irq(u32 vic0_valid, u32 vic1_valid)
-> > >         /*
-> > >          * FIXME: there is no better place to put this at the moment
-> > >          * (s3c64xx_clk_init needs ioremap and must happen before init_time
-> > > -        * samsung_wdt_reset_init needs clocks)
-> > > +        * samsung_wdt_reset_init needs clocks).  However
-> > > +        * samsung_wdt_reset_init() was removed in favor of watchdog driver
-> > > +        * so this should be revised.
-> > 
-> > This leaves the comment referring to an inexistent function.
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > 
-> Yes, I left it as a reference/reason. Although might be quite confusing
-> now...
+> This looks great, but would you mind doing all the ones in drivers/pci
+> at the same time?  When I tested this, I also found the following, and
+> I don't think it's worth doing them one at a time:
 > 
-> > 
-> > I wonder if this being here is actually a problem at all. It's legacy
-> > code and probably there isn't much value in reshuffling it further.
-> > Rather than that, we would probably want to make sure that everything
-> > migrated to DT and just drop the board files.
-> 
-> Maybe let's remove the FIXME and leave the clock init. Since all these
-> times no one fixed the FIXME, so now with limited hardware access I do
-> not expect any movements here.
-> 
-> > 
-> > >          */
-> > >         s3c64xx_clk_init(NULL, xtal_f, xusbxti_f, soc_is_s3c6400(), S3C_VA_SYS);
-> > > -       samsung_wdt_reset_init(S3C_VA_WATCHDOG);
-> > >
-> > >         printk(KERN_DEBUG "%s: initialising interrupts\n", __func__);
-> > >
-> > > @@ -429,12 +429,3 @@ static int __init s3c64xx_init_irq_eint(void)
-> > >         return 0;
-> > >  }
-> > >  arch_initcall(s3c64xx_init_irq_eint);
-> > > -
-> > > -void s3c64xx_restart(enum reboot_mode mode, const char *cmd)
-> > > -{
-> > > -       if (mode != REBOOT_SOFT)
-> > > -               samsung_wdt_reset();
-> > > -
-> > > -       /* if all else fails, or mode was for soft, jump to 0 */
-> > > -       soft_restart(0);
-> > 
-> > Does this remove the soft reboot capability? I'm not sure how much of
-> > a problem that would be, though.
-> 
-> 1. No one cared about it in f6361c6b3880 :)
-> 2. Exynos does not have it
-> 3. Does soft_restart really work? It would be worth to keep it if more
->    or less it was working.
+>   $ make W=1 drivers/pci/
+>   drivers/pci/hotplug/acpi_pcihp.c:69: warning: Function parameter or member 'pdev' not described in 'acpi_get_hp_hw_control_from_firmware'
+>   drivers/pci/hotplug/acpi_pcihp.c:69: warning: Excess function parameter 'dev' description in 'acpi_get_hp_hw_control_from_firmware'
+>   drivers/pci/hotplug/acpi_pcihp.c:199: warning: Function parameter or member 'handle' not described in 'acpi_pci_detect_ejectable'
+>   drivers/pci/endpoint/functions/pci-epf-test.c:189: warning: Function parameter or member 'epf_test' not described in 'pci_epf_test_clean_dma_chan'
+>   drivers/pci/endpoint/functions/pci-epf-test.c:189: warning: Excess function parameter 'epf' description in 'pci_epf_test_clean_dma_chan'
+>   drivers/pci/endpoint/pci-ep-cfs.c:17: warning: Function parameter or member 'functions_idr' not described in 'DEFINE_IDR'
+>   drivers/pci/endpoint/pci-epc-core.c:18: warning: cannot understand function prototype: 'struct class *pci_epc_class; '
+>   drivers/pci/endpoint/pci-epf-core.c:18: warning: Function parameter or member 'pci_epf_mutex' not described in 'DEFINE_MUTEX'
+>   drivers/pci/endpoint/pci-epf-core.c:80: warning: Function parameter or member 'epf' not described in 'pci_epf_free_space'
+>   drivers/pci/endpoint/pci-epf-core.c:107: warning: Function parameter or member 'epf' not described in 'pci_epf_alloc_space'
+>   drivers/pci/endpoint/pci-epc-mem.c:16: warning: Incorrect use of kernel-doc format:  * pci_epc_mem_get_order() - determine the allocation order of a memory size
+>   drivers/pci/endpoint/pci-epc-mem.c:24: warning: Function parameter or member 'mem' not described in 'pci_epc_mem_get_order'
+>   drivers/pci/endpoint/pci-epc-mem.c:24: warning: Function parameter or member 'size' not described in 'pci_epc_mem_get_order'
+>   drivers/pci/setup-bus.c:62: warning: Function parameter or member 'min_align' not described in 'add_to_list'
+>   drivers/pci/vc.c:188: warning: Excess function parameter 'name' description in 'pci_vc_do_save_buffer'
+>   drivers/pci/of.c:262: warning: Function parameter or member 'ib_resources' not described in 'devm_of_pci_get_host_bridge_resources'
+>   drivers/pci/ats.c:196: warning: Function parameter or member 'pdev' not described in 'pci_enable_pri'
+>   drivers/pci/ats.c:196: warning: Function parameter or member 'reqs' not described in 'pci_enable_pri'
+>   drivers/pci/pci-pf-stub.c:20: warning: cannot understand function prototype: 'const struct pci_device_id pci_pf_stub_whitelist[] = '
 
-... and one more reason:
-4. Look how much code I removed:
-       5 insertions(+), 158 deletions(-)
-   Isn't it nice? :)
+Sure, I can work on more of them. Somehow this one got enabled on my
+build (usually it does not contain PCI) and I decided to fix it.
+
+It's a compiler warning so still even one-at-a-time brings us closer to
+clean builds.
 
 Best regards,
 Krzysztof
+
