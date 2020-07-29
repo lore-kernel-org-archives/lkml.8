@@ -2,228 +2,147 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F15BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B30A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D54C720FC3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 13:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C1E32083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:01:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kEMTAmSP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgG2N7y (ORCPT
+        id S1726756AbgG2OB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:59:54 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:44266 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgG2N7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 09:59:54 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id A17DEFB03;
-        Wed, 29 Jul 2020 15:59:51 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id q9qcjMHXwteG; Wed, 29 Jul 2020 15:59:49 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 8633245341; Wed, 29 Jul 2020 15:59:48 +0200 (CEST)
-Date:   Wed, 29 Jul 2020 15:59:48 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        lukas@mntmn.com
-Subject: Re: [PATCH v8 0/5] Add support for iMX8MQ Display Controller
- Subsystem
-Message-ID: <20200729135948.GB266947@bogon.m.sigxcpu.org>
-References: <20200724090736.12228-1-laurentiu.palcu@oss.nxp.com>
+        Wed, 29 Jul 2020 10:01:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgG2OB2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 10:01:28 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C612C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 07:01:28 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id f18so2237826wmc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 07:01:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=S3Q/pa7gsTzvCxWxv3cJhzM+dWaGRiyTH7DGwkkFbqg=;
+        b=kEMTAmSPBJ4YqT1FtUt+9lTD5NQYda1kLIXjSHnBEKQvab5Ns03ekYHNonuRi2A1fC
+         BMF7eZxP/FVwqbBfoyxumSs5NZpPVhdnF5+WQ21/4LoXy79KsSUm5tKqLKXI3OTyYaaw
+         QzAW9fSP2y4eil14j8DYpcuEY4TptrGUpUvV9Cw8rXJfXILFGImfZr/INhWlOUYQCw9m
+         AEwm/4bZnjpSfh14+vEQnHSg+seMoxL9/rCL4OxtrCqwbYTioCc57g8Qk2o6uH9Uk9zN
+         ASE4fErNAX0ZwG7Br1t/c4WL3LzgjhOLVkENVIqs73zeVbyh7YMUE7NGiksIgtxRKPB0
+         4yJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=S3Q/pa7gsTzvCxWxv3cJhzM+dWaGRiyTH7DGwkkFbqg=;
+        b=Cygoxhk+AmoAFCOtNhofTN19J2z7bt+qn4sqqSYR5BMXhyWCVj2+/OAqixQReEhKOk
+         lK9LznsNOrHN6QegtjShdy4WaVIFA6wu2HmCnOphUmCHNMrFXedrcG5TobBZKuRqeUfO
+         rwBVpzLnmKUQFxLclYjBHwDI4wnTQX2pg4m2eGoFgvefz4v+gE9UGGgqmArYKeent60f
+         FleGvXB762wj3sBdRAWeqHW8OO5Q/BkTOb/DeHGl0qtvOVb2ZqO4KJaA0LN0diuCmdr6
+         XwRB5mVGkDDiXPOBR4SjPtu4VKmEaz/0fDDsEefOt/JmYDvBF+1WZv0ucXBCHRK7MOkh
+         4AAg==
+X-Gm-Message-State: AOAM530Ry9AOYQlQxcWvPL9rVycM35ppKJYBipeVVa4e2Nf7nh6XzeB0
+        9SyF2WX9N1hKcFT41Pkb5ad8BQ==
+X-Google-Smtp-Source: ABdhPJwVF7l9peJsPebjdMmQ+dWcd/OjfsRzPDk6kyDbpI6QyOyDRJ96/ueT19VLZ/li3yaNkcKGRg==
+X-Received: by 2002:a1c:81d1:: with SMTP id c200mr8776070wmd.162.1596031286746;
+        Wed, 29 Jul 2020 07:01:26 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:f693:9fff:fef4:a7ef])
+        by smtp.gmail.com with ESMTPSA id j5sm5455686wmb.12.2020.07.29.07.01.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 07:01:25 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 15:01:21 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Patrick Bellasi <patrick.bellasi@matbug.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>, Ben Segall <bsegall@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dhaval Giani <dhaval.giani@oracle.com>,
+        Josef Bacik <jbacik@fb.com>,
+        Chris Hyser <chris.hyser@oracle.com>,
+        Parth Shah <parth@linux.ibm.com>
+Subject: Re: [SchedulerWakeupLatency] Skip energy aware task placement
+Message-ID: <20200729140121.GB1075614@google.com>
+References: <87v9kv2545.derkling@matbug.com>
+ <87h7wd15v2.derkling@matbug.net>
+ <87imgrlrqi.derkling@matbug.net>
+ <87mu5sqwkt.derkling@matbug.net>
+ <87eer42clt.derkling@matbug.net>
+ <87imfi2qbk.derkling@matbug.net>
+ <2aa4b838-c298-ec7d-08f3-caa50cc87dc2@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200724090736.12228-1-laurentiu.palcu@oss.nxp.com>
+In-Reply-To: <2aa4b838-c298-ec7d-08f3-caa50cc87dc2@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Fri, Jul 24, 2020 at 12:07:29PM +0300, Laurentiu Palcu wrote:
-> From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+On Thursday 23 Jul 2020 at 11:31:39 (+0200), Dietmar Eggemann wrote:
+> The search for the most energy-efficient CPU over the Performance
+> Domains (PDs) by consulting the Energy Model (EM), i.e. the estimation
+> on how much energy a PD consumes if the task migrates to one of its
+> CPUs, adds a certain amount of latency to task placement.
 > 
-> Hi,
+> For some tasks this extra latency could be too high. A good example here
+> are the Android display pipeline tasks, UIThread and RenderThread. They
+> have to be placed on idle CPUs with a faster wakeup mechanism than the
+> energy aware wakeup path (A) to guarantee the smallest amount of dropped
+> or delayed frames (a.k.a. jank).
 > 
-> This patchset adds initial DCSS support for iMX8MQ chip. Initial support
-> includes only graphics plane support (no video planes), no HDR10 capabilities,
-> no graphics decompression (only linear, tiled and super-tiled buffers allowed).
-> 
-> Support for the rest of the features will be added incrementally, in subsequent
-> patches.
-> 
-> The patchset was tested with both HDP driver (in the downstream tree) and the upstream
-> MIPI-DSI driver (with a couple of patches on top, to make it work
-> correctly with DCSS).
+> In Linux kernel mainline there is currently no mechanism for latency
+> sensitive tasks to allow that the energy aware wakeup path (A) is
+> skipped and the fast path (B) taken instead.
 
-While i could run earlier versions of this  series with NWL I'm seeing
-only a brief image that then turns black (backlight still on) with this current version and
-the board hangs soon after.(for reference using mxsfb works nicely with
-the very same DT on next-20200727). If I do a drm.debug=0x3f i can see
-that display output stops around:
+FWIW, Android has indeed been using a similar concept for many years
+(the 'prefer-idle' flag you mentioned below) and that proved to be
+critical to meet UI requirements on a number of devices. So +1 to have
+this use case covered as part of the latency-nice work.
 
-[   15.394473] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=22, diff=1, hw=0 hw_last=0
-[   15.397575] device: 'input1': device_add
-[   15.444658] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=23, diff=1, hw=0 hw_last=0
-[   15.465946] PM: Adding info for No Bus:input1
-[   15.494842] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=24, diff=1, hw=0 hw_last=0
-[   15.511694] input: gpio-keys as /devices/platform/gpio-keys/input/input1
-[   15.545025] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=25, diff=1, hw=0 hw_last=0
-[   15.557869] device: 'event1': device_add
-[   15.595209] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=26, diff=1, hw=0 hw_last=0
-[   15.605363] PM: Adding info for No Bus:event1
-[   15.645394] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=27, diff=1, hw=0 hw_last=0
-[   19.427039] imx-dcss 32e00000.display-controller: [drm:vblank_disable_fn] disabling vblank on crtc 0
-[   19.436135] device: 'wakeup6': device_add
-[   19.448202] imx-dcss 32e00000.display-controller: [drm:drm_update_vblank_count] updating vblank count on crtc 0: current=28, diff=0, hw=0 hw_last=0
+<...>
+> > K) Task-Group tuning: which knobs are required
+> 
+> Currently Android uses the 'prefer idle' mechanism only on task-groups
+> and not on individual tasks.
 
-(and there's no further logging from drm from there on).
+To add a little bit of context here, Android uses cgroups extensively
+for task classification. The tasks of any currently used application are
+placed in a cgroup based on their 'role'. For instance, all tasks that
+belong to the currently visible application are classified as 'top-app',
+and are grouped in a cgroup with 'prefer-idle' set (+ other attributes,
+e.g. uclamp). The other tasks in the system are usually placed in other
+cgroups (e.g. 'background'), with 'prefer-idle' cleared.
 
-Would any the above mentioned patches do anything in that area?
+When the user switches from one app to the other, their roles are
+swapped. At this point userspace needs to move all tasks of an app from
+one cgroup to another, to reflect the change in role. But interestingly,
+all tasks of the app belong to the same process, so userspace only needs
+to write the PID of the parent task to the new cgroup to move all of
+them at once. (Note: we're also experimenting having cgroups per-app
+rather than per-role, and to change the cgroup parameters instead of
+migrating between groups, but that doesn't change the conclusion below).
 
-Cheers,
- -- Guido
+So, having 'only' a per-task API for latency-nice may not be sufficient
+to cover the Android use-case, as that would force userspace to iterate
+over all the tasks in an app when switching between roles, and that will
+come at a certain cost (currently unknown). However, that will need to
+be confirmed experimentally, and starting 'simple' with a per-task API
+would definitely be a step in the right direction.
 
-> 
-> Thanks,
-> Laurentiu
-> 
-> Changes in v8:
->  * Removed 'select RESET_CONTROLLER" from Kconfig as Philipp pointed
->    out. SRC is not used in DCSS driver;
->  * Nothing else changed;
-> 
-> Changes in v7:
->  * Added a patch to initialize the connector using the drm_bridge_connector
->    API as Sam suggested. Tested it using NWL_DSI and ADV7535 with
->    Guido's patch [1] applied and one fix for ADV [2]. Also, some extra
->    patches for ADV and NWL were needed, from our downstream tree, which
->    will be upstreamed soon by their author;
->  * Rest of the patches are untouched;
-> 
-> [1] https://lists.freedesktop.org/archives/dri-devel/2020-July/273025.html
-> [2] https://lists.freedesktop.org/archives/dri-devel/2020-July/273132.html
-> 
-> Changes in v6:
->  * Addressed Rob's comment and added "additionalProperties: false" at
->    the end of the bindings' properties. However, this change surfaced
->    an issue with the assigned-clock* properties not being documented in
->    the properties section. Added the descriptions and the bindings patch
->    will need another review;
->  * Added an entry for DCSS driver in the MAINTAINERS file;
->  * Removed the component framework patch altogether;
-> 
-> Changes in v5:
->  * Rebased to latest;
->  * Took out component framework support and made it a separate patch so
->    that people can still test with HDP driver, which makes use of it.
->    But the idea is to get rid of it once HDP driver's next versions
->    will remove component framework as well;
->  * Slight improvement to modesetting: avoid cutting off the pixel clock
->    if the new mode and the old one are equal. Also, in this case, is
->    not necessary to wait for DTG to shut off. This would allow to switch
->    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
->    from DCSS point of view);
->  * Do not fire off CTXLD when going to suspend, unless it still has
->    entries that need to be committed to DCSS;
->  * Addressed Rob's comments on bindings;
-> 
-> Changes in v4:
->  * Addressed Lucas and Philipp's comments:
->    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
->    * Removed usage of devm_ functions since I'm already doing all the
->      clean-up in the submodules_deinit();
->    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
->    * Removed en_completion variable from dcss_crtc since this was
->      introduced mainly to avoid vblank timeout warnings which were fixed
->      by arming the vblank event in flush() instead of begin();
->    * Removed clks_on and irq_enabled flags since all the calls to
->      enabling/disabling clocks and interrupts were balanced;
->    * Removed the custom atomic_commit callback and used the DRM core
->      helper and, in the process, got rid of a workqueue that wasn't
->      necessary anymore;
->    * Fixed some minor DT binding issues flagged by Philipp;
->    * Some other minor changes suggested by Lucas;
->  * Removed YUV formats from the supported formats as these cannot work
->    without the HDR10 module CSCs and LUTs. Will add them back when I
->    will add support for video planes;
-> 
-> Changes in v3:
->  * rebased to latest linux-next and made it compile as drmP.h was
->    removed;
->  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
->  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
->  * fixed a a spurious hang reported by Lukas Hartmann and encountered
->    by me several times;
->  * mask DPR and DTG interrupts by default, as they may come enabled from
->    U-boot;
-> 
-> Changes in v2:
->  * Removed '0x' in node's unit-address both in DT and yaml;
->  * Made the address region size lowercase, to be consistent;
->  * Removed some left-over references to P010;
->  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
->    issues reported by kbuild for other architectures;
-> 
-> 
-> Laurentiu Palcu (5):
->   drm/imx: compile imx directory by default
->   drm/imx: Add initial support for DCSS on iMX8MQ
->   drm/imx/dcss: use drm_bridge_connector API
->   MAINTAINERS: Add entry for i.MX 8MQ DCSS driver
->   dt-bindings: display: imx: add bindings for DCSS
-> 
->  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 104 +++
->  MAINTAINERS                                   |   8 +
->  drivers/gpu/drm/Makefile                      |   2 +-
->  drivers/gpu/drm/imx/Kconfig                   |   2 +
->  drivers/gpu/drm/imx/Makefile                  |   1 +
->  drivers/gpu/drm/imx/dcss/Kconfig              |   8 +
->  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
->  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
->  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
->  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
->  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 325 +++++++
->  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
->  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
->  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 138 +++
->  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
->  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 198 +++++
->  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  44 +
->  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
->  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
->  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
->  20 files changed, 4107 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
->  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
->  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
->  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
-> 
-> -- 
-> 2.23.0
-> 
+Thanks,
+Quentin
