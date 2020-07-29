@@ -2,109 +2,133 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7508FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4824321744
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6112F20809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 07:47:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=students-iitmandi-ac-in.20150623.gappssmtp.com header.i=@students-iitmandi-ac-in.20150623.gappssmtp.com header.b="mUlP7Tu9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kiiVmhSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgG2HqM (ORCPT
+        id S1727905AbgG2Hrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:46:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgG2HqL (ORCPT
+        Wed, 29 Jul 2020 03:47:41 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:41287 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726548AbgG2Hrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:46:11 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A3EC061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 00:46:10 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id i92so1188734pje.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 00:46:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=students-iitmandi-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/Kc8o8UqCU991Vni3y/o1KBZOM15r81DSmGMs9PY1+8=;
-        b=mUlP7Tu9eDU7kLyU4EQLPV0YBwq3/iDMfDoNkfp4mDqI6AhWyl9f3bBrXvbvQUzBd4
-         yPX6O9aseFOlKDRrryBXjhogqmYl6lVMsvX8ei01yY78VJ2A7X74T154+EqzRAWoxPVn
-         Js/wpcs25VS1jqgPYaMgO2u0A78P16DviwPms9ni6xfjFF3SfCd0GSQZZ0baBEvT0igi
-         FkH0WQy9KjvoKPBxBt0DkPKGPaHSk9UL2wRvQt4c1zfKs/NKKv2dbBnL4JfA0yG7Y7nl
-         5zUDncrpl9+ucYfGw5o8QIQV90s1Y3GC1gfXyKAQhGgZ9v7O4Os0egHsN5dkgk8K/hn2
-         XF+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/Kc8o8UqCU991Vni3y/o1KBZOM15r81DSmGMs9PY1+8=;
-        b=ehzPBzoxWqHDmEmnLdlWX4gjfrUzka28M4TF/IMoOGB2FT5zv9+PBApeXY5ARLUNAc
-         eEF1f0nqp04ERw6glr/NNOXyfxRjD73ag7rkcNGEhwhIHj3e/AsAXT99FZ2DbjToOwvO
-         Q7vU7uuGNONMn076G422IQ/YbnV2mrds6fTy35JSXQcenxQ8CimIMCBwZ6G+lg+Iw2lm
-         7HoHO4zSnyMIHOAlDeFbVcX5ma5yvdaLPqt/S2wfgS5dBRl9vMeIP24GoOhksganRqZr
-         h2F9Fe+mh2kqNHHtWZHbP81+lqHqv5YYBXbxGGNMfuEwU2C2bR2uIDSeLP1tFeNIVWgV
-         5xsw==
-X-Gm-Message-State: AOAM531JX4C3nJtdcwZwyh/7ul3kg7k+PAmRqI050fZHzMUwOJegaB5g
-        QN00/9fkD8QlVqQ4xEQa+xvdOw==
-X-Google-Smtp-Source: ABdhPJzhgxtOqw+ErBlwCNI6JQ8tLNWtINKyN3jyJYByNMZI9Ab/y1MtsQtE3dc2L689tAVXkn2msQ==
-X-Received: by 2002:a17:902:6b49:: with SMTP id g9mr25244131plt.230.1596008769862;
-        Wed, 29 Jul 2020 00:46:09 -0700 (PDT)
-Received: from devil-VirtualBox.www.tendawifi.com ([103.198.174.215])
-        by smtp.gmail.com with ESMTPSA id o16sm1424762pfu.188.2020.07.29.00.45.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 00:46:09 -0700 (PDT)
-From:   Ankit Baluni <b18007@students.iitmandi.ac.in>
-To:     gregkh@linuxfoundation.org, Larry.Finger@lwfinger.net,
-        florian.c.schilhabel@googlemail.com, rohitsarkar5398@gmail.com,
-        mukadr@gmail.com, straube.linux@gmail.com, pterjan@google.com
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Ankit Baluni <b18007@students.iitmandi.ac.in>
-Subject: [PATCH v2] Staging: rtl8712: Fixed a coding sytle issue
-Date:   Wed, 29 Jul 2020 13:15:41 +0530
-Message-Id: <20200729074541.1972-1-b18007@students.iitmandi.ac.in>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200728213231.26626-1-b18007@students.iitmandi.ac.in>
-References: <20200728213231.26626-1-b18007@students.iitmandi.ac.in>
+        Wed, 29 Jul 2020 03:47:40 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596008860; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=N0ndv5KN6Xw5hthZa7yh5iBB7EO9NGXqeet5mdr0U8Q=; b=kiiVmhSe+Zr98RXCL+FvLyb6Tlnd3poYQn75oXRNVyuvAhOWXdMmaNlXt2/IWH3u5OzmGNaz
+ q7QvUICjmLZ10zL3mrpUx9gCQI3YSj4w5ML1Jfuxt4CqfnC/ku7pHFzUQZxh4h7E6RmQk8qM
+ 4AeEvlcBmSHs9/z2fHAbpPApiTQ=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5f212979aa44a6db05e2a562 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 07:47:05
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0D356C43395; Wed, 29 Jul 2020 07:47:05 +0000 (UTC)
+Received: from [192.168.0.101] (unknown [49.204.127.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5B348C433C6;
+        Wed, 29 Jul 2020 07:46:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5B348C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH 6/9] phy: qcom-qmp: Add compatible for ipq8074 pcie gen3
+ qmp phy
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, kishon@ti.com, mturquette@baylibre.com,
+        sboyd@kernel.org, svarbanov@mm-sol.com, lorenzo.pieralisi@arm.com,
+        p.zabel@pengutronix.de, mgautam@codeaurora.org,
+        smuthayy@codeaurora.org, varada@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
+ <1593940680-2363-7-git-send-email-sivaprak@codeaurora.org>
+ <20200713060425.GC34333@vkoul-mobl>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <226ed531-f644-f09a-35ae-25abcf502990@codeaurora.org>
+Date:   Wed, 29 Jul 2020 13:16:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200713060425.GC34333@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Removed braces for a 'if' condition as it contain only single line &
-there is no need for braces for such case according to coding style
-rules.
+Hi Vinod,
 
-Signed-off-by: Ankit Baluni <b18007@students.iitmandi.ac.in>
----
-Change in -v2:
-	-Remove space before ':' in subject .
+On 7/13/2020 11:34 AM, Vinod Koul wrote:
+> On 05-07-20, 14:47, Sivaprakash Murugesan wrote:
+>> ipq8074 has two pcie ports, one gen2 and one gen3 ports. with phy
+>> support already available for gen2 pcie ports add support for pcie gen3
+>> port phy.
+>>
+>> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> ---
+>>   drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h | 137 ++++++++++++++++++++++++
+>>   drivers/phy/qualcomm/phy-qcom-qmp.c       | 172 +++++++++++++++++++++++++++++-
+>>   2 files changed, 307 insertions(+), 2 deletions(-)
+>>   create mode 100644 drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h
+>>
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h b/drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h
+>> new file mode 100644
+>> index 000000000000..bb567673d9b5
+>> --- /dev/null
+>> +++ b/drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h
+>> @@ -0,0 +1,137 @@
+>> +/* SPDX-License-Identifier: GPL-2.0*
+> Trailing * at the end, it would make sense to split the spdx and
+> copyright parts to two single lines
+ok
+>
+>> @@ -2550,8 +2707,16 @@ static int phy_pipe_clk_register(struct qcom_qmp *qmp, struct device_node *np)
+>>   
+>>   	init.ops = &clk_fixed_rate_ops;
+>>   
+>> -	/* controllers using QMP phys use 125MHz pipe clock interface */
+>> -	fixed->fixed_rate = 125000000;
+>> +	/*
+>> +	 * controllers using QMP phys use 125MHz pipe clock interface unless
+>> +	 * other frequency is specified in dts
+>> +	 */
+>> +	ret = of_property_read_u32(np, "clock-output-rate",
+>> +				   (u32 *)&fixed->fixed_rate);
+> is this cast required?
 
- drivers/staging/rtl8712/rtl871x_ioctl_linux.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+without this getting the following error.
 
-diff --git a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-index c6f6ccd060bb..df6ae855f3c1 100644
---- a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-+++ b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-@@ -238,9 +238,8 @@ static char *translate_scan(struct _adapter *padapter,
- 	/* parsing HT_CAP_IE */
- 	p = r8712_get_ie(&pnetwork->network.IEs[12], _HT_CAPABILITY_IE_,
- 			 &ht_ielen, pnetwork->network.IELength - 12);
--	if (p && ht_ielen > 0) {
-+	if (p && ht_ielen > 0)
- 		ht_cap = true;
--	}
- 	/* Add the protocol name */
- 	iwe.cmd = SIOCGIWNAME;
- 	if (r8712_is_cckratesonly_included(pnetwork->network.rates)) {
--- 
-2.25.1
+./include/linux/of.h:1209:19: note: expected 'u32 * {aka unsigned int 
+*}' but argument is of type 'long unsigned int *'
 
+>
+>> +	if (ret)
+>> +		fixed->fixed_rate = 125000000;
+>> +
+>> +	dev_info(qmp->dev, "fixed freq %lu\n", fixed->fixed_rate);
+> debug?
+will remove in next patch.
