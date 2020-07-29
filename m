@@ -2,104 +2,89 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E3CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C814120829
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F1252083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:48:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RVbqy5eC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TY7G6j9s"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BxoZM5q3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgG2Mrq (ORCPT
+        id S1726880AbgG2MsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:47:46 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41954 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgG2Mrq (ORCPT
+        Wed, 29 Jul 2020 08:48:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgG2MsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:47:46 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596026864;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3Y4OYJjMYjInJLB1x6yEBhHYOFD16/ZaJSmb+RhIU0M=;
-        b=RVbqy5eC4PwZaaRSgNqGSgtHJQ2yeiVdg0mEVDFNu58vzZth0z6smn3YI/UMkNF0Bf/zLn
-        k84LQwPQk/QowMtkDA6r9G+AWc50TNqiXiDJIWtvsw360zH+kHm4CFcT5lKcVG9thXgxEU
-        4ak7RjuLA4qBYBkzrvi6qE7XQv7Vf+ehksZhq3J2cdJnCuV9Uq5cpzVI1xHUhEDuoP3emv
-        MBPVqeunOHBUpgbrw6FdjE0zqA22bjKl9pWdIfE62nUd0Lxy6N/3/zzMfwYWZsOsk3rKVp
-        W9R2xLufCleWmI/QrYNnnE6w7i/gUx2qYowd0NXfGR2z5jIQHaUMquWtfZhFqQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596026864;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3Y4OYJjMYjInJLB1x6yEBhHYOFD16/ZaJSmb+RhIU0M=;
-        b=TY7G6j9sy+5xSGtSerCIPtawKzENIPukrBXD8fxzA3Js2rnzn4xUNlmiA7jKVUDnDL3WKW
-        eptM1hjQxdi4fwAQ==
-To:     Freddy Hsin <freddy.hsin@mediatek.com>,
-        linux-mediatek@lists.infradead.or,
-        linux-arm-kernel@lists.infradead.org,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        "Ben Dooks \(Codethink\)" <ben.dooks@codethink.co.uk>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        linux-kernel@vger.kernel.org, chang-an.chen@mediatek.com,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        wsd_upstream@mediatek.com, kuohong.wang@mediatek.com,
-        stanley.chu@mediatek.com, Freddy Hsin <freddy.hsin@mediatek.com>
-Subject: Re: [PATCH v1 1/2] kernel: time: export sched_clock_register function
-In-Reply-To: <1595931377-21627-2-git-send-email-freddy.hsin@mediatek.com>
-References: <1595931377-21627-1-git-send-email-freddy.hsin@mediatek.com> <1595931377-21627-2-git-send-email-freddy.hsin@mediatek.com>
-Date:   Wed, 29 Jul 2020 14:47:43 +0200
-Message-ID: <87pn8ea3o0.fsf@nanos.tec.linutronix.de>
+        Wed, 29 Jul 2020 08:48:10 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04FE3C061794;
+        Wed, 29 Jul 2020 05:48:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=yYkMg9oo+eIA5xPDTODwyrduO9h1EYb6IRxHzdvCDzM=; b=BxoZM5q3nVMman3md9NIGIcJj+
+        gDcrN6pf7bPrP5mIR61HwNxBP7+WN01L+Yam0o2fgbhmyfpEb7mZmQQqBrIL0aogqE+WxlNDfe/I9
+        AJBdjlX+Yy2jXpTT2UZIBGof8kkmz48pmeKF2hMFcwZ1/H19C/eEZRBIlzuGg0y1qjzm0a4lm1INA
+        7dS58u2kVhqbynAHp36mhcmW03HOjbc4Zf3HUrsY0KtIK/eWEDgfHhCWe5m3zxgPZmpIgkNg6ZLHX
+        aYafkV1wwcjb+pkoiQSqIr3hiVudsA49yqenwv9osKXgrOqmpnxO44PqgbY1/Uh99qXSzbLSAcgz7
+        mApOt57w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k0lUo-0000os-Do; Wed, 29 Jul 2020 12:47:46 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 993E030411F;
+        Wed, 29 Jul 2020 14:47:44 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7682F203D06A4; Wed, 29 Jul 2020 14:47:44 +0200 (CEST)
+Date:   Wed, 29 Jul 2020 14:47:44 +0200
+From:   peterz@infradead.org
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH 0/2] locking/qspinlock: Break qspinlock_types.h header
+ loop
+Message-ID: <20200729124744.GC2638@hirez.programming.kicks-ass.net>
+References: <20200729210311.425d0e9b@canb.auug.org.au>
+ <20200729114757.GA19388@gondor.apana.org.au>
+ <20200729122807.GA7047@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200729122807.GA7047@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Freddy,
+On Wed, Jul 29, 2020 at 10:28:07PM +1000, Herbert Xu wrote:
+> This miniseries breaks a header loop involving qspinlock_types.h.
+> The issue is that qspinlock_types.h includes atomic.h, which then
+> eventually includes kernel.h which could lead back to the original
+> file via spinlock_types.h.
 
-Freddy Hsin <freddy.hsin@mediatek.com> writes:
+How did you run into this, I haven't seen any build failures due to
+this.
 
-please do not come up with random prefixes. Just look at the topmost two
-commits on that file:
+> The first patch moves ATOMIC_INIT into linux/types.h while the second
+> patch actuallys breaks the loop by no longer including atomic.h
+> in qspinlock_types.h.
 
-2c8bd58812ee ("time/sched_clock: Expire timer in hardirq context")
-2707745533d6 ("time/sched_clock: Disable interrupts in sched_clock_register()")
-
-Also the sentence after the colon starts with an uppercase letter.
-
-Please change 'sched_clock_register function' to
-'sched_clock_register()' which makes it clear that this is a function
-
-> export sched_clock_register function, because the Mediatek timer
-> loadable module depends on this function
-
-Again sentences start with an uppercase letter. Also the reason for
-exporting this is wrong. There is no mediatek timer module now.
-
-The point of exporting this (if at all) is that it's required for any
-ARM SoC timer driver to be modularized.
-> @@ -239,6 +239,7 @@ static enum hrtimer_restart sched_clock_poll(struct hrtimer *hrt)
->  
->  	pr_debug("Registered %pS as sched_clock source\n", read);
->  }
-> +EXPORT_SYMBOL(sched_clock_register);
-
-EXPORT_SYMBOL_GPL() please.
-
-Thanks,
-
-        tglx
+Anyway, the patches look sane enough, I'll go stick them in
+tip/locking/core or somesuch.
