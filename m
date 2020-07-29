@@ -2,100 +2,142 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B86C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95ECDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB22A2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:14:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BUJ/wa/S"
+	by mail.kernel.org (Postfix) with ESMTP id 756A72076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:15:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595988928;
+	bh=amZwJ/+9o4xEOWoXapzupFWaU/HGBNDgOHcSg5Q0a6Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ySfYayXdD5Yo+HV+U5x7PnGbVmC3tGIfUQ+PFp878GvefQBIX3leVLxNY+Uo/COU7
+	 lN83HmZjQsFCOer0w/Ar3034zbNQ5JAtyx8BTromeSPBG4quocwZQRIkXC5z1KmZ5z
+	 13ZOvvuAiGCKJzrZZk6Dkos+NDRUAbkl4b+WqBew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731026AbgG2COz (ORCPT
+        id S1731049AbgG2CP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 22:14:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728401AbgG2COy (ORCPT
+        Tue, 28 Jul 2020 22:15:27 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:39871 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728401AbgG2CP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 22:14:54 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85363C061794;
-        Tue, 28 Jul 2020 19:14:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=1u/cfoScfk1XVAU6hS/7yiR8e3+dFZhylfwJt1KFn1s=; b=BUJ/wa/S/lOBuQvHgI3H+W6K6m
-        paDdu6QwBxIb7AXbnae7nhinRbGMqv5Vu9wCsdr3bNcZaTnLTXyY/e2kA4ykVYNBJ+2gqcP2zIJaI
-        EQEUsOGPDwRu08jULNCfkUTkMoR4U3zRxyz1qLKld8+zLtgFAk4u0eu4KPdJGHKGTPETPcAGT9YNG
-        2j9D/80XpoqGXNMEfkUEh1B8BXMT+Td+uqSS+B7mrUgvAzjq0pWBgg1r+ZlfXGXDgwpJzqxkzad5F
-        FzsT/f9cxVm8ckAe9svcghtGp2rwG5aIxXAnjd7KKvaCTPKcvcG3HEUAEAoaL5i5I9pbTCt3phDNk
-        U/23RGHw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0bcK-0001ev-7q; Wed, 29 Jul 2020 02:14:52 +0000
-Subject: Re: [PATCH] doc: remove stray HTML entity in '<slash>'
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200729021120.35901-1-luc.vanoostenryck@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <1faef34e-053a-121f-1dc5-333c6b6539cc@infradead.org>
-Date:   Tue, 28 Jul 2020 19:14:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 22:15:26 -0400
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 06T2F6UI016692;
+        Wed, 29 Jul 2020 11:15:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 06T2F6UI016692
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1595988907;
+        bh=Qkn+kiJdhteGcggEnh5A4hePD7ExGuNIIh74wMoDJJU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=umve6b0p6HKToioLtP4Ziv+K/KzsD3boGM9ulTtcboyoMyJHaON5gLb5ObRIUow0F
+         o+qfyy6mVaJ+wbsg1u7+sCXM4GBrcHyGZYFeX6ceuwqMQPP8bZc5c1jsgZI0eQTyRg
+         YUu56A2L4EOAnnVU92vWDt+/Wv5E+drhUELngqddl/3WndB6zG1xCsg80UzUT+/Cbe
+         qdbsxDjLFx+eAwr8m1lhtwg4tyd4CIgRAfPztSJSunxLM9AQpesD/qmRbcYx8hVrdn
+         LZYabkaeEhp9sjUa+xtjZh1kBsOK1U7NnYy2nXBcP031DaFpzl9aZFXJFWXT0n+DAm
+         istxPBXYR1iFA==
+X-Nifty-SrcIP: [209.85.217.52]
+Received: by mail-vs1-f52.google.com with SMTP id k7so11294661vso.2;
+        Tue, 28 Jul 2020 19:15:07 -0700 (PDT)
+X-Gm-Message-State: AOAM531lLNpZ7Pz4Kz1RjZ+Vep1p7CD/J3ThCUTghxbS6Rgn33qLuC0/
+        8gjqeUIToPI3HU42YUEHdMg9Dlhhx0T7xwFSowA=
+X-Google-Smtp-Source: ABdhPJxHS/wdsjCJ01OGRsbq6xgw9iJxUiIoq5iqy8Ryces8bJ+zBV7WGCZ5ZFIDG281wY0aBfri71iy4As6H59X2ZQ=
+X-Received: by 2002:a67:de09:: with SMTP id q9mr22428084vsk.179.1595988906252;
+ Tue, 28 Jul 2020 19:15:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200729021120.35901-1-luc.vanoostenryck@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <DB7PR08MB380100FDD4D1B11062FA57819C690@DB7PR08MB3801.eurprd08.prod.outlook.com>
+In-Reply-To: <DB7PR08MB380100FDD4D1B11062FA57819C690@DB7PR08MB3801.eurprd08.prod.outlook.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 29 Jul 2020 11:14:29 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQm87ykKi=OfToZRy2JtNt0OX3n6kXpNxNW5W7HREh4NA@mail.gmail.com>
+Message-ID: <CAK7LNAQm87ykKi=OfToZRy2JtNt0OX3n6kXpNxNW5W7HREh4NA@mail.gmail.com>
+Subject: Re: linux-5.8-rc4/scripts/kconfig/qconf.cc: 2 * bad delete ?
+To:     David Binderman <dcb314@hotmail.com>
+Cc:     "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/20 7:11 PM, Luc Van Oostenryck wrote:
-> An excerpt from POSIX contains three occurrences of '<slash>' but
-> the first two are spelled starting with an HTML entity: '&lt;slash>'
-> 
-> Fix this by replacing the stray HTML entity by a '<'.
-> 
-> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+On Mon, Jul 6, 2020 at 6:22 PM David Binderman <dcb314@hotmail.com> wrote:
+>
+> Hello there,
+>
+> linux-5.8-rc4/scripts/kconfig/qconf.cc:1242:10: error: Mismatching allocation and deallocation: data [mismatchAllocDealloc]
+> linux-5.8-rc4/scripts/kconfig/qconf.cc:1255:10: error: Mismatching allocation and deallocation: data [mismatchAllocDealloc]
+>
+> new [] needs delete [].
+>
+> Regards
+>
+> David Binderman
 
-Hi Luc,
-One day late.
-Fixed and merged yesterday.
 
-https://lore.kernel.org/linux-doc/20200727114527.23944-1-vegard.nossum@oracle.com/
+Thanks for the report, and sorry for the delay.
+
+Will you send a patch, or shall I do it?
 
 
-> ---
->  Documentation/filesystems/path-lookup.rst | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/path-lookup.rst b/Documentation/filesystems/path-lookup.rst
-> index e2ba15146365..d46688d6770d 100644
-> --- a/Documentation/filesystems/path-lookup.rst
-> +++ b/Documentation/filesystems/path-lookup.rst
-> @@ -78,8 +78,8 @@ particular, ``mkdir()`` and ``rmdir()`` each create or remove a directory named
->  by the final component, and they are required to work with pathnames
->  ending in "``/``".  According to POSIX_
->  
-> -  A pathname that contains at least one non- &lt;slash> character and
-> -  that ends with one or more trailing &lt;slash> characters shall not
-> +  A pathname that contains at least one non-<slash> character and
-> +  that ends with one or more trailing <slash> characters shall not
->    be resolved successfully unless the last pathname component before
->    the trailing <slash> characters names an existing directory or a
->    directory entry that is to be created for a directory immediately
-> 
+BTW, I guess those error messages are from cppcheck.
 
-cheers.
--- 
-~Randy
 
+Could you please teach me how to reproduce them?
+
+
+I ran cppcheck against qconf.cc
+but no success to check it.
+
+
+
+
+masahiro@oscar:~/ref/linux$ cppcheck  scripts/kconfig/qconf.cc
+Checking scripts/kconfig/qconf.cc ...
+masahiro@oscar:~/ref/linux$ cppcheck --enable=all scripts/kconfig/qconf.cc
+Checking scripts/kconfig/qconf.cc ...
+scripts/kconfig/qconf.cc:0:0: information: This file is not analyzed.
+Cppcheck failed to extract a valid configuration. Use -v for more
+details. [noValidConfiguration]
+
+^
+nofile:0:0: information: Cppcheck cannot find all the include files
+(use --check-config for details) [missingIncludeSystem]
+
+masahiro@oscar:~/ref/linux$ cppcheck -v --enable=all scripts/kconfig/qconf.cc
+Checking scripts/kconfig/qconf.cc ...
+Defines:
+Undefines:
+Includes:
+Platform:Native
+scripts/kconfig/qconf.cc:0:0: information: This file is not analyzed.
+Cppcheck failed to extract a valid configuration. The tested
+configurations have these preprocessor errors:
+'' : [scripts/kconfig/qconf.moc:12] #error "The header file 'qconf.h'
+doesn't include <QObject>."
+Q_MOC_OUTPUT_REVISION : [scripts/kconfig/qconf.moc:14] #error "This
+file was generated using the moc from 5.12.8. It"
+[noValidConfiguration]
+
+^
+nofile:0:0: information: Cppcheck cannot find all the include files.
+Cppcheck can check the code without the include files found. But the
+results will probably be more accurate if all the include files are
+found. Please check your project's include directories and add all of
+them as include directories for Cppcheck. To see what files Cppcheck
+cannot find use --check-config. [missingIncludeSystem]
+
+
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
