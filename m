@@ -5,61 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D39C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC10C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E51F20809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA9FA2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 14:34:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AsfZqcFN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yGSpx2EI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="06PEpfIm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OnBFmy8V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgG2OeG (ORCPT
+        id S1727053AbgG2Od5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 10:34:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43178 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgG2Odx (ORCPT
+        Wed, 29 Jul 2020 10:33:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727776AbgG2Odn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 10:33:53 -0400
-Date:   Wed, 29 Jul 2020 14:33:50 -0000
+        Wed, 29 Jul 2020 10:33:43 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6938EC061794;
+        Wed, 29 Jul 2020 07:33:43 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 14:33:41 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596033231;
+        s=2020; t=1596033221;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=COUuUxl24BIY1YJMew8yKejsblD7TbzIN2or9F3NwOY=;
-        b=AsfZqcFNo6rXWFWzMj0FfaEXpYa41v0kTZ0PpF24kFn7TVNrB+1gjx2qljV6lAGZGRhGsq
-        MWlPQqLZBaoihjYLL5THCHa8wquImt0UfP/BAFlh+I80iGVEyONiySjI6fRTnVd0DtJrQ6
-        YmqJtMyR/+nWoSqXuv/Uw2OJ6GiUe3IgDmGxq5Mzm1dZlR9k5Lgj8i3sji41cNqzHn8LWU
-        d3V8wnziO8U1y2K1IYH6NH7/oonWH9kiw02Ve6czizaxyCe0+tRBhOiuJW8xtHZhodFgpu
-        hPqlC7yM1nstIs3ztUBZQFy5MSXy98DTRWXtrxuH1i/CR9wKvXf4xIXZKeE+BA==
+        bh=eavMHgip/DHaHggfrx1dCSEAdMJyMOGJhJ6uWsf22qU=;
+        b=06PEpfIme3OvXSDYlVjzE10HU8jH63PqJQxdWZ7yt9dhKFiY8igESKvzBZ24nSjLqwq92X
+        yrrOtrD9EVbxJyXYoiIGw4aC15hkHYrGCjPfRbwX8hjr6Zz7J/dPfpxn7yhVSEt7H6XQzA
+        67KPFmTumdZCUfb3vHZ57TpMSF06IDCVSpYO4CK/4Gu61D3/uFg9G2qkqt0IQIZ3L4ddeg
+        WU6bLM4y8jYk3SMkHimr0iKo+kz+Dw7tCrfHp3/FPvnYW4foTTH+O7SiuqTCkPMFb0NVD7
+        FXYG+snuWovzB4pWNgO7xOif13Yqv0bmnV7ilnS3RwsvhziOPdqv+NE+4SAEjg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596033231;
+        s=2020e; t=1596033221;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=COUuUxl24BIY1YJMew8yKejsblD7TbzIN2or9F3NwOY=;
-        b=yGSpx2EIWqf29hFflRP/KXdHapWsMb+ynugCh9oyGCVibxKUvKNt33pkMgPKZIN7b8EijI
-        31wJhzdIab62BABQ==
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+        bh=eavMHgip/DHaHggfrx1dCSEAdMJyMOGJhJ6uWsf22qU=;
+        b=OnBFmy8VC1vX/VoCGIRkJzjk112PYWyeEH/dvd/o4d0rl+R2VFT8FvSbEr+65EUIApmfxh
+        10aVgUjORGFAkKDA==
+From:   "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/i8259: Use printk_deferred() to prevent deadlock
-Cc:     kernel test robot <lkp@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, stable@vger.kernel.org,
+Subject: [tip: locking/core] seqlock: seqcount_t latch: End read sections with
+ read_seqcount_retry()
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <87365abt2v.fsf@nanos.tec.linutronix.de>
-References: <87365abt2v.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <20200720155530.1173732-4-a.darwish@linutronix.de>
+References: <20200720155530.1173732-4-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <159603323059.4006.16549997854103286756.tip-bot2@tip-bot2>
+Message-ID: <159603322133.4006.2775605538857308036.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -69,56 +72,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     bdd65589593edd79b6a12ce86b3b7a7c6dae5208
-Gitweb:        https://git.kernel.org/tip/bdd65589593edd79b6a12ce86b3b7a7c6dae5208
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 29 Jul 2020 10:53:28 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 29 Jul 2020 16:27:16 +02:00
+Commit-ID:     d3b35b87f436c1b226a8061bee9c8875ba6658bd
+Gitweb:        https://git.kernel.org/tip/d3b35b87f436c1b226a8061bee9c8875ba6658bd
+Author:        Ahmed S. Darwish <a.darwish@linutronix.de>
+AuthorDate:    Mon, 20 Jul 2020 17:55:09 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 29 Jul 2020 16:14:23 +02:00
 
-x86/i8259: Use printk_deferred() to prevent deadlock
+seqlock: seqcount_t latch: End read sections with read_seqcount_retry()
 
-0day reported a possible circular locking dependency:
+The seqcount_t latch reader example at the raw_write_seqcount_latch()
+kernel-doc comment ends the latch read section with a manual smp memory
+barrier and sequence counter comparison.
 
-Chain exists of:
-  &irq_desc_lock_class --> console_owner --> &port_lock_key
+This is technically correct, but it is suboptimal: read_seqcount_retry()
+already contains the same logic of an smp memory barrier and sequence
+counter comparison.
 
- Possible unsafe locking scenario:
+End the latch read critical section example with read_seqcount_retry().
 
-       CPU0                    CPU1
-       ----                    ----
-  lock(&port_lock_key);
-                               lock(console_owner);
-                               lock(&port_lock_key);
-  lock(&irq_desc_lock_class);
-
-The reason for this is a printk() in the i8259 interrupt chip driver
-which is invoked with the irq descriptor lock held, which reverses the
-lock operations vs. printk() from arbitrary contexts.
-
-Switch the printk() to printk_deferred() to avoid that.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/87365abt2v.fsf@nanos.tec.linutronix.de
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200720155530.1173732-4-a.darwish@linutronix.de
 ---
- arch/x86/kernel/i8259.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/seqlock.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/i8259.c b/arch/x86/kernel/i8259.c
-index f3c7625..282b4ee 100644
---- a/arch/x86/kernel/i8259.c
-+++ b/arch/x86/kernel/i8259.c
-@@ -207,7 +207,7 @@ spurious_8259A_irq:
- 		 * lets ACK and report it. [once per IRQ]
- 		 */
- 		if (!(spurious_irq_mask & irqmask)) {
--			printk(KERN_DEBUG
-+			printk_deferred(KERN_DEBUG
- 			       "spurious 8259A interrupt: IRQ%d.\n", irq);
- 			spurious_irq_mask |= irqmask;
- 		}
+diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+index 6c4f68e..d724b5e 100644
+--- a/include/linux/seqlock.h
++++ b/include/linux/seqlock.h
+@@ -363,8 +363,8 @@ static inline int raw_read_seqcount_latch(seqcount_t *s)
+  *			idx = seq & 0x01;
+  *			entry = data_query(latch->data[idx], ...);
+  *
+- *			smp_rmb();
+- *		} while (seq != latch->seq);
++ *		// read_seqcount_retry() includes needed smp_rmb()
++ *		} while (read_seqcount_retry(&latch->seq, seq));
+  *
+  *		return entry;
+  *	}
