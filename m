@@ -2,418 +2,326 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D80C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CEBC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9FD020658
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375A420658
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 20:07:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PFwyu5yV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pvf5XSdx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgG2UGS (ORCPT
+        id S1726858AbgG2UHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:06:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33723 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726628AbgG2UGQ (ORCPT
+        Wed, 29 Jul 2020 16:07:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbgG2UHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:06:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596053174;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1Nf+cVZW6NVZ94AMcR1q0fdpvnEsNWz1jczE5rVu2vk=;
-        b=PFwyu5yVKEVCQBTjGnVJTVUeN0GGWcxE6ou2dmjok0jaj5Sat8iOZtYTjJOyG79Ci96J5u
-        aDl0vJLLGMb5+OaIVb0tVKEASidWe03D4qvJ1ZE7D923QZhl0Rz4COxeCaoLD4y5G7qWM7
-        fynF4p6TtJ0XqbEt0IsMny8foAGbHxk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-477-yJSSxf_fNfaDtsjm96lLEg-1; Wed, 29 Jul 2020 16:06:05 -0400
-X-MC-Unique: yJSSxf_fNfaDtsjm96lLEg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A9248017FB;
-        Wed, 29 Jul 2020 20:06:03 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4A2E65D9E8;
-        Wed, 29 Jul 2020 20:05:48 +0000 (UTC)
-Date:   Wed, 29 Jul 2020 16:05:45 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, Ondrej Mosnacek <omosnace@redhat.com>,
-        dhowells@redhat.com, simo@redhat.com,
-        Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V9 02/13] audit: add container id
-Message-ID: <20200729200545.5apwc7fashwsnglj@madcap2.tricolour.ca>
-References: <cover.1593198710.git.rgb@redhat.com>
- <e5a1ab6955c565743372b392a93f7d1ac98478a2.1593198710.git.rgb@redhat.com>
- <CAHC9VhSgcOS79spSuFDMukw2TnLZfBh2p4BWGfoV_CGUS8b77w@mail.gmail.com>
+        Wed, 29 Jul 2020 16:07:12 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43FBC0619D5
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:07:12 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id lx9so2726042pjb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 13:07:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SxNA+L8rUhB1Bc6LLTgpGXr9c5vU5yL6AHdcNoeaNxA=;
+        b=pvf5XSdxAh16xqgZxP9BVFUyH6stSgPCzZ6a6WEeODNIjwQo1VTGUzg1/3j4pnx0as
+         7Vfvx58XKq3ZbFCMDOLR55WGvEZLJEVPCOQnZ9pD5qLwysvuK44MhSEW5DCSWazEhbu1
+         88/pvsM9aeSW8OEMsQFErmKJLleEBWDrdWMKApngt6DFs2/z+18G/u3oN5kZLsm3cqim
+         z2Lmc2EDSjB2Ps1z3VwaUhKwWBbObqdB/aVan8zYp+axJpyZw2BPSJnHBnDdWFpvKrVX
+         TysZZGT+gxfBLBV3MatKp657yehoahCA7In7kYm+3mZ7sQ85fpFOUkLyzUT3tJ4lzWNx
+         2Anw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SxNA+L8rUhB1Bc6LLTgpGXr9c5vU5yL6AHdcNoeaNxA=;
+        b=hnOfn8pYL/BEYhi09B6q3e15uRznG5ln3RA//9Wn+1fuPEM+I6HVuaplYx2tGYbsd4
+         qA3rAubQS3O4DyMnDDbpNBLBaDxtN9u/RQsj0vdSPTeh88MmothgLiemqsEwxsjGzyjj
+         0D8uDnxEtRWa33i1YrBPNbNZeGvuuO3bGwwsQEpMovjMjKrn3bPHEaFCsUSvCtYXy6Ji
+         pawo11nbgYFuxIwGZzJffdlLZwHiCR5kd22rlYr9GA6EnQD4llg1Kf3ZUMvY7+mEtAMi
+         QtBK+e6oyoHgCrBq9c/vTP6lv9ZsCfQAvrRWwibC4yrxFV9zdHD7ekuvy5l8rwvA9ikS
+         vukA==
+X-Gm-Message-State: AOAM533UqZbRucpDQCUXXdaNcFZAAndlMQT+vF0IWv5pqzGOg6hR1ShQ
+        iJXaBTwWNwSO+tGNc7bf4d4+KQ==
+X-Google-Smtp-Source: ABdhPJxQmSsca4rpT68BQI9U3lGtXd5d9DnRgwFf/Lu+rMoHX3/eA5JVkuOqFNOOYA39BcQ6hzj4AQ==
+X-Received: by 2002:a17:90a:fa92:: with SMTP id cu18mr10998801pjb.215.1596053231946;
+        Wed, 29 Jul 2020 13:07:11 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y9sm3108940pja.13.2020.07.29.13.07.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 13:07:11 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 13:03:42 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
+        agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org
+Subject: Re: [PATCH v5 3/5] media: venus: core: Add support for opp
+ tables/perf voting
+Message-ID: <20200729200342.GJ229995@builder.lan>
+References: <1596007005-30425-1-git-send-email-rnayak@codeaurora.org>
+ <1596007005-30425-4-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhSgcOS79spSuFDMukw2TnLZfBh2p4BWGfoV_CGUS8b77w@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <1596007005-30425-4-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-05 11:09, Paul Moore wrote:
-> On Sat, Jun 27, 2020 at 9:22 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >
-> > Implement the proc fs write to set the audit container identifier of a
-> > process, emitting an AUDIT_CONTAINER_OP record to document the event.
-> >
-> > This is a write from the container orchestrator task to a proc entry of
-> > the form /proc/PID/audit_containerid where PID is the process ID of the
-> > newly created task that is to become the first task in a container, or
-> > an additional task added to a container.
-> >
-> > The write expects up to a u64 value (unset: 18446744073709551615).
-> >
-> > The writer must have capability CAP_AUDIT_CONTROL.
-> >
-> > This will produce a record such as this:
-> >   type=CONTAINER_OP msg=audit(2018-06-06 12:39:29.636:26949) : op=set opid=2209 contid=123456 old-contid=18446744073709551615
-> >
-> > The "op" field indicates an initial set.  The "opid" field is the
-> > object's PID, the process being "contained".  New and old audit
-> > container identifier values are given in the "contid" fields.
-> >
-> > It is not permitted to unset the audit container identifier.
-> > A child inherits its parent's audit container identifier.
-> >
-> > Store the audit container identifier in a refcounted kernel object that
-> > is added to the master list of audit container identifiers.  This will
-> > allow multiple container orchestrators/engines to work on the same
-> > machine without danger of inadvertantly re-using an existing identifier.
-> > It will also allow an orchestrator to inject a process into an existing
-> > container by checking if the original container owner is the one
-> > injecting the task.  A hash table list is used to optimize searches.
-> >
-> > Please see the github audit kernel issue for the main feature:
-> >   https://github.com/linux-audit/audit-kernel/issues/90
-> > Please see the github audit userspace issue for supporting additions:
-> >   https://github.com/linux-audit/audit-userspace/issues/51
-> > Please see the github audit testsuiite issue for the test case:
-> >   https://github.com/linux-audit/audit-testsuite/issues/64
-> > Please see the github audit wiki for the feature overview:
-> >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> >
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > Acked-by: Serge Hallyn <serge@hallyn.com>
-> > Acked-by: Steve Grubb <sgrubb@redhat.com>
-> > Acked-by: Neil Horman <nhorman@tuxdriver.com>
-> > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
-> > ---
-> >  fs/proc/base.c             |  36 +++++++++++
-> >  include/linux/audit.h      |  33 ++++++++++
-> >  include/uapi/linux/audit.h |   2 +
-> >  kernel/audit.c             | 148 +++++++++++++++++++++++++++++++++++++++++++++
-> >  kernel/audit.h             |   8 +++
-> >  5 files changed, 227 insertions(+)
+On Wed 29 Jul 00:16 PDT 2020, Rajendra Nayak wrote:
+
+> Add support to add OPP tables and perf voting on the OPP powerdomain.
+> This is needed so venus votes on the corresponding performance state
+> for the OPP powerdomain along with setting the core clock rate.
 > 
-> ...
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> ---
+>  drivers/media/platform/qcom/venus/core.c       |  2 +
+>  drivers/media/platform/qcom/venus/core.h       |  5 ++
+>  drivers/media/platform/qcom/venus/pm_helpers.c | 92 ++++++++++++++++++++++++--
+>  3 files changed, 92 insertions(+), 7 deletions(-)
 > 
-> > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > index c2150415f9df..2800d4f1a2a8 100644
-> > --- a/include/linux/audit.h
-> > +++ b/include/linux/audit.h
-> > @@ -692,6 +715,16 @@ static inline bool audit_loginuid_set(struct task_struct *tsk)
-> >         return uid_valid(audit_get_loginuid(tsk));
-> >  }
-> >
-> > +static inline bool audit_contid_valid(u64 contid)
-> > +{
-> > +       return contid != AUDIT_CID_UNSET;
-> > +}
-> > +
-> > +static inline bool audit_contid_set(struct task_struct *tsk)
-> > +{
-> > +       return audit_contid_valid(audit_get_contid(tsk));
-> > +}
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index bfcaba3..a3e98a5 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -525,6 +525,7 @@ static const struct venus_resources sdm845_res_v2 = {
+>  	.vcodec_clks_num = 2,
+>  	.vcodec_pmdomains = { "venus", "vcodec0", "vcodec1" },
+>  	.vcodec_pmdomains_num = 3,
+> +	.opp_pmdomain = (const char *[]) { "cx", NULL },
+>  	.vcodec_num = 2,
+>  	.max_load = 3110400,	/* 4096x2160@90 */
+>  	.hfi_version = HFI_VERSION_4XX,
+> @@ -570,6 +571,7 @@ static const struct venus_resources sc7180_res = {
+>  	.vcodec_clks_num = 2,
+>  	.vcodec_pmdomains = { "venus", "vcodec0" },
+>  	.vcodec_pmdomains_num = 2,
+> +	.opp_pmdomain = (const char *[]) { "cx", NULL },
+>  	.vcodec_num = 1,
+>  	.hfi_version = HFI_VERSION_4XX,
+>  	.vmem_id = VIDC_RESOURCE_NONE,
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> index 7118612..b0cc544 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -62,6 +62,7 @@ struct venus_resources {
+>  	unsigned int vcodec_clks_num;
+>  	const char * const vcodec_pmdomains[VIDC_PMDOMAINS_NUM_MAX];
+>  	unsigned int vcodec_pmdomains_num;
+> +	const char **opp_pmdomain;
+>  	unsigned int vcodec_num;
+>  	enum hfi_version hfi_version;
+>  	u32 max_load;
+> @@ -145,8 +146,12 @@ struct venus_core {
+>  	struct clk *vcodec1_clks[VIDC_VCODEC_CLKS_NUM_MAX];
+>  	struct icc_path *video_path;
+>  	struct icc_path *cpucfg_path;
+> +	struct opp_table *opp_table;
+> +	bool has_opp_table;
+>  	struct device_link *pd_dl_venus;
+>  	struct device *pmdomains[VIDC_PMDOMAINS_NUM_MAX];
+> +	struct device_link *opp_dl_venus;
+> +	struct device *opp_pmdomain;
+>  	struct video_device *vdev_dec;
+>  	struct video_device *vdev_enc;
+>  	struct v4l2_device v4l2_dev;
+> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+> index abf9315..0308d20 100644
+> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
+> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+>  #include <linux/pm_domain.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/types.h>
+>  #include <media/v4l2-mem2mem.h>
+> @@ -66,10 +67,9 @@ static void core_clks_disable(struct venus_core *core)
+>  
+>  static int core_clks_set_rate(struct venus_core *core, unsigned long freq)
+>  {
+> -	struct clk *clk = core->clks[0];
+>  	int ret;
+>  
+> -	ret = clk_set_rate(clk, freq);
+> +	ret = dev_pm_opp_set_rate(core->dev, freq);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -740,13 +740,16 @@ static int venc_power_v4(struct device *dev, int on)
+>  
+>  static int vcodec_domains_get(struct device *dev)
+>  {
+> +	int ret;
+> +	struct opp_table *opp_table;
+> +	struct device **opp_virt_dev;
+>  	struct venus_core *core = dev_get_drvdata(dev);
+>  	const struct venus_resources *res = core->res;
+>  	struct device *pd;
+>  	unsigned int i;
+>  
+>  	if (!res->vcodec_pmdomains_num)
+> -		return -ENODEV;
+> +		goto skip_pmdomains;
+>  
+>  	for (i = 0; i < res->vcodec_pmdomains_num; i++) {
+>  		pd = dev_pm_domain_attach_by_name(dev,
+> @@ -763,7 +766,41 @@ static int vcodec_domains_get(struct device *dev)
+>  	if (!core->pd_dl_venus)
+>  		return -ENODEV;
+>  
+> +skip_pmdomains:
+> +	if (!core->has_opp_table)
+> +		return 0;
+> +
+> +	/* Attach the power domain for setting performance state */
+> +	opp_table = dev_pm_opp_attach_genpd(dev, res->opp_pmdomain, &opp_virt_dev);
+> +	if (IS_ERR(opp_table)) {
+> +		ret = PTR_ERR(opp_table);
+> +		goto opp_attach_err;
+> +	}
+> +
+> +	core->opp_pmdomain = *opp_virt_dev;
+> +	core->opp_dl_venus = device_link_add(dev, core->opp_pmdomain,
+> +					     DL_FLAG_RPM_ACTIVE |
+> +					     DL_FLAG_PM_RUNTIME |
+> +					     DL_FLAG_STATELESS);
+> +	if (!core->opp_dl_venus) {
+> +		ret = -ENODEV;
+> +		goto opp_dl_add_err;
+> +	}
+> +
+>  	return 0;
+> +
+> +opp_dl_add_err:
+> +	dev_pm_domain_detach(core->opp_pmdomain, true);
+> +opp_attach_err:
+> +	if (core->pd_dl_venus) {
+> +		device_link_del(core->pd_dl_venus);
+> +		for (i = 0; i < res->vcodec_pmdomains_num; i++) {
+> +			if (IS_ERR_OR_NULL(core->pmdomains[i]))
+> +				continue;
+> +			dev_pm_domain_detach(core->pmdomains[i], true);
+> +		}
+> +	}
+> +	return ret;
+>  }
+>  
+>  static void vcodec_domains_put(struct device *dev)
+> @@ -773,7 +810,7 @@ static void vcodec_domains_put(struct device *dev)
+>  	unsigned int i;
+>  
+>  	if (!res->vcodec_pmdomains_num)
+> -		return;
+> +		goto skip_pmdomains;
+>  
+>  	if (core->pd_dl_venus)
+>  		device_link_del(core->pd_dl_venus);
+> @@ -783,6 +820,15 @@ static void vcodec_domains_put(struct device *dev)
+>  			continue;
+>  		dev_pm_domain_detach(core->pmdomains[i], true);
+>  	}
+> +
+> +skip_pmdomains:
+> +	if (!core->has_opp_table)
+> +		return;
+> +
+> +	if (core->opp_dl_venus)
+> +		device_link_del(core->opp_dl_venus);
+> +
+> +	dev_pm_domain_detach(core->opp_pmdomain, true);
+>  }
+>  
+>  static int core_get_v4(struct device *dev)
+> @@ -811,19 +857,46 @@ static int core_get_v4(struct device *dev)
+>  	if (legacy_binding)
+>  		return 0;
+>  
+> +	core->opp_table = dev_pm_opp_set_clkname(dev, "core");
+> +	if (IS_ERR(core->opp_table))
+> +		return PTR_ERR(core->opp_table);
+> +
+> +	if (core->res->opp_pmdomain) {
+> +		ret = dev_pm_opp_of_add_table(dev);
+> +		if (!ret) {
+> +			core->has_opp_table = true;
+> +		} else if (ret != -ENODEV) {
+> +			dev_err(dev, "invalid OPP table in device tree\n");
+> +			dev_pm_opp_put_clkname(core->opp_table);
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	ret = vcodec_domains_get(dev);
+> -	if (ret)
+> +	if (ret) {
+> +		if (core->has_opp_table)
+> +			dev_pm_opp_of_remove_table(dev);
+> +		dev_pm_opp_put_clkname(core->opp_table);
+>  		return ret;
+> +	}
+>  
+>  	return 0;
+>  }
+>  
+>  static void core_put_v4(struct device *dev)
+>  {
+> +	struct venus_core *core = dev_get_drvdata(dev);
+> +
+>  	if (legacy_binding)
+>  		return;
+>  
+>  	vcodec_domains_put(dev);
+> +
+> +	if (core->has_opp_table)
+> +		dev_pm_opp_of_remove_table(dev);
+> +	if (core->opp_table)
+> +		dev_pm_opp_put_clkname(core->opp_table);
+> +
+>  }
+>  
+>  static int core_power_v4(struct device *dev, int on)
+> @@ -831,10 +904,15 @@ static int core_power_v4(struct device *dev, int on)
+>  	struct venus_core *core = dev_get_drvdata(dev);
+>  	int ret = 0;
+>  
+> -	if (on == POWER_ON)
+> +	if (on == POWER_ON) {
+>  		ret = core_clks_enable(core);
+> -	else
+> +	} else {
+> +		/* Drop the performance state vote */
+> +		if (core->opp_pmdomain)
+> +			dev_pm_opp_set_rate(dev, 0);
+> +
+>  		core_clks_disable(core);
+> +	}
+>  
+>  	return ret;
+>  }
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
 > 
-> This is quasi-nitpicky, but it seems like audit_contid_valid() and
-> audit_contid_set() should be moved to kernel/audit.h if possible
-> (possibly even kernel/audit.c).  Maybe I'll see something later in the
-> patchset, but right now I'm struggling to think of why anyone outside
-> of audit would need to call these functions.
-
-This was historical made moot by the conversion to contobj.  I moved
-them to kernel/audit.c and then just went with an open coded test once
-and even just looking at the existance of a contobj.
-
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index 5d8147a29291..6d387793f702 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -138,6 +138,13 @@ struct auditd_connection {
-> >
-> >  /* Hash for inode-based rules */
-> >  struct list_head audit_inode_hash[AUDIT_INODE_BUCKETS];
-> > +/* Hash for contid object lists */
-> > +struct list_head audit_contid_hash[AUDIT_CONTID_BUCKETS];
-> > +/* Lock all additions and deletions to the contid hash lists, assignment
-> > + * of container objects to tasks.  There should be no need for
-> > + * interaction with tasklist_lock
-> > + */
-> > +static DEFINE_SPINLOCK(audit_contobj_list_lock);
-> >
-> >  static struct kmem_cache *audit_buffer_cache;
-> >
-> > @@ -212,6 +219,33 @@ void __init audit_task_init(void)
-> >                                              0, SLAB_PANIC, NULL);
-> >  }
-> >
-> > +/* rcu_read_lock must be held by caller unless new */
-> > +static struct audit_contobj *_audit_contobj_hold(struct audit_contobj *cont)
-> > +{
-> > +       if (cont)
-> > +               refcount_inc(&cont->refcount);
-> > +       return cont;
-> > +}
-> > +
-> > +static struct audit_contobj *_audit_contobj_get(struct task_struct *tsk)
-> > +{
-> > +       if (!tsk->audit)
-> > +               return NULL;
-> > +       return _audit_contobj_hold(tsk->audit->cont);
-> > +}
-> > +
-> > +/* rcu_read_lock must be held by caller */
-> > +static void _audit_contobj_put(struct audit_contobj *cont)
-> > +{
-> > +       if (!cont)
-> > +               return;
-> > +       if (refcount_dec_and_test(&cont->refcount)) {
-> > +               put_task_struct(cont->owner);
-> > +               list_del_rcu(&cont->list);
-> 
-> You should check your locking; I'm used to seeing exclusive locks
-> (e.g. the spinlock) around list adds/removes, it just reads/traversals
-> that can be done with just the RCU lock held.
-
-Ok, I've redone the locking yet again.  I knew this on one level but
-that didn't translate consistently to code...
-
-> > +               kfree_rcu(cont, rcu);
-> > +       }
-> > +}
-> 
-> Another nitpick, but it might be nice to have similar arguments to the
-> _get() and _put() functions, e.g. struct audit_contobj, but that is
-> some serious bikeshedding (basically rename _hold() to _get() and
-> rename _hold to audit_task_contid_hold() or similar).
-
-I have some idea what you are trying to say, but I think you misspoke.
-Did you mean rename _hold to _get, rename _get to
-audit_task_contobj_hold()?
-
-> >  /**
-> >   * audit_alloc - allocate an audit info block for a task
-> >   * @tsk: task
-> > @@ -232,6 +266,9 @@ int audit_alloc(struct task_struct *tsk)
-> >         }
-> >         info->loginuid = audit_get_loginuid(current);
-> >         info->sessionid = audit_get_sessionid(current);
-> > +       rcu_read_lock();
-> > +       info->cont = _audit_contobj_get(current);
-> > +       rcu_read_unlock();
-> 
-> The RCU locks aren't strictly necessary here, are they?  In fact I
-> suppose we could probably just replace the _get() call with a
-> refcount_set(1) just as we do in audit_set_contid(), yes?
-
-I don't understand what you are getting at here.  It needs a *contobj,
-along with bumping up the refcount of the existing contobj.
-
-> >         tsk->audit = info;
-> >
-> >         ret = audit_alloc_syscall(tsk);
-> > @@ -246,6 +283,7 @@ int audit_alloc(struct task_struct *tsk)
-> >  struct audit_task_info init_struct_audit = {
-> >         .loginuid = INVALID_UID,
-> >         .sessionid = AUDIT_SID_UNSET,
-> > +       .cont = NULL,
-> >  #ifdef CONFIG_AUDITSYSCALL
-> >         .ctx = NULL,
-> >  #endif
-> > @@ -262,6 +300,9 @@ void audit_free(struct task_struct *tsk)
-> >         struct audit_task_info *info = tsk->audit;
-> >
-> >         audit_free_syscall(tsk);
-> > +       rcu_read_lock();
-> > +       _audit_contobj_put(tsk->audit->cont);
-> > +       rcu_read_unlock();
-> >         /* Freeing the audit_task_info struct must be performed after
-> >          * audit_log_exit() due to need for loginuid and sessionid.
-> >          */
-> > @@ -1709,6 +1750,9 @@ static int __init audit_init(void)
-> >         for (i = 0; i < AUDIT_INODE_BUCKETS; i++)
-> >                 INIT_LIST_HEAD(&audit_inode_hash[i]);
-> >
-> > +       for (i = 0; i < AUDIT_CONTID_BUCKETS; i++)
-> > +               INIT_LIST_HEAD(&audit_contid_hash[i]);
-> > +
-> >         mutex_init(&audit_cmd_mutex.lock);
-> >         audit_cmd_mutex.owner = NULL;
-> >
-> > @@ -2410,6 +2454,110 @@ int audit_signal_info(int sig, struct task_struct *t)
-> >         return audit_signal_info_syscall(t);
-> >  }
-> >
-> > +/*
-> > + * audit_set_contid - set current task's audit contid
-> > + * @task: target task
-> > + * @contid: contid value
-> > + *
-> > + * Returns 0 on success, -EPERM on permission failure.
-> > + *
-> > + * If the original container owner goes away, no task injection is
-> > + * possible to an existing container.
-> > + *
-> > + * Called (set) from fs/proc/base.c::proc_contid_write().
-> > + */
-> > +int audit_set_contid(struct task_struct *task, u64 contid)
-> > +{
-> > +       int rc = 0;
-> > +       struct audit_buffer *ab;
-> > +       struct audit_contobj *oldcont = NULL;
-> > +
-> > +       task_lock(task);
-> > +       /* Can't set if audit disabled */
-> > +       if (!task->audit) {
-> > +               task_unlock(task);
-> > +               return -ENOPROTOOPT;
-> > +       }
-> 
-> See my question/comment in patch 1/13; this check may not be needed or
-> it may need to be changed to something other than "!task->audit".
-> 
-> > +       read_lock(&tasklist_lock);
-> > +       /* Don't allow the contid to be unset */
-> > +       if (!audit_contid_valid(contid)) {
-> > +               rc = -EINVAL;
-> > +               goto unlock;
-> > +       }
-> > +       /* if we don't have caps, reject */
-> > +       if (!capable(CAP_AUDIT_CONTROL)) {
-> > +               rc = -EPERM;
-> > +               goto unlock;
-> > +       }
-> > +       /* if task has children or is not single-threaded, deny */
-> > +       if (!list_empty(&task->children) ||
-> > +           !(thread_group_leader(task) && thread_group_empty(task))) {
-> > +               rc = -EBUSY;
-> > +               goto unlock;
-> > +       }
-> > +       /* if contid is already set, deny */
-> > +       if (audit_contid_set(task))
-> > +               rc = -EEXIST;
-> > +unlock:
-> 
-> Can we move the "unlock" target to the end of the function where it
-> just handles the unlocking and returns an error, including the
-> AUDIT_CONTAINER_OP record if necessary?  From what I can see we only
-> jump to "unlock" in case of error where we are not going to set the
-> audit container ID, yet the "unlock" target is placed in a misleading
-> location in the middle of the function.  It may be that everything
-> works correctly, but I would argue this is a bad practice that
-> increases the likelihood of buggy behavior in future code changes.
-> 
-> If you can't find way to arrange the code nicely, just duplicate the
-> "tasklist_lock" unlock operation in the error handlers before jumping
-> down to the end of the function.  It isn't perfect, but I believe it
-> will be a lot less fragile than the current approach.
-
-I think it makes most sense to convert it back to an else if ladder that
-will simplify things a bit and make if flow a bit better.
-
-> > +       read_unlock(&tasklist_lock);
-> > +       rcu_read_lock();
-> > +       oldcont = _audit_contobj_get(task);
-> > +       if (!rc) {
-> > +               struct audit_contobj *cont = NULL, *newcont = NULL;
-> > +               int h = audit_hash_contid(contid);
-> > +
-> > +               spin_lock(&audit_contobj_list_lock);
-> > +               list_for_each_entry_rcu(cont, &audit_contid_hash[h], list)
-> > +                       if (cont->id == contid) {
-> > +                               /* task injection to existing container */
-> > +                               if (current == cont->owner) {
-> > +                                       _audit_contobj_hold(cont);
-> > +                                       newcont = cont;
-> > +                               } else {
-> > +                                       rc = -ENOTUNIQ;
-> > +                                       spin_unlock(&audit_contobj_list_lock);
-> > +                                       goto conterror;
-> > +                               }
-> > +                               break;
-> > +                       }
-> > +               if (!newcont) {
-> > +                       newcont = kmalloc(sizeof(*newcont), GFP_ATOMIC);
-> > +                       if (newcont) {
-> > +                               INIT_LIST_HEAD(&newcont->list);
-> > +                               newcont->id = contid;
-> > +                               newcont->owner = get_task_struct(current);
-> > +                               refcount_set(&newcont->refcount, 1);
-> > +                               list_add_rcu(&newcont->list,
-> > +                                            &audit_contid_hash[h]);
-> > +                       } else {
-> > +                               rc = -ENOMEM;
-> > +                               spin_unlock(&audit_contobj_list_lock);
-> > +                               goto conterror;
-> > +                       }
-> > +               }
-> > +               spin_unlock(&audit_contobj_list_lock);
-> > +               task->audit->cont = newcont;
-> > +               _audit_contobj_put(oldcont);
-> > +       }
-> > +conterror:
-> > +       task_unlock(task);
-> > +
-> > +       if (!audit_enabled)
-> > +               return rc;
-> > +
-> > +       ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_CONTAINER_OP);
-> > +       if (!ab)
-> > +               return rc;
-> > +
-> > +       audit_log_format(ab,
-> > +                        "op=set opid=%d contid=%llu old-contid=%llu",
-> > +                        task_tgid_nr(task), contid, oldcont ? oldcont->id : -1);
-> > +       _audit_contobj_put(oldcont);
-> > +       rcu_read_unlock();
-> > +       audit_log_end(ab);
-> > +       return rc;
-> > +}
-> 
-> --
-> paul moore
-> www.paul-moore.com
-> 
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
