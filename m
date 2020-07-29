@@ -2,112 +2,98 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3584C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 050BF2075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596050844;
-	bh=cVknys6W6Z5keIX/5AC6X889ldEK6JEC+prcZXLCGsQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QJ1oJyrI3N62y0UMxrd2p+rjMKVpf1TTkhGn2yQTZ9mGUJEwb0HkizeEoP6fDGhiR
-	 MfDfFFp5imwlOvrbrd2obheZs+q7hOZDqjQ34RxH8ljam/zYPQldELKcsRvgtyp5pz
-	 6JA5h+gtW4k0HHnKbr74Dk8dG7XZluYl2DyS/CwU=
+	by mail.kernel.org (Postfix) with ESMTP id A63802068F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:28:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="vbKl+EIC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgG2T1W (ORCPT
+        id S1726772AbgG2T2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 15:27:22 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45903 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbgG2T1W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 15:27:22 -0400
-Received: by mail-ed1-f65.google.com with SMTP id di22so11066729edb.12;
-        Wed, 29 Jul 2020 12:27:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SqzkB1yMtwTwe0QIggl9r67QOv8/59iTGPFZ5uluyfk=;
-        b=V6gXlCgw8OYT3T8WZTMOlwE4ElpCGj9XiQN1hXTjf6Nq62ZTZwsSolnaqYDcisqeUt
-         V1dWoWA5WyB5UtF36mLijt16mygMPV7saHjzfRFJvdJ+0v51uPIL3QBAJH0SY4QK1Oa8
-         brgpOA8VHlM3TTjk54V2NnRd2tUBTNTxO9pq77VhTw2RUQ9eI4swcd+KD+761R7dh/m4
-         p18Amr7LeouXZu/4Gta1Doltpe9WhzhmPOqi+gZ1sAsGlbMazhgaNrYJcN3Bw5/3eCHj
-         8+Mugk6sUFt0HBwVMiPYq7PRxKVLlezelSbcuyz29AwMjnzWDvdsvjtVZy9iGklsxiWa
-         v84Q==
-X-Gm-Message-State: AOAM533lr+juw8xmO2N6B9X7V0dGEaQWWpYIOw1OwnvG3oRSo8WnDwt5
-        1Td3AraM5T908mShvz4aqUzYWJqgevQ=
-X-Google-Smtp-Source: ABdhPJxObnVIyDyOgqaH4yWPwEYKAEvkNYKHKyCvuebyOPXp7LV+HEj+KEmaBw3MKXw6vmabtZS16g==
-X-Received: by 2002:aa7:c697:: with SMTP id n23mr52240edq.50.1596050839891;
-        Wed, 29 Jul 2020 12:27:19 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id x16sm2680404edr.52.2020.07.29.12.27.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jul 2020 12:27:19 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 21:27:17 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: Fix kerneldoc of pci_vc_do_save_buffer()
-Message-ID: <20200729192717.GA7457@kozik-lap>
-References: <20200729062620.4168-1-krzk@kernel.org>
- <20200729192416.GA1952120@bjorn-Precision-5520>
+        Wed, 29 Jul 2020 15:28:51 -0400
+Received: from vern.gendns.com ([98.142.107.122]:38636 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726365AbgG2T2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 15:28:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=5SF0hS7MkjQG4xi6yfTw/jT+y1owMkznxqXdW5rNR2k=; b=vbKl+EIC0kzrXinDsh/59cXAl4
+        YimkBAX2zxmID/NFwzUOLOxnaNLnLIA9z2jcu0tZJl30l0SHZ3J2gZVK9fKFG0VHoFf7k95UCf8FF
+        1gESSNMTIrDicWkGdc3CJpfc6siwX6V+hBZlbOC74qwiNoMiDrD0dj9AIBgOvQ7KCFrP6GNe35dxR
+        yDGfkFW5KJwRFhKJPIO4qSy421F7quO45Wfqpxo25tU0FZxAKYZEoHa4ghbZT5KyF+WbGzhXyjjRt
+        ZNKcWWEtNSP96nRv/LESXfrJ1pnuY5uX4Z6jlw/RNtmQ4hbVTT4uvH9w/HBmK6gX5h+1sCj5vaDwU
+        chZQfrZA==;
+Received: from [2600:1700:4830:165f::19e] (port=43762)
+        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <david@lechnology.com>)
+        id 1k0rkq-0004vP-Os; Wed, 29 Jul 2020 15:28:44 -0400
+Subject: Re: [PATCH v4 5/5] irqchip/irq-pruss-intc: Add support for ICSSG INTC
+ on K3 SoCs
+To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        s-anna@ti.com
+Cc:     robh+dt@kernel.org, lee.jones@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        wmills@ti.com, praneeth@ti.com
+References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1595927918-19845-6-git-send-email-grzegorz.jaszczyk@linaro.org>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <015909fa-794c-c938-d944-897985475d20@lechnology.com>
+Date:   Wed, 29 Jul 2020 14:28:42 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200729192416.GA1952120@bjorn-Precision-5520>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1595927918-19845-6-git-send-email-grzegorz.jaszczyk@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 02:24:16PM -0500, Bjorn Helgaas wrote:
-> On Wed, Jul 29, 2020 at 08:26:20AM +0200, Krzysztof Kozlowski wrote:
-> > Fix W=1 compile warnings (invalid kerneldoc):
-> > 
-> >     drivers/pci/vc.c:188: warning: Excess function parameter 'name' description in 'pci_vc_do_save_buffer'
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+On 7/28/20 4:18 AM, Grzegorz Jaszczyk wrote:
+> From: Suman Anna <s-anna@ti.com>
 > 
-> This looks great, but would you mind doing all the ones in drivers/pci
-> at the same time?  When I tested this, I also found the following, and
-> I don't think it's worth doing them one at a time:
+> The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS IP,
+> commonly called ICSSG. The PRUSS INTC present within the ICSSG supports
+> more System Events (160 vs 64), more Interrupt Channels and Host Interrupts
+> (20 vs 10) compared to the previous generation PRUSS INTC instances. The
+> first 2 and the last 10 of these host interrupt lines are used by the
+> PRU and other auxiliary cores and sub-modules within the ICSSG, with 8
+> host interrupts connected to MPU. The host interrupts 5, 6, 7 are also
+> connected to the other ICSSG instances within the SoC and can be
+> partitioned as per system integration through the board dts files.
 > 
->   $ make W=1 drivers/pci/
->   drivers/pci/hotplug/acpi_pcihp.c:69: warning: Function parameter or member 'pdev' not described in 'acpi_get_hp_hw_control_from_firmware'
->   drivers/pci/hotplug/acpi_pcihp.c:69: warning: Excess function parameter 'dev' description in 'acpi_get_hp_hw_control_from_firmware'
->   drivers/pci/hotplug/acpi_pcihp.c:199: warning: Function parameter or member 'handle' not described in 'acpi_pci_detect_ejectable'
->   drivers/pci/endpoint/functions/pci-epf-test.c:189: warning: Function parameter or member 'epf_test' not described in 'pci_epf_test_clean_dma_chan'
->   drivers/pci/endpoint/functions/pci-epf-test.c:189: warning: Excess function parameter 'epf' description in 'pci_epf_test_clean_dma_chan'
->   drivers/pci/endpoint/pci-ep-cfs.c:17: warning: Function parameter or member 'functions_idr' not described in 'DEFINE_IDR'
->   drivers/pci/endpoint/pci-epc-core.c:18: warning: cannot understand function prototype: 'struct class *pci_epc_class; '
->   drivers/pci/endpoint/pci-epf-core.c:18: warning: Function parameter or member 'pci_epf_mutex' not described in 'DEFINE_MUTEX'
->   drivers/pci/endpoint/pci-epf-core.c:80: warning: Function parameter or member 'epf' not described in 'pci_epf_free_space'
->   drivers/pci/endpoint/pci-epf-core.c:107: warning: Function parameter or member 'epf' not described in 'pci_epf_alloc_space'
->   drivers/pci/endpoint/pci-epc-mem.c:16: warning: Incorrect use of kernel-doc format:  * pci_epc_mem_get_order() - determine the allocation order of a memory size
->   drivers/pci/endpoint/pci-epc-mem.c:24: warning: Function parameter or member 'mem' not described in 'pci_epc_mem_get_order'
->   drivers/pci/endpoint/pci-epc-mem.c:24: warning: Function parameter or member 'size' not described in 'pci_epc_mem_get_order'
->   drivers/pci/setup-bus.c:62: warning: Function parameter or member 'min_align' not described in 'add_to_list'
->   drivers/pci/vc.c:188: warning: Excess function parameter 'name' description in 'pci_vc_do_save_buffer'
->   drivers/pci/of.c:262: warning: Function parameter or member 'ib_resources' not described in 'devm_of_pci_get_host_bridge_resources'
->   drivers/pci/ats.c:196: warning: Function parameter or member 'pdev' not described in 'pci_enable_pri'
->   drivers/pci/ats.c:196: warning: Function parameter or member 'reqs' not described in 'pci_enable_pri'
->   drivers/pci/pci-pf-stub.c:20: warning: cannot understand function prototype: 'const struct pci_device_id pci_pf_stub_whitelist[] = '
+> Enhance the PRUSS INTC driver to add support for this ICSSG INTC
+> instance.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+> ---
 
-Sure, I can work on more of them. Somehow this one got enabled on my
-build (usually it does not contain PCI) and I decided to fix it.
-
-It's a compiler warning so still even one-at-a-time brings us closer to
-clean builds.
-
-Best regards,
-Krzysztof
-
+There is not much left in this patch. Might as well squash this into
+"irqchip/irq-pruss-intc: Add a PRUSS irqchip driver for PRUSS interrupts".
