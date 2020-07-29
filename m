@@ -2,179 +2,84 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8F7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF06C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF6292070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:36:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFhHBUQj"
+	by mail.kernel.org (Postfix) with ESMTP id DBC3F20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 06:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgG2Ggp (ORCPT
+        id S1726718AbgG2GlZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 02:36:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43520 "EHLO
+        Wed, 29 Jul 2020 02:41:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgG2Ggo (ORCPT
+        with ESMTP id S1726314AbgG2GlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 02:36:44 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39780C061794;
-        Tue, 28 Jul 2020 23:36:43 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p3so13727425pgh.3;
-        Tue, 28 Jul 2020 23:36:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IsasfM56692RUOErbgn2ABZzJ6c631XfiLeQVHWEUsI=;
-        b=eFhHBUQj6ipfDY5v+hKk8aL0YcnAalVllbCOZzgH++rlzaJSlNhw7c4eAcRiAVPB5i
-         iNYjMfATnkf88ldCnPAx+oG14Jl86MX6aZB07gcYeDON1lhf0bHbgYUcoNtfheqk5Aqv
-         AyA9x8JmA04+sJL6ChCmRJb4j0d7YgmUV5eqG4JgpbmvLeU3bdpe3+IQUvCqMwMwYtLR
-         h6evFRiHi1yCCMkp1+SJbOl8nC2OOQPgiRds9csNGeXqwdeV0pGPeYB1FpXk6+g6InuN
-         HS6xzNni5MbR7u/TS5YRQLYH2Ab8VfxaUbZlU6xF5c9iSdws7+EPPpQExE9u6tBWqfRN
-         tplA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IsasfM56692RUOErbgn2ABZzJ6c631XfiLeQVHWEUsI=;
-        b=IC8veYICTIQMD3GBEjrybjV/rRq/6e+ErTTkjECHs33zBQsCgDNohTcP8FWyDtmA7W
-         +Cr0tZJNdMOR9AjEsZjdSk1eTa3FYz1jP6lSuUHdRxyFeI0kMaODTkGL5D+WRE5pObU4
-         hdzGrvGdmaawjmH/553fJPnWSM3oMWk8fEANLoAQslyVa2O5V6OfMUA3xygNwWPRmUhr
-         /La4GftOmACizbsVIpQ4j6Adr+PWYfWKWQ2XwvVA8gloTx5D46mPyayX2dMd4wt/a7jl
-         oDKUHp3/D14Dx+5OqFzPHyeSdlnnyv5v38Feifi9RPPOrocGwpJBnfUHHFNsLL8enLqf
-         Br4g==
-X-Gm-Message-State: AOAM530WNv0KfxHSzSkQUUgxQcype39ukBZgSpnVBDqgip+S84low030
-        mwL9/VxNS9LSRcMcwK3wnf8=
-X-Google-Smtp-Source: ABdhPJzDxjQQTnVon7UXunhTQddxypSgdNT5v7VIizUudg7wcWuNzDnq1EeBjQdkGAoL/GmxLh1RgQ==
-X-Received: by 2002:a63:5b55:: with SMTP id l21mr28743015pgm.348.1596004602248;
-        Tue, 28 Jul 2020 23:36:42 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id y6sm1053424pfr.61.2020.07.28.23.36.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 23:36:41 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 23:36:38 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Roy Im <roy.im.opensource@diasemi.com>
-Cc:     Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Support Opensource <support.opensource@diasemi.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v18 3/3] Input: new da7280 haptic driver
-Message-ID: <20200729063638.GY1665100@dtor-ws>
-References: <cover.1595991580.git.Roy.Im@diasemi.com>
- <23b3470401ec5cf525add8e1227cb67586b9f294.1595991580.git.Roy.Im@diasemi.com>
+        Wed, 29 Jul 2020 02:41:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B2FDC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jul 2020 23:41:25 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k0fmD-0007tn-T3; Wed, 29 Jul 2020 08:41:21 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k0fmD-0003Ai-G8; Wed, 29 Jul 2020 08:41:21 +0200
+Message-ID: <dd98ed496cedfceec3d41064e95f05b8d3adcca1.camel@pengutronix.de>
+Subject: Re: [PATCH] reset: Fix and extend kerneldoc
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org
+Date:   Wed, 29 Jul 2020 08:41:21 +0200
+In-Reply-To: <20200728171011.28412-1-krzk@kernel.org>
+References: <20200728171011.28412-1-krzk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23b3470401ec5cf525add8e1227cb67586b9f294.1595991580.git.Roy.Im@diasemi.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roy,
+Hi Krzysztof,
 
-On Wed, Jul 29, 2020 at 11:59:40AM +0900, Roy Im wrote:
-> Adds support for the Dialog DA7280 LRA/ERM Haptic Driver with
-> multiple mode and integrated waveform memory and wideband support.
-> It communicates via an I2C bus to the device.
-
-A few questions/suggestions...
-
+On Tue, 2020-07-28 at 19:10 +0200, Krzysztof Kozlowski wrote:
+> Fix W=1 compile warnings (invalid kerneldoc):
 > 
-> Reviewed-by: Jes Sorensen <Jes.Sorensen@gmail.com>.
+>     drivers/reset/core.c:50: warning: Function parameter or member 'array' not described in 'reset_control'
+>     drivers/reset/core.c:50: warning: Function parameter or member 'deassert_count' not described in 'reset_control'
 > 
-> Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
-> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
-> v18:
-> 	- Corrected comments in Kconfig
-> 	- Updated to preferred style for multi line comments in c file.
-> v17:
-> 	- fixed an issue.
-> v16:
-> 	- Corrected some code and updated description in Kconfig.
-> v15:
-> 	- Removed some defines and updated some comments.
-> v14:
-> 	- Updated pwm related code, alignments and comments.
-> v13:
-> 	- Updated some conditions in pwm function and alignments.
-> v12: No changes.
-> v11: 
-> 	- Updated the pwm related code, comments and typo.
-> v10: 
-> 	- Updated the pwm related function and added some comments.
-> v9: 
-> 	- Removed the header file and put the definitions into the c file.
-> 	- Updated the pwm code and error logs with %pE
+>  drivers/reset/core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+> index 01c0c7aa835c..a2df88e90011 100644
+> --- a/drivers/reset/core.c
+> +++ b/drivers/reset/core.c
+> @@ -32,7 +32,8 @@ static LIST_HEAD(reset_lookup_list);
+>   * @refcnt: Number of gets of this reset_control
+>   * @acquired: Only one reset_control may be acquired for a given rcdev and id.
+>   * @shared: Is this a shared (1), or an exclusive (0) reset_control?
+> - * @deassert_cnt: Number of times this reset line has been deasserted
+> + * @array: Is this an array of reset controls (1)?
+> + * @deassert_count: Number of times this reset line has been deasserted
+>   * @triggered_count: Number of times this reset line has been reset. Currently
+>   *                   only used for shared resets, which means that the value
+>   *                   will be either 0 or 1.
 
-I believe the %pE is to format an escaped buffer, you probably want to
-%pe (lowercase) to print errors. I am also not quite sure if we want to
-use it in cases when we have non-pointer error, or we should stick with
-%d as most of the kernel does.
+Thank you for the fix, applied to reset/next.
 
-...
-> +
-> +/* DA7280_ACTUATOR3 (Address 0x0e) */
-> +#define DA7280_IMAX_MASK			(31 << 0)
-
-We have GENMASK(h,l) macro in include/linux/bits.h that could be used
-here and in other mask definitions.
-
-> +
-> +	bool legacy;
-> +	struct delayed_work work_duration;
-> +	struct work_struct work_playback;
-> +	struct work_struct work_setgain;
-
-How do we ensure that all these works do not clash with each other?
-As far as I can see we could have the "duration" work executing
-simultaneously with playback...
-
-> +static int da7280_haptics_playback(struct input_dev *dev,
-> +				   int effect_id, int val)
-> +{
-> +	struct da7280_haptic *haptics = input_get_drvdata(dev);
-> +
-> +	if (!haptics->op_mode) {
-> +		dev_warn(haptics->dev,
-> +			 "Any effects are not uploaded yet\n");
-
-"No effects have been uploaded"?
-
-> +		return -EPERM;
-
-I'd say EINVAL.
-
-> +static DEVICE_ATTR_RW(ps_seq_id);
-> +static DEVICE_ATTR_RW(ps_seq_loop);
-> +static DEVICE_ATTR_RW(gpi_seq_id0);
-> +static DEVICE_ATTR_RW(gpi_seq_id1);
-> +static DEVICE_ATTR_RW(gpi_seq_id2);
-> +static DEVICE_ATTR_WO(patterns);
-
-Should this be a binary attribute instead of having string parsing in
-the kernel?
-
-Thanks.
-
--- 
-Dmitry
+regards
+Philipp
