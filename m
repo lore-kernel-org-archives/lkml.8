@@ -2,178 +2,649 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B443C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85960C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1498C2078E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF332078E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 02:27:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="F8T9JCyS"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="r9jqgMT8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731114AbgG2C0k (ORCPT
+        id S1731106AbgG2C1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jul 2020 22:26:40 -0400
-Received: from mail-db8eur05on2042.outbound.protection.outlook.com ([40.107.20.42]:52704
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728401AbgG2C0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jul 2020 22:26:39 -0400
+        Tue, 28 Jul 2020 22:27:16 -0400
+Received: from mga04.intel.com ([192.55.52.120]:58552 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730505AbgG2C1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jul 2020 22:27:15 -0400
+IronPort-SDR: WbOiKdx+l85NnPQIIWZ1sIxFNHdk9x908UpHxBansaJAweXD1JObDmeSHraIWa6FGY1UU+Ntzr
+ qh41oTpjYFkA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9696"; a="148805952"
+X-IronPort-AV: E=Sophos;i="5.75,408,1589266800"; 
+   d="scan'208";a="148805952"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 19:20:51 -0700
+IronPort-SDR: Dy1b5AnQgHy2z42HNq8ZQqxuGMvxIvAfYofj/mX7piStqoo1dU0OlGGxpylfUqa9Z+6CjwgWab
+ LltSXK/XkmIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,408,1589266800"; 
+   d="scan'208";a="394527816"
+Received: from orsmsx605.amr.corp.intel.com ([10.22.229.18])
+  by fmsmga001.fm.intel.com with ESMTP; 28 Jul 2020 19:20:50 -0700
+Received: from orsmsx605.amr.corp.intel.com (10.22.229.18) by
+ ORSMSX605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 28 Jul 2020 19:20:50 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ orsmsx605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 28 Jul 2020 19:20:50 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.109)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 28 Jul 2020 19:20:48 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bQdc5c7ZylctSMDsHCguuN7Bp5VQM5tBEV9LRo7NPGYwzcFPFq4a9t3GhjjB8mD1lC7dvTDf4QCuyVrYMemNg2uxgA64f+nuU6bs3LpGjiZKifBou+E3TaISM21OA9oFsrVQNfyrCka3GI9R07OWYNQGTQq3vQ0ypnNcf/vAiRJ4Wab/rpTa8Q520+uFYdanl8P908Ri/U9IHx3fsVVxbsvAwrGutH3auK0QGVB94kB63ePWWHNxqAc23cV9kdDnRk2dOd5Q5UrfXZtl6+3pgzImFm3I8o6q9qfyfxXQct0pCaN148X0R6792p5jzATyuuWt5M1JO/O0LRJ4IZLNJg==
+ b=RE9iB1FLGdTh1GT5p+L1sdeiXN1oCG81SoTKtmqQCpC7RduoXA6QKCsYdNZcKmgCXoXljrbddtE1QZC0UngHCzXeoEZV4xPOurGREgXZmcdshXj/cjDm+lTYKNAEPf7GF3EDiPX9yXbPG5E2wMrN4brOeKGYaMSkrRbej6iqOAAM/S0ebLYwyXmad4JmnWJwq6Rd15eebVbGznFu9FjZIQSoXHaHwegVThyR7rA/UosP54XdDjvTW5RmRs9OJJguCizhFAwr3xiqiT3wTFRG3kiQBzQC6uBAbvr7c2QlMYkt3PbMQsny94kQRpUwTWJk64HtReVg1av26Q8xs+UELQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YONlEwMA6CnCGfLpk0tRPQecJeVfXgQV3PfGkmU5HFk=;
- b=Xcl4EaUMYdhbA4X1/xi4Lyk7hqsAO/CVKsyqfW0n9AxSZN8cQxZOWb/k3RH7qS4rHgkdq8ccOTwd2dXwKAN9IDrf2f0HlYwYcHvdGjVWfOs2x0diG0NorDV3cxC4XN41BC7tWbIEQeOZYvD6D98QspK2QAC9Fk2+JHRLOlRhrvdK8Ryn/YH3hNvGarioZVvKMlKG9I3GlSFLvphv4Iw1it8lNGe/NZYT87Z929TxXi4SOmlysB3ZVAn6KgbLG4gDkmNB/trTkC3SLygW6rpbjxDPo49KKdO/XDADOKJvG4G+Dk3MIYfzDA54wpjBdQBuq8DfrovaNMtGtaE3+MGwqw==
+ bh=0ln4JpQBeC4lK6b7k46477WuYrp0RaCxvVaO/fxQoi4=;
+ b=bt1IS0xrbZvGY1R9z1U7zP2hn+NaTpu2tlN/mbs66FD4fe+B9DBJbMro1SUhIWSI5dU71xpbPQZcYeU667oEL3YGc57EBSMxrC/SV2dEx6/3PMGtO4/GyDTRDdyYSSXOpuGNoJkkTHovZnaCJSq6LueEOQ7xViu2NKV/6Zg6zMvFM/0PnyUOZS11dg+CPMlg10vHLJPUJLoGKnBEguMxaBeRwpkImRcoey6NlG13mLcyVx9p1EiOBvicZh1udJZrXPW20eRwY9g9uhzLOyTQHJEh4drxkSOdR34COcfJ8mUsJ+WovGXRtLMUxC8w+imh80ReHFw7E1SrZOXKmUk+YA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YONlEwMA6CnCGfLpk0tRPQecJeVfXgQV3PfGkmU5HFk=;
- b=F8T9JCySUxMOmdMscLQfpgHH399FDm0blVYDOoeQkU7MfGWFYiqW+4cHBeeC1QCQ/rgk97SkYF3alyPefqNchCqbdbs0KvXOn0ZzPJludhvnN0ntjwDCC809M6mjOh8gHGvJJq/aAzyh2C1gF7KDEa179ar+tnqfY9xgGxB+RhU=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB6PR0401MB2536.eurprd04.prod.outlook.com (2603:10a6:4:36::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.26; Wed, 29 Jul
- 2020 02:26:33 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::49f8:20ce:cf20:80b3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::49f8:20ce:cf20:80b3%6]) with mapi id 15.20.3216.034; Wed, 29 Jul 2020
- 02:26:33 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+ bh=0ln4JpQBeC4lK6b7k46477WuYrp0RaCxvVaO/fxQoi4=;
+ b=r9jqgMT8ZzYbHrMQUkAZOB2O3grfI3zgLlMTNfonDQ3O8Kl04rLGaS9AN6TOjMgyT4ehc8qpZtcy5ksj+IvCCtVclhU27GvB2p094NO0B1H+x4IVLNGiAHIMSL5m1HAeVolev4BHXAgT7w8U3Y9fn3nywI/g75EukMDv9IWXmTg=
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
+ DM5PR11MB1578.namprd11.prod.outlook.com (2603:10b6:4:e::23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3239.16; Wed, 29 Jul 2020 02:20:46 +0000
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::9002:97a2:d8c0:8364]) by DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::9002:97a2:d8c0:8364%10]) with mapi id 15.20.3216.034; Wed, 29 Jul
+ 2020 02:20:46 +0000
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "stefanha@gmail.com" <stefanha@gmail.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/2] watchdog: imx7ulp: Strictly follow the sequence for
- wdog operations
-Thread-Topic: [PATCH 1/2] watchdog: imx7ulp: Strictly follow the sequence for
- wdog operations
-Thread-Index: AQHWZKrocghDMpUaBEu/lC3XXGngDakdDvaAgACUUzCAADIzYA==
-Date:   Wed, 29 Jul 2020 02:26:33 +0000
-Message-ID: <DB3PR0402MB39169A9F5E5D2D90A64AAF3DF5700@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1595918567-2017-1-git-send-email-Anson.Huang@nxp.com>
- <566adde7-c397-72f1-145d-fbca9de77cd7@roeck-us.net>
- <DB3PR0402MB3916744794CDCCE7BC332147F5730@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916744794CDCCE7BC332147F5730@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH v6 01/15] vfio/type1: Refactor vfio_iommu_type1_ioctl()
+Thread-Topic: [PATCH v6 01/15] vfio/type1: Refactor vfio_iommu_type1_ioctl()
+Thread-Index: AQHWZKdEWZVxoE+wrUCHRmL6h48nIKkdJTIAgACvF0A=
+Date:   Wed, 29 Jul 2020 02:20:46 +0000
+Message-ID: <DM5PR11MB14352FE9C017BC763181723CC3700@DM5PR11MB1435.namprd11.prod.outlook.com>
+References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
+        <1595917664-33276-2-git-send-email-yi.l.liu@intel.com>
+ <20200728095336.50cd04af@x1.home>
+In-Reply-To: <20200728095336.50cd04af@x1.home>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: roeck-us.net; dkim=none (message not signed)
- header.d=none;roeck-us.net; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [117.169.229.51]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 33e89742-b3f0-4c1d-39f1-08d83366cf88
-x-ms-traffictypediagnostic: DB6PR0401MB2536:
+x-ms-office365-filtering-correlation-id: 3050578c-7a9e-440b-8059-08d8336600eb
+x-ms-traffictypediagnostic: DM5PR11MB1578:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0401MB25367E4D02F658CCDBE08A0BF5700@DB6PR0401MB2536.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <DM5PR11MB157889CEB90A9CDF03762FCAC3700@DM5PR11MB1578.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:134;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2jsD4j9XrEGFo9kFA0xIAGCmGqs99+qoSXkQlAgdYSB4eiIy7bj3Ed+HUEraw0wgQI1Xfab1lOt1bgL5+si573EyE4t21mXmdSuTtA2SQqJWlg4stP3qjnBhzMUqTxwiuCbq+eLmzdYw8sdy6yqlSNC6J+I7pMZO9roi53BLKZ3/2xhqkOk4wWetbkVTR/WiRj4DJc1seIMY9t5SIDx708iQFojUABJHVbs6ze4BlJycPibdAgcaxjNp1ldPMcmqDSRVbQDtwPQrm+bo7JJVzlIFgSPRklEGRo5st/w6WAoNwbzLNK1IY8qPlozMb2BF6Uooxt8gs4Y2wgXA36tihQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(396003)(366004)(39860400002)(33656002)(86362001)(110136005)(5660300002)(71200400001)(4326008)(2906002)(316002)(478600001)(52536014)(83380400001)(186003)(66946007)(64756008)(76116006)(7696005)(9686003)(8936002)(66446008)(26005)(55016002)(44832011)(66476007)(66556008)(8676002)(6506007)(53546011);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: Bl/JkE3Je4qclvkYpM6xyvqCghHLFmD7bUPO9pO9N4ujWiYprwVQWzhWyrlyv2ZfNUFMkTkavLKnTJDdBoij/zS+lQiJyiuG6Qo+s3VDgGST9SludkdKvY9oAspjTIc0jSGLHZpuFsz3iujQxvUD8uxoi+3H0iiceiotNYGJzuyARJraX9/+1Plkea/jmTcfFf9+t0ZLxnu5xJtjDEYELNQfBMY0NR5O/sdhFWkCqaUvLbMOz1ZTyifA7/imM8yN71MO3QpTyFWbfwwkzmk7l9HBb+WA+SgrSdhPK5j/ZSV38p+VOeFArR6EJ1vddORux5fSZkEyhiQStsawrMRGkUuEGx1lU2DcTlvjmBgpgehB4Vj5B7hn3x0vdozqIY7X5cDgRrie32TS6NTx1UkbWcPDPN541w4mgY/WJJvemR27W5JGO/k5TWO1TIsuwNUMBO+FVEtXDmMbf6GeF8bAjuqQUCtNCvD7WQpL87nxtY4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: 6cpQk0FKzzEyt/63x4345QiYfBUhvU7cGTVmYFt5Jn8lxjKPPqDfnltKWaiJch3YV1ATPQIuB2UMU/TzLWkW96ykHEXx+dRn7nSW3N/yPdU2ncn47MO7+oG0Cla0/Mazqiv4raMrjul2yyU4SM9C9ovXYzCrfgv2acopV5PXPlayvYhJr7dpuhtLqFuDlskpPfhesC21AvAgfPEpUDsu2s3zGKpthb9+IePDqKvXT4irSCCzDq9RuijUhyfQ99OwBPudCXTECcm8TmFjap0/SAvGj8dr8AX8PyxrXdT2UA3GmyFGreMcqve7yUXfNdd6sGeN9xsLJ0caHK1wciJARw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(376002)(346002)(396003)(136003)(54906003)(186003)(30864003)(71200400001)(55016002)(9686003)(86362001)(478600001)(7416002)(5660300002)(66446008)(64756008)(316002)(83380400001)(66556008)(66476007)(66946007)(52536014)(8676002)(4326008)(76116006)(7696005)(33656002)(6506007)(6916009)(2906002)(8936002)(26005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: L0ZyveJ6EwMHKZ5W5sEtlHIJOatrIVvx+bz0kxXG7WUSnGQzuqegHdc1OE400dYNHOiILBJwvn8PbHLim/T06IbqH5Eu+H1JjD/pT2PYqKPIwrzVktERzDytxa4MimDu4ohVMbgqzp6/fxNKf4VGqdYflTp1FKVHaDbmeSBPStD7keT+xGkhUlBTifBSmrBdA4oCczwQPsyE/zR95SVSwXki4URNjDhDOkRfkxd6z92WQUUV0Ja7mRZbxUqVWwe+0/XrV8F+NChFET/iQcqaaa0zxAmtO8rroZ7ePmtP2wlUeZwstdYrAAlgzxfLbVRPLBbKIkFx6dR7zffrNmEiborEOuZBHmnoZH84mSKotYUFtSWA/2sh1S8z83GMW8pNY4DJ8m2wrr7e4pLLxafOt6Vqk5MvDTlG0hMfRiJTy8iJQLZ+rJ1tdojLNvPPEWPfab3WxTGVN6xJIFrVccGr5lhbaXAN9fXk0tsxMsYxxSo9T5z8zOfY/lOV5z8ED4uX38nLQEK13SkBigp+zG+xhqzPETOSULRq5XUP+cTKoHOugKEG9CDFw9txTkEmlLJmReQspwdFes/KVMc00ugSR8iwcgYgNy0DUTKFO7/XTQPBCtDElL+UWRBRJ1fsayt/uNz6pisVk7+MV7UXB3Sgkg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33e89742-b3f0-4c1d-39f1-08d83366cf88
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2020 02:26:33.3148
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1435.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3050578c-7a9e-440b-8059-08d8336600eb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2020 02:20:46.6550
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5FLpL+ov3AWd0EvidSW5IO67a253hpTEaMgHxSkQLDzXFbskXM/eK8TWKyGrwOsuJmh3mmN0iXMKJbH8SFpDeQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2536
+X-MS-Exchange-CrossTenant-userprincipalname: Hy9ogemc1i+dgXKUU1w7ZHxEMpELqTFvetQm6RcZaag9nMSPufWYx+NT92QRN++xkVI1zcaqPVMnNITO+LmuWQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1578
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEd1ZW50ZXINCg0KDQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggMS8yXSB3YXRjaGRvZzogaW14
-N3VscDogU3RyaWN0bHkgZm9sbG93IHRoZSBzZXF1ZW5jZSBmb3INCj4gd2RvZyBvcGVyYXRpb25z
-DQo+IA0KPiBIaSwgR3VlbnRlcg0KPiANCj4gDQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJd
-IHdhdGNoZG9nOiBpbXg3dWxwOiBTdHJpY3RseSBmb2xsb3cgdGhlDQo+ID4gc2VxdWVuY2UgZm9y
-IHdkb2cgb3BlcmF0aW9ucw0KPiA+DQo+ID4gT24gNy8yNy8yMCAxMTo0MiBQTSwgQW5zb24gSHVh
-bmcgd3JvdGU6DQo+ID4gPiBBY2NvcmRpbmcgdG8gcmVmZXJlbmNlIG1hbnVhbCwgdGhlIGkuTVg3
-VUxQIFdET0cncyBvcGVyYXRpb25zIHNob3VsZA0KPiA+ID4gZm9sbG93IGJlbG93IHNlcXVlbmNl
-Og0KPiA+ID4NCj4gPiA+IDEuIGRpc2FibGUgZ2xvYmFsIGludGVycnVwdHM7DQo+ID4gPiAyLiB1
-bmxvY2sgdGhlIHdkb2cgYW5kIHdhaXQgdW5sb2NrIGJpdCBzZXQ7IDMuIHJlY29uZmlndXJlIHRo
-ZSB3ZG9nDQo+ID4gPiBhbmQgd2FpdCBmb3IgcmVjb25maWd1cmF0aW9uIGJpdCBzZXQ7IDQuIGVu
-YWJlbCBnbG9iYWwgaW50ZXJydXB0cy4NCj4gPiA+DQo+ID4gPiBTdHJpY3RseSBmb2xsb3cgdGhl
-IHJlY29tbWVuZGVkIHNlcXVlbmNlIGNhbiBtYWtlIGl0IG1vcmUgcm9idXN0Lg0KPiA+ID4NCj4g
-PiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+
-ID4gLS0tDQo+ID4gPiAgZHJpdmVycy93YXRjaGRvZy9pbXg3dWxwX3dkdC5jIHwgMjkgKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysNCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjkgaW5zZXJ0
-aW9ucygrKQ0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3dhdGNoZG9nL2lteDd1
-bHBfd2R0LmMNCj4gPiA+IGIvZHJpdmVycy93YXRjaGRvZy9pbXg3dWxwX3dkdC5jIGluZGV4IDc5
-OTNjOGMuLmI0MTRlY2YgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL3dhdGNoZG9nL2lteDd1
-bHBfd2R0LmMNCj4gPiA+ICsrKyBiL2RyaXZlcnMvd2F0Y2hkb2cvaW14N3VscF93ZHQuYw0KPiA+
-ID4gQEAgLTQsNiArNCw3IEBADQo+ID4gPiAgICovDQo+ID4gPg0KPiA+ID4gICNpbmNsdWRlIDxs
-aW51eC9jbGsuaD4NCj4gPiA+ICsjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4NCj4gPiA+ICAjaW5j
-bHVkZSA8bGludXgvaW8uaD4NCj4gPiA+ICAjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQo+ID4g
-PiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ID4gQEAgLTQ4LDE3ICs0OSwzMiBAQCBz
-dHJ1Y3QgaW14N3VscF93ZHRfZGV2aWNlIHsNCj4gPiA+ICAJc3RydWN0IGNsayAqY2xrOw0KPiA+
-ID4gIH07DQo+ID4gPg0KPiA+ID4gK3N0YXRpYyBpbmxpbmUgdm9pZCBpbXg3dWxwX3dkdF93YWl0
-KHZvaWQgX19pb21lbSAqYmFzZSwgdTMyIG1hc2spIHsNCj4gPiA+ICsJaW50IHJldHJpZXMgPSAx
-MDA7DQo+ID4gPiArDQo+ID4gPiArCWRvIHsNCj4gPiA+ICsJCWlmIChyZWFkbF9yZWxheGVkKGJh
-c2UgKyBXRE9HX0NTKSAmIG1hc2spDQo+ID4gPiArCQkJcmV0dXJuOw0KPiA+ID4gKwkJdXNsZWVw
-X3JhbmdlKDIwMCwgMTAwMCk7DQo+ID4gPiArCX0gd2hpbGUgKHJldHJpZXMtLSk7DQo+ID4NCj4g
-PiBTbGVlcCB3aXRoIGludGVycnVwdHMgZGlzYWJsZWQgPyBJIGNhbiBub3QgaW1hZ2luZSB0aGF0
-IHRoaXMgd29ya3MNCj4gPiB3ZWxsIGluIGEgc2luZ2xlIENQVSBzeXN0ZW0uIE9uIHRvcCBvZiB0
-aGF0LCBpdCBzZWVtcyBxdWl0ZSBwb2ludGxlc3MuDQo+ID4gRWl0aGVyIHlvdSBkb24ndCB3YW50
-IHRvIGJlIGludGVycnVwdGVkIG9yIHlvdSBkbywgYnV0IHNsZWVwaW5nIHdpdGgNCj4gPiBpbnRl
-cnJ1cHRzIGRpc2FibGVkIHJlYWxseSBkb2Vzbid0IG1ha2Ugc2Vuc2UuIEFuZCBkb2VzIGl0IHJl
-YWxseSB0YWtlDQo+ID4gMjAwLTEwMDAgdVMgZm9yIHRoZSB3YXRjaGRvZyBzdWJzeXN0ZW0gdG8g
-cmVhY3QsIGFuZCBzb21ldGltZXMgdXAgdG8NCj4gPiAyMDAgKiAxMDAgPSAyMCBtUyA/IFRoYXQg
-c2VlbXMgaGlnaGx5IHVubGlrZWx5LiBJZiBzdWNoIGEgZGVsYXkgbG9vcA0KPiA+IGlzIGluZGVl
-ZCBuZWVkZWQsIGl0IHNob3VsZCBiZSBsaW1pdGVkIGJ5IGEgdGltZSwgbm90IGJ5IG51bWJlciBv
-Zg0KPiByZXBldGl0aW9ucy4NCj4gPg0KPiA+IFVubGVzcyB0aGVyZSBpcyBldmlkZW5jZSB0aGF0
-IHRoZXJlIGlzIGEgcHJvYmxlbSB0aGF0IG5lZWRzIHRvIGJlDQo+ID4gc29sdmVkLCBJIGFtIG5v
-dCBnb2luZyB0byBhY2NlcHQgdGhpcyBjb2RlLg0KPiA+DQo+IA0KPiBPb3BzLCB0aGlzIGlzIGEg
-bWlzdGFrZSBvZiB1c2luZyBzbGVlcCB3aXRoIGludGVycnVwdCBkaXNhYmxlZCwgc29ycnkgZm9y
-IHRoYXQuDQo+IFRoZSBiZXN0IG9wdGlvbiBpcyB0byB1c2UgcmVhZGxfcmVsYXhlZF9wb2xsX3Rp
-bWVvdXRfYXRvbWljKCkgdG8gcG9sbCB0aGUNCj4gc3RhdHVzIGJpdCwgaG93ZXZlciwgdGhlIGku
-TVg3VUxQIHdhdGNoZG9nIGlzIHZlcnkgc3BlY2lhbCB0aGF0IHRoZSB1bmxvY2sNCj4gd2luZG93
-IE9OTFkgb3BlbiBmb3Igc2V2ZXJhbCBjeWNsZXMsIHRoYXQgbWVhbnMgdGhlIHVubG9jayBzdGF0
-dXMgYml0IHdpbGwgYmUNCj4gc2V0IGFuZCB0aGVuIGNsZWFyIGF1dG9tYXRpY2FsbHkgYWZ0ZXIg
-dGhvc2UgY3ljbGVzLCB1c2luZw0KPiByZWFkbF9yZWxheGVkX3BvbGxfdGltZW91dF9hdG9taWMo
-KSB3aWxsIGZhaWwgc2luY2UgdGhlcmUgYXJlIG1hbnkgdGltZW91dA0KPiBoYW5kbGUgY29kZSBp
-biBpdCBhbmQgdGhlIHVubG9jayB3aW5kb3cgaXMgb3BlbiBhbmQgY2xvc2UgZHVyaW5nIHRoaXMg
-dGltZW91dA0KPiBoYW5kbGUgaW50ZXJ2YWwsIHNvIGl0IGZhaWwgdG8gY2F0Y2ggdGhlIHVubG9j
-ayBiaXQuDQo+IA0KPiBUaGUgaWRlYWwgb3B0aW9uIGlzIHVzaW5nIGF0b21pYyBwb2xsaW5nIHdp
-dGhvdXQgYW55IG90aGVyIHRpbWVvdXQgY2hlY2sgdG8NCj4gbWFrZSBzdXJlIHRoZSB1bmxvY2sg
-d2luZG93IGlzIE5PVCBtaXNzZWQsIGJ1dCBJIHRoaW5rIExpbnV4IGtlcm5lbCB3aWxsIE5PVA0K
-PiBhY2NlcHQgYSB3aGlsZSBsb29wIHdpdGhvdXQgdGltZW91dCwgYW5kIHRoYXQgaXMgd2h5IEkg
-dHJpZWQgdG8gdXNlDQo+IHVzbGVlcF9yYW5nZXMoKSwgYnV0IG9idmlvdXNseSBJIG1hZGUgYSBt
-aXN0YWtlIG9mIHVzaW5nIGl0IHdpdGggSVJRIGRpc2FibGVkLg0KPiANCj4gRG8geW91IGhhdmUg
-YW55IHN1Z2dlc3Rpb24gb2YgaG93IHRvIGhhbmRsZSBzdWNoIGNhc2U/IElmIHRoZSBoYXJkd2Fy
-ZSBPTkxZDQo+IHVubG9jayB0aGUgcmVnaXN0ZXIgZm9yIGEgc21hbGwgd2luZG93LCBob3cgdG8g
-cG9sbCB0aGUgc3RhdHVzIGJpdCB3aXRoIHRpbWVvdXQNCj4gaGFuZGxlIGFuZCBhbHNvIG1ha2Ug
-c3VyZSB0aGUgdGltZW91dCBoYW5kbGUgY29kZSBhcyBxdWljayBhcyBwb3NzaWJsZSB0bw0KPiBO
-T1QgbWlzcyB0aGUgd2luZG93Pw0KPiANCg0KSSBkaWQgbW9yZSBleHBlcmltZW50IGFuZCBmb3Vu
-ZCB0aGF0IGJlbG93IHJlYWRsX3BvbGxfdGltZW91dF9hdG9taWMoKSBpcyBhY3R1YWxseQ0Kd29y
-a2luZywgc28gSSBzZW50IGEgVjIgd2l0aCBpdCwgcGxlYXNlIGhlbHAgcmV2aWV3LCB0aGFuayB5
-b3UuDQoNCg0KKyAgICAgICB1MzIgdmFsID0gcmVhZGwoYmFzZSArIFdET0dfQ1MpOw0KKw0KKyAg
-ICAgICBpZiAoISh2YWwgJiBtYXNrKSkNCisgICAgICAgICAgICAgICBXQVJOX09OKHJlYWRsX3Bv
-bGxfdGltZW91dF9hdG9taWMoYmFzZSArIFdET0dfQ1MsIHZhbCwNCisgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsICYgbWFzaywgMCwNCisgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgV0RPR19XQUlUX1RJTUVP
-VVQpKTsNCg0KVGhhbmtzLA0KQW5zb24NCiANCg0K
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Tuesday, July 28, 2020 11:54 PM
+>=20
+> On Mon, 27 Jul 2020 23:27:30 -0700
+> Liu Yi L <yi.l.liu@intel.com> wrote:
+>=20
+> > This patch refactors the vfio_iommu_type1_ioctl() to use switch
+> > instead of if-else, and each command got a helper function.
+> >
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Eric Auger <eric.auger@redhat.com>
+> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > Cc: Joerg Roedel <joro@8bytes.org>
+> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> > Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> > Suggested-by: Christoph Hellwig <hch@infradead.org>
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > ---
+>=20
+> FYI, this commit is already in my next branch and linux-next as of today,=
+ you can
+> drop it from future series.  Thanks,
+
+got it. thanks. :-)
+
+Regards,
+Yi Liu
+
+> Alex
+>=20
+> > v4 -> v5:
+> > *) address comments from Eric Auger, add r-b from Eric.
+> > ---
+> >  drivers/vfio/vfio_iommu_type1.c | 394
+> > ++++++++++++++++++++++------------------
+> >  1 file changed, 213 insertions(+), 181 deletions(-)
+> >
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c
+> > b/drivers/vfio/vfio_iommu_type1.c index 5e556ac..3bd70ff 100644
+> > --- a/drivers/vfio/vfio_iommu_type1.c
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -2453,6 +2453,23 @@ static int vfio_domains_have_iommu_cache(struct
+> vfio_iommu *iommu)
+> >  	return ret;
+> >  }
+> >
+> > +static int vfio_iommu_type1_check_extension(struct vfio_iommu *iommu,
+> > +					    unsigned long arg)
+> > +{
+> > +	switch (arg) {
+> > +	case VFIO_TYPE1_IOMMU:
+> > +	case VFIO_TYPE1v2_IOMMU:
+> > +	case VFIO_TYPE1_NESTING_IOMMU:
+> > +		return 1;
+> > +	case VFIO_DMA_CC_IOMMU:
+> > +		if (!iommu)
+> > +			return 0;
+> > +		return vfio_domains_have_iommu_cache(iommu);
+> > +	default:
+> > +		return 0;
+> > +	}
+> > +}
+> > +
+> >  static int vfio_iommu_iova_add_cap(struct vfio_info_cap *caps,
+> >  		 struct vfio_iommu_type1_info_cap_iova_range *cap_iovas,
+> >  		 size_t size)
+> > @@ -2529,241 +2546,256 @@ static int vfio_iommu_migration_build_caps(st=
+ruct
+> vfio_iommu *iommu,
+> >  	return vfio_info_add_capability(caps, &cap_mig.header,
+> > sizeof(cap_mig));  }
+> >
+> > -static long vfio_iommu_type1_ioctl(void *iommu_data,
+> > -				   unsigned int cmd, unsigned long arg)
+> > +static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
+> > +				     unsigned long arg)
+> >  {
+> > -	struct vfio_iommu *iommu =3D iommu_data;
+> > +	struct vfio_iommu_type1_info info;
+> >  	unsigned long minsz;
+> > +	struct vfio_info_cap caps =3D { .buf =3D NULL, .size =3D 0 };
+> > +	unsigned long capsz;
+> > +	int ret;
+> >
+> > -	if (cmd =3D=3D VFIO_CHECK_EXTENSION) {
+> > -		switch (arg) {
+> > -		case VFIO_TYPE1_IOMMU:
+> > -		case VFIO_TYPE1v2_IOMMU:
+> > -		case VFIO_TYPE1_NESTING_IOMMU:
+> > -			return 1;
+> > -		case VFIO_DMA_CC_IOMMU:
+> > -			if (!iommu)
+> > -				return 0;
+> > -			return vfio_domains_have_iommu_cache(iommu);
+> > -		default:
+> > -			return 0;
+> > -		}
+> > -	} else if (cmd =3D=3D VFIO_IOMMU_GET_INFO) {
+> > -		struct vfio_iommu_type1_info info;
+> > -		struct vfio_info_cap caps =3D { .buf =3D NULL, .size =3D 0 };
+> > -		unsigned long capsz;
+> > -		int ret;
+> > -
+> > -		minsz =3D offsetofend(struct vfio_iommu_type1_info, iova_pgsizes);
+> > +	minsz =3D offsetofend(struct vfio_iommu_type1_info, iova_pgsizes);
+> >
+> > -		/* For backward compatibility, cannot require this */
+> > -		capsz =3D offsetofend(struct vfio_iommu_type1_info, cap_offset);
+> > +	/* For backward compatibility, cannot require this */
+> > +	capsz =3D offsetofend(struct vfio_iommu_type1_info, cap_offset);
+> >
+> > -		if (copy_from_user(&info, (void __user *)arg, minsz))
+> > -			return -EFAULT;
+> > +	if (copy_from_user(&info, (void __user *)arg, minsz))
+> > +		return -EFAULT;
+> >
+> > -		if (info.argsz < minsz)
+> > -			return -EINVAL;
+> > +	if (info.argsz < minsz)
+> > +		return -EINVAL;
+> >
+> > -		if (info.argsz >=3D capsz) {
+> > -			minsz =3D capsz;
+> > -			info.cap_offset =3D 0; /* output, no-recopy necessary */
+> > -		}
+> > +	if (info.argsz >=3D capsz) {
+> > +		minsz =3D capsz;
+> > +		info.cap_offset =3D 0; /* output, no-recopy necessary */
+> > +	}
+> >
+> > -		mutex_lock(&iommu->lock);
+> > -		info.flags =3D VFIO_IOMMU_INFO_PGSIZES;
+> > +	mutex_lock(&iommu->lock);
+> > +	info.flags =3D VFIO_IOMMU_INFO_PGSIZES;
+> >
+> > -		info.iova_pgsizes =3D iommu->pgsize_bitmap;
+> > +	info.iova_pgsizes =3D iommu->pgsize_bitmap;
+> >
+> > -		ret =3D vfio_iommu_migration_build_caps(iommu, &caps);
+> > +	ret =3D vfio_iommu_migration_build_caps(iommu, &caps);
+> >
+> > -		if (!ret)
+> > -			ret =3D vfio_iommu_iova_build_caps(iommu, &caps);
+> > +	if (!ret)
+> > +		ret =3D vfio_iommu_iova_build_caps(iommu, &caps);
+> >
+> > -		mutex_unlock(&iommu->lock);
+> > +	mutex_unlock(&iommu->lock);
+> >
+> > -		if (ret)
+> > -			return ret;
+> > +	if (ret)
+> > +		return ret;
+> >
+> > -		if (caps.size) {
+> > -			info.flags |=3D VFIO_IOMMU_INFO_CAPS;
+> > +	if (caps.size) {
+> > +		info.flags |=3D VFIO_IOMMU_INFO_CAPS;
+> >
+> > -			if (info.argsz < sizeof(info) + caps.size) {
+> > -				info.argsz =3D sizeof(info) + caps.size;
+> > -			} else {
+> > -				vfio_info_cap_shift(&caps, sizeof(info));
+> > -				if (copy_to_user((void __user *)arg +
+> > -						sizeof(info), caps.buf,
+> > -						caps.size)) {
+> > -					kfree(caps.buf);
+> > -					return -EFAULT;
+> > -				}
+> > -				info.cap_offset =3D sizeof(info);
+> > +		if (info.argsz < sizeof(info) + caps.size) {
+> > +			info.argsz =3D sizeof(info) + caps.size;
+> > +		} else {
+> > +			vfio_info_cap_shift(&caps, sizeof(info));
+> > +			if (copy_to_user((void __user *)arg +
+> > +					sizeof(info), caps.buf,
+> > +					caps.size)) {
+> > +				kfree(caps.buf);
+> > +				return -EFAULT;
+> >  			}
+> > -
+> > -			kfree(caps.buf);
+> > +			info.cap_offset =3D sizeof(info);
+> >  		}
+> >
+> > -		return copy_to_user((void __user *)arg, &info, minsz) ?
+> > -			-EFAULT : 0;
+> > +		kfree(caps.buf);
+> > +	}
+> >
+> > -	} else if (cmd =3D=3D VFIO_IOMMU_MAP_DMA) {
+> > -		struct vfio_iommu_type1_dma_map map;
+> > -		uint32_t mask =3D VFIO_DMA_MAP_FLAG_READ |
+> > -				VFIO_DMA_MAP_FLAG_WRITE;
+> > +	return copy_to_user((void __user *)arg, &info, minsz) ?
+> > +			-EFAULT : 0;
+> > +}
+> >
+> > -		minsz =3D offsetofend(struct vfio_iommu_type1_dma_map, size);
+> > +static int vfio_iommu_type1_map_dma(struct vfio_iommu *iommu,
+> > +				    unsigned long arg)
+> > +{
+> > +	struct vfio_iommu_type1_dma_map map;
+> > +	unsigned long minsz;
+> > +	uint32_t mask =3D VFIO_DMA_MAP_FLAG_READ |
+> VFIO_DMA_MAP_FLAG_WRITE;
+> >
+> > -		if (copy_from_user(&map, (void __user *)arg, minsz))
+> > -			return -EFAULT;
+> > +	minsz =3D offsetofend(struct vfio_iommu_type1_dma_map, size);
+> >
+> > -		if (map.argsz < minsz || map.flags & ~mask)
+> > -			return -EINVAL;
+> > +	if (copy_from_user(&map, (void __user *)arg, minsz))
+> > +		return -EFAULT;
+> >
+> > -		return vfio_dma_do_map(iommu, &map);
+> > +	if (map.argsz < minsz || map.flags & ~mask)
+> > +		return -EINVAL;
+> >
+> > -	} else if (cmd =3D=3D VFIO_IOMMU_UNMAP_DMA) {
+> > -		struct vfio_iommu_type1_dma_unmap unmap;
+> > -		struct vfio_bitmap bitmap =3D { 0 };
+> > -		int ret;
+> > +	return vfio_dma_do_map(iommu, &map); }
+> >
+> > -		minsz =3D offsetofend(struct vfio_iommu_type1_dma_unmap, size);
+> > +static int vfio_iommu_type1_unmap_dma(struct vfio_iommu *iommu,
+> > +				      unsigned long arg)
+> > +{
+> > +	struct vfio_iommu_type1_dma_unmap unmap;
+> > +	struct vfio_bitmap bitmap =3D { 0 };
+> > +	unsigned long minsz;
+> > +	int ret;
+> >
+> > -		if (copy_from_user(&unmap, (void __user *)arg, minsz))
+> > -			return -EFAULT;
+> > +	minsz =3D offsetofend(struct vfio_iommu_type1_dma_unmap, size);
+> >
+> > -		if (unmap.argsz < minsz ||
+> > -		    unmap.flags & ~VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP)
+> > -			return -EINVAL;
+> > +	if (copy_from_user(&unmap, (void __user *)arg, minsz))
+> > +		return -EFAULT;
+> >
+> > -		if (unmap.flags & VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP) {
+> > -			unsigned long pgshift;
+> > +	if (unmap.argsz < minsz ||
+> > +	    unmap.flags & ~VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP)
+> > +		return -EINVAL;
+> >
+> > -			if (unmap.argsz < (minsz + sizeof(bitmap)))
+> > -				return -EINVAL;
+> > +	if (unmap.flags & VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP) {
+> > +		unsigned long pgshift;
+> >
+> > -			if (copy_from_user(&bitmap,
+> > -					   (void __user *)(arg + minsz),
+> > -					   sizeof(bitmap)))
+> > -				return -EFAULT;
+> > +		if (unmap.argsz < (minsz + sizeof(bitmap)))
+> > +			return -EINVAL;
+> >
+> > -			if (!access_ok((void __user *)bitmap.data, bitmap.size))
+> > -				return -EINVAL;
+> > +		if (copy_from_user(&bitmap,
+> > +				   (void __user *)(arg + minsz),
+> > +				   sizeof(bitmap)))
+> > +			return -EFAULT;
+> >
+> > -			pgshift =3D __ffs(bitmap.pgsize);
+> > -			ret =3D verify_bitmap_size(unmap.size >> pgshift,
+> > -						 bitmap.size);
+> > -			if (ret)
+> > -				return ret;
+> > -		}
+> > +		if (!access_ok((void __user *)bitmap.data, bitmap.size))
+> > +			return -EINVAL;
+> >
+> > -		ret =3D vfio_dma_do_unmap(iommu, &unmap, &bitmap);
+> > +		pgshift =3D __ffs(bitmap.pgsize);
+> > +		ret =3D verify_bitmap_size(unmap.size >> pgshift,
+> > +					 bitmap.size);
+> >  		if (ret)
+> >  			return ret;
+> > +	}
+> > +
+> > +	ret =3D vfio_dma_do_unmap(iommu, &unmap, &bitmap);
+> > +	if (ret)
+> > +		return ret;
+> >
+> > -		return copy_to_user((void __user *)arg, &unmap, minsz) ?
+> > +	return copy_to_user((void __user *)arg, &unmap, minsz) ?
+> >  			-EFAULT : 0;
+> > -	} else if (cmd =3D=3D VFIO_IOMMU_DIRTY_PAGES) {
+> > -		struct vfio_iommu_type1_dirty_bitmap dirty;
+> > -		uint32_t mask =3D VFIO_IOMMU_DIRTY_PAGES_FLAG_START |
+> > -				VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP |
+> > -				VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP;
+> > -		int ret =3D 0;
+> > +}
+> >
+> > -		if (!iommu->v2)
+> > -			return -EACCES;
+> > +static int vfio_iommu_type1_dirty_pages(struct vfio_iommu *iommu,
+> > +					unsigned long arg)
+> > +{
+> > +	struct vfio_iommu_type1_dirty_bitmap dirty;
+> > +	uint32_t mask =3D VFIO_IOMMU_DIRTY_PAGES_FLAG_START |
+> > +			VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP |
+> > +			VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP;
+> > +	unsigned long minsz;
+> > +	int ret =3D 0;
+> >
+> > -		minsz =3D offsetofend(struct vfio_iommu_type1_dirty_bitmap,
+> > -				    flags);
+> > +	if (!iommu->v2)
+> > +		return -EACCES;
+> >
+> > -		if (copy_from_user(&dirty, (void __user *)arg, minsz))
+> > -			return -EFAULT;
+> > +	minsz =3D offsetofend(struct vfio_iommu_type1_dirty_bitmap, flags);
+> >
+> > -		if (dirty.argsz < minsz || dirty.flags & ~mask)
+> > -			return -EINVAL;
+> > +	if (copy_from_user(&dirty, (void __user *)arg, minsz))
+> > +		return -EFAULT;
+> >
+> > -		/* only one flag should be set at a time */
+> > -		if (__ffs(dirty.flags) !=3D __fls(dirty.flags))
+> > -			return -EINVAL;
+> > +	if (dirty.argsz < minsz || dirty.flags & ~mask)
+> > +		return -EINVAL;
+> >
+> > -		if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_START) {
+> > -			size_t pgsize;
+> > +	/* only one flag should be set at a time */
+> > +	if (__ffs(dirty.flags) !=3D __fls(dirty.flags))
+> > +		return -EINVAL;
+> >
+> > -			mutex_lock(&iommu->lock);
+> > -			pgsize =3D 1 << __ffs(iommu->pgsize_bitmap);
+> > -			if (!iommu->dirty_page_tracking) {
+> > -				ret =3D vfio_dma_bitmap_alloc_all(iommu, pgsize);
+> > -				if (!ret)
+> > -					iommu->dirty_page_tracking =3D true;
+> > -			}
+> > -			mutex_unlock(&iommu->lock);
+> > -			return ret;
+> > -		} else if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP) {
+> > -			mutex_lock(&iommu->lock);
+> > -			if (iommu->dirty_page_tracking) {
+> > -				iommu->dirty_page_tracking =3D false;
+> > -				vfio_dma_bitmap_free_all(iommu);
+> > -			}
+> > -			mutex_unlock(&iommu->lock);
+> > -			return 0;
+> > -		} else if (dirty.flags &
+> > -				 VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP)
+> {
+> > -			struct vfio_iommu_type1_dirty_bitmap_get range;
+> > -			unsigned long pgshift;
+> > -			size_t data_size =3D dirty.argsz - minsz;
+> > -			size_t iommu_pgsize;
+> > -
+> > -			if (!data_size || data_size < sizeof(range))
+> > -				return -EINVAL;
+> > -
+> > -			if (copy_from_user(&range, (void __user *)(arg + minsz),
+> > -					   sizeof(range)))
+> > -				return -EFAULT;
+> > +	if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_START) {
+> > +		size_t pgsize;
+> >
+> > -			if (range.iova + range.size < range.iova)
+> > -				return -EINVAL;
+> > -			if (!access_ok((void __user *)range.bitmap.data,
+> > -				       range.bitmap.size))
+> > -				return -EINVAL;
+> > +		mutex_lock(&iommu->lock);
+> > +		pgsize =3D 1 << __ffs(iommu->pgsize_bitmap);
+> > +		if (!iommu->dirty_page_tracking) {
+> > +			ret =3D vfio_dma_bitmap_alloc_all(iommu, pgsize);
+> > +			if (!ret)
+> > +				iommu->dirty_page_tracking =3D true;
+> > +		}
+> > +		mutex_unlock(&iommu->lock);
+> > +		return ret;
+> > +	} else if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP) {
+> > +		mutex_lock(&iommu->lock);
+> > +		if (iommu->dirty_page_tracking) {
+> > +			iommu->dirty_page_tracking =3D false;
+> > +			vfio_dma_bitmap_free_all(iommu);
+> > +		}
+> > +		mutex_unlock(&iommu->lock);
+> > +		return 0;
+> > +	} else if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP) {
+> > +		struct vfio_iommu_type1_dirty_bitmap_get range;
+> > +		unsigned long pgshift;
+> > +		size_t data_size =3D dirty.argsz - minsz;
+> > +		size_t iommu_pgsize;
+> >
+> > -			pgshift =3D __ffs(range.bitmap.pgsize);
+> > -			ret =3D verify_bitmap_size(range.size >> pgshift,
+> > -						 range.bitmap.size);
+> > -			if (ret)
+> > -				return ret;
+> > +		if (!data_size || data_size < sizeof(range))
+> > +			return -EINVAL;
+> >
+> > -			mutex_lock(&iommu->lock);
+> > +		if (copy_from_user(&range, (void __user *)(arg + minsz),
+> > +				   sizeof(range)))
+> > +			return -EFAULT;
+> >
+> > -			iommu_pgsize =3D (size_t)1 << __ffs(iommu->pgsize_bitmap);
+> > +		if (range.iova + range.size < range.iova)
+> > +			return -EINVAL;
+> > +		if (!access_ok((void __user *)range.bitmap.data,
+> > +			       range.bitmap.size))
+> > +			return -EINVAL;
+> >
+> > -			/* allow only smallest supported pgsize */
+> > -			if (range.bitmap.pgsize !=3D iommu_pgsize) {
+> > -				ret =3D -EINVAL;
+> > -				goto out_unlock;
+> > -			}
+> > -			if (range.iova & (iommu_pgsize - 1)) {
+> > -				ret =3D -EINVAL;
+> > -				goto out_unlock;
+> > -			}
+> > -			if (!range.size || range.size & (iommu_pgsize - 1)) {
+> > -				ret =3D -EINVAL;
+> > -				goto out_unlock;
+> > -			}
+> > +		pgshift =3D __ffs(range.bitmap.pgsize);
+> > +		ret =3D verify_bitmap_size(range.size >> pgshift,
+> > +					 range.bitmap.size);
+> > +		if (ret)
+> > +			return ret;
+> >
+> > -			if (iommu->dirty_page_tracking)
+> > -				ret =3D vfio_iova_dirty_bitmap(range.bitmap.data,
+> > -						iommu, range.iova, range.size,
+> > -						range.bitmap.pgsize);
+> > -			else
+> > -				ret =3D -EINVAL;
+> > -out_unlock:
+> > -			mutex_unlock(&iommu->lock);
+> > +		mutex_lock(&iommu->lock);
+> >
+> > -			return ret;
+> > +		iommu_pgsize =3D (size_t)1 << __ffs(iommu->pgsize_bitmap);
+> > +
+> > +		/* allow only smallest supported pgsize */
+> > +		if (range.bitmap.pgsize !=3D iommu_pgsize) {
+> > +			ret =3D -EINVAL;
+> > +			goto out_unlock;
+> > +		}
+> > +		if (range.iova & (iommu_pgsize - 1)) {
+> > +			ret =3D -EINVAL;
+> > +			goto out_unlock;
+> > +		}
+> > +		if (!range.size || range.size & (iommu_pgsize - 1)) {
+> > +			ret =3D -EINVAL;
+> > +			goto out_unlock;
+> >  		}
+> > +
+> > +		if (iommu->dirty_page_tracking)
+> > +			ret =3D vfio_iova_dirty_bitmap(range.bitmap.data,
+> > +						     iommu, range.iova,
+> > +						     range.size,
+> > +						     range.bitmap.pgsize);
+> > +		else
+> > +			ret =3D -EINVAL;
+> > +out_unlock:
+> > +		mutex_unlock(&iommu->lock);
+> > +
+> > +		return ret;
+> >  	}
+> >
+> > -	return -ENOTTY;
+> > +	return -EINVAL;
+> > +}
+> > +
+> > +static long vfio_iommu_type1_ioctl(void *iommu_data,
+> > +				   unsigned int cmd, unsigned long arg) {
+> > +	struct vfio_iommu *iommu =3D iommu_data;
+> > +
+> > +	switch (cmd) {
+> > +	case VFIO_CHECK_EXTENSION:
+> > +		return vfio_iommu_type1_check_extension(iommu, arg);
+> > +	case VFIO_IOMMU_GET_INFO:
+> > +		return vfio_iommu_type1_get_info(iommu, arg);
+> > +	case VFIO_IOMMU_MAP_DMA:
+> > +		return vfio_iommu_type1_map_dma(iommu, arg);
+> > +	case VFIO_IOMMU_UNMAP_DMA:
+> > +		return vfio_iommu_type1_unmap_dma(iommu, arg);
+> > +	case VFIO_IOMMU_DIRTY_PAGES:
+> > +		return vfio_iommu_type1_dirty_pages(iommu, arg);
+> > +	default:
+> > +		return -ENOTTY;
+> > +	}
+> >  }
+> >
+> >  static int vfio_iommu_type1_register_notifier(void *iommu_data,
+
