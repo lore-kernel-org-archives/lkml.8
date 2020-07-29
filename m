@@ -2,189 +2,271 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DCBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E571CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA87220809
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B68B220809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 12:34:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZT70JLS/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XlzEZQgU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgG2Meh (ORCPT
+        id S1726948AbgG2Mep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:34:37 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:47794 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726859AbgG2Meg (ORCPT
+        Wed, 29 Jul 2020 08:34:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgG2Meo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:34:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596026074;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=vpjuFUWMrn9WdHgMkjvTUGEbQN0jEb4t1IAuJiFnXjk=;
-        b=ZT70JLS/OQTYWiIEJrreNRO3hnxb2H2hvAtupLp0NvsMpIqwHO2ixRfk1CAJ8mtSGDaxrY
-        aXKl+nHmy9IVfVFGCsl3mYhn+nlJCX7yefPz5PIzjf7XKTUH9X4YSubJnWme0qLLnyvBMc
-        ufbZNGGekvLLWEyGzsWCAS5ILzg0X/M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-141-h_FhbikHPpedD8tYSaoKKg-1; Wed, 29 Jul 2020 08:34:30 -0400
-X-MC-Unique: h_FhbikHPpedD8tYSaoKKg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFF6D193F561;
-        Wed, 29 Jul 2020 12:34:28 +0000 (UTC)
-Received: from [10.10.115.176] (ovpn-115-176.rdu2.redhat.com [10.10.115.176])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D484271917;
-        Wed, 29 Jul 2020 12:34:04 +0000 (UTC)
-Subject: Re: WARNING: suspicious RCU usage - while installing a VM on a CPU
- listed under nohz_full
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        "frederic@kernel.org" <frederic@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>
-References: <ece36eb1-253a-8ec6-c183-309c10bb35d5@redhat.com>
- <CANRm+Cywhi1p5gYLfG=JcyTdYuWK+9bGqF6HD-LiBJM9Q5ykNQ@mail.gmail.com>
- <CANRm+CwrT=gxxgkNdT3wFwzWYYh3FFrUU=aTqH8VT=MraU7jkw@mail.gmail.com>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFl4pQoBEADT/nXR2JOfsCjDgYmE2qonSGjkM1g8S6p9UWD+bf7YEAYYYzZsLtbilFTe
- z4nL4AV6VJmC7dBIlTi3Mj2eymD/2dkKP6UXlliWkq67feVg1KG+4UIp89lFW7v5Y8Muw3Fm
- uQbFvxyhN8n3tmhRe+ScWsndSBDxYOZgkbCSIfNPdZrHcnOLfA7xMJZeRCjqUpwhIjxQdFA7
- n0s0KZ2cHIsemtBM8b2WXSQG9CjqAJHVkDhrBWKThDRF7k80oiJdEQlTEiVhaEDURXq+2XmG
- jpCnvRQDb28EJSsQlNEAzwzHMeplddfB0vCg9fRk/kOBMDBtGsTvNT9OYUZD+7jaf0gvBvBB
- lbKmmMMX7uJB+ejY7bnw6ePNrVPErWyfHzR5WYrIFUtgoR3LigKnw5apzc7UIV9G8uiIcZEn
- C+QJCK43jgnkPcSmwVPztcrkbC84g1K5v2Dxh9amXKLBA1/i+CAY8JWMTepsFohIFMXNLj+B
- RJoOcR4HGYXZ6CAJa3Glu3mCmYqHTOKwezJTAvmsCLd3W7WxOGF8BbBjVaPjcZfavOvkin0u
- DaFvhAmrzN6lL0msY17JCZo046z8oAqkyvEflFbC0S1R/POzehKrzQ1RFRD3/YzzlhmIowkM
- BpTqNBeHEzQAlIhQuyu1ugmQtfsYYq6FPmWMRfFPes/4JUU/PQARAQABtCVOaXRlc2ggTmFy
- YXlhbiBMYWwgPG5pbGFsQHJlZGhhdC5jb20+iQI9BBMBCAAnBQJZeKUKAhsjBQkJZgGABQsJ
- CAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEKOGQNwGMqM56lEP/A2KMs/pu0URcVk/kqVwcBhU
- SnvB8DP3lDWDnmVrAkFEOnPX7GTbactQ41wF/xwjwmEmTzLrMRZpkqz2y9mV0hWHjqoXbOCS
- 6RwK3ri5e2ThIPoGxFLt6TrMHgCRwm8YuOSJ97o+uohCTN8pmQ86KMUrDNwMqRkeTRW9wWIQ
- EdDqW44VwelnyPwcmWHBNNb1Kd8j3xKlHtnS45vc6WuoKxYRBTQOwI/5uFpDZtZ1a5kq9Ak/
- MOPDDZpd84rqd+IvgMw5z4a5QlkvOTpScD21G3gjmtTEtyfahltyDK/5i8IaQC3YiXJCrqxE
- r7/4JMZeOYiKpE9iZMtS90t4wBgbVTqAGH1nE/ifZVAUcCtycD0f3egX9CHe45Ad4fsF3edQ
- ESa5tZAogiA4Hc/yQpnnf43a3aQ67XPOJXxS0Qptzu4vfF9h7kTKYWSrVesOU3QKYbjEAf95
- NewF9FhAlYqYrwIwnuAZ8TdXVDYt7Z3z506//sf6zoRwYIDA8RDqFGRuPMXUsoUnf/KKPrtR
- ceLcSUP/JCNiYbf1/QtW8S6Ca/4qJFXQHp0knqJPGmwuFHsarSdpvZQ9qpxD3FnuPyo64S2N
- Dfq8TAeifNp2pAmPY2PAHQ3nOmKgMG8Gn5QiORvMUGzSz8Lo31LW58NdBKbh6bci5+t/HE0H
- pnyVf5xhNC/FuQINBFl4pQoBEACr+MgxWHUP76oNNYjRiNDhaIVtnPRqxiZ9v4H5FPxJy9UD
- Bqr54rifr1E+K+yYNPt/Po43vVL2cAyfyI/LVLlhiY4yH6T1n+Di/hSkkviCaf13gczuvgz4
- KVYLwojU8+naJUsiCJw01MjO3pg9GQ+47HgsnRjCdNmmHiUQqksMIfd8k3reO9SUNlEmDDNB
- XuSzkHjE5y/R/6p8uXaVpiKPfHoULjNRWaFc3d2JGmxJpBdpYnajoz61m7XJlgwl/B5Ql/6B
- dHGaX3VHxOZsfRfugwYF9CkrPbyO5PK7yJ5vaiWre7aQ9bmCtXAomvF1q3/qRwZp77k6i9R3
- tWfXjZDOQokw0u6d6DYJ0Vkfcwheg2i/Mf/epQl7Pf846G3PgSnyVK6cRwerBl5a68w7xqVU
- 4KgAh0DePjtDcbcXsKRT9D63cfyfrNE+ea4i0SVik6+N4nAj1HbzWHTk2KIxTsJXypibOKFX
- 2VykltxutR1sUfZBYMkfU4PogE7NjVEU7KtuCOSAkYzIWrZNEQrxYkxHLJsWruhSYNRsqVBy
- KvY6JAsq/i5yhVd5JKKU8wIOgSwC9P6mXYRgwPyfg15GZpnw+Fpey4bCDkT5fMOaCcS+vSU1
- UaFmC4Ogzpe2BW2DOaPU5Ik99zUFNn6cRmOOXArrryjFlLT5oSOe4IposgWzdwARAQABiQIl
- BBgBCAAPBQJZeKUKAhsMBQkJZgGAAAoJEKOGQNwGMqM5ELoP/jj9d9gF1Al4+9bngUlYohYu
- 0sxyZo9IZ7Yb7cHuJzOMqfgoP4tydP4QCuyd9Q2OHHL5AL4VFNb8SvqAxxYSPuDJTI3JZwI7
- d8JTPKwpulMSUaJE8ZH9n8A/+sdC3CAD4QafVBcCcbFe1jifHmQRdDrvHV9Es14QVAOTZhnJ
- vweENyHEIxkpLsyUUDuVypIo6y/Cws+EBCWt27BJi9GH/EOTB0wb+2ghCs/i3h8a+bi+bS7L
- FCCm/AxIqxRurh2UySn0P/2+2eZvneJ1/uTgfxnjeSlwQJ1BWzMAdAHQO1/lnbyZgEZEtUZJ
- x9d9ASekTtJjBMKJXAw7GbB2dAA/QmbA+Q+Xuamzm/1imigz6L6sOt2n/X/SSc33w8RJUyor
- SvAIoG/zU2Y76pKTgbpQqMDmkmNYFMLcAukpvC4ki3Sf086TdMgkjqtnpTkEElMSFJC8npXv
- 3QnGGOIfFug/qs8z03DLPBz9VYS26jiiN7QIJVpeeEdN/LKnaz5LO+h5kNAyj44qdF2T2AiF
- HxnZnxO5JNP5uISQH3FjxxGxJkdJ8jKzZV7aT37sC+Rp0o3KNc+GXTR+GSVq87Xfuhx0LRST
- NK9ZhT0+qkiN7npFLtNtbzwqaqceq3XhafmCiw8xrtzCnlB/C4SiBr/93Ip4kihXJ0EuHSLn
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <57ea501b-bf54-3fc0-4a8f-2820df623b14@redhat.com>
-Date:   Wed, 29 Jul 2020 08:34:02 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 29 Jul 2020 08:34:44 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11BD0C061794
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 05:34:44 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id r2so16393122wrs.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 05:34:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=szQFy2yaWn8ZbUsB4xteXiZK5ADMWhSSjVtaK6zckMM=;
+        b=XlzEZQgUEEH3t2YKxNmbKkt6eHfz8hx/jTLJSd4tLYcZEUzUiSZdhNqeqgfAkzb3Ob
+         FfZOVGNWOii/SNOq3uUruta4JOXalZ7CASkPConiMgNeXxenepzCWw4fke0rRNqqqB57
+         0fGr4ptEXl4BfUOst2QXEH35Z4VbEOJ09sHaXQNZn9enaXkhoCYU2l/UnpbzBXnIju1q
+         3Li9yQL/FDKhRptUofPCfPYlXMTKaZqttnRwXJuMOenkAjFJHBpU411QI7KjAoiCggV+
+         0fx5quTSQ3fK34ZFt694NJ/fvuJqnhVkN9g1kgNQ9w0T+vLyufy1+MRclDjj7maoN4TR
+         9KoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=szQFy2yaWn8ZbUsB4xteXiZK5ADMWhSSjVtaK6zckMM=;
+        b=ZrUP4U3md2FCR93VmQWDU9x3CYRyMz3heTbPuJZqyMsqS17EyzUcEsvsv357C9U7em
+         5fbB76G+CX08c8RmUbNnnTc2g9kgKOeeQA1N4RhB2UmCGTWTd8TuUaNgY0d+Q2jfQUR2
+         2B3UZGjmut6rKpwz8oC/DF3DiAlkbr7kKaOuVfV/XwNlctbvfLeapnHCtM1Suf7Pmixt
+         RAKYTSW28y9iKPJ30hHI5FcJN3xwIHPJZLNoY9T86+BSMV3Y83/sdOoXaLLaVd4DGgBf
+         m2JzyOQeTQC2w3mooSvqo4g86Z68R1+QUZaPHmCXCzIDce8mJTrYATuXIvXfW1UOxEWi
+         SyEw==
+X-Gm-Message-State: AOAM533xW37ofj/5pLM2FMRsNh6il29YjlSrT90+Za64kAOfOvOnFkpH
+        NEEqVEpZeQjpErECBXUjJltcnerI1Lk=
+X-Google-Smtp-Source: ABdhPJzbdAN5jEykd3htSbfo/drI7Zl9EDyG2xsh79oqrNAqaaZvqeNDnHUuvWaaL3eFIZsuAIOtcw==
+X-Received: by 2002:adf:9487:: with SMTP id 7mr28418052wrr.133.1596026082651;
+        Wed, 29 Jul 2020 05:34:42 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id l1sm6177688wrb.12.2020.07.29.05.34.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Jul 2020 05:34:42 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org
+Cc:     bjorn.andersson@linaro.org, evgreen@chromium.org,
+        akashast@codeaurora.org, mka@chromium.org,
+        linux-kernel@vger.kernel.org, georgi.djakov@linaro.org
+Subject: [PATCH v2] interconnect: Add bulk API helpers
+Date:   Wed, 29 Jul 2020 15:34:39 +0300
+Message-Id: <20200729123439.9961-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <CANRm+CwrT=gxxgkNdT3wFwzWYYh3FFrUU=aTqH8VT=MraU7jkw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="uP5kPhxszyverNECWhXQL2pWCXsNZwIT3"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---uP5kPhxszyverNECWhXQL2pWCXsNZwIT3
-Content-Type: multipart/mixed; boundary="aewA7KPMFFsjEBrrWzBF8yJT1ydYVsyUm"
+There are drivers which just need to get multiple interconnect paths,
+request some predefined amounts of bandwidth and then just toggle the
+paths between enabled/disabled state.
 
---aewA7KPMFFsjEBrrWzBF8yJT1ydYVsyUm
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+The aim of this patch is simplify the above and to allow drivers to put
+all the path names and bandwidth data into a single static icc_bulk_data
+table and call the icc_bulk_* functions on that table in order to scale
+all the interconnect paths in parallel.
 
+Suggested-by: Evan Green <evgreen@chromium.org>
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
 
-On 7/28/20 10:38 PM, Wanpeng Li wrote:
-> Hi Nitesh=EF=BC=8C
-> On Wed, 29 Jul 2020 at 09:00, Wanpeng Li <kernellwp@gmail.com> wrote:
->> On Tue, 28 Jul 2020 at 22:40, Nitesh Narayan Lal <nitesh@redhat.com> wro=
-te:
->>> Hi,
->>>
->>> I have recently come across an RCU trace with the 5.8-rc7 kernel that h=
-as the
->>> debug configs enabled while installing a VM on a CPU that is listed und=
-er
->>> nohz_full.
->>>
->>> Based on some of the initial debugging, my impression is that the issue=
- is
->>> triggered because of the fastpath that is meant to optimize the writes =
-to x2APIC
->>> ICR that eventually leads to a virtual IPI in fixed delivery mode, is g=
-etting
->>> invoked from the quiescent state.
-> Could you try latest linux-next tree? I guess maybe some patches are
-> pending in linux-next tree, I can't reproduce against linux-next tree.
+v2:
+* Fix kernel-doc. (Bjorn)
+* Do not print EPROBE_DEFER errors. (Bjorn)
 
-Sure, I will try this today.
+v1: https://lore.kernel.org/r/20200528162542.30158-1-georgi.djakov@linaro.org/
 
->
---=20
-Nitesh
+ drivers/interconnect/Makefile |   2 +-
+ drivers/interconnect/bulk.c   | 117 ++++++++++++++++++++++++++++++++++
+ include/linux/interconnect.h  |  22 +++++++
+ 3 files changed, 140 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/interconnect/bulk.c
 
-
---aewA7KPMFFsjEBrrWzBF8yJT1ydYVsyUm--
-
---uP5kPhxszyverNECWhXQL2pWCXsNZwIT3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl8hbLoACgkQo4ZA3AYy
-ozlZvg/+LT3pvapMn9VLl3twNaZIEHWtQw30VDPKArk34leSbQp03otfi+5eevwB
-z8nRH7eRSRX6C1E2b5CQfGArHJOSnIG0rDMoSssjdZ/j1IlgDCkz2opSWRnXmMZW
-T4gRo9Yrx/iJ1c/dkGgYPua/mThq4HaayCK/oYyce+7XUhZqbiFOyEi4GtmEv3J9
-Pog/da4dPJOJ8X7fSJ3QANiMB1cTTReCKEbLo2tKn5YOLvU/kParAMVLN0di4J0q
-pZQF3THHMFa8pmRbfs1Ew6ntPRAy8w84pRGjc4YkVwZVphQyEfbWShl28avXCEpw
-7zeVNZGc0QOJONWyajlJH3sWdiYJucAWHWnCCcP4JP9Eu8Q1ELbUuoTLAXZW0m3e
-L+Kgr/Wk03QilVLI7ubHQ4jNA2Lzor97jgCv/WMSs+BtvMQb4EycmaLhfXkSdemo
-rvedo4ALiBUUTrECeiKWVrWTf0Ov7vy8nklAdGqQpb2wLk7e3AQ1U1XbqPd49E0v
-0Eln8yHmIJL6PT3DmAM5aaW4ucB/TllqD8lvam//ToZsw0BZjPl5Z+j1nqk1uavf
-gqwwDRK5DI1vZBcpkA005O7aiRrrSRhjHX1vWbJZbNpIm5vmbACVh2h2gyTTfqLP
-ylW6auqQeGGScnVzsf9As1+ERR1oF/Op0Iz1ii5ZX8kq7W0PLyM=
-=/NZJ
------END PGP SIGNATURE-----
-
---uP5kPhxszyverNECWhXQL2pWCXsNZwIT3--
-
+diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefile
+index 4825c287ca13..d203520b0a56 100644
+--- a/drivers/interconnect/Makefile
++++ b/drivers/interconnect/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ CFLAGS_core.o				:= -I$(src)
+-icc-core-objs				:= core.o
++icc-core-objs				:= core.o bulk.o
+ 
+ obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
+ obj-$(CONFIG_INTERCONNECT_IMX)		+= imx/
+diff --git a/drivers/interconnect/bulk.c b/drivers/interconnect/bulk.c
+new file mode 100644
+index 000000000000..73e2c8d0a412
+--- /dev/null
++++ b/drivers/interconnect/bulk.c
+@@ -0,0 +1,117 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/interconnect-provider.h>
++#include <linux/device.h>
++#include <linux/export.h>
++
++/**
++ * of_icc_bulk_get() - get interconnect paths
++ * @dev: the device requesting the path
++ * @num_paths: the number of icc_bulk_data
++ * @paths: the table with the paths we want to get
++ *
++ * Returns 0 on success or negative errno otherwise.
++ */
++int __must_check of_icc_bulk_get(struct device *dev, int num_paths,
++				 struct icc_bulk_data *paths)
++{
++	int ret, i;
++
++	for (i = 0; i < num_paths; i++) {
++		paths[i].path = of_icc_get(dev, paths[i].name);
++		if (IS_ERR(paths[i].path)) {
++			ret = PTR_ERR(paths[i].path);
++			if (ret != -EPROBE_DEFER)
++				dev_err(dev, "of_icc_get() failed on path %s (%d)\n",
++					paths[i].name, ret);
++			paths[i].path = NULL;
++			goto err;
++		}
++	}
++
++	return 0;
++
++err:
++	icc_bulk_put(i, paths);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(of_icc_bulk_get);
++
++/**
++ * icc_bulk_put() - put a list of interconnect paths
++ * @num_paths: the number of icc_bulk_data
++ * @paths: the icc_bulk_data table with the paths being put
++ */
++void icc_bulk_put(int num_paths, struct icc_bulk_data *paths)
++{
++	while (--num_paths >= 0) {
++		icc_put(paths[num_paths].path);
++		paths[num_paths].path = NULL;
++	}
++}
++EXPORT_SYMBOL_GPL(icc_bulk_put);
++
++/**
++ * icc_bulk_set() - set bandwidth to a set of paths
++ * @num_paths: the number of icc_bulk_data
++ * @paths: the icc_bulk_data table containing the paths and bandwidth
++ *
++ * Returns 0 on success or negative errno otherwise.
++ */
++int icc_bulk_set_bw(int num_paths, const struct icc_bulk_data *paths)
++{
++	int ret = 0;
++	int i;
++
++	for (i = 0; i < num_paths; i++) {
++		ret = icc_set_bw(paths[i].path, paths[i].avg_bw, paths[i].peak_bw);
++		if (ret) {
++			pr_err("icc_set_bw() failed on path %s (%d)\n", paths[i].name, ret);
++			return ret;
++		}
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(icc_bulk_set_bw);
++
++/**
++ * icc_bulk_enable() - enable a previously disabled set of paths
++ * @num_paths: the number of icc_bulk_data
++ * @paths: the icc_bulk_data table containing the paths and bandwidth
++ *
++ * Returns 0 on success or negative errno otherwise.
++ */
++int icc_bulk_enable(int num_paths, const struct icc_bulk_data *paths)
++{
++	int ret, i;
++
++	for (i = 0; i < num_paths; i++) {
++		ret = icc_enable(paths[i].path);
++		if (ret) {
++			pr_err("icc_enable() failed on path %s (%d)\n", paths[i].name, ret);
++			goto err;
++		}
++	}
++
++	return 0;
++
++err:
++	icc_bulk_disable(i, paths);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(icc_bulk_enable);
++
++/**
++ * icc_bulk_disable() - disable a set of interconnect paths
++ * @num_paths: the number of icc_bulk_data
++ * @paths: the icc_bulk_data table containing the paths and bandwidth
++ */
++void icc_bulk_disable(int num_paths, const struct icc_bulk_data *paths)
++{
++	while (--num_paths >= 0)
++		icc_disable(paths[num_paths].path);
++}
++EXPORT_SYMBOL_GPL(icc_bulk_disable);
+diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
+index 3a63d98613fc..f2dd2fc8d3cd 100644
+--- a/include/linux/interconnect.h
++++ b/include/linux/interconnect.h
+@@ -23,6 +23,28 @@
+ struct icc_path;
+ struct device;
+ 
++/**
++ * struct icc_bulk_data - Data used for bulk icc operations.
++ *
++ * @path: reference to the interconnect path (internal use)
++ * @name: the name from the "interconnect-names" DT property
++ * @avg_bw: average bandwidth in icc units
++ * @peak_bw: peak bandwidth in icc units
++ */
++struct icc_bulk_data {
++	struct icc_path	*path;
++	const char *name;
++	u32 avg_bw;
++	u32 peak_bw;
++};
++
++int __must_check of_icc_bulk_get(struct device *dev, int num_paths,
++				 struct icc_bulk_data *paths);
++void icc_bulk_put(int num_paths, struct icc_bulk_data *paths);
++int icc_bulk_set_bw(int num_paths, const struct icc_bulk_data *paths);
++int icc_bulk_enable(int num_paths, const struct icc_bulk_data *paths);
++void icc_bulk_disable(int num_paths, const struct icc_bulk_data *paths);
++
+ #if IS_ENABLED(CONFIG_INTERCONNECT)
+ 
+ struct icc_path *icc_get(struct device *dev, const int src_id,
