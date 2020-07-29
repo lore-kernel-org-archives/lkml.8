@@ -2,146 +2,138 @@ Return-Path: <SRS0=g5yc=BI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BF5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E020CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7BC12075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:34:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TIeig73K"
+	by mail.kernel.org (Postfix) with ESMTP id C020620809
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jul 2020 19:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596051308;
+	bh=NzOavhypQiRK+fikxf4URNUQ281LTHgwzpWksY2B5j8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=gWaNZWhGLWpaUhI+R7UOnepNpm5EH3PFJiDH6HJdmqupqCjZBZ6ccBPW1xCnaxSu/
+	 xjTV5SzwrqWVQ52rDNE1Lv5keZ1LDznC0KZMNw5rZRfVN9xUt8WZRG76grKW1Su5nF
+	 Y+QQvY/v+aC7P5wXVJSqI2k/RJ7cf2+vja3K86uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgG2TeH (ORCPT
+        id S1726838AbgG2TfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jul 2020 15:34:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50470 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbgG2TeH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jul 2020 15:34:07 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD97DC0619D4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 12:34:06 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id r11so5605813pfl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 12:34:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lmJLA307lWwHeekzFPQEB9AOfGsNOnQY/hcrzbIKKSE=;
-        b=TIeig73KPrCadNnZzPVQMPdXyxSNS+6R7DYyL+q39sURTqbKUrSTkoS0r04rdqBCrV
-         nhOU4qnBs+c/IgQtdZMwlKnhy+Wt55KjwlqseHJcxw9xrSaer/vlD8kZrvxEtm4JJi/0
-         Q8xS4fA0amlih1oA2y+Zx2l+lGKIeGMU9H8+ZfiXwrxtuhnXmbguDRiyRYX3WFUiPvLl
-         dbc5/RtEa4NRtzkBKieF6SnCxhQmcaM6I7AHhPDE7CjVHdvgEn7J8xwf7ptL31l1803O
-         5dFkBRHgdBFmr/gZmkEPftkvzGqqfV3/tFARIh3KUxBoWaHRn3GKAK0Fm6YCA1pj/r8X
-         YA7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lmJLA307lWwHeekzFPQEB9AOfGsNOnQY/hcrzbIKKSE=;
-        b=HgJypj8ikeloFdZlgHZ6ZlYTOsfyXuWhybukqNVq3nKBWSVv6OSbbOohthWk+D9NLU
-         DIjFD0GZ/Vfoh+r6kMOBV6T1nFU9waedqFj08H0Izl5FPYTExE/8IColoUGMD5L1WJQ3
-         I8rK5c2rySM0S0vs6MbG9ZUwkFAuaazP4VTEIWenNlKyPVxNwBAcgNj7evuTEsA2Ae79
-         juK3M1MJVllmNjWIygwIB8Ky4925tXKQirlmx9H4S4Ec6L9ExRhYOUjWhoyIZndo8Cnf
-         LKmg6K+EDm3ZUEnkU15FU/WziAIG+hLfrLj5UiXSPOqRNDicTJ8MZEAFPfByQBkevIjK
-         hcvQ==
-X-Gm-Message-State: AOAM530NBFjBJxCvUBB7wEjEleH5knAskEdZOYPIjMaowPOg1UuYfl15
-        dSFXVtM7UOvBbnroOo1OFOX/gg==
-X-Google-Smtp-Source: ABdhPJyRFLTdu3N5j96/tqd5+3I1ogGdK179B/GQj3++vwncEjAWmlf/FTnGk7Uf6YXWKYzWVvB/rQ==
-X-Received: by 2002:a65:43c1:: with SMTP id n1mr29913461pgp.67.1596051246141;
-        Wed, 29 Jul 2020 12:34:06 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c125sm3074150pfa.119.2020.07.29.12.34.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 12:34:05 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 12:30:36 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
-        agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org
-Subject: Re: [PATCH v5 2/5] media: venus: core: Fix error handling in probe
-Message-ID: <20200729193036.GI229995@builder.lan>
-References: <1596007005-30425-1-git-send-email-rnayak@codeaurora.org>
- <1596007005-30425-3-git-send-email-rnayak@codeaurora.org>
+        Wed, 29 Jul 2020 15:35:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726628AbgG2TfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jul 2020 15:35:07 -0400
+Received: from localhost (mobile-166-175-62-240.mycingular.net [166.175.62.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4401206D4;
+        Wed, 29 Jul 2020 19:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596051306;
+        bh=NzOavhypQiRK+fikxf4URNUQ281LTHgwzpWksY2B5j8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=va7MDQS4LRM/ecdjwCpXltGEt61+wCS4zFLaeboEgcCzWoFtgvvCQ4mSKNBo1v66o
+         wz2Uh5D6HO6Dy9eG/p1Bf0vSGoUPoVI+35+kLyInUV3IjtOr90muXlZHNNr4BbqMhN
+         JZLkbfYMCKz4mg72FAqJvBOtPjkvQUEKTX0JFhJw=
+Date:   Wed, 29 Jul 2020 14:35:04 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, Kelvin.Cao@microchip.com
+Subject: Re: [PATCH 1/2] PCI/switechtec: Add missing __iomem and __user tags
+ to fix sparse warnings
+Message-ID: <20200729193504.GA1960928@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1596007005-30425-3-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <20200728192434.18993-1-logang@deltatee.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 29 Jul 00:16 PDT 2020, Rajendra Nayak wrote:
-
-> Post a successful pm_ops->core_get, an error in probe
-> should exit by doing a pm_ops->core_put which seems
-> to be missing. So fix it.
+On Tue, Jul 28, 2020 at 01:24:33PM -0600, Logan Gunthorpe wrote:
+> Fix a number of missing __iomem and __user tags in the ioctl functions of
+> the switchtec driver. This fixes a number of sparse warnings of the form:
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>   sparse: sparse: incorrect type in ... (different address spaces)
+> 
+> Fixes: 52eabba5bcdb ("switchtec: Add IOCTLs to the Switchtec driver")
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Applied to pci/switchtec for v5.9, thanks!
 
 > ---
->  drivers/media/platform/qcom/venus/core.c | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-> index 203c653..bfcaba3 100644
-> --- a/drivers/media/platform/qcom/venus/core.c
-> +++ b/drivers/media/platform/qcom/venus/core.c
-> @@ -224,13 +224,15 @@ static int venus_probe(struct platform_device *pdev)
->  
->  	ret = dma_set_mask_and_coherent(dev, core->res->dma_mask);
->  	if (ret)
-> -		return ret;
-> +		goto err_core_put;
->  
->  	if (!dev->dma_parms) {
->  		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
->  					      GFP_KERNEL);
-> -		if (!dev->dma_parms)
-> -			return -ENOMEM;
-> +		if (!dev->dma_parms) {
-> +			ret = -ENOMEM;
-> +			goto err_core_put;
-> +		}
+> Here are a couple quick patches to fix some sparse warnings I was
+> notified about a couple weeks ago.
+> 
+> I've split them into two patches based on Fixes tag, but they could be
+> squashed depending on the preference.
+> 
+> Thanks!
+> 
+> drivers/pci/switch/switchtec.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+> index 850cfeb74608..3d5da7f44378 100644
+> --- a/drivers/pci/switch/switchtec.c
+> +++ b/drivers/pci/switch/switchtec.c
+> @@ -940,7 +940,7 @@ static u32 __iomem *event_hdr_addr(struct switchtec_dev *stdev,
+>  	size_t off;
+> 
+>  	if (event_id < 0 || event_id >= SWITCHTEC_IOCTL_MAX_EVENTS)
+> -		return ERR_PTR(-EINVAL);
+> +		return (u32 __iomem *)ERR_PTR(-EINVAL);
+> 
+>  	off = event_regs[event_id].offset;
+> 
+> @@ -948,10 +948,10 @@ static u32 __iomem *event_hdr_addr(struct switchtec_dev *stdev,
+>  		if (index == SWITCHTEC_IOCTL_EVENT_LOCAL_PART_IDX)
+>  			index = stdev->partition;
+>  		else if (index < 0 || index >= stdev->partition_count)
+> -			return ERR_PTR(-EINVAL);
+> +			return (u32 __iomem *)ERR_PTR(-EINVAL);
+>  	} else if (event_regs[event_id].map_reg == pff_ev_reg) {
+>  		if (index < 0 || index >= stdev->pff_csr_count)
+> -			return ERR_PTR(-EINVAL);
+> +			return (u32 __iomem *)ERR_PTR(-EINVAL);
 >  	}
->  	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
->  
-> @@ -242,11 +244,11 @@ static int venus_probe(struct platform_device *pdev)
->  					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
->  					"venus", core);
->  	if (ret)
-> -		return ret;
-> +		goto err_core_put;
->  
->  	ret = hfi_create(core, &venus_core_ops);
->  	if (ret)
-> -		return ret;
-> +		goto err_core_put;
->  
->  	pm_runtime_enable(dev);
->  
-> @@ -302,6 +304,9 @@ static int venus_probe(struct platform_device *pdev)
->  	pm_runtime_set_suspended(dev);
->  	pm_runtime_disable(dev);
->  	hfi_destroy(core);
-> +err_core_put:
-> +	if (core->pm_ops->core_put)
-> +		core->pm_ops->core_put(dev);
->  	return ret;
->  }
->  
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
 > 
+>  	return event_regs[event_id].map_reg(stdev, off, index);
+> @@ -1057,11 +1057,11 @@ static int ioctl_event_ctl(struct switchtec_dev *stdev,
+>  }
+> 
+>  static int ioctl_pff_to_port(struct switchtec_dev *stdev,
+> -			     struct switchtec_ioctl_pff_port *up)
+> +			     struct switchtec_ioctl_pff_port __user *up)
+>  {
+>  	int i, part;
+>  	u32 reg;
+> -	struct part_cfg_regs *pcfg;
+> +	struct part_cfg_regs __iomem *pcfg;
+>  	struct switchtec_ioctl_pff_port p;
+> 
+>  	if (copy_from_user(&p, up, sizeof(p)))
+> @@ -1104,10 +1104,10 @@ static int ioctl_pff_to_port(struct switchtec_dev *stdev,
+>  }
+> 
+>  static int ioctl_port_to_pff(struct switchtec_dev *stdev,
+> -			     struct switchtec_ioctl_pff_port *up)
+> +			     struct switchtec_ioctl_pff_port __user *up)
+>  {
+>  	struct switchtec_ioctl_pff_port p;
+> -	struct part_cfg_regs *pcfg;
+> +	struct part_cfg_regs __iomem *pcfg;
+> 
+>  	if (copy_from_user(&p, up, sizeof(p)))
+>  		return -EFAULT;
+> 
+> base-commit: 92ed301919932f777713b9172e525674157e983d
+> --
+> 2.20.1
