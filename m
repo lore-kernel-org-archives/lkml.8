@@ -8,137 +8,163 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0F7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 04:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0E1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 04:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7942072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 04:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E2BD2072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 04:31:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rCTc8xvg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="htBsbUAC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgG3EbN (ORCPT
+        id S1728517AbgG3Eb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 00:31:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47958 "EHLO
+        Thu, 30 Jul 2020 00:31:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgG3EbM (ORCPT
+        with ESMTP id S1725765AbgG3Eb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 00:31:12 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55C0BC061794
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 21:31:12 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id p16so10602364ile.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 21:31:12 -0700 (PDT)
+        Thu, 30 Jul 2020 00:31:57 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71CA1C061794;
+        Wed, 29 Jul 2020 21:31:57 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c80so4515263wme.0;
+        Wed, 29 Jul 2020 21:31:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K8IWClMf+Ao4pEqXoB9q668049Xra3AgdP5q2Ybi4E0=;
-        b=rCTc8xvgE9Ui97ENvy7ojAC5zhzBo56lHoEpYw8H7EUHC+JPaBfIbyGZ5nwC2FrYXk
-         JehpEw6CYfgWp+fSumr4EfDjvXv1y51KnUMbbsvz0lrrCugYsh9dXr5Ud+tpElv2RfiI
-         plP+lyZa6iPkzc2GTh3DxSW0B9xeFpAkwcJXK48OiF6XhUfAz9FyXiyFG2j7WAhdx5mZ
-         AA2CJOnhBxi7QKS9w37F+n2AlK2i/jqc9q1B3Nw3QOdSweM1NyqFWJPyrd/Gmgd+J4MP
-         4QKE1hDuIEDwcMj9eGWdGU4mrhXRO+ml006SJPd2H/d6S2xB+ox9tMVNHpzihUfeyS7e
-         t0oA==
+         :cc:content-transfer-encoding;
+        bh=0RjPi2QHDN+CaGl6MBAqqXZ/X0Cghv1F5XYMZ8Gsh1w=;
+        b=htBsbUACoP3Op+yOzWaVkw+7rGgTzI3a89FBoY7eSNknA4vgMnZ3aUMBjX0boe+JiH
+         o++pnbaiEZtyJy2j/Z6H8LKs/+9NNp1v22f2zP6oMGbN4UtvH2/i1QW/dkUJevgFJfhR
+         YyiPOREAFOS9BFdCROIGjvGP8sgHg8MnbOdGNc0k+LLrxNRf4OBFKhHN6Sd6oyCLOe5y
+         6gPHlH/rOLb52Q8qUgiuLeYDXzBAqAQPFnuz4SzeFMmJqSbyBxCjfVkvAXbTbMq8TLow
+         XFU+VFeq4lvH5Wj8f72/2t/rscjdK4PCcyiXMnwQAYn8ma3LMqDkzo4N7drmKLxjDuwH
+         0USA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K8IWClMf+Ao4pEqXoB9q668049Xra3AgdP5q2Ybi4E0=;
-        b=P31UL+If7RFQpkyJzzdDD3r9bdR7wWMWL7wh2d69x+HBOLxaOOm0RCR8tZ2kQogTDJ
-         nlKRp6aav1gPIagJKtwPi+DrljBwyHfSbOIl3GMKpVKf6+w6RUJ3z5j4AOv/jiNHi1Q/
-         dTeHWJRPAi4Kwa0o93VXaAEwVSCHCWN5lN6Ha3J6Fh/+Uuk+VB/5g+RmuyWbaK6i5SZR
-         kCmrF0atqFR1R/GksOi/npEN/XOrLQxPzUyf9L97SD4tcJyvzXUOvhPfpdvN/a6rfriy
-         EnelbG3jFBvYwiqLzp/2ERWF/JrIWVfqrbUBmYvrDMVO8709glzV8ytTtckwarb/aKB7
-         BhNQ==
-X-Gm-Message-State: AOAM533xpTZ9zRKsoM2Ema6sfsTZ+kR9j8IHsR2asWN6RTV4KKf7+0qM
-        RwhERZwaIH39m0+LWpg1agGceIxqkUgB0V4EBLg=
-X-Google-Smtp-Source: ABdhPJydOlDtkkFQ7R5dCMPMhtBMULJz9VbqLkowKMQpkrafuAntcCxNQaR4Ib8wrP396W86AK02AU1tIJ//znQ0jSc=
-X-Received: by 2002:a92:ce09:: with SMTP id b9mr15888272ilo.143.1596083471618;
- Wed, 29 Jul 2020 21:31:11 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0RjPi2QHDN+CaGl6MBAqqXZ/X0Cghv1F5XYMZ8Gsh1w=;
+        b=q86eUykXmeS+J3rp81Hypuc363ZIjCgt5koDdJqUHy2SPFk/OVsgoRZG80x80Yg7x/
+         PzUTWNjkgJZWAbsLEiMktwaB/wnOAqEBaKYuCKmgndrixxLhmP5BbO1iEYiaDnB6XfBC
+         VI8Ebvn+bKYCAYVqlprBAUki/mPL4O97ohspQUp9vSVFuaAVZZJ7iOdYOayxmbUwbcC8
+         l1gXjJkGpfUXDiQr48QDqLDoXyx65xn8cny8vczKGKUEMAt8nez2phNAMTRQNW2WeUN2
+         pbgpeeg1QT5cnP/bUAJCGbAnAFhxj7hLRLlomaKaMQ2Eo8lvryjS2L3KbCsR6Bl6CAL+
+         hLGg==
+X-Gm-Message-State: AOAM530o/3h6CeLAICXRMupNawjtkL4x81KAC3fWTeqQ5hUIRKQgevAv
+        Cd0lUbpngmuM07+eAvZArtsowKUyULCvCdfnEQE=
+X-Google-Smtp-Source: ABdhPJxZEOthf3UUgAgW5HJXhdjEOsBx23XqAEk0Qlu8lzNoaQ1zMoTYiSJIcm6gkLqdtdeD2ZixQd16qmewZlQNu4M=
+X-Received: by 2002:a7b:c941:: with SMTP id i1mr11390517wml.73.1596083515979;
+ Wed, 29 Jul 2020 21:31:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200630142639.22770-1-david@redhat.com> <20200630142639.22770-5-david@redhat.com>
-In-Reply-To: <20200630142639.22770-5-david@redhat.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Thu, 30 Jul 2020 06:31:00 +0200
-Message-ID: <CAM9Jb+iBVeFDyichYkdZgcHgd6wJABygJ_GwuL_Og_bqjQ=KwQ@mail.gmail.com>
-Subject: Re: [PATCH v1 4/6] mm/page_isolation: cleanup set_migratetype_isolate()
-To:     David Hildenbrand <david@redhat.com>
+References: <20200729231844.4653-1-logang@deltatee.com>
+In-Reply-To: <20200729231844.4653-1-logang@deltatee.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 30 Jul 2020 00:31:44 -0400
+Message-ID: <CADnq5_OZMiK21niDFSUgptv2vtBj4vyyxBTafWnFwWuEV6VB7w@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI/P2PDMA: Allow P2PDMA on all AMD CPUs newer than
+ the Zen family
+To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Let's clean it up a bit, simplifying error handling and getting rid of
-> the label.
+On Wed, Jul 29, 2020 at 7:18 PM Logan Gunthorpe <logang@deltatee.com> wrote=
+:
 >
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+> In order to avoid needing to add every new AMD CPU host bridge to the lis=
+t
+> every cycle, allow P2PDMA if the CPUs vendor is AMD and family is
+> greater than 0x17 (Zen).
+
+Might want to say "greater than or equal to" to clarify that all Zen
+parts (Zen1, Zen2, etc.) support p2p.  With that clarified,
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+
+>
+> This should cut down a bunch of the churn adding to the list of allowed
+> host bridges.
+>
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Alex Deucher <alexdeucher@gmail.com>
+> Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
+> Cc: Huang Rui <ray.huang@amd.com>
+>
 > ---
->  mm/page_isolation.c | 18 +++++++-----------
->  1 file changed, 7 insertions(+), 11 deletions(-)
 >
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index 02a01bff6b219..5f869bef23fa4 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -17,12 +17,9 @@
+> Here's a reworked patch to enable P2PDMA on Zen2 (and in fact all
+> subsequent Zen platforms).
 >
->  static int set_migratetype_isolate(struct page *page, int migratetype, int isol_flags)
->  {
-> -       struct page *unmovable = NULL;
-> -       struct zone *zone;
-> +       struct zone *zone = page_zone(page);
-> +       struct page *unmovable;
->         unsigned long flags;
-> -       int ret = -EBUSY;
-> -
-> -       zone = page_zone(page);
+> This should remove all the churn on the list for the AMD side. Still
+> don't have a good solution for Intel.
 >
->         spin_lock_irqsave(&zone->lock, flags);
+>  drivers/pci/p2pdma.c | 26 ++++++++++++++++++++------
+>  1 file changed, 20 insertions(+), 6 deletions(-)
 >
-> @@ -51,21 +48,20 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
->                                                                         NULL);
->
->                 __mod_zone_freepage_state(zone, -nr_pages, mt);
-> -               ret = 0;
-> +               spin_unlock_irqrestore(&zone->lock, flags);
-> +               drain_all_pages(zone);
-> +               return 0;
->         }
->
-> -out:
->         spin_unlock_irqrestore(&zone->lock, flags);
-> -       if (!ret) {
-> -               drain_all_pages(zone);
-> -       } else if ((isol_flags & REPORT_FAILURE) && unmovable)
-> +       if (isol_flags & REPORT_FAILURE)
->                 /*
->                  * printk() with zone->lock held will likely trigger a
->                  * lockdep splat, so defer it here.
->                  */
->                 dump_page(unmovable, "unmovable page");
->
-> -       return ret;
-> +       return -EBUSY;
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index e8e444eeb1cd..f1cab2c50595 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -273,6 +273,24 @@ static void seq_buf_print_bus_devfn(struct seq_buf *=
+buf, struct pci_dev *pdev)
+>         seq_buf_printf(buf, "%s;", pci_name(pdev));
 >  }
 >
->  static void unset_migratetype_isolate(struct page *page, unsigned migratetype)
+> +#ifdef CONFIG_X86
+> +static bool cpu_supports_p2pdma(void)
+> +{
+> +       struct cpuinfo_x86 *c =3D &cpu_data(0);
+> +
+> +       /* Any AMD CPU who's family id is newer than Zen will support p2p=
+dma */
+> +       if (c->x86_vendor =3D=3D X86_VENDOR_AMD && c->x86 >=3D 0x17)
+> +               return true;
+> +
+> +       return false;
+> +}
+> +#else
+> +static bool cpu_supports_p2pdma(void)
+> +{
+> +       return false;
+> +}
+> +#endif
+> +
+>  static const struct pci_p2pdma_whitelist_entry {
+>         unsigned short vendor;
+>         unsigned short device;
+> @@ -280,11 +298,6 @@ static const struct pci_p2pdma_whitelist_entry {
+>                 REQ_SAME_HOST_BRIDGE    =3D 1 << 0,
+>         } flags;
+>  } pci_p2pdma_whitelist[] =3D {
+> -       /* AMD ZEN */
+> -       {PCI_VENDOR_ID_AMD,     0x1450, 0},
+> -       {PCI_VENDOR_ID_AMD,     0x15d0, 0},
+> -       {PCI_VENDOR_ID_AMD,     0x1630, 0},
+> -
+>         /* Intel Xeon E5/Core i7 */
+>         {PCI_VENDOR_ID_INTEL,   0x3c00, REQ_SAME_HOST_BRIDGE},
+>         {PCI_VENDOR_ID_INTEL,   0x3c01, REQ_SAME_HOST_BRIDGE},
+> @@ -473,7 +486,8 @@ upstream_bridge_distance(struct pci_dev *provider, st=
+ruct pci_dev *client,
+>                                               acs_redirects, acs_list);
+>
+>         if (map_type =3D=3D PCI_P2PDMA_MAP_THRU_HOST_BRIDGE) {
+> -               if (!host_bridge_whitelist(provider, client))
+> +               if (!cpu_supports_p2pdma() &&
+> +                   !host_bridge_whitelist(provider, client))
+>                         map_type =3D PCI_P2PDMA_MAP_NOT_SUPPORTED;
+>         }
+>
+>
+> base-commit: 92ed301919932f777713b9172e525674157e983d
 > --
-
-This clean up looks good to me.
-
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-
-> 2.26.2
->
->
+> 2.20.1
