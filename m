@@ -2,180 +2,209 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E916AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52455C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF0E32083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 287C020838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:42:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=eclypsium.com header.i=@eclypsium.com header.b="UaGR5oDb"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="uam2K6xV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbgG3WlB (ORCPT
+        id S1730487AbgG3Wl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:41:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729995AbgG3WlB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:41:01 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9339C061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 15:41:00 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id t23so18524679qto.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 15:41:00 -0700 (PDT)
+        Thu, 30 Jul 2020 18:41:59 -0400
+Received: from mail-bn8nam11on2081.outbound.protection.outlook.com ([40.107.236.81]:33664
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728588AbgG3Wl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 18:41:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q/mBkrMmAeaXgyjfv0qCkV5IUgoynXd7Gj3/pi9oVAb0A4eqKMfnQXaJNWmZf0r1rTmNEFUgRwjg1vPtbYOM+sbBRQ8O8xqDe+VmINI3sP+NJsDNOJyC74KGXo1SFp+t/wOzq4aPfR0+iK2rQ4wUw+XWVa/rOEudJtnGDzl8jQppH0W8ybLroXYBfh9z2OnFlvDdDRfSJptSTDTSVeiX3M6UYaNQ8peyFI3h8GFlHQhsIr56A97MVAqRzDItYEbOnO7EvTUMGQ5JWcGwy/GAbIwl2FbeZILysy9E2WN5v3DA7ccw29Q1bzCOCkr96FdJlByV+o3Pt7PHuK1LX/0pRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f0q90Il21xMxD4Fq5QNwEdy7EnAdBR/1ghyCSOXM6YU=;
+ b=ExXODfi/7uTr8wjfb+wH6Lo2zQqI9rg5ArwMjxPSfJt9UGgYkF7EEPxcc4SWcZ0nK5UvXuQaDGgCbJAnVQhwxxSx9wbHiRfRKmgdtbcIRnMqb8bZ+TIBbcU+9sgbOnLf/FBfq6pLUL7vG5FB0KqDiR/fMG5si1PcXcf9UUXnKh6KIIoAS4EzGIhyneX4go1FNYmIfVK30p5sqRR4S/2TfPIalrtD2+tFoU9Jeup8llqKdLlzBoEA5f0ASxAiNsL1W7Yd/lh/JM1chdq+tpw1BGNIXh3o4FA/W6BWEW4f48ik0K7LbPPdvxBS4FSoOohmed/UZluZqqpgAI4UHYRxRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eclypsium.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/SZ4gxiHI+Nu5sjx4/Ifukn3+Fq5G1RhckhYI+XJZH0=;
-        b=UaGR5oDb0PnD9tn6aHvMCK4E40Y8bqg+uvmMWeBUnknAD/FZQEbiqXQkOVAz6croJH
-         pmHjwzLN/wh3s79CgPZZzGqyx8N4ZwPPeK6zpsChEIerErdkQpvFrSmvOY7E9N+WG2Di
-         vfX1ptHRM3/jKQsv1jDP0KWhMHqz60JKew71bouK5f9xHAhwr8+Oj2aSA9U7663e7rct
-         WMEW582NQihgVVOZSZ9LtjbFEe8uSD0glTx1XA7TfqNYVOwhM+WZEDFMq39+gVkJ5QRx
-         /6iC8G3ZgZP163nPoyfQvjoHiv3ZWkrnOAKHa9NznA+gQ0GTjA7FFEX0sZ2IEJagwM37
-         TwMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/SZ4gxiHI+Nu5sjx4/Ifukn3+Fq5G1RhckhYI+XJZH0=;
-        b=ZI0ej2ZUin6IiTae27NeDivuSOsQ2bXyZLoHNBasZDDIZ/yMczw6CKd+7bFB42538N
-         DkVquOFuAuwDMQ0pLIH/20Xli+gqmseWWHgqnpx28kPaj9zy0pfjGH44ebVc1gQ6w5k5
-         RN8+zKtN3421tkrmQqpwgKYlFD5TZM0HGcDHuVUL9wd1VkJxIw9ldso4tayUGaVZszay
-         wd7PMHQZlOMwqgAPBYQX+pyrK5KvKJIUn8KUIaEvg8JWwjG6yS7vBLEBmlTPoWNUzWOU
-         WyHkjZyHtmTnFGsuYmjMvK3k2HxCokhUg2/NAYBvJ/1vYe7IvgPlL8blDasL0zfvXMgm
-         SykQ==
-X-Gm-Message-State: AOAM532IIZG9rCtLaP2TmQk+zsGQgXHgiLpE/Q9gxvRbfP4r0NKZ5m3s
-        y2nKwvtkwc9JpDoew7wpqtZP4vmOSPrygYPLXd9mQg==
-X-Google-Smtp-Source: ABdhPJy+lcQAWamOUPlE2y8kdYzh4K6OjR+IMRhd09HGQ25M/lvvopNMLWlx5Al+JuqSXbnBjl4mlgQRqMivFn5ZUqk=
-X-Received: by 2002:ac8:3ae4:: with SMTP id x91mr904442qte.203.1596148859987;
- Thu, 30 Jul 2020 15:40:59 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f0q90Il21xMxD4Fq5QNwEdy7EnAdBR/1ghyCSOXM6YU=;
+ b=uam2K6xVJ4PfNQ1Df8d73WoeVwn4YfRb/5kgUkv8obUIyKwdT0rpQu9YDsGnoUgQbqalOwl+PEHzFxXERz1I5lDen8ud4lkit3X20wTmrifhNzJkGWI77z9Hw4Re1ah/ocKvAD/ZhS7RzsYdTa9uzhbw9A7i0wsCu0xTFfevEd0=
+Authentication-Results: linutronix.de; dkim=none (message not signed)
+ header.d=none;linutronix.de; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
+ by SN6PR12MB2733.namprd12.prod.outlook.com (2603:10b6:805:77::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.18; Thu, 30 Jul
+ 2020 22:41:54 +0000
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::691c:c75:7cc2:7f2c]) by SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::691c:c75:7cc2:7f2c%6]) with mapi id 15.20.3216.033; Thu, 30 Jul 2020
+ 22:41:54 +0000
+Subject: RE: [PATCH v3 03/11] KVM: SVM: Change intercept_dr to generic
+ intercepts
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm list <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <159597929496.12744.14654593948763926416.stgit@bmoger-ubuntu>
+ <159597948692.12744.7037992839778140055.stgit@bmoger-ubuntu>
+ <CALMp9eRF-ScqaWG7vn2mxKmR4jWo7LYZiiicHksiZR9hh+G=-A@mail.gmail.com>
+ <3841a638-eb9e-fae6-a6b6-04fec0e64b50@redhat.com>
+ <2987e401-f021-a3a7-b4fa-c24ff6d0381b@amd.com>
+From:   Babu Moger <babu.moger@amd.com>
+Message-ID: <560456cc-0cda-13f6-d152-3dca4896e27f@amd.com>
+Date:   Thu, 30 Jul 2020 17:41:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <2987e401-f021-a3a7-b4fa-c24ff6d0381b@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM5PR07CA0158.namprd07.prod.outlook.com
+ (2603:10b6:3:ee::24) To SN1PR12MB2560.namprd12.prod.outlook.com
+ (2603:10b6:802:26::19)
 MIME-Version: 1.0
-References: <20200730214136.5534-1-daniel.gutson@eclypsium.com> <5bd9d37f-4567-f28b-3932-58bd9de38882@infradead.org>
-In-Reply-To: <5bd9d37f-4567-f28b-3932-58bd9de38882@infradead.org>
-From:   Daniel Gutson <daniel@eclypsium.com>
-Date:   Thu, 30 Jul 2020 19:40:49 -0300
-Message-ID: <CAFmMkTFD6V9c2RFfMMb5ouQ5v52nymPxx3HNp53h9Vp+SdmkGA@mail.gmail.com>
-Subject: Re: [PATCH] Platform lockdown information in SYSFS
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Richard Hughes <hughsient@gmail.com>,
-        Alex Bazhaniuk <alex@eclypsium.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.236.31.79] (165.204.77.1) by DM5PR07CA0158.namprd07.prod.outlook.com (2603:10b6:3:ee::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 22:41:53 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5873a445-b973-4a76-6fe3-08d834d9c244
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2733:
+X-Microsoft-Antispam-PRVS: <SN6PR12MB2733D46FF8221C76FFAEA6D595710@SN6PR12MB2733.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vyP96+lks6EOMxxWwSjgbnyZZq6m78kaYOPdSbEyg+DszJg9FoJgcjzNSL0pe5Ini2W7Er90mJb4JowNeXYo6l6y3yy3SBw5LZc98+OQRDHcF7n0BmoC73yMSpdcakvs+Sga5BkxQFOYM9UVFfI6lMH1YB/68BMUT/qgFFiAEM7IOeovRbkBfn2cmsgsGWDLtPdpUL8P1QEMGV5Tiowjq0RrP/9o6Z3f5hGDoaUUhur33W6QiOIp5WB/sbLv2h9TkHfgmFYuRHGi2Lr1xKl8pSIv6PtXvy8m8uY5dF7D5T5T3LjBCE7uY2wcnCOh1gwejzqnLfvh8IGDkkZuiO6Ic2PaTgTr8lo8Uvk2Gt2aDJqqtw1OsI+rs97uga/uX9mAGmyciRe+m/2VKv+K3xw2PQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(366004)(346002)(136003)(39860400002)(44832011)(16526019)(7416002)(16576012)(8676002)(4326008)(6486002)(186003)(2906002)(31696002)(31686004)(36756003)(2616005)(53546011)(86362001)(5660300002)(110136005)(316002)(66946007)(66476007)(66556008)(26005)(83380400001)(956004)(478600001)(54906003)(8936002)(52116002)(41533002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: DOjo3dlS8FRWhCpLB7ClOUqDTfyCf7Ug3tHXl7Uf2NjiGM775QOpGikSSZAx+5+FkyZq8Ij8Q33SJoW2go8+Gq+iQ3nIm2MzQELBN8AGawNKOydUL1qGJJ39XePOUF6Tceuab1r2/0yltRsg243Pvmbuer6UbvNOfFa1MTI4rO/iHr9O7qXaZSqXKe5vtaDsQ4pIeMKxzX36LgAEKZe/WqZSYHANk4p2AbnlmXo/SAIbeTjAKA4L6lbaJiCm6f08KUEytCuIxyhrIoB56jFIXnUFMfi19udWxgtrQsb2NDjpzsNuQDg3hnSgsY0DTFYKczQDEE8lt+HX8UFtYefVauN8b47PHXTTtEg9TaOYIL+627diz0RyM0Jc3QcLOGzSiWQ1iU9IJISXmDxw2OJhOas2c1nEH5iz5K6kNT+33GoGLc9pXoEfDM+mX6l7zB08NX1zQjS/NZwljymE9GFqO4at6f1ZnzQyo4UQfZejgfjDqmJ/v6CZR4Zx356i9cX7o7IStwhK/dU3/wDVfaWsE/eDW/z6zsnagwYU7WkTYswXHnvveVHWh45FCTBgaezUMvgUy6gEONhhT0j2/DQepsbML57Cqq+7YPHD4G8wZAPq+vjh/VxAEt++dHRcm35HQMkwDepZUJJl/083Pvf5Qg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5873a445-b973-4a76-6fe3-08d834d9c244
+X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2560.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 22:41:54.6926
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Yn9vij1qTmpALIK/uZ/TocYdAOgzyftYf52LlKBf/DhAEWptPgATiAPW/CN6Q/v+
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2733
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 7:33 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> Hi,
->
-> Could we get some consistency in the use of "bios" vs. "Bios" vs. "BIOS", please.
-> BIOS is preferred IMO.
-
-OK for the next patch.
-
->
-> On 7/30/20 2:41 PM, Daniel Gutson wrote:
-> >
-> > This initial version exports the BIOS Write Enable (bioswe),
-> > BIOS Lock Enable (ble), and the SMM Bios Write Protect (SMM_BWP)
-> > fields of the Bios Control register. The idea is to keep adding more
-> > flags, not only from the BC but also from other registers in following
-> > versions.
-> >
-> > The goal is that the attributes are avilable to fwupd when SecureBoot
->
->                                       available
->
-> > is turned on.
-> >
-> > The patch provides a new misc driver, as proposed in the previous patch,
-> > that provides a registration function for HW Driver devices to register
-> > class_attributes.
-> > In this case, the intel SPI flash chip (intel-spi) registers three
-> > class_attributes corresponding to the fields mentioned above.
-> >
-> > Signed-off-by: Daniel Gutson <daniel.gutson@eclypsium.com>
-> > ---
-> >  .../ABI/stable/sysfs-class-platform-lockdown  | 23 +++++++
-> >  MAINTAINERS                                   |  7 +++
-> >  drivers/misc/Kconfig                          |  9 +++
-> >  drivers/misc/Makefile                         |  1 +
-> >  drivers/misc/platform-lockdown-attrs.c        | 57 +++++++++++++++++
-> >  drivers/mtd/spi-nor/controllers/Kconfig       |  1 +
-> >  .../mtd/spi-nor/controllers/intel-spi-pci.c   | 49 +++++++++++++++
-> >  drivers/mtd/spi-nor/controllers/intel-spi.c   | 62 +++++++++++++++++++
-> >  .../platform_data/platform-lockdown-attrs.h   | 19 ++++++
-> >  9 files changed, 228 insertions(+)
-> >  create mode 100644 Documentation/ABI/stable/sysfs-class-platform-lockdown
-> >  create mode 100644 drivers/misc/platform-lockdown-attrs.c
-> >  create mode 100644 include/linux/platform_data/platform-lockdown-attrs.h
-> >
-> > diff --git a/Documentation/ABI/stable/sysfs-class-platform-lockdown b/Documentation/ABI/stable/sysfs-class-platform-lockdown
-> > new file mode 100644
-> > index 000000000000..6034d6cbefac
-> > --- /dev/null
-> > +++ b/Documentation/ABI/stable/sysfs-class-platform-lockdown
-> > @@ -0,0 +1,23 @@
-> > +What:                /sys/class/platform-lockdown/bioswe
-> > +Date:                July 2020
-> > +KernelVersion:       5.8.0
-> > +Contact:     Daniel Gutson <daniel.gutson@eclypsium.com>
-> > +Description: If the system firmware set BIOS Write Enable.
-> > +             0: writes disabled, 1: writes enabled.
-> > +Users:               https://github.com/fwupd/fwupd
-> > +
-> > +What:                /sys/class/platform-lockdown/ble
-> > +Date:                July 2020
-> > +KernelVersion:       5.8.0
-> > +Contact:     Daniel Gutson <daniel.gutson@eclypsium.com>
-> > +Description: If the system firmware set Bios Lock Enable.
->
->                                            BIOS
->
-> > +             0: SMM lock disabled, 1: SMM lock enabled.
-> > +Users:               https://github.com/fwupd/fwupd
-> > +
-> > +What:                /sys/class/platform-lockdown/smm_bwp
-> > +Date:                July 2020
-> > +KernelVersion:       5.8.0
-> > +Contact:     Daniel Gutson <daniel.gutson@eclypsium.com>
-> > +Description: If the system firmware set SMM Bios Write Protect.
->
->                                                BIOS
->
-> > +             0: writes disabled unless in SMM, 1: writes enabled.
-> > +Users:               https://github.com/fwupd/fwupd
->
->
->
-> cheers.
-> --
-> ~Randy
->
 
 
--- 
-Daniel Gutson
-Argentina Site Director
-Enginieering Director
-Eclypsium
+> -----Original Message-----
+> From: kvm-owner@vger.kernel.org <kvm-owner@vger.kernel.org> On Behalf
+> Of Babu Moger
+> Sent: Thursday, July 30, 2020 11:38 AM
+> To: Paolo Bonzini <pbonzini@redhat.com>; Jim Mattson
+> <jmattson@google.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>; Wanpeng Li
+> <wanpengli@tencent.com>; Sean Christopherson
+> <sean.j.christopherson@intel.com>; kvm list <kvm@vger.kernel.org>; Joerg
+> Roedel <joro@8bytes.org>; the arch/x86 maintainers <x86@kernel.org>; LKML
+> <linux-kernel@vger.kernel.org>; Ingo Molnar <mingo@redhat.com>; Borislav
+> Petkov <bp@alien8.de>; H . Peter Anvin <hpa@zytor.com>; Thomas Gleixner
+> <tglx@linutronix.de>
+> Subject: RE: [PATCH v3 03/11] KVM: SVM: Change intercept_dr to generic
+> intercepts
+> 
+> 
+> 
+> > -----Original Message-----
+> > From: Paolo Bonzini <pbonzini@redhat.com>
+> > Sent: Wednesday, July 29, 2020 6:12 PM
+> > To: Jim Mattson <jmattson@google.com>; Moger, Babu
+> > <Babu.Moger@amd.com>
+> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>; Wanpeng Li
+> > <wanpengli@tencent.com>; Sean Christopherson
+> > <sean.j.christopherson@intel.com>; kvm list <kvm@vger.kernel.org>;
+> > Joerg Roedel <joro@8bytes.org>; the arch/x86 maintainers
+> > <x86@kernel.org>; LKML <linux-kernel@vger.kernel.org>; Ingo Molnar
+> > <mingo@redhat.com>; Borislav Petkov <bp@alien8.de>; H . Peter Anvin
+> > <hpa@zytor.com>; Thomas Gleixner <tglx@linutronix.de>
+> > Subject: Re: [PATCH v3 03/11] KVM: SVM: Change intercept_dr to generic
+> > intercepts
+> >
+> > On 29/07/20 01:59, Jim Mattson wrote:
+> > >>         case SVM_EXIT_READ_DR0 ... SVM_EXIT_WRITE_DR7: {
+> > >> -               u32 bit = 1U << (exit_code - SVM_EXIT_READ_DR0);
+> > >> -               if (svm->nested.ctl.intercept_dr & bit)
+> > >> +               if (__is_intercept(&svm->nested.ctl.intercepts,
+> > >> + exit_code))
+> > > Can I assume that all of these __<function> calls will become
+> > > <function> calls when the grand unification is done? (Maybe I should
+> > > just look ahead.)
+> > >
+> >
+> > The <function> calls are reserved for the active VMCB while these take a
+> vector.
+> > Probably it would be nicer to call them vmcb_{set,clr,is}_intercept
+> > and make them take a struct vmcb_control_area*, but apart from that
+> > the concept is fine
+> >
+> > Once we do the vmcb01/vmcb02/vmcb12 work, there will not be anymore
+> > &svm->nested.ctl (replaced by &svm->nested.vmcb12->ctl) and we will be
+> > able to change them to take a struct vmcb*.  Then is_intercept would
+> > for example be
+> > simply:
+> Yea. True. It makes the code even cleaner. Also we can avoid calling
+> recalc_intercepts every time we set or clear a bit inside the same function(like
+> init_vmcb).
+> 
+> Let me try to understand.
+> 
+> vmcb01 is &svm->vmcb->control;l
+> vmcb02 is &svm->nested.hsave->control
+> vmcb12 is  &svm->nested.ctl;
+> 
+> The functions set_intercept and clr_intercept calls get_host_vmcb to get the
+> vmcb address.
 
-Below The Surface: Get the latest threat research and insights on
-firmware and supply chain threats from the research team at Eclypsium.
-https://eclypsium.com/research/#threatreport
+I will move the get_host_vmcb inside the caller and then call
+vmcb_set_intercept/vmcb_clr_intercept/vmcb_is_intercept directly.
+I will re post the series. This will change the whole series a little bit.
+
+Jim has already reviewed some of the patches. But I probably cannot use
+"Reviewed-by" if I change the patches too much. thanks
+
+> 
+> static inline struct vmcb *get_host_vmcb(struct vcpu_svm *svm) {
+>         if (is_guest_mode(&svm->vcpu))
+>                 return svm->nested.hsave;
+>         else
+>                 return svm->vmcb;
+> }
+> 
+> I need to study little bit when is_guest_mode Is on or off.  Let me take a look at.
+
+
+> 
+> Thanks
+> 
+> >
+> > 	return vmcb_is_intercept(svm->vmcb, nr);
+> >
+> > as expected.
+> >
+> > Paolo
+
