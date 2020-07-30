@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694BFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7379C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F47F2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2AC2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596097003;
-	bh=FVhoiaMqawfycJa2gTAx0+qfzi3sGM1BjKz7hpJQLzk=;
+	s=default; t=1596097009;
+	bh=OZYPXWVfMwBquWoDmCQumURZ7Eyv7oOh4xRRvY28ykk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F4y3CcUwibUNAMXhw/yinxEe+SrTIL8UYaGq5aU2u/YDoqLC78pk7YPjzgDhZDyjn
-	 JICcVCwCC9qq6qZFtzFePBojKEULLKVbqs8tsN0Tv2eQH/TlVLHy4n/zO9ZITxS8VP
-	 rRct6xEMzJrZ/dO/SqzhWWrv8MzxH/4WvC8O9HmA=
+	b=LQfrvbUpxsBbsCjDWjoyj/3wFVkelC1uSs5ZhG8pxbbHhPKHlSB1DpUUhu2Be/NAR
+	 UiPpvvec/xhnMWxwGWCiiU1kA867aXcg38ACahiGgNtGUp/K+XC6rDSaT/cw+TwdLM
+	 O0zVr/m7mD8JUEovC0kRNw1KHAT8vjtXYtQDUJvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgG3IKm (ORCPT
+        id S1729954AbgG3IQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49558 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:16:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729844AbgG3IKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:10:36 -0400
+        id S1729830AbgG3IKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:10:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 822802074B;
-        Thu, 30 Jul 2020 08:10:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 654552074B;
+        Thu, 30 Jul 2020 08:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096636;
-        bh=FVhoiaMqawfycJa2gTAx0+qfzi3sGM1BjKz7hpJQLzk=;
+        s=default; t=1596096630;
+        bh=OZYPXWVfMwBquWoDmCQumURZ7Eyv7oOh4xRRvY28ykk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e4QDwyyh+1QnBcGfU76JlqJG1QVgLGXieJVPX8UX8SuSoMld34eJ7ZFhPixJNswpd
-         ZbN4FjeSmrWIFCibioroTIYrwN2N52/dAWhc4ikpyhpZitvTLUFBUnWc7Z2EXJkDMV
-         7gmLpZQrVpIFCTDr0hxAdR/sjXSv9nOErPX83I9s=
+        b=L4hPCr0JaPG1PinkJ3w5Ay2p+ejubV5WKkJhgeZ20QlDf+/qXQyWOeq3xz9dSmdvQ
+         Cf4ScowlLzlBimfLx3esNAwd4PP2ofrY9XS+Wzd5Qq5os1onFSZfM4+2HNGIoxMhlq
+         u4jjTt5QGSUlyQb5VsVrYPOt1ZOGYnzWN0NIH0SM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Xiongfeng Wang <wangxiongfeng2@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 51/61] rxrpc: Fix sendmsg() returning EPIPE due to recvmsg() returning ENODATA
-Date:   Thu, 30 Jul 2020 10:05:09 +0200
-Message-Id: <20200730074423.305397265@linuxfoundation.org>
+Subject: [PATCH 4.9 49/61] net-sysfs: add a newline when printing tx_timeout by sysfs
+Date:   Thu, 30 Jul 2020 10:05:07 +0200
+Message-Id: <20200730074423.208969293@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
 References: <20200730074420.811058810@linuxfoundation.org>
@@ -59,51 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 
-[ Upstream commit 639f181f0ee20d3249dbc55f740f0167267180f0 ]
+[ Upstream commit 9bb5fbea59f36a589ef886292549ca4052fe676c ]
 
-rxrpc_sendmsg() returns EPIPE if there's an outstanding error, such as if
-rxrpc_recvmsg() indicating ENODATA if there's nothing for it to read.
+When I cat 'tx_timeout' by sysfs, it displays as follows. It's better to
+add a newline for easy reading.
 
-Change rxrpc_recvmsg() to return EAGAIN instead if there's nothing to read
-as this particular error doesn't get stored in ->sk_err by the networking
-core.
+root@syzkaller:~# cat /sys/devices/virtual/net/lo/queues/tx-0/tx_timeout
+0root@syzkaller:~#
 
-Also change rxrpc_sendmsg() so that it doesn't fail with delayed receive
-errors (there's no way for it to report which call, if any, the error was
-caused by).
-
-Fixes: 17926a79320a ("[AF_RXRPC]: Provide secure RxRPC sockets for use by userspace and kernel both")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rxrpc/recvmsg.c |    2 +-
- net/rxrpc/sendmsg.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ net/core/net-sysfs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/rxrpc/recvmsg.c
-+++ b/net/rxrpc/recvmsg.c
-@@ -439,7 +439,7 @@ try_again:
- 	    list_empty(&rx->recvmsg_q) &&
- 	    rx->sk.sk_state != RXRPC_SERVER_LISTENING) {
- 		release_sock(&rx->sk);
--		return -ENODATA;
-+		return -EAGAIN;
- 	}
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1018,7 +1018,7 @@ static ssize_t show_trans_timeout(struct
+ 	trans_timeout = queue->trans_timeout;
+ 	spin_unlock_irq(&queue->_xmit_lock);
  
- 	if (list_empty(&rx->recvmsg_q)) {
---- a/net/rxrpc/sendmsg.c
-+++ b/net/rxrpc/sendmsg.c
-@@ -191,7 +191,7 @@ static int rxrpc_send_data(struct rxrpc_
- 	/* this should be in poll */
- 	sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
+-	return sprintf(buf, "%lu", trans_timeout);
++	return sprintf(buf, fmt_ulong, trans_timeout);
+ }
  
--	if (sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN))
-+	if (sk->sk_shutdown & SEND_SHUTDOWN)
- 		return -EPIPE;
- 
- 	more = msg->msg_flags & MSG_MORE;
+ #ifdef CONFIG_XPS
 
 
