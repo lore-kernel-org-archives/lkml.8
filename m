@@ -2,110 +2,122 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9862070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E162070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:15:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ow95l7Hy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N2Sm8Dqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbgG3OPf (ORCPT
+        id S1729555AbgG3OP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:15:35 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40259 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727072AbgG3OPf (ORCPT
+        Thu, 30 Jul 2020 10:15:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbgG3OP4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:15:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596118534;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mC9bnvLUmM2DBjf+quSal6Se9a1/PYo8DVnoJYZcaTc=;
-        b=Ow95l7Hy33WpUuimm99Ud9CJFBgQD0BACnv886Nqeva1yiKdxYL8qujGa2RgrIt6zIJADE
-        dDESO9mihKk12v9ZjT1D1IcxF2K+MelbN7uKUo2tpSE0JSEKxCh7hCjYiQnHMn1pgD06ea
-        LieU59CIrmnQ2YWvuSiZvhkOy9WaQSU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-296-2bvH98rxNImIqjoAgJcl4A-1; Thu, 30 Jul 2020 10:15:32 -0400
-X-MC-Unique: 2bvH98rxNImIqjoAgJcl4A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 66FFA100944F;
-        Thu, 30 Jul 2020 14:15:31 +0000 (UTC)
-Received: from treble (ovpn-119-23.rdu2.redhat.com [10.10.119.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C0E2610246F2;
-        Thu, 30 Jul 2020 14:15:28 +0000 (UTC)
-Date:   Thu, 30 Jul 2020 09:15:26 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org, mbenes@suse.cz
-Subject: Re: [PATCH v3 2/4] objtool: Move orc outside of check
-Message-ID: <20200730141526.lr33zv4ffa3rdygp@treble>
-References: <20200730094143.27494-1-jthierry@redhat.com>
- <20200730094143.27494-3-jthierry@redhat.com>
- <20200730095759.GH2655@hirez.programming.kicks-ass.net>
- <dfe69c8f-db70-8366-5601-2592409ce7a0@redhat.com>
- <20200730132237.GM2655@hirez.programming.kicks-ass.net>
- <3af41a3b-a4b9-8120-3ac0-c9ce13770628@redhat.com>
+        Thu, 30 Jul 2020 10:15:56 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B4D8C061574;
+        Thu, 30 Jul 2020 07:15:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=tFNWyA6j56ec9aeIQ1OfZZxIge2UH4uedAgETJaYKbk=; b=N2Sm8DqfAr9tzEPQRhtlTBh2Mx
+        tox4OdA1mARnf8x6r2/doq8NQd/GK/8iZDaje/7XsV8tbwggyoq2W1S2ygXyLajpTKjcJd9QFE7rs
+        SG61EIoHG6EpfY4BgVOz9hO0M1JZQjS1CRYviOqKcNgj8f1nPY4fHN04NSa+ftWDiRksAGdy4Baf4
+        OBjvH33Y6L478WA5eYEArJ+5CAbHYsIps4st0nzh3UnqJd3UsrO4DVgi94MT4ICnRAUBZVLoepWOa
+        UqNbmygbtOqjvdev2rJApy35V0Pw68ULJKAwZABa5LKAIJ6et1rjNYrF1qv9XSikbQvyvTkKWndGQ
+        OdGEycIg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k19LN-0002N9-GX; Thu, 30 Jul 2020 14:15:37 +0000
+Date:   Thu, 30 Jul 2020 15:15:37 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
+        ebiederm@xmission.com, akpm@linux-foundation.org,
+        christian.brauner@ubuntu.com, areber@redhat.com, serge@hallyn.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 09/23] ns: Introduce ns_idr to be able to iterate all
+ allocated namespaces in the system
+Message-ID: <20200730141537.GF23808@casper.infradead.org>
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+ <159611040870.535980.13460189038999722608.stgit@localhost.localdomain>
+ <20200730122319.GC23808@casper.infradead.org>
+ <485c01e6-a4ee-5076-878e-6303e6d8d5f3@virtuozzo.com>
+ <20200730135640.GE23808@casper.infradead.org>
+ <1e41ae9d-9c3d-1c4a-d49e-b7f660ce99f7@virtuozzo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3af41a3b-a4b9-8120-3ac0-c9ce13770628@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <1e41ae9d-9c3d-1c4a-d49e-b7f660ce99f7@virtuozzo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 02:29:20PM +0100, Julien Thierry wrote:
+On Thu, Jul 30, 2020 at 05:12:09PM +0300, Kirill Tkhai wrote:
+> On 30.07.2020 16:56, Matthew Wilcox wrote:
+> > On Thu, Jul 30, 2020 at 04:32:22PM +0300, Kirill Tkhai wrote:
+> >> On 30.07.2020 15:23, Matthew Wilcox wrote:
+> >>> xa_erase_irqsave();
+> >>
+> >> static inline void *xa_erase_irqsave(struct xarray *xa, unsigned long index)
+> >> {
+> >> 	unsigned long flags;
+> >>         void *entry;
+> >>
+> >>         xa_lock_irqsave(xa, flags);
+> >>         entry = __xa_erase(xa, index);
+> >>         xa_unlock_irqrestore(xa, flags);
+> >>
+> >>         return entry;
+> >> }
+> > 
+> > was there a question here?
 > 
-> 
-> On 7/30/20 2:22 PM, peterz@infradead.org wrote:
-> > On Thu, Jul 30, 2020 at 01:40:42PM +0100, Julien Thierry wrote:
-> > > 
-> > > 
-> > > On 7/30/20 10:57 AM, peterz@infradead.org wrote:
-> > > > On Thu, Jul 30, 2020 at 10:41:41AM +0100, Julien Thierry wrote:
-> > > > > +		if (file->elf->changed)
-> > > > > +			return elf_write(file->elf);
-> > > > > +		else
-> > > > > +			return 0;
-> > > > >    	}
-> > > > 
-> > > > I think we can do without that else :-)
-> > > > 
-> > > 
-> > > I did wonder and was not 100% confident about it, but the orc gen will
-> > > always change the file, correct?
-> > 
-> > Not if it already has orc, iirc.
-> > 
-> > But what I was trying to say is that:
-> > 
-> > 	if (file->elf->changed)
-> > 		return elf_write(file->elf)
-> > 
-> > 	return 0;
-> > 
-> > is identical code and, IMO, easier to read.
-> > 
-> 
-> Much easier yes, I'll change it.
+> No, I just I will add this in separate patch.
 
-But I think file->elf->changed can be assumed at this point anyway, so
-it could just be an unconditional
+Ah, yes.  Thanks!
 
-	return elf_write(file->elf);
+> >>>> +struct ns_common *ns_get_next(unsigned int *id)
+> >>>> +{
+> >>>> +	struct ns_common *ns;
+> >>>> +
+> >>>> +	if (*id < PROC_NS_MIN_INO - 1)
+> >>>> +		*id = PROC_NS_MIN_INO - 1;
+> >>>> +
+> >>>> +	*id += 1;
+> >>>> +	*id -= PROC_NS_MIN_INO;
+> >>>> +
+> >>>> +	rcu_read_lock();
+> >>>> +	do {
+> >>>> +		ns = idr_get_next(&ns_idr, id);
+> >>>> +		if (!ns)
+> >>>> +			break;
+> >>>
+> >>> xa_find_after();
+> >>>
+> >>> You'll want a temporary unsigned long to work with ...
+> >>>
+> >>>> +		if (!refcount_inc_not_zero(&ns->count)) {
+> >>>> +			ns = NULL;
+> >>>> +			*id += 1;
+> >>>
+> >>> you won't need this increment.
+> >>
+> >> Why? I don't see a way xarray allows to avoid this.
+> > 
+> > It's embedded in xa_find_after().
+>  
+> How is it embedded to check ns->count that it knows nothing?
 
--- 
-Josh
+I meant you won't need to increment '*id'.  The refcount is, of course,
+your business.
 
