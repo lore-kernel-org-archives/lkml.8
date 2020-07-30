@@ -2,89 +2,102 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F7DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC35C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA021207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FF3207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 15:13:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="e7dfnkL3"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="McJOS71U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbgG3PMF (ORCPT
+        id S1729703AbgG3PNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:12:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33560 "EHLO
+        Thu, 30 Jul 2020 11:13:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727072AbgG3PME (ORCPT
+        with ESMTP id S1728286AbgG3PNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 11:12:04 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F05EC061575
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 08:12:04 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id r2so20171165wrs.8
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 08:12:04 -0700 (PDT)
+        Thu, 30 Jul 2020 11:13:18 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F2A2C061574
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 08:13:18 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id f24so7849583ejx.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 08:13:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxtx.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bd6k9y9ocae6qDNTeHFOtb+QmjW35gPCvFK2OagBbAk=;
-        b=e7dfnkL3oHidiv2xiTBuK7S3CHJPYTmyaCn9j9JyOM2kTQgefIxUsl9AW7/EUa/HVv
-         jXbUXc3YM0vy5t6Myr7f6toWwSrUmiucL7CmvB/QoT7VWI2tAJ8eg/8gPYgcIC8B3Bx7
-         nkEk9bRhEpkjLI7pmsscD/4YjNQ0zmo/0CQBM=
+        bh=vfXGH/CEwaBaC/kQBLI8IC/drfAO5muRPoqQ1huaXOI=;
+        b=McJOS71UhOePjQddHfrQt53FnJHJC0kuVMQu/+RnujQmsJPvqSwPBy9z8zCkrYYY2T
+         9ZdqgPN5eXpDFXra002a1uwK/liS5BLPcUlejRgFdKW3LooogLoj/fjnfsXkdw8i5Vup
+         f9PivRMEUHpTG9rhzJAdaWOlFMSurvCygaBEe0eBbeCKDY8s2kxeS+Rm2sdWUTIACFat
+         UOxs1fCjkyUlRBca/MYzag7GDk3MvtA6RhKZzFYXtxGfQGKGvuSxhn/fzdUD/F341109
+         Chcye3SKwaQBxN/tHr/LWyEEx7wP9nkvRA1tU6nzUS10GF65XzNFLZKPbZ4E187wWFYU
+         bKFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bd6k9y9ocae6qDNTeHFOtb+QmjW35gPCvFK2OagBbAk=;
-        b=RdH0Ou40/7QzUdsTaZ/nAdWtXqsARFkGDaI2y37xPKunfBA8R3KkDrVERJPkPF6iLx
-         IvD262fA0jTgtIf4mL5v09YyYKFH8fMzKinha1gXxDQBq2p75yuwNUYCYC8kiSo0k/tw
-         pfVESIkC6zx6ZnLYafJq4nOOC7vnNV4/mxA/+A5dj/kgaTUakFgfLysdcPEvBfCVjbBp
-         OUkKPIXpVVBWawmHgqQXOGX4LQmNwU3NVWTYERWJ8bfeqaM2aAWpAzDnaDML+T3b6KbH
-         hNQc3JAMStgqBwPcmQzLrTbYhC8Eu/rBR4Gb7B0hw2TZmYz1zJk1Jfk6MjZa5YnneUWv
-         hsRg==
-X-Gm-Message-State: AOAM531tYjTeSJhTaeXuzLudJKekeeCKJ15I51/oUCq+tPTZnpULPIba
-        IYSnSEUM6bLYul1q43ZvxHVjucphpjgre+WY5uxv7A==
-X-Google-Smtp-Source: ABdhPJyTMKHCgY67oNooR7z73laB6BI1tH8YVqF7S5lwcLdP6Zdqj8V26HYN5HBJVvnd7cd0j/MA/HFSaEVy1Oo4fzk=
-X-Received: by 2002:a5d:55c9:: with SMTP id i9mr3145795wrw.31.1596121923069;
- Thu, 30 Jul 2020 08:12:03 -0700 (PDT)
+        bh=vfXGH/CEwaBaC/kQBLI8IC/drfAO5muRPoqQ1huaXOI=;
+        b=kaMPT42d5OAtAF9GWHjh1fnRDT/H78qBiiLGFqCHlkhT0WBCeYFjeGCxNqGUcRijZW
+         iqIMzM1yfHEw4H+xr7PTUjENJD0KEo/0pi5EefeShEkwlGRHPyDxnXDuwn/UpErwJHB9
+         SJqi6WjRNUyQ6Gp/eBi/UBo83l4HO/rwfwmuEMKkPxPWE/7+Ghn0385t5dENun28vX4R
+         FZQPMfU6l0QIypdAW/pMZKpEbLhPzNewJyKrzEf9AMH50VHMgnoCKOC6kl1HytSx9KAJ
+         KucROwmnTONChRj8Cdzk4gKMbO0bw0+WV7hyBnffhgF/Ce+pOWgWC7ewuBLZS28t6jf+
+         h+kA==
+X-Gm-Message-State: AOAM531/yraxbGdUeu3V/bH89cvN6FoG4uwS9n4Huitb26v9xb9gZdBt
+        0K6WPMgF/JhwbA3wAl1kMnzSKc2ApWEOmQqqrkJTpA==
+X-Google-Smtp-Source: ABdhPJzunWv9jHlXQYg33b+C7Rtiu1eMksfQIE/LP2+0U+iyZFw1c/zddv7AfbByWB/s7vUMZbTHhoeQHHnKibfLQVo=
+X-Received: by 2002:a17:906:694b:: with SMTP id c11mr2989856ejs.232.1596121996817;
+ Thu, 30 Jul 2020 08:13:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200727130517.GA1222569@xps-13>
-In-Reply-To: <20200727130517.GA1222569@xps-13>
-From:   Justin Forbes <jmforbes@linuxtx.org>
-Date:   Thu, 30 Jul 2020 10:11:52 -0500
-Message-ID: <CAFxkdAphiZJWnrDUNToVwYJ1Nr9H+E9cSLwA6w3OwSpO4K+pow@mail.gmail.com>
-Subject: Re: crypto: aegis128: error: incompatible types when initializing
- type 'unsigned char' using type 'uint8x16_t'
-To:     Andrea Righi <andrea.righi@canonical.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20200729215152.662225-1-samitolvanen@google.com> <20200730122201.GM25149@gaia>
+In-Reply-To: <20200730122201.GM25149@gaia>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Thu, 30 Jul 2020 08:13:05 -0700
+Message-ID: <CABCJKucS-DXPkHMCPKpbFduZApRdw=1DL4+YhULAsUNn=o-dTA@mail.gmail.com>
+Subject: Re: [PATCH] arm64/alternatives: move length validation inside the subsection
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 8:05 AM Andrea Righi <andrea.righi@canonical.com> wrote:
+On Thu, Jul 30, 2020 at 5:22 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
 >
-> I'm experiencing this build error on arm64 after updating to gcc 10:
+> On Wed, Jul 29, 2020 at 02:51:52PM -0700, Sami Tolvanen wrote:
+> > Commit f7b93d42945c ("arm64/alternatives: use subsections for replacement
+> > sequences") breaks LLVM's integrated assembler, because due to its
+> > one-pass design, it cannot compute instruction sequence lengths before the
+> > layout for the subsection has been finalized. This change fixes the build
+> > by moving the .org directives inside the subsection, so they are processed
+> > after the subsection layout is known.
+> >
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/1078
+> > Cc: <stable@vger.kernel.org> # 4.14+
 >
-> crypto/aegis128-neon-inner.c: In function 'crypto_aegis128_init_neon':
-> crypto/aegis128-neon-inner.c:151:3: error: incompatible types when initializing type 'unsigned char' using type 'uint8x16_t'
->   151 |   k ^ vld1q_u8(const0),
->       |   ^
-> crypto/aegis128-neon-inner.c:152:3: error: incompatible types when initializing type 'unsigned char' using type 'uint8x16_t'
->   152 |   k ^ vld1q_u8(const1),
->       |   ^
->
-> Anybody knows if there's a fix for this already? Otherwise I'll take a look at it.
+> Commit f7b93d42945c went in 5.8-rc4. Why is this cc stable from 4.14? If
+> Will picks it up for 5.8, it doesn't even need a cc stable.
 
+Greg or Sasha can probably answer why, but this patch is in 4.14.189,
+4.19.134, 5.4.53, and 5.7.10, which ended up breaking some downstream
+Android kernel builds.
 
-I hit it and have been working with Jakub on the issue.
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96377
+> Please add a Fixes: tag as well.
 
-Justin
+Sure, I'll send v2 shortly with the tag. Thanks.
+
+Sami
