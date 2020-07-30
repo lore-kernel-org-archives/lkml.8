@@ -2,45 +2,80 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A876C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2441420829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91FB220829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 14:42:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PEa1sYo+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbgG3OlD (ORCPT
+        id S1729599AbgG3OmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:41:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:40794 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729092AbgG3OlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 10:41:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D42F61FB;
-        Thu, 30 Jul 2020 07:41:01 -0700 (PDT)
-Received: from [10.37.12.83] (unknown [10.37.12.83])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E2313F71F;
-        Thu, 30 Jul 2020 07:41:00 -0700 (PDT)
-Subject: Re: [RFC PATCH 01/14] coresight: etm4x: Skip save/restore before
- device registration
-To:     mathieu.poirier@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mike.leach@linaro.org, coresight@lists.linaro.org
-References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
- <20200722172040.1299289-2-suzuki.poulose@arm.com>
- <20200729180128.GA3073178@xps15>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <dc1409bf-3b8a-d669-fb9a-09537d01fb0f@arm.com>
-Date:   Thu, 30 Jul 2020 15:45:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Thu, 30 Jul 2020 10:42:16 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39490 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728462AbgG3OmP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 10:42:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596120134;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kMSPwb1etFyzoIcdbAVB17SQWsfWen8ZJAVvIL55HPY=;
+        b=PEa1sYo+F2QLLCZQTMSTpklAfgYyZzzrajI3lKYK4a5BdQorruOW0g0R3hKzYg4W3VcgAS
+        J3JFKAV4vGxeDvDMfrBiYEPsmcF7xPM0wP04Od9d/WndoHJLtJ8hX4KnlIrOogjc8cS+HS
+        HMVXOUhtkKTuxtp6+qjjTQWXJ4Zxu0A=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-82-bVNqYHHOP8-mp1Ku_y86zQ-1; Thu, 30 Jul 2020 10:42:12 -0400
+X-MC-Unique: bVNqYHHOP8-mp1Ku_y86zQ-1
+Received: by mail-wr1-f72.google.com with SMTP id t3so6985219wrr.5
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 07:42:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kMSPwb1etFyzoIcdbAVB17SQWsfWen8ZJAVvIL55HPY=;
+        b=KYPJBlpYy0vQ0HQCNtV19JKGASvvg/f/bS0xmY050ONQ9hraUxHP9GXx5diOSdNC2b
+         U/kcatZ+5DEgyFfP8VOo3kxM/T9b+dZ9h8QBE+kRIhLr1m3CUQCOHxDjTzf7Y5ITVUSZ
+         Dh7Jy+DNgbthHVf+NLT7KRh3Hcob//itr/DNwg48ONLbaHRtpFVQE4fe9DMe9Raiz+Cd
+         FA3UpdbUKBw3TokWeQt0qy9JXpDemztWZuy9jUkECaRYbAKIB2FfPMqFRMRCYmUzJx7X
+         yiv7PcwfCNGfVOhFkVLeQ8WJIiHdy+mVJHQ9jl37ZsTFQeWdYNaUYp6DizyHdhV4m93r
+         ygZg==
+X-Gm-Message-State: AOAM53153TDKRw4Trk+bm+5MbIS2eGZVVHpyUFow7hUug5/MXiaPF5ai
+        xZ/qXmy24UttoA0NQsrYTbFoCUNLJ956xoFOo1+AsAjLkW5gYtIfszhO23pZ5QWU5LMDFLyCDyG
+        C/hDXb022c5JitQT6kqspMICZ
+X-Received: by 2002:a5d:51c3:: with SMTP id n3mr3172352wrv.104.1596120131352;
+        Thu, 30 Jul 2020 07:42:11 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwYtVkLYNSwnOVhiVSEhOm66tDC6ymDuzh1WKYyGYOJyFk3NZUUIlqMiwi/QARFoKvOHrwfOA==
+X-Received: by 2002:a5d:51c3:: with SMTP id n3mr3172312wrv.104.1596120130776;
+        Thu, 30 Jul 2020 07:42:10 -0700 (PDT)
+Received: from ?IPv6:2a01:cb14:499:3d00:cd47:f651:9d80:157a? ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
+        by smtp.gmail.com with ESMTPSA id h7sm6561387wmf.43.2020.07.30.07.42.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jul 2020 07:42:10 -0700 (PDT)
+Subject: Re: [PATCH v3 0/4] Remove dependency of check subcmd upon orc
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mhelsley@vmware.com, mbenes@suse.cz
+References: <20200730094143.27494-1-jthierry@redhat.com>
+ <20200730140623.5aw7lm57j7qof5pm@treble>
+From:   Julien Thierry <jthierry@redhat.com>
+Message-ID: <f63f8472-8b05-7457-f9ea-2a9f34e5d486@redhat.com>
+Date:   Thu, 30 Jul 2020 15:42:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200729180128.GA3073178@xps15>
+In-Reply-To: <20200730140623.5aw7lm57j7qof5pm@treble>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -49,91 +84,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/29/2020 07:01 PM, Mathieu Poirier wrote:
-> Hi Suzuki,
-> 
-> I have starte to review this - comments will be scattered over a few days.
-> 
-> On Wed, Jul 22, 2020 at 06:20:27PM +0100, Suzuki K Poulose wrote:
->> Skip cpu save/restore before the coresight device is registered.
+
+
+On 7/30/20 3:06 PM, Josh Poimboeuf wrote:
+> On Thu, Jul 30, 2020 at 10:41:39AM +0100, Julien Thierry wrote:
+>> Hi,
 >>
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Cc: Mike Leach <mike.leach@linaro.org>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>   drivers/hwtracing/coresight/coresight-etm4x.c | 16 +++++++++++++++-
->>   1 file changed, 15 insertions(+), 1 deletion(-)
+>> Matt Helsley's change[1] provided a base framework to opt-in/out
+>> objtool subcommands at compile time. This makes it easier for
+>> architectures to port objtool, one subcommand at a time.
 >>
->> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
->> index 6d7d2169bfb2..cb83fb77ded6 100644
->> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
->> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
->> @@ -1135,7 +1135,13 @@ static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
->>   {
->>   	int i, ret = 0;
->>   	struct etmv4_save_state *state;
->> -	struct device *etm_dev = &drvdata->csdev->dev;
->> +	struct coresight_device *csdev = drvdata->csdev;
->> +	struct device *etm_dev;
->> +
->> +	if (WARN_ON(!csdev))
->> +		return -ENODEV;
->> +
->> +	etm_dev = &csdev->dev;
->>   
->>   	/*
->>   	 * As recommended by 3.4.1 ("The procedure when powering down the PE")
->> @@ -1261,6 +1267,10 @@ static void etm4_cpu_restore(struct etmv4_drvdata *drvdata)
->>   {
->>   	int i;
->>   	struct etmv4_save_state *state = drvdata->save_state;
->> +	struct coresight_device *csdev = drvdata->csdev;
->> +
->> +	if (WARN_ON(!csdev))
->> +		return;
+>> Orc generation relies on the check operation implementation. However,
+>> the way this is done causes the check implementation to depend on the
+>> implementation of orc generation functions to call if orc generation is
+>> requested. This means that in order to implement check subcmd, orc
+>> subcmd also need to be implemented.
+>>
+>> These patches aim at removing that dependency, having orc subcmd
+>> being built on top of the check subcmd.
+>>
+>>
+>> Changes since v2 [2]:
+>> - Rebased on recent tip/objtool/core
 > 
-> Restore and save operations are only called from etm4_cpu_pm_notify() where the
-> check for a valid drvdata->csdev is already done.
+> tip/objtool/core is slightly outdated, I got a conflict with patch 1.
 > 
+> I guess linus/master would be best.
 
-Correct, this is just an enforcement as we are going to rely on the 
-availability of drvdata->csdev to access the device with the
-introduction of abstraction. This is why we WARN_ON() as we should
-never hit this case.
+It looks like linus/master is missing the rela -> reloc rework that is 
+present in tip/objtool/core, which will conflict with other patches from 
+this series.
 
->>   
->>   	CS_UNLOCK(drvdata->base);
->>   
->> @@ -1368,6 +1378,10 @@ static int etm4_cpu_pm_notify(struct notifier_block *nb, unsigned long cmd,
->>   
->>   	drvdata = etmdrvdata[cpu];
->>   
->> +	/* If we have not registered the device there is nothing to do */
->> +	if (!drvdata->csdev)
->> +		return NOTIFY_OK;
-> 
-> Can you describe the scenario you've seen this happening in?  Probably best to
-> add it to the changelog.
+How shall I proceed?
 
-The CPU PM notifier is registered with the probing of the first ETM
-device. Now, another ETM device could be probed (on a different CPU
-than the parent of this ETM). Now, there is a very narrow window of
-time between :
+-- 
+Julien Thierry
 
-1) Initialise etmdrvdata[cpu]
-
-2) Register the coresight_device for the ETM.(i.e, coresight_register()).
-
-If the CPU is put on idle, after (1) and before (2), we end up with
-
-drvdata->csdev == NULL.
-
-This is unacceptable and there is no need to take an action in
-such case. This patch fixes the potential problem, also making
-sure that we have the access methods available when we need it.
-(drvdata->csdev->access)
-
-I will add it to the commit message.
-
-Cheers
-Suzuki
