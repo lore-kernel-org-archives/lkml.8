@@ -2,170 +2,131 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE09C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCC12083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9870E20842
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:20:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CNYeSPa5"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BVHxBkPZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgG3FTk (ORCPT
+        id S1728660AbgG3FUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 01:19:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbgG3FTj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 01:19:39 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC975C061794;
-        Wed, 29 Jul 2020 22:19:39 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id u10so3655203plr.7;
-        Wed, 29 Jul 2020 22:19:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EnGXeNbQwuYNZ4/SgA8a2g0/K9Xn2zkd8XxAO1wpPBE=;
-        b=CNYeSPa5UHoQU/zAXoMxTvIy8LM9ZnpBrUa+u5uUMyQdzorRKQusWkM0WWRphxi5ru
-         p/FmoF5qPGgJNNY0+EDETyed1MxEEDnBRCn9/qFltha0m+8igcWmCh9nFCRh3mRLf5qE
-         oXYFuLxMrynBJjPTQ7xkCv/VoWYHHQ2CxG1MYDb+mDbsqpKjABOqr2615HF+D0k0Y0bq
-         hwvXDejkhM7UM6Kq06SzRnTtf4aB1nJ4vOVO7tFo3BKYD0PajnvSPrWUBK29IIfPQCAQ
-         blSwhF47KNibbIJ0e+vT7gwNsoX4dZds4/os/tKEW05Jbq9BhC9BWwcZUM8GY/o0iiOY
-         5Fpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EnGXeNbQwuYNZ4/SgA8a2g0/K9Xn2zkd8XxAO1wpPBE=;
-        b=ZpvvJcx1L6B6EVe5tw0dnjBR5DrHJlZZrXLfE7E/t8FhC1ixH4/O4ECQ70BxzuF8z1
-         oUCQ6lEitwFG9xR9wFBlenq8V0iVcHCLw5k3sO6uLdj0q16um5Isx6VPHqmh8R2PyTPL
-         Jos1Gc//WtjkpbOJaBleR4ROf+YVF2O+OUIulCnNEy4wNn4YNldfaM4c1HyzSm++oc9j
-         NeV7/WyJPHlNWdm8cMYQcjyMH2GD1pSsCxj1S7aMc2oqSpG+3N+6dBaYJC7TCM8zNnSV
-         w38UOojlPlzFl95beAFYXZJOkmd8R7gGasap+CQ2zsUUrk8e6xS/wC206+xe6PXcDik6
-         m2kQ==
-X-Gm-Message-State: AOAM5323x6vWTIReWcWarTVeRKGubv1IC3brQBmDrVegkYNqtwI3vmtm
-        mYkLh0/8Xr69ATGg6k7hPeY=
-X-Google-Smtp-Source: ABdhPJwjUlYjYmMWc8AL8fvrnaAOvzZZqXAtYVN5Q/5zg1fY1zOc8Bo7eLrzwvyLF10mdRA/NCC5WA==
-X-Received: by 2002:a17:902:103:: with SMTP id 3mr31556502plb.195.1596086379202;
-        Wed, 29 Jul 2020 22:19:39 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id 9sm4224025pfx.131.2020.07.29.22.19.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 22:19:38 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v1] scsi: stex: use generic power management
-Date:   Thu, 30 Jul 2020 10:47:33 +0530
-Message-Id: <20200730051733.113652-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Thu, 30 Jul 2020 01:20:10 -0400
+Received: from ozlabs.org ([203.11.71.1]:46997 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726267AbgG3FUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 01:20:10 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHJdN0ss3z9sRX;
+        Thu, 30 Jul 2020 15:20:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596086408;
+        bh=ODeRgtMKT9jb1AW+U70iuR+0CpBcYdgaLgF+n3GXCP4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BVHxBkPZYUUs2Y6tuyHj5/gZZ98M9TqcWwGpfOpIihsQ0Z9MSdbw4YcTaPA5xqGiJ
+         bXmHaVtsWKLxTYTJIkUnCz1M5J0honBwSb4a9XhHl6RmyS6YnBg0uRrEEYvqvFqYda
+         /lOe12lKSibmolA6r2GVWamN6PRUmOU3Ovq6PdKfapT8UKdwwDbrKiSHWOkohLFDq/
+         xtgkl0Ydp9K7YfmH4ZtWrCMLAO/uqRGe7ghqqHligX7Vq/xIfeGw90AxSZsZ3gEkTD
+         4TMYsUBALOiNM7ZMi8GUKx/Qdpp/4L7ZLiGF31v+HB7qWH/SuKtftMFryESdzMWO0r
+         B2gUjy+qTJzjg==
+Date:   Thu, 30 Jul 2020 15:20:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@lst.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>
+Subject: linux-next: manual merge of the iommu tree with the dma-mapping
+ tree
+Message-ID: <20200730152006.7d012668@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/.gygsxj+xJnStLtg1iKpndV";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers using legacy power management .suspen()/.resume() callbacks
-have to manage PCI states and device's PM states themselves. They also
-need to take care of standard configuration registers.
+--Sig_/.gygsxj+xJnStLtg1iKpndV
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Switch to generic power management framework using a single
-"struct dev_pm_ops" variable to take the unnecessary load from the driver.
-This also avoids the need for the driver to directly call most of the PCI
-helper functions and device power state control functions, as through
-the generic framework PCI Core takes care of the necessary operations,
-and drivers are required to do only device-specific jobs.
+Hi all,
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Today's linux-next merge of the iommu tree got a conflict in:
+
+  drivers/iommu/Kconfig
+
+between commit:
+
+  2f9237d4f6df ("dma-mapping: make support for dma ops optional")
+
+from the dma-mapping tree and commit:
+
+  ab65ba57e3ac ("iommu/vt-d: Move Kconfig and Makefile bits down into intel=
+ directory")
+
+from the iommu tree.
+
+I fixed it up (I used the ;atter and applied the folowing merge fix
+patch as well) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 30 Jul 2020 15:14:18 +1000
+Subject: [PATCH] merge fix for "dma-mapping: make support for dma ops optio=
+nal"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
- drivers/scsi/stex.c | 35 +++++++++++++++++++++++++++++------
- 1 file changed, 29 insertions(+), 6 deletions(-)
+ drivers/iommu/intel/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/stex.c b/drivers/scsi/stex.c
-index d4f10c0d813c..9500666b521a 100644
---- a/drivers/scsi/stex.c
-+++ b/drivers/scsi/stex.c
-@@ -1972,9 +1972,9 @@ static int stex_choice_sleep_mic(struct st_hba *hba, pm_message_t state)
- 	}
- }
- 
--static int stex_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int stex_suspend_late(struct device *dev, pm_message_t state)
- {
--	struct st_hba *hba = pci_get_drvdata(pdev);
-+	struct st_hba *hba = dev_get_drvdata(dev);
- 
- 	if ((hba->cardtype == st_yel || hba->cardtype == st_P3)
- 		&& hba->supports_pm == 1)
-@@ -1984,9 +1984,24 @@ static int stex_suspend(struct pci_dev *pdev, pm_message_t state)
- 	return 0;
- }
- 
--static int stex_resume(struct pci_dev *pdev)
-+static int stex_suspend(struct device *dev)
- {
--	struct st_hba *hba = pci_get_drvdata(pdev);
-+	return stex_suspend_late(dev, PMSG_SUSPEND);
-+}
-+
-+static int stex_hibernate(struct device *dev)
-+{
-+	return stex_suspend_late(dev, PMSG_HIBERNATE);
-+}
-+
-+static int stex_freeze(struct device *dev)
-+{
-+	return stex_suspend_late(dev, PMSG_FREEZE);
-+}
-+
-+static int stex_resume(struct device *dev)
-+{
-+	struct st_hba *hba = dev_get_drvdata(dev);
- 
- 	hba->mu_status = MU_STATE_STARTING;
- 	stex_handshake(hba);
-@@ -2000,14 +2015,22 @@ static int stex_halt(struct notifier_block *nb, unsigned long event, void *buf)
- }
- MODULE_DEVICE_TABLE(pci, stex_pci_tbl);
- 
-+static const struct dev_pm_ops stex_pm_ops = {
-+	.suspend	= stex_suspend,
-+	.resume		= stex_resume,
-+	.freeze		= stex_freeze,
-+	.thaw		= stex_resume,
-+	.poweroff	= stex_hibernate,
-+	.restore	= stex_resume,
-+};
-+
- static struct pci_driver stex_pci_driver = {
- 	.name		= DRV_NAME,
- 	.id_table	= stex_pci_tbl,
- 	.probe		= stex_probe,
- 	.remove		= stex_remove,
- 	.shutdown	= stex_shutdown,
--	.suspend	= stex_suspend,
--	.resume		= stex_resume,
-+	.driver.pm	= &stex_pm_ops,
- };
- 
- static int __init stex_init(void)
--- 
+diff --git a/drivers/iommu/intel/Kconfig b/drivers/iommu/intel/Kconfig
+index 877beec9d987..5337ee1584b0 100644
+--- a/drivers/iommu/intel/Kconfig
++++ b/drivers/iommu/intel/Kconfig
+@@ -6,6 +6,7 @@ config DMAR_TABLE
+ config INTEL_IOMMU
+ 	bool "Support for Intel IOMMU using DMA Remapping Devices"
+ 	depends on PCI_MSI && ACPI && (X86 || IA64)
++	select DMA_OPS
+ 	select IOMMU_API
+ 	select IOMMU_IOVA
+ 	select NEED_DMA_MAP_STATE
+--=20
 2.27.0
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/.gygsxj+xJnStLtg1iKpndV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8iWIYACgkQAVBC80lX
+0GxylAf3V+eKlEHqQi+SBPIXWiaFumZKs8Zr6vyqoeeu1NhsHKGmfRuUs7DI5Rd0
+ss5/FvPXlbnmqsZT0KoCeS9ZwAIjlh8OJ/9eiR1q9bgkAAEBrFNIC2BaP47/O433
+Hd/BlGhnbFpyZQ5hWv9cn+GGP5TwSGyDHa87nkhh3vBzh4ScRTjYkT+KKC5z54Au
+rAq2MYLvqaJBBCHLb28Si1aO/OFGxhDJGXmy03p/Qo7Ds98uCfqIEWiJMdE0yvro
+jkkk0mfrnchgof/iQllMoppkoHAJ7nEXZgSlpLVE+M3egM9svMd4VMkDNoC1yzCx
+7Ax+PJ7DYjJdhGmQ1BNsQJjfskf/
+=yw64
+-----END PGP SIGNATURE-----
+
+--Sig_/.gygsxj+xJnStLtg1iKpndV--
