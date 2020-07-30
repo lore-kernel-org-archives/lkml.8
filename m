@@ -2,109 +2,123 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF113C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB904C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97FE6207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8700B207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 21:15:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oR2b908x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iSeinaQF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbgG3VKY (ORCPT
+        id S1730536AbgG3VPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 17:10:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60468 "EHLO
+        Thu, 30 Jul 2020 17:15:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730279AbgG3VKX (ORCPT
+        with ESMTP id S1730281AbgG3VO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 17:10:23 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94920C061574;
-        Thu, 30 Jul 2020 14:10:23 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id c2so15113696edx.8;
-        Thu, 30 Jul 2020 14:10:23 -0700 (PDT)
+        Thu, 30 Jul 2020 17:14:59 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275EDC06174A
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:14:59 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id f24so8891642ejx.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 14:14:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=2LS+lsv6BvDaBlta6f0iZC0wQ8SWNLdIF6mK8BSsBkc=;
-        b=oR2b908xTvNqBccDhi4kJMZR7ZhEijb9wHfTvmPJr31mn237Itvtf7kKlwn+nKc04I
-         A6QbGcayxdWY1huhNzPuwqSajwtAkcp6bKd9W03Z5caH0Sy8N493LR3KQqZubEqMhY7/
-         2bN1PLfR7xxFBPGVXKRFr/ycMWMTylNRDNAz1q+BCaS9cMRR2+34+r8wxSMs1Usm4AI/
-         ScPNnBGGQIYTHR+zR4sNzEoXj8oJ1G380GVUgexEkPZhqB7ZSL3E3MMB8hU7TivzdiMs
-         vA9kx6HPjhdLLMkWmus0LFCnPGnhdMx3KGSi5JZXSNQoxtQqNxnfxfLNU0Q6Xn0DJjtp
-         sUmw==
+        bh=HQQ6RdOfI3qK/AtcGyAa3PPfsZ6PvAzcNLL/uW5Ov+c=;
+        b=iSeinaQFf3yOe2lHxw0CJ8uvvymodnA+gZRBuK4XFslunfBv0lKOpua4/qzmJAeEFf
+         CIhT9MTlKcx429Yqx/9BIvA0klhKjSnvGk84//qFwlrkB9ss82m9nN1DLOaLaapcrVBh
+         KwI/PLMaPPLuiVBdfpgbc6+Q6yzAILIrEWmSOzbfKHx359OcZL2Ra3+hiznU8ilKAdgG
+         YM3x9kcYKXXxov8pSZBJMUeEQ2qZIy648K1J3KfS1xgw1u2pwO3Wr8gjFMa+X2vSEiZ+
+         yNar+F+DxEXNUGQoQlvdbdB6KQ/xGNWe7kHQq4J3/QP3sB0jL/wbrhD+H/8BX/pHIxDw
+         xrHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=2LS+lsv6BvDaBlta6f0iZC0wQ8SWNLdIF6mK8BSsBkc=;
-        b=LzHvBjsjZqDEi/89DwdIeDOhrs45bLdXffQq1mDtkY/lq3/xTtfTaP15qR314Osx5C
-         lRqjrnVGkxv31WWKb+hIQyLCKRtG2SNT1Pg9v0nrs+d1WUE3FNsRA6SWOXBLaEUX+mwX
-         54R+PlC8xgJ15Q2FJgEQz2VOFuTCNWysBP3dOrjYzUPyKUICMI/pQoKDDbgTbVFd9qth
-         xqer0Bygk3JhvOhsXU8BUfm7SG+xiG7qowIiCSr1fXZnx4aJQxROu6pOUJmSSksDeC/L
-         /KO5FXGzMRD4dsTnmUeRpWP20nyHKr2C7LW2q0n2SX/drab/y0mWQyuv5n/AqQ1nOapV
-         /Fpg==
-X-Gm-Message-State: AOAM5322K9aQ4c/BNAeruPYxnhTDlOVKtF3KHaxqnRLQ7Xf3M+HgR52g
-        zJUTs/OAVEDOBIjeEiguawSzttsD
-X-Google-Smtp-Source: ABdhPJwCwBAXUVJ1q6Hm+e1asYDAniuJEjwV6i5ig5xSp11YmPoBbn2WbQRp6wM72Y96QWfUDeksKw==
-X-Received: by 2002:a05:6402:1b1c:: with SMTP id by28mr923522edb.89.1596143422188;
-        Thu, 30 Jul 2020 14:10:22 -0700 (PDT)
-Received: from skbuf ([188.26.57.97])
-        by smtp.gmail.com with ESMTPSA id bi2sm7630231edb.27.2020.07.30.14.10.21
+        bh=HQQ6RdOfI3qK/AtcGyAa3PPfsZ6PvAzcNLL/uW5Ov+c=;
+        b=L+yOEkNzqe5jEuGcYvDAO7ZTclrxMVpeL/uqyB8PTkYiK1dPkaTKy19SnpiOprcc6e
+         qDcOXOzinZnep2Z07ZFrssRUF/ZcgkOEe8oVUHgqTwhF0Z189Jst9qwrEWtrmZuNUP5N
+         6jK5Qrbx0Xq5pIqV6e2tqnbnzr0yT82Td19Z6YzaXtM8b1+oKDslvI7qC6zQvvvNe5no
+         O7opbxrptj7ONvNyYmTpexHsAalk8DTo9x41dtka5iRpIbqI1IFLsAovMpCR4yer+Y5s
+         oOvib1xu0qCxAEHHogzI/9HYdZTTfE+9aKDZJESpOrvFxXYv1gwCIEG643FuC631eOJm
+         OImw==
+X-Gm-Message-State: AOAM5300i/4leF9iscWE785/xfPw94Jk9tzyBsiF/v1Pc/6mpxCsZ5C0
+        /YKcwwSdPV3Blv5JOwwcTfq3aA==
+X-Google-Smtp-Source: ABdhPJzlHh02QVVAFLKTB+xoRHb3mqAraUbK6zYudTHxIdHXY8kSsZkO1Rf8FHPFvQ+mk1u0vH6A8A==
+X-Received: by 2002:a17:906:fb07:: with SMTP id lz7mr991136ejb.49.1596143697686;
+        Thu, 30 Jul 2020 14:14:57 -0700 (PDT)
+Received: from lophozonia ([2001:1715:4e26:a7e0:f1b0:45a6:cd09:bcd0])
+        by smtp.gmail.com with ESMTPSA id w20sm7569128eds.21.2020.07.30.14.14.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 14:10:21 -0700 (PDT)
-Date:   Fri, 31 Jul 2020 00:10:19 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Jonathan McDowell <noodles@earth.li>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Matthew Hagan <mnhagan88@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] net: dsa: qca8k: Add 802.1q VLAN support
-Message-ID: <20200730211019.lsqar5vbrxu5xw2u@skbuf>
-References: <20200721171624.GK23489@earth.li>
- <20200726145611.GA31479@earth.li>
- <20200728163457.imcrsuj7w2la5inp@skbuf>
- <20200730104029.GB21409@earth.li>
+        Thu, 30 Jul 2020 14:14:57 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 23:14:53 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Qian Cai <cai@lca.pw>, linux-arm-kernel@lists.infradead.org,
+        bpf@vger.kernel.org, songliubraving@fb.com, andriin@fb.com,
+        catalin.marinas@arm.com, john.fastabend@gmail.com, ast@kernel.org,
+        zlim.lnx@gmail.com, kpsingh@chromium.org, yhs@fb.com,
+        will@kernel.org, kafai@fb.com, sfr@canb.auug.org.au,
+        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 1/1] arm64: bpf: Add BPF exception tables
+Message-ID: <20200730211453.GA79372@lophozonia>
+References: <20200728152122.1292756-1-jean-philippe@linaro.org>
+ <20200728152122.1292756-2-jean-philippe@linaro.org>
+ <20200730122855.GA3773@lca.pw>
+ <20200730142213.GB1529030@myrica>
+ <f2f05f41-ccf9-e693-85bf-59ebbf8dadfe@iogearbox.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200730104029.GB21409@earth.li>
+In-Reply-To: <f2f05f41-ccf9-e693-85bf-59ebbf8dadfe@iogearbox.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 11:40:29AM +0100, Jonathan McDowell wrote:
-> > > +
-> > > +	for (vid = vlan->vid_begin; vid <= vlan->vid_end && !ret; ++vid)
-> > > +		ret = qca8k_vlan_add(priv, port, vid, !untagged);
-> > > +
-> > > +	if (ret)
-> > > +		dev_err(priv->dev, "Failed to add VLAN to port %d (%d)", port, ret);
-> > > +
+On Thu, Jul 30, 2020 at 09:47:39PM +0200, Daniel Borkmann wrote:
+> On 7/30/20 4:22 PM, Jean-Philippe Brucker wrote:
+> > On Thu, Jul 30, 2020 at 08:28:56AM -0400, Qian Cai wrote:
+> > > On Tue, Jul 28, 2020 at 05:21:26PM +0200, Jean-Philippe Brucker wrote:
+> > > > When a tracing BPF program attempts to read memory without using the
+> > > > bpf_probe_read() helper, the verifier marks the load instruction with
+> > > > the BPF_PROBE_MEM flag. Since the arm64 JIT does not currently recognize
+> > > > this flag it falls back to the interpreter.
+> > > > 
+> > > > Add support for BPF_PROBE_MEM, by appending an exception table to the
+> > > > BPF program. If the load instruction causes a data abort, the fixup
+> > > > infrastructure finds the exception table and fixes up the fault, by
+> > > > clearing the destination register and jumping over the faulting
+> > > > instruction.
+> > > > 
+> > > > To keep the compact exception table entry format, inspect the pc in
+> > > > fixup_exception(). A more generic solution would add a "handler" field
+> > > > to the table entry, like on x86 and s390.
+> > > > 
+> > > > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > > 
+> > > This will fail to compile on arm64,
+> > > 
+> > > https://gitlab.com/cailca/linux-mm/-/blob/master/arm64.config
+> > > 
+> > > arch/arm64/mm/extable.o: In function `fixup_exception':
+> > > arch/arm64/mm/extable.c:19: undefined reference to `arm64_bpf_fixup_exception'
 > > 
-> > If for some reason there is a temporary failure in qca8k_vlan_add, you'd
-> > be swallowing it instead of printing the error and stopping the
-> > execution.
+> > Thanks for the report, I attached a fix. Daniel, can I squash it and
+> > resend as v2 or is it too late?
 > 
-> I don't follow; I'm breaking out of the for loop when we get an error? I
-> figured that was a better move than potentially printing 4095 error
-> messages if they were all going to fail.
-> 
+> If you want I can squash your attached snippet into the original patch of
+> yours. If you want to send a v2 that is fine as well of course. Let me know.
 
-Oh, you are. What an exotic way to write this loop, my brain stopped
-parsing beyond "vid_end".
+Yes please squash it into the original patch, sorry for the mess
 
 Thanks,
--Vladimir
+Jean
