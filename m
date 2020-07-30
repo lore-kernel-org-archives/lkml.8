@@ -2,119 +2,68 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C57C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E48AEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 729D52075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:24:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ldIuMhjR"
+	by mail.kernel.org (Postfix) with ESMTP id CCBDD2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:25:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbgG3GYY (ORCPT
+        id S1728766AbgG3GZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 02:24:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgG3GYU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 02:24:20 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93690C0619D4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 23:24:19 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id s15so4414191pgc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 23:24:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XPnPVe/hBWV8ylTxStT4hqgYjjgVSOD9uWxEIWOaFgQ=;
-        b=ldIuMhjRCKAjbwoGPa+nSN6KncO7fsi1IvDYGFsNSnDyaQ+H/cnJ2f3w7dEo5QgvPh
-         xtEqOV1uuf/gmhfscqmAA2ExohCpn3Zz+GXwzguHX1VAmjy6p2iBuNi2VejPqhC81xxw
-         etkEWT9Vuu6P1PiO3NYhSe2KtJKglpTZUWrU9sn/Kgi4AZjoqS/Sk95euSmpJS4gg/X+
-         IFFnCag173v57OWvBfRdhrSnu2LcIOlURV7JFtawULXaFhaZXDl5yULkxre5yrA2Spp3
-         JQTO0XIuJ0tD2zZMmwmHfX/Tei4B3OXhvJ61prZxsJDwBDM3XqnHsCHjl7aWfE4TW40s
-         rTkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XPnPVe/hBWV8ylTxStT4hqgYjjgVSOD9uWxEIWOaFgQ=;
-        b=CKkP2eXHy2ELDQeT+T1Jq2U6KsFrvz5ncdrxwoZ+pcT6kFrkTF3Ba9i2+9+NtVjHCp
-         8bKDLk1L4ZARC00rLAvmwtfq4vcgjXS0i1SD59OLEIZexd2dL3/ErYYP8i0FxI7IcUgS
-         9PfISWQUJOj++Vo3K4l6gvG8yXxeRfyXUDeYlRY6tYG9d+yZ2trk1Qzh6yZ5H4XIf4oo
-         vNQr7MzQ/ju378CnVd1XnsXNd4CF1S8E5SQ6a53BmjxFz4YuOlmBr7qI2TN/WxDdIy4W
-         KxRP2FcBWALdDsMc8DQwzaOYNa0By++gy30fkOCwYrhYXVfoBldXgQC42m92xFSCavQq
-         Tx1g==
-X-Gm-Message-State: AOAM533lI4dThwgBgrsqD76dyOqHQ6sIYIxgJfAmRuRQ83nX/fzUYqOQ
-        HfCOsMJ1HhgG/osej7dTeXFdUQ==
-X-Google-Smtp-Source: ABdhPJx3x1DBRy4eexY/OhOFytaYU7ysFTqceScvV/5SpmHvZFAmx47nY0u/kZ3Cq7/6tuca1ZuNbQ==
-X-Received: by 2002:a62:1951:: with SMTP id 78mr1751266pfz.137.1596090257777;
-        Wed, 29 Jul 2020 23:24:17 -0700 (PDT)
-Received: from localhost ([106.201.14.19])
-        by smtp.gmail.com with ESMTPSA id 3sm3489881pfv.109.2020.07.29.23.24.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jul 2020 23:24:17 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 11:54:14 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Lukasz Luba <lukasz.luba@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Quentin Perret <qperret@google.com>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH 2/2] thermal: cpufreq_cooling: Reuse effective_cpu_util()
-Message-ID: <20200730062414.uq3ip7ukpu7nkiyg@vireshk-mac-ubuntu>
-References: <cover.1594707424.git.viresh.kumar@linaro.org>
- <b051b42f0c4f36d7177978e090c6a85df17922c6.1594707424.git.viresh.kumar@linaro.org>
- <20200716115605.GR10769@hirez.programming.kicks-ass.net>
- <681fb3e8-d645-2558-38de-b39b372499de@arm.com>
- <CAKfTPtA+BPegK2h6PQMFs+p4dpxO+sk1FDQuOfJvSpGCJ-rBrA@mail.gmail.com>
+        Thu, 30 Jul 2020 02:25:28 -0400
+Received: from verein.lst.de ([213.95.11.211]:54692 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728548AbgG3GZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 02:25:28 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 19D0968AFE; Thu, 30 Jul 2020 08:25:25 +0200 (CEST)
+Date:   Thu, 30 Jul 2020 08:25:24 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: add file system helpers that take kernel pointers for the init
+ code v4
+Message-ID: <20200730062524.GA17980@lst.de>
+References: <20200728163416.556521-1-hch@lst.de> <20200729195117.GE951209@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtA+BPegK2h6PQMFs+p4dpxO+sk1FDQuOfJvSpGCJ-rBrA@mail.gmail.com>
-User-Agent: NeoMutt/20170609 (1.8.3)
+In-Reply-To: <20200729195117.GE951209@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-07-20, 11:46, Vincent Guittot wrote:
-> On Thu, 16 Jul 2020 at 16:24, Lukasz Luba <lukasz.luba@arm.com> wrote:
-> > On 7/16/20 12:56 PM, Peter Zijlstra wrote:
-> > > Currently cpufreq_cooling appears to estimate the CPU energy usage by
-> > > calculating the percentage of idle time using the per-cpu cpustat stuff,
-> > > which is pretty horrific.
+On Wed, Jul 29, 2020 at 08:51:17PM +0100, Al Viro wrote:
+> On Tue, Jul 28, 2020 at 06:33:53PM +0200, Christoph Hellwig wrote:
+> > Hi Al and Linus,
+> > 
+> > currently a lot of the file system calls in the early in code (and the
+> > devtmpfs kthread) rely on the implicit set_fs(KERNEL_DS) during boot.
+> > This is one of the few last remaining places we need to deal with to kill
+> > off set_fs entirely, so this series adds new helpers that take kernel
+> > pointers.  These helpers are in init/ and marked __init and thus will
+> > be discarded after bootup.  A few also need to be duplicated in devtmpfs,
+> > though unfortunately.
 > >
-> > Even worse, it then *samples* the *current* CPU frequency at that
-> > particular point in time and assumes that when the CPU wasn't idle
-> > during that period - it had *this* frequency...
+> > The series sits on top of my previous
+> > 
+> >   "decruft the early init / initrd / initramfs code v2"
 > 
-> So there is 2 problems in the power calculation of cpufreq cooling device :
-> - How to get an accurate utilization level of the cpu which is what
-> this patch is trying to fix because using idle time is just wrong
-> whereas scheduler utilization is frequency invariant
+> Could you fold the fixes in the parent branch to avoid the bisect hazards?
+> As it is, you have e.g. "initd: pass a non-f_pos offset to kernel_read/kernel_write"
+> that ought to go into "initrd: switch initrd loading to struct file based APIs"...
 
-Since this patch is targeted only towards fixing this particular
-problem, should I change something in the patch to make it acceptable
-?
-
-> - How to get power estimate from this utilization level. And as you
-> pointed out, using the current freq which is not accurate.
-
-This should be tackled separately I believe.
-
--- 
-viresh
+I'm not a huge fan of rebasing after it has been out for a long time and
+with pending other patches on top of it.  But at your request I've now
+folded the fixes and force pushed it.
