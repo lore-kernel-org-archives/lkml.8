@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BECAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF4620838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE7720838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 08:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596096538;
-	bh=EPHloOM0DXlDaIKPPfLO266b1vDEBjiAw24s/4FRhi0=;
+	s=default; t=1596096552;
+	bh=kn6xsBvh+/OHG6/QlVSA/8ITK530MiBVTVqzv90rQBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kUGG8fzlTddUjoXczk87q64g5A+KkkVXYL9BfRRDmW/91pRAPtawj4eebdOZoeOrs
-	 wK5eh8zveQUVMPd8LfOENmH+cF8fFZ/jukdyCd0xsrXonyIkCMcMIt2N+D9svp8l4O
-	 e2I0nGrjVabUfP9LvNWdYK3+GD+3MgB44JpDi0Yo=
+	b=Mg8DVksLyywuNohXz5dmWrmOYKjFRprcgRpUOpkxOcn0AIJfsKmcha2XZMqLLE5q7
+	 NMXfUgLECNPDdDq6sv1sZbWLuTajb6IL6ItinvZtswK0hAml4lmsUq12QJjl6/wmrA
+	 N3Wx6FNwzdtQytEKval5rbSIrFzWLbqn6Jv5Ujik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbgG3II5 (ORCPT
+        id S1729664AbgG3IJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:08:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47280 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 04:09:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729637AbgG3IIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:08:53 -0400
+        id S1729624AbgG3IIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:08:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5547A2084D;
-        Thu, 30 Jul 2020 08:08:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D307720838;
+        Thu, 30 Jul 2020 08:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596096532;
-        bh=EPHloOM0DXlDaIKPPfLO266b1vDEBjiAw24s/4FRhi0=;
+        s=default; t=1596096530;
+        bh=kn6xsBvh+/OHG6/QlVSA/8ITK530MiBVTVqzv90rQBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fpy68Zp0I4a/FGVlaADA+9AA3vR/JYdyAuWoDSqUzv/IFZ9UvizsTfUTLdy5xnLRj
-         2MEWaZuihkN2sA8jfE7tc1YEabYHAhhALjvGVDyo9d4qwYnjKBc/uhhvPulXpdLzC7
-         bMIJN8BcySSDVDw/Rf8q66+EBs94vNRi0dWwIsuw=
+        b=A3drLSpxgBkiJHHtGnbful1g8Jhn7ea5nExRTwHiydDjovtVAtvLpNf6mz61Y6qPk
+         D0eIpRg2aW8z+VCgtGy/U57Oahyaq9KNP4tNPSJIclw/GoKTnJox8w4taUL4wfaUH/
+         3F8CiNvldD1ydeHtxFVGNWiSF60GTMhWKgPWzYes=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 24/61] regmap: dev_get_regmap_match(): fix string comparison
-Date:   Thu, 30 Jul 2020 10:04:42 +0200
-Message-Id: <20200730074422.017257160@linuxfoundation.org>
+Subject: [PATCH 4.9 15/61] bnxt_en: Fix race when modifying pause settings.
+Date:   Thu, 30 Jul 2020 10:04:33 +0200
+Message-Id: <20200730074421.565483568@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200730074420.811058810@linuxfoundation.org>
 References: <20200730074420.811058810@linuxfoundation.org>
@@ -60,41 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Kleine-Budde <mkl@pengutronix.de>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit e84861fec32dee8a2e62bbaa52cded6b05a2a456 ]
+[ Upstream commit 163e9ef63641a02de4c95cd921577265c52e1ce2 ]
 
-This function is used by dev_get_regmap() to retrieve a regmap for the
-specified device. If the device has more than one regmap, the name parameter
-can be used to specify one.
+The driver was modified to not rely on rtnl lock to protect link
+settings about 2 years ago.  The pause setting was missed when
+making that change.  Fix it by acquiring link_lock mutex before
+calling bnxt_hwrm_set_pause().
 
-The code here uses a pointer comparison to check for equal strings. This
-however will probably always fail, as the regmap->name is allocated via
-kstrdup_const() from the regmap's config->name.
-
-Fix this by using strcmp() instead.
-
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Link: https://lore.kernel.org/r/20200703103315.267996-1-mkl@pengutronix.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: e2dc9b6e38fa ("bnxt_en: Don't use rtnl lock to protect link change logic in workqueue.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Reviewed-by: Edwin Peer <edwin.peer@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 1799a1dfa46ea..cd984b59a8a16 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1239,7 +1239,7 @@ static int dev_get_regmap_match(struct device *dev, void *res, void *data)
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index 3a352f76e633c..427d4dbc97354 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -1023,8 +1023,11 @@ static int bnxt_set_pauseparam(struct net_device *dev,
+ 	if (epause->tx_pause)
+ 		link_info->req_flow_ctrl |= BNXT_LINK_PAUSE_TX;
  
- 	/* If the user didn't specify a name match any */
- 	if (data)
--		return (*r)->name == data;
-+		return !strcmp((*r)->name, data);
- 	else
- 		return 1;
+-	if (netif_running(dev))
++	if (netif_running(dev)) {
++		mutex_lock(&bp->link_lock);
+ 		rc = bnxt_hwrm_set_pause(bp);
++		mutex_unlock(&bp->link_lock);
++	}
+ 	return rc;
  }
+ 
 -- 
 2.25.1
 
