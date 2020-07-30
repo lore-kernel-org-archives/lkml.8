@@ -2,181 +2,102 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBE3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63496C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 854BE20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA3620809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 18:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RqCOiWrV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BMqbLaym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730179AbgG3SgY (ORCPT
+        id S1730333AbgG3ShN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 14:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36784 "EHLO
+        Thu, 30 Jul 2020 14:37:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgG3SgX (ORCPT
+        with ESMTP id S1730244AbgG3ShI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 14:36:23 -0400
+        Thu, 30 Jul 2020 14:37:08 -0400
 Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5670CC061574;
-        Thu, 30 Jul 2020 11:36:23 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k13so7131449plk.13;
-        Thu, 30 Jul 2020 11:36:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37147C061575
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:37:08 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id b9so14947239plx.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 11:37:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=k6bmctTVblpwuRx6dkbrvHULuxrJOWF9XF1cvoRZiTY=;
-        b=RqCOiWrVPQjy6IlZEk/qXb0QV4B32B7qwyXF6DwZ5qDCkDGMV8GRbm66+Rnh8K/2CZ
-         soK9XDNO8KRVHmzwipg1I9+HqF60twAnDPrNTElm1Aslww4bPr8tYBhPx8oU3BGYkUd8
-         TFJuNmtfbjjKN1mjHmqVRvifprn0rEkfIjnsCgtda1lkAuOzR2pF54jxRcDL4iCilrNP
-         XxjZhBdr9Y2ZMmRZtF2aacb5v+/fv8NWHZukMpTdhY2ejYiq2Z5Mkn1h5GAyN6ySnTH4
-         lQ12P5J0Nx5MW2tHNCw68bRE/TuFcrHGqJNrtCpCty4j/xd/0r8crIAb6FbKnIdvYRx/
-         z9ug==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=48EaftfzmTZBLmMkFzdUMojMZdIQcbrAnw8qi2t2H4o=;
+        b=BMqbLaymOrzJinMUG/wVdMBlECk2GjzePlH+34gGt3CbM/banratdk08A5J901lIVo
+         uIoSW1FSZJ2Ecj3crkTgAY28lnxvsLrF5xAaE5QhTucCOmYUbjezhboBRmz2wMG6Udmt
+         wzOtsncO0fjgHOv9WS9AMpGPCn1HNE0MQq41w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=k6bmctTVblpwuRx6dkbrvHULuxrJOWF9XF1cvoRZiTY=;
-        b=BlGiGfjnr5yMgPv2ZncLsjDMBIu7cK/kkQC0vYp/U7DpQaHrXKZy6Gon2hMM9+Nqvx
-         We0b7r8fc9Hn5yglunh6lglbT6k4KXZ95ZxxRB90ZPiEB+oAnNk07Xj/ZG82URG4UEk0
-         i3FCISwReKv6b7wTOiQZVzX3tcQSBAM0Zt6tTYgkhrKH7K38NIOp+/+4NemV3ShtrZ94
-         4mropjaevHb+pSF7VWP4S9A1A+AzssnpVbGLEcNe7coyc1iqbdvNSSX3B1zqj2yzRgH1
-         smnDLuoTxnzf95s708kGmzTMaXKEwuw3F1IkYlS+0NY0F4d+EmdxEI9yUvtg3Ie1r0JR
-         v8AA==
-X-Gm-Message-State: AOAM531K8e9ppVQE2o16l4aBxTW3xXbNqaOJjuxFGET+yw3nAXdkPCsg
-        AWbXBpLWpBKQYgtG4wvwTVs=
-X-Google-Smtp-Source: ABdhPJwhW08/c7vJi/2IhzixLVqb/1fWz7Po2kgE+huzqVdnz6aneVFNeDfjjk+7S4WjjPqGATx8Mw==
-X-Received: by 2002:a17:90a:2a02:: with SMTP id i2mr405933pjd.157.1596134182792;
-        Thu, 30 Jul 2020 11:36:22 -0700 (PDT)
-Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id p19sm7188470pgj.74.2020.07.30.11.36.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 11:36:21 -0700 (PDT)
-Subject: =?UTF-8?B?UmU6IOWbnuWkjTogSU5GTzogcmN1IGRldGVjdGVkIHN0YWxsIGluIHRj?=
- =?UTF-8?Q?=5fmodify=5fqdisc?=
-To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Cc:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>,
-        syzbot <syzbot+9f78d5c664a8c33f4cce@syzkaller.appspotmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "fweisbec@gmail.com" <fweisbec@gmail.com>,
-        "jhs@mojatatu.com" <jhs@mojatatu.com>,
-        "jiri@resnulli.us" <jiri@resnulli.us>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>
-References: <0000000000006f179d05ab8e2cf2@google.com>
- <BYAPR11MB2632784BE3AD9F03C5C95263FF700@BYAPR11MB2632.namprd11.prod.outlook.com>
- <87tuxqxhgq.fsf@intel.com>
- <CACT4Y+ZMvaJMiXikYCm-Xym8ddKDY0n-5=kwH7i2Hu-9uJW1kQ@mail.gmail.com>
- <87pn8cyk2b.fsf@intel.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <3fc2ce1b-553a-e6de-776c-7e4d668c6ecb@gmail.com>
-Date:   Thu, 30 Jul 2020 11:36:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=48EaftfzmTZBLmMkFzdUMojMZdIQcbrAnw8qi2t2H4o=;
+        b=l0P8DyePgaQM1CG7MONrjwXbzJEd4P5VEuIHSE5AFByc2viN23uL0rI/MNza46AX9y
+         71cUcDPLPtcibN4EF2EdX4lwk93TqkJm9OaoW9+tWHCyZw9cVkjCXdYWaFoIgwky2xuM
+         eykO7ftNR67p2+noLq2ystrw3gVxekJeCUrZg/tdzfQ3DPAkZalFdEkUtJ47ZsOuf+Am
+         fyp6j2EeVSLr9/+1OG2ED82/cV5Q+TTmoAEJTPh4MAjxWsXsW6xygVSo7keYtV13q3XZ
+         vxg0h6WVElRy2gii3azhuJav9wNB0Ivl0HgOd5E2nAt+WxE9y6kIHg14LN5bvsPzADf9
+         kVhA==
+X-Gm-Message-State: AOAM532Zjvn7WvKFe1a1vBBmq81455Ku01FzsC4xvDVPIQj20gfd+uCz
+        0x1yOAT1qDzwjeDGko6rIiArpA==
+X-Google-Smtp-Source: ABdhPJzDKESIkF8QnQ2VFqDc+mBNrDD0slry5sD+djVWxhFRRzlCggy9/6M7ixiBMSS5srYub+xAbA==
+X-Received: by 2002:a62:7b4e:: with SMTP id w75mr320065pfc.130.1596134227382;
+        Thu, 30 Jul 2020 11:37:07 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f6sm7515046pfa.23.2020.07.30.11.37.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 11:37:05 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        WeiXiong Liao <gmpy.liaowx@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] mailmap: Add WeiXiong Liao
+Date:   Thu, 30 Jul 2020 11:37:02 -0700
+Message-Id: <20200730183702.702552-3-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200730183702.702552-1-keescook@chromium.org>
+References: <20200730183702.702552-1-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <87pn8cyk2b.fsf@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+WeiXiong Liao noted to me offlist that his preference for email address
+had changed and that he'd like it updated in the mailmap so people
+discussing pstore/blk would be able to reach him.
 
+Cc: WeiXiong Liao <gmpy.liaowx@gmail.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ .mailmap | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 7/30/20 10:44 AM, Vinicius Costa Gomes wrote:
-> Hi,
-> 
-> Dmitry Vyukov <dvyukov@google.com> writes:
-> 
->> On Wed, Jul 29, 2020 at 9:13 PM Vinicius Costa Gomes
->> <vinicius.gomes@intel.com> wrote:
->>>
->>> Hi,
->>>
->>> "Zhang, Qiang" <Qiang.Zhang@windriver.com> writes:
->>>
->>>> ________________________________________
->>>> 发件人: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> 代表 syzbot <syzbot+9f78d5c664a8c33f4cce@syzkaller.appspotmail.com>
->>>> 发送时间: 2020年7月29日 13:53
->>>> 收件人: davem@davemloft.net; fweisbec@gmail.com; jhs@mojatatu.com; jiri@resnulli.us; linux-kernel@vger.kernel.org; mingo@kernel.org; netdev@vger.kernel.org; syzkaller-bugs@googlegroups.com; tglx@linutronix.de; vinicius.gomes@intel.com; xiyou.wangcong@gmail.com
->>>> 主题: INFO: rcu detected stall in tc_modify_qdisc
->>>>
->>>> Hello,
->>>>
->>>> syzbot found the following issue on:
->>>>
->>>> HEAD commit:    181964e6 fix a braino in cmsghdr_from_user_compat_to_kern()
->>>> git tree:       net
->>>> console output: https://syzkaller.appspot.com/x/log.txt?x=12925e38900000
->>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=f87a5e4232fdb267
->>>> dashboard link: https://syzkaller.appspot.com/bug?extid=9f78d5c664a8c33f4cce
->>>> compiler:       gcc (GCC) 10.1.0-syz 20200507
->>>> syz repro:
->>>> https://syzkaller.appspot.com/x/repro.syz?x=16587f8c900000
->>>
->>> It seems that syzkaller is generating an schedule with too small
->>> intervals (3ns in this case) which causes a hrtimer busy-loop which
->>> starves other kernel threads.
->>>
->>> We could put some limits on the interval when running in software mode,
->>> but I don't like this too much, because we are talking about users with
->>> CAP_NET_ADMIN and they have easier ways to do bad things to the system.
->>
->> Hi Vinicius,
->>
->> Could you explain why you don't like the argument if it's for CAP_NET_ADMIN?
->> Good code should check arguments regardless I think and it's useful to
->> protect root from, say, programming bugs rather than kill the machine
->> on any bug and misconfiguration. What am I missing?
-> 
-> I admit that I am on the fence on that argument: do not let even root
-> crash the system (the point that my code is crashing the system gives
-> weight to this side) vs. root has great powers, they need to know what
-> they are doing.
-> 
-> The argument that I used to convince myself was: root can easily create
-> a bunch of processes and give them the highest priority and do
-> effectively the same thing as this issue, so I went with a the "they
-> need to know what they are doing side".
-> 
-> A bit more on the specifics here:
-> 
->   - Using a small interval size, is only a limitation of the taprio
->   software mode, when using hardware offloads (which I think most users
->   do), any interval size (supported by the hardware) can be used;
-> 
->   - Choosing a good lower limit for this seems kind of hard: something
->   below 1us would never work well, I think, but things 1us < x < 100us
->   will depend on the hardware/kernel config/system load, and this is the
->   range includes "useful" values for many systems.
-> 
-> Perhaps a middle ground would be to impose a limit based on the link
-> speed, the interval can never be smaller than the time it takes to send
-> the minimum ethernet frame (for 1G links this would be ~480ns, should be
-> enough to catch most programming mistakes). I am going to add this and
-> see how it looks like.
-> 
-> Sorry for the brain dump :-)
-
-
-I do not know taprio details, but do you really need a periodic timer ?
-
-Presumably there is no need to fire a timer before next packet departure time ?
-
+diff --git a/.mailmap b/.mailmap
+index 4e6c169719df..9a3e9b68c430 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -296,6 +296,7 @@ Vivien Didelot <vivien.didelot@gmail.com> <vivien.didelot@savoirfairelinux.com>
+ Vlad Dogaru <ddvlad@gmail.com> <vlad.dogaru@intel.com>
+ Vladimir Davydov <vdavydov.dev@gmail.com> <vdavydov@parallels.com>
+ Vladimir Davydov <vdavydov.dev@gmail.com> <vdavydov@virtuozzo.com>
++WeiXiong Liao <gmpy.liaowx@gmail.com> <liaoweixiong@allwinnertech.com>
+ Will Deacon <will@kernel.org> <will.deacon@arm.com>
+ Wolfram Sang <wsa@kernel.org> <w.sang@pengutronix.de>
+ Wolfram Sang <wsa@kernel.org> <wsa@the-dreams.de>
+-- 
+2.25.1
 
