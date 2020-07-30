@@ -2,95 +2,115 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D34C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA03C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D77B720838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:48:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qUrUFIWH"
+	by mail.kernel.org (Postfix) with ESMTP id 1983222B42
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 16:49:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596127748;
+	bh=Wi7LMVSqES6xakVzVVsnmHXkISayOsW7D4YJWLJCn3I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I6TP8Wq5lyHyVE3YkS/3Qwizs9Gjgu4couS38aFalCOS4sX8Cm3xdXwkkBe+hT+lk
+	 ryA9Nhpcr67Uy1kmh6Kf5uyAuKt6qIOILgK4VKTplJmZRyXSXwS/hhIlLzHdaL5c1h
+	 /8eOKFSyhmjbQ78hYEvr4ND1/7zl6v5EOGAl9UAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730151AbgG3QsZ (ORCPT
+        id S1730152AbgG3QtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:48:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728492AbgG3QsZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 12:48:25 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25DCCC061574;
-        Thu, 30 Jul 2020 09:48:25 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t6so1216256pjr.0;
-        Thu, 30 Jul 2020 09:48:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8pqbxjS8L2yEPnu5KBBVfAuXZ06g9Py8DOMu09+tNiY=;
-        b=qUrUFIWH0dTYJusmG7LwlIwq8yggXFuPc4LfzHX4yvYxtRQsIKTE9Y3+drjMazj42W
-         j64mY90k3jpoK/1NmHli355+yQ3T2C3Ped9HF0GCm7p7Genh0QJu+tZ9Kr/2q+WLBBZV
-         Solx/XY22NKFFFOMGfFJLhUUaY5M94u7AJ1vWGKZi4tUS2S2uT+4i8VL+tNRtdegoikP
-         83H2N2W1NMGIugeOOtnAsRsqfzYwg5L1aknCLdxMruiEA+9/8GXWg/dXZrg5Zq40zMb4
-         wOzq2cmgIql8yQe+42CbwMDrDk5pONPgbS54zTZm+nJ/Ej0N4Ep6S9jbNY3Ey4BRNutN
-         lvEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8pqbxjS8L2yEPnu5KBBVfAuXZ06g9Py8DOMu09+tNiY=;
-        b=VIo3adQCIl7A6+mi47HIV2FuoPyB+gNqK1on6BhvKfKqPUn/murMzr49orRfGcco1c
-         ZyXbVz44vdU+NjPDjCTzja0livGeufBCz3RdkRAJqiEHwEBkgaajCwZ4cH31/Ty+eDhz
-         IaFitHldbpfr1F2+ZbGd8mQTGMniSNeyGdbBaFm7PkndNORX8iPwUfdGNLi7vGhVzvuy
-         hKPbQZTXY2ENMGA8wdqu6wHGmiFb2csxfN7SSKp3IqRuXS1Pv9nVdOlxot3AyA5mPyPE
-         p6EiX4ZjFxcJ+7RBvwOx0VZ2TAzYUjjZQb2NubSB6QJO240Kj3stT2q06Xujx4xLImNX
-         lq4w==
-X-Gm-Message-State: AOAM533rxJ0Lu3j6LJmP4Q3fdrA4geb0Qdif4uIlEmzYXa0bYzbnqG7O
-        FtrSYnaW2VthZcwP7ACSiWyBo/R5
-X-Google-Smtp-Source: ABdhPJyLlfSKJaf689h5T58XI/xyizNBGDah8rGKDuxTy6G5cXg+nyXVDaqk4j0jBhMJBi4sBgHRkQ==
-X-Received: by 2002:a17:90a:2c0e:: with SMTP id m14mr4212737pjd.166.1596127704725;
-        Thu, 30 Jul 2020 09:48:24 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k21sm3430973pgl.0.2020.07.30.09.48.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 Jul 2020 09:48:24 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 09:48:23 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.7 00/20] 5.7.12-rc1 review
-Message-ID: <20200730164823.GF57647@roeck-us.net>
-References: <20200730074420.533211699@linuxfoundation.org>
+        Thu, 30 Jul 2020 12:49:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726353AbgG3QtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:49:05 -0400
+Received: from localhost (cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net [82.37.168.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD733207F5;
+        Thu, 30 Jul 2020 16:49:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596127745;
+        bh=Wi7LMVSqES6xakVzVVsnmHXkISayOsW7D4YJWLJCn3I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Zmb7afjLpegOR3tGn/JpIIN/p+wE91ap2d1ddBb7IMI4D29F2LSRidnRC4T9hgdRw
+         EGR6eiQ12u4hN1uU/fWn95U09rp862CWnpbcBnWPiH/a91DqtXmUFdEl8L3BpclCcu
+         9iOiwe/u77goaNG9p4qTuNVuJKIZUWiBYh2kO0Oc=
+Date:   Thu, 30 Jul 2020 17:48:45 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v9 0/4] driver core: add probe error check helper
+Message-ID: <20200730164845.GE5055@sirena.org.uk>
+References: <CGME20200713144331eucas1p25911c4ffa9315f632d8f6dd833588981@eucas1p2.samsung.com>
+ <20200713144324.23654-1-a.hajda@samsung.com>
+ <e55a23bf-59bb-43c6-f7d7-467c282b8648@samsung.com>
+ <20200730070832.GA4045592@kroah.com>
+ <CAKdAkRTKjHg2y8yTFgxr4yY98M8D2noutDBfB1mh7wwLLQrYbw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="KlAEzMkarCnErv5Q"
 Content-Disposition: inline
-In-Reply-To: <20200730074420.533211699@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAKdAkRTKjHg2y8yTFgxr4yY98M8D2noutDBfB1mh7wwLLQrYbw@mail.gmail.com>
+X-Cookie: Alex Haley was adopted!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 10:03:50AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.7.12 release.
-> There are 20 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 01 Aug 2020 07:44:05 +0000.
-> Anything received after that time might be too late.
-> 
 
-Build results:
-	total: 155 pass: 155 fail: 0
-Qemu test results:
-	total: 431 pass: 431 fail: 0
+--KlAEzMkarCnErv5Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Guenter
+On Thu, Jul 30, 2020 at 09:18:30AM -0700, Dmitry Torokhov wrote:
+
+> I believe it still has not been answered why this can't be pushed into
+> resource providers (clock, regulators, gpio, interrupts, etc),
+> especially for devm APIs where we know exactly what device we are
+> requesting a resource for, so that individual drivers do not need to
+> change anything.
+
+The error messages are frequently in the caller rather than the
+frameworks, it's often helpful for the comprehensibility of the error
+messages especially in cases where things may be legitimately absent.
+
+>                  We can mark the device as being probed so that probe
+> deferral is only handled when we actually execute probe() (and for the
+> bonus points scream loudly if someone tries to return -EPROBE_DEFER
+> outside of probe path).
+
+Is this a big issue?
+
+--KlAEzMkarCnErv5Q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8i+ewACgkQJNaLcl1U
+h9DueQf/QkO4v81CMD7SEApOvQjNBQ1RWfJ8Q/NBYJFxm8NmmOowBWYnNXFzRu1O
+oCF+JukJ6znqRqsocboI/8sUkUQ7hWLi9S53VaUkYdArscPZ0myQ8/lb9nqKXqqi
+NlCnEGNxEUprZBxyD1T/qOnoi1hFGko+shXG59pLoYD9SCA0sODJwONb4ktVuJ7J
+7kG2/jF6y5Qs2tMNcDHklnrXZg9yWPIdD9ppl4K2soYw17TyIiF+UZdunZSlWFZ5
+M3Sz+fbK3xPZodecRz6tqaDm48bAsqe51dFa5DbIt6/DPLBo/+cLzpSONZTCUxxs
+hqEsIHEG2ZQ+9cGRQtCPFGruqG5tvA==
+=SqHC
+-----END PGP SIGNATURE-----
+
+--KlAEzMkarCnErv5Q--
