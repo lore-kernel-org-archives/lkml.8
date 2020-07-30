@@ -2,88 +2,133 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14690C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B09AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E98C420578
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3467D20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 06:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgG3GOC (ORCPT
+        id S1728716AbgG3GOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 02:14:02 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8859 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725892AbgG3GOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 02:14:02 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AFAD96AE6D963B38DD14;
-        Thu, 30 Jul 2020 14:14:00 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 30 Jul 2020 14:13:51 +0800
-From:   Kai Ye <yekai13@huawei.com>
-To:     <linux-accelerators@lists.ozlabs.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <zhangfei.gao@linaro.org>
-CC:     Kai Ye <yekai13@huawei.com>
-Subject: [PATCH] uacce: fix some coding styles
-Date:   Thu, 30 Jul 2020 14:13:03 +0800
-Message-ID: <1596089583-32687-1-git-send-email-yekai13@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Thu, 30 Jul 2020 02:14:24 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:39189 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbgG3GOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 02:14:24 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 06U6E7kL007952;
+        Thu, 30 Jul 2020 08:14:07 +0200
+Date:   Thu, 30 Jul 2020 08:14:07 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Emese Revfy <re.emese@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
+Subject: Re: linux-next: build failure after merge of the origin tree
+Message-ID: <20200730061407.GA7941@1wt.eu>
+References: <20200730090828.2349e159@canb.auug.org.au>
+ <CAHk-=wjK8+12i8iDC41LXfZBcMjGsF+WyW_+ncPFmrexRT0yxw@mail.gmail.com>
+ <202007292007.D87DBD34B@keescook>
+ <20200730032250.GB7790@1wt.eu>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/mixed; boundary="1yeeQ81UyVL57Vl7"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200730032250.GB7790@1wt.eu>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. delete some redundant code.
-2. modify the module author information.
 
-Signed-off-by: Kai Ye <yekai13@huawei.com>
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Jul 30, 2020 at 05:22:50AM +0200, Willy Tarreau wrote:
+> On Wed, Jul 29, 2020 at 08:17:48PM -0700, Kees Cook wrote:
+> > And just another heads-up, the patch[1] (which was never sent to a public
+> > list) also breaks arm64 (circular header needs?):
+> (...)
+> 
+> Definitely, we've just got a report about this, I'll have a look once
+> I'm at the office. I'd like to check that we don't obviously break
+> another arch by just removing percpu. If at least shuffling them around
+> is sufficient that'd be nice. Otherwise we'll likely need a separate
+> header (which is not a bad thing for the long term).
+
+So Linus proposed a clean solution which might be harder to backport
+but looks better for 5.8. However the attached one addresses the issue
+for me on arm64 and still works on x86_64, arm, mips. I think we should
+go with this one first then apply Linus' one on top of it to be long
+term proof, and backport only the first one. Linus ?
+
+Willy
+
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: attachment; filename="0001-random-fix-circular-include-dependency-on-arm64-afte.patch"
+Content-Transfer-Encoding: 8bit
+
+From 18fba9e2dfb16605a722e01f95d9e2d020efaa42 Mon Sep 17 00:00:00 2001
+From: Willy Tarreau <w@1wt.eu>
+Date: Thu, 30 Jul 2020 07:59:24 +0200
+Subject: random: fix circular include dependency on arm64 after addition of
+ percpu.h
+MIME-Version: 1.0
+Content-Type: text/plain; charset=latin1
+Content-Transfer-Encoding: 8bit
+
+Daniel Díaz and Kees Cook independently reported that commit f227e3ec3b5c
+("random32: update the net random state on interrupt and activity") broke
+arm64 due to a circular dependency on include files since the addition of
+percpu.h in random.h.
+
+The correct fix would definitely be to move all the prandom32 stuff out
+of random.h but for backporting, a smaller solution is preferred. This
+one replaces linux/percpu.h with asm/percpu.h, and this fixes the problem
+on x86_64, arm64, arm, and mips. Note that moving percpu.h around didn't
+change anything and that removing it entirely broke differently. When
+backporting, such options might still be considered if this patch fails
+to help.
+
+Reported-by: Daniel Díaz <daniel.diaz@linaro.org>
+Reported-by: Kees Cook <keescook@chromium.org>
+Fixes: f227e3ec3b5c
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
 ---
-Changes in V2:
-	deleted extra NULL pointer check in uacce_fops.
+ include/linux/random.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/misc/uacce/uacce.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
-
-diff --git a/drivers/misc/uacce/uacce.c b/drivers/misc/uacce/uacce.c
-index 107028e..1d09707 100644
---- a/drivers/misc/uacce/uacce.c
-+++ b/drivers/misc/uacce/uacce.c
-@@ -239,17 +239,6 @@ static int uacce_fops_mmap(struct file *filep, struct vm_area_struct *vma)
+diff --git a/include/linux/random.h b/include/linux/random.h
+index f310897f051d..9ab7443bd91b 100644
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -11,7 +11,7 @@
+ #include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/once.h>
+-#include <linux/percpu.h>
++#include <asm/percpu.h>
  
- 	switch (type) {
- 	case UACCE_QFRT_MMIO:
--		if (!uacce->ops->mmap) {
--			ret = -EINVAL;
--			goto out_with_lock;
--		}
--
--		ret = uacce->ops->mmap(q, vma, qfr);
--		if (ret)
--			goto out_with_lock;
--
--		break;
--
- 	case UACCE_QFRT_DUS:
- 		if (!uacce->ops->mmap) {
- 			ret = -EINVAL;
-@@ -541,5 +530,5 @@ subsys_initcall(uacce_init);
- module_exit(uacce_exit);
+ #include <uapi/linux/random.h>
  
- MODULE_LICENSE("GPL");
--MODULE_AUTHOR("Hisilicon Tech. Co., Ltd.");
-+MODULE_AUTHOR("HiSilicon Tech. Co., Ltd.");
- MODULE_DESCRIPTION("Accelerator interface for Userland applications");
 -- 
-2.8.1
+2.20.1
 
+
+--1yeeQ81UyVL57Vl7--
