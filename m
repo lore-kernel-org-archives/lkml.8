@@ -2,188 +2,246 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 734C520829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C6E206F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:11:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="njK4CKRS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TlKZLOJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbgG3TH6 (ORCPT
+        id S1730443AbgG3TLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 15:07:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41678 "EHLO
+        Thu, 30 Jul 2020 15:11:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728644AbgG3TH5 (ORCPT
+        with ESMTP id S1730411AbgG3TLP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 15:07:57 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D173C061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 12:07:57 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id r4so4391648pls.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 12:07:57 -0700 (PDT)
+        Thu, 30 Jul 2020 15:11:15 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55DA3C061574;
+        Thu, 30 Jul 2020 12:11:15 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id bh1so1936834plb.12;
+        Thu, 30 Jul 2020 12:11:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yQqZ2MMm/8Cs5yn8qC9wISuJd6WR3cQ7bq1kU0X78gY=;
-        b=njK4CKRSnqz/4kzXOci0zfsSuCFC++5HVfGahiUteSV13O0mQJuO4aCpWv6gZZbvPh
-         /m8TZ8bDXUx4J2okW5Qy7Ct1B4UP5g7A9E0bqr9q2RraQGCBw/WCZPaqz+arHMQvWJpB
-         ZC8tFcP2gD3NkWjH9GRLocJugT/Q5jT2htO+tAq+nwrBPNtl+6amILJRHuK/7QNHs99J
-         SV3fxiK0BgmIIG2A0cotkrNX7RxZ7n/RxaNatkGjuiGPHx7yNBbe9lcz6Qe26zmMQ2at
-         l0uU8JLfKul+uv8ay8RejwYPELo/WJb1or5SErxVz9ycVOIbZzEl2SOcasTlJxb597cy
-         YKaw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T5yHmQpdvD1NrEW9tkXW0vliNxZ+ocZTFoeNrXX0q9o=;
+        b=TlKZLOJHOjjtZQuN7WgX0sc47deyCwLk/KMdIll+PkugDWLDwvOGb1dotw4osKyMr9
+         Sd0WXfksAbszBR4Xasn1cpK8lw1Q3SwVeTspHPmPnVg2NM/gXxStcT480QGrbem1n279
+         diuRKPxQNNFz0vkIXvRPldDWPTKmWiyU3DBdxV1Xf7BbCn8LhvDswdYijyPDiZaEDLfc
+         VRsF7gKTO+AGIF25pjEG3GzqYbs0/XBEkp+q4LHaYg+4nImL8HVaLwMuvzoJrmRQvI96
+         6hKyXARwnv28MNMndbIJ94E4PHBEo7JnA6+8NH86usqrSdh3AiSIDFBgNFj+kX88CUVW
+         3iaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yQqZ2MMm/8Cs5yn8qC9wISuJd6WR3cQ7bq1kU0X78gY=;
-        b=uU+1I/tOTie0gCBWfnKm5FWErXtiXGImIWLE7878iUFxLOCYnEhxNXh180JlP8kXPT
-         GAPmpa1fvJXKvlSZY2zLF3IfEx16SCJXn8mxTclfXA029r/WKv4dbBZ2AA1M4m79GALa
-         wl6J9fybl9LyFQVvsULrr8KxZ1CoImDMN5p2VPXmzG2iDvEteuQHuvzq93OsQivrA1Nl
-         YOQuQt0kynzLHh+qeQvY76gUbI0f2zqf+VmDIkkN7vDeoUu5CKWj7xm2mmj+1jxmdr0c
-         f87BktoyLe7wC0gSgeH/P11QYs6WqxJ5UxUiXO7x4pnBcbd0ULObZ0q5xK0Nx0FjsItJ
-         fjhg==
-X-Gm-Message-State: AOAM532Vl4a2zHPt+MIKxBFwqjk5E3CZvx2YUrJFgY4+HLockR0kJmaS
-        XRqfDwpLNcSzzzhw1TFTyc2WawAVea17F0graXxb8g==
-X-Google-Smtp-Source: ABdhPJxpUre/sCyL5KQFAnJGST7trqtf7jiZxfkce+e8aNDKmYfAKlPnyRtQ8OFxu8QIw05HJaoAQiMCoHz2raocdGo=
-X-Received: by 2002:a17:90a:17e9:: with SMTP id q96mr526355pja.91.1596136076328;
- Thu, 30 Jul 2020 12:07:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T5yHmQpdvD1NrEW9tkXW0vliNxZ+ocZTFoeNrXX0q9o=;
+        b=sDwiJyBFtqUi2zYeuG9bGep7BN2x5aRJjtaMUjW0EFmmkvKXVyD20qr+gLgqymTegL
+         k2cDcwCrJHDuMmL8hhJNxAv7RLhwSkpDxHUrZ2FyR7legcwe8ywbkM43Pk7GVBpmJnOQ
+         oYycTNshtdIEErbap5eqi+04A7WGYv/T7Z2g0irOi/wGnuN/3ED9mYVAnJEwotFJc4Ag
+         lgc8o0BMMFuzOJK58LRpD7E4ZskSkb6e8v1JcVvF3vKkJOWTEUOUem/Miv7VBqsG0cMJ
+         zb/2h8oGtgrsqiwG8hBU72BF3jJDxD2WExCz+KFNWC17t/Qkhr6gqr5fuZjjL+AJO8hD
+         TIuQ==
+X-Gm-Message-State: AOAM531qOO2aQ2t0lVmRgfzy9Si4Oi4Z8m7YjGht7k0f29ay/ZdiBexn
+        wvypGpjj5YYECxSayXWu0lw=
+X-Google-Smtp-Source: ABdhPJzJRK7jqZGOLJljPSUz6rSA76EU9Kb5IXwJgc1Xm+0VHxnaH5+eLnc3fIp5pl40FvrSH2l+Dg==
+X-Received: by 2002:a63:3716:: with SMTP id e22mr355968pga.282.1596136274714;
+        Thu, 30 Jul 2020 12:11:14 -0700 (PDT)
+Received: from nickserv.localdomain (c-98-33-101-203.hsd1.ca.comcast.net. [98.33.101.203])
+        by smtp.gmail.com with ESMTPSA id o22sm8644976pfu.206.2020.07.30.12.11.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 12:11:13 -0700 (PDT)
+From:   Nick Terrell <nickrterrell@gmail.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Xu <alex_y_xu@yahoo.ca>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Terrell <terrelln@fb.com>
+Subject: [GIT PULL][PATCH v10 0/8] Add support for ZSTD-compressed kernel and initramfs
+Date:   Thu, 30 Jul 2020 12:08:33 -0700
+Message-Id: <20200730190841.2071656-1-nickrterrell@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200722110139.24778-1-georgi.djakov@linaro.org>
- <20200722110139.24778-2-georgi.djakov@linaro.org> <CAGETcx-QM8P2nVxcQJZz+m5Zwi==2qLfinb0FkDXJ7dNVP5bEA@mail.gmail.com>
- <e4f68ae5-5cf7-bac4-e7f2-c074327ea659@codeaurora.org>
-In-Reply-To: <e4f68ae5-5cf7-bac4-e7f2-c074327ea659@codeaurora.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 30 Jul 2020 12:07:20 -0700
-Message-ID: <CAGETcx-i=wBB4Ooch734B0ejK6F5mGPLQ6c_K4FeFyNmMLsL=Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] interconnect: Add sync state support
-To:     Mike Tipton <mdtipton@codeaurora.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>, okukatla@codeaurora.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:18 PM Mike Tipton <mdtipton@codeaurora.org> wrote:
->
-> On 7/22/2020 10:07 AM, Saravana Kannan wrote:
-> > On Wed, Jul 22, 2020 at 4:01 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
-> >>
-> >> The bootloaders often do some initial configuration of the interconnects
-> >> in the system and we want to keep this configuration until all consumers
-> >> have probed and expressed their bandwidth needs. This is because we don't
-> >> want to change the configuration by starting to disable unused paths until
-> >> every user had a chance to request the amount of bandwidth it needs.
-> >>
-> >> To accomplish this we will implement an interconnect specific sync_state
-> >> callback which will synchronize (aggregate and set) the current bandwidth
-> >> settings when all consumers have been probed.
-> >>
-> >> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> >> ---
-> >>   drivers/interconnect/core.c           | 61 +++++++++++++++++++++++++++
-> >>   include/linux/interconnect-provider.h |  5 +++
-> >>   2 files changed, 66 insertions(+)
-> >>
-> >> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> >> index e5f998744501..0c4e38d9f1fa 100644
-> >> --- a/drivers/interconnect/core.c
-> >> +++ b/drivers/interconnect/core.c
-> >> @@ -26,6 +26,8 @@
-> >>
-> >>   static DEFINE_IDR(icc_idr);
-> >>   static LIST_HEAD(icc_providers);
-> >> +static int providers_count;
-> >> +static bool synced_state;
-> >>   static DEFINE_MUTEX(icc_lock);
-> >>   static struct dentry *icc_debugfs_dir;
-> >>
-> >> @@ -255,6 +257,12 @@ static int aggregate_requests(struct icc_node *node)
-> >>                          continue;
-> >>                  p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
-> >>                               &node->avg_bw, &node->peak_bw);
-> >> +
-> >> +               /* during boot use the initial bandwidth as a floor value */
-> >> +               if (!synced_state) {
-> >> +                       node->avg_bw = max(node->avg_bw, node->init_avg);
-> >> +                       node->peak_bw = max(node->peak_bw, node->init_peak);
-> >> +               }
-> >
-> > Sorry I didn't reply earlier.
-> >
-> > I liked your previous approach with the get_bw ops. The v2 approach
-> > forces every interconnect provider driver to set up these values even
-> > if they are okay with just maxing out the bandwidth. Also, if they can
-> > actually query their hardware, this adds additional steps for them.
->
-> The problem with using something like get_bw() is that while we can
-> dynamically query the HW, we have far less granularity in HW than we
-> have nodes in the framework. We vote at BCM-level granularity, but each
-> BCM can have many nodes. For example, the sdm845 CN0 BCM has 47 nodes.
-> If we implement get_bw() generically, then it would return the BW for
-> each node, which would be the queried BCM vote scaled to account for
-> differences in BCM/node widths. While this could be useful in general as
-> an informational callback, we wouldn't want to use this as a proxy for
-> our initial BW vote requirements. For CN0, we wouldn't want or need to
-> vote 47 times for the same CN0 BCM. Each of the 47 node requests would
-> result in the same BCM request.
+From: Nick Terrell <terrelln@fb.com>
 
-Firstly most people in the list don't know what BCM means. Also, all
-of this is your provider driver specific issues. If you are exposing
-more nodes than available HW granularity, then you might want to
-question why it needs to be done (probably to make aggregation easier
-for the driver). If it's needed, then optimize your get/set() calls by
-caching the value in an internal variable so that you don't send a
-request to your BCM if you haven't changed the value since the last
-request. This is not a reason to not have get_bw() calls at the
-framework level. Other providers might support it and it'd make their
-lives easier.
+Please pull from
 
-> All we'd really need is a single node per-BCM to serve as the proxy
-> node. We'd query the HW, scale the queried value for the chosen proxy
-> node, and set init_avg/init_peak appropriately. This would save a lot of
-> unnecessary votes. Based on the current implementation, the set() call
-> in icc_node_add() for initial BW wouldn't trigger any actual HW requests
-> since we only queue BCMs that require updating in the aggregate()
-> callback. However, the set() call in icc_sync_state() would, since we
-> re-aggregate each node that has a non-zero init_avg/init_peak.
+  git@github.com:terrelln/linux.git tags/v10-zstd
 
-Having a fake "proxy node" seems like a bad internal design. Also,
-have you timed the cost of these calls to justify your concern? If you
-cache the values after aggregation and check before you send it down
-to a "BCM", at worst you get one additional call to rpmh per BCM due
-to this feature. I'm guessing any time delta would be lost as noise
-compared to the boot up time.
+to get these changes. Alternatively the patchset is included.
 
-> There's nothing stopping us from implementing get_bw() as if it were
-> get_initial_bw(), but that only works until the framework decides to use
-> get_bw() for more things than just the initial vote. I suppose we could
-> also just have a "get_initial_bw" callback, but it only needs to be
-> called once, so doesn't necessarily need a callback as opposed to
-> additional init_avg/init_peak members in the icc_node struct.
+Hi all,
 
-The benefit of "ops" vs "fill up these variables" is that you can
-differentiate between "I don't care, framework can decide" vs "I need
-it to be 0". Put another way, there's no way to say "I don't care" if
-you use variables. And by default drivers that don't really care (as
-in, okay if it's set to INT_MAX) shouldn't have to do extra code/work.
+This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
+initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
+are supported on all architectures. The ZSTD-compressed kernel is only
+hooked up to x86 in this patch set.
 
-Long story short, there's nothing wrong with get_bw(). If your
-specific driver needs to optimize the calls to your RPMH hardware,
-that should be hidden inside your driver.
+Zstandard requires slightly more memory during the kernel decompression
+on x86 (192 KB vs 64 KB), and the memory usage is independent of the
+window size.
 
--Saravana
+Zstandard requires memory proprortional to the window size used during
+compression for decompressing the ramdisk image, since streaming mode is
+used. Newer versions of zstd (1.3.2+) list the window size of a file
+with `zstd -lv <file>'. The absolute maximum amount of memory required
+is just over 8 MB, but it can be controlled at compression time.
+
+This patch set has been boot tested with buildroot and QEMU based off
+of linux-5.6-rc6.
+
+On i386 and x86_64 I have tested the following configurations:
+* zstd compressed kernel and a separate zstd compressed initramfs
+* zstd compressed kernel and a built-in zstd compressed initramfs
+* gzip compressed kernel and a separate gzip compressed initramfs
+* gzip compressed kernel and a built-in gzip compressed initramfs
+
+On arm and aarch64 I tested the same configurations, except that the kernel is
+always gzip compressed.
+
+Facebook has been using v1 of these patches on x86_64 devices for more than 6
+months. When we switched from a xz compressed initramfs to a zstd compressed
+initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
+switched from a xz compressed kernel to a zstd compressed kernel we saved 2
+seconds of boot time.
+
+Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
+When we switched from an lzma compressed initramfs to a zstd compressed initramfs
+decompression time shrunk from 27 seconds to 8 seconds.
+
+The zstd compressed kernel is smaller than the gzip compressed kernel but larger
+than the xz or lzma compressed kernels, and it decompresses faster than
+everything except lz4. See the table below for the measurement of an x86_64
+kernel ordered by compressed size:
+
+algo	size
+xz  	 6,509,792
+lzma	 6,856,576
+zstd	 7,399,157
+gzip	 8,522,527
+bzip	 8,629,603
+lzo 	 9,808,035
+lz4 	10,705,570
+none	32,565,672
+
+Alex Xu ran benchmarks in https://lkml.org/lkml/2020/7/1/722.
+
+v1 -> v2:
+- Rebase
+  - usr/Makefile and init/Kconfig were changed so the patches were updated
+- No functional changes except to rebase
+- Split the patches up into smaller chunks
+
+v2 -> v3:
+- Add *.zst to the .gitignore in patch 8
+- Style nits in patch 3
+- Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
+  1 through 3
+
+v3 -> v4:
+- Increase the ZSTD_IOBUF_SIZE from 4KB to 128KB to improve performance.
+  With this change I switch from malloc() to large_malloc() for the
+  buffers.
+- Increase the maximum allowed window size from 8 MB to 128 MB, which is
+  the max that zstd in the kernel supports.
+
+v4 -> v5:
+- Update commit message for patch 6 in response to comments
+- Rebase onto next-20200408
+
+v5 -> v6:
+- Rebase onto v5.8-rc4
+
+v6 -> v7:
+- (1/7) Don't define or use 'ZSTD_PREBOOT' to hide exports
+- (2/8) Drop 'lib: prepare xxhash for preboot environment'
+- (2/7) Use '__DISABLE_EXPORTS' in unzstd to hide exports
+- (3/7) Update zstd compression cmd to follow other compressors
+- (3/7) Add zstd22 cmd
+- (6/7) Use zstd -22 --ultra (zstd22) for x86 kernel compression
+
+v7 -> v8:
+- (2/7) Don't define '__DISABLE_EXPORTS'
+- (6/7) Define '__DISABLE_EXPORTS' in misc.c
+
+v8 -> v9:
+- Rebase onto v5.8-rc7
+- (2/7) Fix nits about comment style & typos
+- (3/7) Fix typo in init/Kconfig description
+- (6/7) Explain BOOT_HEAP_SIZE increase and define __DISABLE_EXPORTS in
+        Makefile KBUILD_CFLAGS and remove definitions from kaslr.c and misc.c
+
+v9 -> v10:
+- (6/8) Fix commit message regarding __DISABLE_EXPORTS
+- (8/8) Add .zst files to Documentation/dontdiff
+
+Best,
+Nick Terrell
+
+Adam Borowski (1):
+  .gitignore: add ZSTD-compressed files
+
+Nick Terrell (7):
+  lib: prepare zstd for preboot environment
+  lib: add zstd support to decompress
+  init: add support for zstd compressed kernel
+  usr: add support for zstd compressed initramfs
+  x86: bump ZO_z_extra_bytes margin for zstd
+  x86: Add support for ZSTD compressed kernel
+  Documentation: dontdiff: Add zstd compressed files
+
+ .gitignore                        |   1 +
+ Documentation/dontdiff            |   1 +
+ Documentation/x86/boot.rst        |   6 +-
+ Makefile                          |   3 +-
+ arch/x86/Kconfig                  |   1 +
+ arch/x86/boot/compressed/Makefile |   6 +-
+ arch/x86/boot/compressed/kaslr.c  |   7 -
+ arch/x86/boot/compressed/misc.c   |   4 +
+ arch/x86/boot/header.S            |   8 +-
+ arch/x86/include/asm/boot.h       |  11 +-
+ include/linux/decompress/unzstd.h |  11 +
+ init/Kconfig                      |  15 +-
+ lib/Kconfig                       |   4 +
+ lib/Makefile                      |   1 +
+ lib/decompress.c                  |   5 +
+ lib/decompress_unzstd.c           | 345 ++++++++++++++++++++++++++++++
+ lib/zstd/fse_decompress.c         |   9 +-
+ lib/zstd/zstd_internal.h          |  14 +-
+ scripts/Makefile.lib              |  22 ++
+ usr/Kconfig                       |  20 ++
+ usr/Makefile                      |   1 +
+ 21 files changed, 469 insertions(+), 26 deletions(-)
+ create mode 100644 include/linux/decompress/unzstd.h
+ create mode 100644 lib/decompress_unzstd.c
+
+-- 
+2.27.0
+
