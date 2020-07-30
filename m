@@ -2,110 +2,88 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF88C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5739C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15A0C20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:49:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="yMlsUfvi"
+	by mail.kernel.org (Postfix) with ESMTP id 9932120829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 22:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730609AbgG3Wto (ORCPT
+        id S1730481AbgG3Wwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:49:44 -0400
-Received: from vern.gendns.com ([98.142.107.122]:48900 "EHLO vern.gendns.com"
+        Thu, 30 Jul 2020 18:52:31 -0400
+Received: from mga14.intel.com ([192.55.52.115]:45264 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730457AbgG3Wtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:49:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=zIBbAfaKyv0a8khPFENs9bkRVRW75g282kFb88ll0RE=; b=yMlsUfviYgQGqrsCcQwvQ+E9+4
-        n4HKPHVxV3jzQ0oWcZAvtI+PY5km7eQGTZuzRA+5HkyL3yRKEHfiB66jyo5qY/YRP4HQzz/bszsyx
-        Vts7C81XDbxzeLVlXwom6UzAcjLyuwI9G5Ea6LNcZflptu7rpAUOzeSl0Icuz7PcsMCBpDF+sKey6
-        Jr8XysA3pCKftO59vuP+H+1BDP4xx8gYeJDPC7/sJkSX2YPRW/S5umktLVAvBDGdw+QXbLUfWr0WX
-        MDFEQBcVcSTqMtPZ/ING/CB1LVxJPdlHg/SvDtc6eOCZ+yeL+Ghku7zua54tD4t+znNRxeX8OgtmW
-        8b2McVaQ==;
-Received: from [2600:1700:4830:165f::19e] (port=45352)
-        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <david@lechnology.com>)
-        id 1k1HMq-0000Lv-I2; Thu, 30 Jul 2020 18:49:40 -0400
-Subject: Re: [PATCH v4 3/5] counter: Add character device interface
-From:   David Lechner <david@lechnology.com>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>, jic23@kernel.org
-Cc:     kamel.bouhara@bootlin.com, gwendal@chromium.org,
-        alexandre.belloni@bootlin.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-References: <cover.1595358237.git.vilhelm.gray@gmail.com>
- <08b3ac7349a59ba7fa5cd438bbe78360842ccd11.1595358237.git.vilhelm.gray@gmail.com>
- <415ee9ad-255e-cee7-22a6-ffa977999691@lechnology.com>
-Message-ID: <a287770b-c263-f1db-bcc4-d901d3ff3c7c@lechnology.com>
-Date:   Thu, 30 Jul 2020 17:49:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <415ee9ad-255e-cee7-22a6-ffa977999691@lechnology.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        id S1729995AbgG3Wwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 18:52:30 -0400
+IronPort-SDR: uFtuHiCl+CTnE2/iaRYYDXOZZ4MHQODxJlXtuIzoKD20+0YvfTQmmaA9ul8YNPzt28iSc6bUz6
+ +1q9aWRLTNiQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="150901952"
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="150901952"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 15:52:29 -0700
+IronPort-SDR: PKaCNUZl0mAhPLZfpP8lofzuq7CleIQxcu9QD4j2OpfWOPQzjU0CbqtZOVXH5zqZVd08NMTQCJ
+ U2JXQLJzSJhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="323056395"
+Received: from otc-chromeosbuild-1.jf.intel.com ([10.54.30.83])
+  by fmsmga002.fm.intel.com with ESMTP; 30 Jul 2020 15:52:29 -0700
+From:   Azhar Shaikh <azhar.shaikh@intel.com>
+To:     bleung@chromium.org, enric.balletbo@collabora.com,
+        groeck@chromium.org, pmalani@chromium.org,
+        linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@linux.intel.com, azhar.shaikh@intel.com,
+        utkarsh.h.patel@intel.com, casey.g.bowman@intel.com,
+        rajmohan.mani@intel.com
+Subject: [PATCH v2 1/2] platform/chrome: cros_ec_typec: Send enum values to usb_role_switch_set_role()
+Date:   Thu, 30 Jul 2020 15:52:56 -0700
+Message-Id: <20200730225257.7208-2-azhar.shaikh@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200730225257.7208-1-azhar.shaikh@intel.com>
+References: <20200730225257.7208-1-azhar.shaikh@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/28/20 7:20 PM, David Lechner wrote:
-> On 7/21/20 2:35 PM, William Breathitt Gray wrote:
->> This patch introduces a character device interface for the Counter
->> subsystem. Device data is exposed through standard character device read
->> operations. Device data is gathered when a Counter event is pushed by
->> the respective Counter device driver. Configuration is handled via ioctl
->> operations on the respective Counter character device node.
-> 
-> This sounds similar to triggers and buffers in the iio subsystem. And
-> I can see how it might be useful in some cases. But I think it would not
-> give the desired results when performance is important.
-> 
+usb_role_switch_set_role() has the second argument as enum for usb_role.
+Currently depending upon the data role i.e. UFP(0) or DFP(1) is sent.
+This eventually translates to USB_ROLE_NONE in case of UFP and
+USB_ROLE_DEVICE in case of DFP. Correct this by sending correct enum
+values as USB_ROLE_DEVICE in case of UFP and USB_ROLE_HOST in case of
+DFP.
 
-By the way, I really appreciate the work you have done here. When reviewing
-code, it is easy to point out what is wrong or we don't like and to not
-mention all the parts that are good. And there is a lot of really good work
-here already.
+Fixes: 7e7def15fa4b ("platform/chrome: cros_ec_typec: Add USB mux control")
 
-I've been working on this all week to try out some of my suggestions and
-I'm not getting very far. This is a very difficult problem to solve!
+Signed-off-by: Azhar Shaikh <azhar.shaikh@intel.com>
+Cc: Prashant Malani <pmalani@chromium.org>
+Reviewed-by: Prashant Malani <pmalani@chromium.org>
+---
+ drivers/platform/chrome/cros_ec_typec.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-I just wanted to mention this since I responded to this patch series
-already but I am still learning and trying things. So I may have more/
-different feedback in the future and I may decide some of my suggestions
-are not so good. :-)
-
-And one more thing, there was a nice talk at the Embedded Linux
-Conference last month about lessons learned from designing a userspace
-API for the GPIO subsystem [1]. Unfortunately, there is no video yet,
-but the slides might have some helpful ideas about mistakes to avoid.
-
-[1]: https://elinux.org/ELC_2020_Presentations
+diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+index 3eae01f4c9f7..eb4713b7ae14 100644
+--- a/drivers/platform/chrome/cros_ec_typec.c
++++ b/drivers/platform/chrome/cros_ec_typec.c
+@@ -590,7 +590,8 @@ static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
+ 		dev_warn(typec->dev, "Configure muxes failed, err = %d\n", ret);
+ 
+ 	return usb_role_switch_set_role(typec->ports[port_num]->role_sw,
+-					!!(resp.role & PD_CTRL_RESP_ROLE_DATA));
++				       resp.role & PD_CTRL_RESP_ROLE_DATA
++				       ? USB_ROLE_HOST : USB_ROLE_DEVICE);
+ }
+ 
+ static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
+-- 
+2.17.1
 
