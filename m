@@ -2,139 +2,158 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E23C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3521AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76BAC2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A4020809
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:37:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="yV0lYXoR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dPXuNrkZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730510AbgG3Tes (ORCPT
+        id S1730523AbgG3ThO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 15:34:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgG3Ter (ORCPT
+        Thu, 30 Jul 2020 15:37:14 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:41337 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726650AbgG3ThN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 15:34:47 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8386CC061574
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 12:34:47 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id d18so29445183ion.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jul 2020 12:34:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=S2cxBjoQxqxK4peClB1baOHSFoZL+Yj5o/jId09Ervw=;
-        b=yV0lYXoR+mqd/SzhhBLEqFe2z/OHz5ZaPxBuVNBV2Bu2Yc+gK98PiKbSSaxOA8fZQJ
-         xPaW6ZYdYndj0dCUQlYGJUyuWi+TkvwoN1//Rt8BUkiJ9Jh0BKYPI+oztdDLbnRz7YeD
-         qsuA7hhHZWiGed5zySaE9JpdPjc6IqaicExOpvsR72LlQVc9PmhSQPavwo/BKSwyZjMi
-         Y5hy8hDT1HknicHEl2VvsRA4nbliyB5Zyz8MdmfFd5guleqQE3myjmV5ZqkYA5V4NXuN
-         zCYfIq2BgDRWoQQ5jgWzaonHRDR7zf0hO/Q/XnNuQqhOFd8s8j4WwK6uMdeq+LBz7cMy
-         QtXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S2cxBjoQxqxK4peClB1baOHSFoZL+Yj5o/jId09Ervw=;
-        b=ind6N7pg/bj+gx1MkpsrUv0CiQZrjlok9feQHHxEE65IyrWz9GCNZnEJHjBoRtxNIH
-         T680dU7CHrxyiW66kcvN+b0rCbXV3azpn5sXQhpgYgWC1sA7X4u9a/2s58vJZxmYidyC
-         2LNnuX+PFBDprKr16Ulp0Dj76zYMxTmSD2kN0Qqr5BN9mYHRCsoHd76lfbXu0V1WTzIj
-         QnOl8wnoOKHCNWtDHQj/RzXCaNC5q14SCzIpsQHGxU/y0Avf4RsxwgRqgQXGBTIrX0p6
-         YAZiAtaHFKWR4G5aX3vdVJKlORrcDQFHEZo7zYM4J4xwk30TB94VA2mhWKIqxQiI1wqw
-         eEpg==
-X-Gm-Message-State: AOAM53020QRuSwdIuJQm0x/XlpOagA887qHXaj1bioC75OGEHLM5pn2G
-        /uu7VlKFG2aKKw3L6J/A0IGIUQ==
-X-Google-Smtp-Source: ABdhPJyGX3EoUChA60mN8Z9VraISoHTk8hPnjL2b4aDG0Dd5gnLyRZYKRdS5SjnJFFEHslJH4WODZQ==
-X-Received: by 2002:a5e:980f:: with SMTP id s15mr132306ioj.5.1596137686835;
-        Thu, 30 Jul 2020 12:34:46 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id 142sm3466284ilc.40.2020.07.30.12.34.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2020 12:34:46 -0700 (PDT)
-Subject: Re: KASAN: use-after-free Read in io_uring_setup (2)
-To:     syzbot <syzbot+9d46305e76057f30c74e@syzkaller.appspotmail.com>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-References: <000000000000a3709905abad9335@google.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <fcb86aa5-3b91-bf85-7d3a-8ca2a60e05d9@kernel.dk>
-Date:   Thu, 30 Jul 2020 13:34:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 30 Jul 2020 15:37:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596137832;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=evGWKkVwKQbCUf877DPL3WNOIsuP9Jsv7c2BA2D1qwo=;
+        b=dPXuNrkZ+uGOAyIG05LxNyc4ZB87r3mkZhAL0ZuCmtgQ40J3xxn3rNNXvjAqnWuH9LkzAH
+        EfyGcM6o7StECF81BhJPGJs0wM70Y+cQcBVbm2DJhipfgxLbmr2iy5HPLHBywf2jiHCArC
+        tqCQatdDEslQjm1bX5uKAmgHABSaYkI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-476-PkkDqE-UMYi3wYkWz6A3QQ-1; Thu, 30 Jul 2020 15:37:07 -0400
+X-MC-Unique: PkkDqE-UMYi3wYkWz6A3QQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DFC11102C7EE;
+        Thu, 30 Jul 2020 19:37:05 +0000 (UTC)
+Received: from localhost.localdomain.com (unknown [10.40.192.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 735A51002393;
+        Thu, 30 Jul 2020 19:36:45 +0000 (UTC)
+From:   Julia Suvorova <jusual@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Julia Suvorova <jusual@redhat.com>
+Subject: [PATCH] KVM: x86: Use MMCONFIG for all PCI config space accesses
+Date:   Thu, 30 Jul 2020 21:35:10 +0200
+Message-Id: <20200730193510.578309-1-jusual@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <000000000000a3709905abad9335@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/20 1:21 PM, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    04b45717 Add linux-next specific files for 20200729
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=173774b8900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ec68f65b459f1ed
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9d46305e76057f30c74e
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+9d46305e76057f30c74e@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KASAN: use-after-free in io_account_mem fs/io_uring.c:7397 [inline]
-> BUG: KASAN: use-after-free in io_uring_create fs/io_uring.c:8369 [inline]
-> BUG: KASAN: use-after-free in io_uring_setup+0x2797/0x2910 fs/io_uring.c:8400
-> Read of size 1 at addr ffff888087a41044 by task syz-executor.5/18145
+Using MMCONFIG instead of I/O ports cuts the number of config space
+accesses in half, which is faster on KVM and opens the door for
+additional optimizations such as Vitaly's "[PATCH 0/3] KVM: x86: KVM
+MEM_PCI_HOLE memory":
+https://lore.kernel.org/kvm/20200728143741.2718593-1-vkuznets@redhat.com
 
-Quick guess would be that the ring is closed in a race before we do the
-accounting. The below should fix that, by ensuring that we account the
-memory before we install the fd.
+However, this change will not bring significant performance improvement
+unless it is running on x86 within a hypervisor. Moreover, allowing
+MMCONFIG access for addresses < 256 can be dangerous for some devices:
+see commit a0ca99096094 ("PCI x86: always use conf1 to access config
+space below 256 bytes"). That is why a special feature flag is needed.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index fabf0b692384..eb99994de5e2 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -8329,6 +8329,11 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p,
- 		ret = -EFAULT;
- 		goto err;
- 	}
-+
-+	io_account_mem(ctx, ring_pages(p->sq_entries, p->cq_entries),
-+		       ACCT_LOCKED);
-+	ctx->limit_mem = limit_mem;
-+
- 	/*
- 	 * Install ring fd as the very last thing, so we don't risk someone
- 	 * having closed it before we finish setup
-@@ -8338,9 +8343,6 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p,
- 		goto err;
+Introduce KVM_FEATURE_PCI_GO_MMCONFIG, which can be enabled when the
+configuration is known to be safe (e.g. in QEMU).
+
+Signed-off-by: Julia Suvorova <jusual@redhat.com>
+---
+ Documentation/virt/kvm/cpuid.rst     |  4 ++++
+ arch/x86/include/uapi/asm/kvm_para.h |  1 +
+ arch/x86/kernel/kvm.c                | 14 ++++++++++++++
+ 3 files changed, 19 insertions(+)
+
+diff --git a/Documentation/virt/kvm/cpuid.rst b/Documentation/virt/kvm/cpuid.rst
+index a7dff9186bed..711f2074877b 100644
+--- a/Documentation/virt/kvm/cpuid.rst
++++ b/Documentation/virt/kvm/cpuid.rst
+@@ -92,6 +92,10 @@ KVM_FEATURE_ASYNC_PF_INT          14          guest checks this feature bit
+                                               async pf acknowledgment msr
+                                               0x4b564d07.
  
- 	trace_io_uring_create(ret, ctx, p->sq_entries, p->cq_entries, p->flags);
--	io_account_mem(ctx, ring_pages(p->sq_entries, p->cq_entries),
--		       ACCT_LOCKED);
--	ctx->limit_mem = limit_mem;
- 	return ret;
- err:
- 	io_ring_ctx_wait_and_kill(ctx);
-
++KVM_FEATURE_PCI_GO_MMCONFIG       15          guest checks this feature bit
++                                              before using MMCONFIG for all
++                                              PCI config accesses
++
+ KVM_FEATURE_CLOCSOURCE_STABLE_BIT 24          host will warn if no guest-side
+                                               per-cpu warps are expeced in
+                                               kvmclock
+diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
+index 812e9b4c1114..5793f372cae0 100644
+--- a/arch/x86/include/uapi/asm/kvm_para.h
++++ b/arch/x86/include/uapi/asm/kvm_para.h
+@@ -32,6 +32,7 @@
+ #define KVM_FEATURE_POLL_CONTROL	12
+ #define KVM_FEATURE_PV_SCHED_YIELD	13
+ #define KVM_FEATURE_ASYNC_PF_INT	14
++#define KVM_FEATURE_PCI_GO_MMCONFIG	15
+ 
+ #define KVM_HINTS_REALTIME      0
+ 
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index df63786e7bfa..1ec73e6f25ce 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -33,6 +33,7 @@
+ #include <asm/hypervisor.h>
+ #include <asm/tlb.h>
+ #include <asm/cpuidle_haltpoll.h>
++#include <asm/pci_x86.h>
+ 
+ DEFINE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
+ 
+@@ -715,6 +716,18 @@ static uint32_t __init kvm_detect(void)
+ 	return kvm_cpuid_base();
+ }
+ 
++static int __init kvm_pci_arch_init(void)
++{
++	if (raw_pci_ext_ops &&
++	    kvm_para_has_feature(KVM_FEATURE_PCI_GO_MMCONFIG)) {
++		pr_info("PCI: Using MMCONFIG for base access\n");
++		raw_pci_ops = raw_pci_ext_ops;
++		return 0;
++	}
++
++	return 1;
++}
++
+ static void __init kvm_apic_init(void)
+ {
+ #if defined(CONFIG_SMP)
+@@ -726,6 +739,7 @@ static void __init kvm_apic_init(void)
+ static void __init kvm_init_platform(void)
+ {
+ 	kvmclock_init();
++	x86_init.pci.arch_init = kvm_pci_arch_init;
+ 	x86_platform.apic_post_init = kvm_apic_init;
+ }
+ 
 -- 
-Jens Axboe
+2.25.4
 
