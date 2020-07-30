@@ -2,128 +2,121 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB13C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38401C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2662074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:50:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kxVJFfip"
+	by mail.kernel.org (Postfix) with ESMTP id 1E39B20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 19:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbgG3Tur (ORCPT
+        id S1730614AbgG3Tu4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 15:50:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730377AbgG3Tuq (ORCPT
+        Thu, 30 Jul 2020 15:50:56 -0400
+Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:14318 "EHLO
+        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730377AbgG3Tu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 15:50:46 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD3BC061574;
-        Thu, 30 Jul 2020 12:50:46 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t10so9795163plz.10;
-        Thu, 30 Jul 2020 12:50:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tMXvAgV7y7E7g3D1Q8GTY7E552yzOC14eLgZur5bOX4=;
-        b=kxVJFfipNn+Aa+QD1px2nW0qiEiM/lI4U7W6jk2kqnzMFytG1ybU18pP4MGcrHhYnT
-         ZF06DS+lPzJ41rC7TqP6wDhYI8yiae9n4SjJODgj1Hj1CqMErax8rYP3TlyL/cpsahCl
-         vvpw9ksu8nT2OhyGyOLfRIlMQQUTXGxyq0009jfWcozRK5tLt0bpJpl+K3RqM7Vg70b8
-         pH0GI+TmKPzT0JdOgMH+P3uNQKIMU6EpvTI7x7pxYXyx6uq8E5M4l7vt7CoPtZYQREfo
-         X0j97FndDgTSJ092q5QwCB1MporPW5eoJXTXt6mXHOB3gEwdnSZZ55PfIAyu7kwJBEKf
-         IPzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tMXvAgV7y7E7g3D1Q8GTY7E552yzOC14eLgZur5bOX4=;
-        b=CNpi0TmsbEL//SUb0GNdYR8X3yOc6DIr0c5Q9qZISPxDX5AqJGskdVXgnBA3qfLm+R
-         ZRcvb3l4cncKoRnJhOrZjdPx82/Exq42jN52j8EbPBYHTJ7p3W9dJiQgrLPoUxcpNT4y
-         fGLuUhI4S2MHlBSPbckkqEvXoNCZic9DpzDqlFnWlbWQt29e5MArkG3EToygNOP4PQHx
-         46yHa65kjgY4Md7lDFfPJHvlZWoVcLNzUREIF8ik97tKCa9luQPPjhL0gXHfAEifyifD
-         jr0Kp8/H9fM4NeXKCBRuTJqdMNdqwFT6+vzLr8yozniOrXhgk1qdfwKX3C4URlPC9iwh
-         yeNg==
-X-Gm-Message-State: AOAM532+jQ4xajOzoFv1RxrUZpeV0aklb20qznCdb2C5rH4rlHxRtE6Q
-        N1cylgISST9KyXFADCWtFkACWa0DzJBDV5rz7I8=
-X-Google-Smtp-Source: ABdhPJy3/p35FG9tefm9R+LVBFlJys79Eb4rSZlOzkM8ZMdIR5Ub5tAyBAc6UmBduAWzlHFwoqdkyJyAXBlq9OwW6mk=
-X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr707926pjp.228.1596138645586;
- Thu, 30 Jul 2020 12:50:45 -0700 (PDT)
+        Thu, 30 Jul 2020 15:50:56 -0400
+Subject: Re: [PATCH] RFC: selinux avc trace
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     =?UTF-8?Q?Thi=c3=a9baud_Weksteen?= <tweek@google.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Nick Kralevich <nnk@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <selinux@vger.kernel.org>
+References: <20200724091520.880211-1-tweek@google.com>
+ <20200724095232.5f9d3f17@oasis.local.home>
+ <80a23580-5067-93b0-53fa-3bd53253c056@sony.com>
+ <20200730110459.5bf0b0df@oasis.local.home>
+ <6f1262fc-21ad-f872-5460-e78d4685c9c4@sony.com>
+ <20200730120200.1367e1cd@oasis.local.home>
+ <15fcdc87-5e9b-8144-5a6b-34594d1e52ef@sony.com>
+ <20200730131659.7f1d21e8@oasis.local.home>
+ <38053623-2cc0-882d-8578-977ff3f43908@sony.com>
+ <20200730152923.5101346c@oasis.local.home>
+From:   peter enderborg <peter.enderborg@sony.com>
+Message-ID: <79e9971c-2a51-c180-d938-72932bd4d67d@sony.com>
+Date:   Thu, 30 Jul 2020 21:50:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200730193510.578309-1-jusual@redhat.com>
-In-Reply-To: <20200730193510.578309-1-jusual@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 30 Jul 2020 22:50:29 +0300
-Message-ID: <CAHp75VcyRjAr3ugmAWYcKMrAeea6ioQOPfJnj-Srntdg_W8ScQ@mail.gmail.com>
-Subject: Re: [PATCH] KVM: x86: Use MMCONFIG for all PCI config space accesses
-To:     Julia Suvorova <jusual@redhat.com>
-Cc:     "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200730152923.5101346c@oasis.local.home>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-GB
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=DrAoB13+ c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=IkcTkHD0fZMA:10 a=_RQrkK6FrEwA:10 a=z6gsHLkEAAAA:8 a=dadijopU3UlrZyO6t4sA:9 a=QEXdDO2ut3YA:10 a=d-OLMTCWyvARjPbQ-enb:22
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 10:37 PM Julia Suvorova <jusual@redhat.com> wrote:
+On 7/30/20 9:29 PM, Steven Rostedt wrote:
+> On Thu, 30 Jul 2020 21:12:39 +0200
+> peter enderborg <peter.enderborg@sony.com> wrote:
 >
-> Using MMCONFIG instead of I/O ports cuts the number of config space
-> accesses in half, which is faster on KVM and opens the door for
-> additional optimizations such as Vitaly's "[PATCH 0/3] KVM: x86: KVM
-> MEM_PCI_HOLE memory":
+>>>> avc:  denied  { find } for interface=vendor.qti.hardware.perf::IPerf sid=u:r:permissioncontroller_app:s0:c230,c256,c512,c768 pid=9164 scontext=u:r:permissioncontroller_app:s0:c230,c256,c512,c768 tcontext=u:object_r:vendor_hal_perf_hwservice:s0 tclass=hwservice_manager permissive=0
+>>>>  avc:  denied  { execute } for  pid=13914 comm="ScionFrontendAp" path="/data/user_de/0/com.google.android.gms/app_chimera/m/00000002/oat/arm64/DynamiteLoader.odex" dev="sda77" ino=204967 scontext=u:r:platform_app:s0:c512,c768 tcontext=u:object_r:privapp_data_file:s0:c512,c768 tclass=file permissive=0 ppid=788 pcomm="main" pgid=13914 pgcomm="on.updatecenter"
+>>>>
+>>>> It omit the fields that are not used. Some parts are common some are not. So a correct format specification for trace will be problematic if there is no "optional" field indicator.  
+>>> That's all quite noisy. What is the object of these changes? What
+>>> exactly are you trying to trace and why?  
+>> It is noisy, and it have to be. it covers a lot of different areas.  One common problem is
+>> to debug userspace applications regarding violations. You get the violation from the logs
+>> and try to figure out what you did to cause it. With a trace point you can do much better
+>> when combine with other traces. Having a the userspace stack is a very good way,
+>> unfortunately  it does not work on that many architectures within trace.
+>>
+>> What exactly are you doing with any trace? You collect data to analyse what's
+>> going on. This is not different. Selinux do a specific thing, but is has lots of parameters.
+> Have you thought of adding multiple trace events with if statements
+> around them to decode each specific type of event?
 
-> https://lore.kernel.org/kvm/20200728143741.2718593-1-vkuznets@redhat.com
+Yes. And I think class is good split point. But I think it will require
+a few layers, but a is mostly data driven so I think it might be hard
+to do it compile time.  I think a hybrid might be possible,
+but it then we need some ugly part with a other separator than =,
+or some escape seq to separate.
 
-You may use Link: tag for this.
+sort of "generc1=X generic2=Y variable1^x variable2^y" or
 
-> However, this change will not bring significant performance improvement
-> unless it is running on x86 within a hypervisor. Moreover, allowing
-> MMCONFIG access for addresses < 256 can be dangerous for some devices:
-> see commit a0ca99096094 ("PCI x86: always use conf1 to access config
-> space below 256 bytes"). That is why a special feature flag is needed.
+"generc1=X generic2=Y leftover=[variable1=x variable2=y]"
+
+If there was a formal parameter tree we could maybe do some
+generated printer. I don't think there are one, maybe Paul Moore or Stephen Smalley
+can verify that.
+
+ 
+
+> Note, you can have a generic event that gets enabled by all the other
+> events via the "reg" and "unreg" part of TRACE_EVENT_FN(). Say its
+> called trace_avc, make a dummy trace_avc() call hat doesn't even need
+> to be called anywhere, it just needs to exist to get to the other trace
+> events.
 >
-> Introduce KVM_FEATURE_PCI_GO_MMCONFIG, which can be enabled when the
-> configuration is known to be safe (e.g. in QEMU).
+> Then have:
+>
+> 	if (trace_avc_enabled()) {
+> 		if (event1)
+> 			trace_avc_req_event1();
+> 		if (event2)
+> 			trace_avc_req_event2();
+> 		[..]
+> 	}
+>
+> The reason for the trace_avc_enabled() is because that's a static
+> branch, which is a nop when not enabled. When enabled, it is a jump to
+> the out of band if condition block that has all the other trace events.
+>
+> -- Steve
 
-...
 
-> +static int __init kvm_pci_arch_init(void)
-> +{
-> +       if (raw_pci_ext_ops &&
-> +           kvm_para_has_feature(KVM_FEATURE_PCI_GO_MMCONFIG)) {
-
-Better to use traditional pattern, i.e.
-  if (not_supported)
-    return bail_out;
-
-  ...do useful things...
-  return 0;
-
-> +               pr_info("PCI: Using MMCONFIG for base access\n");
-> +               raw_pci_ops = raw_pci_ext_ops;
-> +               return 0;
-> +       }
-
-> +       return 1;
-
-Hmm... I don't remember what positive codes means there. Perhaps you
-need to return a rather error code?
-
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
