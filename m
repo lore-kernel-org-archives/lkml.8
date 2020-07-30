@@ -2,231 +2,152 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7174EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 478B020829
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:30:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XMWn1nPr"
+	by mail.kernel.org (Postfix) with ESMTP id 3C320206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 13:32:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729245AbgG3Naj (ORCPT
+        id S1728400AbgG3Ncb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 09:30:39 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:64199 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727883AbgG3Nad (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:30:33 -0400
-X-UUID: 1bb320a6777149d7be1e67de3b4b7a3b-20200730
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=EFC4xeBmcmvSxTLCFwKXro7Tw1yoAmDYNXqQcPM0FLA=;
-        b=XMWn1nPrlnPm3Ypivb4SjgaNtNr/YlM9B/Qd2aNwN6jlkrseoOavr6e77QUOAUP8bkSFlYxklphwrf2wHSKzhHJ3L0/Ii4bw6715bP2QFpSaEhxzNK2y01j8yOc7EDWwTimbXsWSy/mlVcL9PbEQzRsl6dyvZmkBswqfUty6Mdk=;
-X-UUID: 1bb320a6777149d7be1e67de3b4b7a3b-20200730
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 251755347; Thu, 30 Jul 2020 21:30:26 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 30 Jul 2020 21:30:15 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 30 Jul 2020 21:30:15 +0800
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC:     mtk01761 <wendell.lin@mediatek.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Hanks Chen <hanks.chen@mediatek.com>
-Subject: [PATCH v10 2/3] arm64: dts: add dts nodes for MT6779
-Date:   Thu, 30 Jul 2020 21:30:15 +0800
-Message-ID: <1596115816-11758-3-git-send-email-hanks.chen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1596115816-11758-1-git-send-email-hanks.chen@mediatek.com>
-References: <1596115816-11758-1-git-send-email-hanks.chen@mediatek.com>
+        Thu, 30 Jul 2020 09:32:31 -0400
+Received: from relay.sw.ru ([185.231.240.75]:51876 "EHLO relay3.sw.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726535AbgG3Nca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jul 2020 09:32:30 -0400
+Received: from [192.168.15.64]
+        by relay3.sw.ru with esmtp (Exim 4.93)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1k18fI-0003lW-N6; Thu, 30 Jul 2020 16:32:08 +0300
+Subject: Re: [PATCH 09/23] ns: Introduce ns_idr to be able to iterate all
+ allocated namespaces in the system
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
+        ebiederm@xmission.com, akpm@linux-foundation.org,
+        christian.brauner@ubuntu.com, areber@redhat.com, serge@hallyn.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+ <159611040870.535980.13460189038999722608.stgit@localhost.localdomain>
+ <20200730122319.GC23808@casper.infradead.org>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <485c01e6-a4ee-5076-878e-6303e6d8d5f3@virtuozzo.com>
+Date:   Thu, 30 Jul 2020 16:32:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200730122319.GC23808@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dGhpcyBhZGRzIGluaXRpYWwgTVQ2Nzc5IGR0cyBzZXR0aW5ncyBmb3IgYm9hcmQgc3VwcG9ydCwN
-CmluY2x1ZGluZyBjcHUsIGdpYywgdGltZXIsIGNjZiwgcGluY3RybCwgdWFydCwgc3lzaXJxLi4u
-ZXRjLg0KDQpTaWduZWQtb2ZmLWJ5OiBIYW5rcyBDaGVuIDxoYW5rcy5jaGVuQG1lZGlhdGVrLmNv
-bT4NCi0tLQ0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAgfCAg
-IDEgKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LWV2Yi5kdHMgfCAgMzEg
-KysrDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3NzkuZHRzaSAgICB8IDI3MSAr
-KysrKysrKysrKysrKysrKysrKw0KIDMgZmlsZXMgY2hhbmdlZCwgMzAzIGluc2VydGlvbnMoKykN
-CiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3Nzkt
-ZXZiLmR0cw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVr
-L210Njc3OS5kdHNpDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVr
-L01ha2VmaWxlIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9NYWtlZmlsZQ0KaW5kZXgg
-YTU3YWY5ZGE5ZjVjLi40ZDFiMGY5ZDhkMWMgMTAwNjQ0DQotLS0gYS9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL21lZGlhdGVrL01ha2VmaWxlDQorKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVr
-L01ha2VmaWxlDQpAQCAtMSw2ICsxLDcgQEANCiAjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBH
-UEwtMi4wDQogZHRiLSQoQ09ORklHX0FSQ0hfTUVESUFURUspICs9IG10MjcxMi1ldmIuZHRiDQog
-ZHRiLSQoQ09ORklHX0FSQ0hfTUVESUFURUspICs9IG10Njc1NS1ldmIuZHRiDQorZHRiLSQoQ09O
-RklHX0FSQ0hfTUVESUFURUspICs9IG10Njc3OS1ldmIuZHRiDQogZHRiLSQoQ09ORklHX0FSQ0hf
-TUVESUFURUspICs9IG10Njc5NS1ldmIuZHRiDQogZHRiLSQoQ09ORklHX0FSQ0hfTUVESUFURUsp
-ICs9IG10Njc5Ny1ldmIuZHRiDQogZHRiLSQoQ09ORklHX0FSQ0hfTUVESUFURUspICs9IG10Njc5
-Ny14MjAtZGV2LmR0Yg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsv
-bXQ2Nzc5LWV2Yi5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS1ldmIu
-ZHRzDQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0KaW5kZXggMDAwMDAwMDAwMDAwLi4xNjRmNWNiYjM4
-MjENCi0tLSAvZGV2L251bGwNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2
-Nzc5LWV2Yi5kdHMNCkBAIC0wLDAgKzEsMzEgQEANCisvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
-cjogR1BMLTIuMCsNCisvKg0KKyAqIENvcHlyaWdodCAoYykgMjAxOSBNZWRpYVRlayBJbmMuDQor
-ICogQXV0aG9yOiBNYXJzLkMgPG1hcnMuY2hlbmdAbWVkaWF0ZWsuY29tPg0KKyAqDQorICovDQor
-DQorL2R0cy12MS87DQorI2luY2x1ZGUgIm10Njc3OS5kdHNpIg0KKw0KKy8gew0KKwltb2RlbCA9
-ICJNZWRpYVRlayBNVDY3NzkgRVZCIjsNCisJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3Nzkt
-ZXZiIiwgIm1lZGlhdGVrLG10Njc3OSI7DQorDQorCWFsaWFzZXMgew0KKwkJc2VyaWFsMCA9ICZ1
-YXJ0MDsNCisJfTsNCisNCisJbWVtb3J5QDQwMDAwMDAwIHsNCisJCWRldmljZV90eXBlID0gIm1l
-bW9yeSI7DQorCQlyZWcgPSA8MCAweDQwMDAwMDAwIDAgMHgxZTgwMDAwMD47DQorCX07DQorDQor
-CWNob3NlbiB7DQorCQlzdGRvdXQtcGF0aCA9ICJzZXJpYWwwOjkyMTYwMG44IjsNCisJfTsNCit9
-Ow0KKw0KKyZ1YXJ0MCB7DQorCXN0YXR1cyA9ICJva2F5IjsNCit9Ow0KZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL21lZGlhdGVrL210Njc3OS5kdHNpDQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0KaW5kZXggMDAw
-MDAwMDAwMDAwLi4zNzBmMzA5ZDMyZGUNCi0tLSAvZGV2L251bGwNCisrKyBiL2FyY2gvYXJtNjQv
-Ym9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LmR0c2kNCkBAIC0wLDAgKzEsMjcxIEBADQorLy8gU1BE
-WC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjArDQorLyoNCisgKiBDb3B5cmlnaHQgKGMpIDIw
-MTkgTWVkaWFUZWsgSW5jLg0KKyAqIEF1dGhvcjogTWFycy5DIDxtYXJzLmNoZW5nQG1lZGlhdGVr
-LmNvbT4NCisgKg0KKyAqLw0KKw0KKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9jbG9jay9tdDY3Nzkt
-Y2xrLmg+DQorI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2lycS5o
-Pg0KKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+
-DQorI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3BpbmN0cmwvbXQ2Nzc5LXBpbmZ1bmMuaD4NCisNCisv
-IHsNCisJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NzkiOw0KKwlpbnRlcnJ1cHQtcGFyZW50
-ID0gPCZzeXNpcnE+Ow0KKwkjYWRkcmVzcy1jZWxscyA9IDwyPjsNCisJI3NpemUtY2VsbHMgPSA8
-Mj47DQorDQorCXBzY2kgew0KKwkJY29tcGF0aWJsZSA9ICJhcm0scHNjaS0wLjIiOw0KKwkJbWV0
-aG9kID0gInNtYyI7DQorCX07DQorDQorCWNwdXMgew0KKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
-DQorCQkjc2l6ZS1jZWxscyA9IDwwPjsNCisNCisJCWNwdTA6IGNwdUAwIHsNCisJCQlkZXZpY2Vf
-dHlwZSA9ICJjcHUiOw0KKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNTUiOw0KKwkJCWVu
-YWJsZS1tZXRob2QgPSAicHNjaSI7DQorCQkJcmVnID0gPDB4MDAwPjsNCisJCX07DQorDQorCQlj
-cHUxOiBjcHVAMSB7DQorCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisJCQljb21wYXRpYmxlID0g
-ImFybSxjb3J0ZXgtYTU1IjsNCisJCQllbmFibGUtbWV0aG9kID0gInBzY2kiOw0KKwkJCXJlZyA9
-IDwweDEwMD47DQorCQl9Ow0KKw0KKwkJY3B1MjogY3B1QDIgew0KKwkJCWRldmljZV90eXBlID0g
-ImNwdSI7DQorCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQorCQkJZW5hYmxlLW1l
-dGhvZCA9ICJwc2NpIjsNCisJCQlyZWcgPSA8MHgyMDA+Ow0KKwkJfTsNCisNCisJCWNwdTM6IGNw
-dUAzIHsNCisJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOw0KKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNv
-cnRleC1hNTUiOw0KKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQorCQkJcmVnID0gPDB4MzAw
-PjsNCisJCX07DQorDQorCQljcHU0OiBjcHVANCB7DQorCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsN
-CisJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTU1IjsNCisJCQllbmFibGUtbWV0aG9kID0g
-InBzY2kiOw0KKwkJCXJlZyA9IDwweDQwMD47DQorCQl9Ow0KKw0KKwkJY3B1NTogY3B1QDUgew0K
-KwkJCWRldmljZV90eXBlID0gImNwdSI7DQorCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1
-NSI7DQorCQkJZW5hYmxlLW1ldGhvZCA9ICJwc2NpIjsNCisJCQlyZWcgPSA8MHg1MDA+Ow0KKwkJ
-fTsNCisNCisJCWNwdTY6IGNwdUA2IHsNCisJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOw0KKwkJCWNv
-bXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNzUiOw0KKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7
-DQorCQkJcmVnID0gPDB4NjAwPjsNCisJCX07DQorDQorCQljcHU3OiBjcHVANyB7DQorCQkJZGV2
-aWNlX3R5cGUgPSAiY3B1IjsNCisJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTc1IjsNCisJ
-CQllbmFibGUtbWV0aG9kID0gInBzY2kiOw0KKwkJCXJlZyA9IDwweDcwMD47DQorCQl9Ow0KKwl9
-Ow0KKw0KKwlwbXUgew0KKwkJY29tcGF0aWJsZSA9ICJhcm0sYXJtdjgtcG11djMiOw0KKwkJaW50
-ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsNCisJCWludGVycnVwdHMgPSA8R0lDX1BQSSA3IElSUV9U
-WVBFX0xFVkVMX0xPVyAwPjsNCisJfTsNCisNCisJY2xrMjZtOiBvc2NpbGxhdG9yQDAgew0KKwkJ
-Y29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7DQorCQkjY2xvY2stY2VsbHMgPSA8MD47DQorCQlj
-bG9jay1mcmVxdWVuY3kgPSA8MjYwMDAwMDA+Ow0KKwkJY2xvY2stb3V0cHV0LW5hbWVzID0gImNs
-azI2bSI7DQorCX07DQorDQorCWNsazMyazogb3NjaWxsYXRvckAxIHsNCisJCWNvbXBhdGlibGUg
-PSAiZml4ZWQtY2xvY2siOw0KKwkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0KKwkJY2xvY2stZnJlcXVl
-bmN5ID0gPDMyNzY4PjsNCisJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJjbGszMmsiOw0KKwl9Ow0K
-Kw0KKwl0aW1lciB7DQorCQljb21wYXRpYmxlID0gImFybSxhcm12OC10aW1lciI7DQorCQlpbnRl
-cnJ1cHQtcGFyZW50ID0gPCZnaWM+Ow0KKwkJaW50ZXJydXB0cyA9IDxHSUNfUFBJIDEzIElSUV9U
-WVBFX0xFVkVMX0xPVyAwPiwNCisJCQkgICAgIDxHSUNfUFBJIDE0IElSUV9UWVBFX0xFVkVMX0xP
-VyAwPiwNCisJCQkgICAgIDxHSUNfUFBJIDExIElSUV9UWVBFX0xFVkVMX0xPVyAwPiwNCisJCQkg
-ICAgIDxHSUNfUFBJIDEwIElSUV9UWVBFX0xFVkVMX0xPVyAwPjsNCisJfTsNCisNCisJc29jIHsN
-CisJCSNhZGRyZXNzLWNlbGxzID0gPDI+Ow0KKwkJI3NpemUtY2VsbHMgPSA8Mj47DQorCQljb21w
-YXRpYmxlID0gInNpbXBsZS1idXMiOw0KKwkJcmFuZ2VzOw0KKw0KKwkJZ2ljOiBpbnRlcnJ1cHQt
-Y29udHJvbGxlckAwYzAwMDAwMCB7DQorCQkJY29tcGF0aWJsZSA9ICJhcm0sZ2ljLXYzIjsNCisJ
-CQkjaW50ZXJydXB0LWNlbGxzID0gPDQ+Ow0KKwkJCWludGVycnVwdC1wYXJlbnQgPSA8JmdpYz47
-DQorCQkJaW50ZXJydXB0LWNvbnRyb2xsZXI7DQorCQkJcmVnID0gPDAgMHgwYzAwMDAwMCAwIDB4
-NDAwMDA+LCAgLyogR0lDRCAqLw0KKwkJCSAgICAgIDwwIDB4MGMwNDAwMDAgMCAweDIwMDAwMD47
-IC8qIEdJQ1IgKi8NCisJCQlpbnRlcnJ1cHRzID0gPEdJQ19QUEkgOSBJUlFfVFlQRV9MRVZFTF9I
-SUdIIDA+Ow0KKw0KKwkJCXBwaS1wYXJ0aXRpb25zIHsNCisJCQkJcHBpX2NsdXN0ZXIwOiBpbnRl
-cnJ1cHQtcGFydGl0aW9uLTAgew0KKwkJCQkJYWZmaW5pdHkgPSA8JmNwdTAgJmNwdTEgXA0KKwkJ
-CQkJCSZjcHUyICZjcHUzICZjcHU0ICZjcHU1PjsNCisJCQkJfTsNCisJCQkJcHBpX2NsdXN0ZXIx
-OiBpbnRlcnJ1cHQtcGFydGl0aW9uLTEgew0KKwkJCQkJYWZmaW5pdHkgPSA8JmNwdTYgJmNwdTc+
-Ow0KKwkJCQl9Ow0KKwkJCX07DQorDQorCQl9Ow0KKw0KKwkJc3lzaXJxOiBpbnRwb2wtY29udHJv
-bGxlckAwYzUzYTY1MCB7DQorCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3Nzktc3lzaXJx
-IiwNCisJCQkJICAgICAibWVkaWF0ZWssbXQ2NTc3LXN5c2lycSI7DQorCQkJaW50ZXJydXB0LWNv
-bnRyb2xsZXI7DQorCQkJI2ludGVycnVwdC1jZWxscyA9IDwzPjsNCisJCQlpbnRlcnJ1cHQtcGFy
-ZW50ID0gPCZnaWM+Ow0KKwkJCXJlZyA9IDwwIDB4MGM1M2E2NTAgMCAweDUwPjsNCisJCX07DQor
-DQorCQl0b3Bja2dlbjogY2xvY2stY29udHJvbGxlckAxMDAwMDAwMCB7DQorCQkJY29tcGF0aWJs
-ZSA9ICJtZWRpYXRlayxtdDY3NzktdG9wY2tnZW4iLCAic3lzY29uIjsNCisJCQlyZWcgPSA8MCAw
-eDEwMDAwMDAwIDAgMHgxMDAwPjsNCisJCQkjY2xvY2stY2VsbHMgPSA8MT47DQorCQl9Ow0KKw0K
-KwkJaW5mcmFjZmdfYW86IGNsb2NrLWNvbnRyb2xsZXJAMTAwMDEwMDAgew0KKwkJCWNvbXBhdGli
-bGUgPSAibWVkaWF0ZWssbXQ2Nzc5LWluZnJhY2ZnX2FvIiwgInN5c2NvbiI7DQorCQkJcmVnID0g
-PDAgMHgxMDAwMTAwMCAwIDB4MTAwMD47DQorCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KKwkJfTsN
-CisNCisJCXBpbzogcGluY3RybEAxMDAwNTAwMCB7DQorCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRl
-ayxtdDY3NzktcGluY3RybCIsICJzeXNjb24iOw0KKwkJCXJlZyA9IDwwIDB4MTAwMDUwMDAgMCAw
-eDEwMDA+LA0KKwkJCSAgICAgIDwwIDB4MTFjMjAwMDAgMCAweDEwMDA+LA0KKwkJCSAgICAgIDww
-IDB4MTFkMTAwMDAgMCAweDEwMDA+LA0KKwkJCSAgICAgIDwwIDB4MTFlMjAwMDAgMCAweDEwMDA+
-LA0KKwkJCSAgICAgIDwwIDB4MTFlNzAwMDAgMCAweDEwMDA+LA0KKwkJCSAgICAgIDwwIDB4MTFl
-YTAwMDAgMCAweDEwMDA+LA0KKwkJCSAgICAgIDwwIDB4MTFmMjAwMDAgMCAweDEwMDA+LA0KKwkJ
-CSAgICAgIDwwIDB4MTFmMzAwMDAgMCAweDEwMDA+LA0KKwkJCSAgICAgIDwwIDB4MTAwMGIwMDAg
-MCAweDEwMDA+Ow0KKwkJCXJlZy1uYW1lcyA9ICJncGlvIiwgImlvY2ZnX3JtIiwNCisJCQkJICAg
-ICJpb2NmZ19iciIsICJpb2NmZ19sbSIsDQorCQkJCSAgICAiaW9jZmdfbGIiLCAiaW9jZmdfcnQi
-LA0KKwkJCQkgICAgImlvY2ZnX2x0IiwgImlvY2ZnX3RsIiwNCisJCQkJICAgICJlaW50IjsNCisJ
-CQlncGlvLWNvbnRyb2xsZXI7DQorCQkJI2dwaW8tY2VsbHMgPSA8Mj47DQorCQkJZ3Bpby1yYW5n
-ZXMgPSA8JnBpbyAwIDAgMjEwPjsNCisJCQlpbnRlcnJ1cHQtY29udHJvbGxlcjsNCisJCQkjaW50
-ZXJydXB0LWNlbGxzID0gPDI+Ow0KKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMDQgSVJRX1RZ
-UEVfTEVWRUxfSElHSD47DQorCQl9Ow0KKw0KKwkJYXBtaXhlZDogY2xvY2stY29udHJvbGxlckAx
-MDAwYzAwMCB7DQorCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NzktYXBtaXhlZCIsICJz
-eXNjb24iOw0KKwkJCXJlZyA9IDwwIDB4MTAwMGMwMDAgMCAweGUwMD47DQorCQkJI2Nsb2NrLWNl
-bGxzID0gPDE+Ow0KKwkJfTsNCisNCisJCXVhcnQwOiBzZXJpYWxAMTEwMDIwMDAgew0KKwkJCWNv
-bXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2Nzc5LXVhcnQiLA0KKwkJCQkgICAgICJtZWRpYXRlayxt
-dDY1NzctdWFydCI7DQorCQkJcmVnID0gPDAgMHgxMTAwMjAwMCAwIDB4NDAwPjsNCisJCQlpbnRl
-cnJ1cHRzID0gPEdJQ19TUEkgMTE1IElSUV9UWVBFX0xFVkVMX0xPVz47DQorCQkJY2xvY2tzID0g
-PCZjbGsyNm0+LCA8JmluZnJhY2ZnX2FvIENMS19JTkZSQV9VQVJUMD47DQorCQkJY2xvY2stbmFt
-ZXMgPSAiYmF1ZCIsICJidXMiOw0KKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQorCQl9Ow0KKw0K
-KwkJdWFydDE6IHNlcmlhbEAxMTAwMzAwMCB7DQorCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxt
-dDY3NzktdWFydCIsDQorCQkJCSAgICAgIm1lZGlhdGVrLG10NjU3Ny11YXJ0IjsNCisJCQlyZWcg
-PSA8MCAweDExMDAzMDAwIDAgMHg0MDA+Ow0KKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxMTYg
-SVJRX1RZUEVfTEVWRUxfTE9XPjsNCisJCQljbG9ja3MgPSA8JmNsazI2bT4sIDwmaW5mcmFjZmdf
-YW8gQ0xLX0lORlJBX1VBUlQxPjsNCisJCQljbG9jay1uYW1lcyA9ICJiYXVkIiwgImJ1cyI7DQor
-CQkJc3RhdHVzID0gImRpc2FibGVkIjsNCisJCX07DQorDQorCQl1YXJ0Mjogc2VyaWFsQDExMDA0
-MDAwIHsNCisJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS11YXJ0IiwNCisJCQkJICAg
-ICAibWVkaWF0ZWssbXQ2NTc3LXVhcnQiOw0KKwkJCXJlZyA9IDwwIDB4MTEwMDQwMDAgMCAweDQw
-MD47DQorCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDExNyBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0K
-KwkJCWNsb2NrcyA9IDwmY2xrMjZtPiwgPCZpbmZyYWNmZ19hbyBDTEtfSU5GUkFfVUFSVDI+Ow0K
-KwkJCWNsb2NrLW5hbWVzID0gImJhdWQiLCAiYnVzIjsNCisJCQlzdGF0dXMgPSAiZGlzYWJsZWQi
-Ow0KKwkJfTsNCisNCisJCWF1ZGlvOiBjbG9jay1jb250cm9sbGVyQDExMjEwMDAwIHsNCisJCQlj
-b21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS1hdWRpbyIsICJzeXNjb24iOw0KKwkJCXJlZyA9
-IDwwIDB4MTEyMTAwMDAgMCAweDEwMDA+Ow0KKwkJCSNjbG9jay1jZWxscyA9IDwxPjsNCisJCX07
-DQorDQorCQltZmdjZmc6IGNsb2NrLWNvbnRyb2xsZXJAMTNmYmYwMDAgew0KKwkJCWNvbXBhdGli
-bGUgPSAibWVkaWF0ZWssbXQ2Nzc5LW1mZ2NmZyIsICJzeXNjb24iOw0KKwkJCXJlZyA9IDwwIDB4
-MTNmYmYwMDAgMCAweDEwMDA+Ow0KKwkJCSNjbG9jay1jZWxscyA9IDwxPjsNCisJCX07DQorDQor
-CQltbXN5czogc3lzY29uQDE0MDAwMDAwIHsNCisJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10
-Njc3OS1tbXN5cyIsICJzeXNjb24iOw0KKwkJCXJlZyA9IDwwIDB4MTQwMDAwMDAgMCAweDEwMDA+
-Ow0KKwkJCSNjbG9jay1jZWxscyA9IDwxPjsNCisJCX07DQorDQorCQlpbWdzeXM6IGNsb2NrLWNv
-bnRyb2xsZXJAMTUwMjAwMDAgew0KKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2Nzc5LWlt
-Z3N5cyIsICJzeXNjb24iOw0KKwkJCXJlZyA9IDwwIDB4MTUwMjAwMDAgMCAweDEwMDA+Ow0KKwkJ
-CSNjbG9jay1jZWxscyA9IDwxPjsNCisJCX07DQorDQorCQl2ZGVjc3lzOiBjbG9jay1jb250cm9s
-bGVyQDE2MDAwMDAwIHsNCisJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS12ZGVjc3lz
-IiwgInN5c2NvbiI7DQorCQkJcmVnID0gPDAgMHgxNjAwMDAwMCAwIDB4MTAwMD47DQorCQkJI2Ns
-b2NrLWNlbGxzID0gPDE+Ow0KKwkJfTsNCisNCisJCXZlbmNzeXM6IGNsb2NrLWNvbnRyb2xsZXJA
-MTcwMDAwMDAgew0KKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2Nzc5LXZlbmNzeXMiLCAi
-c3lzY29uIjsNCisJCQlyZWcgPSA8MCAweDE3MDAwMDAwIDAgMHgxMDAwPjsNCisJCQkjY2xvY2st
-Y2VsbHMgPSA8MT47DQorCQl9Ow0KKw0KKwkJY2Ftc3lzOiBjbG9jay1jb250cm9sbGVyQDFhMDAw
-MDAwIHsNCisJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS1jYW1zeXMiLCAic3lzY29u
-IjsNCisJCQlyZWcgPSA8MCAweDFhMDAwMDAwIDAgMHgxMDAwMD47DQorCQkJI2Nsb2NrLWNlbGxz
-ID0gPDE+Ow0KKwkJfTsNCisNCisJCWlwZXN5czogY2xvY2stY29udHJvbGxlckAxYjAwMDAwMCB7
-DQorCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NzktaXBlc3lzIiwgInN5c2NvbiI7DQor
-CQkJcmVnID0gPDAgMHgxYjAwMDAwMCAwIDB4MTAwMD47DQorCQkJI2Nsb2NrLWNlbGxzID0gPDE+
-Ow0KKwkJfTsNCisNCisJfTsNCit9Ow0KLS0gDQoyLjE4LjANCg==
+On 30.07.2020 15:23, Matthew Wilcox wrote:
+> On Thu, Jul 30, 2020 at 03:00:08PM +0300, Kirill Tkhai wrote:
+>> This patch introduces a new IDR and functions to add/remove and iterate
+>> registered namespaces in the system. It will be used to list namespaces
+>> in /proc/namespaces/... in next patches.
+> 
+> Looks like you could use an XArray for this and it would be fewer lines of
+> code.
+> 
+>>  
+>>  static struct vfsmount *nsfs_mnt;
+>> +static DEFINE_SPINLOCK(ns_lock);
+>> +static DEFINE_IDR(ns_idr);
+> 
+> XArray includes its own spinlock.
+> 
+>> +/*
+>> + * Add a newly created ns to ns_idr. The ns must be fully
+>> + * initialized since it becomes available for ns_get_next()
+>> + * right after we exit this function.
+>> + */
+>> +int ns_idr_register(struct ns_common *ns)
+>> +{
+>> +	int ret, id = ns->inum - PROC_NS_MIN_INO;
+>> +
+>> +	if (WARN_ON(id < 0))
+>> +		return -EINVAL;
+>> +
+>> +	idr_preload(GFP_KERNEL);
+>> +	spin_lock_irq(&ns_lock);
+>> +	ret = idr_alloc(&ns_idr, ns, id, id + 1, GFP_ATOMIC);
+>> +	spin_unlock_irq(&ns_lock);
+>> +	idr_preload_end();
+>> +	return ret < 0 ? ret : 0;
+> 
+> This would simply be return xa_insert_irq(...);
+> 
+>> +}
+>> +
+>> +/*
+>> + * Remove a dead ns from ns_idr. Note, that ns memory must
+>> + * be freed not earlier then one RCU grace period after
+>> + * this function, since ns_get_next() uses RCU to iterate the IDR.
+>> + */
+>> +void ns_idr_unregister(struct ns_common *ns)
+>> +{
+>> +	int id = ns->inum - PROC_NS_MIN_INO;
+>> +	unsigned long flags;
+>> +
+>> +	if (WARN_ON(id < 0))
+>> +		return;
+>> +
+>> +	spin_lock_irqsave(&ns_lock, flags);
+>> +	idr_remove(&ns_idr, id);
+>> +	spin_unlock_irqrestore(&ns_lock, flags);
+>> +}
+> 
+> xa_erase_irqsave();
 
+static inline void *xa_erase_irqsave(struct xarray *xa, unsigned long index)
+{
+	unsigned long flags;
+        void *entry;
+
+        xa_lock_irqsave(xa, flags);
+        entry = __xa_erase(xa, index);
+        xa_unlock_irqrestore(xa, flags);
+
+        return entry;
+}
+
+>> +
+>> +/*
+>> + * This returns ns with inum greater than @id or NULL.
+>> + * @id is updated to refer the ns inum.
+>> + */
+>> +struct ns_common *ns_get_next(unsigned int *id)
+>> +{
+>> +	struct ns_common *ns;
+>> +
+>> +	if (*id < PROC_NS_MIN_INO - 1)
+>> +		*id = PROC_NS_MIN_INO - 1;
+>> +
+>> +	*id += 1;
+>> +	*id -= PROC_NS_MIN_INO;
+>> +
+>> +	rcu_read_lock();
+>> +	do {
+>> +		ns = idr_get_next(&ns_idr, id);
+>> +		if (!ns)
+>> +			break;
+> 
+> xa_find_after();
+> 
+> You'll want a temporary unsigned long to work with ...
+> 
+>> +		if (!refcount_inc_not_zero(&ns->count)) {
+>> +			ns = NULL;
+>> +			*id += 1;
+> 
+> you won't need this increment.
+
+Why? I don't see a way xarray allows to avoid this.
