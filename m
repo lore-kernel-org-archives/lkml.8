@@ -2,237 +2,139 @@ Return-Path: <SRS0=+W6S=BJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F14C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 924B42083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8898A2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jul 2020 05:58:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WRTqr8Ny"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgG3F5T (ORCPT
+        id S1728607AbgG3F6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jul 2020 01:57:19 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55758 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725892AbgG3F5S (ORCPT
+        Thu, 30 Jul 2020 01:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgG3F6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jul 2020 01:57:18 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06U5WbRK139586;
-        Thu, 30 Jul 2020 01:57:03 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32k9qv98as-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jul 2020 01:57:03 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06U5Wrxm140823;
-        Thu, 30 Jul 2020 01:57:02 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32k9qv989x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jul 2020 01:57:02 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06U5oOp8030969;
-        Thu, 30 Jul 2020 05:55:22 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma04dal.us.ibm.com with ESMTP id 32gcq1swjn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jul 2020 05:55:22 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06U5tLX155509472
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jul 2020 05:55:21 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BFBE3AE05F;
-        Thu, 30 Jul 2020 05:55:21 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27445AE060;
-        Thu, 30 Jul 2020 05:55:21 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.102.0.230])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Jul 2020 05:55:21 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 26C122E2D91; Thu, 30 Jul 2020 11:25:17 +0530 (IST)
-Date:   Thu, 30 Jul 2020 11:25:17 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: Re: [PATCH v4 06/10] powerpc/smp: Generalize 2nd sched domain
-Message-ID: <20200730055517.GA29623@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <20200727053230.19753-1-srikar@linux.vnet.ibm.com>
- <20200727053230.19753-7-srikar@linux.vnet.ibm.com>
+        Thu, 30 Jul 2020 01:58:31 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 619F1C0619D2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 22:58:29 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id b79so24591957qkg.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jul 2020 22:58:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=phd6O3yMyVkYT4PFMQTzBGjYeyD6/bbg4aQWWhxqFYo=;
+        b=WRTqr8NyjcdEcUae816dG3ovpNjrpDSMTg0dXIyhE/mr53gMIw8yWWMEgjdVSuJ8Ay
+         WtGWGOGcUySOCgGPo1/ZzVYKWMfr6Bj90xJzmuYR7qmirPuxDNepJmb9EN8xe2xlYGdJ
+         HfgHiGgAHmzwrYeRoR+3zdVGRFDNB/YtQc6eDHJ5DACx1QYkrNkSNAlal1+oVKidrcPv
+         vWx+r51AGp+cAvJVeszU+WdhYL6K/OnDy2yn1/2L0X6lzt0VECPebxcwKLiLKppcK3EU
+         niK2lDDQa8OLLXsvY/y3mTpaeM6k24GwR4QEZRA8yLckuqV3tUFcS4gSWYs/t6I0itj5
+         d+4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=phd6O3yMyVkYT4PFMQTzBGjYeyD6/bbg4aQWWhxqFYo=;
+        b=DPhLKy2AHSwNuJrltMhzrdAuV2+qnD473ekG9LLPjU6EaH0v3CSUA3XRSOygNd/BYq
+         aK3C91yMUKWtpR1LWWN5yh3QU25B/IcdPNke6H1vZv/fiif0FPQcdXd8UVU1tijGkEvn
+         ggAAGxQEI0VHkUMJybA/D1mGCX8Dyrm0SnI4ifCq11JlfYzbciwN3bxK+kOJRF9pjs4d
+         z6Jzjf/EcKQbTqqpcfSiObf8FlZPicsc3LN9JD1LQLSUKtOSlUuLtD/xMnMjDb1FF7Bc
+         qNhkFBx8iaSfpu9jwqOEvziksZzrzs6uyvsdG7QCFSilbhpbdkQNibJWt6Zlk0Gr/6e4
+         g6mA==
+X-Gm-Message-State: AOAM531jWt7t8Q8tEcplstmWyx5SLAJUUw+dbfFoDN9H59yx9PIXchWQ
+        qN32a+6kFgazqU+EoRX4sqOjtDEHjQpWYygyTqH/Mw==
+X-Google-Smtp-Source: ABdhPJx7mC8iIHX6qkV1NeL0SnyK0zXPm9WUW3SQNhvECWDHWYCi8kk4E2uD+DDGyoMQ4L0avHMwQN66ZL6FeyA7A9g=
+X-Received: by 2002:a37:8241:: with SMTP id e62mr37765030qkd.250.1596088708115;
+ Wed, 29 Jul 2020 22:58:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727053230.19753-7-srikar@linux.vnet.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-30_03:2020-07-29,2020-07-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- phishscore=0 clxscore=1015 bulkscore=0 impostorscore=0 mlxlogscore=999
- adultscore=0 malwarescore=0 priorityscore=1501 lowpriorityscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007300042
+References: <0000000000006f179d05ab8e2cf2@google.com> <BYAPR11MB2632784BE3AD9F03C5C95263FF700@BYAPR11MB2632.namprd11.prod.outlook.com>
+ <87tuxqxhgq.fsf@intel.com>
+In-Reply-To: <87tuxqxhgq.fsf@intel.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 30 Jul 2020 07:58:16 +0200
+Message-ID: <CACT4Y+ZMvaJMiXikYCm-Xym8ddKDY0n-5=kwH7i2Hu-9uJW1kQ@mail.gmail.com>
+Subject: =?UTF-8?B?UmU6IOWbnuWkjTogSU5GTzogcmN1IGRldGVjdGVkIHN0YWxsIGluIHRjX21vZGlmeV9xZA==?=
+        =?UTF-8?B?aXNj?=
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>,
+        syzbot <syzbot+9f78d5c664a8c33f4cce@syzkaller.appspotmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "fweisbec@gmail.com" <fweisbec@gmail.com>,
+        "jhs@mojatatu.com" <jhs@mojatatu.com>,
+        "jiri@resnulli.us" <jiri@resnulli.us>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:02:26AM +0530, Srikar Dronamraju wrote:
-> Currently "CACHE" domain happens to be the 2nd sched domain as per
-> powerpc_topology. This domain will collapse if cpumask of l2-cache is
-> same as SMT domain. However we could generalize this domain such that it
-> could mean either be a "CACHE" domain or a "BIGCORE" domain.
-> 
-> While setting up the "CACHE" domain, check if shared_cache is already
-> set.
-> 
-> Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-> Cc: LKML <linux-kernel@vger.kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Anton Blanchard <anton@ozlabs.org>
-> Cc: Oliver O'Halloran <oohall@gmail.com>
-> Cc: Nathan Lynch <nathanl@linux.ibm.com>
-> Cc: Michael Neuling <mikey@neuling.org>
-> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Jordan Niethe <jniethe5@gmail.com>
-> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+On Wed, Jul 29, 2020 at 9:13 PM Vinicius Costa Gomes
+<vinicius.gomes@intel.com> wrote:
+>
+> Hi,
+>
+> "Zhang, Qiang" <Qiang.Zhang@windriver.com> writes:
+>
+> > ________________________________________
+> > =E5=8F=91=E4=BB=B6=E4=BA=BA: linux-kernel-owner@vger.kernel.org <linux-=
+kernel-owner@vger.kernel.org> =E4=BB=A3=E8=A1=A8 syzbot <syzbot+9f78d5c664a=
+8c33f4cce@syzkaller.appspotmail.com>
+> > =E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4: 2020=E5=B9=B47=E6=9C=8829=E6=97=
+=A5 13:53
+> > =E6=94=B6=E4=BB=B6=E4=BA=BA: davem@davemloft.net; fweisbec@gmail.com; j=
+hs@mojatatu.com; jiri@resnulli.us; linux-kernel@vger.kernel.org; mingo@kern=
+el.org; netdev@vger.kernel.org; syzkaller-bugs@googlegroups.com; tglx@linut=
+ronix.de; vinicius.gomes@intel.com; xiyou.wangcong@gmail.com
+> > =E4=B8=BB=E9=A2=98: INFO: rcu detected stall in tc_modify_qdisc
+> >
+> > Hello,
+> >
+> > syzbot found the following issue on:
+> >
+> > HEAD commit:    181964e6 fix a braino in cmsghdr_from_user_compat_to_ke=
+rn()
+> > git tree:       net
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D12925e38900=
+000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Df87a5e4232f=
+db267
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D9f78d5c664a8c=
+33f4cce
+> > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > syz repro:
+> > https://syzkaller.appspot.com/x/repro.syz?x=3D16587f8c900000
+>
+> It seems that syzkaller is generating an schedule with too small
+> intervals (3ns in this case) which causes a hrtimer busy-loop which
+> starves other kernel threads.
+>
+> We could put some limits on the interval when running in software mode,
+> but I don't like this too much, because we are talking about users with
+> CAP_NET_ADMIN and they have easier ways to do bad things to the system.
 
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Hi Vinicius,
 
-> ---
-> Changelog v1 -> v2:
-> 	Moved shared_cache topology fixup to fixup_topology (Gautham)
-> 
->  arch/powerpc/kernel/smp.c | 48 +++++++++++++++++++++++++++------------
->  1 file changed, 34 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-> index d997c7411664..3c5ccf6d2b1c 100644
-> --- a/arch/powerpc/kernel/smp.c
-> +++ b/arch/powerpc/kernel/smp.c
-> @@ -85,6 +85,14 @@ EXPORT_PER_CPU_SYMBOL(cpu_l2_cache_map);
->  EXPORT_PER_CPU_SYMBOL(cpu_core_map);
->  EXPORT_SYMBOL_GPL(has_big_cores);
-> 
-> +enum {
-> +#ifdef CONFIG_SCHED_SMT
-> +	smt_idx,
-> +#endif
-> +	bigcore_idx,
-> +	die_idx,
-> +};
-> +
->  #define MAX_THREAD_LIST_SIZE	8
->  #define THREAD_GROUP_SHARE_L1   1
->  struct thread_groups {
-> @@ -851,13 +859,7 @@ static int powerpc_shared_cache_flags(void)
->   */
->  static const struct cpumask *shared_cache_mask(int cpu)
->  {
-> -	if (shared_caches)
-> -		return cpu_l2_cache_mask(cpu);
-> -
-> -	if (has_big_cores)
-> -		return cpu_smallcore_mask(cpu);
-> -
-> -	return per_cpu(cpu_sibling_map, cpu);
-> +	return per_cpu(cpu_l2_cache_map, cpu);
->  }
-> 
->  #ifdef CONFIG_SCHED_SMT
-> @@ -867,11 +869,16 @@ static const struct cpumask *smallcore_smt_mask(int cpu)
->  }
->  #endif
-> 
-> +static const struct cpumask *cpu_bigcore_mask(int cpu)
-> +{
-> +	return per_cpu(cpu_sibling_map, cpu);
-> +}
-> +
->  static struct sched_domain_topology_level powerpc_topology[] = {
->  #ifdef CONFIG_SCHED_SMT
->  	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
->  #endif
-> -	{ shared_cache_mask, powerpc_shared_cache_flags, SD_INIT_NAME(CACHE) },
-> +	{ cpu_bigcore_mask, SD_INIT_NAME(BIGCORE) },
->  	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
->  	{ NULL, },
->  };
-> @@ -1311,7 +1318,6 @@ static void add_cpu_to_masks(int cpu)
->  void start_secondary(void *unused)
->  {
->  	unsigned int cpu = smp_processor_id();
-> -	struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
-> 
->  	mmgrab(&init_mm);
->  	current->active_mm = &init_mm;
-> @@ -1337,14 +1343,20 @@ void start_secondary(void *unused)
->  	/* Update topology CPU masks */
->  	add_cpu_to_masks(cpu);
-> 
-> -	if (has_big_cores)
-> -		sibling_mask = cpu_smallcore_mask;
->  	/*
->  	 * Check for any shared caches. Note that this must be done on a
->  	 * per-core basis because one core in the pair might be disabled.
->  	 */
-> -	if (!cpumask_equal(cpu_l2_cache_mask(cpu), sibling_mask(cpu)))
-> -		shared_caches = true;
-> +	if (!shared_caches) {
-> +		struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
-> +		struct cpumask *mask = cpu_l2_cache_mask(cpu);
-> +
-> +		if (has_big_cores)
-> +			sibling_mask = cpu_smallcore_mask;
-> +
-> +		if (cpumask_weight(mask) > cpumask_weight(sibling_mask(cpu)))
-> +			shared_caches = true;
-> +	}
-> 
->  	set_numa_node(numa_cpu_lookup_table[cpu]);
->  	set_numa_mem(local_memory_node(numa_cpu_lookup_table[cpu]));
-> @@ -1375,9 +1387,17 @@ static void fixup_topology(void)
->  #ifdef CONFIG_SCHED_SMT
->  	if (has_big_cores) {
->  		pr_info("Big cores detected but using small core scheduling\n");
-> -		powerpc_topology[0].mask = smallcore_smt_mask;
-> +		powerpc_topology[smt_idx].mask = smallcore_smt_mask;
->  	}
->  #endif
-> +	if (shared_caches) {
-> +		pr_info("Using shared cache scheduler topology\n");
-> +		powerpc_topology[bigcore_idx].mask = shared_cache_mask;
-> +		powerpc_topology[bigcore_idx].sd_flags = powerpc_shared_cache_flags;
-> +#ifdef CONFIG_SCHED_DEBUG
-> +		powerpc_topology[bigcore_idx].name = "CACHE";
-> +#endif
-> +	}
->  }
-> 
->  void __init smp_cpus_done(unsigned int max_cpus)
-> -- 
-> 2.17.1
-> 
+Could you explain why you don't like the argument if it's for CAP_NET_ADMIN=
+?
+Good code should check arguments regardless I think and it's useful to
+protect root from, say, programming bugs rather than kill the machine
+on any bug and misconfiguration. What am I missing?
+
+Also are we talking about CAP_NET_ADMIN in a user ns as well
+(effectively nobody)?
